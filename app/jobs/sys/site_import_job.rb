@@ -35,11 +35,11 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_users_roles
     invoke :import_ss_files
     invoke :import_cms_forms
-    invoke :import_cms_columns
     invoke :import_cms_loop_settings
     invoke :import_cms_layouts
     invoke :import_cms_body_layouts
     invoke :import_cms_nodes
+    invoke :import_cms_columns
     invoke :import_cms_parts
     invoke :import_cms_pages
     invoke :import_cms_page_searches
@@ -162,6 +162,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     data['loop_setting_id'] = @cms_loop_settings_map[data['loop_setting_id']] if data['loop_setting_id'].present?
 
+    data['contact_groups'] = [] if data['contact_groups'].present?
+
     data
   end
 
@@ -192,7 +194,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       end
 
       data.each { |k, v| item[k] = v }
-      yield(item) if block
+      yield(item, data) if block
 
       if save_document(item)
         map[id] = item.id
