@@ -52,8 +52,8 @@ module Sys::SiteImport::Contents
         end
       end
       if data["event_recurrences"].present?
-        item.event_recurrences = data["event_recurrences"].map do |er|
-          Event::Extensions::Recurrence.new(er["attributes"])
+        item.event_recurrences = data["event_recurrences"].map do |event_recurrence|
+          Event::Extensions::Recurrence.new(event_recurrence["attributes"])
         end
       end
     end
