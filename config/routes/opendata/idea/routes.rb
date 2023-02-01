@@ -12,8 +12,13 @@ Rails.application.routes.draw do
     post :command, on: :member
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   content "opendata" do
-    resources :ideas, concerns: [:deletion, :command], module: :idea do
+    resources :ideas, concerns: [:deletion, :command, :change_state], module: :idea do
       resources :comments, concerns: :deletion do
         match :soft_delete, on: :member, via: [:get, :post]
         match :undo_delete, on: :member, via: [:get, :post]

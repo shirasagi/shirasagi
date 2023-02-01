@@ -14,7 +14,7 @@ $("<input />").attr("type", "submit").attr("name", "publish_save").attr("class",
 
 <% if %w(ready public).include?(@item.state) %>
   <% if @item.allowed?(:close, @cur_user, site: @cur_site) %>
-  $(".save").val('<%= t("ss.buttons.draft_save") %>');
+  $(".save").val('<%= t("ss.buttons.closed_save") %>');
   <% else %>
   $(".save").remove();
   <% end %>

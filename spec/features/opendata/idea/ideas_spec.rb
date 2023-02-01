@@ -62,7 +62,6 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
       let(:show_path) { opendata_idea_path site, node, item }
       let(:edit_path) { edit_opendata_idea_path site, node, item }
       let(:delete_path) { delete_opendata_idea_path site, node, item }
-
       let(:comment_text) { "管理画面コメント０１" }
 
       describe "#show" do
@@ -76,48 +75,58 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
       describe "#comment" do
         it do
           visit show_path
-
           click_link I18n.t('opendata.manage_comments')
-
           click_link I18n.t('ss.links.new')
-
           fill_in "item_text", with: comment_text
           click_button I18n.t('ss.buttons.save')
           expect(status_code).to eq 200
           expect(page).to have_no_css("form#item-form")
 
           click_link I18n.t('ss.links.back_to_index')
-
           fill_in "s_keyword", with: comment_text
           click_button I18n.t('ss.buttons.search')
           expect(status_code).to eq 200
           expect(page).to have_css("a", text: comment_text)
 
           click_link comment_text
-
           click_link I18n.t('ss.links.delete')
-
           click_button I18n.t('ss.buttons.delete')
           expect(status_code).to eq 200
 
           click_link comment_text
-
           click_link I18n.t('ss.links.restore')
-
           click_button I18n.t('ss.buttons.restore')
           expect(status_code).to eq 200
 
           click_link I18n.t('ss.links.delete')
-
           click_button I18n.t('ss.buttons.delete')
-
           click_link comment_text
-
           click_link I18n.t('ss.links.delete')
-
           click_button I18n.t('ss.buttons.delete')
           expect(status_code).to eq 200
           expect(page).to have_no_css("a", text: comment_text)
+        end
+      end
+
+      describe "comment with release_permission", js: true do
+        let!(:comment) { create :opendata_idea_comment, site: site, idea_id: node.id, state: 'public' }
+        let!(:edit_path) { edit_opendata_idea_comment_path(site, node, item, comment) }
+
+        it do
+          visit edit_path
+          within "footer.send" do
+            expect(page).to have_xpath("//input[@value='#{I18n.t("ss.buttons.publish_save")}']")
+            expect(page).to have_xpath("//input[@value='#{I18n.t("ss.buttons.closed_save")}']")
+          end
+
+          role = cms_user.cms_roles[0]
+          role.update permissions: role.permissions.reject { |k, v| k =~ /^(release_|close_)/ }
+
+          visit edit_path
+          within "footer.send" do
+            expect(page).to have_no_xpath("//input[@value='#{I18n.t("ss.buttons.publish_save")}']")
+            expect(page).to have_no_xpath("//input[@value='#{I18n.t("ss.buttons.closed_save")}']")
+          end
         end
       end
 
