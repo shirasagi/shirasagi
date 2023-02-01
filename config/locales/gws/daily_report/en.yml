@@ -27,6 +27,10 @@ en:
     labels:
       user: Author
       form: Form
+    options:
+      export_target:
+        all: Export all
+        shared: Export shared by department
 
   modules:
     gws/daily_report: Business daily report

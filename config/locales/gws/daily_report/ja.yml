@@ -27,6 +27,10 @@ ja:
     labels:
       user: 作成者
       form: フォーム
+    options:
+      export_target:
+        all: 全てを出力する
+        shared: 部署で共有のみ出力する
 
   modules:
     gws/daily_report: 業務日報

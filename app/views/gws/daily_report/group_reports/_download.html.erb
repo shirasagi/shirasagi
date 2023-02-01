@@ -8,4 +8,14 @@
       </label>
     <% end %>
   </dd>
+
+  <dt><%= t('modules.gws/daily_report') %></dt>
+  <dd>
+    <% %w(all shared).each do |target| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[export_target]", target, target == 'all', { id: nil } %>
+        <%= t("gws/daily_report.options.export_target.#{target}") %>
+      </label>
+    <% end %>
+  </dd>
 </dl>

@@ -5,6 +5,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     @cur_group = group
     @reports = reports.dup
     @encoding = options[:encoding].presence || 'Shift_JIS'
+    @export_target = options[:export_target].presence || 'all'
     users = Gws::User.site(@cur_site).where(group_ids: @cur_group.id)
     if @cur_site.fiscal_year(reports.first.try(:daily_report_date)) != @cur_site.fiscal_year
       users = users.where(id: @cur_user.id)
@@ -94,7 +95,8 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
   def to_small_talk(report)
     if report.share_small_talk.present?
       [report.small_talk, I18n.t('gws/daily_report.shared')].join("\n")
-    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
+    elsif (report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all') ||
+          report.user_id == @cur_user.id
       report.small_talk
     else
       nil
@@ -109,7 +111,8 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
 
     if report.share_column_ids.include?(column.id.to_s)
       [column_value.value, I18n.t('gws/daily_report.shared')].join("\n")
-    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
+    elsif (report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all') ||
+          report.user_id == @cur_user.id
       column_value.value
     else
       nil

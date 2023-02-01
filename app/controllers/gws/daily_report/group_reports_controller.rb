@@ -209,7 +209,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     end
 
     if params[:item].present?
-      csv_params = params.require(:item).permit(:encoding)
+      csv_params = params.require(:item).permit(:encoding, :export_target)
     else
       csv_params = {}
     end
