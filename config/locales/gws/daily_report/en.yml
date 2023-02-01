@@ -1,17 +1,20 @@
 en:
   gws/daily_report:
-    create_daily_report: Create daily report
-    daily_report_list: Daily report list
+    create_comment: Comment
+    create_daily_report: Create business daily report
+    daily_report_list: Business daily report list
     date: Date
     department: Department
-    edit_daily_report: Edit daily report
+    edit_daily_report: Edit business daily report
     individual: Individual
     shared: Shared by department
     wday: Day of the week
+    buttons:
+      save_and_categorize: Save and categorize
     columns:
-      index: Manage input settings
+      index: Manage category
     formats:
-      daily_report_full_name: '%{date}’s daily report for %{user_name}'
+      daily_report_full_name: '%{date}’s business daily report for %{user_name}'
     forms:
       more: See more
     links:
@@ -26,17 +29,17 @@ en:
       form: Form
 
   modules:
-    gws/daily_report: Daily report
+    gws/daily_report: Business daily report
     addons:
-      gws/daily_report/column_setting: Input settings
+      gws/daily_report/column_setting: Category settings
       gws/daily_report/custom_form: Input details
 
   gws_role:
-    use_gws_daily_report_reports: Use daily report
-    edit_gws_daily_report_reports: Edit daily report
-    manage_private_gws_daily_report_reports: Manage daily report (own group)
-    manage_all_gws_daily_report_reports: Manage daily report (all)
-    access_gws_daily_report_reports: Show limited access daily report
+    use_gws_daily_report_reports: Use business daily report
+    edit_gws_daily_report_reports: Edit business daily report
+    manage_private_gws_daily_report_reports: Manage business daily report (own group)
+    manage_all_gws_daily_report_reports: Manage business daily report (all)
+    access_gws_daily_report_reports: Show limited access business daily report
 
     read_other_gws_daily_report_forms: View application forms (all)
     read_private_gws_daily_report_forms: View application forms (own)
@@ -47,9 +50,10 @@ en:
 
   mongoid:
     models:
-      gws/daily_report/report: Daily report
+      gws/daily_report/report: Business daily report
       gws/daily_report/form: Work category
       gws/daily_report/column: Input items
+      gws/daily_report/comment: Comment
     attributes:
       gws/daily_report/report:
         name: Title
@@ -57,13 +61,13 @@ en:
         form_id: Form
         daily_report_member_id: Approver
       gws/daily_report/form:
-        name: Title
+        name: Department
         year: Year
         order: Order
         memo: Remarks
         daily_report_group_id: Department
       gws/addon/daily_report/column_setting:
-        columns: Input settings
+        columns: Category settings
       gws/daily_report/column:
         name: Item name
         order: Order
@@ -74,6 +78,11 @@ en:
         small_talk: Small talk
         share_small_talk: Shared by department
         share_column_ids: Shared by department
+      gws/daily_report/comment:
+        body: Comment
+        report_key: Input items key
+        report_id: Business daily report
+        column_id: Input items
 
   tooltip:
     gws/daily_report/report:
@@ -99,7 +108,10 @@ en:
     gws/addon/daily_report/group_setting:
       daily_report_new_days:
         - Enter the display period for new items.
+    gws/daily_report/comment:
+      body:
+        - Enter a comment.
 
   job:
     models:
-      gws/daily_report/trash_purge_job: Empty daily report/application trash
+      gws/daily_report/trash_purge_job: Empty business daily report trash

@@ -1,10 +1,10 @@
 class Gws::DailyReport::GroupReportEnumerator < Enumerator
-  def initialize(site, user, group, reports, encoding: "Shift_JIS")
+  def initialize(site, user, group, reports, options)
     @cur_site = site
     @cur_user = user
     @cur_group = group
     @reports = reports.dup
-    @encoding = encoding
+    @encoding = options[:encoding].presence || 'Shift_JIS'
     users = Gws::User.site(@cur_site).where(group_ids: @cur_group.id)
     if @cur_site.fiscal_year(reports.first.try(:daily_report_date)) != @cur_site.fiscal_year
       users = users.where(id: @cur_user.id)
@@ -46,7 +46,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
 
   def build_term_handlers
     @handlers = []
-    if Gws::DailyReport::Report.allowed?(:access_all, @cur_user, site: @cur_site)
+    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
       @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
     end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }
@@ -92,7 +92,13 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
   end
 
   def to_small_talk(report)
-    [report.small_talk, report.shared_small_talk].flatten.uniq.compact.join("\n")
+    if report.share_small_talk.present?
+      [report.small_talk, I18n.t('gws/daily_report.shared')].join("\n")
+    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
+      report.small_talk
+    else
+      nil
+    end
   end
 
   def to_column_value(form, column, report)
@@ -101,7 +107,13 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     column_value = report.column_values.where(column_id: column.id).first
     return nil if column_value.blank?
 
-    [column_value.value, report.shared_column_value(column_value)].flatten.uniq.compact.join("\n")
+    if report.share_column_ids.include?(column.id.to_s)
+      [column_value.value, I18n.t('gws/daily_report.shared')].join("\n")
+    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
+      column_value.value
+    else
+      nil
+    end
   end
 
   def encode(str)

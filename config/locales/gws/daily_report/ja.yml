@@ -1,17 +1,20 @@
 ja:
   gws/daily_report:
-    create_daily_report: 日報を作成
-    daily_report_list: 日報一覧
+    create_comment: コメントする
+    create_daily_report: 業務日報を作成
+    daily_report_list: 業務日報一覧
     date: 日
     department: 部署
-    edit_daily_report: 日報を編集
+    edit_daily_report: 業務日報を編集
     individual: 個人
     shared: 部署で共有
     wday: 曜日
+    buttons:
+      save_and_categorize: 保存してカテゴリーを設定する
     columns:
-      index: 入力設定を管理する
+      index: カテゴリーを管理する
     formats:
-      daily_report_full_name: '%{user_name}の%{date}の日報'
+      daily_report_full_name: '%{user_name}の%{date}の業務日報'
     forms:
       more: もっと見る
     links:
@@ -26,18 +29,17 @@ ja:
       form: フォーム
 
   modules:
-    gws/daily_report: 日報
+    gws/daily_report: 業務日報
     addons:
-      gws/daily_report/column_setting: 入力設定
+      gws/daily_report/column_setting: カテゴリー設定
       gws/daily_report/custom_form: 入力内容
 
   gws_role:
-    use_gws_daily_report_reports: 日報の利用
-    edit_gws_daily_report_reports: 日報の変更
-    manage_private_gws_daily_report_reports: 日報の管理（自所属）
-    manage_all_gws_daily_report_reports: 日報の管理（全て）
-    access_private_gws_daily_report_reports: 日報の限定公開表示（自所属）
-    access_all_gws_daily_report_reports: 日報の限定公開表示（全て）
+    use_gws_daily_report_reports: 業務日報の利用
+    edit_gws_daily_report_reports: 業務日報の変更
+    manage_private_gws_daily_report_reports: 業務日報の管理（自所属）
+    manage_all_gws_daily_report_reports: 業務日報の管理（全て）
+    access_gws_daily_report_reports: 業務日報の限定公開表示
 
     read_other_gws_daily_report_forms: 申請フォームの閲覧（全て）
     read_private_gws_daily_report_forms: 申請フォームの閲覧（所有）
@@ -48,9 +50,10 @@ ja:
 
   mongoid:
     models:
-      gws/daily_report/report: 日報
+      gws/daily_report/report: 業務日報
       gws/daily_report/form: 業務カテゴリー
       gws/daily_report/column: 入力項目
+      gws/daily_report/comment: コメント
     attributes:
       gws/daily_report/report:
         name: タイトル
@@ -58,13 +61,13 @@ ja:
         form_id: フォーム
         daily_report_member_id: 承認者
       gws/daily_report/form:
-        name: タイトル
+        name: 部署名
         year: 年度
         order: 並び順
         memo: 備考
         daily_report_group_id: 部署
       gws/addon/daily_report/column_setting:
-        columns: 入力設定
+        columns: カテゴリー設定
       gws/daily_report/column:
         name: 項目名
         order: 並び順
@@ -75,6 +78,11 @@ ja:
         small_talk: 雑談
         share_small_talk: 部署で共有
         share_column_ids: 部署で共有
+      gws/daily_report/comment:
+        body: コメント
+        report_key: 入力項目キー
+        report_id: 業務日報
+        column_id: 入力項目
 
   tooltip:
     gws/daily_report/report:
@@ -100,7 +108,10 @@ ja:
     gws/addon/daily_report/group_setting:
       daily_report_new_days:
         - 新着表示期間を入力します。
+    gws/daily_report/comment:
+      body:
+        - コメントを入力します。
 
   job:
     models:
-      gws/daily_report/trash_purge_job: 日報/申請ゴミ箱の掃除
+      gws/daily_report/trash_purge_job: 業務日報ゴミ箱の掃除

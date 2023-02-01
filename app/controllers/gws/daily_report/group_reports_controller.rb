@@ -10,7 +10,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
   before_action :set_search_params
   before_action :set_cur_date
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete, :comment]
 
   helper_method :year_month_options, :group_options
 
@@ -203,14 +203,45 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     render layout: 'ss/print'
   end
 
-  def download
+  def download_all
+    if request.get? || request.head?
+      return
+    end
+
+    if params[:item].present?
+      csv_params = params.require(:item).permit(:encoding)
+    else
+      csv_params = {}
+    end
+    csv_params.merge!(fix_params)
+
     set_items
 
     filename = "daily_report_group_csv_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "Shift_JIS"
     send_enum(
-      @items.group_csv(site: @cur_site, user: @cur_user, group: @group, encoding: encoding),
+      @items.group_csv(site: @cur_site, user: @cur_user, group: @group, options: csv_params),
       type: "text/csv; charset=#{encoding}", filename: filename
     )
+  end
+
+  def comment
+    @comment = Gws::DailyReport::Comment.new
+    @comment.cur_site = @cur_site
+    @comment.cur_user = @cur_user
+    @comment.report_id = params[:id]
+    case params[:column]
+    when 'small_talk'
+      @comment.report_key = params[:column]
+    else
+      @comment.report_key = 'column_value_ids'
+      @comment.column_id = params[:column]
+    end
+
+    return if request.get? || request.head?
+
+    @comment.body = params.dig(:comment, :body)
+
+    render_create @comment.save, location: { action: :index }, render: { template: "comment" }
   end
 end

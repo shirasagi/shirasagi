@@ -1,9 +1,11 @@
 .mod-gws-daily-report-custom_form {
   .share-cell {
-    background-color: #fd8;
+    background-color: #ffe9b7;
   }
   .share-value {
+    margin-top: 1em;
     color: #38c;
+    font-weight: bold;
   }
 }
 
@@ -24,11 +26,19 @@
   .limited-access {
     color: #f40;
   }
+  .list-head-action {
+    float: none;
+  }
   .share-cell {
-    background-color: #fd8;
+    background-color: #ffe9b7;
   }
   .share-value {
+    margin-top: 1em;
     color: #38c;
+    font-weight: bold;
+  }
+  .table-wrap {
+    overflow-x: scroll;
   }
   header {
     .search {
@@ -50,5 +60,46 @@
         .btn-print { display: none; }
       }
     }
+  }
+  table.index {
+    width: auto;
+    thead th {
+      text-align: center;
+      white-space: nowrap;
+    }
+    td {
+      vertical-align: top;
+    }
+    tr td {
+      &:first-child {
+        white-space: nowrap;
+      }
+      &:nth-child(n+3) {
+        min-width: 170px;
+      }
+    }
+  }
+}
+
+.gws-daily-report-print {
+  .share-value {
+    margin-top: 1em;
+    font-weight: bold;
+  }
+  table.index {
+    width: auto;
+    border-collapse: collapse;
+    thead th {
+      text-align: center;
+    }
+    td {
+      vertical-align: top;
+    }
+    th,td {
+      border: 1px solid #dcdcdc;
+    }
+  }
+  .horizontal .sheet {
+    height: auto;
   }
 }

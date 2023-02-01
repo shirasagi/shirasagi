@@ -26,9 +26,11 @@ class Gws::DailyReport::ReportsController < ApplicationController
   def set_forms
     @forms ||= begin
       criteria = Gws::DailyReport::Form.site(@cur_site)
+      if params[:state] != 'preview'
+        criteria = criteria.in(daily_report_group_id: @cur_group.id)
+        criteria = criteria.where(year: @cur_site.fiscal_year)
+      end
       criteria = criteria.readable(@cur_user, site: @cur_site)
-      criteria = criteria.in(daily_report_group_id: @cur_group.id)
-      criteria = criteria.where(year: @cur_site.fiscal_year)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
@@ -60,8 +62,16 @@ class Gws::DailyReport::ReportsController < ApplicationController
   def set_active_year_range
     @active_year_range ||= begin
       items = @model.unscoped.site(@cur_site).without_deleted.search(@s).order_by(daily_report_date: 1)
-      start_date = @cur_site.fiscal_first_date([items.first.try(:daily_report_date), Time.zone.now].min.year).beginning_of_month
-      end_date = @cur_site.fiscal_last_date([items.last.try(:daily_report_date), Time.zone.now].max.year).beginning_of_month
+      start_date = [Time.zone.now]
+      start_date << items.first.daily_report_date if items.first.try(:daily_report_date).present?
+      start_date = @cur_site.
+        fiscal_first_date(@cur_site.fiscal_year(start_date.min)).
+        beginning_of_month
+      end_date = [Time.zone.now]
+      end_date << items.last.daily_report_date if items.last.try(:daily_report_date).present?
+      end_date = @cur_site.
+        fiscal_last_date(@cur_site.fiscal_year(end_date.max)).
+        beginning_of_month
       [start_date, end_date]
     end
   end
@@ -75,6 +85,8 @@ class Gws::DailyReport::ReportsController < ApplicationController
 
     set_search_params
     @items = @model.site(@cur_site).without_deleted.and_month(@cur_month).search(@s)
+    @items = @items.where(daily_report_group_id: @s[:group]) if @s[:group].present?
+    @items = @items.where(user_id: @s[:user]) if @s[:user].present?
 
     return if @model.allowed?(:manage_all, @cur_user, site: @cur_site)
 
@@ -131,6 +143,12 @@ class Gws::DailyReport::ReportsController < ApplicationController
   public
 
   def index
+    if params[:s].blank?
+      @s[:group] ||= @cur_group.id
+      @s[:user] ||= @cur_user.id
+      @items = @items.where(daily_report_group_id: @s[:group])
+      @items = @items.where(user_id: @s[:user])
+    end
     @items = @items.page(params[:page]).per(50)
   end
 

@@ -17,6 +17,8 @@ class Gws::DailyReport::Report
 
   belongs_to :daily_report_group, class_name: 'Gws::Group'
 
+  has_many :comments, class_name: 'Gws::DailyReport::Comment', dependent: :destroy
+
   permit_params :daily_report_date
 
   before_validation :set_name
@@ -58,8 +60,8 @@ class Gws::DailyReport::Report
       Gws::DailyReport::UserReportEnumerator.new(site, user, group, month, all, encoding: encoding)
     end
 
-    def group_csv(site: nil, user: nil, group: nil, encoding: "Shift_JIS")
-      Gws::DailyReport::GroupReportEnumerator.new(site, user, group, all, encoding: encoding)
+    def group_csv(site: nil, user: nil, group: nil, options: {})
+      Gws::DailyReport::GroupReportEnumerator.new(site, user, group, all, options)
     end
 
     def collect_attachments
@@ -89,6 +91,18 @@ class Gws::DailyReport::Report
 
   def destroyable?(user, opts)
     editable?(user, opts)
+  end
+
+  def manageable?(user, opts)
+    return true if allowed?(:manage_all, user, opts)
+    return true if user_id == user.id
+
+    site = opts[:site] || @cur_site || site
+    date = opts[:date] || Time.zone.now
+
+    return false unless allowed?(:manage_private, user, opts)
+    return false if site.fiscal_year(date) != site.fiscal_year
+    user.groups.in_group(site).distinct(:id).include?(daily_report_group_id)
   end
 
   def enum_csv(encoding: "Shift_JIS")
@@ -134,6 +148,15 @@ class Gws::DailyReport::Report
       str << "#{column_value.value}(#{report.user.try(:name)})"
     end
     str.join("\n")
+  end
+
+  def column_comments(report_key)
+    case report_key
+    when 'small_talk'
+      Gws::DailyReport::Comment.where(report_key: report_key, report_id: id)
+    else
+      Gws::DailyReport::Comment.where(report_key: 'column_value_ids', report_id: id, column_id: report_key)
+    end
   end
 
   private

@@ -12,7 +12,7 @@ class Gws::DailyReport::UserReportsController < ApplicationController
   before_action :check_cur_month
   before_action :set_user
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete, :comment]
 
   helper_method :year_month_options, :group_options
 
@@ -61,8 +61,16 @@ class Gws::DailyReport::UserReportsController < ApplicationController
   def set_active_year_range
     @active_year_range ||= begin
       items = @model.unscoped.site(@cur_site).without_deleted.search(@s).order_by(daily_report_date: 1)
-      start_date = @cur_site.fiscal_first_date([items.first.try(:daily_report_date), Time.zone.now].min.year).beginning_of_month
-      end_date = @cur_site.fiscal_last_date([items.last.try(:daily_report_date), Time.zone.now].max.year).beginning_of_month
+      start_date = [Time.zone.now]
+      start_date << items.first.daily_report_date if items.first.try(:daily_report_date).present?
+      start_date = @cur_site.
+        fiscal_first_date(@cur_site.fiscal_year(start_date.min)).
+        beginning_of_month
+      end_date = [Time.zone.now]
+      end_date << items.last.daily_report_date if items.last.try(:daily_report_date).present?
+      end_date = @cur_site.
+        fiscal_last_date(@cur_site.fiscal_year(end_date.max)).
+        beginning_of_month
       [start_date, end_date]
     end
   end
@@ -229,5 +237,25 @@ class Gws::DailyReport::UserReportsController < ApplicationController
       @items.user_csv(site: @cur_site, user: @cur_user, group: @cur_group, month: @cur_month, encoding: encoding),
       type: "text/csv; charset=#{encoding}", filename: filename
     )
+  end
+
+  def comment
+    @comment = Gws::DailyReport::Comment.new
+    @comment.cur_site = @cur_site
+    @comment.cur_user = @cur_user
+    @comment.report_id = params[:id]
+    case params[:column]
+    when 'small_talk'
+      @comment.report_key = params[:column]
+    else
+      @comment.report_key = 'column_value_ids'
+      @comment.column_id = params[:column]
+    end
+
+    return if request.get? || request.head?
+
+    @comment.body = params.dig(:comment, :body)
+
+    render_create @comment.save, location: { action: :index }, render: { template: "comment" }
   end
 end

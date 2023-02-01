@@ -2,8 +2,10 @@
 <% @cur_form ||= (@item.cur_form || @item.form) %>
 
 <dl class="see mod-gws-daily-report-custom_form">
-  <dt><%= @model.t :limited_access %><%= @model.tt :limited_access %></dt>
-  <dd><%= f.text_area :limited_access %></dd>
+  <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @item.user.blank? || @item.user_id == @cur_user.id %>
+    <dt><%= @model.t :limited_access %><%= @model.tt :limited_access %></dt>
+    <dd><%= f.text_area :limited_access %></dd>
+  <% end %>
 
   <dt><%= @model.t :small_talk %><%= @model.tt :small_talk %></dt>
   <dd><%= f.text_area :small_talk %></dd>
