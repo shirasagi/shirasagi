@@ -1,3 +1,4 @@
+<%= javascript_include_tag "inquiry/chart" %>
 <%= jquery do %>Inquiry_Chart.drawBar(".graph-canvas");<% end %>
 
 <% if @cur_node.inquiry_results_html.present? %>
