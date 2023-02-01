@@ -53,7 +53,10 @@ module Cms::CrudFilter
     @items = []
 
     role_action = :edit
-    role_action = :release if @change_state && @item.class.include?(Cms::Addon::Release)
+    if @model.include?(Cms::Addon::Release)
+      role_action = :release if @change_state == 'public'
+      role_action = :close if @change_state == 'closed'
+    end
 
     entries.each do |item|
       if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
