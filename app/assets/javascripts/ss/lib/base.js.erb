@@ -25,6 +25,8 @@ this.SS = (function () {
   SS.defaultTimeoutMillis = <%= SS.config.ss.dc_guard_timeout_millis %>;
 
   SS.KEY_ENTER = 13;
+  SS.DEFAULT_DATE_FORMAT = '%Y/%m/%d';
+  SS.DEFAULT_TIME_FORMAT = '%Y/%m/%d %H:%M';
 
   SS.isReady = false;
   var readyPromise = new Promise(function(resolve, _reject) {
@@ -541,11 +543,15 @@ this.SS = (function () {
     if (!time) {
       return time;
     }
-    if (!format) {
-      format = "default"
+    if ("i18next" in window) {
+      if (!format) {
+        format = "default"
+      }
+      format = i18next.t("time.formats." + format, format);
+      format = SS.convertDateTimeFormat(format);
+    } else {
+      format = SS.DEFAULT_TIME_FORMAT;
     }
-    format = i18next.t("time.formats." + format, format);
-    format = SS.convertDateTimeFormat(format);
 
     return moment(time).format(format);
   };
@@ -554,11 +560,15 @@ this.SS = (function () {
     if (!date) {
       return date;
     }
-    if (!format) {
-      format = "default"
+    if ("i18next" in window) {
+      if (!format) {
+        format = "default"
+      }
+      format = i18next.t("date.formats." + format, format);
+      format = SS.convertDateTimeFormat(format);
+    } else {
+      format = SS.DEFAULT_DATE_FORMAT;
     }
-    format = i18next.t("date.formats." + format, format);
-    format = SS.convertDateTimeFormat(format);
 
     return moment(date).format(format);
   };
