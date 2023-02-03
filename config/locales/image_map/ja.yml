@@ -1,0 +1,63 @@
+ja:
+  image_map:
+    page: エリアページ
+
+  modules:
+    image_map: イメージマップ
+    addons:
+      image_map/image_setting: 画像設定
+      image_map/area: イメージマップ
+
+  cms:
+    nodes:
+      image_map/page: イメージマップ
+    parts:
+      image_map/page: イメージマップ
+
+  cms_role:
+    read_other_image_map_pages: エリアページの閲覧（全て）
+    read_private_image_map_pages: エリアページの閲覧（所有）
+    edit_other_image_map_pages: エリアページの編集（全て）
+    edit_private_image_map_pages: エリアページの編集（所有）
+    delete_other_image_map_pages: エリアページの削除（全て）
+    delete_private_image_map_pages: エリアページの削除（所有）
+    release_other_image_map_pages: エリアページの公開（全て）
+    release_private_image_map_pages: エリアページの公開（所有）
+    approve_other_image_map_pages: エリアページの承認（全て）
+    approve_private_image_map_pages: エリアページの承認（所有）
+    reroute_other_image_map_pages: エリアページの承認経路変更（全て）
+    reroute_private_image_map_pages: エリアページの承認経路変更（所有）
+    revoke_other_image_map_pages: エリアページの承認申請取消（全て）
+    revoke_private_image_map_pages: エリアページの承認申請取消（所有）
+    unlock_other_image_map_pages: エリアページのロック解除（全て）
+
+  mongoid:
+    models:
+      image_map/page: エリアページ
+    attributes:
+      image_map/addon/image_setting:
+        image_id: 画像
+        area_states: エリアステータス
+        area_state_name: 名称
+        area_state_value: 値
+      image_map/addon/area:
+        in_area: クリックエリア
+        link_url: リンクURL
+        area_state: エリアステータス
+
+  tooltip:
+    image_map/addon/image_setting:
+      image_id:
+        - 画像を入力します。
+      area_states:
+        - エリアページのステータスを設定できます。
+    image_map/page:
+      name:
+        - ページタイトルを入力します。
+      in_area:
+        - 画像からエリアを選択します。
+      link_url:
+        - エリアをクリックした際に遷移するURLを入力します。
+        - 入力がない場合、本文へのアンカーリンクとなります。
+      area_state:
+        - エリアのステータスを選択します。

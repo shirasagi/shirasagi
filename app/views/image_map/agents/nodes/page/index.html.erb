@@ -1,0 +1,32 @@
+<%
+  return if @cur_node.nil?
+  return if @image.nil?
+%>
+
+<div class="image-map-pages pages">
+  <%== @cur_node.upper_html.html_safe if @cur_node.upper_html.present? %>
+
+  <%= image_tag @image.url, usemap: "\##{@usemap}" %>
+
+  <% if @items.present? %>
+    <map name="<%= @usemap %>">
+      <% @items.each do |item| %>
+        <area
+          shape="<%= item.shape %>"
+          coords="<%= item.coords.join(",") %>"
+          href="<%= item.link_url.present? ? item.link_url : "\##{item.area_anchor}" %>"
+          data-state="<%= item.area_state %>"
+          data-name="<%= item.label :area_state %>">
+      <% end %>
+    </map>
+    <div class="area-contents">
+      <% @items.each do |item| %>
+        <div class="area-content" id="<%= item.area_anchor %>">
+          <%== item.render_html%>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%== @cur_node.lower_html.html_safe if @cur_node.lower_html.present? %>
+</div>
