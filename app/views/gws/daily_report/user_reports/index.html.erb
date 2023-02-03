@@ -70,7 +70,9 @@
             <% end %>
             <% if report.share_small_talk.present? %>
               <td class="share-cell">
-                <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: 'small_talk'), { class: 'add-plan' } %></div>
+                <% if report.user_id != @cur_user.id %>
+                  <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: 'small_talk'), { class: 'add-plan' } %></div>
+                <% end %>
                 <div class="report-value"><%= br report.small_talk %></div>
                 <div class="share-value"><%= t('gws/daily_report.shared') %></div>
                 <% report.column_comments('small_talk').each do |comment| %>
@@ -80,7 +82,9 @@
             <% else %>
               <td>
                 <% if report.manageable?(@cur_user, site: @cur_site, date: date) && report.small_talk.present? %>
-                  <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: 'small_talk'), { class: 'add-plan' } %></div>
+                  <% if report.user_id != @cur_user.id %>
+                    <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: 'small_talk'), { class: 'add-plan' } %></div>
+                  <% end %>
                   <div class="report-value"><%= br report.small_talk %></div>
                   <% report.column_comments('small_talk').each do |comment| %>
                     <div class="comment-value"><%= br "#{comment.body}(#{comment.user.try(:name)})" %></div>
@@ -91,7 +95,9 @@
             <% report.column_values.each do |column_value| %>
               <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
                 <td class="share-cell">
-                  <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: column_value.column_id), { class: 'add-plan' } %></div>
+                  <% if report.user_id != @cur_user.id %>
+                    <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: column_value.column_id), { class: 'add-plan' } %></div>
+                  <% end %>
                   <div class="report-value"><%= br column_value.value %></div>
                   <div class="share-value"><%= t('gws/daily_report.shared') %></div>
                   <% report.column_comments(column_value.column_id).each do |comment| %>
@@ -101,7 +107,9 @@
               <% else %>
                 <td>
                   <% if report.manageable?(@cur_user, site: @cur_site, date: date) && column_value.value.present? %>
-                    <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: column_value.column_id), { class: 'add-plan' } %></div>
+                    <% if report.user_id != @cur_user.id %>
+                      <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: column_value.column_id), { class: 'add-plan' } %></div>
+                    <% end %>
                     <div class="report-value"><%= br column_value.value %></div>
                     <% report.column_comments(column_value.column_id).each do |comment| %>
                       <div class="comment-value"><%= br "#{comment.body}(#{comment.user.try(:name)})" %></div>

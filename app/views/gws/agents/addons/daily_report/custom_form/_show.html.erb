@@ -17,6 +17,9 @@
       <%= @model.t(:share_small_talk) %>
     </div>
   <% end %>
+  <% @item.column_comments('small_talk').each do |comment| %>
+    <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+  <% end %>
 
 <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
   <% column = value.column %>
@@ -34,6 +37,9 @@
     <div class="share-value">
       <%= @model.t(:share_column_ids) %>
     </div>
+  <% end %>
+  <% @item.column_comments(value.column_id).each do |comment| %>
+    <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
   <% end %>
 <% end %>
 </dl>

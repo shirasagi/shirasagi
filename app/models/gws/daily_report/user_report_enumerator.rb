@@ -92,13 +92,20 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
   end
 
   def to_small_talk(report)
+    text = []
     if report.share_small_talk.present?
-      [report.small_talk, I18n.t('gws/daily_report.shared')].join("\n")
+      text << report.small_talk
+      text << I18n.t('gws/daily_report.shared')
+      report.column_comments('small_talk').each do |comment|
+        text << "#{comment.body}(#{comment.user.try(:name)})"
+      end
     elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
-      report.small_talk
-    else
-      nil
+      text << report.small_talk
+      report.column_comments('small_talk').each do |comment|
+        text << "#{comment.body}(#{comment.user.try(:name)})"
+      end
     end
+    text.join("\n")
   end
 
   def to_column_value(form, column, report)
@@ -107,13 +114,20 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
     column_value = report.column_values.where(column_id: column.id).first
     return nil if column_value.blank?
 
+    text = []
     if report.share_column_ids.include?(column.id.to_s)
-      [column_value.value, I18n.t('gws/daily_report.shared')].join("\n")
+      text << column_value.value
+      text << I18n.t('gws/daily_report.shared')
+      report.column_comments(column.id).each do |comment|
+        text << "#{comment.body}(#{comment.user.try(:name)})"
+      end
     elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
-      column_value.value
-    else
-      nil
+      text << column_value.value
+      report.column_comments(column.id).each do |comment|
+        text << "#{comment.body}(#{comment.user.try(:name)})"
+      end
     end
+    text.join("\n")
   end
 
   def encode(str)
