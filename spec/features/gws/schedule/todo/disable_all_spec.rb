@@ -10,7 +10,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
   describe "#disable_all" do
     it do
       visit gws_schedule_todo_readables_path gws_site, "-"
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.disable-all').click
       end

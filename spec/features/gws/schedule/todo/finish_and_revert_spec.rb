@@ -64,7 +64,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
   describe "#finish_all" do
     it do
       visit gws_schedule_todo_readables_path gws_site, "-"
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.finish-all').click
       end
@@ -93,7 +93,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
       select I18n.t("gws/schedule/todo.options.todo_state_filter.finished"), from: "s[todo_state]"
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.revert-all').click
       end

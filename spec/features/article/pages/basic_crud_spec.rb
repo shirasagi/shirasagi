@@ -55,19 +55,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it "#move" do
       visit move_path
-      within "form" do
+      within "form#item-form" do
         fill_in "destination", with: "docs/destination"
         click_on I18n.t("ss.buttons.move")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      within "form#item-form" do
+        expect(page).to have_css("h2", text: "docs/destination.html")
+        expect(page).to have_css(".result", text: I18n.t("article.count"))
+      end
 
-      within "form" do
+      within "form#item-form" do
         fill_in "destination", with: "docs/sample"
         click_on I18n.t("ss.buttons.move")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      within "form#item-form" do
+        expect(page).to have_css("h2", text: "docs/sample.html")
+        expect(page).to have_css(".result", text: I18n.t("article.count"))
+      end
     end
 
     it "#copy" do

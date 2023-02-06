@@ -224,7 +224,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_messages_path(site)
       expect(page).to have_selector('li.list-item')
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.trash-all').click
       end
@@ -234,7 +234,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       click_link I18n.t('gws/memo/folder.inbox_trash')
       expect(page).to have_selector('li.list-item')
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.destroy-all').click
       end
@@ -252,7 +252,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#set_seen_all and #unset_seen_all' do
       visit gws_memo_messages_path(site)
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         click_button I18n.t("gws/memo/message.links.etc")
         find('.set-seen-all').click
@@ -261,7 +261,10 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-item.seen")
       expect(page).to have_no_css(".list-item.unseen")
 
-      find('.list-head label.check input').set(true)
+      page.execute_script("SS.clearNotice();")
+      wait_for_js_ready
+
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         click_button I18n.t("gws/memo/message.links.etc")
         find('.unset-seen-all').click
@@ -273,7 +276,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#set_star_all and #unset_star_all' do
       visit gws_memo_messages_path(site)
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("gws/memo/message.links.etc")
       wait_for_ajax
       page.accept_confirm do
@@ -283,7 +286,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".icon.icon-star.on")
       expect(page).to have_no_css(".icon.icon-star.off")
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("gws/memo/message.links.etc")
       wait_for_ajax
       page.accept_confirm do
@@ -299,7 +302,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       wait_for_ajax
       expect(page).to have_content(I18n.t("gws/memo/folder.inbox"))
       expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         within ".move-menu" do
           click_button I18n.t("ss.links.move")
