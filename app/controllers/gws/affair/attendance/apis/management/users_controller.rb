@@ -1,5 +1,6 @@
 class Gws::Affair::Attendance::Apis::Management::UsersController < ApplicationController
   include Gws::ApiFilter
+  include Gws::Affair::PermissionFilter
 
   model Gws::User
 
