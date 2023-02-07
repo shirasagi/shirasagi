@@ -99,7 +99,7 @@
             <% if report.share_small_talk.present? %>
               <td class="share-cell">
                 <% if report.user_id != @cur_user.id %>
-                  <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_user_report_path(id: report.id, column: 'small_talk'), { class: 'add-plan' } %></div>
+                  <div class="comment-link"><%= link_to t('gws/daily_report.create_comment'), comment_gws_daily_report_group_report_path(id: report.id, column: 'small_talk'), { class: 'add-plan' } %></div>
                 <% end %>
                 <div class="report-value"><%= br report.small_talk %></div>
                 <div class="share-value"><%= t('gws/daily_report.shared') %></div>

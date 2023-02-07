@@ -18,16 +18,16 @@
   <% elsif params[:action] =~ /new|create|lock|destroy_all|download_all|comment/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move|copy|soft_delete|request_cancel/ %>
-    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+    <% if @item.readable?(@cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <%= link_to t('ss.links.print'), action: :print %>
-    <% if @item.editable?(@cur_user, site: @cur_site) %>
+    <% if @item.editable?(@cur_user, site: @cur_site) && (@item.allowed?(:manage_all, @cur_user, site: @cur_site) || @item.user_id == @cur_user.id) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>
-    <% if @item.destroyable?(@cur_user, site: @cur_site) %>
+    <% if @item.destroyable?(@cur_user, site: @cur_site) && (@item.allowed?(:manage_all, @cur_user, site: @cur_site) || @item.user_id == @cur_user.id) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
     <%= link_to t("ss.links.download_csv"), { action: :download_all }, { method: 'get', data: { confirm: t("ss.confirm.download") } } %>

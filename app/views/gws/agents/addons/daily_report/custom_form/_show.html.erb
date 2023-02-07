@@ -8,40 +8,62 @@
     </dd>
   <% end %>
 
-  <dt><%= @model.t :small_talk %></dt>
-  <dd>
-    <%= br @item.small_talk %>
-  </dd>
   <% if @item.share_small_talk.present? %>
+    <dt><%= @model.t :small_talk %></dt>
+    <dd>
+      <%= br @item.small_talk %>
+    </dd>
     <div class="share-value">
       <%= @model.t(:share_small_talk) %>
     </div>
-  <% end %>
-  <% @item.column_comments('small_talk').each do |comment| %>
-    <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+    <% @item.column_comments('small_talk').each do |comment| %>
+      <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+    <% end %>
+  <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @item.small_talk.present? %>
+    <dt><%= @model.t :small_talk %></dt>
+    <dd>
+      <%= br @item.small_talk %>
+    </dd>
+    <% @item.column_comments('small_talk').each do |comment| %>
+      <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+    <% end %>
   <% end %>
 
-<% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
-  <% column = value.column %>
-  <% if column.present? && column.column_show_partial_path.present? %>
-    <%= render column.column_show_partial_path, column: column, value: value %>
-  <% else %>
-    <dt><%= value.name %></dt>
-    <dd>
-      <%= column.try(:prefix_label) %>
-      <%= br value.value %>
-      <%= column.try(:postfix_label) %>
-    </dd>
+  <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+    <% column = value.column %>
+    <% if @item.share_column_ids.include?(column.id.to_s) %>
+      <% if column.present? && column.column_show_partial_path.present? %>
+        <%= render column.column_show_partial_path, column: column, value: value %>
+      <% else %>
+        <dt><%= value.name %></dt>
+        <dd>
+          <%= column.try(:prefix_label) %>
+          <%= br value.value %>
+          <%= column.try(:postfix_label) %>
+        </dd>
+      <% end %>
+      <div class="share-value">
+        <%= @model.t(:share_column_ids) %>
+      </div>
+      <% @item.column_comments(value.column_id).each do |comment| %>
+        <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+      <% end %>
+    <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && value.value.present? %>
+      <% if column.present? && column.column_show_partial_path.present? %>
+        <%= render column.column_show_partial_path, column: column, value: value %>
+      <% else %>
+        <dt><%= value.name %></dt>
+        <dd>
+          <%= column.try(:prefix_label) %>
+          <%= br value.value %>
+          <%= column.try(:postfix_label) %>
+        </dd>
+      <% end %>
+      <% @item.column_comments(value.column_id).each do |comment| %>
+        <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+      <% end %>
+    <% end %>
   <% end %>
-  <% if @item.share_column_ids.to_a.include?(column.id.to_s) %>
-    <div class="share-value">
-      <%= @model.t(:share_column_ids) %>
-    </div>
-  <% end %>
-  <% @item.column_comments(value.column_id).each do |comment| %>
-    <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
-  <% end %>
-<% end %>
 </dl>
 
 <%= jquery do %>
