@@ -1,4 +1,3 @@
-
 module Gws::Addon::Affair::OvertimeFile
   module Compensatory
     extend ActiveSupport::Concern
@@ -35,8 +34,10 @@ module Gws::Addon::Affair::OvertimeFile
       permit_params :week_out_compensatory_minute
 
       # 代休振替
-      attr_accessor :holiday_compensatory_start_at_date, :holiday_compensatory_start_at_hour, :holiday_compensatory_start_at_minute
-      attr_accessor :holiday_compensatory_end_at_date, :holiday_compensatory_end_at_hour, :holiday_compensatory_end_at_minute
+      attr_accessor :holiday_compensatory_start_at_date, :holiday_compensatory_start_at_hour,
+        :holiday_compensatory_start_at_minute
+      attr_accessor :holiday_compensatory_end_at_date, :holiday_compensatory_end_at_hour,
+        :holiday_compensatory_end_at_minute
 
       has_one :holiday_compensatory_leave_file, class_name: "Gws::Affair::LeaveFile",
         inverse_of: :holiday_compensatory_file,  dependent: nil
@@ -45,8 +46,10 @@ module Gws::Addon::Affair::OvertimeFile
       field :holiday_compensatory_end_at, type: DateTime
       field :holiday_compensatory_minute, type: Integer, default: 0
 
-      permit_params :holiday_compensatory_start_at_date, :holiday_compensatory_start_at_hour, :holiday_compensatory_start_at_minute
-      permit_params :holiday_compensatory_end_at_date, :holiday_compensatory_end_at_hour, :holiday_compensatory_end_at_minute
+      permit_params :holiday_compensatory_start_at_date, :holiday_compensatory_start_at_hour,
+        :holiday_compensatory_start_at_minute
+      permit_params :holiday_compensatory_end_at_date, :holiday_compensatory_end_at_hour,
+        :holiday_compensatory_end_at_minute
       permit_params :holiday_compensatory_minute
 
       after_initialize :initialize_start_end
