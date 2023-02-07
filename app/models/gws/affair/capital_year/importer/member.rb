@@ -43,7 +43,7 @@ class Gws::Affair::CapitalYear::Importer::Member < Gws::Affair::CapitalYear::Imp
           last_year_count = last_year_setting.count
           leave_files = last_year_setting.annual_leave_files
           minutes = leave_files.map(&:leave_minutes_in_query).sum
-          effective_minutes = (last_year_setting.annual_leave_minutes - minutes)
+          effective_minutes = (last_year_setting.annual_leave_minutes(cur_site) - minutes)
           effective_minutes = effective_minutes > 0 ? effective_minutes : 0
 
           leaved_count = Gws::Affair::Utils.leave_minutes_to_day(cur_site, minutes)

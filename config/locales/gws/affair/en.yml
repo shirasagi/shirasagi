@@ -107,8 +107,8 @@ en:
         - "%{year}'s leave setting import"
       leave_setting_import_member_last_year:
         - ""
-      leave_setting_download_yearly:
-        - "%{year}'s leave setting export"
+      leave_setting_download_yearly: "%{year}'s leave setting export"
+      leave_minutes_to_day: "%{upper_hour} hours : 1 day + fraction %{threshold_hour} hours : 1 day"
       capital_import_group:
         - "%{year}'s capital setting import"
       capital_import_member:

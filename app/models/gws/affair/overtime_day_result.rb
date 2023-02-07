@@ -5,7 +5,7 @@ class Gws::Affair::OvertimeDayResult
   include Gws::Reference::Site
   include Gws::Addon::Affair::Capital
   include Gws::Addon::Affair::FileTarget
-  include Gws::Affair::OvertimeDayResult::Aggregate
+  include Gws::Addon::Affair::OvertimeDayResult::Aggregate
 
   belongs_to :file, class_name: "Gws::Affair::OvertimeFile"
 

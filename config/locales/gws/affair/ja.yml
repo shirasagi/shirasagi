@@ -112,9 +112,8 @@ ja:
         - ""
         - "%{year} の有効日数、取得日数、残日数がある場合は、ユーザー設定CSVに参考列として出力されます。"
         - "この列はインポートには影響しません。"
-      leave_setting_download_yearly:
-        - "%{year} の有効日数（保有日数）と残日数を出力します。"
-        - "%{upper_hour} 時間 : １日 + 端数 %{threshold_hour} 時間 : １日"
+      leave_setting_download_yearly: "%{year} の有効日数（保有日数）と残日数を出力します。"
+      leave_minutes_to_day: "%{upper_hour} 時間 : 1日 + 端数 %{threshold_hour} 時間 : 1日"
       capital_import_group:
         - "%{year} の原資区分にグループの紐付け（参加グループ）を一括設定する画面です。"
         - "原資区分を登録し、グループ設定をダウンロードしてください。"
