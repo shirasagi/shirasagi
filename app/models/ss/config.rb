@@ -11,7 +11,7 @@ class SS::Config
 
   class << self
     def setup
-      new(Rails.root)
+      new("#{Rails.root}/config")
     end
   end
 
@@ -28,7 +28,7 @@ class SS::Config
   private
 
   def config_paths
-    @config_paths ||= [ "#{@base_dir}/config/defaults".freeze, "#{@base_dir}/config".freeze ].freeze
+    @config_paths ||= [ "#{@base_dir}/defaults".freeze, "#{@base_dir}".freeze ].freeze
   end
 
   def load_config(name, section = nil)
