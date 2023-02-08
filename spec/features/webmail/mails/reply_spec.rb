@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
+describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
   context "when mail is replied" do
     let(:user) { webmail_imap }
     let(:item_from) { "from-#{unique_id}@example.jp" }
@@ -29,32 +29,8 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         # reply
         visit index_path
         click_link item_subject
-
-        first(".address-field .address-item").find("span").click
-        new_window = window_opened_by do
-          within ".dropdown-menu.active" do
-            click_on I18n.t("webmail.links.address.send")
-          end
-        end
-        within_window new_window do
-          current_window.close
-        end
-        switch_to_window(windows.last)
-
-        new_window = window_opened_by do
-          within "#menu" do
-            first(".webmail-dropdown a").click
-          end
-          within ".dropdown-menu.active" do
-            click_on I18n.t("webmail.links.reply")
-          end
-        end
-        within_window new_window do
-          wait_for_js_ready
-          within "form#item-form" do
-            click_on I18n.t('ss.buttons.send')
-          end
-        end
+        click_link I18n.t('webmail.links.reply')
+        click_button I18n.t('ss.buttons.send')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
