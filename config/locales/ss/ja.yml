@@ -282,7 +282,7 @@ ja:
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。
-      file_droppable: ファイルをドロップすることでアップロードできます。
+      file_droppable: ここにファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。
