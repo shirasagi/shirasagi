@@ -37,6 +37,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           end
         end
         within_window new_window do
+          wait_for_js_ready
           current_window.close
         end
 
