@@ -1,3 +1,7 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item }, class: "title notice-severity-#{item.severity}" %>
+<% end %>
+
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.restore'), action: :undo_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
@@ -11,10 +15,6 @@
   <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
   <% if item.folder.present? %>
     <span class="folder"><%= t('mongoid.models.gws/notice/folder') %>: <%= item.folder.name %></span>
-  <% end %>
-
-  <% if attr = item.label(:severity).presence %>
-    <span class="label"><%= attr %></span>
   <% end %>
 
   <% if item.categories.present? %>

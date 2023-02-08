@@ -6,14 +6,19 @@ module Gws::Addon::Notice::GroupSetting
 
   included do
     field :notice_new_days, type: Integer
+    field :notice_severity, type: String, default: "all"
     field :notice_browsed_state, type: String, default: "both"
     field :notice_toggle_browsed, type: String, default: "button"
 
-    permit_params :notice_new_days, :notice_browsed_state, :notice_toggle_browsed
+    permit_params :notice_new_days, :notice_browsed_state, :notice_severity, :notice_toggle_browsed
   end
 
   def notice_new_days
     self[:notice_new_days].presence || 7
+  end
+
+  def notice_severity_options
+    %w(all high).map { |m| [I18n.t("gws/notice.options.severity.#{m}"), m] }
   end
 
   def notice_browsed_state_options

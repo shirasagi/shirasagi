@@ -61,7 +61,7 @@ module Gws::Portal::PortalFilter
         else # unread
           @notices = @notices.and_unread(@cur_user)
         end
-
+        @notices = @notices.search_severity(severity: @portal.portal_notice_severity)
         @notices = @notices.reorder(severity: -1, released: -1)
         @notices = @notices.page(1).per(5)
       else

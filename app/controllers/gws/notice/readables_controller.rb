@@ -58,7 +58,8 @@ class Gws::Notice::ReadablesController < ApplicationController
       @s[:folder_ids] += @folder.folders.for_post_reader(@cur_site, @cur_user).pluck(:id)
     end
     @s[:category_id] = @category.id if @category.present?
-    @s[:browsed_state] = @cur_site.notice_browsed_state if @s[:browsed_state].blank?
+    @s[:severity] = @cur_site.notice_severity if @s[:severity].nil?
+    @s[:browsed_state] = @cur_site.notice_browsed_state if @s[:browsed_state].nil?
   end
 
   def set_items

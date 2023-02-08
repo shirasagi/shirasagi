@@ -7,6 +7,9 @@
   <dt><%= @model.t :notice_new_days %><%= @model.tt :notice_new_days %></dt>
   <dd class="short"><%= f.number_field :notice_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
 
+  <dt><%= @model.t :notice_severity %><%= @model.tt :notice_severity %></dt>
+  <dd><%= f.select :notice_severity, @item.notice_severity_options %></dd>
+
   <dt><%= @model.t :notice_browsed_state %><%= @model.tt :notice_browsed_state %></dt>
   <dd><%= f.select :notice_browsed_state, @item.notice_browsed_state_options %></dd>
 

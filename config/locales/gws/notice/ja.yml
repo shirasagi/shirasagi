@@ -10,6 +10,7 @@ ja:
     total_body_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
     total_file_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
     gws_addon_member_head: 投稿者
+    severity: 重要度
     links:
       set_seen: 既読にする
       unset_seen: 未読にする
@@ -29,6 +30,9 @@ ja:
       toggle_browsed:
         button: ボタンで切り替える
         read: 表示した際に既読にする
+      severity:
+        all: 全て表示
+        high: 重要なお知らせ
 
   gws_role:
     use_gws_notice: お知らせの利用
@@ -126,6 +130,7 @@ ja:
       gws/addon/notice/group_setting:
         notice_new_days: 新着表示期間
         notice_browsed_state: 未読・既読
+        notice_severity: 重要度
         notice_toggle_browsed: 既読への変更
 
   tooltip:
@@ -153,9 +158,11 @@ ja:
       notice_new_days:
         - 新着表示期間を入力します。
       notice_browsed_state:
-        - 既定の表示ステータスを選択します。
+        - 表示するお知らせの状態を選択します。
+      notice_severity:
+        - 表示するお知らせの重要度を選択します。
       notice_toggle_browsed:
-        - 既読へ変更する動作を選択します。
+        - 既読へ変更する際の動作（設定方法）を選択します。
 
   job:
     models:

@@ -15,7 +15,7 @@
 %>
 
 <% @index_title = proc do |item| %>
-  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+  <%= link_to item.name, { action: :show, id: item }, class: "title notice-severity-#{item.severity}" %>
   <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 <% end %>
 

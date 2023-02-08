@@ -11,15 +11,13 @@ module Gws::Addon::Portal::Portlet
       embeds_ids :notice_categories, class_name: "Gws::Notice::Category"
       embeds_ids :notice_folders, class_name: "Gws::Notice::Folder"
 
-      before_validation :set_notice_browsed_state, if: ->{ notice_browsed_state.blank? }
+      before_validation :set_default_notice_setting
 
       permit_params :notice_severity, :notice_browsed_state, notice_category_ids: [], notice_folder_ids: []
     end
 
     def notice_severity_options
-      [
-        [I18n.t('gws.options.severity.high'), 'high'],
-      ]
+      %w(all high).map { |m| [I18n.t("gws/notice.options.severity.#{m}"), m] }
     end
 
     def notice_browsed_state_options
@@ -56,10 +54,16 @@ module Gws::Addon::Portal::Portlet
 
     private
 
-    def set_notice_browsed_state
+    def set_default_notice_setting
       site = cur_site || site
       return unless site
-      self.notice_browsed_state = site.notice_browsed_state
+
+      if notice_severity.blank?
+        self.notice_severity = site.notice_severity
+      end
+      if notice_browsed_state.blank?
+        self.notice_browsed_state = site.notice_browsed_state
+      end
     end
   end
 end

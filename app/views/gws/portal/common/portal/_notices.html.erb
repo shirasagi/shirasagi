@@ -50,6 +50,12 @@
       <% end %>
     <% end %>
   </ul>
-  <div class="more"><%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(folder_id: '-', category_id: '-') %></div>
+  <div class="more">
+    <%
+      options = { category_id: "-", folder_id: "-" }
+      options[:s] = { severity: @item.portal_notice_severity }
+    %>
+    <%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(options) %>
+  </div>
 </div>
 <% end %>

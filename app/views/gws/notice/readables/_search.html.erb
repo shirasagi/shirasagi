@@ -1,6 +1,7 @@
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.select :browsed_state, @model.new.browsed_state_options, include_blank: t('gws/board.options.browsed_state.both') %>
+    <%= f.select :severity, @model.new.severity_options, include_blank: t("gws/notice.severity") %>
     <%= f.text_field :keyword, style: "width: 240px;" %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>

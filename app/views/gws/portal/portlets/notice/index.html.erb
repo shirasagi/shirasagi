@@ -15,7 +15,7 @@
       %>
       <li class="<%= css_classes.join(' ') %>">
         <div class="info">
-          <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'title' %>
+          <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: "title notice-severity-#{item.severity}" %>
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
@@ -44,6 +44,12 @@
   </ul>
 
   <% if items.next_page %>
-    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_notice_main_path %></div>
+    <div class="list-more">
+      <%
+        options = { category_id: "-", folder_id: "-" }
+        options[:s] = { severity: @portlet.notice_severity }
+      %>
+      <%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(options) %>
+    </div>
   <% end %>
 </div>

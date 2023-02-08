@@ -208,6 +208,7 @@ ja:
       gws/addon/portal/notice_setting:
         portal_notice_state: 表示・非表示
         portal_notice_browsed_state: 未読・既読
+        portal_notice_severity: 重要度
       gws/addon/portal/monitor_setting:
         portal_monitor_state: 表示・非表示
       gws/addon/portal/link_setting:
@@ -231,7 +232,9 @@ ja:
       portal_notice_state:
         - ポータルにお知らせを表示するか、しないかを選択します。
       portal_notice_browsed_state:
-        - ポータルにお知らせを表示するを選択した際に、未読のみを表示するか、未読と既読の両方を表示するかを選択します。
+        - ポータルにお知らせを表示するを選択した際に、どの状態のお知らせを表示するか選択します。
+      portal_notice_severity:
+        - ポータルにお知らせを表示するを選択した際に、どの重要度のお知らせを表示するか選択します。
     gws/addon/portal/monitor_setting:
       portal_monitor_state:
         - ポータルに照会・回答を表示するか、しないかを選択します。

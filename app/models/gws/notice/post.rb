@@ -60,6 +60,7 @@ class Gws::Notice::Post
 
     def search_severity(params)
       return all if params.blank? || params[:severity].blank?
+      return all if params[:severity] == "all"
       all.where(severity: params[:severity])
     end
 
