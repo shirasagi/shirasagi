@@ -53,7 +53,7 @@
   <div class="more">
     <%
       options = { category_id: "-", folder_id: "-" }
-      options[:s] = { severity: @item.portal_notice_severity }
+      options[:s] = { severity: @item.portal_notice_severity, browsed_state: @item.portal_notice_browsed_state }
     %>
     <%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(options) %>
   </div>

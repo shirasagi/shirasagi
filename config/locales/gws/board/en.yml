@@ -47,7 +47,7 @@ en:
       browsed_state:
         read: Read
         unread: Unread
-        both: Both
+        both: All
       severity:
         normal: Normal
         important: Important
@@ -91,7 +91,7 @@ en:
       text: "%{text}"
       mail_text: |
         %{subject}
-        
+
         %{text}
 
     gws/board/post:

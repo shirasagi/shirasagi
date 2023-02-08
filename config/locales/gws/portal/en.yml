@@ -208,6 +208,7 @@ en:
       gws/addon/portal/notice_setting:
         portal_notice_state: Show/Hide
         portal_notice_browsed_state: Unread/Read
+        portal_notice_severity: Severity
       gws/addon/portal/monitor_setting:
         portal_monitor_state: Show/Hide
       gws/addon/portal/link_setting:
@@ -232,6 +233,8 @@ en:
         - Select whether or not to show an announcement in the portal.
       portal_notice_browsed_state:
         - "When you choose to show announcements in the portal, select to show only unread or both unread and read announcements."
+      portal_notice_severity:
+        - "When you choose to show announcements in the portal, select to show severity announcements."
     gws/addon/portal/monitor_setting:
       portal_monitor_state:
         - Select whether or not to show inquiries and responses in the portal.

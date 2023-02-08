@@ -13,7 +13,7 @@ en:
       answered_state:
         answered: Responded
         unanswered: Unanswered
-        both: Both
+        both: All
       file_edit_state:
         disabled: Invalid
         enabled: Valid
@@ -152,7 +152,7 @@ en:
       subject: "A request for response to [Questionnaire] “%{name}” has arrived."
       text: "%{path}"
       mail_text: |
-        %{subject} 
+        %{subject}
 
         %{text}
 

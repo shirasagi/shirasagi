@@ -81,9 +81,15 @@ describe Gws::Portal::UserPortlet, type: :model, dbscope: :example do
         post5.set_browsed!(gws_user)
       end
 
-      context "with blank" do
+      context "with default (site's unread)" do
+        it do
+          expect(subject.length).to eq 2
+        end
+      end
+
+      context "with both" do
         before do
-          portlet.notice_browsed_state = ""
+          portlet.notice_browsed_state = "both"
           portlet.save!
         end
 

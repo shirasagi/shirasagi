@@ -10,6 +10,7 @@ en:
     total_body_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
     total_file_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
     gws_addon_member_head: Contributors
+    severity: Severity
     links:
       set_seen: Mark as read
       unset_seen: Mark as unread
@@ -25,6 +26,13 @@ en:
       reclaimed: Usage has been recalculated.
     prefix:
       copy: "[Duplication]"
+    options:
+      toggle_browsed:
+        button: Toggle by button
+        read: Toggle by read
+      severity:
+        all: All
+        high: High
 
   gws_role:
     use_gws_notice: Use of announcements
@@ -121,6 +129,9 @@ en:
         notice_id: Announcements
       gws/addon/notice/group_setting:
         notice_new_days: Display period for new items
+        notice_browsed_state: Read/Unread
+        notice_severity: Severity
+        notice_toggle_browsed: Toggle Read/Unread
 
   tooltip:
     gws/notice/post:
@@ -146,6 +157,12 @@ en:
     gws/addon/notice/group_setting:
       notice_new_days:
         - Enter the display period for new items.
+      notice_browsed_state:
+        - Select the default browsed state.
+      notice_severity:
+        - Select the default severity.
+      notice_toggle_browsed:
+        - Select the toggle method.
 
   job:
     models:
