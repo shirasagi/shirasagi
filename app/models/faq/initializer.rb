@@ -12,6 +12,8 @@ module Faq
     Cms::Role.permission :delete_private_faq_pages
     Cms::Role.permission :release_other_faq_pages
     Cms::Role.permission :release_private_faq_pages
+    Cms::Role.permission :close_other_faq_pages
+    Cms::Role.permission :close_private_faq_pages
     Cms::Role.permission :approve_other_faq_pages
     Cms::Role.permission :approve_private_faq_pages
     Cms::Role.permission :reroute_other_faq_pages

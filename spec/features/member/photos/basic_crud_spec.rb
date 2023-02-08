@@ -48,6 +48,34 @@ describe "member_photos", type: :feature, dbscope: :example do
     end
   end
 
+  describe "workflow", js: true do
+    before { login_cms_user }
+
+    it do
+      visit edit_path
+      expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+      expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+
+      item.update state: 'close'
+      visit edit_path
+      expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
+      expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+
+      # not permitted
+      role = cms_user.cms_roles[0]
+      role.update permissions: role.permissions.reject { |k, v| k =~ /^(release_|close_)/ }
+
+      visit edit_path
+      expect(page).to have_no_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
+      expect(page).to have_no_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+
+      item.update state: 'public'
+      visit edit_path
+      expect(page).to have_no_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
+      expect(page).to have_no_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+    end
+  end
+
   context "set center and zoom" do
     before { login_cms_user }
     before do

@@ -207,8 +207,8 @@ module Cms::PageFilter
     if %w(ready public).include?(@item.state_was)
       if @item.is_a?(Workflow::Addon::Branch) && @item.branch?
         # 差し替えページは公開権限がなくても取り下げ保存が可能
-      elsif !@item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
-        # 公開ページだった場合、非公開とするには公開権限が必要
+      elsif !@item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node)
+        # 公開ページだった場合、非公開とするには非公開権限が必要
         raise "403"
       end
     end

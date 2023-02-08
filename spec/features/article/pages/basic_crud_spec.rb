@@ -195,7 +195,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "not permited and contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
-                                    release_private_article_pages release_other_article_pages))
+                                    release_private_article_pages release_other_article_pages
+                                    close_private_article_pages close_other_article_pages))
         visit edit_path2
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
@@ -207,7 +208,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "not permited and not contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
-                                    release_private_article_pages release_other_article_pages))
+                                    release_private_article_pages release_other_article_pages
+                                    close_private_article_pages close_other_article_pages))
         visit edit_path
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
