@@ -44,6 +44,8 @@ module Member
     Cms::Role.permission :delete_private_member_blogs
     Cms::Role.permission :release_other_member_blogs
     Cms::Role.permission :release_private_member_blogs
+    Cms::Role.permission :close_other_member_blogs
+    Cms::Role.permission :close_private_member_blogs
     Cms::Role.permission :approve_other_member_blogs
     Cms::Role.permission :approve_private_member_blogs
     Cms::Role.permission :reroute_other_member_blogs
@@ -59,6 +61,8 @@ module Member
     Cms::Role.permission :delete_private_member_photos
     Cms::Role.permission :release_other_member_photos
     Cms::Role.permission :release_private_member_photos
+    Cms::Role.permission :close_other_member_photos
+    Cms::Role.permission :close_private_member_photos
     Cms::Role.permission :approve_other_member_photos
     Cms::Role.permission :approve_private_member_photos
     Cms::Role.permission :reroute_other_member_photos
