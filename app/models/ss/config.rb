@@ -28,7 +28,7 @@ class SS::Config
   private
 
   def config_paths
-    @config_paths ||= [ "#{@base_dir}/defaults".freeze, "#{@base_dir}".freeze ].freeze
+    @config_paths ||= [ "#{@base_dir}/defaults", @base_dir ].freeze
   end
 
   def load_config(name, section = nil)
