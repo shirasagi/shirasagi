@@ -1,9 +1,11 @@
+<% @item.notice_browsed_state ||= @cur_site.notice_browsed_state %>
+
 <dl class="see">
   <dt><%= @model.t :notice_severity %><%= @model.tt :notice_severity %></dt>
   <dd><%= f.select :notice_severity, @item.notice_severity_options, include_blank: true %></dd>
 
   <dt><%= @model.t :notice_browsed_state %><%= @model.tt :notice_browsed_state %></dt>
-  <dd><%= f.select :notice_browsed_state, @item.notice_browsed_state_options, include_blank: t("gws/board.options.browsed_state.both") %></dd>
+  <dd><%= f.select :notice_browsed_state, @item.notice_browsed_state_options %></dd>
 
   <dt><%= @model.t :notice_category_ids %><%= @model.tt :notice_category_ids %></dt>
   <dd>

@@ -176,7 +176,6 @@ production: &production
     default_notice_total_body_size_limit: 31_457_280
     default_notice_individual_file_size_limit: 10_485_760
     default_notice_total_file_size_limit: 31_457_280
-    portal_browsed_state: unread
 
   # Default state and style label in user presence
   presence:

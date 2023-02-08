@@ -58,7 +58,7 @@ class Gws::Notice::ReadablesController < ApplicationController
       @s[:folder_ids] += @folder.folders.for_post_reader(@cur_site, @cur_user).pluck(:id)
     end
     @s[:category_id] = @category.id if @category.present?
-    @s[:browsed_state] ||= SS.config.gws.notice['portal_browsed_state'].presence
+    @s[:browsed_state] = @cur_site.notice_browsed_state if @s[:browsed_state].blank?
   end
 
   def set_items
@@ -86,6 +86,9 @@ class Gws::Notice::ReadablesController < ApplicationController
   end
 
   def show
+    if @cur_site.notice_toggle_by_read? && !@item.browsed?(@cur_user)
+      @item.set_browsed!(@cur_user)
+    end
     render
   end
 

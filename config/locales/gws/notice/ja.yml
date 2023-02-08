@@ -25,6 +25,10 @@ ja:
       reclaimed: 使用量を再計算しました。
     prefix:
       copy: 【複製】
+    options:
+      toggle_browsed:
+        button: ボタンで切り替える
+        read: 表示した際に既読にする
 
   gws_role:
     use_gws_notice: お知らせの利用
@@ -121,6 +125,8 @@ ja:
         notice_id: お知らせ
       gws/addon/notice/group_setting:
         notice_new_days: 新着表示期間
+        notice_browsed_state: 未読・既読
+        notice_toggle_browsed: 既読への変更
 
   tooltip:
     gws/notice/post:
@@ -146,6 +152,10 @@ ja:
     gws/addon/notice/group_setting:
       notice_new_days:
         - 新着表示期間を入力します。
+      notice_browsed_state:
+        - 既定の表示ステータスを選択します。
+      notice_toggle_browsed:
+        - 既読へ変更する動作を選択します。
 
   job:
     models:

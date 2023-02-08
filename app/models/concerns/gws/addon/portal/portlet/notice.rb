@@ -7,9 +7,12 @@ module Gws::Addon::Portal::Portlet
 
     included do
       field :notice_severity, type: String
-      field :notice_browsed_state, type: String, default: "unread"
+      field :notice_browsed_state, type: String
       embeds_ids :notice_categories, class_name: "Gws::Notice::Category"
       embeds_ids :notice_folders, class_name: "Gws::Notice::Folder"
+
+      before_validation :set_notice_browsed_state, if: ->{ notice_browsed_state.blank? }
+
       permit_params :notice_severity, :notice_browsed_state, notice_category_ids: [], notice_folder_ids: []
     end
 
@@ -20,7 +23,7 @@ module Gws::Addon::Portal::Portlet
     end
 
     def notice_browsed_state_options
-      %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
+      %w(both unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
     end
 
     def find_notice_items(portal, user)
@@ -49,6 +52,14 @@ module Gws::Addon::Portal::Portlet
         search(search).
         page(1).
         per(limit)
+    end
+
+    private
+
+    def set_notice_browsed_state
+      site = cur_site || site
+      return unless site
+      self.notice_browsed_state = site.notice_browsed_state
     end
   end
 end
