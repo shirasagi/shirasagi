@@ -1,9 +1,15 @@
 module SS::Config
   class << self
+    def config_paths
+      @config_paths ||= [ "#{Rails.root}/config/defaults".freeze, "#{Rails.root}/config".freeze ].freeze
+    end
+
     def setup
       @@config = {}
-      Dir.glob("#{Rails.root}/config/defaults/*.yml").each do |path|
-        @@config[File.basename(path, '.yml').to_sym] = nil
+      config_paths.each do |config_path|
+        Dir.glob("#{config_path}/*.yml").each do |path|
+          @@config[File.basename(path, '.yml').to_sym] = nil
+        end
       end
       self
     end
@@ -15,9 +21,11 @@ module SS::Config
     end
 
     def load_config(name, section = nil)
-      conf = load_yml("#{Rails.root}/config/defaults/#{name}.yml", section)
-      path = "#{Rails.root}/config/#{name}.yml"
-      conf = conf.deep_merge(load_yml(path, section)) if File.exist?(path)
+      conf = {}
+      config_paths.each do |config_path|
+        path = "#{config_path}/#{name}.yml"
+        conf = conf.deep_merge(load_yml(path, section)) if ::File.exist?(path)
+      end
 
       struct = OpenStruct.new(conf).freeze
       define_singleton_method(name) { struct }
