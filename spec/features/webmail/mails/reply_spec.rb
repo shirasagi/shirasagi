@@ -37,9 +37,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           end
         end
         within_window new_window do
-          wait_for_js_ready
           current_window.close
         end
+        switch_to_window(windows.last)
 
         new_window = window_opened_by do
           within "#menu" do
