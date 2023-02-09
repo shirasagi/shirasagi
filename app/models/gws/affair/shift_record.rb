@@ -1,7 +1,7 @@
 # rubocop:disable Rails/Delegate
 class Gws::Affair::ShiftRecord
   include SS::Document
-  include Gws::Affair::ShiftRecord::Export
+  include Gws::Addon::Affair::ShiftRecord::Exporter
   include Gws::SitePermission
 
   set_permission_name 'gws_affair_shift_calendars'
