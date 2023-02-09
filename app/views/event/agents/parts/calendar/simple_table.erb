@@ -2,6 +2,10 @@
 
 <div class="event-calendar">
   <nav class="calendar-nav" aria-label="<%= t("event.prev_next_navi") %>">
+    <h2>
+      <span class="calendar-year"><%= @year %><%= t("datetime.prompts.year") %></span>
+      <span class="calendar-month"><%= @month %><%= t("datetime.prompts.month") %></span>
+    </h2>
     <ul>
       <li class="prev">
         <% if within_one_year?(@prev_month_date) %>
@@ -22,29 +26,32 @@
       </li>
     </ul>
   </nav>
-  <table class="calendar">
-    <caption>
-      <%= link_to_monthly @current_month_date, name: I18n.l(@current_month_date.to_date, format: :long_month), path: @cur_part.parent.try(:url).to_s %>
-    </caption>
-    <thead>
-      <tr>
-        <% t_wdays.each do |wday| %>
-          <th scope="col"><span class="wday"><%= wday %><span class="unit"><%= t_date('wday') %></span></span></th>
+
+  <div class="event-table">
+    <table class="calendar">
+      <caption>
+        <%= link_to_monthly @current_month_date, name: I18n.l(@current_month_date.to_date, format: :long_month), path: @cur_part.parent.try(:url).to_s %>
+      </caption>
+      <thead>
+        <tr>
+          <% t_wdays.each do |wday| %>
+            <th scope="col"><span class="wday"><%= wday %><span class="unit"><%= t_date('wday') %></span></span></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @dates.each_with_index do |(date, events), i| %>
+          <% if (i % 7) == 0 %>
+            <tr>
+          <% end %>
+          <td class="<%= event_td_class(date, @current_month_date) %>">
+          <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
+          </td>
+          <% if (i % 7) == 6 %>
+            </tr>
+          <% end %>
         <% end %>
-      </tr>
-    </thead>
-    <tbody>
-      <% @dates.each_with_index do |(date, events), i| %>
-        <% if (i % 7) == 0 %>
-          <tr>
-        <% end %>
-        <td class="<%= event_td_class(date, @current_month_date) %>">
-        <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
-        </td>
-        <% if (i % 7) == 6 %>
-          </tr>
-        <% end %>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>

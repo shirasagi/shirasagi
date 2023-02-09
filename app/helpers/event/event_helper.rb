@@ -26,9 +26,11 @@ module Event::EventHelper
     cls = event_dl_class(date)
     cls = "#{cls} today" if date == Time.zone.today
 
-    if date.month > cdate.month
+    first_date = date.to_date.beginning_of_month
+    first_cdate = cdate.to_date.beginning_of_month
+    if first_date > first_cdate
       "#{cls} next-month"
-    elsif date.month < cdate.month
+    elsif first_date < first_cdate
       "#{cls} prev-month"
     else
       cls

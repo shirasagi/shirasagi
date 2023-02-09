@@ -2,6 +2,10 @@
 
 <div class="event-calendar">
   <nav class="calendar-nav" aria-label="<%= t("event.prev_next_navi") %>">
+    <h2>
+      <span class="calendar-year"><%= @year %><%= t("datetime.prompts.year") %></span>
+      <span class="calendar-month"><%= @month %><%= t("datetime.prompts.month") %></span>
+    </h2>
     <ul>
       <li class="prev">
         <% if within_one_year?(@prev_month_date) %>
@@ -22,51 +26,54 @@
       </li>
     </ul>
   </nav>
-  <table class="calendar">
-    <caption>
-      <%= link_to_monthly @current_month_date, name: I18n.l(@current_month_date.to_date, format: :long_month), path: @cur_part.parent.try(:url).to_s %>
-    </caption>
-    <thead>
-    <tr>
-      <% t_wdays.each do |wday| %>
-        <th scope="col"><span class="wday"><%= wday %><span class="unit"><%= t_date('wday') %></span></span></th>
-      <% end %>
-    </tr>
-    </thead>
-    <tbody>
-    <% @events.each_with_index do |(date, events), i| %>
-      <% if (i % 7) == 0 %>
-        <tr>
-      <% end %>
-      <td class="<%= event_td_class(date, @date) %>">
-        <div class="date">
-          <div class="daily">
-            <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
-          </div>
 
-          <% if date.national_holiday? %>
-            <div class="holiday"><%= HolidayJapan.name date %></div>
-          <% end %>
-
-          <% if events.blank? && @parent_node.present? && @parent_node.substitute_html.present? %>
-            <div class="no-event"><%= sanitize @parent_node.substitute_html.html_safe %></div>
-          <% end %>
-
-          <% events.each do |event, categories| %>
-            <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
-              <% if categories.present? %>
-                <% cate = categories.entries.sort_by{ |c| c.order }.first %>
-                <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>
-              <% end %>
-              <div class="event"><%= link_to (event.event_name.present? ? event.event_name : event.name), event.url %></div>
+  <div class="event-table">
+    <table class="calendar">
+      <caption>
+        <%= link_to_monthly @current_month_date, name: I18n.l(@current_month_date.to_date, format: :long_month), path: @cur_part.parent.try(:url).to_s %>
+      </caption>
+      <thead>
+      <tr>
+        <% t_wdays.each do |wday| %>
+          <th scope="col"><span class="wday"><%= wday %><span class="unit"><%= t_date('wday') %></span></span></th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @events.each_with_index do |(date, events), i| %>
+        <% if (i % 7) == 0 %>
+          <tr>
+        <% end %>
+        <td class="<%= event_td_class(date, @date) %>">
+          <div class="date">
+            <div class="daily">
+              <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
             </div>
-          <% end %>
-        </div>
-      </td>
-      <% if (i % 7) == 6 %>
-        </tr>
+
+           <% if date.national_holiday? %>
+              <div class="holiday"><%= HolidayJapan.name date %></div>
+            <% end %>
+
+            <% if events.blank? && @parent_node.present? && @parent_node.substitute_html.present? %>
+              <div class="no-event"><%= sanitize @parent_node.substitute_html.html_safe %></div>
+            <% end %>
+
+            <% events.each do |event, categories| %>
+              <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+                <% if categories.present? %>
+                  <% cate = categories.entries.sort_by{ |c| c.order }.first %>
+                  <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>
+                <% end %>
+                <div class="event"><%= link_to (event.event_name.present? ? event.event_name : event.name), event.url %></div>
+              </div>
+            <% end %>
+          </div>
+        </td>
+        <% if (i % 7) == 6 %>
+          </tr>
+        <% end %>
       <% end %>
-    <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
