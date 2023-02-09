@@ -60,12 +60,18 @@ class Gws::Affair::Utils
     def leave_minutes_to_day(site, minutes)
       day = (minutes / site.upper_day_leave_minute)
       min = minutes % site.upper_day_leave_minute
-      day += 1 if min >= leave_minutes_to_day_threshold_hour
+      day += 1 if min >= leave_minutes_to_day_threshold_minute
       day
     end
 
-    def leave_minutes_to_day_threshold_hour
-      SS.config.gws.affair.dig("leave_setting", "download_yearly", "threshold_hour") || 225
+    def leave_minutes_to_day_threshold_minute
+      SS.config.gws.affair.dig("leave_setting", "download_yearly", "threshold_minute") || 225
+    end
+
+    def leave_minutes_to_day_label(site)
+      upper_hour = (site.upper_day_leave_minute.to_f / 60).floor(2)
+      threshold_hour = (leave_minutes_to_day_threshold_minute.to_f / 60).floor(2)
+      I18n.t("gws/affair.caution.leave_minutes_to_day", upper_hour: upper_hour, threshold_hour: threshold_hour)
     end
   end
 end

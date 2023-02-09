@@ -159,7 +159,7 @@ production: &production
         threshold_hour: 60
     leave_setting:
       download_yearly:
-        threshold_hour: 225
+        threshold_minute: 225
 
   memo:
     disable_unsend: true

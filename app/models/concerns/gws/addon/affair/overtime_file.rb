@@ -1,8 +1,8 @@
 module Gws::Addon::Affair::OvertimeFile
   extend ActiveSupport::Concern
   extend SS::Addon
-  include Gws::Affair::OvertimeFile::Compensatory
-  include Gws::Affair::OvertimeFile::CreateCompensatory
+  include Compensatory
+  include CreateCompensatory
 
   included do
     attr_accessor :start_at_date, :start_at_hour, :start_at_minute,
