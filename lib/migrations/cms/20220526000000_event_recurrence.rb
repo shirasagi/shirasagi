@@ -7,6 +7,11 @@ class SS::Migration20220526000000
     each_page do |page|
       next if page.site.blank?
 
+      if page.event_dates.blank?
+        page.unset(:event_dates)
+        next
+      end
+
       recurrences = page.event_dates.clustered.map do |dates|
         { kind: "date", start_at: dates.first, frequency: "daily", until_on: dates.last }
       end

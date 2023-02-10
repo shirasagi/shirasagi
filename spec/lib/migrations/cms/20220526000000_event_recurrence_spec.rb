@@ -12,11 +12,19 @@ RSpec.describe SS::Migration20220526000000, dbscope: :example do
     end
   end
   let!(:page3_single_event_date) { create :cms_page, cur_site: site, cur_node: node }
+  let!(:page4_event_dates_nil) do
+    page = create :cms_page, cur_site: site, cur_node: node
+    page.collection.update_one({ _id: page.id }, { '$set' => { event_dates: nil } })
+    page.unset(:event_recurrences)
+    Cms::Page.find(page.id)
+  end
 
   before do
     page1.set(event_dates: event_dates)
     page2.set(event_dates: event_dates)
     page3_single_event_date.set(event_dates: [ event_dates[3] ])
+    expect(page4_event_dates_nil.attributes.key?(:event_dates)).to be_truthy
+    expect(page4_event_dates_nil.event_dates).to be_nil
 
     described_class.new.change
   end
@@ -82,6 +90,11 @@ RSpec.describe SS::Migration20220526000000, dbscope: :example do
       expect(event_recurrence.by_days).to be_blank
       expect(event_recurrence.includes_holiday).to be_falsey
       expect(event_recurrence.exclude_dates).to be_blank
+    end
+
+    Cms::Page.find(page4_event_dates_nil.id).tap do |page|
+      expect(page.attributes.key?(:event_dates)).to be_falsey
+      expect(page.event_dates).to be_nil
     end
   end
 end
