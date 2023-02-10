@@ -24,7 +24,7 @@
       if relation.blank? && contact.present?
         relation = t("contact.options.relation.related.title")
       end
-      if relation.present? && contact.present?
+      if relation.present? && @item.contact_group_relation != "unrelated" && contact.present?
         relation = "#{relation} (#{contact.name})"
       end
       relation
