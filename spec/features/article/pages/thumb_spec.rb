@@ -22,7 +22,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("ss.buttons.upload")
@@ -59,7 +59,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("ss.buttons.upload")
@@ -103,7 +103,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("sns.user_file")
@@ -153,7 +153,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("cms.file")
@@ -201,7 +201,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-cms-agents-addons-thumb" do
-          find('.dropdown-toggle').click
+          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
             wait_cbox_open do
               click_on I18n.t("cms.file")
@@ -278,7 +278,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-cms-agents-addons-thumb" do
-          find('.dropdown-toggle').click
+          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
             wait_cbox_open do
               click_on I18n.t("cms.file")
@@ -360,7 +360,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
-          find('.dropdown-toggle').click
+          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
             wait_cbox_open do
               click_on I18n.t("ss.buttons.upload")

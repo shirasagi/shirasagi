@@ -30,7 +30,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("gws/workflow.columns.index")
 
       within "#menu" do
-        click_on I18n.t("ss.links.new")
+        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on I18n.t("gws.columns.gws/text_area")
         end
