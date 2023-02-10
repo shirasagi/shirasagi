@@ -1,4 +1,3 @@
-require 'rake'
-Rails.application.load_tasks
-ENV["site"]=@site.name
-Rake::Task['gws:aggregation:group:update'].invoke
+puts "# gws/aggregation"
+puts "\# #{@site.name}"
+::Gws::Aggregation::GroupUpdateJob.bind(site_id: @site.id).perform_now
