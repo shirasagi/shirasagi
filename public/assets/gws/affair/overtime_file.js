@@ -15,6 +15,7 @@ Gws_Affair_OvertimeFile.prototype.render = function() {
     var startDate = SS_DateTimePicker.momentValue(self.$dateStartEl);
     if (startDate) {
       SS_DateTimePicker.momentValue(self.$dateEndEl, startDate);
+      self.toggleCompensatory(startDate);
     }
   });
   //self.$dateStartEl.trigger("ss:changeDateTime");

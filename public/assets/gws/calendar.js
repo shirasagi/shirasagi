@@ -23106,522 +23106,769 @@ for(u=new I(this,t),null==e&&(i=t.parentId,i&&(e=this.getResourceRow(i))),e?this
 // save jQuery1
 var $jQuery1 = jQuery.noConflict();
 window.jQuery = window.$ = $jQuery3;
-this.Gws_Schedule_Calendar = (function ($) {
-  function Gws_Schedule_Calendar() {
-  }
+SS.ready(function() {
+  window.Gws_Schedule_Calendar = (function ($) {
+    function Gws_Schedule_Calendar() {
+    }
 
-  Gws_Schedule_Calendar.messages = {
-    noPlan: "予定はありません"
-  };
+    Gws_Schedule_Calendar.messages = {
+      noPlan: i18next.t("gws/schedule.no_plan")
+    };
 
-  Gws_Schedule_Calendar.render = function (selector, opts, init) {
-    var params;
-    if (opts == null) {
-      opts = {};
-    }
-    if (init == null) {
-      init = {};
-    }
-    params = this.defaultParams(selector, opts);
-    if (opts['restUrl']) {
-      $.extend(true, params, this.editableParams(selector, opts));
-    }
-    if (opts['restUrl']) {
-      $.extend(true, params, this.tapMenuParams(selector, opts));
-    }
-    $.extend(true, params, opts);
-    $(selector).fullCalendar(params);
-    this.renderInitialize(selector, init);
-    return this.overrideAddLink(selector);
-  };
+    Gws_Schedule_Calendar.render = function (selector, opts, init) {
+      var params;
+      if (opts == null) {
+        opts = {};
+      }
+      if (init == null) {
+        init = {};
+      }
+      params = this.defaultParams(selector, opts);
+      if (opts['restUrl']) {
+        $.extend(true, params, this.editableParams(selector, opts));
+      }
+      if (opts['restUrl']) {
+        $.extend(true, params, this.tapMenuParams(selector, opts));
+      }
+      for (var i in opts.eventSources) {
+        opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
+      }
+      $.extend(true, params, opts);
+      $(selector).fullCalendar(params);
+      this.renderInitialize(selector, init);
+      this.overrideAddLink(selector);
+    };
 
-  Gws_Schedule_Calendar.renderInitialize = function (selector, init) {
-    if (init == null) {
-      init = {};
-    }
-    init['viewTodo'] || (init['viewTodo'] = 'active');
-    if (init['view']) {
-      $(selector).fullCalendar('changeView', init['view']);
-    }
-    if (init['date']) {
-      $(selector).fullCalendar('gotoDate', init['date']);
-    }
-    if (init['viewFormat'] === 'list') {
-      $.fullCalendar.toggleListFormat(selector);
-      $(selector).find('.fc-withListView-button').addClass("fc-state-active");
-    }
-    if (init['viewTodo'] === 'active') {
-      $(selector).find('.fc-withTodo-button').addClass("fc-state-active");
-    }
-    if (init['viewAttendance'] === 'active') {
-      $(selector).find('.fc-withAbsence-button').addClass("fc-state-active");
-    }
-    Gws_Schedule_View.renderSideCalendars(selector);
-    return $(selector + "-header .calendar-text").each(function () {
-      var data, wrap;
-      wrap = $(this);
-      data = $(this).find('.calendar-text-popup').prop('outerHTML');
-      return wrap.find('.calendar-text-link').on("click", function () {
-        Gws_Popup.render($(this), $(data).show());
-        return false;
+    Gws_Schedule_Calendar.renderInitialize = function (selector, init) {
+      if (init == null) {
+        init = {};
+      }
+      init['viewTodo'] || (init['viewTodo'] = 'active');
+      if (init['view']) {
+        $(selector).fullCalendar('changeView', init['view']);
+      }
+      if (init['date']) {
+        $(selector).fullCalendar('gotoDate', init['date']);
+      }
+      if (init['viewFormat'] === 'list') {
+        $.fullCalendar.toggleListFormat(selector);
+        $(selector).find('.fc-withListView-button').addClass("fc-state-active");
+      }
+      if (init['viewTodo'] === 'active') {
+        $(selector).find('.fc-withTodo-button').addClass("fc-state-active");
+      }
+      if (init['viewAttendance'] === 'active') {
+        $(selector).find('.fc-withAbsence-button').addClass("fc-state-active");
+      }
+      Gws_Schedule_View.renderSideCalendars(selector);
+      return $(selector + "-header .calendar-text").each(function () {
+        var data, wrap;
+        wrap = $(this);
+        data = $(this).find('.calendar-text-popup').prop('outerHTML');
+        return wrap.find('.calendar-text-link').on("click", function () {
+          Gws_Popup.render($(this), $(data).show());
+          return false;
+        });
       });
-    });
-  };
-
-  Gws_Schedule_Calendar.defaultParams = function (selector, opts) {
-    return {
-      buttonText: {
-        listMonth: "リスト"
-      },
-      columnFormat: {
-        month: "ddd",
-        week: "M/D [(]ddd[)]",
-        day: "M/D [(]ddd[)]"
-      },
-      customButtons: {
-        withTodo: {
-          text: "ToDo表示",
-          click: function (e) {
-            $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
-            $(this).toggleClass("fc-state-active");
-            return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
-          }
-        },
-        withAbsence: {
-          text: "欠席表示",
-          click: function (e) {
-            $(".fc-event-user-attendance-absence").each(function() {
-              $(this).toggleClass("hide");
-            });
-            $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'));
-            $(this).toggleClass("fc-state-active");
-            return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
-          }
-        },
-        withListView: {
-          text: "リスト",
-          click: function (e) {
-            $.fullCalendar.toggleListFormat(selector);
-            $(selector).fullCalendar('refetchEvents');
-            $(window).trigger('resize'); //for AgendaView
-
-            return $(this).toggleClass("fc-state-active");
-          }
-        },
-        reload: {
-          text: "再読込",
-          icon: "gws-schedule-calendar-reload",
-          click: function (e) {
-            $(selector).fullCalendar('refetchEvents');
-          }
-        }
-      },
-      contentHeight: 'auto',
-      displayEventEnd: {
-        basicWeek: true
-      },
-      endParam: 's[end]',
-      fixedWeekCount: false,
-      slotEventOverlap: false,
-      header: {
-        left: 'today prev next title reload',
-        right: 'withAbsence withTodo month,basicWeek,agendaDay withListView'
-      },
-      lang: 'ja',
-      nextDayThreshold: '00:00:00', // 複数日表示の閾値
-      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-      slotLabelFormat: 'HH:mm',
-      startParam: 's[start]',
-      timeFormat: 'HH:mm',
-      titleFormat: {
-        month: "YYYY年 M月",
-        week: "(YYYY年 M月 D日（ddd）)",
-        day: "YYYY年 M月 D日（ddd）"
-      },
-      loading: function (isLoading, view) {
-        if (isLoading) {
-          if ($(selector).hasClass("fc-list-format")) {
-            return $(this).find('.fc-view').prepend('<span class="fc-loading">読み込み中</span>');
-          } else {
-            return $(this).find('.fc-widget-content').eq(0).prepend('<span class="fc-loading">読み込み中</span>');
-          }
-        } else {
-          return $(this).find('.fc-loading').remove();
-        }
-      },
-      eventRender: function(event, element) {
-        if (event.className.includes('fc-event-range')) {
-          var fcClass = 'fc-datetime';
-          var format = 'MM/DD HH:mm';
-          var end = moment(event.end);
-          if (event.className.includes('fc-event-allday')) {
-            fcClass = 'fc-date';
-            format = 'MM/DD';
-            end = end.add(-1, 'days')
-          } else {
-            element.find('span.fc-time').remove();
-          }
-          var content = (event.start.format(format) + ' - ' + end.format(format));
-          if (event.start.format(format) === end.format(format)) {
-            content = end.format(format);
-          }
-          var span = $('<span></span>').addClass(fcClass).append(content);
-          element.find('span.fc-title').before(span);
-        }
-        if (event.category) {
-          var span = $('<span class="fc-category"></span>').append(event.category);
-          element.find('span.fc-title').prepend(span);
-        }
-        if (event.facility) {
-          var span = $('<span class="fc-facility"></span>').append(event.facility);
-          element.find('span.fc-title').after(span);
-        }
-      },
-      eventAfterAllRender: function (view) {
-        var attendance, todo;
-        todo = $('.fc .fc-withTodo-button');
-        if (todo.length) {
-          if (todo.hasClass('fc-state-active')) {
-            $('.fc .fc-event-todo').show();
-          } else {
-            $('.fc .fc-event-todo').hide();
-          }
-        }
-        attendance = $('.fc .fc-withAbsence-button');
-        if (attendance.length) {
-          if (attendance.hasClass('fc-state-active')) {
-            $('.fc .fc-event-user-attendance-absence').removeClass("hide")
-          }
-        }
-        Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
-        return Gws_Schedule_Calendar.changePrintPreviewPortrait(view);
-      }
     };
-  };
 
-  Gws_Schedule_Calendar.viewStateQuery = function (view) {
-    var attendance, format, todo;
-    format = view.el.closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
-    todo = $('.fc .fc-withTodo-button').hasClass("fc-state-active") ? 'active' : 'inactive';
-    attendance = $('.fc .fc-withAbsence-button').hasClass("fc-state-active") ? 'active' : 'inactive';
-    return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format + "&calendar[viewTodo]=" + todo + "&calendar[viewAttendance]=" + attendance;
-  };
-
-  Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
-    var url;
-    url = opts['restUrl'];
-    return {
-      dayClick: function (date, event, view) {
-        var links, now, start, state, todo;
-        links = '';
-        if (opts['tapMenu']) {
-          now = new Date;
-          start = (date.format()) + "T" + (now.getHours()) + ":00:00";
-          state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-          links = "<a href='" + url + "/new?start=" + start + "&" + state + "' class='add-plan'>予定を作成</a>";
-          todo = url.replace(/schedule\/.*/, 'schedule/todo/-/readables');
-          links += "<a href='" + todo + "/new?start=" + start + "&" + state + "' class='add-plan'>ToDoを作成</a>";
-        }
-        if ($('#calendar-controller').length === 0) {
-          if (view.name !== 'month') {
-            links += '<a href="" data-view="month">月表示</a>';
-          }
-          if (view.name !== 'basicWeek') {
-            links += '<a href="" data-view="basicWeek">週表示</a>';
-          }
-          if (view.name !== 'agendaDay') {
-            links += '<a href="" data-view="agendaDay">日表示</a>';
-          }
-        }
-        if (links) {
-          $("body").append('<div class="tap-menu">' + links + '</div>');
-          if (event.pageX + $(".tap-menu").width() > $(window).width()) {
-            $(".tap-menu").css("top", event.pageY - 5).css("right", 5).show();
-          } else {
-            $(".tap-menu").css("top", event.pageY - 5).css("left", event.pageX - 5).show();
-          }
-          $(".tap-menu a").on("click", function () {
-            var cal;
-            if ($(this).data('view')) {
-              cal = view.calendar.getCalendar();
-              cal.changeView($(this).data('view'));
-              cal.gotoDate(date);
-              $(".tap-menu").remove();
-              return false;
+    Gws_Schedule_Calendar.defaultParams = function (selector, _opts) {
+      return {
+        firstDay: 0,
+        buttonText: {
+          listMonth: i18next.t('gws/schedule.calendar.buttonText.listMonth')
+        },
+        columnFormat: {
+          month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.month')),
+          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.week')),
+          day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.columnFormat.day'))
+        },
+        customButtons: {
+          withTodo: {
+            text: i18next.t('gws/schedule.calendar.buttonText.withTodo'),
+            click: function (_ev) {
+              $('.fc-event-todo').toggle(!$(this).hasClass('fc-state-active'));
+              $(this).toggleClass("fc-state-active");
+              return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
             }
-          });
-          return $(".tap-menu").on("mouseleave", function () {
-            return $(".tap-menu").remove();
-          });
-        }
-      }
-    };
-  };
+          },
+          withAbsence: {
+            text: i18next.t('gws/schedule.calendar.buttonText.withAbsence'),
+            click: function (_ev) {
+              $(".fc-event-user-attendance-absence").each(function() {
+                $(this).toggleClass("hide");
+              });
+              $('.fc-event-user-attendance-absence').toggle(!$(this).hasClass('fc-state-active'));
+              $(this).toggleClass("fc-state-active");
+              return Gws_Schedule_Calendar.updateNoPlanVisibility($(this).closest(".fc"));
+            }
+          },
+          withListView: {
+            text: i18next.t('gws/schedule.calendar.buttonText.listMonth'),
+            click: function (_ev) {
+              $.fullCalendar.toggleListFormat(selector);
+              $(selector).fullCalendar('refetchEvents');
+              $(window).trigger('resize'); //for AgendaView
 
-  Gws_Schedule_Calendar.editableParams = function (selector, opts) {
-    var url = opts['restUrl'];
-    var token = $('meta[name="csrf-token"]').attr('content');
-    return {
-      editable: true,
-      eventClick: function (event, jsEvent, view) {
-        if (event.noPopup) {
-          return;
+              return $(this).toggleClass("fc-state-active");
+            }
+          },
+          reload: {
+            text: i18next.t('ss.buttons.reload'),
+            icon: "gws-schedule-calendar-reload",
+            click: function (_ev) {
+              $(selector).fullCalendar('refetchEvents');
+            }
+          }
+        },
+        contentHeight: 'auto',
+        displayEventEnd: {
+          basicWeek: true
+        },
+        endParam: 's[end]',
+        fixedWeekCount: false,
+        slotEventOverlap: false,
+        header: {
+          left: 'today prev next title reload',
+          right: 'withAbsence withTodo month,basicWeek,agendaDay withListView'
+        },
+        lang: document.documentElement.lang || 'ja',
+        nextDayThreshold: '00:00:00', // 複数日表示の閾値
+        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+        slotLabelFormat: 'HH:mm',
+        startParam: 's[start]',
+        timeFormat: 'HH:mm',
+        titleFormat: {
+          month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
+          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')),
+          day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.day'))
+        },
+        loading: function (isLoading, view) {
+          var target = $(selector).hasClass("fc-list-format") ? $(this).find('.fc-view') : $(this).find('.fc-widget-content').eq(0)
+
+          $(this).find('.fc-loading').remove();
+          if (isLoading) {
+            return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading")));
+          }
+          if ($(selector).data('resource-error')) {
+            $(selector).data('resource-error', null);
+            return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error")));
+          }
+        },
+        eventRender: function(event, element) {
+          var name = element.find('.fc-title').text();
+          var span = $('<span class="fc-event-name"></span>').text(name);
+          element.find('.fc-title').html(span);
+
+          if (event.className.includes('fc-event-range')) {
+            var fcClass = 'fc-datetime';
+            var format = 'MM/DD HH:mm';
+            var end = moment(event.end);
+            if (event.className.includes('fc-event-allday')) {
+              fcClass = 'fc-date';
+              format = 'MM/DD';
+              end = end.add(-1, 'days')
+            } else {
+              element.find('span.fc-time').remove();
+            }
+            var content = (event.start.format(format) + ' - ' + end.format(format));
+            if (event.start.format(format) === end.format(format)) {
+              content = end.format(format);
+            }
+            var span = $('<span></span>').addClass(fcClass).append(content);
+            element.find('.fc-title').before(span);
+          }
+          if (event.category) {
+            var span = $('<span class="fc-category"></span>').append(event.category);
+            element.find('.fc-title').prepend(span);
+          }
+          if (event.facility) {
+            var span = $('<span class="fc-facility"></span>').append(event.facility);
+            element.find('.fc-title').append(span);
+          }
+        },
+        eventAfterAllRender: function (view) {
+          var attendance, todo;
+          todo = $('.fc .fc-withTodo-button');
+          if (todo.length) {
+            if (todo.hasClass('fc-state-active')) {
+              $('.fc .fc-event-todo').show();
+            } else {
+              $('.fc .fc-event-todo').hide();
+            }
+          }
+          attendance = $('.fc .fc-withAbsence-button');
+          if (attendance.length) {
+            if (attendance.hasClass('fc-state-active')) {
+              $('.fc .fc-event-user-attendance-absence').removeClass("hide")
+            }
+          }
+          Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
+          return Gws_Schedule_Calendar.changePrintPreviewPortrait(view);
         }
-        var popup_url = event.restUrl ? event.restUrl : url;
-        var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-        if (event.className.includes('fc-event-point') && !event.className.includes('fc-event-private')) {
+      };
+    };
+
+    Gws_Schedule_Calendar.viewStateQuery = function (view) {
+      var attendance, format, todo;
+      format = view.el.closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
+      todo = $('.fc .fc-withTodo-button').hasClass("fc-state-active") ? 'active' : 'inactive';
+      attendance = $('.fc .fc-withAbsence-button').hasClass("fc-state-active") ? 'active' : 'inactive';
+      return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format + "&calendar[viewTodo]=" + todo + "&calendar[viewAttendance]=" + attendance;
+    };
+
+    Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
+      var url;
+      url = opts['restUrl'];
+      return {
+        dayClick: function (date, event, view) {
+          var links, now, start, state, todo;
+          links = '';
+          if (opts['tapMenu']) {
+            now = new Date;
+            start = (date.format()) + "T" + (now.getHours()) + ":00:00";
+            state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+            links = ejs.render(
+              "<a href='<%= url %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
+              { url: url, start: start, state: state, text: i18next.t('gws/schedule.links.add_plan') });
+            todo = url.replace(/schedule\/.*/, 'schedule/todo/-/readables');
+            links += ejs.render(
+              "<a href='<%= todo %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
+              { todo: todo, start: start, state: state, text: i18next.t('gws/schedule.links.add_todo') });
+          }
+          if ($('#calendar-controller').length === 0) {
+            if (view.name !== 'month') {
+              links += $('<a href="" data-view="month"/>').text(i18next.t("gws/schedule.links.show_month")).prop("outerHTML");
+            }
+            if (view.name !== 'basicWeek') {
+              links += $('<a href="" data-view="basicWeek"/>').text(i18next.t("gws/schedule.links.show_week")).prop("outerHTML");
+            }
+            if (view.name !== 'agendaDay') {
+              links += $('<a href="" data-view="agendaDay"/>').text(i18next.t("gws/schedule.links.show_day")).prop("outerHTML");
+            }
+          }
+          if (links) {
+            $("body").append('<div class="tap-menu">' + links + '</div>');
+            if (event.pageX + $(".tap-menu").width() > $(window).width()) {
+              $(".tap-menu").css("top", event.pageY - 5).css("right", 5).show();
+            } else {
+              $(".tap-menu").css("top", event.pageY - 5).css("left", event.pageX - 5).show();
+            }
+            $(".tap-menu a").on("click", function () {
+              var cal;
+              if ($(this).data('view')) {
+                cal = view.calendar.getCalendar();
+                cal.changeView($(this).data('view'));
+                cal.gotoDate(date);
+                $(".tap-menu").remove();
+                return false;
+              }
+            });
+            return $(".tap-menu").on("mouseleave", function () {
+              return $(".tap-menu").remove();
+            });
+          }
+        }
+      };
+    };
+
+    Gws_Schedule_Calendar.editableParams = function (selector, opts) {
+      var url = opts['restUrl'];
+      var token = $('meta[name="csrf-token"]').attr('content');
+      return {
+        editable: true,
+        eventClick: function (event, jsEvent, view) {
+          if (event.noPopup) {
+            return;
+          }
+          var popup_url = event.restUrl ? event.restUrl : url;
+          var state = ("calendar[date]=" + (event.start.format('YYYY-MM-DD')) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+
           jsEvent.preventDefault();
           event.url = popup_url + "/" + event.id + "?" + state;
           location.href = event.url;
-          return;
-        }
-        var target = $(this);
-        Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'>読み込み中</span></div>");
 
-        return $.ajax({
-          url: popup_url + "/" + event.id + "/popup",
-          success: function (data) {
-            $('.fc-popup').html(data);
-            $('.fc-popup').find('a').each(function () {
-              return $(this).attr('href', $(this).attr('href') + ("?" + state));
-            });
-            return Gws_Popup.renderPopup(target);
+          // var target = $(this);
+          // var popupContent = ejs.render(
+          //  "<div class='fc-popup'><span class='fc-loading'><%= text %></span></div>",
+          //  { text: i18next.t('gws/schedule.loading') });
+          // Gws_Popup.render(target, popupContent);
+          //
+          // $.ajax({
+          //  url: popup_url + "/" + event.id + "/popup",
+          //  success: function (data) {
+          //    $('.fc-popup').html(data);
+          //    $('.fc-popup').find('a').each(function () {
+          //      return $(this).attr('href', $(this).attr('href') + ("?" + state));
+          //    });
+          //    return Gws_Popup.renderPopup(target);
+          //  }
+          //});
+        },
+        eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
+          var drop_url, end;
+          end = null;
+          if (event.end) {
+            end = event.end.format();
           }
-        });
-      },
-      eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-        var drop_url, end;
-        end = null;
-        if (event.end) {
-          end = event.end.format();
+          drop_url = event.restUrl ? event.restUrl : url;
+          return $.ajax({
+            type: 'PUT',
+            url: (drop_url + "/") + event.id + ".json",
+            data: {
+              item: {
+                api: 'drop',
+                api_start: event.start.format(),
+                api_end: end
+              },
+              authenticity_token: token
+            },
+            success: function (data, dataType) {
+              var viewId;
+              viewId = view.el.closest('.calendar').attr('id');
+              return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
+            },
+            error: function (xhr, status, error) {
+              alert(xhr.responseJSON.join("\n"));
+              return revertFunc();
+            }
+          });
+        },
+        eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+          return $.ajax({
+            type: 'PUT',
+            url: (url + "/") + event.id + ".json",
+            data: {
+              item: {
+                api: 'resize',
+                api_start: event.start.format(),
+                api_end: event.end.format()
+              },
+              authenticity_token: token
+            },
+            success: function (data, dataType) {
+              var viewId;
+              viewId = view.el.closest('.calendar').attr('id');
+              return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
+            },
+            error: function (xhr, status, error) {
+              alert(xhr.responseJSON.join("\n"));
+              return revertFunc();
+            }
+          });
         }
-        drop_url = event.restUrl ? event.restUrl : url;
-        return $.ajax({
-          type: 'PUT',
-          url: (drop_url + "/") + event.id + ".json",
-          data: {
-            item: {
-              api: 'drop',
-              api_start: event.start.format(),
-              api_end: end
-            },
-            authenticity_token: token
-          },
-          success: function (data, dataType) {
-            var viewId;
-            viewId = view.el.closest('.calendar').attr('id');
-            return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
-          },
-          error: function (xhr, status, error) {
-            alert(xhr.responseJSON.join("\n"));
-            return revertFunc();
-          }
-        });
-      },
-      eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-        return $.ajax({
-          type: 'PUT',
-          url: (url + "/") + event.id + ".json",
-          data: {
-            item: {
-              api: 'resize',
-              api_start: event.start.format(),
-              api_end: event.end.format()
-            },
-            authenticity_token: token
-          },
-          success: function (data, dataType) {
-            var viewId;
-            viewId = view.el.closest('.calendar').attr('id');
-            return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
-          },
-          error: function (xhr, status, error) {
-            alert(xhr.responseJSON.join("\n"));
-            return revertFunc();
-          }
-        });
+      };
+    };
+
+    Gws_Schedule_Calendar.changePrintPreviewPortrait = function (view) {
+      if ($('body').hasClass('print-preview')) {
+        if (view.type === 'agendaDay' || view.type === 'listMonth' || view.el.closest(".fc").hasClass("fc-list-format")) {
+          $('body').removeClass('horizontal');
+          return $('body').addClass('vertical');
+        } else {
+          $('body').removeClass('vertical');
+          return $('body').addClass('horizontal');
+        }
       }
     };
-  };
 
-  Gws_Schedule_Calendar.changePrintPreviewPortrait = function (view) {
-    if ($('body').hasClass('print-preview')) {
-      if (view.type === 'agendaDay' || view.type === 'listMonth' || view.el.closest(".fc").hasClass("fc-list-format")) {
-        $('body').removeClass('horizontal');
-        return $('body').addClass('vertical');
-      } else {
-        $('body').removeClass('vertical');
-        return $('body').addClass('horizontal');
-      }
-    }
-  };
+    Gws_Schedule_Calendar.overrideAddLink = function (selector) {
+      $('.add-plan').on("click", function () {
+        var date, href, now, start, state, view;
+        now = new Date;
+        date = $(selector).fullCalendar('getDate');
+        view = $(selector).fullCalendar('getView');
+        href = $(this).attr('href').replace(/\?.*/, '');
+        if (!(view.start.isBefore(now) && view.end.isAfter(now))) {
+          start = (date.format('YYYY-MM-DD')) + "T" + (now.getHours()) + ":00:00";
+          state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
+          href = href + ("?start=" + start + "&" + state);
+        } else {
+          href = href + "?" + Gws_Schedule_Calendar.viewStateQuery(view);
+        }
+        $(this).attr('href', href);
+      });
+    };
 
-  Gws_Schedule_Calendar.overrideAddLink = function (selector) {
-    return $('.add-plan').on("click", function (ev) {
-      var date, href, now, start, state, view;
-      now = new Date;
-      date = $(selector).fullCalendar('getDate');
-      view = $(selector).fullCalendar('getView');
-      href = $(this).attr('href').replace(/\?.*/, '');
-      if (!(view.start.isBefore(now) && view.end.isAfter(now))) {
-        start = (date.format('YYYY-MM-DD')) + "T" + (now.getHours()) + ":00:00";
-        state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
-        href = href + ("?start=" + start + "&" + state);
+    Gws_Schedule_Calendar.updateNoPlanVisibility = function (selector) {
+      var no_plan;
+      no_plan = $(selector).find('.fc-listMonth-view-container .no-plan');
+      if (no_plan.length !== 0) {
+        if ($('.fc-event:visible').length === 0) {
+          return no_plan.show();
+        } else {
+          return no_plan.hide();
+        }
       }
-      return $(this).attr('href', href);
+    };
+
+    return Gws_Schedule_Calendar;
+
+  })($jQuery1);
+});
+SS.ready(function() {
+  (function ($) {
+    /**
+     * BasicHour View
+     */
+    var FC = $.fullCalendar;
+    var View = FC.View;
+
+    BasicHourView = FC.views.basicHour = FC.BasicView.extend({
+
+      renderEvents: function (events) {
+        this.dayGrid.renderEvents(events);
+
+        var head = '<tr><td class="fc-head-container fc-widget-header">'
+        head += '<div class="fc-row fc-widget-header">'
+        head += '<table><thead><tr>'
+        for (i in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]) {
+          head += '<th class="fc-day-header fc-widget-header fc-hour-' + i + '">' + i + '</th>'
+        }
+        head += '</tr></thead></table>'
+        head += '</div>'
+        head += '</td></tr>'
+
+        this.el.find('.fc-head').html(head)
+      },
     });
-  };
 
-  Gws_Schedule_Calendar.updateNoPlanVisibility = function (selector) {
-    var no_plan;
-    no_plan = $(selector).find('.fc-listMonth-view-container .no-plan');
-    if (no_plan.length !== 0) {
-      if ($('.fc-event:visible').length === 0) {
-        return no_plan.show();
-      } else {
-        return no_plan.hide();
-      }
+    BasicHourView.eventRender = function (event, element, view) {
+      var left = BasicHourView.eventLeftPosition(event, view);
+      var right = BasicHourView.eventRightPosition(event, view);
+      var width = right - left;
+      if (width < 1) width = 1;
+
+      element.find('.fc-time').remove()
+      element.css({
+        'position': 'absolute',
+        'top': '2px',
+        'width': (width.toString() + '%'),
+        'margin-left': left + '%',
+      });
     }
-  };
 
-  return Gws_Schedule_Calendar;
+    BasicHourView.eventLeftPosition = function (event, view) {
+      nums = BasicHourView.datesToNum(event.start, view.start);
+      if (nums[0] < nums[1]) return 0;
 
-})($jQuery1);
-(function($) {
-  /**
-   * BasicHour View
-   */
-  var FC = $.fullCalendar;
-  var View = FC.View;
+      var date = new Date(event.start._i);
+      return (date.getHours() * 60 + date.getMinutes()) * 0.0694;
+    }
 
-  BasicHourView = FC.views.basicHour = FC.BasicView.extend({
+    BasicHourView.eventRightPosition = function (event, view) {
+      if (!event.end) return 1; // start == end
 
-    renderEvents: function(events) {
-      this.dayGrid.renderEvents(events);
+      nums = BasicHourView.datesToNum(event.end, view.end);
+      if (nums[0] == nums[1]) return 99.5;
 
-      head  = '<tr><td class="fc-head-container fc-widget-header">'
-      head += '<div class="fc-row fc-widget-header">'
-      head += '<table><thead><tr>'
-      for (i in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]) {
-        head += '<th class="fc-day-header fc-widget-header fc-hour-' + i + '">' + i + '</th>'
-      }
-      head += '</tr></thead></table>'
-      head += '</div>'
-      head += '</td></tr>'
+      var date = new Date(event.end._i);
+      return (date.getHours() * 60 + date.getMinutes()) * 0.0694;
+    }
 
-      this.el.find('.fc-head').html(head)
-    },
-  });
-
-  BasicHourView.eventRender = function(event, element, view) {
-    var left = BasicHourView.eventLeftPosition(event, view);
-    var right = BasicHourView.eventRightPosition(event, view);
-    var width = right - left;
-    if (width < 1) width = 1;
-
-    element.find('.fc-time').remove()
-    element.css({
-      'position': 'absolute',
-      'top': '2px',
-      'width': (width.toString() + '%'),
-      'margin-left': left + '%',
-    });
-  }
-
-  BasicHourView.eventLeftPosition = function(event, view) {
-    nums = BasicHourView.datesToNum(event.start, view.start);
-    if (nums[0] < nums[1]) return 0;
-
-    var date = new Date(event.start._i);
-    return (date.getHours() * 60 + date.getMinutes()) * 0.0694;
-  }
-
-  BasicHourView.eventRightPosition = function(event, view) {
-    if (!event.end) return 1; // start == end
-
-    nums = BasicHourView.datesToNum(event.end, view.end);
-    if (nums[0] == nums[1]) return 99.5;
-
-    var date = new Date(event.end._i);
-    return (date.getHours() * 60 + date.getMinutes()) * 0.0694;
-  }
-
-  BasicHourView.datesToNum = function(date1, date2) {
-    num1 = date1.year() * 10000 + (date1.month() + 1) * 100 + date1.date();
-    num2 = date2.year() * 10000 + (date2.month() + 1) * 100 + date2.date();
-    return [num1, num2];
-  }
-})($jQuery1);
+    BasicHourView.datesToNum = function (date1, date2) {
+      num1 = date1.year() * 10000 + (date1.month() + 1) * 100 + date1.date();
+      num2 = date2.year() * 10000 + (date2.month() + 1) * 100 + date2.date();
+      return [num1, num2];
+    }
+  })($jQuery1);
+});
 /**
  * ListMonth View
  */
 
-(function($) {
-  var FC = $.fullCalendar;
-  var View = FC.View;
-  var installedWithTodoClick = false;
+SS.ready(function() {
+  (function ($) {
+    var FC = $.fullCalendar;
+    var View = FC.View;
+    var installedWithTodoClick = false;
 
-  var firstOrCreateView = function() {
-    var view = $('.fc-listMonth-view .fc-listMonth-view-container')[0];
-    if (view) {
-      return $(view);
-    }
+    var firstOrCreateView = function () {
+      var view = $('.fc-listMonth-view .fc-listMonth-view-container')[0];
+      if (view) {
+        return $(view);
+      }
 
-    view = $('<div class="fc-listMonth-view-container"></div>').appendTo('.fc-listMonth-view');
-    return view;
-  };
+      view = $('<div class="fc-listMonth-view-container"></div>').appendTo('.fc-listMonth-view');
+      return view;
+    };
 
-  var clearView = function(view) {
-    view.html('');
-    return view;
-  };
+    var clearView = function (view) {
+      view.html('');
+      return view;
+    };
 
-  var updateNoPlanVisibility = function() {
-    var noPlan = $('.fc-listMonth-view .no-plan');
-    if ($('.fc-event:visible').length == 0) {
-      noPlan.show();
-    } else {
-      noPlan.hide();
-    }
-  };
+    var updateNoPlanVisibility = function () {
+      var noPlan = $('.fc-listMonth-view .no-plan');
+      if ($('.fc-event:visible').length == 0) {
+        noPlan.show();
+      } else {
+        noPlan.hide();
+      }
+    };
 
-  var ListMonthView = FC.ListMonthView = FC.BasicView.extend({
-    renderEvents: function(events) {
-      //this.dayGrid.renderEvents([]);
+    var ListMonthView = FC.ListMonthView = FC.BasicView.extend({
+      renderEvents: function (events) {
+        //this.dayGrid.renderEvents([]);
+        var calendar = this.calendar;
+
+        var view = clearView(firstOrCreateView());
+        var table = $('<div class="fc-listMonth-view-table"></div>');
+        var eventCount = 0;
+
+        var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>')
+        $('<div class="tr"></div>').appendTo(table).append(noPlan);
+
+        for (var i in events) {
+          var event = events[i];
+          if (event.className.indexOf('fc-holiday') !== -1) continue;
+
+          var cont = $('<span class="fc-content"></span>').text(event.title);
+          var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
+
+          evEl.addClass(event.className.join(' '));
+          evEl.css({'color': event.textColor, 'background-color': event.backgroundColor});
+
+          evEl.on('click', function (ev) {
+            var eventNo = $(this).data('eventNo');
+            return calendar.view.trigger('eventClick', $(this), events[eventNo], ev);
+          }).data('eventNo', i);
+
+          var info = $('<div class="td info"></div>').append(evEl);
+          if (event.sanitizedHtml) {
+            info.append('<p class="summary">' + event.sanitizedHtml + '</p>');
+          }
+          var date = $('<div class="td date"></div>').text(event.startDateLabel);
+          var time = $('<div class="td time"></div>').text(event.startTimeLabel);
+          if (event.allDay) time.text(event.allDayLabel);
+          eventCount++;
+
+          var tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
+          if (event.className.indexOf('fc-event-todo') !== -1) {
+            tr.addClass('fc-event-todo');
+          }
+          if (event.className.indexOf('fc-event-user-attendance-absence') !== -1) {
+            tr.addClass('fc-event-user-attendance-absence');
+            tr.css('display', 'none');
+          }
+        }
+        table.appendTo(view);
+        updateNoPlanVisibility();
+
+        if (!installedWithTodoClick) {
+          installedWithTodoClick = true;
+          $('.fc-withTodo-button').on('click', function (e) {
+            var viewName = $('#calendar').fullCalendar('getView').name;
+            if (!viewName) {
+              viewName = $('#calendar-controller').fullCalendar('getView').name;
+            }
+
+            if (viewName === 'listMonth') {
+              setTimeout(updateNoPlanVisibility, 0);
+            }
+          });
+        }
+      }
+    });
+
+    FC.views.listMonth = {
+      'class': ListMonthView,
+      duration: {months: 1},
+      defaults: {
+        fixedWeekCount: false
+      }
+    };
+  })($jQuery1);
+});
+SS.ready(function() {
+  (function ($) {
+    var FC = $.fullCalendar;
+
+    var renderTitle = function (event) {
+      if (!event.title) {
+        return '';
+      }
+
+      var commonPart = '<div class="fc-title">' + FC.htmlEscape('[' + event.title + ']');
+      if (event.sanitizedHtml) {
+        return commonPart + ' ' + FC.htmlEscape(event.sanitizedHtml) + '</div>';
+      } else {
+        return commonPart + '</div>';
+      }
+    };
+
+    var SS_TimeGrid = FC.TimeGrid.extend({
+      fgSegHtml: function (seg, disableResizing) {
+        var view = this.view;
+        var event = seg.event;
+        var isDraggable = view.isEventDraggable(event);
+        var isResizableFromStart = !disableResizing && seg.isStart && view.isEventResizableFromStart(event);
+        var isResizableFromEnd = !disableResizing && seg.isEnd && view.isEventResizableFromEnd(event);
+        var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd);
+        var skinCss = FC.cssToStr(this.getSegSkinCss(seg));
+        var timeText;
+        var fullTimeText; // more verbose time text. for the print stylesheet
+        var startTimeText; // just the start time text
+
+        classes.unshift('fc-time-grid-event', 'fc-v-event');
+
+        if (view.isMultiDayEvent(event)) { // if the event appears to span more than one day...
+          // Don't display time text on segments that run entirely through a day.
+          // That would appear as midnight-midnight and would look dumb.
+          // Otherwise, display the time text for the *segment's* times (like 6pm-midnight or midnight-10am)
+          if (seg.isStart || seg.isEnd) {
+            timeText = this.getEventTimeText(seg);
+            fullTimeText = this.getEventTimeText(seg, 'LT');
+            startTimeText = this.getEventTimeText(seg, null, false); // displayEnd=false
+          }
+        } else {
+          // Display the normal time text for the *event's* times
+          timeText = this.getEventTimeText(event);
+          fullTimeText = this.getEventTimeText(event, 'LT');
+          startTimeText = this.getEventTimeText(event, null, false); // displayEnd=false
+        }
+
+        return '<a class="' + classes.join(' ') + '"' +
+          (event.url ?
+              ' href="' + FC.htmlEscape(event.url) + '"' :
+              ''
+          ) +
+          (skinCss ?
+              ' style="' + skinCss + '"' :
+              ''
+          ) +
+          '>' +
+          '<div class="fc-content">' +
+          (timeText ?
+              '<div class="fc-time"' +
+              ' data-start="' + FC.htmlEscape(startTimeText) + '"' +
+              ' data-full="' + FC.htmlEscape(fullTimeText) + '"' +
+              '>' +
+              '<span>' + FC.htmlEscape(timeText) + '</span>' +
+              '</div>' :
+              ''
+          ) +
+          renderTitle(event) +
+          '</div>' +
+          '<div class="fc-bg"/>' +
+          /* TODO: write CSS for this
+          (isResizableFromStart ?
+              '<div class="fc-resizer fc-start-resizer" />' :
+              ''
+              ) +
+          */
+          (isResizableFromEnd ?
+              '<div class="fc-resizer fc-end-resizer" />' :
+              ''
+          ) +
+          '</a>';
+      }
+    });
+
+    var SS_AgendaView = FC.AgendaView.extend({
+      timeGridClass: SS_TimeGrid
+    });
+
+    // FC.views.agendaDay = {
+    //   'class': SS_AgendaView,
+    //   defaults: {
+    //     allDaySlot: true,
+    //     allDayText: 'all-day',
+    //     slotDuration: '00:30:00',
+    //     minTime: '00:00:00',
+    //     maxTime: '24:00:00',
+    //     slotEventOverlap: false // a bad name. confused with overlap/constraint system
+    //   },
+    //   duration: { days: 1 }
+    // };
+  })($jQuery1);
+});
+SS.ready(function() {
+  (function ($) {
+    var fullCalendar_renderListEvents = function (segs) {
+      var firstOrCreateView = function () {
+        var view = $('.fc-view .fc-listMonth-view-container')[0];
+        if (view) {
+          return $(view);
+        }
+        view = $('<div class="fc-listMonth-view-container"></div>').appendTo('.fc-view');
+        return view;
+      };
+      var clearView = function (view) {
+        view.html('');
+        return view;
+      };
+      var updateNoPlanVisibility = function () {
+        var noPlan = $('.fc-listMonth-view-container .no-plan');
+        if ($('.fc-event:visible').length == 0) {
+          noPlan.show();
+        } else {
+          noPlan.hide();
+        }
+      };
       var calendar = this.calendar;
-
-      var view  = clearView(firstOrCreateView());
+      var view = clearView(firstOrCreateView());
       var table = $('<div class="fc-listMonth-view-table"></div>');
       var eventCount = 0;
+      var duplicateCheck = [];
 
-      var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>')
+      var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>');
       $('<div class="tr"></div>').appendTo(table).append(noPlan);
 
-      for (var i in events) {
-        var event = events[i];
+      for (var i = 0; i < segs.length; i++) {
+        var seg = segs[i];
+        var event = seg.event;
+
         if (event.className.indexOf('fc-holiday') !== -1) continue;
 
-        var cont = $('<span class="fc-content"></span>').text(event.title);
-        var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
+        var uniqueKey = [event.id, event.startDateLabel, event.startTimeLabel].join(":");
+        if (duplicateCheck.includes(uniqueKey)) {
+          continue;
+        }
+        duplicateCheck.push(uniqueKey);
 
+        var cont = $('<span class="fc-content"></span>');
+        var title = $('<span class="fc-title"></span>');
+        var evEl = $('<a class="fc-event fc-event-point"></a>');
+
+        if (event.category) {
+          var category = $('<span class="fc-category"></span>');
+          category.text(event.category);
+          title.append(category);
+        }
+        title.append($('<span class="fc-event-name"/>').text(event.title));
+        cont.append(title);
+
+        if (event.facility) {
+          var facility = $('<span class="fc-facility"></span>');
+          facility.text(event.facility);
+          title.append(facility);
+        }
+        evEl.append(cont);
         evEl.addClass(event.className.join(' '));
-        evEl.css({ 'color': event.textColor, 'background-color': event.backgroundColor });
+        evEl.css({'color': event.textColor, 'background-color': event.backgroundColor});
 
-        evEl.bind('click', function(ev) {
+        evEl.on('click', function (ev) {
           var eventNo = $(this).data('eventNo');
-          return calendar.view.trigger('eventClick', $(this), events[eventNo], ev);
+          return calendar.view.trigger('eventClick', $(this), segs[eventNo].event, ev);
         }).data('eventNo', i);
 
         var info = $('<div class="td info"></div>').append(evEl);
         if (event.sanitizedHtml) {
-          info.append('<p class="summary">' + event.sanitizedHtml + '</p>');
+          info.append($('<p class="summary"/>').html(event.sanitizedHtml));
         }
-        var date = $('<div class="td date"></div>').text(event.startDateLabel);
-        var time = $('<div class="td time"></div>').text(event.startTimeLabel);
-        if (event.allDay) time.text(event.allDayLabel);
+        if (event.allDay) {
+          var startLabel = event.startDateLabel + ' ' + event.allDayLabel;
+          var endLabel = event.endDateLabel + ' ' + event.allDayLabel;
+        } else {
+          var startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
+          var endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
+        }
+        var startAt = $('<div class="td startAt"></div>').text(startLabel);
+        var delimiter = $('<div class="td delimiter"></div>').text('-');
+        var endAt = $('<div class="td endAt"></div>').text(endLabel);
+        var tr = $('<div class="tr"></div>').appendTo(table).append(startAt).append(delimiter).append(endAt).append(info);
         eventCount++;
-
-        var tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
         if (event.className.indexOf('fc-event-todo') !== -1) {
           tr.addClass('fc-event-todo');
         }
@@ -23633,282 +23880,75 @@ this.Gws_Schedule_Calendar = (function ($) {
       table.appendTo(view);
       updateNoPlanVisibility();
 
-      if (! installedWithTodoClick) {
-        installedWithTodoClick = true;
-        $('.fc-withTodo-button').on('click', function (e) {
-          var viewName = $('#calendar').fullCalendar('getView').name;
-          if (!viewName) {
-            viewName = $('#calendar-controller').fullCalendar('getView').name;
-          }
+      //var installedWithTodoClick = false;
+      //if (!installedWithTodoClick) {
+      //  installedWithTodoClick = true;
+      //  $('.fc-withTodo-button').on('click', function (e) {
+      //    var viewName = $('#calendar').fullCalendar('getView').name;
+      //    if (!viewName) {
+      //      viewName = $('#calendar-controller').fullCalendar('getView').name;
+      //    }
+      //
+      //    if (viewName === 'listMonth') {
+      //      setTimeout(updateNoPlanVisibility, 0);
+      //    }
+      //  });
+      //}
+    };
 
-          if (viewName === 'listMonth') {
-            setTimeout(updateNoPlanVisibility, 0);
-          }
-        });
-      }
-    }
-  });
-
-  FC.views.listMonth = {
-    'class': ListMonthView,
-    duration: { months: 1 },
-    defaults: {
-      fixedWeekCount: false
-    }
-  };
-})($jQuery1);
-(function($) {
-  var FC = $.fullCalendar;
-
-  var renderTitle = function(event) {
-    if (!event.title) {
-      return '';
-    }
-
-    var commonPart = '<div class="fc-title">' + FC.htmlEscape('[' + event.title + ']');
-    if (event.sanitizedHtml) {
-      return commonPart + ' ' + FC.htmlEscape(event.sanitizedHtml) + '</div>';
-    } else {
-      return commonPart + '</div>';
-    }
-  };
-
-  var SS_TimeGrid = FC.TimeGrid.extend({
-    fgSegHtml: function(seg, disableResizing) {
-      var view = this.view;
-      var event = seg.event;
-      var isDraggable = view.isEventDraggable(event);
-      var isResizableFromStart = !disableResizing && seg.isStart && view.isEventResizableFromStart(event);
-      var isResizableFromEnd = !disableResizing && seg.isEnd && view.isEventResizableFromEnd(event);
-      var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd);
-      var skinCss = FC.cssToStr(this.getSegSkinCss(seg));
-      var timeText;
-      var fullTimeText; // more verbose time text. for the print stylesheet
-      var startTimeText; // just the start time text
-
-      classes.unshift('fc-time-grid-event', 'fc-v-event');
-
-      if (view.isMultiDayEvent(event)) { // if the event appears to span more than one day...
-        // Don't display time text on segments that run entirely through a day.
-        // That would appear as midnight-midnight and would look dumb.
-        // Otherwise, display the time text for the *segment's* times (like 6pm-midnight or midnight-10am)
-        if (seg.isStart || seg.isEnd) {
-          timeText = this.getEventTimeText(seg);
-          fullTimeText = this.getEventTimeText(seg, 'LT');
-          startTimeText = this.getEventTimeText(seg, null, false); // displayEnd=false
-        }
+    $.fullCalendar.toggleListFormat = function (selector) {
+      if ($(selector).hasClass("fc-list-format")) {
+        $(selector).find(".fc-view").children().show();
+        $(selector).find(".fc-listMonth-view-container").hide();
+        $(selector).removeClass("fc-list-format");
       } else {
-        // Display the normal time text for the *event's* times
-        timeText = this.getEventTimeText(event);
-        fullTimeText = this.getEventTimeText(event, 'LT');
-        startTimeText = this.getEventTimeText(event, null, false); // displayEnd=false
-      }
-
-      return '<a class="' + classes.join(' ') + '"' +
-        (event.url ?
-            ' href="' + FC.htmlEscape(event.url) + '"' :
-            ''
-        ) +
-        (skinCss ?
-            ' style="' + skinCss + '"' :
-            ''
-        ) +
-        '>' +
-        '<div class="fc-content">' +
-        (timeText ?
-            '<div class="fc-time"' +
-            ' data-start="' + FC.htmlEscape(startTimeText) + '"' +
-            ' data-full="' + FC.htmlEscape(fullTimeText) + '"' +
-            '>' +
-            '<span>' + FC.htmlEscape(timeText) + '</span>' +
-            '</div>' :
-            ''
-        ) +
-        renderTitle(event) +
-        '</div>' +
-        '<div class="fc-bg"/>' +
-        /* TODO: write CSS for this
-        (isResizableFromStart ?
-            '<div class="fc-resizer fc-start-resizer" />' :
-            ''
-            ) +
-        */
-        (isResizableFromEnd ?
-            '<div class="fc-resizer fc-end-resizer" />' :
-            ''
-        ) +
-        '</a>';
-    }
-  });
-
-  var SS_AgendaView = FC.AgendaView.extend({
-    timeGridClass: SS_TimeGrid
-  });
-
-  // FC.views.agendaDay = {
-  //   'class': SS_AgendaView,
-  //   defaults: {
-  //     allDaySlot: true,
-  //     allDayText: 'all-day',
-  //     slotDuration: '00:30:00',
-  //     minTime: '00:00:00',
-  //     maxTime: '24:00:00',
-  //     slotEventOverlap: false // a bad name. confused with overlap/constraint system
-  //   },
-  //   duration: { days: 1 }
-  // };
-})($jQuery1);
-(function($) {
-  var fullCalendar_renderListEvents = function(segs) {
-    var firstOrCreateView = function () {
-      var view = $('.fc-view .fc-listMonth-view-container')[0];
-      if (view) {
-        return $(view);
-      }
-      view = $('<div class="fc-listMonth-view-container"></div>').appendTo('.fc-view');
-      return view;
-    };
-    var clearView = function (view) {
-      view.html('');
-      return view;
-    };
-    var updateNoPlanVisibility = function () {
-      var noPlan = $('.fc-listMonth-view-container .no-plan');
-      if ($('.fc-event:visible').length == 0) {
-        noPlan.show();
-      } else {
-        noPlan.hide();
+        $(selector).find(".fc-view").children().hide();
+        $(selector).find(".fc-listMonth-view-container").show();
+        $(selector).addClass("fc-list-format");
       }
     };
-    var calendar = this.calendar;
-    var view = clearView(firstOrCreateView());
-    var table = $('<div class="fc-listMonth-view-table"></div>');
-    var eventCount = 0;
-    var duplicateCheck = [];
 
-    var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>');
-    $('<div class="tr"></div>').appendTo(table).append(noPlan);
-
-    for (var i = 0; i < segs.length; i++) {
-      var seg = segs[i];
-      var event = seg.event;
-
-      if (event.className.indexOf('fc-holiday') !== -1) continue;
-
-      var uniqueKey = [ event.id, event.startDateLabel, event.startTimeLabel ].join(":");
-      if (duplicateCheck.includes(uniqueKey)) {
-        continue;
+    // basic
+    $.fullCalendar.BasicView.prototype.renderListEvents = fullCalendar_renderListEvents;
+    $.fullCalendar.BasicView.prototype.renderEvents_ = $.fullCalendar.BasicView.prototype.renderEvents;
+    $.fullCalendar.BasicView.prototype.renderEvents = function (events) {
+      this.renderEvents_(events);
+      if (this.el.closest(".fc").hasClass("fc-list-format")) {
+        segs = this.dayGrid.segs;
+        this.renderListEvents(segs);
       }
-      duplicateCheck.push(uniqueKey);
+    };
 
-      var cont = $('<span class="fc-content"></span>').text(event.title);
-      var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
-
-      evEl.addClass(event.className.join(' '));
-      evEl.css({'color': event.textColor, 'background-color': event.backgroundColor});
-
-      evEl.bind('click', function (ev) {
-        var eventNo = $(this).data('eventNo');
-        return calendar.view.trigger('eventClick', $(this), segs[eventNo].event, ev);
-      }).data('eventNo', i);
-
-      var info = $('<div class="td info"></div>').append(evEl);
-      if (event.sanitizedHtml) {
-        info.append('<p class="summary">' + event.sanitizedHtml + '</p>');
+    $.fullCalendar.BasicView.prototype.renderSkeletonHtml_ = $.fullCalendar.BasicView.prototype.renderSkeletonHtml;
+    $.fullCalendar.BasicView.prototype.renderSkeletonHtml = function () {
+      var h = this.renderSkeletonHtml_();
+      if (this.el.closest(".fc").hasClass("fc-list-format")) {
+        h = $(h).hide()[0];
       }
-      if (event.allDay) {
-        var startLabel = event.startDateLabel + ' ' + event.allDayLabel;
-        var endLabel = event.endDateLabel + ' ' + event.allDayLabel;
+      return h;
+    };
+
+    // agenda
+    $.fullCalendar.AgendaView.prototype.renderListEvents = fullCalendar_renderListEvents;
+    $.fullCalendar.AgendaView.prototype.renderEvents_ = $.fullCalendar.AgendaView.prototype.renderEvents;
+    $.fullCalendar.AgendaView.prototype.renderEvents = function (events) {
+      this.renderEvents_(events);
+      if (this.el.closest(".fc").hasClass("fc-list-format")) {
+        segs = this.timeGrid.segs.concat(this.dayGrid.segs);
+        this.renderListEvents(segs);
       }
-      else {
-        var startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
-        var endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
+    };
+
+    $.fullCalendar.AgendaView.prototype.renderSkeletonHtml_ = $.fullCalendar.AgendaView.prototype.renderSkeletonHtml;
+    $.fullCalendar.AgendaView.prototype.renderSkeletonHtml = function () {
+      var h = this.renderSkeletonHtml_();
+      if (this.el.closest(".fc").hasClass("fc-list-format")) {
+        h = $(h).hide()[0];
       }
-      var startAt = $('<div class="td startAt"></div>').text(startLabel);
-      var delimiter = $('<div class="td delimiter"></div>').text('-');
-      var endAt = $('<div class="td endAt"></div>').text(endLabel);
-      var tr = $('<div class="tr"></div>').appendTo(table).append(startAt).append(delimiter).append(endAt).append(info);
-      eventCount++;
-      if (event.className.indexOf('fc-event-todo') !== -1) {
-        tr.addClass('fc-event-todo');
-      }
-      if (event.className.indexOf('fc-event-user-attendance-absence') !== -1) {
-        tr.addClass('fc-event-user-attendance-absence');
-        tr.css('display', 'none');
-      }
-    }
-    table.appendTo(view);
-    updateNoPlanVisibility();
-
-    //var installedWithTodoClick = false;
-    //if (!installedWithTodoClick) {
-    //  installedWithTodoClick = true;
-    //  $('.fc-withTodo-button').on('click', function (e) {
-    //    var viewName = $('#calendar').fullCalendar('getView').name;
-    //    if (!viewName) {
-    //      viewName = $('#calendar-controller').fullCalendar('getView').name;
-    //    }
-    //
-    //    if (viewName === 'listMonth') {
-    //      setTimeout(updateNoPlanVisibility, 0);
-    //    }
-    //  });
-    //}
-  };
-
-  $.fullCalendar.toggleListFormat = function(selector) {
-    if ($(selector).hasClass("fc-list-format")) {
-      $(selector).find(".fc-view").children().show();
-      $(selector).find(".fc-listMonth-view-container").hide();
-      $(selector).removeClass("fc-list-format");
-    }
-    else {
-      $(selector).find(".fc-view").children().hide();
-      $(selector).find(".fc-listMonth-view-container").show();
-      $(selector).addClass("fc-list-format");
-    }
-  };
-
-  // basic
-  $.fullCalendar.BasicView.prototype.renderListEvents = fullCalendar_renderListEvents;
-  $.fullCalendar.BasicView.prototype.renderEvents_ = $.fullCalendar.BasicView.prototype.renderEvents;
-  $.fullCalendar.BasicView.prototype.renderEvents = function(events) {
-    this.renderEvents_(events);
-    if (this.el.closest(".fc").hasClass("fc-list-format")) {
-      segs = this.dayGrid.segs;
-      this.renderListEvents(segs);
-    }
-  };
-
-  $.fullCalendar.BasicView.prototype.renderSkeletonHtml_ = $.fullCalendar.BasicView.prototype.renderSkeletonHtml;
-  $.fullCalendar.BasicView.prototype.renderSkeletonHtml = function() {
-    var h = this.renderSkeletonHtml_();
-    if (this.el.closest(".fc").hasClass("fc-list-format")) {
-      h = $(h).hide()[0];
-    }
-    return h;
-  };
-
-  // agenda
-  $.fullCalendar.AgendaView.prototype.renderListEvents = fullCalendar_renderListEvents;
-  $.fullCalendar.AgendaView.prototype.renderEvents_ = $.fullCalendar.AgendaView.prototype.renderEvents;
-  $.fullCalendar.AgendaView.prototype.renderEvents = function(events) {
-    this.renderEvents_(events);
-    if (this.el.closest(".fc").hasClass("fc-list-format")) {
-      segs = this.timeGrid.segs.concat(this.dayGrid.segs);
-      this.renderListEvents(segs);
-    }
-  };
-
-  $.fullCalendar.AgendaView.prototype.renderSkeletonHtml_ = $.fullCalendar.AgendaView.prototype.renderSkeletonHtml;
-  $.fullCalendar.AgendaView.prototype.renderSkeletonHtml = function() {
-    var h = this.renderSkeletonHtml_();
-    if (this.el.closest(".fc").hasClass("fc-list-format")) {
-      h = $(h).hide()[0];
-    }
-    return h;
-  };
-})($jQuery1);
+      return h;
+    };
+  })($jQuery1);
+});
 function Gws_Schedule_CalendarTransition(params) {
   if (params) {
     this.state = $.param({ calendar: params });
@@ -23935,291 +23975,319 @@ Gws_Schedule_CalendarTransition.prototype.renderLinks = function(selector) {
     $(this).attr('href', href);
   });
 };
-this.Gws_Schedule_Multiple_Calendar = (function ($) {
-  function Gws_Schedule_Multiple_Calendar() {
-  }
 
-  Gws_Schedule_Multiple_Calendar.render = function (selector, opts, init) {
-    var params;
-    if (opts == null) {
-      opts = {};
-    }
-    if (init == null) {
-      init = {};
-    }
-    params = Gws_Schedule_Calendar.defaultParams(selector, opts);
-    if (opts['restUrl']) {
-      $.extend(true, params, Gws_Schedule_Calendar.editableParams(selector, opts));
-    }
-    if (opts['restUrl']) {
-      $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(selector, opts));
-    }
-    $.extend(true, params, this.defaultParams(selector, opts));
-    $.extend(true, params, this.contentParams(selector, opts));
-    $.extend(true, params, opts);
-    // To render gridster and/or other frames first, all fullCalendar initializations is delayed.
-    // And a calendar is individually rendered from top to bottom.
-    setTimeout(function() {
-      $(selector).fullCalendar(params);
-      Gws_Schedule_Calendar.renderInitialize(selector, init);
-
-      Gws_Schedule_Multiple_Calendar.renderOnce();
-    }, 0);
-  };
-
-  Gws_Schedule_Multiple_Calendar.onceRendered = false;
-
-  // bind click handler once
-  Gws_Schedule_Multiple_Calendar.renderOnce = function () {
-    if (Gws_Schedule_Multiple_Calendar.onceRendered) {
-      return;
-    }
-
-    $(document).on("click", function (ev) {
-      $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove();
-    });
-
-    Gws_Schedule_Multiple_Calendar.onceRendered = true;
-  };
-
-  Gws_Schedule_Multiple_Calendar.defaultParams = function (selector, opts) {
-    return {
-      defaultView: 'basicWeek',
-      header: {
-        left: 'today prev next title reload',
-        right: 'withAbsence withTodo basicWeek,timelineDay'
-      },
-      slotDuration: '01:00',
-      slotLabelFormat: 'H',
-      views: {
-        basicHour: {
-          type: 'day',
-          buttonText: '日', //TODO: Use lang.
-          contentHeight: 25
-        },
-        timelineDay: {
-          contentHeight: 25,
-          minTime: '08:00',
-          maxTime: '22:00'
-        }
-      }
-    };
-  };
-
-  Gws_Schedule_Multiple_Calendar.controllerParams = function (selector, opts) {
-    return {
-      header: {
-        left: 'today prev next title reload',
-        right: 'withAbsence withTodo basicWeek,timelineDay'
-      },
-      eventSources: [],
-      eventAfterAllRender: function (view) {
-        if (view.name === 'basicWeek') {
-          return view.el.find(".fc-body").hide();
-        }
-      }
-    };
-  };
-
-  Gws_Schedule_Multiple_Calendar.contentParams = function (selector, opts) {
-    return {
-      eventRender: function (event, element, view) {
-        if (event.className.includes('fc-event-range')) {
-          var fcClass = 'fc-datetime';
-          var format = 'MM/DD HH:mm';
-          var end = moment(event.end);
-          if (event.className.includes('fc-event-allday')) {
-            fcClass = 'fc-date';
-            format = 'MM/DD';
-            end = end.add(-1, 'days')
-          } else {
-            element.find('span.fc-time').remove();
-          }
-          var content = (event.start.format(format) + ' - ' + end.format(format));
-          if (event.start.format(format) === end.format(format)) {
-            content = end.format(format);
-          }
-          var span = $('<span></span>').addClass(fcClass).append(content);
-          element.find('span.fc-title').before(span);
-        }
-        if (event.category) {
-          var span = $('<span class="fc-category"></span>').append(event.category);
-          element.find('span.fc-title').prepend(span);
-        }
-        if (event.facility) {
-          var span = $('<span class="fc-facility"></span>').append(event.facility);
-          element.find('span.fc-title').after(span);
-        }
-        if (view.name === 'basicHour') {
-          return BasicHourView.eventRender(event, element, view);
-        }
-      },
-      eventAfterAllRender: function (view) {
-        $(window).trigger('resize');
-      }
-    };
-  };
-  //view.el.find(".fctoolbar, .fc-head").remove("")
-
-  Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
-    var controller, params;
-    if (opts == null) {
-      opts = {};
-    }
-    if (init == null) {
-      init = {};
-    }
-    params = Gws_Schedule_Calendar.defaultParams(selector, opts);
-    $.extend(true, params, this.defaultParams(selector, opts));
-    $.extend(true, params, this.controllerParams(selector, opts));
-    $.extend(true, params, opts);
-    $(selector).fullCalendar(params);
-    Gws_Schedule_Calendar.renderInitialize(selector, init);
-    Gws_Schedule_Calendar.overrideAddLink(selector);
-    controller = $(selector);
-    controller.find('.fc-today-button').on("click", function () {
-      return $('.calendar.multiple .fc-today-button').trigger("click");
-    });
-    controller.find('.fc-prev-button').on("click", function () {
-      return $('.calendar.multiple .fc-prev-button').trigger("click");
-    });
-    controller.find('.fc-next-button').on("click", function () {
-      return $('.calendar.multiple .fc-next-button').trigger("click");
-    });
-    controller.find('.fc-basicWeek-button').on("click", function () {
-      return $('.calendar.multiple .fc-basicWeek-button').trigger("click");
-    });
-    controller.find('.fc-timelineDay-button').on("click", function () {
-      return $('.calendar.multiple .fc-timelineDay-button').trigger("click");
-    });
-    controller.find('.fc-basicHour-button').on("click", function () {
-      return $('.calendar.multiple .fc-basicHour-button').trigger("click");
-    });
-    controller.find('.fc-reload-button').on("click", function () {
-      return $('.calendar.multiple .fc-reload-button').trigger("click");
-    });
-  };
-
-  return Gws_Schedule_Multiple_Calendar;
-
-})($jQuery1);
-this.Gws_Schedule_View = (function ($) {
-  function Gws_Schedule_View() {
-  }
-
-  Gws_Schedule_View.getCalendar = function () {
-    var cal;
-    cal = $('#calendar-controller');
-    if (cal.length === 0) {
-      cal = $('#calendar');
-    }
-    if (cal.fullCalendar('getView').calendar) {
-      return cal;
-    }
-    return null;
-  };
-
-  Gws_Schedule_View.getCalendarDate = function () {
-    var cal;
-    cal = Gws_Schedule_View.getCalendar();
-    if (cal) {
-      return cal.fullCalendar('getDate').format('YYYY-MM-DD');
-    }
-    return null;
-  };
-  // Schedule tabs
-
-  Gws_Schedule_View.renderTabs = function (selector) {
-    return $(selector).find('a').on("click", function () {
-      var date, url;
-      date = Gws_Schedule_View.getCalendarDate();
-      if (!date) {
-        return true;
-      }
-      url = $(this).attr('href');
-      url = url.replace(/(\?.*)?$/, "?calendar[date]=" + date);
-      $(this).attr('href', url);
-      return true;
-    });
-  };
-  // 4 months calendars
-
-  Gws_Schedule_View.renderSideCalendars = function (selector) {
-    return $(selector).find('.fc-toolbar h2').on("click", function () {
-      var date, name;
-      name = "gws-schedule-tool-calendars";
-      date = Gws_Schedule_View.getCalendarDate();
-      date = $.fullCalendar.moment(date);
-      if ($("." + name).is(':hidden')) {
-        $("." + name).remove();
-      }
-      if ($("." + name).length === 0) {
-        Gws_Schedule_View.crenderSideCalendars(name, date);
-      }
-      return $("." + name).animate({
-        width: 'toggle'
-      }, 'fast');
-    });
-  };
-
-  return Gws_Schedule_View;
-
-})($jQuery1);
-
-(function ($) {
-  // datetimepicker プラグイン は jQuery3 にだけ存在する。
-  // このプラグインを jQuery1 へ組み込んでも jQuery3 の側と競合するのかうまく動作しない。少なくとも言語が英語になってしまう。
-  // そこで、Gws_Schedule_View.crenderSideCalendars() のみ jQuery3 で動作させる。
-  // Gws_Schedule_View.crenderSideCalendars() は fullcalendar の機能を利用しないため、jQuery3 で動作させても問題ない。
-  Gws_Schedule_View.crenderSideCalendars = function (name, date) {
-    var h, i, j;
-    h = ("<div class='" + name + "'>") + "<div class='xdsoft_datetimepicker controller'>" + "<button type='button' class='xdsoft_prev' />" + "<button type='button' class='xdsoft_next' />" + "</div></div>";
-    $('#menu').before(h);
-    for (i = j = 0; j <= 3; i = ++j) {
-      if (i > 0) {
-        date.add(1, 'months');
-      }
-      $("." + name).append("<div class='" + name + "-cal" + i + "'></div>");
-      $("." + name + "-cal" + i).datetimepicker({
-        timepicker: false,
-        format: 'Y/m/d',
-        closeOnDateSelect: true,
-        scrollInput: false,
-        scrollMonth: false,
-        inline: true,
-        defaultDate: date.format('YYYY-MM-DD'),
-        defaultSelect: false,
-        todayButton: false,
-        onGenerate: function (time, el) {
-          $(this).find('.xdsoft_today').removeClass('xdsoft_today');
-          return $(this).find('.xdsoft_current').removeClass('xdsoft_current');
-        },
-        onSelectDate: function (ct, i) {
-          date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate());
-          return $jQuery1('.calendar').fullCalendar('gotoDate', date);
-        }
+Gws_Schedule_CalendarTransition.prototype.renderCancelButton = function(selector, link) {
+  var url = $(link).attr("href");
+  $(selector).each(function() {
+    if (url) {
+      $(this).attr("onclick", "$(window).off('beforeunload')");
+      $(this).on("click", function(){
+        location.href= url;
       });
     }
-    $("." + name).find(".xdsoft_month, .xdsoft_year").unbind('mousedown').find("i").remove();
-    $("." + name + " .xdsoft_datetimepicker").not(".controller.controller").find(".xdsoft_prev, .xdsoft_next").hide();
-    $("." + name + " .controller .xdsoft_prev").on("mousedown", function () {
-      var k, results;
-      results = [];
-      for (i = k = 1; k <= 4; i = ++k) {
-        results.push($("." + name + " .xdsoft_prev").not(this).trigger("mousedown").trigger("mouseup"));
+  });
+};
+SS.ready(function() {
+  window.Gws_Schedule_Multiple_Calendar = (function ($) {
+    function Gws_Schedule_Multiple_Calendar() {
+    }
+
+    Gws_Schedule_Multiple_Calendar.render = function (selector, opts, init) {
+      var params;
+      if (opts == null) {
+        opts = {};
       }
-      return results;
-    });
-    return $("." + name + " .controller .xdsoft_next").on("mousedown", function () {
-      var k, results;
-      results = [];
-      for (i = k = 1; k <= 4; i = ++k) {
-        results.push($("." + name + " .xdsoft_next").not(this).trigger("mousedown").trigger("mouseup"));
+      if (init == null) {
+        init = {};
       }
-      return results;
-    });
-  };
-})($jQuery3);
+      params = Gws_Schedule_Calendar.defaultParams(selector, opts);
+      if (opts['restUrl']) {
+        $.extend(true, params, Gws_Schedule_Calendar.editableParams(selector, opts));
+      }
+      if (opts['restUrl']) {
+        $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(selector, opts));
+      }
+      $.extend(true, params, this.defaultParams(selector, opts));
+      $.extend(true, params, this.contentParams(selector, opts));
+      $.extend(true, params, opts);
+      // To render gridster and/or other frames first, all fullCalendar initializations is delayed.
+      // And a calendar is individually rendered from top to bottom.
+      setTimeout(function () {
+        $(selector).fullCalendar(params);
+        Gws_Schedule_Calendar.renderInitialize(selector, init);
+
+        Gws_Schedule_Multiple_Calendar.renderOnce();
+      }, 0);
+    };
+
+    Gws_Schedule_Multiple_Calendar.onceRendered = false;
+
+    // bind click handler once
+    Gws_Schedule_Multiple_Calendar.renderOnce = function () {
+      if (Gws_Schedule_Multiple_Calendar.onceRendered) {
+        return;
+      }
+
+      $(document).on("click", function (ev) {
+        $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove();
+      });
+
+      Gws_Schedule_Multiple_Calendar.onceRendered = true;
+    };
+
+    Gws_Schedule_Multiple_Calendar.defaultParams = function (_selector, _opts) {
+      return {
+        firstDay: 0,
+        defaultView: 'basicWeek',
+        header: {
+          left: 'today prev next title reload',
+          right: 'withAbsence withTodo basicWeek,timelineDay'
+        },
+        slotDuration: '01:00',
+        slotLabelFormat: 'H',
+        views: {
+          basicHour: {
+            type: 'day',
+            buttonText: i18next.t("gws/schedule.options.interval.daily"),
+            contentHeight: 25
+          },
+          timelineDay: {
+            contentHeight: 25,
+            minTime: '08:00',
+            maxTime: '22:00'
+          }
+        }
+      };
+    };
+
+    Gws_Schedule_Multiple_Calendar.controllerParams = function (_selector, _opts) {
+      return {
+        header: {
+          left: 'today prev next title reload',
+          right: 'withAbsence withTodo basicWeek,timelineDay'
+        },
+        eventSources: [],
+        eventAfterAllRender: function (view) {
+          if (view.name === 'basicWeek') {
+            return view.el.find(".fc-body").hide();
+          }
+        }
+      };
+    };
+
+    Gws_Schedule_Multiple_Calendar.contentParams = function (_selector, _opts) {
+      return {
+        eventRender: function (event, element, view) {
+          var name = element.find('.fc-title').text();
+          var span = $('<span class="fc-event-name"></span>').text(name);
+          element.find('.fc-title').html(span);
+
+          if (event.className.includes('fc-event-range')) {
+            var fcClass = 'fc-datetime';
+            var format = 'MM/DD HH:mm';
+            var end = moment(event.end);
+            if (event.className.includes('fc-event-allday')) {
+              fcClass = 'fc-date';
+              format = 'MM/DD';
+              end = end.add(-1, 'days')
+            } else {
+              element.find('span.fc-time').remove();
+            }
+            var content = (event.start.format(format) + ' - ' + end.format(format));
+            if (event.start.format(format) === end.format(format)) {
+              content = end.format(format);
+            }
+            var spanBefore = $('<span></span>').addClass(fcClass).append(content);
+            element.find('.fc-title').before(spanBefore);
+          }
+          if (event.category) {
+            var spanPrepend = $('<span class="fc-category"></span>').append(event.category);
+            element.find('.fc-title').prepend(spanPrepend);
+          }
+          if (event.facility) {
+            var spanAfter = $('<span class="fc-facility"></span>').append(event.facility);
+            element.find('.fc-title').after(spanAfter);
+          }
+          if (view.name === 'basicHour') {
+            return BasicHourView.eventRender(event, element, view);
+          }
+        },
+        eventAfterAllRender: function (_view) {
+          $(window).trigger('resize');
+        }
+      };
+    };
+    //view.el.find(".fctoolbar, .fc-head").remove("")
+
+    Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
+      var controller, params;
+      if (opts == null) {
+        opts = {};
+      }
+      if (init == null) {
+        init = {};
+      }
+      params = Gws_Schedule_Calendar.defaultParams(selector, opts);
+      $.extend(true, params, this.defaultParams(selector, opts));
+      $.extend(true, params, this.controllerParams(selector, opts));
+      $.extend(true, params, opts);
+      $(selector).fullCalendar(params);
+      Gws_Schedule_Calendar.renderInitialize(selector, init);
+      Gws_Schedule_Calendar.overrideAddLink(selector);
+      controller = $(selector);
+      controller.find('.fc-today-button').on("click", function () {
+        return $('.calendar.multiple .fc-today-button').trigger("click");
+      });
+      controller.find('.fc-prev-button').on("click", function () {
+        return $('.calendar.multiple .fc-prev-button').trigger("click");
+      });
+      controller.find('.fc-next-button').on("click", function () {
+        return $('.calendar.multiple .fc-next-button').trigger("click");
+      });
+      controller.find('.fc-basicWeek-button').on("click", function () {
+        return $('.calendar.multiple .fc-basicWeek-button').trigger("click");
+      });
+      controller.find('.fc-timelineDay-button').on("click", function () {
+        return $('.calendar.multiple .fc-timelineDay-button').trigger("click");
+      });
+      controller.find('.fc-basicHour-button').on("click", function () {
+        return $('.calendar.multiple .fc-basicHour-button').trigger("click");
+      });
+      controller.find('.fc-reload-button').on("click", function () {
+        return $('.calendar.multiple .fc-reload-button').trigger("click");
+      });
+    };
+
+    return Gws_Schedule_Multiple_Calendar;
+
+  })($jQuery1);
+});
+SS.ready(function() {
+  window.Gws_Schedule_View = (function ($) {
+    function Gws_Schedule_View() {
+    }
+
+    Gws_Schedule_View.getCalendar = function () {
+      var cal;
+      cal = $('#calendar-controller');
+      if (cal.length === 0) {
+        cal = $('#calendar');
+      }
+      if (cal.fullCalendar('getView').calendar) {
+        return cal;
+      }
+      return null;
+    };
+
+    Gws_Schedule_View.getCalendarDate = function (selector) {
+      var cal;
+      if (selector) {
+        cal = $(selector);
+      } else {
+        cal = Gws_Schedule_View.getCalendar();
+      }
+      if (cal) {
+        return cal.fullCalendar('getDate').format('YYYY-MM-DD');
+      }
+      return null;
+    };
+    // Schedule tabs
+
+    Gws_Schedule_View.renderTabs = function (selector) {
+      return $(selector).find('a').on("click", function () {
+        var date, url;
+        date = Gws_Schedule_View.getCalendarDate();
+        if (!date) {
+          return true;
+        }
+        url = $(this).attr('href');
+        url = url.replace(/(\?.*)?$/, "?calendar[date]=" + date);
+        $(this).attr('href', url);
+        return true;
+      });
+    };
+    // 4 months calendars
+
+    Gws_Schedule_View.renderSideCalendars = function (selector) {
+      return $(selector).find('.fc-toolbar h2').on("click", function () {
+        var date, name;
+        name = "gws-schedule-tool-calendars";
+        date = Gws_Schedule_View.getCalendarDate(selector);
+        date = $.fullCalendar.moment(date);
+        if ($("." + name).is(':hidden')) {
+          $("." + name).remove();
+        }
+        if ($("." + name).length === 0) {
+          Gws_Schedule_View.crenderSideCalendars(name, date);
+        }
+        return $("." + name).animate({
+          width: 'toggle'
+        }, 'fast');
+      });
+    };
+
+    return Gws_Schedule_View;
+
+  })($jQuery1);
+
+  (function ($) {
+    // datetimepicker プラグイン は jQuery3 にだけ存在する。
+    // このプラグインを jQuery1 へ組み込んでも jQuery3 の側と競合するのかうまく動作しない。少なくとも言語が英語になってしまう。
+    // そこで、Gws_Schedule_View.crenderSideCalendars() のみ jQuery3 で動作させる。
+    // Gws_Schedule_View.crenderSideCalendars() は fullcalendar の機能を利用しないため、jQuery3 で動作させても問題ない。
+    Gws_Schedule_View.crenderSideCalendars = function (name, date) {
+      var h, i, j;
+      h = $("<div />", { class: name })
+        .append($("<div class='xdsoft_datetimepicker controller' />")
+          .append("<button type='button' class='xdsoft_prev' />")
+          .append("<button type='button' class='xdsoft_next' />"));
+      $('#menu').before(h);
+      for (i = j = 0; j <= 3; i = ++j) {
+        if (i > 0) {
+          date.add(1, 'months');
+        }
+        $("." + name).append($("<div />", { class: name + "-cal" + i }));
+        $("." + name + "-cal" + i).datetimepicker({
+          timepicker: false,
+          format: 'YYYY/MM/DD',
+          closeOnDateSelect: true,
+          scrollInput: false,
+          scrollMonth: false,
+          inline: true,
+          defaultDate: date.format('YYYY-MM-DD'),
+          defaultSelect: false,
+          todayButton: false,
+          onGenerate: function (_time, _el) {
+            $(this).find('.xdsoft_today').removeClass('xdsoft_today');
+            return $(this).find('.xdsoft_current').removeClass('xdsoft_current');
+          },
+          onSelectDate: function (ct, _i) {
+            date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate());
+            return $jQuery1('.calendar').fullCalendar('gotoDate', date);
+          }
+        });
+      }
+      $("." + name).find(".xdsoft_month, .xdsoft_year").unbind('mousedown').find("i").remove();
+      $("." + name + " .xdsoft_datetimepicker").not(".controller.controller").find(".xdsoft_prev, .xdsoft_next").hide();
+      $("." + name + " .controller .xdsoft_prev").on("mousedown", function () {
+        var k, results;
+        results = [];
+        for (i = k = 1; k <= 4; i = ++k) {
+          results.push($("." + name + " .xdsoft_prev").not(this).trigger("mousedown").trigger("mouseup"));
+        }
+        return results;
+      });
+      return $("." + name + " .controller .xdsoft_next").on("mousedown", function () {
+        var k, results;
+        results = [];
+        for (i = k = 1; k <= 4; i = ++k) {
+          results.push($("." + name + " .xdsoft_next").not(this).trigger("mousedown").trigger("mouseup"));
+        }
+        return results;
+      });
+    };
+  })($jQuery3);
+});
 
 
 
@@ -24234,3 +24302,9 @@ this.Gws_Schedule_View = (function ($) {
 
 
 
+
+SS.ready(function() {
+  setTimeout(function() {
+    $(document).trigger("gws:calendarInitialized");
+  }, 0)
+});
