@@ -13,11 +13,12 @@ module Gws::Affair::Attendance::TimeCardFilter
 
   def set_overtime_files
     @overtime_files = {}
-    Gws::Affair::OvertimeFile.site(@cur_site).where(target_user_id: @item.user_id).and(
+    items = Gws::Affair::OvertimeFile.site(@cur_site).and(
+      { "target_user_id" => @item.user_id },
       { "state" => "approve" },
       { "date" => { "$gte" => @cur_month } },
-      { "date" => { "$lte" => @cur_month.end_of_month } }
-    ).each do |item|
+      { "date" => { "$lte" => @cur_month.end_of_month } })
+    items.each do |item|
       date = item.date.localtime.to_date
       @overtime_files[date] ||= []
       @overtime_files[date] << item
@@ -26,10 +27,14 @@ module Gws::Affair::Attendance::TimeCardFilter
 
   def set_leave_files
     @leave_files = {}
-    Gws::Affair::LeaveFile.site(@cur_site).where(target_user_id: @item.user_id, state: "approve").or([
-      { "end_at" => { "$gte" => @cur_month } },
-      { "start_at" => { "$lt" => @cur_month.advance(months: 1) } }
-    ]).each do |item|
+    items = Gws::Affair::LeaveFile.site(@cur_site).and(
+      { "target_user_id" => @item.user_id },
+      { "state" => "approve" },
+      { "$or" => [
+        { "end_at" => { "$gte" => @cur_month } },
+        { "start_at" => { "$lt" => @cur_month.advance(months: 1) } }
+      ]})
+    items.each do |item|
       item.leave_dates.each do |leave_date|
         @leave_files[leave_date.date.to_date] ||= []
         @leave_files[leave_date.date.to_date] << item
