@@ -1,7 +1,7 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
-  addon[:stimulus] = { inquiry_form_enabled: @cur_site.inquiry_form.present? }
+  addon[:stimulus] = true
 
   if params[:action] =~ /new/ && @cur_group
     @cur_group.cms_group.tap do |group|
@@ -9,9 +9,7 @@
       @item.contact_charge = group.contact_group_name
       @item.contact_tel = group.contact_tel
       @item.contact_fax = group.contact_fax
-      if @cur_site.inquiry_form.blank?
-        @item.contact_email = group.contact_email
-      end
+      @item.contact_email = group.contact_email
       @item.contact_link_url = group.contact_link_url
       @item.contact_link_name = group.contact_link_name
     end
@@ -24,11 +22,7 @@
     @item.contact_charge = contact.try(:contact_group_name)
     @item.contact_tel = contact.try(:contact_tel)
     @item.contact_fax = contact.try(:contact_fax)
-    if @cur_site.inquiry_form.blank?
-      @item.contact_email = contact.try(:contact_email)
-    else
-      @item.contact_email = nil
-    end
+    @item.contact_email = contact.try(:contact_email)
     @item.contact_link_url = contact.try(:contact_link_url)
     @item.contact_link_name = contact.try(:contact_link_name)
   end
