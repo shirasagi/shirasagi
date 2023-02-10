@@ -100,9 +100,13 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
 
     # 固定型モードの仕様（配備された階層依存）
     context "with default" do
-      context "located at root" do
+      context "located at root (depth 1)" do
         let!(:part) do
           create :cms_part_node2, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
+        end
+
+        before do
+          expect(part.depth).to eq 1
         end
 
         context "when loop_format is 'shirasagi'" do
@@ -194,7 +198,11 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
 
       context "located at depth 2" do
         let!(:part) do
-          create :cms_part_node2, cur_node: cate_d11, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
+          create :cms_part_node2, cur_node: cate_d1, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
+        end
+
+        before do
+          expect(part.depth).to eq 2
         end
 
         context "when loop_format is 'shirasagi'" do
@@ -220,7 +228,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
 
             visit cate_d12.full_url
             within "#node-part-e0" do
-              # （パーツが第一階層に配置されているので）第一階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              # （パーツが第二階層に配置されているので）第二階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
               expect(page).to have_css("article", count: 3)
               expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
               expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
@@ -234,7 +242,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
 
             visit cate_d111.full_url
             within "#node-part-e0" do
-              # （パーツが第一階層に配置されているので）第一階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              # （パーツが第二階層に配置されているので）第二階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
               expect(page).to have_css("article", count: 3)
               expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
               expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
@@ -247,7 +255,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
 
             visit cate_d1121.full_url
             within "#node-part-e0" do
-              # （パーツが第一階層に配置されているので）第一階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              # （パーツが第二階層に配置されているので）第二階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
               expect(page).to have_css("article", count: 3)
               expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
               expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
@@ -261,7 +269,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
             expect(page0.depth).to eq 1
             visit page0.full_url
             within "#node-part-e0" do
-              # （パーツが第一階層に配置されているので）第一階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              # （パーツが第二階層に配置されているので）第二階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
               expect(page).to have_css("article", count: 3)
               expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
               expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
@@ -271,7 +279,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
             expect(page1.depth).to eq 2
             visit page1.full_url
             within "#node-part-e0" do
-              # （パーツが第一階層に配置されているので）第一階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              # （パーツが第二階層に配置されているので）第二階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
               expect(page).to have_css("article", count: 3)
               expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
               expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
@@ -281,7 +289,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
             expect(page2.depth).to eq 3
             visit page2.full_url
             within "#node-part-e0" do
-              # （パーツが第一階層に配置されているので）第一階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              # （パーツが第二階層に配置されているので）第二階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
               expect(page).to have_css("article", count: 3)
               expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
               expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
@@ -291,9 +299,109 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
         end
       end
 
+      context "located at depth 3" do
+        let!(:part) do
+          create :cms_part_node2, cur_node: cate_d11, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
+        end
+
+        before do
+          expect(part.depth).to eq 3
+        end
+
+        context "when loop_format is 'shirasagi'" do
+          let(:loop_format) { 'shirasagi' }
+          let(:upper_html) { '<div id="node-part-e0">' }
+          let(:lower_html) { '</div> <!-- #node-part-e0 -->' }
+
+          it do
+            visit cate_d1.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+            within "#category-node-node-1" do
+              expect(page).to have_css("article", count: 3)
+              expect(page).to have_css(".item-#{cate_d11.basename}", text: cate_d11.name)
+              expect(page).to have_css(".item-#{cate_d12.basename}", text: cate_d12.name)
+              expect(page).to have_css(".item-#{cate_d13.basename}", text: cate_d13.name)
+            end
+
+            visit cate_d12.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+            within "#category-node-node-1-2" do
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d121.basename}", text: cate_d121.name)
+              expect(page).to have_css(".item-#{cate_d122.basename}", text: cate_d122.name)
+            end
+
+            visit cate_d111.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+            within "#category-node-page-1-1-1" do
+              expect(page).to have_css("article", count: 1)
+              expect(page).to have_css(".item-#{File.basename(page0.filename, ".*")}", text: page0.name)
+            end
+
+            visit cate_d1121.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+            within "#category-node-page-1-1-2-1" do
+              expect(page).to have_css("article", count: 1)
+              expect(page).to have_css(".item-#{File.basename(page0.filename, ".*")}", text: page0.name)
+            end
+
+            expect(page0.depth).to eq 1
+            visit page0.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+
+            expect(page1.depth).to eq 2
+            visit page1.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+
+            expect(page2.depth).to eq 3
+            visit page2.full_url
+            within "#node-part-e0" do
+              # （パーツが第三階層に配置されているので）第三階層にあるフォルダー（パーツ自身の兄弟）を一覧に表示する。
+              expect(page).to have_css("article", count: 2)
+              expect(page).to have_css(".item-#{cate_d111.basename}", text: cate_d111.name)
+              expect(page).to have_css(".item-#{cate_d112.basename}", text: cate_d112.name)
+            end
+          end
+        end
+      end
+
       context "located at depth 4" do
         let!(:part) do
-          create :cms_part_node2, cur_node: cate_d1122, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
+          create :cms_part_node2, cur_node: cate_d112, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html
+        end
+
+        before do
+          expect(part.depth).to eq 4
         end
 
         context "when loop_format is 'shirasagi'" do
@@ -386,10 +494,14 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
 
     # 浮動型モードの仕様（アクセスされたコンテンツ依存）
     context "with 'content'" do
-      context "located at root" do
+      context "located at root (depth 1)" do
         let!(:part) do
           create :cms_part_node2, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html,
                  list_origin: 'content'
+        end
+
+        before do
+          expect(part.depth).to eq 1
         end
 
         context "when loop_format is 'shirasagi'" do
@@ -481,10 +593,14 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
         end
       end
 
-      context "located at depth 4" do
+      context "located at depth 5" do
         let!(:part) do
           create :cms_part_node2, cur_node: cate_d1122, loop_format: loop_format, upper_html: upper_html, lower_html: lower_html,
                  list_origin: 'content'
+        end
+
+        before do
+          expect(part.depth).to eq 5
         end
 
         context "when loop_format is 'shirasagi'" do
