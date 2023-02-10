@@ -45,16 +45,18 @@ this.Facility_Search = (function () {
       $.each(Googlemaps_Map.markers, function (i, m) {
         var column;
         if (dataID === m["id"]) {
-          var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
-            if (cluster.getMarkers().length === 1) return false;
-            return cluster.getMarkers().find(function(marker) {
-              return marker.position === m.marker.position;
+          if (Googlemaps_Map.markerClusterer) {
+            var cluster = Googlemaps_Map.markerClusterer.clusters_.find(function(cluster) {
+              if (cluster.getMarkers().length === 1) return false;
+              return cluster.getMarkers().find(function(marker) {
+                return marker.position === m.marker.position;
+              });
             });
-          });
-          if (cluster) {
-            m["window"].setPosition(cluster.getMarkers()[0].position);
-            m["window"].pixelOffset = new google.maps.Size(0, -15);
-            console.log(cluster)
+            if (cluster) {
+              m["window"].setPosition(cluster.getMarkers()[0].position);
+              m["window"].pixelOffset = new google.maps.Size(0, -15);
+              console.log(cluster)
+            }
           }
 
           if (Googlemaps_Map.openedInfo) {

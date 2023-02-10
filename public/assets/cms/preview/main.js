@@ -8,6 +8,7 @@
 
 
 
+
 this.Cms_Form = (function () {
   function Cms_Form() {};
 
@@ -34,6 +35,7 @@ this.Cms_Form = (function () {
       Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
     }
     Form_Alert.addAsyncValidation(Mobile_Size_Checker.asyncValidateHtml);
+    Form_Alert.addAsyncValidation(Backlink_Checker.asyncCheck);
     Form_Alert.render();
 
     // handle Form_Preview
@@ -72,20 +74,6 @@ this.Cms_Form = (function () {
     }
   };
 
-  // activate syntax checks
-  Cms_Form.syntaxChecks = {};
-  Cms_Form.addSyntaxCheck = function (id, check) {
-    Cms_Form.syntaxChecks[id] = check;
-  };
-  Cms_Form.activateSyntaxChecks = function () {
-    Syntax_Checker.resetChecks();
-    $.each(Cms_Form.syntaxChecks, function(id, check) {
-      var ele = $('#' + id)[0];
-      if (ele && $(ele).is(':visible')) {
-        Syntax_Checker.addCheck(id, check);
-      }
-    });
-  };
   Cms_Form.afterSyntaxCheck = function () {
     // emptyAttributesCheck
     $("[data-check-presence]").each(function () {
@@ -216,26 +204,31 @@ this.Form_Alert = (function () {
   Form_Alert.render = function () {
     $("input:submit").on("click.form_alert", function (e) {
       var submit = this;
-      var form = $(submit).closest("form");
+      var $submit = $(submit);
+      var form = $submit.closest("form");
 
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (!SS.isEmptyObject(Form_Alert.alerts) || !SS.isEmptyObject(Form_Alert.staticAlerts)) {
+          if (!SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
+            $submit.trigger("ss:formAlertFinish");
             return;
           }
 
-          $(submit).off(".form_alert");
+          $submit.off(".form_alert");
+          $submit.trigger("ss:formAlertFinish");
           // To protected from bubbling events within a event wraps trigger "click" with setTimeout
-          setTimeout(function() { $(submit).trigger("click"); }, 0);
+          setTimeout(function() { $submit.trigger("click"); }, 0);
         });
       };
 
       var rejected = function(xhr, status, error) {
         alert(error);
+        $submit.trigger("ss:formAlertFinish");
       };
 
+      $submit.trigger("ss:formAlertStart");
       Cms_Form.getHtml(resolved, rejected);
 
       e.preventDefault();
@@ -268,18 +261,6 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.staticAlerts = {};
-
-  Form_Alert.addStaticAlerts = function(key, messages) {
-    if (! Form_Alert.staticAlerts[key]) {
-      Form_Alert.staticAlerts[key] = []
-    }
-
-    for (var i = 0; i < messages.length; i++) {
-      Form_Alert.staticAlerts[key].push({ msg: messages[i] });
-    }
-  };
-
   Form_Alert.showAlert = function (form, submit) {
     var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
     $div.append("<h2>警告</h2>");
@@ -287,24 +268,23 @@ this.Form_Alert = (function () {
     var appendAlerts = function (alerts) {
       for (var addon in alerts) {
         var fields = alerts[addon];
-        $div.append('<p>' + addon + '</p>');
+        $div.append($('<p />').text(addon));
         var $ul = $("<ul>").appendTo($div);
         var i, j, len;
         for (i = j = 0, len = fields.length; j < len; i = ++j) {
           var field = fields[i];
           if (field["msg"]) {
-            $ul.append('<li>' + field["msg"] + '</li>');
+            $ul.append($('<li />').html(field["msg"]));
           }
         }
       }
     }
     appendAlerts(Form_Alert.alerts);
-    appendAlerts(Form_Alert.staticAlerts);
 
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
     
-    if (SS.isEmptyObject(Form_Alert.staticAlerts)) {
+    if (SS.isEmptyObject(Form_Alert.alerts["被リンクチェック"])) {
       $footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
     }
     $footer.append('<button name="button" type="button" class="btn-default cancel">キャンセル</button>');
@@ -656,7 +636,7 @@ this.Syntax_Checker = (function () {
   };
 
   ResultBox.prototype.showResult = function (checks, errors) {
-    if (errors.length == 0) {
+    if (errors.length === 0) {
       this.showMessage("<p>" + "エラーは見つかりませんでした。" + "</p>");
       return;
     }
@@ -680,115 +660,254 @@ this.Syntax_Checker = (function () {
 
   ResultBox.prototype.appendMessage = function (ul, checks, errors) {
     var self = this;
-    var correct, li, message, code, column;
+    var correct, li, message;
 
     var errorHash = {};
-
     $.each(errors, function(_, error) {
-      var id = error["id"];
-      errorHash[id] = errorHash[id] || [];
-      (errorHash[id]).push(error);
+      var id = error.id;
+      if (!errorHash[id]) {
+        errorHash[id] = [];
+      }
+      errorHash[id].push(error);
     });
 
-    $.each(checks, function(id, check) {
+    $.each(checks, function(index, check) {
+      var id = check.id;
       errors = errorHash[id];
-
-      if (errors) {
-        // append column name
-        if (check["name"]) {
-          column = $('<li class="column-name">');
-          column.text(check["name"]);
-          ul.append(column);
-        }
-
-        $.each(errors, function(_, error) {
-          // append code
-          code = $('<code>')
-          code.text(error["code"]);
-          ul.append('<li class="code">');
-          ul.find('li:last').append(code);
-
-          // append message
-          ul.append('<ul>');
-          ul.find('> ul:last').append('<li>');
-          li = ul.find('> ul:last li:last');
-          message = $('<span class="message detail">' + error["msg"] + '</span>');
-          if (error["detail"]) {
-            var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
-            var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
-            $.each(error["detail"], function () {
-              detail.append("<li>" + this + "<br></li>");
-            });
-          }
-          li.append(message);
-
-          // append correct
-          if (error["correctContent"]) {
-            correct = $('<a href="#" class="correct">' + "自動修正" + '</a>');
-            correct.on("click", function (e) {
-              var setContent, getContent, correctContent, resolve, type;
-
-              correctContent = error["correctContent"];
-              setContent = check["setContent"];
-              getContent = check["getContent"];
-              resolve = check["resolve"];
-              type = check["type"];
-
-              setContent(correctContent(id, { content: getContent(), resolve: resolve, type: type }, error));
-              $(self.form.addonSelector).find("button.syntax-check").trigger("click");
-
-              return false;
-            });
-            li.append(correct)
-          }
-          if (error["collector"]) {
-            correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("自動修正");
-            correct.on("click", function (ev) {
-              ev.target.disabled = true;
-
-              var setContent = check["setContent"];
-              var getContent = check["getContent"];
-              var resolve = check["resolve"];
-              var type = check["type"];
-
-              var token = $('meta[name="csrf-token"]').attr('content');
-              $.ajax({
-                type: "POST",
-                url: Syntax_Checker.correct_url,
-                cache: false,
-                data: {
-                  authenticity_token: token,
-                  content: { content: getContent(), resolve: resolve, type: type },
-                  collector: error["collector"],
-                  params: error["collector_params"]
-                },
-                success: function(data, textStatus, xhr) {
-                  setContent(data["result"]);
-                  $(self.form.addonSelector).find("button.syntax-check").trigger("click");
-                },
-                error: function (xhr, status, error) {
-                  console.log(error);
-                },
-                complete: function (xhr, status) {
-                  ev.target.disabled = false;
-                }
-              });
-
-              ev.preventDefault();
-              return false;
-            });
-            li.append(correct)
-          }
-        });
+      if (!errors) {
+        return;
       }
+
+      // append column name
+      if (check.name) {
+        var column = $('<li />', { class: "column-name" }).text(check.name);
+        ul.append(column);
+      }
+
+      $.each(errors, function(_, error) {
+        // append code
+        var code = $('<code />');
+        code.text(error["code"]);
+        ul.append('<li class="code">');
+        ul.find('li:last').append(code);
+
+        // append message
+        ul.append('<ul>');
+        ul.find('> ul:last').append('<li>');
+        li = ul.find('> ul:last li:last');
+        message = $('<span class="message detail">' + error["msg"] + '</span>');
+        if (error["detail"]) {
+          var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
+          var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
+          $.each(error["detail"], function () {
+            detail.append($("<li/>").html(this));
+          });
+        }
+        li.append(message);
+
+        // append correct
+        if (error["correctContent"]) {
+          correct = $('<a href="#" class="correct">' + "自動修正" + '</a>');
+          correct.on("click", function (e) {
+            var correctContent = error["correctContent"];
+            check.setContent(correctContent(id, { content: check.getContent(), resolve: check.resolve, type: check.type }, error));
+            $(self.form.addonSelector).find("button.syntax-check").trigger("click");
+
+            return false;
+          });
+          li.append(correct)
+        }
+        if (error["collector"]) {
+          correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("自動修正");
+          correct.on("click", function (ev) {
+            ev.target.disabled = true;
+
+            var token = $('meta[name="csrf-token"]').attr('content');
+            $.ajax({
+              type: "POST",
+              url: Syntax_Checker.correct_url,
+              cache: false,
+              data: {
+                authenticity_token: token,
+                content: { content: check.getContent(), resolve: check.resolve, type: check.type },
+                collector: error["collector"],
+                params: error["collector_params"]
+              },
+              success: function(data, textStatus, xhr) {
+                check.setContent(data["result"]);
+                $(self.form.addonSelector).find("button.syntax-check").trigger("click");
+              },
+              error: function (xhr, status, error) {
+                console.log(error);
+              },
+              complete: function (xhr, status) {
+                ev.target.disabled = false;
+              }
+            });
+
+            ev.preventDefault();
+            return false;
+          });
+          li.append(correct)
+        }
+      });
     });
 
     return;
   };
 
+  function EditorCheck(el) {
+    this.$el = $(el);
+    this.id = el.id;
+    this.name = this.$el.data("syntax-check-name");
+    this.resolve = "html";
+    this.type = "string";
+  }
+
+  EditorCheck.prototype.isVisible = function() {
+    if (typeof CKEDITOR !== 'undefined') {
+      var editor = CKEDITOR.instances[this.id];
+      if (!editor || !editor.document) {
+        return false;
+      }
+      return $(editor.document.$.body).is(":visible")
+    }
+
+    return false;
+  }
+
+  EditorCheck.prototype.getContent = function() {
+    return Cms_Form.getEditorHtml(this.id);
+  };
+
+  EditorCheck.prototype.setContent = function(content) {
+    Cms_Form.setEditorHtml(content, { id: this.id });
+  };
+
+  function getClosestId($el) {
+    if ($el[0].id) {
+      return $el[0].id;
+    }
+
+    var $container = $el.closest("[id]");
+    if ($container[0]) {
+      return $container[0].id;
+    }
+  }
+
+  function ValueCheck(el) {
+    this.$el = $(el);
+    this.id = getClosestId(this.$el);
+    this.name = this.$el.data("syntax-check-name");
+    this.resolve = "text";
+    this.type = "string";
+  }
+
+  ValueCheck.prototype.isVisible = function() {
+    return this.$el.is(":visible")
+  }
+
+  ValueCheck.prototype.getContent = function() {
+    return this.$el.val();
+  };
+
+  ValueCheck.prototype.setContent = function(content) {
+    this.$el.val(content);
+  };
+
+  function ListCheck(el) {
+    this.$el = $(el);
+    this.id = getClosestId(this.$el);
+    this.name = this.$el.data("syntax-check-name");
+    this.resolve = "text";
+    this.type = "array";
+  }
+
+  ListCheck.prototype.isVisible = function() {
+    return this.$el.is(":visible")
+  }
+
+  ListCheck.prototype.getContent = function() {
+    var contents = [];
+    this.$el.find('[name="item[column_values][][in_wrap][lists][]').each(function () {
+      contents.push($(this).val());
+    });
+    return contents;
+  };
+
+  ListCheck.prototype.setContent = function(content) {
+    var selector = this.$el.find('[name="item[column_values][][in_wrap][lists][]');
+    $.each(content, function (idx, value) {
+      var element = selector[idx];
+      if (element) {
+        element.value = value;
+      }
+    });
+  };
+
+  function TableCheck(el) {
+    this.$el = $(el);
+    this.id = getClosestId(this.$el);
+    this.name = this.$el.data("syntax-check-name");
+    this.resolve = "text";
+    this.type = "array";
+
+    this.table = $("#" + this.id).data("instance");
+  }
+
+  TableCheck.prototype.isVisible = function() {
+    return this.$el.is(":visible")
+  }
+
+  TableCheck.prototype.getContent = function() {
+    var contents = [];
+    if (this.table) {
+      contents.push(this.table.caption());
+      contents.push(this.table.tableHtml());
+    }
+    return contents;
+  };
+
+  TableCheck.prototype.setContent = function(content) {
+    if (this.table) {
+      this.table.caption(content[0]);
+      this.table.tableHtml(content[1]);
+    }
+  };
+
+  function LinkCheck(el) {
+    this.$el = $(el);
+    this.id = getClosestId(this.$el);
+    this.name = this.$el.data("syntax-check-name");
+    this.resolve = "text";
+    this.type = "string";
+  }
+
+  LinkCheck.prototype.isVisible = function() {
+    return this.$el.is(":visible")
+  }
+
+  LinkCheck.prototype.getContent = function() {
+    return this.$el.find(".link-label").val();
+  };
+
+  LinkCheck.prototype.setContent = function(content) {
+    this.$el.find(".link-label").val(content);
+  };
+
+  LinkCheck.prototype.afterCheck = function (id, content) {
+    var text = content["content"];
+    if (text && text.length <= 3) {
+      Syntax_Checker.errors.push({
+        id: id, idx: 0, code: text,
+        msg: Syntax_Checker.message["checkLinkText"],
+        detail: Syntax_Checker.detail["checkLinkText"]
+      });
+    }
+  };
+
   function Syntax_Checker() {};
 
-  Syntax_Checker.checks = {};
   Syntax_Checker.errors = [];
   Syntax_Checker.errorCount = 0;
 
@@ -831,49 +950,60 @@ this.Syntax_Checker = (function () {
     return defer.promise();
   };
 
-  Syntax_Checker.addCheck = function (id, options) {
-    options = options || {};
-
-    var name = options["name"] || null;
-    var resolve = options["resolve"] || "text";
-    var type = options["type"] || "string";
-    var getContent = options["getContent"];
-    var setContent = options["setContent"];
-    var afterCheck = options["afterCheck"];
-
-    Syntax_Checker.checks[id] = {
-      name: name,
-      resolve: resolve,
-      type: type,
-      getContent: getContent,
-      setContent: setContent,
-      afterCheck: afterCheck
-    };
-  };
-
-  Syntax_Checker.resetChecks = function () {
-    Syntax_Checker.checks = {};
+  Syntax_Checker.reset = function () {
     Syntax_Checker.errors = [];
     Syntax_Checker.errorCount = 0;
   };
 
-  Syntax_Checker.reset = function () {
-    this.errors = [];
-  };
+  function collectChecks() {
+    var checks = [];
 
-  Syntax_Checker.getContents = function () {
-    var contents = {};
+    $("[data-syntax-check]").each(function() {
+      if (!this._ss) {
+        this._ss = {};
+      }
 
-    $.each(Syntax_Checker.checks, function(id, check) {
-      contents[id] = { content: check["getContent"](), resolve: check["resolve"], type: check["type"], afterCheck: check["afterCheck"] };
+      var check = this._ss.syntaxCheck;
+      if (check) {
+        if (check.isVisible()) {
+          checks.push(check);
+        }
+        return;
+      }
+
+      var type = this.dataset.syntaxCheck;
+      if (type === "editor") {
+        check = new EditorCheck(this);
+      } else if (type === "value") {
+        check = new ValueCheck(this);
+      } else if (type === "list") {
+        check = new ListCheck(this);
+      } else if (type === "table") {
+        check = new TableCheck(this);
+      } else if (type === "link") {
+        check = new LinkCheck(this);
+      }
+      if (!check) {
+        console.warn(type + ": unknown syntax check type")
+        return;
+      }
+
+      this._ss.syntaxCheck = check;
+      if (check.isVisible()) {
+        checks.push(check);
+      }
     });
 
-    return contents;
-  };
+    return checks;
+  }
 
   Syntax_Checker.check = function (defer) {
     var token = $('meta[name="csrf-token"]').attr('content');
-    var contents = Syntax_Checker.getContents();
+    var checks = collectChecks();
+    var contents = {};
+    $.each(checks, function() {
+      contents[this.id] = { content: this.getContent(), resolve: this.resolve, type: this.type, afterCheck: this.afterCheck };
+    });
     var params = [];
     $.each(contents, function(id, content) {
       var param = {};
@@ -895,7 +1025,7 @@ this.Syntax_Checker = (function () {
       data: JSON.stringify({ authenticity_token: token, item: { contents: params } }),
       contentType: "application/json",
       success: function(data, textStatus, xhr) {
-        Syntax_Checker.showServerResult(contents, data, textStatus, xhr);
+        Syntax_Checker.showServerResult(checks, contents, data, textStatus, xhr);
         defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
       },
       error: function (xhr, status, error) {
@@ -908,7 +1038,7 @@ this.Syntax_Checker = (function () {
     });
   };
 
-  Syntax_Checker.showServerResult = function (contents, data, textStatus, xhr) {
+  Syntax_Checker.showServerResult = function (checks, contents, data, textStatus, xhr) {
     $.each(data.errors, function() {
       Syntax_Checker.errors.push(this);
     });
@@ -924,7 +1054,7 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    Syntax_Checker.resultBox.showResult(Syntax_Checker.checks, Syntax_Checker.errors);
+    Syntax_Checker.resultBox.showResult(checks, Syntax_Checker.errors);
   }
 
   // javascript syntax check
@@ -1132,7 +1262,7 @@ this.Mobile_Size_Checker = (function () {
     this.$elBody.html('');
     for (var j = 0, len = ref.length; j < len; j++) {
       var err = ref[j];
-      this.$elBody.append('<p class="error">' + err + '</p>');
+      this.$elBody.append($('<p/>', { class: "error" }).html(err));
     }
 
     return this.moveLast();
@@ -1318,12 +1448,12 @@ this.Link_Checker = (function () {
 
   ResultBox.prototype.showResult = function (links) {
     var $ul = $("<ul/>");
-    $.each(links, function(link, msg) {
-      $ul.append('<li>' + msg + '</li>');
+    $.each(links, function(link, msgHtml) {
+      $ul.append($('<li/>').html(msgHtml));
     });
 
     this.$elBody.html("");
-    this.$elBody.append("<p>" + Link_Checker.message["checkLinks"] + "</p>");
+    this.$elBody.append($("<p/>").text(Link_Checker.message["checkLinks"]));
     this.$elBody.append($ul);
 
     return this.moveLast();
@@ -1549,6 +1679,46 @@ this.Link_Checker = (function () {
   return Link_Checker;
 
 })();
+this.Backlink_Checker = (function () {
+  function Backlink_Checker() {
+  }
+
+  Backlink_Checker.enabled = false;
+
+  Backlink_Checker.url = null;
+
+  Backlink_Checker.itemId = null;
+
+  Backlink_Checker.asyncCheck = function(form, submit, opts) {
+    var defer = $.Deferred();
+    if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
+      defer.resolve();
+      return defer.promise();
+    }
+
+    $.ajax({
+      url: Backlink_Checker.url,
+      method: "post",
+      data: { item: { id: Backlink_Checker.itemId, submit: submit.name } },
+      cache: false,
+      success: function(data) {
+        if (data["errors"] && data["errors"].length > 0) {
+          Form_Alert.add(data["addon"], null, data["errors"]);
+        }
+      },
+      error: function (_xhr, _status, _error) {
+        Form_Alert.add("backlink_check", null, [ "Server Error" ]);
+      },
+      complete: function(_xhr, _status) {
+        defer.resolve();
+      }
+    });
+
+    return defer.promise();
+  };
+
+  return Backlink_Checker;
+})();
 Cms_TemplateForm = function(options) {
   this.options = options;
   this.$formChangeBtn = $('#addon-basic .btn-form-change');
@@ -1676,7 +1846,7 @@ Cms_TemplateForm.prototype.loadForm = function(html) {
   this.$formPage.html($(html).html());
   // SS.render();
   SS.renderAjaxBox();
-  SS.renderDateTimePicker();
+  SS_DateTimePicker.render();
 };
 
 Cms_TemplateForm.prototype.showError = function(msg) {
@@ -1692,7 +1862,6 @@ Cms_TemplateForm.prototype.activateForm = function(formId) {
   $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
   $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
-  Cms_Form.activateSyntaxChecks();
 
   this.$formIdInput.val(formId);
   this.$formChangeBtn.trigger("ss:formActivated");
@@ -1708,7 +1877,6 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   $("#item_body_layout_id").parent('dd').prev('dt').removeClass('hide');
   $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
-  Cms_Form.activateSyntaxChecks();
 
   this.$formIdInput.val('');
   this.$formChangeBtn.trigger("ss:formDeactivated");
@@ -1767,8 +1935,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
         // use "setTimeout" to consume events in browser.
         setTimeout(function() {
           SS.renderAjaxBox();
-          SS.renderDateTimePicker();
-          Cms_Form.activateSyntaxChecks();
+          SS_DateTimePicker.render();
 
           setTimeout(function() {
             $this.trigger("ss:columnAdded", newColumnElement);
@@ -2029,7 +2196,6 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
     }
     $columnValue.remove();
     self.resetOrder();
-    Cms_Form.activateSyntaxChecks();
 
     self.$el.trigger("ss:columnDeleted");
   });
@@ -2624,7 +2790,7 @@ SS_WorkflowApprover.prototype.onClickSave = function () {
   var self = this;
 
   self.addOrUpdateInput("item[state]", "closed");
-  self.addOrUpdateInput("item[workflow_reset]", null);
+  self.removeInput("item[workflow_reset]");
 };
 
 SS_WorkflowApprover.prototype.onPublishSaveClicked = function () {
@@ -2645,6 +2811,10 @@ SS_WorkflowApprover.prototype.addOrUpdateInput = function (name, value) {
     .attr("name", name)
     .attr("value", value)
     .appendTo("#item-form");
+};
+
+SS_WorkflowApprover.prototype.removeInput = function (name) {
+  $("#item-form").find("input[name='" + name + "']").remove();
 };
 this.SS_Addon_TempFile = (function () {
   function SS_Addon_TempFile(selector, userId, options) {
@@ -2777,14 +2947,14 @@ this.SS_Addon_TempFile = (function () {
       formData.append('item[in_files][]', files[j]);
     }
     var request = new XMLHttpRequest();
-    request.onload = function (e) {
+    request.onload = function(_ev) {
       if (request.readyState === XMLHttpRequest.DONE) {
         _this.$selector.removeClass('file-dragenter');
         if (request.status === 200 || request.status === 201) {
           var files = JSON.parse(request.response);
           _this.select(files, _this.$selector);
         } else if (request.status === 413) {
-          alert(["== Error =="].concat("データのサイズが大きすぎます。").join("\n"));
+          alert(["== Error =="].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
         } else {
           try {
             var json = $.parseJSON(request.response);
@@ -2795,6 +2965,10 @@ this.SS_Addon_TempFile = (function () {
         }
         _this.dropEventTriggered = false;
       }
+    };
+    request.onerror = function(ev) {
+      _this.dropEventTriggered = false;
+      _this.onDragLeave(ev);
     };
     request.open("POST", _this.uploadUrl());
     request.send(formData);
@@ -2816,7 +2990,7 @@ this.SS_SearchUI = (function () {
         <input type=\"<%= attr.type %>\" name=\"<%= attr.name %>\" value=\"<%= data.id %>\" class=\"<%= attr.class %>\"> \
         <%= data.name %> \
       </td> \
-      <td><a class=\"deselect btn\" href=\"#\">削除</a></td> \
+      <td><a class=\"deselect btn\" href=\"#\"><%= label.delete %></a></td> \
     </tr>";
 
   SS_SearchUI.defaultSelector = function ($item) {
@@ -2841,7 +3015,7 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, { data: data, attr: attr });
+    var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
 
     var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     $ajaxSelected.find("tbody").prepend(tr);
@@ -2906,7 +3080,7 @@ this.SS_SearchUI = (function () {
     var self = this;
 
     $(".ajax-selected").each(function () {
-      $(this).on("click", ".deselect", self.deselect);
+      $(this).on("click", "a.deselect", self.deselect);
       if ($(this).find("a.deselect").size() === 0) {
         $(this).hide();
       }
@@ -3116,7 +3290,7 @@ this.SS_ListUI = (function () {
       // for backward compatibility
       this.dataset.ssButtonToAction = "";
       this.dataset.ssButtonToMethod = "delete";
-      this.dataset.ssConfirmation = "削除してよろしいですか？";
+      this.dataset.ssConfirmation = i18next.t('ss.confirm.delete');
       this.classList.add("btn-list-head-action");
     });
     $el.find(".list-head [data-ss-list-head-method]").each(function() {
@@ -3400,7 +3574,14 @@ this.SS_Dropdown = (function () {
   };
 
   SS_Dropdown.prototype.toggleDropdown = function () {
+    this.closeOtherDropdown();
     return this.target.toggle();
+  };
+
+  SS_Dropdown.prototype.closeOtherDropdown = function () {
+    $(".dropdown-container").not(this.target.get(0)).each(function () {
+      $(this).hide();
+    });
   };
 
   SS_Dropdown.prototype.cancelEvent = function (e) {
@@ -3623,12 +3804,7 @@ SS_Preview = (function () {
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
-    this.$datePicker.datetimepicker({
-      lang: "ja",
-      roundTime: "ceil",
-      step: 30,
-      closeOnDateSelect: true
-    });
+    new SS_DateTimePicker(this.$datePicker, "datetime");
 
     var self = this;
 
@@ -3793,6 +3969,14 @@ SS_Preview = (function () {
     if (opts.notice) {
       this.notice.show(opts.notice);
     }
+
+    // sets relative on the wrapper
+    $('body').children().each(function() {
+      $el = $(this);
+      if ($el.css('position') === 'static') {
+        $el.css('position', 'relative');
+      }
+    });
   };
 
   SS_Preview.prototype.initializeLayout = function() {
@@ -4096,7 +4280,7 @@ SS_Preview = (function () {
     var list = this.$el.find(".ss-preview-part-list");
     var options = list.html();
     $.each(this.parts, function(index, item) {
-      options += "<option value=\"" + item.id + "\">" + item.name + "</option>"
+      options += $("<option />", { value: item.id }).text(item.name).prop("outerHTML");
     });
 
     list.html(options).on('change', function() {
@@ -4398,7 +4582,7 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.dateForPreview = function() {
-    var date = this.$datePicker.val();
+    var date = SS_DateTimePicker.instance(this.$datePicker).valueForExchange();
     if (!date) {
       return;
     }
@@ -4858,7 +5042,7 @@ SS_Preview = (function () {
       var html = [];
       $(document).find(".ss-preview-column[data-column-order]").each(function () {
         var order = parseInt(this.dataset.columnOrder, 10);
-        html.push("<option value=\"" + order + "\">" + (order + 1) + "</option>");
+        html.push($("<option />", { value: order }).text((order + 1).toString()).prop("outerHTML"));
       });
 
       select.html(html.join(""));

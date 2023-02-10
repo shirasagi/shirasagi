@@ -46,7 +46,7 @@ Map_Reference.prototype.reload = function() {
   console.log(selectOptions);
   $.each(selectOptions, function() {
     var value = this.toString();
-    var $option = $("<option />", { value: value }).html(value);
+    var $option = $("<option />", { value: value }).text(value);
     if (value === selected) {
       $option.prop("selected", true);
     }
