@@ -30,10 +30,10 @@
     <% end %>
 
     <dt><%= task.t :started %></dt>
-    <dd class="started"><%= task.started.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
+    <dd class="started"><%= task.started.try { |time| ss_time_tag(time) } %></dd>
 
     <dt><%= task.t :closed %></dt>
-    <dd class="closed"><%= task.closed.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
+    <dd class="closed"><%= task.closed.try { |time| ss_time_tag(time) } %></dd>
   </dl>
 
   <div class="controller">
