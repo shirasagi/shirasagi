@@ -4,8 +4,6 @@ class SS::Migration20221214000000
   depends_on "20220928000000"
 
   def change
-    if Gws::Aggregation::Group.count == 0
-      ::Tasks::SS.invoke_task("gws:aggregation:group:update")
-    end
+    ::Tasks::SS.invoke_task("gws:aggregation:group:update")
   end
 end
