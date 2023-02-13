@@ -220,14 +220,14 @@ this.Openlayers_Map_Form = (function () {
       text = $(this).find(".marker-text").val();
       loc = $(this).find(".marker-loc").val();
       if (name) {
-        markerHtml += '<p>' + name + '</p>';
+        markerHtml += $('<p />').text(name).prop('outerHTML');
       }
       if (text) {
         return $.each(text.split(/[\r\n]+/), function () {
           if (this.match(/^https?:\/\//)) {
-            return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+            return markerHtml += $('<p />').html($('<a />', { href: this}).text(this));
           } else {
-            return markerHtml += '<p>' + this + '</p>';
+            return markerHtml += $('<p />').text(this).prop('outerHTML');
           }
         });
       }

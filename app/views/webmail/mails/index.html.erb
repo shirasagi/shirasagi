@@ -117,7 +117,7 @@
           <% title_flag = item.answered? ? %(<i class="material-icons md-18 icon-reply">&#xE15E;</i>) : nil %>
           <%== title_flag %><%= item.display_subject %>
         <% end %>
-        <span class="field datetime"><%= tryb { ss_time_tag item.internal_date } %></span>
+        <span class="field datetime"><%= ss_time_tag item.internal_date %></span>
         <span class="field size"><%= item.display_size %></span>
       </div>
     </li>

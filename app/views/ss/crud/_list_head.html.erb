@@ -1,9 +1,14 @@
 <%
 
-# deletable = @model.allowed?(:delete, @cur_user, site: @cur_site, owned: true) rescue true # for uploader
 releasable = false
-releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true) if @model.include?(Cms::Model::Node)
-releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true) if @model.include?(Cms::Addon::Release)
+closeable = false
+if @model.include?(Cms::Addon::Release)
+  releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true)
+  closeable = @model.allowed?(:close, @cur_user, site: @cur_site, owned: true)
+elsif @model.include?(Cms::Model::Node)
+  releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true)
+  closeable = releasable
+end
 
 %>
 <div class="list-head">
@@ -14,12 +19,12 @@ releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true) 
     <div class="list-head-action-destroy">
       <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     </div>
-    <% if releasable %>
+    <% if releasable || closeable %>
       <div class="list-head-action-update">
         <%= ss_button_to t("ss.links.make_them_public"), "",
-          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'public' } %>
+          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'public' } if releasable %>
         <%= ss_button_to t("ss.links.make_them_close"), "",
-          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'closed' } %>
+          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'closed' } if closeable %>
       </div>
     <% end %>
   </div>

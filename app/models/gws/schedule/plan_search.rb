@@ -51,7 +51,7 @@ class Gws::Schedule::PlanSearch
     plan_times = {}
     facility_times = {}
     plans.each do |plan|
-      time = Time.zone.parse plan.start_at.strftime("%Y-%m-%d %H:00:00")
+      time = plan.start_at.change(min: 0)
       fids = facility_ids & plan.facility_ids
 
       while time < plan.end_at

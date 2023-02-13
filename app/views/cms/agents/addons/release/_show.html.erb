@@ -6,10 +6,10 @@
     <dt><%= @model.t :released %></dt>
       <dd>
       <% if !@item.respond_to?(:released_type) || @item.released_type == "fixed" %>
-        <%= @item.released.try { |time| content_tag(:time, I18n.l(time, format: :long), datetime: time.iso8601) } %>
+        <%= @item.released.try { |time| ss_time_tag(time, format: :long) } %>
       <% else %>
         <%= @item.label :released_type %>
-        <%= @item.released.try { |time| content_tag(:time, "(" + I18n.l(time, format: :long) + ")", datetime: time.iso8601) } %>
+        (<%= @item.released.try { |time| ss_time_tag(time, format: :long) } %>)
       <% end %>
     </dd>
   <% end %>

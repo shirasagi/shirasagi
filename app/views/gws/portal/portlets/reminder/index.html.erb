@@ -31,7 +31,7 @@
             <% if item.start_at.present? %>
               <span class="datetime"><%= term(item) %></span>
             <% else %>
-              <span class="datetime"><%= tryb { ss_time_tag item.date } %></span>
+              <span class="datetime"><%= ss_time_tag item.date %></span>
             <% end %>
             <% item.notifications.each do |notification| %>
               <span class="datetime"><%= tryb { notification.interval_label } %></span>

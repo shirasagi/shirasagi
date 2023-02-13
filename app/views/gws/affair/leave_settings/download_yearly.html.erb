@@ -6,7 +6,10 @@
     <div class="main-body">
       <dl class="see">
         <dt><%= t("gws/affair.labels.caution") %></dt>
-        <dd><%=br t("gws/affair.caution.leave_setting_download_yearly", year: @cur_year.name).join("\n") %></dd>
+        <dd>
+          <%= t("gws/affair.caution.leave_setting_download_yearly", year: @cur_year.name) %><br>
+          <%= Gws::Affair::Utils.leave_minutes_to_day_label(@cur_site) %>
+        </dd>
       </dl>
     </div>
   </section>

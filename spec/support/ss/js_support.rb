@@ -430,6 +430,8 @@ module SS
     end
 
     def fill_in_datetime(locator, **options)
+      wait_for_js_ready
+
       element = find(:fillable_field, locator, visible: :all)
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?

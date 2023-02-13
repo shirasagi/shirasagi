@@ -57,6 +57,7 @@ ja:
     under_maintenance_mode: 現在メンテナンス中です。
     pagination: ページネーション
     hours: 時間
+    minutes: 分
     remark: 備考
     before: 前
     after: 後
@@ -281,7 +282,7 @@ ja:
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。
-      file_droppable: ファイルをドロップすることでアップロードできます。
+      file_droppable: ここにファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。

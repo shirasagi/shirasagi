@@ -7,6 +7,7 @@
   }
 
   <% if @model.use_liquid %>
+  var $addon = $("<%= "##{addon[:id]}" %>");
   var changeLoopFormat = function() {
     var format = $addon.find("select[name='item[loop_format]']").val();
     if (format === "liquid") {

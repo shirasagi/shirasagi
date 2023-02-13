@@ -157,6 +157,9 @@ production: &production
         end_hour: 29
       aggregate:
         threshold_hour: 60
+    leave_setting:
+      download_yearly:
+        threshold_minute: 225
 
   memo:
     disable_unsend: true

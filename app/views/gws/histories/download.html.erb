@@ -17,9 +17,9 @@
       <dl class="see">
         <dt><%= Gws::History.model_name.human %></dt>
         <dd>
-          <%= f.text_field :from, class: 'date js-date', value: tryb { @item.from.strftime('%Y/%m/%d') }, data: { min_date: min, max_date: max } %>
+          <%= f.ss_date_field :from, min_date: min, max_date: max %>
           <%= t("ss.wave_dash") %>
-          <%= f.text_field :to, class: 'date js-date', value: tryb { @item.to.strftime('%Y/%m/%d') }, data: { min_date: min, max_date: max } %>
+          <%= f.ss_date_field :to, min_date: min, max_date: max %>
         </dd>
 
         <dt><%= t('ss.encoding') %></dt>

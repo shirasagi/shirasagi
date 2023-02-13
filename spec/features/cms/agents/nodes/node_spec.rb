@@ -53,6 +53,7 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
 
     let!(:item1) { create :cms_page, filename: "cms-node/pages/item1.html", group_ids: [cms_group.id], order: 10 }
     let!(:item2) { create :article_page, filename: "cms-node/pages/item2.html", group_ids: [cms_group.id], order: 30 }
+    let(:expected_html) { [item1, docs_node, item2].map { |item| "<li>#{item.name}</li>" }.join("\n") }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -62,7 +63,7 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
       visit cms_node.url
       expect(status_code).to eq 200
       expect(page).to have_link(pages.name)
-      expect(page.body.include?("<li>#{item1.name}</li><li>#{docs_node.name}</li><li>#{item2.name}</li>")).to be_truthy
+      expect(page.html).to include(expected_html)
     end
   end
 end

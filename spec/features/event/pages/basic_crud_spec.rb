@@ -140,7 +140,8 @@ describe "event_pages", type: :feature, js: true do
     it "not permited and contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
-                                  release_private_event_pages release_other_event_pages))
+                                  release_private_event_pages release_other_event_pages
+                                  close_private_event_pages close_other_event_pages))
       visit edit_path2
       within "form" do
         click_on I18n.t("ss.buttons.withdraw")
@@ -152,7 +153,8 @@ describe "event_pages", type: :feature, js: true do
     it "not permited and not contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
-                                  release_private_event_pages release_other_event_pages))
+                                  release_private_event_pages release_other_event_pages
+                                  close_private_event_pages close_other_event_pages))
       visit edit_path
       within "form" do
         click_on I18n.t("ss.buttons.withdraw")

@@ -14,7 +14,7 @@
     <tbody>
       <% @item.group_histories.each do |item| %>
       <tr>
-        <td><%= tryb { ss_time_tag item.created } %></td>
+        <td><%= ss_time_tag item.created %></td>
         <td><%= item.group_names.join(', ').presence || '-' %></td>
       </tr>
       <% end %>

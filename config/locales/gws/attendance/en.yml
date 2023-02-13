@@ -128,6 +128,7 @@ en:
         compensatory_minute1: Compensatory 1
         compensatory_minute2: Compensatory 2
         compensatory_minute3: Compensatory 3
+        upper_day_leave_minute: Upper day leave minute
         week_out_compensatory_file_limit: Week out Compensatory limit
         week_out_compensatory_file_notify_day: Week out Compensatory notify day
     errors:
@@ -162,6 +163,14 @@ en:
         - For commonly used kanji characters, you can select Shift JIS.
 
     gws/addon/attendance/group_setting:
+      compensatory_minute1:
+        - Set compensatory minute.
+      compensatory_minute2:
+        - Set compensatory minute.
+      compensatory_minute3:
+        - Set compensatory minute.
+      upper_day_leave_minute:
+        - Set upper day leave minute.
       week_out_compensatory_file_limit:
         - Set week out compensatory expiration.
       week_out_compensatory_file_notify_day:

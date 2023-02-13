@@ -46,7 +46,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: folder_name
 
         within '.gws-addon-member' do
-          click_on I18n.t('ss.apis.users.index')
+          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
         end
       end
       wait_for_cbox do
@@ -56,12 +56,12 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on site.name
         end
         expect(page).to have_content(editor.name)
-        click_on editor.name
+        wait_cbox_close { click_on editor.name }
       end
       within 'form#item-form' do
         within '.gws-addon-readable-setting' do
           click_on I18n.t('ss.buttons.delete')
-          click_on I18n.t('ss.apis.users.index')
+          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
         end
       end
       wait_for_cbox do
@@ -71,13 +71,19 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on site.name
         end
         expect(page).to have_content(reader.name)
-        click_on reader.name
+        wait_cbox_close { click_on reader.name }
       end
       within 'form#item-form' do
+        within "#addon-gws-agents-addons-member" do
+          expect(page).to have_css("[data-id='#{editor.id}']", text: editor.name)
+        end
+        within "#addon-gws-agents-addons-readable_setting" do
+          expect(page).to have_css("[data-id='#{reader.id}']", text: reader.name)
+        end
         click_on I18n.t('ss.buttons.save')
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Notice::Folder.all.count).to eq 1
       folder = Gws::Notice::Folder.all.first
@@ -103,13 +109,15 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: notice_name
         fill_in 'item[text]', with: notice_text
-        click_on I18n.t("gws.apis.categories.index")
+        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
       end
       wait_for_cbox do
-        expect(page).to have_content(cate.name)
-        click_on cate.name
+        wait_cbox_close { click_on cate.name }
       end
       within 'form#item-form' do
+        within "#addon-gws-agents-addons-notice-category" do
+          expect(page).to have_css("[data-id='#{cate.id}']", text: cate.name)
+        end
         click_on I18n.t('ss.buttons.save')
       end
 

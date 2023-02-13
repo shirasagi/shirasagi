@@ -23,7 +23,7 @@
       <% @item.histories.each do |history| %>
       <tr id="history-<%= history.id %>">
         <td><%= history.mode_name %></td>
-        <td><%= tryb { ss_time_tag history.created } %></td>
+        <td><%= ss_time_tag history.created %></td>
         <td><%= gws_public_user_long_name(history.user_long_name) %></td>
         <% if @cur_site.user_profile_public?("tel") %>
           <td><%= history.user_tel %></td>

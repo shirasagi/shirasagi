@@ -3,7 +3,7 @@ en:
     aggregate: Aggregate results
     capital: Capital types
     default_duty_hour: Default duty hour
-    default_holiday_calendar: Default holiday calendar
+    default_holiday_calendar: Default holiday
     default_duty_calendar: Default duty calendar
     top_holidays_on_year: "Show %{count} holidays in %{year}"
     year_id: Fiscal year
@@ -107,8 +107,8 @@ en:
         - "%{year}'s leave setting import"
       leave_setting_import_member_last_year:
         - ""
-      leave_setting_download_yearly:
-        - "%{year}'s leave setting export"
+      leave_setting_download_yearly: "%{year}'s leave setting export"
+      leave_minutes_to_day: "%{upper_hour} hours : 1 day + fraction %{threshold_hour} hours : 1 day"
       capital_import_group:
         - "%{year}'s capital setting import"
       capital_import_member:
@@ -198,6 +198,8 @@ en:
         description_name: Description name
         item_name: Item name
         subitem_name: Subitem name
+        member_group_ids: Member groups
+        member_ids: Members
       capital_group:
         group_name: Group name
         project_code: Project code
@@ -220,7 +222,7 @@ en:
       duty_hours:
         index: Select duty hour
       holiday_calendars:
-        index: Select holiday calendars
+        index: Select holidays
       duty_notices:
         index: Select duty notices
       special_leaves:
@@ -257,14 +259,14 @@ en:
     gws/affair/worktime/aggregate/default: Users
     gws/affair/duty_setting: Duty setting
     gws/affair/duty_hour: Duty hour
-    gws/affair/duty_calendar: Duty calendar
-    gws/affair/holiday_calendar: Holiday calendar
+    gws/affair/duty_calendar: Timecard
+    gws/affair/holiday_calendar: Holiday
     gws/affair/capital: Capital
     gws/affair/capital_years: Capital years
     gws/affair/shift_work: Shift work
     gws/affair/shift_work/calendar: Shift calendar
     gws/affair/shift_work/shift_calendar: Shift calendar
-    gws/affair/duty_notice: Timecard notification
+    gws/affair/duty_notice: Notification
     gws/affair/special_leave: Special leave types
     addons:
       gws/affair/overtime_file: Overtime
@@ -274,7 +276,7 @@ en:
       gws/affair/duty_hour: Duty hour
       gws/affair/holiday: Holiday
       gws/affair/flextime: Flextime
-      gws/affair/duty_notice: Timecard notification
+      gws/affair/duty_notice: Notification
       gws/affair/file_target: Target
       gws/affair/annual_leave_setting: Annual leave
       gws/affair/paid_leave_setting: Paid leave
@@ -285,7 +287,7 @@ en:
       gws/affair/capital: Capital
       gws/affair/duty_calendar: Duty calendar
       gws/affair/duty_hour: Duty hour
-      gws/affair/holiday_calendar: Holiday calendar
+      gws/affair/holiday_calendar: Holiday
       gws/affair/capital_year: Capital year
     attributes:
       gws/affair/capital:
@@ -309,7 +311,7 @@ en:
         name: Name
         code: Code
       gws/affair/shift_record:
-        duty_calendar_id: Duty calendar
+        duty_calendar_id: Timecard
         date: Date
         wday: Week day
         start_at: Start
@@ -397,7 +399,7 @@ en:
       gws/addon/affair/duty_hour:
         duty_hour_ids: Duty hours
       gws/addon/affair/holiday:
-        holiday_calendar_ids: Holiday calendar
+        holiday_calendar_ids: Holiday
       gws/addon/affair/duty_notice:
         duty_notice_ids: Timecard notification
       gws/affair/holiday_calendar:
@@ -628,6 +630,13 @@ en:
     gws/affair/duty_hour:
       name:
         - Input name.
+      affair_time:
+        - Input time.
+    gws/affair/holiday_calendar:
+      name:
+        - Input name.
+      wday_settings:
+        - Input wday settings.
     gws/affair/duty_notice:
       name:
         - Input title.

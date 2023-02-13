@@ -1,7 +1,7 @@
 module Gws::Addon::Affair::LeaveFile
   extend ActiveSupport::Concern
   extend SS::Addon
-  include Gws::Affair::LeaveFile::Compensatory
+  include Compensatory
 
   included do
     attr_accessor :start_at_date, :start_at_hour, :start_at_minute,
@@ -108,7 +108,7 @@ module Gws::Addon::Affair::LeaveFile
 
       working_minute, = duty_calendar.working_minute(date, affair_start_at, affair_end_at)
       next if working_minute == 0
-      minute = Gws::Affair::Utils.format_leave_minutes(working_minute)
+      minute = Gws::Affair::Utils.format_leave_minutes(site, working_minute)
 
       self.in_leave_dates << OpenStruct.new(
         date: date,

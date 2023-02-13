@@ -1,12 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
+import i18next from 'i18next'
 
 const CONTACT_ATTRIBUTES = [
   "contact_charge", "contact_tel", "contact_fax", "contact_email", "contact_link_url", "contact_link_name"
 ]
 
 export default class extends Controller {
-  static values = { inquiryFormEnabled: Boolean }
-
   initialize() {
   }
 
@@ -25,6 +24,12 @@ export default class extends Controller {
     const $el = $(this.element)
     const $data = $item.closest("[data-id]")
 
+    const contactGroupRelation = $el.find("[name=\"item[contact_group_relation]\"]").val()
+    if (contactGroupRelation === "unrelated") {
+      SS.notice(i18next.t("contact.notices.unchanged_contacts"))
+      return
+    }
+
     const groupName = $data.data("contact-group-name")
     $el.find('[name="item[contact_charge]"]').val(groupName || '');
 
@@ -34,10 +39,8 @@ export default class extends Controller {
     const fax = $data.data("contact-fax")
     $el.find('[name="item[contact_fax]"]').val(fax || '');
 
-    if (!this.inquiryFormEnabledValue) {
-      const email = $data.data("contact-email");
-      $el.find('[name="item[contact_email]"]').val(email || '');
-    }
+    const email = $data.data("contact-email");
+    $el.find('[name="item[contact_email]"]').val(email || '');
 
     const linkUrl = $data.data("contact-link-url");
     $el.find('[name="item[contact_link_url]"]').val(linkUrl || '');

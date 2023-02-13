@@ -7,12 +7,6 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
-  concern :change_state do
-    get :state, on: :member
-    put :change_state_all, on: :collection, path: ''
-  end
-
-
   concern :copy do
     get :copy, on: :member
     put :copy, on: :member
@@ -21,6 +15,11 @@ Rails.application.routes.draw do
   concern :command do
     get :command, on: :member
     post :command, on: :member
+  end
+
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
   end
 
   content "opendata" do

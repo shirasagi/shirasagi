@@ -130,6 +130,7 @@ en:
       unable_to_reserve_all_days: You cannot reserve a facility all day due to limits on facility use.
       faciliy_day_lte: "The reservation time must be within %{count} days."
       not_found_reservable_facilities: No available facilities found.
+      resource_error: Failed to get schedule.
 
     csv:
       id: ID

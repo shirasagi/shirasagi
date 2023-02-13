@@ -95,7 +95,9 @@
 %>
 
 <%
-  if contact_group.present? && contact_group.contact_email.present? && @cur_site.inquiry_form.present?
+  # グループに主メールアドレスが設定されているかどうかで、お問い合わせフォームのリンクを表示するかどうかを切り替えている。
+  # 分かりずらい仕様だと思うので、将来のどこかのタイミングで、別のスイッチを儲けた方が良さそう。
+  if contact_group.present? && contact_group.contact_email.present? && @cur_site.inquiry_form.present? && @cur_site.inquiry_form.public?
     url = @cur_site.inquiry_form.url
     url = url + "?" + { group: contact_group.id, page: @cur_page.id }.to_query
     contact_parts << content_tag(:div, link_to(t("contact.view.inquiry_form"), url), class: "inquiry-form")

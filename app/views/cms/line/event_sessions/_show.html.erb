@@ -9,7 +9,7 @@
   <dd><%= @item.data %></dd>
 
   <dt><%= @model.t :locked_at %></dt>
-  <dd><%= tryb { ss_time_tag @item.locked_at } %></dd>
+  <dd><%= ss_time_tag @item.locked_at %></dd>
 
   <dt><%= @model.t :created %></dt>
   <dd><%= ss_time_tag @item.created %></dd>

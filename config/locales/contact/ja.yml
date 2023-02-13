@@ -37,6 +37,8 @@ ja:
             通常は「グループと連動する」を選択してください。
     buttons:
       select: 選択
+    notices:
+      unchanged_contacts: "連絡先グループが変更されましたが、「グループと連動しない」に設定されているため「担当」〜「リンク名」は変更されません。"
 
   modules:
     contact: 連絡先

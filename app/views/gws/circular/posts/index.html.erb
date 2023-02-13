@@ -40,7 +40,7 @@
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { ss_time_tag item.due_date, type: :date } %></span>
+            <span class="datetime"><%= @model.t(:due_date) %>: <%= ss_time_tag(item.due_date, type: :date) %></span>
             <span class="datetime"><%= @model.t(:updated) %>: <%= ss_time_tag last_updated %></span>
             <span class="datetime"><%= @model.t(:created) %>: <%= ss_time_tag item.created %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>

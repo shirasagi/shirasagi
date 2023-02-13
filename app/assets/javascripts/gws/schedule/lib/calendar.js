@@ -22,6 +22,9 @@ SS.ready(function() {
       if (opts['restUrl']) {
         $.extend(true, params, this.tapMenuParams(selector, opts));
       }
+      for (var i in opts.eventSources) {
+        opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
+      }
       $.extend(true, params, opts);
       $(selector).fullCalendar(params);
       this.renderInitialize(selector, init);
@@ -133,14 +136,15 @@ SS.ready(function() {
           day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.day'))
         },
         loading: function (isLoading, view) {
+          var target = $(selector).hasClass("fc-list-format") ? $(this).find('.fc-view') : $(this).find('.fc-widget-content').eq(0)
+
+          $(this).find('.fc-loading').remove();
           if (isLoading) {
-            if ($(selector).hasClass("fc-list-format")) {
-              return $(this).find('.fc-view').prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading")));
-            } else {
-              return $(this).find('.fc-widget-content').eq(0).prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading")));
-            }
-          } else {
-            return $(this).find('.fc-loading').remove();
+            return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.loading")));
+          }
+          if ($(selector).data('resource-error')) {
+            $(selector).data('resource-error', null);
+            return target.prepend($('<span />', { class: "fc-loading" }).text(i18next.t("gws/schedule.errors.resource_error")));
           }
         },
         eventRender: function(event, element) {

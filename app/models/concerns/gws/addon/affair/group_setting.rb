@@ -9,7 +9,7 @@ module Gws::Addon::Affair::GroupSetting
     field :compensatory_minute1, type: Integer, default: 240
     field :compensatory_minute2, type: Integer, default: 465
     field :compensatory_minute3, type: Integer
-
+    field :upper_day_leave_minute, type: Integer, default: 465
     field :week_out_compensatory_file_start_limit, type: Integer, default: 4
     field :week_out_compensatory_file_start_limit_unit, type: String, default: 'week'
     field :week_out_compensatory_file_end_limit, type: Integer, default: 8
@@ -19,6 +19,7 @@ module Gws::Addon::Affair::GroupSetting
     permit_params :compensatory_minute1
     permit_params :compensatory_minute2
     permit_params :compensatory_minute3
+    permit_params :upper_day_leave_minute
     permit_params :week_out_compensatory_file_start_limit
     permit_params :week_out_compensatory_file_start_limit_unit
     permit_params :week_out_compensatory_file_end_limit
@@ -51,4 +52,5 @@ module Gws::Addon::Affair::GroupSetting
   alias week_out_compensatory_file_end_limit_unit_options week_out_compensatory_file_start_limit_unit_options
   alias compensatory_minute2_options compensatory_minute1_options
   alias compensatory_minute3_options compensatory_minute1_options
+  alias upper_day_leave_minute_options compensatory_minute1_options
 end

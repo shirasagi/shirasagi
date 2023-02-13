@@ -12,10 +12,15 @@ Rails.application.routes.draw do
     post :command, on: :member
   end
 
+  concern :change_state do
+    get :state, on: :member
+    put :change_state_all, on: :collection, path: ''
+  end
+
   content "opendata" do
     resources :app_categories, concerns: :deletion, module: :app
     resources :search_apps, concerns: :deletion, module: :app
-    resources :apps, concerns: [:deletion, :command], module: :app do
+    resources :apps, concerns: [:deletion, :command, :change_state], module: :app do
       resources :appfiles, concerns: :deletion do
         get "file" => "appfiles#download"
       end

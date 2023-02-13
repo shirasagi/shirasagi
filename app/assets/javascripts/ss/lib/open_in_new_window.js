@@ -21,7 +21,7 @@ SS_OpenInNewWindow.render = function() {
     return;
   }
 
-  $(".ss-open-in-new-window").on("click", function(ev) {
+  $(document).on("click", ".ss-open-in-new-window", function(ev) {
     if (SS_OpenInNewWindow.openInNewWindow(ev.target)) {
       SS_OpenInNewWindow.closeDropdown(ev.target);
       ev.preventDefault();

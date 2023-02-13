@@ -191,7 +191,7 @@ class Fs::FilesController < ApplicationController
       @cur_variant = cur_item.variants[{ width: width, height: height }]
     elsif size.present? && (variant = cur_item.variants[size.to_s.to_sym])
       @cur_variant = variant
-    else
+    elsif cur_item.respond_to?(:variants)
       @cur_variant = cur_item.variants[:thumb]
     end
 

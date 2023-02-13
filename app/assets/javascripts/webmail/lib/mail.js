@@ -541,16 +541,16 @@ this.Webmail_Mail_Address = (function () {
       }
       addr.find('.address-name').prepend('<i class="material-icons md-14">&#xE7FD;</i>');
       menu.append('<li class="dropdown-menu-item disabled">' + email + '</li>');
-      menu.append('<li><a href="#" class="addr-send">' + lang.send + '</a></li>');
+      menu.append('<li><a href="#" class="addr-send ss-open-in-new-window">' + lang.send + '</a></li>');
       menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>');
       menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>');
-      $(this).find('.addr-send').on("click", function () {
-        location.href = urls.send + "?" + $.param({
+      $(this).find('.addr-send').each(function () {
+        var href = urls.send + "?" + $.param({
           item: {
             to: name + "<" + email + ">"
           }
         });
-        return false;
+        this.setAttribute('href', href);
       });
       $(this).find('.addr-entry').on("click", function () {
         location.href = urls.add + "?" + $.param({

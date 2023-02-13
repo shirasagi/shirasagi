@@ -30,10 +30,10 @@
     <% end %>
 
     <dt><%= task.t :started %></dt>
-    <dd class="started"><%= task.started.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
+    <dd class="started"><%= task.started.try { |time| ss_time_tag(time) } %></dd>
 
     <dt><%= task.t :closed %></dt>
-    <dd class="closed"><%= task.closed.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
+    <dd class="closed"><%= task.closed.try { |time| ss_time_tag(time) } %></dd>
   </dl>
 
   <div class="controller">
@@ -85,15 +85,6 @@
     }
   };
 
-  var formatTime = function(time) {
-    if (! time) {
-      return "";
-    }
-
-    time = moment(time);
-    return $("<time />", { datetime: time.toISOString() }).text(SS.formatTime(time));
-  };
-
   var reload = function () {
     $.ajax({
       url: "<%= url %>",
@@ -102,8 +93,8 @@
       success: function (data) {
         $el.find(".state").text(data["state_label"] || "").data("state", data["state"]);
         $el.find(".count").text(formatCount(data["current_count"], data["total_count"]));
-        $el.find(".started").text(formatTime(data["started"]));
-        $el.find(".closed").text(formatTime(data["closed"]));
+        $el.find(".started time").text(SS.formatTime(data["started"], "picker"));
+        $el.find(".closed time").text(SS.formatTime(data["closed"], "picker"));
         $el.find(".log").val(data["head_logs"].join("\n"));
         if (data["state"] === "completed") {
           $form.find(".stop-button").hide();

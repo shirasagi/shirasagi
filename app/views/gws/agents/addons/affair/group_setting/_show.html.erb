@@ -3,7 +3,7 @@
   addon[:display_body] = "hide"
 %>
 
-<dl class="see addon-gws-attendance-group-setting">
+<dl class="see addon-gws-affair-group-setting">
   <dt><%= @model.t :compensatory_minute1 %></dt>
   <dd><%= @item.label :compensatory_minute1 %></dd>
 
@@ -12,6 +12,9 @@
 
   <dt><%= @model.t :compensatory_minute3 %></dt>
   <dd><%= @item.label :compensatory_minute3 %></dd>
+
+  <dt><%= @model.t :upper_day_leave_minute %></dt>
+  <dd><%= @item.label :upper_day_leave_minute %></dd>
 
   <dt><%= @model.t :week_out_compensatory_file_limit %></dt>
   <dd>
@@ -30,5 +33,5 @@
     <% end %>
   </dd>
 
-  <%= render "gws/affair/duty_setting/duty_hours/duty_hour_setting_show" %>
+  <%#= render "gws/affair/duty_setting/duty_hours/duty_hour_setting_show" %>
 </dl>
