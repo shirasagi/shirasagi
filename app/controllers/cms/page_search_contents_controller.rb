@@ -43,7 +43,7 @@ class Cms::PageSearchContentsController < ApplicationController
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @selected_items = Cms::Page.in(id: ids)
+    @selected_items = Cms::Page.site(@cur_site).in(id: ids)
     raise "400" unless @selected_items.present?
   end
 end
