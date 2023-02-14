@@ -16,7 +16,11 @@ module Gws::CrudFilter
   end
 
   def set_item
-    @item = @model.site(@cur_site).find(params[:id])
+    if @model.respond_to?(:site)
+      @item = @model.site(@cur_site).find(params[:id])
+    else
+      @item = @model.find(params[:id])
+    end
     @item.attributes = fix_params
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
@@ -24,15 +28,22 @@ module Gws::CrudFilter
   end
 
   def set_items
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site)
+    if @model.respond_to?(:site)
+      @items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    else
+      @items = @model.allow(:read, @cur_user, site: @cur_site)
+    end
   end
 
   def set_selected_items
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @selected_items = @items = @model.in(id: ids).site(@cur_site)
+    if @model.respond_to?(:site)
+      @selected_items = @items = @model.in(id: ids).site(@cur_site)
+    else
+      @selected_items = @items = @model.in(id: ids)
+    end
     raise "400" unless @items.present?
   end
 
