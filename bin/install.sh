@@ -47,6 +47,7 @@ asdf install ruby 3.0.4
 asdf global ruby 3.0.4
 
 if [ ! `which ruby` ]; then exit 1; fi
+
 asdf plugin add nodejs
 asdf install nodejs 16.19.0
 asdf global nodejs 16.19.0 
