@@ -116,7 +116,7 @@ class Gws::Circular::Post
                 item.name,
                 comment.id,
                 item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen'),
-                comment.user.long_name,
+                comment.user.try(:long_name),
                 comment.text,
                 I18n.l(comment.updated, format: :picker)
               ]
