@@ -56,7 +56,7 @@ class Gws::Affair::DutySetting::DutyHoursController < ApplicationController
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @selected_items = @items = @model.site(@cur_site).in(id: ids)
+    @selected_items = @items = @model.in(id: ids).site(@cur_site)
   end
 
   def check_deletable_item

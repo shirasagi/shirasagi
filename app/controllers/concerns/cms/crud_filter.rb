@@ -15,17 +15,25 @@ module Cms::CrudFilter
     append_view_path "app/views/ss/crud"
   end
 
-  def set_items
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site)
-  end
-
   def set_item
     @item = @model.site(@cur_site).find(params[:id])
     @item.attributes = fix_params
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def set_items
+    @items = @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site)
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @selected_items = @items = @model.in(id: ids).site(@cur_site)
+    raise "400" unless @items.present?
   end
 
   def destroy_items
