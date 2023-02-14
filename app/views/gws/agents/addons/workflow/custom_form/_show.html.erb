@@ -19,5 +19,6 @@
 <%= jquery do %>
   $('#addon-ss-agents-addons-markdown').hide();
   $('#addon-gws-agents-addons-file').hide();
-  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2')
+    .text(<%== (@cur_form.try(:name) || "(#{Gws::Workflow::Form.model_name.human})").to_json %>);
 <% end %>
