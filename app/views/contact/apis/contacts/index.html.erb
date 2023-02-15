@@ -1,3 +1,5 @@
+<% max_name_len = 25 %>
+
 <%= jquery do %>
   SS_SearchUI.modal();
 <% end %>
@@ -52,10 +54,24 @@
               <input type="checkbox" name="ids[]" value="<%= group.id %>:<%= contact.id %>" />
             </td>
           <% end %>
-          <td class="group-name"><%= index == 0 ? link_to(group.section_name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
-          <td class="main-state"><%= contact.try(:main_state) == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
-          <td class="name"><%= contact.try(:name) ? link_to(contact.name, "#", class: @multi ? "select-item" : "select-single-item") : nil %></td>
-          <td class="contact-group-name"><%= contact.try(:contact_group_name) %></td>
+          <td class="group-name" style="white-space: normal">
+            <%=
+              if index == 0
+                link_to("#", class: @multi ? "select-item" : "select-single-item") do
+                  ss_truncate(group.section_name, length: max_name_len)
+                end
+              end
+            %>
+          </td>
+          <td class="main-state">
+            <%= contact.try(:main_state) == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %>
+          </td>
+          <td class="name" style="white-space: normal">
+            <%= contact.try(:name) ? link_to(ss_truncate(contact.name, length: max_name_len), "#", class: @multi ? "select-item" : "select-single-item") : nil %>
+          </td>
+          <td class="contact-group-name" style="white-space: normal">
+            <%= ss_truncate contact.try(:contact_group_name), length: max_name_len %>
+          </td>
           <td class="contact-tel"><%= contact.try(:contact_tel) %></td>
           <td class="contact-fax"><%= contact.try(:contact_fax) %></td>
           <td class="contact-email"><%= contact.try(:contact_email) %></td>
