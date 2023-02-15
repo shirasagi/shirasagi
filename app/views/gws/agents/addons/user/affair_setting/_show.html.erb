@@ -5,13 +5,9 @@
   <dt><%= @model.t :staff_address_uid %></dt>
   <dd><%= @item.staff_address_uid %></dd>
 
-  <% if @item.gws_superior_groups.present? %>
-    <dt><%= @model.t :gws_superior_group_ids %></dt>
-    <dd><%=br @item.gws_superior_groups.pluck(:name) %></dd>
-  <% end %>
+  <dt><%= @model.t :gws_superior_group_ids %></dt>
+  <dd><%=br @item.gws_superior_groups.pluck(:name) %></dd>
 
-  <% if @item.gws_superior_users.present? %>
-    <dt><%= @model.t :gws_superior_user_ids %></dt>
-    <dd><%=br @item.gws_superior_users.map { |item| item.long_name } %></dd>
-  <% end %>
+  <dt><%= @model.t :gws_superior_user_ids %></dt>
+  <dd><%=br @item.gws_superior_users.map { |item| item.long_name } %></dd>
 </dl>
