@@ -485,8 +485,8 @@ ja:
         gws_superior_group_ids: 上位グループ
         gws_superior_user_ids: 上位ユーザー
       gws/addon/group/affair_setting:
-        gws_superior_group_ids: 上位グループ
-        gws_superior_user_ids: 上位ユーザー
+        superior_group_ids: 上位グループ
+        superior_user_ids: 上位ユーザー
       gws/contrast:
         name: 名前
         order: 並び順
@@ -635,8 +635,8 @@ ja:
       gws_superior_group_ids: 上位グループを入力します。
       gws_superior_user_ids: 上位ユーザーを入力します。
     gws/addon/group/affair_setting:
-      gws_superior_group_ids: 上位グループを入力します。
-      gws_superior_user_ids: 上位ユーザーを入力します。
+      superior_group_ids: 上位グループを入力します。
+      superior_user_ids: 上位ユーザーを入力します。
 
   activemodel:
     models:
