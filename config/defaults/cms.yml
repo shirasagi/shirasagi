@@ -189,8 +189,10 @@ production: &production
 
   default_released_type: "fixed"
 
-  part:
-    node:
+  parts:
+    cms/node:
+      disable: true
+    category/node:
       disable: true
 
 test:
