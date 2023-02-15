@@ -3,7 +3,7 @@
     <div class="photo">
       <%= link_to page.url do %>
         <%= image_tag file.thumb_url, alt: file.name, class: :thumb %>
-        <span class="title"><%= page.name.truncate(35) %></span>
+        <span class="title"><%= ss_truncate(page.name, length: 35) %></span>
       <% end %>
     </div>
   <% end %>

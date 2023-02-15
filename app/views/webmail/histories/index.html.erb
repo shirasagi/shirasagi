@@ -50,7 +50,7 @@
           <%= link_to("[#{t("modules.#{item.module_key}")}] #{title}", { action: :show, id: item }) %>
         </span>
         <% if item.message %>
-        <p class="message"><%= item.message.truncate(120) %></p>
+        <p class="message"><%= ss_truncate(item.message, length: 120) %></p>
         <% end %>
 
         <div class="meta">

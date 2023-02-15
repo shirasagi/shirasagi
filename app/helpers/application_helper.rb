@@ -298,4 +298,8 @@ module ApplicationHelper
   def ejs_template(str)
     "<%= #{str} %>".html_safe
   end
+
+  def ss_truncate(text, **options)
+    tag.span truncate(text, options), title: text
+  end
 end

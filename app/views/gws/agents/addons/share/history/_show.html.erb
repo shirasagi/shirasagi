@@ -37,7 +37,7 @@
         </td>
         <td>
           <% if (names = history.updated_field_names).present? %>
-          <%= truncate names.join(', '), length: 30 %>
+          <%= ss_truncate names.join(', '), length: 30 %>
           <% end %>
         </td>
       </tr>
