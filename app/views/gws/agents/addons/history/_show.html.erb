@@ -27,7 +27,7 @@
         <% end %>
         <td>
           <% if (names = item.updated_field_names).present? %>
-          <%= truncate names.join(', '), length: 30 %>
+          <%= ss_truncate names.join(', '), length: 30 %>
           <% end %>
         </td>
       </tr>

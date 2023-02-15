@@ -20,7 +20,7 @@
     <span class="state"><%= t "ss.state.#{item.status}" %></span>
   <% end %>
   <% if item.error.present? %>
-    <span class="error"><%= item.error.truncate(60) %></span>
+    <span class="error"><%= ss_truncate item.error, length: 60 %></span>
   <% end %>
 <% end %>
 

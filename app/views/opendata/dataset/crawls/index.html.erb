@@ -18,7 +18,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= ss_time_tag item[:original_updated] %></span>
-  <span class="original-url"><%= Addressable::URI.unencode(item[:original_url]).truncate(60) %></span>
+  <span class="original-url"><%= ss_truncate Addressable::URI.unencode(item[:original_url]), length: 60 %></span>
   <span class="state"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></span>
   <span class="crawl-update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></span>
 <% end %>
