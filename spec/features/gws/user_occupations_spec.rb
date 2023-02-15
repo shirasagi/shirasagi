@@ -5,7 +5,7 @@ describe "gws_user_occupations", type: :feature, dbscope: :example do
   let(:index_path) { gws_user_occupations_path site }
 
   context "with auth" do
-    let!(:item) { create :ss_user_occupation, group_id: gws_user.group_ids.first }
+    let!(:item) { create :ss_user_occupation, group_id: site.id }
 
     before { login_gws_user }
 
