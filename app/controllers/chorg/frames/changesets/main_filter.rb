@@ -27,7 +27,7 @@ module Chorg::Frames::Changesets::MainFilter
         if ids.blank?
           Cms::Group.none
         else
-          Cms::Group.all.site(@cur_site).in(id: ids).reorder(order: 1, name: 1)
+          Cms::Group.all.in(id: ids).site(@cur_site).reorder(order: 1, name: 1)
         end
       end
     end

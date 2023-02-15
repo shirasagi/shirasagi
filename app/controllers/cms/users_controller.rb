@@ -31,7 +31,7 @@ class Cms::UsersController < ApplicationController
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @selected_items = @items = @model.unscoped.in(id: ids)
+    @selected_items = @items = @model.unscoped.in(id: ids).site(@cur_site, state: 'all')
     raise "400" unless @items.present?
   end
 
