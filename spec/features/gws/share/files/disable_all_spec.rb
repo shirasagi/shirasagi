@@ -18,7 +18,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       within ".tree-navi" do
         expect(page).to have_css(".item-name", text: folder.name)
       end
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       within ".list-head-action" do
         page.accept_confirm do
           # find('.disable-all').click
