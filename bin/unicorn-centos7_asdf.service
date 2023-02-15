@@ -11,7 +11,7 @@ PIDFile=/var/www/shirasagi/tmp/pids/unicorn.pid
 Type=forking
 TimeoutSec=300
 
-ExecStart=/root/.asdf/shims/bundle exec unicorn_rails -c config/unicorn.rb -D
+ExecStart=/bin/bash -lc 'bundle exec unicorn_rails -c config/unicorn.rb -D'
 ExecStop=/usr/bin/kill -QUIT $MAINPID
 ExecReload=/usr/bin/kill -USR2 $MAINPID
 
