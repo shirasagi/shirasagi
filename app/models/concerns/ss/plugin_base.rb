@@ -8,21 +8,20 @@ module SS::PluginBase
   end
 
   def enabled?
-    paths = path.split('/')
-    paths.insert(1, plugin_type)
+    settings = SS.config.try(self.class.scope)
+    return true if settings.blank?
 
-    section = paths.shift
-    return true unless SS.config.respond_to?(section)
-
-    config = SS.config.send(section).to_h.stringify_keys
-    while paths.present?
-      path = paths.shift
-      return true unless config.key?(path)
-      config = config[path]
-      return true unless config.is_a?(Hash)
+    if plugin_type == 'part'
+      puts 'part'
     end
 
-    !config.fetch('disable', false)
+    plugin_settings = settings.try(plugin_type.pluralize)
+    return true if plugin_settings.blank?
+
+    part_settings = plugin_settings[path]
+    return true if part_settings.blank?
+
+    !part_settings.fetch('disable', false)
   end
 
   def i18n_name
