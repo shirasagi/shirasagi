@@ -8,6 +8,7 @@ describe "gws_job_user_reservations", type: :feature, dbscope: :example, js: tru
   let!(:task1) do
     job = Gws::Schedule::TrashPurgeJob.new.bind("site_id" => site.id, "user_id" => user1.id)
     Job::Task.create(
+      site_id: site.id,
       name: job.job_id, class_name: job.class.name, app_type: job.class.ss_app_type,
       pool: job.queue_name, args: job.arguments, active_job: job.serialize,
       at: now + 8.days, group_id: site.id, user_id: user1.id
@@ -16,6 +17,7 @@ describe "gws_job_user_reservations", type: :feature, dbscope: :example, js: tru
   let!(:task2) do
     job = Gws::Notice::NotificationJob.new.bind("site_id" => site.id, "user_id" => user1.id)
     Job::Task.create(
+      site_id: site.id,
       name: job.job_id, class_name: job.class.name, app_type: job.class.ss_app_type,
       pool: job.queue_name, args: job.arguments, active_job: job.serialize,
       at: now + 3.days, group_id: site.id, user_id: user1.id
@@ -24,6 +26,7 @@ describe "gws_job_user_reservations", type: :feature, dbscope: :example, js: tru
   let!(:task3) do
     job = Gws::Reminder::NotificationJob.new.bind("site_id" => site.id, "user_id" => user2.id)
     Job::Task.create(
+      site_id: site.id,
       name: job.job_id, class_name: job.class.name, app_type: job.class.ss_app_type,
       pool: job.queue_name, args: job.arguments, active_job: job.serialize,
       at: now + 3.days, group_id: job.site_id, user_id: job.user_id
