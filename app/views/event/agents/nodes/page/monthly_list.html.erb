@@ -18,7 +18,10 @@
 <% end %>
 
 <nav class="event-date" aria-label="<%= t("event.calendar") %>">
-  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <h2 class="<%= event_h1_class @month %>">
+    <span class="calendar-year"><%= @year %><%= t_date('year') %></span>
+    <span class="calendar-month"><%= @month %><%= t_date('month') %></span>
+  </h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
     <div class="event-format">
       <span class="list current">
