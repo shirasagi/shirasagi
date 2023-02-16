@@ -18,6 +18,9 @@ SS.ready(function() {
       if (opts['restUrl']) {
         $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(selector, opts));
       }
+      for (var i in opts.eventSources) {
+        opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
+      }
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.contentParams(selector, opts));
       $.extend(true, params, opts);
