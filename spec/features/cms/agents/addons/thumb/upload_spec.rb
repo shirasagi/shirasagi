@@ -106,7 +106,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       click_on I18n.t("ss.links.new")
 
       within "#item-form #addon-cms-agents-addons-thumb" do
-        click_button "▼"
+        wait_event_to_fire("ss:dropdownOpened") { click_button "▼" }
 
         within ".dropdown-menu" do
           wait_cbox_open do

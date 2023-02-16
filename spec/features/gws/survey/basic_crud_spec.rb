@@ -55,7 +55,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       click_on(I18n.t('gws/workflow.columns.index'))
 
       within ".nav-menu" do
-        click_on(I18n.t("ss.links.new"))
+        wait_event_to_fire("ss:dropdownOpened") { click_on(I18n.t("ss.links.new")) }
       end
       within ".gws-dropdown-menu" do
         click_on(I18n.t("gws.columns.gws/radio_button"))

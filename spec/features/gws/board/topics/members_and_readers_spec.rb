@@ -277,7 +277,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       #
       visit gws_board_main_path(site: site)
       within ".gws-category-navi" do
-        click_on I18n.t('gws.category')
+        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('gws.category') }
         within ".dropdown-menu" do
           click_on cate.name
         end
@@ -333,7 +333,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       # change category
       visit gws_board_main_path(site: site)
       within ".gws-category-navi" do
-        click_on I18n.t('gws.category')
+        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('gws.category') }
         within ".dropdown-menu" do
           click_on cate.name
         end

@@ -197,6 +197,7 @@ SS.ready(function () {
     if ($target.parents('.dropdown-menu').length === 0) {
       $menu.toggleClass('active');
       e.stopPropagation();
+      $this.trigger("ss:dropdownOpened");
     }
   });
   $("select").on("change", function () {
