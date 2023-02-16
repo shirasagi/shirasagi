@@ -1,9 +1,9 @@
 <dl class="see">
   <dt><%= t('ss.encoding') %><%= tt(:encoding, scope: 'gws/attendance.tooltips') %></dt>
   <dd>
-    <% %w(Shift_JIS UTF-8).each do |encoding| %>
+    <% %w(UTF-8 Shift_JIS).each do |encoding| %>
       <label>
-        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'Shift_JIS', { id: nil } %>
+        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
         <%= t("ss.options.csv_encoding.#{encoding}") %>
       </label>
     <% end %>
