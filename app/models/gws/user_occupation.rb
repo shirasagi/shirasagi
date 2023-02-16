@@ -20,10 +20,8 @@ class Gws::UserOccupation
       drawer = SS::Csv.draw(:export, context: self) do |drawer|
         drawer.column :code
         drawer.column :name
-        drawer.column :remark
         drawer.column :order
-        # drawer.column :activation_date
-        # drawer.column :expiration_date
+        drawer.column :remark
       end
 
       drawer.enum(self.all, options)
