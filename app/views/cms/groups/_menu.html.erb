@@ -17,7 +17,9 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.role_setting'), action: :role_edit, id: @item if @item.users.present? %>
     <% end %>
-    <%= link_to t('ss.links.delete'), action: :delete, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @item.active? && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>
