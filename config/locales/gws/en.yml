@@ -485,8 +485,8 @@ en:
         gws_superior_group_ids: Superior groups
         gws_superior_user_ids: Superior users
       gws/addon/group/affair_setting:
-        gws_superior_group_ids: Superior groups
-        gws_superior_user_ids: Superior users
+        superior_group_ids: Superior groups
+        superior_user_ids: Superior users
       gws/contrast:
         name: Name
         order: Order
@@ -635,8 +635,8 @@ en:
       gws_superior_group_ids: Select superior groups
       gws_superior_user_ids: Select superior users
     gws/addon/group/affair_setting:
-      gws_superior_group_ids: Select superior groups
-      gws_superior_user_ids: Select superior users
+      superior_group_ids: Select superior groups
+      superior_user_ids: Select superior users
 
   activemodel:
     models:
