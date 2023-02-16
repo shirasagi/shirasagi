@@ -44,11 +44,13 @@
       </div>
     <% end %>
   </div>
-  <div class="menu">
-    <% if @item.browsed?(@cur_user) %>
-      <%= button_to(t('gws/notice.links.unset_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.unset_seen'), class: 'btn') %>
-    <% else %>
-      <%= button_to(t('gws/notice.links.set_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.set_seen'), class: 'btn') %>
-    <% end %>
-  </div>
+  <% if @cur_site.notice_toggle_by_button? %>
+    <div class="menu">
+      <% if @item.browsed?(@cur_user) %>
+        <%= button_to(t('gws/notice.links.unset_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.unset_seen'), class: 'btn') %>
+      <% else %>
+        <%= button_to(t('gws/notice.links.set_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.set_seen'), class: 'btn') %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

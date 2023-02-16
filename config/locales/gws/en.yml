@@ -57,6 +57,7 @@ en:
     options:
       severity:
         high: Important announcements
+        normal: Normal announcements
       input_type:
         text_field: Text box
         text_area: Text area

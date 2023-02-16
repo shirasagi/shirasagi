@@ -7,20 +7,21 @@ module Gws::Addon::Portal::Portlet
 
     included do
       field :notice_severity, type: String
-      field :notice_browsed_state, type: String, default: "unread"
+      field :notice_browsed_state, type: String
       embeds_ids :notice_categories, class_name: "Gws::Notice::Category"
       embeds_ids :notice_folders, class_name: "Gws::Notice::Folder"
+
+      before_validation :set_default_notice_setting
+
       permit_params :notice_severity, :notice_browsed_state, notice_category_ids: [], notice_folder_ids: []
     end
 
     def notice_severity_options
-      [
-        [I18n.t('gws.options.severity.high'), 'high'],
-      ]
+      %w(all high normal).map { |m| [I18n.t("gws/notice.options.severity.#{m}"), m] }
     end
 
     def notice_browsed_state_options
-      %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
+      %w(both unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
     end
 
     def find_notice_items(portal, user)
@@ -41,6 +42,9 @@ module Gws::Addon::Portal::Portlet
         search[:user] = user
         search[:browsed_state] = notice_browsed_state
       end
+      if notice_severity.present?
+        search[:severity] = notice_severity
+      end
 
       Gws::Notice::Post.site(portal.site).
         without_deleted.
@@ -49,6 +53,20 @@ module Gws::Addon::Portal::Portlet
         search(search).
         page(1).
         per(limit)
+    end
+
+    private
+
+    def set_default_notice_setting
+      site = cur_site || site
+      return unless site
+
+      if notice_severity.blank?
+        self.notice_severity = site.notice_severity
+      end
+      if notice_browsed_state.blank?
+        self.notice_browsed_state = site.notice_browsed_state
+      end
     end
   end
 end

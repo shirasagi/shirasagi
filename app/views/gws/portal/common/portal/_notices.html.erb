@@ -35,8 +35,15 @@
       <% @notices.each do |item| %>
       <li class="list-item <%= item.browsed?(@cur_user) ? 'read' : 'unread' %>">
         <div class="info">
-          <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: "title notice-severity-#{item.severity}" %>
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+          <div class="title marked">
+            <% if item.severity.present? %>
+              <i title="<%= item.label(:severity) %>" class="material-icons-outlined md-16 severity-<%= item.severity %>">error_outline</i>
+            <% end %>
+            <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: "name notice-severity-#{item.severity}" %>
+            <% if item.new_flag? %>
+              <span class="gws-board-flag-new"></span>
+            <% end %>
+          </div>
         </div>
         <div class="meta">
           <% if item.categories.readable(@cur_user, site: @cur_site).present? %>

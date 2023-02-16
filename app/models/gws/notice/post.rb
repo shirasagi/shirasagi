@@ -60,7 +60,15 @@ class Gws::Notice::Post
 
     def search_severity(params)
       return all if params.blank? || params[:severity].blank?
-      all.where(severity: params[:severity])
+
+      case params[:severity]
+      when 'all'
+        all
+      when 'normal'
+        all.where(severity: { "$exists" => false })
+      else # 'high'
+        all.where(severity: 'high')
+      end
     end
 
     def search_folders(params)
@@ -85,6 +93,8 @@ class Gws::Notice::Post
       return all if params.blank? || params[:browsed_state].blank?
 
       case params[:browsed_state]
+      when 'both'
+        all
       when 'read'
         all.exists("browsed_users_hash.#{params[:user].id}" => 1)
       when 'unread'
@@ -98,6 +108,7 @@ class Gws::Notice::Post
   def severity_options
     [
       [I18n.t('gws.options.severity.high'), 'high'],
+      [I18n.t('gws.options.severity.normal'), 'normal']
     ]
   end
 
