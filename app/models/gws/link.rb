@@ -22,11 +22,15 @@ class Gws::Link
   default_scope -> {
     order_by released: -1
   }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
-    criteria
-  }
+  class << self
+    def search(params)
+      all.search_keyword(params)
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :name, "links.name", "links.url"
+    end
+  end
 end
