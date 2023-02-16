@@ -39,7 +39,7 @@ module SS::CrudFilter
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @selected_items = @items = @model.in(id: ids)
+    @selected_items = @items = @model.in(id: ids) # filter by site on cms,gws,,
     raise "400" unless @items.present?
   end
 
