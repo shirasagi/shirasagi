@@ -24,6 +24,7 @@ end
 
 upload_files %w(files/css/_carousel.scss files/css/_original.scss files/css/bootstrap.scss)
 upload_files %w(files/css/ckeditor_contents.css)
+upload_files Dir.glob("files/css/*.*")
 upload_files Dir.glob("files/js/*.*")
 upload_files Dir.glob("files/img/*.*")
 upload_files Dir.glob("files/fonts/*.*")

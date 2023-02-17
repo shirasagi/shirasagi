@@ -1,0 +1,16 @@
+.inquiry-form.confirm{
+  .columns{
+    text-align: start;
+
+    .column{
+      dt{
+        .label{
+          background-color: #327ab7;
+        }
+        .required{
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
