@@ -13,7 +13,11 @@ module Gws::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name permissions permission_level)
+        headers = %w(id name permissions)
+        unless SS.config.ss.disable_permission_level
+          headers << 'permission_level'
+        end
+        headers
       end
 
       def to_csv
@@ -25,7 +29,9 @@ module Gws::Addon::Import
               line << item.id
               line << item.name
               line << item.localized_permissions.join("\n")
-              line << item.permission_level
+              unless SS.config.ss.disable_permission_level
+                line << item.permission_level
+              end
               data << line
             end
           end
