@@ -1,5 +1,5 @@
 <%
-  bulk_download_items = @items.select{ |item| item.resources.present? && item.zip_exist? }
+  bulk_download_items = @items.select{ |item| item.resources.and_public.present? && item.zip_exist? }
   bulk_download_ids = bulk_download_items.map(&:id)
   bulk_download_size = bulk_download_items.map(&:zip_size).sum
 
@@ -59,7 +59,7 @@ $(".download-all").on("click", function () {
     <header>
       <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
       <h2><%= link_to item.name, item.url %>
-        <% if item.resources.present? && item.zip_exist? %>
+        <% if item.resources.and_public.present? && item.zip_exist? %>
         <div class="download">
           <% if @cur_site.anti_bot_use_button_for_bulk_download? %>
             <%= form_tag search_dataset_download_path(item), method: "post" do %>

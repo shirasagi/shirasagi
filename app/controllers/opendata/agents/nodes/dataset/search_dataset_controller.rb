@@ -76,7 +76,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     filename = "opendata-datasets-#{Time.zone.now.to_i}"
 
     @items = Opendata::Dataset.site(@cur_site).and_public.in(id: ids).
-      select { |item| item.resources.present? && item.zip_exist? }
+      select { |item| item.resources.and_public.present? && item.zip_exist? }
 
     bulk_download_size = @items.sum(&:zip_size)
     if bulk_download_size > SS.config.opendata.bulk_download_max_filesize

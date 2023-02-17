@@ -188,7 +188,7 @@ SS.renderClipboardCopy();
                   <%= submit_tag t("opendata.search_datasets.download", size: @cur_page.resources.and_public.size), name: "dataset-download" %>
                 <% end %>
               <% else %>
-                <%= link_to(t("opendata.search_datasets.download", size: @cur_page.resource.and_public.size), search_dataset_download_path(@cur_page), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+                <%= link_to(t("opendata.search_datasets.download", size: @cur_page.resources.and_public.size), search_dataset_download_path(@cur_page), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
               <% end %>
             </div>
           <% end %>

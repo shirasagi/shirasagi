@@ -2,7 +2,7 @@ module Opendata::DatasetBulkDownload
   extend ActiveSupport::Concern
 
   def exceeded_bulk_download_filesize?(datasets)
-    datasets = datasets.select { |dataset| dataset.resources.present? && dataset.zip_exist? }
+    datasets = datasets.select { |dataset| dataset.resources.and_public.present? && dataset.zip_exist? }
     size = datasets.sum(&:zip_size)
     size > SS.config.opendata.bulk_download_max_filesize
   end
