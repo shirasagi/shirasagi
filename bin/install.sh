@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 SS_HOSTNAME=${1:-"example.jp"}
 SS_USER=${2:-"$USER"}
 SS_DIR=/var/www/shirasagi
@@ -45,6 +47,10 @@ asdf install ruby 3.0.4
 asdf global ruby 3.0.4
 
 if [ ! `which ruby` ]; then exit 1; fi
+asdf plugin add nodejs
+asdf install nodejs 16.19.0
+asdf global nodejs 16.19.0 
+npm install -g yarn
 
 # use devtoolset-11
 source /opt/rh/devtoolset-11/enable
@@ -184,7 +190,7 @@ sudo systemctl enable nginx.service --now
 cat <<EOF | sudo tee /etc/nginx/conf.d/http.conf
 server_tokens off;
 server_name_in_redirect off;
-etag off;
+etag on;
 client_max_body_size 100m;
 client_body_buffer_size 256k;
 gzip on;
@@ -310,7 +316,7 @@ location ~* \.svg$ {
     access_log off;
     log_not_found off;
     add_header Content-Disposition "attachment";
-    try_files $uri @app;
+    try_files \$uri @app;
 }
 EOF
 
@@ -362,8 +368,6 @@ cd /etc/ImageMagick && cat << EOF | sudo patch
  </policymap>
 EOF
 
-#### daemonize
-
 cat <<EOF | sudo tee /etc/systemd/system/shirasagi-unicorn.service
 [Unit]
 Description=Shirasagi Unicorn Server
@@ -376,7 +380,7 @@ SyslogIdentifier=unicorn
 PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 Type=forking
 TimeoutSec=300
-ExecStart=${ASDF_HOME}/bundle exec unicorn_rails -c config/unicorn.rb -D
+ExecStart=/bin/bash -lc 'bundle exec unicorn_rails -c config/unicorn.rb -D'
 ExecStop=/usr/bin/kill -QUIT $MAINPID
 ExecReload=/usr/bin/kill -USR2 $MAINPID
 [Install]
