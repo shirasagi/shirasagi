@@ -1374,6 +1374,15 @@ footer.contact {
     @include mb {
       border-radius: 0;
     }
+
+    .site-search-categories{
+      display: none;
+    }
+    .site-search-keyword{
+      & > dt{
+        display: none;
+      }
+    }
   }
   #s_keyword {
     width: 80%;
