@@ -32839,6 +32839,7 @@ SS.ready(function () {
     if ($target.parents('.dropdown-menu').length === 0) {
       $menu.toggleClass('active');
       e.stopPropagation();
+      $this.trigger("ss:dropdownOpened");
     }
   });
   $("select").on("change", function () {
@@ -34983,10 +34984,11 @@ this.SS_ListUI = (function () {
     $el.find(".list-head input:checkbox").on("change", function () {
       var chk;
       chk = $(this).prop('checked');
-      return $el.find('.list-item').each(function () {
+      $el.find('.list-item').each(function () {
         $(this).toggleClass('checked', chk);
         return $(this).find('input:checkbox').prop('checked', chk);
       });
+      $(this).trigger("ss:checked-all-list-items");
     });
     $el.find(".list-item").each(function () {
       var list;
