@@ -181,13 +181,13 @@ module SS::Model::User
       end
 
       if user_ids.blank?
-        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email)
+        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark)
       end
 
       # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
       base_criteria = all.dup
 
-      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email).selector
+      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark).selector
       base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
