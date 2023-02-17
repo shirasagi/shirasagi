@@ -1,5 +1,5 @@
 <%
-  bulk_download_items = @items.select{ |item| item.zip_exist? }
+  bulk_download_items = @items.select{ |item| item.resources.present? && item.zip_exist? }
   bulk_download_ids = bulk_download_items.map(&:id)
   bulk_download_size = bulk_download_items.map(&:zip_size).sum
 
@@ -59,14 +59,14 @@ $(".download-all").on("click", function () {
     <header>
       <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
       <h2><%= link_to item.name, item.url %>
-        <% if item.zip_exist? %>
+        <% if item.resources.present? && item.zip_exist? %>
         <div class="download">
           <% if @cur_site.anti_bot_use_button_for_bulk_download? %>
             <%= form_tag search_dataset_download_path(item), method: "post" do %>
-              <%= submit_tag t("opendata.search_datasets.download", size: item.resources.size), name: "dataset-download" %>
+              <%= submit_tag t("opendata.search_datasets.download", size: item.resources.and_public.size), name: "dataset-download" %>
             <% end %>
           <% else %>
-            <%= link_to(t("opendata.search_datasets.download", size: item.resources.size), search_dataset_download_path(item), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            <%= link_to(t("opendata.search_datasets.download", size: item.resources.and_public.size), search_dataset_download_path(item), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
           <% end %>
         </div>
         <% end %>

@@ -21,13 +21,13 @@ module Opendata::Addon::ZipDataset
 
   def compression_dataset
     ::FileUtils.rm_rf(zip_path) if zip_exist?
-    return if resources.blank?
+    return if resources.and_public.blank?
 
     name_util = SS::FilenameUtils.new
     begin
       Timeout.timeout(60) do
         files = []
-        resources.each do |resource|
+        resources.and_public.each do |resource|
           if resource.source_url.present?
             name = "#{resource.name.gsub(/[#{Regexp.escape('¥/:*?\"<>|.')}]/, "_")}.txt"
             file = Tempfile.open(name)
@@ -48,7 +48,7 @@ module Opendata::Addon::ZipDataset
         end
       end
     rescue Timeout::Error => e
-      message = "compression time out\n" + resources.map(&:full_url).join("\n")
+      message = "compression time out\n" + resources.and_public.map(&:full_url).join("\n")
       name = "resource-#{uuid}.txt"
 
       file = Tempfile.open(name)
