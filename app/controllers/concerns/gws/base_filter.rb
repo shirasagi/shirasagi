@@ -42,7 +42,7 @@ module Gws::BaseFilter
   end
 
   def set_current_group
-    @cur_group = @cur_user.gws_default_group
+    @cur_group = SS.current_user_group = @cur_user.gws_default_group
     raise "403" unless @cur_group
   end
 

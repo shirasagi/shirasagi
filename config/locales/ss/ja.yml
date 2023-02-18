@@ -692,6 +692,7 @@ ja:
         expiration_date: 有効期限（終了）
         domains: ドメイン
         gws_use: グループウェアの使用
+        file_prefix: ファイル接頭辞
         upload_policy: アップロード制限
       ss/user_group_history:
         created: 異動日時
@@ -1016,6 +1017,9 @@ ja:
       gws_use:
         - グループウェアを使用するかどうかを指定します。
         - 既定では、グループウェアを使用します。
+      file_prefix:
+        - 日本語ファイル名をアップロードする時に自動的に置換されます。
+        - 部署+日付+時間+連番（例：kikaku20220907162801.xls）
       upload_policy:
         - ファイルアップロード時の動作を設定します。
     ss/document:

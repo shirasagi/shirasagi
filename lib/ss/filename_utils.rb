@@ -61,6 +61,13 @@ class SS::FilenameUtils
   end
 
   class << self
+    def convert_by_section(filename, section)
+      time = Time.zone.now.strftime('%Y%m%d%H%M')
+      id = SS::Sequence.next_sequence("minutely_#{time}_#{section}", :id, {})
+      basename = "#{section}#{time}" + sprintf('%02d', id)
+      "#{basename}#{::File.extname(filename)}"
+    end
+
     def convert_by_sequence(filename, opts)
       return filename unless NON_ASCII_RE.match?(filename)
       id = opts[:id]
@@ -68,6 +75,11 @@ class SS::FilenameUtils
     end
 
     def convert_by_underscore(filename, _opts = nil)
+      if filename.match(NON_ASCII_RE)
+        section = SS.current_user_group.try(:[], :file_prefix) || 'file'
+        return convert_by_section(filename, section)
+      end
+
       filename.gsub(NON_ASCII_RE, "_")
     end
 

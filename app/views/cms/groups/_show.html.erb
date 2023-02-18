@@ -19,4 +19,9 @@
   <dt><%= @model.t :expiration_date %></dt>
   <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
   <% end %>
+
+  <% if @item.file_prefix.present? %>
+  <dt><%= @model.t :file_prefix %></dt>
+  <dd><%= @item.file_prefix %></dd>
+  <% end %>
 </dl>

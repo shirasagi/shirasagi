@@ -67,7 +67,7 @@ module SS
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
     cattr_accessor(:request_interceptor, instance_accessor: false)
 
-    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.organization).freeze
+    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.user_group ss.organization).freeze
 
     def call(*args, &block)
       save_context = {}
@@ -169,6 +169,14 @@ module SS
 
   def self.current_user=(user)
     Thread.current["ss.user"] = user
+  end
+
+  def self.current_user_group
+    Thread.current["ss.user_group"]
+  end
+
+  def self.current_user_group=(group)
+    Thread.current["ss.user_group"] = group
   end
 
   def self.current_organization

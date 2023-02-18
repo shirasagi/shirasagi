@@ -27,6 +27,9 @@ namespace :ss do
     # FormDB URL インポート
     ::Tasks::SS.invoke_task("cms:form_db:import_later")
 
+    # SS::Sequence 時間型の削除
+    ::Tasks::SS.invoke_task("ss:remove_minutely_sequence")
+
     if ::SS.config.cms.disable.blank?
       # ゴミ箱の掃除
       ::Tasks::SS.invoke_task("history:trash:purge")

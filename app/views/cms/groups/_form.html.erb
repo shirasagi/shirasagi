@@ -15,4 +15,7 @@
 
   <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
   <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :file_prefix %><%= @model.tt :file_prefix %></dt>
+  <dd><%= f.text_field :file_prefix %></dd>
 </dl>

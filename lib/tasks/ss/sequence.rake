@@ -1,4 +1,16 @@
 namespace :ss do
+  task remove_minutely_sequence: :environment do
+    puts "delete minutely sequences"
+    today = Time.zone.now.strftime('%Y%m%d0000')
+
+    SS::Sequence.where(id: /\Aminutely_/).each do |item|
+      time = item.id.to_s.sub(/\Aminutely_(\d+)_.*/, '\\1')
+      next if time.to_i >= today.to_i
+
+      item.destroy
+    end
+  end
+
   task reset_sequence: :environment do
     ::Rails.application.eager_load!
 
