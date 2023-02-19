@@ -17,7 +17,7 @@ module Gws::Model
       field :size, type: Integer, default: 0
       field :star, type: Hash, default: {}
       field :filtered, type: Hash, default: {}
-      field :deleted, type: Hash, default: {}
+      field :deleted, type: Hash, default: {}, overwrite: true
       field :state, type: String, default: 'public'
       field :send_date, type: DateTime
       field :user_settings, type: Array, default: []

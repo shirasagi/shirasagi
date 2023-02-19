@@ -5,7 +5,7 @@ module Gws::Affair::DutyHourSetting
   included do
     attr_accessor :in_attendance_time_change_hour
 
-    field :attendance_time_changed_minute, type: Integer, default: 3 * 60
+    field :attendance_time_changed_minute, type: Integer, default: 3 * 60, overwrite: true
     permit_params :in_attendance_time_change_hour
 
     field :overtime_in_work, type: String, default: "disabled"
