@@ -8,6 +8,11 @@ module Opendata::Harvest::CkanApiExporter
   end
 
   def export
+    if !enabled?
+      put_log "not enabled #{url}"
+      return
+    end
+
     put_log "export to #{url} (Ckan API)"
 
     @package = ::Opendata::Harvest::CkanPackage.new(url)

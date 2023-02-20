@@ -13,4 +13,7 @@
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :state %><%= @item.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
 </dl>

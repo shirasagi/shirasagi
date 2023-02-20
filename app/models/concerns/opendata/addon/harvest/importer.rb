@@ -9,6 +9,11 @@ module Opendata::Addon::Harvest
     EXTERNAL_RESOUCE_FORMAT = %w(html htm).freeze
 
     def import
+      if !enabled?
+        put_log("not enabled #{source_url}")
+        return
+      end
+
       if api_type == "ckan"
         import_from_ckan_api
       elsif api_type == "shirasagi_api"

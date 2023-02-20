@@ -16,6 +16,7 @@ class Opendata::Harvest::Exporter
   field :api_type, type: String
   field :api_key, type: String
   field :order, type: Integer, default: 0
+  field :state, type: String, default: "enabled"
 
   field :host, type: String
   field :deleted_resources, type: Array, default: []
@@ -33,7 +34,7 @@ class Opendata::Harvest::Exporter
   validates :api_key, presence: true
   validate :validate_host, if: -> { url.present? }
 
-  permit_params :name, :url, :api_type, :api_key, :order
+  permit_params :name, :url, :api_type, :api_key, :order, :state
 
   default_scope -> { order_by(order: 1) }
 
@@ -54,5 +55,15 @@ class Opendata::Harvest::Exporter
 
   def api_type_options
     I18n.t("opendata.harvest_exporter_api_options").map { |k, v| [v, k] }
+  end
+
+  def state_options
+    %w(enabled disabled).map do |v|
+      [ I18n.t("ss.options.state.#{v}"), v ]
+    end
+  end
+
+  def enabled?
+    state == "enabled"
   end
 end

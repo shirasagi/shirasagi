@@ -757,6 +757,7 @@ ja:
         api_type: API
         api_key: APIキー
         order: 並び順
+        state: ステータス
       opendata/harvest/exporter/group_setting:
         name: 名前
         ckan_id: "CKAN ID"
@@ -1068,6 +1069,9 @@ ja:
         - APIキーを設定します。
       order:
         - 並び順を設定します。
+      state:
+        - ステータスを設定します。
+        - 無効に設定すると定期実行の際に無視されます。
     opendata/part/dataset:
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。

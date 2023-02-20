@@ -19,4 +19,7 @@
 
   <dt><%= t("opendata.ckan.organization") %></dt>
   <dd><%= link_to "#{t("opendata.ckan.organization")}(#{@item.owner_org_settings.count})", opendata_harvest_exporter_owner_org_settings_path(exporter_id: @item.id) %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
 </dl>
