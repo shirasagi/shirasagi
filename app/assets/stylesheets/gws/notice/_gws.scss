@@ -3,7 +3,10 @@
   .unread {
     background-color: #f9e9e3;
     &:hover {
-      background: $orange2;
+      background-color: #f2f2f2;
     }
+  }
+  .read:hover {
+    background-color: #f2f2f2;
   }
 }

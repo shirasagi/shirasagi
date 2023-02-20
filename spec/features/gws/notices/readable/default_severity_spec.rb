@@ -40,7 +40,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css('.ss-base-loading')
 
         within ".index-search" do
-          select I18n.t("gws/notice.severity"), from: "s[severity]"
+          select I18n.t("gws/notice.options.severity.all"), from: "s[severity]"
           click_on I18n.t("ss.buttons.search")
         end
 
@@ -69,7 +69,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css('.ss-base-loading')
 
         within ".index-search" do
-          select I18n.t("gws/notice.severity"), from: "s[severity]"
+          select I18n.t("gws/notice.options.severity.all"), from: "s[severity]"
           click_on I18n.t("ss.buttons.search")
         end
 

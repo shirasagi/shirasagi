@@ -7,7 +7,7 @@ module Gws::Addon::Notice::GroupSetting
   included do
     field :notice_new_days, type: Integer
     field :notice_severity, type: String, default: "all"
-    field :notice_browsed_state, type: String, default: "unread"
+    field :notice_browsed_state, type: String, default: "both"
     field :notice_toggle_browsed, type: String, default: "button"
 
     permit_params :notice_new_days, :notice_severity, :notice_browsed_state, :notice_toggle_browsed

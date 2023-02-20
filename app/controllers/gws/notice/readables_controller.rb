@@ -87,8 +87,9 @@ class Gws::Notice::ReadablesController < ApplicationController
   end
 
   def show
-    if @cur_site.notice_toggle_by_read? && !@item.browsed?(@cur_user)
+    if @cur_site.notice_toggle_by_read? && params[:toggled].blank? && !@item.browsed?(@cur_user)
       @item.set_browsed!(@cur_user)
+      @item.reload
     end
     render
   end
@@ -100,9 +101,9 @@ class Gws::Notice::ReadablesController < ApplicationController
       @item.set_browsed!(@cur_user)
     end
 
-    render_update true
+    render_update true, location: { action: :show, toggled: 1 }
   rescue => e
-    render_update false
+    render_update false, render: { template: :show, toggled: 1 }
   end
 
   def print

@@ -29,69 +29,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     login_gws_user
   end
 
-  context "default unread" do
-    it do
-      visit gws_portal_user_path(site: site, user: user)
-      click_on I18n.t('gws/portal.links.manage_portlets')
-      click_on I18n.t('ss.links.new')
-      within ".main-box [data-id='#{preset_portlet.id}']" do
-        click_on I18n.t('ss.buttons.add')
-      end
-      within 'form#item-form' do
-        click_link I18n.t('gws/share.apis.folders.index')
-      end
-      wait_for_cbox do
-        click_link folder.name
-      end
-      within 'form#item-form' do
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-
-      visit gws_portal_user_path(site: site, user: user)
-      within ".gws-portlets" do
-        within ".portlets .gws-notices" do
-          expect(page).to have_no_css(".list-item", text: item1.name)
-          expect(page).to have_no_css(".list-item", text: item2.name)
-          expect(page).to have_no_css(".list-item", text: item3.name)
-          expect(page).to have_no_css(".list-item", text: item4.name)
-          expect(page).to have_no_css(".list-item", text: item5.name)
-          expect(page).to have_no_css(".list-item", text: item6.name)
-          expect(page).to have_no_css(".list-item", text: item7.name)
-          expect(page).to have_css(".list-item", text: item8.name)
-          expect(page).to have_css(".list-item", text: item9.name)
-          expect(page).to have_css(".list-item", text: item10.name)
-          expect(page).to have_css(".list-item", text: item11.name)
-          expect(page).to have_css(".list-item", text: item12.name)
-        end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
-
-        within ".portlets .gws-notices" do
-          click_on I18n.t("ss.links.more")
-        end
-      end
-      within ".index.gws-notices" do
-        expect(page).to have_no_css(".list-item", text: item1.name)
-        expect(page).to have_no_css(".list-item", text: item2.name)
-        expect(page).to have_no_css(".list-item", text: item3.name)
-        expect(page).to have_no_css(".list-item", text: item4.name)
-        expect(page).to have_no_css(".list-item", text: item5.name)
-        expect(page).to have_no_css(".list-item", text: item6.name)
-        expect(page).to have_css(".list-item", text: item7.name)
-        expect(page).to have_css(".list-item", text: item8.name)
-        expect(page).to have_css(".list-item", text: item9.name)
-        expect(page).to have_css(".list-item", text: item10.name)
-        expect(page).to have_css(".list-item", text: item11.name)
-        expect(page).to have_css(".list-item", text: item12.name)
-      end
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-    end
-  end
-
   context "default both" do
     it do
       visit gws_portal_user_path(site: site, user: user)
@@ -101,7 +38,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.add')
       end
       within 'form#item-form' do
-        select I18n.t('gws/board.options.browsed_state.both'), from: "item[notice_browsed_state]"
         click_link I18n.t('gws/share.apis.folders.index')
       end
       wait_for_cbox do
@@ -143,6 +79,70 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: item4.name)
         expect(page).to have_css(".list-item", text: item5.name)
         expect(page).to have_css(".list-item", text: item6.name)
+        expect(page).to have_css(".list-item", text: item7.name)
+        expect(page).to have_css(".list-item", text: item8.name)
+        expect(page).to have_css(".list-item", text: item9.name)
+        expect(page).to have_css(".list-item", text: item10.name)
+        expect(page).to have_css(".list-item", text: item11.name)
+        expect(page).to have_css(".list-item", text: item12.name)
+      end
+      # wait for ajax completion
+      expect(page).to have_no_css('.fc-loading')
+      expect(page).to have_no_css('.ss-base-loading')
+    end
+  end
+
+  context "default unread" do
+    it do
+      visit gws_portal_user_path(site: site, user: user)
+      click_on I18n.t('gws/portal.links.manage_portlets')
+      click_on I18n.t('ss.links.new')
+      within ".main-box [data-id='#{preset_portlet.id}']" do
+        click_on I18n.t('ss.buttons.add')
+      end
+      within 'form#item-form' do
+        select I18n.t('gws/board.options.browsed_state.unread'), from: "item[notice_browsed_state]"
+        click_link I18n.t('gws/share.apis.folders.index')
+      end
+      wait_for_cbox do
+        click_link folder.name
+      end
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      visit gws_portal_user_path(site: site, user: user)
+      within ".gws-portlets" do
+        within ".portlets .gws-notices" do
+          expect(page).to have_no_css(".list-item", text: item1.name)
+          expect(page).to have_no_css(".list-item", text: item2.name)
+          expect(page).to have_no_css(".list-item", text: item3.name)
+          expect(page).to have_no_css(".list-item", text: item4.name)
+          expect(page).to have_no_css(".list-item", text: item5.name)
+          expect(page).to have_no_css(".list-item", text: item6.name)
+          expect(page).to have_no_css(".list-item", text: item7.name)
+          expect(page).to have_css(".list-item", text: item8.name)
+          expect(page).to have_css(".list-item", text: item9.name)
+          expect(page).to have_css(".list-item", text: item10.name)
+          expect(page).to have_css(".list-item", text: item11.name)
+          expect(page).to have_css(".list-item", text: item12.name)
+        end
+        # wait for ajax completion
+        expect(page).to have_no_css('.fc-loading')
+        expect(page).to have_no_css('.ss-base-loading')
+
+        within ".portlets .gws-notices" do
+          click_on I18n.t("ss.links.more")
+        end
+      end
+      within ".index.gws-notices" do
+        expect(page).to have_no_css(".list-item", text: item1.name)
+        expect(page).to have_no_css(".list-item", text: item2.name)
+        expect(page).to have_no_css(".list-item", text: item3.name)
+        expect(page).to have_no_css(".list-item", text: item4.name)
+        expect(page).to have_no_css(".list-item", text: item5.name)
+        expect(page).to have_no_css(".list-item", text: item6.name)
         expect(page).to have_css(".list-item", text: item7.name)
         expect(page).to have_css(".list-item", text: item8.name)
         expect(page).to have_css(".list-item", text: item9.name)

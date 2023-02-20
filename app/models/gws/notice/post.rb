@@ -105,11 +105,12 @@ class Gws::Notice::Post
     end
   end
 
+  def browsed_state_options
+    %w(both unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
+  end
+
   def severity_options
-    [
-      [I18n.t('gws.options.severity.high'), 'high'],
-      [I18n.t('gws.options.severity.normal'), 'normal']
-    ]
+    %w(all high normal).map { |m| [I18n.t("gws/notice.options.severity.#{m}"), m] }
   end
 
   def new_flag?

@@ -15,10 +15,29 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
   context "with auth" do
     before { login_gws_user }
 
-    context "default unread" do
+    context "default both" do
       it "#index" do
-        expect(site.notice_browsed_state).to eq "unread"
+        expect(site.notice_browsed_state).to eq "both"
 
+        visit index_path
+        expect(page).to have_css(".list-item.unread", text: item1.name)
+        expect(page).to have_css(".list-item.unread", text: item2.name)
+        expect(page).to have_css(".list-item.read", text: item3.name)
+        expect(page).to have_css(".list-item.read", text: item4.name)
+
+        # wait for ajax completion
+        expect(page).to have_no_css('.fc-loading')
+        expect(page).to have_no_css('.ss-base-loading')
+      end
+    end
+
+    context "default unread" do
+      before do
+        site.notice_browsed_state = "unread"
+        site.update!
+      end
+
+      it "#index" do
         visit index_path
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
@@ -34,25 +53,6 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.search")
         end
 
-        expect(page).to have_css(".list-item.unread", text: item1.name)
-        expect(page).to have_css(".list-item.unread", text: item2.name)
-        expect(page).to have_css(".list-item.read", text: item3.name)
-        expect(page).to have_css(".list-item.read", text: item4.name)
-
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
-      end
-    end
-
-    context "default both" do
-      before do
-        site.notice_browsed_state = "both"
-        site.update!
-      end
-
-      it "#index" do
-        visit index_path
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
         expect(page).to have_css(".list-item.read", text: item3.name)

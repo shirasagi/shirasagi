@@ -76,12 +76,48 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         within ".list-items" do
           click_on item1.name
         end
-        expect(page).to have_no_link(I18n.t("gws/notice.links.set_seen"))
+        expect(page).to have_button(I18n.t("gws/notice.links.unset_seen"))
         within ".nav-menu" do
           click_on I18n.t("ss.links.back_to_index")
         end
 
         expect(page).to have_css(".list-item.read", text: item1.name)
+        expect(page).to have_css(".list-item.unread", text: item2.name)
+        expect(page).to have_css(".list-item.read", text: item3.name)
+        expect(page).to have_css(".list-item.read", text: item4.name)
+
+        # wait for ajax completion
+        expect(page).to have_no_css('.fc-loading')
+        expect(page).to have_no_css('.ss-base-loading')
+      end
+
+      it "#index" do
+        visit index_path
+        expect(page).to have_css(".list-item.unread", text: item1.name)
+        expect(page).to have_css(".list-item.unread", text: item2.name)
+        expect(page).to have_css(".list-item.read", text: item3.name)
+        expect(page).to have_css(".list-item.read", text: item4.name)
+
+        # wait for ajax completion
+        expect(page).to have_no_css('.fc-loading')
+        expect(page).to have_no_css('.ss-base-loading')
+
+        within ".list-items" do
+          click_on item1.name
+        end
+        expect(page).to have_button(I18n.t("gws/notice.links.unset_seen"))
+
+        page.accept_confirm do
+          click_on I18n.t("gws/notice.links.unset_seen")
+        end
+        within first("#notice", visible: false) do
+          expect(page).to have_content(I18n.t('ss.notice.saved'))
+        end
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.back_to_index")
+        end
+
+        expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
         expect(page).to have_css(".list-item.read", text: item3.name)
         expect(page).to have_css(".list-item.read", text: item4.name)
