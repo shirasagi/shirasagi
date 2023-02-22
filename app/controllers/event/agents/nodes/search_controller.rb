@@ -32,12 +32,12 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     @close_date = Date.parse(@close_date) if @close_date.present?
     @facility_name = safe_params[:facility_name].presence
     if @facility_name.present?
-      @facility_ids = Facility::Node::Page.site(@cur_site).where(name: /#{::Regexp.escape(@facility_name)}/).and_public.pluck(:id)
+      @facility_ids = Facility::Node::Page.site(@cur_site).where(name: /#{::Regexp.escape(@facility_name)}/).and_public(@cur_date).pluck(:id)
     end
   end
 
   def list_events
-    criteria = Cms::Page.site(@cur_site).and_public
+    criteria = Cms::Page.site(@cur_site).and_public(@cur_date)
     criteria = criteria.search(keyword: @keyword) if @keyword.present?
     criteria = criteria.where(@cur_node.condition_hash)
     criteria = criteria.in(category_ids: @category_ids) if @category_ids.present?

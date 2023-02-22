@@ -82,7 +82,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   def set_page
     return if params[:page].blank?
 
-    @page = Cms::Page.site(@cur_site).and_public.where(id: params[:page]).first
+    @page = Cms::Page.site(@cur_site).and_public(@cur_date).where(id: params[:page]).first
     raise "404" if @page.blank?
   end
 

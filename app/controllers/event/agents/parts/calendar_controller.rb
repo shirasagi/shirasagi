@@ -79,7 +79,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
         next unless @events[d]
         @events[d] << [
             page,
-            page.categories.in(id: node_category_ids).and_public.order_by(order: 1)
+            page.categories.in(id: node_category_ids).and_public(@cur_date).order_by(order: 1)
         ]
       end
     end
