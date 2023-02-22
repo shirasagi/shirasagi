@@ -2,6 +2,7 @@ class Gws::Memo::Message
   include ActiveSupport::NumberHelper
   include SS::Document
   include Gws::Model::Memo::Message
+  include Gws::Model::Memo::Constructors
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site

@@ -395,7 +395,7 @@ module Gws::Model
 
       if sign = Gws::Memo::Signature.site(@cur_site).default_sign(@cur_user)
         self.text = "\n\n#{sign}"
-        self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+        self.html = Gws::Memo.text_to_html(self.text)
       end
 
       if to.present?
@@ -444,9 +444,9 @@ module Gws::Model
     #  @in_reminder_state = (@cur_site.memo_reminder == 0)
     #end
 
-    def h(str)
-      ERB::Util.h(str)
-    end
+    # def h(str)
+    #   ERB::Util.h(str)
+    # end
 
     def list_message?
       self[:list_id].present?

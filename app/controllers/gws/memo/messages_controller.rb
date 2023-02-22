@@ -258,40 +258,18 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def reply
-    @item = @model.new pre_params.merge(fix_params)
     item_reply = @model.site(@cur_site).find(params[:id])
-    @item.to_member_ids = [item_reply.user_id]
-    @item.subject = "Re: #{item_reply.subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+    @item = @model.new_reply(item_reply, cur_site: @cur_site, cur_user: @cur_user)
   end
 
   def reply_all
-    @item = @model.new pre_params.merge(fix_params)
     item_reply = @model.site(@cur_site).find(params[:id])
-
-    @item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [@cur_user.id]
-    @item.to_shared_address_group_ids = item_reply.to_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
-    @item.cc_member_ids = item_reply.cc_member_ids
-    @item.cc_shared_address_group_ids = item_reply.cc_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
-    @item.subject = "Re: #{item_reply.subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+    @item = @model.new_reply(item_reply, cur_site: @cur_site, cur_user: @cur_user, respond_to: :all)
   end
 
   def forward
-    @item = @model.new pre_params.merge(fix_params)
     item_forward = @model.site(@cur_site).find(params[:id])
-    @item.subject = "Fwd: #{item_forward.display_subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
-    @item.ref_file_ids = item_forward.file_ids
+    @item = @model.new_forward(item_forward, cur_site: @cur_site, cur_user: @cur_user)
   end
 
   def ref

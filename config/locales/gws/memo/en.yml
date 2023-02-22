@@ -44,6 +44,7 @@ en:
     unsend: Delete the sent message (cancel sending)
     export_filter: Target
     backup_filter: Target
+    forward_message_header: Forwarded Message
     links:
       move: Move
       etc: Other
