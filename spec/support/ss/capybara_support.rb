@@ -36,7 +36,7 @@ module SS::CapybaraSupport
       options.add_argument('log-level=0')
       options.add_argument('lang=ja-JP')
       if headless != '0'
-        options.add_argument('headless')
+        options.add_argument('headless=new')
         options.add_argument('disable-gpu')
         if ENV.fetch('sandbox', '0') != '0' || ci?
           options.add_argument('no-sandbox')
