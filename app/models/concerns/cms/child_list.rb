@@ -25,9 +25,7 @@ module Cms::ChildList
 
   def category_pages
     @_child_list_category_pages ||= begin
-      items = Cms::Page.site(site).and_public
-      items = items.in(category_ids: self.id)
-      items = items.where(self.condition_hash)
+      items = Cms::Page.public_list(site: site, node: self)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
       items.to_a
@@ -36,9 +34,7 @@ module Cms::ChildList
 
   def child_pages
     @_child_list_pages ||= begin
-      items = Cms::Page.site(site).and_public
-      items = items.where(filename: /^#{::Regexp.escape(self.filename)}\//)
-      items = items.where(self.condition_hash)
+      items = Cms::Page.public_list(site: site, node: self)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
       items.to_a
