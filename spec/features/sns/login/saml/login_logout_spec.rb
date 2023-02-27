@@ -14,6 +14,15 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       saml.force_authn_state = "enabled"
       saml.save!
     end
+
+    # SAML Mock Server(https) からシラサギ (http) へ post する際、Chrome v110 からセキュリティエラーが発生するようになった。
+    # セキュリティエラーを防ぐため、明示的にシラサギ URL を http://0.0.0.0 ではなく http://127.0.0.1 へ変更する
+    @save_app_host = Capybara.app_host
+    Capybara.app_host = "http://127.0.0.1:#{Capybara.current_session.server.port}"
+  end
+
+  after do
+    Capybara.app_host = @save_app_host
   end
 
   context "when email is given" do
