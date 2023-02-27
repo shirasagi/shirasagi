@@ -21331,12 +21331,23 @@ this.SS_AjaxFile = (function () {
   SS_AjaxFile.prototype.render = function() {
     var self = this;
 
+
     self.$el.on("submit", "form.user-file", function (ev) {
       var submitted = "attach";
       if (ev.originalEvent && ev.originalEvent.submitter) {
         submitted = ev.originalEvent.submitter.dataset.submitted;
       }
       var $form = $(this);
+
+      var files = $form.find('input[name="item[in_files][]"]')[0].files
+      var filename = Array.from(files).map(function(file) { return file.name; }).join(' ')
+      if (filename.match(/[^\w\-.]/)) {
+        var msg = 'ファイル名が日本語のファイルをアップロードする場合は'
+          + '「部署+日付+時間+連番（例：kikaku20220907162801.xls）」のファイル名に変換されます。';
+        if (!confirm(msg)) {
+          return false;
+        }
+      }
 
       var params = {
         url: $form.attr("action") + ".json",

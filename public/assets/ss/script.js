@@ -42257,12 +42257,23 @@ this.SS_AjaxFile = (function () {
   SS_AjaxFile.prototype.render = function() {
     var self = this;
 
+
     self.$el.on("submit", "form.user-file", function (ev) {
       var submitted = "attach";
       if (ev.originalEvent && ev.originalEvent.submitter) {
         submitted = ev.originalEvent.submitter.dataset.submitted;
       }
       var $form = $(this);
+
+      var files = $form.find('input[name="item[in_files][]"]')[0].files
+      var filename = Array.from(files).map(function(file) { return file.name; }).join(' ')
+      if (filename.match(/[^\w\-.]/)) {
+        var msg = 'ファイル名が日本語のファイルをアップロードする場合は'
+          + '「部署+日付+時間+連番（例：kikaku20220907162801.xls）」のファイル名に変換されます。';
+        if (!confirm(msg)) {
+          return false;
+        }
+      }
 
       var params = {
         url: $form.attr("action") + ".json",
@@ -43310,10 +43321,17 @@ this.Form_Alert = (function () {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
           if (!SS.isEmptyObject(Form_Alert.alerts)) {
+            var result = JSON.stringify(Form_Alert.alerts['アクセシビリティチェック']) || null;
+            $('input[name="item[syntax_check_result]"').remove();
+            $('<input>', { type: 'hidden', name: 'item[syntax_check_result]', value: result }).appendTo(form);
+
             Form_Alert.showAlert(form, submit);
             $submit.trigger("ss:formAlertFinish");
             return;
           }
+
+          $('input[name="item[syntax_check_result]"').remove();
+          $('<input>', { type: 'hidden', name: 'item[syntax_check_result]', value: null }).appendTo(form);
 
           $submit.off(".form_alert");
           $submit.trigger("ss:formAlertFinish");
@@ -43382,7 +43400,7 @@ this.Form_Alert = (function () {
 
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
-    
+
     if (SS.isEmptyObject(Form_Alert.alerts["被リンクチェック"])) {
       $footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
     }

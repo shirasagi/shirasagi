@@ -225,10 +225,17 @@ this.Form_Alert = (function () {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
           if (!SS.isEmptyObject(Form_Alert.alerts)) {
+            var result = JSON.stringify(Form_Alert.alerts['アクセシビリティチェック']) || null;
+            $('input[name="item[syntax_check_result]"').remove();
+            $('<input>', { type: 'hidden', name: 'item[syntax_check_result]', value: result }).appendTo(form);
+
             Form_Alert.showAlert(form, submit);
             $submit.trigger("ss:formAlertFinish");
             return;
           }
+
+          $('input[name="item[syntax_check_result]"').remove();
+          $('<input>', { type: 'hidden', name: 'item[syntax_check_result]', value: null }).appendTo(form);
 
           $submit.off(".form_alert");
           $submit.trigger("ss:formAlertFinish");
@@ -297,7 +304,7 @@ this.Form_Alert = (function () {
 
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var $footer = $(document.createElement("footer")).addClass('send');
-    
+
     if (SS.isEmptyObject(Form_Alert.alerts["被リンクチェック"])) {
       $footer.append('<button name="button" type="button" class="btn-primary save">警告を無視する</button>');
     }
