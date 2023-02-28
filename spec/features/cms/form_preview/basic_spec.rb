@@ -31,15 +31,15 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           fill_in "item[basename]", with: "sample"
         end
 
-        page.first("#addon-cms-agents-addons-body .preview").click
-
-        switch_to_window(windows.last)
-
-        expect(page).to have_css("h2", text: "見出し2")
-        expect(page).to have_css("p", text: "内容が入ります。")
-        expect(page).to have_css("h3", text: "見出し3")
-        expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
-        expect(page).to have_css("header h2", text: "カテゴリー")
+        new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
+        within_window new_window do
+          expect(page).to have_css("h2", text: "見出し2")
+          expect(page).to have_css("p", text: "内容が入ります。")
+          expect(page).to have_css("h3", text: "見出し3")
+          expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
+          expect(page).to have_css("header h2", text: "カテゴリー")
+        end
+        new_window.close
       end
     end
   end
@@ -62,15 +62,15 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           fill_in "item[basename]", with: "sample"
         end
 
-        page.first("#addon-cms-agents-addons-body .preview").click
-
-        switch_to_window(windows.last)
-
-        expect(page).to have_css("h2", text: "見出し2")
-        expect(page).to have_css("p", text: "内容が入ります。")
-        expect(page).to have_css("h3", text: "見出し3")
-        expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
-        expect(page).to have_no_css("header h2", text: "カテゴリー")
+        new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
+        within_window new_window do
+          expect(page).to have_css("h2", text: "見出し2")
+          expect(page).to have_css("p", text: "内容が入ります。")
+          expect(page).to have_css("h3", text: "見出し3")
+          expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
+          expect(page).to have_no_css("header h2", text: "カテゴリー")
+        end
+        new_window.close
       end
     end
   end
@@ -227,25 +227,22 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        page.first("#addon-cms-agents-addons-form-page .preview").click
-
-        switch_to_window(windows.last)
-
-        expect(page).to have_css("div", text: column1_value)
-        expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
-        expect(page).to have_css("div", text: column3_value)
-        expect(page).to have_css("div", text: column4_value)
-        expect(page).to have_css("div", text: column5_value)
-        expect(page).to have_css("div", text: column6_value)
-        expect(page).to have_css("div", text: column7_value)
-        expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
-        expect(page).to have_css("div", text: column9_value)
-        expect(page).to have_css("h1", text: column10_text)
-        expect(page).to have_css("div", text: column11_list)
-        expect(page).to have_css("div", text: column12_caption)
-        expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
-
-        switch_to_window(windows.first)
+        new_window = window_opened_by { page.first("#addon-cms-agents-addons-form-page .preview").click }
+        within_window new_window do
+          expect(page).to have_css("div", text: column1_value)
+          expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
+          expect(page).to have_css("div", text: column3_value)
+          expect(page).to have_css("div", text: column4_value)
+          expect(page).to have_css("div", text: column5_value)
+          expect(page).to have_css("div", text: column6_value)
+          expect(page).to have_css("div", text: column7_value)
+          expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
+          expect(page).to have_css("div", text: column9_value)
+          expect(page).to have_css("h1", text: column10_text)
+          expect(page).to have_css("div", text: column11_list)
+          expect(page).to have_css("div", text: column12_caption)
+          expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+        end
 
         within "form#item-form" do
           click_on I18n.t('ss.buttons.draft_save')
@@ -256,23 +253,26 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         expect(Article::Page.count).to eq 1
 
         click_on I18n.t('ss.links.edit')
-        page.first("#addon-cms-agents-addons-form-page .preview").click
-
-        switch_to_window(windows.last)
-
-        expect(page).to have_css("div", text: column1_value)
-        expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
-        expect(page).to have_css("div", text: column3_value)
-        expect(page).to have_css("div", text: column4_value)
-        expect(page).to have_css("div", text: column5_value)
-        expect(page).to have_css("div", text: column6_value)
-        expect(page).to have_css("div", text: column7_value)
-        expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
-        expect(page).to have_css("div", text: column9_value)
-        expect(page).to have_css("h1", text: column10_text)
-        expect(page).to have_css("div", text: column11_list)
-        expect(page).to have_css("div", text: column12_caption)
-        expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+        within 'form#item-form' do
+          ensure_addon_opened "#addon-cms-agents-addons-form-page"
+          page.first("#addon-cms-agents-addons-form-page .preview").click
+        end
+        within_window new_window do # new_window is re-used.
+          expect(page).to have_css("div", text: column1_value)
+          expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
+          expect(page).to have_css("div", text: column3_value)
+          expect(page).to have_css("div", text: column4_value)
+          expect(page).to have_css("div", text: column5_value)
+          expect(page).to have_css("div", text: column6_value)
+          expect(page).to have_css("div", text: column7_value)
+          expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
+          expect(page).to have_css("div", text: column9_value)
+          expect(page).to have_css("h1", text: column10_text)
+          expect(page).to have_css("div", text: column11_list)
+          expect(page).to have_css("div", text: column12_caption)
+          expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+        end
+        new_window.close
       end
     end
   end

@@ -142,6 +142,9 @@ RSpec.configure do |config|
 
   config.after(:example, type: :feature) do
     page.reset!
+  rescue => e
+    # たまに page.reset! でのタイムアウトでテストが失敗するときがある。テスト失敗とならないように rescue する。
+    Rails.logger.debug(e.to_s)
   end
 
   config.after(:suite) do

@@ -197,7 +197,6 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       node.show_point = 'hide'
       node.save!
 
-
       # https://jira.mongodb.org/browse/MONGOID-4544
       # app.touch
       app.save!
