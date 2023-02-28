@@ -52,14 +52,15 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          click_on I18n.t("workflow.search_approvers.index")
+          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
         wait_for_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
+          expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end

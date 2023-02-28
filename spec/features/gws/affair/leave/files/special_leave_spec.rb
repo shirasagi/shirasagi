@@ -31,21 +31,23 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.hour", count: end_at.hour), from: 'item[end_at_hour]'
           select I18n.t("gws/attendance.minute", count: end_at.min), from: 'item[end_at_minute]'
 
-          within "#addon-gws-agents-addons-file .toggle-head" do
-            find('h2', text: I18n.t("modules.addons.gws/file")).click
-          end
+          # within "#addon-gws-agents-addons-file .toggle-head" do
+          #   find('h2', text: I18n.t("modules.addons.gws/file")).click
+          # end
 
           fill_in "item[reason]", with: reason
           select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
 
-          click_on I18n.t("gws/affair.apis.special_leaves.index")
+          wait_cbox_open { click_on I18n.t("gws/affair.apis.special_leaves.index") }
         end
         wait_for_cbox do
-          click_on "病気休暇（公務）"
+          wait_cbox_close { click_on "病気休暇（公務）" }
         end
         within "form#item-form" do
+          expect(page).to have_css(".select-special-leave", text: "病気休暇（公務）")
           click_on I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
     end
@@ -63,14 +65,15 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          click_on I18n.t("workflow.search_approvers.index")
+          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
         wait_for_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
+          expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -134,8 +137,8 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       within ".gws-attendance" do
         # change year month
         within "form" do
-          select I18n.t("gws/attendance.year", count: 2021), from: 'year'
-          select I18n.t("gws/attendance.month", count: 1), from: 'month'
+          select I18n.t("gws/attendance.year", count: start_at.year), from: 'year'
+          select I18n.t("gws/attendance.month", count: start_at.month), from: 'month'
           click_on I18n.t('ss.buttons.search')
         end
       end

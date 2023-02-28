@@ -19,6 +19,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit new_path
 
         within "form#item-form" do
+          expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
           fill_in "item[overtime_name]", with: name
 
           fill_in "item[start_at_date]", with: start_at.to_date
@@ -31,6 +32,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
           click_on I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       Gws::Affair::OvertimeFile.find_by(overtime_name: name)
     end
@@ -48,14 +50,15 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          click_on I18n.t("workflow.search_approvers.index")
+          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
         wait_for_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
+          expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -94,7 +97,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on I18n.t("gws/affair.links.set_results")
+          wait_cbox_open { click_on I18n.t("gws/affair.links.set_results") }
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
@@ -116,7 +119,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          click_on I18n.t("gws/affair.links.edit_results")
+          wait_cbox_open { click_on I18n.t("gws/affair.links.edit_results") }
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")

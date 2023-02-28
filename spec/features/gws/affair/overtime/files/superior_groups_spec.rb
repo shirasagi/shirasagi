@@ -48,10 +48,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       login_user(user)
       visit new_path
 
-      within "#addon-gws-agents-addons-group_permission" do
-        expect(page).to have_css(".ajax-selected tr[data-id=\"#{superior_group.id}\"]")
-      end
       within "form#item-form" do
+        expect(page).to have_css(".selected-capital", text: user.effective_capital(site).name)
+        within "#addon-gws-agents-addons-group_permission" do
+          expect(page).to have_css(".ajax-selected tr[data-id=\"#{superior_group.id}\"]")
+        end
         fill_in "item[overtime_name]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
@@ -60,7 +61,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        click_on I18n.t("workflow.search_approvers.index")
+        wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
       end
       wait_for_cbox do
         within ".search-ui-form" do

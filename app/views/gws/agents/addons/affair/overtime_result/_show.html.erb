@@ -32,14 +32,6 @@
   end
 %>
 
-<%= jquery do %>
-$(".close-results").on("click", function () {
-  if (!confirm("結果を確認済みにしてもよろしいですか？")) {
-    return false;
-  }
-});
-<% end %>
-
 <dl class="see addon-gws-affair-overtime_result">
   <% if @item.day_results.present? %>
     <%
@@ -168,7 +160,7 @@ $(".close-results").on("click", function () {
         <%= link_to t("gws/affair.links.edit_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: request.path), class: "ajax-box" %>
       <% end %>
       <% if @item.result_closeable(@cur_user) %>
-        <%= link_to t("gws/affair.links.close_results"), close_gws_affair_overtime_result_path(id: @item.id, ref: request.path), method: :post, class: "btn close-results" %>
+        <%= link_to t("gws/affair.links.close_results"), close_gws_affair_overtime_result_path(id: @item.id, ref: request.path), method: :post, class: "btn close-results", data: { confirm: "結果を確認済みにしてもよろしいですか？" } %>
       <% end %>
     <% end %>
   <% else %>
