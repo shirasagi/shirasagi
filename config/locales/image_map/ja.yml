@@ -40,6 +40,7 @@ ja:
         area_states: エリアステータス
         area_state_name: 名称
         area_state_value: 値
+        supplement_state: 補足の表示
       image_map/addon/area:
         in_area: クリックエリア
         link_url: リンクURL
@@ -51,6 +52,8 @@ ja:
         - 画像を入力します。
       area_states:
         - エリアページのステータスを設定できます。
+      supplement_state:
+        - エリアステータスの補足を表示するか選択します。
     image_map/page:
       name:
         - ページタイトルを入力します。

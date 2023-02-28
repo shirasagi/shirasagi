@@ -24,4 +24,7 @@
       </tbody>
     </table>
   </dd>
+
+  <dt><%= @model.t :supplement_state %><%= @model.tt :supplement_state %></dt>
+  <dd><%= f.select :supplement_state, @item.supplement_state_options %></dd>
 </dl>
