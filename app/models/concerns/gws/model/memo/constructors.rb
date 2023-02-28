@@ -11,8 +11,10 @@ module Gws::Model::Memo::Constructors
       when :all
         item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [cur_user.id]
         item.to_shared_address_group_ids = item_reply.to_shared_address_groups.readable(cur_user, site: cur_site).pluck(:id)
+        item.to_webmail_address_group_ids = item_reply.to_webmail_address_groups.allow(:read, cur_user, site: cur_site).pluck(:id)
         item.cc_member_ids = item_reply.cc_member_ids
         item.cc_shared_address_group_ids = item_reply.cc_shared_address_groups.readable(cur_user, site: cur_site).pluck(:id)
+        item.cc_webmail_address_group_ids = item_reply.cc_webmail_address_groups.allow(:read, cur_user, site: cur_site).pluck(:id)
       else # :sender
         item.to_member_ids = [ item_reply.user_id ]
       end
