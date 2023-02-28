@@ -294,9 +294,7 @@ module Gws::Model
     def destroy_from_folder(user, folder, opts = {})
       unsend = opts[:unsend]
 
-      if folder.draft_box?
-        destroy
-      elsif folder.sent_box? && unsend == "1"
+      if folder.draft_box? || (folder.sent_box? && unsend == "1")
         destroy
       elsif folder.sent_box?
         destroy_from_sent

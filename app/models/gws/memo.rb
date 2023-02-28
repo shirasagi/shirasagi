@@ -21,7 +21,8 @@ module Gws::Memo
       # RFC2822 によるとメールアドレス部 addr-spec は省略することができないので、仮初めのメールアドレスを生成する
       #
       # - シラサギのユーザーはメールアドレスを省略することができる。このようなユーザーに対して仮初めのメールアドレスが適用される。
-      # - メッセージでは、共有アドレスグループや個人アドレスグループを指定することができる。このようなグループに対して仮初めのメールアドレスが適用される。
+      # - メッセージでは、共有アドレスグループや個人アドレスグループを指定することができる。
+      #   このようなグループに対して仮初めのメールアドレスが適用される。
       # - メッセージにはメーリングリスト機能がある。メーリングリストを用いたメッセージに対しても仮初めのメールアドレスが適用される。
       if RFC5822_ATEXT_REGEX.match?(name)
         local_part = name
@@ -57,9 +58,12 @@ module Gws::Memo
 
     ret = "\n\n"
     ret += "-------- #{I18n.t("gws/memo/message.forward_message_header")} --------\n"
-    ret += "#{I18n.t("mongoid.attributes.gws/model/memo/message.subject")}: #{message.subject}\n"
-    ret += "#{I18n.t("mongoid.attributes.gws/model/memo/message.send_date")}: #{I18n.l(send_date, format: :long)}\n"
-    ret += "#{I18n.t("mongoid.attributes.gws/model/memo/message.from")}: #{message.from_member_name.presence || message.user_long_name}\n"
+    header = I18n.t("mongoid.attributes.gws/model/memo/message.subject")
+    ret += "#{header}: #{message.subject}\n"
+    header = I18n.t("mongoid.attributes.gws/model/memo/message.send_date")
+    ret += "#{header}: #{I18n.l(send_date, format: :long)}\n"
+    header = I18n.t("mongoid.attributes.gws/model/memo/message.from")
+    ret += "#{header}: #{message.from_member_name.presence || message.user_long_name}\n"
     ret += "\n\n"
     ret += "#{I18n.l(send_date, format: :long)}, #{message.from_member_name.presence || message.user_long_name}:\n"
     ret += (text || message.text).to_s.gsub(/^/m, '> ')
@@ -72,17 +76,30 @@ module Gws::Memo
     ret
   end
 
+  FIGURE_STYLE = [
+    "margin-block: 0",
+    "margin-inline: 0"
+  ].join("; ").freeze
+
+  QUOTE_STYLE = [
+    "margin-inline-start: 1em",
+    "margin-inline-end: 1em",
+    "padding-inline-start: 1em",
+    "padding-inline-end: 1em",
+    "border-left: 1px solid #000"
+  ].join("; ").freeze
+
   def reply_html(message, cur_site:, cur_user:, html: nil)
     send_date = message.send_date || message.updated
 
     ret = <<~HTML
-      <figure style="margin-block: 0; margin-inline: 0;">
+      <figure style="#{FIGURE_STYLE};">
         <figcaption>
           <time datetime="#{send_date.iso8601}">#{I18n.l(send_date, format: :long)}</time>
           <cite>#{message.from_member_name.presence || message.user_long_name}</cite>
           :
         </figcaption>
-        <blockquote style="margin-inline-start: 1em; margin-inline-end: 1em; padding-inline-start: 1em; padding-inline-end: 1em; border-left: 1px solid #000">
+        <blockquote style="#{QUOTE_STYLE};">
           #{html || message.html}
         </blockquote>
       </figure>
@@ -129,6 +146,7 @@ module Gws::Memo
     ret
   end
 
+  # rubocop:disable Style::RedundantAssignment
   def text_to_html(text)
     return text if text.blank?
 
@@ -138,6 +156,7 @@ module Gws::Memo
     text = text.gsub(/\R/, '<br />')
     text
   end
+  # rubocop:enable Style::RedundantAssignment
 
   def html_to_text(html)
     return html if html.blank?
