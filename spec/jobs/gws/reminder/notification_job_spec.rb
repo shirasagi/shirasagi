@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Gws::Reminder::NotificationJob, dbscope: :example do
   let(:site) { gws_site }
+  let(:user) { gws_user }
   let(:reminder_condition) do
     { 'user_id' => gws_user.id, 'state' => 'mail', 'interval' => 10, 'interval_type' => 'minutes' }
   end
@@ -11,7 +12,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       start_at: 1.hour.from_now.strftime('%Y/%m/%d %H:%M'), end_at: 2.hours.from_now.strftime('%Y/%m/%d %H:%M'),
       in_reminder_conditions: [ reminder_condition ])
   end
-  let(:reminder) { schedule.reminder(gws_user) }
+  let(:reminder) { schedule.reminder(user) }
   let(:default_from) { SS.config.mail.default_from }
   let(:sender_email) { "sys@example.jp" }
 
@@ -153,6 +154,61 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
         expect(notify_mail.body.raw_source).to include("[参加ユーザー]\r\n")
         expect(notify_mail.body.raw_source).to include(schedule.members.first.long_name)
       end
+    end
+  end
+
+  context 'user not notifiable' do
+    it "expired" do
+      expect(reminder.notifications).to be_present
+      Timecop.travel(reminder.notifications.first.notify_at) do
+        user.deletion_unlock
+        user.disable
+        described_class.bind(site_id: site.id).perform_now
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Gws::Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(include("リマインダー通知（メール送信）"))
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
+    end
+
+    it "locked" do
+      expect(reminder.notifications).to be_present
+      Timecop.travel(reminder.notifications.first.notify_at) do
+        user.lock
+        described_class.bind(site_id: site.id).perform_now
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Gws::Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(include("リマインダー通知（メール送信）"))
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
+    end
+
+    it "api only" do
+      expect(reminder.notifications).to be_present
+      Timecop.travel(reminder.notifications.first.notify_at) do
+        user.restriction = 'api_only'
+        user.update!
+        described_class.bind(site_id: site.id).perform_now
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Gws::Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(include("リマインダー通知（メール送信）"))
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
     end
   end
 end

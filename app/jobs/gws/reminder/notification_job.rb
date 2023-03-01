@@ -8,6 +8,8 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
 
     send_count = 0
     each_reminder do |item|
+      next if !item.user.notifiable?
+
       mail = Gws::Reminder::Mailer.notify_mail(site, item)
       next if mail.blank?
 

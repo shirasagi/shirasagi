@@ -270,12 +270,31 @@ module SS::Model::User
     !locked?
   end
 
+  def restricted_api_only?
+    restriction == 'api_only'
+  end
+
+  def notifiable?
+    return false if disabled?
+    return false if locked?
+    return false if restricted_api_only?
+    true
+  end
+
   def lock
     update(lock_state: 'locked')
   end
 
   def unlock
     update(lock_state: 'unlocked')
+  end
+
+  def deletion_lock
+    update(deletion_lock_state: 'locked')
+  end
+
+  def deletion_unlock
+    update(deletion_lock_state: 'unlocked')
   end
 
   def root_groups
@@ -304,10 +323,6 @@ module SS::Model::User
     %w(unlocked locked).map do |v|
       [ I18n.t("ss.options.user_deletion_lock_state.#{v}"), v ]
     end
-  end
-
-  def restricted_api_only?
-    restriction == 'api_only'
   end
 
   def organization_id_options(sites = [])
