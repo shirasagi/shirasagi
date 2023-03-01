@@ -21,14 +21,15 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
 
         within "form#item-form" do
           within "#addon-basic" do
-            click_on I18n.t("ss.apis.users.index")
+            wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
           end
         end
         wait_for_cbox do
-          click_on user.name
+          wait_cbox_close { click_on user.name }
         end
 
         within "form#item-form" do
+          expect(page).to have_css("#addon-basic .ajax-selected [data-id='#{user.id}']", text: user.name)
           fill_in "item[count]", with: 60
           click_on I18n.t("ss.buttons.save")
         end

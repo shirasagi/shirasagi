@@ -97,6 +97,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
+          wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.set_results") }
         end
         wait_for_cbox do
@@ -119,6 +120,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
+          wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.edit_results") }
         end
         wait_for_cbox do
@@ -141,6 +143,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
         click_on item.name
         within "#addon-gws-agents-addons-affair-overtime_result" do
+          wait_for_js_ready
           page.accept_confirm do
             click_on I18n.t("gws/affair.links.close_results")
           end
