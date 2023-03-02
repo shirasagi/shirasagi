@@ -1,5 +1,7 @@
 class Gws::Reminder::NotificationJob < Gws::ApplicationJob
   def perform(*args)
+    return unless site.gws_use?
+
     options = args.extract_options!
     options = options.with_indifferent_access
     @now = Time.zone.now.beginning_of_minute

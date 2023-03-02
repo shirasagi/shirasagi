@@ -211,4 +211,24 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       expect(ActionMailer::Base.deliveries.length).to eq 0
     end
   end
+
+  context 'not use gws' do
+    it "expired" do
+      expect(reminder.notifications).to be_present
+      Timecop.travel(reminder.notifications.first.notify_at) do
+        site.gws_use = "disabled"
+        site.update!
+        described_class.bind(site_id: site.id).perform_now
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Gws::Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(include("リマインダー通知（メール送信）"))
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
+    end
+  end
 end
