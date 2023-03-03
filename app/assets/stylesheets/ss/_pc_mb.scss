@@ -2426,7 +2426,7 @@ div.index {
       border: 0;
     }
     .checked, &:hover {
-      background: $orange2;
+      background-color: #f2f2f2;
     }
     label + .info, .info + .links {
       @include mb { margin-left: 26px; }
