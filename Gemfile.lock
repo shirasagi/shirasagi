@@ -458,6 +458,7 @@ GEM
     pry-stack_explorer (0.6.1)
       binding_of_caller (~> 1.0)
       pry (~> 0.13)
+    psych (3.3.4)
     public_suffix (4.0.6)
     puma (5.6.4)
       nio4r (~> 2.0)
@@ -801,6 +802,7 @@ DEPENDENCIES
   pry-doc
   pry-rails
   pry-stack_explorer
+  psych (< 4.0.0)
   puma
   rails (~> 6.1.0)
   rails-controller-testing
