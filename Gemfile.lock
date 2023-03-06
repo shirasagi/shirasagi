@@ -386,6 +386,10 @@ GEM
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
     net-ldap (0.17.0)
+    net-protocol (0.2.1)
+      timeout
+    net-smtp (0.3.3)
+      net-protocol
     nio4r (2.5.8)
     nokogiri (1.13.10)
       mini_portile2 (~> 2.8.0)
@@ -670,6 +674,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.10)
     timecop (0.9.4)
+    timeout (0.3.2)
     trailblazer-option (0.1.2)
     ttfunk (1.7.0)
     twitter (7.0.0)
@@ -787,6 +792,7 @@ DEPENDENCIES
   mongoid-grid_fs
   mongoid-rspec
   net-ldap
+  net-smtp
   non-stupid-digest-assets
   oauth2
   oj
