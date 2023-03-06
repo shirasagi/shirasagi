@@ -117,7 +117,7 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'debase', '0.2.5.beta2', require: false
+  gem 'debase', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
