@@ -120,6 +120,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    date (3.3.3)
     debase (0.2.5.beta2)
       debase-ruby_core_source (>= 0.10.12)
     debase-ruby_core_source (0.10.14)
@@ -385,6 +386,9 @@ GEM
     nenv (0.3.0)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
+    net-imap (0.3.4)
+      date
+      net-protocol
     net-ldap (0.17.0)
     net-protocol (0.2.1)
       timeout
@@ -791,6 +795,7 @@ DEPENDENCIES
   mongoid-geospatial
   mongoid-grid_fs
   mongoid-rspec
+  net-imap
   net-ldap
   net-smtp
   non-stupid-digest-assets
