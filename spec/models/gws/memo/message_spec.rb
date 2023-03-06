@@ -301,11 +301,18 @@ RSpec.describe Gws::Memo::Message, type: :model do
           expect(fragment.elements[0].name).to eq "br"
 
           table_node = fragment.elements[1]
-          expect(table_node.name).to eq "figure"
+          expect(table_node.name).to eq "table"
+          expect(table_node.elements.count).to eq 1
+
+          tbody_node = table_node.elements[0]
+          expect(tbody_node.name).to eq "tbody"
+          expect(tbody_node.elements.count).to eq 3
+
           td_nodes = table_node.css("td")
-          expect(td_nodes[1].text).to include(item.subject)
-          expect(td_nodes[3].text).to include(I18n.l(item.send_date, format: :long))
-          expect(td_nodes[5].text).to include(user.long_name)
+          expect(td_nodes.length).to eq 3
+          expect(td_nodes[0].text).to eq item.subject
+          expect(td_nodes[1].text).to eq I18n.l(item.send_date, format: :long)
+          expect(td_nodes[2].text).to eq user.long_name
 
           expect(fragment.elements[2].name).to eq "br"
           expect(fragment.elements[3].name).to eq "p"
