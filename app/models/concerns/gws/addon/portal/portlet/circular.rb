@@ -6,10 +6,14 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :circular_article_state, type: String, default: "unseen"
+      field :circular_article_state, type: String
+      field :circular_sort, type: String
+
       embeds_ids :circular_categories, class_name: "Gws::Circular::Category"
       permit_params circular_category_ids: []
-      permit_params :circular_article_state
+      permit_params :circular_article_state, :circular_sort
+
+      before_validation :set_default_circular_setting
     end
 
     def find_circular_items(portal, user)
@@ -38,6 +42,10 @@ module Gws::Addon::Portal::Portlet
 
     def circular_article_state_options
       Gws::Circular::Post.new.article_state_options
+    end
+
+    def circular_sort_options
+      Gws::Circular::Post.new.sort_options
     end
   end
 end

@@ -176,6 +176,7 @@ en:
       gws/addon/portal/portlet/circular:
         circular_category_ids: Category
         circular_article_state: Display type
+        circular_sort: Order
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: Category
         monitor_answerable_article: Display range
@@ -224,9 +225,21 @@ en:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: Enter a portlet name.
+      #circular_article_state:
+      #  - <b>Unread</b> - Show only unread items in the portal.
+      #  - <b>Show all</b> - Show all read and unread items in the portal.
       circular_article_state:
-        - <b>Unread</b> - Show only unread items in the portal.
-        - <b>Show all</b> - Show all read and unread items in the portal.
+        - Select display type of circular boards.
+      circular_sort:
+        - Select order of circular boards.
+      survey_answered_state:
+        - Select display type of surveys.
+      survey_sort:
+        - Select order of surveys.
+      survey_category_ids:
+        - Select categories.
+      limit:
+        - Enter the display limit for surveys.
     gws/addon/portal/notice_setting:
       portal_notice_state:
         - Select whether or not to show an announcement in the portal.

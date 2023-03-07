@@ -52,6 +52,9 @@ end
       (<%= now >= item.due_date ? t("gws/survey.over_limit") : time_ago_in_words(item.due_date) %>)
     </span>
   <% end %>
+  <span class="datetime"><%= @model.t(:updated) %>:<%= ss_time_tag item.updated %></span>
+  <span class="datetime"><%= @model.t(:created) %>:<%= ss_time_tag item.created %></span>
+  <span class="user"><%= gws_public_user_long_name(item.i18n_contributor_name.presence || item.user_long_name) %></span>
 
   <% if item.categories.present? %>
     <span class="categories">
