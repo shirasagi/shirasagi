@@ -57,7 +57,7 @@ module Gws::Model
 
       validates :subject, presence: true, length: { maximum: 200 }
 
-      scope :and_public, -> { where(state: "public") }
+      scope :and_public, ->(_date = nil) { where(state: "public") }
       scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
       scope :folder, ->(folder, user) {
         if folder.sent_box?

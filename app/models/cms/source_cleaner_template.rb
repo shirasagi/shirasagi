@@ -16,7 +16,7 @@ class Cms::SourceCleanerTemplate
   validates :name, presence: true, length: { maximum: 40 }
 
   default_scope -> { order_by(order: 1, name: 1) }
-  scope :and_public, ->{ where state: "public" }
+  scope :and_public, ->(_date = nil){ where state: "public" }
 
   def state_options
     [

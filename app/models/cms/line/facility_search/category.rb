@@ -40,7 +40,7 @@ class Cms::Line::FacilitySearch::Category
   end
 
   class << self
-    def and_public
+    def and_public(_date = nil)
       where(state: "public")
     end
 

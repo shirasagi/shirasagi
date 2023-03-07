@@ -28,7 +28,7 @@ class Cms::Form
   validates :sub_type, presence: true, inclusion: { in: %w(static entry), allow_blank: true }
   validates :html, liquid_format: true
 
-  scope :and_public, -> { where(state: 'public') }
+  scope :and_public, ->(_date = nil) { where(state: 'public') }
 
   class << self
     def search(params = {})
