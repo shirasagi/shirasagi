@@ -80,7 +80,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         click_on item.name
       end
       click_on I18n.t('gws/schedule/todo.links.finish')
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -110,7 +110,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       # click_on item.name
       first('.fc-view a.fc-event-todo').click
       click_on I18n.t('gws/schedule/todo.links.revert')
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -231,7 +231,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

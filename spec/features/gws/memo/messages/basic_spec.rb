@@ -249,7 +249,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#delete' do
       visit delete_gws_memo_message_path(site: site, folder: 'INBOX.Trash', id: trash_memo.id)
-      within 'form' do
+      within 'form#item-form' do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq gws_memo_messages_path(site, folder: 'INBOX.Trash')

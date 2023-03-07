@@ -48,7 +48,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.delete")
       end
       within "#ajax-box" do
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t('ss.buttons.delete')
         end
       end

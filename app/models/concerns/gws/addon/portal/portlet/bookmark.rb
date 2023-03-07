@@ -10,11 +10,11 @@ module Gws::Addon::Portal::Portlet
 
       permit_params :bookmark_model
 
-      validates :bookmark_model, inclusion: { in: (%w(other) << Gws::Bookmark::BOOKMARK_MODEL_TYPES).flatten, allow_blank: true }
+      validates :bookmark_model, inclusion: { in: Gws::Bookmark::Item.allowed_bookmark_models, allow_blank: true }
     end
 
     def bookmark_model_options
-      options = Gws::Bookmark::BOOKMARK_MODEL_TYPES.map do |model_type|
+      options = Gws::Bookmark::Item::BOOKMARK_MODEL_TYPES.map do |model_type|
         [@cur_site.try(:"menu_#{model_type}_label") || I18n.t("modules.gws/#{model_type}"), model_type]
       end
       options.push([I18n.t('gws/bookmark.options.bookmark_model.other'), 'other'])

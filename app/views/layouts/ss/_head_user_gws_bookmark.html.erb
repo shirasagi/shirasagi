@@ -1,16 +1,16 @@
-<% if @cur_site.menu_bookmark_visible? && Gws::Bookmark.allowed?(:read, @cur_user, site: @cur_site) %>
-  <div class="gws-bookmark dropdown dropdown-toggle">
-    <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
-    <%= jquery do %>
-      new Gws_Bookmark().render({
-        id: '<%= bookmark.try(:id) %>',
-        name: '<%= bookmark.try(:name) %>',
-        default_name: '<%= window_name %>',
-        url: '<%= gws_apis_bookmarks_path %>',
-        model: '<%= @model.name.underscore if @model %>',
-        save: '<%= I18n.t('ss.buttons.save') %>',
-        delete: '<%= I18n.t('ss.buttons.delete') %>'
-      });
-    <% end %>
-  </div>
+<%
+  return if !@cur_site.menu_bookmark_visible?
+  return if !Gws::Bookmark::Item.allowed?(:read, @cur_user, site: @cur_site)
+
+  @bookmark_default_name = window_name
+  @bookmark_url = request.fullpath
+  @bookmark_model = Gws::Bookmark::Item.detect_model((@model ? @model.name.underscore :  ""), @bookmark_url)
+
+  @bookmark = @cur_user.find_bookmark(@cur_site, @bookmark_url)
+  @bookmark_folders = @cur_user.bookmark_folders(@cur_site) if @bookmark
+%>
+<% if @bookmark %>
+  <%= render template: "gws/bookmark/apis/items/update" %>
+<% else %>
+  <%= render template: "gws/bookmark/apis/items/create" %>
 <% end %>

@@ -1620,7 +1620,7 @@ ja:
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
       not_found_parent_node: 移動先の親フォルダーが存在しません。
-      subnode_of_itself: 移動先のフォルダーパスに自身のパスが含まれています。
+      subnode_of_itself: 移動先のフォルダーに自身のフォルダーが含まれています。
       not_cms_page_in_root: 固定ページ以外をルートに移動することはできません。
       not_have_parent_read_permission: 移動先の親フォルダーの閲覧権限がありません。
       branch_page_can_not_move: 差し替え用ページは移動できません。

@@ -123,6 +123,38 @@ class Gws::User
   end
   alias gws_main_group find_gws_main_group
 
+  def find_bookmark(site, url, cond = {})
+    items = ::Gws::Bookmark::Item.site(site).user(self).where(url: url)
+    items = items.where(cond) if cond.present?
+    items.first
+  end
+
+  def bookmark_root_folder(site)
+    @bookmark_root_folder ||= {}
+    @bookmark_root_folder[site.id] ||= begin
+      item = ::Gws::Bookmark::Folder.find_or_initialize_by(site_id: site.id, user_id: id, depth: 1, folder_type: "specified")
+      if item.new_record? || item.name.blank? || item.order != 0
+        SS.change_locale_and_timezone(self)
+        item.in_basename = { I18n.default_locale => I18n.t("gws/bookmark.root_folder") }
+        item.order = 0
+        item.save!
+      end
+      item
+    end
+  end
+
+  def bookmark_folders(site)
+    @bookmark_folders ||= {}
+    @bookmark_folders[site.id] ||= begin
+      root_folder = bookmark_root_folder(site)
+      if root_folder
+        ::Gws::Bookmark::Folder.site(site).user(self).tree_sort
+      else
+        []
+      end
+    end
+  end
+
   private
 
   def set_title_ids

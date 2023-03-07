@@ -1,4 +1,4 @@
-<%= form_for :item, url: {action: :move}, html: {id: "item-form", method: :post, autocomplete: :off} do |f| %>
+<%= form_for :item, url: {action: :move}, html: { id: "item-form", method: :post, autocomplete: :off} do |f| %>
   <%= error_messages_for :item %>
 
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>

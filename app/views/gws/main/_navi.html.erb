@@ -28,7 +28,7 @@
   <% end %>
 
   <% if @cur_site.menu_bookmark_visible? && Gws.module_usable?(:bookmark, @cur_site, @cur_user) %>
-    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
+    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmark_main_path, class: "icon-bookmark" %></h2>
   <% end %>
 
   <% if @cur_site.menu_attendance_visible? && Gws.module_usable?(:attendance, @cur_site, @cur_user) %>
