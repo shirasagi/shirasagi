@@ -102,9 +102,9 @@ module SS::Model::User
 
   module ClassMethods
     def flex_find(keyword)
-      if keyword =~ /^\d+$/
+      if keyword.numeric?
         cond = { id: keyword }
-      elsif keyword =~ /@/
+      elsif keyword.include?('@')
         cond = { email: keyword }
       else
         cond = { uid: keyword }
@@ -159,14 +159,15 @@ module SS::Model::User
       nil
     end
 
+    SEARCH_HANDLERS = %i[search_name search_title_ids search_occupation_ids search_keyword].freeze
+
     def search(params)
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_name(params)
-      criteria = criteria.search_title_ids(params)
-      criteria = criteria.search_occupation_ids(params)
-      criteria = criteria.search_keyword(params)
+      SEARCH_HANDLERS.each do |handler|
+        criteria = criteria.send(handler, params)
+      end
       criteria
     end
 
@@ -181,13 +182,13 @@ module SS::Model::User
       end
 
       if user_ids.blank?
-        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email)
+        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark)
       end
 
       # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
       base_criteria = all.dup
 
-      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email).selector
+      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark).selector
       base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
@@ -211,9 +212,7 @@ module SS::Model::User
     end
 
     def labels
-      %w(uid email organization_uid organization_id).collect do |key|
-        [key, t(key)]
-      end.to_h
+      %w(uid email organization_uid organization_id).index_with { |key| t(key) }
     end
   end
 
@@ -378,8 +377,8 @@ module SS::Model::User
   end
 
   def validate_uid
-    return if uid.blank?
-    errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
+    return if uid.blank? || /^[\w\-]+$/.match?(uid)
+    errors.add :uid, :invalid
   end
 
   def validate_cur_user
