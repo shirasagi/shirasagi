@@ -78,8 +78,8 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     aes_key_wrap (1.1.0)
     amazing_print (1.3.0)
     ast (2.4.2)
@@ -97,8 +97,9 @@ GEM
     builder (3.2.4)
     bxslider-rails (4.2.5.1)
     byebug (11.1.3)
-    capybara (3.35.3)
+    capybara (3.38.0)
       addressable
+      matrix
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
       rack (>= 1.6.0)
@@ -120,6 +121,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    date (3.3.3)
     debase (0.2.5.beta2)
       debase-ruby_core_source (>= 0.10.12)
     debase-ruby_core_source (0.10.14)
@@ -344,6 +346,7 @@ GEM
       mail (>= 2.2.6, <= 2.7.1)
     marcel (1.0.2)
     marked-rails (0.3.2.0)
+    matrix (0.4.2)
     memoist (0.16.2)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
@@ -352,7 +355,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0704)
     mini_magick (4.11.0)
-    mini_mime (1.1.1)
+    mini_mime (1.1.2)
     mini_portile2 (2.8.1)
     minitest (5.17.0)
     momentjs-rails (2.20.1)
@@ -385,9 +388,16 @@ GEM
     nenv (0.3.0)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
+    net-imap (0.3.4)
+      date
+      net-protocol
     net-ldap (0.17.0)
+    net-protocol (0.2.1)
+      timeout
+    net-smtp (0.3.3)
+      net-protocol
     nio4r (2.5.8)
-    nokogiri (1.13.10)
+    nokogiri (1.14.2)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     non-stupid-digest-assets (1.0.9)
@@ -459,15 +469,15 @@ GEM
       binding_of_caller (~> 1.0)
       pry (~> 0.13)
     psych (3.3.4)
-    public_suffix (4.0.6)
+    public_suffix (5.0.1)
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.3)
     rack-protection (2.1.0)
       rack
-    rack-test (1.1.0)
-      rack (>= 1.0, < 3)
+    rack-test (2.0.2)
+      rack (>= 1.3)
     rails (6.1.4.1)
       actioncable (= 6.1.4.1)
       actionmailbox (= 6.1.4.1)
@@ -532,7 +542,7 @@ GEM
       rdf (~> 3.1)
       rexml (~> 3.2)
     rdoc (6.3.3)
-    regexp_parser (2.1.1)
+    regexp_parser (2.7.0)
     representable (3.2.0)
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
@@ -541,7 +551,7 @@ GEM
     rexml (3.2.5)
     romaji (0.2.4)
       rake (>= 0.8.0)
-    roo (2.8.3)
+    roo (2.10.0)
       nokogiri (~> 1)
       rubyzip (>= 1.3.0, < 3.0.0)
     rspec (3.7.0)
@@ -670,6 +680,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.10)
     timecop (0.9.4)
+    timeout (0.3.2)
     trailblazer-option (0.1.2)
     ttfunk (1.7.0)
     twitter (7.0.0)
@@ -786,7 +797,9 @@ DEPENDENCIES
   mongoid-geospatial
   mongoid-grid_fs
   mongoid-rspec
+  net-imap
   net-ldap
+  net-smtp
   non-stupid-digest-assets
   oauth2
   oj
