@@ -81,7 +81,8 @@ module Webmail::Imap::UidsCommand
   # @return [Integer] count
   def response_code_to_size(code)
     return 0 unless code
-    uids_size code.data.split(/ /)[2]
+    # uids_size code.data.split(/ /)[2]
+    code.data.assigned_uids.size
   end
 
   # Compress uids for uid_xxx command
@@ -103,23 +104,23 @@ module Webmail::Imap::UidsCommand
     end
   end
 
-  # Counts the uids
-  #
-  # @example
-  #   '1,2,5:7' #=> 5
-  #
-  # @param [String] uids Net::IMAP::ResponseCode#data
-  # @return [Integer] uids size
-  def uids_size(uids)
-    size = 0
-    uids.split(/,/).each do |uid|
-      if /:/.match?(uid)
-        arr = uid.split(/:/)
-        size += arr[1].to_i - arr[0].to_i + 1
-      else
-        size += 1
-      end
-    end
-    size
-  end
+  # # Counts the uids
+  # #
+  # # @example
+  # #   '1,2,5:7' #=> 5
+  # #
+  # # @param [String] uids Net::IMAP::ResponseCode#data
+  # # @return [Integer] uids size
+  # def uids_size(uids)
+  #   size = 0
+  #   uids.split(/,/).each do |uid|
+  #     if /:/.match?(uid)
+  #       arr = uid.split(/:/)
+  #       size += arr[1].to_i - arr[0].to_i + 1
+  #     else
+  #       size += 1
+  #     end
+  #   end
+  #   size
+  # end
 end
