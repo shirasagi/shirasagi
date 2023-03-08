@@ -61,7 +61,7 @@ module Cms::Model::Line::ServiceGroup
   end
 
   module ClassMethods
-    def and_public
+    def and_public(_date = nil)
       self.where(state: "public")
     end
 

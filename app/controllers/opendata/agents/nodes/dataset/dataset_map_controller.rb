@@ -72,7 +72,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
       @items = @model.site(@cur_site)
     end
 
-    @items = @items.and_public.where({
+    @items = @items.and_public(@cur_date).where({
       "resources" => {
         "$elemMatch" => {
           "$or" => [

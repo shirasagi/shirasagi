@@ -20,7 +20,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   end
 
   def show
-    @datasets = Opendata::Dataset.site(@cur_site).and_public.
+    @datasets = Opendata::Dataset.site(@cur_site).and_public(@cur_date).
       where(member_id: @member.id).
       order_by(released: -1).
       limit(10)
@@ -30,7 +30,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   end
 
   def datasets
-    @datasets = Opendata::Dataset.site(@cur_site).and_public.
+    @datasets = Opendata::Dataset.site(@cur_site).and_public(@cur_date).
       where(member_id: @member.id).
       order_by(released: -1).
       page(params[:page]).
@@ -38,7 +38,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   end
 
   def apps
-    @apps = Opendata::App.site(@cur_site).and_public.
+    @apps = Opendata::App.site(@cur_site).and_public(@cur_date).
       where(member_id: @member.id).
       order_by(released: -1).
       page(params[:page]).
@@ -46,7 +46,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   end
 
   def ideas
-    @ideas = Opendata::Idea.site(@cur_site).and_public.
+    @ideas = Opendata::Idea.site(@cur_site).and_public(@cur_date).
       where(member_id: @member.id).
       order_by(released: -1).
       page(params[:page]).

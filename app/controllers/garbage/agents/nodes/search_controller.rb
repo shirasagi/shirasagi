@@ -18,7 +18,7 @@ class Garbage::Agents::Nodes::SearchController < ApplicationController
 
   def result
     set_params
-    @items = Garbage::Node::Page.site(@cur_site).and_public.
+    @items = Garbage::Node::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       search(name: params[:name]).
       in(@q_category).

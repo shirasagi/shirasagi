@@ -18,7 +18,7 @@ class Gws::Contrast
   validates :text_color, presence: true, if: -> { state == 'public' }
   validates :color, presence: true, if: -> { state == 'public' }
 
-  scope :and_public, ->{ where state: 'public' }
+  scope :and_public, ->(_date = nil){ where state: 'public' }
 
   def state_options
     %w(public closed).map do |v|

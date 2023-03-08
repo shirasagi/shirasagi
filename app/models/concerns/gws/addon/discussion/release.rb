@@ -13,8 +13,8 @@ module Gws::Addon::Discussion
       validates :released, datetime: true
       after_validation :set_released, if: -> { state == "public" }
 
-      scope :and_public, ->() { where(state: "public") }
-      scope :and_closed, ->() { where(state: "closed") }
+      scope :and_public, ->(_date = nil) { where(state: "public") }
+      scope :and_closed, ->(_date = nil) { where(state: "closed") }
     end
 
     def updated_after_released?
