@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
   let(:site) { gws_site }
+  let(:user) { gws_user }
   let!(:group1) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
   let!(:other_site) { create(:gws_group, name: unique_id) }
   let!(:other_site_group1) { create(:gws_group, name: "#{other_site.name}/#{unique_id}") }
@@ -33,7 +34,8 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
         before_import.call
       end
       Fs::UploadedFile.create_from_file(file) do |f|
-        importer = Gws::UserCsv::Importer.new(cur_site: site, in_file: f)
+        importer = Gws::UserCsv::Importer.new(
+          cur_site: site, cur_user: user, webmail_support: webmail_support, in_file: f)
         importer.import
         expect(importer.imported).to eq 1
       end
@@ -491,23 +493,28 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
       let!(:readable_user1) { create :gws_user, group_ids: [ group1.id ] }
 
       context 'with new user' do
+        let(:readable_setting_range) { %w(public select private).sample }
         let(:source_user) do
           build(
-            :gws_user, id: nil, readable_setting_range: %w(public select private).sample,
+            :gws_user, id: nil, readable_setting_range: readable_setting_range,
             readable_group_ids: [ group1.id], readable_member_ids: [ readable_user1.id ],
           )
         end
 
         it do
-          Gws::User.unscoped.find_by(uid: source_user.uid).tap do |user|
-            expect(user).to be_persisted
-            expect(user.readable_setting_range).to eq source_user.readable_setting_range
-            if user.readable_setting_range == 'select'
-              expect(user.readable_group_ids).to eq source_user.readable_group_ids
-              expect(user.readable_member_ids).to eq source_user.readable_member_ids
+          Gws::User.unscoped.find_by(uid: source_user.uid).tap do |imported_user|
+            expect(imported_user).to be_persisted
+            expect(imported_user.readable_setting_range).to eq source_user.readable_setting_range
+            case imported_user.readable_setting_range
+            when 'select'
+              expect(imported_user.readable_group_ids).to eq source_user.readable_group_ids
+              expect(imported_user.readable_member_ids).to eq source_user.readable_member_ids
+            when 'private'
+              expect(imported_user.readable_group_ids).to be_blank
+              expect(imported_user.readable_member_ids).to eq [ user.id ]
             else
-              expect(user.readable_group_ids).to be_blank
-              expect(user.readable_member_ids).to be_blank
+              expect(imported_user.readable_group_ids).to be_blank
+              expect(imported_user.readable_member_ids).to be_blank
             end
           end
         end
