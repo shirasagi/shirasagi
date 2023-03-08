@@ -44,6 +44,7 @@ ja:
     unsend: 送信先のメッセージも削除する（送信取り消し）
     export_filter: 対象
     backup_filter: 対象
+    forward_message_header: 転送メッセージ
     links:
       move: 移動する
       etc: その他
