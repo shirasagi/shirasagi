@@ -16,7 +16,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
         next
       end
 
-      node = Cms::Node.site(site).and_public.filename(content_or_path).first
+      node = Cms::Node.site(site).and_public(@cur_date).filename(content_or_path).first
       next unless node
 
       @tabs << tab = { name: node.name, url: node.url, rss: nil, pages: [] }

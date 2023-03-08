@@ -25,8 +25,8 @@ class Gws::Report::File
   validates :name, presence: true, length: { maximum: 80 }
   after_save :send_notification_mail, unless: ->{ @in_skip_notification_mail }
 
-  scope :and_public, -> { where(state: 'public') }
-  scope :and_closed, -> { where(state: 'closed') }
+  scope :and_public, ->(_date = nil) { where(state: 'public') }
+  scope :and_closed, ->(_date = nil) { where(state: 'closed') }
 
   # indexing to elasticsearch via companion object
   around_save ::Gws::Elasticsearch::Indexer::ReportFileJob.callback

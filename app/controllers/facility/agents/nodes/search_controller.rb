@@ -16,13 +16,13 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     @q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}
     @q_location = @location_ids.present? ? { location_ids: @location_ids } : {}
 
-    @categories = Facility::Node::Category.site(@cur_site).and_public.in(id: @category_ids)
-    @services   = Facility::Node::Service.site(@cur_site).and_public.in(id: @service_ids)
-    @locations  = Facility::Node::Location.site(@cur_site).and_public.in(id: @location_ids)
+    @categories = Facility::Node::Category.site(@cur_site).and_public(@cur_date).in(id: @category_ids)
+    @services   = Facility::Node::Service.site(@cur_site).and_public(@cur_date).in(id: @service_ids)
+    @locations  = Facility::Node::Location.site(@cur_site).and_public(@cur_date).in(id: @location_ids)
   end
 
   def set_items
-    @items = Facility::Node::Page.site(@cur_site).and_public.
+    @items = Facility::Node::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       search(name: @keyword).
       in(@q_category).
@@ -32,7 +32,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   end
 
   def set_markers
-    @items = Facility::Node::Page.site(@cur_site).and_public.
+    @items = Facility::Node::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       search(name: @keyword).
       in(@q_category).

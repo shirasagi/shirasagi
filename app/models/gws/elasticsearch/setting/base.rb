@@ -158,7 +158,7 @@ module Gws::Elasticsearch::Setting::Base
     Rails.application.routes.url_helpers
   end
 
-  def and_public
+  def and_public(_date = nil)
     query0 = { term: { 'state' => 'public' } }
 
     query1 = {}

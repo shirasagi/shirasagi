@@ -25,7 +25,7 @@ class Cms::Agents::Parts::Node2Controller < ApplicationController
       cond[:route] = { "$in" => node_routes }
     end
 
-    @items = Cms::Node.site(@cur_site).and_public.
+    @items = Cms::Node.site(@cur_site).and_public(@cur_date).
       where(cond).
       order_by(@cur_part.sort_hash).
       limit(@cur_part.limit)

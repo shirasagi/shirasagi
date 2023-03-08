@@ -21,7 +21,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
       sort = { released: -1, _id: -1 }
     end
 
-    @model.site(@cur_site).and_public.
+    @model.site(@cur_site).and_public(@cur_date).
       search(focus).
       order_by(sort)
   end
@@ -33,7 +33,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
   public
 
   def index
-    @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
+    @cur_categories = st_categories.map { |cate| cate.children.and_public(@cur_date).sort(order: 1).to_a }.flatten
     @items = pages.page(params[:page]).per(@cur_node.limit || 20)
   end
 
@@ -45,7 +45,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
 
   def search
     @model = Opendata::Idea
-    @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
+    @cur_categories = st_categories.map { |cate| cate.children.and_public(@cur_date).sort(order: 1).to_a }.flatten
   end
 
   def rss

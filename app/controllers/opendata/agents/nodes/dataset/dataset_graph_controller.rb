@@ -45,7 +45,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
       @items = @model.site(@cur_site)
     end
 
-    @items = @items.and_public.where({
+    @items = @items.and_public(@cur_date).where({
       "resources" => {
         "$elemMatch" => {
           "$and" => [
@@ -67,7 +67,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
 
   def graph
     @model = Opendata::Dataset
-    @dataset = @model.site(@cur_site).and_public.where(id: params[:dataset_id]).first
+    @dataset = @model.site(@cur_site).and_public(@cur_date).where(id: params[:dataset_id]).first
     raise "404" unless @dataset
 
     @item = @dataset.resources.select { |r| r.id == params[:id].to_i }.first

@@ -46,7 +46,7 @@ class Gws::Circular::Post
 
   scope :topic, -> { exists post_id: false }
 
-  scope :and_public, -> {
+  scope :and_public, ->(_date = nil) {
     where(state: 'public')
   }
 

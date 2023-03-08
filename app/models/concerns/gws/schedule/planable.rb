@@ -46,7 +46,7 @@ module Gws::Schedule::Planable
     default_scope ->{
       order_by start_at: 1
     }
-    scope :and_public, ->{
+    scope :and_public, ->(_date = nil){
       where state: 'public'
     }
     scope :between_dates, ->(target_start, target_end) {

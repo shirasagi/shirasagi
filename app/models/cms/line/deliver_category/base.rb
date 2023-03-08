@@ -109,11 +109,11 @@ class Cms::Line::DeliverCategory::Base
       criteria
     end
 
-    def and_public
+    def and_public(_date = nil)
       self.where(state: "public")
     end
 
-    def and_closed
+    def and_closed(_date = nil)
       self.where(state: "closed")
     end
 

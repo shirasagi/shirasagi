@@ -24,7 +24,7 @@ class Gws::Workflow::Form
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :agent_state, presence: true, inclusion: { in: %w(disabled enabled), allow_blank: true }
 
-  scope :and_public, ->{
+  scope :and_public, ->(_date = nil){
     where(state: 'public')
   }
 
