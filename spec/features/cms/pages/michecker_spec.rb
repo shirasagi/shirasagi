@@ -11,14 +11,15 @@ describe "michecker", type: :feature, dbscope: :example, js: true do
 
     it do
       visit show_path
-      click_on I18n.t('cms.links.michecker')
+      new_window = window_opened_by { click_on I18n.t('cms.links.michecker') }
+      within_window new_window do
+        wait_for_js_ready
+        within ".michecker-head" do
+          expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
+          click_on I18n.t('cms.cms/michecker.start')
 
-      switch_to_window(windows.last)
-      within ".michecker-head" do
-        expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
-        click_on I18n.t('cms.cms/michecker.start')
-
-        expect(page).to have_content(I18n.t("cms.cms/michecker.michecker_started"), wait: 60)
+          expect(page).to have_content(I18n.t("cms.cms/michecker.michecker_started"), wait: 60)
+        end
       end
 
       expect(enqueued_jobs.size).to eq 1
@@ -34,14 +35,15 @@ describe "michecker", type: :feature, dbscope: :example, js: true do
 
       it do
         visit show_path
-        click_on I18n.t('cms.links.michecker')
+        new_window = window_opened_by { click_on I18n.t('cms.links.michecker') }
+        within_window new_window do
+          wait_for_js_ready
+          within ".michecker-head" do
+            expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
+            click_on I18n.t('cms.cms/michecker.start')
 
-        switch_to_window(windows.last)
-        within ".michecker-head" do
-          expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
-          click_on I18n.t('cms.cms/michecker.start')
-
-          expect(page).to have_content(I18n.t("cms.cms/michecker.michecker_started"), wait: 60)
+            expect(page).to have_content(I18n.t("cms.cms/michecker.michecker_started"), wait: 60)
+          end
         end
 
         expect(enqueued_jobs.size).to eq 1
