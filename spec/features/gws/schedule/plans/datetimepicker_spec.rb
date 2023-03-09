@@ -19,6 +19,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -33,6 +34,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -47,6 +49,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -63,6 +66,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -77,6 +81,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -91,6 +96,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -105,6 +111,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -119,6 +126,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -133,6 +141,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "item[start_at]", with: start_at
             fill_in "item[name]", with: unique_id
@@ -155,6 +164,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             check "item_allday"
             fill_in "item[start_on]", with: start_on
@@ -170,6 +180,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             check "item_allday"
             fill_in "item[start_on]", with: start_on
@@ -185,6 +196,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             check "item_allday"
             fill_in "item[start_on]", with: start_on
@@ -202,6 +214,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             check "item_allday"
             fill_in "item[start_on]", with: start_on
@@ -217,6 +230,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             check "item_allday"
             fill_in "item[start_on]", with: start_on
@@ -232,6 +246,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
         it "#new" do
           visit new_path
+          wait_for_js_ready
           within "form#item-form" do
             check "item_allday"
             fill_in "item[start_on]", with: start_on

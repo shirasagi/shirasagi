@@ -44,7 +44,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # choose member
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
       end
       wait_for_cbox do
@@ -105,7 +105,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # choose member
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
       end
       wait_for_cbox do

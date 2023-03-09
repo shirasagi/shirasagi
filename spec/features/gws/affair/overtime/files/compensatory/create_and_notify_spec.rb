@@ -19,6 +19,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       Timecop.freeze(travel_at) do
         login_user(user638)
         visit new_path
+        wait_for_js_ready
 
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)

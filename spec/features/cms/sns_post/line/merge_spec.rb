@@ -90,7 +90,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                click_on I18n.t("ss.buttons.publish_save")
+                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
               end
               wait_for_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -137,7 +137,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               fill_in "item[line_text_message]", with: line_text_message
             end
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
 
             perform_enqueued_jobs do
@@ -232,7 +232,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                click_on I18n.t("ss.buttons.publish_save")
+                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
               end
               wait_for_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -277,7 +277,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                click_on I18n.t("ss.buttons.publish_save")
+                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
               end
               wait_for_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))

@@ -167,7 +167,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           # create memo
           within ".today .action .memo" do
-            click_on I18n.t('ss.buttons.edit')
+            wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
           end
           wait_for_cbox do
             fill_in 'record[memo]', with: memo
@@ -217,7 +217,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             end
           end
           within '.cell-toolbar' do
-            click_on I18n.t('ss.links.edit')
+            wait_cbox_open { click_on I18n.t('ss.links.edit') }
           end
           wait_for_cbox do
             fill_in 'record[memo]', with: memo
@@ -289,7 +289,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           # edit
           within ".today .action .#{cell_type}" do
-            click_on I18n.t("ss.buttons.edit")
+            wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
           end
           wait_for_cbox do
             select I18n.t('gws/attendance.hour', count: edit_at.hour), from: 'cell[in_hour]'
@@ -332,7 +332,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t("ss.buttons.edit")
+              wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
             end
             wait_for_cbox do
               select I18n.t('gws/attendance.hour', count: edit_at.hour), from: 'cell[in_hour]'
@@ -358,7 +358,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t('ss.links.edit')
+              wait_cbox_open { click_on I18n.t('ss.links.edit') }
             end
             wait_for_cbox do
               select I18n.t('gws/attendance.hour', count: now.hour), from: 'cell[in_hour]'
@@ -376,7 +376,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t("ss.links.edit")
+              wait_cbox_open { click_on I18n.t("ss.links.edit") }
             end
             wait_for_cbox do
               select I18n.t('gws/attendance.hour', count: edit_at.hour), from: 'cell[in_hour]'
@@ -423,7 +423,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           # create new memo
           within ".today .action .memo" do
-            click_on I18n.t("ss.buttons.edit")
+            wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
           end
           wait_for_cbox do
             fill_in 'record[memo]', with: memo1
@@ -435,7 +435,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           # edit
           within ".today .action .memo" do
-            click_on I18n.t("ss.buttons.edit")
+            wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
           end
           wait_for_cbox do
             fill_in 'record[memo]', with: memo2
@@ -461,7 +461,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t("ss.links.edit")
+              wait_cbox_open { click_on I18n.t("ss.links.edit") }
             end
             wait_for_cbox do
               fill_in 'record[memo]', with: memo1
@@ -478,7 +478,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t("ss.links.edit")
+              wait_cbox_open { click_on I18n.t("ss.links.edit") }
             end
             wait_for_cbox do
               fill_in 'record[memo]', with: memo2
@@ -502,7 +502,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t('ss.links.edit')
+              wait_cbox_open { click_on I18n.t('ss.links.edit') }
             end
             wait_for_cbox do
               fill_in 'record[memo]', with: memo1
@@ -518,7 +518,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              click_on I18n.t("ss.links.edit")
+              wait_cbox_open { click_on I18n.t("ss.links.edit") }
             end
             wait_for_cbox do
               fill_in 'record[memo]', with: memo2

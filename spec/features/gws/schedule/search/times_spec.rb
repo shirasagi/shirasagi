@@ -10,7 +10,7 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: tru
 
     it "#index" do
       visit path
-      click_on I18n.t("gws.apis.facilities.index")
+      wait_cbox_open { click_on I18n.t("gws.apis.facilities.index") }
       wait_for_cbox do
         expect(page).to have_css(".select-item", text: facility.name)
         click_on facility.name

@@ -24,7 +24,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample"
           select "無効", from: "item[pull_up]"
 
-          click_on "グループを選択する"
+          wait_cbox_open { click_on "グループを選択する" }
         end
 
         wait_for_cbox do
@@ -35,7 +35,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
 
         within "form#item-form" do
           within "dl.workflow-level-1" do
-            click_on "承認者を選択する"
+            wait_cbox_open { click_on "承認者を選択する" }
           end
         end
         wait_for_cbox do

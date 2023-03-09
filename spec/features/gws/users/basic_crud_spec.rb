@@ -23,6 +23,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       #new"
       visit new_path
+      wait_for_js_ready
       first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
       wait_for_cbox
       first('tbody.items a.select-item').click
@@ -115,6 +116,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       #new"
       visit new_path
+      wait_for_js_ready
       first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
       wait_for_cbox
       first('tbody.items a.select-item').click
@@ -173,6 +175,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       #new
       visit new_path
+      wait_for_js_ready
       first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
       wait_for_cbox
       first('tbody.items a.select-item').click

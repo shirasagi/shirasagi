@@ -27,7 +27,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       find("#item_maintenance_mode").find("option[value='enabled']").select_option
       fill_in "item[maint_remark]", with: "今日から明日までメンテナンスになります。"
       within ".maint-mode" do
-        click_on I18n.t("ss.apis.users.index")
+        wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
       end
     end
     wait_for_cbox do

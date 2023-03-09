@@ -102,7 +102,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
@@ -290,7 +290,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
@@ -370,7 +370,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
@@ -405,7 +405,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
@@ -455,7 +455,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
@@ -514,7 +514,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            click_on I18n.t("workflow.search_approvers.index")
+            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           wait_for_cbox do

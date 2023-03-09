@@ -14,7 +14,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # create root folder
       within "#gws-share-file-folder-list" do
-        first(".btn-create-root-folder").click
+        wait_cbox_open { first(".btn-create-root-folder").click }
       end
       wait_for_cbox do
         fill_in "item[in_basename]", with: folder_name1
@@ -34,7 +34,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # create sub folder
       within "#gws-share-file-folder-property" do
-        first(".btn-create-folder").click
+        wait_cbox_open { first(".btn-create-folder").click }
       end
       wait_for_cbox do
         fill_in "item[in_basename]", with: folder_name2
@@ -62,7 +62,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # rename sub folder
       within "#gws-share-file-folder-property" do
-        first(".btn-rename-folder").click
+        wait_cbox_open { first(".btn-rename-folder").click }
       end
       wait_for_cbox do
         fill_in "item[in_basename]", with: folder_name3
@@ -82,7 +82,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # delete sub folder
       within "#gws-share-file-folder-property" do
-        first(".btn-delete-folder").click
+        wait_cbox_open { first(".btn-delete-folder").click }
       end
       wait_for_cbox do
         click_on I18n.t("ss.buttons.delete")

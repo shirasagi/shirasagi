@@ -25,7 +25,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility1.id}']" do
-          first("input[value='approve']").click
+          wait_cbox_open { first("input[value='approve']").click }
         end
       end
       wait_for_cbox do
@@ -73,7 +73,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       # end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility1.id}']" do
-          first("input[value='approve']").click
+          wait_cbox_open { first("input[value='approve']").click }
         end
       end
       wait_for_cbox do
@@ -91,7 +91,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility2.id}']" do
-          first("input[value='approve']").click
+          wait_cbox_open { first("input[value='approve']").click }
         end
       end
       wait_for_cbox do
@@ -109,7 +109,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility3.id}']" do
-          first("input[value='approve']").click
+          wait_cbox_open { first("input[value='approve']").click }
         end
       end
       wait_for_cbox do
