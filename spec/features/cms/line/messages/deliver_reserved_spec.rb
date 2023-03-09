@@ -85,7 +85,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
   def check_deliver_members(selector)
     within selector do
-      first(".ajax-box", text: "確認する").click
+      wait_cbox_open { first(".ajax-box", text: "確認する").click }
     end
     wait_for_cbox do
       expect(page).to have_text(targets_count)
@@ -185,7 +185,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -319,7 +320,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
         end
         click_on I18n.t("ss.buttons.save")
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -390,7 +392,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
@@ -531,7 +534,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -606,7 +610,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
@@ -685,7 +690,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
