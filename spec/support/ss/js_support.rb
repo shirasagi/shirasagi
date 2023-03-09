@@ -271,7 +271,7 @@ module SS
       options[:visible] = :all
 
       element = find(:fillable_field, locator, **options)
-      value = page.evaluate_script("$(arguments[0]).data('xdsoft_datetimepicker').getValue()", element)
+      value = page.evaluate_script("$(arguments[0]).data('xdsoft_datetimepicker').getValue().toJSON()", element)
       format = date ? I18n.t("date.formats.picker") : I18n.t("time.formats.picker")
       Time.zone.parse(value).strftime(format)
     end
@@ -309,7 +309,7 @@ module SS
 
     def capture_console_logs(session = nil)
       session ||= page
-      session.driver.browser.manage.logs.get(:browser).collect(&:message)
+      session.driver.browser.logs.get(:browser).collect(&:message)
     rescue => _e
     end
 

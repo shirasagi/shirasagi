@@ -42,10 +42,9 @@ module SS::CapybaraSupport
           options.add_argument('no-sandbox')
         end
       end
+      options.add_option("goog:loggingPrefs", { browser: "ALL" })
 
-      caps = Selenium::WebDriver::Remote::Capabilities.chrome("goog:loggingPrefs" => { browser: "ALL" })
-
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, desired_capabilities: caps)
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
     end
     Capybara.javascript_driver = :chrome
 
