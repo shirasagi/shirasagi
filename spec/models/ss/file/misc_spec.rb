@@ -228,7 +228,7 @@ describe SS::File, dbscope: :example do
     context "when js file is uploaded with application/octet-stream" do
       let(:filename) { "a.js" }
       let(:mime_type_map) { {} }
-      its(:content_type) { is_expected.to eq "application/javascript" }
+      its(:content_type) { is_expected.to eq "text/javascript" }
     end
 
     context "when jtd file is uploaded with application/octet-stream" do
