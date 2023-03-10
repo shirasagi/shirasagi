@@ -42,7 +42,7 @@ export default class extends Controller {
       return
     }
 
-    instances.split(found, 1)
+    instances.splice(found, 1)
   }
 
   update() {
