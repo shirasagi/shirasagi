@@ -1,10 +1,6 @@
 <%
   return if @item.contact_state == "hide" || !@item.contact_present?
-
-  contact_group = @item.contact_group
-  if contact_group.present? && @item.contact_group_contact_id.present?
-    contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
-  end
+  contact_group, contact = Contact.find_contact(@cur_site, @item)
 %>
 
 <dl class="see mod-contact">
@@ -12,20 +8,19 @@
   <dd><%= @item.label :contact_state %></dd>
 
   <dt><%= @model.t :contact_group_id %></dt>
-  <dd class="contact-group-id"><%= tryb { @item.contact_group.name } %></dd>
+  <dd class="contact-group-id"><%= contact_group.try(:name) %></dd>
 
   <dt><%= @model.t :contact_group_relation %></dt>
   <dd>
     <%=
-      relation = @item.label(:contact_group_relation)
-      if @item.contact_group_contact_id.present?
-        contact = @item.contact_group.try { |group| group.contact_groups.where(id: @item.contact_group_contact_id).first }
-      end
-      if relation.blank? && contact.present?
+      if @item.contact_group_related?
         relation = t("contact.options.relation.related.title")
+      else
+        relation = t("contact.options.relation.unrelated.title")
       end
-      if relation.present? && @item.contact_group_relation != "unrelated" && contact.present?
-        relation = "#{relation} (#{contact.name})"
+
+      if @item.contact_group_related?
+        relation = "#{relation} (#{contact.try(:name) || t("contact.no_contact")})"
       end
       relation
     %>
