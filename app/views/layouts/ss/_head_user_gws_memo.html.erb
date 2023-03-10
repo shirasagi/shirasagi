@@ -26,6 +26,20 @@
       $(this).text(switched);
       $(this).attr("data-label-switched", label);
     });
+    $(".gws-memo-message .set-seen-all").on("click", function() {
+      var url = $(this).attr("href");
+      var token = $('meta[name="csrf-token"]').attr('content');
+      if (confirm('<%= t("gws/notice.confirm.set_seen") %>')) {
+        $.ajax({
+          url: url,
+          type: 'POST',
+          dataType: 'json',
+          success: function() { location.reload(); },
+          error: function(_xhr, _status, _error) { alert("Error"); }
+        });
+      }
+      return false;
+    });
     (new SS_PopupNotice(".gws-memo-message.popup-notice-container")).render();
   <% end %>
   <div class="gws-memo-message popup-notice-container">
@@ -46,7 +60,10 @@
         </h2>
       </header>
       <div class="popup-notice-items"></div>
-      <%= link_to t("ss.links.more_all"), gws_memo_messages_path, class: "more-all" %>
+      <div class="popup-notice-actions">
+        <%= link_to t("ss.links.more_all"), gws_memo_messages_path, class: "more-all" %>
+        <%= link_to t("gws/notice.links.set_seen_all"), set_seen_from_popup_gws_memo_messages_path, class: "set-seen-all" %>
+      </div>
     </div>
   </div>
 <% end %>
