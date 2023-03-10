@@ -1,7 +1,6 @@
 en:
   gws/bookmark:
     all: All bookmarks
-    root_folder: Favorites
     notice:
       save: Saved in Favorites
       edit: Edit the favorite

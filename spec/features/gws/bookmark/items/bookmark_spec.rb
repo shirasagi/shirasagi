@@ -58,7 +58,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
 
   context "notice" do
     let(:bookmark_path) { gws_notice_main_path site }
-    let(:bookmark_model) { I18n.t("modules.gws/bookmark") }
+    let(:bookmark_model) { I18n.t("modules.gws/notice") }
 
     it_behaves_like "bookmark main"
   end

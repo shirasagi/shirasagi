@@ -14,7 +14,7 @@ class SS::Migration20230305000000
         next if site.nil?
 
         item.folder = user.bookmark_root_folder(site)
-        item.update!
+        item.update
       end
     end
   end

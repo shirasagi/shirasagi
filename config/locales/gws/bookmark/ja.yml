@@ -1,7 +1,6 @@
 ja:
   gws/bookmark:
     all: 全てのブックマーク
-    root_folder: お気に入り
     notice:
       save: お気に入りを保存しました
       edit: お気に入りを編集

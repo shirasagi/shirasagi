@@ -60,5 +60,11 @@ module Gws::Bookmark
     def validate_children
       folders.each(&:destroy)
     end
+
+    class << self
+      def default_root_name
+        SS.config.gws.bookmark["root_folder"]
+      end
+    end
   end
 end

@@ -161,6 +161,9 @@ production: &production
       download_yearly:
         threshold_minute: 225
 
+  bookmark:
+    root_folder: お気に入り
+
   memo:
     disable_unsend: true
     disable_mail_forward: false
