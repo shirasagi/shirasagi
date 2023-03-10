@@ -2,7 +2,9 @@
   <nav class="nav-menu">
     <% if params[:action] =~ /file/ %>
       <% if params[:do] =~ /show/ %>
-        <%= link_to t('ss.links.edit'), { action: :file, filename: @item.filename, do: "edit" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) && editable_with_upload_policy? %>
+          <%= link_to t('ss.links.edit'), { action: :file, filename: @item.filename, do: "edit" } %>
+        <% end %>
         <%= link_to t('ss.links.delete'), { action: :file, filename: @item.filename, do: "delete" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to t('ss.links.back_to_index'), { action: :file, filename: @item.dirname } %>
       <% elsif params[:do] =~ /edit|delete/ %>

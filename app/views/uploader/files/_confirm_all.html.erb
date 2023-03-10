@@ -1,0 +1,15 @@
+<li class="list-item">
+  <label class="check">
+    <%= f.check_box_tag 'ids[]', item.basename, checked: true %>
+  </label>
+  <div class="info">
+    <% if item.directory? %>
+      <%= link_to item.name, { action: :file, filename: item.filename, do: :show }, { class: "list-item-title dir", target: "_blank", rel: "noopener" } %>
+    <% else %>
+      <%= link_to item.name, { action: :file, filename: item.filename, do: :show }, { class: "list-item-title dir", target: "_blank", rel: "noopener" } %>
+    <% end %>
+    <div class="meta">
+      <span class="filename"><%= item.filename %></span>
+    </div>
+  </div>
+</li>
