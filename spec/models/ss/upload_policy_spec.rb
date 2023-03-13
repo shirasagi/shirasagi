@@ -9,8 +9,9 @@ describe SS::UploadPolicy, dbscope: :example do
 
     SS.current_site = nil
     SS.current_user = nil
-    SS.current_token = nil
+    SS.current_user_group = nil
     SS.current_organization = nil
+    SS.current_token = nil
   end
 
   after do
