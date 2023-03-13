@@ -5,5 +5,5 @@
   <% end %>
 
   <dt><%= @model.t :select_options %><%= @model.tt :select_options %></dt>
-  <dd><%= f.text_area :select_options %></dd>
+  <dd><%= f.text_area :select_options, value: @item.select_options.join("\n") %></dd>
 </dl>
