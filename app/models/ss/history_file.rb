@@ -1,7 +1,7 @@
 class SS::HistoryFile
   include SS::Model::File
 
-  field :site_id, type: Integer
+  field :site_id, type: Integer, overwrite: true
   field :node_id, type: Integer
 
   belongs_to :original, class_name: "SS::File"
