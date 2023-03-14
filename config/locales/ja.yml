@@ -187,6 +187,7 @@ ja:
       not_found_user_title: "役職コード「%{code}」が見つかりません。"
       not_found_user_occupation: "職種コード「%{code}」が見つかりません。"
       upload_restricted: ご利用の環境ではファイルをアップロードできません。
+      edit_restricted: ご利用の環境ではファイルの編集操作はできません。
       sanitizer_waiting: 無害化処理を行っています。しばらくお待ちください。
       url: は有効なURLを入力してください。
       invalid_latlon: |-

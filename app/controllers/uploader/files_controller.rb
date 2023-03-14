@@ -165,8 +165,13 @@ class Uploader::FilesController < ApplicationController
 
   def edit
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
-    raise "403" unless editable_with_upload_policy?
-    render :edit
+
+    if editable_with_upload_policy?
+      render :edit
+    else
+      @item.errors.add :base, :edit_restricted
+      render :edit_restricted
+    end
   end
 
   def show
@@ -276,7 +281,7 @@ class Uploader::FilesController < ApplicationController
       item.destroy
     end
     @paths = @deleted_items.map(&:filename)
-    render_confirmed_all (@undeleted_items.size == 0), location: "#{uploader_files_path}/#{@item.filename}"
+    render_confirmed_all @undeleted_items.blank?, location: "#{uploader_files_path}/#{@item.filename}"
   end
 
   def render_confirmed_all(result, opts = {})
