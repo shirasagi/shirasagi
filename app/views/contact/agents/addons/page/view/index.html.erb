@@ -2,11 +2,7 @@
   return if @cur_page.contact_state == "hide" || !@cur_page.contact_present?
 
   contact_parts = []
-  contact_group = @cur_page.contact_group
-
-  if contact_group.present? && @cur_page.contact_group_contact_id.present?
-    contact = contact_group.contact_groups.where(id: @cur_page.contact_group_contact_id).first
-  end
+  contact_group, contact = Contact.find_contact(@cur_site, @cur_page)
 %>
 
 <%
