@@ -24,7 +24,7 @@ Platform
 --------
 
 - CentOS, Ubuntu
-- Ruby 2.6 or 3.0 (2.7 might work but not supported)
+- Ruby 3.0 or 3.1
 - Ruby on Rails 6.1
 - MongoDB 4.4 or above
 - Unicorn
@@ -89,8 +89,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 ### Rubyのインストール
 ```
 # asdf plugin add ruby
-# asdf install ruby 3.0.4
-# asdf global ruby 3.0.4
+# asdf install ruby 3.1.3
+# asdf global ruby 3.1.3
 ```
 ### Nodejs等のインストール
 ```
