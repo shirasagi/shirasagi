@@ -19,6 +19,19 @@ class SS::Contact
   permit_params :name, :contact_group_name, :contact_tel, :contact_fax, :contact_email
   permit_params :contact_link_url, :contact_link_name, :main_state
 
+  def same_contact?(dist)
+    dist.deep_stringify_keys!
+    return false if dist.blank?
+    return false if all_empty?
+
+    %w(contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name).each do |key|
+      src_value = send(key).to_s.squish
+      dist_value = dist[key].to_s.squish
+      return false if src_value != dist_value
+    end
+    true
+  end
+
   def all_empty?
     return false if name.present?
     return false if contact_group_name.present?
