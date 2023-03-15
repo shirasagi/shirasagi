@@ -24,6 +24,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       it do
         visit index_path
         click_on item.subject
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic .body--html", text: "test")
 
         new_window = window_opened_by do
@@ -52,6 +53,8 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         visit index_path
         click_on item.subject
+        wait_for_js_ready
+
         new_window = window_opened_by { click_on I18n.t("webmail.links.forward") }
         within_window new_window do
           wait_for_js_ready

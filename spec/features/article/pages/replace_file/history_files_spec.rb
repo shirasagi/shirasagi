@@ -52,7 +52,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            click_on I18n.t("ss.buttons.replace_file")
+            wait_cbox_open { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
@@ -161,7 +161,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            click_on I18n.t("ss.buttons.replace_file")
+            wait_cbox_open { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation

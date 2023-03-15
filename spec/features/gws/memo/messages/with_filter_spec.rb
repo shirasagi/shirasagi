@@ -24,7 +24,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -71,7 +71,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -120,7 +120,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -168,7 +168,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -216,7 +216,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -264,7 +264,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -312,7 +312,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
@@ -360,7 +360,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 

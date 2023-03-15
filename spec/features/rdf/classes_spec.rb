@@ -84,10 +84,8 @@ describe "rdf_classes", type: :feature, dbscope: :example do
 
       # click ajax link
       within "form#item-form" do
-        click_link "継承を変更する"
+        wait_cbox_open { click_link "継承を変更する" }
       end
-
-      wait_for_cbox
 
       # select rdf class
       within "table.rdf-search-classes-class-list" do

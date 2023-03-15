@@ -49,47 +49,41 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
       expect(page).to have_css(".dataset-search")
 
       within ".dataset-search" do
-        click_on I18n.t("opendata.links.dataset_map_search_datasets")
-        wait_for_cbox
+        wait_cbox_open { click_on I18n.t("opendata.links.dataset_map_search_datasets") }
       end
 
       # search
-      within "#ajax-box" do
+      wait_for_cbox do
         fill_in "s[keyword]", with: I18n.t("opendata.links.dataset_map_search_datasets")
         first('input[name="commit"]').click
-        wait_for_cbox
       end
       expect(page).to have_no_css(".dataset-name", text: item11.name)
 
       # reset
-      within "#ajax-box" do
+      wait_for_cbox do
         first("a", text: I18n.t("ss.buttons.reset")).click
-        wait_for_cbox
       end
       expect(page).to have_css(".dataset-name", text: item11.name)
 
       # select
-      within "#ajax-box" do
+      wait_for_cbox do
         fill_in "s[keyword]", with: I18n.t("opendata.links.dataset_map_search_datasets")
-        wait_for_cbox
       end
 
-      within "#ajax-box" do
+      wait_for_cbox do
         first("a", text: item11.name).click
       end
 
       within ".dataset-search" do
         click_on I18n.t("opendata.links.dataset_map_search_datasets")
-        wait_for_cbox
       end
 
       # pagination
-      within "#ajax-box" do
+      wait_for_cbox do
         click_on I18n.t("views.pagination.next")
-        wait_for_cbox
       end
 
-      within "#ajax-box" do
+      wait_for_cbox do
         first("a", text: item1.name).click
       end
 

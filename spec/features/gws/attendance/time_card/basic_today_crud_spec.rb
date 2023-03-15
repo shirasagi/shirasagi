@@ -46,7 +46,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         # edit
         within '.today .action .enter' do
-          click_on I18n.t('ss.buttons.edit')
+          wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
         end
         wait_for_cbox do
           select I18n.t("gws/attendance.hour", count: 8), from: 'cell[in_hour]'
@@ -66,7 +66,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         # clear
         within '.today .action .enter' do
-          click_on I18n.t('ss.buttons.edit')
+          wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
         end
         wait_for_cbox do
           click_on I18n.t('ss.buttons.clear')

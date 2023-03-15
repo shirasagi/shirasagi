@@ -206,7 +206,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
         wait_for_cbox do
@@ -260,7 +260,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-palette" do
             click_on column14.name
           end
-          click_on I18n.t("cms.apis.pages.index")
+          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
         wait_for_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
@@ -341,7 +341,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
         wait_for_cbox do
@@ -374,7 +374,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-cms-column-selectpage " do
-            click_on I18n.t("cms.apis.pages.index")
+            wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
           end
         end
         wait_for_cbox do
@@ -615,7 +615,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-palette" do
             click_on column14.name
           end
-          click_on I18n.t("cms.apis.pages.index")
+          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
         wait_for_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
@@ -728,7 +728,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
         wait_for_cbox do
@@ -760,7 +760,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
           within ".column-value-cms-column-selectpage " do
-            click_on I18n.t("cms.apis.pages.index")
+            wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
           end
         end
         wait_for_cbox do

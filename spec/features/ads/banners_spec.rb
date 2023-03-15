@@ -23,7 +23,7 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[link_url]", with: "http://example.jp"
-        first(".btn-file-upload").click
+        wait_cbox_open { first(".btn-file-upload").click }
       end
       wait_for_cbox do
         expect(page).to have_css(".file-view", text: file.name)

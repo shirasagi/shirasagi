@@ -25,14 +25,14 @@ module SS
 
     module Hooks
       def self.extended(obj)
-        obj.around(:all) do |example|
+        obj.around do |example|
           Rails.logger.tagged(SS::LocaleSupport.current_lang.to_s) do
             example.run
           end
         end
 
         # rubocop:disable Rails/I18nLocaleAssignment
-        obj.after(:each) do
+        obj.after do
           I18n.locale = I18n.default_locale if I18n.locale != I18n.default_locale
         end
         # rubocop:enable Rails/I18nLocaleAssignment

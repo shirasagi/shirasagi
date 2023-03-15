@@ -26,7 +26,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         # edit
         find(".monthly td.leave[data-day='#{the_day}']").click
         within '.cell-toolbar' do
-          click_on I18n.t('ss.links.edit')
+          wait_cbox_open { click_on I18n.t('ss.links.edit') }
         end
         wait_for_cbox do
           select I18n.t("gws/attendance.hour", count: 25), from: 'cell[in_hour]'
@@ -47,7 +47,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         find(".monthly td.leave[data-day='#{the_day}']").click
         within '.cell-toolbar' do
-          click_on I18n.t('ss.links.edit')
+          wait_cbox_open { click_on I18n.t('ss.links.edit') }
         end
         wait_for_cbox do
           click_on I18n.t('ss.buttons.clear')
@@ -75,7 +75,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         find(".monthly td.memo[data-day='#{the_day}']").click
         within '.cell-toolbar' do
-          click_on I18n.t('ss.links.edit')
+          wait_cbox_open { click_on I18n.t('ss.links.edit') }
         end
         wait_for_cbox do
           fill_in 'record[memo]', with: memo

@@ -32,9 +32,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
         within "#addon-basic" do
-          wait_cbox_open do
-            wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
-          end
+          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
         end
       end
       wait_for_cbox do

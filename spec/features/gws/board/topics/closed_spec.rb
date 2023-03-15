@@ -30,12 +30,13 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         visit index_path
         click_on I18n.t("ss.navi.editable")
         click_on I18n.t("ss.links.new")
-        click_on I18n.t("gws.apis.categories.index")
+        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
         wait_for_cbox do
-          click_on category.name
+          wait_cbox_close { click_on category.name }
         end
 
         within "form#item-form" do
+          expect(page).to have_css("#addon-gws-agents-addons-board-category .ajax-selected", text: category.name)
           within "#addon-basic" do
             fill_in "item[name]", with: "name"
           end

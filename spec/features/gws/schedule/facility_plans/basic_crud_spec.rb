@@ -34,7 +34,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[name]", with: "name"
         fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
         fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
-        click_button I18n.t('gws/schedule.facility_reservation.index')
+        wait_cbox_open { click_button I18n.t('gws/schedule.facility_reservation.index') }
       end
       wait_for_cbox do
         click_on I18n.t('ss.buttons.close')
@@ -100,7 +100,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           fill_in "item[name]", with: "name"
           fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
           fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
-          click_button I18n.t('gws/schedule.facility_reservation.index')
+          wait_cbox_open { click_button I18n.t('gws/schedule.facility_reservation.index') }
         end
         wait_for_cbox do
           click_on I18n.t('ss.buttons.close')

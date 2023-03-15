@@ -369,7 +369,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-fileupload" do
               fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-              click_on I18n.t("ss.links.upload")
+              wait_cbox_open { click_on I18n.t("ss.links.upload") }
             end
           end
           wait_for_cbox do
@@ -414,7 +414,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-              click_on I18n.t("ss.links.upload")
+              wait_cbox_open { click_on I18n.t("ss.links.upload") }
             end
           end
           wait_for_cbox do
@@ -595,7 +595,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_frame page.first("#ss-preview-dialog-frame") do
-          click_on I18n.t("cms.apis.pages.index")
+          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
           wait_for_cbox do
             expect(page).to have_css(".list-item", text: selectable_page1.name)
             expect(page).to have_css(".list-item", text: selectable_page2.name)
