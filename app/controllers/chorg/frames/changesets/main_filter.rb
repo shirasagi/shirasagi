@@ -2,7 +2,7 @@ module Chorg::Frames::Changesets::MainFilter
   extend ActiveSupport::Concern
 
   included do
-    layout "chorg/item_frame"
+    layout "ss/item_frame"
     model Chorg::Changeset
 
     helper_method :type, :cur_revision, :source_groups, :first_source_group
@@ -51,7 +51,14 @@ module Chorg::Frames::Changesets::MainFilter
     end
 
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_create @item.save, location: chorg_revision_path(id: cur_revision)
+    unless @item.save
+      render template: "new"
+      return
+    end
+
+    flash[:notice] = t("ss.notice.saved")
+    json = { status: 302, location: chorg_revision_path(id: cur_revision) }
+    render json: json, status: :ok, content_type: json_content_type
   end
 
   def update
@@ -66,6 +73,13 @@ module Chorg::Frames::Changesets::MainFilter
     end
 
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_update @item.save, location: chorg_revision_path(id: cur_revision)
+    unless @item.save
+      render template: "edit"
+      return
+    end
+
+    flash[:notice] = t("ss.notice.saved")
+    json = { status: 302, location: chorg_revision_path(id: cur_revision) }
+    render json: json, status: :ok, content_type: json_content_type
   end
 end
