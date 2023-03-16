@@ -92,8 +92,8 @@ class Uploader::FilesController < ApplicationController
       job_file.upload(@item.path) if @file
     elsif action == 'destroy'
       paths = [@path_was]
-      paths = @paths.map { |name| "#{@path_was}/#{name}" } if @paths
-      job_file.bind_rm(paths).save_job
+      paths = @paths if @paths
+      job_file.bind_rm(paths).save_job if paths.present?
     end
   end
 
@@ -280,7 +280,7 @@ class Uploader::FilesController < ApplicationController
       next false if item.sanitizer_state == 'wait' #&& updated condition
       item.destroy
     end
-    @paths = @deleted_items.map(&:filename)
+    @paths = @deleted_items.map(&:path)
     render_confirmed_all @undeleted_items.blank?, location: "#{uploader_files_path}/#{@item.filename}"
   end
 
