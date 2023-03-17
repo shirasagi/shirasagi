@@ -94,7 +94,9 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
     time = Time.zone.now
     cond = [
+      # condition for pages to be public
       { state: "ready", release_date: { "$lte" => time } },
+      # condition for pages to be closed
       { state: "public", close_date: { "$lte" => time } }
     ]
 
