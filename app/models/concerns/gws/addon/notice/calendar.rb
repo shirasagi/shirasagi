@@ -41,6 +41,8 @@ module Gws::Addon::Notice::Calendar
     data[:editable] = false
 
     data[:title] = name
+    data[:abbrTitle] = name.truncate(20)
+
     data[:startDateLabel] = date_label(start_at_to_format)
     data[:endDateLabel] = date_label(end_at_to_format)
 
@@ -53,18 +55,18 @@ module Gws::Addon::Notice::Calendar
     data[:end] = (end_at_to_format + 1.day).to_date
     data[:className] += ' fc-event-allday'
 
-    if categories.present?
-      data[:className] += " fc-event-category"
-      data[:categories] = categories.map do |cate|
-        color = "#e8e8e8"
-        text_color = "#444"
-
-        color = cate.color if cate.color.present?
-        text_color = cate.text_color if cate.text_color.present?
-
-        { name: cate.name, color: color, text_color: text_color }
-      end
-    end
+    #if categories.present?
+    #  data[:className] += " fc-event-category"
+    #  data[:categories] = categories.map do |cate|
+    #    color = "#e8e8e8"
+    #    text_color = "#444"
+    #
+    #    color = cate.color if cate.color.present?
+    #    text_color = cate.text_color if cate.text_color.present?
+    #
+    #    { name: cate.name, color: color, text_color: text_color }
+    #  end
+    #end
 
     data
   end

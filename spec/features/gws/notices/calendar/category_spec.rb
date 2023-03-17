@@ -36,9 +36,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".fc-event-name", text: item2.name)
         expect(page).to have_css(".fc-event-name", text: item3.name)
         expect(page).to have_css(".fc-event-name", text: item4.name)
-
-        expect(page).to have_css(".fc-category", text: category1.name)
-        expect(page).to have_css(".fc-category", text: category2.name)
       end
 
       # select category1
@@ -60,9 +57,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".fc-event-name", text: item2.name)
         expect(page).to have_css(".fc-event-name", text: item3.name)
         expect(page).to have_no_css(".fc-event-name", text: item4.name)
-
-        expect(page).to have_css(".fc-category", text: category1.name)
-        expect(page).to have_no_css(".fc-category", text: category2.name)
       end
 
       within "#content-navi" do
@@ -81,9 +75,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".fc-event-name", text: item2.name)
         expect(page).to have_no_css(".fc-event-name", text: item3.name)
         expect(page).to have_no_css(".fc-event-name", text: item4.name)
-
-        expect(page).to have_css(".fc-category", text: category1.name)
-        expect(page).to have_no_css(".fc-category", text: category2.name)
       end
 
       within "#content-navi" do
@@ -102,9 +93,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".fc-event-name", text: item2.name)
         expect(page).to have_css(".fc-event-name", text: item3.name)
         expect(page).to have_no_css(".fc-event-name", text: item4.name)
-
-        expect(page).to have_css(".fc-category", text: category1.name)
-        expect(page).to have_no_css(".fc-category", text: category2.name)
       end
     end
   end

@@ -45,24 +45,31 @@ SS.ready(function() {
         var cont = $('<span class="fc-content"></span>');
         var title = $('<span class="fc-title"></span>');
         var evEl = $('<a class="fc-event fc-event-point"></a>');
+        var tippyOptions = { trigger: 'mouseenter', theme: 'light-border ss-tooltip', interactive: false };
 
         if (event.category) {
           var category = $('<span class="fc-category"></span>');
           category.text(event.category);
           title.append(category);
         }
-        if (event.categories) {
-          $(event.categories).each(function() {
-            var category = $('<span class="fc-category" style=""></span>').append(this.name);
-            if (this.color) {
-              category.css("background-color", this.color);
-              category.css("color", this.text_color);
-            }
-            title.append(category);
-          });
-        }
+        //if (event.categories) {
+        //  $(event.categories).each(function() {
+        //    var category = $('<span class="fc-category" style=""></span>').append(this.name);
+        //    if (this.color) {
+        //      category.css("background-color", this.color);
+        //      category.css("color", this.text_color);
+        //    }
+        //    title.append(category);
+        //  });
+        //}
 
-        title.append($('<span class="fc-event-name"/>').text(event.title));
+        if (event.abbrTitle) {
+          title.append($('<span class="fc-event-name"/>').text(event.abbrTitle));
+          tippyOptions["content"] = event.title;
+          tippy(title[0], tippyOptions);
+        } else {
+          title.append($('<span class="fc-event-name"/>').text(event.title));
+        }
         cont.append(title);
 
         if (event.facility) {

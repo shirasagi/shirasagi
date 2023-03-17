@@ -118,6 +118,15 @@ SS.ready(function() {
           }
         },
         eventRender: function(event, element) {
+          if (event.abbrTitle) {
+            var title = element.find('.fc-title');
+            var tippyOptions = { trigger: 'mouseenter', theme: 'light-border ss-tooltip', interactive: false };
+
+            tippyOptions["content"] = event.title;
+            title.text(event.abbrTitle);
+            tippy(element[0], tippyOptions);
+          }
+
           var name = element.find('.fc-title').text();
           var span = $('<span class="fc-event-name"></span>').text(name);
           element.find('.fc-title').html(span);
@@ -140,33 +149,18 @@ SS.ready(function() {
             span = $('<span></span>').addClass(fcClass).append(content);
             element.find('.fc-title').before(span);
           }
-          if (event.categories) {
-            $(event.categories).each(function() {
-              span = $('<span class="fc-category" style=""></span>').append(this.name);
-              if (this.color) {
-                span.css("background-color", this.color);
-                span.css("color", this.text_color);
-              }
-              element.find('.fc-title').append(span);
-            });
-          }
+          //if (event.categories) {
+          //  $(event.categories).each(function() {
+          //    span = $('<span class="fc-category" style=""></span>').append(this.name);
+          //    if (this.color) {
+          //      span.css("background-color", this.color);
+          //      span.css("color", this.text_color);
+          //    }
+          //    element.find('.fc-title').append(span);
+          //  });
+          //}
         },
         eventAfterAllRender: function (view) {
-          var attendance, todo;
-          todo = $('.fc .fc-withTodo-button');
-          if (todo.length) {
-            if (todo.hasClass('fc-state-active')) {
-              $('.fc .fc-event-todo').show();
-            } else {
-              $('.fc .fc-event-todo').hide();
-            }
-          }
-          attendance = $('.fc .fc-withAbsence-button');
-          if (attendance.length) {
-            if (attendance.hasClass('fc-state-active')) {
-              $('.fc .fc-event-user-attendance-absence').removeClass("hide")
-            }
-          }
           if (opts.eventAfterAllRenderCallback) {
             opts.eventAfterAllRenderCallback();
           }
