@@ -672,9 +672,9 @@ GEM
       rdf (~> 3.2, >= 3.2.6)
     spring (2.0.2)
       activesupport (>= 4.2)
-    sprockets (3.7.2)
+    sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
-      rack (> 1, < 3)
+      rack (>= 2.2.4, < 4)
     sprockets-rails (3.4.2)
       actionpack (>= 5.2)
       activesupport (>= 5.2)
@@ -867,7 +867,7 @@ DEPENDENCIES
   sparql
   sparql-client
   spring (~> 2.0.2)
-  sprockets (< 4.0)
+  sprockets
   terminal-notifier-guard
   test-queue
   thinreports

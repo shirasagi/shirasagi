@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gem 'rails', '~> 6.1.0'
-gem 'sprockets', '< 4.0'
+gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sass'
 gem 'sassc-rails'
