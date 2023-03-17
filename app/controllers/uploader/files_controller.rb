@@ -271,7 +271,7 @@ class Uploader::FilesController < ApplicationController
     end
 
     if params[:destroy_all].blank?
-      render "cms/crud/destroy_all"
+      render :destroy_all
       return
     end
 
