@@ -185,7 +185,7 @@ module Cms::Content
 
   def private_dir
     return if new_record?
-    self.class.private_root + "/" + id.to_s.chars.join("/") + "/_"
+    self.class.private_root + "/" + SS::FilenameUtils.dirname_with_id(id) + "/_"
   end
 
   def private_file(basename)

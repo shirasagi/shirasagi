@@ -74,7 +74,7 @@ module SS::JbuilderHelper
         scheme ||= SS.config.gws.canonical_scheme.presence || "http"
         host = context.cur_site.try(:canonical_domain).presence || request.try(:host_with_port)
         host ||= SS.config.gws.canonical_domain
-        "#{scheme}://#{host}/fs/" + file.id.to_s.chars.join("/") + "/_/#{file.filename}"
+        "#{scheme}://#{host}/fs/" + SS::FilenameUtils.dirname_with_id(file.id) + "/_/#{file.filename}"
       else
         file.full_url
       end

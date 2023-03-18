@@ -101,7 +101,7 @@ module SS::Model::JobLog
 
   def file_path
     raise if new_record?
-    @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.chars.join("/") + "/_/#{id}.log"
+    @file_path ||= "#{SS::File.root}/job_logs/" + SS::FilenameUtils.dirname_with_id(id) + "/_/#{id}.log"
   end
 
   def head_logs(limit = nil)

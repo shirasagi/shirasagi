@@ -8,7 +8,7 @@ module Opendata::Addon::ZipDataset
   end
 
   def zip_path
-    "#{Rails.root}/private/opendata/datasets/#{id.to_s.chars.join("/")}/_/opendata-datasets-#{id}.zip"
+    "#{Rails.root}/private/opendata/datasets/#{SS::FilenameUtils.dirname_with_id(id)}/_/opendata-datasets-#{id}.zip"
   end
 
   def zip_exist?

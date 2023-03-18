@@ -3,13 +3,15 @@ Rails.application.routes.draw do
   Fs::Initializer
 
   namespace "fs" do
-    get "*id_path/_/:filename" => "files#index", id_path: %r{(\d/)*\d}, filename: %r{[^/]+}, as: :file, format: false
-    get "*id_path/_/thumb/:filename" => "files#thumb", id_path: %r{(\d/)*\d}, filename: %r{[^/]+}, as: :thumb, format: false
-    get "*id_path/_/thumb/:size/:filename" => "files#thumb", id_path: %r{(\d/)*\d}, size: %r{[^/]+},
+    get "*id_path/_/:filename" => "files#index", id_path: %r{\h{3}/\h{10}},
+      filename: %r{[^/]+}, as: :file, format: false
+    get "*id_path/_/thumb/:filename" => "files#thumb", id_path: %r{\h{3}/\h{10}},
+      filename: %r{[^/]+}, as: :thumb, format: false
+    get "*id_path/_/thumb/:size/:filename" => "files#thumb", id_path: %r{\h{3}/\h{10}}, size: %r{[^/]+},
       filename: %r{[^/]+}, format: false
-    get "*id_path/_/download/:filename" => "files#download", id_path: %r{(\d/)*\d},
+    get "*id_path/_/download/:filename" => "files#download", id_path: %r{\h{3}/\h{10}},
       filename: %r{[^/]+}, as: :download, format: false
-    get "*id_path/_/view/:filename" => "files#view", id_path: %r{(\d/)*\d},
+    get "*id_path/_/view/:filename" => "files#view", id_path: %r{\h{3}/\h{10}},
       filename: %r{[^/]+}, as: :preview, format: false
 
     # @deprecated

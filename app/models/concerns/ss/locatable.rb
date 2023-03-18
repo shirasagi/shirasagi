@@ -19,12 +19,12 @@ module SS::Locatable
   end
 
   def path
-    "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{physical_name}"
+    "#{self.class.root}/ss_files/" + SS::FilenameUtils.dirname_with_id(id) + "/_/#{physical_name}"
   end
 
   def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
-    "#{site.root_path}/fs/" + id.to_s.chars.join("/") + "/_"
+    "#{site.root_path}/fs/" + SS::FilenameUtils.dirname_with_id(id) + "/_"
   end
 
   def public_path
@@ -32,12 +32,12 @@ module SS::Locatable
   end
 
   def url_with_filename
-    "/fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
+    "/fs/" + SS::FilenameUtils.dirname_with_id(id) + "/_/#{filename}"
   end
 
   def url_with_name
     if SS::FilenameUtils.url_safe_japanese?(name)
-      "/fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+      "/fs/" + SS::FilenameUtils.dirname_with_id(id) + "/_/#{Addressable::URI.encode_component(name)}"
     else
       url_with_filename
     end
@@ -45,13 +45,13 @@ module SS::Locatable
 
   def full_url_with_filename
     return if site.blank? || !site.respond_to?(:full_root_url)
-    "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{filename}"
+    "#{site.full_root_url}fs/" + SS::FilenameUtils.dirname_with_id(id) + "/_/#{filename}"
   end
 
   def full_url_with_name
     return if site.blank? || !site.respond_to?(:full_root_url)
     if SS::FilenameUtils.url_safe_japanese?(name)
-      "#{site.full_root_url}fs/" + id.to_s.chars.join("/") + "/_/#{Addressable::URI.encode_component(name)}"
+      "#{site.full_root_url}fs/" + SS::FilenameUtils.dirname_with_id(id) + "/_/#{Addressable::URI.encode_component(name)}"
     else
       full_url_with_filename
     end

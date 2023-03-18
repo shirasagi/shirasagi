@@ -30,6 +30,6 @@ class Cms::LargeFileUploadTask
   end
 
   def tmp_file_path
-    "#{SS::File.root}/ss_tasks/#{self.id.to_s.chars.join("/")}"
+    "#{SS::File.root}/ss_tasks/#{SS::FilenameUtils.dirname_with_id(self.id)}"
   end
 end

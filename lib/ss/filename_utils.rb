@@ -141,6 +141,10 @@ class SS::FilenameUtils
       ret
     end
 
+    def dirname_with_id(id)
+      Digest::MD5.hexdigest(id.to_s).slice(0..2) + '/' + sprintf('%010d', id)
+    end
+
     private
 
     def url_safe_japanese_char?(utf8_char)

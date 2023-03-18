@@ -189,7 +189,7 @@ module SS::Model::Task
 
   def log_file_path
     return if new_record?
-    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.chars.join("/") + "/_/#{id}.log"
+    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + dirname_with_id + "/_/#{id}.log"
   end
 
   def perf_log_file_path

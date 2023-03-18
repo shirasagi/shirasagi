@@ -48,7 +48,7 @@ class Cms::Michecker::Result
   private
 
   def root_filepath
-    "#{SS::File.root}/cms_michecker_results/" + id.to_s.chars.join("/") + "/_"
+    "#{SS::File.root}/cms_michecker_results/" + SS::FilenameUtils.dirname_with_id(id) + "/_"
   end
 
   def remove_all

@@ -93,7 +93,7 @@ class History::Trash
       item.group_ids = opts[:cur_group].to_a.pluck(:id)
       item.save
       id = self.data[:_id]
-      path = "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
+      path = "#{self.class.root}/ss_files/" + dirname_with_id + "/_/#{id}"
       src = path
       file = Fs::UploadedFile.create_from_file(path, content_type: self.data[:content_type])
       Fs.mkdir_p(File.dirname(item.path))

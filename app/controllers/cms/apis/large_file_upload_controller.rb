@@ -80,6 +80,6 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   end
 
   def tmp_file_path
-    "#{SS::File.root}/ss_tasks/#{@task.id.to_s.chars.join("/")}"
+    "#{SS::File.root}/ss_tasks/#{SS::FilenameUtils.dirname_with_id(@task.id)}"
   end
 end

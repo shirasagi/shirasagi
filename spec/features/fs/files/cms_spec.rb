@@ -57,7 +57,7 @@ describe "fs_files", type: :feature, dbscope: :example do
         end
 
         it "#thumb" do
-          visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+          visit "/fs/#{SS::FilenameUtils.dirname_with_id(file.id)}/_/thumb/#{file.filename}"
           expect(status_code).to eq 200
         end
       end
@@ -88,7 +88,7 @@ describe "fs_files", type: :feature, dbscope: :example do
         end
 
         it "#thumb" do
-          visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+          visit "/fs/#{SS::FilenameUtils.dirname_with_id(file.id)}/_/thumb/#{file.filename}"
           expect(status_code).to eq 404
         end
       end
@@ -127,7 +127,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+            visit "/fs/#{SS::FilenameUtils.dirname_with_id(file.id)}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -156,7 +156,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+            visit "/fs/#{SS::FilenameUtils.dirname_with_id(file.id)}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -214,7 +214,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+            visit "/fs/#{SS::FilenameUtils.dirname_with_id(file.id)}/_/thumb/#{file.filename}"
             expect(status_code).to eq 404
           end
         end
@@ -243,7 +243,7 @@ describe "fs_files", type: :feature, dbscope: :example do
           end
 
           it "#thumb" do
-            visit "/fs/#{file.id.to_s.chars.join("/")}/_/thumb/#{file.filename}"
+            visit "/fs/#{SS::FilenameUtils.dirname_with_id(file.id)}/_/thumb/#{file.filename}"
             expect(status_code).to eq 200
           end
         end
@@ -497,7 +497,7 @@ describe "fs_files", type: :feature, dbscope: :example do
   end
 
   context "error page" do
-    let(:url) { "/fs/1/_/error.png" }
+    let(:url) { "/fs/c4c/0000000001/_/error.png" }
     let(:item) { create :cms_page, filename: "404.html", name: "404", html: unique_id.to_s }
 
     before do
