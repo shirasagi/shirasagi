@@ -16,6 +16,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/node") }
 
@@ -34,6 +35,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/page") }
   end
@@ -47,6 +49,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/search") }
 
@@ -67,6 +70,7 @@ module Garbage::Node
     include Cms::Addon::NodeList
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/category_list") }
   end
@@ -80,6 +84,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/category") }
 
@@ -98,6 +103,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/area_list") }
   end
@@ -110,6 +116,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/area") }
   end
@@ -122,6 +129,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/center_list") }
   end
@@ -134,6 +142,7 @@ module Garbage::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "garbage/center") }
   end

@@ -12,6 +12,7 @@ module Urgency::Node
     include Urgency::Addon::Layout
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "urgency/layout") }
 

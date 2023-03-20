@@ -1,5 +1,6 @@
 class SS::LogoFile
   include SS::Model::File
+  include Cms::Lgwan::File
 
   default_scope ->{ where(model: "ss/logo_file") }
 

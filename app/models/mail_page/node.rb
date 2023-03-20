@@ -17,6 +17,7 @@ module MailPage::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Cms::ChildList
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "mail_page/page") }
   end

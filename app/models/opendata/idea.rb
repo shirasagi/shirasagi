@@ -13,6 +13,7 @@ class Opendata::Idea
   include Workflow::MemberPermission
   include Opendata::IdeaSearchable
   include Opendata::IdeaTemplateVariables
+  include Cms::Lgwan::Page
 
   set_permission_name "opendata_ideas"
 

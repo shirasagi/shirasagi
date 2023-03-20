@@ -3,6 +3,7 @@ class Cms::TempFile
   include SS::Reference::Site
   include Cms::Reference::Node
   include SS::UserPermission
+  include Cms::Lgwan::File
 
   validates_with Cms::FileSizeValidator, if: ->{ size.present? && @cur_node.present? }
 

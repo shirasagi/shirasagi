@@ -2,6 +2,7 @@ class Cms::File
   include SS::Model::File
   include SS::Reference::Site
   include Cms::Addon::GroupPermission
+  include Cms::Lgwan::File
 
   attr_accessor :cur_group
 

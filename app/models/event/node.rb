@@ -22,6 +22,7 @@ module Event::Node
     include Cms::Addon::ImageResizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "event/page") }
 
@@ -46,6 +47,7 @@ module Event::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "event/search") }
   end

@@ -6,7 +6,7 @@ class Cms::SnsPost::LineJob < Cms::ApplicationJob
     item = Cms::Page.find(page_id)
     Rails.logger.info("post to line : #{item.name}")
 
-    SS::Lgwan.pull_private_files(item) if SS::Lgwan.enabled?
+    SS::Lgwan.pull_private_files(item) if SS::Lgwan.inweb?
     item.post_to_line
   end
 end

@@ -25,6 +25,7 @@ class Opendata::Dataset
   include Opendata::Addon::Harvest::EditLock
   include Opendata::Addon::ZipDataset
   include Opendata::Addon::ExportPublicEntityFormat
+  include Cms::Lgwan::Page
 
   set_permission_name "opendata_datasets"
 

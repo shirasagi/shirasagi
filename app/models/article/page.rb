@@ -32,6 +32,7 @@ class Article::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
+  include Cms::Lgwan::Page
 
   after_save :new_size_input, if: ->{ @db_changes }
 

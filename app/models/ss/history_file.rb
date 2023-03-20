@@ -1,5 +1,6 @@
 class SS::HistoryFile
   include SS::Model::File
+  include Cms::Lgwan::File
 
   field :site_id, type: Integer, overwrite: true
   field :node_id, type: Integer

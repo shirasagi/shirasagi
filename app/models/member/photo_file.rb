@@ -2,6 +2,7 @@ class Member::PhotoFile
   include SS::Model::File
   include Cms::Reference::Member
   include Cms::MemberPermission
+  include Cms::Lgwan::File
 
   default_thumb_size [160, 120]
   add_thumb_size :detail, [800, 600]

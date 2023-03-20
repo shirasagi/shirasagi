@@ -24,6 +24,7 @@ module Category::Node
     include History::Addon::Backup
     include Category::Addon::Integration
     include Category::Addon::Split
+    include Cms::Lgwan::Node
 
     class_variable_set(:@@_requires_read_permission_to_read, false)
 
@@ -48,6 +49,7 @@ module Category::Node
     include Category::Addon::Integration
     include Category::Addon::Split
     include Cms::ChildList
+    include Cms::Lgwan::Node
 
     class_variable_set(:@@_requires_read_permission_to_read, false)
 

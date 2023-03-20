@@ -1,5 +1,6 @@
 class SS::LinkFile
   include SS::Model::File
+  include Cms::Lgwan::File
 
   field :link_url, type: String
 

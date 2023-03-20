@@ -64,7 +64,7 @@ class Cms::Agents::Tasks::Line::MessagesController < ApplicationController
   end
 
   def pull_private_files(message)
-    return unless SS::Lgwan.enabled?
+    return unless SS::Lgwan.inweb?
     message.templates.each { |template| SS::Lgwan.pull_private_files(template) }
   end
 end

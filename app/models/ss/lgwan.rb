@@ -2,7 +2,15 @@ module SS::Lgwan
   module_function
 
   def enabled?
-    !SS.config.lgwan.disable
+    inweb? || lgcms?
+  end
+
+  def inweb?
+    SS.config.lgwan.mode == "inweb"
+  end
+
+  def lgcms?
+    SS.config.lgwan.mode == "lgcms"
   end
 
   def pull_private_files(page)
