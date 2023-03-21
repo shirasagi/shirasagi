@@ -1,0 +1,44 @@
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
+
+<div class="addon-views sheet gws-daily-report-print">
+  <div class="addon-view print" id="addon-basic">
+    <div class="addon-body print">
+      <table class="index">
+    <tbody>
+    <% @items.where(form_id: @forms.first.try(:id)).each do |report| %>
+      <% next if report.share_small_talk.blank? && report.share_column_ids.blank? %>
+      <tr>
+        <td><%= link_to I18n.l(report.daily_report_date.to_date, format: :short), gws_daily_report_user_reports_path(user: report.user_id) %></td>
+        <td><%= t("date.abbr_day_names")[report.daily_report_date.wday] %></td>
+        <td><%= gws_public_user_long_name(report.user.long_name) %></td>
+        <% if report.share_small_talk.present? %>
+          <td class="share-cell">
+            <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+            <div class="report-value">【<%= @model.t(:small_talk) %>】<%= br report.small_talk %></div>
+            <% report.column_comments('small_talk').each do |comment| %>
+              <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+            <% end %>
+          </td>
+        <% end %>
+        <% report.column_values.each do |column_value| %>
+          <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
+            <td class="share-cell">
+              <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+              <div class="report-value">【<%= column_value.column.try(:name) %>】<%= br column_value.value %></div>
+              <% report.column_comments(column_value.column_id).each do |comment| %>
+                <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+              <% end %>
+            </td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+  SS_Font.render();
+<% end %>

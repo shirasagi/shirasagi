@@ -1,23 +1,19 @@
-class Gws::DailyReport::GroupReportEnumerator < Enumerator
-  def initialize(site, user, group, reports, options)
+class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
+  def initialize(site, user, group, reports, encoding: "UTF-8")
     @cur_site = site
     @cur_user = user
     @cur_group = group
     @reports = reports.dup
-    @encoding = options[:encoding].presence || "UTF-8"
-    @export_target = options[:export_target].presence || 'all'
-    users = Gws::User.site(@cur_site).where(group_ids: @cur_group.id)
-    if @cur_site.fiscal_year(reports.first.try(:daily_report_date)) != @cur_site.fiscal_year
-      users = users.where(id: @cur_user.id)
-    end
+    @encoding = encoding
 
     super() do |yielder|
       load_forms
       build_term_handlers
 
-      yielder << bom + encode(headers.to_csv)
-      users.each do |user|
-        enum_report(yielder, user, @reports.and_user(user).first)
+      yielder << bom
+      @reports.each do |report|
+        next if report.share_small_talk.blank? && report.share_column_ids.blank?
+        enum_report(yielder, report.daily_report_date.try(:to_date), report)
       end
     end
   end
@@ -40,16 +36,14 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
 
     @forms = Gws::DailyReport::Form.site(@cur_site).
       readable(@cur_user, site: @cur_site).
-      where(year: @cur_site.fiscal_year, daily_report_group_id: @cur_group.id).
+      in(daily_report_group_id: @cur_group.id).
+      where(year: @cur_site.fiscal_year).
       order_by(order: 1, created: 1).
       to_a
   end
 
   def build_term_handlers
     @handlers = []
-    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
-      @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
-    end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }
     @forms.each do |form|
       form.columns.order_by(order: 1).each do |column|
@@ -62,17 +56,12 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     end
   end
 
-  def headers
-    header = []
-    header << Gws::User.t(:name)
-    header << @handlers.pluck(:name)
-    header.flatten
-  end
-
-  def enum_report(yielder, user, report)
+  def enum_report(yielder, date, report)
     row = []
-    row << user.name
-    row << base_infos(report)
+    row << I18n.l(date, format: :short)
+    row << I18n.t("date.abbr_day_names")[date.wday]
+    row << report.user.try(:name)
+    row << base_infos(report).select(&:present?)
     yielder << encode(row.flatten.to_csv)
   end
 
@@ -88,20 +77,10 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     end
   end
 
-  def to_limited_access(report)
-    report.limited_access
-  end
-
   def to_small_talk(report)
     text = []
     if report.share_small_talk.present?
       text << I18n.t('gws/daily_report.shared')
-      text << report.small_talk
-      report.column_comments('small_talk').each do |comment|
-        text << "#{comment.body}(#{comment.user.try(:name)})"
-      end
-    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month && @export_target == 'all') ||
-          report.user_id == @cur_user.id
       text << report.small_talk
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
@@ -119,12 +98,6 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     text = []
     if report.share_column_ids.include?(column.id.to_s)
       text << I18n.t('gws/daily_report.shared')
-      text << column_value.value
-      report.column_comments(column.id).each do |comment|
-        text << "#{comment.body}(#{comment.user.try(:name)})"
-      end
-    elsif (report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all') ||
-          report.user_id == @cur_user.id
       text << column_value.value
       report.column_comments(column.id).each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"

@@ -1,5 +1,5 @@
 class Gws::DailyReport::UserReportEnumerator < Enumerator
-  def initialize(site, user, group, month, reports, encoding: "Shift_JIS")
+  def initialize(site, user, group, month, reports, encoding: "UTF-8")
     @cur_site = site
     @cur_user = user
     @cur_group = group
@@ -94,8 +94,8 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
   def to_small_talk(report)
     text = []
     if report.share_small_talk.present?
-      text << report.small_talk
       text << I18n.t('gws/daily_report.shared')
+      text << report.small_talk
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
       end
@@ -116,8 +116,8 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
 
     text = []
     if report.share_column_ids.include?(column.id.to_s)
-      text << column_value.value
       text << I18n.t('gws/daily_report.shared')
+      text << column_value.value
       report.column_comments(column.id).each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
       end

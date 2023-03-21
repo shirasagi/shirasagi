@@ -36,10 +36,10 @@
           <% end %>
           <% if report.share_small_talk.present? %>
             <td class="share-cell">
-              <div class="report-value"><%= br report.small_talk %></div>
               <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+              <div class="report-value"><%= br report.small_talk %></div>
               <% report.column_comments('small_talk').each do |comment| %>
-                <div class="comment-value"><%= br "#{comment.body}(#{comment.user.try(:name)})" %></div>
+                <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
               <% end %>
             </td>
           <% else %>
@@ -47,7 +47,7 @@
               <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && report.small_talk.present? %>
                 <div class="report-value"><%= br report.small_talk %></div>
                 <% report.column_comments('small_talk').each do |comment| %>
-                  <div class="comment-value"><%= br "#{comment.body}(#{comment.user.try(:name)})" %></div>
+                  <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
                 <% end %>
               <% end %>
             </td>
@@ -55,10 +55,10 @@
           <% report.column_values.each do |column_value| %>
             <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
               <td class="share-cell">
-                <div class="report-value"><%= br column_value.value %></div>
                 <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+                <div class="report-value"><%= br column_value.value %></div>
                 <% report.column_comments(column_value.column_id).each do |comment| %>
-                  <div class="comment-value"><%= br "#{comment.body}(#{comment.user.try(:name)})" %></div>
+                  <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
                 <% end %>
               </td>
             <% else %>
@@ -66,7 +66,7 @@
                 <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && column_value.value.present? %>
                   <div class="report-value"><%= br column_value.value %></div>
                   <% report.column_comments(column_value.column_id).each do |comment| %>
-                    <div class="comment-value"><%= br "#{comment.body}(#{comment.user.try(:name)})" %></div>
+                    <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
                   <% end %>
                 <% end %>
               </td>

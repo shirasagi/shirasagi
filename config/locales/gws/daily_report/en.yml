@@ -52,6 +52,13 @@ en:
     delete_other_gws_daily_report_forms: Delete application forms (all)
     delete_private_gws_daily_report_forms: Delete application forms (own)
 
+    read_other_gws_daily_report_comments: View comments (all)
+    read_private_gws_daily_report_comments: View comments (own)
+    edit_other_gws_daily_report_comments: Edit comments (all)
+    edit_private_gws_daily_report_comments: Edit comments (own)
+    delete_other_gws_daily_report_comments: Delete comments (all)
+    delete_private_gws_daily_report_comments: Delete comments (own)
+
   mongoid:
     models:
       gws/daily_report/report: Business daily report

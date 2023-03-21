@@ -27,16 +27,19 @@ Rails.application.routes.draw do
       resources :reports, path: ':form_id', only: [:new, :create], as: 'form_reports'
       resources :user_reports, path: 'users/:user/reports', concerns: [:deletion, :export] do
         get :print, on: :collection
-        match :comment, path: ':column/comment', on: :member, via: %i[get post]
+        resources :comments, path: ':column/comments', module: 'user_reports', concerns: [:deletion]
       end
-      resources :user_reports, path: 'users/:user/:form_id', only: [:new, :create], as: 'form_user_reports'
+      resources :user_reports, path: 'users/:user/reports/form/:form_id', only: [:new, :create], as: 'form_user_reports'
+      resources :group_share_reports, path: 'groups/:group/share_reports', only: [:index], concerns: [:export] do
+        get :print, on: :collection
+      end
     end
     scope(path: ':ymd') do
       resources :group_reports, path: 'groups/:group/reports', concerns: [:deletion, :download_all] do
         get :print, on: :collection
-        match :comment, path: ':column/comment', on: :member, via: %i[get post]
+        resources :comments, path: ':column/comments', module: 'group_reports', concerns: [:deletion]
       end
-      resources :group_reports, path: 'groups/:group/:form_id', only: [:new, :create], as: 'form_group_reports'
+      resources :group_reports, path: 'groups/:group/reports/form/:form_id', only: [:new, :create], as: 'form_group_reports'
     end
     resources :forms, concerns: :deletion do
       resources :columns, concerns: :deletion
