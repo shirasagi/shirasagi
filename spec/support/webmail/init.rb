@@ -32,7 +32,7 @@ module SS::WebmailSupport
 
   def docker_conf_auth_type
     @docker_conf_imap_auth_type ||= begin
-      SS::WebmailSupport.docker_conf["auth_type"].presence || "CRAM-MD5"
+      SS::WebmailSupport.docker_conf["auth_type"].presence || "PLAIN"
     end
   end
 
