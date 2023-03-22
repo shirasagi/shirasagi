@@ -1,5 +1,3 @@
-// link_tree ../images
-
 // webpacker で生成するアセットを明示的に指定する。指定していないと Sprockets 4 からエラーになる。
 //
 //= link application.js
@@ -85,3 +83,7 @@
 //= link ss/cke_reset.css
 //= link ss/print.css
 //= link ss/style.css
+
+// others like image
+
+//= link opendata/icon-user.png
