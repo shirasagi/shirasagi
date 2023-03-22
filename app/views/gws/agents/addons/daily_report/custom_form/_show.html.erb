@@ -31,7 +31,7 @@
 
   <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
     <% column = value.column %>
-    <% if @item.share_column_ids.include?(column.id.to_s) %>
+    <% if @item.share_column_ids.include?(value.column_id.to_s) %>
       <% if column.present? && column.column_show_partial_path.present? %>
         <%= render column.column_show_partial_path, column: column, value: value %>
       <% else %>

@@ -44,7 +44,9 @@
           <% if report.share_small_talk.present? %>
             <td class="share-cell">
               <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-              <div class="report-value">【<%= @model.t(:small_talk) %>】<%= br report.small_talk %></div>
+              <div class="report-value-wrap">
+                <div class="report-value">【<%= @model.t(:small_talk) %>】<%= br report.small_talk %></div>
+              </div>
               <% report.column_comments('small_talk').each do |comment| %>
                 <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
               <% end %>
@@ -54,7 +56,9 @@
             <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
               <td class="share-cell">
                 <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-                <div class="report-value">【<%= column_value.column.try(:name) %>】<%= br column_value.value %></div>
+                <div class="report-value-wrap">
+                  <div class="report-value">【<%= column_value.column.try(:name) %>】<%= br column_value.value %></div>
+                </div>
                 <% report.column_comments(column_value.column_id).each do |comment| %>
                   <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
                 <% end %>

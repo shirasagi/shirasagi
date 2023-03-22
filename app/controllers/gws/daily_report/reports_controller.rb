@@ -27,7 +27,7 @@ class Gws::DailyReport::ReportsController < ApplicationController
     @forms ||= begin
       criteria = Gws::DailyReport::Form.site(@cur_site)
       if params[:state] != 'preview'
-        criteria = criteria.in(daily_report_group_id: @cur_group.id)
+        criteria = criteria.in(daily_report_group_id: @cur_user.groups.in_group(@cur_site).pluck(:id))
         criteria = criteria.where(year: @cur_site.fiscal_year)
       end
       criteria = criteria.readable(@cur_user, site: @cur_site)

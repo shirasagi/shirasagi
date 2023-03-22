@@ -3,7 +3,6 @@
     background-color: #ffe9b7;
   }
   .share-value {
-    margin-top: 1em;
     color: #38c;
     font-weight: bold;
   }
@@ -11,17 +10,22 @@
 
 .gws-daily-report-box {
   .add-plan {
-    margin-left: 8px;
-    padding: 2px 5px;
-    border-radius: 4px;
-    background-color: #f40;
-    color: #fff;
-    font-size: 95%;
-    font-weight: normal;
-    text-decoration: none;
-    &:hover {
-      background-color: #f60;
-    }
+    display: inline-flex;
+    margin-left: 0;
+    padding: 0;
+    background-color: transparent;
+  }
+  .comment-link {
+    display: inline-flex;
+    margin-left: 5px;
+  }
+  .comment-value {
+    margin-top: 1em;
+    padding-left: 1em;
+  }
+  .editicon {
+    color: #f25a38;
+    cursor: pointer;
   }
   .limited-access {
     color: #f40;
@@ -29,11 +33,17 @@
   .list-head-action {
     float: none;
   }
+  .report-value {
+    display: inline;
+  }
+  .report-value-wrap {
+    display: inline-flex;
+    min-width: 10em;
+  }
   .share-cell {
     background-color: #ffe9b7;
   }
   .share-value {
-    margin-top: 1em;
     color: #38c;
     font-weight: bold;
   }
@@ -83,7 +93,6 @@
 
 .gws-daily-report-print {
   .share-value {
-    margin-top: 1em;
     font-weight: bold;
   }
   table.index {

@@ -84,6 +84,11 @@ class Gws::DailyReport::UserReports::CommentsController < ApplicationController
     raise e
   end
 
+  def pre_params
+    @skip_default_group = true
+    super
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, report: @report }
   end
