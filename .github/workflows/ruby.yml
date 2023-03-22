@@ -45,12 +45,17 @@ jobs:
         run: docker pull osixia/openldap
       - name: Start Shirasagi Mail
         run: |
-          docker pull ghcr.io/shirasagi/mail
+          docker pull ghcr.io/shirasagi/mail:latest
+          docker tag ghcr.io/shirasagi/mail:latest shirasagi/mail:latest
           docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
       - name: Prepare Michecker
-        run: docker pull ghcr.io/shirasagi/michecker
+        run: |
+          docker pull ghcr.io/shirasagi/michecker:latest
+          docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
       - name: Prepare Elasticsearch
-        run: docker pull ghcr.io/shirasagi/elasticsearch
+        run: |
+          docker pull ghcr.io/shirasagi/elasticsearch:latest
+          docker tag ghcr.io/shirasagi/elasticsearch:latest shirasagi/elasticsearch:latest
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
