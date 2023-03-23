@@ -14,7 +14,7 @@
   <% end %>
 </div>
 
-<section class="main-box gws-daily-report-box">
+<section class="main-box gws-daily-report-box share-view">
   <header>
     <h2>
       <%= @group.trailing_name %>
@@ -35,34 +35,44 @@
   <div class="table-wrap">
     <table class="index">
       <tbody>
-      <% @items.where(form_id: @forms.first.try(:id)).each do |report| %>
-        <% next if report.share_small_talk.blank? && report.share_column_ids.blank? %>
+      <% (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date| %>
         <tr>
-          <td><%= link_to I18n.l(report.daily_report_date.to_date, format: :short), gws_daily_report_user_reports_path(user: report.user_id) %></td>
-          <td><%= t("date.abbr_day_names")[report.daily_report_date.wday] %></td>
-          <td><%= gws_public_user_long_name(report.user.long_name) %></td>
-          <% if report.share_small_talk.present? %>
-            <td class="share-cell">
-              <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-              <div class="report-value-wrap">
-                <div class="report-value">【<%= @model.t(:small_talk) %>】<%= br report.small_talk %></div>
-              </div>
-              <% report.column_comments('small_talk').each do |comment| %>
-                <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
-              <% end %>
-            </td>
-          <% end %>
-          <% report.column_values.each do |column_value| %>
-            <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
+          <td><%= I18n.l(date.to_date, format: :short) %></td>
+          <td><%= t("date.abbr_day_names")[date.wday] %></td>
+          <% @items.where(form_id: @forms.first.try(:id), daily_report_date: date).each do |report| %>
+            <% if report.share_small_talk.present? %>
               <td class="share-cell">
-                <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-                <div class="report-value-wrap">
-                  <div class="report-value">【<%= column_value.column.try(:name) %>】<%= br column_value.value %></div>
+                <div class="share-cell-in">
+                  <div class="user-name"><%= gws_public_user_long_name(report.user.long_name) %></div>
+                  <div class="report-value-wrap">
+                    <div class="report-value">
+                      <div class="report-name">【<%= @model.t(:small_talk) %>】</div>
+                      <%= br report.small_talk %>
+                    </div>
+                  </div>
+                  <% report.column_comments('small_talk').each do |comment| %>
+                    <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+                  <% end %>
                 </div>
-                <% report.column_comments(column_value.column_id).each do |comment| %>
-                  <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
-                <% end %>
               </td>
+            <% end %>
+            <% report.column_values.each do |column_value| %>
+              <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
+                <td class="share-cell">
+                  <div class="share-cell-in">
+                    <div class="user-name"><%= gws_public_user_long_name(report.user.long_name) %></div>
+                    <div class="report-value-wrap">
+                      <div class="report-value">
+                        <div class="report-name">【<%= column_value.column.try(:name) %>】</div>
+                        <%= br column_value.value %>
+                      </div>
+                    </div>
+                    <% report.column_comments(column_value.column_id).each do |comment| %>
+                      <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+                    <% end %>
+                  </div>
+                </td>
+              <% end %>
             <% end %>
           <% end %>
         </tr>

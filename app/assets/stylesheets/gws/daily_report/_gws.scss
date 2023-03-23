@@ -17,6 +17,7 @@
   }
   .comment-link {
     display: inline-flex;
+    flex-direction: row-reverse;
     margin-left: 5px;
   }
   .comment-value {
@@ -37,7 +38,8 @@
     display: inline;
   }
   .report-value-wrap {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     min-width: 10em;
   }
   .share-cell {
@@ -46,6 +48,22 @@
   .share-value {
     color: #38c;
     font-weight: bold;
+  }
+  &.share-view {
+    .share-cell {
+      background: none;
+      .share-cell-in {
+        padding: 10px;
+        background-color: #ffe9b7;
+        .user-name {
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+        .report-name {
+          display: block;
+        }
+      }
+    }
   }
   .table-wrap {
     overflow-x: scroll;

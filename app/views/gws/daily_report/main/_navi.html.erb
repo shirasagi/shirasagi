@@ -3,7 +3,7 @@
   <h3><%= link_to t('gws/daily_report.daily_report_list'), gws_daily_report_reports_path(year_month: (@cur_month || Time.zone.now).strftime('%Y%m')), class: "navi-icon" %></h3>
   <h3><%= link_to t('gws/daily_report.individual'), gws_daily_report_user_reports_path(year_month: (@cur_month || Time.zone.now).strftime('%Y%m'), user: @cur_user), class: "navi-icon" %></h3>
   <h3><%= link_to t('gws/daily_report.department'), gws_daily_report_group_reports_path(ymd: (@cur_date || Time.zone.now).strftime('%Y%m%d'), group: @cur_group), class: "navi-icon" %></h3>
-  <h3><%= link_to t('gws/daily_report.shared'), gws_daily_report_group_share_reports_path(year_month: (@cur_month || Time.zone.now).strftime('%Y%m'), group: @cur_group), class: "navi-icon" %></h3>
+  <h3><%= link_to t('gws/daily_report.shared_view'), gws_daily_report_group_share_reports_path(year_month: (@cur_month || Time.zone.now).strftime('%Y%m'), group: @cur_group), class: "navi-icon" %></h3>
 
   <% if Gws::DailyReport::Form.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to Gws::DailyReport::Form.model_name.human, gws_daily_report_forms_path, class: "management" %></h3>

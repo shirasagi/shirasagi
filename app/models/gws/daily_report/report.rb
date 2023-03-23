@@ -64,8 +64,8 @@ class Gws::DailyReport::Report
       Gws::DailyReport::GroupReportEnumerator.new(site, user, group, all, options)
     end
 
-    def group_share_csv(site: nil, user: nil, group: nil, encoding: "UTF-8")
-      Gws::DailyReport::GroupShareReportEnumerator.new(site, user, group, all, encoding: encoding)
+    def group_share_csv(site: nil, user: nil, group: nil, month: Time.zone.today.beginning_of_month, encoding: "UTF-8")
+      Gws::DailyReport::GroupShareReportEnumerator.new(site, user, group, month, all, encoding: encoding)
     end
 
     def collect_attachments

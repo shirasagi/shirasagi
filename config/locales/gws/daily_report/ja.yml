@@ -8,6 +8,7 @@ ja:
     edit_daily_report: 業務日報を編集
     individual: 個人
     shared: 部署で共有
+    shared_view: 共有表示
     wday: 曜日
     buttons:
       save_and_categorize: 保存してカテゴリーを設定する

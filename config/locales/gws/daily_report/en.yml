@@ -8,6 +8,7 @@ en:
     edit_daily_report: Edit business daily report
     individual: Individual
     shared: Shared by department
+    shared_view: Shared view
     wday: Day of the week
     buttons:
       save_and_categorize: Save and categorize

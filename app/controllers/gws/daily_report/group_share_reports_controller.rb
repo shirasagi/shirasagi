@@ -21,7 +21,7 @@ class Gws::DailyReport::GroupShareReportsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [@cur_site.menu_daily_report_label || t("gws/daily_report.individual"), action: :index]
+    @crumbs << [@cur_site.menu_daily_report_label || t("gws/daily_report.shared_view"), action: :index]
   end
 
   def set_group
@@ -33,8 +33,7 @@ class Gws::DailyReport::GroupShareReportsController < ApplicationController
     @forms ||= begin
       criteria = Gws::DailyReport::Form.site(@cur_site)
       criteria = criteria.readable(@cur_user, site: @cur_site)
-      criteria = criteria.in(daily_report_group_id: @cur_group.id)
-      criteria = criteria.where(year: @cur_site.fiscal_year)
+      criteria = criteria.where(year: @cur_site.fiscal_year, daily_report_group_id: @group.id)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
@@ -152,7 +151,7 @@ class Gws::DailyReport::GroupShareReportsController < ApplicationController
     filename = "daily_report_group_share_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
     encoding = "UTF-8"
     send_enum(
-      @items.group_share_csv(site: @cur_site, user: @cur_user, group: @cur_group, encoding: encoding),
+      @items.group_share_csv(site: @cur_site, user: @cur_user, group: @cur_group, month: @cur_month, encoding: encoding),
       type: "text/csv; charset=#{encoding}", filename: filename
     )
   end

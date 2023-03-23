@@ -1,8 +1,9 @@
 class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
-  def initialize(site, user, group, reports, encoding: "UTF-8")
+  def initialize(site, user, group, month, reports, encoding: "UTF-8")
     @cur_site = site
     @cur_user = user
     @cur_group = group
+    @cur_month = month
     @reports = reports.dup
     @encoding = encoding
 
@@ -11,9 +12,8 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
       build_term_handlers
 
       yielder << bom
-      @reports.each do |report|
-        next if report.share_small_talk.blank? && report.share_column_ids.blank?
-        enum_report(yielder, report.daily_report_date.try(:to_date), report)
+      (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date|
+        enum_reports(yielder, date, @reports.and_date(date))
       end
     end
   end
@@ -56,12 +56,13 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
     end
   end
 
-  def enum_report(yielder, date, report)
+  def enum_reports(yielder, date, reports)
     row = []
     row << I18n.l(date, format: :short)
     row << I18n.t("date.abbr_day_names")[date.wday]
-    row << report.user.try(:name)
-    row << base_infos(report).select(&:present?)
+    reports.each do |report|
+      row << base_infos(report).select(&:present?)
+    end
     yielder << encode(row.flatten.to_csv)
   end
 
@@ -80,7 +81,8 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
   def to_small_talk(report)
     text = []
     if report.share_small_talk.present?
-      text << I18n.t('gws/daily_report.shared')
+      text << report.user.try(:name)
+      text << "【#{@model.t(:small_talk)}】"
       text << report.small_talk
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
@@ -97,7 +99,8 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
 
     text = []
     if report.share_column_ids.include?(column.id.to_s)
-      text << I18n.t('gws/daily_report.shared')
+      text << report.user.try(:name)
+      text << "【#{column.try(:name)}】"
       text << column_value.value
       report.column_comments(column.id).each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
