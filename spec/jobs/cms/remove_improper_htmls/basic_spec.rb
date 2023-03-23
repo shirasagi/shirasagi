@@ -20,8 +20,16 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   let!(:cms_page3) { create :cms_page, cur_site: site, cur_node: event_node }
   let!(:cms_page4) { create :cms_page, cur_site: site, cur_node: faq_node }
 
-  before { Fs.rm_rf site.path }
-  after { Fs.rm_rf site.path }
+  let(:email) { "sample@example.jp" }
+
+  before do
+    Fs.rm_rf site.path
+    ActionMailer::Base.deliveries.clear
+  end
+  after do
+    Fs.rm_rf site.path
+    ActionMailer::Base.deliveries.clear
+  end
 
   def generate_htmls
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
@@ -143,6 +151,43 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
+    end
+
+    it "#perform with email option" do
+      generate_htmls
+      set_improper_htmls
+
+      expectation = expect { described_class.bind(site_id: site).perform_now(email: email) }
+      expectation.to output(
+        include(
+          site.name,
+          "remove #{article_page1.path}",
+          "remove #{event_page1.path}",
+          "remove #{cms_page1.path}",
+          "remove #{cms_page2.path}",
+          "remove #{faq_page1.path}"
+        )).to_stdout
+
+      expect(File.exists?(article_page1.path)).to be false
+      expect(File.exists?(event_page1.path)).to be false
+      expect(File.exists?(cms_page1.path)).to be false
+      expect(File.exists?(cms_page2.path)).to be false
+      expect(File.exists?(faq_page1.path)).to be false
+
+      log = Job::Log.first
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.last
+      body = mail.body.decoded
+      expect(mail.to).to eq [email]
+      expect(body).to include("[5 errors]")
+      expect(body).to include("remove #{article_page1.path}")
+      expect(body).to include("remove #{event_page1.path}")
+      expect(body).to include("remove #{cms_page1.path}")
+      expect(body).to include("remove #{cms_page2.path}")
+      expect(body).to include("remove #{faq_page1.path}")
     end
   end
 end
