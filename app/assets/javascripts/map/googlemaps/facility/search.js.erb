@@ -14,12 +14,14 @@ this.Facility_Search = (function () {
       columnTop = column.offset().top;
       indexTop = column.closest("#map-sidebar").offset().top;
       scrolled = column.closest("#map-sidebar").scrollTop();
-      return column.closest("#map-sidebar").animate({
+      column.closest("#map-sidebar").animate({
         scrollTop: columnTop - indexTop + scrolled
       }, 'fast');
     };
+
     //setup map
     Googlemaps_Map.load(selector, opts);
+
     //setup markers
     overrided = Googlemaps_Map.attachMessage;
     Googlemaps_Map.attachMessage = function (id) {
@@ -29,14 +31,17 @@ this.Facility_Search = (function () {
         $("#map-sidebar .column").removeClass("current");
         dataID = Googlemaps_Map.markers[id]["id"];
         column = $('#map-sidebar .column[data-id="' + dataID + '"]');
-        column.addClass("current");
-        return slideSidebar(column);
+        if (column.length) {
+          column.addClass("current");
+          slideSidebar(column);
+        }
       });
-      return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
-        return $("#map-sidebar .column").removeClass("current");
+      google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+        $("#map-sidebar .column").removeClass("current");
       });
     };
     Googlemaps_Map.setMarkers(markers, { markerCluster: opts['markerCluster'] });
+
     //setup sidebar
     $("#map-sidebar .column .click-marker").on("click", function () {
       var dataID;
@@ -55,7 +60,6 @@ this.Facility_Search = (function () {
             if (cluster) {
               m["window"].setPosition(cluster.getMarkers()[0].position);
               m["window"].pixelOffset = new google.maps.Size(0, -15);
-              console.log(cluster)
             }
           }
 
@@ -73,6 +77,7 @@ this.Facility_Search = (function () {
 
       return false;
     });
+
     //setup category filter
     $(".filters a").on("click", function () {
       var dataIDs;
@@ -94,11 +99,13 @@ this.Facility_Search = (function () {
         column = $('#map-sidebar .column[data-id="' + dataID + '"]');
         if (visible) {
           Googlemaps_Map.markers[id]["marker"].setVisible(true);
-          return column.show();
+          column.show();
         } else {
           Googlemaps_Map.markers[id]["marker"].setVisible(false);
-          Googlemaps_Map.markers[id]["window"].close();
-          return column.hide();
+          if (Googlemaps_Map.markers[id]["window"]) {
+            Googlemaps_Map.markers[id]["window"].close();
+          }
+          column.hide();
         }
       });
 
@@ -122,11 +129,12 @@ this.Facility_Search = (function () {
       }
       return false;
     });
+
     //setup location filter
-    return $(".filters .focus").on("change", function () {
+    $(".filters .focus").on("change", function () {
       var select;
       select = $(this);
-      return select.find("option:selected").each(function () {
+      select.find("option:selected").each(function () {
         var latlng, loc, zoomLevel;
         if ($(this).val() === "") {
           return false;
@@ -138,7 +146,19 @@ this.Facility_Search = (function () {
         if (zoomLevel) {
           Googlemaps_Map.map.setZoom(parseInt(zoomLevel));
         }
-        return select.val("");
+        select.val("");
+      });
+    });
+
+    //click selected category
+    $('.map-search-condition .category-settings').each(function() {
+      var settings = $(this).attr('data-category-settings');
+      if (!settings) return false;
+      $('.map-search-index .filters a').each(function() {
+        var $btn = $(this);
+        if (!settings.includes($btn.text())) {
+          $btn.click();
+        }
       });
     });
   };
