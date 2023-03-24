@@ -14,6 +14,12 @@ class Cms::RemoveImproperHtmlsJob < Cms::ApplicationJob
     @dry_run.present?
   end
 
+  def ignore_path?(path)
+    @ignore_paths ||= SS.config.remove_improper_htmls.ignore_paths
+    path = path.delete_prefix(site.root_path + "/")
+    @ignore_paths.find { |ignore_path| path == ignore_path || path.start_with?(ignore_path + "/") }.present?
+  end
+
   def perform(opts = {})
     @dry_run = opts[:dry_run].presence
     @email = opts[:email].presence
@@ -21,6 +27,11 @@ class Cms::RemoveImproperHtmlsJob < Cms::ApplicationJob
 
     @errors = []
     public_html_paths(site) do |path|
+      if ignore_path?(path)
+        put_error("skip #{path}")
+        next
+      end
+
       cur_main_path = format_cur_paths(path)
       if check_as_page(cur_main_path) || check_as_node(cur_main_path)
         next
