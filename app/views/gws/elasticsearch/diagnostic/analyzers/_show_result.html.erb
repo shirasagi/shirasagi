@@ -1,0 +1,33 @@
+<%
+  return unless @result
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+
+<%= tag.div id: "#{addon[:id]}-frame" do %>
+  <table class="index">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Token</th>
+      <th>Start Offset</th>
+      <th>End Offset</th>
+      <th>Type</th>
+      <th>Position</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @result["tokens"].each_with_index do |token, index| %>
+    <tr data-index="<%= index %>">
+      <th>#<%= index + 1 %></th>
+      <th><%= token["token"] %></th>
+      <th><%= token["start_offset"] %></th>
+      <th><%= token["end_offset"] %></th>
+      <th><%= token["type"] %></th>
+      <th><%= token["position"] %></th>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <script type="application/json"><%== JSON.pretty_generate(@result) %></script>
+<% end %>

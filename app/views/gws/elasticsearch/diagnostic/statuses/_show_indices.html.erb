@@ -1,0 +1,8 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  result = @cur_site.elasticsearch_client.indices.get(index: "g#{@cur_site.id}") rescue nil
+  return unless result
+%>
+<%= tag.div id: "#{addon[:id]}-frame" do %>
+  <pre class="gws-elasticsearch-json-view"><%== JSON.pretty_generate(result) %></pre>
+<% end %>
