@@ -7,7 +7,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
     @encoding = options[:encoding].presence || "UTF-8"
     @export_target = options[:export_target].presence || 'all'
     users = Gws::User.site(@cur_site).where(group_ids: @cur_group.id)
-    if @cur_site.fiscal_year(reports.first.try(:daily_report_date)) != @cur_site.fiscal_year
+    if @cur_site.fiscal_year(@reports.first.try(:daily_report_date).presence || Time.zone.now) != @cur_site.fiscal_year
       users = users.where(id: @cur_user.id)
     end
 
@@ -47,7 +47,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
 
   def build_term_handlers
     @handlers = []
-    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
+    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site) && @export_target == 'all'
       @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
     end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }
@@ -100,7 +100,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
       end
-    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month && @export_target == 'all') ||
+    elsif (report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all') ||
           report.user_id == @cur_user.id
       text << report.small_talk
       report.column_comments('small_talk').each do |comment|
