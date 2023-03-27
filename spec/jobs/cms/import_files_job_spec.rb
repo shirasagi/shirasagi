@@ -2,21 +2,15 @@ require 'spec_helper'
 
 describe Cms::ImportFilesJob, dbscope: :example do
   let!(:site) { cms_site }
-  let!(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
-  let!(:name) { "sample-#{unique_id}" }
   let!(:import_job_file) do
     create(:cms_import_job_file, site: site, name: name, basename: name, in_file: in_file)
   end
 
-  describe "#perform" do
-    before do
-      expected_files = [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ]
-      expect do
-        described_class.bind(site_id: site).perform_now
-      end.to output(include(*expected_files)).to_stdout
-    end
-
+  shared_examples "perform import from zip" do
     it do
+      expectation = expect { described_class.bind(site_id: site).perform_now }
+      expectation.to output(include(*expected_files)).to_stdout
+
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).not_to include(/INFO -- : .* error:/)
@@ -45,5 +39,21 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
       expect(Cms::ImportJobFile.count).to eq 0
     end
+  end
+
+  context "zip file contain root directory" do
+    let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+    let(:name) { "site" }
+    let(:expected_files) { [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ] }
+
+    it_behaves_like "perform import from zip"
+  end
+
+  context "zip file not contain root directory" do
+    let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
+    let(:name) { "site2" }
+    let(:expected_files) { [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ] }
+
+    it_behaves_like "perform import from zip"
   end
 end

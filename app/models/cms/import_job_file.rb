@@ -84,10 +84,11 @@ class Cms::ImportJobFile
       attribute = error.attribute
       message = error.message
 
-      if attribute == :filename
+      case attribute
+      when :filename
         @import_logs << "error: #{import_filename} #{message}"
         self.errors.add :base, "#{item.filename} #{message}"
-      elsif attribute == :name
+      when :name
         @import_logs << "error: #{import_filename} #{message}"
         self.errors.add :base, "#{import_filename} #{message}"
       else
@@ -103,12 +104,11 @@ class Cms::ImportJobFile
       archive.each do |entry|
         next if entry.name.start_with?('__MACOSX')
 
-        fname = entry.name.force_encoding("utf-8").scrub.split(/\//)
-        fname.shift # remove root folder
-        fname = fname.join('/')
-        next if fname.blank?
+        filename = entry.name.force_encoding("utf-8").scrub
+        filename = filename.delete_prefix("#{node.filename}/") # remove root folder
+        next if filename.blank?
 
-        import_filename = "#{node.filename}/#{fname}"
+        import_filename = "#{node.filename}/#{filename}"
         import_filename = import_filename.sub(/\/$/, "")
 
         if entry.directory?
