@@ -44,7 +44,9 @@ describe Cms::ImportFilesJob, dbscope: :example do
   context "zip file contain root directory" do
     let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
     let(:name) { "site" }
-    let(:expected_files) { [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ] }
+    let(:expected_files) do
+      [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ]
+    end
 
     it_behaves_like "perform import from zip"
   end
@@ -52,7 +54,9 @@ describe Cms::ImportFilesJob, dbscope: :example do
   context "zip file not contain root directory" do
     let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
     let(:name) { "site2" }
-    let(:expected_files) { [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ] }
+    let(:expected_files) do
+      [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ]
+    end
 
     it_behaves_like "perform import from zip"
   end

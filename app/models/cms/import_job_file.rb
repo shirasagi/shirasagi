@@ -103,6 +103,7 @@ class Cms::ImportJobFile
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
         next if entry.name.start_with?('__MACOSX')
+        next if entry.name.start_with?('.DS_Store')
 
         filename = entry.name.force_encoding("utf-8").scrub
         filename = filename.delete_prefix("#{node.filename}/") # remove root folder
