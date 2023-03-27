@@ -82,7 +82,7 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
     text = []
     if report.share_small_talk.present?
       text << report.user.try(:name)
-      text << "【#{@model.t(:small_talk)}】"
+      text << "【#{report.t(:small_talk)}】"
       text << report.small_talk
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
