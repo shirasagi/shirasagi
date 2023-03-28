@@ -3,10 +3,10 @@ module Cms::Lgwan
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def delegate_lgwan_inweb(name)
-        alias_method "#{name}_in_lgcms", name
+      def delegate_lgwan_in_web(name)
+        alias_method "#{name}_in_cms", name
         define_method(name) do |*args|
-          SS::Lgwan.inweb? ? send("#{name}_in_inweb", *args) : send("#{name}_in_lgcms", *args)
+          SS::Lgwan.web? ? send("#{name}_in_web", *args) : send("#{name}_in_cms", *args)
         end
       end
     end

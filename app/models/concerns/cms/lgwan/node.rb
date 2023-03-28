@@ -4,16 +4,16 @@ module Cms::Lgwan
     include Cms::Lgwan::Base
 
     included do
-      delegate_lgwan_inweb :rename_children_files
-      delegate_lgwan_inweb :remove_owned_files
-      delegate_lgwan_inweb :remove_all
+      delegate_lgwan_in_web :rename_children_files
+      delegate_lgwan_in_web :remove_owned_files
+      delegate_lgwan_in_web :remove_all
     end
 
-    def rename_children_files_in_inweb(src, dst)
+    def rename_children_files_in_web(src, dst)
       Uploader::JobFile.new_job(site_id: site.id).bind_rm([src]).save_job
     end
 
-    def remove_owned_files_in_inweb
+    def remove_owned_files_in_web
       return if !Dir.exist?(path)
 
       fullnames = []
@@ -30,7 +30,7 @@ module Cms::Lgwan
       Uploader::JobFile.new_job(site_id: site.id).bind_rm(fullnames).save_job
     end
 
-    def remove_all_in_inweb
+    def remove_all_in_web
       src = path.delete_prefix("#{Rails.root}/")
       Uploader::JobFile.new_job(site_id: site.id).bind_rm([src]).save_job
     end

@@ -18,14 +18,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     SS.config.replace_value_at(:lgwan, :mode, @save_config)
   end
 
-  def with_lgcms
-    SS.config.replace_value_at(:lgwan, :mode, "lgcms")
+  def with_lgwan_cms
+    SS.config.replace_value_at(:lgwan, :mode, "cms")
     yield
     SS.config.replace_value_at(:lgwan, :mode, @save_config)
   end
 
-  def with_inweb
-    SS.config.replace_value_at(:lgwan, :mode, "inweb")
+  def with_lgwan_web
+    SS.config.replace_value_at(:lgwan, :mode, "web")
     yield
     SS.config.replace_value_at(:lgwan, :mode, @save_config)
   end
@@ -36,19 +36,17 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     end
   end
 
-  context "inweb" do
-    before { SS.config.replace_value_at(:lgwan, :mode, "inweb") }
-
+  context "lgwan web" do
     context "page" do
       it "save and upate" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be false
         end
 
-        with_inweb do
+        with_lgwan_web do
           expect(enqueued_jobs.size).to eq 0
           item.name = name
           item.update!
@@ -59,14 +57,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "rename" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be false
         end
 
-        with_inweb do
+        with_lgwan_web do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
 
@@ -83,14 +81,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "close" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be false
         end
 
-        with_inweb do
+        with_lgwan_web do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
 
@@ -105,14 +103,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "remove" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be false
         end
 
-        with_inweb do
+        with_lgwan_web do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
 
@@ -127,19 +125,17 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     end
   end
 
-  context "lgcms" do
-    before { SS.config.replace_value_at(:lgwan, :mode, "lgcms") }
-
+  context "lgwan cms" do
     context "page" do
       it "save and upate" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           expect(enqueued_jobs.size).to eq 0
           item.name = name
           item.update!
@@ -150,14 +146,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "rename" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
 
@@ -173,14 +169,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "close" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
 
@@ -194,14 +190,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "remove" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
           expect(::File.exist?(item.path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
 

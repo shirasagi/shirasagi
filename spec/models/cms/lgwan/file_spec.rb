@@ -22,14 +22,14 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     SS.config.replace_value_at(:lgwan, :mode, @save_config)
   end
 
-  def with_lgcms
-    SS.config.replace_value_at(:lgwan, :mode, "lgcms")
+  def with_lgwan_cms
+    SS.config.replace_value_at(:lgwan, :mode, "cms")
     yield
     SS.config.replace_value_at(:lgwan, :mode, @save_config)
   end
 
-  def with_inweb
-    SS.config.replace_value_at(:lgwan, :mode, "inweb")
+  def with_lgwan_web
+    SS.config.replace_value_at(:lgwan, :mode, "web")
     yield
     SS.config.replace_value_at(:lgwan, :mode, @save_config)
   end
@@ -40,10 +40,10 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     end
   end
 
-  context "inweb" do
+  context "lgwan web" do
     context "file in page" do
       it "save and upate" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
@@ -51,13 +51,13 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
           expect(::File.exist?(file.public_path)).to be false
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           job.perform_now
           expect(::File.exist?(item.path)).to be true
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_inweb do
+        with_lgwan_web do
           expect(enqueued_jobs.size).to eq 0
           item.name = name
           item.update!
@@ -69,7 +69,7 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "close" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
@@ -77,13 +77,13 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
           expect(::File.exist?(file.public_path)).to be false
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           job.perform_now
           expect(::File.exist?(item.path)).to be true
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_inweb do
+        with_lgwan_web do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
           dir = file.public_dir.delete_prefix("#{Rails.root}/")
@@ -98,7 +98,7 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "remove" do
-        with_inweb do
+        with_lgwan_web do
           node
           item
           expect(enqueued_jobs.size).to eq 0
@@ -106,13 +106,13 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
           expect(::File.exist?(file.public_path)).to be false
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           job.perform_now
           expect(::File.exist?(item.path)).to be true
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_inweb do
+        with_lgwan_web do
           path_was = item.path
           file_was = path_was.delete_prefix("#{Rails.root}/")
           dir = file.public_dir.delete_prefix("#{Rails.root}/")
@@ -127,10 +127,10 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     end
   end
 
-  context "lgcms" do
+  context "lgwan cms" do
     context "file in page" do
       it "save and upate" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
@@ -138,13 +138,13 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           job.perform_now
           expect(::File.exist?(item.path)).to be true
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_inweb do
+        with_lgwan_cms do
           expect(enqueued_jobs.size).to eq 0
           item.name = name
           item.update!
@@ -156,7 +156,7 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "close" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
@@ -164,13 +164,13 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           job.perform_now
           expect(::File.exist?(item.path)).to be true
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           path_was = item.path
           dir_was = file.public_dir
 
@@ -186,7 +186,7 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
       end
 
       it "remove" do
-        with_lgcms do
+        with_lgwan_cms do
           node
           item
           expect(enqueued_jobs.size).to eq 0
@@ -194,13 +194,13 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           job.perform_now
           expect(::File.exist?(item.path)).to be true
           expect(::File.exist?(file.public_path)).to be true
         end
 
-        with_lgcms do
+        with_lgwan_cms do
           path_was = item.path
           dir_was = file.public_dir
 

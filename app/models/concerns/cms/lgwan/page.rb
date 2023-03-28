@@ -4,18 +4,18 @@ module Cms::Lgwan
     include Cms::Lgwan::Base
 
     included do
-      delegate_lgwan_inweb :generate_file
-      delegate_lgwan_inweb :rename_file
-      delegate_lgwan_inweb :remove_file
+      delegate_lgwan_in_web :generate_file
+      delegate_lgwan_in_web :rename_file
+      delegate_lgwan_in_web :remove_file
 
       # after_remove_file
       if include?(Sitemap::Addon::Body)
-        delegate_lgwan_inweb :rename_sitemap_xml
-        delegate_lgwan_inweb :remove_sitemap_xml
+        delegate_lgwan_in_web :rename_sitemap_xml
+        delegate_lgwan_in_web :remove_sitemap_xml
       end
     end
 
-    def generate_file_in_inweb(opts = {})
+    def generate_file_in_web(opts = {})
       return false unless serve_static_file?
       return false unless public?
       return false unless public_node?
@@ -37,7 +37,7 @@ module Cms::Lgwan
       0
     end
 
-    def rename_file_in_inweb
+    def rename_file_in_web
       return unless @db_changes["filename"]
       return unless @db_changes["filename"][0]
 
@@ -49,7 +49,7 @@ module Cms::Lgwan
       end
     end
 
-    def remove_file_in_inweb
+    def remove_file_in_web
       src = "#{site.path}/#{filename}"
       src = src.delete_prefix("#{Rails.root}/")
       run_callbacks :remove_file do
@@ -59,13 +59,13 @@ module Cms::Lgwan
     end
 
     # after_remove_file
-    def remove_sitemap_xml_in_inweb
+    def remove_sitemap_xml_in_web
       file = sitemap_xml_path
       file = file.delete_prefix("#{Rails.root}/")
       Uploader::JobFile.new_job(site_id: site.id).bind_rm([file]).save_job
     end
 
-    def rename_sitemap_xml_in_inweb
+    def rename_sitemap_xml_in_web
       src = "#{site.path}/#{@db_changes['filename'][0]}"
       src = src.sub(/\.[^\/]+$/, ".xml")
       src = src.delete_prefix("#{Rails.root}/")

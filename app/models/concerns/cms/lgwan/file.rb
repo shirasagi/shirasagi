@@ -4,14 +4,14 @@ module Cms::Lgwan
     include Cms::Lgwan::Base
 
     included do
-      delegate_lgwan_inweb :generate_public_file
-      delegate_lgwan_inweb :remove_public_file
+      delegate_lgwan_in_web :generate_public_file
+      delegate_lgwan_in_web :remove_public_file
     end
 
-    def generate_public_file_in_inweb
+    def generate_public_file_in_web
     end
 
-    def remove_public_file_in_inweb
+    def remove_public_file_in_web
       dir = public_dir
       return if dir.blank?
       dir = dir.delete_prefix("#{Rails.root}/")

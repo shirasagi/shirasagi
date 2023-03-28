@@ -2,8 +2,8 @@
 
 production: &production
   # LGWAN mode.
-  # inweb ... internet segment of lgwan
-  # lgcms ... lgwan segment
+  # web ... internet segment of lgwan
+  # cms ... lgwan segment
   mode:
 
   # copy private files from GATEWAY Segment.
