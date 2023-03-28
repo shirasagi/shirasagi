@@ -205,6 +205,7 @@ en:
       division_after_blank: The first split destination has not been entered.
       add_after_blank: The new destination has not been entered.
       malformed_duration: Mulformed period.
+      malformed_color: Mulformed color.
       password_short: must be at least 10 characters long
       password_short_upcase: must be at least 10 uppercase alphabetical characters (A-Z).
       password_short_downcase: must be at least 10 lowercase alphabetical characters (A-Z).
