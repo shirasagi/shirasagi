@@ -206,6 +206,11 @@ def unique_email
   "#{unique_id}@example.jp"
 end
 
+def unique_color
+  @random_color ||= SS::RandomColor.new
+  @random_color.next.to_rgb.to_s
+end
+
 def ss_japanese_text(length: 10, separator: '')
   @japanese_chars ||= begin
     hiragana = ('あ'..'ん').to_a
