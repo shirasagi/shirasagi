@@ -16,7 +16,9 @@ class Gws::Contrast
   validates :name, presence: true, length: { maximum: 40 }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :text_color, presence: true, if: -> { state == 'public' }
+  validates :text_color, "ss/color" => true
   validates :color, presence: true, if: -> { state == 'public' }
+  validates :color, "ss/color" => true
 
   scope :and_public, ->(_date = nil){ where state: 'public' }
 

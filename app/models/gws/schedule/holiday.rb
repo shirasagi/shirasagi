@@ -18,7 +18,7 @@ class Gws::Schedule::Holiday
 
   permit_params :color
 
-  validates :color, presence: true
+  validates :color, presence: true, "ss/color" => true
 
   def readable?(user, opts = {})
     true
