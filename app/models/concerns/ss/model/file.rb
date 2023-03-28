@@ -459,6 +459,7 @@ module SS::Model::File
   end
 
   def rename_file
+    return if new_record?
     return if !filename_changed? && !name_changed?
     remove_public_file if site
   end
