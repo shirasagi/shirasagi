@@ -1,9 +1,5 @@
 <div class="operations">
-  <% if @model.allowed?(:manage_all, @cur_user, site: @cur_site) || @model.allowed?(:manage_private, @cur_user, site: @cur_site) %>
-    <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all), model: @model, class: "btn btn-download btn-list-head-action", method: "get" %>
-  <% else %>
-    <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all), model: @model, class: "btn btn-download btn-list-head-action", method: "post", confirm: t("ss.confirm.download") %>
-  <% end %>
+  <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download_all), model: @model, class: "btn btn-download btn-list-head-action", method: "get" %>
   <%= ss_button_to t('ss.buttons.print'), url_for(action: :print), model: @model, class: "btn btn-print btn-list-head-action", method: "get" %>
 </div>
 

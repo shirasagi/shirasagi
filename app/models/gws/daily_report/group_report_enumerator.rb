@@ -100,8 +100,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
       end
-    elsif (report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all') ||
-          report.user_id == @cur_user.id
+    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all'
       text << report.small_talk
       report.column_comments('small_talk').each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
@@ -123,8 +122,7 @@ class Gws::DailyReport::GroupReportEnumerator < Enumerator
       report.column_comments(column.id).each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"
       end
-    elsif (report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all') ||
-          report.user_id == @cur_user.id
+    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @export_target == 'all'
       text << column_value.value
       report.column_comments(column.id).each do |comment|
         text << "#{comment.body}(#{comment.user.try(:name)})"

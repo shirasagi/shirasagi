@@ -218,7 +218,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
     set_items
 
     filename = "daily_report_group_csv_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
-    encoding = "Shift_JIS"
+    encoding = csv_params[:encoding]
     send_enum(
       @items.group_csv(site: @cur_site, user: @cur_user, group: @group, options: csv_params),
       type: "text/csv; charset=#{encoding}", filename: filename
