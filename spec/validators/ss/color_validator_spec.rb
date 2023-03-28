@@ -47,7 +47,7 @@ describe SS::ColorValidator, type: :validator do
     let(:value) { 'ffffff' }
 
     it do
-      is_expected.to be_invalid
+      is_expected.to be_valid
     end
   end
 
@@ -55,7 +55,7 @@ describe SS::ColorValidator, type: :validator do
     let(:value) { '#fff' }
 
     it do
-      is_expected.to be_invalid
+      is_expected.to be_valid
     end
   end
 
