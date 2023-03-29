@@ -17,8 +17,8 @@ $('.send .delete').on('click', function() {
       <div class="addon-body">
         <div class="index">
           <ul class="list-items">
-            <li class="list-item">
-              <% @selected_items.each do |item| %>
+            <% @selected_items.each do |item| %>
+              <li class="list-item">
                 <label class="check">
                   <%= f.check_box_tag 'ids[]', item.basename, checked: true %>
                 </label>
@@ -32,8 +32,8 @@ $('.send .delete').on('click', function() {
                     <span class="filename"><%= item.filename %></span>
                   </div>
                 </div>
-              <% end %>
-            </li>
+              </li>
+            <% end %>
           </ul>
         </div>
       </div>
