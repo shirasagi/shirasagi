@@ -1,6 +1,8 @@
 class ImageMap::Agents::Pages::PageController < ApplicationController
   include Cms::PageFilter::View
 
+  private
+
   def pages
     return public_pages unless @preview
     preview_pages

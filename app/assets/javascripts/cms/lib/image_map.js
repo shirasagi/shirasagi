@@ -8,7 +8,7 @@ this.Cms_Image_Map_Area_Cropper = (function () {
     this.$image = this.$el.find(".image-warp img");
     this.readonly = opts["readonly"];
     this.render();
-  };
+  }
 
   Cms_Image_Map_Area_Cropper.prototype.render = function () {
     var self = this;
@@ -19,10 +19,10 @@ this.Cms_Image_Map_Area_Cropper = (function () {
         zoomOnWheel: false,
         background: true,
         autoCrop: false,
-        ready: function(e) {
+        ready: function() {
           self.cropCurrentArea();
         },
-        cropmove: function(e) {
+        cropmove: function() {
           self.setCroppedArea();
         }
       }
