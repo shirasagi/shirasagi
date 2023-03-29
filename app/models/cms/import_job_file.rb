@@ -97,12 +97,11 @@ class Cms::ImportJobFile
   def import_from_zip(file)
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
-        next if entry.name.start_with?('__MACOSX')
-        next if entry.name.start_with?('.DS_Store')
-
         filename = entry.name.force_encoding("utf-8").scrub
         filename = filename.delete_prefix("#{root_node.basename}/") # remove root folder
         next if filename.blank?
+        next if filename.start_with?('__MACOSX')
+        next if filename.start_with?('.DS_Store')
 
         import_filename = "#{root_node.filename}/#{filename}"
         import_filename = import_filename.sub(/\/$/, "")

@@ -3,12 +3,17 @@ require 'spec_helper'
 describe Cms::ImportFilesJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:import_job_file) do
-    create(:cms_import_job_file, site: site, name: name, basename: name, in_file: in_file)
+    create(:cms_import_job_file, cur_site: site, cur_node: node,
+      name: dir, basename: dir, in_file: in_file)
   end
 
   shared_examples "perform import from zip" do
+    let(:expected_files) do
+      %w(index.html article/page.html css/style.css img/logo.jpg).map { |file| ::File.join(root, file) }
+    end
+
     it do
-      expectation = expect { described_class.bind(site_id: site).perform_now }
+      expectation = expect { described_class.bind(job_binding).perform_now }
       expectation.to output(include(*expected_files)).to_stdout
 
       log = Job::Log.first
@@ -19,45 +24,67 @@ describe Cms::ImportFilesJob, dbscope: :example do
       pages = Cms::ImportPage.all
       nodes = Cms::Node::ImportNode.all
       expect(pages.pluck(:name).sort).to eq %w(index.html page.html)
-      expect(pages.pluck(:filename).sort).to include("#{name}/article/page.html", "#{name}/index.html")
-      expect(nodes.pluck(:name).sort).to include("article", "css", "img", name)
-      expect(nodes.pluck(:filename).sort).to include(name, "#{name}/article", "#{name}/css", "#{name}/img")
+      expect(pages.pluck(:filename).sort).to include("#{root}/article/page.html", "#{root}/index.html")
+      expect(nodes.pluck(:name).sort).to include("article", "css", "img", dir)
+      expect(nodes.pluck(:filename).sort).to include(root, "#{root}/article", "#{root}/css", "#{root}/img")
 
       pages.each do |page|
         expect(page.html.present?).to eq true
         page.html.scan(/(href|src)="\/(.+?)"/) do
           path = $2
-          expect(path =~ /#{::Regexp.escape(name)}\//).to eq 0
+          expect(path =~ /#{::Regexp.escape(root)}\//).to eq 0
         end
       end
 
-      css_node = nodes.find_by(filename: "#{name}/css")
+      css_node = nodes.find_by(filename: "#{root}/css")
       expect(::File.exist?("#{css_node.path}/style.css")).to be_truthy
 
-      img_node = nodes.find_by(filename: "#{name}/img")
+      img_node = nodes.find_by(filename: "#{root}/img")
       expect(::File.exist?("#{img_node.path}/logo.jpg")).to be_truthy
 
       expect(Cms::ImportJobFile.count).to eq 0
     end
   end
 
-  context "zip file contain root directory" do
-    let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
-    let(:name) { "site" }
-    let(:expected_files) do
-      [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ]
+  context "root" do
+    let(:node) { nil }
+    let(:job_binding) { { site_id: site } }
+
+    context "zip file contain root directory" do
+      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+      let(:dir) { "site" }
+      let(:root) { "site" }
+
+      it_behaves_like "perform import from zip"
     end
 
-    it_behaves_like "perform import from zip"
+    context "zip file not contain root directory" do
+      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
+      let(:dir) { "site2" }
+      let(:root) { "site2" }
+
+      it_behaves_like "perform import from zip"
+    end
   end
 
-  context "zip file not contain root directory" do
-    let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
-    let(:name) { "site2" }
-    let(:expected_files) do
-      [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ]
+  context "node given" do
+    let!(:node) { create :article_node_page, cur_site: site }
+    let(:job_binding) { { site_id: site, node_id: node } }
+
+    context "zip file contain root directory" do
+      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+      let(:dir) { "site" }
+      let(:root) { "#{node.filename}/site" }
+
+      it_behaves_like "perform import from zip"
     end
 
-    it_behaves_like "perform import from zip"
+    context "zip file not contain root directory" do
+      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
+      let(:dir) { "site2" }
+      let(:root) { "#{node.filename}/site2" }
+
+      it_behaves_like "perform import from zip"
+    end
   end
 end
