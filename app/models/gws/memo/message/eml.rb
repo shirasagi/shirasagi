@@ -1,3 +1,5 @@
+require 'kconv'
+
 class Gws::Memo::Message
   module Eml
     module_function

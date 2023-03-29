@@ -1,3 +1,5 @@
+require 'kconv'
+
 class Webmail::MailPart
   attr_accessor :section, :part, :param, :disposition, :disposition_param, :data
 

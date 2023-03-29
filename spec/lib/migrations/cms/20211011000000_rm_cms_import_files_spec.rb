@@ -3,11 +3,14 @@ require Rails.root.join("lib/migrations/cms/20211011000000_rm_cms_import_files.r
 
 RSpec.describe SS::Migration20211011000000, dbscope: :example do
   let!(:site) { cms_site }
-  let!(:node) { create_once :cms_node_import_node, name: "import" }
   let!(:file) { "#{Rails.root}/spec/fixtures/cms/import/site.zip" }
+  let!(:name) { unique_id }
 
   let!(:job_file) do
-    job_file = Cms::ImportJobFile.new(site_id: site.id, node_id: node.id)
+    job_file = Cms::ImportJobFile.new
+    job_file.cur_site = site
+    job_file.name = name
+    job_file.basename = name
     job_file.import_date = 1.day.since
 
     Fs::UploadedFile.create_from_file(file) do |in_file|
