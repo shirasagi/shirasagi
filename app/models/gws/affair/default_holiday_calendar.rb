@@ -4,7 +4,7 @@ class Gws::Affair::DefaultHolidayCalendar
   attr_accessor :cur_site
 
   def name
-    I18n.t("gws/affair.options.holiday_type.system")
+    I18n.t("gws/affair.default_holiday_calendar")
   end
 
   # 休み
