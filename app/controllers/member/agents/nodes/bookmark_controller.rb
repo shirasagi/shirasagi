@@ -4,6 +4,7 @@ class Member::Agents::Nodes::BookmarkController < ApplicationController
   include Cms::PublicFilter::FindContent
 
   helper Member::BookmarkHelper
+  helper Member::MypageHelper
 
   protect_from_forgery except: [:register, :cancel]
 
