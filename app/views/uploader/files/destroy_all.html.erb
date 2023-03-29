@@ -1,0 +1,46 @@
+<%= jquery do %>
+$('.send .delete').on('click', function() {
+  var checkedCount = $('.list-item :checked').length;
+  if (checkedCount === 0){
+    alert("<%= I18n.t("errors.messages.plz_check_targets_to_delete") %>");
+    return false;
+  }
+});
+<% end %>
+<%= form_with url: request.url, method: :delete do |f| %>
+  <%= hidden_field_tag "destroy_all", true %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head">
+        <h2><%= t("ss.confirm.target_to_delete") %></h2>
+      </div>
+      <div class="addon-body">
+        <div class="index">
+          <ul class="list-items">
+            <% @selected_items.each do |item| %>
+              <li class="list-item">
+                <label class="check">
+                  <%= f.check_box_tag 'ids[]', item.basename, checked: true %>
+                </label>
+                <div class="info">
+                  <% if item.directory? %>
+                    <%= link_to item.name, { action: :file, filename: item.filename, do: :show }, { class: "list-item-title dir", target: "_blank", rel: "noopener" } %>
+                  <% else %>
+                    <%= link_to item.name, { action: :file, filename: item.filename, do: :show }, { class: "list-item-title dir", target: "_blank", rel: "noopener" } %>
+                  <% end %>
+                  <div class="meta">
+                    <span class="filename"><%= item.filename %></span>
+                  </div>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <footer class="send">
+      <%= f.submit t("ss.buttons.delete"), class: "btn-danger delete" %>
+      <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
+    </footer>
+  </div>
+<% end %>
