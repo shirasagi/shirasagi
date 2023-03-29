@@ -15,7 +15,6 @@ module Cms::ChildList
   def category_nodes
     @_child_list_category_nodes ||= begin
       items = Category::Node::Base.site(site).and_public
-      items = items.where(filename: /^#{::Regexp.escape(self.filename)}\//)
       items = items.where(self.condition_hash)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
@@ -44,7 +43,6 @@ module Cms::ChildList
   def child_nodes
     @_child_list_nodes ||= begin
       items = Cms::Node.site(site).and_public
-      items = items.where(filename: /^#{::Regexp.escape(self.filename)}\//)
       items = items.where(self.condition_hash)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
