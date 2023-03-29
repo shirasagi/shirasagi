@@ -27,5 +27,21 @@ class SS::Color
 
       SS::RandomColor::Rgb.new(numeric_red, numeric_green, numeric_blue)
     end
+
+    def brightness(color)
+      return if color.blank?
+
+      rgb = SS::Color.parse(color)
+      return unless rgb
+
+      ((rgb.red * 299) + (rgb.green * 587) + (rgb.blue * 114)).to_f / 1000
+    end
+
+    def text_color(color)
+      bgb = brightness(color)
+      return nil if bgb.blank?
+
+      (255 - bgb > bgb - 0) ? "#ffffff" : "#000000"
+    end
   end
 end

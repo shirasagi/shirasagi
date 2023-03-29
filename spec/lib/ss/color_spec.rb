@@ -87,4 +87,82 @@ describe SS::Color do
       end
     end
   end
+
+  describe ".brightness" do
+    context "with valid colors" do
+      it do
+        # 6-digit starting with '#'
+        expect(SS::Color.brightness("#000000")).to be_within(0.01).of(0)
+        expect(SS::Color.brightness("#ffffff")).to be_within(0.01).of(255)
+        expect(SS::Color.brightness("#ffffff".upcase)).to be_within(0.01).of(255)
+
+        # 3-digits starting with '#'
+        expect(SS::Color.brightness("#000")).to be_within(0.01).of(0)
+        expect(SS::Color.brightness("#fff")).to be_within(0.01).of(255)
+        expect(SS::Color.brightness("#fff".upcase)).to be_within(0.01).of(255)
+
+        # just 6-digit
+        expect(SS::Color.brightness("000000")).to be_within(0.01).of(0)
+        expect(SS::Color.brightness("ffffff")).to be_within(0.01).of(255)
+        expect(SS::Color.brightness("ffffff".upcase)).to be_within(0.01).of(255)
+
+        # just 3-digits
+        expect(SS::Color.brightness("000")).to be_within(0.01).of(0)
+        expect(SS::Color.brightness("fff")).to be_within(0.01).of(255)
+        expect(SS::Color.brightness("fff".upcase)).to be_within(0.01).of(255)
+      end
+    end
+
+    context "with invalid colors" do
+      it do
+        expect(SS::Color.brightness(nil)).to be_nil
+        expect(SS::Color.brightness("")).to be_nil
+        expect(SS::Color.brightness("z")).to be_nil
+        expect(SS::Color.brightness("zz")).to be_nil
+        expect(SS::Color.brightness("zzz")).to be_nil
+        expect(SS::Color.brightness("zzzz")).to be_nil
+        expect(SS::Color.brightness("zzzzz")).to be_nil
+        expect(SS::Color.brightness("zzzzzz")).to be_nil
+      end
+    end
+  end
+
+  describe ".text_color" do
+    context "with valid colors" do
+      it do
+        # 6-digit starting with '#'
+        expect(SS::Color.text_color("#000000")).to eq "#ffffff"
+        expect(SS::Color.text_color("#ffffff")).to eq "#000000"
+        expect(SS::Color.text_color("#ffffff".upcase)).to eq "#000000"
+
+        # 3-digits starting with '#'
+        expect(SS::Color.text_color("#000")).to eq "#ffffff"
+        expect(SS::Color.text_color("#fff")).to eq "#000000"
+        expect(SS::Color.text_color("#fff".upcase)).to eq "#000000"
+
+        # just 6-digit
+        expect(SS::Color.text_color("000000")).to eq "#ffffff"
+        expect(SS::Color.text_color("ffffff")).to eq "#000000"
+        expect(SS::Color.text_color("ffffff".upcase)).to eq "#000000"
+
+        # just 3-digits
+        expect(SS::Color.text_color("000")).to eq "#ffffff"
+        expect(SS::Color.text_color("fff")).to eq "#000000"
+        expect(SS::Color.text_color("fff".upcase)).to eq "#000000"
+      end
+    end
+
+    context "with invalid colors" do
+      it do
+        expect(SS::Color.text_color(nil)).to be_nil
+        expect(SS::Color.text_color("")).to be_nil
+        expect(SS::Color.text_color("z")).to be_nil
+        expect(SS::Color.text_color("zz")).to be_nil
+        expect(SS::Color.text_color("zzz")).to be_nil
+        expect(SS::Color.text_color("zzzz")).to be_nil
+        expect(SS::Color.text_color("zzzzz")).to be_nil
+        expect(SS::Color.text_color("zzzzzz")).to be_nil
+      end
+    end
+  end
 end
