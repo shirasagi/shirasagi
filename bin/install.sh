@@ -43,8 +43,8 @@ EOF
 source $HOME/.bashrc
 
 asdf plugin add ruby
-asdf install ruby 3.0.4
-asdf global ruby 3.0.4
+asdf install ruby 3.1.3
+asdf global ruby 3.1.3
 
 if [ ! `which ruby` ]; then exit 1; fi
 asdf plugin add nodejs
