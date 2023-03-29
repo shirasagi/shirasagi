@@ -205,6 +205,7 @@ ja:
       division_after_blank: １番目の分割先が入力されていません。
       add_after_blank: 新設先が入力されていません。
       malformed_duration: は不正な期間です。
+      malformed_color: は不正な色です。
       password_short: "は%{count}文字以上にしてください。"
       password_short_upcase: "は英大文字（A-Z）を%{count}文字以上含むようにしてください。"
       password_short_downcase: "は英小文字（a-z）を%{count}文字以上含むようにしてください。"

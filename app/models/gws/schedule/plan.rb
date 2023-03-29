@@ -36,6 +36,7 @@ class Gws::Schedule::Plan
 
   permit_params :color
 
+  validates :color, "ss/color" => true
   validate :validate_color
   validate :validate_file_size
 
