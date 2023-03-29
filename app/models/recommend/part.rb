@@ -12,13 +12,7 @@ class Recommend::Part
     include ::Cms::Addon::GroupPermission
     include ::History::Addon::Backup
 
-    before_save :set_view_options
-
-    def set_view_options
-      self.mobile_view = "hide"
-      self.ajax_view = "enabled"
-    end
-
+    self.only_ajax_view = true
     self.use_sort = false
     self.use_new_days = false
 

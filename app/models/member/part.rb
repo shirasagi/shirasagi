@@ -6,6 +6,8 @@ module Member::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.ajax_view_only = true
+
     default_scope ->{ where(route: "member/login") }
   end
 
@@ -67,6 +69,8 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.ajax_view_only = true
 
     default_scope ->{ where(route: "member/bookmark") }
   end
