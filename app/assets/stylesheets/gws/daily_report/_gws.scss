@@ -13,9 +13,9 @@ dl.see.mod-gws-daily-report-custom_form {
   }
   > dd {
     width: calc(100% - 180px);
-    margin: 0;
+    margin: 15px 0 0;
     @media only screen and (max-width: 768px) {
-      width: 100%;
+      margin-top: 0;
     }
   }
   .share-cell {
