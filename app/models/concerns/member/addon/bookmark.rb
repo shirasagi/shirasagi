@@ -4,7 +4,7 @@ module Member::Addon
     extend ActiveSupport::Concern
 
     included do
-      has_many :bookmarks, class_name: "Member::Bookmark", foreign_key: :member_id, dependent: :destroy
+      has_many :bookmarks, class_name: "Member::Bookmark", inverse_of: :member, dependent: :destroy
     end
 
     def bookmark_condition(content)

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
+  let(:member) { cms_member }
   let(:layout1) { create_cms_layout bookmark_part }
   let(:layout2) { create_cms_layout }
 
@@ -27,9 +28,13 @@ describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js:
       end
 
       within 'form.form-login' do
-        expect(page).to have_css('input#item_email')
-        expect(page).to have_css('input#item_password')
+        fill_in 'item[email]', with: member.email
+        fill_in 'item[password]', with: member.in_password
+        click_button I18n.t("ss.login")
       end
+      expect(current_path).to eq article_page.url
+      expect(page).to have_css(".favorite", text: I18n.t("member.links.register_bookmark"))
+      logout_member(site, login_node)
     end
   end
 

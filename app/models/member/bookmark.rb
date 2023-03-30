@@ -45,7 +45,8 @@ class Member::Bookmark
 
   def cancel_link(node, ref)
     url = node.url + "cancel?" + { path: content.url, ref: ref }.to_query
-    ApplicationController.helpers.link_to(I18n.t("member.links.cancel_bookmark"), url, { method: :post, class: "favorite-cancel" })
+    ApplicationController.helpers.link_to(I18n.t("member.links.cancel_bookmark"), url,
+      { method: :post, class: "favorite-cancel" })
   end
 
   def becomes_with_route

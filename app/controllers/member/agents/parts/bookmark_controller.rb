@@ -11,7 +11,7 @@ class Member::Agents::Parts::BookmarkController < ApplicationController
   def member_login_node
     @member_login_node ||= begin
       node = Member::Node::Login.site(@cur_site).and_public.first
-      node.present? ? node : false
+      node.presence || false
     end
   end
 
