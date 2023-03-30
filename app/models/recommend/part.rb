@@ -12,7 +12,7 @@ class Recommend::Part
     include ::Cms::Addon::GroupPermission
     include ::History::Addon::Backup
 
-    self.only_ajax_view = true
+    self.ajax_view_only = true
     self.use_sort = false
     self.use_new_days = false
 

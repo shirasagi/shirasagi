@@ -1,5 +1,6 @@
 module Cms::PublicFilter::FindContent
   extend ActiveSupport::Concern
+  include Cms::PublicFilter::Agent
 
   def find_page(site, path)
     filename = path.delete_prefix(site.url)

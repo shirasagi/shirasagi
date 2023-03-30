@@ -29,10 +29,10 @@ class Member::Agents::Parts::BookmarkController < ApplicationController
     raise "404" unless @bookmark_node
   end
 
-  def set_cur_content
-    @cur_content = find_content(@cur_site, @cur_path)
-    raise "404" unless @cur_content
-  end
+  #def set_cur_content
+  #  @cur_content = find_content(@cur_site, @cur_path)
+  #  raise "404" unless @cur_content
+  #end
 
   def set_member
     raise "404" unless member_login_path
