@@ -59,7 +59,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.edit')
       within "#item-form" do
         fill_in "item[name]", with: new_name
-        fill_in "item[index_name]", with: ""
+        fill_in "item[index_name]", with: "" if !item.is_a?(ImageMap::Page)
         click_on I18n.t('ss.buttons.draft_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -71,8 +71,10 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(item.state).to eq "public"
       expect(branch.name).not_to eq item.name
       expect(branch.name).to eq new_name
-      expect(branch.index_name).not_to eq item.index_name
-      expect(branch.index_name).to be_blank
+      if !item.is_a?(ImageMap::Page)
+        expect(branch.index_name).not_to eq item.index_name
+        expect(branch.index_name).to be_blank
+      end
       expect(branch.state).to eq "closed"
       expect(item.branches.first.id).to eq(branch.id)
 
@@ -109,7 +111,9 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect { branch.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       item.reload
       expect(item.name).to eq branch.name
-      expect(item.index_name).to eq branch.index_name
+      if !item.is_a?(ImageMap::Page)
+        expect(item.index_name).to eq branch.index_name
+      end
       if item.class.fields.key?("html")
         expect(item.html).to eq new_html
       end
@@ -246,6 +250,25 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     let!(:item) { create :sitemap_page, filename: "sitemap/page.html", name: old_name, index_name: old_index_name }
     let!(:node) { create :sitemap_node_page, filename: "sitemap", name: "sitemap" }
     let(:show_path) { sitemap_page_path site, node, item }
+    it_behaves_like "create_branch"
+  end
+
+  context "image_map page" do
+    let(:file) do
+      tmp_ss_file(site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
+    end
+    let(:html) do
+      [
+        "<p>テスト</p>",
+        "<p><a class=\"icon-png attachment\" href=\"#{file.url}\">#{file.humanized_name}</a></p>"
+      ].join("\r\n\r\n")
+    end
+    let!(:item) do
+      create(:image_map_page, cur_node: node, name: old_name, index_name: old_index_name,
+        html: html, file_ids: [ file.id ])
+    end
+    let!(:node) { create :image_map_node_page, filename: "image-map", name: "image-map" }
+    let(:show_path) { image_map_page_path site, node, item }
     it_behaves_like "create_branch"
   end
 
