@@ -156,45 +156,59 @@ dl.see.mod-gws-daily-report-custom_form {
   }
 }
 
-table.see.mod-gws-daily-report-custom_form {
+#addon-gws-agents-addons-daily_report-custom_form {
   .table-wrap {
     max-width: 100%;
     overflow-x: auto;
     white-space: nowrap;
-  }
-  table.index.see {
-    width: auto;
-    min-width: 100%;
-    padding: 0;
-    table-layout: fixed;
-    &:hover {
-      background: transparent;
-    }
-    tr {
-      display: flex;
-      &.share-row {
-        background-color: #ffe9b7 !important;
-        td {
-          background-color: #ffe9b7 !important;
+    table.index.see.mod-gws-daily-report-custom_form {
+      width: auto;
+      min-width: 100%;
+      padding: 0;
+      table-layout: fixed;
+      tr {
+        display: flex;
+        &:hover {
+          background-color: transparent;
         }
-      }
-      > td {
-        word-break: break-all;
-        vertical-align: top;
-        white-space: normal;
-        &:first-child {
-          width: 180px;
-          min-width: 180px;
-          float: left;
-          zoom: 1;
-          color: #a0522d;
-          font-weight: bold;
-          .share-value {
-            color: #38c;
+        &.share-row {
+          background-color: #ffe9b7 !important;
+          &:hover {
+            background-color: #ffe9b7 !important;
+          }
+          td {
+            background-color: #ffe9b7 !important;
           }
         }
-        &:nth-child(n+2) {
-          width: 12em;
+        &:nth-child(2n) {
+          &:hover {
+            background: #f8f8f8;
+          }
+          &.share-row {
+            background-color: #ffe9b7 !important;
+            &:hover {
+              background-color: #ffe9b7 !important;
+            }
+          }
+        }
+        > td {
+          word-break: break-all;
+          vertical-align: top;
+          white-space: normal;
+          &:first-child {
+            width: 180px;
+            min-width: 180px;
+            float: left;
+            zoom: 1;
+            color: #a0522d;
+            font-weight: bold;
+            .share-value {
+              color: #38c;
+            }
+          }
+          &:nth-child(n+2) {
+            width: 12em;
+          }
         }
       }
     }
