@@ -163,6 +163,15 @@ class Gws::DailyReport::Report
     end
   end
 
+  def max_column_comments_length
+    length = []
+    length << column_comments('small_talk').length
+    column_values.each do |column_value|
+      length << column_comments(column_value.column_id).length
+    end
+    length.max
+  end
+
   private
 
   def set_name

@@ -1,80 +1,84 @@
 <% return if @item.column_values.blank? %>
 
-<dl class="see mod-gws-daily-report-custom_form">
-  <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @item.user.blank? || @item.user_id == @cur_user.id %>
-    <dt><%= @model.t :limited_access %></dt>
-    <dd>
-      <%= br @item.limited_access %>
-    </dd>
-  <% end %>
-
-  <% if @item.share_small_talk.present? %>
-    <dt><%= @model.t :small_talk %></dt>
-    <dd>
-      <%= br @item.small_talk %>
-    </dd>
-    <div class="share-value">
-      <%= @model.t(:share_small_talk) %>
-    </div>
-    <% @item.column_comments('small_talk').each do |comment| %>
-      <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+<div class="table-wrap">
+  <table class="index see mod-gws-daily-report-custom_form">
+    <tbody>
+    <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @item.user.blank? || @item.user_id == @cur_user.id %>
+      <tr>
+        <td>
+          <%= @model.t :limited_access %>
+        </td>
+        <td><%= br @item.limited_access %></td>
+        <% @item.max_column_comments_length.times do %>
+          <td></td>
+        <% end %>
+      </tr>
     <% end %>
-  <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @item.small_talk.present? %>
-    <dt><%= @model.t :small_talk %></dt>
-    <dd>
-      <%= br @item.small_talk %>
-    </dd>
-    <% @item.column_comments('small_talk').each do |comment| %>
-      <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+    <% if @item.share_small_talk.present? %>
+      <tr class="share-row">
+        <td>
+          <%= @model.t :small_talk %>
+          <div class="share-value"><%= @model.t(:share_small_talk) %></div>
+        </td>
+        <td><%= br @item.small_talk %></td>
+        <% @item.column_comments('small_talk').each do |comment| %>
+          <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+        <% end %>
+        <% (@item.max_column_comments_length - @item.column_comments('small_talk').length).times do %>
+          <td></td>
+        <% end %>
+      </tr>
+    <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @item.small_talk.present? %>
+      <tr>
+        <td>
+          <%= @model.t :small_talk %>
+        </td>
+        <td><%= br @item.small_talk %></td>
+        <% @item.column_comments('small_talk').each do |comment| %>
+          <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+        <% end %>
+        <% (@item.max_column_comments_length - @item.column_comments('small_talk').length).times do %>
+          <td></td>
+        <% end %>
+      </tr>
     <% end %>
-  <% end %>
-
-  <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
-    <% column = value.column %>
-    <% if @item.share_column_ids.include?(value.column_id.to_s) %>
-      <% if column.present? && column.column_show_partial_path.present? %>
-        <%= render column.column_show_partial_path, column: column, value: value %>
-      <% else %>
-        <dt><%= value.name %></dt>
-        <dd>
-          <%= column.try(:prefix_label) %>
-          <%= br value.value %>
-          <%= column.try(:postfix_label) %>
-        </dd>
-      <% end %>
-      <div class="share-value">
-        <%= @model.t(:share_column_ids) %>
-      </div>
-      <% @item.column_comments(value.column_id).each do |comment| %>
-        <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
-      <% end %>
-    <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && value.value.present? %>
-      <% if column.present? && column.column_show_partial_path.present? %>
-        <%= render column.column_show_partial_path, column: column, value: value %>
-      <% else %>
-        <dt><%= value.name %></dt>
-        <dd>
-          <%= column.try(:prefix_label) %>
-          <%= br value.value %>
-          <%= column.try(:postfix_label) %>
-        </dd>
-      <% end %>
-      <% @item.column_comments(value.column_id).each do |comment| %>
-        <dd><%= br "#{comment.body}(#{comment.user.try(:name)})" %></dd>
+    <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+      <% column = value.column %>
+      <% if @item.share_column_ids.include?(value.column_id.to_s) %>
+        <tr class="share-row">
+          <td>
+            <%= value.name %>
+            <div class="share-value"><%= @model.t(:share_column_ids) %></div>
+          </td>
+          <td><%= br value.value %></td>
+          <% @item.column_comments(value.column_id).each do |comment| %>
+            <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+          <% end %>
+          <% (@item.max_column_comments_length - @item.column_comments(value.column_id).length).times do %>
+            <td></td>
+          <% end %>
+        </tr>
+      <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && value.value.present? %>
+        <tr>
+          <td>
+            <%= value.name %>
+          </td>
+          <td><%= br value.value %></td>
+          <% @item.column_comments(value.column_id).each do |comment| %>
+            <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+          <% end %>
+          <% (@item.max_column_comments_length - @item.column_comments(value.column_id).length).times do %>
+            <td></td>
+          <% end %>
+        </tr>
       <% end %>
     <% end %>
-  <% end %>
-</dl>
+    </tbody>
+  </table>
+</div>
 
 <%= jquery do %>
-  $('#addon-ss-agents-addons-markdown').hide();
-  $('#addon-gws-agents-addons-file').hide();
   <% if @cur_form.present? %>
     $('#addon-gws-agents-addons-daily-report-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
   <% end %>
-  $('.share-value').each(function (){
-    $(this).prev('dd').addClass('share-cell');
-    $(this).prev('dd').prev('dt').addClass('share-cell');
-    $(this).prev('dd').prev('dt').append($(this));
-  });
 <% end %>
