@@ -1,4 +1,23 @@
-.mod-gws-daily-report-custom_form {
+dl.see.mod-gws-daily-report-custom_form {
+  display: flex;
+  flex-wrap: wrap;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+  > dt {
+    width: 180px;
+    min-width: 0;
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+  > dd {
+    width: calc(100% - 180px);
+    margin: 0;
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
   .share-cell {
     background-color: #ffe9b7;
   }
