@@ -44,7 +44,8 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
 
   def build_term_handlers
     @handlers = []
-    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site)
+    if Gws::DailyReport::Report.allowed?(:access, @cur_user, site: @cur_site) ||
+       @reports.first.try(:user_id) == @cur_user.id
       @handlers << { name: Gws::DailyReport::Report.t(:limited_access), handler: method(:to_limited_access), type: :base }
     end
     @handlers << { name: Gws::DailyReport::Report.t(:small_talk), handler: method(:to_small_talk), type: :base }

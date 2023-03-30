@@ -9,7 +9,7 @@
           <th><%= t('gws/daily_report.date') %></th>
           <th><%= t('gws/daily_report.wday') %></th>
           <% if @forms.present? %>
-            <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+            <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @user.id == @cur_user.id %>
               <th class="limited-access"><%= @model.t(:limited_access) %></th>
             <% end %>
             <th><%= @model.t(:small_talk) %></th>
@@ -26,7 +26,7 @@
             <td><%= I18n.l(date, format: :short) %></td>
             <td><%= t("date.abbr_day_names")[date.wday] %></td>
             <% if report %>
-              <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+              <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @user.id == @cur_user.id %>
                 <td>
                   <div class="report-value-wrap">
                     <div class="report-value"><%= br report.limited_access %></div>
@@ -80,7 +80,7 @@
                 <% end %>
               <% end %>
             <% elsif @forms.present? %>
-              <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+              <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @user.id == @cur_user.id %>
                 <td></td>
               <% end %>
               <td></td>
