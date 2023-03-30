@@ -37,17 +37,19 @@ class Member::Agents::Nodes::BookmarkController < ApplicationController
     item = find_content(@cur_site, @path)
     @cur_member.register_bookmark(item) if item
 
-    url = @path
-    url = params[:ref] if params[:ref].present? && trusted_url?(params[:ref])
-    redirect_to(url)
+    url = params[:ref].presence || @path
+    url = trusted_url!(url) rescue nil
+    url ||= @cur_site.url
+    redirect_to url
   end
 
   def cancel
     item = find_content(@cur_site, @path)
     @cur_member.cancel_bookmark(item) if item
 
-    url = @path
-    url = params[:ref] if params[:ref].present? && trusted_url?(params[:ref])
-    redirect_to(url)
+    url = params[:ref].presence || @path
+    url = trusted_url!(url) rescue nil
+    url ||= @cur_site.url
+    redirect_to url
   end
 end
