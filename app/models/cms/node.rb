@@ -69,7 +69,6 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::Addon::Import::Page
     include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "cms/import_node") }

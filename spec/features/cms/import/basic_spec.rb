@@ -34,10 +34,10 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
       expect(Cms::ImportJobFile.all.count).to eq 1
       Cms::ImportJobFile.first.tap do |task|
         expect(task.import_date).to eq now
-        expect(task.node).to be_present
-        expect(task.node.route).to eq "cms/import_node"
-        expect(task.node.name).to eq name
-        expect(task.node.filename).to eq name
+        expect(task.root_node).to be_present
+        expect(task.root_node.route).to eq "cms/import_node"
+        expect(task.root_node.name).to eq name
+        expect(task.root_node.filename).to eq name
         expect(task.file_ids).to have(1).items
       end
     end

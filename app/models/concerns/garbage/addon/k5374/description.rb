@@ -8,6 +8,8 @@ module Garbage::Addon
       field :bgcolor, type: String
 
       permit_params :style, :bgcolor
+
+      validates :bgcolor, "ss/color" => true
     end
   end
 end

@@ -15,7 +15,6 @@ module Cms::ChildList
   def category_nodes
     @_child_list_category_nodes ||= begin
       items = Category::Node::Base.site(site).and_public
-      items = items.where(filename: /^#{::Regexp.escape(self.filename)}\//)
       items = items.where(self.condition_hash)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
@@ -25,9 +24,7 @@ module Cms::ChildList
 
   def category_pages
     @_child_list_category_pages ||= begin
-      items = Cms::Page.site(site).and_public
-      items = items.in(category_ids: self.id)
-      items = items.where(self.condition_hash)
+      items = Cms::Page.public_list(site: site, node: self)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
       items.to_a
@@ -36,9 +33,7 @@ module Cms::ChildList
 
   def child_pages
     @_child_list_pages ||= begin
-      items = Cms::Page.site(site).and_public
-      items = items.where(filename: /^#{::Regexp.escape(self.filename)}\//)
-      items = items.where(self.condition_hash)
+      items = Cms::Page.public_list(site: site, node: self)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
       items.to_a
@@ -48,7 +43,6 @@ module Cms::ChildList
   def child_nodes
     @_child_list_nodes ||= begin
       items = Cms::Node.site(site).and_public
-      items = items.where(filename: /^#{::Regexp.escape(self.filename)}\//)
       items = items.where(self.condition_hash)
       items = items.order_by(self.sort_hash)
       items = items.limit(child_list_limit)
