@@ -21,6 +21,7 @@ module Faq::Node
     include Cms::Addon::ImageResizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "faq/page") }
   end
@@ -34,6 +35,7 @@ module Faq::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "faq/search") }
 

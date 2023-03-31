@@ -21,6 +21,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/login") }
 
@@ -72,6 +73,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/mypage") }
 
@@ -90,6 +92,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/my_profile") }
   end
@@ -107,6 +110,7 @@ module Member::Node
     include Member::Addon::Registration::RequiredFields
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/registration") }
   end
@@ -119,6 +123,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/my_blog") }
 
@@ -134,6 +139,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/my_photo") }
   end
@@ -147,6 +153,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 
@@ -169,6 +176,7 @@ module Member::Node
     include Member::Addon::Blog::PageSetting
     include Cms::Addon::PageList
     include Cms::Addon::GroupPermission
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 
@@ -199,6 +207,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 
@@ -223,6 +232,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/photo") }
   end
@@ -235,6 +245,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/photo_search") }
 
@@ -258,6 +269,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/photo_spot") }
   end
@@ -270,6 +282,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/photo_category") }
 
@@ -286,6 +299,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/photo_location") }
 
@@ -304,6 +318,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/my_anpi_post") }
   end
@@ -318,6 +333,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/my_group") }
   end
@@ -330,6 +346,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/my_line_profile") }
   end
@@ -341,6 +358,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "member/line_first_registration") }
   end

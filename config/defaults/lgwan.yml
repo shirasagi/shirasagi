@@ -1,8 +1,10 @@
 # lgwan
 
 production: &production
-  # Disable LGWAN.
-  disable: true
+  # LGWAN mode.
+  # web ... internet segment of lgwan
+  # cms ... lgwan segment
+  mode:
 
   # copy private files from GATEWAY Segment.
   pull_private_files_command: "/root/shell/pull_publish.sh"

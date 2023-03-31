@@ -307,10 +307,7 @@ module Cms::Model::Node
 
     src = "#{(@cur_site || site).path}/#{@db_changes['filename'][0]}"
     dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
-    dst_dir = ::File.dirname(dst)
-
-    Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
-    Fs.mv src, dst if Fs.exist?(src)
+    rename_children_files(src, dst)
 
     src, dst = @db_changes["filename"]
     [ Cms::Node, Cms::Page, Cms::Part, Cms::Layout ].each do |model|
@@ -326,6 +323,12 @@ module Cms::Model::Node
         end
       end
     end
+  end
+
+  def rename_children_files(src, dst)
+    dst_dir = ::File.dirname(dst)
+    Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
+    Fs.mv src, dst if Fs.exist?(src)
   end
 
   def destroy_children
@@ -355,7 +358,7 @@ module Cms::Model::Node
       next if name == '.' || name == '..'
 
       fullname = "#{path}/#{name}"
-      next if File::ftype(fullname) != 'file'
+      next if ::File::ftype(fullname) != 'file'
       File.delete(fullname)
     end
   end

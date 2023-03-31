@@ -51,4 +51,5 @@ end
 class Opendata::ResourceDownloadHistory::ArchiveFile
   include SS::Model::File
   include Opendata::Resource::HistoryArchiveFileModel
+  include Cms::Lgwan::File
 end

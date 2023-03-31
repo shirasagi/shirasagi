@@ -25,6 +25,7 @@ class Cms::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
+  include Cms::Lgwan::Page
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 

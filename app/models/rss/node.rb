@@ -14,6 +14,7 @@ module Rss::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "rss/page") }
 
@@ -37,6 +38,7 @@ module Rss::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "rss/weather_xml") }
     self.weather_xml = true

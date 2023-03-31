@@ -7,6 +7,7 @@ class Cms::Node
   include Cms::Addon::NodeTwitterPostSetting
   include Cms::Addon::NodeLinePostSetting
   include Cms::Addon::ForMemberNode
+  include Cms::Lgwan::Node
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -31,6 +32,7 @@ class Cms::Node
     include Cms::Addon::ReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "cms/node") }
   end
@@ -52,6 +54,7 @@ class Cms::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Cms::ChildList
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "cms/page") }
 
@@ -66,6 +69,7 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "cms/import_node") }
   end
@@ -79,6 +83,7 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "cms/archive") }
 
@@ -92,6 +97,7 @@ class Cms::Node
     include ::Cms::ChildList
     include History::Addon::Backup
     include Cms::Addon::Release
+    include Cms::Lgwan::Node
 
     def child_items
       child_pages
@@ -115,6 +121,7 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_no_items_display = false
     self.use_substitute_html = false
@@ -140,6 +147,7 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope -> { where(route: "cms/site_search") }
 
@@ -155,6 +163,7 @@ class Cms::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "cms/line_hub") }
   end

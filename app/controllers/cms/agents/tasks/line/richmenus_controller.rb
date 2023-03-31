@@ -184,7 +184,7 @@ class Cms::Agents::Tasks::Line::RichmenusController < ApplicationController
   end
 
   def pull_private_files(group)
-    return unless SS::Lgwan.enabled?
+    return unless SS::Lgwan.web?
     group.menus.each { |menu| SS::Lgwan.pull_private_files(menu) }
   end
 

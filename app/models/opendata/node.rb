@@ -13,6 +13,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     attr_accessor :count
 
@@ -26,6 +27,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     attr_accessor :count
 
@@ -40,6 +42,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     attr_accessor :count, :code
 
@@ -56,6 +59,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/dataset") }
   end
@@ -68,6 +72,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/dataset_category") }
   end
@@ -80,6 +85,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/dataset_estat_category") }
   end
@@ -92,6 +98,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/dataset_area") }
   end
@@ -104,6 +111,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/search_dataset_group") }
   end
@@ -117,6 +125,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/search_dataset") }
   end
@@ -127,6 +136,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/dataset_map") }
   end
@@ -137,6 +147,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/dataset_graph") }
   end
@@ -148,6 +159,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/sparql") }
   end
@@ -159,6 +171,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/api") }
   end
@@ -172,6 +185,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/app") }
   end
@@ -184,6 +198,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/app_category") }
   end
@@ -196,6 +211,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/search_app") }
   end
@@ -209,6 +225,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/idea") }
   end
@@ -221,6 +238,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/idea_category") }
   end
@@ -233,6 +251,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/search_idea") }
   end
@@ -244,6 +263,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/mypage") }
   end
@@ -255,6 +275,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/member") }
   end
@@ -266,6 +287,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "opendata/my_profile") }
   end
@@ -278,6 +300,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 
@@ -292,6 +315,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 
@@ -306,6 +330,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 
@@ -320,6 +345,7 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_liquid = false
 

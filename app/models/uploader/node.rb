@@ -12,6 +12,7 @@ module Uploader::Node
     # include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "uploader/file") }
 

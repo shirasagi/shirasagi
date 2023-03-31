@@ -1,6 +1,7 @@
 class SS::TempFile
   include SS::Model::File
   include SS::UserPermission
+  include Cms::Lgwan::File
 
   default_scope ->{ where(model: "ss/temp_file") }
 

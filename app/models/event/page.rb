@@ -26,6 +26,7 @@ class Event::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
+  include Cms::Lgwan::Page
 
   set_permission_name "event_pages"
 

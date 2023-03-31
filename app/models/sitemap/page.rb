@@ -9,6 +9,7 @@ class Sitemap::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Cms::Lgwan::Page
 
   set_permission_name "sitemap_pages"
 
