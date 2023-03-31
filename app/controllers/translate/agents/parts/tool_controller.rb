@@ -24,11 +24,6 @@ class Translate::Agents::Parts::ToolController < ApplicationController
     if @cur_part.ajax_view == "enabled"
       @preferred_lang = http_accept_language.preferred_language_from(@available_lang.keys)
       @preferred_lang = @available_lang[@preferred_lang]
-      render :index_ajax
-    else
-      @source_lang = @cur_site.translate_source
-      @en_lang = @available_lang["en"]
-      render :index
     end
   end
 end
