@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Lgwan::Page, type: :model, dbscope: :example do
+describe Cms::Lgwan::File, type: :model, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
 

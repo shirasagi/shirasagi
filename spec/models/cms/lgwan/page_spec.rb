@@ -211,4 +211,3 @@ describe Cms::Lgwan::Page, type: :model, dbscope: :example do
     end
   end
 end
-
