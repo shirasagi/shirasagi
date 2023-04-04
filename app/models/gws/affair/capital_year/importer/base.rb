@@ -24,10 +24,13 @@ class Gws::Affair::CapitalYear::Importer::Base
     end
 
     begin
-      CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      in_file.rewind
+      unless SS::Csv.valid_csv?(in_file, headers: true)
+        errors.add :in_file, :invalid_file_type
+      end
     rescue => e
       errors.add :in_file, :invalid_file_type
+    ensure
+      in_file.rewind
     end
   end
 end

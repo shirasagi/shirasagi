@@ -75,8 +75,7 @@ module Gws::Addon::Import::Affair
       return false unless errors.empty?
 
       I18n.with_locale(I18n.default_locale) do
-        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        table.each_with_index do |row, i|
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
           update_row(row, i + 2)
         end
       end
@@ -97,10 +96,13 @@ module Gws::Addon::Import::Affair
       end
 
       begin
-        CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        in_file.rewind
+        unless SS::Csv.valid_csv?(in_file, headers: true)
+          errors.add :in_file, :invalid_file_type
+        end
       rescue => e
         errors.add :in_file, :invalid_file_type
+      ensure
+        in_file.rewind
       end
     end
 

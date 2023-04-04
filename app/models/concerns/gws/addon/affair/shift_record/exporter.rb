@@ -9,8 +9,7 @@ module Gws::Addon::Affair::ShiftRecord
     end
 
     def each_csv(&block)
-      csv = ::CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      csv.each(&block)
+      SS::Csv.foreach_row(in_file, headers: true, &block)
     end
 
     def import_csv
