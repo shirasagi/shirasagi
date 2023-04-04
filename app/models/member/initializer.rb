@@ -20,6 +20,7 @@ module Member
     Cms::Node.plugin "member/photo_category"
     Cms::Node.plugin "member/photo_location"
     Cms::Node.plugin "member/photo_spot"
+    Cms::Node.plugin "member/bookmark"
 
     # anpi
     Cms::Node.plugin "member/my_anpi_post"
@@ -31,6 +32,7 @@ module Member
     Cms::Part.plugin "member/photo_search"
     Cms::Part.plugin "member/photo_slide"
     Cms::Part.plugin "member/invited_group"
+    Cms::Part.plugin "member/bookmark"
 
     # line
     Cms::Node.plugin "member/my_line_profile"

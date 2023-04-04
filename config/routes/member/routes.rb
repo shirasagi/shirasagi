@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     resources :photo_locations, concerns: :deletion
     resources :photo_spots, concerns: [:deletion, :command]
     resources :registrations, only: [:index]
+    resources :bookmarks, only: [:index], concerns: :deletion
 
     # resources :groups, concerns: :deletion do
     #   resources :members, controller: :group_members, concerns: :deletion
@@ -132,6 +133,10 @@ Rails.application.routes.draw do
       post "reject(.:format)", action: :reject, on: :member
     end
 
+    get "bookmark/(index.:format)" => "public#index", cell: "nodes/bookmark"
+    post "bookmark/register(index.:format)" => "public#register", cell: "nodes/bookmark"
+    post "bookmark/cancel(index.:format)" => "public#cancel", cell: "nodes/bookmark"
+
     ## registration
     get "registration/(index.html)" => "public#new", cell: "nodes/registration"
     match "registration/new.html" => "public#new", cell: "nodes/registration", via: [:get, :post]
@@ -164,6 +169,7 @@ Rails.application.routes.draw do
     get "photo_slide" => "public#index", cell: "parts/photo_slide"
     get "photo_search" => "public#index", cell: "parts/photo_search"
     get "invited_group" => "public#index", cell: "parts/invited_group"
+    get "bookmark" => "public#index", cell: "parts/bookmark"
   end
 
   namespace "member", path: ".m:member", member: /\d+/ do

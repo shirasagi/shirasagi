@@ -70,4 +70,8 @@ FactoryBot.define do
     sender_name { unique_id }
     sender_email { "#{sender_name}@example.jp" }
   end
+
+  factory :member_node_bookmark, class: Member::Node::Bookmark, traits: [:cms_node] do
+    route { "member/bookmark" }
+  end
 end

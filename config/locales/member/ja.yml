@@ -101,6 +101,8 @@ ja:
       slide: スライド
       search: 検索
       create_unregisted_anpi: 未登録者安否作成
+      register_bookmark: お気に入りに登録
+      cancel_bookmark: お気に入りを解除
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。
@@ -182,6 +184,7 @@ ja:
       member/photo_spot: フォトスポット
       member/my_line_profile: LINEプロフィール
       member/line_first_registration: LINE初回登録
+      member/bookmark: ブックマーク
 
     parts:
       member/blog_page: ブログページ一覧
@@ -190,6 +193,7 @@ ja:
       member/photo_slide: フォトスライド
       member/login: ログイン
       member/invited_group: 招待されたグループ
+      member/bookmark: ブックマーク
 
   mongoid:
     models:
