@@ -1,6 +1,8 @@
 module SS
   module_function
 
+  EPOCH_TIME = Time.at(0).utc
+
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
   def change_locale_and_timezone(user)

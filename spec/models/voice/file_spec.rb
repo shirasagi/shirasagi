@@ -205,7 +205,7 @@ describe Voice::File, dbscope: :example do
     subject { described_class.find_or_create_by_url("http://#{voice_site.domain}/#{path}") }
 
     it do
-      expect(subject.lock_until).to eq ::Time::EPOCH
+      expect(subject.lock_until).to eq ::SS::EPOCH_TIME
 
       Timecop.freeze(now) do
         expect(described_class.acquire_lock(subject)).to be_truthy

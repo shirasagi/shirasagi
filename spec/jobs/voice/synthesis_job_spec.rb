@@ -26,7 +26,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(file.exists?).to be_truthy
         expect(file.same_identity?).to be_truthy
         expect(file.latest?).to be_truthy
-        expect(file.lock_until).to eq ::Time::EPOCH
+        expect(file.lock_until).to eq ::SS::EPOCH_TIME
         expect(file.error).to be_nil
         expect(file.has_error).to eq 0
         expect(file.age).to be > 0
@@ -153,7 +153,7 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         file.reload
         expect(file.page_identity).not_to be_nil
-        expect(file.lock_until).to eq ::Time::EPOCH
+        expect(file.lock_until).to eq ::SS::EPOCH_TIME
         expect(file.error).to be_nil
         expect(file.has_error).to eq 0
         expect(file.age).to be > 0
