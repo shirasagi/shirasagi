@@ -6,16 +6,6 @@ GIT
       faraday (>= 0.9.2)
       faraday_middleware (>= 0.10.0)
 
-GIT
-  remote: https://github.com/shirasagi/mongoid
-  revision: ca2d42c4a88625a4b145e55a80db5df5eb880ba8
-  branch: 7.3-stable-MONGOID-5183
-  specs:
-    mongoid (7.3.3.ss.pre.1)
-      activemodel (>= 6.0, < 6.2)
-      mongo (>= 2.10.5, < 3.0.0)
-      ruby2_keywords (~> 0.0.5)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -362,6 +352,10 @@ GEM
     mongo_session_store (3.2.1)
       actionpack (>= 4.0)
       mongo (~> 2.0)
+    mongoid (8.0.3)
+      activemodel (>= 5.1, < 7.1, != 7.0.0)
+      mongo (>= 2.18.0, < 3.0.0)
+      ruby2_keywords (~> 0.0.5)
     mongoid-compatibility (0.6.0)
       activesupport
       mongoid (>= 2.0)
@@ -811,7 +805,7 @@ DEPENDENCIES
   marked-rails
   mini_magick
   mongo_session_store
-  mongoid!
+  mongoid
   mongoid-geospatial
   mongoid-grid_fs
   mongoid-rspec
