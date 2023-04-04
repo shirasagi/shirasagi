@@ -11,6 +11,8 @@ ja:
       select_lang: 言語を選択
       api: API
       api_request_word_limit: APIリクエスト文字数制限
+    labels:
+      translate_tool: 言語翻訳
 
     options:
       update_state:
