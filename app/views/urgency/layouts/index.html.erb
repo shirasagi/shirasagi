@@ -2,9 +2,8 @@
   <table class="index">
     <thead>
       <tr>
-        <% @model.fields.select {|k, v| k =~ /^(name|filename)/ }.keys.each do |key| %>
-        <th><%= @model.t key %></th>
-        <% end %>
+        <th><%= @model.t :name %></th>
+        <th><%= @model.t :filename %></th>
         <th class="datetime"><%= @model.t :updated %></th>
         <th class="preview"><%= t 'cms.preview_page' %></th>
       </tr>
