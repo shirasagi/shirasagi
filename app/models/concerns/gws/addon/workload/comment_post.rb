@@ -8,21 +8,11 @@ module Gws::Addon::Workload::CommentPost
     before_validation :set_due_end_on
   end
 
-  public
-
-  def last_comment
-    comments.exists(achievement_rate: true).last
-  end
-
-  def finished?
-    work_state == 'finished'
-  end
-
   private
 
   def set_comments_total
     self.achievement_rate = last_achievement_rate || 0
-    self.worktime_minutes = comments.pluck(:worktime_minutes).map(&:to_i).sum
+    self.worktime_minutes = comments.pluck(:worktime_minutes).sum(&:to_i)
     set_work_state
   end
 
@@ -55,5 +45,15 @@ module Gws::Addon::Workload::CommentPost
   def last_achievement_rate
     return if last_comment.blank?
     last_comment.achievement_rate
+  end
+
+  public
+
+  def last_comment
+    comments.exists(achievement_rate: true).last
+  end
+
+  def finished?
+    work_state == 'finished'
   end
 end

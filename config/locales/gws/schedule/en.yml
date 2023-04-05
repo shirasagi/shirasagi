@@ -41,6 +41,7 @@ en:
       download: Download
       import: Import
       add_todo: Create a to-do task
+      add_workload: Create a work task
       add_holiday: Create a holiday
       show_month: Month view
       show_week: Week view

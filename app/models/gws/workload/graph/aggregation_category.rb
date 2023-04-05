@@ -49,7 +49,7 @@ module Gws::Workload::Graph::AggregationCategory
     project_pipeline = {
       month: "$_id.month",
       day: "$_id.day",
-      work: { "$arrayElemAt": [ "$works", 0 ] }
+      work: { "$arrayElemAt" => [ "$works", 0 ] }
     }
     group_pipeline2 = { _id: "$work.load_id" }
     months.each do |m|

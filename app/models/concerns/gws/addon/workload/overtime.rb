@@ -5,6 +5,7 @@ module Gws::Addon::Workload::Overtime
   included do
     (1..12).each do |m|
       attr_accessor "in_month#{m}_hours", "in_month#{m}_minutes"
+
       field "month#{m}_minutes", type: Integer, default: 0
       permit_params "in_month#{m}_hours", "in_month#{m}_minutes"
 

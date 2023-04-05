@@ -12,9 +12,9 @@
     }
   }
   .link-item {
-    border-bottom: 1px solid #f2f2f2;
     display: block;
     padding: 6px 10px;
+    border-bottom: 1px solid #f2f2f2;
     color: #333;
   }
   .link-item:hover {
@@ -42,10 +42,10 @@
   }
   .main {
     flex: 1;
-    background: #fff;
     padding: 10px;
     border: 1px solid #d0d0d0;
     border-radius: 3px;
+    background: #fff;
     .head {
       @include clear;
       .search {
@@ -62,11 +62,11 @@
         border-bottom: solid 1px #d0d0d0;
       }
       h2 {
-        text-align: center;
+        margin-bottom: 10px;
         padding: 10px;
         font-size: 120%;
         font-weight: bold;
-        margin-bottom: 10px;
+        text-align: center;
       }
     }
   }

@@ -13,7 +13,11 @@ module Gws::Workload::YearFilter
       @cur_year = @cur_site.fiscal_year
       @year = params[:year].to_i
       @year_name ||= "#{@year}#{I18n.t("ss.fiscal_year")}"
-      @years ||= ((@cur_year - 10)..(@cur_year + 1)).map { |i| { _id: i, name: "#{i}#{I18n.t("ss.fiscal_year")}", trailing_name: i.to_s } }.reverse
+      @years ||= begin
+        years = ((@cur_year - 10)..(@cur_year + 1))
+        years = years.map { |i| { _id: i, name: "#{i}#{I18n.t("ss.fiscal_year")}", trailing_name: i.to_s } }
+        years.reverse
+      end
     else
       redirect_to({ year: @cur_site.fiscal_year })
     end
