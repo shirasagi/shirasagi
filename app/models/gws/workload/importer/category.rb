@@ -11,11 +11,10 @@ module Gws::Workload::Importer
     # export
     def export_items
       items = model.site(site).search(year: year).to_a
-      items = items.sort_by do |item|
+      items.sort_by do |item|
         group_name = item.member_group.try(:name) || ""
         [group_name, item.order, item.id]
       end
-      items
     end
 
     def item_to_csv(item)

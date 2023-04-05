@@ -60,6 +60,8 @@ en:
     remark: Remark
     before: Before
     after: After
+    time: Time
+    fiscal_year: Fiscal year
 
     views:
       login/login:

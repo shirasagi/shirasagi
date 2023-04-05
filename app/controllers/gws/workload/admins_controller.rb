@@ -30,7 +30,7 @@ class Gws::Workload::AdminsController < ApplicationController
     ret[:category_id] = @category.id if @category
 
     # work target
-    ret[:member_group_id] = @cur_group.id,
+    ret[:member_group_id] = @cur_group.id
     ret[:member_group_id] = @group.id if @group
     ret[:member_ids] = [@cur_user.id]
     ret[:member_ids] = [@user.id] if @user

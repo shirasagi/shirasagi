@@ -39,9 +39,9 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[1][:label]).to eq load2.name
       expect(datasets[2][:label]).to eq load3.name
 
-      expect(datasets[0][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[1][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[2][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
+      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[2][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     it "worktime_datasets" do
@@ -53,8 +53,8 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[0][:label]).to eq "gws-sys"
       expect(datasets[1][:label]).to eq "gw-admin"
 
-      expect(datasets[0][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[1][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
+      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     it "overtime_datasets" do
@@ -66,8 +66,8 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[0][:label]).to eq "gws-sys"
       expect(datasets[1][:label]).to eq "gw-admin"
 
-      expect(datasets[0][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[1][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
+      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     it "client_datasets" do
@@ -81,9 +81,9 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[1][:label]).to eq client2.name
       expect(datasets[2][:label]).to eq client3.name
 
-      expect(datasets[0][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[1][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[2][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
+      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[2][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     it "load_datasets" do
@@ -97,9 +97,9 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[1][:label]).to eq load2.name
       expect(datasets[2][:label]).to eq load3.name
 
-      expect(datasets[0][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[1][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
-      expect(datasets[2][:data]).to eq [0,0,0,0,0,0,0,0,0,0,0,0]
+      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[2][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
   end
 end

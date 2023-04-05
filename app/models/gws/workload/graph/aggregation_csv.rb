@@ -78,7 +78,7 @@ module Gws::Workload::Graph::AggregationCsv
       month: "$_id.month",
       day: "$_id.day",
       user_id: "$_id.user_id",
-      work: { "$arrayElemAt": [ "$works", 0 ] },
+      work: { "$arrayElemAt" => [ "$works", 0 ] },
       day_worktime_minutes: "$day_worktime_minutes"
     }
 

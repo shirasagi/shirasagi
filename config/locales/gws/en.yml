@@ -367,6 +367,8 @@ en:
         menu_qna_state: Display Q&A
         menu_workflow_label: Display workflows
         menu_workflow_state: Display workflows
+        menu_workload_label: Display workloads
+        menu_workload_state: Display workloads
         menu_report_label: Display reports
         menu_report_state: Display reports
         menu_circular_label: Display circular boards
@@ -397,6 +399,7 @@ en:
         notice_schedule_state: Schedule
         notice_todo_state: ToDo
         notice_affair_state: Affair
+        notice_workload_state: Workloads
         notice_workflow_state: Workflows
         notice_circular_state: Circular boards
         notice_monitor_state: Inquiries and responses

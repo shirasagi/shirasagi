@@ -13,7 +13,6 @@ Gws_Workload_Navi.prototype.render = function(items) {
   }
   var _this = this;
   var list = [];
-  var isCate = null;
 
   $.each(items, function(idx, item) {
     var url = _this.baseUrl.replace('ID', item._id);

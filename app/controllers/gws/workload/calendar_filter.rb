@@ -17,7 +17,7 @@ module Gws::Workload::CalendarFilter
     set_calendar_start
 
     # calendar drop
-    if params.dig("item","api")
+    if params.dig("item", "api")
       set_item
       @year = @item.year
       return
@@ -42,13 +42,11 @@ module Gws::Workload::CalendarFilter
   public
 
   def calendar_redirect_url
-    @calendar_redirect_url ||= begin
-      path = params.dig(:calendar, :path)
-      return nil if path.blank?
-      uri = URI(path)
-      uri.query = { calendar: redirection_calendar_params }.to_param
-      uri.to_s
-    end
+    path = params.dig(:calendar, :path)
+    return if path.blank?
+    uri = URI(path)
+    uri.query = { calendar: redirection_calendar_params }.to_param
+    uri.to_s
   end
 
   def popup

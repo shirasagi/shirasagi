@@ -18,7 +18,7 @@ module SS::BaseFilter
     before_action :logged_in?
     before_action :check_api_user
     before_action :set_logout_path_by_session
-    rescue_from StandardError, with: :rescue_action
+    #rescue_from StandardError, with: :rescue_action
     layout "ss/base"
   end
 

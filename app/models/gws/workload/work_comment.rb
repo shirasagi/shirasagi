@@ -4,8 +4,7 @@ class Gws::Workload::WorkComment
   include Gws::Reference::Site
   include SS::Addon::Markdown
 
-  attr_accessor :cur_work
-  attr_accessor :in_worktime_hours, :in_worktime_minutes
+  attr_accessor :cur_work, :in_worktime_hours, :in_worktime_minutes
 
   belongs_to :work, class_name: 'Gws::Workload::Work'
 
