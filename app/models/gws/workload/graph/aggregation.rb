@@ -1,16 +1,20 @@
 class Gws::Workload::Graph::Aggregation
   include Gws::Workload::Graph::AggregationTotal
   include Gws::Workload::Graph::AggregationCategory
-  include Gws::Workload::Graph::AggregationCsv
+  include Gws::Workload::Graph::AggregationWorkCsv
+  include Gws::Workload::Graph::AggregationWorkCommentCsv
 
+  # base condition1
   attr_reader :site, :year, :group
+  # base condition2
   attr_reader :categories, :loads, :clients, :cycles
+  # base condition3
   attr_reader :graph_users, :users
+  # base items
   attr_reader :items, :comments, :overtimes
-
-  attr_reader :graph_user, :user
-  attr_reader :category
-
+  # extra condition
+  attr_reader :graph_user, :user, :category
+  # results
   attr_reader :total_datasets, :worktime_datasets, :overtime_datasets, :client_datasets, :load_datasets
 
   def initialize(site, year, group, users)

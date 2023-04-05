@@ -59,13 +59,6 @@ class Gws::Workload::Apis::CommentsController < ApplicationController
   def edit
     raise '403' if @item.user_id != @cur_user.id && !@cur_work.allowed?(:edit, @cur_user, site: @cur_site)
     @cur_work.errors.clear
-
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
-    end
     render
   end
 

@@ -31,11 +31,10 @@ module Gws::Aggregation
       end
 
       def active_at(date = Time.zone.now)
-        items = where('$and' => [
+        items = self.where('$and' => [
           { '$or' => [{ :activation_date.lte => date }] },
           { '$or' => [{ expiration_date: nil }, { :expiration_date.gt => date }] }
         ])
-        items = items.reorder(name: 1).to_a # tree sort
         GroupArray.new(items)
       end
     end

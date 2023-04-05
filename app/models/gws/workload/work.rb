@@ -46,7 +46,10 @@ class Gws::Workload::Work
   permit_params :category_id, :client_id, :cycle_id, :load_id
 
   validates :name, presence: true
-  validate :validate_due_date
+  validates :due_date, presence: true
+  validates :due_start_on, presence: true
+  validate :validate_due_date, if: -> { due_date && due_start_on }
+  validate :validate_year_months, if: -> { errors.blank? }
 
   # indexing to elasticsearch via companion object
   # around_save ::Gws::Elasticsearch::Indexer::WorkloadWorkJob.callback
@@ -101,8 +104,7 @@ class Gws::Workload::Work
       criteria = criteria.search_keyword(params)
       criteria = criteria.search_category_id(params)
       criteria = criteria.search_client_id(params)
-      criteria = criteria.search_work_state(params)
-      criteria
+      criteria.search_work_state(params)
     end
 
     def search_keyword(params)
@@ -147,10 +149,6 @@ class Gws::Workload::Work
   private
 
   def validate_due_date
-    errors.add :due_date, :blank if due_date.blank?
-    errors.add :due_start_on, :blank if due_start_on.blank?
-    return if errors.present?
-
     if due_start_on > due_date
       errors.add :due_date, :greater_than, count: t(:due_start_on)
     end
@@ -160,12 +158,13 @@ class Gws::Workload::Work
     if due_end_on && due_end_on > due_date
       errors.add :due_date, :greater_than, count: t(:due_end_on)
     end
-    return if errors.present?
+  end
 
+  def validate_year_months
     self.year_months = []
     d1 = due_start_on.dup.change(day: 1)
     d2 = due_end_on ? due_end_on.dup.change(day: 1) : d1.dup
-    while (true) do
+    loop do
       self.year_months << {
         "year" => (@cur_site || site).fiscal_year(d1),
         "month" => d1.month
@@ -173,9 +172,8 @@ class Gws::Workload::Work
       d1 = d1.advance(months: 1)
       break if d1 > d2
     end
-
     if !year_months.map { |h| h["year"] }.include?(year)
-      errors.add :year, "が #{t(:due_start_on)} 〜 #{t(:due_end_on)} の期間に含まれていません"
+      errors.add :base, :not_include_fiscal_year
     end
   end
 end

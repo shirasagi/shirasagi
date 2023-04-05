@@ -1,9 +1,10 @@
 module Gws::Aggregation
   class GroupArray
-    def initialize(array)
-      @items = array
+    def initialize(items)
+      @items = items.to_a
       set_depth
       set_relations
+      sort_items
     end
 
     def find_group(group_id)
@@ -49,6 +50,16 @@ module Gws::Aggregation
 
         # set descendants
         item.descendants = @items.select { |group| group.name =~ /^#{item.name}\// }
+      end
+    end
+
+    def sort_items
+      @items.sort! do |lhs, rhs|
+        if lhs.depth != rhs.depth
+          lhs.depth <=> rhs.depth
+        else
+          lhs.order <=> rhs.order
+        end
       end
     end
 

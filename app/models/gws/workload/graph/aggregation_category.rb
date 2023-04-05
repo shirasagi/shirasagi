@@ -15,30 +15,16 @@ module Gws::Workload::Graph::AggregationCategory
     pipes << { "$match" => { "year_months.year" => year } }
     pipes << { "$group" => group_pipeline }
 
-    aggregation = Gws::Workload::Work.collection.aggregate(pipes)
-    aggregation = aggregation.to_a.index_by { |h| h["_id"] }
+    count_by_client = Gws::Workload::Work.collection.aggregate(pipes).to_a
+    count_by_client = count_by_client.index_by { |h| h["_id"] }
 
-    clients.each_with_index do |client, idx|
-      data = aggregation[client.id]
-      data ||= {}
-
-      count = months.map { |m| data["month#{m}_count"].to_i }
-
-      client_datasets << {
-        label: client.name,
-        data: count,
-        backgroundColor: Array.new(12, client.color),
-        barPercentage: 0.5,
-        order: (idx + 1)
-      }
-    end
+    set_client_datasets(count_by_client)
   end
 
-  def aggregate_load_datasets
-    # 業務負荷：
-    # (業務案件の終了日 - 業務案件の開始日) * 業務負荷係数
-    # 業務にコメントがあった日付を1日分とする
-
+  # 業務負荷：
+  # (業務案件の終了日 - 業務案件の開始日) * 業務負荷係数
+  # 業務にコメントがあった日付を1日分とする
+  def aggregate_coefficient_datasets
     group_pipeline1 = { _id: { month: "$month", day: "$day", work_id: "$work_id" } }
     lookup_pipeline = {
       from: "gws_workload_works",
@@ -49,7 +35,7 @@ module Gws::Workload::Graph::AggregationCategory
     project_pipeline = {
       month: "$_id.month",
       day: "$_id.day",
-      work: { "$arrayElemAt": [ "$works", 0 ] }
+      work: { "$arrayElemAt" => [ "$works", 0 ] }
     }
     group_pipeline2 = { _id: "$work.load_id" }
     months.each do |m|
@@ -65,15 +51,37 @@ module Gws::Workload::Graph::AggregationCategory
     pipes << { "$lookup" => lookup_pipeline }
     pipes << { "$project" => project_pipeline }
     pipes << { "$group" => group_pipeline2 }
-    aggregation = Gws::Workload::WorkComment.collection.aggregate(pipes)
-    aggregation = aggregation.to_a.index_by { |h| h["_id"] }
 
+    count_by_load = Gws::Workload::WorkComment.collection.aggregate(pipes).to_a
+    count_by_load = count_by_load.index_by { |h| h["_id"] }
+
+    set_coefficient_datasets(count_by_load)
+  end
+
+  private
+
+  def set_client_datasets(count_by_client)
+    clients.each_with_index do |client, idx|
+      data = count_by_client[client.id]
+      data ||= {}
+
+      count = months.map { |m| data["month#{m}_count"].to_i }
+      client_datasets << {
+        label: client.name,
+        data: count,
+        backgroundColor: Array.new(12, client.color),
+        barPercentage: 0.5,
+        order: (idx + 1)
+      }
+    end
+  end
+
+  def set_coefficient_datasets(count_by_load)
     loads.each_with_index do |load, idx|
-      data = aggregation[load.id]
+      data = count_by_load[load.id]
       data ||= {}
 
       coefficients = months.map { |m| data["month#{m}_count"].to_i * load.coefficient }
-
       load_datasets << {
         label: load.name,
         data: coefficients,

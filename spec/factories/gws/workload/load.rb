@@ -5,6 +5,6 @@ FactoryBot.define do
 
     name { unique_id }
     year { gws_site.fiscal_year }
-    coefficient { [166320, 55440, 27720].sample }
+    coefficient { [166_320, 55_440, 27_720].sample }
   end
 end

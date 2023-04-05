@@ -4,6 +4,7 @@ module Gws::Workload::ScheduleCalendar
 
   included do
     attr_accessor :api, :api_start, :api_end
+
     permit_params :api, :api_start, :api_end
 
     before_validation :set_from_drop_date_api, if: -> { api == 'drop' }
@@ -70,7 +71,7 @@ module Gws::Workload::ScheduleCalendar
   end
 
   def time_label(datetime)
-    sprintf('%d:%02d', datetime.hour, datetime.minute)
+    format('%d:%02d', datetime.hour, datetime.minute)
   end
 
   def private_plan?(user)

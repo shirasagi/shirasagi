@@ -15,50 +15,19 @@ module Gws::Workload::Graph::AggregationTotal
     pipes << { "$match" => { "year_months.year" => year } }
     pipes << { "$group" => group_pipeline }
 
-    aggregation1 = Gws::Workload::Work.collection.aggregate(pipes)
-    aggregation1 = aggregation1.to_a.index_by { |h| h["_id"] }
+    count_by_load = Gws::Workload::Work.collection.aggregate(pipes).to_a
+    count_by_load = count_by_load.index_by { |h| h["_id"] }
 
-    aggregation2 = {}
-    aggregation1.each_value do |data|
+    count_by_total = {}
+    count_by_load.each_value do |data|
       months.each do |month|
-        aggregation2["month#{month}_count"] ||= 0
-        aggregation2["month#{month}_count"] += data["month#{month}_count"]
+        count_by_total["month#{month}_count"] ||= 0
+        count_by_total["month#{month}_count"] += data["month#{month}_count"]
       end
     end
 
-    loads.each_with_index do |load, idx|
-      data = aggregation1[load.id] || {}
-
-      percentages = months.map do |month|
-        load_count = data["month#{month}_count"] || 0
-        total_count = aggregation2["month#{month}_count"] || 0
-        percentage = (total_count == 0) ? 0 : (load_count.to_f / total_count) * 100
-        percentage
-      end
-
-      total_datasets << {
-        label: load.name,
-        data: percentages,
-        backgroundColor: Array.new(12, load.bar_color),
-        barPercentage: 0.5,
-        datalabels: { display: false },
-        order: (2 + idx),
-        yAxisID: 'y'
-      }
-    end
-
-    yellow = "hsl(40,100%,50%)"
-    total_count = months.map { |month| aggregation2["month#{month}_count"] }
-    total_datasets << {
-      label: I18n.t("gws/workload.graph.total.label"),
-      data: total_count,
-      backgroundColor: yellow,
-      borderColor: yellow,
-      type: 'line',
-      fill: false,
-      order: 1,
-      yAxisID: 'y2'
-    }
+    set_load_datasets(count_by_load, count_by_total)
+    set_total_datasets(count_by_total)
   end
 
   def aggregate_worktime_datasets
@@ -73,12 +42,62 @@ module Gws::Workload::Graph::AggregationTotal
     pipes << { "$match" => comments.selector }
     pipes << { "$match" => { "year" => year } }
     pipes << { "$group" => group_pipeline }
-    aggregation = Gws::Workload::WorkComment.collection.aggregate(pipes).to_a
-    aggregation = aggregation.index_by { |h| h["_id"] }
 
+    minutes_by_user = Gws::Workload::WorkComment.collection.aggregate(pipes).to_a
+    minutes_by_user = minutes_by_user.index_by { |h| h["_id"] }
+
+    set_worktime_datasets(minutes_by_user)
+  end
+
+  def aggregate_overtime_datasets
+    minutes_by_user = overtimes.to_a.index_by(&:user_id)
+    set_overtime_datasets(minutes_by_user)
+  end
+
+  private
+
+  def set_load_datasets(count_by_load, count_by_total)
+    loads.each_with_index do |load, idx|
+      data = count_by_load[load.id] || {}
+
+      percentages = months.map do |month|
+        load_count = data["month#{month}_count"] || 0
+        total_count = count_by_total["month#{month}_count"] || 0
+        percentage = (total_count == 0) ? 0 : (load_count.to_f / total_count) * 100
+        percentage
+      end
+
+      total_datasets << {
+        label: load.name,
+        data: percentages,
+        backgroundColor: Array.new(12, load.bar_color),
+        barPercentage: 0.5,
+        datalabels: { display: false },
+        order: (2 + idx),
+        yAxisID: 'y'
+      }
+    end
+  end
+
+  def set_total_datasets(count_by_total)
+    yellow = "hsl(40,100%,50%)"
+    total_count = months.map { |month| count_by_total["month#{month}_count"] }
+    total_datasets << {
+      label: I18n.t("gws/workload.graph.total.label"),
+      data: total_count,
+      backgroundColor: yellow,
+      borderColor: yellow,
+      type: 'line',
+      fill: false,
+      order: 1,
+      yAxisID: 'y2'
+    }
+  end
+
+  def set_worktime_datasets(minutes_by_user)
     graph_users.each do |graph_user|
       user = graph_user.user
-      data = aggregation[user.id]
+      data = minutes_by_user[user.id]
       data ||= {}
 
       hours = months.map { |m| (data["worktime_month#{m}_minutes"].to_f / 60).round(2) }
@@ -91,12 +110,10 @@ module Gws::Workload::Graph::AggregationTotal
     end
   end
 
-  def aggregate_overtime_datasets
-    overtime_h = overtimes.to_a.index_by(&:user_id)
-
+  def set_overtime_datasets(minutes_by_user)
     graph_users.each do |graph_user|
       user = graph_user.user
-      data = overtime_h[user.id]
+      data = minutes_by_user[user.id]
 
       hours = months.map { |m| (data.send("month#{m}_minutes").to_f / 60).round(2) }
       overtime_datasets << {

@@ -2,7 +2,6 @@ module Gws::Workload::WorkFilter
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor(:cur_tab)
     append_view_path 'app/views/gws/workload/main'
 
     model Gws::Workload::Work
@@ -89,7 +88,7 @@ module Gws::Workload::WorkFilter
     #ret[:due_end_on] = due_end_on
     ret[:year] = @year if @year
     ret[:category_id] = @category.id if @category
-    ret[:member_group_id] = @cur_group.id,
+    ret[:member_group_id] = @cur_group.id
     ret[:member_ids] = [@cur_user.id]
     ret
   end
@@ -145,8 +144,12 @@ module Gws::Workload::WorkFilter
 
   def show
     raise '404' if item_deleted?
-    raise '403' if !item_readable?
-    render
+
+    if item_readable?
+      render template: 'show'
+    else
+      render template: 'gws/schedule/plans/private_plan'
+    end
   end
 
   def download_all

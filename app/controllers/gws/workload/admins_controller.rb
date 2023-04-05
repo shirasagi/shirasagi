@@ -20,17 +20,16 @@ class Gws::Workload::AdminsController < ApplicationController
   end
 
   def pre_params
-    now = Time.zone.now
-    ret = {
-      due_date: now + @cur_site.workload_default_due_date.day,
-      due_start_on: now,
-      due_end_on: now + @cur_site.workload_default_due_date.day,
-    }
+    today = Time.zone.today
+
+    ret = {}
+    ret[:due_date] = today + @cur_site.workload_default_due_date.day
+    ret[:due_start_on] = today
     ret[:year] = @year if @year
     ret[:category_id] = @category.id if @category
 
     # work target
-    ret[:member_group_id] = @cur_group.id,
+    ret[:member_group_id] = @cur_group.id
     ret[:member_group_id] = @group.id if @group
     ret[:member_ids] = [@cur_user.id]
     ret[:member_ids] = [@user.id] if @user

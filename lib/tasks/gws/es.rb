@@ -335,6 +335,27 @@ module Tasks
         end
       end
 
+      #def feed_all_workloads
+      #  ::Tasks::Gws::Base.with_site(ENV['site']) do |site|
+      #    if !site.menu_elasticsearch_visible?
+      #      puts 'elasticsearch was not enabled'
+      #      break
+      #    end
+      #
+      #    if site.elasticsearch_client.nil?
+      #      puts 'elasticsearch was not configured'
+      #      break
+      #    end
+      #
+      #    puts 'gws/workload/work'
+      #    ::Tasks::Gws::Base.each_item(::Gws::Workload::Work.site(site).without_deleted) do |work|
+      #      puts "- #{work.name}"
+      #      job = ::Gws::Elasticsearch::Indexer::WorkloadWorkJob.bind(site_id: site)
+      #      job.perform_now(action: 'index', id: work.id.to_s)
+      #    end
+      #  end
+      #end
+
       module Ingest
         module_function
 

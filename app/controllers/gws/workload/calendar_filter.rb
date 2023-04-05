@@ -17,7 +17,7 @@ module Gws::Workload::CalendarFilter
     set_calendar_start
 
     # calendar drop
-    if params.dig("item","api")
+    if params.dig("item", "api")
       set_item
       @year = @item.year
       return
@@ -27,7 +27,8 @@ module Gws::Workload::CalendarFilter
     if params[:action] == "new" && @calendar_start
       # カレンダーから遷移した際に年度を設定してリダイレクトする
       if !params[:year].match?(/\A\d+\z/)
-        redirect_to({ year: @cur_site.fiscal_year(@calendar_start) }.merge(request.query_parameters))
+        options = { action: "new", year: @cur_site.fiscal_year(@calendar_start) }.merge(request.query_parameters)
+        redirect_to url_for(options)
         return
       end
     end
@@ -42,13 +43,11 @@ module Gws::Workload::CalendarFilter
   public
 
   def calendar_redirect_url
-    @calendar_redirect_url ||= begin
-      path = params.dig(:calendar, :path)
-      return nil if path.blank?
-      uri = URI(path)
-      uri.query = { calendar: redirection_calendar_params }.to_param
-      uri.to_s
-    end
+    path = params.dig(:calendar, :path)
+    return if path.blank?
+    uri = URI(path)
+    uri.query = { calendar: redirection_calendar_params }.to_param
+    uri.to_s
   end
 
   def popup

@@ -50,7 +50,7 @@ module Gws::Addon::Workload::Graph
       self.color = SS::RandomColor.random_rgb.to_s
       return
     end
-    if color !~ /\#[0-9a-f]{6}/i
+    if !color.match?(/\#[0-9a-f]{6}/i)
       errors.add :color, :invalid
     end
   end

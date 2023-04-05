@@ -44,10 +44,9 @@ class Gws::Workload::OvertimesController < ApplicationController
   def set_items
     @items = @model.create_settings(@year, @users, site_id: @cur_site.id, group_id: @group.id).
       search(params[:s]).to_a
+    return if allowed_all?
 
-    if allowed_all?
-      #
-    elsif allowed_manage?
+    if allowed_manage?
       user_ids = @users.map(&:id)
       @items = @items.select { |item| user_ids.include?(item.user_id) }
     elsif allowed_use?
@@ -58,11 +57,11 @@ class Gws::Workload::OvertimesController < ApplicationController
   end
 
   def allowed_use?
-    @model.allowed?(:use, @cur_user, site: @cur_site) || @model.allowed?(:manage, @cur_user, site: @cur_site) || @model.allowed?(:all, @cur_user, site: @cur_site)
+    allowed_manage? || @model.allowed?(:use, @cur_user, site: @cur_site)
   end
 
   def allowed_manage?
-    @model.allowed?(:manage, @cur_user, site: @cur_site) || @model.allowed?(:all, @cur_user, site: @cur_site)
+    allowed_all? || @model.allowed?(:manage, @cur_user, site: @cur_site)
   end
 
   def allowed_all?

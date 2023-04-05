@@ -41,7 +41,8 @@ module Gws::Workload::GroupFilter
   end
 
   def user_options
-    [{ _id: "-", name: "// #{@model.t(:member_ids)}", trailing_name: "// #{@model.t(:member_ids)}" }] + @users.map { |u| { _id: u.id, name: u.name, trailing_name: u.name } }
+    [{ _id: "-", name: "// #{@model.t(:member_ids)}", trailing_name: "// #{@model.t(:member_ids)}" }] +
+      @users.map { |u| { _id: u.id, name: u.name, trailing_name: u.name } }
   end
 
   def category_options
