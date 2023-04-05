@@ -219,6 +219,7 @@ production: &production
 
   share:
     max_history_count: 20
+    folder_navi_limit: 100
 
   readable_setting:
     setting_range: 'select'
