@@ -1,6 +1,8 @@
 # workflow
 
 production: &production
+  # this option is currently not used.
+  # see cms site setting.
   disable_my_group: false
 
 test:
