@@ -85,7 +85,7 @@ class Gws::Workload::GraphsController < ApplicationController
     @aggregation.set_category(@category)
     @aggregation.set_base_items
     @aggregation.aggregate_client_datasets
-    @aggregation.aggregate_load_datasets
+    @aggregation.aggregate_coefficient_datasets
   end
 
   def download_works

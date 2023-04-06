@@ -1,7 +1,8 @@
 class Gws::Workload::Graph::Aggregation
   include Gws::Workload::Graph::AggregationTotal
   include Gws::Workload::Graph::AggregationCategory
-  include Gws::Workload::Graph::AggregationCsv
+  include Gws::Workload::Graph::AggregationWorkCsv
+  include Gws::Workload::Graph::AggregationWorkCommentCsv
 
   # base condition1
   attr_reader :site, :year, :group

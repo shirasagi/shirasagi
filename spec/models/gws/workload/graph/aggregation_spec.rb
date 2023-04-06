@@ -86,11 +86,11 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[2][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
-    it "load_datasets" do
+    it "coefficient_datasets" do
       aggregation = described_class.new(site, year, group, users)
       aggregation.set_category(category1)
       aggregation.set_base_items
-      aggregation.aggregate_load_datasets
+      aggregation.aggregate_coefficient_datasets
       datasets = aggregation.load_datasets
 
       expect(datasets[0][:label]).to eq load1.name
