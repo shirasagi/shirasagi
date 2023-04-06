@@ -57,9 +57,10 @@ module SS::Document
       sequence_field name
 
       if name == :id
-        replace_field "_id", Integer
+        field = replace_field "_id", Integer
+        field.default_val = 0
       else
-        field name, type: Integer
+        field name, type: Integer, default: 0
       end
     end
 
