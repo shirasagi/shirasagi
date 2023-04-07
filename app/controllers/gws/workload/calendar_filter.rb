@@ -27,7 +27,8 @@ module Gws::Workload::CalendarFilter
     if params[:action] == "new" && @calendar_start
       # カレンダーから遷移した際に年度を設定してリダイレクトする
       if !params[:year].match?(/\A\d+\z/)
-        redirect_to({ year: @cur_site.fiscal_year(@calendar_start) }.merge(request.query_parameters))
+        options = { action: "new", year: @cur_site.fiscal_year(@calendar_start) }.merge(request.query_parameters)
+        redirect_to url_for(options)
         return
       end
     end
