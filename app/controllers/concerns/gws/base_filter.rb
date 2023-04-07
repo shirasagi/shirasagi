@@ -51,7 +51,6 @@ module Gws::BaseFilter
 
   def set_account_menu
     @account_menu = []
-    @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
   end
 
   def set_gws_logged_in
