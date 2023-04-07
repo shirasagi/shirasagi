@@ -55,10 +55,10 @@ module Gws::Aggregation
 
     def sort_items
       @items.sort! do |lhs, rhs|
-        if lhs.depth != rhs.depth
-          lhs.depth <=> rhs.depth
-        else
+        if lhs.depth == rhs.depth
           lhs.order <=> rhs.order
+        else
+          lhs.depth <=> rhs.depth
         end
       end
     end
