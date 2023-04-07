@@ -96,10 +96,12 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       expect(datasets[0][:label]).to eq load1.name
       expect(datasets[1][:label]).to eq load2.name
       expect(datasets[2][:label]).to eq load3.name
+      expect(datasets[3][:label]).to eq I18n.t("gws/workload.graph.total.label")
 
       expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       expect(datasets[2][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(datasets[3][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
   end
 end
