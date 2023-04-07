@@ -144,8 +144,12 @@ module Gws::Workload::WorkFilter
 
   def show
     raise '404' if item_deleted?
-    raise '403' if !item_readable?
-    render
+
+    if item_readable?
+      render template: 'show'
+    else
+      render template: 'gws/schedule/plans/private_plan'
+    end
   end
 
   def download_all
