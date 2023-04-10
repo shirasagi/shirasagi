@@ -17,7 +17,7 @@ module SS::Password
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
     before_save :reset_initial_password_warning, if: -> { self_edit.present? && self_edit }
     before_save :update_password_changed_at, if: -> { password_changed? }
-    after_save :update_password_in_session, if: -> { password_changed? }
+    after_save :update_password_in_session, if: -> { password_changed? || password_previously_changed? }
   end
 
   def initial_password_warning_options

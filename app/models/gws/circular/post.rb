@@ -210,7 +210,7 @@ class Gws::Circular::Post
       cur_member_ids = sorted_overall_members.pluck(:id)
       prev_member_ids = sorted_overall_members_was.pluck(:id)
 
-      if state_was == 'draft'
+      if state_previously_was == 'draft'
         # just published
         added_member_ids = cur_member_ids
         removed_member_ids = []
@@ -220,7 +220,7 @@ class Gws::Circular::Post
       end
     end
 
-    if state == 'draft' && state_was == 'public'
+    if state == 'draft' && state_previously_was == 'public'
       # just depublished
       cur_member_ids = sorted_overall_members.pluck(:id)
       prev_member_ids = sorted_overall_members_was.pluck(:id)

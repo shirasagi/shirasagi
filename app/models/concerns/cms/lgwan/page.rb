@@ -38,14 +38,15 @@ module Cms::Lgwan
     end
 
     def rename_file_in_web
-      return unless @db_changes["filename"]
-      return unless @db_changes["filename"][0]
+      filename_changes = changes['filename'].presence || previous_changes['filename']
+      return unless filename_changes
+      return unless filename_changes[0]
 
-      src = "#{site.path}/#{@db_changes['filename'][0]}"
+      src = "#{site.path}/#{filename_changes[0]}"
       src = src.delete_prefix("#{Rails.root}/")
       run_callbacks :rename_file do
         Uploader::JobFile.new_job(site_id: site.id).bind_rm([src]).save_job
-        Cms::PageRelease.close(self, @db_changes['filename'][0])
+        Cms::PageRelease.close(self, filename_changes[0])
       end
     end
 
@@ -66,7 +67,8 @@ module Cms::Lgwan
     end
 
     def rename_sitemap_xml_in_web
-      src = "#{site.path}/#{@db_changes['filename'][0]}"
+      filename_changes = changes['filename'].presence || previous_changes['filename']
+      src = "#{site.path}/#{filename_changes[0]}"
       src = src.sub(/\.[^\/]+$/, ".xml")
       src = src.delete_prefix("#{Rails.root}/")
       Uploader::JobFile.new_job(site_id: site.id).bind_rm([src]).save_job

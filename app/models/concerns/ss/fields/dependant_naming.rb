@@ -5,7 +5,7 @@ module SS::Fields::DependantNaming
     cattr_accessor(:name_field, instance_accessor: false) { "name" }
     attr_accessor :skip_rename_children
 
-    after_save :rename_children, if: ->{ @db_changes && !skip_rename_children }
+    after_save :rename_children, if: ->{ (changes.present? || previous_changes.present?) && !skip_rename_children }
   end
 
   def trailing_name
@@ -23,13 +23,13 @@ module SS::Fields::DependantNaming
   end
 
   def rename_children
-    changes = @db_changes[self.class.name_field]
-    return unless changes
+    name_changes = changes[self.class.name_field].presence || previous_changes[self.class.name_field]
+    return unless name_changes
 
-    src = changes[0]
+    src = name_changes[0]
     return unless src
 
-    dst = changes[1]
+    dst = name_changes[1]
     return unless dst
 
     dependant_scope.ne(_id: _id).where(self.class.name_field => /^#{::Regexp.escape(src)}\//).each do |item|
