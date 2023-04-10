@@ -20,7 +20,7 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("gws/schedule/todo.links.finish")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       item.reload
 
       within ".gws-comment-post" do
@@ -38,7 +38,7 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("gws/schedule/todo.links.revert")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       item.reload
 
       within ".gws-comment-post" do

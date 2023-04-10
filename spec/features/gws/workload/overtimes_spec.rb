@@ -41,7 +41,7 @@ describe "gws_workload_overtimes", type: :feature, dbscope: :example, js: true d
           end
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         within "#addon-gws-agents-addons-workload-overtime" do
           site.fiscal_months.each do |m|

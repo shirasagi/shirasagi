@@ -25,7 +25,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/workload.buttons.comment')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-gws-agents-addons-workload-comment_post" do
         within ".comment.total" do
@@ -44,7 +44,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/workload.buttons.comment')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-gws-agents-addons-workload-comment_post" do
         within ".comment.total" do
@@ -60,7 +60,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/workload.buttons.comment')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-gws-agents-addons-workload-comment_post" do
         within ".comment.total" do
@@ -86,7 +86,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
         fill_in "item[commented_at]", with: I18n.l(commented_at, format: :picker)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within ".gws-comment-post" do
         within "#comment-#{comment.id}" do
@@ -108,7 +108,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".gws-comment-post" do
         expect(page).to have_no_css("#comment-#{comment.id}")

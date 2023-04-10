@@ -38,7 +38,7 @@ describe "gws_workload_graph_user_settings", type: :feature, dbscope: :example, 
           fill_in "item[color]", with: "#000000"
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         within "#addon-gws-agents-addons-workload-graph" do
           expect(page).to have_css("dd", text: I18n.t("ss.options.state.hide"))

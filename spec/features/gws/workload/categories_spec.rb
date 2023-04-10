@@ -31,7 +31,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-basic" do
         expect(page).to have_css("dd", text: name)
         expect(page).to have_css("dd", text: site.fiscal_year)
@@ -49,7 +49,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-basic" do
         expect(page).to have_css("dd", text: name)
       end
@@ -60,7 +60,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     it "#download" do
@@ -101,7 +101,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("ss.links.import")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_selector(".list-items .list-item", count: 15)
 
         count = Gws::Workload::Category.site(site).size
