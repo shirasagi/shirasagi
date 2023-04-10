@@ -136,7 +136,9 @@ class History::Trash
 
     def restore!(opts = {})
       criteria.each do |item|
-        item.restore!(opts)
+        self.with_scope(self.unscoped) do
+          item.restore!(opts)
+        end
       end
     end
   end
