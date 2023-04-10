@@ -90,7 +90,7 @@ class History::Trash
       self.destroy
     end
     if opts[:file_restore]
-      item.group_ids = opts[:cur_group].to_a.pluck(:id)
+      item.group_ids = opts[:cur_group].try(:id).then { |id| id ? [ id ] : [] }
       item.save
       id = self.data[:_id]
       path = "#{self.class.root}/ss_files/" + id.to_s.chars.join("/") + "/_/#{id}"
