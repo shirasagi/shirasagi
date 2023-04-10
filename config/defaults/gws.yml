@@ -220,6 +220,11 @@ production: &production
   share:
     max_history_count: 20
     folder_navi_limit: 100
+    # 共有ファイルのフォルダーリストナビの表示フォルダー上限
+    # 1階層内での表示上限となる
+    #
+    # 100 : 1階層に最大 100 までフォルダーを表示可能。
+    # 空欄 : 制限無し
 
   readable_setting:
     setting_range: 'select'
