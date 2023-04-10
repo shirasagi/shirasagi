@@ -54,13 +54,7 @@ module Gws::Aggregation
     end
 
     def sort_items
-      @items.sort! do |lhs, rhs|
-        if lhs.depth == rhs.depth
-          lhs.order <=> rhs.order
-        else
-          lhs.depth <=> rhs.depth
-        end
-      end
+      @items = SS::TreeList.build(@items, {})
     end
 
     def respond_method?(name)

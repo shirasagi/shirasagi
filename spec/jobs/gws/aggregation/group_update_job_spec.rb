@@ -6,9 +6,9 @@ describe Gws::Aggregation::GroupUpdateJob, dbscope: :example do
   let(:group1) { Gws::Group.find_by(name: "シラサギ市") }
   let(:group2) { Gws::Group.find_by(name: "シラサギ市/企画政策部") }
   let(:group3) { Gws::Group.find_by(name: "シラサギ市/企画政策部/政策課") }
-  let(:group4) { create(:gws_group, name: "シラサギ市/企画政策部/広報課") }
-  let(:group5) { create(:gws_group, name: "シラサギ市/企画政策部/広報課/担当1") }
-  let(:group6) { create(:gws_group, name: "シラサギ市/企画政策部/広報課/担当2") }
+  let(:group4) { create(:gws_group, name: "シラサギ市/企画政策部/広報課", order: 0) }
+  let(:group5) { create(:gws_group, name: "シラサギ市/企画政策部/広報課/担当1", order: 0) }
+  let(:group6) { create(:gws_group, name: "シラサギ市/企画政策部/広報課/担当2", order: 0) }
 
   let!(:user1) { create(:gws_user, group_ids: [group4.id], title_ids: [title1.id]) }
   let!(:user2) { create(:gws_user, group_ids: [group4.id], title_ids: [title2.id]) }
@@ -201,9 +201,9 @@ describe Gws::Aggregation::GroupUpdateJob, dbscope: :example do
       expect(groups.map(&:name)).to eq %w(
         シラサギ市
         シラサギ市/企画政策部
+        シラサギ市/企画政策部/政策課
         シラサギ市/企画政策部/DX推進広報課/担当1
-        シラサギ市/企画政策部/DX推進広報課/担当2
-        シラサギ市/企画政策部/政策課)
+        シラサギ市/企画政策部/DX推進広報課/担当2)
 
       groups = Gws::Aggregation::Group.active_at(time6 + 1.second)
       expect(groups.map(&:name)).to eq %w(

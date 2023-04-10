@@ -6,6 +6,7 @@ module Gws::Aggregation
 
     attr_accessor :children, :parent, :descendants, :depth, :trailing_name
 
+    seqid :id
     field :activation_date, type: DateTime
     field :expiration_date, type: DateTime
 
