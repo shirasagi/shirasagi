@@ -124,9 +124,9 @@ class Gws::Report::File
 
     if state == 'public'
       cur_member_ids = sorted_overall_members.pluck(:id)
-      prev_member_ids = sorted_overall_members_was.pluck(:id)
+      prev_member_ids = sorted_overall_members_previously_was.pluck(:id)
 
-      if state_was == 'closed'
+      if state_previously_was == 'closed'
         # just published
         added_member_ids = cur_member_ids
         removed_member_ids = []
@@ -136,10 +136,10 @@ class Gws::Report::File
       end
     end
 
-    if state == 'closed' && state_was == 'public'
+    if state == 'closed' && state_previously_was == 'public'
       # just depublished
       cur_member_ids = sorted_overall_members.pluck(:id)
-      prev_member_ids = sorted_overall_members_was.pluck(:id)
+      prev_member_ids = sorted_overall_members_previously_was.pluck(:id)
 
       added_member_ids = []
       removed_member_ids = (cur_member_ids + prev_member_ids).uniq

@@ -111,7 +111,7 @@ module Cms::Reference::Files
   def put_contains_urls_logs
     return if !respond_to?(:contains_urls)
 
-    add_contains_urls = self.contains_urls - self.contains_urls_was.to_a
+    add_contains_urls = self.contains_urls - self.contains_urls_previously_was.to_a
     add_contains_urls.each do |file_url|
       item = History::Log.build_file_log(nil, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
       item.url = file_url
@@ -121,7 +121,7 @@ module Cms::Reference::Files
       item.save
     end
 
-    del_contains_urls = self.contains_urls_was.to_a - self.contains_urls
+    del_contains_urls = self.contains_urls_previously_was.to_a - self.contains_urls
     del_contains_urls.each do |file_url|
       item = History::Log.build_file_log(nil, site_id: @cur_site.try(:id), user_id: @cur_user.try(:id))
       item.url = file_url

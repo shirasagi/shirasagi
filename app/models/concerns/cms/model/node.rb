@@ -28,9 +28,9 @@ module Cms::Model::Node
     validate :validate_invalid_filename
     validate :validate_ancestors
 
-    after_save :rename_children, if: ->{ @db_changes }
+    after_save :rename_children, if: ->{ changes.present? || previous_changes.present? }
     after_save :remove_files_recursively, if: ->{ remove_files_recursively? }
-    after_update :update_page_index_queues, if: ->{ @db_changes["state"] }
+    after_update :update_page_index_queues, if: ->{ state_changed? || state_previously_changed? }
     after_destroy :remove_all
     after_destroy :destroy_children
 
@@ -240,8 +240,8 @@ module Cms::Model::Node
 
   def remove_files_recursively?
     return false if skip_remove_files_recursively
-    return true if @db_changes && @db_changes["state"] && !public?
-    return true if @db_changes && @db_changes["route"] && public?
+    return true if (state_changed? || state_previously_changed?) && !public?
+    return true if (route_changed? || route_previously_changed?) && public?
     false
   end
 
@@ -302,14 +302,15 @@ module Cms::Model::Node
   end
 
   def rename_children
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
+    filename_changes = changes["filename"].presence || previous_changes["filename"]
+    return unless filename_changes
+    return unless filename_changes[0]
 
-    src = "#{(@cur_site || site).path}/#{@db_changes['filename'][0]}"
-    dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
+    src = "#{(@cur_site || site).path}/#{filename_changes[0]}"
+    dst = "#{(@cur_site || site).path}/#{filename_changes[1]}"
     rename_children_files(src, dst)
 
-    src, dst = @db_changes["filename"]
+    src, dst = filename_changes
     [ Cms::Node, Cms::Page, Cms::Part, Cms::Layout ].each do |model|
       criteria = model.unscoped
       criteria = criteria.site(@cur_site || site)

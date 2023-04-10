@@ -34,9 +34,10 @@ module Gws::Addon::Share
     end
 
     def save_history_for_save
-      return if @db_changes.blank?
+      field_changes = changes.presence || previous_changes
+      return if field_changes.blank?
 
-      if @db_changes.key?('deleted')
+      if field_changes.key?('deleted')
         if deleted.present?
           save_history mode: 'delete'
         else
@@ -45,7 +46,7 @@ module Gws::Addon::Share
       elsif histories.blank?
         save_history mode: 'create'
       else
-        save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
+        save_history mode: 'update', updated_fields: field_changes.keys.reject { |s| s =~ /_hash$/ }
       end
     end
 

@@ -81,27 +81,57 @@ module Gws::Member
   end
 
   def overall_members_was
-    user_ids = member_ids_was.to_a
-    group_ids = member_group_ids_was.to_a
+    user_ids_was = member_ids_was.to_a
+    group_ids_was = member_group_ids_was.to_a
 
     if self.class.member_include_custom_groups?
-      member_custom_groups_was = Gws::CustomGroup.site(site || cur_site).in(id: member_custom_group_ids_was)
-      user_ids += member_custom_groups_was.pluck(:member_ids).flatten
-      group_ids += member_custom_groups_was.pluck(:member_group_ids).flatten
+      custom_group_ids_was = member_custom_group_ids_was
+      if custom_group_ids_was.present?
+        member_custom_groups_was = Gws::CustomGroup.site(cur_site || site).in(id: custom_group_ids_was.to_a)
+        user_ids_was += member_custom_groups_was.pluck(:member_ids).flatten
+        group_ids_was += member_custom_groups_was.pluck(:member_group_ids).flatten
+      end
     end
 
-    group_ids.compact!
-    group_ids.uniq!
-    group_ids += Gws::Group.site(@cur_site || site).in(id: group_ids).active.pluck(:id)
+    group_ids_was.compact!
+    group_ids_was.uniq!
+    group_ids_was += Gws::Group.site(@cur_site || site).in(id: group_ids_was).active.pluck(:id)
 
-    user_ids += Gws::User.in(group_ids: group_ids).pluck(:id)
-    user_ids.compact!
-    user_ids.uniq!
-    Gws::User.in(id: user_ids)
+    user_ids_was += Gws::User.in(group_ids: group_ids_was).pluck(:id)
+    user_ids_was.compact!
+    user_ids_was.uniq!
+    Gws::User.in(id: user_ids_was)
+  end
+
+  def overall_members_previously_was
+    user_ids_was = member_ids_previously_was.to_a
+    group_ids_was = member_group_ids_previously_was.to_a
+
+    if self.class.member_include_custom_groups?
+      custom_group_ids_was = member_custom_group_ids_previously_was
+      if custom_group_ids_was.present?
+        member_custom_groups_was = Gws::CustomGroup.site(cur_site || site).in(id: custom_group_ids_was.to_a)
+        user_ids_was += member_custom_groups_was.pluck(:member_ids).flatten
+        group_ids_was += member_custom_groups_was.pluck(:member_group_ids).flatten
+      end
+    end
+
+    group_ids_was.compact!
+    group_ids_was.uniq!
+    group_ids_was += Gws::Group.site(@cur_site || site).in(id: group_ids_was).active.pluck(:id)
+
+    user_ids_was += Gws::User.in(group_ids: group_ids_was).pluck(:id)
+    user_ids_was.compact!
+    user_ids_was.uniq!
+    Gws::User.in(id: user_ids_was)
   end
 
   def sorted_overall_members_was
     overall_members_was.active.order_by_title(site || cur_site)
+  end
+
+  def sorted_overall_members_previously_was
+    overall_members_previously_was.active.order_by_title(site || cur_site)
   end
 
   private

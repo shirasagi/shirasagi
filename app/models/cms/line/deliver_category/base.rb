@@ -30,7 +30,7 @@ class Cms::Line::DeliverCategory::Base
   validates :name, presence: true
   validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
   validates :depth, presence: true
-  after_save :rename_children, if: ->{ @db_changes }
+  after_save :rename_children, if: ->{ changes.present? || previous_changes.present? }
 
   default_scope -> { order_by(order: 1) }
 
@@ -79,8 +79,9 @@ class Cms::Line::DeliverCategory::Base
   end
 
   def rename_children
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
+    filename_changes = changes['filename'].presence || previous_changes['filename']
+    return unless filename_changes
+    return unless filename_changes[0]
     children.each(&:save)
   end
 

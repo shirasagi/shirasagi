@@ -32,10 +32,10 @@ module Cms::Model::Page
 
     permit_params category_ids: []
 
-    after_save :rename_file, if: ->{ @db_changes }
-    after_save :generate_file, if: ->{ @db_changes }
-    after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
-    after_save :new_size_input, if: ->{ @db_changes }
+    after_save :rename_file, if: ->{ changes.present? || previous_changes.present? }
+    after_save :generate_file, if: ->{ changes.present? || previous_changes.present? }
+    after_save :remove_file, if: ->{ (state_changed? || state_previously_changed?) && !public? }
+    after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
     after_destroy :remove_file
 
     template_variable_handler(:categories, :template_variable_handler_categories)
@@ -120,17 +120,18 @@ module Cms::Model::Page
   end
 
   def rename_file
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
+    filename_changes = changes["filename"].presence || previous_changes["filename"]
+    return unless filename_changes
+    return unless filename_changes[0]
 
-    src = "#{(@cur_site || site).path}/#{@db_changes['filename'][0]}"
-    dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
+    src = "#{(@cur_site || site).path}/#{filename_changes[0]}"
+    dst = "#{(@cur_site || site).path}/#{filename_changes[1]}"
     dst_dir = ::File.dirname(dst)
 
     run_callbacks :rename_file do
       Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
       Fs.mv src, dst if Fs.exist?(src)
-      Cms::PageRelease.close(self, @db_changes['filename'][0])
+      Cms::PageRelease.close(self, filename_changes[0])
     end
   end
 

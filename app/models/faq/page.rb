@@ -26,7 +26,7 @@ class Faq::Page
 
   set_permission_name "faq_pages"
 
-  after_save :new_size_input, if: ->{ @db_changes }
+  after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
 
   default_scope ->{ where(route: "faq/page") }
 end

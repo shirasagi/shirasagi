@@ -41,7 +41,7 @@ class Cms::Page
   # rss
   index({ released: 1, id: 1 })
 
-  after_save :new_size_input, if: ->{ @db_changes }
+  after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
 
   class << self
     def routes

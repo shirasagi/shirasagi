@@ -121,8 +121,9 @@ module Gws::Addon
         end
       end
 
-      if @db_changes.present?
-        reminder.updated_fields = @db_changes.keys.reject { |s| s =~ /_hash$/ } unless new_record?
+      field_changes = changes.presence || previous_changes
+      if field_changes.present?
+        reminder.updated_fields = field_changes.keys.reject { |s| s =~ /_hash$/ } unless new_record?
         reminder.updated_user_id = @cur_user.id
         reminder.updated_user_uid = @cur_user.uid
         reminder.updated_user_name = @cur_user.name
@@ -137,7 +138,8 @@ module Gws::Addon
 
     def save_reminders
       return if reminder_url.blank?
-      return if @db_changes.blank?
+      field_changes = changes.presence || previous_changes
+      return if field_changes.blank?
       return if @cur_user.blank?
 
       cond = {
@@ -156,7 +158,8 @@ module Gws::Addon
 
     def update_reminders
       return if reminder_url.blank?
-      return if @db_changes.blank?
+      field_changes = changes.presence || previous_changes
+      return if field_changes.blank?
       return if @cur_user.blank?
 
       reminder = reminder(@cur_user)
@@ -184,7 +187,7 @@ module Gws::Addon
         end
       end
 
-      reminder.updated_fields = @db_changes.keys.reject { |s| s =~ /_hash$/ }
+      reminder.updated_fields = field_changes.keys.reject { |s| s =~ /_hash$/ }
       reminder.updated_user_id = @cur_user.id
       reminder.updated_user_uid = @cur_user.uid
       reminder.updated_user_name = @cur_user.name
@@ -196,10 +199,11 @@ module Gws::Addon
     def purge_reminders
       return if new_record?
       return if reminder_url.blank?
-      return if @db_changes.blank?
+      field_changes = changes.presence || previous_changes
+      return if field_changes.blank?
       return if @cur_user.blank?
 
-      if @db_changes["start_at"] || @db_changes["allday"]
+      if field_changes["start_at"] || field_changes["allday"]
         # remove other users item_id
         cond = {
           site_id: site_id,
@@ -211,7 +215,7 @@ module Gws::Addon
         end
       end
 
-      if @db_changes["deleted"]
+      if field_changes["deleted"]
         # when soft deleted
         reminder = reminder(@cur_user)
         reminder.destroy if reminder

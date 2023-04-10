@@ -140,7 +140,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   def put_contains_urls_logs
     owner_item = SS::Model.container_of(self)
-    add_contains_urls = owner_item.value_contains_urls - owner_item.value_contains_urls_was.to_a
+    add_contains_urls = owner_item.value_contains_urls - owner_item.value_contains_urls_previously_was.to_a
     add_contains_urls.each do |file_url|
       item = build_history_log(nil)
       item.url = file_url
@@ -150,7 +150,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       item.save
     end
 
-    del_contains_urls = owner_item.value_contains_urls_was.to_a - owner_item.value_contains_urls
+    del_contains_urls = owner_item.value_contains_urls_previously_was.to_a - owner_item.value_contains_urls
     del_contains_urls.each do |file_url|
       item = build_history_log(nil)
       item.url = file_url

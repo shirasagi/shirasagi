@@ -83,7 +83,7 @@ module SS::Model::User
     validate :validate_uid
     validate :validate_account_expiration_date
 
-    after_save :save_group_history, if: -> { @db_changes['group_ids'] }
+    after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     default_scope -> {
@@ -398,13 +398,13 @@ module SS::Model::User
   end
 
   def save_group_history
-    changes = @db_changes['group_ids']
+    group_ids_changes = changes['group_ids'].presence || previous_changes['group_ids']
     item = SS::UserGroupHistory.new(
       cur_site: @cur_site,
       user_id: id,
       group_ids: group_ids,
-      inc_group_ids: (changes[1].to_a - changes[0].to_a),
-      dec_group_ids: (changes[0].to_a - changes[1].to_a)
+      inc_group_ids: (group_ids_changes[1].to_a - group_ids_changes[0].to_a),
+      dec_group_ids: (group_ids_changes[0].to_a - group_ids_changes[1].to_a)
     )
     item.save
   end

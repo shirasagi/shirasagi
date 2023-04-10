@@ -18,7 +18,7 @@ module Rss::Node
 
     default_scope ->{ where(route: "rss/page") }
 
-    after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
+    after_save :purge_pages, if: ->{ rss_max_docs_changed? || rss_max_docs_previously_changed? }
 
     private
 
@@ -44,7 +44,7 @@ module Rss::Node
     self.weather_xml = true
     self.default_rss_max_docs = 100
 
-    after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
+    after_save :purge_pages, if: ->{ rss_max_docs_changed? || rss_max_docs_previously_changed? }
 
     def execute_weather_xml_filter(page, context)
       return if page.blank?

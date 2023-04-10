@@ -19,7 +19,7 @@ module Gws::Addon::Schedule::Repeat
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
     before_save :todo_action_repeat_plan, if: -> { todo_action.present? && edit_range }
     after_save :extract_repeat_plans, if: -> { repeat? }
-    after_save :do_soft_or_undo_delete_with_repeat_plans, if: -> { deleted_changed? }
+    after_save :do_soft_or_undo_delete_with_repeat_plans, if: -> { deleted_changed? || deleted_previously_changed? }
     before_destroy :remove_repeat_plan, if: -> { repeat_plan }
   end
 
