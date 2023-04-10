@@ -111,6 +111,7 @@ module ApplicationHelper
 
   def tt(key, *args)
     opts = args.extract_options!
+    symbol = opts[:symbol] || "?"
 
     html_wrap = args.shift
     html_wrap = opts[:html_wrap] if html_wrap.nil?
@@ -127,7 +128,7 @@ module ApplicationHelper
     list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
 
     h = []
-    h << %(<div class="tooltip">?)
+    h << %(<div class="tooltip">#{symbol})
     h << %(<ul class="tooltip-content">)
     h << list
     h << %(</ul>)

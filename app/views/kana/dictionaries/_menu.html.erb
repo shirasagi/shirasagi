@@ -9,7 +9,7 @@
         if source_timestamp = @model.site(@cur_site).map(:updated)
           dic_timestamp = @model.master_dic_timestamp(@cur_site.id)
           if dic_timestamp.nil? || source_timestamp > dic_timestamp
-            tt("kana/dictionary.newer_source")
+            tt("kana/dictionary.newer_source", symbol: "!")
           end
         end
       %>
