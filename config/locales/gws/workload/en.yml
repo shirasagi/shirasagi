@@ -1,0 +1,260 @@
+en:
+  gws/workload:
+    year: Fiscal year
+    setting: Workload settings
+    tabs:
+      work: Work
+      admin: All works
+      overtime: Overtime
+      graph: Graph
+      trash: Trash
+    links:
+      work_csv: Work count CSV
+      work_comment_csv: Work comment CSV
+    confirm:
+      set_seen_all: Do you want to mark all selected items as read?
+      unset_seen_all: Do you want to return all selected items to unread?
+      download: Do you want to output all selected items to CSV?
+    work:
+      disabled: Disabled
+      seen: Seen
+      unseen: Unseen
+      set_seen: Mark as read
+      unset_seen: Mark as unread
+      seen_at:  Date and time read
+      download: Output to CSV
+      member: Members
+      type: Types
+      update_at: Date and updated
+      user: User
+      replay: Replay
+    graph:
+      total:
+        title: Summary of work load, requests and number of work
+        label: Number of work
+        x: months
+        y: work oad percentage
+      worktime:
+        title: Work situation
+        x: Months
+        y: Work hours (h)
+      overtime:
+        title: Overtime situation
+        x: Months
+        y: Overtime hours (h)
+      client:
+        title: Number of work
+        x: Months
+        y: Works
+      load:
+        title: Work load
+        x: Months
+        y: Work load figures
+    csv:
+      - ID
+      - 業務名
+      - 年度
+      - 業務カテゴリー
+      - 依頼元
+      - 頻度
+      - 業務負荷
+    buttons:
+      comment: Update
+    options:
+      workload_delete_threshold:
+        - 6 months
+        - 1 year
+        - 1 year and 6 months
+        - 2 years
+        - 2 years and 6 months
+        - 3 years
+        - 3 years and 6 months
+      sort:
+        created_asc:  Posted (by date)
+        created_desc: Posted (from newest)
+        updated_asc:  Last updated (by date)
+        updated_desc: Last updated (from newest)
+        due_date_asc:  Circular deadline date and time (ascending order)
+        due_date_desc: Circular deadline date and time (descending order)
+      work_state:
+        finished: Completed
+        except_finished: Exclude completed
+        all: All
+
+  modules:
+    gws/workload: Workload
+    addons:
+      gws/workload/group_setting: Workload
+      gws/workload/category: Category
+      gws/workload/member: Member
+      gws/workload/comment_post: Comment
+      gws/workload/graph: Graph settings
+      gws/workload/overtime: Overtime
+  gws_role:
+    use_gws_workload: Use of workload
+    read_other_gws_workload_works: View works (all)
+    read_private_gws_workload_works: View works (own)
+    edit_other_gws_workload_works: Edit works (all)
+    edit_private_gws_workload_works: Edit works (own)
+    delete_other_gws_workload_works: Delete works (all)
+    delete_private_gws_workload_works: Delete works (own)
+    trash_other_gws_workload_works: Manage work trash (all)
+    trash_private_gws_workload_works: Manage work trash (own)
+    edit_gws_workload_settings: Manage workload settings
+    read_other_gws_workload_graphs: View workload graphs (all)
+    read_private_gws_workload_graphs: View workload graphs (own)
+    use_gws_workload_overtimes: Manage overtime (own)
+    manage_gws_workload_overtimes: Manage overtime (own group)
+    all_gws_workload_overtimes:  Manage overtime (all)
+
+  gws_notification:
+    #gws/workload/work:
+    #  subject: "[Workload] “%{name}” has arrived."
+    #  text: "%{text}"
+    #  mail_text: |
+    #    %{subject}
+    #
+    #    %{text}
+
+    gws/workload/work/destroy:
+      subject: "[Workload] “%{name}” has been removed."
+      text: ""
+      mail_text: |
+        %{subject}
+
+  mongoid:
+    models:
+      gws/workload/work: Work
+      gws/workload/category: Category
+      gws/workload/client: Client
+      gws/workload/cycle: Cycle
+      gws/workload/load: Load
+      gws/workload/graph/user_setting: Graph users
+
+    errors:
+      models:
+        gws/workload/work:
+          member_length: Set the number of participants at no more than %{max}.
+          file_size_limit: The size of the attachment (%{size}) has exceeded the maximum size (%{limit}).
+          not_include_fiscal_year: The start or end date is not within the fiscal year.
+        gws/workload/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+    attributes:
+      gws/workload/work:
+        name: Title
+        year: Fiscal year.
+        month: Month
+        category_id: Category
+        client_id: Client
+        cycle_id: Cycle
+        load_id: Load
+        created: Created date and time
+        updated: Updated date and time
+        due_date: Due date
+        due_start_on: Due start date
+        due_end_on: Due end date
+        see_type: Format to mark as read
+        deleted: Deletion date and time
+        seen: Read
+        achievement_rate: Progress rate
+        worktime_minutes: Worktime minutes
+        overtime_minutes: Overtime minutes
+        comments_total: Progress rate/time
+        term: Term
+      gws/workload/category:
+        name: Title
+        order: Order
+        year: Fiscal year
+      gws/workload/client:
+        name: Title
+        order: Order
+        year: Fiscal year
+      gws/workload/cycle:
+        name: Title
+        order: Order
+        year: Fiscal year
+      gws/workload/load:
+        name: Title
+        order: Order
+        year: Fiscal year
+        coefficient: Coefficient
+      gws/addon/workload/member:
+        member_ids: Members
+        member_group_id: Member group
+      gws/workload/work_comment:
+        year: Fiscal year
+        month: Month
+        day: Day
+        work_id: Work
+        work_name: Work title
+        commented_at: Commented date and time
+        achievement_rate: Progress rate
+        worktime_minutes: Worktime minutes
+        overtime_minutes: Overtime minutes
+        coefficient: Progress rate/time
+      gws/addon/workload/graph:
+        graph_state: Graph status
+        color: Color
+      gws/workload/graph/user_setting:
+        name: Title
+        state: Status
+      gws/workload/overtime:
+        name: Title
+        month1_minutes: Overtime hours in January
+        month2_minutes: Overtime hours in February
+        month3_minutes: Overtime hours in March
+        month4_minutes: Overtime hours in April
+        month5_minutes: Overtime hours in May
+        month6_minutes: Overtime hours in June
+        month7_minutes: Overtime hours in July
+        month8_minutes: Overtime hours in August
+        month9_minutes: Overtime hours in September
+        month10_minutes: Overtime hours in October
+        month11_minutes: Overtime hours in November
+        month12_minutes: Overtime hours in December
+
+  activemodel:
+    models:
+      gws/workload/importer/category: Category CSV importer
+    attributes:
+      gws/workload/importer/category:
+        in_file: File
+    errors:
+      models:
+        gws/workload/importer/base:
+          not_found: "%{line_no}: Fiscal year %{year}, ID %{id} is not exists"
+          not_found_group: "%{line_no}: group %{name} is not found."
+
+  tooltip:
+    gws/workload/work:
+      name: Enter a title.
+      year: Enter a fiscal year.
+      category_id: Select a category.
+      client_id:  Select a client.
+      cycle_id:  Select a cycle.
+      load_id:  Select a load.
+      due_date: Enter a due date.
+      due_start_on: Enter a start date.
+      due_end_on: Enter a start close.
+      achievement_rate: Latest comment progress rate
+      worktime_minutes: Total working hours of comments
+      overtime_minutes: Total overtime of comments
+    gws/workload/category:
+      name: Enter a title.
+      year: Enter a fiscal year.
+    gws/workload/client:
+      name: Enter a title.
+      year: Enter a fiscal year.
+    gws/workload/cycle:
+      name: Enter a title.
+      year: Enter a fiscal year.
+    gws/workload/load:
+      name: Enter a title.
+      year: Enter a fiscal year.
+      coefficient: Enter a coefficient.
+
+  job:
+    models:
+      gws/aggregation/group_job: Aggregation group update

@@ -17,22 +17,24 @@ module Gws::Workload::Importer
     end
 
     def import(file)
-      @imported = 0
+      I18n.with_locale(I18n.default_locale) do
+        @imported = 0
 
-      if file.nil? || ::File.extname(file.original_filename) != ".csv"
-        errors.add :base, :invalid_csv
-        return false
-      end
+        if file.nil? || ::File.extname(file.original_filename) != ".csv"
+          errors.add :base, :invalid_csv
+          return false
+        end
 
-      if !SS::Csv.valid_csv?(file, headers: true, required_headers: headers)
-        errors.add :base, :malformed_csv
-        return false
-      end
+        if !SS::Csv.valid_csv?(file, headers: true, required_headers: headers)
+          errors.add :base, :malformed_csv
+          return false
+        end
 
-      SS::Csv.foreach_row(file, headers: true) do |row, i|
-        update_row(row, i + 2)
+        SS::Csv.foreach_row(file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
+        errors.empty?
       end
-      errors.empty?
     end
 
     # export
@@ -40,11 +42,13 @@ module Gws::Workload::Importer
       encoding = options[:encoding].presence || "Shift_JIS"
       items = export_items
       Enumerator.new do |y|
-        str = encode(headers, encoding)
-        str = SS::Csv::UTF8_BOM + str if encoding.casecmp("UTF-8") == 0
-        y << str
-        items.each do |item|
-          y << encode(item_to_csv(item), encoding)
+        I18n.with_locale(I18n.default_locale) do
+          str = encode(headers, encoding)
+          str = SS::Csv::UTF8_BOM + str if encoding.casecmp("UTF-8") == 0
+          y << str
+          items.each do |item|
+            y << encode(item_to_csv(item), encoding)
+          end
         end
       end
     end

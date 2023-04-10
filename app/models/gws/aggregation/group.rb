@@ -20,7 +20,7 @@ module Gws::Aggregation
     validates :group_id, presence: true
     validates :activation_date, presence: true
 
-    default_scope -> { order_by(order: 1, name: 1) }
+    #default_scope -> { order_by(order: 1, name: 1) }
 
     def find_user(user_id)
       users.to_a.find { |item| item.id == user_id }
