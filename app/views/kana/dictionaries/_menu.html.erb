@@ -5,6 +5,14 @@
     <% end %>
     <% if @model.allowed?(:build, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t("kana.links.build_kana_dictionary"), action: :build_confirmation %>
+      <%=
+        if source_timestamp = @model.site(@cur_site).map(:updated)
+          dic_timestamp = @model.master_dic_timestamp(@cur_site.id)
+          if dic_timestamp.nil? || source_timestamp > dic_timestamp
+            tt("kana/dictionary.newer_source")
+          end
+        end
+      %>
     <% end %>
   <% elsif params[:action] =~ /new|create|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
