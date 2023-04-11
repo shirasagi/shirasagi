@@ -3,7 +3,7 @@
 <% end %>
 
 <%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil, id: nil %>
-<% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
+<% Cms::Line::DeliverCategory::Base.site(@cur_site).each_public do |root, children| %>
   <fieldset class="column column--<%= root.filename %> deliver-category deliver-category-<%= root.order %>" <%== root.data_required_html %>>
     <legend>
       <%= root.name %>

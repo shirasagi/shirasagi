@@ -8,7 +8,7 @@ module Cms::Addon
     end
 
     def each_deliver_categories
-      Cms::Line::DeliverCategory::Category.site(site).each_public do |root, children|
+      Cms::Line::DeliverCategory::Base.site(site).each_public do |root, children|
         categories = children.select { |child| deliver_category_ids.include?(child.id) }
         yield(root, categories)
       end
@@ -16,9 +16,9 @@ module Cms::Addon
 
     def condition_label
       h = []
-      Cms::Line::DeliverCategory::Category.site(site).and_root.and_public.each do |root|
-        categories = root.children.and_public.select { |category| deliver_category_ids.include?(category.id) }
-        h << "#{root.name}: #{categories.map(&:name).join(", ")}" if categories.present?
+      each_deliver_categories do |root, categories|
+        next if categories.blank?
+        h << "#{root.name}: #{categories.map(&:name).join(", ")}"
       end
       h.select(&:present?).join("\n")
     end
