@@ -1,5 +1,5 @@
 <%
-  return if @item.contact_state == "hide" || !@item.contact_present?
+  return unless @item.show_contact?
 
   contact_group = @item.contact_group
   if contact_group.present? && @item.contact_group_contact_id.present?

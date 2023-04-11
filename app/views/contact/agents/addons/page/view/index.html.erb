@@ -1,5 +1,5 @@
 <%
-  return if @cur_page.contact_state == "hide" || !@cur_page.contact_present?
+  return unless @cur_page.show_contact?
 
   contact_parts = []
   contact_group = @cur_page.contact_group
