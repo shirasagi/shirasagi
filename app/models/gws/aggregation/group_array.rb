@@ -1,9 +1,10 @@
 module Gws::Aggregation
   class GroupArray
-    def initialize(array)
-      @items = array
+    def initialize(items)
+      @items = items.to_a
       set_depth
       set_relations
+      sort_items
     end
 
     def find_group(group_id)
@@ -50,6 +51,10 @@ module Gws::Aggregation
         # set descendants
         item.descendants = @items.select { |group| group.name =~ /^#{item.name}\// }
       end
+    end
+
+    def sort_items
+      @items = SS::TreeList.build(@items, {})
     end
 
     def respond_method?(name)

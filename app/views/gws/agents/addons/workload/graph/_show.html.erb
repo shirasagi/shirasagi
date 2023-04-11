@@ -1,0 +1,7 @@
+<dl class="see gws-addon-workload-graph">
+  <dt><%= @model.t :graph_state %></dt>
+  <dd><%= @item.label :graph_state %></dd>
+
+  <dt><%= @model.t :color %></dt>
+  <dd><%= content_tag :span, (@model.t :color), style: "background-color: #{@item.color}; color: #{@item.color}" %></dd>
+</dl>

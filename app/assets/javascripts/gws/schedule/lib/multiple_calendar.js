@@ -122,6 +122,11 @@ SS.ready(function() {
             var spanAfter = $('<span class="fc-facility"></span>').append(event.facility);
             element.find('.fc-title').after(spanAfter);
           }
+          if (event.className.includes('fc-event-work')) {
+            $(element).find(".fc-date").remove();
+            $(element).find(".fc-resizer").remove();
+            $(element).removeClass("fc-resizable");
+          }
           if (view.name === 'basicHour') {
             return BasicHourView.eventRender(event, element, view);
           }

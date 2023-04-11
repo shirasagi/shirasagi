@@ -178,6 +178,11 @@ SS.ready(function() {
             var span = $('<span class="fc-facility"></span>').append(event.facility);
             element.find('.fc-title').append(span);
           }
+          if (event.className.includes('fc-event-work')) {
+            $(element).find(".fc-date").remove();
+            $(element).find(".fc-resizer").remove();
+            $(element).removeClass("fc-resizable");
+          }
         },
         eventAfterAllRender: function (view) {
           var attendance, todo;
@@ -227,6 +232,13 @@ SS.ready(function() {
             links += ejs.render(
               "<a href='<%= todo %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
               { todo: todo, start: start, state: state, text: i18next.t('gws/schedule.links.add_todo') });
+
+            if (opts['useWorkload']) {
+              workload = url.replace(/schedule\/.*/, 'workload/-/-/-/-/-/works');
+              links += ejs.render(
+                "<a href='<%= workload %>/new?start=<%= start %>&<%= state %>' class='add-plan'><%= text %></a>",
+                { workload: workload, start: start, state: state, text: i18next.t('gws/schedule.links.add_workload') });
+            }
           }
           if ($('#calendar-controller').length === 0) {
             if (view.name !== 'month') {

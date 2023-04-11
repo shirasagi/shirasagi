@@ -47,5 +47,8 @@ class Gws::Schedule::UserPlansController < ApplicationController
     @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@user).
       search(todo_search)
+
+    @works = Gws::Workload::Work.site(@cur_site).without_deleted.
+      member(@user)
   end
 end

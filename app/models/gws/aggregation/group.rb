@@ -6,6 +6,7 @@ module Gws::Aggregation
 
     attr_accessor :children, :parent, :descendants, :depth, :trailing_name
 
+    seqid :id
     field :activation_date, type: DateTime
     field :expiration_date, type: DateTime
 
@@ -19,7 +20,7 @@ module Gws::Aggregation
     validates :group_id, presence: true
     validates :activation_date, presence: true
 
-    default_scope -> { order_by(order: 1, name: 1) }
+    #default_scope -> { order_by(order: 1, name: 1) }
 
     def find_user(user_id)
       users.to_a.find { |item| item.id == user_id }
@@ -31,11 +32,10 @@ module Gws::Aggregation
       end
 
       def active_at(date = Time.zone.now)
-        items = where('$and' => [
+        items = self.where('$and' => [
           { '$or' => [{ :activation_date.lte => date }] },
           { '$or' => [{ expiration_date: nil }, { :expiration_date.gt => date }] }
         ])
-        items = items.reorder(name: 1).to_a # tree sort
         GroupArray.new(items)
       end
     end

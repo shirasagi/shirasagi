@@ -5,7 +5,7 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="ss-quota-bar gws-schedule-todo-achievement-bar">
+  <span class="ss-quota-bar gws-achievement-bar">
     <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
     <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
   </span>

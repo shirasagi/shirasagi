@@ -1,0 +1,13 @@
+<dl class="see form-options">
+  <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
+  <dd><%= select_tag "item[category_id]", options_for_select(category_options, @item.category_id), include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
+  <dd><%= select_tag "item[client_id]", options_for_select(client_options, @item.client_id), include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :cycle_id %><%= @model.tt :cycle_id %></dt>
+  <dd><%= select_tag "item[cycle_id]", options_for_select(cycle_options, @item.cycle_id), include_blank: ' ' %></dd>
+
+  <dt><%= @model.t :load_id %><%= @model.tt :load_id %></dt>
+  <dd><%= select_tag "item[load_id]", options_for_select(load_options, @item.load_id), include_blank: ' ' %></dd>
+</dl>

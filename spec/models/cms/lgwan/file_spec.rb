@@ -93,7 +93,8 @@ describe Cms::Lgwan::File, type: :model, dbscope: :example do
           item.update!
 
           expect(enqueued_jobs.size).to eq 2
-          expect(enqueued_args).to match_array [[dir], [file_was]]
+          expect(enqueued_args[0]).to match_array [file_was]
+          expect(enqueued_args[1]).to match_array [dir]
         end
       end
 
@@ -121,7 +122,9 @@ describe Cms::Lgwan::File, type: :model, dbscope: :example do
           item.destroy!
 
           expect(enqueued_jobs.size).to eq 3
-          expect(enqueued_args).to match_array [[dir], [dir], [file_was]]
+          expect(enqueued_args[0]).to match_array [file_was]
+          expect(enqueued_args[1]).to match_array [dir]
+          expect(enqueued_args[2]).to match_array [dir]
         end
       end
     end

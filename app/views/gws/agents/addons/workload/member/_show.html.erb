@@ -1,0 +1,9 @@
+<dl class="see">
+  <dt><%= @model.t :member_group_id %></dt>
+  <dd><%= @item.member_group.try(:name) %></dd>
+
+  <% if @model.use_member_ids? %>
+    <dt><%= @model.t :member_ids %></dt>
+    <dd><%=br @item.members.map(&:long_name).join("\n") %></dd>
+  <% end %>
+</dl>
