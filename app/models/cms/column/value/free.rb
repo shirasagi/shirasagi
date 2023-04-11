@@ -7,7 +7,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   permit_values :value, file_ids: []
 
   before_validation :set_contains_urls
-  before_save { @add_file_ids = file_ids - file_ids_was.to_a }
+  before_save { @add_file_ids ||= file_ids - file_ids_was.to_a }
   after_save :put_contains_urls_logs
   before_parent_save :before_save_files
   after_parent_destroy :destroy_files
@@ -70,6 +70,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     # master から branch を作成する際は @merge_values はセットされないのに対し、
     # master へ branch をマージする際は @merge_values がセットされる。
     clone_files if @new_clone && !@merge_values
+    @add_file_ids ||= file_ids - file_ids_was.to_a
     save_files
   end
 
