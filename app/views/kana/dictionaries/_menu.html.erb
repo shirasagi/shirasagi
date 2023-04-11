@@ -6,8 +6,10 @@
     <% if @model.allowed?(:build, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t("kana.links.build_kana_dictionary"), action: :build_confirmation %>
       <%=
-        if source_timestamp = @model.site(@cur_site).map(:updated)
+        if source_timestamp = @model.site(@cur_site).max(:updated)
+          source_timestamp = source_timestamp.in_time_zone
           dic_timestamp = @model.master_dic_timestamp(@cur_site.id)
+          dic_timestamp = dic_timestamp.in_time_zone if dic_timestamp
           if dic_timestamp.nil? || source_timestamp > dic_timestamp
             tt("kana/dictionary.newer_source", symbol: "!")
           end
