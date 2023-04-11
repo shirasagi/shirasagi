@@ -80,6 +80,12 @@ module Tasks
         end
       end
 
+      def remove_improper_htmls
+        each_sites do |site|
+          perform_job(::Cms::RemoveImproperHtmlsJob, site: site, email: ENV["email"], dry_run: ENV["dry_run"])
+        end
+      end
+
       def export_site
         with_site(ENV['site']) do |site|
           job = ::Sys::SiteExportJob.new

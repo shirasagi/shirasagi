@@ -4,15 +4,8 @@ module Cms::PublicFilter::Page
 
   private
 
-  def find_page(path)
-    page = Cms::Page.site(@cur_site).filename(path).first
-    return unless page
-    @preview || (page.public? && page.public_node?) ? page : nil
-  end
-
   def render_page(page, env = {})
-    path = "/.s#{@cur_site.id}/pages/#{page.route}/#{page.basename}"
-    spec = recognize_agent path, env
+    spec = recognize_page(page, env)
     return unless spec
 
     @cur_page = page
@@ -24,6 +17,17 @@ module Cms::PublicFilter::Page
   end
 
   public
+
+  def find_page(path)
+    page = Cms::Page.site(@cur_site).filename(path).first
+    return unless page
+    @preview || (page.public? && page.public_node?) ? page : nil
+  end
+
+  def recognize_page(page, env = {})
+    path = "/.s#{@cur_site.id}/pages/#{page.route}/#{page.basename}"
+    recognize_agent path, env
+  end
 
   def generate_page(page)
     @cur_site      = page.site
