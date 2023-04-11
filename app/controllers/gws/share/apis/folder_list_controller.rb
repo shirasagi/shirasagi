@@ -4,7 +4,7 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   model Gws::Share::Folder
 
   def index
-    @limit = 100
+    @limit = SS.config.gws.share["folder_navi_limit"]
     @type = params[:type].presence || 'gws/share/files'
     @item = @model.find(params[:id]) if params[:id].present?
 
@@ -26,6 +26,7 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   private
 
   def append_items(items, add_items, pos_item = nil)
+    add_items = add_items.to_a
     return items if add_items.blank?
     pos_item ||= add_items.first
 
@@ -43,12 +44,16 @@ class Gws::Share::Apis::FolderListController < ApplicationController
     when 'gws/share/files'
       @item.parents.each do |item|
         next unless item.allowed?(:read, @cur_user, site: @cur_site)
-        items = append_items(items, item.children.readable(@cur_user, site: @cur_site).limit(@limit).entries, item)
+        children = item.children.readable(@cur_user, site: @cur_site)
+        children = children.limit(@limit) if @limit
+        items = append_items(items, children, item)
       end
     when 'gws/share/management/files'
       @item.parents.each do |item|
         next unless item.allowed?(:read, @cur_user, site: @cur_site)
-        items = append_items(items, item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit).entries, item)
+        children = item.children.allow(:read, @cur_user, site: @cur_site)
+        children = children.limit(@limit) if @limit
+        items = append_items(items, children, item)
       end
     end
     items
@@ -57,18 +62,26 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   def root_items
     case @type
     when 'gws/share/files'
-      @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site).limit(@limit)
+      items = @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
     when 'gws/share/management/files'
-      @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site).limit(@limit)
+      items = @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
     end
   end
 
   def child_items
     case @type
     when 'gws/share/files'
-      @item.children.readable(@cur_user, site: @cur_site).limit(@limit)
+      items = @item.children.readable(@cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
     when 'gws/share/management/files'
-      @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
+      items = @item.children.allow(:read, @cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
     end
   end
 
