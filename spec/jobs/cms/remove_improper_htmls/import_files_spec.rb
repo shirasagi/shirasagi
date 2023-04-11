@@ -4,7 +4,7 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
 
-  let!(:name) { "sample-#{unique_id}" }
+  let!(:name) { "site" }
   let!(:import_file1) { "#{site.path}/#{name}/index.html" }
   let!(:import_file2) { "#{site.path}/#{name}/article/page.html" }
   let!(:import_file3) { "#{site.path}/#{name}/css/style.css" }
