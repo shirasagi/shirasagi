@@ -6,10 +6,22 @@ module Gws::Addon::Workflow::GroupSetting
 
   included do
     field :workflow_new_days, type: Integer
-    permit_params :workflow_new_days
+    field :workflow_my_group, type: String, default: "enabled"
+    permit_params :workflow_new_days, :workflow_my_group
+  end
+
+  def workflow_my_group_options
+    [
+      [I18n.t("ss.options.state.enabled"), "enabled"],
+      [I18n.t("ss.options.state.disabled"), "disabled"]
+    ]
   end
 
   def workflow_new_days
     self[:workflow_new_days].presence || 7
+  end
+
+  def workflow_my_group_disabled?
+    workflow_my_group == "disabled"
   end
 end
