@@ -113,7 +113,7 @@ class Gws::Elasticsearch::Diagnostic::AnalyzersController < ApplicationControlle
       return
     end
 
-    body = { text: @item.text, tokenizer: @item.tokenizer, char_filter: @item.char_filters, filter: @item.filters }
+    body = { text: @item.text, tokenizer: @item.tokenizer, char_filter: @item.char_filters || [], filter: @item.filters || [] }
     @result = @cur_site.elasticsearch_client.indices.analyze(index: "g#{@cur_site.id}", body: body)
     render action: "edit", layout: "ss/item_frame"
   end

@@ -30,18 +30,20 @@
       <dt>Char Filters</dt>
       <dd>
         <div class="char-filter-list" data-controller="gws--elasticsearch--dnd" style="display: flex; flex-direction: column; gap: 5px;">
-          <% @item.char_filters.each do |char_filter| %>
-            <div class="char-filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
-              <span class="material-icons-outlined md-15">drag_indicator</span>
-              <%= check_box_tag "#{f.object_name}[char_filters][]", char_filter, true, id: "item_char_filters_#{char_filter}" %>
-              <label for="<%= "item_char_filters_#{char_filter}" %>">
-                <%= char_filter %>
-              </label>
-            </div>
+          <% if @item.char_filters %>
+            <% @item.char_filters.each do |char_filter| %>
+              <div class="char-filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
+                <span class="material-icons-outlined md-15">drag_indicator</span>
+                <%= check_box_tag "#{f.object_name}[char_filters][]", char_filter, true, id: "item_char_filters_#{char_filter}" %>
+                <label for="<%= "item_char_filters_#{char_filter}" %>">
+                  <%= char_filter %>
+                </label>
+              </div>
+            <% end %>
           <% end %>
 
           <% char_filters.each do |char_filter| %>
-            <% next if @item.char_filters.include?(char_filter) %>
+            <% next if @item.char_filters && @item.char_filters.include?(char_filter) %>
             <div class="char-filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
               <span class="material-icons-outlined md-15">drag_indicator</span>
               <%= check_box_tag "#{f.object_name}[char_filters][]", char_filter, false, id: "item_char_filters_#{char_filter}" %>
@@ -56,18 +58,20 @@
       <dt>Filters</dt>
       <dd>
         <div class="filter-list" data-controller="gws--elasticsearch--dnd" style="display: flex; flex-direction: column; gap: 5px;">
-          <% @item.filters.each do |filter| %>
-            <div class="filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
-              <span class="material-icons-outlined md-15">drag_indicator</span>
-              <%= check_box_tag "#{f.object_name}[filters][]", filter, true, id: "item_filters_#{filter}" %>
-              <label for="<%= "item_filters_#{filter}" %>">
-                <%= filter %>
-              </label>
-            </div>
+          <% if @item.filters %>
+            <% @item.filters.each do |filter| %>
+              <div class="filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
+                <span class="material-icons-outlined md-15">drag_indicator</span>
+                <%= check_box_tag "#{f.object_name}[filters][]", filter, true, id: "item_filters_#{filter}" %>
+                <label for="<%= "item_filters_#{filter}" %>">
+                  <%= filter %>
+                </label>
+              </div>
+            <% end %>
           <% end %>
 
           <% filters.each do |filter| %>
-            <% next if @item.filters.include?(filter) %>
+            <% next if @item.filters && @item.filters.include?(filter) %>
             <div class="filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
               <span class="material-icons-outlined md-15">drag_indicator</span>
               <%= check_box_tag "#{f.object_name}[filters][]", filter, false, id: "item_filters_#{filter}" %>
