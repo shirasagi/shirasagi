@@ -23,6 +23,12 @@ module Cms::Addon::Form::Page
 
     validate :validate_column_links, on: :link
 
+    after_find do
+      if __selected_fields.nil? || __selected_fields.key?("column_values")
+        @_column_values_before_change = column_values.map(&:dup)
+      end
+    end
+
     before_validation :set_form_contains_urls
 
     around_save :cms_form_page_around_save_delegate
@@ -142,18 +148,7 @@ module Cms::Addon::Form::Page
 
   def column_values_was
     return [] if new_record?
-
-    docs = attribute_was("column_values")
-
-    if docs.present?
-      docs = docs.select(&:present?).map do |doc|
-        type = doc["_type"] || doc[:_type]
-        effective_klass = type.camelize.constantize rescue Cms::Column::Value::Base
-        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_klass.fields.keys.map(&:to_s)))
-      end
-    end
-
-    docs || []
+    @_column_values_before_change || []
   end
 
   def cms_form_page_delete_unlinked_files
