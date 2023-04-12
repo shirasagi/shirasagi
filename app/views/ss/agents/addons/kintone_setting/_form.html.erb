@@ -10,5 +10,5 @@
   <dd><%= f.text_field :kintone_user %></dd>
 
   <dt><%= @model.t :kintone_password %><%= @model.tt :kintone_password %></dt>
-  <dd><%= f.password_field :in_kintone_password %></dd>
+  <dd><%= f.password_field :in_kintone_password, autocomplete: "new-password" %></dd>
 </dl>
