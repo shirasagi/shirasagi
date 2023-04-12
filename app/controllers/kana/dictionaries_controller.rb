@@ -4,7 +4,7 @@ class Kana::DictionariesController < ApplicationController
 
   model Kana::Dictionary
 
-  navi_view "cms/main/conf_navi"
+  navi_view "kana/main/conf_navi"
 
   private
 
