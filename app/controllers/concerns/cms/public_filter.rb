@@ -1,3 +1,5 @@
+require "sass"
+
 module Cms::PublicFilter
   extend ActiveSupport::Concern
   include Cms::PublicFilter::Site
