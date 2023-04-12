@@ -97,7 +97,6 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
         SS::Csv.open(downloads.first) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 1
-          expect(csv_table[0][Gws::CustomGroup.t(:id)]).to be_present
           expect(csv_table[0][Gws::CustomGroup.t(:name)]).to be_present
         end
       end
@@ -108,6 +107,50 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
         expect(history.controller).to eq "gws/custom_groups"
         expect(history.path).to eq download_all_gws_custom_groups_path(site: site)
         expect(history.action).to eq "download_all"
+      end
+    end
+  end
+
+  context "import" do
+    let!(:source_site) { create :gws_group }
+    let!(:source_item) { create :gws_custom_group, cur_site: source_site }
+    let(:encoding) { %w(Shift_JIS UTF-8).sample }
+    let!(:csv_file) do
+      csv = Gws::CustomGroup.unscoped.site(source_site).reorder(id: 1).to_csv
+
+      case encoding
+      when "Shift_JIS"
+        csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
+      when "UTF-8"
+        csv = SS::Csv::UTF8_BOM + csv
+      end
+
+      tmpfile(extname: ".csv", binary: true) do |f|
+        f.write csv
+      end
+    end
+
+    it do
+      visit gws_custom_groups_path(site: site)
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.import")
+      end
+      within "form" do
+        attach_file "item[in_file]", csv_file
+
+        page.accept_confirm I18n.t("ss.confirm.import") do
+          click_on I18n.t("ss.buttons.import")
+        end
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      expect(Gws::CustomGroup.unscoped.site(site).count).to eq 1
+      Gws::CustomGroup.unscoped.site(site).first.tap do |item|
+        expect(item.site_id).to eq site.id
+        expect(item.name).to eq source_item.name
+        expect(item.order).to eq source_item.order
+        expect(item.member_ids).to eq source_item.member_ids
+        expect(item.member_group_ids).to eq source_item.member_group_ids
       end
     end
   end

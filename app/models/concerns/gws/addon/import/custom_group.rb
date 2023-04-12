@@ -13,7 +13,7 @@ module Gws::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name order member_group_ids member_ids)
+        %w(name order member_group_ids member_ids)
       end
 
       def to_csv
@@ -24,7 +24,6 @@ module Gws::Addon::Import
             data << csv_headers.map { |k| t k }
             criteria.each do |item|
               line = []
-              line << item.id
               line << item.name
               line << item.order
               line << item.member_group_ids.map { |m| groups[m] }.join("\n")
@@ -37,24 +36,27 @@ module Gws::Addon::Import
     end
 
     def import
+      I18n.with_locale(I18n.default_locale) do
+        _import
+      end
+    end
+
+    private
+
+    def _import
       @imported = 0
 
       validate_import
       return false unless errors.empty?
 
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
       @groups = Gws::Group.site(cur_site).pluck(:name, :_id).uniq.to_h
       @users = Gws::User.site(cur_site).pluck(:uid, :_id).uniq.to_h
 
-      I18n.with_locale(I18n.default_locale) do
-        table.each_with_index do |row, i|
-          update_row(row, i + 2)
-        end
+      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+        update_row(row, i + 2)
       end
-      return errors.empty?
+      errors.empty?
     end
-
-    private
 
     def validate_import
       return errors.add :in_file, :blank if in_file.blank?
@@ -67,42 +69,34 @@ module Gws::Addon::Import
       end
 
       begin
-        CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        in_file.rewind
+        required_headers = %i[name].map { |key| Gws::CustomGroup.t(key) }
+        unless SS::Csv.valid_csv?(in_file, headers: true, required_headers: required_headers)
+          errors.add :in_file, :invalid_file_type
+        end
       rescue => e
         errors.add :in_file, :invalid_file_type
+      ensure
+        in_file.rewind
       end
     end
 
     def update_row(row, index)
-      id = row[t("id")].to_s.strip
       name = row[t("name")].to_s.strip
       order = row[t("order")].to_s.strip
       member_group_ids = row[t("member_group_ids")].to_s.split(/\n/).map(&:strip)
       member_ids = row[t("member_ids")].to_s.split(/\n/).map(&:strip)
 
-      if id.present?
-        item = self.class.unscoped.site(cur_site).where(id: id).first
-        if item.blank?
-          self.errors.add :base, :not_found, line_no: index, id: id
-          return nil
-        end
-
-        if name.blank?
-          item.disable
-          @imported += 1
-          return nil
-        end
-      else
-        item = self.class.new
+      if name.present?
+        item = self.class.unscoped.site(cur_site).where(name: name).first
       end
+      item ||= self.class.new
 
       item.name = name
       item.order = order
 
       item.member_group_ids = member_group_ids.map { |m| get_group_id(m, index) }
       item.member_ids = member_ids.map { |m| get_user_id(m, index) }
-      item.site_id = cur_site.id
+      item.site = cur_site
 
       return nil if errors.present?
 
