@@ -74,7 +74,6 @@ Rails.application.routes.draw do
       get :edit_password, on: :member
       post :update_password, on: :member
     end
-    resource :user_setting, only: [:show, :edit, :update]
     resource :user_locale_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do
       resources :user_form_columns, concerns: :deletion, path: '/columns'
