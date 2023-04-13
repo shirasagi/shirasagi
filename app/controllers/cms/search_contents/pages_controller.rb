@@ -37,7 +37,7 @@ class Cms::SearchContents::PagesController < ApplicationController
   end
 
   def item_attributes
-    attr = @item.attributes.except(:site_id, :_id, :id, :order)
+    attr = @item.attributes.except("site_id", "_id", "id", "order")
     @item.fields.each do |n, f|
       v = @item.send(n)
       next unless v.present?

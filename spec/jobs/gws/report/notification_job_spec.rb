@@ -15,7 +15,7 @@ describe Gws::Report::NotificationJob, dbscope: :example do
         job.perform_now(item.id.to_s, added_member_ids, removed_member_ids)
 
         Job::Log.first.tap do |log|
-          expect(log.attributes[:logs]).to be_empty
+          expect(log.attributes["logs"]).to be_empty
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end

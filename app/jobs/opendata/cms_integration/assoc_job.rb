@@ -133,23 +133,23 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       assoc_node_ids: [@cms_node.id],
       assoc_page_ids: [@cur_page.id],
       state: @cur_page.opendata_dataset_state.presence == 'public' ? 'public' : 'closed'
-    }
+    }.stringify_keys
     if @cur_page.try(:contact_group_id)
       contact_group = Cms::Group.all.site(@dataset_node.site).where(id: @cur_page.contact_group_id).first
     end
     if @cur_page.try(:contact_group_contact_id) && contact_group
       contact = contact_group.contact_groups.where(id: @cur_page.contact_group_contact_id).first
     end
-    attributes[:contact_state] = @cur_page.contact_state if @cur_page.respond_to?(:contact_state)
-    attributes[:contact_group_id] = contact_group.try(:id)
-    attributes[:contact_group_contact_id] = contact.try(:id)
-    attributes[:contact_group_relation] = @cur_page.contact_group_relation if @cur_page.respond_to?(:contact_group_relation)
-    attributes[:contact_charge] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
-    attributes[:contact_tel] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
-    attributes[:contact_fax] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)
-    attributes[:contact_email] = @cur_page.contact_email if @cur_page.respond_to?(:contact_email)
-    attributes[:contact_link_url] = @cur_page.contact_link_url if @cur_page.respond_to?(:contact_link_url)
-    attributes[:contact_link_name] = @cur_page.contact_link_name if @cur_page.respond_to?(:contact_link_name)
+    attributes["contact_state"] = @cur_page.contact_state if @cur_page.respond_to?(:contact_state)
+    attributes["contact_group_id"] = contact_group.try(:id)
+    attributes["contact_group_contact_id"] = contact.try(:id)
+    attributes["contact_group_relation"] = @cur_page.contact_group_relation if @cur_page.respond_to?(:contact_group_relation)
+    attributes["contact_charge"] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
+    attributes["contact_tel"] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
+    attributes["contact_fax"] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)
+    attributes["contact_email"] = @cur_page.contact_email if @cur_page.respond_to?(:contact_email)
+    attributes["contact_link_url"] = @cur_page.contact_link_url if @cur_page.respond_to?(:contact_link_url)
+    attributes["contact_link_name"] = @cur_page.contact_link_name if @cur_page.respond_to?(:contact_link_name)
 
     dataset = Opendata::Dataset.create(attributes)
     Rails.logger.info("#{dataset.name}: dataset is created")

@@ -23,7 +23,7 @@ RSpec.describe SS::Migration20220526000000, dbscope: :example do
     page1.set(event_dates: event_dates)
     page2.set(event_dates: event_dates)
     page3_single_event_date.set(event_dates: [ event_dates[3] ])
-    expect(page4_event_dates_nil.attributes.key?(:event_dates)).to be_truthy
+    expect(page4_event_dates_nil.attributes.key?("event_dates")).to be_truthy
     expect(page4_event_dates_nil.event_dates).to be_nil
 
     described_class.new.change
@@ -93,7 +93,7 @@ RSpec.describe SS::Migration20220526000000, dbscope: :example do
     end
 
     Cms::Page.find(page4_event_dates_nil.id).tap do |page|
-      expect(page.attributes.key?(:event_dates)).to be_falsey
+      expect(page.attributes.key?("event_dates")).to be_falsey
       expect(page.event_dates).to be_nil
     end
   end

@@ -5,15 +5,15 @@ module Rdf::Builders::Context
   attr_accessor :vocab
 
   def attributes
-    @attributes ||= {}
+    @attributes ||= {}.with_indifferent_access
   end
 
   def handlers
-    @handlers ||= {}
+    @handlers ||= {}.with_indifferent_access
   end
 
   def aliases
-    @aliases ||= {}
+    @aliases ||= {}.with_indifferent_access
   end
 
   def register_handler(key, handler)

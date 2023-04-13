@@ -125,6 +125,7 @@ class Uploader::File
   end
 
   def initialize(attributes = {})
+    attributes = attributes.with_indifferent_access
     saved_path = attributes.delete :saved_path
     @saved_path = saved_path unless saved_path.nil?
 
