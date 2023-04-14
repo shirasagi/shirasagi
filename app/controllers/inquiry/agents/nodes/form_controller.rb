@@ -117,11 +117,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       return
     end
 
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@answer)
-        render action: :confirm
-        return
-      end
+    if @cur_node.captcha_enabled? && !captcha_valid?(@answer)
+      render action: :confirm
+      return
     end
 
     @answer.save

@@ -55,7 +55,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[delete_key]", with: "test"
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
         end
         click_button '投稿'
       end
@@ -100,7 +100,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[delete_key]", with: "pass"
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
         end
         click_button '投稿'
       end
@@ -142,7 +142,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[delete_key]", with: "pass"
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
         end
         click_button '削除'
       end
