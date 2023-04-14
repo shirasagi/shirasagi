@@ -124,10 +124,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: selectable_page2.name)
         expect(page).to have_css(".list-item", text: selectable_page3.name)
         expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-        click_on selectable_page1.name
+        wait_cbox_close { click_on selectable_page1.name }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
+
+        wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
       click_on I18n.t('ss.buttons.ignore_alert')
@@ -153,12 +155,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_content("logo.png")
         end
+
+        wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -220,7 +224,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -235,12 +239,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: selectable_page2.name)
         expect(page).to have_css(".list-item", text: selectable_page3.name)
         expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-        click_on selectable_page2.name
+        wait_cbox_close { click_on selectable_page2.name }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-selectpage " do
           expect(page).to have_css(".ajax-selected", text: selectable_page2.name)
         end
+
+        wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
