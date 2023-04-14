@@ -229,7 +229,10 @@ RSpec.describe Gws::Circular::Post, type: :model, dbscope: :example do
     let(:circular_author) { create(:gws_user, :gws_user_base) }
     let(:circular_viewer) { create(:gws_user, :gws_user_base) }
 
-    subject { post.reload.browsable_comments }
+    subject do
+      post.reload
+      post.browsable_comments
+    end
 
     context 'cur_user is circular_author' do
       let(:cur_user) { circular_author }

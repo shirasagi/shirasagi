@@ -45,7 +45,8 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example do
           click_button I18n.t('ss.buttons.save')
         end
         wait_for_ajax
-        expect(item.reload.color).to eq '#ff0000'
+        item.reload
+        expect(item.color).to eq '#ff0000'
       end
     end
 
