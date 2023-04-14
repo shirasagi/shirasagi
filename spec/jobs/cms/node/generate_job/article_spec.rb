@@ -13,7 +13,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
   describe "#perform without node" do
     before do
-      described_class.bind(site_id: site).perform_now
+      described_class.bind(site_id: site.id).perform_now
     end
 
     it do
@@ -49,7 +49,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
   describe "#perform with node" do
     before do
-      described_class.bind(site_id: site, node_id: node).perform_now
+      described_class.bind(site_id: site.id, node_id: node.id).perform_now
     end
 
     it do
@@ -83,7 +83,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
       SS.config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
       site.set(generate_lock_until: Time.zone.now + 1.hour)
 
-      described_class.bind(site_id: site).perform_now
+      described_class.bind(site_id: site.id).perform_now
     end
 
     after do

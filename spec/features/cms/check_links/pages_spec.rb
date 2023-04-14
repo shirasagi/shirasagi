@@ -34,7 +34,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
   let(:page1_report_created) { docs_page1.latest_check_links_report.created }
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site).perform_now
+    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
   end
 
   def latest_report

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::Chorg::MainRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
-  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
+  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group: site) }
   let(:job_opts) { {} }
 
   context 'with add' do
@@ -13,7 +13,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # execute
-      job = described_class.bind(site_id: site, task_id: task)
+      job = described_class.bind(site_id: site.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
@@ -38,7 +38,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, task_id: task)
+        job = described_class.bind(site_id: site.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -65,7 +65,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, task_id: task)
+        job = described_class.bind(site_id: site.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -97,7 +97,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, user_id: user1, task_id: task)
+        job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -140,7 +140,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset.destinations[0]['name']).to eq group1.name
 
         # execute
-        job = described_class.bind(site_id: site, user_id: user1, task_id: task)
+        job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -187,7 +187,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, user_id: user, task_id: task)
+        job = described_class.bind(site_id: site.id, user_id: user.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -225,7 +225,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, user_id: user, task_id: task)
+        job = described_class.bind(site_id: site.id, user_id: user.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -261,7 +261,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, task_id: task)
+        job = described_class.bind(site_id: site.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -286,7 +286,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
 
         # execute
-        job = described_class.bind(site_id: site, task_id: task)
+        job = described_class.bind(site_id: site.id, task_id: task.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded

@@ -12,7 +12,7 @@ describe Gws::CompressJob, dbscope: :example do
         zip = Gws::Compressor.new(user, items: files)
         zip.url = sns_download_job_files_url(host: 'localhost', user: zip.user, filename: zip.filename)
 
-        job = Gws::CompressJob.bind(site_id: site, user_id: user)
+        job = Gws::CompressJob.bind(site_id: site.id, user_id: user.id)
         job.perform_now(zip.serialize)
 
         Job::Log.first.tap do |log|

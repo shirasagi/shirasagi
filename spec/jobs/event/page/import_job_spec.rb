@@ -53,7 +53,7 @@ describe Event::Page::ImportJob, dbscope: :example do
           enumerable.each { |csv| f.write(csv) }
         end
 
-        job_class = described_class.bind(site_id: site, node_id: node, user_id: user)
+        job_class = described_class.bind(site_id: site.id, node_id: node.id, user_id: user.id)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start event_pages.csv\n")).to_stdout
       end
 

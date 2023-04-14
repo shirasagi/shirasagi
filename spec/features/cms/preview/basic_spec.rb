@@ -140,7 +140,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
   context "with sub site" do
     let!(:user) { cms_user }
     let!(:sub_site) { create(:cms_site_subdir, parent_id: site.id, group_ids: user.group_ids) }
-    let!(:admin_role) { create(:cms_role_admin, cur_site: sub_site, site: sub_site, site_id: sub_site) }
+    let!(:admin_role) { create(:cms_role_admin, cur_site: sub_site, site: sub_site, site_id: sub_site.id) }
     let!(:layout) { create_cms_layout(cur_site: sub_site, cur_user: user) }
     let!(:html) { '<h2 class="heading">見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
     let!(:item) { create(:cms_page, filename: "index.html", cur_site: sub_site, cur_user: user, layout: layout, html: html) }

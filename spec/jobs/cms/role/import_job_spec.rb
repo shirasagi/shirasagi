@@ -16,7 +16,7 @@ describe Cms::Role::ImportJob, dbscope: :example do
   end
 
   before do
-    described_class.bind(site_id: site).perform_now(ss_file.id)
+    described_class.bind(site_id: site.id).perform_now(ss_file.id)
   end
 
   it ".perform_now" do

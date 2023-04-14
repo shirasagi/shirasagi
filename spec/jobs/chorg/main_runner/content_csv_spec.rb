@@ -5,7 +5,7 @@ describe Chorg::MainRunner, dbscope: :example do
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let!(:role) { create(:cms_role_admin, cur_site: site) }
   let!(:user) { create(:cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [root_group.id]) }
-  let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
+  let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
   let!(:job_opts) { { 'newly_created_group_to_site' => 'add' } }
 
   context 'with content csv' do
@@ -75,7 +75,7 @@ describe Chorg::MainRunner, dbscope: :example do
       expect { Cms::User.find_by(uid: 'import_user1') }.to raise_error Mongoid::Errors::DocumentNotFound
       expect { Cms::User.find_by(uid: 'import_user2') }.to raise_error Mongoid::Errors::DocumentNotFound
 
-      job = described_class.bind(site_id: site, user_id: user, task_id: task)
+      job = described_class.bind(site_id: site.id, user_id: user.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded

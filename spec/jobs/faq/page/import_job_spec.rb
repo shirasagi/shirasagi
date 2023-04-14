@@ -29,7 +29,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
   describe ".perform_later" do
     context "with node1" do
       before do
-        job_class = described_class.bind(site_id: site, node_id: node1, user_id: user)
+        job_class = described_class.bind(site_id: site.id, node_id: node1.id, user_id: user.id)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
 
@@ -78,7 +78,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
 
     context "with node2" do
       before do
-        job_class = described_class.bind(site_id: site, node_id: node2, user_id: user)
+        job_class = described_class.bind(site_id: site.id, node_id: node2.id, user_id: user.id)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
 

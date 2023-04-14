@@ -101,7 +101,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   end
 
   def execute_reserved_job
-    Cms::Line::DeliverReservedJob.bind(site_id: site).perform_now
+    Cms::Line::DeliverReservedJob.bind(site_id: site.id).perform_now
   end
 
   before do

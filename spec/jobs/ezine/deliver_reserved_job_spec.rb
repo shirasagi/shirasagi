@@ -25,7 +25,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
 
   it do
     Timecop.freeze(now) do
-      expect { described_class.bind(site_id: site).perform_now }.not_to output.to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.not_to output.to_stdout
     end
 
     expect(Job::Log.count).to eq 1
@@ -37,7 +37,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
     expect(ActionMailer::Base.deliveries.length).to eq 0
 
     Timecop.freeze(deliver_date1 - 1.second) do
-      expect { described_class.bind(site_id: site).perform_now }.not_to output.to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.not_to output.to_stdout
     end
 
     expect(Job::Log.count).to eq 2
@@ -49,7 +49,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
     expect(ActionMailer::Base.deliveries.length).to eq 0
 
     Timecop.freeze(deliver_date1) do
-      expect { described_class.bind(site_id: site).perform_now }.to \
+      expect { described_class.bind(site_id: site.id).perform_now }.to \
         output(include("To: #{member1.email}", "To: #{member2.email}")).to_stdout
     end
 
@@ -81,7 +81,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
     end
 
     Timecop.freeze(deliver_date2) do
-      expect { described_class.bind(site_id: site).perform_now }.to \
+      expect { described_class.bind(site_id: site.id).perform_now }.to \
         output(include("To: #{member1.email}", "To: #{member2.email}")).to_stdout
     end
 

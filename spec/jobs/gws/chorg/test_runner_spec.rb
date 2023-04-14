@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::Chorg::TestRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
-  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
+  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group: site) }
   let(:job_opts) { {} }
 
   context 'with add' do
@@ -13,7 +13,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
 
-      job = described_class.bind(site_id: site, task_id: task)
+      job = described_class.bind(site_id: site.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
@@ -43,7 +43,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # check for not changed
-      job = described_class.bind(site_id: site, task_id: task)
+      job = described_class.bind(site_id: site.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
@@ -81,7 +81,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # check for not changed
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
@@ -123,7 +123,7 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # change group.
-      job = described_class.bind(site_id: site, task_id: task)
+      job = described_class.bind(site_id: site.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded

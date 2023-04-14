@@ -58,7 +58,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
 
       # send notification
-      Gws::Notice::NotificationJob.bind(site_id: site).perform_now
+      Gws::Notice::NotificationJob.bind(site_id: site.id).perform_now
 
       # job was succeeded
       expect(Gws::Job::Log.count).to eq 1

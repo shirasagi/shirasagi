@@ -32,7 +32,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
   context "least required permissions to manage" do
     let!(:notice_folder) { create(:gws_notice_folder, cur_site: site) }
-    let!(:notice_post) { create(:gws_notice_post, cur_site: site, folder_id: notice_folder) }
+    let!(:notice_post) { create(:gws_notice_post, cur_site: site, folder_id: notice_folder.id) }
     let!(:schedule_plan) { create(:gws_schedule_plan, cur_site: site) }
     let(:permissions) do
       permissions = []
@@ -96,7 +96,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
   context "least required permissions to show" do
     let!(:notice_folder) { create(:gws_notice_folder, cur_site: site) }
-    let!(:notice_post) { create(:gws_notice_post, cur_site: site, folder_id: notice_folder) }
+    let!(:notice_post) { create(:gws_notice_post, cur_site: site, folder_id: notice_folder.id) }
     let!(:schedule_plan) { create(:gws_schedule_plan, cur_site: site) }
     let(:permissions) do
       permissions = []

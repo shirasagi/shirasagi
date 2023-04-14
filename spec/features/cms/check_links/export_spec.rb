@@ -29,11 +29,11 @@ describe "cms/check_links/export", type: :feature, dbscope: :example do
   let(:index_path) { cms_check_links_reports_path site.id }
 
   def generate_nodes
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
+    Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
   end
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site).perform_now
+    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
   end
 
   def latest_report
