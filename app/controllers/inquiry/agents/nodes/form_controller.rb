@@ -122,7 +122,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       return
     end
 
-    @answer.save
+    unless @answer.save
+      render action: :new
+      return
+    end
+
     if @cur_node.notify_mail_enabled?
       if @group.present? && @group.contact_email.present?
         notice_email = @group.contact_email
