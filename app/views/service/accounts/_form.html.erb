@@ -6,7 +6,7 @@
   <dd><%= f.text_field :account %></dd>
 
   <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
-  <dd><%= f.password_field :in_password, style: "width: 200px" %></dd>
+  <dd><%= f.password_field :in_password, autocomplete: "new-password", style: "width: 200px" %></dd>
 
   <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
   <dd><%= f.ss_datetime_field :account_start_date %></dd>

@@ -9,7 +9,7 @@
   <dd><%= f.text_field :ckan_basicauth_username, class: "ckan-basicauth-username" %></dd>
 
   <dt><%= @model.t :ckan_basicauth_password %><%= @model.tt :ckan_basicauth_password %></dt>
-  <dd><%= f.password_field :in_ckan_basicauth_password, class: "ckan-basicauth-password" %></dd>
+  <dd><%= f.password_field :in_ckan_basicauth_password, autocomplete: "new-password", class: "ckan-basicauth-password" %></dd>
 
   <dt><%= @model.t :ckan_status %><%= @model.tt :ckan_status %></dt>
   <dd><%= f.select :ckan_status, @item.ckan_status_options  %></dd>
