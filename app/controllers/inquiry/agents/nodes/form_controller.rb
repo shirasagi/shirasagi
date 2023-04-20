@@ -35,6 +35,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def set_answer
+    set_group
+    set_page
+
     @items = []
     @data = {}
     @to = [@cur_node.notice_email]
@@ -69,12 +72,17 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @answer.member = @cur_member
     @answer.source_url = params[:item].try(:[], :source_url)
     @answer.set_data(@data)
+    @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids
+    if @page
+      @answer.inquiry_page_url = @page.url
+      @answer.inquiry_page_name = @page.name
+    end
   end
 
   def set_group
     return if params[:group].blank?
 
-    @group = Cms::Group.site(@cur_site).where(id: params[:group]).first
+    @group = Cms::Group.site(@cur_site).active.where(id: params[:group]).first
     raise "404" if @group.blank?
     raise "404" if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
   end
@@ -89,8 +97,6 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   public
 
   def new
-    set_group
-    set_page
     if @group || @page
       raise "404" if @cur_site.inquiry_form != @cur_node
     end
@@ -100,36 +106,27 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def confirm
-    set_group
-    set_page
     if !@answer.valid?
       render action: :new
     end
   end
 
   def create
-    set_group
-    set_page
     if !@answer.valid? || params[:submit].blank?
       render action: :new
       return
     end
 
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@answer)
-        render action: :confirm
-        return
-      end
+    if @cur_node.captcha_enabled? && !captcha_valid?(@answer)
+      render action: :confirm
+      return
     end
 
-    @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids
-
-    if @page
-      @answer.inquiry_page_url = @page.url
-      @answer.inquiry_page_name = @page.name
+    unless @answer.save
+      render action: :new
+      return
     end
 
-    @answer.save
     if @cur_node.notify_mail_enabled?
       if @group.present? && @group.contact_email.present?
         notice_email = @group.contact_email

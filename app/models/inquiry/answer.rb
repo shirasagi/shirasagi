@@ -3,7 +3,6 @@ class Inquiry::Answer
   include SS::Reference::Site
   include Inquiry::Addon::Answer::Body
   include Inquiry::Addon::KintoneApp::Answer
-  include SS::Captchable
   include Cms::Addon::GroupPermission
 
   attr_accessor :cur_node

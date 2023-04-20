@@ -1,18 +1,9 @@
-<%= jquery do %>
-  $(".simple-captcha").hide()
-  $("button").on("click", function(){
-    $(".simple-captcha").toggle();
-  });
-<% end %>
-
 <dl class="see mod-inquiry-captcha">
   <dt><%= @model.t :inquiry_captcha %><%= @model.tt :inquiry_captcha %></dt>
   <dd><%= f.select :inquiry_captcha, @item.inquiry_captcha_options %></dd>
   <dt><%= @model.t :captcha_test %><%= @model.tt :captcha_test %></dt>
   <dd>
-    <button type="button"><%= I18n.t('simple_captcha.captcha_button') %></button>
-    <div class='simple-captcha'>
-      <div class='image'><%= show_captcha(show_specific_error: true) %></div>
-    </div>
+    <div><%= I18n.t('simple_captcha.captcha_button') %></div>
+    <%= show_captcha(show_specific_error: true) %>
   </dd>
 </dl>
