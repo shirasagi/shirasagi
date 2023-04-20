@@ -15,7 +15,7 @@
     elsif value == ""
       value = "''"
     elsif value.is_a?(Time)
-      value = I18n.l value, format: :short
+      value = I18n.l(value.in_time_zone, format: :picker)
     else
       value
     end
