@@ -2,6 +2,7 @@ class SS::Captcha
   include SS::Document
 
   attr_accessor :out_captcha_image_base64
+
   field :captcha_text, type: String
   field :captcha_error, type: String
 
