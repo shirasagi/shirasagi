@@ -1,0 +1,17 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "addon-info", head: "Info", toggle: true } do %>
+    <%= render "show_info", addon: { id: "addon-info", head: "Info", toggle: true } %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-cat", head: "Cat", toggle: true } do %>
+    <%= render "show_cat", addon: { id: "addon-cat", head: "Cat", toggle: true } %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-indices", head: "Indices", toggle: true } do %>
+    <%= render "show_indices", addon: { id: "addon-indices", head: "Indices", toggle: true } %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-attachment", head: "Attachment", toggle: true } do %>
+    <%= render "show_attachment", addon: { id: "addon-attachment", head: "Attachment", toggle: true } %>
+  <% end %>
+</div>

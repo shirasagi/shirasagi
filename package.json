@@ -11,7 +11,8 @@
     "jquery-colorbox": "^1.6.4",
     "material-icons": "^1.13.2",
     "moment": "^2.29.4",
-    "promise-polyfill": "^8.3.0"
+    "promise-polyfill": "^8.3.0",
+    "smooth-dnd": "^0.12.1"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js"

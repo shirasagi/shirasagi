@@ -1,0 +1,87 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<%= tag.div id: "#{addon[:id]}-frame" do %>
+  <%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "#{addon[:id]}-form", data: { turbo: true } } do |f| %>
+    <div>
+      <%= f.text_field :text %>
+      <%= button_tag "Analyze", name: "analyze", type: :submit, class: 'btn' %>
+    </div>
+
+    <dl class="see">
+      <dt>Analyzer</dt>
+      <dd>
+        <%=
+          options = analyzers.map { |analyzer| [ analyzer.name, analyzer.name ] }
+          f.select :analyzer, options_for_select(options, selected: @item.analyzer), include_blank: true
+        %>
+        <%= button_tag "Change", name: "change_analyzer", type: :submit, class: 'btn' %>
+      </dd>
+
+      <dt>Tokenizer</dt>
+      <dd>
+        <div class="tokenizer-list" style="display: flex; flex-wrap: wrap; align-items: center; gap: 5px 15px;">
+          <% tokenizers.each do |tokenizer| %>
+            <label style="display: flex; align-items: center; gap: 5px; margin-right: 0;"><%= f.radio_button :tokenizer, tokenizer %> <%= tokenizer %></label>
+          <% end %>
+        </div>
+      </dd>
+
+      <dt>Char Filters</dt>
+      <dd>
+        <div class="char-filter-list" data-controller="gws--elasticsearch--dnd" style="display: flex; flex-direction: column; gap: 5px;">
+          <% if @item.char_filters %>
+            <% @item.char_filters.each do |char_filter| %>
+              <div class="char-filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
+                <span class="material-icons-outlined md-15">drag_indicator</span>
+                <%= check_box_tag "#{f.object_name}[char_filters][]", char_filter, true, id: "item_char_filters_#{char_filter}" %>
+                <label for="<%= "item_char_filters_#{char_filter}" %>">
+                  <%= char_filter %>
+                </label>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% char_filters.each do |char_filter| %>
+            <% next if @item.char_filters && @item.char_filters.include?(char_filter) %>
+            <div class="char-filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
+              <span class="material-icons-outlined md-15">drag_indicator</span>
+              <%= check_box_tag "#{f.object_name}[char_filters][]", char_filter, false, id: "item_char_filters_#{char_filter}" %>
+              <label for="<%= "item_char_filters_#{char_filter}" %>">
+                <%= char_filter %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      </dd>
+
+      <dt>Filters</dt>
+      <dd>
+        <div class="filter-list" data-controller="gws--elasticsearch--dnd" style="display: flex; flex-direction: column; gap: 5px;">
+          <% if @item.filters %>
+            <% @item.filters.each do |filter| %>
+              <div class="filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
+                <span class="material-icons-outlined md-15">drag_indicator</span>
+                <%= check_box_tag "#{f.object_name}[filters][]", filter, true, id: "item_filters_#{filter}" %>
+                <label for="<%= "item_filters_#{filter}" %>">
+                  <%= filter %>
+                </label>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% filters.each do |filter| %>
+            <% next if @item.filters && @item.filters.include?(filter) %>
+            <div class="filter-item" style="display: flex; align-items:center; gap: 5px; padding: 5px; border: 1px solid #dcdcdc; cursor: grab;">
+              <span class="material-icons-outlined md-15">drag_indicator</span>
+              <%= check_box_tag "#{f.object_name}[filters][]", filter, false, id: "item_filters_#{filter}" %>
+              <label for="<%= "item_filters_#{filter}" %>">
+                <%= filter %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      </dd>
+    </dl>
+  <% end %>
+<% end %>

@@ -1,0 +1,11 @@
+<% if @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_groups) && @cur_site.elasticsearch_client %>
+  <nav class="mod-navi">
+    <h2>Elasticsearch</h2>
+
+    <h3><%= link_to "Status", gws_elasticsearch_diagnostic_status_path %></h3>
+    <h3><%= link_to "Stats", gws_elasticsearch_diagnostic_statistic_path %></h3>
+    <h3><%= link_to "Analyzer", edit_gws_elasticsearch_diagnostic_analyzer_path %></h3>
+  </nav>
+<% end %>
+
+<%= render partial: 'gws/main/conf_navi' %>

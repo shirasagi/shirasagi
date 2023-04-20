@@ -1,0 +1,103 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<%= tag.div id: "#{addon[:id]}-frame" do %>
+  <dl class="see">
+    <dt>aliases</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.aliases(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>allocation</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.allocation(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>count (<%= @cur_site.name %>)</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.count(index: "g#{@cur_site.id}", v: true) rescue nil %></pre>
+    </dd>
+
+    <% if false %>
+    <dt>fielddata</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.fielddata(v: true, fields: "name_ja") rescue nil %></pre>
+    </dd>
+    <% end %>
+
+    <dt>health</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.health(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>indices (<%= @cur_site.name %>)</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.indices(index: "g#{@cur_site.id}", v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>master</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.master(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>node attrs</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.nodeattrs(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>nodes</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.nodes(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>pending tasks</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.pending_tasks(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>plugins</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.plugins(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>recovery (<%= @cur_site.name %>)</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.recovery(index: "g#{@cur_site.id}", v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>repositories</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.repositories(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>segments (<%= @cur_site.name %>)</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.segments(index: "g#{@cur_site.id}", v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>shards (<%= @cur_site.name %>)</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.shards(index: "g#{@cur_site.id}", v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>snapshots</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.snapshots(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>tasks</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.tasks(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>templates</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.templates(v: true) rescue nil %></pre>
+    </dd>
+
+    <dt>thread pool</dt>
+    <dd>
+      <pre class="gws-elasticsearch-json-view"><%= @cur_site.elasticsearch_client.cat.thread_pool(v: true) rescue nil %></pre>
+    </dd>
+  </dl>
+<% end %>
