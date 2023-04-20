@@ -17,7 +17,7 @@ class Gws::Affair::OvertimeDayResult
   field :start_at, type: DateTime
   field :end_at, type: DateTime
 
-  field :is_holiday, type: Boolean
+  field :is_holiday, type: ::Mongoid::Boolean
   field :duty_day_time_minute, type: Integer
   field :duty_night_time_minute, type: Integer
   field :leave_day_time_minute, type: Integer
