@@ -14,7 +14,7 @@
 </dl>
 
 <%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil, id: nil %>
-<% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
+<% Cms::Line::DeliverCategory::Base.site(@cur_site).each_public do |root, children| %>
   <dl class="see deliver-category" <%== root.data_required_html %> style="padding-bottom: 10px;">
     <dt><%= root.name %></dt>
     <dd>

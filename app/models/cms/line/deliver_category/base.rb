@@ -123,8 +123,10 @@ class Cms::Line::DeliverCategory::Base
 
     def each_public
       self.and_root.and_public.each do |root|
-        children = root.children.and_public.to_a
-        yield(root, children)
+        self.with_scope(nil) do
+          children = root.children.and_public.to_a
+          yield(root, children)
+        end
       end
     end
 
