@@ -857,6 +857,7 @@ DEPENDENCIES
   ruby-debug-ide
   ruby-saml
   rubyzip (~> 2.3.0)
+  sass
   sass-rails
   scss_lint
   sdoc

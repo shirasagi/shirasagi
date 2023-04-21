@@ -6,6 +6,7 @@ gem 'rails', '~> 6.1.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sass-rails'
+gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'jbuilder'
