@@ -2,29 +2,31 @@ require 'oauth2'
 
 module OAuth::Base
   def site
-    @site ||= begin
-      request.env["ss.site"] ||= begin
-        host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
-        path = request.env["REQUEST_PATH"] || request.path
-        SS::Site.find_by_domain host, path
-      end
+    return @site if instance_variable_defined?(:@site)
+
+    request.env["ss.site"] ||= begin
+      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+      path = request.env["REQUEST_PATH"] || request.path
+      SS::Site.find_by_domain host, path
     end
+    @site = request.env["ss.site"]
   end
 
   def node
     return if site.blank?
-    @node ||= begin
-      request.env["ss.node"] ||= begin
-        path = request.env["REQUEST_PATH"] || request.path
-        if site.subdir.present?
-          main_path = path.sub(/^\/#{site.subdir}/, "")
-        else
-          main_path = path.dup
-        end
+    return @node if instance_variable_defined?(:@node)
 
-        Member::Node::Login.site(site).in_path(main_path).reorder(depth: -1).first
+    request.env["ss.node"] ||= begin
+      path = request.env["REQUEST_PATH"] || request.path
+      if site.subdir.present?
+        main_path = path.sub(/^\/#{site.subdir}/, "")
+      else
+        main_path = path.dup
       end
+
+      Member::Node::Login.site(site).in_path(main_path).reorder(depth: -1).first
     end
+    @node = request.env["ss.node"]
   end
 
   def client_id

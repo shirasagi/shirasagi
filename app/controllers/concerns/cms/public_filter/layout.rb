@@ -136,10 +136,13 @@ module Cms::PublicFilter::Layout
   end
 
   def render_body_class(html)
+    body_cls = body_class(@cur_main_path)
+    body_id = body_id(@cur_main_path)
+
     html.sub(/<body.*?>/) do |m|
-      m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
-      m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
-      m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
+      m = m.sub(/ class="/, %( class="#{body_cls} )     ) if m =~ / class="/
+      m = m.sub(/<body/,    %(<body class="#{body_cls}")) unless m =~ / class="/
+      m = m.sub(/<body/,    %(<body id="#{body_id}")    ) unless m =~ / id="/
       m
     end
   end
