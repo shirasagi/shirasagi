@@ -27,12 +27,12 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
     Cms::Page::GenerateJob.bind(site_id: site).perform_now
 
-    expect(File.exists?(article_node.path)).to be true
-    expect(File.exists?(article_page1.path)).to be true
-    expect(File.exists?(article_page2.path)).to be true
-    expect(File.exists?(faq_node.path)).to be true
-    expect(File.exists?(faq_page1.path)).to be true
-    expect(File.exists?(faq_page2.path)).to be true
+    expect(File.exist?(article_node.path)).to be true
+    expect(File.exist?(article_page1.path)).to be true
+    expect(File.exist?(article_page2.path)).to be true
+    expect(File.exist?(faq_node.path)).to be true
+    expect(File.exist?(faq_page1.path)).to be true
+    expect(File.exist?(faq_page2.path)).to be true
   end
 
   def set_improper_htmls
@@ -40,24 +40,24 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       item.state = "closed"
       item.update!
     end
-    expect(File.exists?(article_node.path)).to be true
-    expect(File.exists?(article_page1.path)).to be false
-    expect(File.exists?(article_page2.path)).to be false
-    expect(File.exists?(faq_node.path)).to be true
-    expect(File.exists?(faq_page1.path)).to be false
-    expect(File.exists?(faq_page2.path)).to be false
+    expect(File.exist?(article_node.path)).to be true
+    expect(File.exist?(article_page1.path)).to be false
+    expect(File.exist?(article_page2.path)).to be false
+    expect(File.exist?(faq_node.path)).to be true
+    expect(File.exist?(faq_page1.path)).to be false
+    expect(File.exist?(faq_page2.path)).to be false
 
     ::FileUtils.touch(article_page1.path)
     ::FileUtils.touch(article_page2.path)
     ::FileUtils.touch(faq_page1.path)
     ::FileUtils.touch(faq_page2.path)
 
-    expect(File.exists?(article_node.path)).to be true
-    expect(File.exists?(article_page1.path)).to be true
-    expect(File.exists?(article_page2.path)).to be true
-    expect(File.exists?(faq_node.path)).to be true
-    expect(File.exists?(faq_page1.path)).to be true
-    expect(File.exists?(faq_page2.path)).to be true
+    expect(File.exist?(article_node.path)).to be true
+    expect(File.exist?(article_page1.path)).to be true
+    expect(File.exist?(article_page2.path)).to be true
+    expect(File.exist?(faq_node.path)).to be true
+    expect(File.exist?(faq_page1.path)).to be true
+    expect(File.exist?(faq_page2.path)).to be true
   end
 
   context "errors exists" do
@@ -75,10 +75,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
           "remove #{faq_page2.path}"
         )).to_stdout
 
-      expect(File.exists?(article_page1.path)).to be true
-      expect(File.exists?(article_page2.path)).to be true
-      expect(File.exists?(faq_page1.path)).to be true
-      expect(File.exists?(faq_page2.path)).to be false
+      expect(File.exist?(article_page1.path)).to be true
+      expect(File.exist?(article_page2.path)).to be true
+      expect(File.exist?(faq_page1.path)).to be true
+      expect(File.exist?(faq_page2.path)).to be false
 
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)

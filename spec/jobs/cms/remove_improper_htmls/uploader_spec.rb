@@ -20,10 +20,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
     Cms::Page::GenerateJob.bind(site_id: site).perform_now
 
-    expect(File.exists?(node.path)).to be true
-    expect(File.exists?(upload_dir)).to be true
-    expect(File.exists?(upload_html1)).to be true
-    expect(File.exists?(upload_html2)).to be true
+    expect(File.exist?(node.path)).to be true
+    expect(File.exist?(upload_dir)).to be true
+    expect(File.exist?(upload_html1)).to be true
+    expect(File.exist?(upload_html2)).to be true
   end
 
   context "no errors" do
@@ -36,10 +36,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-      expect(File.exists?(node.path)).to be true
-      expect(File.exists?(upload_dir)).to be true
-      expect(File.exists?(upload_html1)).to be true
-      expect(File.exists?(upload_html2)).to be true
+      expect(File.exist?(node.path)).to be true
+      expect(File.exist?(upload_dir)).to be true
+      expect(File.exist?(upload_html1)).to be true
+      expect(File.exist?(upload_html2)).to be true
     end
   end
 end

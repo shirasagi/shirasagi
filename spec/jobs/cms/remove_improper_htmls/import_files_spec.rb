@@ -23,15 +23,15 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
     Cms::Page::GenerateJob.bind(site_id: site).perform_now
 
-    expect(File.exists?(import_file1)).to be true
-    expect(File.exists?(import_file2)).to be true
-    expect(File.exists?(import_file3)).to be true
-    expect(File.exists?(import_file4)).to be true
+    expect(File.exist?(import_file1)).to be true
+    expect(File.exist?(import_file2)).to be true
+    expect(File.exist?(import_file3)).to be true
+    expect(File.exist?(import_file4)).to be true
   end
 
   def set_improper_htmls
     ::FileUtils.touch(improper_html)
-    expect(File.exists?(improper_html)).to be true
+    expect(File.exist?(improper_html)).to be true
   end
 
   context "no errors" do
@@ -45,10 +45,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-      expect(File.exists?(import_file1)).to be true
-      expect(File.exists?(import_file2)).to be true
-      expect(File.exists?(import_file3)).to be true
-      expect(File.exists?(import_file4)).to be true
+      expect(File.exist?(import_file1)).to be true
+      expect(File.exist?(import_file2)).to be true
+      expect(File.exist?(import_file3)).to be true
+      expect(File.exist?(import_file4)).to be true
     end
   end
 
@@ -68,11 +68,11 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-      expect(File.exists?(import_file1)).to be true
-      expect(File.exists?(import_file2)).to be true
-      expect(File.exists?(import_file3)).to be true
-      expect(File.exists?(import_file4)).to be true
-      expect(File.exists?(improper_html)).to be false
+      expect(File.exist?(import_file1)).to be true
+      expect(File.exist?(import_file2)).to be true
+      expect(File.exist?(import_file3)).to be true
+      expect(File.exist?(import_file4)).to be true
+      expect(File.exist?(improper_html)).to be false
     end
   end
 end
