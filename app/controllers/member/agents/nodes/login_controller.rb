@@ -12,7 +12,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     raise "400"
   end
 
-  def set_member_and_redirect(member)
+  def set_member_and_redirect(member, notice: nil)
     ref = @cur_node.make_trusted_full_url(params[:ref] || flash[:ref])
     ref = @cur_node.redirect_full_url if ref.blank?
     ref = @cur_site.full_url if ref.blank?
@@ -27,7 +27,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       remote_addr: remote_addr,
       user_agent: request.user_agent)
 
-    redirect_to ref
+    redirect_to ref, notice: notice
   end
 
   public
@@ -64,6 +64,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       # 外部認証していない場合、ログイン情報を保存してから、ログインさせる
       Cms::Member.create_auth_member(auth, @cur_site)
       member = Cms::Member.site(@cur_site).and_enabled.where(oauth_type: auth.provider, oauth_id: auth.uid).first
+      created = true
     else
       # auth info の名前が変わっていたら上書きする
       name = Cms::Member.name_of(auth.info)
@@ -74,7 +75,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       member.update if member.changed?
     end
 
-    set_member_and_redirect member
+    set_member_and_redirect member, notice: created ? I18n.t('member.notice.member_created') : nil
   end
 
   def failure
