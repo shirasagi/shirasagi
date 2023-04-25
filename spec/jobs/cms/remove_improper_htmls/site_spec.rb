@@ -26,10 +26,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     Cms::Node::GenerateJob.bind(site_id: site2).perform_now
     Cms::Page::GenerateJob.bind(site_id: site2).perform_now
 
-    expect(File.exists?(article_node1.path)).to be true
-    expect(File.exists?(article_page1.path)).to be true
-    expect(File.exists?(article_node2.path)).to be true
-    expect(File.exists?(article_page2.path)).to be true
+    expect(File.exist?(article_node1.path)).to be true
+    expect(File.exist?(article_page1.path)).to be true
+    expect(File.exist?(article_node2.path)).to be true
+    expect(File.exist?(article_page2.path)).to be true
   end
 
   def set_improper_htmls
@@ -37,14 +37,14 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       item.state = "closed"
       item.update!
     end
-    expect(File.exists?(article_page1.path)).to be false
-    expect(File.exists?(article_page2.path)).to be false
+    expect(File.exist?(article_page1.path)).to be false
+    expect(File.exist?(article_page2.path)).to be false
 
     [article_page1, article_page2].each do |item|
       ::FileUtils.touch(item.path)
     end
-    expect(File.exists?(article_page1.path)).to be true
-    expect(File.exists?(article_page2.path)).to be true
+    expect(File.exist?(article_page1.path)).to be true
+    expect(File.exist?(article_page2.path)).to be true
   end
 
   context "no errors" do
@@ -73,8 +73,8 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
           "remove #{article_page1.path}"
         )).to_stdout
 
-      expect(File.exists?(article_page1.path)).to be false
-      expect(File.exists?(article_page2.path)).to be true
+      expect(File.exist?(article_page1.path)).to be false
+      expect(File.exist?(article_page2.path)).to be true
 
       expectation = expect { described_class.bind(site_id: site2).perform_now }
       expectation.to output(
@@ -83,8 +83,8 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
           "remove #{article_page2.path}"
         )).to_stdout
 
-      expect(File.exists?(article_page1.path)).to be false
-      expect(File.exists?(article_page2.path)).to be false
+      expect(File.exist?(article_page1.path)).to be false
+      expect(File.exist?(article_page2.path)).to be false
     end
   end
 end

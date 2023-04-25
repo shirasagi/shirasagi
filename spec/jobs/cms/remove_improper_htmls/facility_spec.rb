@@ -15,11 +15,11 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   def generate_htmls
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
 
-    expect(File.exists?(facility_search.path)).to be true
-    expect(File.exists?(facility_node.path)).to be true
-    #expect(File.exists?(facility_page1.path)).to be true
-    #expect(File.exists?(facility_page2.path)).to be true
-    #expect(File.exists?(facility_page3.path)).to be true
+    expect(File.exist?(facility_search.path)).to be true
+    expect(File.exist?(facility_node.path)).to be true
+    #expect(File.exist?(facility_page1.path)).to be true
+    #expect(File.exist?(facility_page2.path)).to be true
+    #expect(File.exist?(facility_page3.path)).to be true
   end
 
   def set_improper_htmls
@@ -36,9 +36,9 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     ::FileUtils.mkdir_p(facility_page3.path)
     ::FileUtils.touch("#{facility_page3.path}/index.html")
 
-    expect(File.exists?(facility_page1.path)).to be true
-    expect(File.exists?(facility_page2.path)).to be true
-    expect(File.exists?(facility_page3.path)).to be true
+    expect(File.exist?(facility_page1.path)).to be true
+    expect(File.exist?(facility_page2.path)).to be true
+    expect(File.exist?(facility_page3.path)).to be true
   end
 
   context "no errors" do
@@ -68,9 +68,9 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
           "remove #{facility_page3.path}"
         )).to_stdout
 
-      expect(File.exists?("#{facility_page1.path}/index.html")).to be false
-      expect(File.exists?("#{facility_page2.path}/index.html")).to be false
-      expect(File.exists?("#{facility_page3.path}/index.html")).to be false
+      expect(File.exist?("#{facility_page1.path}/index.html")).to be false
+      expect(File.exist?("#{facility_page2.path}/index.html")).to be false
+      expect(File.exist?("#{facility_page3.path}/index.html")).to be false
 
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
