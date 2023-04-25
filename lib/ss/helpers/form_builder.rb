@@ -37,6 +37,10 @@ module SS::Helpers
       @template.check_box_tag(object_method, checked_value, checked, options)
     end
 
+    def ss_lines_field(method, options = {})
+      @template.ss_lines_field(@object_name, method, objectify_options(options))
+    end
+
     private
 
     def array_value(method)

@@ -13,10 +13,10 @@ class Chat::Intent
 
   seqid :id
   field :name, type: String
-  field :phrase, type: SS::Extensions::Words
-  field :suggest, type: SS::Extensions::Words
+  field :phrase, type: SS::Extensions::Lines
+  field :suggest, type: SS::Extensions::Lines
   field :response, type: String
-  field :link, type: SS::Extensions::Words
+  field :link, type: SS::Extensions::Lines
   field :question, type: String
   field :site_search, type: String
   field :order, type: Integer

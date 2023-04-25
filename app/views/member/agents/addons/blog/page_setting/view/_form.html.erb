@@ -18,7 +18,7 @@
 
 <dl class="column">
   <dt><%= @model.t :genres %></dt>
-  <dd><%= f.text_area :genres %></dd>
+  <dd><%= f.ss_lines_field :genres %></dd>
 </dl>
 
 <% if @locations.present? %>

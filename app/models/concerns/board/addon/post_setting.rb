@@ -10,8 +10,8 @@ module Board::Addon
       field :show_url, type: String, default: "enabled"
       field :deletable_post, type: String, default: "enabled"
       field :deny_url, type: String, default: "deny"
-      field :banned_words, type: SS::Extensions::Words, default: ""
-      field :deny_ips, type: SS::Extensions::Words, default: ""
+      field :banned_words, type: SS::Extensions::Lines, default: ""
+      field :deny_ips, type: SS::Extensions::Lines, default: ""
       field :text_size_limit, type: Integer, default: 400
 
       permit_params :show_email, :show_url, :deletable_post, :deny_url

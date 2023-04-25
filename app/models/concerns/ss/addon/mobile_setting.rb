@@ -9,7 +9,7 @@ module SS::Addon
       field :mobile_state, type: String
       field :mobile_size, type: Integer, default: 500 * 1_024 # 500kb
       field :mobile_location, type: String
-      field :mobile_css, type: SS::Extensions::Words
+      field :mobile_css, type: SS::Extensions::Lines
       permit_params :mobile_state, :in_mobile_size, :mobile_location, :mobile_css
       before_validation :normalize_mobile_location
       before_validation :set_mobile_size

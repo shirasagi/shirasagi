@@ -21,7 +21,7 @@ module Cms::Addon::List
       cattr_accessor(:use_condition_forms, instance_accessor: false) { false }
       attr_accessor :cur_date
 
-      field :conditions, type: SS::Extensions::Words
+      field :conditions, type: SS::Extensions::Lines
       field :condition_forms, type: Cms::Extensions::ConditionForms
       field :sort, type: String
       field :limit, type: Integer, default: -> { self.class.default_limit }

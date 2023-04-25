@@ -45,7 +45,7 @@
 <% if @model.use_conditions %>
   <dl class="see">
     <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
-    <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+    <dd><%= f.ss_lines_field :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
   </dl>
 <% end %>
 
