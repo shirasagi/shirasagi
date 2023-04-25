@@ -1,3 +1,5 @@
+require 'sass'
+
 module ApplicationHelper
   include Category::CategoryHelper
   include SS::AutoLink

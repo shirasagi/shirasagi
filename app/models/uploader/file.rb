@@ -1,3 +1,5 @@
+require 'sass'
+
 class Uploader::File
   include ActiveModel::Model
 
