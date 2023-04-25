@@ -41,7 +41,7 @@ class Webmail::Mail
   field :references, type: SS::Extensions::Words
   field :content_type, type: String
   field :subject, type: String
-  field :has_attachment, type: Boolean
+  field :has_attachment, type: ::Mongoid::Boolean
   field :disposition_notification_to, type: Array, default: []
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
