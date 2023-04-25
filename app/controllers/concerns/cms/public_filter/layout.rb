@@ -136,10 +136,16 @@ module Cms::PublicFilter::Layout
   end
 
   def render_body_class(html)
+    body_cls = body_class(@cur_main_path)
+    body_id = body_id(@cur_main_path)
+
     html.sub(/<body.*?>/) do |m|
-      m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
-      m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
-      m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
+      if m.include?(' class="')
+        m = m.sub(' class="', %( class="#{body_cls} ))
+      else
+        m = m.sub('<body', %(<body class="#{body_cls}"))
+      end
+      m = m.sub('<body', %(<body id="#{body_id}")) unless m.include?(' id="')
       m
     end
   end
@@ -179,9 +185,7 @@ module Cms::PublicFilter::Layout
       convert_date
     end
 
-    html = render_conditional_tag(html)
-
-    html
+    render_conditional_tag(html)
   end
 
   def render_layout_parts(html, opts = {})
@@ -207,10 +211,10 @@ module Cms::PublicFilter::Layout
   end
 
   def render_layout_part(part, opts = {})
-    if !opts[:previewable].nil?
-      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-    else
+    if opts[:previewable].nil?
       previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    else
+      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     end
     html = []
     if previewable
