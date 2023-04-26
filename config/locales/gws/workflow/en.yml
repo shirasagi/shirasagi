@@ -109,6 +109,7 @@ en:
         order: Order
       gws/addon/workflow/group_setting:
         workflow_new_days: Display period for new items
+        workflow_my_group: Display own group
 
   tooltip:
     gws/workflow/file:
@@ -136,6 +137,8 @@ en:
     gws/addon/workflow/group_setting:
       workflow_new_days:
         - Enter the display period for new items.
+      workflow_my_group:
+        - Select the display own group
 
   job:
     models:

@@ -589,6 +589,7 @@ ja:
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
+      ss/workflow_setting: ワークフロー設定
       ss/maintenance_mode: メンテナンスモード
       ss/oauth2/sys_permission: システム権限
       ss/oauth2/cms_permission: CMS権限
@@ -1012,6 +1013,8 @@ ja:
       ss/addon/locale_setting:
         lang: 言語
         timezone: タイムゾーン
+      ss/addon/workflow_setting:
+        workflow_my_group: 自所属の表示
 
   tooltip:
     ss/model/site:
@@ -1461,6 +1464,10 @@ ja:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - グループ共通のお問い合わせフォームを設定します。
+
+    ss/addon/workflow_setting:
+      workflow_my_group:
+        - ページの公開申請時「自所属」を表示するか設定します。
 
     ss:
       contrast_ratio:

@@ -588,6 +588,7 @@ en:
       ss/generate_lock: Stop exporting
       ss/partner_site: Partner site settings
       ss/inquiry_setting: Inquiry form settings
+      ss/workflow_setting: Workflow settings
       ss/maintenance_mode: Maintenance mode
       ss/oauth2/sys_permission: System permissions
       ss/oauth2/cms_permission: CMS permissions
@@ -1011,6 +1012,8 @@ en:
       ss/addon/locale_setting:
         lang: Language
         timezone: Timezone
+      ss/addon/workflow_setting:
+        workflow_my_group: Display own group
 
   tooltip:
     ss/model/site:
@@ -1460,6 +1463,10 @@ en:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - Set a group-wide inquiry form.
+
+    ss/addon/workflow_setting:
+      workflow_my_group:
+        - Select the display own group
 
     ss:
       contrast_ratio:

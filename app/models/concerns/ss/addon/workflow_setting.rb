@@ -1,13 +1,10 @@
-module Gws::Addon::Workflow::GroupSetting
+module SS::Addon::WorkflowSetting
   extend ActiveSupport::Concern
   extend SS::Addon
 
-  set_addon_type :organization
-
   included do
-    field :workflow_new_days, type: Integer
     field :workflow_my_group, type: String, default: "enabled"
-    permit_params :workflow_new_days, :workflow_my_group
+    permit_params :workflow_my_group
   end
 
   def workflow_my_group_options
@@ -15,10 +12,6 @@ module Gws::Addon::Workflow::GroupSetting
       [I18n.t("ss.options.state.enabled"), "enabled"],
       [I18n.t("ss.options.state.disabled"), "disabled"]
     ]
-  end
-
-  def workflow_new_days
-    self[:workflow_new_days].presence || 7
   end
 
   def workflow_my_group_disabled?
