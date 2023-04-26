@@ -25,13 +25,13 @@ module SS::Config
     end
 
     def load_yml(file, section = nil)
-      conf = YAML.load_file(file)
+      conf = YAML.load(ERB.new(IO.read(file)).result)
       section ? conf[section] : conf
     end
 
     def method_missing(name, *args, &block)
-      load_config(name, Rails.env) if @@config.key?(name)
-      # super
+      return load_config(name, Rails.env) if @@config.key?(name)
+      super rescue nil
     end
 
     def respond_to?(name, *args)
