@@ -43,7 +43,7 @@ class Event::Extensions::EventDates < Array
     end
 
     def mongoize_array(array)
-      array = array.select { |item| item.respond_to?(:in_time_zone) }.map(&:in_time_zone).compact.map(&:to_date)
+      array = array.filter_map { |item| item.in_time_zone if item.respond_to?(:in_time_zone) }.map(&:to_date)
       array.compact!
       array.uniq!
       array.sort!
