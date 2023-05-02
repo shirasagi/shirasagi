@@ -3247,11 +3247,24 @@ this.SS_ListUI = (function () {
     }
 
     $el.find(".list-head input:checkbox").on("change", function () {
-      var chk;
-      chk = $(this).prop('checked');
+      var chk = $(this).prop('checked');
       $el.find('.list-item').each(function () {
-        $(this).toggleClass('checked', chk);
-        return $(this).find('input:checkbox').prop('checked', chk);
+        var $listItem = $(this);
+        var modified = false;
+        $listItem.find('input:checkbox').each(function() {
+          if (!this.disabled) {
+            this.checked = chk;
+            modified = true;
+          }
+        });
+
+        if (modified) {
+          if (chk) {
+            $listItem.addClass('checked', chk);
+          } else {
+            $listItem.removeClass('checked', chk);
+          }
+        }
       });
       $(this).trigger("ss:checked-all-list-items");
     });
