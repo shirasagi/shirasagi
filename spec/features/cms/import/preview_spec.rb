@@ -10,7 +10,7 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
 
     expected_files = [ "#{name}/index.html", "#{name}/article/page.html", "#{name}/css/style.css", "#{name}/img/logo.jpg" ]
     expect do
-      Cms::ImportFilesJob.bind(site_id: site).perform_now
+      Cms::ImportFilesJob.bind(site_id: site.id).perform_now
     end.to output(include(*expected_files)).to_stdout
 
     login_cms_user

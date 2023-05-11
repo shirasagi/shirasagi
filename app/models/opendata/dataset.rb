@@ -64,7 +64,7 @@ class Opendata::Dataset
   permit_params :text, :creator_name, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
-  after_save :on_state_changed, if: ->{ state_changed? }
+  after_save :on_state_changed, if: ->{ state_changed? || state_previously_changed? }
 
   default_scope ->{ where(route: "opendata/dataset") }
 

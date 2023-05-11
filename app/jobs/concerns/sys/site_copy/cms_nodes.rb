@@ -50,7 +50,7 @@ module Sys::SiteCopy::CmsNodes
     Inquiry::Column.where(site_id: @src_site.id, node_id: src_node.id).order_by(updated: 1).each do |src_inquiry_column|
       Rails.logger.debug("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry::Column をコピーします。")
       dest_inquiry_column = Inquiry::Column.new src_inquiry_column.
-        attributes.except(:id, :_id, :node_id, :site_id, :created, :updated)
+        attributes.except("id", "_id", "node_id", "site_id", "created", "updated")
       dest_inquiry_column.cur_site = @dest_site
       dest_inquiry_column.site_id = @dest_site.id
       # dest_inquiry_column.cur_node = dest_node
@@ -64,7 +64,7 @@ module Sys::SiteCopy::CmsNodes
     Ezine::Column.where(site_id: @src_site.id, node_id: src_node.id).order_by(updated: 1).each do |src_ezine_column|
       Rails.logger.debug("#{src_ezine_column.name}(#{src_ezine_column.id}): Ezine::Column をコピーします。")
       dest_ezine_column = Ezine::Column.new src_ezine_column.
-          attributes.except(:id, :_id, :node_id, :site_id, :created, :updated)
+          attributes.except("id", "_id", "node_id", "site_id", "created", "updated")
       dest_ezine_column.cur_site = @dest_site
       dest_ezine_column.site_id = @dest_site.id
       dest_ezine_column.cur_node = dest_node

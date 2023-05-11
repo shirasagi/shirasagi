@@ -26,7 +26,7 @@ module Event::Node
 
     default_scope ->{ where(route: "event/page") }
 
-    after_save :purge_pages, if: ->{ ical_refresh_enabled? && @db_changes && @db_changes["ical_max_docs"] }
+    after_save :purge_pages, if: ->{ ical_refresh_enabled? && (ical_max_docs_changed? || ical_max_docs_previously_changed?) }
 
     def condition_hash(options = {})
       cond = super

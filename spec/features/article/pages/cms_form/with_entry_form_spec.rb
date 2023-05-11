@@ -274,6 +274,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".ajax-selected", text: column14_page1.name)
           end
 
+          wait_for_js_ready
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -388,6 +389,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           within ".column-value-cms-column-selectpage " do
             expect(page).to have_css(".ajax-selected", text: column14_page2.name)
           end
+
+          wait_for_js_ready
           click_on I18n.t('ss.buttons.draft_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

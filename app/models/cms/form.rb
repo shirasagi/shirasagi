@@ -44,16 +44,19 @@ class Cms::Form
       criteria
     end
 
+    EXCLUDES_FORM_FIELDS_FROM_EXPORT = %w(_id site_id group_ids created updated).freeze
+    EXCLUDES_COLUMN_FIELDS_FROM_EXPORT = %w(_id site_id form_id created updated).freeze
+
     def export_json(items)
       items.map do |form|
-        form_data = form.attributes.reject { |c| %(_id site_id group_ids created updated).include?(c) }
+        form_data = form.attributes.reject { |c| EXCLUDES_FORM_FIELDS_FROM_EXPORT.include?(c) }
         form_data[:groups] = form.groups.map(&:name)
 
         form_data[:columns] = form.columns.map do |col|
-          col.attributes.reject { |c| %(_id site_id form_id created updated).include?(c) }
+          col.attributes.reject { |c| EXCLUDES_COLUMN_FIELDS_FROM_EXPORT.include?(c) }
         end
         form_data[:init_columns] = form.init_columns.map do |col|
-          col.attributes.reject { |c| %(_id site_id form_id created updated).include?(c) }
+          col.attributes.reject { |c| EXCLUDES_COLUMN_FIELDS_FROM_EXPORT.include?(c) }
         end
 
         form_data

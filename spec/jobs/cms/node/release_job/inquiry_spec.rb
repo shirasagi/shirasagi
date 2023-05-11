@@ -22,8 +22,8 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
   let!(:close_date) { 7.days.from_now }
 
   def generate_all
-    described_class.bind(site_id: site).perform_now
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
+    described_class.bind(site_id: site.id).perform_now
+    Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
     inquiry1.reload
     inquiry2.reload
     inquiry3.reload

@@ -22,7 +22,7 @@ describe Webmail::RoleImportJob, dbscope: :example do
       job.perform_now(temp_file.id)
 
       Job::Log.first.tap do |log|
-        expect(log.attributes[:logs]).to be_empty
+        expect(log.attributes["logs"]).to be_empty
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
         expect(log.logs).to include(match(/2行目:.*インポートしました。/))

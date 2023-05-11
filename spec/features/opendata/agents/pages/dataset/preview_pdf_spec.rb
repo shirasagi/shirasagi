@@ -28,6 +28,8 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       page_dataset.reload
       page_dataset.save
       expect(page_dataset.resources.count).to eq 1
+
+      ::FileUtils.rm_f(page_dataset.path)
     end
 
     it "#index" do

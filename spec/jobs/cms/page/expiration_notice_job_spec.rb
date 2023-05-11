@@ -24,7 +24,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
     let(:expiration_state) { "disabled" }
 
     it do
-      described_class.bind(site_id: site).perform_now
+      described_class.bind(site_id: site.id).perform_now
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -71,7 +71,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -107,7 +107,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -143,7 +143,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)

@@ -8,7 +8,7 @@ module Sys::SiteCopy::CmsRoles
       begin
         cms_role = Cms::Role.where(site_id: @src_site.id).find(cms_roles_id)
         Rails.logger.debug("#{cms_role.name}(#{cms_role.id}): 権限/ロールのコピーを開始します。")
-        new_cms_role = Cms::Role.new cms_role.attributes.except(:id, :_id, :site_id, :created, :updated)
+        new_cms_role = Cms::Role.new cms_role.attributes.except("id", "_id", "site_id", "created", "updated")
         new_cms_role.site_id = @dest_site.id
         new_cms_role.cur_site = @dest_site
         new_cms_role.save!

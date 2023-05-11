@@ -9,13 +9,13 @@
     if (!$(this).hasClass("pulled")) return true;
 
     var select = $(this);
-    select.html('<option value="">' + blank + '</option>');
+    select.html($("<option/>").val("").text(blank));
 
     $("input[type=checkbox][name$='[category_ids][]']").each(function(){
       if (!$(this).prop('checked')) return;
       var value  = $(this).data("url");
       var label  = $(this).parent().text();
-      var option = $("<option>").val(value).text(label);
+      var option = $("<option/>").val(value).text(label);
       select.append(option);
     });
 

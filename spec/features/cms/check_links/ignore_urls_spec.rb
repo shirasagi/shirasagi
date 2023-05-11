@@ -21,7 +21,7 @@ describe "cms/check_links/ignore_urls", type: :feature, dbscope: :example, js: t
   let(:delete_path) { delete_cms_check_links_ignore_url_path(site: site.id, id: item.id) }
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site).perform_now
+    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
   end
 
   def latest_report

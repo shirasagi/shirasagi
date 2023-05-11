@@ -38,7 +38,7 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       expect(item.files.first.id).to eq file.id
 
       # perform
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(item.full_url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(item.full_url)).to_stdout
     end
 
     it do
@@ -97,7 +97,7 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       expect(copy.html).to include(copy.files.first.url)
 
       # perform
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(copy.full_url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(copy.full_url)).to_stdout
     end
 
     it do

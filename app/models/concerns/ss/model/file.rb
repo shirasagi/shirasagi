@@ -48,7 +48,7 @@ module SS::Model::File
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :mangle_filename
-    before_save :rename_file, if: ->{ @db_changes.present? }
+    before_save :rename_file, if: ->{ changes.present? || previous_changes.present? }
     before_save :save_file
     before_destroy :remove_file
 

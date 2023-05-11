@@ -4,7 +4,10 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
   def create_appfile(app, file, format)
     appfile = app.appfiles.new(text: "index", format: format)
     appfile.in_file = file
-    appfile.save
+    appfile.save!
+
+    ::FileUtils.rm_f(app.path)
+
     appfile
   end
 

@@ -19,7 +19,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   end
 
   before do
-    Rdf::VocabImportJob.bind(site_id: site).perform_now("ic", ipa_core_sample_file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
+    Rdf::VocabImportJob.bind(site_id: site.id).perform_now("ic", ipa_core_sample_file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
   end
 
   before { login_cms_user }

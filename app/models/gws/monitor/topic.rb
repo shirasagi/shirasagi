@@ -206,7 +206,7 @@ class Gws::Monitor::Topic
   def set_notice_at
     case notice_state
     when 'from_now'
-      self.notice_at = ::Time::EPOCH
+      self.notice_at = ::SS::EPOCH_TIME
     when *%w(1_day_from_released 2_days_from_released 3_days_from_released 4_days_from_released 5_days_from_released)
       term, = notice_state.split('_')
       self.notice_at = (released || created) + Integer(term).days

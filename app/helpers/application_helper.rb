@@ -303,4 +303,18 @@ module ApplicationHelper
   def ss_truncate(text, **options)
     tag.span truncate(text, options), title: text
   end
+
+  def ss_lines_field(object_name, method, options = {})
+    if !options.key?(:value)
+      object = options[:object] || instance_variable_get("@#{object_name}")
+      if object && object.respond_to?(method)
+        value = object.public_send(method)
+      end
+      if value
+        options[:value] = value.join("\n")
+      end
+    end
+
+    text_area(object_name, method, options)
+  end
 end

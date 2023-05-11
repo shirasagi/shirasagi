@@ -9,7 +9,7 @@ describe Gws::Board::TrashPurgeJob, dbscope: :example do
   describe '#perform' do
     context '1 board topics are purged' do
       it do
-        expect { described_class.bind(site_id: site).perform_now }.to change { Gws::Board::Topic.topic.count }.by(-1)
+        expect { described_class.bind(site_id: site.id).perform_now }.to change { Gws::Board::Topic.topic.count }.by(-1)
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
@@ -21,7 +21,7 @@ describe Gws::Board::TrashPurgeJob, dbscope: :example do
 
     context '2 board topics are purged' do
       it do
-        expect { described_class.bind(site_id: site).perform_now(threshold: '7.days') }.to \
+        expect { described_class.bind(site_id: site.id).perform_now(threshold: '7.days') }.to \
           change { Gws::Board::Topic.topic.count }.by(-2)
 
         expect(Job::Log.count).to eq 1
@@ -34,7 +34,7 @@ describe Gws::Board::TrashPurgeJob, dbscope: :example do
 
     context 'no board topics are purged' do
       it do
-        expect { described_class.bind(site_id: site).perform_now(threshold: '3.years') }.to \
+        expect { described_class.bind(site_id: site.id).perform_now(threshold: '3.years') }.to \
           change { Gws::Board::Topic.topic.count }.by(0)
 
         expect(Job::Log.count).to eq 1
@@ -52,7 +52,7 @@ describe Gws::Board::TrashPurgeJob, dbscope: :example do
       end
 
       it do
-        expect { described_class.bind(site_id: site).perform_now }.to \
+        expect { described_class.bind(site_id: site.id).perform_now }.to \
           change { Gws::Board::Topic.topic.count }.by(-2)
 
         expect(Job::Log.count).to eq 1
@@ -70,7 +70,7 @@ describe Gws::Board::TrashPurgeJob, dbscope: :example do
       end
 
       it do
-        expect { described_class.bind(site_id: site).perform_now }.to change { Gws::Board::Topic.topic.count }.by(0)
+        expect { described_class.bind(site_id: site.id).perform_now }.to change { Gws::Board::Topic.topic.count }.by(0)
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|

@@ -65,7 +65,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(page1.url, page2.url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(page1.url, page2.url)).to_stdout
     end
 
     it do
@@ -114,7 +114,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      expect { described_class.bind(site_id: site, node_id: node).perform_now }.to \
+      expect { described_class.bind(site_id: site.id, node_id: node.id).perform_now }.to \
         output(include(page1.url, page2.url)).to_stdout
     end
 
@@ -165,7 +165,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      expect { described_class.bind(site_id: site).perform_now }.to \
+      expect { described_class.bind(site_id: site.id).perform_now }.to \
         output(include(I18n.t("mongoid.attributes.ss/addon/generate_lock.generate_locked"))).to_stdout
     end
 
@@ -223,7 +223,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(page1.url, page2.url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(page1.url, page2.url)).to_stdout
 
       expect(File.size(page1.path)).to be > 0
       expect(File.size(ss_file1.public_path)).to be > 0
@@ -235,7 +235,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       site.file_fs_access_restriction_state = "enabled"
       site.save!
 
-      expect { described_class.bind(site_id: site).perform_now }.not_to output(include(page1.url, page2.url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.not_to output(include(page1.url, page2.url)).to_stdout
 
       expect(File.size(page1.path)).to be > 0
       expect(File.exist?(ss_file1.public_path)).to be_falsey

@@ -7,7 +7,7 @@ module Sys::SiteCopy::KanaDictionaries
       begin
         src_dictionary = Kana::Dictionary.find(src_dictionary_id)
         Rails.logger.debug("#{src_dictionary.name}(#{src_dictionary.id}): 辞書のコピーを開始します。")
-        dest_dictionary = Kana::Dictionary.new src_dictionary.attributes.except(:id, :_id, :site_id, :created, :updated)
+        dest_dictionary = Kana::Dictionary.new src_dictionary.attributes.except("id", "_id", "site_id", "created", "updated")
         dest_dictionary.cur_site = @dest_site
         dest_dictionary.site_id = @dest_site.id
         dest_dictionary.save!

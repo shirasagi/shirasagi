@@ -67,7 +67,7 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
     builder.build(ontology_subject_hash)
     raise Rdf::VocabImportJobError, I18n.t("rdf.errors.unable_to_load_vocab") if builder.attributes.blank?
 
-    uri = builder.attributes[:uri]
+    uri = builder.attributes["uri"]
     uri ||= ontology_subject.to_s.sub("##{ontology_subject.fragment}", '#')
 
     vocab = Rdf::Vocab.site(@cur_site).where(uri: uri).first || Rdf::Vocab.new
@@ -117,8 +117,8 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
         create_prop(vocab, object_name, builder.attributes)
       else
         attributes = builder.attributes.dup
-        attributes[:vocab_id] = vocab.id
-        attributes[:name] = object_name
+        attributes["vocab_id"] = vocab.id
+        attributes["name"] = object_name
         @pending_classes << [klass, attributes]
       end
     end
@@ -148,8 +148,8 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
   def create_prop(vocab, name, attributes)
     rdf_object = Rdf::Prop.vocab(vocab).where(name: name).first || Rdf::Prop.new
     # domains and ranges are class reference. so we'll resolve class reference later.
-    domains = attributes.delete(:domains)
-    ranges = attributes.delete(:ranges)
+    domains = attributes.delete("domains")
+    ranges = attributes.delete("ranges")
     rdf_object.attributes = attributes
     rdf_object.vocab_id = vocab.id
     rdf_object.name = name
@@ -162,11 +162,11 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
   def do_process_pending_classes
     @pending_classes.each do |klass, attributes|
       # puts "attributes=#{attributes}"
-      rdf_object = klass.where(vocab_id: attributes[:vocab_id]).where(name: attributes[:name]).first || klass.new
+      rdf_object = klass.where(vocab_id: attributes["vocab_id"]).where(name: attributes["name"]).first || klass.new
       # properties are property reference. it'll be resolve after.
-      properties = attributes.delete(:properties)
+      properties = attributes.delete("properties")
       # sub_class_of is class reference. so we'll resolve class reference later.
-      sub_class_of = attributes.delete(:sub_class_of)
+      sub_class_of = attributes.delete("sub_class_of")
       rdf_object.attributes = attributes
       save_or_update!(rdf_object)
 

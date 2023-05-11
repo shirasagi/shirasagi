@@ -19,7 +19,6 @@ module SS::Document
     validates :created, datetime: true
     validates :updated, datetime: true
     validates :deleted, datetime: true
-    before_save :set_db_changes
     before_save :set_updated
     before_save :set_text_index
   end
@@ -57,9 +56,10 @@ module SS::Document
       sequence_field name
 
       if name == :id
-        replace_field "_id", Integer
+        field = replace_field "_id", Integer
+        field.default_val = 0
       else
-        field name, type: Integer
+        field name, type: Integer, default: 0
       end
     end
 
@@ -172,10 +172,6 @@ module SS::Document
   end
 
   private
-
-  def set_db_changes
-    @db_changes = changes
-  end
 
   def set_updated
     return true if !changed?

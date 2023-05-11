@@ -84,25 +84,66 @@ describe History::Trash, type: :model, dbscope: :example do
 
       trashes = History::Trash.all.to_a
       expect(trashes.length).to eq 4
-      History::Trash.all.first.tap do |trash|
-        expect(trash.site_id).to eq site.id
-        expect(trash.version).to eq SS.version
-        expect(trash.ref_coll).to eq node.collection_name.to_s
-        expect(trash.ref_class).to eq node.class.name
-        expect(trash.data).to be_present
-        expect(trash.data["_id"]).to eq item.id
-        expect(trash.state).to be_blank
-        expect(trash.action).to eq "save"
+      History::Trash.all.to_a.tap do |trashes|
+        trashes[0].tap do |trash|
+          expect(trash.site_id).to eq site.id
+          expect(trash.version).to eq SS.version
+          expect(trash.ref_coll).to eq node.collection_name.to_s
+          expect(trash.ref_class).to eq node.class.name
+          expect(trash.data).to be_present
+          expect(trash.data["_id"]).to eq node.id
+          expect(trash.data["site_id"]).to eq site.id
+          expect(trash.data["filename"]).to eq node.filename
+          expect(trash.state).to be_blank
+          expect(trash.action).to eq "save"
+        end
+        trashes[1].tap do |trash|
+          expect(trash.site_id).to eq site.id
+          expect(trash.version).to eq SS.version
+          expect(trash.ref_coll).to eq item.collection_name.to_s
+          expect(trash.ref_class).to eq item.class.name
+          expect(trash.data).to be_present
+          expect(trash.data["_id"]).to eq item.id
+          expect(trash.data["site_id"]).to eq site.id
+          expect(trash.data["filename"]).to eq item.filename
+          expect(trash.state).to be_blank
+          expect(trash.action).to eq "save"
+        end
+        trashes[2].tap do |trash|
+          expect(trash.site_id).to eq site.id
+          expect(trash.version).to eq SS.version
+          expect(trash.ref_coll).to eq file1.collection_name.to_s
+          expect(trash.ref_class).to eq file1.class.name
+          expect(trash.data).to be_present
+          expect(trash.data["_id"]).to eq file1.id
+          expect(trash.data["site_id"]).to eq site.id
+          expect(trash.data["filename"]).to eq file1.filename
+          expect(trash.state).to be_blank
+          expect(trash.action).to eq "save"
+        end
+        trashes[3].tap do |trash|
+          expect(trash.site_id).to eq site.id
+          expect(trash.version).to eq SS.version
+          expect(trash.ref_coll).to eq file2.collection_name.to_s
+          expect(trash.ref_class).to eq file2.class.name
+          expect(trash.data).to be_present
+          expect(trash.data["_id"]).to eq file2.id
+          expect(trash.data["site_id"]).to eq site.id
+          expect(trash.data["filename"]).to eq file2.filename
+          expect(trash.state).to be_blank
+          expect(trash.action).to eq "save"
+        end
       end
-      expect(File.exist?("#{described_class.root}/#{file1.path.sub(/.*\/(ss_files\/)/, '\\1')}")).to be_truthy
-      expect(File.exist?("#{described_class.root}/#{file2.path.sub(/.*\/(ss_files\/)/, '\\1')}")).to be_truthy
+      expect(File.size(file1.path.sub("#{file1.class.root}/", "#{described_class.root}/"))).to be > 0
+      expect(File.size(file2.path.sub("#{file2.class.root}/", "#{described_class.root}/"))).to be > 0
     end
 
     context "when children: 'restore' is given" do
       describe "#restore" do
         it do
           trashes = History::Trash.all.to_a
-          result = trashes.first.restore(basename: basename, children: "restore")
+          node_trash = trashes.find { |trash| trash.ref_class == node.class.name }
+          result = node_trash.restore(basename: basename, children: "restore")
           expect(result).to be_new_record
           expect(result.filename).to be_nil
 
@@ -117,12 +158,13 @@ describe History::Trash, type: :model, dbscope: :example do
       describe "#restore!" do
         it do
           trashes = History::Trash.all.to_a
+          node_trash = trashes.find { |trash| trash.ref_class == node.class.name }
           # https://github.com/shirasagi/shirasagi/issues/4217 に示す問題があるので、
           # 名前を変更して配下のコンテンツを「復元にする」でフォルダーをゴミ箱から復元できない
           # result = trashes.first.restore!(basename: basename, children: "restore")
           # trashes.first.children.restore!(basename: basename, children: "restore")
-          result = trashes.first.restore!(children: "restore")
-          trashes.first.children.restore!(children: "restore")
+          result = node_trash.restore!(children: "restore")
+          node_trash.children.restore!(children: "restore")
           expect(result).to be_persisted
           # expect(result.filename).to eq basename
 

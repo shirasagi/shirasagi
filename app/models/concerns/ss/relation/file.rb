@@ -243,13 +243,13 @@ module SS::Relation::File
       return if is_branch && SS::File.file_owned?(file, owner_item.master)
 
       if !SS::File.file_owned?(file, owner_item)
-        attributes[:owner_item] = owner_item
-        attributes[:owner_item_id] = owner_item.id
-        attributes[:owner_item_type] = owner_item.class.name
+        attributes["owner_item"] = owner_item
+        attributes["owner_item_id"] = owner_item.id
+        attributes["owner_item_type"] = owner_item.class.name
       end
 
       item.send("#{name}_file_state").tap do |file_state|
-        attributes[:state] = file_state if file.state != file_state
+        attributes["state"] = file_state if file.state != file_state
       end
 
       if class_name == DEFAULT_FILE_CLASS_NAME
@@ -258,12 +258,12 @@ module SS::Relation::File
         expected_model = default_model(class_name)
       end
       if file.model != expected_model
-        attributes[:model] = expected_model
+        attributes["model"] = expected_model
       end
 
       file.update(attributes) if attributes.present?
 
-      if attributes[:model].present?
+      if attributes["model"].present?
         resizing = item.send("in_#{name}_resizing").presence || default_resizing
         if resizing
           file.shrink_image_to(resizing[0].to_i, resizing[1].to_i)

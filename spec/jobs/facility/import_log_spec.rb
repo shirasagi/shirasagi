@@ -85,7 +85,7 @@ describe Facility::ImportJob, dbscope: :example do
     context "create Facility::Node::Page" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file1.id)
+          described_class.bind(site_id: site.id, node_id: node.id).perform_later(ss_file1.id)
         end
       end
 
@@ -102,7 +102,7 @@ describe Facility::ImportJob, dbscope: :example do
     context "update Facility::Node::Page" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file2.id)
+          described_class.bind(site_id: site.id, node_id: node.id).perform_later(ss_file2.id)
         end
       end
 
@@ -123,7 +123,7 @@ describe Facility::ImportJob, dbscope: :example do
     context "failed to save Facility::Node::Page" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file3.id)
+          described_class.bind(site_id: site.id, node_id: node.id).perform_later(ss_file3.id)
         end
       end
 

@@ -24,7 +24,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
       let(:node) { create :event_node_page, cur_site: cms_site, layout_id: layout.id, event_display: "list" }
 
       before do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
       end
 
       it do

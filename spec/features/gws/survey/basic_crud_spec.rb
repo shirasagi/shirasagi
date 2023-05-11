@@ -86,7 +86,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
 
       expect(Gws::Job::Log.all.where(class_name: Gws::Survey::NotificationJob.name).count).to eq 1
-      Gws::Job::Log.all.first(class_name: Gws::Survey::NotificationJob.name).tap do |log|
+      Gws::Job::Log.all.where(class_name: Gws::Survey::NotificationJob.name).first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end

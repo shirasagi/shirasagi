@@ -15,7 +15,7 @@ class ImageMap::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
-  after_save :new_size_input, if: ->{ @db_changes }
+  after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
 
   set_permission_name "image_map_pages"
 

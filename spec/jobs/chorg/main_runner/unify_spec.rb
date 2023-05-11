@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Chorg::MainRunner, dbscope: :example do
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
-  let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
+  let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
   let(:job_opts) { { 'newly_created_group_to_site' => 'add' } }
 
   context "with unify" do
@@ -20,7 +20,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site, task_id: task, user_id: user1)
+        job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user1.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
@@ -120,7 +120,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site, task_id: task, user_id: user1)
+        job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user1.id)
         expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded

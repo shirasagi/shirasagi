@@ -48,7 +48,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
   context "root" do
     let(:node) { nil }
-    let(:job_binding) { { site_id: site } }
+    let(:job_binding) { { site_id: site.id } }
 
     context "zip file contain root directory" do
       let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
@@ -69,7 +69,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
   context "node given" do
     let!(:node) { create :article_node_page, cur_site: site }
-    let(:job_binding) { { site_id: site, node_id: node } }
+    let(:job_binding) { { site_id: site.id, node_id: node.id } }
 
     context "zip file contain root directory" do
       let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
