@@ -25,7 +25,7 @@ class Cms::Line::MessagesController < ApplicationController
 
   def copy
     set_item
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
       return
@@ -37,7 +37,7 @@ class Cms::Line::MessagesController < ApplicationController
 
   def deliver
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     if @item.deliver
       redirect_to({ action: :show }, { notice: I18n.t("ss.notice.started_deliver") })
@@ -49,7 +49,7 @@ class Cms::Line::MessagesController < ApplicationController
 
     @test_members = Cms::Line::TestMember.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
 
-    if request.get?
+    if request.get? || request.head?
       @checked_ids = @test_members.and_default_checked.pluck(:id)
     else
       @checked_ids = params.dig(:item, :test_member_ids).to_a.map(&:to_i) rescue []
