@@ -6,6 +6,8 @@ describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
 
   let(:name) { unique_id }
   let(:oauth_id) { unique_id }
+  let(:order) { 10 }
+  let(:default_checked) { I18n.t("ss.options.state.enabled") }
 
   let(:index_path) { cms_line_test_members_path site }
   let(:new_path) { new_cms_line_test_member_path site }
@@ -21,11 +23,15 @@ describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[oauth_id]", with: oauth_id
+        fill_in "item[order]", with: order
+        select default_checked, from: "item[default_checked]"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#addon-basic", text: name)
       expect(page).to have_css("#addon-basic", text: oauth_id)
+      expect(page).to have_css("#addon-basic", text: order)
+      expect(page).to have_css("#addon-basic", text: default_checked)
     end
 
     it "#show" do
@@ -39,11 +45,15 @@ describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "name"
         fill_in "item[oauth_id]", with: "oauth_id"
+        fill_in "item[order]", with: order
+        select default_checked, from: "item[default_checked]"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#addon-basic", text: "name")
       expect(page).to have_css("#addon-basic", text: "oauth_id")
+      expect(page).to have_css("#addon-basic", text: order)
+      expect(page).to have_css("#addon-basic", text: default_checked)
     end
 
     it "#delete" do
