@@ -99,6 +99,7 @@ Rails.application.routes.draw do
       end
       resources :environments, concerns: :deletion
       resources :oauth2_applications, concerns: :deletion
+      resource :setting, only: [:show, :edit, :update]
     end
   end
 

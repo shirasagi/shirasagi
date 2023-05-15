@@ -39,6 +39,7 @@ ja:
     auth/saml: SAML
     auth/open_id_connect: OpenID Connect
     auth/environment: 環境変数
+    auth/setting: 設定
     options:
       auth_state:
         enabled: 有効
@@ -197,6 +198,8 @@ ja:
       sys/ad:
         time: 画像切り替え時間
         width: 横幅
+      sys/auth/setting:
+        form_auth: フォーム認証
 
   errors:
     messages:
@@ -303,6 +306,10 @@ ja:
         - 「グループウェア」を選択した場合、グループウェア利用時にお知らせが表示されます。
         - 「ウェブメール」を選択した場合、ウェブメール利用時にお知らせが表示されます。
         - 「システム管理画面」を選択した場合、システムの管理画面にお知らせが表示されます。
+
+    sys/auth/setting:
+      form_auth:
+        - ログイン画面のフォーム認証を表示するか選択します。
 
   job:
     models:

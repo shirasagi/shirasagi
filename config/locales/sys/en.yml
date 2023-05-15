@@ -39,6 +39,7 @@ en:
     auth/saml: SAML
     auth/open_id_connect: OpenID Connect
     auth/environment: Environment variables
+    auth/setting: Setting
     options:
       auth_state:
         enabled: Enabled
@@ -197,6 +198,8 @@ en:
       sys/ad:
         time: Image switch time
         width: Width
+      sys/auth/setting:
+        form_auth: Form authentication
 
   errors:
     messages:
@@ -303,6 +306,10 @@ en:
         - If “Groupware” is selected, notifications will be displayed when using groupware.
         - If “Webmail” is selected, notifications will be displayed when using webmail.
         - If “System management screen” is selected, notifications will be displayed on the system management screen.
+
+    sys/auth/setting:
+      form_auth:
+        - Select whether to show form authentication on the login screen.
 
   job:
     models:
