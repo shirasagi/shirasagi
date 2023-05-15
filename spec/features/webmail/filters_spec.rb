@@ -19,12 +19,15 @@ describe "webmail_filters", type: :feature, dbscope: :example, imap: true, js: t
           #find("option[value='INBOX']").select_option
         end
         click_button I18n.t('ss.buttons.save')
+        wait_for_notice I18n.t("ss.notice.saved")
         click_link I18n.t('ss.links.back_to_index')
 
         # edit/update
         click_link item_title
         click_link I18n.t('ss.links.edit')
+        wait_for_js_ready
         click_button I18n.t('ss.buttons.save')
+        wait_for_notice I18n.t("ss.notice.saved")
 
         # apply filter
         find(".apply-mailbox option[value='INBOX']").select_option
@@ -34,6 +37,7 @@ describe "webmail_filters", type: :feature, dbscope: :example, imap: true, js: t
         # delete/destroy
         click_link I18n.t('ss.links.delete')
         click_button I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t("ss.notice.deleted")
 
         expect(current_path).to eq index_path
       end

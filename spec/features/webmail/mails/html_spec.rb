@@ -23,6 +23,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
       it do
         visit index_path
+        wait_for_js_ready
         click_on item.subject
         wait_for_js_ready
         expect(page).to have_css("#addon-basic .body--html", text: "test")
@@ -52,6 +53,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         end
 
         visit index_path
+        wait_for_js_ready
         click_on item.subject
         wait_for_js_ready
 

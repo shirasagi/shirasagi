@@ -22,6 +22,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       it do
         # save as draft
         visit index_path
+        wait_for_js_ready
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
           wait_for_js_ready
@@ -37,12 +38,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             click_on I18n.t('ss.buttons.draft_save')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         visit index_path
+        wait_for_js_ready
         within ".webmail-navi-mailboxes" do
           click_on I18n.t("webmail.box.draft")
         end
+        wait_for_js_ready
         click_on item_subject
         expect(page).to have_css(".address-field", text: user2.email)
         expect(page).to have_css(".address-field", text: user3.email)
@@ -51,10 +54,13 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         # send
         visit index_path
+        wait_for_js_ready
         within ".webmail-navi-mailboxes" do
           click_on I18n.t("webmail.box.draft")
         end
+        wait_for_js_ready
         click_on item_subject
+        wait_for_js_ready
         new_window = window_opened_by { click_on I18n.t("ss.links.edit") }
         within_window new_window do
           wait_for_js_ready
@@ -62,7 +68,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             click_on I18n.t('ss.buttons.send')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
@@ -77,10 +83,13 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         # confirm sent box
         visit index_path
+        wait_for_js_ready
         within ".webmail-navi-mailboxes" do
           click_on I18n.t("webmail.box.sent")
         end
+        wait_for_js_ready
         click_on item_subject
+        wait_for_js_ready
         expect(page).to have_css(".address-field", text: user2.email)
         expect(page).to have_css(".address-field", text: user3.email)
         expect(page).to have_css(".address-field", text: user4.email)
@@ -88,18 +97,23 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         # confirm to remove draft main in draft box
         visit index_path
+        wait_for_js_ready
         within ".webmail-navi-mailboxes" do
           click_on I18n.t("webmail.box.draft")
         end
+        wait_for_js_ready
         expect(page).to have_no_content(item_subject)
         expect(page).to have_no_css(".list-item")
 
         # reply to all
         visit index_path
+        wait_for_js_ready
         within ".webmail-navi-mailboxes" do
           click_on I18n.t("webmail.box.sent")
         end
+        wait_for_js_ready
         click_on item_subject
+        wait_for_js_ready
         new_window = window_opened_by do
           within "#menu" do
             # drop down "reply"
@@ -116,7 +130,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             click_on I18n.t('ss.buttons.send')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(2).items
         ActionMailer::Base.deliveries.last.tap do |mail|
