@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t('ss.buttons.save'), class: 'btn-primary', data: { disable_with: t("ss.buttons.saving") } %>
   <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>

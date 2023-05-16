@@ -18,7 +18,7 @@
 </div>
 
 <% if Cms::GenerateLock.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <footer class="send">
+  <footer class="send ss-sticky ss-sticky-bottom">
     <%= f.submit(@model.t(:generate_lock), name: "lock", class: "btn btn-primary btn-generate-lock") %>
     <%= f.submit(@model.t(:generate_unlock), name: "unlock", class: "btn btn-default btn-generate-lock") %>
   </footer>
