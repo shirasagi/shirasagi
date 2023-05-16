@@ -115,10 +115,6 @@ jobs:
         run: docker ps -a
       - name: Bundle assets
         run: npx webpack-cli build
-      - name: Install & Update chrome driver
-        run: |
-          bundle exec rails runner "require 'webdrivers'; Webdrivers::Chromedriver.update"
-          $HOME/.webdrivers/chromedriver --version
       - name: Run tests
         run: |
           file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
