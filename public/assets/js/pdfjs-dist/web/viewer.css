@@ -1185,6 +1185,8 @@
   --toolbarButton-openFile-icon: url(images/toolbarButton-openFile.svg);
   --toolbarButton-download-icon: url(images/toolbarButton-download.svg);
   --toolbarButton-close-icon: url(images/ss-close.svg);
+  --toolbarButton-next-pdf-icon: url(images/ss-next-pdf.svg);
+  --toolbarButton-previous-pdf-icon: url(images/ss-previous-pdf.svg);
   --toolbarButton-fullscreen-icon: url(images/ss-fullscreen.svg);
   --toolbarButton-bookmark-icon: url(images/toolbarButton-bookmark.svg);
   --toolbarButton-viewThumbnail-icon: url(images/toolbarButton-viewThumbnail.svg);
@@ -2097,6 +2099,16 @@ body {
           mask-image: var(--toolbarButton-close-icon);
 }
 
+#next-pdf::before {
+  -webkit-mask-image: var(--toolbarButton-next-pdf-icon);
+          mask-image: var(--toolbarButton-next-pdf-icon);
+}
+
+#previous-pdf::before {
+  -webkit-mask-image: var(--toolbarButton-previous-pdf-icon);
+          mask-image: var(--toolbarButton-previous-pdf-icon);
+}
+
 a.secondaryToolbarButton {
   padding-top: 5px;
   text-decoration: none;
@@ -2703,3 +2715,16 @@ dialog :link {
     display: none;
   }
 }
+
+#pdf-title {
+  width: 140px;
+  margin-top: 9px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#toolbarContainer button {
+  cursor: pointer;
+};

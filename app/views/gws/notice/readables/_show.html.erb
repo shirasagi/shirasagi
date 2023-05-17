@@ -33,9 +33,9 @@
     <% if @item.files.present? %>
       <div class="files">
         <% @item.files.each do |file| %>
-        <span id="file-<%= file.id %>">
-        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname} ext-#{file.extname}", target: '_blank', rel: "noopener" %>
-        </span>
+        <p id="file-<%= file.id %>">
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname} ext-#{file.extname}", target: '_blank', rel: "noopener" %>
+        </p>
         <% end %>
       </div>
     <% end %>

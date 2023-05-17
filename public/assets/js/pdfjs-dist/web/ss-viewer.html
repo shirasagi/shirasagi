@@ -13,6 +13,7 @@
 #openFile { display: none; }
 #editorModeButtons { display: none; }
 #toolbarViewerRight .verticalToolbarSeparator { display: none; }
+#fullscreen { display: none; }
 </style>
 
 <!-- This snippet is used in production (included from viewer.html) -->
@@ -232,21 +233,16 @@
                 <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar" aria-expanded="false" aria-controls="sidebarContainer">
                   <span data-l10n-id="toggle_sidebar_label">Toggle Sidebar</span>
                 </button>
-                <div class="toolbarButtonSpacer"></div>
-                <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12" data-l10n-id="findbar" aria-expanded="false" aria-controls="findbar">
-                  <span data-l10n-id="findbar_label">Find</span>
-                </button>
-                <div class="splitToolbarButton hiddenSmallView">
-                  <button class="toolbarButton" title="Previous Page" id="previous" tabindex="13" data-l10n-id="previous">
-                    <span data-l10n-id="previous_label">Previous</span>
+                <div class="splitToolbarButton">
+                  <button id="previous-pdf" class="toolbarButton" title="Previous Page" tabindex="11" data-l10n-id="previous_pdf">
+                    <span data-l10n-id="previous_pdf_label">Previous Pdf</span>
                   </button>
                   <div class="splitToolbarButtonSeparator"></div>
-                  <button class="toolbarButton" title="Next Page" id="next" tabindex="14" data-l10n-id="next">
-                    <span data-l10n-id="next_label">Next</span>
+                  <button id="next-pdf" class="toolbarButton" title="Next Page" tabindex="11" data-l10n-id="next_pdf">
+                    <span data-l10n-id="next_pdf_label">Next Pdf</span>
                   </button>
                 </div>
-                <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
-                <span id="numPages" class="toolbarLabel"></span>
+                <div id="pdf-title" class="splitToolbarButton"></div>
               </div>
               <div id="toolbarViewerRight">
                 <button id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="31" data-l10n-id="open_file">
@@ -287,6 +283,22 @@
                 </button>
               </div>
               <div id="toolbarViewerMiddle">
+
+                <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12" data-l10n-id="findbar" aria-expanded="false" aria-controls="findbar">
+                  <span data-l10n-id="findbar_label">Find</span>
+                </button>
+                <div class="splitToolbarButton hiddenSmallView">
+                  <button class="toolbarButton" title="Previous Page" id="previous" tabindex="13" data-l10n-id="previous">
+                    <span data-l10n-id="previous_label">Previous</span>
+                  </button>
+                  <div class="splitToolbarButtonSeparator"></div>
+                  <button class="toolbarButton" title="Next Page" id="next" tabindex="14" data-l10n-id="next">
+                    <span data-l10n-id="next_label">Next</span>
+                  </button>
+                </div>
+                <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
+                <span id="numPages" class="toolbarLabel"></span>
+
                 <div class="splitToolbarButton">
                   <button id="zoomOut" class="toolbarButton" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
                     <span data-l10n-id="zoom_out_label">Zoom Out</span>
