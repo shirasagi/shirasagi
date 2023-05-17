@@ -19,10 +19,6 @@ class Cms::Apis::Preview::PagesController < ApplicationController
     @cur_node ||= (@item.parent || nil)
   end
 
-  def set_item
-    super
-  end
-
   def check_lockable_item
     set_item
 
@@ -71,7 +67,7 @@ class Cms::Apis::Preview::PagesController < ApplicationController
     if @item.try(:branch?) && @item.state == "public"
       location = cms_preview_path(path: @item.master.url[1..-1])
       @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
-      @item.delete
+      @item.destroy
     end
 
     render json: { reload: location.blank?, location: location }, status: :ok
