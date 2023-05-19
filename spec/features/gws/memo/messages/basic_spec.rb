@@ -199,15 +199,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it '#send_mdn' do
       visit gws_memo_messages_path(site)
       click_link memo.name
+      wait_for_js_ready
       click_button I18n.t('webmail.buttons.send_mdn')
-      expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.send_mdn"))
+      wait_for_notice I18n.t("gws/memo/message.notice.send_mdn")
     end
 
     it '#ignore_mdn' do
       visit gws_memo_messages_path(site)
       click_link memo.name
+      wait_for_js_ready
       click_button I18n.t('webmail.buttons.ignore_mdn')
-      expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.ignore_mdn"))
+      wait_for_notice I18n.t("gws/memo/message.notice.ignore_mdn")
     end
 
     it '#print' do

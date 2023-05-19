@@ -28,7 +28,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       it do
         # forward
         visit index_path
+        wait_for_js_ready
         click_link item_subject
+        wait_for_js_ready
         new_window = window_opened_by { click_link I18n.t('webmail.links.forward') }
         within_window new_window do
           wait_for_js_ready
@@ -37,7 +39,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           end
           click_button I18n.t('ss.buttons.send')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
