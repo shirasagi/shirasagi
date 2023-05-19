@@ -174,7 +174,24 @@ module SS
 
     WAIT_FOR_JS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
-        SS.ready(function() { resolve(true); });
+        if ("SS" in window) {
+          SS.ready(function() { resolve(true); });
+          return;
+        }
+
+        if (document.readyState === "complete") {
+          // document が読み込まれているのに SS が存在しない場合、現在のところリカバリ方法が不明
+          resolve(false);
+          return;
+        }
+
+        window.addEventListener("load", function() {
+          if ("SS" in window) {
+            SS.ready(function() { resolve(true); });
+          } else {
+            resolve(false);
+          }
+        });
       })(...arguments)
     SCRIPT
 
