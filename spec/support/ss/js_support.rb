@@ -483,6 +483,9 @@ module SS
       session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
 
       yield if block_given?
+    rescue Selenium::WebDriver::Error::JavascriptError
+      puts_console_logs
+      raise
     end
     alias wait_for_ajax wait_for_js_ready
   end
