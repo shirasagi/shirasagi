@@ -31,6 +31,8 @@ jobs:
         run: |
           sudo locale-gen ja_JP
           sudo update-locale LANG=ja_JP.UTF-8
+      - name: Google Chrome version
+        run: google-chrome-stable --version
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -69,8 +71,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
-      - name: Show google chrome version
-        run: google-chrome-stable --version
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
