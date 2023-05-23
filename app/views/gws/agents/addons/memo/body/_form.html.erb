@@ -4,6 +4,7 @@
   </div>
   <div class="options">
     <%= f.select :format, @item.format_options, selected: @item.format %>
+    <%= select_tag :template, options_for_select(@item.template_options), include_blank: t('mongoid.models.gws/memo/template'), class: "add-template" %>
     <%= f.select :signature, @item.signature_options, include_blank: t('mongoid.models.gws/memo/signature'), class: "add-template" %>
   </div>
   <div class="body-content body-text">
@@ -14,9 +15,6 @@
     <%= f.text_area :html, class: "html", style: "height: 400px;" %>
   </div>
   <% if @item.template_options.present?  %>
-  <div class="template-options">
-    <%= select_tag :template, options_for_select(@item.template_options), include_blank: t('mongoid.models.gws/memo/template'), class: "add-template" %>
-  </div>
   <% end %>
   <div class="header-options">
     <label for="in-request-mdn">
