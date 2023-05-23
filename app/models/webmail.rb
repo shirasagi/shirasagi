@@ -186,7 +186,7 @@ module Webmail
     ret += "#{header}: #{from}\n"
     ret += "\n\n"
     ret += "#{I18n.l(send_date, format: :long)}, #{from}:\n"
-    ret += (text).to_s.gsub(/^/m, '> ')
+    ret += text.to_s.gsub(/^/m, '> ')
 
     if sign
       ret += "\n\n#{sign}"
