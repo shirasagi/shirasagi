@@ -623,18 +623,13 @@ this.Webmail_Mail_Form = (function () {
   };
 
   Webmail_Mail_Form.insertText = function (field, str) {
-    var np, p, r, s;
     field.focus();
     if (navigator.userAgent.match(/MSIE/)) {
-      r = document.selection.createRange();
+      var r = document.selection.createRange();
       r.text = str;
-      return r.select();
+      r.select();
     } else {
-      s = field.val();
-      p = field.get(0).selectionStart;
-      np = p + str.length;
-      field.val(s.substr(0, p) + str + s.substr(p));
-      return field.get(0).setSelectionRange(np, np);
+      field.get(0).setRangeText(str);
     }
   };
 
