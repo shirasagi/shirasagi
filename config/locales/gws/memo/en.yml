@@ -25,6 +25,7 @@ en:
       publish: Send
     buttons:
       seen: Sender list
+      select_signature: Select signature
     confirm:
       publish: Are you sure you want to send it?
     notice:
@@ -188,7 +189,7 @@ en:
       gws/memo/folder: Folder
       gws/memo/filter: Filter
       gws/memo/signature: Signature
-      gws/memo/template: Phone memos
+      gws/memo/template: Template
       gws/memo/forward: Forward e-mail
       gws/memo/group_setting: Message settings
       gws/memo/list: List
