@@ -12,7 +12,7 @@ class Gws::Bookmark::ItemsController < ApplicationController
   private
 
   def pre_params
-    { bookmark_model: Gws::Bookmark::Item::BOOKMARK_MODEL_DEFAULT_TYPE, folder: (@folder || @root_folder) }
+    { bookmark_model: Gws::Bookmark::BOOKMARK_MODEL_DEFAULT_TYPE, folder: (@folder || @root_folder) }
   end
 
   def fix_params

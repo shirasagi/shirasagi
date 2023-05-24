@@ -5,7 +5,7 @@ FactoryBot.define do
 
     name { "name-#{unique_id}" }
     url { "http://#{unique_id}.example.jp/" }
-    bookmark_model { Gws::Bookmark::Item::BOOKMARK_MODEL_TYPES.sample }
+    bookmark_model { Gws::Bookmark::BOOKMARK_MODEL_TYPES.sample }
     folder { gws_user.bookmark_root_folder(gws_site) }
   end
 end

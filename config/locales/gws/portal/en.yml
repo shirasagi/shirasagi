@@ -164,6 +164,7 @@ en:
       gws/addon/portal/portlet/todo:
         todo_state: Display status
       gws/addon/portal/portlet/bookmark:
+        bookmark_folder_id: Folder
         bookmark_model: Functional display range
       gws/addon/portal/portlet/board:
         board_severity: Importance
