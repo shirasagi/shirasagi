@@ -21,10 +21,6 @@
 <%= stylesheet_link_tag('cms/form_db', media: "all") %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <%= javascript_include_tag('cms/form_db', defer: true) %>
-<!--[if lt IE 9]>
-<script src="/assets/js/html5.js"></script>
-<script src="/assets/js/selectivizr-min.js"></script>
-<![endif]-->
 <%= csrf_meta_tags %>
 </head>
 <body>
