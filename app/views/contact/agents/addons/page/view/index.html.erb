@@ -74,12 +74,12 @@
 
 <%
   if @cur_page.contact_group_related?
-    contact_link = contact.try(:contact_link)
+    contact_link = contact.try(:contact_link_name)
     contact_link ||= contact.try(:contact_group_name)
     contact_link ||= contact_group.try(:section_name).presence
     contact_link_url = contact.try(:contact_link_url)
   else
-    contact_link = @cur_page.contact_link.presence
+    contact_link = @cur_page.contact_link_name.presence
     contact_link ||= @cur_page.contact_charge.presence
     contact_link ||= contact_group.try(:section_name).presence
     contact_link_url = @cur_page.contact_link_url
