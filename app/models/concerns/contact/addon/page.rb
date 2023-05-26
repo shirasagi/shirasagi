@@ -14,6 +14,8 @@ module Contact::Addon::Page
     belongs_to :contact_group_contact, class_name: "SS::Contact"
     field :contact_group_relation, type: String
 
+    before_validation :set_contact_link_name
+
     validates :contact_state, inclusion: { in: %w(show hide), allow_blank: true }
     validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
     validates :contact_group_relation, inclusion: { in: %w(related unrelated), allow_blank: true }
@@ -119,5 +121,9 @@ module Contact::Addon::Page
     self.contact_email = contact.contact_email
     self.contact_link_url = contact.contact_link_url
     self.contact_link_name = contact.contact_link_name
+  end
+
+  def set_contact_link_name
+    self.contact_link_name = contact_link_url if contact_link_name.blank?
   end
 end
