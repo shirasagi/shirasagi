@@ -514,7 +514,9 @@ module Capybara
 
     def visit_with_shirasagi(*args, **options)
       run_callbacks :visit do
-        visit_without_shirasagi(*args, **options)
+        Retriable.retriable(on: [ ::Selenium::WebDriver::Error::UnknownError ]) do
+          visit_without_shirasagi(*args, **options)
+        end
       end
     end
 
