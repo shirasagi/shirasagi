@@ -1,0 +1,15 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /edit|update|delete|import|menu/ %>
+    <%= link_to t('ss.links.back_to_show'), action: :show %>
+  <% else %>
+    <%= link_to t('ss.links.edit'), action: :edit if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% download_url = url_for(action: :download_all) rescue (url_for(action: :download) rescue nil) %>
+      <%= link_to(t('ss.links.download'), download_url, class: :download) if download_url %>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, owned: true) %>
+      <%= link_to(t('ss.links.import'), { action: :import }, { class: :import }) rescue nil %>
+    <% end %>
+  <% end %>
+</nav>

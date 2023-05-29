@@ -1,0 +1,47 @@
+<% return unless @show_guidance_question_node_addon %>
+
+<div>
+  <% @item.guidance_question_list.group_by_question_key.each do |question, items| %>
+    <table class="index mb-2">
+      <thead>
+        <tr>
+          <th><%= question.t :question_key %></th>
+          <th style="width: 120px;"><%= question.t :question_type %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><%= question.question_key %></td>
+          <td><%= question.label :question_type %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <% items.each do |item| %>
+      <div style="padding-left: 30px;">
+        <table class="index mb-2">
+          <tbody>
+            <tr>
+              <td><%= item.question_item %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <% %w(condition_and condition_or1 condition_or2 condition_or3).each do |field| %>
+        <% next unless question.send(field).present? %>
+
+        <div style="padding-left: 60px;">
+          <table class="index mb-2">
+            <tbody>
+              <tr>
+                <th style="width: 120px;"><%= question.t field %></th>
+                <td><%=br item.send(field).join("\n") %></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

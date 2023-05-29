@@ -1,0 +1,64 @@
+ja:
+  guidance:
+    diagnostic: 診断
+    options:
+      question_type:
+        single: 単一選択
+        multiple: 複数選択
+        yes_no: はい・いいえ
+        select: プルダウン
+        text: 説明文
+
+  cms_role:
+    read_other_guidance_results: 手続きの閲覧（全て）
+    read_private_guidance_results: 手続きの閲覧（所有）
+    edit_other_guidance_results: 手続きの編集（全て）
+    edit_private_guidance_results: 手続きの編集（所有）
+    delete_other_guidance_results: 手続きの削除（全て）
+    delete_private_guidance_results: 手続きの削除（所有）
+
+  modules:
+    guidance: 目的別ガイド2
+    addons:
+      guidance/procedure: 手続き
+      guidance/question_node: 質問
+
+  cms:
+    nodes:
+      guidance/guide: 目的別ガイド
+
+  mongoid:
+    models:
+      guidance/result: 手続き
+      guidance/question: 質問
+    attributes:
+      guidance/result:
+        id: ID
+        name: 名称
+        order: 並び順
+        text: 説明
+        condition_and: 表示条件AND
+        condition_or1: 表示条件OR1
+        condition_or2: 表示条件OR2
+        condition_or3: 表示条件OR3
+      guidance/question:
+        question_key: 質問キー
+        question_type: 選択方法
+        question_item: 質問項目
+        condition_and: 表示条件AND
+        condition_or1: 表示条件OR1
+        condition_or2: 表示条件OR2
+        condition_or3: 表示条件OR3
+      guidance/addon/question_node:
+        guidance_questions: 質問
+      guidance/diagram/edge:
+        value: 選択肢の質問
+
+  tooltip:
+    guidance/question:
+      name:
+        - 表示用のタイトルを入力します。
+
+  job:
+    models:
+      guidance/procedure/import_job: 目的別ガイド手続きインポート

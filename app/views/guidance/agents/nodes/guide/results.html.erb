@@ -1,0 +1,21 @@
+<style>
+.guidance-results-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+</style>
+
+<div class="guidance-results">
+
+  <% @items.each do |item| %>
+    <div class="guidance-results-item">
+      <div>Name: <%= item.name %></div>
+      <!--
+      <div>Text: <%=br item.text %></div>
+      -->
+    </div>
+  <% end %>
+
+</div>
+

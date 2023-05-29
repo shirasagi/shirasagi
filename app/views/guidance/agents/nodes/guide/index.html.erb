@@ -1,0 +1,199 @@
+<%= jquery do %> // <script>
+Guidance_Form = function(el) {
+  this.$el = $(el);
+  this.questions = []; // [[question, items]]
+  this.results = [];
+  this.resultsUrl = null;
+};
+
+Guidance_Form.prototype.render = function() {
+  this.initQuestion();
+};
+
+Guidance_Form.prototype.initQuestion = function() {
+  this.currentNo = -1
+  this.answers = [];
+  this.values = [];
+  this.matchedResults = [];
+  this.nextQuestion();
+};
+
+Guidance_Form.prototype.nextQuestion = function() {
+  var self = this;
+
+  this.$el.find('.guidance-input').remove();
+  this.calculate();
+  this.currentNo += 1;
+
+  if (!this.questions[this.currentNo]) {
+    return this.endQuestion();
+  }
+  var nextItems = this.questions[this.currentNo][1].filter(function(item) {
+    return self.validCondition(item);
+  });
+  if (!nextItems.length)  {
+    return this.nextQuestion();
+  }
+  return this.renderQuestion(nextItems);
+};
+
+Guidance_Form.prototype.backQuestion = function() {
+  var lastQuestion = this.answers.pop();
+
+  this.currentNo = lastQuestion.no - 1
+  this.nextQuestion();
+};
+
+Guidance_Form.prototype.endQuestion = function() {
+  var ids = this.matchedResults.map(function(result) {
+    return result.id;
+  });
+
+  location.href = `${this.resultsUrl}?results=${ids.join(',')}`;
+};
+
+Guidance_Form.prototype.saveAnswers = function() {
+  var items = {};
+  this.$el.find('.guidance-input').each(function() {
+    var item = $(this);
+    var name = item.closest('label').text();
+    items[name] = item.prop('checked');
+  });
+  if (!Object.keys(items).length) return;
+
+  this.answers.push({ no: this.currentNo, items: items });
+};
+
+Guidance_Form.prototype.calculate = function() {
+  var self = this;
+
+  this.values = [];
+  for (var index in this.answers) {
+    var items = this.answers[index].items;
+    for (var name in items) {
+      var value = items[name] ? 'Y' : 'N';
+      this.values.push(`${name}:${value}`)
+    }
+  }
+
+  this.matchedResults = this.results.filter(function(item) {
+    return self.validCondition(item);
+  });
+
+  // debug
+  $('.guidance-selected-questions').html(this.values.join('<br>'));
+  $('.guidance-selected-results').html(this.matchedResults.map(x => x.name).join('<br>'));
+};
+
+Guidance_Form.prototype.validCondition = function(item) {
+  if (!this.validConditionAnd(item.condition_and)) return false;
+  if (!this.validConditionOr(item.condition_or1)) return false;
+  if (!this.validConditionOr(item.condition_or2)) return false;
+  if (!this.validConditionOr(item.condition_or3)) return false;
+  return true;
+};
+
+Guidance_Form.prototype.validConditionAnd = function(condition) {
+  for (var cond of condition) {
+    if (!cond) continue;
+    if (!this.values.includes(cond)) return false;
+  }
+  return true;
+};
+
+Guidance_Form.prototype.validConditionOr = function(condition) {
+  if (!condition.length) return true;
+
+  for (var cond of condition) {
+    if (!cond) continue;
+    if (this.values.includes(cond)) return true;
+  }
+  return false;
+};
+
+Guidance_Form.prototype.renderQuestion = function(items) {
+  var self = this;
+  var question = this.questions[this.currentNo][0];
+
+  var html = '<div class="question-header">';
+  html += `<p class="question-title"><span class="question-name">${question.question_name}</span>に関する質問です。</p>`;
+  html += '</div>'
+
+  html += '<div class="question-items">';
+  items.forEach(function(item) {
+    html += '<div class="question-item">';
+    html += self.renderInput(question, item);
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="question-footer">';
+  html += this.renderButtons(question.question_type);
+  html += '</div>';
+
+  this.$el.html(html);
+  this.renderButtonsScript();
+};
+
+Guidance_Form.prototype.renderInput = function(question, item) {
+  var html = '';
+
+  if (question.question_type === 'single') {
+    html += `<label><input class="guidance-input" name="${question.question_key}" type="radio" required>${item.question_item}</label>`;
+  } else {
+    html += `<label><input class="guidance-input" type="checkbox">${item.question_item}</label>`;
+  }
+  return html;
+};
+
+Guidance_Form.prototype.renderButtons = function(question_type) {
+  var html = '';
+
+  if (this.currentNo) {
+    html += '<input type="button" value="最初から" class="btn btn-init"> ';
+  }
+  if (this.currentNo) {
+    html += '<input type="button" value="戻る" class="btn btn-back"> ';
+  }
+  if (question_type) {
+    html += '<input type="button" value="次へ" class="btn btn-next">';
+  }
+  return html;
+};
+
+Guidance_Form.prototype.renderButtonsScript = function() {
+  var self = this;
+
+  this.$el.find('.btn.btn-back').on('click', function() {
+    self.backQuestion();
+  });
+  this.$el.find('.btn.btn-next').on('click', function() {
+    self.saveAnswers();
+    self.nextQuestion();
+  });
+  this.$el.find('.btn.btn-init').on('click', function() {
+    self.initQuestion();
+  });
+};
+<% end %>
+
+<%= jquery do %>
+  var form = new Guidance_Form('.guidance-form-canvas');
+  form.questions = <%== @cur_node.guidance_question_list.to_hash_list.to_json %>;
+  form.results = <%== @cur_node.guidance_results.to_hash_list.to_json %>;
+  form.resultsUrl = <%== "#{@cur_node.url}results.html".to_json %>;
+  form.render();
+<% end %>
+
+<div class="guidance-form-canvas"></div>
+
+<table style="width: 100%; margin-top: 15px; display: <%= 'none' if Rails.env.production? %>">
+  <tr style="border-top: 1px solid #ddd;">
+    <td style="width: 50%;">## Selected Questions</td>
+    <td>## Selected Results</td>
+  </tr>
+  <tr>
+    <td class="guidance-selected-questions"></td>
+    <td class="guidance-selected-results"></td>
+  </tr>
+</table>
