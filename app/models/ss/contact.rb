@@ -12,11 +12,8 @@ class SS::Contact
   field :contact_link_name, type: String
   field :main_state, type: String
 
-  before_validation :set_contact_link_name
-
   validates :name, presence: true, uniqueness: true
   validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
-  validates :contact_link_name, presence: true, if: ->{ contact_link_url.present? }
   validates :main_state, inclusion: { in: %w(main), allow_blank: true }
 
   permit_params :name, :contact_group_name, :contact_tel, :contact_fax, :contact_email
@@ -44,9 +41,5 @@ class SS::Contact
     return false if contact_link_url.present?
     return false if contact_link_name.present?
     true
-  end
-
-  def set_contact_link_name
-    self.contact_link_name = contact_link_url if contact_link_name.blank?
   end
 end
