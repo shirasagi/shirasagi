@@ -180,7 +180,6 @@ module Map::MapHelper
     case default_map_api(opts)
     when 'openlayers'
       include_openlayers_api
-      controller.javascript "/assets/js/exif-js.js"
 
       # set default values
       map_options[:readonly] = true
@@ -195,7 +194,6 @@ module Map::MapHelper
       s << 'map.setExifLatLng("#item_in_image");'
     else
       include_googlemaps_api(opts)
-      controller.javascript "/assets/js/exif-js.js"
 
       s << "Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
       s << "Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
