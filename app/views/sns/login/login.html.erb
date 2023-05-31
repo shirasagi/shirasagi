@@ -16,7 +16,8 @@
     </header>
 
     <% setting = Sys::Auth::Setting.first_or_create %>
-    <% if setting.form_auth_enabled? || params[:user] == "guest" %>
+    <% if setting.form_auth_available?(params) %>
+      <% form_key = setting.form_key.presence || Sys::Auth::Setting::DEFAULT_KEY %>
       <%= form_tag action: params[:action] do |f| %>
         <% if flash[:alert] %>
         <div class="error-message"><%= flash[:alert] %></div>
@@ -24,7 +25,7 @@
 
         <%= error_messages_for :item %>
         <%= hidden_field_tag :ref, params[:ref] %>
-        <%= hidden_field_tag :user, params[:user] if params[:user].present? %>
+        <%= hidden_field_tag form_key, params[form_key] if params[form_key].present? %>
 
         <div class="form-group">
           <label><%== t("ss.views.login/login.id") %></label>

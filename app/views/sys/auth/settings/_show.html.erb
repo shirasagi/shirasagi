@@ -1,4 +1,15 @@
 <dl class="see">
   <dt><%= @model.t :form_auth %></dt>
   <dd><%= @item.label :form_auth %></dd>
+
+  <% if @item.form_auth_disabled? %>
+    <dt><%= t "sys.form_auth.when_disabled" %></dt>
+    <dd></dd>
+
+    <dt class="depth-2"><%= t "sys.form_auth.form_key" %></dt>
+    <dd class="depth-2"><%= @item.form_key.presence || Sys::Auth::Setting::DEFAULT_KEY %></dd>
+
+    <dt class="depth-2"><%= t "sys.form_auth.form_password" %></dt>
+    <dd class="depth-2"><%= @item.form_password.present? ? "*" * 8 : nil %></dd>
+  <% end %>
 </dl>

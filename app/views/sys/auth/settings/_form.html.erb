@@ -1,4 +1,13 @@
 <dl class="see">
   <dt><%= @model.t :form_auth %><%= @model.tt :form_auth %></dt>
   <dd><%= f.select :form_auth, @item.form_auth_options %></dd>
+
+  <dt><%= t "sys.form_auth.when_disabled" %><%= tt("sys/auth/setting.when_form_auth_disabled") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t "sys.form_auth.form_key" %><%= @model.tt :form_key %></dt>
+  <dd class="depth-2"><%= f.text_field :form_key, placeholder: Sys::Auth::Setting::DEFAULT_KEY %></dd>
+
+  <dt class="depth-2"><%= t "sys.form_auth.form_password" %><%= @model.tt :in_form_password %></dt>
+  <dd class="depth-2"><%= f.password_field :in_form_password %></dd>
 </dl>

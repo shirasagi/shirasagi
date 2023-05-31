@@ -37,7 +37,9 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     before do
       item = Sys::Auth::Setting.first_or_create
       item.form_auth = "disabled"
-      item.update!
+      item.form_key = "user"
+      item.in_form_password = "guest"
+      item.save!
     end
 
     it do

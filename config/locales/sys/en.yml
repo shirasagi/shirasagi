@@ -86,6 +86,10 @@ en:
         - "When you access “init uri”, single sign-on process by OpenID Connect starts on the Shirasagi side. Set init uri for business terminals and other systems."
         - "By attaching the `?ref=` parameter, you can set the screen to be displayed after logging in. For example, you can display groupware after logging in by attaching `?ref=/.g1`."
       open_id_redirect_uri_md: Set “redirect uri” to the callback URL on the authentication infrastructure side.
+    form_auth:
+      when_disabled: When form authentication is disabled
+      form_key: Key
+      form_password: Password
 
   sys_role:
     edit_sys_sites: Manage site
@@ -200,6 +204,9 @@ en:
         width: Width
       sys/auth/setting:
         form_auth: Form authentication
+        form_key: Key name to activate form authentication
+        form_password: Password to activate form authentication
+        in_form_password: Password to activate form authentication
 
   errors:
     messages:
@@ -310,6 +317,8 @@ en:
     sys/auth/setting:
       form_auth:
         - Select whether to show form authentication on the login screen.
+      when_form_auth_disabled:
+        - Even when form authentication is disabled, if the key and password set below are set in the Query String, form authentication will be displayed.
 
   job:
     models:
