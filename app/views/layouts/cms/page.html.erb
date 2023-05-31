@@ -5,8 +5,10 @@
 <meta charset="UTF-8" />
 <title><%= @window_name %></title>
 <%= stylesheet_link_tag "cms/public", media: "all" %>
+<%= stylesheet_link_tag "jplayer", media: "all" %>
 <%= javascript_include_tag "cms/compat" %>
 <%= javascript_include_tag "cms/public" %>
+<%= javascript_include_tag "jplayer" %>
 <% controller.stylesheets.each do |path| %>
   <%= stylesheet_link_tag path, media: "all" %>
 <% end %>

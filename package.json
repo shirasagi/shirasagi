@@ -9,6 +9,7 @@
     "i18next": "^22.4.11",
     "i18next-http-backend": "^2.1.1",
     "i18next-multiload-backend-adapter": "^2.2.0",
+    "jplayer": "^2.9.2",
     "jquery-colorbox": "^1.6.4",
     "material-icons": "^1.13.2",
     "moment": "^2.29.4",
