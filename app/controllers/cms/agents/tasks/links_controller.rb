@@ -202,7 +202,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if url.match?(/\/2\d{7}\.html$/) # calendar
     return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
     return false if url.match?(/\/https?:/) # b.hatena
-    return false if url.match?(/\/\/twitter\.com\/share/) # twitter.com/share
+    return false if url.match?(/\/\/twitter\.com/) # twitter.com
     true
   end
 
