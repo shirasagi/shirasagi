@@ -39,6 +39,33 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
 <% end %>
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
+    <dl class="site-search-type">
+      <dt><%= f.label(:type, @cur_node.t(:site_search_type)) %></dt>
+      <dd><%= select_tag 's[type]', options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type)), include_blank: t('cms.options.site_search_type.all'), "aria-label" => @cur_node.t(:site_search_type) %></dd>
+    </dl>
+
+    <% if @cur_node.ordered_st_article_nodes.present? %>
+      <dl class="site-search-article-nodes">
+        <dt><%= f.label(:article_node_ids, t("cms.node")) %></dt>
+        <dd>
+          <%= link_to t('facility.submit.change'), "#{@cur_node.url}article_nodes.html", class: "ajax-box article-nodes", style: 'display: block' %>
+          <div class="selected-article-nodes">
+            <% if @s.article_node_ids.present? %>
+              <% @cur_node.st_article_nodes.in(id: @s.article_node_ids).each do |node| %>
+                <article class="selected-item" data-id="<%= node.id %>">
+                  <header>
+                    <span class="article-node-name"><%= node.name %></span>
+                    <%= f.hidden_field('article_node_ids[]', value: node.id) %>
+                    <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+                  </header>
+                </article>
+              <% end %>
+            <% end %>
+          </div>
+        </dd>
+      </dl>
+    <% end %>
+
     <dl class="site-search-categories">
       <dt><%= f.label(:category_name, t("category.node")) %></dt>
       <dd>

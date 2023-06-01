@@ -4,10 +4,10 @@ class Cms::Elasticsearch::Searcher
 
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
-  attr_accessor :setting, :keyword, :category_name, :category_names
+  attr_accessor :setting, :keyword, :category_name, :article_node_ids, :category_names
   attr_writer :index, :type, :field_name, :from, :size, :aggregate_size
 
-  permit_params :keyword, :category_name, category_names: []
+  permit_params :keyword, :type, :category_name, article_node_ids: [], category_names: []
 
   def index
     @index ||= "s#{setting.cur_site.id}"
@@ -52,8 +52,25 @@ class Cms::Elasticsearch::Searcher
       query[:bool][:must] << { simple_query_string: { query: keyword, fields: [field_name].flatten, default_operator: 'AND' } }
     end
 
+    if type == 'page'
+      query[:bool][:must_not] ||= []
+      query[:bool][:must_not] << { exists: { field: 'attachment' } }
+    elsif type == 'file'
+      query[:bool][:must] << { exists: { field: 'attachment' } }
+    end
+
     if category_name.present?
       query[:bool][:must] << { term: { categories: category_name } }
+    end
+
+    if article_node_ids.present?
+      article_node_query = {}
+      article_node_query[:bool] = {}
+      article_node_query[:bool][:filter] = []
+      setting.cur_node.st_article_nodes.in(id: article_node_ids).each do |node|
+        article_node_query[:bool][:filter] << { match_phrase: { filename: node.url } }
+      end
+      query[:bool][:must] << article_node_query
     end
 
     if category_names.present?
