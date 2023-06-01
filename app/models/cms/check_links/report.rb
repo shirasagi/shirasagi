@@ -36,12 +36,7 @@ class Cms::CheckLinks::Report
     Cms::CheckLinks::Error::Node.and_report(self)
   end
 
-  def ignore_urls
-    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(site).pluck(:name)
-  end
-
   def save_error(ref, urls)
-    urls -= ignore_urls
     return true if urls.blank?
 
     ref_url = File.join(site.full_root_url, ref) if ref[0] == "/"
