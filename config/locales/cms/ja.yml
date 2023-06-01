@@ -1424,6 +1424,8 @@ ja:
       cms/line/test_member:
         name: 名前
         oauth_id: OAuth ID (ユーザーID)
+        order: 並び順
+        default_checked: 既定のテストメンバー
       cms/addon/line/deliver_condition/body: &line_deliver_condition
         year1: 年齢1
         year2: 年齢2
@@ -1687,6 +1689,7 @@ ja:
       unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
       both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
+      not_found_test_members: テストメンバーが選択されていません。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2930,10 +2933,15 @@ ja:
         - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
 
     cms/line/test_member:
-      name: 名前を入力します。
+      name:
+        - 名前を入力します。
       oauth_id:
         - メンバーの OAuth ID を入力します。
         - LINE Messaging API の ユーザーID と同じです。
+      order:
+        - 並び順を入力します。
+      default_checked:
+        - 有効にするとテスト配信画面にて、既定で選択された状態になります。
 
     cms/line/message:
       name:

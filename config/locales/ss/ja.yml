@@ -63,6 +63,8 @@ ja:
     after: 後
     time: 時間
     fiscal_year: 年度
+    test_deliver: テスト配信
+    target: 対象
 
     views:
       login/login:
@@ -86,6 +88,10 @@ ja:
         service:
           name: サービス
           text: OAuth 2.0 サービス・アプリケーションを作成します。サーバー間での認証を有効にします。
+      line:
+        test_deliver:
+          - テストメンバー宛に本文を配信します。
+          - 配信するボタンを押下するとテスト配信処理が開始されます。
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
@@ -266,6 +272,7 @@ ja:
       target_to_public: 公開対象の確認
       target_to_closed: 非公開対象の確認
       approve: 承認してよろしいですか？
+      test_deliver: テスト配信を開始してよろしいですか？
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。

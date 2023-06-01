@@ -9,13 +9,15 @@ class Cms::Line::TestMember
   seqid :id
   field :name, type: String
   field :oauth_id, type: String
+  field :order, type: Integer, default: 0
+  field :default_checked, type: String, default: "enabled"
 
-  permit_params :name, :oauth_id
+  permit_params :name, :oauth_id, :order, :default_checked
 
   validates :name, presence: true
   validates :oauth_id, presence: true
 
-  default_scope -> { order_by(name: 1) }
+  default_scope -> { order_by(order: 1) }
 
   def root_owned?(user)
     true
@@ -26,6 +28,22 @@ class Cms::Line::TestMember
     options.merge!(site: (cur_site || site), id: id)
     helper_mod = Rails.application.routes.url_helpers
     helper_mod.cms_line_test_member_path(*args, options) rescue nil
+  end
+
+  def default_checked_options
+    [
+      [I18n.t("ss.options.state.enabled"), "enabled"],
+      [I18n.t("ss.options.state.disabled"), "disabled"],
+    ]
+  end
+
+  def default_checked?
+    default_checked == "enabled"
+  end
+
+  def order
+    value = self[:order].to_i
+    value < 0 ? 0 : value
   end
 
   class << self
@@ -40,6 +58,10 @@ class Cms::Line::TestMember
         criteria = criteria.keyword_in params[:keyword], :name
       end
       criteria
+    end
+
+    def and_default_checked
+      self.where(default_checked: "enabled")
     end
 
     def encode_sjis(str)
