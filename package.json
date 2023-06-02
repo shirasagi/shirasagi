@@ -9,6 +9,7 @@
     "chartjs-plugin-colorschemes-v3": "^0.5.4",
     "chartjs-plugin-datalabels": "^2.2.0",
     "compass-mixins": "^0.12.12",
+    "cropperjs": "1.0.0-rc.3",
     "exif-js": "^2.3.0",
     "flexibility": "1.0.6",
     "i18next": "^22.4.11",
