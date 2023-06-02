@@ -11,6 +11,7 @@
     "i18next-multiload-backend-adapter": "^2.2.0",
     "jplayer": "^2.9.2",
     "jquery-colorbox": "^1.6.4",
+    "jquery-datetimepicker": "^2.5.21",
     "material-icons": "^1.13.2",
     "moment": "^2.29.4",
     "promise-polyfill": "^8.3.0",
