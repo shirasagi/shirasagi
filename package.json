@@ -5,6 +5,7 @@
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
     "@hotwired/turbo": "^7.3.0",
+    "compass-mixins": "^0.12.12",
     "exif-js": "^2.3.0",
     "flexibility": "1.0.6",
     "i18next": "^22.4.11",
