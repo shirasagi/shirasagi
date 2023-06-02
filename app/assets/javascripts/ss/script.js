@@ -31,7 +31,7 @@
 //= require mdn-polyfills/String.prototype.trim.js
 //= require popper.js/dist/umd/popper.js
 //= require tippy.js/dist/tippy-bundle.iife.js
-//= require crypto-js/3.2.0/crypto-js.min.js
+//= require crypto-js/crypto-js.js
 //= require ejs/ejs.min.js
 //= require ss/lib/base
 //= require_self
