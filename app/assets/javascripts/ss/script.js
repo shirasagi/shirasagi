@@ -104,7 +104,7 @@
 //= require webmail/lib/address
 //= require cropperjs/cropper.min.js
 //= require service/lib/quota.js
-//= require flexibility-1.0.6.js
+//= require flexibility/flexibility.js
 //= require cms/lib/readable_setting
 //= require cms/lib/michecker
 //= require cms/lib/condition_forms

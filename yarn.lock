@@ -1038,6 +1038,11 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
+flexibility@1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/flexibility/-/flexibility-1.0.6.tgz#faa5caf65708c91317508a491d194f434f2eba74"
+  integrity sha512-x4KnoHg/eS4KSmodcHWkYvoyYcCdJrKNE3laW+hzVbuoTexCd2ijko7mBA3VuGO0zO/ATskLHmq6i1B99ufINA==
+
 fraction.js@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.2.0.tgz#448e5109a313a3527f5a3ab2119ec4cf0e0e2950"

@@ -6,6 +6,7 @@
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
     "@hotwired/turbo": "^7.3.0",
     "exif-js": "^2.3.0",
+    "flexibility": "1.0.6",
     "i18next": "^22.4.11",
     "i18next-http-backend": "^2.1.1",
     "i18next-multiload-backend-adapter": "^2.2.0",
