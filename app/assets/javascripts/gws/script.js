@@ -1,4 +1,4 @@
-//= require sprintf
+//= require sprintf-js/dist/sprintf.min.js
 //= require gridster/jquery.gridster.min.js
 //= require gws/lib/category
 //= require gws/lib/tab

@@ -16,7 +16,8 @@
     "material-icons": "^1.13.2",
     "moment": "^2.29.4",
     "promise-polyfill": "^8.3.0",
-    "smooth-dnd": "^0.12.1"
+    "smooth-dnd": "^0.12.1",
+    "sprintf-js": "^1.1.2"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js"
