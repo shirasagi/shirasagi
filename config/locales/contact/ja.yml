@@ -7,6 +7,11 @@ ja:
     email: メールアドレス
     link_url: リンクURL
     link_name: リンク名
+    pages_used_label: ページ数
+    pages_used:
+      zero: なし
+      one: "%{count}"
+      other: "%{count}"
     apis:
       contacts:
         index: 連絡先グループを選択する
@@ -39,6 +44,9 @@ ja:
       select: 選択
     notices:
       unchanged_contacts: "連絡先グループが変更されましたが、「グループと連動しない」に設定されているため「担当」〜「リンク名」は変更されません。"
+      group_page_notice_html: |-
+        閲覧可能なページのみが表示されています。<br>
+        よって、グループ明細に表示されているページ数と、本一覧に表示されているページの件数が異なる場合があります。
 
   modules:
     contact: 連絡先
