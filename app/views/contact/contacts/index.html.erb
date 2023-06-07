@@ -1,0 +1,62 @@
+<% prev_group_id = nil %>
+
+<div class="main-box">
+  <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+  <% end %>
+  <table class="index">
+    <thead class="list-head">
+    <tr>
+      <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <th class="checkbox">
+          <input type="checkbox" />
+        </th>
+      <% end %>
+      <th class="pages-used"><%= t("contact.pages_used_label") %></th>
+      <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
+      <th class="name"><%= SS::Contact.t :name %></th>
+      <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+      <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
+      <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
+      <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+      <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
+      <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% @items.each do |item| %>
+      <% if prev_group_id != item.group.id %>
+        <tr>
+          <td colspan="10"><%= link_to item.group.name, cms_group_path(id: item.group.id) %></td>
+        </tr>
+        <% prev_group_id = item.group.id %>
+      <% end %>
+      <tr class="list-item" data-id="<%= item.contact.id %>">
+        <td>
+          <input type="checkbox" name="ids[]" value="<%= item.group.id %>:<%= item.contact.id %>" disabled/>
+        </td>
+        <td class="pages-used">
+          <%=
+            count = Cms::Page.all.site(@cur_site).where(contact_group_id: item.group.id, contact_group_contact_id: item.contact.id).count
+            if count > 0
+              link_to(t("contact.pages_used", count: count), cms_group_pages_path(group_id: item.group.id, contact_id: item.contact.id))
+            else
+              t("contact.pages_used", count: 0)
+            end
+          %>
+        </td>
+        <td class="contact-main-state"><%= item.contact.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+        <td class="name"><%= item.contact.name %></td>
+        <td class="contact-group-name"><%= item.contact.contact_group_name %></td>
+        <td class="contact-tel"><%= item.contact.contact_tel %></td>
+        <td class="contact-fax"><%= item.contact.contact_fax %></td>
+        <td class="contact-email"><%= item.contact.contact_email %></td>
+        <td class="contact-link-url"><%= item.contact.contact_link_url %></td>
+        <td class="contact-link-name"><%= item.contact.contact_link_name %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
