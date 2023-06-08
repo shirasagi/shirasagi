@@ -23,6 +23,16 @@ export default class extends Controller {
         this.deleteRow(ev)
       }
     })
+
+    this.element.querySelectorAll("[data-id]").forEach((listItem) => {
+      const countElement = listItem.querySelector(".pages-used [data-count]")
+      if (countElement && countElement.dataset.count && countElement.dataset.count === "0") {
+        const deleteBtn = listItem.querySelector(".operations .btn-delete")
+        if (deleteBtn) {
+          deleteBtn.disabled = false
+        }
+      }
+    })
   }
 
   addRow(_ev) {
