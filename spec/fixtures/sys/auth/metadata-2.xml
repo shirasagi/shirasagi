@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+                     entityID="https://shirasagi.github.io/samling/samling.html">
+  <md:IDPSSODescriptor WantAuthnRequestsSigned="false"
+                       protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>
+            MIIDCTCCAnKgAwIBAgIBATANBgkqhkiG9w0BAQUFADBvMRQwEgYDVQQDEwtjYXByaXphLmNvbTELMAkGA1UEBhMCVVMxETAPBgNVBAgTCFZpcmdpbmlhMRMwEQYDVQQHEwpCbGFja3NidXJnMRAwDgYDVQQKEwdTYW1saW5nMRAwDgYDVQQLEwdTYW1saW5nMB4XDTE2MDcwNzEyMjM0MloXDTE3MDcwNzEyMjM0MlowbzEUMBIGA1UEAxMLY2Fwcml6YS5jb20xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhWaXJnaW5pYTETMBEGA1UEBxMKQmxhY2tzYnVyZzEQMA4GA1UEChMHU2FtbGluZzEQMA4GA1UECxMHU2FtbGluZzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAkQE0MkofmdevSFkpxI0hjWXgd5gs8EQoktfICegVN2Aau+LjRjIjH2UeHQtsNVYKDEmnbUGYqWXQKSCZ4qJ28aWvcVTC0ROujjgv5KCaOIk1t+28XGE2SADbo7YYNC4GhDCBKJqBVp1ZfAkqSh0fy3HiiME9grWkE7x8d/fA6fECAwEAAaOBtDCBsTAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIC9DA7BgNVHSUENDAyBggrBgEFBQcDAQYIKwYBBQUHAwIGCCsGAQUFBwMDBggrBgEFBQcDBAYIKwYBBQUHAwgwEQYJYIZIAYb4QgEBBAQDAgD3MCUGA1UdEQQeMByGGmh0dHA6Ly9jYXByaXphLmNvbS9zYW1saW5nMB0GA1UdDgQWBBSLoT4AEwcK1+0IMwgo6JYfA4e8ZTANBgkqhkiG9w0BAQUFAAOBgQBAys18QBzkdaTNWLfN4cMB7/2YTK30XTtcEVW9XHarEYK5sKAKF8iXmiyJxIw3Qid8fnhU/n0Mkh3W19cOYgtYsIJVcjzUmKtT5l75tVTAwC2/WJWURHAylxOJcT/4zx25MFxWRsSaRtk5S7N8CJvDeejCKyOsHQQwgf5bXby+ug==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>
+            MIIDCAwIBAgTCCAnKgIBATANBgkqhkiG9w0BAQUFADBvMRQwEgYDVQQDEwtjYXByaXphLmNvbTELMAkGA1UEBhMCVVMxETAPBgNVBAgTCFZpcmdpbmlhMRMwEQYDVQQHEwpCbGFja3NidXJnMRAwDgYDVQQKEwdTYW1saW5nMRAwDgYDVQQLEwdTYW1saW5nMB4XDTE2MDcwNzEyMjM0MloXDTE3MDcwNzEyMjM0MlowbzEUMBIGA1UEAxMLY2Fwcml6YS5jb20xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhWaXJnaW5pYTETMBEGA1UEBxMKQmxhY2tzYnVyZzEQMA4GA1UEChMHU2FtbGluZzEQMA4GA1UECxMHU2FtbGluZzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAkQE0MkofmdevSFkpxI0hjWXgd5gs8EQoktfICegVN2Aau+LjRjIjH2UeHQtsNVYKDEmnbUGYqWXQKSCZ4qJ28aWvcVTC0ROujjgv5KCaOIk1t+28XGE2SADbo7YYNC4GhDCBKJqBVp1ZfAkqSh0fy3HiiME9grWkE7x8d/fA6fECAwEAAaOBtDCBsTAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIC9DA7BgNVHSUENDAyBggrBgEFBQcDAQYIKwYBBQUHAwIGCCsGAQUFBwMDBggrBgEFBQcDBAYIKwYBBQUHAwgwEQYJYIZIAYb4QgEBBAQDAgD3MCUGA1UdEQQeMByGGmh0dHA6Ly9jYXByaXphLmNvbS9zYW1saW5nMB0GA1UdDgQWBBSLoT4AEwcK1+0IMwgo6JYfA4e8ZTANBgkqhkiG9w0BAQUFAAOBgQBAys18QBzkdaTNWLfN4cMB7/2YTK30XTtcEVW9XHarEYK5sKAKF8iXmiyJxIw3Qid8fnhU/n0Mkh3W19cOYgtYsIJVcjzUmKtT5l75tVTAwC2/WJWURHAylxOJcT/4zx25MFxWRsSaRtk5S7N8CJvDeejCKyOsHQQwgf5bXby+ug==
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                            Location="https://shirasagi.github.io/samling/samling.html"/>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                            Location="https://shirasagi.github.io/samling/samling.html"/>
+  </md:IDPSSODescriptor>
+</md:EntityDescriptor>
