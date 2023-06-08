@@ -7,10 +7,6 @@
   <title><%= SS.config.ss.application_name %></title>
   <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
   <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
-  <!--[if lt IE 9]>
-  <script src="/assets/js/html5.js"></script>
-  <script src="/assets/js/selectivizr-min.js"></script>
-  <![endif]-->
   <%= csrf_meta_tags %>
 </head>
 <body>
