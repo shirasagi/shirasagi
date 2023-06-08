@@ -43,11 +43,13 @@ module Gws::Workload::CalendarFilter
   public
 
   def calendar_redirect_url
-    path = params.dig(:calendar, :path)
+    path = params.dig(:calendar, :path).to_s
     return if path.blank?
-    uri = URI(path)
+    return unless Sys::TrustedUrlValidator.myself_url?(path)
+
+    uri = ::Addressable::URI.parse(path)
     uri.query = { calendar: redirection_calendar_params }.to_param
-    uri.to_s
+    uri.request_uri
   end
 
   def popup
