@@ -474,38 +474,10 @@ li.webmail-accounts {
   color: #888;
 }
 .webmail-addon-mail-body {
-  @include clear;
-  .subject {
-    width: calc(100% - 300px);
-    width: -webkit-calc(100% - 300px);
-    min-width: 300px;
-    margin-bottom: 15px;
-    float: left;
-    input {
-      width: 100%;
-      padding: 10px 6px;
-    }
-  }
-  .options {
-    margin-bottom: 15px;
-    float: right;
-    text-align: right;
-  }
-  #item_signature {
-    max-width: 200px;
-  }
-  .body-content {
-    margin-top: 15px;
-    clear: both;
-  }
-  .template-options {
-    margin-top: 10px;
-    float: left;
-  }
-  .header-options {
-    margin-top: 10px;
-    float: right;
-  }
+  @include display-flex();
+  @include flex-direction(column);
+  grid-row-gap: 10px;  // for old browsers
+  row-gap: 10px;
 }
 // form-addresses
 .webmail-address-field.see {
