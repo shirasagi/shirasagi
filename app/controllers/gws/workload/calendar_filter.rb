@@ -24,13 +24,11 @@ module Gws::Workload::CalendarFilter
     end
 
     # calendar add workload
-    if params[:action] == "new" && @calendar_start
+    if params[:action] == "new" && @calendar_start && !params[:year].numeric?
       # カレンダーから遷移した際に年度を設定してリダイレクトする
-      if !params[:year].match?(/\A\d+\z/)
-        options = { action: "new", year: @cur_site.fiscal_year(@calendar_start) }.merge(request.query_parameters)
-        redirect_to url_for(options)
-        return
-      end
+      options = { action: "new", year: @cur_site.fiscal_year(@calendar_start) }.merge(request.query_parameters)
+      redirect_to url_for(options)
+      return
     end
 
     super
