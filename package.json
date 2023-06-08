@@ -18,6 +18,7 @@
     "flexibility": "1.0.6",
     "fullcalendar": "2.6.1",
     "fullcalendar-scheduler": "1.2.1",
+    "gmaps-marker-clusterer": "^1.2.2",
     "i18next": "^22.4.11",
     "i18next-http-backend": "^2.1.1",
     "i18next-multiload-backend-adapter": "^2.2.0",
