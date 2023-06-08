@@ -107,6 +107,7 @@ ja:
       accepted: 参加しました。
       rejected: 辞退しました。
       posted_gpf: Google Person Finder に登録しました。
+      member_created: メンバーを登録しました。
     confirm:
       leave: ボタンをクリックすると退会します。よろしいですか。
       group:
