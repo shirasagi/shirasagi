@@ -29,9 +29,11 @@
     "material-icons": "^1.13.2",
     "mdn-polyfills": "^5.20.0",
     "moment": "^2.29.4",
+    "popper.js": "^1.16.1",
     "promise-polyfill": "^8.3.0",
     "smooth-dnd": "^0.12.1",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "tippy.js": "5.2.1"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js"
