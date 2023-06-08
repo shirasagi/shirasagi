@@ -93,10 +93,11 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       visit gws_memo_messages_path(site)
       click_on memo.name
-      first(".addon-view.gws-memo .icon-star.off a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.set_star'))
+      wait_for_js_ready
+      within ".addon-view.gws-memo .icon-star" do
+        click_on "star"
       end
+      wait_for_notice I18n.t('ss.notice.set_star')
 
       expect(page).to have_css(".addon-view.gws-memo .icon-star.on")
       memo.reload
@@ -111,10 +112,11 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       visit gws_memo_messages_path(site)
       click_on memo.name
-      first(".addon-view.gws-memo .icon-star.on a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.unset_star'))
+      wait_for_js_ready
+      within ".addon-view.gws-memo .icon-star" do
+        click_on "star"
       end
+      wait_for_notice I18n.t('ss.notice.unset_star')
 
       expect(page).to have_css(".addon-view.gws-memo .icon-star.off")
       memo.reload
