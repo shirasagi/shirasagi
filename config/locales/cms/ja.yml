@@ -1148,10 +1148,12 @@ ja:
         line_edit_auto_post: 編集時に自動投稿
         line_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
+        node_twitter_poster_state: ページ連携
         node_twitter_auto_post: Twitter投稿
         node_twitter_post_format: 投稿形式
         node_twitter_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
+        node_line_poster_state: ページ連携
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
         node_line_edit_auto_post: 編集時に自動投稿
@@ -2957,6 +2959,8 @@ ja:
       generate_on_import: |-
         インポートした際に記事ページを書き出します。
     cms/addon/node_twitter_post_setting:
+      node_twitter_poster_state:
+        - 有効に設定するとフォルダー内の記事編集時にTwitter連携が表示されます。
       node_twitter_auto_post:
         - 有効に設定すると公開時にTwitter投稿をおこないます。
       node_twitter_edit_auto_post:
@@ -2977,6 +2981,8 @@ ja:
         - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/node_line_post_setting:
+      node_line_poster_state:
+        - 有効に設定するとフォルダー内の記事編集時LINE連携が表示されます。
       node_line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
       node_line_edit_auto_post:
