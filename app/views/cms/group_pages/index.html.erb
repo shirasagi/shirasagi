@@ -3,7 +3,7 @@
 </style>
 
 <div>
-  <%= t("contact.notices.group_page_notice_html") %>
+  <%= t("contact.notices.group_page_notice_html", site: @cur_site.name) %>
 </div>
 
 <% @tap_menu = proc do |item| %>

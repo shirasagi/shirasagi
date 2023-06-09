@@ -35,7 +35,6 @@ class Contact::PageCountJob < Cms::ApplicationJob
 
   def build_stages
     [
-      { "$match" => { site_id: site.id } },
       {
         "$group" => {
           _id: { contact_group_id: "$contact_group_id", contact_group_contact_id: "$contact_group_contact_id" },
