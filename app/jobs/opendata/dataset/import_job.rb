@@ -34,13 +34,17 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     @import_dir ||= "#{Rails.root}/private/import/opendata-datasets-#{Time.zone.now.to_i}"
   end
 
+  def import_dir_with_slash
+    @import_dir_with_slash ||= "#{import_dir}/"
+  end
+
   def prepare_import_dir
     FileUtils.rm_rf(import_dir)
     FileUtils.mkdir_p(import_dir)
   end
 
   def format_log_path(path)
-    path.sub(import_dir + "/", "")
+    path.sub(import_dir_with_slash, "")
   end
 
   def import_zip(file)
@@ -48,7 +52,9 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
     Zip::File.open(file.path) do |entries|
       entries.each do |entry|
-        path = ::File.join(import_dir, entry.name.encode("utf-8", "cp932", invalid: :replace, undef: :replace).tr('\\', '/'))
+        name = entry.name.encode("utf-8", "cp932", invalid: :replace, undef: :replace).tr('\\', '/')
+        path = ::File.expand_path(name, import_dir)
+        next unless path.start_with?(import_dir_with_slash)
 
         if entry.directory?
           FileUtils.mkdir_p(path)
