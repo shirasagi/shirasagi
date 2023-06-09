@@ -2,19 +2,20 @@ require 'spec_helper'
 
 describe Opendata::Dataset::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
-  let!(:node) { create(:opendata_node_dataset, name: "import") }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
-  let!(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/opendata/dataset_import.zip") }
+  let!(:node) { create :opendata_node_dataset, cur_site: site }
+  let!(:node_search) { create :opendata_node_search_dataset, cur_site: site }
 
-  describe ".perform_later" do
+  describe "#perform" do
+    let!(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/opendata/dataset_import.zip") }
+
     before do
       @save_url_type = SS.config.sns.url_type
       SS.config.replace_value_at(:sns, :url_type, 'any')
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
 
-      perform_enqueued_jobs do
-        described_class.bind(site_id: site, node_id: node).perform_later(ss_file.id)
-      end
+      expect do
+        described_class.bind(site_id: site, node_id: node).perform_now(ss_file.id)
+      end.to output(/サンプルデータ【1】/).to_stdout
     ensure
       SS.config.replace_value_at(:sns, :url_type, @save_url_type)
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
