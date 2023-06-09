@@ -31,7 +31,11 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def import_dir
-    @import_dir ||= "#{Rails.root}/private/import/opendata-datasets-#{Time.zone.now.to_i}"
+    # use "tmp" directory.
+    #
+    # "private" directory is sometimes mounted via NFS and NFS is too slow.
+    # so "private" directory isn't right and "tmp" directory is preferable.
+    @import_dir ||= "#{Rails.root}/tmp/import-opendata-datasets-#{task.id}-#{Time.zone.now.to_i}"
   end
 
   def import_dir_with_slash

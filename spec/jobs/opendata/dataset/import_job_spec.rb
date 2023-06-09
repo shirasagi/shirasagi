@@ -36,7 +36,7 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
 
     before do
       Zip::File.open(zip_file, Zip::File::CREATE) do |zip|
-        zip.get_output_stream("../../shift_jis.csv") do |f|
+        zip.get_output_stream("../shift_jis.csv") do |f|
           IO.copy_stream("#{Rails.root}/spec/fixtures/opendata/shift_jis.csv", f)
         end
         # datasets.csv is required
@@ -57,8 +57,7 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
       expect(::File.exist?("#{Rails.root}/shift_jis.csv")).to be_falsey
-      expect(::File.exist?("#{Rails.root}/private/shift_jis.csv")).to be_falsey
-      expect(::File.exist?("#{Rails.root}/private/import/shift_jis.csv")).to be_falsey
+      expect(::File.exist?("#{Rails.root}/tmp/shift_jis.csv")).to be_falsey
     end
   end
 end
