@@ -57,6 +57,10 @@ ja:
   mongoid:
     models:
       ss/contact: 連絡先
+    errors:
+      models:
+        ss/contact:
+          in_use: 連絡先は使用中です。
     attributes:
       cms/model/page: &cmspage
         contact_state: 表示設定

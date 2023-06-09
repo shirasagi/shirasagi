@@ -5,11 +5,19 @@
 
 <div class="main-box">
   <div class="list-head">
-    <div class="list-head-action">
-      <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
-      <% end %>
-    </div>
+    <%
+      actions = []
+      if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site)
+        actions << button_tag(t("ss.links.delete"), type: :button, name: "delete", class: "btn", data: { controller: "ss--list-action", "ss--list-action-action-value" => url_for(action: :destroy, id: ":id", format: :json), "ss--list-action-method-value" => "delete", "ss--list-action-confirm-value" => t('ss.confirm.delete') })
+      end
+    %>
+    <% if actions.present? %>
+      <div class="list-head-action">
+        <% actions.each do |action| %>
+          <%= action %>
+        <% end %>
+      </div>
+    <% end %>
     <div class="list-head-search">
       <% @s ||= OpenStruct.new(params[:s]) %>
       <%= form_with scope: :s, action: url_for(action: :index), method: :get, class: "index-search" do |f| %>
@@ -22,7 +30,7 @@
   <table class="index">
     <thead class="list-head">
     <tr>
-      <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% if actions.present? %>
         <th class="checkbox">
           <input type="checkbox" />
         </th>
@@ -44,15 +52,17 @@
     <tbody class="items">
     <% @items.each do |item| %>
       <% if prev_group_id != item.group.id %>
-        <tr>
+        <tr class="list-section" data-group-id="<%= item.group.id %>">
           <td colspan="10"><%= link_to item.group.name, cms_group_path(id: item.group.id) %></td>
         </tr>
         <% prev_group_id = item.group.id %>
       <% end %>
       <tr class="list-item" data-id="<%= item.contact.id %>">
-        <td>
-          <input type="checkbox" name="ids[]" value="<%= item.group.id %>:<%= item.contact.id %>" disabled/>
-        </td>
+        <% if actions.present? %>
+          <td>
+            <input type="checkbox" name="ids[]" value="<%= item.group.id %>:<%= item.contact.id %>" disabled/>
+          </td>
+        <% end %>
         <td class="pages-used">
           <%= page_count_service.render(group_id: item.group.id, contact_id: item.contact.id) %>
         </td>
