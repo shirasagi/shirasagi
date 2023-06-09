@@ -12,9 +12,13 @@ class Contact::ContactsController < ApplicationController
     end
   end
 
+  private
+
   def set_crumbs
     @crumbs << [ t("modules.contact"), url_for(action: :index) ]
   end
+
+  public
 
   def index
     raise "403" unless Cms::Group.allowed?(:read, @cur_user, site: @cur_site)
@@ -22,17 +26,21 @@ class Contact::ContactsController < ApplicationController
     limit = 50
     offset = params[:page].numeric? ? (params[:page].to_i - 1) * limit : 0
 
-    stages = [
-      { "$match" => { contact_groups: { "$exists" => true } } },
-      { "$sort" => { order: 1, name: 1 } },
-      { "$unwind" => "$contact_groups" },
-      {
-        "$facet" => {
-          "paginatedResults" => [{ "$skip" => offset }, { "$limit" => limit }],
-          "totalCount" => [{ "$count" => "count" }]
-        }
+    stages = [{ "$match" => { contact_groups: { "$exists" => true } } }]
+    if params[:s].present?
+      Cms::Group.unscoped do
+        criteria = Cms::Group.search(params[:s])
+        stages << { "$match" => criteria.selector }
+      end
+    end
+    stages << { "$sort" => { order: 1, name: 1 } }
+    stages << { "$unwind" => "$contact_groups" }
+    stages << {
+      "$facet" => {
+        "paginatedResults" => [{ "$skip" => offset }, { "$limit" => limit }],
+        "totalCount" => [{ "$count" => "count" }]
       }
-    ]
+    }
 
     results = Cms::Group.collection.aggregate(stages)
 

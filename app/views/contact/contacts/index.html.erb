@@ -4,9 +4,21 @@
 %>
 
 <div class="main-box">
-  <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
-  <% end %>
+  <div class="list-head">
+    <div class="list-head-action">
+      <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+      <% end %>
+    </div>
+    <div class="list-head-search">
+      <% @s ||= OpenStruct.new(params[:s]) %>
+      <%= form_with scope: :s, action: url_for(action: :index), method: :get, class: "index-search" do |f| %>
+        <%= f.text_field :keyword, id: nil, style: "width: 300px;" %>
+        <%= f.submit t("ss.buttons.search"), name: "search", class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+
   <table class="index">
     <thead class="list-head">
     <tr>
