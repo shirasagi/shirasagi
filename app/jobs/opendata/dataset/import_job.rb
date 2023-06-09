@@ -190,7 +190,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
     # contact
     item.contact_state = value(row, item, :contact_state)
-    item.contact_group_id = SS::Group.where(name: value(row, item, :contact_group_id)).first.try(:id)
+    item.contact_group_id = Cms::Group.site(site).where(name: value(row, item, :contact_group_id)).first.try(:id)
     item.contact_charge = value(row, item, :contact_charge)
     item.contact_tel = value(row, item, :contact_tel)
     item.contact_fax = value(row, item, :contact_fax)
@@ -212,7 +212,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   def initialize_resource(row, dataset)
     item = dataset.resources.new
 
-    license = Opendata::License.where(name: value(row, item, :license_id)).first
+    license = Opendata::License.site(site).where(name: value(row, item, :license_id)).first
     file_name = value(row, item, :file_id)
     tsv_name = value(row, item, :tsv_id)
     source_url = value(row, item, :source_url)
