@@ -751,6 +751,7 @@ ja:
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
     use_cms_all_contents: 全コンテンツの利用
+    use_cms_page_sns_posts: ページSNS投稿の利用
     use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
