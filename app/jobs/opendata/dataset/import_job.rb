@@ -7,11 +7,11 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   def perform(ss_file_id)
     @file = SS::File.find(ss_file_id)
     prepare_temp_dir
-    Rails.logger.tagged(::File.basename(@file.name)) do
+    task.tagged(::File.basename(@file.name)) do
       task.log "start importing"
 
       zip_each_datasets_csv do |datasets_csv_table, datasets_csv_dir|
-        Rails.logger.tagged("#{datasets_csv_dir}/datasets.csv") do
+        task.tagged("#{datasets_csv_dir}/datasets.csv") do
           dataset_import_csv(datasets_csv_table, datasets_csv_dir)
         end
       end
@@ -68,9 +68,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
       ::SS::Csv.open(temp_name) do |csv_table|
         datasets_csv_dir = ::File.dirname(datasets_csv_path)
         datasets_csv_dir = "" if datasets_csv_dir == "."
-        Rails.logger.tagged(datasets_csv_dir) do
-          yield csv_table, datasets_csv_dir
-        end
+        yield csv_table, datasets_csv_dir
       end
     end
   end
@@ -109,7 +107,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
   def dataset_import_csv(dataset_csv_table, datasets_csv_dir)
     dataset_csv_table.each.with_index do |row, i|
-      Rails.logger.tagged("#{i + 2}行目") do
+      task.tagged("#{i + 2}行目") do
         begin
           dataset_create(row, datasets_csv_dir)
         rescue => e
@@ -150,7 +148,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     ::SS::Csv.open(temp_name) do |resources_csv_table|
       resources_csv_path = zip_normalize_entry_name(resources_csv_entry)
       resources_csv_dir = ::File.dirname(resources_csv_path)
-      Rails.logger.tagged(resources_csv_path) do
+      task.tagged(resources_csv_path) do
         task.log("start importing resources")
         resource_import_csv(resources_csv_table, resources_csv_dir, dataset_item)
       end
@@ -213,7 +211,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
   def resource_import_csv(resources_csv_table, resources_csv_dir, dataset)
     resources_csv_table.each.with_index do |row, i|
-      Rails.logger.tagged("#{i + 2}行目") do
+      task.tagged("#{i + 2}行目") do
         resource_create(resources_csv_dir, dataset, row)
       rescue => e
         task.log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
