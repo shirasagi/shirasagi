@@ -41,6 +41,8 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
           expect(resource.file.name).to eq "sample.txt"
           expect(resource.file.filename).to eq "sample.txt"
           expect(::File.size(resource.file.path)).to be > 0
+          expect(resource.file.owner_item_id).to eq dataset.id
+          expect(resource.file.owner_item_type).to eq dataset.class.name
         end
       end
     end
