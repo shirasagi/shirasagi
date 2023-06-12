@@ -26,7 +26,7 @@ class Cms::ContentsController < ApplicationController
       allow(:read, @cur_user).
       where(cond).
       where(shortcut: :show).
-      order_by(filename: 1).
+      order_by(order: 1, filename: 1).
       page(params[:page]).per(100)
   end
 end

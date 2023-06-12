@@ -35,8 +35,6 @@ module Cms::Model::Node
     after_destroy :remove_all
     after_destroy :destroy_children
 
-    default_scope -> { order(order: 1, filename: 1) }
-
     scope :root, ->{ where depth: 1 }
     scope :in_path, ->(path) {
       paths = Cms::Node.split_path(path.sub(/^\//, ""))
