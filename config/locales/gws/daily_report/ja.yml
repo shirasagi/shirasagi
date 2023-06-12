@@ -70,6 +70,7 @@ ja:
       gws/daily_report/report:
         name: タイトル
         daily_report_date: 日付
+        daily_report_group_id: 部署
         form_id: フォーム
         daily_report_member_id: 承認者
       gws/daily_report/form:

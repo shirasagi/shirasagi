@@ -70,6 +70,7 @@ en:
       gws/daily_report/report:
         name: Title
         daily_report_date: Date
+        daily_report_group_id: Department
         form_id: Form
         daily_report_member_id: Approver
       gws/daily_report/form:

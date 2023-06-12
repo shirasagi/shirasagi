@@ -1,25 +1,22 @@
 class Gws::DailyReport::ReportsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-
-  model Gws::DailyReport::Report
+  include Gws::DailyReport::ReportFilter
 
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
-  before_action :set_search_params
-  before_action :set_active_year_range
   before_action :set_cur_month
-  before_action :check_cur_month
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
 
-  helper_method :year_month_options, :group_options
+  helper_method :group_options
 
   navi_view "gws/daily_report/main/navi"
 
   private
 
   def set_crumbs
+    @crumbs << [t('modules.gws/daily_report'), gws_daily_report_main_path]
     @crumbs << [@cur_site.menu_daily_report_label || t("gws/daily_report.daily_report_list"), action: :index]
   end
 
@@ -33,46 +30,6 @@ class Gws::DailyReport::ReportsController < ApplicationController
       criteria = criteria.readable(@cur_user, site: @cur_site)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
-    end
-  end
-
-  def set_cur_form
-    return if params[:form_id].blank? || params[:form_id] == 'default'
-    set_forms
-    @cur_form ||= @forms.find(params[:form_id])
-  end
-
-  def set_search_params
-    @s ||= begin
-      s = OpenStruct.new params[:s]
-      s.cur_site = @cur_site
-      s.cur_user = @cur_user
-      s
-    end
-  end
-
-  def set_cur_month
-    raise '404' if params[:year_month].blank? || params[:year_month].length != 6
-
-    year = params[:year_month][0..3]
-    month = params[:year_month][4..5]
-    @cur_month = Time.zone.parse("#{year}/#{month}/01")
-  end
-
-  def set_active_year_range
-    @active_year_range ||= begin
-      items = @model.unscoped.site(@cur_site).without_deleted.search(@s).order_by(daily_report_date: 1)
-      start_date = [Time.zone.now]
-      start_date << items.first.daily_report_date if items.first.try(:daily_report_date).present?
-      start_date = @cur_site.
-        fiscal_first_date(@cur_site.fiscal_year(start_date.min)).
-        beginning_of_month
-      end_date = [Time.zone.now]
-      end_date << items.last.daily_report_date if items.last.try(:daily_report_date).present?
-      end_date = @cur_site.
-        fiscal_last_date(@cur_site.fiscal_year(end_date.max)).
-        beginning_of_month
-      [start_date, end_date]
     end
   end
 
@@ -122,18 +79,6 @@ class Gws::DailyReport::ReportsController < ApplicationController
     params = { cur_user: @cur_user, cur_site: @cur_site }
     params[:cur_form] = @cur_form if @cur_form
     params
-  end
-
-  def year_month_options
-    set_active_year_range
-
-    options = []
-    date = @active_year_range.last
-    while date >= @active_year_range.first
-      options << [l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}"]
-      date -= 1.month
-    end
-    options
   end
 
   def group_options
@@ -237,72 +182,14 @@ class Gws::DailyReport::ReportsController < ApplicationController
     render layout: 'ss/print'
   end
 
-  def download_comment
-    set_item
-
-    filename = "daily_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
-    encoding = "Shift_JIS"
-    send_enum(@item.enum_csv(user: @cur_user, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
-  end
-
   def download_all_comments
     set_selected_items
 
     filename = "daily_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
-    encoding = "Shift_JIS"
+    options = { encoding: "UTF-8" }
     send_enum(
-      @items.enum_csv(site: @cur_site, user: @cur_user, encoding: encoding),
-      type: "text/csv; charset=#{encoding}", filename: filename
+      @items.enum_csv(site: @cur_site, user: @cur_user, options: options),
+      type: "text/csv; charset=#{options[:encoding]}", filename: filename
     )
-  end
-
-  def download_attachment
-    set_item
-
-    files = @item.collect_attachments
-    if files.blank?
-      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
-      return
-    end
-
-    filename = "daily_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
-    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
-
-    if zip.deley_download?
-      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
-      job.perform_later(zip.serialize)
-
-      flash[:notice_options] = { timeout: 0 }
-      redirect_to({ action: :show }, { notice: zip.delay_message })
-    else
-      raise '500' unless zip.save
-      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
-    end
-  end
-
-  def download_all_attachments
-    set_selected_items
-
-    files = @items.collect_attachments
-    if files.blank?
-      redirect_to({ action: :index }, { notice: t("gws/workflow.notice.no_files") })
-      return
-    end
-
-    filename = "daily_report_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
-    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
-    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
-
-    if zip.deley_download?
-      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
-      job.perform_later(zip.serialize)
-
-      flash[:notice_options] = { timeout: 0 }
-      redirect_to({ action: :index }, { notice: zip.delay_message })
-    else
-      raise '500' unless zip.save
-      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
-    end
   end
 end

@@ -9,8 +9,6 @@ class Gws::DailyReport::Report
   include Gws::Addon::DailyReport::CustomForm
   include Gws::Addon::History
 
-  cattr_reader(:approver_user_class) { Gws::User }
-
   seqid :id
   field :name, type: String
   field :daily_report_date, type: DateTime
@@ -52,36 +50,20 @@ class Gws::DailyReport::Report
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
-    def enum_csv(site: nil, user: nil, encoding: "Shift_JIS")
-      Gws::DailyReport::ReportEnumerator.new(site, user, all, encoding: encoding)
+    def enum_csv(site: nil, user: nil, options: {})
+      Gws::DailyReport::ReportEnumerator.new(site, user, all, options)
     end
 
-    def user_csv(site: nil, user: nil, group: nil, month: Time.zone.today.beginning_of_month, encoding: "UTF-8")
-      Gws::DailyReport::UserReportEnumerator.new(site, user, group, month, all, encoding: encoding)
+    def user_csv(site: nil, user: nil, options: {})
+      Gws::DailyReport::UserReportEnumerator.new(site, user, all, options)
     end
 
-    def group_csv(site: nil, user: nil, group: nil, options: {})
-      Gws::DailyReport::GroupReportEnumerator.new(site, user, group, all, options)
+    def group_csv(site: nil, user: nil, options: {})
+      Gws::DailyReport::GroupReportEnumerator.new(site, user, all, options)
     end
 
-    def group_share_csv(site: nil, user: nil, group: nil, month: Time.zone.today.beginning_of_month, encoding: "UTF-8")
-      Gws::DailyReport::GroupShareReportEnumerator.new(site, user, group, month, all, encoding: encoding)
-    end
-
-    def collect_attachments
-      attachment_ids = []
-
-      attachment_ids += all.pluck(:file_ids).flatten.compact
-
-      all.pluck(:column_values).flatten.compact.each do |bson_doc|
-        if bson_doc["_type"] == Gws::Column::Value::FileUpload.name && bson_doc["file_ids"].present?
-          attachment_ids += bson_doc["file_ids"]
-        end
-      end
-
-      return SS::File.none if attachment_ids.blank?
-
-      SS::File.in(id: attachment_ids)
+    def group_share_csv(site: nil, user: nil, options: {})
+      Gws::DailyReport::GroupShareReportEnumerator.new(site, user, all, options)
     end
   end
 
@@ -107,51 +89,6 @@ class Gws::DailyReport::Report
     return false unless allowed?(:manage_private, user, opts)
     return false if site.fiscal_year(date) != site.fiscal_year
     user.groups.in_group(site).distinct(:id).include?(daily_report_group_id)
-  end
-
-  def enum_csv(encoding: "Shift_JIS")
-    Gws::DailyReport::ReportEnumerator.new(@cur_site || site, @cur_user || user, [ self ], encoding: encoding)
-  end
-
-  def collect_attachments
-    attachment_ids = []
-
-    attachment_ids += file_ids if file_ids.present?
-
-    if column_values.present?
-      column_values.each do |value|
-        if value.is_a?(Gws::Column::Value::FileUpload) && value.file_ids.present?
-          attachment_ids += value.file_ids
-        end
-      end
-    end
-
-    return SS::File.none if attachment_ids.blank?
-
-    SS::File.in(id: attachment_ids)
-  end
-
-  def shared_small_talk
-    str = []
-    reports = self.class.and_date(daily_report_date).
-      where(form_id: form_id, share_small_talk: 'true').
-      ne(user_id: (@cur_user || user).id)
-    reports.each do |report|
-      str << "#{report.small_talk}(#{report.user.try(:name)})"
-    end
-    str.join("\n")
-  end
-
-  def shared_column_value(column_value)
-    str = []
-    reports = self.class.and_date(daily_report_date).
-      in(share_column_ids: column_value.column_id.to_s).
-      where(form_id: form_id).
-      ne(user_id: (@cur_user || user).id)
-    reports.each do |report|
-      str << "#{column_value.value}(#{report.user.try(:name)})"
-    end
-    str.join("\n")
   end
 
   def column_comments(report_key)

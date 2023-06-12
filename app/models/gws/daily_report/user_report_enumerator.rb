@@ -1,11 +1,12 @@
-class Gws::DailyReport::UserReportEnumerator < Enumerator
-  def initialize(site, user, group, month, reports, encoding: "UTF-8")
+class Gws::DailyReport::UserReportEnumerator < Gws::DailyReport::Enumerator::Base
+  def initialize(site, user, reports, options)
     @cur_site = site
     @cur_user = user
-    @cur_group = group
-    @cur_month = month
+    @cur_group = options[:group]
+    @cur_month = options[:month]
     @reports = reports.dup
-    @encoding = encoding
+    @encoding = options[:encoding].presence || "UTF-8"
+    @export_target = options[:export_target].presence || 'all'
 
     super() do |yielder|
       load_forms
@@ -74,72 +75,5 @@ class Gws::DailyReport::UserReportEnumerator < Enumerator
     row << I18n.t("date.abbr_day_names")[date.wday]
     row << base_infos(report)
     yielder << encode(row.flatten.to_csv)
-  end
-
-  def base_infos(report)
-    @handlers.map do |handler|
-      if handler[:type] == :base
-        next unless report
-
-        handler[:handler].call(report)
-      else
-        nil
-      end
-    end
-  end
-
-  def to_limited_access(report)
-    report.limited_access
-  end
-
-  def to_small_talk(report)
-    text = []
-    if report.share_small_talk.present?
-      text << I18n.t('gws/daily_report.shared')
-      text << report.small_talk
-      report.column_comments('small_talk').each do |comment|
-        text << "#{comment.body}(#{comment.user.try(:name)})"
-      end
-    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
-      text << report.small_talk
-      report.column_comments('small_talk').each do |comment|
-        text << "#{comment.body}(#{comment.user.try(:name)})"
-      end
-    end
-    text.join("\n")
-  end
-
-  def to_column_value(form, column, report)
-    return nil if form.id != report.form_id
-
-    column_value = report.column_values.where(column_id: column.id).first
-    return nil if column_value.blank?
-
-    text = []
-    if report.share_column_ids.include?(column.id.to_s)
-      text << I18n.t('gws/daily_report.shared')
-      text << column_value.value
-      report.column_comments(column.id).each do |comment|
-        text << "#{comment.body}(#{comment.user.try(:name)})"
-      end
-    elsif report.manageable?(@cur_user, site: @cur_site, date: @cur_month)
-      text << column_value.value
-      report.column_comments(column.id).each do |comment|
-        text << "#{comment.body}(#{comment.user.try(:name)})"
-      end
-    end
-    text.join("\n")
-  end
-
-  def encode(str)
-    return '' if str.blank?
-
-    str = str.encode('CP932', invalid: :replace, undef: :replace) if @encoding == 'Shift_JIS'
-    str
-  end
-
-  def bom
-    return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
   end
 end

@@ -1,9 +1,10 @@
-class Gws::DailyReport::ReportEnumerator < Enumerator
-  def initialize(site, user, reports, encoding: "Shift_JIS")
+class Gws::DailyReport::ReportEnumerator < Gws::DailyReport::Enumerator::Base
+  def initialize(site, user, reports, options)
     @cur_site = site
     @cur_user = user
     @reports = reports.dup
-    @encoding = encoding
+    @encoding = options[:encoding].presence || "UTF-8"
+    @export_target = options[:export_target].presence || 'all'
 
     super() do |yielder|
       load_forms
@@ -17,19 +18,6 @@ class Gws::DailyReport::ReportEnumerator < Enumerator
   end
 
   private
-
-  def load_forms
-    if @reports.is_a?(Mongoid::Criteria)
-      form_ids = @reports.pluck(:form_id).uniq
-    else
-      form_ids = @reports.map { |report| report.form_id }.uniq
-    end
-
-    @base_form_use = form_ids.include?(nil)
-    @forms = Gws::DailyReport::Form.site(@cur_site).in(id: form_ids.compact).order_by(order: 1, created: 1)
-    # load all forms in memory for performance
-    @forms = @forms.to_a
-  end
 
   def build_term_handlers
     @handlers = []
@@ -63,16 +51,6 @@ class Gws::DailyReport::ReportEnumerator < Enumerator
 
   def enum_report(yielder, report)
     yielder << encode(base_infos(report).to_csv)
-  end
-
-  def base_infos(report)
-    @handlers.map do |handler|
-      if handler[:type] == :base
-        handler[:handler].call(report)
-      else
-        nil
-      end
-    end
   end
 
   def to_name(report)
@@ -114,17 +92,5 @@ class Gws::DailyReport::ReportEnumerator < Enumerator
 
   def to_updated(report)
     I18n.l(report.updated)
-  end
-
-  def encode(str)
-    return '' if str.blank?
-
-    str = str.encode('CP932', invalid: :replace, undef: :replace) if @encoding == 'Shift_JIS'
-    str
-  end
-
-  def bom
-    return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
   end
 end

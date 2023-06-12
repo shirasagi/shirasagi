@@ -1,11 +1,12 @@
-class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
-  def initialize(site, user, group, month, reports, encoding: "UTF-8")
+class Gws::DailyReport::GroupShareReportEnumerator < Gws::DailyReport::Enumerator::Base
+  def initialize(site, user, reports, options)
     @cur_site = site
     @cur_user = user
-    @cur_group = group
-    @cur_month = month
+    @cur_group = options[:group]
+    @cur_month = options[:month]
     @reports = reports.dup
-    @encoding = encoding
+    @encoding = options[:encoding].presence || "UTF-8"
+    @export_target = options[:export_target].presence || 'all'
 
     super() do |yielder|
       load_forms
@@ -66,18 +67,6 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
     yielder << encode(row.flatten.to_csv)
   end
 
-  def base_infos(report)
-    @handlers.map do |handler|
-      if handler[:type] == :base
-        next unless report
-
-        handler[:handler].call(report)
-      else
-        nil
-      end
-    end
-  end
-
   def to_small_talk(report)
     text = []
     if report.share_small_talk.present?
@@ -107,17 +96,5 @@ class Gws::DailyReport::GroupShareReportEnumerator < Enumerator
       end
     end
     text.join("\n")
-  end
-
-  def encode(str)
-    return '' if str.blank?
-
-    str = str.encode('CP932', invalid: :replace, undef: :replace) if @encoding == 'Shift_JIS'
-    str
-  end
-
-  def bom
-    return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
   end
 end

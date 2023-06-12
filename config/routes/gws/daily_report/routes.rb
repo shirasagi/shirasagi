@@ -19,10 +19,7 @@ Rails.application.routes.draw do
     scope(path: ':year_month') do
       resources :reports, concerns: :deletion do
         get :print, on: :member
-        post :download_comment, on: :member
-        post :download_attachment, on: :member
         post :download_all_comments, on: :collection
-        post :download_all_attachments, on: :collection
       end
       resources :reports, path: ':form_id', only: [:new, :create], as: 'form_reports'
       resources :user_reports, path: 'users/:user/reports', concerns: [:deletion, :export] do

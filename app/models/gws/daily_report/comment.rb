@@ -15,6 +15,8 @@ class Gws::DailyReport::Comment
 
   permit_params :body
 
+  before_validation :set_column_id
+
   validates :report_id, presence: true
   validates :body, presence: true
 
@@ -22,7 +24,6 @@ class Gws::DailyReport::Comment
     def search(params)
       criteria = all
       criteria = criteria.search_keyword(params)
-      criteria
     end
 
     def search_keyword(params)
@@ -30,5 +31,14 @@ class Gws::DailyReport::Comment
 
       all.keyword_in(params[:keyword], :body)
     end
+  end
+
+  private
+
+  def set_column_id
+    return if %w(small_talk column_value_ids).include?(report_key)
+
+    self.column_id = report_key
+    self.report_key = 'column_value_ids'
   end
 end
