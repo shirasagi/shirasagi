@@ -1,6 +1,7 @@
 <%
   return "" unless @cur_site.line_poster_enabled?
   return "" unless @cur_node.try(:node_line_poster_enabled?)
+  return "" unless Cms::SnsPost.allowed?(:use, @cur_user, site: @cur_site)
 %>
 
 <dl class="see mod-cms-line_poster">
