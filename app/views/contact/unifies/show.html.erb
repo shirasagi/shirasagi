@@ -25,12 +25,11 @@
         </tr>
         </thead>
         <tbody class="items">
-        <% @item.contact_groups.each do |contact_group| %>
-          <% next unless contact_group.main_state == "main" %>
+        <% group_item.contact_groups.where(id: @item.main_id).first.tap do |contact_group| %>
           <tr class="list-item" data-id="<%= contact_group.id %>">
             <td class="pages-used">
               <%= f.hidden_field :main_id, value: contact_group.id, id: nil %>
-              <%= page_count_service.render(group_id: @item.id, contact_id: contact_group.id) %>
+              <%= page_count_service.render(group_id: group_item.id, contact_id: contact_group.id) %>
             </td>
             <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
             <td class="name"><%= contact_group.name %></td>
@@ -41,7 +40,6 @@
             <td class="contact-link-url"><%= contact_group.contact_link_url %></td>
             <td class="contact-link-name"><%= contact_group.contact_link_name %></td>
           </tr>
-          <% break %>
         <% end %>
         </tbody>
       </table>
@@ -73,14 +71,13 @@
         </tr>
         </thead>
         <tbody class="items">
-        <% @item.contact_groups.each do |contact_group| %>
-          <% next if contact_group.main_state == "main" %>
+        <% group_item.contact_groups.ne(id: @item.main_id).each do |contact_group| %>
           <tr class="list-item" data-id="<%= contact_group.id %>">
             <td class="checkbox">
-              <%= check_box_tag "#{f.object_name}[sub_ids][]", contact_group.id, true, id: nil %>
+              <%= check_box_tag "#{f.object_name}[sub_ids][]", contact_group.id, @item.sub_ids.include?(contact_group.id.to_s), id: nil %>
             </td>
             <td class="pages-used">
-              <%= page_count_service.render(group_id: @item.id, contact_id: contact_group.id) %>
+              <%= page_count_service.render(group_id: group_item.id, contact_id: contact_group.id) %>
             </td>
             <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
             <td class="name"><%= contact_group.name %></td>
@@ -98,7 +95,7 @@
   </div>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
-    <%= link_to t("ss.buttons.cancel"), cms_group_path(id: @item.id), class: 'btn-default', data: { controller: "ss--history-back" } %>
+    <%= f.submit t("contact.buttons.unify"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= link_to t("ss.buttons.cancel"), cms_group_path(id: group_item.id), class: 'btn-default', data: { controller: "ss--history-back" } %>
   </footer>
 <% end %>
