@@ -636,6 +636,7 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     shellany (0.0.1)
+    shortuuid (0.6.0)
     signet (0.17.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
@@ -856,6 +857,7 @@ DEPENDENCIES
   scss_lint
   sdoc
   selenium-webdriver
+  shortuuid
   simplecov
   simplecov-csv
   simplecov-html
@@ -881,4 +883,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.32
+   2.2.33

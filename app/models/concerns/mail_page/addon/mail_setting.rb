@@ -27,7 +27,7 @@ module MailPage::Addon
       page.group_ids = self.group_ids
 
       page.name = mail.subject
-      page.html = body.gsub(/(\r\n?)|(\n)/, "<br />")
+      page.html = body.gsub(/\r\n/, "\n").gsub(/\n+/, "\n").gsub(/\n+/, "<br />")
       page.mail_page_original_mail = mail.to_s
       page.arrival_start_date = Time.zone.now
       page.arrival_close_date = page.arrival_start_date.advance(days: arrival_days)

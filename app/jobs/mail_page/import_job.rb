@@ -1,4 +1,6 @@
 class MailPage::ImportJob < Cms::ApplicationJob
+  queue_as :external
+
   def put_log(message)
     Rails.logger.warn(message)
   end
