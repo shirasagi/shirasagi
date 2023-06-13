@@ -127,7 +127,8 @@ module Cms
     Cms::Role.permission :use_cms_line_deliver_categories
     Cms::Role.permission :use_cms_line_services
     Cms::Role.permission :use_cms_all_contents
-    Cms::Role.permission :use_cms_page_sns_posts
+    Cms::Role.permission :use_cms_page_twitter_posts
+    Cms::Role.permission :use_cms_page_line_posts
 
     if SS.config.michecker && SS.config.michecker['disable'].blank?
       Cms::Role.permission :use_cms_michecker
