@@ -52,6 +52,6 @@
   </ul>
 
   <% if items.next_page %>
-    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_notice_main_path %></div>
+    <div class="list-more"><%= link_to I18n.t("ss.links.more"), @portlet.see_more_path(@portal, @cur_user) %></div>
   <% end %>
 </div>

@@ -55,6 +55,23 @@ module Gws::Addon::Portal::Portlet
         per(limit)
     end
 
+    def see_more_path(portal, user)
+      folder_id = notice_folders.first.try(:id) || "-"
+
+      categories = notice_categories.readable(user, site: portal.site)
+      category_id = categories.first.try(:id) || "-"
+
+      search = {}
+      if notice_browsed_state.present?
+        search[:browsed_state] = notice_browsed_state
+      end
+      if notice_severity.present?
+        search[:severity] = notice_severity
+      end
+      url_helper = Rails.application.routes.url_helpers
+      url_helper.gws_notice_readables_path(site: portal.site, folder_id: folder_id, category_id: category_id, s: search)
+    end
+
     private
 
     def set_default_notice_setting

@@ -4,12 +4,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:folder) { create(:gws_notice_folder) }
-
-  let(:preset) { user.find_portal_preset(cur_user: user, cur_site: site) }
-  let(:preset_setting) { preset.portal_setting }
-  let(:preset_portlet) { preset_setting.portlets.where(portlet_model: "notice").first }
-
   let(:browsed) { { user.id => Time.zone.now.utc } }
+
   let!(:item1) { create :gws_notice_post, folder: folder, browsed_users_hash: browsed, released: Time.zone.now }
   let!(:item2) { create :gws_notice_post, folder: folder, browsed_users_hash: browsed, released: item1.released + 1.day }
   let!(:item3) { create :gws_notice_post, folder: folder, browsed_users_hash: browsed, released: item2.released + 1.day }
@@ -25,7 +21,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   let!(:item12) { create :gws_notice_post, folder: folder, released: item11.released + 1.day }
 
   before do
-    create_default_portal
     login_gws_user
   end
 
@@ -34,8 +29,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
       click_on I18n.t('ss.links.new')
-      within ".main-box [data-id='#{preset_portlet.id}']" do
-        click_on I18n.t('ss.buttons.add')
+      within '.main-box' do
+        click_on I18n.t('gws/portal.portlets.notice.name')
       end
       within 'form#item-form' do
         click_link I18n.t('gws/share.apis.folders.index')
@@ -97,8 +92,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
       click_on I18n.t('ss.links.new')
-      within ".main-box [data-id='#{preset_portlet.id}']" do
-        click_on I18n.t('ss.buttons.add')
+      within '.main-box' do
+        click_on I18n.t('gws/portal.portlets.notice.name')
       end
       within 'form#item-form' do
         select I18n.t('gws/board.options.browsed_state.unread'), from: "item[notice_browsed_state]"
@@ -161,8 +156,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
       click_on I18n.t('ss.links.new')
-      within ".main-box [data-id='#{preset_portlet.id}']" do
-        click_on I18n.t('ss.buttons.add')
+      within '.main-box' do
+        click_on I18n.t('gws/portal.portlets.notice.name')
       end
       within 'form#item-form' do
         select I18n.t('gws/board.options.browsed_state.read'), from: "item[notice_browsed_state]"
