@@ -136,8 +136,6 @@ en:
         notice_browsed_state: Read/Unread
         notice_severity: Severity
         notice_toggle_browsed: Toggle Read/Unread
-      gws/addon/notice/variant_post:
-        variant_post_ids: Related variant announcements
 
   tooltip:
     gws/notice/post:
