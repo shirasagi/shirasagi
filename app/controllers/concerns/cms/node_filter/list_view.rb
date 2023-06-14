@@ -97,6 +97,12 @@ module Cms::NodeFilter::ListView
     render_rss @cur_node, @items
   end
 
+  def rss_recent
+    @cur_site = Cms::Site.find(@cur_site.id)
+    raise "404" if @cur_site.rss_recent_disabled?
+    rss
+  end
+
   def generate
     if index_page_exist? || !@cur_node.serve_static_file?
       cleanup_index_files(1)
