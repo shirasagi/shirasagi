@@ -14,7 +14,8 @@ class Contact::PageCountService
     label = helpers.tag.span(I18n.t("contact.pages_used", count: count), class: "count", data: { count: count })
     return label if count == 0
 
-    helpers.link_to(label, url_helpers.cms_group_pages_path(site: cur_site.id, group_id: group_id, contact_id: contact_id))
+    path = url_helpers.cms_group_pages_path(site: cur_site.id, group_id: group_id, contact_id: contact_id)
+    helpers.link_to(label, path, data: { turbo: false })
   end
 
   private
@@ -71,6 +72,8 @@ class Contact::PageCountService
     return @map if !::File.exist?(path) || ::File.size(path).zero?
 
     ::File.readlines(path).each do |line|
+      next if line.start_with?("#")
+
       json = JSON.parse(line.strip)
       group_id = json["group_id"]
       contact_id = json["contact_id"]

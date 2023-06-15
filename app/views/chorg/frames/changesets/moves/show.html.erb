@@ -1,13 +1,43 @@
-<div class="addon-views">
+<%
+  source =  @item.sources.try(:first)
+  return unless source
+
+  group = Cms::Group.site(@cur_site).find(source["id"]) rescue nil
+  return unless group
+%>
+
+<div class="addon-views chorg-before">
   <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
     <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
     <%= t("chorg.views.#{type}_changesets.before_move") %>
   </h2>
 
   <%=
-    { id: "chorg-before", class: "chorg-before" }.then do |addon_options|
+    { id: "chorg-before-basic", class: "chorg-before-basic", head: t("ss.basic_info"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
-        render "show_before", addon: addon_options
+        render "show_before_basic", addon: addon_options, group: group
+      end
+    end
+  %>
+
+  <%=
+    { id: "chorg-before-ldap", class: "chorg-before-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+      content = render "show_before_ldap", addon: addon_options, group: group
+      if content.present?
+        render "ss/crud/addon", addon: addon_options do
+          content
+        end
+      end
+    end
+  %>
+
+  <%=
+    { id: "chorg-before-contact", class: "chorg-before-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+      content = render "show_before_contact", addon: addon_options, group: group
+      if content.present?
+        render "ss/crud/addon", addon: addon_options do
+          content
+        end
       end
     end
   %>
@@ -17,30 +47,30 @@
   <span class="material-icons-outlined" style="display: block; font-size: 100%;">arrow_circle_down</span>
 </div>
 
-<div class="addon-views">
+<div class="addon-views chorg-after">
   <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
     <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
     <%= t("chorg.views.#{type}_changesets.after_move") %>
   </h2>
 
   <%=
-    { id: "chorg-basic", class: "chorg-basic", head: t("ss.basic_info") }.then do |addon_options|
+    { id: "chorg-after-basic", class: "chorg-after-basic", head: t("ss.basic_info"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
-        render "chorg/frames/changesets/main/show_basic", addon: addon_options
+        render "chorg/frames/changesets/main/show_basic", addon: addon_options, source_groups: [ group ]
       end
     end
   %>
   <%=
-    { id: "chorg-ldap", class: "chorg-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+    { id: "chorg-after-ldap", class: "chorg-after-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
-        render "chorg/frames/changesets/main/show_ldap", addon: addon_options
+        render "chorg/frames/changesets/main/show_ldap", addon: addon_options, source_groups: [ group ]
       end
     end
   %>
   <%=
-    { id: "chorg-contact", class: "chorg-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+    { id: "chorg-after-contact", class: "chorg-after-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options, data: SS::StimulusHelper::Utils.convert_to_data_params("contact/addon/group") do
-        render "chorg/frames/changesets/main/show_contact", addon: addon_options
+        render "chorg/frames/changesets/main/show_contact", addon: addon_options, source_groups: [ group ]
       end
     end
   %>

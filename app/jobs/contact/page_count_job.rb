@@ -12,6 +12,7 @@ class Contact::PageCountJob < Cms::ApplicationJob
 
   def perform
     f = Tempfile.create
+    f.puts "# 連絡先使用数"
     each_item do |group_id, contact_id, count|
       hash = { group_id: group_id, contact_id: contact_id.to_s, count: count }
       f.puts(hash.to_json)

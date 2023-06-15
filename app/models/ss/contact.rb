@@ -11,13 +11,15 @@ class SS::Contact
   field :contact_link_url, type: String
   field :contact_link_name, type: String
   field :main_state, type: String
+  field :unifies_to_main, type: String
 
   validates :name, presence: true, uniqueness: true
   validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
   validates :main_state, inclusion: { in: %w(main), allow_blank: true }
+  validates :unifies_to_main, inclusion: { in: %w(enabled disabled), allow_blank: true }
 
   permit_params :name, :contact_group_name, :contact_tel, :contact_fax, :contact_email
-  permit_params :contact_link_url, :contact_link_name, :main_state
+  permit_params :contact_link_url, :contact_link_name, :main_state, :unifies_to_main
 
   def same_contact?(dist)
     dist.deep_stringify_keys!

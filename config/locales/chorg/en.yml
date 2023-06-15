@@ -140,6 +140,11 @@ en:
         nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
         nth_destination_contact_contact_link_url: "Destination%{dest_seq}_Contact%{contact_seq}_Link URL"
         nth_destination_contact_contact_link_name: "Destination%{dest_seq}_Contact%{contact_seq}_Link Name"
+    errors:
+      template:
+        body: |-
+          The following contacts in the selected group cannot be found for transfers.
+          The following contacts will be deleted when the organizational change is executed, and the contacts on the page where the following contacts are being used will be hidden.
 
   modules:
     chorg: Organizational change

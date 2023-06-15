@@ -71,7 +71,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("chorg.menus.revisions.unify")
       end
       within "form#item-form" do
-        within "#chorg-before" do
+        within "#chorg-before-basic" do
           wait_cbox_open { click_on I18n.t("chorg.views.unify_changesets.select_group") }
         end
       end
@@ -85,11 +85,11 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         end
       end
       within "form#item-form" do
-        within "#chorg-basic" do
+        within "#chorg-after-basic" do
           fill_in "item[destinations][][name]", with: new_name
           fill_in "item[destinations][][order]", with: new_order
         end
-        within "#chorg-ldap" do
+        within "#chorg-after-ldap" do
           fill_in "item[destinations][][ldap_dn]", with: new_ldap_dn
         end
         click_on I18n.t("ss.buttons.save")
@@ -172,13 +172,13 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-unify" do
         click_on new_name
       end
-      expect(page).to have_css("#chorg-basic", text: new_name)
+      expect(page).to have_css("#chorg-after-basic", text: new_name)
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        within "#chorg-basic" do
+        within "#chorg-after-basic" do
           fill_in "item[destinations][][name]", with: new_name2
         end
-        within "#chorg-contact" do
+        within "#chorg-after-contact" do
           within first("tr[data-id='#{group1.contact_groups[0].id}']") do
             fill_in "item[destinations][][contact_groups][][name]", with: new_contact_name1
             fill_in "item[destinations][][contact_groups][][contact_group_name]", with: new_contact_group_name1
@@ -199,7 +199,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
           end
           within first("tr[data-id='#{group2.contact_groups[0].id}']") do
             # click_on I18n.t("contact.options.main_state.main")
-            first('[name="dummy[chorg-contact][][main_state]"]').click
+            first('[name="dummy[chorg-after-contact][][main_state]"]').click
           end
           within first("tr[data-id='#{group2.contact_groups[1].id}']") do
             click_on I18n.t("ss.buttons.delete")
@@ -272,7 +272,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-unify" do
         click_on new_name2
       end
-      expect(page).to have_css("#chorg-basic", text: new_name2)
+      expect(page).to have_css("#chorg-after-basic", text: new_name2)
       click_on I18n.t("ss.links.delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")
