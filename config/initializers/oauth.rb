@@ -10,7 +10,11 @@ if SS.config.oauth.prefix_path
 
   Rails.application.config.middleware.use OmniAuth::Builder do
     provider ::OAuth::Twitter
-    provider ::OAuth::Facebook
+    provider ::OAuth::Facebook, {
+      site: "https://graph.facebook.com/v17.0",
+      authorize_url: "https://www.facebook.com/v17.0/dialog/oauth",
+      scope: "public_profile"
+    }
     provider ::OAuth::YahooJp, {
       name: "yahoojp_v2",
       scope: "openid profile email address"
