@@ -70,6 +70,10 @@ en:
       on_remand:
         back_to_init: Back to start
         back_to_previous: Previous
+      kind:
+        public: Public
+        closed: Closed
+        replace: Replace
     required_count_label:
       all: Requires approval from everyone
       minimum: Requires approval by %{required_count} people
@@ -96,16 +100,16 @@ en:
         text: |-
           %{from_name} sent a request for approval for the following article.
           Please go through the approval process.
-          
+
           - Title
           %{page_name}
-          
+
           - Applicant
           %{from_name}
-          
+
           - Applicant's comment
           %{workflow_comment}
-          
+
           - Article URL
           %{show_path}
       content_remind:
@@ -146,6 +150,7 @@ en:
         workflow_user_id: Applicant
         workflow_member_id: Application members
         workflow_state: Approval status
+        workflow_kind: Approval kind
         workflow_comment: Application comments
         workflow_pull_up: Pull-up approval
         workflow_on_remand: On remand
@@ -199,6 +204,11 @@ en:
 
   tooltip:
     workflow/addon/approver:
+      workflow_kind: |-
+        Displays the kind of approval.
+        "Public" makes the target public.
+        "Closed" makes the target closed.
+        "Replace" will replace the target.
       workflow_comment:
         - Describe the reason for the application and other comments to the approver.
       workflow_approvers:

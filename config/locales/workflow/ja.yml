@@ -70,6 +70,10 @@ ja:
       on_remand:
         back_to_init: 最初に戻る
         back_to_previous: 直前に戻る
+      kind:
+        public: 公開
+        closed: 非公開
+        replace: 差し替え
     required_count_label:
       all: 全員の承認が必要
       minimum: "%{required_count} 人の承認が必要"
@@ -96,16 +100,16 @@ ja:
         text: |-
           %{from_name}さんより次の記事について承認依頼が届きました。
           承認作業を行ってください。
-          
+
           - タイトル
           %{page_name}
-          
+
           - 申請者
           %{from_name}
-          
+
           - 申請者コメント
           %{workflow_comment}
-          
+
           - 記事URL
           %{show_path}
       content_remind:
@@ -146,6 +150,7 @@ ja:
         workflow_user_id: 申請者
         workflow_member_id: 申請メンバー
         workflow_state: 承認状態
+        workflow_kind: 承認の種類
         workflow_comment: 申請コメント
         workflow_pull_up: 引き上げ承認
         workflow_on_remand: 差し戻し時
@@ -199,6 +204,11 @@ ja:
 
   tooltip:
     workflow/addon/approver:
+      workflow_kind:
+        - 承認の種類が表示されます。
+        - 「公開」は、対象を公開状態にします。
+        - 「非公開」は、対象を非公開状態にします。
+        - 「差し替え」は、対象の差し替えを実行します。
       workflow_comment:
         - 申請理由など承認者に対するコメントをを記述してください。
       workflow_approvers:
