@@ -10,7 +10,6 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
   let(:name) { "sample" }
-  let(:line_text_message) { unique_id }
 
   before do
     site.line_channel_secret = unique_id
@@ -22,6 +21,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
     before { login_cms_user }
 
     context "post none" do
+      let(:line_text_message) { unique_id }
+
       it "#new" do
         capture_line_bot_client do |capture|
           visit new_path
@@ -82,6 +83,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
     end
 
     context "post message_only_carousel" do
+      let(:line_text_message) { unique_id }
+
       it "#new" do
         capture_line_bot_client do |capture|
           visit new_path
@@ -166,6 +169,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
     end
 
     context "post thumb_carousel" do
+      let(:line_text_message) { unique_id }
       let!(:file) do
         tmp_ss_file(
           Cms::TempFile, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, site: site, node: node
@@ -283,6 +287,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
     end
 
     context "post body_carousel" do
+      let(:line_text_message) { unique_id }
       let(:attach_file_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif" }
 
       it "#new" do
@@ -399,6 +404,87 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(capture.broadcast.messages.dig(0, :template, :columns, 0, "thumbnailImageUrl")).to include(::File.basename(attach_file_path))
           expect(Cms::SnsPostLog::Line.count).to eq 1
         end
+      end
+    end
+
+    context "post message_only_text" do
+      let(:line_text_message) { "あ" * 1000 }
+
+      it "#new" do
+        capture_line_bot_client do |capture|
+          visit new_path
+          within "form#item-form" do
+            fill_in "item[name]", with: name
+          end
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
+            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
+            select I18n.t("cms.options.line_post_format.message_only_text"), from: "item[line_post_format]"
+            fill_in "item[line_text_message]", with: line_text_message
+          end
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          end
+
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css("dd", text: line_text_message)
+          end
+
+          expect(capture.broadcast.count).to eq 1
+          expect(capture.broadcast.messages.dig(0, :type)).to eq "text"
+          expect(capture.broadcast.messages.dig(0, :text)).to eq line_text_message
+          expect(Cms::SnsPostLog::Line.count).to eq 1
+        end
+      end
+
+     it "#edit" do
+        capture_line_bot_client do |capture|
+          visit edit_path
+          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
+            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
+
+            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
+            select I18n.t("cms.options.line_post_format.message_only_text"), from: "item[line_post_format]"
+            fill_in "item[line_text_message]", with: line_text_message
+          end
+
+          perform_enqueued_jobs do
+            within "form#item-form" do
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.publish_save")
+              end
+            end
+            wait_for_cbox do
+              expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
+              click_on I18n.t("ss.buttons.ignore_alert")
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          end
+
+          within "#addon-cms-agents-addons-line_poster" do
+            expect(page).to have_css("dd", text: line_text_message)
+          end
+
+          expect(capture.broadcast.count).to eq 1
+          expect(capture.broadcast.messages.dig(0, :type)).to eq "text"
+          expect(capture.broadcast.messages.dig(0, :text)).to eq line_text_message
+          expect(Cms::SnsPostLog::Line.count).to eq 1
+       end
       end
     end
   end
