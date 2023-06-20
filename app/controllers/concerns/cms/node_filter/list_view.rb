@@ -4,7 +4,7 @@ module Cms::NodeFilter::ListView
   include Cms::PublicFilter::Node
 
   included do
-    before_action :accept_cors_request, only: [:rss]
+
     before_action :prepend_current_view_path, only: [:generate]
     helper Cms::ListHelper
   end
