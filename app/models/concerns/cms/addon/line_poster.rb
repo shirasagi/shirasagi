@@ -3,9 +3,9 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    LINE_PAGE_NAME_MAX_LENGTH = 40.freeze
-    LINE_TEXT_MESSAGE_CAROUSEL_MAX_LENGTH = 45.freeze
-    LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH = 1000.freeze
+    LINE_PAGE_NAME_MAX_LENGTH = 40
+    LINE_TEXT_MESSAGE_CAROUSEL_MAX_LENGTH = 45
+    LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH = 1000
 
     included do
       attr_accessor :skip_line_post
@@ -114,7 +114,7 @@ module Cms::Addon
       end
       return if errors.present?
 
-      if line_post_format =~ /_carousel$/
+      if line_post_format.match?(/_carousel$/)
         if line_text_message.index("\n")
           errors.add :line_text_message, :invalid_new_line_included
         end
@@ -196,8 +196,8 @@ module Cms::Addon
 
     def line_message_text
       {
-        "type": "text",
-        "text": line_text_message.to_s
+        type: "text",
+        text: line_text_message.to_s
       }
     end
   end
