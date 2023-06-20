@@ -3,6 +3,10 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    LINE_PAGE_NAME_MAX_LENGTH = 40.freeze
+    LINE_TEXT_MESSAGE_CAROUSEL_MAX_LENGTH = 45.freeze
+    LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH = 1000.freeze
+
     included do
       attr_accessor :skip_line_post
 
@@ -27,7 +31,7 @@ module Cms::Addon
     end
 
     def line_post_format_options
-      %w(thumb_carousel body_carousel message_only_carousel).map { |v| [I18n.t("cms.options.line_post_format.#{v}"), v] }
+      I18n.t("cms.options.line_post_format").map { |k, v| [v, k] }
     end
 
     def line_edit_auto_post_options
@@ -99,21 +103,28 @@ module Cms::Addon
         return
       end
 
-      if name.present? && name.size > 40
-        errors.add :name, :too_long_with_line_title, count: 40
+      if name.present? && name.size > LINE_PAGE_NAME_MAX_LENGTH
+        errors.add :name, :too_long_with_line_title, count: LINE_PAGE_NAME_MAX_LENGTH
       end
       if line_post_format == "thumb_carousel" && thumb.blank?
         errors.add :thumb_id, :blank
       end
-      if line_text_message.present?
+      if line_text_message.blank?
+        errors.add :line_text_message, :blank
+      end
+      return if errors.present?
+
+      if line_post_format =~ /_carousel$/
         if line_text_message.index("\n")
           errors.add :line_text_message, :invalid_new_line_included
         end
-        if line_text_message.size > 45
-          errors.add :line_text_message, :too_long, count: 45
+        if line_text_message.size > LINE_TEXT_MESSAGE_CAROUSEL_MAX_LENGTH
+          errors.add :line_text_message, :too_long, count: LINE_TEXT_MESSAGE_CAROUSEL_MAX_LENGTH
         end
       else
-        errors.add :line_text_message, :blank
+        if line_text_message.size > LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH
+          errors.add :line_text_message, :too_long, count: LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH
+        end
       end
     end
 
@@ -131,8 +142,12 @@ module Cms::Addon
             messages << line_message_carousel(first_img_full_url)
           elsif line_post_format == "message_only_carousel"
             messages << line_message_carousel
+          elsif line_post_format == "message_only_text"
+            messages << line_message_text
+          else
+            raise "unknown line_post_format!"
           end
-          raise "messages blank" if messages.blank?
+          raise "messages blank!" if messages.blank?
           log.messages = messages
 
           res = site.line_client.broadcast(messages)
@@ -176,6 +191,13 @@ module Cms::Addon
           type: "carousel",
           columns: [column]
         }
+      }
+    end
+
+    def line_message_text
+      {
+        "type": "text",
+        "text": line_text_message.to_s
       }
     end
   end

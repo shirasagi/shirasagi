@@ -250,6 +250,14 @@ ja:
         broadcast:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
+      line_poster:
+        carousel:
+          - ○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。
+          - ※全角%{size}文字以内
+          - ※改行はしないでください
+        text:
+          - ○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。
+          - ※全角%{size}文字以内
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -445,9 +453,10 @@ ja:
         files_and_page: 本文内の画像とページ
         page_only: ページ
       line_post_format:
-        thumb_carousel: サムネイル画像とLINEメッセージ
-        body_carousel: 本文内の最初の画像とLINEメッセージ
-        message_only_carousel: LINEメッセージ
+        thumb_carousel: "[記事] サムネイル画像とLINEメッセージ"
+        body_carousel: "[記事] 本文内の最初の画像とLINEメッセージ"
+        message_only_carousel: "[記事] LINEメッセージ"
+        message_only_text: "[テキスト] LINEメッセージ"
       line_service_type:
         hub: サービスHUB
         chat: チャットボット
@@ -1086,7 +1095,6 @@ ja:
         line_auto_post: LINE投稿
         line_post_format: 投稿形式
         line_text_message: LINEメッセージ
-        line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
         line_posted: LINE投稿履歴
         line_edit_auto_post: 編集時に自動投稿
         line_post_error: 投稿エラー

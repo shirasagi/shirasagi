@@ -11,6 +11,22 @@
   line_edit_auto_post = @item.line_edit_auto_post.presence || @cur_node.try(:node_line_edit_auto_post).presence || "disabled"
 %>
 
+<%= jquery do %>
+var togglePlaceholder = function() {
+  var $el = $(".mod-cms-line_poster");
+  var $textArea = $el.find('[name="item[line_text_message]"]');
+  var val = $el.find('[name="item[line_post_format]"]').val();
+  if (val && val.match(/_carousel$/)) {
+    $textArea.attr("placeholder", $textArea.attr("data-placeholder-carousel"));
+  } else {
+    $textArea.attr("placeholder", $textArea.attr("data-placeholder-text"));
+  }
+};
+
+$(".mod-cms-line_poster").find('[name="item[line_post_format]"]').on("change", togglePlaceholder);
+togglePlaceholder();
+<% end %>
+
 <dl class="see mod-cms-line_poster">
   <dt><%= @model.t :line_auto_post %><%= @model.tt :line_auto_post %></dt>
   <dd><%= f.select :line_auto_post, @item.line_auto_post_options, selected: line_auto_post %></dd>
@@ -19,7 +35,11 @@
   <dd><%= f.select :line_post_format, @item.line_post_format_options, selected: line_post_format %></dd>
 
   <dt><%= @model.t :line_text_message %><%= @model.tt :line_text_message %></dt>
-  <dd><%= f.text_area :line_text_message, placeholder: (@item.t :line_text_message_placeholder) %></dd>
+  <dd>
+    <%= f.text_area :line_text_message,
+      "data-placeholder-carousel": t("cms.notices.line_poster.carousel", size: Cms::Addon::LinePoster::LINE_TEXT_MESSAGE_CAROUSEL_MAX_LENGTH).join("\n"),
+      "data-placeholder-text": t("cms.notices.line_poster.text", size: Cms::Addon::LinePoster::LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH).join("\n") %>
+  </dd>
 
   <dt><%= @model.t :line_edit_auto_post %><%= @model.tt :line_edit_auto_post %></dt>
   <dd><%= f.select :line_edit_auto_post, @item.line_edit_auto_post_options, selected: line_edit_auto_post %></dd>
