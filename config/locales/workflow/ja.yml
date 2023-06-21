@@ -2,6 +2,9 @@ ja:
   workflow:
     name: ワークフロー
     request: 承認申請
+    public_request: 「公開」の承認申請
+    closed_request: 「非公開」の承認申請
+    replace_request: 「差し替え」の承認申請
     request_to: 申請先
     selectable_users: 選択候補
     pages: 承認
@@ -206,9 +209,10 @@ ja:
     workflow/addon/approver:
       workflow_kind:
         - 承認の種類が表示されます。
-        - 「公開」は、対象を公開状態にします。
-        - 「非公開」は、対象を非公開状態にします。
-        - 「差し替え」は、対象の差し替えを実行します。
+        - 「公開」は、承認後、このページを公開状態にします。
+        - 「非公開」は、承認後、このページを非公開状態にします。
+        - 「差し替え」は、承認後、差し替え元ページを差し替えページで上書きします。
+        - 上書きしたタイミングで差し替えページはなくなります。
       workflow_comment:
         - 申請理由など承認者に対するコメントをを記述してください。
       workflow_approvers:
