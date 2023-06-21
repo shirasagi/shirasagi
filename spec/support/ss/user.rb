@@ -24,6 +24,7 @@ def login_user(user, pass: nil)
     set_value_to_hidden_input('input#ref', '/robots.txt')
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
+  expect(page).to have_no_css('.login-box [name="item[password]"]')
 
   # rubocop:disable Rails/I18nLocaleAssignment
   if user.lang.present?
