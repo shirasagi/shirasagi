@@ -30,14 +30,17 @@ module Gws::Addon::Portal::Portlet
       end
       search[:user] = user
 
-      items = Gws::Circular::Post.site(portal.site)
-      items = items.topic
-      items = items.without_deleted
-      items = items.and_public
-      items = items.member(user)
-      items = items.search(search)
-      items = items.order(updated: -1)
-      items.page(1).per(limit)
+      criteria = Gws::Circular::Post.site(portal.site)
+      criteria = criteria.topic
+      criteria = criteria.without_deleted
+      criteria = criteria.and_public
+      criteria = criteria.member(user)
+      criteria = criteria.search(search)
+      criteria = criteria.order(updated: -1)
+      if circular_sort.present?
+        criteria = criteria.custom_order(circular_sort)
+      end
+      criteria.page(1).per(limit)
     end
 
     def circular_article_state_options
@@ -46,6 +49,34 @@ module Gws::Addon::Portal::Portlet
 
     def circular_sort_options
       Gws::Circular::Post.new.sort_options
+    end
+
+    def see_more_circular_path(portal, user)
+      search = {}
+
+      if circular_article_state.present?
+        search[:article_state] = circular_article_state
+      end
+      if circular_sort.present?
+        search[:sort] = circular_sort
+      end
+
+      url_helper = Rails.application.routes.url_helpers
+      url_helper.gws_circular_posts_path(site: portal.site, s: search)
+    end
+
+    private
+
+    def set_default_circular_setting
+      site = cur_site || site
+      return unless site
+
+      if circular_article_state.blank?
+        self.circular_article_state = site.circular_article_state
+      end
+      if circular_sort.blank?
+        self.circular_sort = site.circular_sort
+      end
     end
   end
 end

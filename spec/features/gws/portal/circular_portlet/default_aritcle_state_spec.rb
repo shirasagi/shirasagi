@@ -5,10 +5,6 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
   let(:user) { gws_user }
   let!(:folder) { create(:gws_notice_folder) }
 
-  let(:preset) { user.find_portal_preset(cur_user: user, cur_site: site) }
-  let(:preset_setting) { preset.portal_setting }
-  let(:preset_portlet) { preset_setting.portlets.where(portlet_model: "circular").first }
-
   let(:now) { Time.zone.now.beginning_of_minute }
   let!(:post1) do
     create(:gws_circular_post, due_date: now + 1.day, member_ids: [user.id], state: "public",
@@ -54,7 +50,6 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
   end
 
   before do
-    create_default_portal
     login_gws_user
   end
 
@@ -62,15 +57,27 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
+
+      # destroy default portlet
+      find('.list-head input[type="checkbox"]').set(true)
+      within ".list-head-action" do
+        page.accept_alert do
+          click_button I18n.t('ss.buttons.delete')
+        end
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      # create portlet
       click_on I18n.t('ss.links.new')
-      within ".main-box [data-id='#{preset_portlet.id}']" do
-        click_on I18n.t('ss.buttons.add')
+      within ".main-box" do
+        click_on I18n.t('gws/portal.portlets.circular.name')
       end
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
+      # visit portal agein
       visit gws_portal_user_path(site: site, user: user)
       within ".gws-portlets" do
         within ".portlets .gws-boards" do
@@ -117,16 +124,28 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
+
+      # destroy default portlet
+      find('.list-head input[type="checkbox"]').set(true)
+      within ".list-head-action" do
+        page.accept_alert do
+          click_button I18n.t('ss.buttons.delete')
+        end
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      # create portlet
       click_on I18n.t('ss.links.new')
-      within ".main-box [data-id='#{preset_portlet.id}']" do
-        click_on I18n.t('ss.buttons.add')
+      within ".main-box" do
+        click_on I18n.t('gws/portal.portlets.circular.name')
       end
       within 'form#item-form' do
         select I18n.t("gws/circular.options.article_state.unseen"), from: "item[circular_article_state]"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
+      # visit portal agein
       visit gws_portal_user_path(site: site, user: user)
       within ".gws-portlets" do
         within ".portlets .gws-boards" do
