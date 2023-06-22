@@ -2,7 +2,6 @@ class SS::Migration20230224000001
   include SS::Migration::Base
 
   def change
-    Gws::Portal::PresetPortlet.each { |portlet| change_portlet(portlet) }
     Gws::Portal::GroupPortlet.each { |portlet| change_portlet(portlet) }
     Gws::Portal::UserPortlet.each { |portlet| change_portlet(portlet) }
   end
