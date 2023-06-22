@@ -74,6 +74,9 @@
   padding: 0 10px 10px;
   text-align: right;
 }
+i.calendar-month {
+  margin-top: -3px;
+}
 
 .list-item {
   .title.notice-severity-high {
@@ -93,6 +96,9 @@
     }
     .gws-board-flag-new {
       margin-left: 8px;
+    }
+    .index-cleander-link {
+      margin-left: 6px;
     }
   }
   .state {

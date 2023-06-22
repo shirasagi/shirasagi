@@ -91,6 +91,7 @@ en:
       unseen: Unread list
       seen: Read list
       trash: Trash
+      calendar: Calendar
     links:
       add: Add
       cms: Site management

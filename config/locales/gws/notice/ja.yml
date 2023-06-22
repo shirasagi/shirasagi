@@ -73,6 +73,7 @@ ja:
       gws/notice/resource_limitation: 容量制限
       gws/notice/member: 閲覧者
       gws/notice/group_setting: お知らせ
+      gws/notice/calendar: カレンダー
 
   gws_notification:
     gws/notice/post:
@@ -136,6 +137,11 @@ ja:
         notice_browsed_state: 未読・既読
         notice_severity: 重要度
         notice_toggle_browsed: 既読への変更
+      gws/addon/notice/calendar:
+        start_on: 開始日
+        end_on: 終了日
+        term: 日付
+        color: 表示色
 
   tooltip:
     gws/notice/post:
@@ -167,6 +173,12 @@ ja:
         - 表示するお知らせの重要度を選択します。
       notice_toggle_browsed:
         - 既読へ変更する際の動作（設定方法）を選択します。
+
+    gws/addon/notice/calendar:
+      term:
+        - お知らせをカレンダーに表示する場合に日付を入力します。
+      color:
+        - お知らせをカレンダーに表示した際の表示色を入力します。
 
   job:
     models:

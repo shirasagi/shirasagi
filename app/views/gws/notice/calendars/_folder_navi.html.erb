@@ -1,0 +1,16 @@
+<%= jquery do %>
+  var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
+  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: 'calendar', folder_id: '-', id: @folder, format: 'json').to_json %>);
+<% end %>
+
+<div id="content-navi">
+  <h2 class="content-navi-title">
+    <%= t('mongoid.models.gws/notice/folder') %>
+  </h2>
+
+  <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
+    <%= link_to t('gws/notice.all'), gws_notice_calendars_path(folder_id: '-') %>
+  </div>
+
+  <div class="tree-navi"></div>
+</div>

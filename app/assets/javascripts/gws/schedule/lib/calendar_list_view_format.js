@@ -51,6 +51,17 @@ SS.ready(function() {
           category.text(event.category);
           title.append(category);
         }
+        if (event.categories) {
+          $(event.categories).each(function() {
+            var category = $('<span class="fc-category" style=""></span>').append(this.name);
+            if (this.color) {
+              category.css("background-color", this.color);
+              category.css("color", this.text_color);
+            }
+            title.append(category);
+          });
+        }
+
         title.append($('<span class="fc-event-name"/>').text(event.title));
         cont.append(title);
 

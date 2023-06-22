@@ -1,0 +1,29 @@
+<%
+  calendar_options = {
+    restUrl: gws_notice_readables_path,
+    eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
+    firstDay: @cur_site.schedule_first_day,
+    minTime: @cur_site.schedule_min_time,
+    maxTime: @cur_site.schedule_max_time
+  }
+  if @cur_site.schedule_drag_drop_denied?
+    calendar_options[:eventStartEditable] = false
+  end
+
+  init_options = params[:calendar] || {}
+%>
+<%= jquery do %>
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Notice_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  });
+<% end %>
+<div class="content-main">
+  <section class="main-box gws-schedule-box">
+    <header>
+      <nav>
+        <%= render template: "_search" %>
+      </nav>
+    </header>
+    <div id="calendar" class="calendar"></div>
+  </section>
+</div>

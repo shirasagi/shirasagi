@@ -5,6 +5,7 @@ class Gws::Notice::Post
   include Gws::Reference::Site
   include Gws::Reference::Notice::Folder
   include Gws::Notice::Cloneable
+  include Gws::Addon::Notice::Calendar
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -49,7 +50,8 @@ class Gws::Notice::Post
         search_folders(params).
         search_category(params).
         search_categories(params).
-        search_browsed_state(params)
+        search_browsed_state(params).
+        search_term(params)
     end
 
     def search_keyword(params)
@@ -102,6 +104,12 @@ class Gws::Notice::Post
       else
         none
       end
+    end
+
+    def search_term(params)
+      return all if params.blank?
+      return all if params[:start].blank? && params[:end].blank?
+      all.between_dates params[:start], params[:end]
     end
   end
 
