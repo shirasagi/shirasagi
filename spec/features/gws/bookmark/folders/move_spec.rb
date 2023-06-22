@@ -10,9 +10,9 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
   let(:basename3) { basename2 }
 
   let!(:folder) { user.bookmark_root_folder(site) }
-  let!(:item1) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: { ja: basename1 } }
-  let!(:item2) { create :gws_bookmark_folder, cur_user: user, in_parent: item1.id, in_basename: { ja: basename2 } }
-  let!(:item3) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: { ja: basename3 } }
+  let!(:item1) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: basename1 }
+  let!(:item2) { create :gws_bookmark_folder, cur_user: user, in_parent: item1.id, in_basename: basename2 }
+  let!(:item3) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: basename3 }
 
   let(:index_path) { gws_bookmark_folders_path site }
 

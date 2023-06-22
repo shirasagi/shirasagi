@@ -50,7 +50,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
 
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
-        fill_in 'item[in_basename][ja]', with: name
+        fill_in 'item[in_basename]', with: name
         click_button I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -80,7 +80,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
 
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
-        fill_in 'item[in_basename][ja]', with: name
+        fill_in 'item[in_basename]', with: name
         click_button I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -110,7 +110,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
 
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
-        fill_in 'item[in_basename][ja]', with: name
+        fill_in 'item[in_basename]', with: name
         click_button I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

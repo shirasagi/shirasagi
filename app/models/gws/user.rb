@@ -134,8 +134,7 @@ class Gws::User
     @bookmark_root_folder[site.id] ||= begin
       item = ::Gws::Bookmark::Folder.find_or_initialize_by(site_id: site.id, user_id: id, depth: 1, folder_type: "specified")
       if item.new_record? || item.name.blank? || item.order != 0
-        SS.change_locale_and_timezone(self)
-        item.in_basename = { I18n.default_locale => I18n.t("gws/bookmark.root_folder") }
+        item.in_basename = I18n.t("gws/bookmark.root_folder")
         item.order = 0
         item.save!
       end

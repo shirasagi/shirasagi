@@ -1,6 +1,6 @@
 <dl class="see">
-  <dt><%= @model.t :i18n_name %><%= @model.tt :i18n_name %></dt>
-  <dd><%= text_field_tag "#{f.object_name}[in_basename][#{I18n.default_locale}]", @item.i18n_name.try { |name| ::File.basename(name) }, autofocus: pc_browser? %></dd>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= text_field_tag "#{f.object_name}[in_basename]", @item.name.try { |name| ::File.basename(name) }, autofocus: pc_browser? %></dd>
 
   <% if @item.new_record? %>
     <dt><%= @model.t :in_parent %><%= @model.tt :in_parent %></dt>

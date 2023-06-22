@@ -60,8 +60,7 @@ class Gws::Bookmark::FoldersController < ApplicationController
     end
 
     @item.attributes = params.require(:item).permit(:in_parent).merge(fix_params)
-    @item.in_basename = {}
-    @item.in_basename[I18n.default_locale] = @item.trailing_name
+    @item.in_basename = @item.trailing_name
 
     render_update @item.save, notice: t("ss.notice.moved"), render: :move
   end

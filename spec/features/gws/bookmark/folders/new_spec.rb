@@ -10,9 +10,9 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
   let(:basename3) { unique_id }
 
   let!(:folder) { user.bookmark_root_folder(site) }
-  let!(:item1) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: { ja: basename1 } }
-  let!(:item2) { create :gws_bookmark_folder, cur_user: user, in_parent: item1.id, in_basename: { ja: basename2 } }
-  let!(:item3) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: { ja: basename3 } }
+  let!(:item1) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: basename1 }
+  let!(:item2) { create :gws_bookmark_folder, cur_user: user, in_parent: item1.id, in_basename: basename2 }
+  let!(:item3) { create :gws_bookmark_folder, cur_user: user, in_parent: folder.id, in_basename: basename3 }
 
   let(:index_path) { gws_bookmark_folders_path site }
 
@@ -53,7 +53,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
     it "#new" do
       visit new_gws_bookmark_folder_path site
       within "form#item-form" do
-        fill_in 'item[in_basename][ja]', with: basename1
+        fill_in 'item[in_basename]', with: basename1
         click_button I18n.t('ss.buttons.save')
       end
       within "#errorExplanation" do
@@ -61,7 +61,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        fill_in 'item[in_basename][ja]', with: basename3
+        fill_in 'item[in_basename]', with: basename3
         click_button I18n.t('ss.buttons.save')
       end
       within "#errorExplanation" do
@@ -72,7 +72,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
     it "#new" do
       visit new_gws_bookmark_folder_path site
       within "form#item-form" do
-        fill_in 'item[in_basename][ja]', with: basename2
+        fill_in 'item[in_basename]', with: basename2
         click_button I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -122,7 +122,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       visit new_gws_bookmark_folder_path site
 
       within "#item-form" do
-        fill_in 'item[in_basename][ja]', with: basename1
+        fill_in 'item[in_basename]', with: basename1
         click_on I18n.t("gws/share.apis.folders.index")
       end
       wait_for_cbox do
@@ -159,7 +159,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       visit new_gws_bookmark_folder_path site
 
       within "#item-form" do
-        fill_in 'item[in_basename][ja]', with: basename2
+        fill_in 'item[in_basename]', with: basename2
         click_on I18n.t("gws/share.apis.folders.index")
       end
       wait_for_cbox do
@@ -193,7 +193,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       visit new_gws_bookmark_folder_path site
 
       within "#item-form" do
-        fill_in 'item[in_basename][ja]', with: basename3
+        fill_in 'item[in_basename]', with: basename3
         click_on I18n.t("gws/share.apis.folders.index")
       end
       wait_for_cbox do

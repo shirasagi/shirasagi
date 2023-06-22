@@ -30,7 +30,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
   it "#new" do
     visit new_path
     within "form#item-form" do
-      fill_in 'item[in_basename][ja]', with: name
+      fill_in 'item[in_basename]', with: name
       fill_in 'item[order]', with: order
       click_button I18n.t('ss.buttons.save')
     end
@@ -55,7 +55,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
   it "#edit" do
     visit edit_path
     within "form#item-form" do
-      fill_in 'item[in_basename][ja]', with: name
+      fill_in 'item[in_basename]', with: name
       fill_in 'item[order]', with: order
       click_button I18n.t('ss.buttons.save')
     end

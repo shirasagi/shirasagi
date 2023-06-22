@@ -13,14 +13,8 @@ class SS::Migration20230305000000
         next if user.nil?
         next if site.nil?
 
-        if user.try(:lang).present?
-          I18n.locale = user.lang.to_sym
-        else
-          I18n.locale = I18n.default_locale
-        end
         item.folder = user.bookmark_root_folder(site)
         item.update!
-        p item.name
       end
     end
   end

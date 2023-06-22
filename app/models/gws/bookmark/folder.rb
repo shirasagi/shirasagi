@@ -44,17 +44,14 @@ module Gws::Bookmark
       return if user.nil?
       return if in_basename.blank?
 
-      after_name = i18n_name
       folders = self.class.site(site).user(user).nin(id: id).to_a
-
-      if folders.find { |item| item.name == after_name }
+      if folders.find { |item| item.name == name }
         errors.add :base, :same_folder_exists
       end
 
-      before_name = i18n_name_was[I18n.default_locale.to_s]
-      return if before_name.blank?
+      return if name_was.blank?
 
-      if after_name.start_with?(before_name + "/")
+      if name.start_with?(name_was + "/")
         errors.add :base, :subfolder_of_itself
       end
     end

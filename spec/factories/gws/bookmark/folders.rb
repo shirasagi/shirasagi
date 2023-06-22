@@ -3,7 +3,7 @@ FactoryBot.define do
     cur_site { gws_site }
     cur_user { gws_user }
 
-    in_basename { { ja: unique_id } }
+    in_basename { unique_id }
     in_parent { gws_user.bookmark_root_folder(gws_site).id }
   end
 end
