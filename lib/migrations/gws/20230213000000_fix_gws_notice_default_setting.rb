@@ -2,11 +2,9 @@ class SS::Migration20230213000000
   include SS::Migration::Base
 
   def change
-    Gws::Portal::PresetSetting.each { |portal| change_portal(portal) }
     Gws::Portal::GroupSetting.each { |portal| change_portal(portal) }
     Gws::Portal::UserSetting.each { |portal| change_portal(portal) }
 
-    Gws::Portal::PresetPortlet.each { |portlet| change_portlet(portlet) }
     Gws::Portal::GroupPortlet.each { |portlet| change_portlet(portlet) }
     Gws::Portal::UserPortlet.each { |portlet| change_portlet(portlet) }
   end
