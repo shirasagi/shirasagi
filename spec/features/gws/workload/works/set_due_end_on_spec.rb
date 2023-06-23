@@ -85,7 +85,7 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
 
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
-          within "form" do
+          within "form#item-form" do
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
           wait_for_notice I18n.t('ss.notice.saved')
@@ -183,7 +183,7 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
 
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
-          within "form" do
+          within "form#item-form" do
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
           wait_for_notice I18n.t('ss.notice.saved')
@@ -281,7 +281,7 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
 
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
-          within "form" do
+          within "form#item-form" do
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
           wait_for_notice I18n.t('ss.notice.saved')
@@ -379,7 +379,7 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
 
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
-          within "form" do
+          within "form#item-form" do
             click_on I18n.t("gws/schedule/todo.links.finish")
           end
           wait_for_notice I18n.t('ss.notice.saved')
