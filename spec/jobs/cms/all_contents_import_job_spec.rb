@@ -258,7 +258,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
     end
     let(:filename) { "filename-#{unique_id}.html" }
     let(:released) { Time.zone.now.beginning_of_hour - 1.day }
-    let(:release_date) { Time.zone.now.beginning_of_hour - 23.hours }
+    let(:release_date) { Time.zone.now.beginning_of_hour + 1.hour }
     let(:close_date) { Time.zone.now.beginning_of_hour + 13.hours }
     let(:criteria) do
       page2 = page.dup
@@ -291,7 +291,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
         expect(updated_page.summary_html).to eq page.summary_html
         expect(updated_page.category_ids).to eq [cate1.id]
         expect(updated_page.group_ids).to eq [group1.id]
-        expect(updated_page.status).to eq page.status
+        expect(updated_page.status).to eq 'ready'
         expect(updated_page.released).to eq released
         expect(updated_page.release_date).to eq release_date
         expect(updated_page.close_date).to eq close_date

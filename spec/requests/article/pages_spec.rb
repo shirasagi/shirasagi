@@ -146,6 +146,9 @@ describe "Article::PagesController", type: :request, dbscope: :example do
       let!(:cate_node) { create(:category_node_page, cur_site: site, cur_node: node, name: "くらしのガイド") }
       let!(:layout) { create(:cms_layout, cur_site: site, name: "記事レイアウト", filename: "page.layout.html") }
       let!(:group) { create(:ss_group, name: "シラサギ市/企画政策部/政策課") }
+      let(:released) { Time.zone.now }
+      let(:release_date) { Time.zone.now.advance(hours: 1) }
+      let(:close_date) { Time.zone.now.advance(hours: 2) }
 
       before do
         create(:article_page, cur_site: site, cur_node: node,
@@ -169,9 +172,9 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           contact_email: 'test1_contact_email',
           contact_link_url: 'test1_contact_link_url',
           contact_link_name: 'test1_contact_link_name',
-          released: "2016/7/6 0:0:0",
-          release_date: "2016/7/6 1:1:1",
-          close_date: "2016/7/6 2:2:2",
+          released: released,
+          release_date: release_date,
+          close_date: close_date,
           group_ids: [group.id],
           permission_level: 1)
       end
@@ -216,9 +219,9 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             expect(row[Cms::Page.t(:contact_email)]).to eq "test1_contact_email"
             expect(row[Cms::Page.t(:contact_link_url)]).to eq "test1_contact_link_url"
             expect(row[Cms::Page.t(:contact_link_name)]).to eq "test1_contact_link_name"
-            expect(row[Cms::Page.t(:released)]).to eq "2016/07/06 00:00"
-            expect(row[Cms::Page.t(:release_date)]).to eq "2016/07/06 01:01"
-            expect(row[Cms::Page.t(:close_date)]).to eq "2016/07/06 02:02"
+            expect(row[Cms::Page.t(:released)]).to eq released.strftime("%Y/%m/%d %H:%M")
+            expect(row[Cms::Page.t(:release_date)]).to eq release_date.strftime("%Y/%m/%d %H:%M")
+            expect(row[Cms::Page.t(:close_date)]).to eq close_date.strftime("%Y/%m/%d %H:%M")
             expect(row[Cms::Page.t(:group_ids)]).to eq group.name
             unless SS.config.ss.disable_permission_level
               expect(row[Cms::Page.t(:permission_level)]).to eq 1
