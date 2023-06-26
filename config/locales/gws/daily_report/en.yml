@@ -103,7 +103,9 @@ en:
         - Enter a date.
     gws/daily_report/form:
       name:
-        - Enter a title.
+        - Enter a department.
+      year:
+        - Enter a year.
       order:
         - Enter the order.
         - "The lower the number, the higher the position."
@@ -112,6 +114,8 @@ en:
       memo:
         - Enter remarks.
         - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+      daily_report_group_id:
+        - Enter the department.
     gws/daily_report/column:
       name:
         - Enter an item.

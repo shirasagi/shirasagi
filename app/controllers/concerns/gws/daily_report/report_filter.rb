@@ -8,6 +8,7 @@ module Gws::DailyReport::ReportFilter
     before_action :set_search_params
     before_action :set_group, if: -> { params[:group].present? }
     before_action :set_user, if: -> { params[:user].present? }
+    before_action :set_min_updated
 
     helper_method :year_month_options
   end
@@ -31,6 +32,15 @@ module Gws::DailyReport::ReportFilter
     @user ||= Gws::User.site(@cur_site).find(params[:user])
     raise '404' unless @user.active?
     raise '403' unless @user.readable_user?(@cur_user, site: @cur_site)
+  end
+
+  def set_min_updated
+    items = @model.unscoped.
+      site(@cur_site).
+      without_deleted.
+      order_by(daily_report_date: 1)
+    items = items.and_groups([@group]) if @group.present?
+    @min_updated = items.first.try(:daily_report_date) || Time.zone.now
   end
 
   def set_forms

@@ -1,4 +1,1 @@
-<dl class="see">
-  <dt><%= @model.t :body %><%= @model.tt :body %></dt>
-  <dd><%= f.text_area :body %></dd>
-</dl>
+<%= render partial: 'gws/daily_report/user_reports/comments/form', locals: { f: f } %>

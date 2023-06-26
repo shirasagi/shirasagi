@@ -17,7 +17,3 @@ end
   </div>
   <%= render template: '_addons_show', locals: { addons: addons, css_classes: %w(print) } if addons.size > 0 %>
 </div>
-
-<%= jquery do %>
-  SS_Font.render();
-<% end %>

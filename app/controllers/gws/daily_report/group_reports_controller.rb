@@ -6,6 +6,7 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
   before_action :set_cur_date
+  before_action :set_users
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
 
@@ -26,6 +27,14 @@ class Gws::DailyReport::GroupReportsController < ApplicationController
       criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
+  end
+
+  def set_users
+    @users = Gws::User.site(@cur_site).
+      active.
+      readable_users(@cur_user, site: @cur_site).
+      where(group_ids: @group.id)
+    @users = @users.where(id: @cur_user.id) if @cur_site.fiscal_year(@cur_date) != @cur_site.fiscal_year
   end
 
   def set_items

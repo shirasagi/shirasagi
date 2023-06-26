@@ -1,8 +1,3 @@
-<%
-  users = Gws::User.site(@cur_site).active.readable_users(@cur_user, site: @cur_site).where(group_ids: @group.id)
-  users = users.where(id: @cur_user.id) if @cur_site.fiscal_year(@cur_date) != @cur_site.fiscal_year
-%>
-
 <%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
 
 <div class="addon-views sheet gws-daily-report-print">
@@ -24,7 +19,7 @@
     </tr>
     </thead>
     <tbody>
-    <% users.each do |user| %>
+    <% @users.each do |user| %>
       <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
       <tr>
         <td>
@@ -100,7 +95,3 @@
     </div>
   </div>
 </div>
-
-<%= jquery do %>
-  SS_Font.render();
-<% end %>

@@ -58,4 +58,30 @@ class Gws::DailyReport::UserReports::CommentsController < ApplicationController
     @item = @model.new get_params
     render_create @item.save
   end
+
+  def edit
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      redirect_to action: :lock
+      return
+    end
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    return render_update(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_update @item.update
+  end
+
+  def delete
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render_destroy @item.destroy
+  end
 end

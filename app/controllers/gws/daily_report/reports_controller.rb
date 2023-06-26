@@ -6,6 +6,8 @@ class Gws::DailyReport::ReportsController < ApplicationController
   before_action :set_forms
   before_action :set_cur_form, only: %i[new create]
   before_action :set_cur_month
+  before_action :set_groups
+  before_action :set_users
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :soft_delete]
 
@@ -35,6 +37,16 @@ class Gws::DailyReport::ReportsController < ApplicationController
 
   def check_cur_month
     raise '404' if @cur_month < @active_year_range.first || @active_year_range.last < @cur_month
+  end
+
+  def set_groups
+    @groups = @cur_user.groups.in_group(@cur_site)
+  end
+
+  def set_users
+    @users = Gws::User.site(@cur_site).
+      active.
+      readable_users(@cur_user, site: @cur_site)
   end
 
   def set_items

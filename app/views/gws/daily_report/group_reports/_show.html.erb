@@ -9,8 +9,3 @@
     <dd><%= I18n.l(@item.daily_report_date.to_date, format: :long) %></dd>
   <% end %>
 </dl>
-
-<%= jquery do %>
-  var highlighter = new Gws_Elasticsearch_Highlighter();
-  highlighter.render();
-<% end %>
