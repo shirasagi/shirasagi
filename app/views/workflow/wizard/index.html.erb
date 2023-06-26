@@ -1,7 +1,7 @@
 <% if @route_options.present? %>
 <dl class="see">
   <dt>
-    <% if @item.workflow_init_kind.present? %>
+    <% if @ss_mode == :cms && @item.workflow_init_kind.present? %>
       <%= t("workflow.#{@item.workflow_init_kind}_request") %>
     <% else %>
       <%= t("workflow.request") %>

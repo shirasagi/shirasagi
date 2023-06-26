@@ -2,6 +2,9 @@ en:
   workflow:
     name: Workflow
     request: Application for approval
+    public_request: Approval request for "public"
+    closed_request: Approval request for "closed"
+    replace_request: Approval request for "replace"
     request_to: Application destination
     selectable_users: Selection candidates
     pages: Approve
