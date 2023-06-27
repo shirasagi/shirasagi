@@ -1,0 +1,8 @@
+<td>
+  <% if report %>
+    <%= link_to I18n.l(date, format: :short), gws_daily_report_user_report_path(id: report.id) %>
+  <% else %>
+    <%= I18n.l(date, format: :short) %>
+  <% end %>
+</td>
+<td><%= t("date.abbr_day_names")[date.wday] %></td>

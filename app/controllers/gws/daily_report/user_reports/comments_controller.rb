@@ -23,7 +23,7 @@ class Gws::DailyReport::UserReports::CommentsController < ApplicationController
       and_user(@user || @cur_user).
       and_groups([@cur_group]).
       search(@s).
-      find(params[:user_report_id])
+      find(params[:report])
 
     @cur_form ||= @report.form if @report.present?
   rescue Mongoid::Errors::DocumentNotFound => e

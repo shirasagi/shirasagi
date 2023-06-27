@@ -1,6 +1,6 @@
 <% if report %>
   <% report.column_values.each do |column_value| %>
-    <%= render partial: 'column_value', locals: { user: user, report: report, column_value: column_value, print: print } %>
+    <%= render partial: 'column_value', locals: { column_value: column_value, date: date, print: print, report: report, user: user } %>
   <% end %>
 <% elsif @forms.present? %>
   <% @forms.first.columns.each do |column| %>

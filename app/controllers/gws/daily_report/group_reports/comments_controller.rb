@@ -23,7 +23,7 @@ class Gws::DailyReport::GroupReports::CommentsController < ApplicationController
     @report ||= begin
       item = Gws::DailyReport::Report.site(@cur_site).without_deleted.and_date(@cur_date).and_groups([@group])
       item = item.and_user(@cur_user) if @cur_site.fiscal_year(@cur_date) != @cur_site.fiscal_year
-      item = item.find(params[:group_report_id])
+      item = item.find(params[:report])
       item
     end
 

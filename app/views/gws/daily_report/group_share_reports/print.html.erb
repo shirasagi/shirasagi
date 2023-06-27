@@ -4,51 +4,19 @@
   <div class="addon-view print" id="addon-basic">
     <div class="addon-body print">
       <table class="index">
-    <tbody>
-    <% (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date| %>
-      <tr>
-        <td><%= I18n.l(date.to_date, format: :short) %></td>
-        <td><%= t("date.abbr_day_names")[date.wday] %></td>
-        <% @items.where(form_id: @forms.first.try(:id), daily_report_date: date).each do |report| %>
-          <% if report.share_small_talk.present? %>
-            <td class="share-cell">
-              <div class="share-cell-in">
-                <div class="user-name"><%= gws_public_user_long_name(report.user.long_name) %></div>
-                <div class="report-value-wrap">
-                  <div class="report-value">
-                    <div class="report-name">【<%= @model.t(:small_talk) %>】</div>
-                    <%= br report.small_talk %>
-                  </div>
-                </div>
-                <% report.column_comments('small_talk').each do |comment| %>
-                  <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+        <tbody>
+          <% (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date| %>
+            <tr>
+              <%= render partial: 'date', locals: { column_value: nil, date: date, print: true, report: nil, user: @cur_user } %>
+              <% @items.where(form_id: @forms.first.try(:id), daily_report_date: date).each do |report| %>
+                <% %w(small_talk column_values).each do |path| %>
+                  <%= render partial: path, locals: { column_value: nil, date: date, print: true, report: report, user: report.user } %>
                 <% end %>
-              </div>
-            </td>
+              <% end %>
+            </tr>
           <% end %>
-          <% report.column_values.each do |column_value| %>
-            <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
-              <td class="share-cell">
-                <div class="share-cell-in">
-                  <div class="user-name"><%= gws_public_user_long_name(report.user.long_name) %></div>
-                  <div class="report-value-wrap">
-                    <div class="report-value">
-                      <div class="report-name">【<%= column_value.column.try(:name) %>】</div>
-                      <%= br column_value.value %>
-                    </div>
-                  </div>
-                  <% report.column_comments(column_value.column_id).each do |comment| %>
-                    <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
-                  <% end %>
-                </div>
-              </td>
-            <% end %>
-          <% end %>
-        <% end %>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

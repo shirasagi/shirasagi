@@ -22,10 +22,9 @@
           <% @users.each do |user| %>
             <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
             <tr>
-              <%= render partial: 'name', locals: { user: user, report: report, print: true } %>
-              <%= render partial: 'limited_access', locals: { user: user, report: report, print: true } %>
-              <%= render partial: 'small_talk', locals: { user: user, report: report, print: true } %>
-              <%= render partial: 'column_values', locals: { user: user, report: report, print: true } %>
+              <% %w(name limited_access small_talk column_values).each do |path| %>
+                <%= render partial: path, locals: { column_value: nil, date: @cur_date, print: true, report: report, user: user } %>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
