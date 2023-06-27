@@ -3,8 +3,8 @@ if SS.config.oauth.prefix_path
     config.logger = Rails.logger
     config.path_prefix = SS.config.oauth.prefix_path
     config.on_failure = proc do |env|
-      config.path_prefix = env["ss.node"].url
-      OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+      new_path = env["ss.node"].full_url
+      Rack::Response.new(['302 Moved'], 302, 'Location' => new_path).finish
     end
   end
 
