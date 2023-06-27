@@ -4,94 +4,32 @@
   <div class="addon-view print" id="addon-basic">
     <div class="addon-body print">
       <table class="index">
-    <thead>
-    <tr>
-      <th><%= Gws::User.t(:name) %></th>
-      <% if @forms.present? %>
-        <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-          <th class="limited-access"><%= @model.t(:limited_access) %></th>
-        <% end %>
-        <th><%= @model.t(:small_talk) %></th>
-        <% @forms.first.columns.each do |column| %>
-          <th><%= column.name %></th>
-        <% end %>
-      <% end %>
-    </tr>
-    </thead>
-    <tbody>
-    <% @users.each do |user| %>
-      <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
-      <tr>
-        <td>
-          <div><%= gws_public_user_long_name(user.long_name) %></div>
-        </td>
-        <% if report %>
-          <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-            <td>
-              <div class="report-value-wrap">
-                <div class="report-value"><%= br report.limited_access %></div>
-              </div>
-            </td>
-          <% end %>
-          <% if report.share_small_talk.present? %>
-            <td class="share-cell">
-              <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-              <div class="report-value-wrap">
-                <div class="report-value"><%= br report.small_talk %></div>
-              </div>
-              <% report.column_comments('small_talk').each do |comment| %>
-                <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+        <thead>
+          <tr>
+            <th><%= Gws::User.t(:name) %></th>
+            <% if @forms.present? %>
+              <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+                <th class="limited-access"><%= @model.t(:limited_access) %></th>
               <% end %>
-            </td>
-          <% else %>
-            <td>
-              <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && report.small_talk.present? %>
-                <div class="report-value-wrap">
-                  <div class="report-value"><%= br report.small_talk %></div>
-                </div>
-                <% report.column_comments('small_talk').each do |comment| %>
-                  <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
-                <% end %>
+              <th><%= @model.t(:small_talk) %></th>
+              <% @forms.first.columns.each do |column| %>
+                <th><%= column.name %></th>
               <% end %>
-            </td>
-          <% end %>
-          <% report.column_values.each do |column_value| %>
-            <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
-              <td class="share-cell">
-                <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-                <div class="report-value-wrap">
-                  <div class="report-value"><%= br column_value.value %></div>
-                </div>
-                <% report.column_comments(column_value.column_id).each do |comment| %>
-                  <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
-                <% end %>
-              </td>
-            <% else %>
-              <td>
-                <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && column_value.value.present? %>
-                  <div class="report-value-wrap">
-                    <div class="report-value"><%= br column_value.value %></div>
-                  </div>
-                  <% report.column_comments(column_value.column_id).each do |comment| %>
-                    <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
-                  <% end %>
-                <% end %>
-              </td>
             <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
+            <tr>
+              <%= render partial: 'name', locals: { user: user, report: report, print: true } %>
+              <%= render partial: 'limited_access', locals: { user: user, report: report, print: true } %>
+              <%= render partial: 'small_talk', locals: { user: user, report: report, print: true } %>
+              <%= render partial: 'column_values', locals: { user: user, report: report, print: true } %>
+            </tr>
           <% end %>
-        <% elsif @forms.present? %>
-          <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-            <td></td>
-          <% end %>
-          <td></td>
-          <% @forms.first.columns.each do |column| %>
-            <td></td>
-          <% end %>
-        <% end %>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

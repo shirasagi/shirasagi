@@ -1,0 +1,52 @@
+<% if report.share_column_ids.include?(column_value.column.id.to_s) %>
+  <td class="share-cell">
+    <div class="share-value"><%= t('gws/daily_report.shared') %></div>
+    <div class="report-value-wrap">
+      <div class="report-value"><%= br column_value.value %></div>
+      <% if !print && report.user_id != @cur_user.id %>
+        <div class="comment-link">
+          <%= link_to new_gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id), { class: 'add-plan' } do %>
+            <i class="material-icons editicon" style="font-size: inherit"></i>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <% report.column_comments(column_value.column_id).each do |comment| %>
+      <div class="comment-value">
+        <% if !print && comment.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id, id: comment.id) do %>
+            <%= br comment.body %>(<%= comment.user.try(:name) %>)
+          <% end %>
+        <% else %>
+          <%= br comment.body %>(<%= comment.user.try(:name) %>)
+        <% end %>
+      </div>
+    <% end %>
+  </td>
+<% else %>
+  <td>
+    <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && column_value.value.present? %>
+      <div class="report-value-wrap">
+        <div class="report-value"><%= br column_value.value %></div>
+        <% if !print && report.user_id != @cur_user.id %>
+          <div class="comment-link">
+            <%= link_to new_gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id), { class: 'add-plan' } do %>
+              <i class="material-icons editicon" style="font-size: inherit"></i>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <% report.column_comments(column_value.column_id).each do |comment| %>
+        <div class="comment-value">
+          <% if !print && comment.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id, id: comment.id) do %>
+              <%= br comment.body %>(<%= comment.user.try(:name) %>)
+            <% end %>
+          <% else %>
+            <%= br comment.body %>(<%= comment.user.try(:name) %>)
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </td>
+<% end %>

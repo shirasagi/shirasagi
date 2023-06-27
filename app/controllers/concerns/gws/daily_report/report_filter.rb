@@ -35,7 +35,7 @@ module Gws::DailyReport::ReportFilter
   end
 
   def set_min_updated
-    items = @model.unscoped.
+    items = Gws::DailyReport::Report.unscoped.
       site(@cur_site).
       without_deleted.
       order_by(daily_report_date: 1)

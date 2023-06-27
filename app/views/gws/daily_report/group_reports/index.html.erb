@@ -58,164 +58,29 @@
   <div class="table-wrap">
     <table class="index">
       <thead>
-      <tr>
-        <th><%= Gws::User.t(:name) %></th>
-        <% if @forms.present? %>
-          <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-            <th class="limited-access"><%= @model.t(:limited_access) %></th>
-          <% end %>
-          <th><%= @model.t(:small_talk) %></th>
-          <% @forms.first.columns.each do |column| %>
-            <th><%= column.name %></th>
-          <% end %>
-        <% end %>
-      </tr>
-      </thead>
-      <tbody>
-      <% @users.each do |user| %>
-        <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
         <tr>
-          <td>
-            <div>
-              <% if user.id == @cur_user.id %>
-                <% if report %>
-                  <%= link_to({ action: :edit, id: report.id }, { class: 'add-plan' }) do %>
-                    <i class="material-icons editicon" style="font-size: inherit"></i>
-                  <% end %>
-                <% elsif @forms.present? %>
-                  <%= link_to(new_gws_daily_report_form_group_report_path(form_id: @forms.first.try(:id)), { class: 'add-plan' }) do %>
-                    <i class="material-icons editicon" style="font-size: inherit"></i>
-                  <% end %>
-                <% end %>
-              <% end %>
-            </div>
-            <div><%= link_to gws_public_user_long_name(user.long_name), gws_daily_report_user_reports_path(year_month: (@cur_date || Time.zone.now).strftime('%Y%m'), user: user) %></div>
-          </td>
-          <% if report %>
+          <th><%= Gws::User.t(:name) %></th>
+          <% if @forms.present? %>
             <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-              <td>
-                <div class="report-value-wrap">
-                  <div class="report-value"><%= br report.limited_access %></div>
-                </div>
-              </td>
+              <th class="limited-access"><%= @model.t(:limited_access) %></th>
             <% end %>
-            <% if report.share_small_talk.present? %>
-              <td class="share-cell">
-                <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-                <div class="report-value-wrap">
-                  <div class="report-value"><%= br report.small_talk %></div>
-                  <% if report.user_id != @cur_user.id %>
-                    <div class="comment-link">
-                      <%= link_to new_gws_daily_report_group_report_comment_path(group_report_id: report.id, column: 'small_talk'), { class: 'add-plan' } do %>
-                        <i class="material-icons editicon" style="font-size: inherit"></i>
-                      <% end %>
-                    </div>
-                  <% end %>
-                </div>
-                <% report.column_comments('small_talk').each do |comment| %>
-                  <div class="comment-value">
-                    <% if comment.allowed?(:read, @cur_user, site: @cur_site) %>
-                      <%= link_to gws_daily_report_group_report_comment_path(group_report_id: report.id, column: 'small_talk', id: comment.id) do %>
-                        <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                      <% end %>
-                    <% else %>
-                      <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                    <% end %>
-                  </div>
-                <% end %>
-              </td>
-            <% else %>
-              <td>
-                <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && report.small_talk.present? %>
-                  <div class="report-value-wrap">
-                    <div class="report-value"><%= br report.small_talk %></div>
-                    <% if report.user_id != @cur_user.id %>
-                      <div class="comment-link">
-                        <%= link_to new_gws_daily_report_group_report_comment_path(group_report_id: report.id, column: 'small_talk'), { class: 'add-plan' } do %>
-                          <i class="material-icons editicon" style="font-size: inherit"></i>
-                        <% end %>
-                      </div>
-                    <% end %>
-                  </div>
-                  <% report.column_comments('small_talk').each do |comment| %>
-                    <div class="comment-value">
-                      <% if comment.allowed?(:read, @cur_user, site: @cur_site) %>
-                        <%= link_to gws_daily_report_group_report_comment_path(group_report_id: report.id, column: 'small_talk', id: comment.id) do %>
-                          <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                        <% end %>
-                      <% else %>
-                        <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                      <% end %>
-                    </div>
-                  <% end %>
-                <% end %>
-              </td>
-            <% end %>
-            <% report.column_values.each do |column_value| %>
-              <% if report.share_column_ids.include?(column_value.column.id.to_s) %>
-                <td class="share-cell">
-                  <div class="share-value"><%= t('gws/daily_report.shared') %></div>
-                  <div class="report-value-wrap">
-                    <div class="report-value"><%= br column_value.value %></div>
-                    <% if report.user_id != @cur_user.id %>
-                      <div class="comment-link">
-                        <%= link_to new_gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id), { class: 'add-plan' } do %>
-                          <i class="material-icons editicon" style="font-size: inherit"></i>
-                        <% end %>
-                      </div>
-                    <% end %>
-                  </div>
-                  <% report.column_comments(column_value.column_id).each do |comment| %>
-                    <div class="comment-value">
-                      <% if comment.allowed?(:read, @cur_user, site: @cur_site) %>
-                        <%= link_to gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id, id: comment.id) do %>
-                          <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                        <% end %>
-                      <% else %>
-                        <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                      <% end %>
-                    </div>
-                  <% end %>
-                </td>
-              <% else %>
-                <td>
-                  <% if report.manageable?(@cur_user, site: @cur_site, date: @cur_date) && column_value.value.present? %>
-                    <div class="report-value-wrap">
-                      <div class="report-value"><%= br column_value.value %></div>
-                      <% if report.user_id != @cur_user.id %>
-                        <div class="comment-link">
-                          <%= link_to new_gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id), { class: 'add-plan' } do %>
-                            <i class="material-icons editicon" style="font-size: inherit"></i>
-                          <% end %>
-                        </div>
-                      <% end %>
-                    </div>
-                    <% report.column_comments(column_value.column_id).each do |comment| %>
-                      <div class="comment-value">
-                        <% if comment.allowed?(:read, @cur_user, site: @cur_site) %>
-                          <%= link_to gws_daily_report_group_report_comment_path(group_report_id: report.id, column: column_value.column_id, id: comment.id) do %>
-                            <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                          <% end %>
-                        <% else %>
-                          <%= br comment.body %>(<%= comment.user.try(:name) %>)
-                        <% end %>
-                      </div>
-                    <% end %>
-                  <% end %>
-                </td>
-              <% end %>
-            <% end %>
-          <% elsif @forms.present? %>
-            <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
-              <td></td>
-            <% end %>
-            <td></td>
+            <th><%= @model.t(:small_talk) %></th>
             <% @forms.first.columns.each do |column| %>
-              <td></td>
+              <th><%= column.name %></th>
             <% end %>
           <% end %>
         </tr>
-      <% end %>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
+          <tr>
+            <%= render partial: 'name', locals: { user: user, report: report, print: false } %>
+            <%= render partial: 'limited_access', locals: { user: user, report: report, print: false } %>
+            <%= render partial: 'small_talk', locals: { user: user, report: report, print: false } %>
+            <%= render partial: 'column_values', locals: { user: user, report: report, print: false } %>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
