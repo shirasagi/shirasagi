@@ -1,5 +1,4 @@
-<% return unless @model.allowed?(:access, @cur_user, site: @cur_site) %>
-<% return if @user.id != @cur_user.id %>
+<% return if !@model.allowed?(:access, @cur_user, site: @cur_site) && user.id != @cur_user.id %>
 
 <% if report %>
   <td>

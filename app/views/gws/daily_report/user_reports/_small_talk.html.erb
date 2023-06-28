@@ -6,7 +6,7 @@
         <div class="report-value"><%= br report.small_talk %></div>
         <% if !print && report.user_id != @cur_user.id %>
           <div class="comment-link">
-            <%= link_to new_gws_daily_report_user_report_comment_path(user_report_id: report.id, column: 'small_talk'), { class: 'add-plan' } do %>
+            <%= link_to({ controller: "#{controller_path}/comments", action: :new, report: report.id, column: 'small_talk' }, { class: 'add-plan' }) do %>
               <i class="material-icons editicon" style="font-size: inherit"></i>
             <% end %>
           </div>
@@ -15,7 +15,7 @@
       <% report.column_comments('small_talk').each do |comment| %>
         <div class="comment-value">
           <% if !print && comment.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to gws_daily_report_user_report_comment_path(user_report_id: report.id, column: 'small_talk', id: comment.id) do %>
+            <%= link_to({ controller: "#{controller_path}/comments", action: :show, report: report.id, column: 'small_talk', id: comment.id }) do %>
               <%= br comment.body %>(<%= comment.user.try(:name) %>)
             <% end %>
           <% else %>
@@ -31,7 +31,7 @@
           <div class="report-value"><%= br report.small_talk %></div>
           <% if !print && report.user_id != @cur_user.id %>
             <div class="comment-link">
-              <%= link_to new_gws_daily_report_user_report_comment_path(user_report_id: report.id, column: 'small_talk'), { class: 'add-plan' } do %>
+              <%= link_to({ controller: "#{controller_path}/comments", action: :new, report: report.id, column: 'small_talk' }, { class: 'add-plan' }) do %>
                 <i class="material-icons editicon" style="font-size: inherit"></i>
               <% end %>
             </div>
@@ -40,7 +40,7 @@
         <% report.column_comments('small_talk').each do |comment| %>
           <div class="comment-value">
             <% if !print && comment.allowed?(:read, @cur_user, site: @cur_site) %>
-              <%= link_to gws_daily_report_user_report_comment_path(user_report_id: report.id, column: 'small_talk', id: comment.id) do %>
+              <%= link_to({ controller: "#{controller_path}/comments", action: :show, report: report.id, column: 'small_talk', id: comment.id }) do %>
                 <%= br comment.body %>(<%= comment.user.try(:name) %>)
               <% end %>
             <% else %>
