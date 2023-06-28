@@ -234,7 +234,7 @@ describe Cms, type: :model, dbscope: :example do
         create(:add_changeset, revision_id: revision.id)
         create(:move_changeset, revision_id: revision.id, source: group2)
         create(:unify_changeset, revision_id: revision.id, sources: [group1, group2])
-        create(:division_changeset, revision_id: revision.id, source: group1, destinations: [group2])
+        create(:division_changeset, revision_id: revision.id, source: group1, destination: [group2])
         create(:delete_changeset, revision_id: revision.id, source: group1)
       end
       expectation.to change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by_at_least(100)
