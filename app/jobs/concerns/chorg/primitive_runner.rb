@@ -95,6 +95,7 @@ module Chorg::PrimitiveRunner
       return
     end
 
+    source_attributes = copy_attributes_deeply(source_group)
     destination_groups = changeset.destinations.map.with_index do |destination, index|
       # なるべく新しいグループは作成しないようにする。
       # 1 番目の分割先のグループが見つからない場合は、分割元グループへ分割結果をセットする。
@@ -126,8 +127,10 @@ module Chorg::PrimitiveRunner
 
     # be careful, user's group_ids has only first division group.
     move_users_group(source_group.id, destination_group_ids.first)
+    #
+    divide_page_contacts(source_attributes, destination_groups)
     # group of page/node/layout/part has all division groups.
-    substitutor.collect(source_group.attributes, destination_attributes, destination_group_ids)
+    substitutor.collect(source_attributes, destination_attributes, destination_group_ids)
     delete_group_ids << source_group.id unless destination_group_ids.include?(source_group.id)
   end
 
@@ -150,5 +153,58 @@ module Chorg::PrimitiveRunner
 
   def execute_after(changesets)
     execute_after_gws_notice(changesets)
+  end
+
+  def divide_page_contacts(source_attributes, destination_groups)
+    source_contact_groups_attributes = source_attributes["contact_groups"]
+    return if source_contact_groups_attributes.blank?
+
+    destination_group_contact_pairs = destination_groups.map do |group|
+      group.contact_groups.to_a.map { |contact| [ group, contact ] }
+    end
+    destination_group_contact_pairs.flatten!(1)
+
+    source_contact_groups_attributes.each do |contact_attributes|
+      triple = destination_group_contact_pairs.find do |_group, contact|
+        contact.id.to_s == contact_attributes["_id"].to_s || contact.name == contact_attributes["name"]
+      end
+
+      criteria = Cms::Page.all.where(contact_group_id: source_attributes['_id'], contact_group_relation: "related")
+      criteria = criteria.where(contact_group_contact_id: contact_attributes['_id'].to_s)
+      all_ids = criteria.pluck(:id)
+      if triple.blank?
+        # 連絡先のリンク切れ
+        all_ids.each_slice(20) do |ids|
+          criteria.in(id: ids).to_a.each do |page|
+            page.contact_group_contact = nil
+
+            if save_or_collect_errors(page)
+              put_log("unifies contacts to main: #{page.name}(#{page.id})")
+            else
+              Rails.logger.warn("failed to unify contacts to main: #{page.errors.full_messages.join("\n")}")
+            end
+          end
+        end
+      else
+        all_ids.each_slice(20) do |ids|
+          criteria.in(id: ids).to_a.each do |page|
+            page.contact_group = triple[0]
+            page.contact_group_contact = triple[1]
+            page.contact_charge = triple[1].contact_group_name
+            page.contact_tel = triple[1].contact_tel
+            page.contact_fax = triple[1].contact_fax
+            page.contact_email = triple[1].contact_email
+            page.contact_link_url = triple[1].contact_link_url
+            page.contact_link_name = triple[1].contact_link_name
+
+            if save_or_collect_errors(page)
+              put_log("divided contact: #{page.name}(#{page.id})")
+            else
+              Rails.logger.warn("failed to unify contacts to main: #{page.errors.full_messages.join("\n")}")
+            end
+          end
+        end
+      end
+    end
   end
 end
