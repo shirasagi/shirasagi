@@ -225,36 +225,41 @@ module Cms::PageFilter
 
     if request.get? || request.head?
       @filename = @item.filename
-    elsif confirm
+      return
+    end
+    raise "400" if @item.respond_to?(:branch?) && @item.branch?
+
+    if confirm
       @source = "/#{@item.filename}"
       @item.validate_destination_filename(destination)
       @item.filename = destination
       @link_check = @item.errors.empty?
+      return
+    end
+
+    @source = "/#{@item.filename}"
+    raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
+
+    node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
+
+    if node.blank?
+      location = move_cms_page_path id: @item.id, source: @source, link_check: true
+    elsif @item.route == "cms/page"
+      location = move_node_page_path cid: node.id, id: @item.id, source: @source, link_check: true
     else
-      @source = "/#{@item.filename}"
-      raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
+      location = { cid: node.id, action: :move, source: @source, link_check: true }
+    end
 
-      node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
+    task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
 
-      if node.blank?
-        location = move_cms_page_path id: @item.id, source: @source, link_check: true
-      elsif @item.route == "cms/page"
-        location = move_node_page_path cid: node.id, id: @item.id, source: @source, link_check: true
-      else
-        location = { cid: node.id, action: :move, source: @source, link_check: true }
-      end
+    rejected = -> do
+      @item.errors.add :base, :other_task_is_running
+      render
+    end
 
-      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
-
-      rejected = -> do
-        @item.errors.add :base, :other_task_is_running
-        render
-      end
-
-      task.run_with(rejected: rejected) do
-        task.log "# #{I18n.t("ss.buttons.move")}"
-        render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
-      end
+    task.run_with(rejected: rejected) do
+      task.log "# #{I18n.t("ss.buttons.move")}"
+      render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
     end
   end
 

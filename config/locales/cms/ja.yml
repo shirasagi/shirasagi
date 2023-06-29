@@ -320,6 +320,14 @@ ja:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
+      title: ページの移動
+      current_filename: 現在のファイル名
+      destination_filename: 移動先のファイル名
+      branch_page_error: このページは差し替えページの為、移動できません。
+    move_node:
+      title: フォルダーの移動
+      current_filename: 現在のフォルダー名
+      destination_filename: 移動先のフォルダー名
     copy_nodes:
       from: 複製元フォルダー
       to: 複製先
