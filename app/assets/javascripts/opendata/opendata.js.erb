@@ -357,15 +357,72 @@ this.Opendata_SearchUI = (function () {
   };
 
   Opendata_SearchUI.render = function () {
-    return $(".ajax-selected").each(function () {
-      $(this).find(".deselect").on("click", Opendata_SearchUI.deselect);
-      if ($(this).find(".deselect").size() === 0) {
-        return $(this).hide();
+    var self = this;
+
+    $(".ajax-selected").each(function () {
+      $(this).on("click", "a.deselect", self.deselect);
+      if ($(this).find("a.deselect").size() === 0) {
+        $(this).hide();
       }
     });
+
+    $(document)
+      .on("cbox_load", SS_SearchUI.onColorBoxLoaded)
+      .on("cbox_cleanup", SS_SearchUI.onColorBoxCleanedUp);
   };
 
-  Opendata_SearchUI.modal = function () {
+  Opendata_SearchUI.modal = function (options) {
+    if (!options) {
+      options = {};
+    }
+
+    var self = this;
+    var colorbox = options.colorbox || $.colorbox;
+    var $el = options.$el || $("#ajax-box");
+
+    var isSameWindow = (window == $el[0].ownerDocument.defaultView)
+    if (isSameWindow) {
+      $el.find("form.search").on("submit", function (ev) {
+        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        $el.find("[type=submit]").after($div);
+
+        $(this).ajaxSubmit({
+          url: $(this).attr("action"),
+          success: function (data) {
+            var $data = $("<div />").html(data);
+            $.colorbox.prep($data.contents());
+          },
+          error: function (data, status) {
+            $div.html("== Error ==");
+          }
+        });
+        ev.preventDefault();
+        return false;
+      });
+    }
+    $el.find(".pagination a").on("click", function (ev) {
+      SS_SearchUI.selectItems($el);
+
+      if (isSameWindow) {
+        $el.find(".pagination").html(SS.loading);
+
+        $.ajax({
+          url: $(this).attr("href"),
+          type: "GET",
+          success: function (data) {
+            $el.closest("#cboxLoadedContent").html(data);
+          },
+          error: function (data, status) {
+            $el.find(".pagination").html("== Error ==");
+          }
+        });
+
+        ev.preventDefault();
+        return false;
+      } else {
+        return true;
+      }
+    });
     $("#ajax-box form.search").on("submit", function (e) {
       $(this).ajaxSubmit({
         url: $(this).attr("action"),
@@ -378,10 +435,25 @@ this.Opendata_SearchUI = (function () {
       });
       return e.preventDefault();
     });
-    $.colorbox.element().closest("dl").find(".ajax-selected tr[data-id]").each(function () {
-      var id;
-      id = $(this).attr("data-id");
-      return $("#ajax-box .items [data-id=" + id + "]").remove();
+    var $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    if (!$ajaxSelected.length) {
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    $ajaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      var tr = $("#colorbox .items [data-id='" + id + "']");
+      tr.find("input[type=checkbox]").remove();
+      if ($el.find(".pagination a").size()) {
+        tr.find(".select-item,.select-single-item").each(function() {
+          var $this = $(this);
+          var html = $this.html();
+
+          var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+          $this.replaceWith(disabledHtml);
+        });
+      } else {
+        tr.remove();
+      }
     });
     Opendata_ListUI.render("table.od-modal");
     $("#ajax-box a.select-item").on("click", function (e) {
