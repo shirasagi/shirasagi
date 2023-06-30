@@ -2,7 +2,7 @@
   index ||= 0
   destination = @item.destinations.present? ? @item.destinations[index] : nil
 
-  source_contact_map = source_groups.map { |group| group.contact_groups.to_a }.flatten.index_by { |contact| contact.id.to_s }
+  source_contacts = source_groups.map { |group| group.contact_groups.to_a }.flatten
   unifies_to_main = nil
 %>
 
@@ -29,7 +29,10 @@
       <tr class="list-item" data-contact-id="<%= contact_group[:_id] %>">
         <td>
           <%=
-            source_contact = source_contact_map.delete(contact_group[:_id])
+            source_contact_index = source_contacts.find_index { |contact| contact.id.to_s == contact_group[:_id].to_s || contact.name == contact_group[:name].to_s }
+            if source_contact_index
+              source_contact = source_contacts.delete_at(source_contact_index)
+            end
             unless source_contact
               "New"
             end
@@ -62,16 +65,16 @@
     @item.destinations.each do |destination|
       next if destination.blank? || destination[:contact_groups].blank?
       destination[:contact_groups].each do |contact_group|
-        source_contact_map.delete(contact_group[:_id])
+        source_contacts.delete_if { |contact| contact.id.to_s == contact_group[:_id] || contact.name == contact_group[:name] }
       end
     end
   %>
-  <% if source_contact_map.present? %>
+  <% if source_contacts.present? %>
     <div id="errorExplanation" class="errorExplanation" style="margin-top: 10px;">
-      <h2><%= t("errors.template.header", count: source_contact_map.count) %></h2>
+      <h2><%= t("errors.template.header", count: source_contacts.length) %></h2>
       <p><%= t("chorg.errors.template.body") %></p>
       <ul>
-        <% source_contact_map.each do |_id, source_contact| %>
+        <% source_contacts.each do |source_contact| %>
           <li><%= source_contact.name %></li>
         <% end %>
       </ul>
