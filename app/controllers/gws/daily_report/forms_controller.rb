@@ -16,4 +16,31 @@ class Gws::DailyReport::FormsController < ApplicationController
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end
+
+  public
+
+  def index
+    @items = @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site).
+      search(params[:s]).
+      order_by(year: -1, order: 1).
+      page(params[:page]).per(50)
+  end
+
+  def copy_year
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @src_year = params.dig(:item, :src_year) || @model.site(@cur_site).without_deleted.pluck(:year).max
+    @dest_year = params.dig(:item, :dest_year) || (@src_year + 1)
+
+    if request.get? || request.head?
+      render
+      return
+    end
+
+    job = Gws::DailyReport::CopyYearJob.bind(site_id: @cur_site, user_id: @cur_user)
+    job.perform_later(@src_year, @dest_year)
+
+    redirect_to({ action: :index }, { notice: I18n.t('gws/daily_report.notice.copy_year_started') })
+  end
 end

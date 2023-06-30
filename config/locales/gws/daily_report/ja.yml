@@ -14,6 +14,8 @@ ja:
       save_and_categorize: 保存してカテゴリーを設定する
     columns:
       index: カテゴリーを管理する
+    confirm:
+      copy_year: 対象年度から業務カテゴリーを作成してよろしいですか？
     formats:
       daily_report_full_name: '%{user_name}の%{date}の業務日報'
     forms:
@@ -23,8 +25,10 @@ ja:
       depublish: 非公開にする
       download_comment: 承認/回覧コメントCSV
       download_attachment: 添付ファイルダウンロード
+      copy_year: 過去の年度から業務カテゴリーを作成する
     notice:
       no_files: "添付ファイルがありません。"
+      copy_year_started: 対象年度から業務カテゴリーの作成処理を開始しました。
     labels:
       user: 作成者
       form: フォーム
@@ -79,6 +83,8 @@ ja:
         order: 並び順
         memo: 備考
         daily_report_group_id: 部署
+        src_year: 作成元年度
+        dest_year: 作成先年度
       gws/addon/daily_report/column_setting:
         columns: カテゴリー設定
       gws/daily_report/column:
@@ -114,6 +120,10 @@ ja:
         - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
       daily_report_group_id:
         - 部署を入力します。
+      src_year:
+        - 作成元となる年度を入力します。
+      dest_year:
+        - 作成する年度を入力します。
     gws/daily_report/column:
       name:
         - 項目を入力します。
@@ -129,4 +139,4 @@ ja:
 
   job:
     models:
-      gws/daily_report/trash_purge_job: 業務日報ゴミ箱の掃除
+      gws/daily_report/copy_year_job: 業務日報年度コピージョブ

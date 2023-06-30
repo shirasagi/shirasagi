@@ -14,6 +14,8 @@ en:
       save_and_categorize: Save and categorize
     columns:
       index: Manage category
+    confirm:
+      copy_year: Are you sure you want to create work category from the target year?
     formats:
       daily_report_full_name: '%{date}’s business daily report for %{user_name}'
     forms:
@@ -23,8 +25,10 @@ en:
       depublish: Make private
       download_comment: Approval/circular comment CSV
       download_attachment: Download attached file
+      copy_year: Create work category from the before year
     notice:
       no_files: "There are no attached files."
+      copy_year_started: The process of creating work category from the target year has started.
     labels:
       user: Author
       form: Form
@@ -79,6 +83,8 @@ en:
         order: Order
         memo: Remarks
         daily_report_group_id: Department
+        src_year: Source year
+        dest_year: Destination year
       gws/addon/daily_report/column_setting:
         columns: Category settings
       gws/daily_report/column:
@@ -116,6 +122,10 @@ en:
         - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
       daily_report_group_id:
         - Enter the department.
+      src_year:
+        - Enter the year from which to create.
+      dest_year:
+        - Enter the year to create.
     gws/daily_report/column:
       name:
         - Enter an item.
@@ -131,4 +141,4 @@ en:
 
   job:
     models:
-      gws/daily_report/trash_purge_job: Empty business daily report trash
+      gws/daily_report/copy_year_job: Copy job for work category target year

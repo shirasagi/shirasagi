@@ -16,6 +16,10 @@ Rails.application.routes.draw do
 
   gws "daily_report" do
     get '/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}/reports" }, as: :main
+    resources :forms, concerns: [:deletion] do
+      match :copy_year, on: :collection, via: %i[get post]
+      resources :columns, concerns: :deletion
+    end
     scope(path: ':year_month') do
       resources :reports, concerns: :deletion do
         get :print, on: :member
@@ -41,9 +45,6 @@ Rails.application.routes.draw do
       namespace :group_reports, path: 'groups/:group/reports' do
         resources :comments, path: ':report/:column/comments', concerns: [:deletion]
       end
-    end
-    resources :forms, concerns: :deletion do
-      resources :columns, concerns: :deletion
     end
   end
 end
