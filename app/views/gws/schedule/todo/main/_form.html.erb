@@ -16,11 +16,11 @@
   <dd>
     <div class="gws-schedule-start-end-combo">
       <div class="datetimes-field">
-        <%= f.ss_datetime_field :start_at, { max_date: @cur_site.schedule_max_at }, { class: 'start', type: 'hidden' } %>
+        <%= f.ss_datetime_field :start_at, { max_date: @cur_site.schedule_max_at }, { class: 'start', type: 'hidden', data: { sync_with: "item[end_at]" } } %>
         <%= f.ss_datetime_field :end_at, { max_date: @cur_site.schedule_max_at }, { class: 'end' } %>
       </div>
       <div class="dates-field hide">
-        <%= f.ss_date_field :start_on, { max_date: @cur_site.schedule_max_at }, { class: 'start', type: 'hidden' } %>
+        <%= f.ss_date_field :start_on, { max_date: @cur_site.schedule_max_at }, { class: 'start', type: 'hidden', data: { sync_with: "item[end_on]" } } %>
         <%= f.ss_date_field :end_on, { max_date: @cur_site.schedule_max_at }, { class: 'end' } %>
       </div>
       <div class="date-options mt-3">
