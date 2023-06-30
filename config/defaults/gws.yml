@@ -193,10 +193,10 @@ production: &production
       dayoff: none
       '': none
     reset:
-      available: ''
-      unavailable: ''
-      leave: ''
-      dayoff: ''
+      available: 'unavailable'
+      unavailable: 'unavailable'
+      leave: 'leave'
+      dayoff: 'dayoff'
     sync_available:
       disable: false
       presence_logged_in:
