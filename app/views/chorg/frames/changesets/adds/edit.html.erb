@@ -19,7 +19,7 @@
     <%=
       { id: "chorg-after-contact", class: "chorg-after-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
         render "ss/crud/addon", addon: addon_options, data: SS::StimulusHelper::Utils.convert_to_data_params("contact/addon/group") do
-          render "chorg/frames/changesets/main/form_contact", f: f, addon: addon_options
+          render "chorg/frames/changesets/main/form_contact", f: f, addon: addon_options, show_unifies_to_main: false
         end
       end
     %>

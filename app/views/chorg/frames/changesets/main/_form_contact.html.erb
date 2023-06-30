@@ -1,4 +1,7 @@
-<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  show_unifies_to_main = local_assigns.fetch(:show_unifies_to_main, true)
+%>
 
 <% render_row = proc do |contact_group| %>
   <tr data-id="<%= contact_group.try(:id) || "new" %>">
@@ -91,12 +94,14 @@
     <% render_row.call(nil) %>
     </tbody>
   </table>
-  <div>
-    <label>
-      <%= check_box_tag "dummy[#{addon[:id]}][][unifies_to_main]", "enabled", false, id: nil, class: "unifies-to-main" %>
-      <%= t("contact.links.unify_to_main") %>
-    </label>
-  </div>
+  <% if show_unifies_to_main %>
+    <div>
+      <label>
+        <%= check_box_tag "dummy[#{addon[:id]}][][unifies_to_main]", "enabled", false, id: nil, class: "unifies-to-main" %>
+        <%= t("contact.links.unify_to_main") %>
+      </label>
+    </div>
+  <% end %>
   <template id="new-contact-group-row">
     <% render_row.call(nil) %>
   </template>
