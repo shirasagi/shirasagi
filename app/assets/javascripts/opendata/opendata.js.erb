@@ -332,6 +332,8 @@ this.Opendata_SearchUI = (function () {
   function Opendata_SearchUI() {
   }
 
+  Opendata_SearchUI.anchorAjaxBox;
+
   Opendata_SearchUI.select = function (item) {
     var a, input, tr;
     // create tr element and append to form
@@ -342,6 +344,17 @@ this.Opendata_SearchUI = (function () {
     tr.append($('<td>').append($(input)).append(item["name"]));
     tr.append($('<td>').append($(a)));
     $.colorbox.element().closest("dl").find(".ajax-selected tbody").prepend(tr);
+  };
+
+  Opendata_SearchUI.selectItems = function ($el) {
+    if (! $el) {
+      $el = $("#ajax-box");
+    }
+    var self = this;
+    $el.find(".items input:checkbox").filter(":checked").each(function () {
+      self.select($(this));
+    });
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
   };
 
   Opendata_SearchUI.deselect = function (e) {
@@ -368,8 +381,21 @@ this.Opendata_SearchUI = (function () {
     });
 
     $(document)
-      .on("cbox_load", SS_SearchUI.onColorBoxLoaded)
-      .on("cbox_cleanup", SS_SearchUI.onColorBoxCleanedUp);
+      .on("cbox_load", self.onColorBoxLoaded)
+      .on("cbox_cleanup", self.onColorBoxCleanedUp);
+  };
+
+  Opendata_SearchUI.onColorBoxLoaded = function (ev) {
+    if (!Opendata_SearchUI.anchorAjaxBox) {
+      // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
+      // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
+      // そこで、初回表示時の anchor を記憶しておく。
+      Opendata_SearchUI.anchorAjaxBox = $.colorbox.element();
+    }
+  };
+
+  Opendata_SearchUI.onColorBoxCleanedUp = function (ev) {
+    Opendata_SearchUI.anchorAjaxBox = null;
   };
 
   Opendata_SearchUI.modal = function (options) {
@@ -402,7 +428,7 @@ this.Opendata_SearchUI = (function () {
       });
     }
     $el.find(".pagination a").on("click", function (ev) {
-      SS_SearchUI.selectItems($el);
+      self.selectItems($el);
 
       if (isSameWindow) {
         $el.find(".pagination").html(SS.loading);
@@ -436,9 +462,9 @@ this.Opendata_SearchUI = (function () {
       });
       return e.preventDefault();
     });
-    var $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     if (!$ajaxSelected.length) {
-      $ajaxSelected = SS_SearchUI.anchorAjaxBox.parent().find(".ajax-selected");
+      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
     }
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
