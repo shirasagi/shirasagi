@@ -449,18 +449,6 @@ this.Opendata_SearchUI = (function () {
         return true;
       }
     });
-    $("#ajax-box form.search").on("submit", function (e) {
-      $(this).ajaxSubmit({
-        url: $(this).attr("action"),
-        success: function (data) {
-          return $("#cboxLoadedContent").html(data);
-        },
-        error: function (data, status) {
-          return alert("== Error ==");
-        }
-      });
-      return e.preventDefault();
-    });
     var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     if (!$ajaxSelected.length) {
       $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
