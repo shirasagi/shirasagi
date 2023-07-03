@@ -43,28 +43,11 @@ this.Opendata = (function () {
 
   Opendata.render = function (box) {
     var anchorCallback;
-    if (box == null) {
-      box = null;
-    }
-    if (box) {
-      anchorCallback = function () {
-        return $("#cboxLoadedContent a").each(function () {
-          var elem;
-          elem = $(this);
-          elem.addClass("cboxElement");
-          if (!elem.attr("target") && !elem.data("target")) {
-            return elem.colorbox({
-              fixed: true,
-              width: "90%",
-              height: "90%",
-              onComplete: anchorCallback
-            });
-          }
-        });
-      };
-      $(box).find("a").each(function () {
+    anchorCallback = function () {
+      return $("#cboxLoadedContent .ajax-box:not(.cboxElement)").each(function () {
         var elem;
         elem = $(this);
+        elem.addClass("cboxElement");
         if (!elem.attr("target") && !elem.data("target")) {
           return elem.colorbox({
             fixed: true,
@@ -74,25 +57,16 @@ this.Opendata = (function () {
           });
         }
       });
-    }
-    //defaullt
-    box = $(document);
-    //eternal links
-    box.find("a[href^=http]").each(function () {
-      return $(this).addClass("external");
-    });
-    //ajax to (color)box
-    return box.find(".ajax-box").each(function () {
+    };
+    return $(box).find(".ajax-box:not(.cboxElement)").each(function () {
       var elem;
       elem = $(this);
-      if (elem.hasClass("cboxElement")) {
-        return true;
-      }
       if (!elem.attr("target") && !elem.data("target")) {
         return elem.colorbox({
           fixed: true,
           width: "90%",
-          height: "90%"
+          height: "90%",
+          onComplete: anchorCallback
         });
       }
     });
@@ -109,7 +83,7 @@ this.Opendata = (function () {
       dataType: "json",
       success: function () {
       },
-      error: function (data, status) {
+      error: function (data, _status) {
         return alert(["== Error =="].concat(data.responseJSON).join("\n"));
       }
     };
@@ -133,7 +107,7 @@ this.Opendata = (function () {
         },
         success: function () {
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error ==");
         }
       };
@@ -166,7 +140,7 @@ this.Opendata = (function () {
             return $(self.data("remove")).remove();
           }
         },
-        error: function (data, status) {
+        error: function (data, _status) {
           return alert(["== Error =="].concat(data.responseJSON).join("\n"));
         }
       };
@@ -198,7 +172,7 @@ this.Opendata_Tooltips = (function () {
   Opendata_Tooltips.render = function () {
     var ttips;
     ttips = $(".tooltip");
-    ttips.on("click", function (ev) {
+    ttips.on("click", function (_ev) {
       var css, cur, hgt, ofs, style;
       $(".tooltip ul").hide();
       cur = $(this);
@@ -234,7 +208,7 @@ this.Opendata_ListUI = (function () {
   function Opendata_ListUI() {
   }
 
-  Opendata_ListUI.render = function (list) {
+  Opendata_ListUI.render = function (_list) {
     $("table.od-modal tbody tr").each(function () {
       var tbody, tr;
       tr = $(this);
@@ -315,9 +289,9 @@ this.Opendata_ListUI = (function () {
       type: "post",
       url: location.pathname + "/" + id,
       data: "_method=delete",
-      success: function (msg) {
+      success: function (_msg) {
       },
-      error: function (msg, status) {
+      error: function (msg, _status) {
         return alert(["== Error =="].concat(msg["statusText"]).join("\n"));
       }
     });
@@ -384,7 +358,7 @@ this.Opendata_SearchUI = (function () {
       .on("cbox_cleanup", self.onColorBoxCleanedUp);
   };
 
-  Opendata_SearchUI.onColorBoxLoaded = function (ev) {
+  Opendata_SearchUI.onColorBoxLoaded = function (_ev) {
     if (!Opendata_SearchUI.anchorAjaxBox) {
       // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
       // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
@@ -393,7 +367,7 @@ this.Opendata_SearchUI = (function () {
     }
   };
 
-  Opendata_SearchUI.onColorBoxCleanedUp = function (ev) {
+  Opendata_SearchUI.onColorBoxCleanedUp = function (_ev) {
     Opendata_SearchUI.anchorAjaxBox = null;
   };
 
@@ -418,7 +392,7 @@ this.Opendata_SearchUI = (function () {
             var $data = $("<div />").html(data);
             $.colorbox.prep($data.contents());
           },
-          error: function (data, status) {
+          error: function (_data, _status) {
             $div.html("== Error ==");
           }
         });
@@ -438,7 +412,7 @@ this.Opendata_SearchUI = (function () {
           success: function (data) {
             $el.closest("#cboxLoadedContent").html(data);
           },
-          error: function (data, status) {
+          error: function (_data, _status) {
             $el.find(".pagination").html("== Error ==");
           }
         });
@@ -480,7 +454,7 @@ this.Opendata_SearchUI = (function () {
       });
       $.colorbox.element().closest("dl").find(".ajax-selected").show();
       e.preventDefault();
-      return $.colorbox.close();
+      return colorbox.close();
     });
     $("#ajax-box .select-items").on("click", function (e) {
       $("#ajax-box .items input:checkbox").filter(":checked").each(function () {
@@ -497,9 +471,9 @@ this.Opendata_SearchUI = (function () {
       });
       $.colorbox.element().closest("dl").find(".ajax-selected").show();
       e.preventDefault();
-      return $.colorbox.close();
+      return colorbox.close();
     });
-    $("#ajax-box .od-modal").on("change", function (e) {
+    $("#ajax-box .od-modal").on("change", function (_e) {
       return Opendata_SearchUI.toggleSelectButton();
     });
     return Opendata_SearchUI.toggleSelectButton();
@@ -514,7 +488,7 @@ this.Opendata_HieraricalCheckbox = (function () {
   }
 
   Opendata_HieraricalCheckbox.render = function () {
-    return $("label.parent input[type='checkbox']").on("change", function (e) {
+    return $("label.parent input[type='checkbox']").on("change", function (_e) {
       var checked;
       checked = $(this).is(':checked');
       return $(this).closest('div.parent').find("input[type='checkbox']").prop('checked', checked);
