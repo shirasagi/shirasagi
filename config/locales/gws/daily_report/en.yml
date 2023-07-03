@@ -115,8 +115,6 @@ en:
       order:
         - Enter the order.
         - "The lower the number, the higher the position."
-      state:
-        - Select whether to publish the application form.
       memo:
         - Enter remarks.
         - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
