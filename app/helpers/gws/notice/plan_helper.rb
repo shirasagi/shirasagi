@@ -14,4 +14,13 @@ module Gws::Notice::PlanHelper
     events.compact!
     events
   end
+
+  def redirection_date(item = nil)
+    item ||= @item
+    item.present? ? item.start_at.to_date.to_s : params.dig(:calendar, :date)
+  end
+
+  def redirection_calendar_params(item = nil)
+    super().merge(date: redirection_date(item))
+  end
 end
