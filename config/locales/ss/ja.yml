@@ -72,12 +72,14 @@ ja:
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
       index:
+        created: "作成日時：%{created}"
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
         approved: "承認日時：%{approved}"
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+        openrate: "開封率：%{openrate}"
       oauth2/application:
         header:
           name: アプリケーション種別
@@ -168,6 +170,7 @@ ja:
       approve: 承認する
       prev: 前へ
       next: 次へ
+      update: 更新する
     buttons:
       save: 保存
       saving: 保存中
@@ -321,6 +324,7 @@ ja:
         - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
         - これを超える制限サイズを設定しても有効に機能しません。
         - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
+      updated: 更新しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。

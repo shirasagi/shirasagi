@@ -1,38 +1,17 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :message_id %></dt>
   <dd>
     <% message = @item.message %>
     <% if message && message.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to message.name, message.private_show_path %>
+      <%= link_to @item.name, message.private_show_path %>
     <% else %>
       <%= @item.name %>
     <% end %>
   </dd>
 
-  <dt><%= @model.t :action %></dt>
-  <dd><%= @item.action %></dd>
-
   <dt><%= @model.t :created %></dt>
   <dd><%=l @item.created %></dd>
 
-  <% if @item.broadcast? %>
-    <dt><%= @model.t :request_id %></dt>
-    <dd><%= @item.request_id %></dd>
-  <% else %>
-    <dt><%= @model.t :aggregation_unit %></dt>
-    <dd><%= @item.aggregation_unit %></dd>
-
-    <dt><%= @model.t :aggregation_units_by_month %></dt>
-    <dd><%= @item.aggregation_units_by_month %></dd>
-  <% end %>
-
-  <dt><%= @model.t :statistics %></dt>
-  <dd>
-    <% if @item.statistics.present? %>
-      <%= text_area_tag :tatistics, JSON.pretty_generate(@item.statistics), style: "height: 500px;  margin-bottom: 12px;" %>
-    <% end %>
-    <% if !SS::Lgwan.cms? %>
-      <%= ss_button_to t("ss.buttons.update"), url_for(action: :update), class: "btn", method: "put" %>
-    <% end %>
-  </dd>
+  <dt><%= @model.t :updated %></dt>
+  <dd><%=l @item.updated %></dd>
 </dl>

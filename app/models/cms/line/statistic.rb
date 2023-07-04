@@ -2,8 +2,10 @@ class Cms::Line::Statistic
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
+  include Cms::Addon::Line::Statistic::Body
+  include Cms::Addon::Line::Statistic::Info
   include Cms::Addon::GroupPermission
-  #include History::Addon::Backup
+  include History::Addon::Backup
 
   MAX_OF_AGGREGATION_UNITS_BY_MONTH = 1000
 
@@ -40,6 +42,12 @@ class Cms::Line::Statistic
     self.aggregation_unit ||= self.class.ss_short_uuid
   end
 
+  def exceeded_units_by_month?
+    return false if broadcast?
+    return false if aggregation_units_by_month.nil?
+    aggregation_units_by_month >= MAX_OF_AGGREGATION_UNITS_BY_MONTH
+  end
+
   def update_statistics
     broadcast? ? update_broadcast_statistics : update_multicast_statistics
   end
@@ -47,8 +55,12 @@ class Cms::Line::Statistic
   # ref: https://developers.line.biz/ja/reference/messaging-api/#get-message-event
   def update_broadcast_statistics
     res = site.line_client.get_user_interaction_statistics(request_id)
+    raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
     self.statistics = JSON.parse(res.body)
-    update
+    update!
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    false
   end
 
   # ref: https://developers.line.biz/ja/reference/messaging-api/#get-statistics-per-unit
@@ -56,8 +68,12 @@ class Cms::Line::Statistic
     from = created.strftime("%Y%m%d")
     to = created.advance(days: 14).strftime("%Y%m%d")
     res = site.line_client.get_statistics_per_unit(unit: aggregation_unit, from: from, to: to)
+    raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
     self.statistics = JSON.parse(res.body)
-    update
+    update!
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    false
   end
 
   def root_owned?(user)

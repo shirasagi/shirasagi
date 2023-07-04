@@ -15,10 +15,22 @@ def capture_line_bot_client
     capture.multicast.messages = args[2]
     OpenStruct.new(code: "200", body: "{}")
   end
+
+  # statistics
   capture.get_aggregation_info = OpenStruct.new(count: 0)
   allow_any_instance_of(Line::Bot::Client).to receive(:get_aggregation_info) do |*args|
     capture.get_aggregation_info.count += 1
     OpenStruct.new(code: "200", body: "{\"numOfCustomAggregationUnits\":\"0\"}")
+  end
+  capture.get_user_interaction_statistics = OpenStruct.new(count: 0)
+  allow_any_instance_of(Line::Bot::Client).to receive(:get_user_interaction_statistics) do |*args|
+    capture.get_user_interaction_statistics.count += 1
+    OpenStruct.new(code: "200", body: "{\"overview\":\"null\"}")
+  end
+  capture.get_statistics_per_unit = OpenStruct.new(count: 0)
+  allow_any_instance_of(Line::Bot::Client).to receive(:get_statistics_per_unit) do |*args|
+    capture.get_statistics_per_unit.count += 1
+    OpenStruct.new(code: "200", body: "{\"overview\":\"null\"}")
   end
 
   # richmenu

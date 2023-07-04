@@ -252,6 +252,11 @@ ja:
         broadcast:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
+      line_statistics:
+         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+      line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -836,6 +841,8 @@ ja:
       cms/line/richmenu/area: タップ領域
       cms/line/deliver_plan/repeat: 繰り返し
       cms/line/service/image_map: イメージマップ
+      cms/line/statistic/body: 統計情報
+      cms/line/statistic/info: 詳細情報
       cms/clipboard_copy: クリップボードへコピー
 
   mongoid:
@@ -1566,6 +1573,14 @@ ja:
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
+      cms/line/statistic:
+        message_id: メッセージ
+        overview_delivered: メッセージの送信数
+        overview_unique_impression: メッセージを開封した人数
+        overview_openrate: 開封率
+        overview_unique_click: URLをタップした人数
+        update_statistics: 統計情報の更新
+        null_label: 情報なし
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター

@@ -1,6 +1,8 @@
 <% @index_meta = proc do |item| %>
-  <span class="action"><%= item.action %></span>
-  <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= t("ss.views.index.created", created: I18n.l(item.created, format: :picker)) %></span>
+  <span class="datetime"><%= t("ss.views.index.updated", updated: I18n.l(item.updated, format: :picker)) %></span>
+  <span class="openrate"><%= t("ss.views.index.openrate", openrate: item.with_null_label(:overview_openrate_label)) %></span>
 <% end %>
 
 <% @tap_menu = proc do |item| %>

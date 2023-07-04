@@ -85,7 +85,8 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
           expect(page).to have_link name
           click_on name
 
-          within "#addon-basic" do
+          ensure_addon_opened("#addon-cms-agents-addons-line-statistic-info")
+          within "#addon-cms-agents-addons-line-statistic-info" do
             expect(page).to have_css("dd", text: statistic.request_id)
           end
         end
@@ -133,7 +134,8 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
           expect(page).to have_link name
           click_on name
 
-          within "#addon-basic" do
+          ensure_addon_opened("#addon-cms-agents-addons-line-statistic-info")
+          within "#addon-cms-agents-addons-line-statistic-info" do
             expect(page).to have_css("dd", text: statistic.aggregation_unit)
           end
         end
