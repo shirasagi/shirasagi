@@ -1,6 +1,6 @@
 class Gws::Presence::ResetJob < Gws::ApplicationJob
   def perform
-    Rails.logger.info "#{site.name}の在籍ステータスをリセット開始"
+    Rails.logger.info "#{site.name}の在席ステータスをリセット開始"
 
     each_user do |user|
       presence = user.user_presence(site)
@@ -13,7 +13,7 @@ class Gws::Presence::ResetJob < Gws::ApplicationJob
       presence.save
     end
 
-    Rails.logger.info "#{site.name}の在籍ステータスをリセット完了"
+    Rails.logger.info "#{site.name}の在席ステータスをリセット完了"
   end
 
   private
