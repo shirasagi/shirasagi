@@ -72,7 +72,7 @@
   <% if source_contacts.present? %>
     <div id="errorExplanation" class="errorExplanation" style="margin-top: 10px;">
       <h2><%= t("errors.template.header", count: source_contacts.length) %></h2>
-      <p><%= t("chorg.errors.template.body") %></p>
+      <p><%= t("chorg.errors.template.body_html") %></p>
       <ul>
         <% source_contacts.each do |source_contact| %>
           <li><%= source_contact.name %></li>
