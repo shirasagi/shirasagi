@@ -279,14 +279,15 @@ module ApplicationHelper
     image = site.logo_application_image
     return SS.config.ss.application_logo_html.html_safe if name.blank? && image.blank?
 
-    content_tag(:div, class: "ss-logo-wrap") do
-      if image.present?
-        output_buffer << image_tag(image.url, alt: name || SS.config.ss.application_name)
-      end
-      if name.present?
-        output_buffer << content_tag(:span, name, class: "ss-logo-application-name")
-      end
+    logo_html = "".html_safe
+    if image.present?
+      logo_html += image_tag(image.url, alt: name.presence || SS.config.ss.application_name)
     end
+    if name.present?
+      logo_html += tag.span(name, class: "ss-logo-application-name")
+    end
+
+    tag.div(logo_html, class: "ss-logo-wrap")
   end
 
   def required_label
