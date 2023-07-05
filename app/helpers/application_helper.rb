@@ -267,6 +267,10 @@ module ApplicationHelper
     end
   end
 
+  def ss_application_name
+    @cur_site.try(:logo_application_name).presence || SS.config.ss.application_name
+  end
+
   def render_application_logo(site = nil)
     site ||= @cur_site
     return SS.config.ss.application_logo_html.html_safe if site.blank?

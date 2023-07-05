@@ -74,4 +74,38 @@ describe ApplicationHelper, type: :helper do
       it { is_expected.to be_a ActiveSupport::SafeBuffer }
     end
   end
+
+  describe ".ss_application_name" do
+    context "when @cur_site isn't given" do
+      subject { helper.ss_application_name }
+      it { is_expected.to eq SS.config.ss.application_name }
+    end
+
+    context "when @cur_site is given" do
+      context "when logo_application_name isn't given" do
+        subject { helper.ss_application_name }
+        before { @cur_site = gws_site }
+        it { is_expected.to eq SS.config.ss.application_name }
+      end
+
+      context "when logo_application_name is blank" do
+        subject { helper.ss_application_name }
+        before do
+          @cur_site = gws_site
+          @cur_site.logo_application_name = ""
+        end
+        it { is_expected.to eq SS.config.ss.application_name }
+      end
+
+      context "when logo_application_name is present" do
+        let(:logo_application_name) { unique_id }
+        subject { helper.ss_application_name }
+        before do
+          @cur_site = gws_site
+          @cur_site.logo_application_name = logo_application_name
+        end
+        it { is_expected.to eq logo_application_name }
+      end
+    end
+  end
 end

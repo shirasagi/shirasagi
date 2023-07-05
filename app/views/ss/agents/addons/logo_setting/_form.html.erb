@@ -5,7 +5,7 @@
 
 <dl class="see">
   <dt><%= @model.t :logo_application_name %><%= @model.tt :logo_application_name %></dt>
-  <dd><%= f.text_field :logo_application_name %></dd>
+  <dd><%= f.text_field :logo_application_name, placeholder: SS.config.ss.application_name %></dd>
 
   <dt><%= @model.t :logo_application_image_id %><%= @model.tt :logo_application_image_id %></dt>
   <dd><%= f.ss_file_field :logo_application_image %></dd>
