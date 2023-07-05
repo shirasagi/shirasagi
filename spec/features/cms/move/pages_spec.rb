@@ -46,7 +46,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       #expect(current_path).to eq move_page_path
-      expect(page).to have_css("form#item-form h2", text: "A/page.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "A/page.html")
 
       expect(Fs.exist?("#{site.path}/page.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/A/page.html")).to be_truthy
@@ -72,7 +72,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       expect(current_path).to eq move_node_path
-      expect(page).to have_css("form#item-form h2", text: "D/E")
+      expect(page).to have_css("form#item-form .current-filename", text: "D/E")
 
       expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/D/E/page2.html")).to be_truthy
@@ -93,7 +93,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.move')
       end
       #expect(current_path).to eq move_page_path
-      expect(page).to have_css("form#item-form h2", text: "D/E/page.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "D/E/page.html")
 
       expect(Fs.exist?("#{site.path}/A/page.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/D/E/page.html")).to be_truthy
@@ -114,7 +114,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_node_path
-      expect(page).to have_css("form#item-form h2", text: "A/B/C")
+      expect(page).to have_css("form#item-form .current-filename", text: "A/B/C")
 
       expect(Fs.exist?("#{site.path}/D/E/page.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/D/E/page2.html")).to be_falsy
