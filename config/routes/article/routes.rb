@@ -66,7 +66,10 @@ Rails.application.routes.draw do
     resources :pages, concerns: [
       :deletion, :copy, :move, :lock, :download_all, :import, :command,
       :opendata_ref, :contains_urls, :tag, :michecker, :change_state
-    ]
+    ] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+    end
     resources :form_exports, only: [:index]
     resources :map_searches, only: [:index]
     resources :searches, concerns: :deletion

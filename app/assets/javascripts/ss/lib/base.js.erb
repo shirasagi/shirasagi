@@ -379,13 +379,13 @@ this.SS = (function () {
     return save;
   };
 
-  SS.formChanged = false;
+  SS.formChanged = undefined;
   SS.disableConfirmUnloading = false;
 
   SS.confirmUnloading = function () {
-    SS.formChanged = false;
+    SS.formChanged = undefined;
     $("input[type=text],textarea,select").on("change", function () {
-      SS.formChanged = true;
+      SS.formChanged = new Date().getTime();
     });
     $(window).on("beforeunload", function () {
       if (SS.formChanged && !SS.disableConfirmUnloading) {
@@ -393,7 +393,7 @@ this.SS = (function () {
       }
     });
     $("input[type=submit]").on("click", function () {
-      SS.formChanged = false;
+      SS.formChanged = undefined;
       return true;
     });
   };

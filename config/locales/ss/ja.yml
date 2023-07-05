@@ -273,6 +273,7 @@ ja:
       target_to_closed: 非公開対象の確認
       approve: 承認してよろしいですか？
       test_deliver: テスト配信を開始してよろしいですか？
+      resume_editing: 自動保存された内容があります。編集を直前から再開しますか？
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。
@@ -338,6 +339,7 @@ ja:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
+      failed_to_resume_editing: 編集の再開に失敗しました。
     apis:
       groups:
         index: グループを選択する

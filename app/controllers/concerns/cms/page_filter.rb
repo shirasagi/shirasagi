@@ -340,4 +340,17 @@ module Cms::PageFilter
 
     render_update true, location: { action: :index }, render: { template: "index" }
   end
+
+  def resume_new
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render template: 'new'
+  end
+
+  def resume_edit
+    set_item
+    @item.attributes = get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render template: 'edit'
+  end
 end

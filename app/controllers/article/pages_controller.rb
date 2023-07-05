@@ -9,6 +9,8 @@ class Article::PagesController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "article/main/navi"
 
+  before_action(only: %i[new edit]) { @auto_save_enabled = true }
+
   private
 
   def fix_params
