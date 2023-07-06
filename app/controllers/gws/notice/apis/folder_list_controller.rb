@@ -23,7 +23,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
         @model.for_post_manager(@cur_site, @cur_user)
       when 'editable'
         @model.for_post_editor(@cur_site, @cur_user)
-      when 'readable'
+      when 'readable', 'calendar'
         @model.for_post_reader(@cur_site, @cur_user)
       else
         @model.none

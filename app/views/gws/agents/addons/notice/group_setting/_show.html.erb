@@ -6,4 +6,13 @@
 <dl class="see addon-gws-notice-group-setting">
   <dt><%= @model.t :notice_new_days %></dt>
   <dd><%= @item.notice_new_days %> <%= t("datetime.prompts.day") %></dd>
+
+  <dt><%= @model.t :notice_severity %></dt>
+  <dd><%= @item.label :notice_severity %></dd>
+
+  <dt><%= @model.t :notice_browsed_state %></dt>
+  <dd><%= @item.label :notice_browsed_state %></dd>
+
+  <dt><%= @model.t :notice_toggle_browsed %></dt>
+  <dd><%= @item.label :notice_toggle_browsed %></dd>
 </dl>

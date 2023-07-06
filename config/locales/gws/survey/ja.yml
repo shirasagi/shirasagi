@@ -13,7 +13,7 @@ ja:
       answered_state:
         answered: 回答済
         unanswered: 未回答
-        both: 両方
+        both: 全て表示
       file_edit_state:
         disabled: 無効
         enabled: 有効

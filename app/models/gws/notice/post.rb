@@ -5,6 +5,7 @@ class Gws::Notice::Post
   include Gws::Reference::Site
   include Gws::Reference::Notice::Folder
   include Gws::Notice::Cloneable
+  include Gws::Addon::Notice::Calendar
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -49,7 +50,8 @@ class Gws::Notice::Post
         search_folders(params).
         search_category(params).
         search_categories(params).
-        search_browsed_state(params)
+        search_browsed_state(params).
+        search_term(params)
     end
 
     def search_keyword(params)
@@ -60,7 +62,15 @@ class Gws::Notice::Post
 
     def search_severity(params)
       return all if params.blank? || params[:severity].blank?
-      all.where(severity: params[:severity])
+
+      case params[:severity]
+      when 'all'
+        all
+      when 'normal'
+        all.where(severity: { "$exists" => false })
+      else # 'high'
+        all.where(severity: 'high')
+      end
     end
 
     def search_folders(params)
@@ -85,6 +95,8 @@ class Gws::Notice::Post
       return all if params.blank? || params[:browsed_state].blank?
 
       case params[:browsed_state]
+      when 'both'
+        all
       when 'read'
         all.exists("browsed_users_hash.#{params[:user].id}" => 1)
       when 'unread'
@@ -93,12 +105,20 @@ class Gws::Notice::Post
         none
       end
     end
+
+    def search_term(params)
+      return all if params.blank?
+      return all if params[:start].blank? && params[:end].blank?
+      all.between_dates params[:start], params[:end]
+    end
+  end
+
+  def browsed_state_options
+    %w(both unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
   end
 
   def severity_options
-    [
-      [I18n.t('gws.options.severity.high'), 'high'],
-    ]
+    %w(all high normal).map { |m| [I18n.t("gws/notice.options.severity.#{m}"), m] }
   end
 
   def new_flag?

@@ -57,6 +57,7 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
+        normal: 通常のお知らせ
       input_type:
         text_field: テキストボックス
         text_area: テキストエリア

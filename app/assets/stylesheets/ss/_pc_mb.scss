@@ -1521,7 +1521,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 #content-navi {
   @include box;
   position: relative;
-  width: 30%;
+  width: 24%;
   padding: 10px;
   float: left;
   .content-navi-title {
@@ -1543,7 +1543,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   }
 }
 #content-navi + .index, #content-navi ~ .content-main {
-  width: calc(100% - 30% - 10px);
+  width: calc(100% - 24% - 10px);
   float: right;
 }
 @include mb {

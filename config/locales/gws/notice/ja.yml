@@ -10,6 +10,7 @@ ja:
     total_body_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
     total_file_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
     gws_addon_member_head: 投稿者
+    severity: 重要度
     links:
       set_seen: 既読にする
       unset_seen: 未読にする
@@ -25,6 +26,17 @@ ja:
       reclaimed: 使用量を再計算しました。
     prefix:
       copy: 【複製】
+    options:
+      toggle_browsed:
+        button: ボタンで切り替える
+        read: 表示した際に既読にする
+      severity:
+        all: 全て表示
+        high: 重要なお知らせ
+        normal: 通常のお知らせ
+    apis:
+      posts:
+        index: お知らせを選択する
 
   gws_role:
     use_gws_notice: お知らせの利用
@@ -61,6 +73,7 @@ ja:
       gws/notice/resource_limitation: 容量制限
       gws/notice/member: 閲覧者
       gws/notice/group_setting: お知らせ
+      gws/notice/calendar: カレンダー
 
   gws_notification:
     gws/notice/post:
@@ -121,6 +134,14 @@ ja:
         notice_id: お知らせ
       gws/addon/notice/group_setting:
         notice_new_days: 新着表示期間
+        notice_browsed_state: 未読・既読
+        notice_severity: 重要度
+        notice_toggle_browsed: 既読への変更
+      gws/addon/notice/calendar:
+        start_on: 開始日
+        end_on: 終了日
+        term: 日付
+        color: 表示色
 
   tooltip:
     gws/notice/post:
@@ -146,6 +167,18 @@ ja:
     gws/addon/notice/group_setting:
       notice_new_days:
         - 新着表示期間を入力します。
+      notice_browsed_state:
+        - 表示するお知らせの状態を選択します。
+      notice_severity:
+        - 表示するお知らせの重要度を選択します。
+      notice_toggle_browsed:
+        - 既読へ変更する際の動作（設定方法）を選択します。
+
+    gws/addon/notice/calendar:
+      term:
+        - お知らせをカレンダーに表示する場合に日付を入力します。
+      color:
+        - お知らせをカレンダーに表示した際の表示色を入力します。
 
   job:
     models:

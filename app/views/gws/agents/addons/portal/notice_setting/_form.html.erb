@@ -4,6 +4,9 @@
   <dt><%= @model.t :portal_notice_state %><%= @model.tt :portal_notice_state %></dt>
   <dd><%= f.select :portal_notice_state, @item.portal_notice_state_options %></dd>
 
+  <dt><%= @model.t :portal_notice_severity %><%= @model.tt :portal_notice_severity %></dt>
+  <dd><%= f.select :portal_notice_severity, @item.portal_notice_severity_options %></dd>
+
   <dt><%= @model.t :portal_notice_browsed_state %><%= @model.tt :portal_notice_browsed_state %></dt>
   <dd><%= f.select :portal_notice_browsed_state, @item.portal_notice_browsed_state_options %></dd>
 </dl>
