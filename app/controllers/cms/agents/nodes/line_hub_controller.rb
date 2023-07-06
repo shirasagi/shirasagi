@@ -51,7 +51,7 @@ class Cms::Agents::Nodes::LineHubController < ApplicationController
     item = Cms::Line::MailHandler.site(@cur_site).and_enabled.find_by(filename: params[:filename]) rescue nil
     raise "404" unless item
 
-    if request.get?
+    if request.get? || request.head?
       head :ok
       return
     end

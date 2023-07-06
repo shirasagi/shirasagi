@@ -56,7 +56,7 @@ class Cms::Line::MailHandler
     to_domain = to.sub(/^.+@/, "")
 
     body = mail.text_part ? mail.text_part.decoded : mail.decoded
-    body = body.gsub(/\r\n/, "\n").gsub(/\n+/, "\n")
+    body = body.gsub(/\r\n/, "\n").squeeze("\n")
     subject = mail.subject
 
     # check from, to

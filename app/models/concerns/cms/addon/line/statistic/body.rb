@@ -20,7 +20,7 @@ module Cms::Addon
     def overview_openrate
       return if overview_unique_impression.nil?
       return if overview_delivered.nil? || overview_delivered == 0
-      ((overview_unique_impression.to_f / overview_delivered.to_f) * 100).round(2)
+      ((overview_unique_impression.to_f / overview_delivered) * 100).round(2)
     end
 
     def overview_openrate_label

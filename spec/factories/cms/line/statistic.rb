@@ -8,7 +8,7 @@ FactoryBot.define do
   factory :cms_line_broadcast_statistic, class: Cms::Line::Statistic, traits: [:cms_line_statistic] do
     action { "broadcast" }
     request_id { unique_id }
-    statistics {
+    statistics do
       {
         overview: {
           requestId: request_id,
@@ -20,7 +20,7 @@ FactoryBot.define do
           uniqueMediaPlayed100Percent: nil
         }
       }
-    }
+    end
   end
 
   factory :cms_line_multicast_statistic, class: Cms::Line::Statistic, traits: [:cms_line_statistic] do
@@ -28,7 +28,7 @@ FactoryBot.define do
     aggregation_unit { Cms::Line::Statistic.ss_short_uuid }
     member_count { 600 }
     aggregation_units_by_month { 0 }
-    statistics {
+    statistics do
       {
         overview: {
           uniqueImpression: 410,
@@ -37,6 +37,6 @@ FactoryBot.define do
           uniqueMediaPlayed100Percent: nil
         }
       }
-    }
+    end
   end
 end

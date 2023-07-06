@@ -42,7 +42,7 @@ describe Cms::Line::UpdateStatisticsJob, dbscope: :example do
         end
       end
 
-      Timecop.travel(13.day.from_now) do
+      Timecop.travel(13.days.from_now) do
         capture_line_bot_client do |capture|
           described_class.bind(site_id: site).perform_now
 
@@ -56,7 +56,7 @@ describe Cms::Line::UpdateStatisticsJob, dbscope: :example do
         end
       end
 
-      Timecop.travel(14.day.from_now) do
+      Timecop.travel(14.days.from_now) do
         capture_line_bot_client do |capture|
           described_class.bind(site_id: site).perform_now
 
@@ -70,7 +70,7 @@ describe Cms::Line::UpdateStatisticsJob, dbscope: :example do
         end
       end
 
-      Timecop.travel(15.day.from_now) do
+      Timecop.travel(15.days.from_now) do
         capture_line_bot_client do |capture|
           described_class.bind(site_id: site).perform_now
 
@@ -84,7 +84,7 @@ describe Cms::Line::UpdateStatisticsJob, dbscope: :example do
         end
       end
 
-      Timecop.travel(16.day.from_now) do
+      Timecop.travel(16.days.from_now) do
         capture_line_bot_client do |capture|
           described_class.bind(site_id: site).perform_now
 
@@ -98,7 +98,7 @@ describe Cms::Line::UpdateStatisticsJob, dbscope: :example do
         end
       end
 
-      Timecop.travel(20.day.from_now) do
+      Timecop.travel(20.days.from_now) do
         capture_line_bot_client do |capture|
           described_class.bind(site_id: site).perform_now
 

@@ -28,7 +28,7 @@ namespace :cms do
         item = Cms::Line::MailHandler.site(site).and_enabled.find_by(filename: ENV['filename']) rescue nil
         raise "handler not found!" if item.nil?
 
-        item.handle_message(STDIN.read)
+        item.handle_message($stdin.read)
       end
     end
   end
