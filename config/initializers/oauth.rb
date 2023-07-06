@@ -3,7 +3,9 @@ if SS.config.oauth.prefix_path
     config.logger = Rails.logger
     config.path_prefix = SS.config.oauth.prefix_path
     config.on_failure = proc do |env|
-      new_path = env["ss.node"].full_url
+      new_path = env["omniauth.origin"].presence
+      new_path ||= env["ss.node"].try(:full_url)
+      new_path ||= "/"
       Rack::Response.new(['302 Moved'], 302, 'Location' => new_path).finish
     end
   end
