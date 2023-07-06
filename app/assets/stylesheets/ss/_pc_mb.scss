@@ -204,15 +204,17 @@ td {
     }
   }
   a { color: #f25a38 !important; }
-  .more-all {
-    display: inline-block;
-    width: 100%;
-    padding: 10px 0;
-    float: left;
-    background: #f2f2f2;
-    text-align: center;
-    &:hover {
-      background: #ebebeb;
+  .popup-notice-actions {
+    display: flex;
+    .more-all, .set-seen-all {
+      display: inline-block;
+      width: 100%;
+      padding: 10px 0;
+      background: #f2f2f2;
+      text-align: center;
+      &:hover {
+        background: #ebebeb;
+      }
     }
   }
 }

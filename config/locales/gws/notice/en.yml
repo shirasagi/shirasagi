@@ -13,6 +13,7 @@ en:
     severity: Severity
     links:
       set_seen: Mark as read
+      set_seen_all: Mark as read all
       unset_seen: Mark as unread
       reclaim_total_size: Recalculate usage
       create_my_folder: Create your own group folder

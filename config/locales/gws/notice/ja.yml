@@ -13,6 +13,7 @@ ja:
     severity: 重要度
     links:
       set_seen: 既読にする
+      set_seen_all: 全てを既読にする
       unset_seen: 未読にする
       reclaim_total_size: 使用量を再計算する
       create_my_folder: 自所属を作成する
