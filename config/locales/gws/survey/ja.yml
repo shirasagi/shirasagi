@@ -19,8 +19,12 @@ ja:
         enabled: 有効
         enabled_until_due_date: 締切まで有効
       sort:
-        due_date: 回答期限
-        updated: 新着順
+        created_asc:  投稿日(日付順)
+        created_desc: 投稿日(新着順)
+        updated_asc:  最終更新日(日付順)
+        updated_desc: 最終更新日(新着順)
+        due_date_asc:  回答期限日時(昇順)
+        due_date_desc: 回答期限日時(降順)
     notices:
       anonymous:
         head: 匿名アンケート
@@ -78,6 +82,8 @@ ja:
         order: 並び順
         state: 公開状態
         due_date: 回答期限
+        created: 投稿日
+        updated: 最終更新日
         release_date: 公開期限（開始）
         close_date: 公開期限（終了）
         anonymous_state: 匿名回答
@@ -99,6 +105,8 @@ ja:
         notification_noticed_at: 通知日時
       gws/addon/survey/group_setting:
         survey_default_due_date: 回答期限日初期値
+        survey_answered_state: 表示種別
+        survey_sort: アンケートの並び
         survey_new_days: 新着表示期間
       gws/survey/answer_state:
         answered_users_hash: 回答状況
@@ -144,6 +152,10 @@ ja:
       survey_default_due_date:
         - 回答期限日時の初期値を、今日から数えて何日後かで入力します。
         - 初期値は 7 日後です。
+      survey_answered_state:
+        - 表示するアンケートの状態を選択します。
+      survey_sort:
+        - 表示するアンケートの並びを選択します。
       survey_new_days:
         - 新着表示期間を入力します。
 

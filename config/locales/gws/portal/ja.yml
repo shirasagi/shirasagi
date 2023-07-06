@@ -176,6 +176,7 @@ ja:
       gws/addon/portal/portlet/circular:
         circular_category_ids: カテゴリー
         circular_article_state: 表示種別
+        circular_sort: 回覧板の並び
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: カテゴリー
         monitor_answerable_article: 表示範囲
@@ -225,9 +226,21 @@ ja:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: ポートレット名を入力します。
+      #circular_article_state:
+      #  - <b>未読</b> - 未読のみをポータルに表示する。
+      #  - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
       circular_article_state:
-        - <b>未読</b> - 未読のみをポータルに表示する。
-        - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
+        - 表示する回覧板の状態を選択します。
+      circular_sort:
+        - 表示する回覧板の並びを選択します。
+      survey_answered_state:
+        - 表示するアンケートの状態を選択します。
+      survey_sort:
+        - 表示するアンケートの並びを選択します。
+      survey_category_ids:
+        - 分類ラベルを選択します。
+      limit:
+        - 表示件数を入力します。
     gws/addon/portal/notice_setting:
       portal_notice_state:
         - ポータルにお知らせを表示するか、しないかを選択します。

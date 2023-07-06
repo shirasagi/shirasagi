@@ -50,6 +50,18 @@ class Gws::Survey::Form
     ])
   }
 
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      all.reorder(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('due_date')
+      all.reorder(due_date: key.end_with?('_asc') ? 1 : -1)
+    else
+      all
+    end
+  }
+
   class << self
     def search(params)
       criteria = all

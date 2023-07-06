@@ -19,8 +19,12 @@ en:
         enabled: Valid
         enabled_until_due_date: Valid until deadline
       sort:
-        due_date: Response deadline
-        updated: Newest
+        created_asc:  Posted (by date)
+        created_desc: Posted (from newest)
+        updated_asc:  Last updated (by date)
+        updated_desc: Last updated (from newest)
+        due_date_asc:  Survey deadline date and time (ascending order)
+        due_date_desc: Survey deadline date and time (descending order)
     notices:
       anonymous:
         head: Anonymous questionnaire
@@ -78,6 +82,8 @@ en:
         order: Order
         state: Publishing status
         due_date: Response deadline
+        created: Date posted
+        updated: Last updated
         release_date: Publication deadline (start)
         close_date: Publication deadline (end)
         anonymous_state: Anonymous response
@@ -99,6 +105,8 @@ en:
         notification_noticed_at: Notification date and time
       gws/addon/survey/group_setting:
         survey_default_due_date: Initial value for response deadline date
+        survey_answered_state: Display type
+        survey_sort: Order
         survey_new_days: Display period for new items
       gws/survey/answer_state:
         answered_users_hash: Response status
@@ -144,6 +152,10 @@ en:
       survey_default_due_date:
         - "For the initial value of the response due date and time, enter a date within a few days of today."
         - The initial value is 7 days.
+      survey_answered_state:
+        - Select display type of items.
+      survey_sort:
+        - Select order of items.
       survey_new_days:
         - Enter the display period for new items.
 
