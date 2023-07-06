@@ -1,0 +1,33 @@
+<%= jquery do %>
+  var select = function() {
+    var groupId = parseInt($("#s_group").val());
+    $("#s_user").children("[data-group-ids]").each(function() {
+      if ($(this).data('group-ids').includes(groupId)) {
+        $(this).show();
+      } else {
+        $(this).hide();
+      }
+    });
+  }
+
+  $("#s_group").on('change', function() {
+    select();
+    if ($(this).val()) {
+      $("#s_user").val(<%= @cur_user.id %>);
+    } else {
+      $("#s_user").val(null);
+    }
+  });
+
+  select();
+<% end %>
+
+<% @s ||= OpenStruct.new params[:s] %>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.select :group, options_from_collection_for_select(@groups, :id, :name, (@s[:group] || @cur_group.id)), include_blank: true, style: "width: 300px;" %>
+    <%= f.select :user, options_for_select(@users.collect { |user| [user.name, user.id, { data: { group_ids: user.groups.in_group(@cur_site).distinct(:id) } }] }, selected: (@s[:user] || @cur_user.id)), include_blank: true, style: "width: 300px;" %>
+    <%= f.text_field :keyword, style: "width: 300px;" %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>

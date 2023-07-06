@@ -5,8 +5,9 @@ class Gws::Bookmark
   include Gws::SitePermission
 
   BOOKMARK_MODEL_TYPES = %w(
-    portal notice schedule schedule/todo reminder presence memo bookmark attendance affair report workflow workload
-    circular monitor survey board faq qna discussion share shared_address personal_address elasticsearch staff_record
+    portal notice schedule schedule/todo reminder presence memo bookmark attendance affair daily_report report workflow
+    workload circular monitor survey board faq qna discussion share shared_address personal_address elasticsearch
+    staff_record
   ).freeze
   FALLBACK_BOOKMARK_MODEL_TYPE = "other".freeze
 
