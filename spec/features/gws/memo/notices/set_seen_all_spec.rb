@@ -35,7 +35,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
     it do
       visit index_path
 
-      within ".ss-notification-notices" do
+      within ".gws-memo-notices" do
         within ".list-items" do
           expect(page).to have_css(".list-item.unseen", text: item1.subject)
           expect(page).to have_css(".list-item.unseen", text: item2.subject)
@@ -50,7 +50,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.set_seen")
 
-      within ".ss-notification-notices" do
+      within ".gws-memo-notices" do
         within ".list-items" do
           expect(page).to have_css(".list-item.seen", text: item1.subject)
           expect(page).to have_css(".list-item.seen", text: item2.subject)
@@ -62,7 +62,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
     it do
       visit index_path
 
-      within ".ss-notification-notices" do
+      within ".gws-memo-notices" do
         within ".list-items" do
           expect(page).to have_css(".list-item.unseen", text: item1.subject)
           expect(page).to have_css(".list-item.unseen", text: item2.subject)
@@ -79,7 +79,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.set_seen")
 
-      within ".ss-notification-notices" do
+      within ".gws-memo-notices" do
         within ".list-items" do
           expect(page).to have_selector(".list-item.unseen", count: 2)
           expect(page).to have_selector(".list-item.seen", count: 1)
@@ -104,7 +104,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.more_all")
       end
 
-      within ".ss-notification-notices" do
+      within ".gws-memo-notices" do
         within ".list-items" do
           expect(page).to have_css(".list-item.unseen", text: item1.subject)
           expect(page).to have_css(".list-item.unseen", text: item2.subject)
@@ -137,7 +137,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.more_all")
       end
 
-      within ".ss-notification-notices" do
+      within ".gws-memo-notices" do
         within ".list-items" do
           expect(page).to have_css(".list-item.seen", text: item1.subject)
           expect(page).to have_css(".list-item.seen", text: item2.subject)
