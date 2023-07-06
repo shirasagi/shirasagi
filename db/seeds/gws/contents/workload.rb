@@ -64,9 +64,9 @@ cycle7 = create_workload_cycle(name: "4か月毎", year: @site.fiscal_year, orde
 cycle8 = create_workload_cycle(name: "半年毎", year: @site.fiscal_year, order: 80)
 
 puts "# workload/load"
-load1 = create_workload_load(name: "作業負荷大", year: @site.fiscal_year, coefficient: 166320, color: "#ff0000", order: 10)
-load2 = create_workload_load(name: "作業負荷並", year: @site.fiscal_year, coefficient: 55440, color: "#008000", order: 20)
-load3 = create_workload_load(name: "作業負荷小", year: @site.fiscal_year, coefficient: 27720, color: "#0000ff", order: 30)
+load1 = create_workload_load(name: "作業負荷大", year: @site.fiscal_year, coefficient: 166_320, color: "#ff0000", order: 10)
+load2 = create_workload_load(name: "作業負荷並", year: @site.fiscal_year, coefficient: 55_440, color: "#008000", order: 20)
+load3 = create_workload_load(name: "作業負荷小", year: @site.fiscal_year, coefficient: 27_720, color: "#0000ff", order: 30)
 
 puts "# workload/work"
 today = Time.zone.today
