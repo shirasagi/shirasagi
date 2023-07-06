@@ -39,6 +39,8 @@ ja:
     line_facility_search_category: 施設カテゴリー
     line_message: メッセージ
     line_template: テンプレート
+    line_statistics: 統計情報
+    line_mail_handlers: メール連携
     line_deliver_log: 配信ログ
     line_deliver_condition: 配信条件
     line_deliver_category: 配信カテゴリー
@@ -250,6 +252,11 @@ ja:
         broadcast:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
+      line_statistics:
+         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+      line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -513,7 +520,10 @@ ja:
       clipboard_copy_target:
         url: URL
         css_selector: CSSセレクター
-
+      handle_state:
+        deliver: メッセージを保存し自動配信する
+        draft: メッセージを下書き保存する
+        disabled: 無効
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -736,6 +746,10 @@ ja:
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
     use_cms_all_contents: 全コンテンツの利用
+    use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
+    use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
+    use_other_cms_line_statistics: LINE統計情報の利用（全て）
+    use_private_cms_line_statistics: LINE統計情報の利用（所有）
 
   modules:
     cms: 標準機能
@@ -827,6 +841,8 @@ ja:
       cms/line/richmenu/area: タップ領域
       cms/line/deliver_plan/repeat: 繰り返し
       cms/line/service/image_map: イメージマップ
+      cms/line/statistic/body: 統計情報
+      cms/line/statistic/info: 詳細情報
       cms/clipboard_copy: クリップボードへコピー
 
   mongoid:
@@ -1367,6 +1383,7 @@ ja:
         state: ステータス
         source_id: 連携対象
         action: アクション
+        request_id: "X-Line-Request-Id"
         response_code: レスポンスコード
         response_body: レスポンスボディ
         messages: リクエストメッセージ
@@ -1388,6 +1405,7 @@ ja:
         name: タイトル
         body: JSON
         deliver_state: 配信ステータス
+        statistic_state: 統計情報
         completed: 配信日時
         test_completed: テスト配信日時
       cms/line/service/hook/base:
@@ -1427,6 +1445,14 @@ ja:
         name: タイトル
         order: 並び順
         state: ステータス
+      cms/line/mail_handler:
+        name: タイトル
+        filename: ファイル名
+        from_conditions: 送信者メールアドレス
+        to_conditions: 宛先メールアドレス
+        order: 並び順
+        handle_state: ステータス
+        statistic_state: 統計情報
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
@@ -1547,6 +1573,14 @@ ja:
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
+      cms/line/statistic:
+        message_id: メッセージ
+        overview_delivered: メッセージの送信数
+        overview_unique_impression: メッセージを開封した人数
+        overview_openrate: 開封率
+        overview_unique_click: URLをタップした人数
+        update_statistics: 統計情報の更新
+        null_label: 情報なし
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
@@ -2002,6 +2036,24 @@ ja:
         - トーク画面下部のメニューバーのテキストを入力します。
       selected:
         - トーク画面を開いた際に、メニューを最初から表示するか選択します。
+
+    cms/line/mail_handler:
+      name:
+        - タイトルを入力します。
+      filename:
+        - ファイル名を入力します。
+      from_conditions:
+        - 送信者メールアドレス（From）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの受信アドレスと一致した際にメール連携を実行します。
+      to_conditions:
+        - メール取込の宛先メールアドレス（To）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にメール連携を実行します。
+      order:
+        - 並び順を入力します。
+      handle_state:
+        - ステータスを設定します。
+      statistic_state:
+        - 有効にするとメッセージ送信時に統計情報を保存します。
 
     cms/site:
       name:
@@ -2956,6 +3008,8 @@ ja:
        - タイトルを入力します。
       title:
        - タイトルを入力します。
+      statistic_state:
+        - 有効にするとメッセージ送信時に統計情報を保存します。
 
     cms/addon/line/message/deliver_condition:
       deliver_condition_state:
@@ -3125,3 +3179,4 @@ ja:
       cms/line/apply_richmenu_job: LINEリッチメニュー登録
       cms/group_import_job: グループインポート
       cms/remove_improper_htmls_job: 不要HTML削除
+      cms/line/update_statistics_job: LINE統計情報更新

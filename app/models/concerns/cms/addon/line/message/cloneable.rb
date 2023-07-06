@@ -22,6 +22,9 @@ module Cms::Addon
       item.deliver_condition = deliver_condition
       item.deliver_category_ids = deliver_category_ids
 
+      # statistic_state
+      item.statistic_state = statistic_state
+
       item.attributes = attributes
       return item unless item.save
 

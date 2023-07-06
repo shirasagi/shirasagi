@@ -3,6 +3,7 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
   helper Cms::ListHelper
 
   before_action :accept_cors_request, only: [:rss]
+  protect_from_forgery except: [:mail]
 
   def pages
     MailPage::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
@@ -23,5 +24,19 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
       limit(@cur_node.limit)
 
     render_rss @cur_node, @items
+  end
+
+  def mail
+    if request.get?
+      head :ok
+      return
+    end
+
+    data = params.permit(:data)[:data]
+    raise "404" if data.blank?
+
+    file = SS::MailHandler.write_eml(data, "mail_page")
+    MailPage::ImportJob.bind(site_id: @cur_site.id).perform_now(file)
+    head :ok
   end
 end

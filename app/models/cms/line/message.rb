@@ -16,13 +16,16 @@ class Cms::Line::Message
 
   field :state, type: String, default: "closed"
   field :deliver_state, type: String, default: "draft"
+  field :statistic_state, type: String, default: "enabled"
 
   field :released, type: DateTime
   field :first_released, type: DateTime
   field :completed, type: DateTime
   field :test_completed, type: DateTime
 
-  permit_params :name
+  has_many :statistics, class_name: "Cms::Line::Statistic", inverse_of: :message, dependent: nil
+
+  permit_params :name, :statistic_state
 
   validates :name, presence: true
   validate :validate_condition_body, if: ->{ deliver_condition_state == "multicast_with_input_condition" }
@@ -40,6 +43,18 @@ class Cms::Line::Message
 
   def ready?
     deliver_state == "ready"
+  end
+
+  def statistic_state_options
+    %w(disabled enabled).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
+  end
+
+  def statistic_enabled?
+    statistic_state == "enabled"
+  end
+
+  def statistic_disabled?
+    !statistic_enabled?
   end
 
   def publish

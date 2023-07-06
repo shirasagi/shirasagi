@@ -69,6 +69,7 @@ gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
+gem 'shortuuid'
 gem 'thinreports'
 gem 'ungarbled'
 gem 'view_component'

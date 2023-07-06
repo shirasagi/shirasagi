@@ -212,6 +212,12 @@ Rails.application.routes.draw do
         resources :categories, concerns: :deletion, controller: "deliver_category/categories"
       end
 
+      # statistics
+      resources :statistics, concerns: :deletion
+
+      # mail hanlders
+      resources :mail_handlers, concerns: :deletion
+
       # services
       namespace "richmenu" do
         resources :groups, concerns: :deletion do
@@ -459,11 +465,15 @@ Rails.application.routes.draw do
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
-    get "line_hub/line" => "public#index", cell: "nodes/line_hub"
-    post "line_hub/line" => "public#index", cell: "nodes/line_hub"
-    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
     get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
     get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
+    get "line_hub/(index.:format)" => "public#index", cell: "nodes/line_hub"
+    get "line_hub/line" => "public#line", cell: "nodes/line_hub"
+    post "line_hub/line" => "public#line", cell: "nodes/line_hub"
+    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
+    get "line_hub/mail/:filename" => "public#mail", cell: "nodes/line_hub"
+    post "line_hub/mail/:filename" => "public#mail", cell: "nodes/line_hub"
+    get "line_hub/dump_garbage/:id/:size" => "public#dump_garbage", cell: "nodes/line_hub"
   end
 
   part "cms" do
