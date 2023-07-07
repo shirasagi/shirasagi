@@ -13,19 +13,15 @@
   month_options.unshift([t("datetime.prompts.month"), ""])
 
   workflow_state_options = %w(draft request approve).map { |k| [I18n.t("ss.state.#{k}"), k] }
-
-  if @s[:year].blank? || @s[:month].blank?
-    @s[:year] = @s[:month] = ""
-  end
 %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get, autocomplete: :off } do |f| %>
     <% if params[:state] != "mine" %>
-      <%= f.select :user_id, user_options %>
+      <%= f.select :user_id, user_options, {}, { data: { controller: "ss--submit-on-change" } } %>
     <% end %>
-    <%= f.select :workflow_state, workflow_state_options, include_blank: "承認状態" %>
-    <%= f.select :year, year_options %>
-    <%= f.select :month, month_options %>
+    <%= f.select :workflow_state, workflow_state_options, { include_blank: "承認状態" }, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :year, year_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :month, month_options, {}, { data: { controller: "ss--submit-on-change" } } %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
     <%= link_to t('ss.buttons.reset'), { action: :index }, class: "btn", style: "font-weight: normal;" %>
   <% end %>
