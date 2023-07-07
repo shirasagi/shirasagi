@@ -12047,7 +12047,6 @@ return jQuery;
       return false. The `confirm:complete` event is fired whether or not the user answered true or false to the dialog.
    */
     allowAction: function(element) {
-      console.log("allowAction")
       var message = element.data('confirm'),
           answer = false, callback;
       if (!message) { return true; }
@@ -12181,7 +12180,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.linkClickSelector, function(e) {
-      console.log({ on: 'click.rails', linkClickSelector: rails.linkClickSelector });
       var link = $(this), method = link.data('method'), data = link.data('params'), metaClick = e.metaKey || e.ctrlKey;
       if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -12206,7 +12204,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.buttonClickSelector, function(e) {
-      console.log({ on: 'click.rails', buttonClickSelector: rails.buttonClickSelector });
       var button = $(this);
 
       if (!rails.allowAction(button) || !rails.isRemote(button)) return rails.stopEverything(e);
@@ -12232,7 +12229,6 @@ return jQuery;
     });
 
     $document.on('submit.rails', rails.formSubmitSelector, function(e) {
-      console.log({ on: 'submit.rails', formSubmitSelector: rails.formSubmitSelector });
       var form = $(this),
         remote = rails.isRemote(form),
         blankRequiredInputs,
@@ -12278,7 +12274,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.formInputClickSelector, function(event) {
-      console.log({ on: 'click.rails', formInputClickSelector: rails.formInputClickSelector });
       var button = $(this);
 
       if (!rails.allowAction(button)) return rails.stopEverything(event);
