@@ -2,3 +2,35 @@
   max-height: 30em;
   overflow: auto;
 }
+
+.gws-elasticsearch {
+  .external-search {
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    background: #fff;
+    font-weight: normal;
+    .list-notice {
+      padding: 10px 18px;
+      .material-icons {
+        vertical-align: bottom;
+      }
+      ul {
+        margin-bottom: 0;
+        padding-left: 1em;
+      }
+    }
+    @include mb {
+      margin: 0 10px 10px;
+    }
+  }
+}
+
+.gws-tabs a[data-external-search-url] {
+  display: flex;
+  position: relative;
+  align-items: center;
+  float: right;
+  margin-right: 0;
+  padding: 0 5px 0 0;
+  border-left: 1px solid #d0d0d0;
+}

@@ -63,7 +63,9 @@ module Gws::Bookmark
 
     class << self
       def default_root_name
-        SS.config.gws.bookmark["root_folder"]
+        name = SS.config.gws.bookmark["root_folder"].presence rescue nil
+        name ||= I18n.t("modules.gws/bookmark")
+        name
       end
     end
   end

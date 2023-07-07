@@ -405,7 +405,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       display: none;
     }
   }
-  .cms, .gws, .sns, .webmail {
+  .cms, .gws, .sns, .webmail, .gws-search {
     @include clear;
     float: left;
     @include mb { float: none; }
@@ -487,6 +487,54 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
       @include mb {
         background-position: 10px center;
+      }
+    }
+  }
+  .gws-search {
+    padding: 10px 0px 0px 30px;
+    //width: 400px;
+    .input-group {
+      display: flex;
+      .input-group-append {
+        display: flex;
+      }
+    }
+    input.keyword {
+      width: 240px;
+    }
+    button {
+      width: 34px;
+      margin-left: 5px;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      &:hover {
+        color: #f25a38;
+      }
+    }
+    .dropdown-menu {
+      top: 100%;
+      min-width: 260px;
+      margin-top: 1px;
+      margin-left: 48px;
+      padding: 10px;
+      border: 1px solid #d0d0d0;
+      background: #fff;
+      label {
+        cursor: pointer;
+      }
+    }
+  }
+  @include mb {
+    .gws-search {
+      width: 100%;
+      padding: 15px 15px 15px 20px;
+      input.keyword {
+        width: calc(100% - 78px) !important;
+      }
+      .dropdown-menu {
+        margin-top: -14px;
+        margin-left: 0px;
       }
     }
   }
