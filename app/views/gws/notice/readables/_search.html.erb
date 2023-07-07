@@ -1,7 +1,7 @@
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.select :browsed_state, @model.new.browsed_state_options %>
-    <%= f.select :severity, @model.new.severity_options %>
+    <%= f.select :browsed_state, @model.new.browsed_state_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :severity, @model.new.severity_options, {}, { data: { controller: "ss--submit-on-change" } } %>
     <%= f.text_field :keyword, style: "width: 240px;" %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
