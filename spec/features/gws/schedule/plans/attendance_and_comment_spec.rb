@@ -104,7 +104,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.delete")
         end
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))

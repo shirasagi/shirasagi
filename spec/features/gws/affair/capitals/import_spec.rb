@@ -61,7 +61,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
     it do
       # import capitals
       visit import_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capitals.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
@@ -79,7 +79,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import members 1
       visit import_member_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_members1.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
@@ -102,7 +102,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import members 2
       visit import_member_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_members2.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
@@ -125,7 +125,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import group 1
       visit import_group_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_groups1.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
@@ -148,7 +148,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import group 2
       visit import_group_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_groups2.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")

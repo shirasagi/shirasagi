@@ -1,0 +1,12 @@
+<% @index_meta = proc do |item| %>
+  <% item.cur_site ||= @cur_site %>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+  <span class="order"><%= item.order %></span>
+  <span class="url"><%= link_to item.url.truncate(80), sns_redirect_path(ref: item.url), item.link_to_options %></span>
+  <span class="label"><%= @model.t :bookmark_model %></span>
+  <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
+  <span class="label"><%= @model.t :folder_id %></span>
+  <span class="bookmark_model"><%= item.folder.try(:trailing_name) %></span>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

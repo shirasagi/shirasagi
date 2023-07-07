@@ -71,7 +71,7 @@ describe "gws_job_logs", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.download")
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.download")
       end
 

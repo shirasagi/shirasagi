@@ -1,0 +1,16 @@
+<%= jquery do %>
+var bookmark = new Gws_Bookmark('.gws-bookmark', "<%= @bookmark_default_name %>")
+bookmark.renderCreate();
+<% end %>
+<% @bookmark = ::Gws::Bookmark::Item.new(@bookmark_default) %>
+<div class="gws-bookmark dropdown dropdown-toggle">
+  <span class="bookmark-icon">
+    <i class="material-icons inactive">star_border</i>
+  </span>
+  <%= form_for :bookmark, url: gws_bookmark_apis_update_item_path, html: { method: "POST", id: "bookmark-form" } do |f| %>
+    <%= f.hidden_field :url, value: @bookmark_url %>
+    <%= f.hidden_field :bookmark_model, value: @bookmark_model %>
+    <%= f.hidden_field :name, value: @bookmark_default_name %>
+    <ul class="dropdown-menu"></ul>
+  <% end %>
+</div>

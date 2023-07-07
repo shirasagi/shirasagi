@@ -625,9 +625,34 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         right: 0;
         padding: 5px;
         @include mb { left: 0; }
-        input[type=text] {
-          width: 100%;
-          margin-top: 5px;
+        .bookmark-notice {
+          padding-bottom: 6px;
+          border-bottom: 1px solid #bebebe;
+        }
+        .name {
+          display: flex;
+          margin-top: 6px;
+          margin-bottom: 6px;
+          span {
+            width: 80px;
+            margin-top: 12px;
+          }
+          input[type=text] {
+            display: inline-block;
+            width: 240px;
+          }
+        }
+        .folder {
+          display: flex;
+          margin-bottom: 6px;
+          span {
+            width: 80px;
+            margin-top: 12px;
+          }
+          select {
+            display: inline-block;
+            width: 240px;
+          }
         }
         .btn {
           margin-top: 5px;

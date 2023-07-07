@@ -69,7 +69,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       within ".nav-menu" do
         click_link I18n.t('ss.links.delete')
       end
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
@@ -135,7 +135,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         within ".nav-menu" do
           click_link I18n.t('ss.links.delete')
         end
-        within "form" do
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.delete')
         end
         wait_for_ajax
