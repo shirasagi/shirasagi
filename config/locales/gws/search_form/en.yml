@@ -29,5 +29,16 @@ en:
 
   tooltip:
     gws/search_form/target:
+      name:
+        - Enter the name.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      place_holder:
+        - Enter the placeholder.
+      search_service:
+        - Select the search service.
       search_service/external:
         - If you selected "External site search" as search service, set the external site information in the form below.
+      state:
+        - Select the state.

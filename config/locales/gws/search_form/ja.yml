@@ -29,5 +29,16 @@ ja:
 
   tooltip:
     gws/search_form/target:
+      name:
+        - 名称を入力します。
+      order:
+        - 並び順を入力します。
+        - 値が小さいほど先頭に表示され、優先度が高くなります。
+      place_holder:
+        - プレースホルダーを入力します。
+      search_service:
+        - 検索対象を選択します。
       search_service/external:
         - 検索対象で「外部サイト」を選択した場合は、以下のフォームに外部サイト情報を設定してください。
+      state:
+        - ステータスを選択します。
