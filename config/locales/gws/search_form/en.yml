@@ -1,0 +1,33 @@
+en:
+  gws/search_form:
+    main: Search Form
+    views:
+      try_external_search: If you can't find the search results you're looking for, please try the following search.
+    links:
+      search_for_keyword: Search for "<span class="keyword"></span>" using %{target}
+    options:
+      search_service:
+        shirasagi_es: Shirasagi full-text search
+        external: External site search
+
+  modules:
+    gws/search_form: Search form
+
+  mongoid:
+    models:
+      gws/search_form/target: Search target
+    attributes:
+      gws/search_form/target:
+        name: Name
+        order: Order
+        place_holder: Placeholder
+        search_service: Search service
+        search_url: Search Url
+        search_keyword_name: Keyword name
+        search_other_query: Other query
+        state: Status
+
+  tooltip:
+    gws/search_form/target:
+      search_service/external:
+        - If you selected "External site search" as search service, set the external site information in the form below.

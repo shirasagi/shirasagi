@@ -3,8 +3,12 @@ if @s.keyword.present?
   params = { s: { keyword: @s.keyword } }
   params = "?#{params.to_query}"
 end
-%>
 
+@search_externals ||= Gws::SearchForm::Target.site(@cur_site).and_enabled.and_external.to_a
+%>
+<%= jquery do %>
+  Gws_SearchForm.renderExternalSearch();
+<% end %>
 <div class="gws-tabs">
   <% @model::WELL_KNOWN_TYPES.each do |type| %>
     <% setting = "Gws::Elasticsearch::Setting::#{type.classify}".constantize.new(cur_site: @cur_site, cur_user: @cur_user) %>
@@ -12,6 +16,14 @@ end
       <% path = gws_elasticsearch_search_search_path(type: type) %>
       <%= link_to "#{path}#{params}", class: [ type, request.path.start_with?(path) ? 'current' : nil ] do %>
         <span class="tab-name"><%= setting.menu_label %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% if @search_externals.present? %>
+    <% @search_externals.each do |target| %>
+      <%= link_to target.url, class: "btn", "data-external-search-url": target.url_without_keyword do %>
+        <span class="tab-name"><%= target.place_holder %></span>
+        <i class="material-icons md-18">open_in_new</i>
       <% end %>
     <% end %>
   <% end %>

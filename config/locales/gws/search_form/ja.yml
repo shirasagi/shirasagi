@@ -1,0 +1,33 @@
+ja:
+  gws/search_form:
+    main: 検索窓
+    views:
+      try_external_search: 検索結果が見つからない場合は、以下の検索をお試しください。
+    links:
+      search_for_keyword: 「<span class="keyword"></span>」 を %{target} で検索する
+    options:
+      search_service:
+        shirasagi_es: シラサギ全文検索
+        external: 外部サイト
+
+  modules:
+    gws/search_form: 検索窓
+
+  mongoid:
+    models:
+      gws/search_form/target: 検索対象
+    attributes:
+      gws/search_form/target:
+        name: 名称
+        order: 並び順
+        place_holder: プレースホルダー
+        search_service: 検索対象
+        search_url: 検索URL
+        search_keyword_name: Keyword name
+        search_other_query: Other query
+        state: ステータス
+
+  tooltip:
+    gws/search_form/target:
+      search_service/external:
+        - 検索対象で「外部サイト」を選択した場合は、以下のフォームに外部サイト情報を設定してください。
