@@ -1,4 +1,4 @@
-class SS::Migration20230224000001
+class SS::Migration20230410000003
   include SS::Migration::Base
 
   def change
