@@ -36,7 +36,7 @@ class Gws::Survey::FileEnumerator < Enumerator
   def enum_record(yielder, item)
     terms = []
     if !@cur_form.anonymous?
-      terms << I18n.l(item.updated)
+      terms << I18n.l(item.updated, format: :csv)
       terms << item.user_name
       terms << (item.user.organization_uid.presence || item.user_uid)
     end
