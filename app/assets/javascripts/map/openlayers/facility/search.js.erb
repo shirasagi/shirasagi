@@ -86,6 +86,9 @@ this.Openlayers_Facility_Search = (function () {
           column.hide();
         }
       });
+
+      var resultSize = $('#map-sidebar .column:visible').length;
+      $('.map-search-result .number').text(resultSize);
       return false;
     });
 
