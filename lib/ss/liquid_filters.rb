@@ -151,9 +151,9 @@ module SS::LiquidFilters
   end
 
   def search_column_value(page, *args)
-    return nil if !page.respond_to?("values")
+    return nil if !page.respond_to?(:values)
     return nil if !args.is_a?(Array)
-    page.values.to_a.find { |value | args.include?(value.name) }
+    page.values.to_a.find { |value| args.include?(value.name) }
   end
 
   def filter_by_column_value(pages, key_value)
