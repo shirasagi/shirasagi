@@ -61,3 +61,7 @@ en:
     gws/addon/presence/delegator_setting:
       presence_editable_title_ids:
         - "By setting a different job title, you can update the status of users with that job title."
+
+  job:
+    models:
+      gws/presence/reset_job: Presence Reset Job
