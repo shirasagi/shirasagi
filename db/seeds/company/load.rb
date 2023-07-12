@@ -22,6 +22,9 @@ end
 ## -------------------------------------
 puts "# layouts"
 
+CSS_PATHS = %w(/css/style.css).freeze
+JS_PATHS = %w(/js/common.js).freeze
+
 def save_layout(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
@@ -37,34 +40,34 @@ def save_layout(data)
 end
 
 save_layout filename: "company.layout.html", name: "会社案内",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(head.part.html breadcrumbs.part.html company/side-menu.part.html page-top.part.html foot.part.html)
 save_layout filename: "news.layout.html", name: "ニュース",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(head.part.html breadcrumbs.part.html news/side-menu.part.html page-top.part.html, foot.part.html)
 save_layout filename: "one.layout.html", name: "1カラム",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(head.part.html breadcrumbs.part.html page-top.part.html foot.part.html)
 save_layout filename: "product-top.layout.html", name: "製品サービス:トップ",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(
     head.part.html breadcrumbs.part.html product/solution/side-menu.part.html product/software/side-menu.part.html
     product/office/side-menu.part.html product/marketing/side-menu.part.html product/solution/solution.part.html
     product/software/software.part.html product/office/office.part.html product/marketing/marketing.part.html
     page-top.part.html foot.part.html)
 save_layout filename: "product.layout.html", name: "製品サービス",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(
     head.part.html breadcrumbs.part.html product/solution/side-menu.part.html product/software/side-menu.part.html
     product/office/side-menu.part.html product/marketing/side-menu.part.html page-top.part.html foot.part.html)
 save_layout filename: "recruit.layout.html", name: "採用情報",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(head.part.html breadcrumbs.part.html recruit/side-menu.part.html page-top.part.html foot.part.html)
 save_layout filename: "sitemap.layout.html", name: "サイトマップ",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: JS_PATHS,
   part_paths: %w(head.part.html breadcrumbs.part.html page-top.part.html foot.part.html)
 save_layout filename: "top.layout.html", name: "トップページ",
-  css_paths: %w(/css/style.css), js_paths: %w(/js/camera.min.js /js/keyvisual.js /js/common.js /js/selectivizr.js),
+  css_paths: CSS_PATHS, js_paths: %w(/js/camera.min.js /js/keyvisual.js /js/common.js),
   part_paths: %w(
     head.part.html keyvisual.part.html news.part.html inquiry.part.html
     product/folder-list.part.html connection.part.html page-top.part.html

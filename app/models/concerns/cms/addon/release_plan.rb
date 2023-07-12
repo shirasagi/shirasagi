@@ -78,6 +78,10 @@ module Cms::Addon
       return calc_beginning_of_day(now, site.default_close_days_after) if site.try(:default_release_plan_enabled?)
     end
 
+    def expired_close_date?
+      close_date && close_date <= Time.zone.now
+    end
+
     private
 
     def calc_beginning_of_day(now, days)

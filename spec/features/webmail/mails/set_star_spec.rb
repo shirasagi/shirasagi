@@ -78,24 +78,27 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     it do
       visit webmail_mails_path(account: 0)
       click_on mail1.subject
-      first(".webmail-mail .icon-star.off a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.set_star'))
+      wait_for_js_ready
+      within ".webmail-mail .icon-star" do
+        click_on "star"
       end
+      wait_for_notice I18n.t('ss.notice.set_star')
 
       visit webmail_mails_path(account: 0)
       click_on mail1.subject
-      first(".webmail-mail .icon-star.on a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.unset_star'))
+      wait_for_js_ready
+      within ".webmail-mail .icon-star" do
+        click_on "star"
       end
+      wait_for_notice I18n.t('ss.notice.unset_star')
 
       visit webmail_mails_path(account: 0)
       click_on mail1.subject
-      first(".webmail-mail .icon-star.off a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.set_star'))
+      wait_for_js_ready
+      within ".webmail-mail .icon-star" do
+        click_on "star"
       end
+      wait_for_notice I18n.t('ss.notice.set_star')
     end
   end
 end

@@ -76,7 +76,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t('ss.notice.moved')
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
@@ -84,7 +84,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t('ss.notice.moved')
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
 
     it "#copy" do

@@ -49,7 +49,8 @@ class Gws::Survey::ReadablesController < ApplicationController
       @s[:folder_ids] += @folder.folders.for_post_reader(@cur_site, @cur_user).pluck(:id)
     end
     @s[:category_id] = @category.id if @category.present?
-    @s[:answered_state] ||= 'unanswered'
+    @s[:answered_state] ||= @cur_site.survey_answered_state
+    @s[:sort] ||= @cur_site.survey_sort
   end
 
   def set_items
@@ -74,7 +75,8 @@ class Gws::Survey::ReadablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.order_by(due_date: 1, order: 1, updated: -1).page(params[:page]).per(50)
+    @items = @items.custom_order(@s.sort).
+      page(params[:page]).per(50)
   end
 
   def show

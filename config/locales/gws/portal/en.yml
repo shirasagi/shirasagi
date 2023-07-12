@@ -164,6 +164,7 @@ en:
       gws/addon/portal/portlet/todo:
         todo_state: Display status
       gws/addon/portal/portlet/bookmark:
+        bookmark_folder_id: Folder
         bookmark_model: Functional display range
       gws/addon/portal/portlet/board:
         board_severity: Importance
@@ -176,6 +177,7 @@ en:
       gws/addon/portal/portlet/circular:
         circular_category_ids: Category
         circular_article_state: Display type
+        circular_sort: Order
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: Category
         monitor_answerable_article: Display range
@@ -208,6 +210,7 @@ en:
       gws/addon/portal/notice_setting:
         portal_notice_state: Show/Hide
         portal_notice_browsed_state: Unread/Read
+        portal_notice_severity: Severity
       gws/addon/portal/monitor_setting:
         portal_monitor_state: Show/Hide
       gws/addon/portal/link_setting:
@@ -224,14 +227,28 @@ en:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: Enter a portlet name.
+      #circular_article_state:
+      #  - <b>Unread</b> - Show only unread items in the portal.
+      #  - <b>Show all</b> - Show all read and unread items in the portal.
       circular_article_state:
-        - <b>Unread</b> - Show only unread items in the portal.
-        - <b>Show all</b> - Show all read and unread items in the portal.
+        - Select display type of circular boards.
+      circular_sort:
+        - Select order of circular boards.
+      survey_answered_state:
+        - Select display type of surveys.
+      survey_sort:
+        - Select order of surveys.
+      survey_category_ids:
+        - Select categories.
+      limit:
+        - Enter the display limit for surveys.
     gws/addon/portal/notice_setting:
       portal_notice_state:
         - Select whether or not to show an announcement in the portal.
       portal_notice_browsed_state:
         - "When you choose to show announcements in the portal, select to show only unread or both unread and read announcements."
+      portal_notice_severity:
+        - "When you choose to show announcements in the portal, select to show severity announcements."
     gws/addon/portal/monitor_setting:
       portal_monitor_state:
         - Select whether or not to show inquiries and responses in the portal.

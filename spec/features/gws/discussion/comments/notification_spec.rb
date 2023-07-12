@@ -28,7 +28,7 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
       visit gws_discussion_main_path(site: site)
       click_on forum.name
       click_on I18n.t("gws/discussion.links.topic.reply")
-      within "form" do
+      within "form.reply" do
         fill_in "item[text]", with: post_texts.join("\n")
         click_on I18n.t("ss.links.reply")
       end

@@ -12047,7 +12047,6 @@ return jQuery;
       return false. The `confirm:complete` event is fired whether or not the user answered true or false to the dialog.
    */
     allowAction: function(element) {
-      console.log("allowAction")
       var message = element.data('confirm'),
           answer = false, callback;
       if (!message) { return true; }
@@ -12181,7 +12180,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.linkClickSelector, function(e) {
-      console.log({ on: 'click.rails', linkClickSelector: rails.linkClickSelector });
       var link = $(this), method = link.data('method'), data = link.data('params'), metaClick = e.metaKey || e.ctrlKey;
       if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -12206,7 +12204,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.buttonClickSelector, function(e) {
-      console.log({ on: 'click.rails', buttonClickSelector: rails.buttonClickSelector });
       var button = $(this);
 
       if (!rails.allowAction(button) || !rails.isRemote(button)) return rails.stopEverything(e);
@@ -12232,7 +12229,6 @@ return jQuery;
     });
 
     $document.on('submit.rails', rails.formSubmitSelector, function(e) {
-      console.log({ on: 'submit.rails', formSubmitSelector: rails.formSubmitSelector });
       var form = $(this),
         remote = rails.isRemote(form),
         blankRequiredInputs,
@@ -12278,7 +12274,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.formInputClickSelector, function(event) {
-      console.log({ on: 'click.rails', formInputClickSelector: rails.formInputClickSelector });
       var button = $(this);
 
       if (!rails.allowAction(button)) return rails.stopEverything(event);
@@ -32796,6 +32791,8 @@ this.SS = (function () {
 
 
 
+
+
 //#
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 //#
@@ -42414,6 +42411,46 @@ Cms_Branch.prototype.toggleCreateBranchButton = function() {
     self.$result.hide();
   }
 };
+Cms_Move = function (el, url, keyword, confirm) {
+  this.$el = $(el);
+  this.url = url;
+  this.keyword = keyword;
+  this.confirm = confirm;
+  this.render();
+}
+
+Cms_Move.prototype.render = function() {
+  var self = this;
+  var $result = self.$el.find(".result");
+
+  if (self.confirm) {
+    data = {
+      s: {
+        keyword: self.keyword,
+        option: "string"
+      }
+    };
+    $result.closest(".see").show();
+    $.ajax({
+      type: "GET",
+      data: data,
+      url: self.url + "?" + $.param(data),
+      beforeSend: function () {
+        $result.html(SS.loading);
+      },
+      success: function (data) {
+        $result.html(data);
+        $result.find("th input").remove();
+        $result.find("input[name='page_ids[]']").remove();
+        $result.find("input[name='part_ids[]']").remove();
+        $result.find("input[name='layout_ids[]']").remove();
+      },
+      error: function (data, status) {
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+    });
+  }
+};
 this.Cms_Line_Message_Repeat_Plan = (function () {
   function Cms_Line_Message_Repeat_Plan() {
   }
@@ -42672,6 +42709,80 @@ Cms_UploadFileOrder.prototype.appendOrderedFiles = function ($filesEl) {
     $('.column-value-files').append($filesEl);
   }
 };
+this.Cms_Image_Map_Area_Cropper = (function () {
+  function Cms_Image_Map_Area_Cropper(el, opts) {
+    if (!opts) {
+      opts = {};
+    }
+    this.$el = $(el);
+    this.$currentArea = this.$el.find(".areas .area");
+    this.$image = this.$el.find(".image-warp img");
+    this.readonly = opts["readonly"];
+    this.render();
+  }
+
+  Cms_Image_Map_Area_Cropper.prototype.render = function () {
+    var self = this;
+    self.cropper = new Cropper(
+      self.$image[0],
+      {
+        viewMode: 1,
+        zoomOnWheel: false,
+        background: true,
+        autoCrop: false,
+        ready: function() {
+          self.cropCurrentArea();
+        },
+        cropmove: function() {
+          self.setCroppedArea();
+        }
+      }
+    );
+
+    self.$el.find(".reset-area").on("click", function() {
+      self.$currentArea.find('[name="item[in_area][x]"]').val("");
+      self.$currentArea.find('[name="item[in_area][y]"]').val("");
+      self.$currentArea.find('[name="item[in_area][width]"]').val("");
+      self.$currentArea.find('[name="item[in_area][height]"]').val("");
+      self.cropper.clear();
+      return false;
+    });
+  };
+
+  Cms_Image_Map_Area_Cropper.prototype.cropCurrentArea = function () {
+    var self = this;
+    var x = self.$currentArea.find('input[name="item[in_area][x]"]').val();
+    var y = self.$currentArea.find('input[name="item[in_area][y]"]').val();
+    var width = self.$currentArea.find('input[name="item[in_area][width]"]').val();
+    var height = self.$currentArea.find('input[name="item[in_area][height]"]').val();
+
+    if (x && y && width && height) {
+      var data = self.cropper.getData(true);
+      Object.assign(data, { x: parseInt(x), y: parseInt(y), width: parseInt(width), height: parseInt(height) });
+      self.cropper.enable();
+      self.cropper.crop();
+      self.cropper.setData(data);
+    } else {
+      self.cropper.enable();
+      self.cropper.clear();
+    }
+
+    if (self.readonly) {
+      self.cropper.disable();
+    }
+  };
+
+  Cms_Image_Map_Area_Cropper.prototype.setCroppedArea = function () {
+    var self = this;
+    var data = self.cropper.getData(true);
+    self.$currentArea.find('input[name="item[in_area][x]"]').val(data.x);
+    self.$currentArea.find('input[name="item[in_area][y]"]').val(data.y);
+    self.$currentArea.find('input[name="item[in_area][width]"]').val(data.width);
+    self.$currentArea.find('input[name="item[in_area][height]"]').val(data.height);
+  };
+
+  return Cms_Image_Map_Area_Cropper;
+})();
 this.Event_Form = (function () {
   function Event_Form(el, options) {
     this.$el = $(el);
@@ -46327,18 +46438,13 @@ this.Webmail_Mail_Form = (function () {
   };
 
   Webmail_Mail_Form.insertText = function (field, str) {
-    var np, p, r, s;
     field.focus();
     if (navigator.userAgent.match(/MSIE/)) {
-      r = document.selection.createRange();
+      var r = document.selection.createRange();
       r.text = str;
-      return r.select();
+      r.select();
     } else {
-      s = field.val();
-      p = field.get(0).selectionStart;
-      np = p + str.length;
-      field.val(s.substr(0, p) + str + s.substr(p));
-      return field.get(0).setSelectionRange(np, np);
+      field.get(0).setRangeText(str);
     }
   };
 

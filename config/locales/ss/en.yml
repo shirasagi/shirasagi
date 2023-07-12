@@ -69,12 +69,14 @@ en:
         password: Password
         organization_uid: Staff number or e-mail address
       index:
+        created: "Created：%{created}"
         updated: "Updated: %{updated}"
         released: "Published: %{released}"
         approved: "Approved: %{approved}"
         reserved: "Reserved：%{time}"
         delivered: "Delivered：%{time}"
         term: "Term：%{term}"
+        openrate: "Openrate：%{openrate}"
       oauth2/application:
         header:
           name: Application Type
@@ -91,6 +93,7 @@ en:
       unseen: Unread list
       seen: Read list
       trash: Trash
+      calendar: Calendar
     links:
       add: Add
       cms: Site management
@@ -161,6 +164,7 @@ en:
       approve: Approve
       prev: Previous
       next: Next
+      update: Update
     buttons:
       save: Save
       saving: Saving
@@ -313,6 +317,7 @@ en:
         - The maximum file upload size is set to %{human_size} in the server settings.
         - Setting a size limit that exceeds it will not affect it.
         - If you would like to change the server settings, please contact your system administrator.
+      updated: Updated.
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.

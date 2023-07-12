@@ -17,9 +17,9 @@ class Gws::Circular::PostsController < ApplicationController
       without_deleted.
       and_public.
       member(@cur_user).
-      search(params[:s]).
-      page(params[:page]).per(50).
-      custom_order(params.dig(:s, :sort) || 'due_date')
+      search(@s).
+      custom_order(@s.sort).
+      page(params[:page]).per(50)
   end
 
   public

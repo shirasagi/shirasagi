@@ -19,6 +19,9 @@ chageApi($(".translate-api .select-api"));
   <dt><%= @model.t :translate_microsoft_api_key %></dt>
   <dd><%= f.text_field :translate_microsoft_api_key %></dd>
 
+  <dt><%= @model.t :translate_microsoft_api_region %></dt>
+  <dd><%= f.text_field :translate_microsoft_api_region %></dd>
+
   <dt><%= @model.t :translate_microsoft_api_request_count %><%= @model.tt :translate_microsoft_api_request_count %></dt>
   <dd><%= f.number_field :translate_microsoft_api_request_count, min: 0 %></dd>
 

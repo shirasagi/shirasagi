@@ -12,6 +12,7 @@
 //= require gws/schedule/lib/calendar_transition
 //= require gws/schedule/lib/multiple_calendar
 //= require gws/schedule/lib/view
+//= require gws/notice/lib/calendar
 
 SS.ready(function() {
   setTimeout(function() {

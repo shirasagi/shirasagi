@@ -1,0 +1,16 @@
+<% return if params[:action] =~ /index/ %>
+
+<% form_limit = 50 %>
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move|copy|soft_delete|request_cancel/ %>
+    <% if @item.readable?(@cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

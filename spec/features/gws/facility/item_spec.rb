@@ -16,7 +16,7 @@ describe "facility_item", type: :feature, dbscope: :example do
     context "when the all datas on csv is valid" do
       it "the datas are imported" do
 
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/facility/gws_items_1.csv"
           expect{ click_button I18n.t('ss.links.import') }.to change{ Gws::Facility::Item.count }.from(0).to(2)
         end
@@ -69,7 +69,7 @@ describe "facility_item", type: :feature, dbscope: :example do
 
     context "when some data on csv is invalid" do
       it "does not import the only data in CSVfile" do
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/facility/gws_items_2.csv"
           click_button I18n.t('ss.links.import')
         end
@@ -99,7 +99,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         within "nav.nav-menu" do
           click_link I18n.t('ss.links.download')
         end
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t('ss.buttons.download')
         end
         expect(status_code).to eq 200

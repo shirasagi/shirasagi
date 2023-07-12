@@ -63,6 +63,8 @@ ja:
     after: 後
     time: 時間
     fiscal_year: 年度
+    test_deliver: テスト配信
+    target: 対象
 
     views:
       login/login:
@@ -70,12 +72,14 @@ ja:
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
       index:
+        created: "作成日時：%{created}"
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
         approved: "承認日時：%{approved}"
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+        openrate: "開封率：%{openrate}"
       oauth2/application:
         header:
           name: アプリケーション種別
@@ -86,12 +90,17 @@ ja:
         service:
           name: サービス
           text: OAuth 2.0 サービス・アプリケーションを作成します。サーバー間での認証を有効にします。
+      line:
+        test_deliver:
+          - テストメンバー宛に本文を配信します。
+          - 配信するボタンを押下するとテスト配信処理が開始されます。
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
       unseen: 未読一覧
       seen: 既読一覧
       trash: ゴミ箱
+      calendar: カレンダー
     links:
       add: 追加する
       cms: サイト管理
@@ -162,6 +171,7 @@ ja:
       approve: 承認する
       prev: 前へ
       next: 次へ
+      update: 更新する
     buttons:
       save: 保存
       saving: 保存中
@@ -266,6 +276,7 @@ ja:
       target_to_public: 公開対象の確認
       target_to_closed: 非公開対象の確認
       approve: 承認してよろしいですか？
+      test_deliver: テスト配信を開始してよろしいですか？
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。
@@ -314,6 +325,7 @@ ja:
         - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
         - これを超える制限サイズを設定しても有効に機能しません。
         - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
+      updated: 更新しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -961,6 +973,7 @@ ja:
         translate_mock_api_request_count: APIリクエスト数
         translate_mock_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_key: "サブスクリプション キー"
+        translate_microsoft_api_region: リージョン
         translate_microsoft_api_request_count: APIリクエスト数
         translate_microsoft_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_request_metered_usage: "x-metered-usage"

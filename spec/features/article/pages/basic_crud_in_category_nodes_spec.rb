@@ -56,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "category/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "category/destination.html")
 
       within "form" do
         fill_in "destination", with: "category/sample"
@@ -64,7 +64,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "category/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "category/sample.html")
     end
 
     it "#copy" do
@@ -132,7 +132,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "category/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "category/destination.html")
 
       within "form" do
         fill_in "destination", with: "category/sample"
@@ -140,7 +140,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "category/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "category/sample.html")
     end
 
     it "#copy" do

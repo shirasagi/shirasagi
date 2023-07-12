@@ -374,6 +374,7 @@
   border: 0;
   border-radius: 0;
   font-size: 90%;
+  cursor: pointer;
   &:hover {
     color: $black;
   }
@@ -408,9 +409,6 @@
 .fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
 }
-.fc-event-allday {
-  border-right: 2px solid #000;
-}
 .fc-time-grid-event .fc-resizer {
   display: none;
 }
@@ -438,7 +436,6 @@
 }
 .fc-event-range {
   padding: 1px 2px;
-  border-color: #966;
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
@@ -448,6 +445,9 @@
     .fc-title,.fc-facility {
        display: inline;
     }
+  }
+  &.fc-resizable {
+    border-right: 2px solid #966;
   }
 }
 .fc-agenda-view .fc-day-grid .fc-event-point {

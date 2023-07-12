@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :url %></dt>
+  <dd><%= link_to @item.url, sns_redirect_path(ref: @item.url), @item.link_to_options %></dd>
+
+  <dt><%= @model.t :link_target %></dt>
+  <dd><%= @item.label :link_target %></dd>
+
+  <dt><%= @model.t :bookmark_model %></dt>
+  <dd><%= @item.label :bookmark_model %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :folder_id %></dt>
+  <dd><%= @item.folder.try(:name) %></dd>
+</dl>

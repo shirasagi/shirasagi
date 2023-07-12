@@ -2,6 +2,11 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
+  <% if Cms::Line::Statistic.allowed?(:use, @cur_user, site: @cur_site) %>
+    <dt><%= @model.t :statistic_state %></dt>
+    <dd><%= @item.label :statistic_state %></dd>
+  <% end %>
+
   <dt><%= @model.t :deliver_state %></dt>
   <dd><%= @item.label :deliver_state %></dd>
 

@@ -47,6 +47,9 @@ end
 ## -------------------------------------
 puts "# layouts"
 
+CSS_PATHS = %w(/css/style.css).freeze
+JS_PATHS = %w(/js/common.js /js/heightLine.js).freeze
+
 def save_layout(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
@@ -62,8 +65,8 @@ def save_layout(data)
 end
 
 save_layout filename: "docs.layout.html", name: "記事ページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html news/recent.part.html
@@ -71,24 +74,24 @@ save_layout filename: "docs.layout.html", name: "記事ページ",
     pagetop.part.html foot.part.html
     )
 save_layout filename: "event-page.layout.html", name: "イベントページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html event/calendar.part.html purpose/birth/folder.html
     age/zero/folder.part.html sub-menu/banner.part.html pagetop.part.html foot.part.html
     )
 save_layout filename: "event.layout.html", name: "イベントカレンダー",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html event/calendar.part.html purpose/birth/folder.html
     age/zero/folder.part.html sub-menu/banner.part.html pagetop.part.html foot.part.html
     )
 save_layout filename: "faq-top.layout.html", name: "よくある質問：トップ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html faq/search/search.part.html faq/docs/recent.part.html
@@ -96,8 +99,8 @@ save_layout filename: "faq-top.layout.html", name: "よくある質問：トッ�
     pagetop.part.html foot.part.html
     )
 save_layout filename: "faq.layout.html", name: "よくある質問",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html faq/docs/recent.part.html
@@ -105,16 +108,16 @@ save_layout filename: "faq.layout.html", name: "よくある質問",
     pagetop.part.html foot.part.html
     )
 save_layout filename: "folder.layout.html", name: "フォルダーリスト",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html purpose/birth/folder.html age/zero/folder.part.html
     sub-menu/banner.part.html pagetop.part.html foot.part.html
     )
 save_layout filename: "general.layout.html", name: "汎用ページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html purpose/birth/folder.html
@@ -122,8 +125,8 @@ save_layout filename: "general.layout.html", name: "汎用ページ",
     foot.part.html
     )
 save_layout filename: "institution-page.layout.html", name: "施設情報：施設",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html institution/type/nursery/folder.part.html purpose/birth/folder.part.html
@@ -131,8 +134,8 @@ save_layout filename: "institution-page.layout.html", name: "施設情報：施�
     foot.part.html
     )
 save_layout filename: "institution.layout.html", name: "施設情報",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html institution/type/nursery/folder.part.html purpose/birth/folder.part.html
@@ -140,8 +143,8 @@ save_layout filename: "institution.layout.html", name: "施設情報",
     foot.part.html
     )
 save_layout filename: "page.layout.html", name: "固定ページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html pages.part.html
@@ -149,8 +152,8 @@ save_layout filename: "page.layout.html", name: "固定ページ",
     pagetop.part.html foot.part.html
     )
 save_layout filename: "pages.layout.html", name: "ページリスト",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html category.part.html purpose/birth/folder.part.html
@@ -158,8 +161,8 @@ save_layout filename: "pages.layout.html", name: "ページリスト",
     foot.part.html
     )
 save_layout filename: "top.layout.html", name: "トップページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     slide/slide.part.html purpose/birth/folder.part age/zero/folder.part.html

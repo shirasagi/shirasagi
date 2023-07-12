@@ -77,6 +77,7 @@ ja:
       send_mdn: 開封確認を送付する
       ignore_mdn: 要求を無視する
       batch_download: 一括ダウンロード
+      select_signature: 署名を選択
     options:
       action:
         copy: コピーする

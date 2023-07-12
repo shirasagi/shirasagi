@@ -1,0 +1,41 @@
+<%= jquery do %>
+(function ($) {
+  $('.gws-schedule-box header .operations .btn-print').on('click', function() {
+    var viewName = $('#calendar').fullCalendar('getView').name;
+    var curDate = $('#calendar').fullCalendar('getDate');
+    if (!viewName) {
+      viewName = $('#calendar-controller').fullCalendar('getView').name;
+      curDate = $('#calendar-controller').fullCalendar('getDate');
+    }
+
+    var viewFormat = "default";
+    if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
+      viewFormat = "list";
+    }
+
+    var queryString = '';
+    if (viewName) {
+      var queryParams = <%== request.query_parameters.to_json %>;
+      if (! queryParams.calendar) {
+        queryParams.calendar = {};
+      }
+      queryParams.calendar.view = viewName;
+      queryParams.calendar.date = curDate.format();
+      queryParams.calendar.viewFormat = viewFormat;
+      queryString = '?' + $.param(queryParams);
+    }
+    var path = '<%= url_for({ action: :print }) %>' + queryString;
+    location.href = path;
+  });
+})($jQuery1);
+<% end %>
+
+<div class="operations">
+  <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
+</div>
+<%= form_for :s, url: "", html: { class: "search", method: :get } do |f| %>
+  <%= f.select :browsed_state, @model.new.browsed_state_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+  <%= f.select :severity, @model.new.severity_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+  <%= f.text_field :keyword, style: "width: 240px;" %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>

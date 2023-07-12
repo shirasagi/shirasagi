@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   node "mail_page" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    post "page/mail" => "public#mail", cell: "nodes/page"
   end
 
   page "mail_page" do

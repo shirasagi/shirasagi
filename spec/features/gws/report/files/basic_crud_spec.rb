@@ -166,7 +166,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.delete")
       end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -185,7 +185,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       click_on name2
       click_on I18n.t("ss.links.restore")
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
@@ -206,7 +206,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.delete")
       end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
 
@@ -217,7 +217,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.delete")
       end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

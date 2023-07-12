@@ -17,7 +17,7 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
       it do
         visit index_path
         click_link I18n.t('ss.links.download')
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t('ss.buttons.download')
         end
 
@@ -105,7 +105,7 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
     it do
       visit index_path
       click_on I18n.t('ss.links.import')
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", csv_file
         click_on I18n.t('ss.import')
       end

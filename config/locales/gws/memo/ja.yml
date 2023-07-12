@@ -25,6 +25,7 @@ ja:
       publish: 送信する
     buttons:
       seen: 送信者一覧
+      select_signature: 署名を選択
     confirm:
       publish: 送信してよろしいですか？
     notice:
@@ -188,7 +189,7 @@ ja:
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
-      gws/memo/template: 電話メモ
+      gws/memo/template: 定型文
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
       gws/memo/list: リスト

@@ -28,7 +28,7 @@
   <% end %>
 
   <% if @cur_site.menu_bookmark_visible? && Gws.module_usable?(:bookmark, @cur_site, @cur_user) %>
-    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
+    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmark_main_path, class: "icon-bookmark" %></h2>
   <% end %>
 
   <% if @cur_site.menu_attendance_visible? && Gws.module_usable?(:attendance, @cur_site, @cur_user) %>
@@ -41,6 +41,10 @@
 
   <% if @cur_site.menu_workload_visible? && Gws.module_usable?(:workload, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_workload_label || t('modules.gws/workload'), gws_workload_main_path, class: "icon-workload" %></h2>
+  <% end %>
+
+  <% if @cur_site.menu_daily_report_visible? && Gws.module_usable?(:daily_report, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_daily_report_label || t('modules.gws/daily_report'), gws_daily_report_main_path, class: "icon-daily-report" %></h2>
   <% end %>
 
   <% if @cur_site.menu_report_visible? && Gws.module_usable?(:report, @cur_site, @cur_user) %>

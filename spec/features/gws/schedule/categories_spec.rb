@@ -49,7 +49,7 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example do
 
     it "#delete" do
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path

@@ -1,0 +1,84 @@
+<% return if @item.column_values.blank? %>
+
+<div class="table-wrap">
+  <table class="index see mod-gws-daily-report-custom_form">
+    <tbody>
+    <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @item.user.blank? || @item.user_id == @cur_user.id %>
+      <tr>
+        <td>
+          <%= @model.t :limited_access %>
+        </td>
+        <td><%= br @item.limited_access %></td>
+        <% @item.max_column_comments_length.times do %>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+    <% if @item.share_small_talk.present? %>
+      <tr class="share-row">
+        <td>
+          <%= @model.t :small_talk %>
+          <div class="share-value"><%= @model.t(:share_small_talk) %></div>
+        </td>
+        <td><%= br @item.small_talk %></td>
+        <% @item.column_comments('small_talk').each do |comment| %>
+          <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+        <% end %>
+        <% (@item.max_column_comments_length - @item.column_comments('small_talk').length).times do %>
+          <td></td>
+        <% end %>
+      </tr>
+    <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && @item.small_talk.present? %>
+      <tr>
+        <td>
+          <%= @model.t :small_talk %>
+        </td>
+        <td><%= br @item.small_talk %></td>
+        <% @item.column_comments('small_talk').each do |comment| %>
+          <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+        <% end %>
+        <% (@item.max_column_comments_length - @item.column_comments('small_talk').length).times do %>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+    <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+      <% column = value.column %>
+      <% if @item.share_column_ids.include?(value.column_id.to_s) %>
+        <tr class="share-row">
+          <td>
+            <%= value.name %>
+            <div class="share-value"><%= @model.t(:share_column_ids) %></div>
+          </td>
+          <td><%= br value.value %></td>
+          <% @item.column_comments(value.column_id).each do |comment| %>
+            <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+          <% end %>
+          <% (@item.max_column_comments_length - @item.column_comments(value.column_id).length).times do %>
+            <td></td>
+          <% end %>
+        </tr>
+      <% elsif @item.manageable?(@cur_user, site: @cur_site, date: @cur_month) && value.value.present? %>
+        <tr>
+          <td>
+            <%= value.name %>
+          </td>
+          <td><%= br value.value %></td>
+          <% @item.column_comments(value.column_id).each do |comment| %>
+            <td><%= br "#{comment.body}(#{comment.user.try(:name)})" %></td>
+          <% end %>
+          <% (@item.max_column_comments_length - @item.column_comments(value.column_id).length).times do %>
+            <td></td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= jquery do %>
+  <% if @cur_form.present? %>
+    $('#addon-gws-agents-addons-daily-report-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+  <% end %>
+<% end %>

@@ -15,8 +15,20 @@
 %>
 
 <% @index_title = proc do |item| %>
-  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+  <div class="title marked">
+    <% if item.severity.present? %>
+      <i title="<%= item.label(:severity) %>" class="material-icons-outlined md-16 severity-<%= item.severity %>">error_outline</i>
+    <% end %>
+    <%= link_to item.name, { action: :show, id: item }, { class: "name" } %>
+    <% if item.term_enabled? %>
+      <%= link_to gws_notice_calendars_path(calendar: redirection_calendar_params(item)), { class: "index-cleander-link" } do %>
+        <i class="material-icons calendar-month md-18">calendar_month</i>
+      <% end %>
+    <% end %>
+    <% if item.new_flag? %>
+      <span class="gws-board-flag-new"></span>
+    <% end %>
+  </div>
 <% end %>
 
 <% @index_meta = proc do |item| %>
@@ -29,10 +41,6 @@
       <span class="label"><%= t('mongoid.models.gws/notice/folder') %></span>
       <span class="folder-name"><%= item.folder.name %></span>
     </span>
-  <% end %>
-
-  <% if attr = item.label(:severity).presence %>
-    <span class="label"><%= attr %></span>
   <% end %>
 
   <% if item.categories.present? %>

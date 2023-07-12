@@ -58,7 +58,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.move")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css("form#item-form h2", text: "destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "destination.html")
 
       item.reload
       expect(item.name).to eq "modify"
@@ -70,7 +70,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.move")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css("form#item-form h2", text: "sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "sample.html")
 
       item.reload
       expect(item.name).to eq "modify"

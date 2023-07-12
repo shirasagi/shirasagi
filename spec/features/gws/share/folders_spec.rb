@@ -65,7 +65,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -159,7 +159,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         within ".nav-menu" do
           click_on I18n.t('ss.links.delete')
         end
-        within 'form' do
+        within 'form#item-form' do
           click_on I18n.t('ss.buttons.delete')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

@@ -1,0 +1,26 @@
+<% return t("cms.notices.line_statistics_exceeded_units_by_month") if @item.exceeded_units_by_month? %>
+
+<ul style="line-height: 1.4; background: #f2f2f2; padding: 10px; border-radius: 4px;">
+  <% t("cms.notices.line_statistics").each do |msg| %>
+    <li style="list-style: disc; margin-left: 24px;"><%= msg %></li>
+  <% end %>
+</ul>
+
+<dl class="see">
+  <dt><%= @model.t :overview_openrate %><%= @model.tt :overview_openrate %></dt>
+  <dd><%= @item.with_null_label(:overview_openrate_and_delivered_label) %></dd>
+
+  <dt><%= @model.t :overview_delivered %><%= @model.tt :overview_delivered %></dt>
+  <dd><%= @item.with_null_label(:overview_delivered) %></dd>
+
+  <dt><%= @model.t :overview_unique_impression %><%= @model.tt :overview_unique_impression %></dt>
+  <dd><%= @item.with_null_label(:overview_unique_impression) %></dd>
+
+  <dt><%= @model.t :overview_unique_click %><%= @model.tt :overview_unique_click %></dt>
+  <dd><%= @item.with_null_label(:overview_unique_click) %></dd>
+
+  <% if !SS::Lgwan.cms? %>
+    <dt><%= @model.t :update_statistics %></dt>
+    <dd><%= ss_button_to t("ss.links.update"), url_for(action: :update), class: "btn", method: "put" %></dd>
+  <% end %>
+</dl>

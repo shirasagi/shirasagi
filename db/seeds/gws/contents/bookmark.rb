@@ -3,7 +3,7 @@ puts "# bookmark"
 def create_bookmark(data)
   puts data[:name]
   cond = {site_id: @site._id, user_id: data[:cur_user].id, name: data[:name]}
-  item = Gws::Bookmark.find_or_initialize_by(cond)
+  item = Gws::Bookmark::Item.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   puts item.errors.full_messages unless item.save
   item

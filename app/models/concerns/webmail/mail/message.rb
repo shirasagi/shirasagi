@@ -21,13 +21,13 @@ module Webmail::Mail::Message
   end
 
   def merge_address_field(array, str)
-    (array + str.to_s.split(/;/)).uniq.select { |c| c.present? }.compact
+    (array + str.to_s.split(";")).uniq.select { |c| c.present? }.compact
   end
 
   def new_mail
     if sign = Webmail::Signature.default_sign(imap)
       self.text = "\n\n#{sign}"
-      self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+      self.html = "<p></p>" + Webmail.text_to_html(sign)
     end
   end
 
@@ -52,7 +52,7 @@ module Webmail::Mail::Message
   def new_forward(ref)
     self.forward_uid = ref.uid
     self.subject = "Fw: " + ref.display_subject.to_s.gsub(/^Fw:\s*/, '')
-    set_reply_body(ref)
+    set_forward_body(ref)
     set_ref_files(ref.attachments)
   end
 
@@ -81,39 +81,63 @@ module Webmail::Mail::Message
   end
 
   def set_reply_body(ref)
+    text = html = nil
+    if ref.text.present?
+      text = decode_jp(ref.text.to_s)
+    elsif ref.html.present?
+      html = ref.sanitize_html(nil, remove_image: true)
+      text = Gws::Memo.html_to_text(ref.sanitize_html(nil, remove_image: true))
+    end
+
+    if ref.html.present?
+      html ||= ref.sanitize_html(nil, remove_image: true)
+    elsif ref.text.present?
+      html = Webmail.text_to_html(text)
+    end
+
+    send_date = ref.internal_date.in_time_zone
+    from = ref.display_sender.present? ? ref.display_sender.address : t("webmail.no_senders")
     sign = Webmail::Signature.default_sign(imap)
+
     self.format = ref.format
-    self.text = reply_body_text(ref, sign)
-    self.html = reply_body_html(ref, sign)
+    if text.present?
+      self.text = Webmail.reply_text(text, send_date: send_date, from: from, sign: sign)
+    end
+    if html.present?
+      self.html = Webmail.reply_html(html, send_date: send_date, from: from, sign: sign)
+    end
   end
 
   def reply_body_info(ref)
     I18n.l(ref.internal_date, format: :long) + ' ' + ref.from.join(', ').to_s + ':'
   end
 
-  def reply_body_text(ref, sign = nil)
-    text = "\n\n"
-    text += "#{sign}\n\n" if sign.present?
-    text += reply_body_info(ref) + "\n"
-    text += decode_jp(ref.text.to_s).gsub(/^/m, "> ")
-    text
-  end
-
-  def reply_body_html(ref, sign = nil)
-    if ref.html.present?
-      bq = ref.sanitize_html(nil, remove_image: true)
-    elsif ref.text.present?
-      bq = h(decode_jp(ref.text.to_s)).gsub(/\r\n|\n/, '<br />')
+  def set_forward_body(ref)
+    text = html = nil
+    if ref.text.present?
+      text = decode_jp(ref.text.to_s)
+    elsif ref.html.present?
+      html = ref.sanitize_html(nil, remove_image: true)
+      text = Gws::Memo.html_to_text(ref.sanitize_html(nil, remove_image: true))
     end
 
-    html = "<p></p>"
-    html += "<p>" + h(sign).gsub(/\r\n|\n/, '<br />') + "</p>" if sign.present?
-    html += "<div>" + h(reply_body_info(ref)) + "</div>"
-    html += "<blockquote style='margin: 0 0 0 1ex'>#{bq}</blockquote>"
-    html
-  end
+    if ref.html.present?
+      html ||= ref.sanitize_html(nil, remove_image: true)
+    elsif ref.text.present?
+      html = Webmail.text_to_html(text)
+    end
 
-  def h(str)
-    ERB::Util.h(str)
+    subject = ref.display_subject.to_s
+    send_date = ref.internal_date.in_time_zone
+    from = ref.display_sender.present? ? ref.display_sender.address : t("webmail.no_senders")
+    sign = Webmail::Signature.default_sign(imap)
+
+    self.format = ref.format
+    if text.present?
+      self.text = Webmail.forward_text(text, subject: subject, send_date: send_date, from: from, sign: sign)
+    end
+    if html.present?
+      self.html = Webmail.forward_html(html, subject: subject, send_date: send_date, from: from, sign: sign)
+    end
   end
 end
