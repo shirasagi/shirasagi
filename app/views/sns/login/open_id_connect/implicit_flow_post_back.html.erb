@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
-  <title><%= SS.config.ss.application_name %></title>
+  <title><%= ss_application_name %></title>
   <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
   <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
   <%= csrf_meta_tags %>
