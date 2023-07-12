@@ -11,18 +11,20 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_chorg_main_path(site: site)
       click_on revision.name
+      wait_for_js_ready
       click_on I18n.t("chorg.menus.revisions.delete")
 
       within "form#item-form" do
-        click_on I18n.t("chorg.views.delete_changesets.select_group")
+        wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
       end
-      within "#ajax-box" do
-        click_on group0.trailing_name
+      wait_for_cbox do
+        wait_cbox_close { click_on group0.trailing_name }
       end
       within "form#item-form" do
+        expect(page).to have_css(".ajax-selected [data-id='#{group0.id}']", text: group0.trailing_name)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       revision.reload
       expect(revision.changesets.count).to eq 1
@@ -45,19 +47,22 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
 
       visit gws_chorg_main_path(site: site)
       click_on revision.name
+      wait_for_js_ready
       click_on changeset0.delete_description
+      wait_for_js_ready
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
-        click_on I18n.t("chorg.views.delete_changesets.select_group")
+        wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
       end
-      within "#ajax-box" do
-        click_on group1.trailing_name
+      wait_for_cbox do
+        wait_cbox_close { click_on group1.trailing_name }
       end
       within "form#item-form" do
+        expect(page).to have_css(".ajax-selected [data-id='#{group1.id}']", text: group1.trailing_name)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       revision.reload
       expect(revision.changesets.count).to eq 1
@@ -79,7 +84,9 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
 
       visit gws_chorg_main_path(site: site)
       click_on revision.name
+      wait_for_js_ready
       click_on changeset0.delete_description
+      wait_for_js_ready
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
@@ -87,7 +94,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       revision.reload
       expect(revision.changesets.count).to eq 0

@@ -12,8 +12,9 @@ module Chorg::Model::Changeset
   TYPE_ORDER = TYPES.each_with_index.to_h.freeze
 
   CONTACT_GROUP_ATTRIBUTES = %i[
-    _id id main_state name contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name].freeze
-  MAIN_CONTACT_GROUP_ATTRIBUTES = (CONTACT_GROUP_ATTRIBUTES - %i[_id id]).freeze
+    _id id main_state unifies_to_main name contact_group_name contact_tel contact_fax contact_email
+    contact_link_url contact_link_name].freeze
+  MAIN_CONTACT_GROUP_ATTRIBUTES = (CONTACT_GROUP_ATTRIBUTES - %i[_id id unifies_to_main]).freeze
 
   included do
     attr_accessor :cur_revision, :cur_type
@@ -25,7 +26,7 @@ module Chorg::Model::Changeset
     permit_params :cur_revision, :cur_type
     permit_params :type, :sources, :destinations
     permit_params(sources: %w(id name))
-    permit_params(destinations: [ :name, :order, :ldap_dn, contact_groups: CONTACT_GROUP_ATTRIBUTES ])
+    permit_params(destinations: [ :name, :order, :ldap_dn, :unifies_to_main, contact_groups: CONTACT_GROUP_ATTRIBUTES ])
 
     before_validation :set_revision_id, if: ->{ @cur_revision }
     before_validation :set_type, if: ->{ @cur_type }

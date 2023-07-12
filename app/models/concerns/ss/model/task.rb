@@ -40,6 +40,7 @@ module SS::Model::Task
     validates :closed, datetime: true
 
     after_initialize :init_variables
+    after_destroy ->{ ::FileUtils.rm_rf(base_dir) }
   end
 
   class Interrupt < StandardError
@@ -187,9 +188,14 @@ module SS::Model::Task
     ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exist?(log_file_path)
   end
 
+  def base_dir
+    return if new_record?
+    @base_dir ||= "#{SS::File.root}/ss_tasks/#{id.to_s.chars.join("/")}/_"
+  end
+
   def log_file_path
     return if new_record?
-    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.chars.join("/") + "/_/#{id}.log"
+    @log_file_path ||= "#{base_dir}/#{id}.log"
   end
 
   def perf_log_file_path

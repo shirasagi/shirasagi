@@ -100,6 +100,7 @@ Rails.application.routes.draw do
     end
     resources :groups, concerns: [:deletion, :role, :import] do
       match :download_all, on: :collection, via: %i[get post]
+      resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
     end
     resources :members, concerns: [:deletion, :download] do
       get :verify, on: :member
