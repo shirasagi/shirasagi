@@ -123,8 +123,6 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
 
       click_on I18n.t("ss.links.new")
-      within "form#item-form" do
-      end
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         first("#item_allday").click
