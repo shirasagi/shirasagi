@@ -63,6 +63,11 @@ class Contact::UnifiesController < ApplicationController
 
     job_class = Contact::UnifyJob.bind(site_id: @cur_site, user_id: @cur_user)
     job_class.perform_now(group_item.id, @item.main_id, @item.sub_ids)
-    render_update true, location: cms_group_path(id: group_item.id), render: { template: "show" }, notice: t("contact.notices.unified")
+    render_opts = {
+      location: cms_group_path(id: group_item.id),
+      render: { template: "show" },
+      notice: t("contact.notices.unified")
+    }
+    render_update true, render_opts
   end
 end

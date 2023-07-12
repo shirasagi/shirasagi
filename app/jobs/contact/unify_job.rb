@@ -8,7 +8,8 @@ class Contact::UnifyJob < Cms::ApplicationJob
     criteria = Cms::Page.all.where(contact_group_id: group_item.id).in(contact_group_contact_id: sub_contacts.map(&:id))
     criteria.set(contact_group_contact_id: main_contact.id)
 
-    criteria = Cms::Page.all.where(contact_group_id: group_item.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
+    criteria = Cms::Page.all.where(
+      contact_group_id: group_item.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
     criteria.set(
       contact_charge: main_contact.contact_group_name,
       contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
