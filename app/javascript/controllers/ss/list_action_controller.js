@@ -79,7 +79,7 @@ export default class extends Controller {
         headers: { "X-CSRF-Token": csrfToken() },
         body: body
       }).then((response) => this.#showResponse(listItem, response))
-        .catch((err) => this.#showError(listItem, { text: "Network Error" }));
+        .catch((_err) => this.#showError(listItem, { text: "Network Error" }));
 
       promises.push(promise);
     });
