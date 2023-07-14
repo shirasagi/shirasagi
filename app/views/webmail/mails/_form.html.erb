@@ -37,9 +37,10 @@
         <% end %>
       </div>
     </dd>
-    <dd><%= render 'address_form', { f: f, field: field } %></dd>
   </dl>
 <% end %>
+
+<%= render 'address_form', { f: f } %>
 
 <% render_address_form.call(:to, @item.to, "to", false) %>
 
