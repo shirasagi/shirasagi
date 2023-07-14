@@ -5,7 +5,7 @@
 
   if @auto_save_enabled && (url_for(action: :resume_edit) rescue nil)
     # 自動保存が有効 & resume アクションが定義位されている場合
-    html_option[:data] = { controller: "ss--auto-save", "ss--auto-save-resume-url-value" => url_for(action: :resume_edit) }
+    html_option[:data] = { controller: "ss--auto-save", "ss--auto-save-user-id-value" => @cur_user.id, "ss--auto-save-resume-url-value" => url_for(action: :resume_edit) }
   end
 %>
 

@@ -17,7 +17,7 @@ function stringifyJsonToFormData(stringifyJson) {
 }
 
 export default class extends Controller {
-  static values = { resumeUrl: String }
+  static values = { userId: String, resumeUrl: String }
 
   #lastAutoSaved = 0;
   #submitted = false;
@@ -33,7 +33,7 @@ export default class extends Controller {
     this.#beforeUnloadHandler = () => { this.#onUnload(); };
     window.addEventListener("beforeunload", this.#beforeUnloadHandler);
 
-    const autoSaveData = localStorage.getItem(`autosave.${location.pathname}`);
+    const autoSaveData = localStorage.getItem(this.#key());
     if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing"))) {
       await this.#restoreForm(autoSaveData);
     }
@@ -48,10 +48,15 @@ export default class extends Controller {
     window.removeEventListener("beforeunload", this.#beforeUnloadHandler);
   }
 
+  #key() {
+    // 業務端末を複数職員で共有するケースを想定し、ユーザーIDを含める
+    return `autosave.${this.userIdValue}.${location.pathname}`;
+  }
+
   #onUnload() {
     if (this.#submitted) {
       // form を送信したので local storage の編集途中のデータを削除
-      localStorage.removeItem(`autosave.${location.pathname}`)
+      localStorage.removeItem(this.#key())
     } else {
       // form は未送信のため、編集途中のデータを local storage へ保存
       this.#serializeFormData();
@@ -76,7 +81,7 @@ export default class extends Controller {
     formData.delete("_method")
     formData.delete("_updated")
 
-    localStorage.setItem(`autosave.${location.pathname}`, formDataToStringifyJson(formData))
+    localStorage.setItem(this.#key(), formDataToStringifyJson(formData))
     this.#lastAutoSaved = new Date().getTime();
   }
 
