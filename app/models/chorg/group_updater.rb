@@ -92,6 +92,8 @@ class Chorg::GroupUpdater
       end
 
       if contact.blank?
+        hash = hash.dup
+        hash.delete("unifies_to_main")
         item_attributes["contact_groups"] << hash
         next
       end
