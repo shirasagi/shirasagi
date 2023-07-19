@@ -1,9 +1,8 @@
 class Contact::PageCountService
   include ActiveModel::Model
 
-  cattr_accessor :expires_in, :perform_caching, :cache_key, instance_accessor: false
+  cattr_accessor :expires_in, instance_accessor: false
   self.expires_in = 1.hour
-  self.perform_caching = Rails.application.config.action_controller.perform_caching
 
   attr_accessor :cur_site, :cur_user
 
@@ -32,10 +31,6 @@ class Contact::PageCountService
     @task ||= Cms::Task.all.order_by(id: 1).find_or_create_by(site_id: cur_site.id, name: Contact::PageCountJob::task_name)
   end
 
-  def cache_configured?
-    Rails.application.config.action_controller.perform_caching && Rails.cache
-  end
-
   def require_refreshing?(now = nil)
     path = Contact::PageCountJob.page_count_path(task)
     return true if !::File.exist?(path) || ::File.size(path).zero?
@@ -48,14 +43,7 @@ class Contact::PageCountService
 
   def count_map
     return @count_map if instance_variable_defined?(:@count_map)
-
-    if cache_configured?
-      @count_map = Rails.cache.fetch(component_cache_key || {}, expires_in: self.class.expires_in) do
-        load_count_map
-      end
-    else
-      @count_map = load_count_map
-    end
+    @count_map = load_count_map
   end
 
   def load_count_map

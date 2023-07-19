@@ -305,7 +305,7 @@ describe Chorg::MainRunner, dbscope: :example do
         contact = source_group2.contact_groups.first
         create(
           :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group1.id, source_group2.id ],
-          contact_group_id: source_group1.id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+          contact_group_id: source_group2.id, contact_group_contact_id: contact.id, contact_group_relation: "related",
           contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel,
           contact_fax: contact.contact_fax, contact_email: contact.contact_email,
           contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
