@@ -9,13 +9,14 @@ this.SS_ListUI = (function () {
       $el = $(document);
     }
 
-    $el.find(".list-head input:checkbox").on("change", function () {
+    $el.find(".list-head input:checkbox,.grid-head input:checkbox").on("change", function () {
+      var name = this.name;
       var chk = $(this).prop('checked');
       $el.find('.list-item').each(function () {
         var $listItem = $(this);
         var modified = false;
         $listItem.find('input:checkbox').each(function() {
-          if (!this.disabled) {
+          if ((!name || this.name === name) && !this.disabled) {
             this.checked = chk;
             modified = true;
           }

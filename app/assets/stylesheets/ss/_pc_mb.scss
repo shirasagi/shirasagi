@@ -2742,6 +2742,50 @@ table.index.data-table {
     color: inherit;
   }
 }
+table.grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto;
+  width: 100%;
+  border: $border-gray5;
+  background: $white;
+
+  tr:nth-child(2n) {
+    td, th {
+      background: #f8f8f8;
+    }
+  }
+
+  tr.current, tr:hover {
+    * {
+      background: $gray1;
+    }
+  }
+
+  thead, tbody, tr {
+    display: contents;
+  }
+
+  thead {
+    tr {
+      td, th {
+        border-bottom: 1px solid #dcdcdc;
+        background: #f2f2f2;
+        color: #999;
+      }
+    }
+  }
+
+  td, th {
+    padding: 6px 18px;
+  }
+
+  @include mb {
+    td, th {
+      padding: 4px;
+    }
+  }
+}
 .sortable-index {
   .sortable-handle-head {
     width: 10px;

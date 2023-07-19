@@ -189,19 +189,25 @@ this.SS_SearchUI = (function () {
     if (!$ajaxSelected.length) {
       $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
     }
-    $ajaxSelected.find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      var tr = $("#colorbox .items [data-id='" + id + "']");
-      tr.find("input[type=checkbox]").remove();
-      tr.find(".select-item,.select-single-item").each(function() {
-        var $this = $(this);
-        var html = $this.html();
+    if ($ajaxSelected.length) {
+      $ajaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        var tr = $("#colorbox .items [data-id='" + id + "']");
+        tr.find("input[type=checkbox]").remove();
+        tr.find(".select-item,.select-single-item").each(function () {
+          var $this = $(this);
+          var html = $this.html();
 
-        var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
-        $this.replaceWith(disabledHtml);
+          var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+          $this.replaceWith(disabledHtml);
+        });
       });
-    });
-    $el.find("table.index").each(function() {
+    } else {
+      if (this.anchorAjaxBox.data('on-init')) {
+        this.anchorAjaxBox.data('on-init')($el)
+      }
+    }
+    $el.find("table.index,table.grid").each(function() {
       SS_ListUI.render(this);
     });
     $el.find("a.select-item").on("click", function (ev) {
@@ -245,7 +251,7 @@ this.SS_SearchUI = (function () {
       colorbox.close();
       return false;
     });
-    $el.find(".index").on("change", function (ev) {
+    $el.find(".index,.grid").on("change", function (ev) {
       return self.toggleSelectButton($el);
     });
     return self.toggleSelectButton($el);

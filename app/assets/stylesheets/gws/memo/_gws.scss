@@ -341,3 +341,39 @@ table.index.gws-memo-folder {
     }
   }
 }
+
+.gws-memo-persona-address-list {
+  table.grid {
+    .checkbox {
+      display: flex;
+      justify-content: center;
+
+      label {
+        display: inline-flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+#gws-memo-persona-address-personal {
+  table.grid {
+    grid-template-columns: auto auto auto 1fr 1fr;
+  }
+
+  @include mb {
+    table.grid {
+      grid-template-columns: auto auto auto 1fr;
+
+      .checkbox {
+        grid-row: span 2;
+      }
+    }
+  }
+}
+
+#gws-memo-persona-address-group {
+  table.grid {
+    grid-template-columns: auto auto auto 1fr;
+  }
+}

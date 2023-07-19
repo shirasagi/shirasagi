@@ -20,6 +20,7 @@
 //= require gws/memo/message
 //= require gws/memo/folder
 //= require gws/memo/filter
+//= require gws/memo/member
 //= require gws/monitor/lib/monitor
 //= require gws/portal/lib/portal
 //= require gws/elasticsearch/highlighter
