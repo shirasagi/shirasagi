@@ -277,6 +277,10 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      layouts:
+        index: レイアウトを選択する
+        search: レイアウトを検索
+        select: レイアウトを設定する
       nodes_routes:
         index: フォルダー属性を選択する
         search: フォルダー属性を検索
@@ -804,6 +808,8 @@ ja:
       cms/tag: タグ
       cms/layout_html: レイアウト
       cms/layout_part: 使用中パーツ
+      cms/layout_search: レイアウト使用ページを検索する
+      cms/layotu_search/btn: レイアウト使用ページを検索
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム

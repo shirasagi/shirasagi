@@ -9,4 +9,3 @@ module Cms::Addon
       end
     end
   end
-  
