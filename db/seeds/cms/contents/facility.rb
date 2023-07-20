@@ -59,8 +59,7 @@ save_page route: "facility/notice", filename: "institution/shisetsu/library/page
 
 puts "# ezine"
 save_page route: "ezine/page", filename: "ezine/page36.html", name: "シラサギ市メールマガジン", completed: true,
-  layout_id: @layouts["ezine"].id, html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
-  text: "シラサギ市メールマガジンを配信します。\r\n"
+  layout_id: @layouts["ezine"].id, text: "シラサギ市メールマガジンを配信します。\r\n"
 
 puts "# anpi-ezine"
 anpi_text = File.read("pages/anpi-ezine/anpi/anpi37.text.txt") rescue nil
