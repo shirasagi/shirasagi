@@ -753,6 +753,7 @@ ja:
 
   modules:
     cms: 標準機能
+    cms/line: LINE機能
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール
