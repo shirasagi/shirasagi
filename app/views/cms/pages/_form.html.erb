@@ -1,3 +1,20 @@
+<%
+  forms = ancestral_forms.to_a
+  forms << @item.form if @item.form
+  forms = forms.uniq(&:id)
+
+  if params[:form_id].present?
+    form = forms.select { |form| form.id == params[:form_id].to_i }.first
+    if form.present?
+      @item.form_id = form.id
+    end
+  elsif params.key?(:form_id)
+    @item.form_id = nil
+  end
+
+  cur_form = @item.form
+%>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -16,11 +33,37 @@
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item.parent, @item.layout), include_blank: " " %></dd>
 
+<!--定型フォーム選択-->
+  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
+  <dd>
+    <%= f.hidden_field :form_id, value: cur_form.try(:id) %>
+    
+    <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change") %>
+    <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+
+    <%= jquery do %>
+      Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
+      Cms_Column_FileUpload.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>
+      Cms_Column_FileUpload.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", node: params[:cid], owner_item_id: @item.id, owner_item_type: @model.to_s).to_json %>;
+
+      Cms_Column_Free.userId = <%= @cur_user.id %>;
+      Cms_Column_Free.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
+      Cms_Column_Free.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", form: "free", node: params[:cid], owner_item_id: @item.id, owner_item_type: @model.to_s).to_json %>;
+
+      Cms_TemplateForm.userId = <%= @cur_user.id %>;
+      Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+      Cms_TemplateForm.confirms.changeForm = <%== t("cms.confirm.change_form").to_json %>;
+      Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId", node: @cur_node.try(:id)).to_json %>;
+      Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', node: @cur_node.try(:id), item_id: (@item.new_record? ? nil : @item.id), item_route: @item.route).to_json %>;
+      Cms_TemplateForm.render();
+    <% end %>
+  </dd>
+
   <%= render 'cms/pages/form_body_parts', f: f %>
 
-  <%= render 'cms/pages/form_template_form', f: f %>
+ <%Rails.logger.error "------------------@cur_node = #{@cur_form.try(:id)}"%>
+  <!--%= render 'cms/pages/form_template_form', f: f %-->
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 </dl>
-
