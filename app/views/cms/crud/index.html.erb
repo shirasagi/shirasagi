@@ -23,6 +23,7 @@
             <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
             <% if %i(cms_nodes cms_pages).include?(@model.collection_name) %>
+            <%Rails.logger.error "cms_pages#{cms_pages}"%>
               <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
               <%= safe_join cms_preview_links(item) %>
             <% end %>

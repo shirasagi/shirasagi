@@ -809,7 +809,7 @@ ja:
       cms/layout_html: レイアウト
       cms/layout_part: 使用中パーツ
       cms/layout_search: レイアウト使用ページを検索する
-      cms/layotu_search/btn: レイアウト使用ページを検索
+      cms/layout_search/btn: レイアウト使用ページを検索
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
