@@ -141,8 +141,10 @@ module Opendata::Harvest::CkanApiImporter
       dataset.resources << resource
     end
 
-    if resource.revision_id == attributes["revision_id"]
-      put_log("-- resource : same revision_id #{resource.name}")
+    last_modified = attributes["last_modified"]
+    last_modified = DateTime.parse(last_modified).in_time_zone.change(sec: 0)
+    if resource.harvest_last_modified.to_i == last_modified.to_i
+      put_log("-- resource : same last_modified #{I18n.l(last_modified)}")
       return resource
     end
 
@@ -182,19 +184,14 @@ module Opendata::Harvest::CkanApiImporter
 
     resource.order = idx
     resource.uuid = attributes["id"]
-    resource.revision_id = attributes["revision_id"]
+    resource.harvest_last_modified = last_modified
     resource.name = attributes["name"]
     resource.text = attributes["description"]
     resource.filename = filename
     resource.format = format
     resource.license = license
 
-    def resource.set_updated; end
-
-    def resource.set_revision_id; end
-
     def resource.compression_dataset; end
-
     resource.updated = dataset.updated
     resource.created = dataset.created
 
