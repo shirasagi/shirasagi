@@ -12,6 +12,7 @@ module Opendata::Addon::Harvest::Resource
     field :harvest_imported, type: DateTime, default: nil
     field :harvest_imported_url, type: String, default: nil
     field :harvest_imported_attributes, type: Hash, default: {}
+    field :harvest_last_modified, type: DateTime, default: nil
 
     field :harvest_host, type: String, default: nil
     field :harvest_api_type, type: String, default: nil
