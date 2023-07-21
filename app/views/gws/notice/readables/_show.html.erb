@@ -43,7 +43,7 @@
       <div class="links">
         <% @item.links.each_with_index do |link, i| %>
         <span id="link-<%= i %>">
-          <% ext = ::File.extname(url).delete(".") rescue "" %>
+          <% ext = ::File.extname(link['url']).delete(".") rescue "" %>
           <%= link_to link['name'], link['url'], class: (ext.present? ? "ext-#{ext}" : "") %>
         </span>
         <% end %>
