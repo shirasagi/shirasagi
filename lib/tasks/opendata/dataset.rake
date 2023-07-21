@@ -53,6 +53,22 @@ namespace :opendata do
   end
 
   namespace :harvest do
+    task export: :environment do
+      puts "Please input site: site=[www]" or exit if ENV['site'].blank?
+      puts "Please input exporter: exporter=[1]" or exit if ENV['exporter'].blank?
+
+      site = ::Cms::Site.where(host: ENV['site']).first
+      ::Opendata::Harvest::HarvestDatasetsJob.bind(site_id: site.id).perform_now(exporter_id: ENV['exporter'])
+    end
+
+    task import: :environment do
+      puts "Please input site: site=[www]" or exit if ENV['site'].blank?
+      puts "Please input importer: importer=[1]" or exit if ENV['importer'].blank?
+
+      site = ::Cms::Site.where(host: ENV['site']).first
+      ::Opendata::Harvest::HarvestDatasetsJob.bind(site_id: site.id).perform_now(importer_id: ENV['importer'])
+    end
+
     task exporter_dataset_purge: :environment do
       puts "Please input site: site=[www]" or exit if ENV['site'].blank?
       puts "Please input exporter: exporter=[1]" or exit if ENV['exporter'].blank?
