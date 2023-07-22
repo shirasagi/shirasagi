@@ -19,7 +19,8 @@ module SS::CapybaraSupport
   module_function
 
   def activate_driver(name, config)
-    activate_chrome(config)
+    # activate_chrome(config)
+    activate_firefox(config)
   rescue LoadError
     deactivate_driver(config)
   end
@@ -49,6 +50,32 @@ module SS::CapybaraSupport
     Capybara.javascript_driver = :chrome
 
     puts "[Capybara] with Google Chrome(headless: #{headless == '0' ? 'disabled' : 'enabled'})"
+    true
+  end
+
+  def activate_firefox(config)
+    require 'selenium-webdriver'
+    headless = ENV.fetch('headless', '1')
+    set_capybara_server
+    Capybara.register_driver :firefox do |app|
+      profile = Selenium::WebDriver::Firefox::Profile.new
+      profile['browser.download.dir'] = SS::DownloadHelpers.path
+      profile['intl.accept_languages'] = 'ja-JP'
+
+      options = Selenium::WebDriver::Options.firefox(profile: profile)
+      options.log_level = 'trace'
+      options.add_argument('--width=1280')
+      options.add_argument('--height=800')
+
+      if headless != '0'
+        options.add_argument('--headless')
+      end
+
+      Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
+    end
+    Capybara.javascript_driver = :firefox
+
+    puts "[Capybara] with Firefox(headless: #{headless == '0' ? 'disabled' : 'enabled'})"
     true
   end
 
