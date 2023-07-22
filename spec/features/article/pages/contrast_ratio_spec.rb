@@ -46,7 +46,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#addon-cms-agents-addons-thumb" do
             expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
             wait_cbox_open do
-              first(".file-view[data-file-id='#{file1.id}'] a").click
+              js_click first(".file-view[data-file-id='#{file1.id}'] a")
             end
           end
           wait_for_cbox do
@@ -159,7 +159,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             wait_for_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
               wait_cbox_close do
-                first(".file-view[data-file-id='#{file2.id}'] a").click
+                js_click first(".file-view[data-file-id='#{file2.id}'] a")
               end
             end
 
@@ -256,7 +256,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             wait_for_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
               wait_cbox_close do
-                first(".file-view[data-file-id='#{file3.id}'] a").click
+                js_click first(".file-view[data-file-id='#{file3.id}'] a")
               end
             end
 
@@ -286,7 +286,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             wait_for_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file4.id}']", text: file4.name)
               wait_cbox_close do
-                first(".file-view[data-file-id='#{file4.id}'] a").click
+                js_click first(".file-view[data-file-id='#{file4.id}'] a")
               end
             end
 

@@ -34,6 +34,8 @@ module SS
       end
     end
 
+    mattr_accessor :is_within_cbox
+
     module_function
 
     HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
@@ -270,7 +272,15 @@ module SS
     def wait_for_cbox(&block)
       wait_for_js_ready
       have_css("#cboxClose", text: "close")
-      within("#cboxContent", &block) if block
+      if block
+        save = JsSupport.is_within_cbox
+        JsSupport.is_within_cbox = true
+        begin
+          within("#cboxContent", &block)
+        ensure
+          JsSupport.is_within_cbox = save
+        end
+      end
     end
 
     def colorbox_opened?
@@ -394,7 +404,11 @@ module SS
     #
     def wait_cbox_close(&block)
       wait_for_js_ready
+      save = JsSupport.is_within_cbox
+      JsSupport.is_within_cbox = true
       wait_event_to_fire("cbox_closed", &block)
+    ensure
+      JsSupport.is_within_cbox = save
     end
 
     #
@@ -509,6 +523,30 @@ module SS
       raise
     end
     alias wait_for_ajax wait_for_js_ready
+
+    def click_on(locator = nil, **options)
+      if JsSupport.is_within_cbox
+        click_on_cbox(locator, **options)
+      else
+        page.click_on(locator, **options)
+      end
+    end
+
+    def click_on_cbox(locator, **options)
+      case Capybara.javascript_driver
+      when :firefox
+        # firefox で colorbox 上の <a> をクリックすると、ElementNotInteractableError が発生する
+        # JS でクリックしてこのエラーを回避する
+        # see: https://github.com/teamcapybara/capybara/blob/3.38.0/lib/capybara/node/actions.rb#L25-L28
+        js_click find(:link_or_button, locator, **options)
+      else
+        page.click_on(locator, **options)
+      end
+    end
+
+    def js_click(element)
+      page.execute_script("arguments[0].click()", element)
+    end
   end
 end
 
