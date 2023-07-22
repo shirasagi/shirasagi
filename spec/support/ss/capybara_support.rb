@@ -53,13 +53,28 @@ module SS::CapybaraSupport
     true
   end
 
+  MIME_TYPES_FOR_DOWNLOAD = %w(
+    text/plain text/csv text/xml image/png image/jpeg image/gif application/pdf application/zip application/octet-stream
+  ).freeze
+
   def activate_firefox(config)
     require 'selenium-webdriver'
     headless = ENV.fetch('headless', '1')
     set_capybara_server
     Capybara.register_driver :firefox do |app|
       profile = Selenium::WebDriver::Firefox::Profile.new
+      # ダウンロード
       profile['browser.download.dir'] = SS::DownloadHelpers.path
+      profile['browser.download.folderList'] = 2
+      profile['browser.download.manager.alertOnEXEOpen'] = false
+      profile['browser.download.manager.closeWhenDone'] = true
+      profile['browser.download.manager.focusWhenStarting'] = false
+      profile['browser.download.manager.showAlertOnComplete'] = false
+      profile['browser.download.manager.showWhenStarting'] = false
+      profile['browser.download.manager.useWindow'] = false
+      profile['browser.helperApps.alwaysAsk.force'] = false
+      profile['browser.helperApps.neverAsk.saveToDisk'] = MIME_TYPES_FOR_DOWNLOAD.join(",")
+      # 国際化
       profile['intl.accept_languages'] = 'ja-JP'
 
       options = Selenium::WebDriver::Options.firefox(profile: profile)
