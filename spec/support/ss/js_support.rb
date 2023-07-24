@@ -343,9 +343,16 @@ module SS
     end
 
     def capture_console_logs(session = nil)
-      session ||= page
-      session.driver.browser.logs.get(:browser).collect(&:message)
+      case Capybara.javascript_driver
+      when :firefox
+        # currently not supported on firefox
+        []
+      else
+        session ||= page
+        session.driver.browser.logs.get(:browser).collect(&:message)
+      end
     rescue => _e
+      []
     end
 
     def puts_console_logs
