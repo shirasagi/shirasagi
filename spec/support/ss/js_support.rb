@@ -517,7 +517,7 @@ module SS
         raise "unable to be js ready"
       end
 
-      yield if block_given?
+      yield if block
     rescue Selenium::WebDriver::Error::JavascriptError
       puts_console_logs
       raise
