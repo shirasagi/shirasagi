@@ -1031,6 +1031,7 @@ ja:
       ss/api_token:
         name: 名前
         jwt_id: JWT ID (jti)
+        expiration_date: 期限切れ日時
         jwt: APIトークン
   tooltip:
     ss/model/site:

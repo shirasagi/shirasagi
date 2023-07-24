@@ -8,10 +8,10 @@ class SS::ApiToken
   field :subject, type: String, default: nil
   field :jwt_id, type: String, default: -> { SecureRandom.uuid }
   field :expiration_date, type: DateTime, default: nil
-  field :not_before_date, type: DateTime, default: nil
   field :custom_claim, type: Hash, default: {}
+  field :state, type: String, default: "public"
 
-  permit_params :name, :expiration_date, :not_before_date
+  permit_params :name, :expiration_date, :state
 
   validates :name, presence: true
   validates :user_id, presence: true
@@ -45,8 +45,8 @@ class SS::ApiToken
   end
 
   def nbf
-    return unless not_before_date
-    not_before_date.to_i
+    return unless expiration_date
+    created.to_i
   end
 
   def to_jwt
@@ -54,6 +54,10 @@ class SS::ApiToken
       nbf: nbf, iat: iat, jti: jti }
     payload.merge!(custom_claim).compact!
     JWT.encode payload, self.class.secret, 'HS256'
+  end
+
+  def state_options
+    %w(public closed).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
   end
 
   class << self

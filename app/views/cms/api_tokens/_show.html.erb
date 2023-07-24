@@ -8,9 +8,14 @@
   <dt><%= @model.t :jwt_id %></dt>
   <dd><%= @item.jwt_id %></dd>
 
-  <dt><%= @model.t :site_id %></dt>
-  <dd><%= @item.site.name %></dd>
+  <% if @item.expiration_date %>
+    <dt><%= @model.t :expiration_date %></dt>
+    <dd><%= ss_time_tag(@item.expiration_date) %></dd>
+  <% end %>
 
   <dt><%= @model.t :user_id %></dt>
   <dd><%= @item.user.name %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
 </dl>
