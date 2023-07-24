@@ -3,7 +3,13 @@
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :expiration_date %></dt>
-  <dd><%= f.text_field :expiration_date, class: "datetime js-datetime" %></dd>
+  <dd>
+    <% if @item.new_record? %>
+      <%= f.text_field :expiration_date, class: "datetime js-datetime" %>
+    <% else %>
+      <%= @item.expiration_date_label %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>

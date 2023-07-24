@@ -33,6 +33,7 @@ class Cms::ApiToken < SS::ApiToken
 
       api_token = self.site(site).where(jwt_id: claim["jti"]).first
       raise "could not found api token!" if api_token.nil?
+      raise "api_token's state is closed!" if api_token.closed?
 
       api_token
     end

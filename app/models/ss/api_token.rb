@@ -60,6 +60,18 @@ class SS::ApiToken
     %w(public closed).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
   end
 
+  def public?
+    state == "public"
+  end
+
+  def closed?
+    !public?
+  end
+
+  def expiration_date_label
+    expiration_date ? I18n.l(expiration_date, format: :picker) : I18n.t("ss.unlimited")
+  end
+
   class << self
     def iss
       nil

@@ -8,52 +8,63 @@ describe "cms_api_tokens", type: :feature, dbscope: :example, js: true do
   let(:index_path) { cms_api_tokens_path site.id }
   let(:new_path) { new_cms_api_token_path site.id }
   let(:show_path) { cms_api_token_path site.id, item }
+  let(:edit_path) { edit_cms_api_token_path site.id, item }
   let(:delete_path) { delete_cms_api_token_path site.id, item }
 
   context "with auth" do
     before { login_cms_user }
 
-    context "#index" do
-      it do
-        visit index_path
-        expect(current_path).to eq index_path
+    it "#index" do
+      visit index_path
+      expect(current_path).to eq index_path
+    end
+
+    it "#new" do
+      visit new_path
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: name)
       end
     end
 
-    context "#new" do
-      it do
-        visit new_path
-        within "form#item-form" do
-          fill_in "item[name]", with: name
-          click_button I18n.t('ss.buttons.save')
-        end
-        wait_for_notice I18n.t("ss.notice.saved")
-
-        within "#addon-basic" do
-          expect(page).to have_css("dd", text: name)
-        end
+    it "#show" do
+      visit show_path
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: item.name)
+        expect(page).to have_css("dd", text: item.jwt_id)
+        expect(page).to have_css("dd", text: item.to_jwt)
       end
     end
 
-    context "#show" do
-      it do
-        visit show_path
-        within "#addon-basic" do
-          expect(page).to have_css("dd", text: item.name)
-          expect(page).to have_css("dd", text: item.jwt_id)
-          expect(page).to have_css("dd", text: item.to_jwt)
-        end
+    it "#edit" do
+      jwt = item.to_jwt
+
+      visit edit_path
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        select I18n.t("ss.options.state.closed"), from: 'item[state]'
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      within "#addon-basic" do
+        expect(page).to have_css("dd", text: name)
+        expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
+        expect(page).to have_css("dd", text: jwt)
       end
     end
 
-    context "#delete" do
-      it do
-        visit delete_path
-        within "form" do
-          click_button I18n.t('ss.buttons.delete')
-        end
-        wait_for_notice I18n.t("ss.notice.deleted")
+    it "#delete" do
+      visit delete_path
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
     end
   end
 end

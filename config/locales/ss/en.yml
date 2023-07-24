@@ -77,6 +77,7 @@ en:
         delivered: "Delivered：%{time}"
         term: "Term：%{term}"
         openrate: "Openrate：%{openrate}"
+        expiration_date: "Expiration date：%{expiration_date}"
       oauth2/application:
         header:
           name: Application Type
