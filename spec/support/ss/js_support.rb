@@ -526,6 +526,24 @@ module SS
       result
     end
 
+    # document.readyState が 'loading' になるのを待機する。
+    #
+    # switch_to_window や within_window で別ウインドウに切り替えた直後、document.readyState が 'uninitialized' となっている場合がある。
+    # この場合、window.addEventListener, window.setTimeout, document.addEventListener などを呼び出すとエラー "Document was unloaded"
+    # が発生する。
+    #
+    # JS コードで待機できれば良いのだが、setTimeout が使用できないので Ruby コードで待機する。
+    def wait_for_document_loading
+      Timeout.timeout(wait_timeout) do
+        loop do
+          ready_state = page.evaluate_script("document.readyState")
+          break if ready_state.present? && ready_state != 'uninitialized'
+
+          sleep 0.1
+        end
+      end
+    end
+
     def wait_for_js_ready(session = nil, &block)
       session ||= page
       unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
@@ -564,6 +582,21 @@ module SS
     def js_click(element)
       wait_for_js_ready
       page.execute_script("arguments[0].click()", element)
+      wait_for_js_ready
+    end
+
+    def js_dispatch_focus_event(event_name, locator)
+      wait_for_js_ready
+      page.execute_script("arguments[0].dispatchEvent(new FocusEvent(arguments[1]))", find(:fillable_field, locator), event_name)
+      wait_for_js_ready
+    end
+
+    def fill_in_address(locator, with:)
+      wait_for_js_ready
+      wait_event_to_fire("ss:addressCommitted") do
+        fill_in locator, with: with
+        js_dispatch_focus_event 'blur', locator
+      end
       wait_for_js_ready
     end
   end

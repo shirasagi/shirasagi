@@ -35,7 +35,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_password]", with: "pass"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #show
       visit show_path
@@ -47,13 +47,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #delete
       visit delete_path
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
 
       #delete disabled user
@@ -61,10 +62,18 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
 
-      #download
-      visit "#{index_path}/download_template"
+      #download template
+      visit index_path
+      click_on I18n.t("ss.links.import")
+      click_on I18n.t("ss.links.download_template")
+
+      wait_for_download
+
+      expect(downloads.first).to be_present
+      expect(::File.file?(downloads.first)).to be_truthy
 
       #import
       sys_role1
@@ -79,6 +88,8 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.import')
         end
       end
+      wait_for_notice I18n.t("ss.notice.saved")
+
       expect(current_path).to eq index_path
     end
 

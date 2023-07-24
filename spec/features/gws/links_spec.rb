@@ -180,6 +180,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           end
         end
         within_window new_window do
+          wait_for_document_loading
           within "#query-parameters" do
             expect(page).to have_css(".addon-body", text: "link2")
           end
@@ -204,6 +205,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           end
         end
         within_window new_window do
+          wait_for_document_loading
           within "#query-parameters" do
             expect(page).to have_css(".addon-body", text: "link3")
           end
@@ -235,6 +237,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           end
         end
         within_window new_window do
+          wait_for_document_loading
           within "#query-parameters" do
             expect(page).to have_css(".addon-body", text: "link2")
           end
@@ -266,6 +269,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           end
         end
         within_window new_window do
+          wait_for_document_loading
           within "#query-parameters" do
             expect(page).to have_css(".addon-body", text: "link2")
           end
@@ -297,6 +301,7 @@ describe "gws_links", type: :feature, dbscope: :example, js: true do
           end
         end
         within_window new_window do
+          wait_for_document_loading
           within "#query-parameters" do
             expect(page).to have_css(".addon-body", text: "link2")
           end

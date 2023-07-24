@@ -64,6 +64,7 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         js_click find(:link_or_button, item1.name)
 
         switch_to_window(windows.last)
+        wait_for_document_loading
         expect(current_path).to eq item1.private_show_path
         expect(current_path).to eq cms_page_path(site: site, id: item1)
       end

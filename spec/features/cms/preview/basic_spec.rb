@@ -162,6 +162,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
       end
 
       within_window new_window do
+        wait_for_document_loading
         wait_for_js_ready
         expect(page).to have_css(".heading", text: "見出し2")
 

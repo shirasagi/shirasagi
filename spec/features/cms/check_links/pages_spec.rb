@@ -104,6 +104,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
         end
       end
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       within "div#main" do
         expect(page).to have_no_css("a.ss-check-links-error", text: "[リンク切れ]index.html")

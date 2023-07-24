@@ -4,7 +4,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:subject) { "subject-#{unique_id}" }
-  let(:text) { ("text-#{unique_id}\r\n" * 3).strip }
+  let(:text) { Array.new(3) { "text-#{unique_id}" } }
 
   context 'sending messages by using group' do
     before { login_gws_user }
@@ -35,7 +35,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_content(group.name)
 
           fill_in 'item[subject]', with: subject
-          fill_in 'item[text]', with: text
+          fill_in 'item[text]', with: text.join("\n")
 
           page.accept_confirm do
             click_on I18n.t('ss.buttons.send')
@@ -46,7 +46,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.subject).to eq subject
-          expect(message.text).to eq text
+          expect(message.text).to eq text.join("\r\n")
           expect(message.user_settings).to include({ 'user_id' => gws_user.id, 'path' => 'INBOX' })
           expect(message.to_member_name).to eq group.name
           expect(message.from_member_name).to eq gws_user.long_name
@@ -80,7 +80,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[subject]', with: subject
-          fill_in 'item[text]', with: text
+          fill_in 'item[text]', with: text.join("\n")
 
           page.accept_confirm do
             click_on I18n.t('ss.buttons.send')
@@ -91,7 +91,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.subject).to eq subject
-          expect(message.text).to eq text
+          expect(message.text).to eq text.join("\r\n")
           expect(message.user_settings).to include({ 'user_id' => gws_user.id, 'path' => 'INBOX' })
           expect(message.to_member_name).to eq group.name
           expect(message.from_member_name).to eq gws_user.long_name
