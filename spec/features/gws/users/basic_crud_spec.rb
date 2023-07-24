@@ -128,12 +128,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_password]", with: "pass"
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       #delete
       visit delete_path
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(current_path).to eq index_path
 
       #delete_all disabled user
@@ -145,11 +147,12 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-items", count: 1)
 
       within ".list-head" do
-        find('label.check input').set(true)
-        click_button I18n.t("ss.links.delete")
+        wait_event_to_fire("ss:checked-all-list-items") { find('label.check input').set(true) }
+        page.accept_alert(I18n.t("ss.confirm.delete")) do
+          click_button I18n.t("ss.links.delete")
+        end
       end
-      page.accept_alert
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".index-search" do
         select I18n.t('ss.options.state.disabled'), from: 's[state]'

@@ -43,7 +43,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           end
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_js_ready
       end
       Gws::Affair::OvertimeFile.find_by(overtime_name: name)
     end
@@ -82,7 +83,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_js_ready
       end
       item.reload
       item
@@ -121,7 +123,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_js_ready
       end
       item.reload
       item
@@ -160,7 +163,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_js_ready
       end
       item.reload
       item
@@ -235,7 +239,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
             click_on I18n.t("ss.buttons.save")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_js_ready
       end
       item.reload
       item
@@ -254,7 +259,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
             click_on I18n.t("gws/affair.links.close_results")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t("gws/affair.notice.close_results"))
+        wait_for_notice I18n.t("gws/affair.notice.close_results")
+        wait_for_js_ready
       end
       item.reload
       item

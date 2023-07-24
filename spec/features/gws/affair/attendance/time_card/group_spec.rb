@@ -26,6 +26,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
     expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
     min = now.min
@@ -40,6 +41,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
     expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
     min = now.min
@@ -114,11 +116,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       # change year month
       select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
+      wait_for_js_ready
       expect(page).to have_css(".attendance-box-title",
         text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user638_group))
 
       # change day
       select I18n.t("gws/attendance.day", count: 30), from: 'day'
+      wait_for_js_ready
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user638_group))
 
       within ".time-card" do
@@ -141,11 +145,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
       # change year month
       select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
+      wait_for_js_ready
       expect(page).to have_css(".attendance-box-title",
         text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user638_group))
 
       # change day
       select I18n.t("gws/attendance.day", count: 30), from: 'day'
+      wait_for_js_ready
       expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user638_group))
 
       within ".time-card" do

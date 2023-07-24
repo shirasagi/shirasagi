@@ -245,6 +245,8 @@ module SS
       with = options.delete(:with)
       options[:visible] = :all
 
+      wait_for_js_ready
+
       element = find(:fillable_field, locator, **options)
       page.execute_script("$(arguments[0]).data('editor').setValue(arguments[1])", element, with)
     end
@@ -312,11 +314,17 @@ module SS
     end
 
     def wait_for_notice(text)
+      wait_for_js_ready
       expect(page).to have_css('#notice', text: text)
+      page.execute_script("SS.clearNotice();")
+      wait_for_js_ready
     end
 
     def wait_for_error(text)
+      wait_for_js_ready
       expect(page).to have_css('#errorExplanation', text: text)
+      page.execute_script("SS.clearNotice();")
+      wait_for_js_ready
     end
 
     def save_full_screenshot(**opts)
@@ -393,6 +401,7 @@ module SS
     def wait_cbox_open(&block)
       wait_for_js_ready
       wait_event_to_fire("cbox_complete", &block)
+      wait_for_js_ready
     end
 
     #
@@ -539,13 +548,16 @@ module SS
         # JS でクリックしてこのエラーを回避する
         # see: https://github.com/teamcapybara/capybara/blob/3.38.0/lib/capybara/node/actions.rb#L25-L28
         js_click find(:link_or_button, locator, **options)
+        wait_for_js_ready
       else
         page.click_on(locator, **options)
       end
     end
 
     def js_click(element)
+      wait_for_js_ready
       page.execute_script("arguments[0].click()", element)
+      wait_for_js_ready
     end
   end
 end

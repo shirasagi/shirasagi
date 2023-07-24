@@ -28,10 +28,12 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           expect(page).to have_content(group.name)
           click_on I18n.t('mongoid.models.gws/shared_address/group')
-          click_on group.name
+          wait_cbox_close { click_on group.name }
         end
 
         within 'form#item-form' do
+          expect(page).to have_content(group.name)
+
           fill_in 'item[subject]', with: subject
           fill_in 'item[text]', with: text
 
@@ -39,7 +41,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             click_on I18n.t('ss.buttons.send')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|
@@ -73,7 +75,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_cbox do
           expect(page).to have_content(group.name)
           click_on I18n.t('mongoid.models.webmail/address_group')
-          click_on group.name
+          wait_cbox_close { click_on group.name }
         end
 
         within 'form#item-form' do
@@ -84,7 +86,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             click_on I18n.t('ss.buttons.send')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(Gws::Memo::Message.all.count).to eq 1
         Gws::Memo::Message.all.first.tap do |message|

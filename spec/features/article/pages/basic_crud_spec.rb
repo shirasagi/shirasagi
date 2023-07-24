@@ -135,7 +135,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         role.update(permissions: role_permissions.compact)
 
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
@@ -149,7 +149,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy_all & check contain_urls" do
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
@@ -160,14 +160,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy_all & unable to delete without check" do
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
 
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
         wait_for_ajax
 
-        find('.list-item input[type="checkbox"][checked="checked"]').set(false)
+        wait_event_to_fire("ss:checked-all-list-items") do
+          find('.list-item input[type="checkbox"][checked="checked"]').set(false)
+        end
         click_button I18n.t('ss.buttons.delete')
         expect(page.accept_confirm).to eq I18n.t("errors.messages.plz_check_targets_to_delete")
       end
