@@ -1019,7 +1019,10 @@ en:
         timezone: Timezone
       ss/addon/workflow_setting:
         workflow_my_group: Display own group
-
+      ss/api_token:
+        name: Name
+        jwt_id: JWT ID (jti)
+        jwt: API token
   tooltip:
     ss/model/site:
       upload_policy:

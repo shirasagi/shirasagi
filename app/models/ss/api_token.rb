@@ -2,7 +2,7 @@ class SS::ApiToken
   include SS::Document
   include SS::Reference::User
 
-  API_KEY_HEADER = "X-SS-API-Key"
+  API_KEY_HEADER = "X-SS-API-Key".freeze
 
   field :name, type: String
   field :subject, type: String, default: nil
