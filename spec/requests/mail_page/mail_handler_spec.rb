@@ -29,26 +29,51 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       Capybara.app_host = "http://#{site.domain}"
     end
 
-    context "post utf-8 mail" do
-      let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+    context "without api_token" do
+      context "post utf-8 mail" do
+        let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
 
-      it "#mail" do
-        perform_enqueued_jobs do
-          post url, params: { data: data }
-          expect(MailPage::Page.count).to eq 1
-          expect(page.html.gsub("<br />", "\n")).to start_with(decoded)
+        it "#mail" do
+          expect { post(url, params: { data: data }) }.to raise_error "404"
+          expect(MailPage::Page.count).to eq 0
+        end
+      end
+
+      context "post iso-2022-jp mail" do
+        let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+
+        it "#mail" do
+          expect { post(url, params: { data: data }) }.to raise_error "404"
+          expect(MailPage::Page.count).to eq 0
         end
       end
     end
 
-    context "post iso-2022-jp mail" do
-      let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+    context "with api_token" do
+      let!(:api_token) { create :cms_api_token }
+      let!(:headers) { { SS::ApiToken::API_KEY_HEADER => api_token.to_jwt } }
 
-      it "#mail" do
-        perform_enqueued_jobs do
-          post url, params: { data: data }
-          expect(MailPage::Page.count).to eq 1
-          expect(page.html.gsub("<br />", "\n")).to start_with decoded
+      context "post utf-8 mail" do
+        let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+
+        it "#mail" do
+          perform_enqueued_jobs do
+            post url, params: { data: data }, headers: headers
+            expect(MailPage::Page.count).to eq 1
+            expect(page.html.gsub("<br />", "\n")).to start_with(decoded)
+          end
+        end
+      end
+
+      context "post iso-2022-jp mail" do
+        let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+
+        it "#mail" do
+          perform_enqueued_jobs do
+            post url, params: { data: data }, headers: headers
+            expect(MailPage::Page.count).to eq 1
+            expect(page.html.gsub("<br />", "\n")).to start_with decoded
+          end
         end
       end
     end

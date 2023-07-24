@@ -27,9 +27,16 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
   end
 
   def mail
-    if request.get?
+    if request.get? || request.head?
       head :ok
       return
+    end
+
+    begin
+      Cms::ApiToken.authenticate(request, @cur_site)
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      raise "404"
     end
 
     data = params.permit(:data)[:data]

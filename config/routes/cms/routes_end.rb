@@ -121,6 +121,7 @@ Rails.application.routes.draw do
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
+    resources :api_tokens, concerns: :deletion
     resources :command_settings, concerns: :deletion do
       post :run, on: :member
     end

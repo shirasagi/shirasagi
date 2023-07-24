@@ -1028,7 +1028,10 @@ ja:
         timezone: タイムゾーン
       ss/addon/workflow_setting:
         workflow_my_group: 自所属の表示
-
+      ss/api_token:
+        name: 名前
+        jwt_id: JWT ID (jti)
+        jwt: APIトークン
   tooltip:
     ss/model/site:
       upload_policy:

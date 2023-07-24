@@ -1,0 +1,7 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= ss_time_tag item.created %></span>
+  <span class="site"><%= item.site.name %></span>
+  <span class="user"><%= item.user.name %></span>
+<% end %>
+
+<%= render template: 'cms/crud/index' %>
