@@ -65,6 +65,7 @@ ja:
     fiscal_year: 年度
     test_deliver: テスト配信
     target: 対象
+    unlimited: 制限無し
 
     views:
       login/login:
@@ -80,6 +81,7 @@ ja:
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
         openrate: "開封率：%{openrate}"
+        expiration_date: "期限切れ日時：%{expiration_date}"
       oauth2/application:
         header:
           name: アプリケーション種別
