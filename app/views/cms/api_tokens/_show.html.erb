@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :jwt %></dt>
+  <dd><%= @item.to_jwt %></dd>
+
+  <dt><%= @model.t :jwt_id %></dt>
+  <dd><%= @item.jwt_id %></dd>
+
+  <dt><%= @model.t :site_id %></dt>
+  <dd><%= @item.site.name %></dd>
+
+  <dt><%= @model.t :user_id %></dt>
+  <dd><%= @item.user.name %></dd>
+</dl>

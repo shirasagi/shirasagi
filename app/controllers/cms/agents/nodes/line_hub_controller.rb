@@ -56,6 +56,13 @@ class Cms::Agents::Nodes::LineHubController < ApplicationController
       return
     end
 
+    begin
+      Cms::ApiToken.authenticate(request, @cur_site)
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      raise "404"
+    end
+
     data = params.permit(:data)[:data]
     raise "404" if data.blank?
 
