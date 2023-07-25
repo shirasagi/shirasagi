@@ -2,8 +2,11 @@ module Cms::ApiFilter::Contents
   extend ActiveSupport::Concern
 
   HTML_FIELDS = [
-    :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel,
-    :contact_fax, :contact_email, :contact_link_url, :contact_link_name
+    :name, :html, :question, :upper_html, :lower_html
+  ].freeze
+
+  CONTACT_FIELDS = [
+    :contact_charge, :contact_tel, :contact_fax, :contact_email, :contact_link_url, :contact_link_name
   ].freeze
 
   COLUMN_VALUES_FIELDS = [
@@ -19,6 +22,7 @@ module Cms::ApiFilter::Contents
   def search_html_with_string(string)
     or_cond = []
     or_cond += HTML_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } }
+    or_cond += CONTACT_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } }
     or_cond += ARRAY_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } }
     or_cond << {
       column_values: {
@@ -35,6 +39,7 @@ module Cms::ApiFilter::Contents
     path = "=\"#{::Regexp.escape(url)}"
     or_cond = []
     or_cond += HTML_FIELDS.map { |field| { field => /#{path}/ } }
+    or_cond += CONTACT_FIELDS.map { |field| { field => /#{path}/ } }
     or_cond += ARRAY_FIELDS.map { |field| { field => /\A#{::Regexp.escape(url)}/ } }
     or_cond << {
       column_values: {
@@ -51,6 +56,7 @@ module Cms::ApiFilter::Contents
     regexp = ::Regexp.new(string, ::Regexp::MULTILINE)
     or_cond = []
     or_cond += HTML_FIELDS.map { |field| { field => regexp } }
+    or_cond += CONTACT_FIELDS.map { |field| { field => regexp } }
     or_cond += ARRAY_FIELDS.map { |field| { field => regexp } }
     or_cond << {
       column_values: {
