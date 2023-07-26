@@ -9,7 +9,7 @@ module Cms::SyntaxChecker
   AL_NUM_SP_PAT = "#{AL_NUM_PAT}#{SP}".freeze
   AL_NUM_REGEX = /[#{AL_NUM_PAT}]([#{AL_NUM_SP_PAT}]*[#{AL_NUM_PAT}])?/.freeze
 
-  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors, :header_check) #checkを追あk
+  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors, :header_check) #checkを追加
   CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result) do
     def set_result(ret)
       if content["type"] == "array"
