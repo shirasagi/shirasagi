@@ -7,6 +7,8 @@ class Contact::PageCountService
   attr_accessor :cur_site, :cur_user
 
   def render(group_id:, contact_id:)
+    return helpers.tag.span("na", title: "Not Available") if cur_site.blank?
+
     count = count_map["#{group_id}:#{contact_id}"]
     count ||= 0
 

@@ -83,7 +83,7 @@
         destination = @item.destinations.present? ? @item.destinations[index] : nil
         if destination && destination[:contact_groups]
           destination[:contact_groups].each do |contact_group|
-            contact_group = ::Mongoid::Factory.build(SS::Contact, contact_group)
+            contact_group = ::Mongoid::Factory.build(SS::Contact, contact_group.except(:unifies_to_main))
             next if contact_group.all_empty?
             render_row.call(contact_group)
           end

@@ -109,11 +109,13 @@ FactoryBot.define do
         end
       end
       contact_groups.flatten!
-      main_contact = contact_groups.find { |contact| contact[:main_state] == "main" }
-      if main_contact.blank?
-        contact_groups[0][:main_state] = "main"
-      else
-        contact_groups.each { |contact| contact[:main_state] = main_contact[:_id] == contact[:_id] ? "main" : nil }
+      if contact_groups.present?
+        main_contact = contact_groups.find { |contact| contact[:main_state] == "main" }
+        if main_contact.blank?
+          contact_groups[0][:main_state] = "main"
+        else
+          contact_groups.each { |contact| contact[:main_state] = main_contact[:_id] == contact[:_id] ? "main" : nil }
+        end
       end
 
       [
