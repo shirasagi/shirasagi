@@ -10,12 +10,14 @@ class SS::ApiToken
   field :expiration_date, type: DateTime, default: nil
   field :custom_claim, type: Hash, default: {}
   field :state, type: String, default: "public"
+  belongs_to :audience, class_name: "SS::User"
 
-  permit_params :name, :expiration_date, :state
+  permit_params :name, :expiration_date, :state, :audience_id
 
   validates :name, presence: true
   validates :user_id, presence: true
   validates :jwt_id, presence: true
+  validates :audience_id, presence: true
 
   default_scope -> { order_by(created: -1) }
 
@@ -28,7 +30,8 @@ class SS::ApiToken
   end
 
   def aud
-    user.id.to_s
+    return unless audience
+    audience.id.to_s
   end
 
   def iss
@@ -81,7 +84,7 @@ class SS::ApiToken
       Rails.application.secrets[:secret_key_base][0..31]
     end
 
-    def authenticate(request)
+    def authenticate(request, opts = {})
       raise "unimplemented!"
     end
   end

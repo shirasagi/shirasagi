@@ -33,7 +33,11 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
     end
 
     begin
-      Cms::ApiToken.authenticate(request, @cur_site)
+      Cms::ApiToken.authenticate(request, site: @cur_site) do |audience|
+        if !MailPage::Page.allowed?(:edit, audience, site: @cur_site, node: @cur_node)
+          raise "not allowed create mail page!"
+        end
+      end
     rescue => e
       Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise "404"

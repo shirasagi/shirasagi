@@ -12,6 +12,10 @@ class Cms::ApiTokensController < ApplicationController
     @crumbs << [t('cms.api_token'), action: :index]
   end
 
+  def pre_params
+    { audience: @cur_user }
+  end
+
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user }
   end

@@ -1034,6 +1034,7 @@ ja:
         name: 名前
         jwt_id: JWT ID (jti)
         expiration_date: 期限切れ日時
+        audience_id: 利用ユーザー
         jwt: APIトークン
   tooltip:
     ss/model/site:

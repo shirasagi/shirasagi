@@ -1024,6 +1024,7 @@ en:
         name: Name
         jwt_id: JWT ID (jti)
         expiration_date: Expiration datetime
+        audience_id: Audience user
         jwt: API token
   tooltip:
     ss/model/site:
