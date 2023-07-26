@@ -19,7 +19,11 @@ class Cms::ApiToken < SS::ApiToken
       "/.s#{site.id}"
     end
 
-    def authenticate(request, site)
+    def authenticate(request, opts = {})
+      site = opts[:site]
+      action = opts[:action].presence || "api_login"
+      raise "site not given!" if site.nil?
+
       token = request.headers[SS::ApiToken::API_KEY_HEADER].presence
       token ||= begin
         token_and_options = ActionController::HttpAuthentication::Token.token_and_options(request)
@@ -34,6 +38,17 @@ class Cms::ApiToken < SS::ApiToken
       api_token = self.site(site).where(jwt_id: claim["jti"]).first
       raise "could not found api token!" if api_token.nil?
       raise "api_token's state is closed!" if api_token.closed?
+
+      right = SS::User.find(claim["aud"]) rescue nil
+      left = api_token.audience
+      raise "invalid aud!" if right.nil? || left.nil? || right.id != left.id
+
+      yield api_token.audience if block_given?
+
+      History::Log.create_log!(
+        request, nil, controller: request.path, action: action,
+        cur_site: site, cur_user: api_token.audience, item: api_token
+      ) rescue nil
 
       api_token
     end

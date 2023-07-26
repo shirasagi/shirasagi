@@ -901,6 +901,7 @@ ja:
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
+      cms/api_token: 連携用APIトークン
     errors:
       models:
         cms/content:
