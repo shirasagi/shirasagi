@@ -148,7 +148,7 @@ this.hideDateForm = function(self) {
       <tbody>
       <% @item.search_layouts.each do |item| %>
           <tr data-id="<%= item.id %>">
-            <td><%= hidden_field_tag "#{f.object_name}[search_layout_id][]", item.id, id: nil%> <%= item.name %></td>
+            <td><%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", item.id, id: nil%> <%= item.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
       <% end %>
