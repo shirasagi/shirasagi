@@ -1,8 +1,8 @@
-class Opendata::Dataset::Harvest::Exporter::GroupSettingsController < ApplicationController
+class Opendata::Harvest::Exporter::OwnerOrgSettingsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Opendata::Harvest::Exporter::GroupSetting
+  model Opendata::Harvest::Exporter::OwnerOrgSetting
 
   before_action :set_exporter
   before_action :set_crumbs
@@ -26,6 +26,6 @@ class Opendata::Dataset::Harvest::Exporter::GroupSettingsController < Applicatio
   end
 
   def index
-    @items = @exporter.group_settings
+    @items = @exporter.owner_org_settings
   end
 end

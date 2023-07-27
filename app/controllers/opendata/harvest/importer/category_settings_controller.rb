@@ -1,8 +1,8 @@
-class Opendata::Dataset::Harvest::Importer::EstatCategorySettingsController < ApplicationController
+class Opendata::Harvest::Importer::CategorySettingsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Opendata::Harvest::Importer::EstatCategorySetting
+  model Opendata::Harvest::Importer::CategorySetting
 
   before_action :set_importer
   before_action :set_crumbs
@@ -25,17 +25,17 @@ class Opendata::Dataset::Harvest::Importer::EstatCategorySettingsController < Ap
   def set_importer
     @importer = Opendata::Harvest::Importer.site(@cur_site).node(@cur_node).find(params[:importer_id])
     if params[:category_id] != '-'
-      @category = Opendata::Node::EstatCategory.site(@cur_site).find(params[:category_id])
+      @category = Opendata::Node::Category.site(@cur_site).find(params[:category_id])
     end
   end
 
   def index
-    @items = @importer.estat_category_settings.where(category_id: @category.id)
+    @items = @importer.category_settings.where(category_id: @category.id)
   end
 
   def download
     csv = @model.where(importer_id: @importer.id).to_csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "harvest_estat_category_#{Time.zone.now.to_i}.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "harvest_category_#{Time.zone.now.to_i}.csv"
   end
 
   def import

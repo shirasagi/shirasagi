@@ -99,37 +99,35 @@ Rails.application.routes.draw do
                 controller: "dataset/resource_preview_history_archives"
     end
 
-    scope module: :dataset do
-      namespace :harvest do
-        resources :importers, concerns: :deletion do
-          get :import, on: :member
-          put :import, on: :member
-          get :purge, on: :member
-          put :purge, on: :member
-          scope module: :importer do
-            resources :category_settings, concerns: :deletion, path: 'c:category_id', defaults: { category_id: '-' } do
-              get :download, on: :collection
-              get :import, on: :collection
-              put :import, on: :collection
-            end
-            resources :estat_category_settings, concerns: :deletion, path: 'estat:category_id', defaults: { category_id: '-' } do
-              get :download, on: :collection
-              get :import, on: :collection
-              put :import, on: :collection
-            end
-            resources :reports, only: [:show, :destroy], concerns: :deletion do
-              get :dataset, on: :member
-              get :download, on: :member
-            end
+    namespace :harvest do
+      resources :importers, concerns: :deletion do
+        get :import, on: :member
+        put :import, on: :member
+        get :purge, on: :member
+        put :purge, on: :member
+        scope module: :importer do
+          resources :category_settings, concerns: :deletion, path: 'c:category_id', defaults: { category_id: '-' } do
+            get :download, on: :collection
+            get :import, on: :collection
+            put :import, on: :collection
+          end
+          resources :estat_category_settings, concerns: :deletion, path: 'estat:category_id', defaults: { category_id: '-' } do
+            get :download, on: :collection
+            get :import, on: :collection
+            put :import, on: :collection
+          end
+          resources :reports, only: [:show, :destroy], concerns: :deletion do
+            get :dataset, on: :member
+            get :download, on: :member
           end
         end
-        resources :exporters, concerns: :deletion do
-          get :export, on: :member
-          put :export, on: :member
-          scope module: :exporter do
-            resources :group_settings, concerns: :deletion
-            resources :owner_org_settings, concerns: :deletion
-          end
+      end
+      resources :exporters, concerns: :deletion do
+        get :export, on: :member
+        put :export, on: :member
+        scope module: :exporter do
+          resources :group_settings, concerns: :deletion
+          resources :owner_org_settings, concerns: :deletion
         end
       end
     end

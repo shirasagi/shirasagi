@@ -1,4 +1,4 @@
-class Opendata::Dataset::Harvest::ExportersController < ApplicationController
+class Opendata::Harvest::ExportersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
