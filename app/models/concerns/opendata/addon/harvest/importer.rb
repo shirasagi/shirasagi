@@ -23,7 +23,7 @@ module Opendata::Addon::Harvest
       end
     end
 
-    def destroy_imported_datasets
+    def purge
       dataset_ids = ::Opendata::Dataset.site(site).node(node).where("$or" => [
           { harvest_api_type: api_type, harvest_host: source_host },
           { harvest_importer_id: id }

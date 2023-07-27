@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ExportDatasetsJob, dbscope: :example, ckan: true do
+describe Opendata::Harvest::RunJob, dbscope: :example, ckan: true do
   let!(:site) { cms_site }
   let!(:group) { cms_group }
   let!(:node) { create :opendata_node_dataset, cur_site: site }
@@ -50,7 +50,7 @@ describe Opendata::Harvest::ExportDatasetsJob, dbscope: :example, ckan: true do
     exporter.initialize_group
 
     expect(ckan_package.package_list).to match_array []
-    ::Opendata::Harvest::HarvestDatasetsJob.bind(site_id: site.id).perform_now(exporter_id: exporter.id)
+    described_class.bind(site_id: site.id).perform_now(exporter_id: exporter.id)
     expect(ckan_package.package_list).to match_array [
       dataset1.uuid,
       dataset2.uuid,

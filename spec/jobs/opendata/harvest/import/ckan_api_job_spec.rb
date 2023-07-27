@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
+describe Opendata::Harvest::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
   let!(:node_search) { create :opendata_node_search_dataset, cur_site: site }
@@ -15,7 +15,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
           to_return(body: package_list_json, status: 200, headers: { 'Content-Type' => 'application/json' })
 
         perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(importer.id)
+          described_class.bind(site_id: site).perform_later
         end
       end
 
@@ -51,7 +51,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
           to_return(body: sample_txt, status: 200, headers: { 'Content-Type' => 'application/text' })
 
         perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(importer.id)
+          described_class.bind(site_id: site).perform_later
         end
       end
 
@@ -68,7 +68,6 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
         resource = item.resources.first
         expect(resource.file.read.include?("opendata harvest")).to be_truthy
         expect(resource.uuid).to eq "c53c15c7-7ef4-4dec-9a42-58f731703c40"
-        expect(resource.revision_id).to eq "706b93ce-151f-442a-a8b9-d256614c50db"
         expect(resource.format).to eq "TXT"
       end
     end

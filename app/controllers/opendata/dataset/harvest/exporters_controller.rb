@@ -25,7 +25,7 @@ class Opendata::Dataset::Harvest::ExportersController < ApplicationController
     set_item
     return if request.get? || request.head?
 
-    Opendata::Harvest::HarvestDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(exporter_id: @item.id)
+    Opendata::Harvest::Export.bind(site_id: @cur_site, node_id: @cur_node).perform_later(exporters: [@item.id])
     flash.now[:notice] = "エクポート処理を開始しました。"
   end
 end

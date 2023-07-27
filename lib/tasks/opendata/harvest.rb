@@ -29,7 +29,7 @@ module Tasks
           opts = {}
           opts[:exporters] = exporters if exporters.present?
           opts[:importers] = importers if importers.present?
-          ::Opendata::Harvest::HarvestDatasetsJob.bind(site_id: site.id).perform_now(opts)
+          ::Opendata::Harvest::RunJob.bind(site_id: site.id).perform_now(opts)
         end
       end
 
@@ -39,8 +39,7 @@ module Tasks
 
           opts = {}
           opts[:exporters] = exporters if exporters.present?
-          opts[:importers] = []
-          ::Opendata::Harvest::HarvestDatasetsJob.bind(site_id: site.id).perform_now(opts)
+          ::Opendata::Harvest::ExportJob.bind(site_id: site.id).perform_now(opts)
         end
       end
 
@@ -49,9 +48,8 @@ module Tasks
           importers = env_importers
 
           opts = {}
-          opts[:exporters] = []
           opts[:importers] = importers if importers.present?
-          ::Opendata::Harvest::HarvestDatasetsJob.bind(site_id: site.id).perform_now(opts)
+          ::Opendata::Harvest::ImportJob.bind(site_id: site.id).perform_now(opts)
         end
       end
 

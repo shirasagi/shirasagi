@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
+describe Opendata::Harvest::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
   let!(:node_search) { create :opendata_node_search_dataset, cur_site: site }
@@ -15,7 +15,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
           to_return(body: package_list_json, status: 200, headers: { 'Content-Type' => 'application/json' })
 
         perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(importer.id)
+          described_class.bind(site_id: site).perform_later
         end
       end
 
@@ -44,7 +44,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
             to_return(body: sample_txt, status: 200, headers: { 'Content-Type' => 'application/text' })
 
         perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(importer.id)
+          described_class.bind(site_id: site).perform_later
         end
       end
 
