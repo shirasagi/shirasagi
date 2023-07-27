@@ -5,9 +5,11 @@ describe Opendata::Harvest::ExportDatasetsJob, dbscope: :example, ckan: true do
   let!(:group) { cms_group }
   let!(:node) { create :opendata_node_dataset, cur_site: site }
   let!(:node_search) { create :opendata_node_search_dataset, cur_site: site }
-  let!(:license) { create :opendata_license, cur_site: site }
 
-  let!(:exporter) { create(:opendata_harvest_exporter, cur_node: node, url: ckan_url, api_type: "ckan", api_key: api_key) }
+  let!(:license_file) { Fs::UploadedFile.create_from_file("#{Rails.root}/spec/fixtures/ss/logo.png", basename: "spec") }
+  let!(:license) { create :opendata_license, cur_site: site, in_file: license_file }
+
+  let!(:exporter) { create(:opendata_harvest_exporter, cur_node: node, url: ckan_url, api_key: api_key) }
   let!(:ckan_url) { "http://localhost:8080" }
   let!(:api_key) { SS::CkanSupport.docker_ckan_api_key }
 
