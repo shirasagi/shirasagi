@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::RunJob, dbscope: :example, ckan: true do
+describe Opendata::Harvest::ExportJob, dbscope: :example, ckan: true do
   let!(:site) { cms_site }
   let!(:group) { cms_group }
   let!(:node) { create :opendata_node_dataset, cur_site: site }
@@ -16,13 +16,10 @@ describe Opendata::Harvest::RunJob, dbscope: :example, ckan: true do
   let!(:dataset1) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
   let!(:dataset2) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
   let!(:dataset3) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
-  let!(:dataset4) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
-  let!(:dataset5) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }
 
   let!(:file_path1) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let!(:file_path2) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-2.csv") }
   let!(:file_path3) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-3.csv") }
-  let!(:file_path4) { Rails.root.join("spec", "fixtures", "opendata", "resource.pdf") }
 
   let!(:ckan_package) { Opendata::Harvest::CkanPackage.new(ckan_url) }
 
@@ -38,24 +35,52 @@ describe Opendata::Harvest::RunJob, dbscope: :example, ckan: true do
       format: ext)
   end
 
+  def expect_same_file(file1, file2)
+    expect(URI.open(file1, "rb").read).to eq URI.open(file2, "rb").read
+  end
+
   before do
     create_resource(dataset1, file_path1)
     create_resource(dataset2, file_path2)
     create_resource(dataset3, file_path3)
-    create_resource(dataset4, file_path4)
   end
 
   it do
+    exporter.dataset_purge
     exporter.initialize_organization
     exporter.initialize_group
 
     expect(ckan_package.package_list).to match_array []
     described_class.bind(site_id: site.id).perform_now(exporter_id: exporter.id)
-    expect(ckan_package.package_list).to match_array [
-      dataset1.uuid,
-      dataset2.uuid,
-      dataset3.uuid,
-      dataset4.uuid,
-      dataset5.uuid]
+    expect(ckan_package.package_list).to match_array [dataset1.uuid, dataset2.uuid, dataset3.uuid]
+    expect(Opendata::Harvest::Exporter::DatasetRelation.count).to eq 3
+
+    resources = ckan_package.package_show(dataset1.uuid)["resources"]
+    expect(resources.size).to eq 1
+    expect_same_file(resources[0]["url"], file_path1)
+
+    resources = ckan_package.package_show(dataset2.uuid)["resources"]
+    expect(resources.size).to eq 1
+    expect_same_file(resources[0]["url"], file_path2)
+
+    resources = ckan_package.package_show(dataset3.uuid)["resources"]
+    expect(resources.size).to eq 1
+    expect_same_file(resources[0]["url"], file_path3)
+
+    described_class.bind(site_id: site.id).perform_now(exporter_id: exporter.id)
+    expect(ckan_package.package_list).to match_array [dataset1.uuid, dataset2.uuid, dataset3.uuid]
+    expect(Opendata::Harvest::Exporter::DatasetRelation.count).to eq 3
+
+    resources = ckan_package.package_show(dataset1.uuid)["resources"]
+    expect(resources.size).to eq 1
+    expect_same_file(resources[0]["url"], file_path1)
+
+    resources = ckan_package.package_show(dataset2.uuid)["resources"]
+    expect(resources.size).to eq 1
+    expect_same_file(resources[0]["url"], file_path2)
+
+    resources = ckan_package.package_show(dataset3.uuid)["resources"]
+    expect(resources.size).to eq 1
+    expect_same_file(resources[0]["url"], file_path3)
   end
 end
