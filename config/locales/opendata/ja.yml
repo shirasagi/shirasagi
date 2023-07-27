@@ -29,7 +29,7 @@ ja:
       sync: 同期する
       copy_url: URLをコピー
       harvest_import_datasets: データセットをインポートする
-      harvest_destroy_datasets: 関連するデータセットを削除する
+      harvest_purge_datasets: 関連するデータセットを削除する
       dataset_map_search_datasets: データセットを探す
       deleted: 削除済み
       add_favorite: マイリストに登録する
@@ -1139,7 +1139,7 @@ ja:
       opendata/dataset/import_job: データセットインポートジョブ
       opendata/resource_download_history_update_job: リソースダウンロード履歴更新ジョブ
       opendata/resource_preview_history_update_job: リソースプレビュー履歴更新ジョブ
-      opendata/harvest/run_job: ハーベストジョブ
-      opendata/harvest/export_job: ハーベストエクスポートジョブ
-      opendata/harvest/import_job: ハーベストインポートジョブ
-      opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
+      opendata/harvest/run_job: ハーベスト/実行ジョブ
+      opendata/harvest/export_job: ハーベスト/エクスポートジョブ
+      opendata/harvest/import_job: ハーベスト/インポートジョブ
+      opendata/harvest/purge_job: ハーベスト/データセット削除ジョブ

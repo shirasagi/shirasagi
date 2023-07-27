@@ -104,8 +104,8 @@ Rails.application.routes.draw do
         resources :importers, concerns: :deletion do
           get :import, on: :member
           put :import, on: :member
-          get :destroy_datasets, on: :member
-          put :destroy_datasets, on: :member
+          get :purge, on: :member
+          put :purge, on: :member
           scope module: :importer do
             resources :category_settings, concerns: :deletion, path: 'c:category_id', defaults: { category_id: '-' } do
               get :download, on: :collection

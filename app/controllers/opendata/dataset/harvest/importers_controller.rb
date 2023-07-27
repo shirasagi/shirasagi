@@ -6,7 +6,7 @@ class Opendata::Dataset::Harvest::ImportersController < ApplicationController
 
   navi_view "opendata/main/navi"
 
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :import, :destroy_datasets]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :import, :purge]
   before_action :append_crumbs
 
   def append_crumbs
@@ -26,13 +26,13 @@ class Opendata::Dataset::Harvest::ImportersController < ApplicationController
     return if request.get? || request.head?
 
     Opendata::Harvest::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(importers: [@item.id])
-    flash.now[:notice] = I18n.t("opendata.errors.messages.import_started")
+    flash.now[:notice] = I18n.t("ss.notice.started_import")
   end
 
-  def destroy_datasets
+  def purge
     return if request.get? || request.head?
 
-    Opendata::Harvest::Purge.bind(site_id: @cur_site, node_id: @cur_node).perform_later(importers: [@item.id])
-    flash.now[:notice] = I18n.t("opendata.errors.messages.destroy_started")
+    Opendata::Harvest::PurgeJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(importers: [@item.id])
+    flash.now[:notice] = I18n.t("ss.notice.started_purge")
   end
 end

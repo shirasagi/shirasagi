@@ -9,6 +9,8 @@ describe "opendata_harvest_importer", type: :feature, dbscope: :example, js: tru
   let(:show_path) { opendata_harvest_importer_path site.id, node, item }
   let(:edit_path) { edit_opendata_harvest_importer_path site.id, node, item }
   let(:delete_path) { delete_opendata_harvest_importer_path site.id, node, item }
+  let(:import_path) { import_opendata_harvest_importer_path site.id, node, item }
+  let(:purge_path) { purge_opendata_harvest_importer_path site.id, node, item }
 
   context "basic crud" do
     before { login_cms_user }
@@ -49,6 +51,24 @@ describe "opendata_harvest_importer", type: :feature, dbscope: :example, js: tru
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+    end
+
+    it "#import" do
+      visit import_path
+      page.accept_confirm do
+        click_on I18n.t("ss.buttons.run")
+      end
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.started_import"))
+      expect(enqueued_jobs.size).to eq 1
+    end
+
+    it "#purge" do
+      visit purge_path
+      page.accept_confirm do
+        click_on I18n.t("ss.buttons.run")
+      end
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.started_purge"))
+      expect(enqueued_jobs.size).to eq 1
     end
   end
 end

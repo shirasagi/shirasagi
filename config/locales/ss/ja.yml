@@ -291,10 +291,12 @@ ja:
       imported: インポートしました。
       approved: 承認しました。
       started_import: インポートを開始しました。
+      started_export: エクスポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。
       started_test_deliver: テスト配信を開始しました。
       started_apply: 反映処理を開始しました。
+      started_purge: 削除処理を開始しました。
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。

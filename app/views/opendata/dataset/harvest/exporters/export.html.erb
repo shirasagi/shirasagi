@@ -2,7 +2,7 @@
   <%= error_messages_for :item %>
 
   <section class="main-box">
-    <header><h2><%= t("ss.links.export") %></h2></header>
+    <header><h2><%= t("ss.export") %></h2></header>
 
     <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
       <dl class="see">
@@ -13,7 +13,7 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.links.export"), class: :save, data: { confirm: t("ss.confirm.export") } %>
+    <%= f.submit t("ss.buttons.run"), class: :save, onclick: "return confirm('#{t("ss.tasks.confirm_start")}')" %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>
