@@ -7,7 +7,7 @@ describe Opendata::Harvest::ExportJob, dbscope: :example, ckan: true do
   let!(:node_search) { create :opendata_node_search_dataset, cur_site: site }
 
   let!(:license_file) { Fs::UploadedFile.create_from_file("#{Rails.root}/spec/fixtures/ss/logo.png", basename: "spec") }
-  let!(:license) { create :opendata_license, cur_site: site, in_file: license_file }
+  let!(:license) { create :opendata_license, cur_site: site, in_file: license_file, name: "cc-by", uid: "cc-by" }
 
   let!(:exporter) { create(:opendata_harvest_exporter, cur_node: node, url: ckan_url, api_key: api_key) }
   let!(:ckan_url) { "http://localhost:8080" }
