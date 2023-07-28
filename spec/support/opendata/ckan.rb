@@ -54,7 +54,6 @@ module SS::CkanSupport
     end
   rescue => e
     puts("[CKAN Spec] failed to initialize")
-    puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     RSpec.configuration.filter_run_excluding(ckan: true)
   end
 
