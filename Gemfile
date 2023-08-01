@@ -142,7 +142,7 @@ group :development, :test do
   gem 'rubocop-rails', '2.11.3', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
-  gem 'selenium-webdriver', require: false
+  gem 'selenium-webdriver', '~> 4.11', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
@@ -150,7 +150,6 @@ group :development, :test do
   gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
-  gem 'webdrivers', require: false
 end
 
 group :development do
