@@ -9,7 +9,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
     let(:content) do
       { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false) }
 
     context "with usual case" do
       let(:head_html1) { "<h2>#{unique_id}</h2>" }
@@ -144,6 +144,42 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
           expect(error[:collector]).to eq described_class.name
           expect(error[:collector_params]).to be_blank
+        end
+      end
+    end
+
+    context "header_checkがtrueのとき" do
+      let(:level) { rand(3..6) }
+      let(:head_html1) { "<h#{level}>#{unique_id}</h#{level}>" }
+      let(:head_htmls) { [ head_html1 ] }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true) }
+
+      it do
+        described_class.new.check(context, id, idx, raw_html, fragment)
+
+        expect(context.header_check).to eq true
+        expect(context.errors).to be_blank
+      end
+    end
+
+    context "header_checkがfalseのとき" do
+      let(:level) { rand(3..6) }
+      let(:head_html1) { "<h#{level}>#{unique_id}</h#{level}>" }
+      let(:head_htmls) { [ head_html1 ] }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false) }
+
+      it do
+        described_class.new.check(context, id, idx, raw_html, fragment)
+
+        expect(context.header_check).to eq false
+        context.errors.first.tap do |error|
+          expect(error[:id]).to eq id
+            expect(error[:idx]).to eq idx
+            expect(error[:code]).to eq "h#{level}"
+            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
+            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+            expect(error[:collector]).to eq described_class.name
+            expect(error[:collector_params]).to be_blank
         end
       end
     end
