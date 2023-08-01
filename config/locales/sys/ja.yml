@@ -39,7 +39,6 @@ ja:
     auth/saml: SAML
     auth/open_id_connect: OpenID Connect
     auth/environment: 環境変数
-    auth/setting: 設定
     options:
       auth_state:
         enabled: 有効
@@ -86,10 +85,6 @@ ja:
         - Init uri にアクセスすると、シラサギ側では OpenID Connect によるシングル・サインオン処理を開始します。業務端末や他システムへは Init uri を設定してください。
         - "`?ref=` パラメータをつけることでログイン後に表示する画面を設定することができます。例えば `?ref=/.g1` をつけることでログイン後にグループウェアを表示することができます。"
       open_id_redirect_uri_md: 認証基板側のコールバックURLなどへ Redirect uri を設定してください。
-    form_auth:
-      when_disabled: フォーム認証無効時
-      form_key: キー
-      form_password: パスワード
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -202,11 +197,6 @@ ja:
       sys/ad:
         time: 画像切り替え時間
         width: 横幅
-      sys/auth/setting:
-        form_auth: フォーム認証
-        form_key: フォーム認証利用時のキー
-        form_password: フォーム認証利用時のパスワード
-        in_form_password: フォーム認証利用時のパスワード
 
   errors:
     messages:
@@ -313,12 +303,6 @@ ja:
         - 「グループウェア」を選択した場合、グループウェア利用時にお知らせが表示されます。
         - 「ウェブメール」を選択した場合、ウェブメール利用時にお知らせが表示されます。
         - 「システム管理画面」を選択した場合、システムの管理画面にお知らせが表示されます。
-
-    sys/auth/setting:
-      form_auth:
-        - ログイン画面のフォーム認証を表示するか選択します。
-      when_form_auth_disabled:
-        - フォーム認証無効時でも以下に設定したキーとパスワードがQuery Stringに設定されていたらフォーム認証を表示します。
 
   job:
     models:

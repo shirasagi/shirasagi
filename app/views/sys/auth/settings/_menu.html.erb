@@ -1,7 +1,0 @@
-<nav class="nav-menu">
-  <% if params[:action] =~ /edit|update/ %>
-    <%= link_to t('ss.links.back_to_show'), { action: :show }, class: "back-to-show" if @item.allowed?(:edit, @cur_user) %>
-  <% else %>
-    <%= link_to t('ss.links.edit'), { action: :edit }, class: :edit if @item.allowed?(:edit, @cur_user) %>
-  <% end %>
-</nav>
