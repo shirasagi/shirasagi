@@ -3,7 +3,7 @@
     focus: function() { $(this).attr('type', 'email'); },
     blur: function() { $(this).attr('type', 'text'); },
     keypress: function(ev) { if (ev.which == 13) { $('#item_password').focus(); return false; } }
-  });
+  }).attr('type', 'email');
 <% end %>
 
 <div class="login-wrap">
