@@ -1,0 +1,62 @@
+<nav id="navi" class="navi">
+  <!-- PC用Gナビメニュー -->
+  <div class="cat-navi pc">
+    <ul class="cat-mainnavi__list">
+
+      {% assign ordered_nodes = nodes | sort: "order" %}
+      {% for node in ordered_nodes %}
+        {% if
+          node.basename == "kurashi" or
+          node.basename == "kosodate" or
+          node.basename == "kenko" or
+          node.basename == "kanko" or
+          node.basename == "sangyo" or
+          node.basename == "shisei"%}
+          <li class="cat-mainnavi__item cat-mainnavi__item-{{ node.filename }}">
+            <a href="{{ node.url }}" class="cat-mainnavi__link">
+              <span class="cat-mainnavi__link-inner">{{ node.name }}</span>
+            </a>
+
+            <div class="cat-nav__sub cat-subnavi">
+              <ul class="cat-subnavi__list">
+                {% for subnode in node.nodes %}
+                <li class="cat-subbavi__item">
+                  <a href="{{ subnode.url }}">{{ subnode.name }}</a>
+                </li><!-- /.cat-subbavi__item -->
+                {% endfor %}
+              </ul><!-- /.cat-subnavi__list -->
+            </div><!-- /.cat-nav__sub -->
+          </li><!-- /.cat-navi__item -->
+      {% endif %}
+    {% endfor %}
+    </ul><!-- /.cat-mainnavi__list -->
+  </div><!-- /.cat-navi -->
+
+  <!-- SP用Gナビメニュー -->
+  <div class="hamburger-menu__btn">
+    <span class="hamburger-menu__btn-line"></span>
+    <span class="hamburger-menu__btn-line"></span>
+    <span class="hamburger-menu__btn-line"></span>
+  </div><!-- /.hamburger-menu -->
+  <div class="cat-navi sp">
+    <ul class="cat-mainnavi__list">
+
+      {% assign ordered_nodes = nodes | sort: "order" %}
+      {% for node in ordered_nodes %}
+        {% if
+          node.basename == "kurashi" or
+          node.basename == "kosodate" or
+          node.basename == "kenko" or
+          node.basename == "kanko" or
+          node.basename == "sangyo" or
+          node.basename == "shisei"%}
+          <li class="cat-mainnavi__item cat-mainnavi__item-{{ node.filename }}">
+            <a href="{{ node.url }}" class="cat-mainnavi__link">
+              <span class="cat-mainnavi__link-inner">{{ node.name }}</span>
+            </a>
+        {% endif %}
+      {% endfor %}
+
+    </ul><!-- /.cat-mainnavi__list -->
+  </div><!-- /.cat-navi -->
+</nav>

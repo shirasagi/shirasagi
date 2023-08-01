@@ -2,17 +2,24 @@
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <script src="/js/common.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery.rwdImageMaps.min.js"></script>
 </head>
 <body>
 <div id="page">
 
-{{ part "tool" }}
-  <div class="translate-wrap">
-  <div class="translate-box">
-    {{ part "translate" }}
-    </div>
-  </div>
+ <div class="accessibility">
+    <div class="accessibility-inner">
+      <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
+      <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
+      <div class="accessibility__translate translate-wrap">
+        <div class="translate-box">
+          {{ part "translate" }}
+      </div>
+              </div>
+      {{ part "tool" }}
+      </div><!-- /.accessibility-inner -->
+  </div><!-- .accessibility -->
 {{ part "head" }}
   <div class="search-wrap">
   {{ part "search" }}
@@ -35,17 +42,24 @@
     {{ part "kanko-info/blog/recent" }}
   </div>
 </div>
-<section id="chat">
-  <div class="chat-close">
-    <p>チャットボット</p>
-  </div>
-  <div class="chat-open">
-    <header><h2>チャットボット</h2><span class="close-btn"><img src="/img/chat-close.png" alt="閉じる" /></span></header>
-    {{ part "bot" }}
-  </div>
-</section>
+      <section id="chat" class="chat">
+        <div class="chat--close">
+          <p>なんでも聞いてね！</p>
+          <img src="/img/ic-chat.png" alt="chatbot" />
+        </div>
+        <div class="chat--open">
+          <header>
+            <h2>チャットボット</h2>
+            <span class="close-btn">
+              <img src="/img/chat-close.png" alt="閉じる" />
+            </span>
+          </header>
+          {{ part "bot" }}
+        </div>
+      </section>
 {{ part "foot" }}
 
 </div>
+  <div style="display: none;">{{ part "browsing-history" }}</div>
 </body>
 </html>

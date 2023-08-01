@@ -1,1 +1,3 @@
-<nav id="emergency"><header><h2>緊急情報</h2></header>
+<nav id="emergency" class="emergency">
+  <header class="emergency__title"><h2>緊急情報</h2></header>
+  <div class="emergency__article">
