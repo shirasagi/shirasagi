@@ -69,7 +69,7 @@ module Cms::PublicFilter::Layout
         end
 
         if /\#{[^}]*?parent_name}/.match?(body)
-          parent = Cms::Node.site(@cur_site).filename(@cur_main_path.to_s.sub(/^\//, "").sub(/\/[\w\-.]*?$/, "")).first
+          parent = (@cur_node || @cur_page).try(:parent)
           if parent
             body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
             body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
