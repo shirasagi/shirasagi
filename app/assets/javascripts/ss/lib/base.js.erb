@@ -253,7 +253,7 @@ this.SS = (function () {
       success: function () {
       },
       error: function (data, status) {
-        alert([ "== Error ==" ].concat(data.responseJSON).join("\n"));
+        alert([ "== Error(AjaxForm) ==" ].concat(data.responseJSON).join("\n"));
       }
     };
     elem.on("submit", selector, function (e) {
@@ -289,7 +289,7 @@ this.SS = (function () {
         success: function () {
         },
         error: function (data, status) {
-          return alert("== Error ==");
+          return alert("== Error(Ajax) ==");
         }
       };
       $.ajax($.extend(true, defaults, params));
@@ -327,7 +327,7 @@ this.SS = (function () {
           }
         },
         error: function (data, status) {
-          alert([ "== Error ==" ].concat(data.responseJSON).join("\n"));
+          alert([ "== Error(AjaxDelete) ==" ].concat(data.responseJSON).join("\n"));
         }
       };
       $.ajax($.extend(true, defaults, params));
@@ -441,9 +441,9 @@ this.SS = (function () {
           var errors;
           try {
             errors = $.parseJSON(xhr.responseText);
-            return alert([ "== Error ==" ].concat(errors).join("\n"));
+            return alert([ "== Error(FileCheck) ==" ].concat(errors).join("\n"));
           } catch (_error) {
-            return alert([ "== Error ==" ].concat(xhr["statusText"]).join("\n"));
+            return alert([ "== Error(FileCheck) ==" ].concat(xhr["statusText"]).join("\n"));
           }
         }
       });
@@ -684,11 +684,11 @@ this.SS = (function () {
         }, function (xhr, textStatus, errorThrown) {
           // error
           if (xhr.status === 413) {
-            alert([ "== Error ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
+            alert([ "== Error(FileUpload) ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
           } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert([ "== Error ==" ].concat(xhr.responseJSON).join("\n"));
+            alert([ "== Error(FileUpload) ==" ].concat(xhr.responseJSON).join("\n"));
           } else {
-            alert([ "== Error ==" ].concat(xhr.statusText).join("\n"));
+            alert([ "== Error(FileUpload) ==" ].concat(xhr.statusText).join("\n"));
           }
         }).then(function () {
           // complete

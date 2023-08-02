@@ -50,7 +50,7 @@ this.Cms_Site_Search = (function () {
           return $("#cboxLoadedContent").html(data);
         },
         error: function (data, status) {
-          return alert("== Error ==");
+          return alert("== Error(SiteSearch) ==");
         }
       });
       return false;
