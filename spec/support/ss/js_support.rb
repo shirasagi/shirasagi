@@ -223,6 +223,13 @@ module SS
       })(...arguments)
     SCRIPT
 
+    JS_SELECT_SCRIPT = <<~SCRIPT.freeze
+      (function(element, valueText) {
+        const optionIndex = Array.from(element.options).findIndex(option => option.text === valueText);
+        element.selectedIndex = optionIndex;
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -585,9 +592,15 @@ module SS
       wait_for_js_ready
     end
 
-    def js_dispatch_focus_event(event_name, locator)
+    def js_dispatch_generic_event(element, event_name)
       wait_for_js_ready
-      page.execute_script("arguments[0].dispatchEvent(new FocusEvent(arguments[1]))", find(:fillable_field, locator), event_name)
+      page.execute_script("arguments[0].dispatchEvent(new Event(arguments[1]))", element, event_name)
+      wait_for_js_ready
+    end
+
+    def js_dispatch_focus_event(element, event_name)
+      wait_for_js_ready
+      page.execute_script("arguments[0].dispatchEvent(new FocusEvent(arguments[1]))", element, event_name)
       wait_for_js_ready
     end
 
@@ -595,8 +608,16 @@ module SS
       wait_for_js_ready
       wait_event_to_fire("ss:addressCommitted") do
         fill_in locator, with: with
-        js_dispatch_focus_event 'blur', locator
+        js_dispatch_focus_event find(:fillable_field, locator), 'blur'
       end
+      wait_for_js_ready
+    end
+
+    def js_select(value, from:, **options)
+      wait_for_js_ready
+      element = find(:select, from, **options)
+      page.execute_script(JS_SELECT_SCRIPT, element, value)
+      js_dispatch_generic_event(element, "change")
       wait_for_js_ready
     end
   end
