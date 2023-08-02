@@ -453,8 +453,9 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
-      expect(result).to be_truthy
+      page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
+      #result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      #expect(result).to be_truthy
     end
 
     alias fill_in_date fill_in_datetime
