@@ -47,6 +47,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
 
         click_on item.name
+        wait_for_js_ready
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"

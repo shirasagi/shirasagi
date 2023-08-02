@@ -61,7 +61,7 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
   describe "bulk delete" do
     it do
       visit opendata_dataset_history_preview_archives_path(site: site, cid: node)
-      first(".list-head input[type='checkbox']").click
+      wait_event_to_fire("ss:checked-all-list-items") { first(".list-head input[type='checkbox']").click }
       within ".list-head-action" do
         click_on I18n.t("ss.links.delete")
       end
