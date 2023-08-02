@@ -23,7 +23,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
       end
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
       login_gws_user
@@ -51,7 +51,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
       end
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "unavailable"
 
       login_gws_user
@@ -79,7 +79,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
       end
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
       login_gws_user
@@ -107,7 +107,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
       end
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "unavailable"
 
       login_gws_user

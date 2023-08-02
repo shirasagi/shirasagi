@@ -5,9 +5,6 @@ Dotenv.load
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../config/environment", __dir__)
-
-require 'webdrivers'
-# Webdrivers.logger.level = :DEBUG
 require 'rails-controller-testing'
 require 'rspec/rails'
 # require 'rspec/autorun'

@@ -93,7 +93,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
       click_on name2
       click_on I18n.t("ss.links.delete")
-      within 'form' do
+      within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
