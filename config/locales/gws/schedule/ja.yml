@@ -106,7 +106,7 @@ ja:
       expand_all: すべて展開
       collapse_all: すべて閉じる
     facility_reservation:
-      index: 予約状況の確認
+      index: 予約可否の確認
       state: 予約状況
       duplicate_register_message: 重複して予約が可能です。
       free: 予約可能

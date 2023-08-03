@@ -106,7 +106,7 @@ en:
       expand_all: Expand all
       collapse_all: Close all
     facility_reservation:
-      index: Check reservation status
+      index: Check reservation availability
       state: Reservation status
       duplicate_register_message: Duplicate reservations are possible.
       free: Reservable

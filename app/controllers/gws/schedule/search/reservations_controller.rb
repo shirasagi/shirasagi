@@ -42,13 +42,20 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
 
   def index
     set_plan
-    @reservation_valid = @plan.facility_double_booking_plans.blank?
-
     @submit = params[:submit].present?
 
     @s = get_params
     @time_search = Gws::Schedule::PlanSearch.new(pre_params.merge(@s))
     @time_search.valid?
+
+    @min_minutes_limit = []
+    @max_minutes_limit = []
+    @time_search.facilities.each do |facility|
+      @min_minutes_limit << facility.min_minutes_limit if facility.min_minutes_limit
+      @max_minutes_limit << facility.max_minutes_limit if facility.max_minutes_limit
+    end
+    @min_minutes_limit = @min_minutes_limit.max
+    @max_minutes_limit = @max_minutes_limit.min
 
     @start_on = Time.zone.parse(@s[:start_on]) rescue nil
     @end_on = Time.zone.parse(@s[:end_on]) rescue nil

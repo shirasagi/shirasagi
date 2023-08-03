@@ -158,7 +158,7 @@
     display: table-cell;
   }
   .label {
-    width: 12rem;
+    width: 8rem;
     margin: 1px 0;
     padding: 5px 1px;
   }
@@ -237,6 +237,12 @@
   }
   .reservation-valid.exist {
     padding-left: 10px;
+    color: $orange;
+  }
+  .duplicate-register-message {
+    color: #e00;
+  }
+  .reservation-errors {
     color: $orange;
   }
 }
