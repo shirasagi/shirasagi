@@ -170,6 +170,7 @@ en:
       prev: Previous
       next: Next
       update: Update
+      open_in_new_tab: Open in new tab
     buttons:
       save: Save
       saving: Saving

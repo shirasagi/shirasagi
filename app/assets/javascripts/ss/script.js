@@ -70,6 +70,7 @@
 //= require ss/lib/emoji
 //= require ss/lib/role
 //= require ss/lib/date_time_picker
+//= require ss/lib/pdfjs
 //= require chat/lib/chart
 //= require cms/lib/base
 //= require cms/lib/editor
