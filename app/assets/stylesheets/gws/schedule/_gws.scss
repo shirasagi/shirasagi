@@ -239,6 +239,12 @@
     padding-left: 10px;
     color: $orange;
   }
+  .duplicate-register-message {
+    color: #e00;
+  }
+  .reservation-errors {
+    color: $orange;
+  }
 }
 #addon-gws-agents-addons-schedule-comments {
   .list-items {

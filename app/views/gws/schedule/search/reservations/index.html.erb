@@ -33,15 +33,35 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
     <span class="datetime-wrap start"><%= l(@start_on, format: :gws_long) rescue nil %></span>
     <span class="delimiter">-</span>
     <span class="datetime-wrap end"><%= l(@end_on, format: :gws_long) rescue nil %></span>
-    <% if @reservation_valid %>
-      <% reservation_valid = 'free' %>
-    <% else %>
-      <% reservation_valid = @cur_user.gws_role_permit_any?(@cur_site, :duplicate_private_gws_facility_plans) ? 'registered' : 'exist' %>
-    <% end %>
-    <span class="reservation-valid <%= reservation_valid %>"><%= t("gws/schedule.facility_reservation.#{reservation_valid}") %></span>
-    <% if reservation_valid == 'registered' %>
-      <div class="duplicate-register-message" style="color: #e00;">
+    <span class="reservation-valid <%= @plan.reservation_status == 'exist' ? 'exist' : 'free' %>"><%= t("gws/schedule.facility_reservation.#{@plan.reservation_status}") %></span>
+    <% if @plan.reservation_status == 'registered' %>
+      <div class="duplicate-register-message">
         <%= t('gws/schedule.facility_reservation.duplicate_register_message') %>
+      </div>
+    <% end %>
+    <% if @min_minutes_limit || @max_minutes_limit %>
+      <div class="minutes-limit">
+        <span class="minutes-limit-text"><%= Gws::Facility::Item.t(:minutes_limit) %></span>
+        <% if @min_minutes_limit %>
+          <span class="min-minutes-limit">
+            <%= @min_minutes_limit.to_s(:delimited) %>
+            <%= I18n.t('gws/facility.prompts.minutes') %>
+          </span>
+        <% end %>
+        <span class="delimiter">-</span>
+        <% if @max_minutes_limit %>
+          <span class="max-minutes-limit">
+            <%= @max_minutes_limit.to_s(:delimited) %>
+            <%= I18n.t('gws/facility.prompts.minutes') %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+    <% if @plan.reservation_errors.present? %>
+      <div class="reservation-errors">
+        <% @plan.reservation_errors.each do |error| %>
+          <p class="reservation-error"><%= error.message %></p>
+        <% end %>
       </div>
     <% end %>
   </div>
@@ -55,7 +75,11 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
 
       <% @time_search.facilities.each do |facility| %>
       <div class="date <%= date.strftime('%a').downcase %>">
-        <p class="label"><%= l date, format: :full %></p>
+        <p class="label">
+          <%= content_tag(:time, datetime: l(date, format: :iso), title: l(date, format: :gws_long)) do %>
+            <%= l(date, format: :gws_long) %>
+          <% end rescue nil %>
+        </p>
         <p class="facility"><%= facility.name %></p>
         <% overall_exist = 'free' %>
         <% @time_search.hours.each do |hour| %>
