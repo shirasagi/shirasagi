@@ -9,7 +9,7 @@ module Cms::SyntaxChecker
   AL_NUM_SP_PAT = "#{AL_NUM_PAT}#{SP}".freeze
   AL_NUM_REGEX = /[#{AL_NUM_PAT}]([#{AL_NUM_SP_PAT}]*[#{AL_NUM_PAT}])?/.freeze
 
-  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors, :header_check) #checkを追加
+  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors, :header_check, :h2_check) #checkを追加
   CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result) do
     def set_result(ret)
       if content["type"] == "array"
@@ -52,7 +52,7 @@ module Cms::SyntaxChecker
   ]
 
   def check(cur_site:, cur_user:, contents:)
-    context = Cms::SyntaxChecker::CheckerContext.new(cur_site, cur_user, contents, [], false)
+    context = Cms::SyntaxChecker::CheckerContext.new(cur_site, cur_user, contents, [], false, false)
 
     contents.each do |content|
       if content["resolve"] == "html"

@@ -9,7 +9,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
     let(:content) do
       { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false) }
+    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false,false) }
 
     context "with usual case" do
       let(:head_html1) { "<h2>#{unique_id}</h2>" }
@@ -176,6 +176,28 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
           expect(error[:id]).to eq id
             expect(error[:idx]).to eq idx
             expect(error[:code]).to eq "h#{level}"
+            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
+            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+            expect(error[:collector]).to eq described_class.name
+            expect(error[:collector_params]).to be_blank
+        end
+      end
+    end
+
+    context "header_checkがtrueでh2_checkがtrueのとき" do
+      let(:head_html1) { "<h2>#{unique_id}</h2>" }
+      let(:head_html2) { "<h4>#{unique_id}</h4>" }
+      let(:head_htmls) { [ head_html1, head_html2 ] }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true,true) }
+
+      it do
+        described_class.new.check(context, id, idx, raw_html, fragment)
+
+        expect(context.header_check).to eq true
+        expect(context.h2_check).to eq true
+        context.errors.first.tap do |error|
+          expect(error[:id]).to eq id
+            expect(error[:idx]).to eq idx
             expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
             expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
             expect(error[:collector]).to eq described_class.name

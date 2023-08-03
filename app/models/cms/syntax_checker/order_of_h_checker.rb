@@ -14,9 +14,12 @@ class Cms::SyntaxChecker::OrderOfHChecker
 
       if i == 0
         # first leve of h should be 1 or 2
-        if current_level > 2  && !context.header_check
+        if (current_level > 2  && !context.header_check) || ( current_level == 4 && context.h2_check)
           code += current_node.name + " "
         elsif current_level <= 2 && !context.header_check
+          if current_level == 2 
+            context.h2_check = true 
+          end
           context.header_check = true 
         end
       elsif current_level <= 2
