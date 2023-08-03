@@ -57,11 +57,15 @@ en:
     under_maintenance_mode: Currently under maintenance.
     pagination: Pagination
     hours: hours
+    minutes: Minutes
     remark: Remark
     before: Before
     after: After
     time: Time
     fiscal_year: Fiscal year
+    test_deliver: Test deliver
+    target: Target
+    unlimited: Unlimited
 
     views:
       login/login:
