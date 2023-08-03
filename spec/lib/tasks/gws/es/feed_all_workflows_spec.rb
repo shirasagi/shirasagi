@@ -31,7 +31,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     let!(:form) { create(:gws_workflow_form, cur_site: site, cur_user: user) }
     let!(:column) { create(:gws_column_file_upload, cur_site: site, cur_form: form) }
     let!(:item) do
-      create(:gws_workflow_file, cur_site: site, cur_user: user, form: form, column_values: [ column.serialize_value([ file.id ]) ])
+      create(:gws_workflow_file, cur_site: site, cur_user: user, form: form, column_values: [column.serialize_value([file.id])])
     end
 
     let(:now) { Time.zone.now.change(usec: 0) }
