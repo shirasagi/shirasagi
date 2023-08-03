@@ -24,11 +24,7 @@ class Cms::ApiToken < SS::ApiToken
       action = opts[:action].presence || "api_login"
       raise "site not given!" if site.nil?
 
-      token = request.headers[SS::ApiToken::API_KEY_HEADER].presence
-      token ||= begin
-        token_and_options = ActionController::HttpAuthentication::Token.token_and_options(request)
-        token_and_options ? token_and_options[0] : nil
-      end
+      token = get_token(request)
       raise "could not fetch the token!" if token.nil?
 
       decoded_token = JWT.decode token, secret, true, { algorithm: 'HS256' }

@@ -84,6 +84,15 @@ class SS::ApiToken
       Rails.application.secrets[:secret_key_base][0..31]
     end
 
+    def get_token(request)
+      token = request.headers[SS::ApiToken::API_KEY_HEADER].presence
+      token ||= begin
+        token_and_options = ActionController::HttpAuthentication::Token.token_and_options(request)
+        token_and_options ? token_and_options[0] : nil
+      end
+      token
+    end
+
     def authenticate(request, opts = {})
       raise "unimplemented!"
     end
