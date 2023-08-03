@@ -65,6 +65,7 @@ ja:
     fiscal_year: 年度
     test_deliver: テスト配信
     target: 対象
+    unlimited: 制限無し
 
     views:
       login/login:
@@ -80,6 +81,7 @@ ja:
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
         openrate: "開封率：%{openrate}"
+        expiration_date: "期限切れ日時：%{expiration_date}"
       oauth2/application:
         header:
           name: アプリケーション種別
@@ -1028,7 +1030,12 @@ ja:
         timezone: タイムゾーン
       ss/addon/workflow_setting:
         workflow_my_group: 自所属の表示
-
+      ss/api_token:
+        name: 名前
+        jwt_id: JWT ID (jti)
+        expiration_date: 期限切れ日時
+        audience_id: 利用ユーザー
+        jwt: APIトークン
   tooltip:
     ss/model/site:
       upload_policy:

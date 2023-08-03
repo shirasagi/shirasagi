@@ -13,6 +13,7 @@ ja:
     check_links_pages: ページ
     count_pages: ページ目
     command: コマンド
+    api_token: 連携用APIトークン
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
@@ -901,6 +902,7 @@ ja:
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
+      cms/api_token: 連携用APIトークン
     errors:
       models:
         cms/content:
