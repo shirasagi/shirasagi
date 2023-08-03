@@ -77,7 +77,7 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
       <div class="date <%= date.strftime('%a').downcase %>">
         <p class="label">
           <%= content_tag(:time, datetime: l(date, format: :iso), title: l(date, format: :gws_long)) do %>
-            <%= l(date, format: :m_d_a) %>
+            <%= l(date, format: :gws_long) %>
           <% end rescue nil %>
         </p>
         <p class="facility"><%= facility.name %></p>
