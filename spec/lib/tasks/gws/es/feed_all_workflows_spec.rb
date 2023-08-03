@@ -28,7 +28,11 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     let!(:file) do
       tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", binary: true, content_type: 'image/png')
     end
-    let!(:workflow) { create(:gws_workflow_file, cur_site: site, cur_user: user, file_ids: [file.id]) }
+    let!(:form) { create(:gws_workflow_form, cur_site: site, cur_user: user) }
+    let!(:column) { create(:gws_column_file_upload, cur_site: site, cur_form: form) }
+    let!(:item) do
+      create(:gws_workflow_file, cur_site: site, cur_user: user, form: form, column_values: [column.serialize_value([file.id])])
+    end
 
     let(:now) { Time.zone.now.change(usec: 0) }
     let!(:deleted_workflow) { create(:gws_workflow_file, cur_site: site, cur_user: user, deleted: now) }
@@ -38,20 +42,27 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_workflows }.to output(include("- #{workflow.name}\n")).to_stdout
+      expectation = expect { described_class.feed_all_workflows }
+      expectation.to output(include("- #{item.name}\n")).to_stdout
+      expectation.to output(include("- #{form.name}\n")).to_stdout
 
       ::Gws::Elasticsearch.refresh_index(site: site)
       site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
-        expect(es_docs["hits"]["hits"].length).to eq 2
+        expect(es_docs["hits"]["hits"].length).to eq 3
         es_docs["hits"]["hits"][0].tap do |es_doc|
-          expect(es_doc["_id"]).to eq "gws_workflow_files-workflow-#{workflow.id}"
+          expect(es_doc["_id"]).to eq "gws_workflow_files-workflow-#{item.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}"
+          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
         end
         es_docs["hits"]["hits"][1].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{workflow.id}#file-#{file.id}"
+          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{item.id}#file-#{file.id}"
+        end
+        es_docs["hits"]["hits"][2].tap do |es_doc|
+          expect(es_doc["_id"]).to eq "gws_workflow_forms-workflow-#{form.id}"
+          source = es_doc["_source"]
+          expect(source['url']).to eq "/.g#{site.id}/workflow/forms/#{form.id}"
         end
       end
     end

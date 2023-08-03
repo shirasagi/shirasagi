@@ -14,7 +14,7 @@ end
     <% setting = "Gws::Elasticsearch::Setting::#{type.classify}".constantize.new(cur_site: @cur_site, cur_user: @cur_user) %>
     <% if setting.search_types.present? %>
       <% path = gws_elasticsearch_search_search_path(type: type) %>
-      <%= link_to "#{path}#{params}", class: [ type, request.path.start_with?(path) ? 'current' : nil ] do %>
+      <%= link_to "#{path}#{params}", class: [ type, (::File.basename(request.path) == type) ? 'current' : nil ] do %>
         <span class="tab-name"><%= setting.menu_label %></span>
       <% end %>
     <% end %>
