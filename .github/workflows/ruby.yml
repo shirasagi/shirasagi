@@ -132,6 +132,7 @@ jobs:
           RUBYOPT: "-W:deprecated"
           logs_on_failure: 0
           CAPYBARA_MAX_WAIT_TIME: 60
+          driver: firefox
           # RSPEC_LOCALE: en
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
