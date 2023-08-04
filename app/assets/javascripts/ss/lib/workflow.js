@@ -317,7 +317,9 @@ SS_Workflow.prototype = {
           msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         pThis.$el.find(".workflow-partial-section").html('<div class="error">' + msg + '</div>');
-        alert(msg);
+        if (SS.env !== 'test') {
+          alert(msg);
+        }
       }
     });
   },
@@ -343,7 +345,9 @@ SS_Workflow.prototype = {
           msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         pThis.$el.find(".workflow-partial-section").html(msg);
-        alert(msg);
+        if (SS.env !== 'test') {
+          alert(msg);
+        }
       }
     });
   },

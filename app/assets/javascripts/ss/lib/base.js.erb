@@ -413,37 +413,46 @@ this.SS = (function () {
   };
 
   SS.fileCheck = function () {
-    return $('#item_files').on("change", function () {
-      var form, uri;
-      form = $(this).val();
-      if (!form) {
-        $(".js-uploader-alert-message").hide();
+    $('#item_files').on("change", function () {
+      var $uploaderAlertMessage = $(".js-uploader-alert-message");
+
+      var uploadedFile = $(this).val();
+      if (!uploadedFile) {
         return;
       }
-      uri = location.pathname.split("/");
-      return $.ajax({
+
+      $uploaderAlertMessage.html(SS.loading);
+      $uploaderAlertMessage.show();
+
+      $.ajax({
         type: "get",
-        url: uri.join("/"),
+        url: location.pathname,
         dataType: "json",
         data: {
           "do": "check",
-          item_files: form
+          item_files: uploadedFile
         },
         success: function (data) {
           if (data["message"]) {
-            $(".js-uploader-alert-message").html(data["message"]);
-            return $(".js-uploader-alert-message").show();
+            $uploaderAlertMessage.html(data["message"]);
+            $uploaderAlertMessage.show();
           } else {
-            return $(".js-uploader-alert-message").hide();
+            $uploaderAlertMessage.html('ok');
+            $uploaderAlertMessage.show();
           }
         },
         error: function (xhr, status) {
           var errors;
           try {
             errors = $.parseJSON(xhr.responseText);
-            return alert([ "== Error(FileCheck) ==" ].concat(errors).join("\n"));
           } catch (_error) {
-            return alert([ "== Error(FileCheck) ==" ].concat(xhr["statusText"]).join("\n"));
+            errors = xhr["statusText"]
+          }
+          var message = [ "== Error(FileCheck) ==" ].concat(errors).join("\n");
+          $uploaderAlertMessage.html(message);
+          $uploaderAlertMessage.show();
+          if (SS.env !== 'test') {
+            alert(message);
           }
         }
       });
