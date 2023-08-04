@@ -19,8 +19,14 @@ module SS::CapybaraSupport
   module_function
 
   def activate_driver(name, config)
-    # activate_chrome(config)
-    activate_firefox(config)
+    case name
+    when 'firefox'
+      activate_firefox(config)
+    when 'chrome'
+      activate_chrome(config)
+    else
+      [ true, false ].sample ? activate_chrome(config) : activate_firefox(config)
+    end
   rescue LoadError
     deactivate_driver(config)
   end
