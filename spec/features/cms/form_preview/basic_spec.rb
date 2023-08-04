@@ -40,7 +40,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
           expect(page).to have_css("header h2", text: "カテゴリー")
         end
-        new_window.close
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end
@@ -72,7 +72,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
           expect(page).to have_no_css("header h2", text: "カテゴリー")
         end
-        new_window.close
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end
@@ -276,7 +276,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("div", text: column12_caption)
           expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
         end
-        new_window.close
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end

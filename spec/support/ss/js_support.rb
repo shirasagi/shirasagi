@@ -580,7 +580,6 @@ module SS
         # JS でクリックしてこのエラーを回避する
         # see: https://github.com/teamcapybara/capybara/blob/3.38.0/lib/capybara/node/actions.rb#L25-L28
         js_click find(:link_or_button, locator, **options)
-        wait_for_js_ready
       else
         page.click_on(locator, **options)
       end
@@ -589,7 +588,6 @@ module SS
     def js_click(element)
       wait_for_js_ready
       page.execute_script("arguments[0].click()", element)
-      wait_for_js_ready
     end
 
     def js_dispatch_generic_event(element, event_name)
@@ -610,7 +608,6 @@ module SS
         fill_in locator, with: with
         js_dispatch_focus_event find(:fillable_field, locator), 'blur'
       end
-      wait_for_js_ready
     end
 
     def js_select(value, from:, **options)
@@ -618,7 +615,6 @@ module SS
       element = find(:select, from, **options)
       page.execute_script(JS_SELECT_SCRIPT, element, value)
       js_dispatch_generic_event(element, "change")
-      wait_for_js_ready
     end
   end
 end

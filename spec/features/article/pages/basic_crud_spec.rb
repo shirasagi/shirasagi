@@ -167,9 +167,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_ajax
 
-        wait_event_to_fire("ss:checked-all-list-items") do
-          find('.list-item input[type="checkbox"][checked="checked"]').set(false)
-        end
+        find('.list-item input[type="checkbox"][checked="checked"]').set(false)
         click_button I18n.t('ss.buttons.delete')
         expect(page.accept_confirm).to eq I18n.t("errors.messages.plz_check_targets_to_delete")
       end
