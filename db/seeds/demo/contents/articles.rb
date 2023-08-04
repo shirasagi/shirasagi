@@ -201,8 +201,8 @@ save_page route: "article/page", filename: "docs/page19.html", name: "自動交�
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
-save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
+save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届", layout_id: @layouts["pages"].id,
+  category_ids: [@categories["attention"].id, @categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
@@ -259,11 +259,16 @@ save_page route: "article/page", filename: "urgency/page26.html", name: "黒鷺�
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
 file_1 = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", model: "article/page"
-file_2 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "画像1", model: "article/page"
-file_3 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "画像2", model: "article/page"
-file_4 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "画像3", model: "article/page"
-file_5 = save_ss_files "ss_files/key_visual/keyvisual04.jpg", filename: "keyvisual04.jpg", name: "画像4", model: "article/page"
-file_6 = save_ss_files "ss_files/key_visual/keyvisual05.jpg", filename: "keyvisual05.jpg", name: "画像5", model: "article/page"
+file_2 = save_ss_files "ss_files/key_visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "画像1",
+  model: "article/page"
+file_3 = save_ss_files "ss_files/key_visual/small/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "画像2",
+  model: "article/page"
+file_4 = save_ss_files "ss_files/key_visual/small/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "画像3",
+  model: "article/page"
+file_5 = save_ss_files "ss_files/key_visual/small/keyvisual04.jpg", filename: "keyvisual04.jpg", name: "画像4",
+  model: "article/page"
+file_6 = save_ss_files "ss_files/key_visual/small/keyvisual05.jpg", filename: "keyvisual05.jpg", name: "画像5",
+  model: "article/page"
 html = []
 html << '<p><a class="icon-pdf" href="' + file_1.url + '">サンプルファイル (PDF 783KB)</a></p>'
 html << '<p>'
@@ -275,7 +280,7 @@ end
 html << '</p>'
 recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow + 10 }
 save_page route: "article/page", filename: "docs/page27.html", name: "ふれあいフェスティバル",
-  layout_id: @layouts["oshirase"].id, event_recurrences: [ recurrence ],
+  layout_id: @layouts["pages"].id, event_recurrences: [ recurrence ],
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/event"].id,
                  @categories["shisei/soshiki"].id,
@@ -293,11 +298,11 @@ save_page route: "event/page", filename: "calendar/page28.html", name: "住民�
   content: "○○○○○○○○○○○○○○○○○○○○", related_url: @link_url,
   group_ids: [@g_seisaku.id]
 
-file_7 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg",
+file_7 = save_ss_files "ss_files/key_visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg",
                        model: "ss/temp_file"
-file_8 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "keyvisual02.jpg",
+file_8 = save_ss_files "ss_files/key_visual/small/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "keyvisual02.jpg",
                        model: "ss/temp_file"
-file_9 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg",
+file_9 = save_ss_files "ss_files/key_visual/small/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg",
                        model: "ss/temp_file"
 file_10_1 = save_ss_files "ss_files/article/img.png", filename: "img1.jpg", name: "img.jpg",
                         model: "ss/temp_file"
@@ -362,7 +367,7 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
     @form_columns[14].value_type.new(column: @form_columns[14], file_id: file_10_6.id, file_label: "写真5",
       image_html_type: "image"),
   ],
-  map_points: [{ "name" => "", "loc" => [35.7186823, 139.7741203], "text" => "" }],
+  map_points: [{ "name" => "", "loc" => [139.7741203, 35.7186823], "text" => "" }],
   group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page30.html", name: "ふれあいフェスティバル開催報告",
@@ -449,7 +454,8 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
   ],
   group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/229.html", name: "第67回　小鷲町ひまわり祭りのお知らせ",
+recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow + 1 }
+save_page route: "article/page", filename: "docs/page33.html", name: "第67回　小鷲町ひまわり祭りのお知らせ",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   column_values: [
     @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: ''),
@@ -459,8 +465,8 @@ save_page route: "article/page", filename: "docs/229.html", name: "第67回　�
     @categories["oshirase/kanko"].id
   ],
   event_name: '小鷲町　ひまわり祭り',
-  event_recurrences: [{ in_update_from_view: 1, in_all_day: 1, in_start_on: '2021/07/30', in_until_on: '2021/07/31' }],
-  event_deadline: '2021/07/30 11:00',
+  event_recurrences: [ recurrence ],
+  event_deadline: Time.zone.now.advance(days: 1).change(hour: 11),
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
@@ -473,16 +479,137 @@ save_page route: "article/page", filename: "docs/229.html", name: "第67回　�
   ],
   group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/550.html", name: "第27回シラサギハーフマラソン　イベント開催！！",
+save_page route: "article/page", filename: "docs/page34.html", name: "会計年度任用職員（道路維持補修作業員）を募集します",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["shisei/jinji"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow }
+save_page route: "article/page", filename: "docs/page35.html", name: "第27回シラサギハーフマラソン　イベント開催！！",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["oshirase/event"].id],
-  event_recurrences: [{ in_update_from_view: 1, in_all_day: 1, in_start_on: '2022/11/26', in_until_on: '2022/11/26' }],
+  event_recurrences: [ recurrence ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/569.html", name: "婚姻届（結婚するときの戸籍の届出）について",
+save_page route: "article/page", filename: "docs/page36.html", name: "令和４年度　シラサギ市職員採用試験（後期試験）を実施します",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["shisei/jinji"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+file_page37_1 = save_ss_files "ss_files/article/topic.jpeg", filename: "topic.jpeg",
+  name: "topic.jpeg", model: "ss/temp_file"
+save_page route: "article/page", filename: "docs/page37.html", name: "SHIRASAGI川堤防の桜が開花しました。",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, thumb_id: file_page37_1.id,
+  column_values: [
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 0, head: 'h2', text: 'SHIRASAGI川堤防の桜が開花しました。'
+    ),
+    @form_columns4[1].value_type.new(
+      column: @form_columns4[1], order: 1,
+      value: "SHIRASAGI川堤防の桜が開花しました。\nSHIRASAGI川堤防の桜が開花しました。SHIRASAGI川堤防の桜が開花しました。"
+    ),
+  ],
+  category_ids: [@categories["topics"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page38.html", name: "SHIRASAGI川堤防の桜が開花しました。２",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["topics"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page39.html", name: "SHIRASAGI川堤防の桜が開花しました。３",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["topics"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+file_page40_1 = save_ss_files "ss_files/article/koho_shirasagi.jpg", filename: "koho_shirasagi.jpg",
+  name: "広報シラサギ.jpg", model: "ss/temp_file"
+file_page40_2 = save_ss_files "ss_files/article/koho_shirasagi.pdf", filename: "koho_shirasagi.pdf",
+  name: "広報シラサギ.pdf", model: "ss/temp_file"
+save_page route: "article/page", filename: "docs/page40.html", name: "今月の広報SHIRASAGI",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  column_values: [
+    @form_columns4[4].value_type.new(
+      column: @form_columns4[4], order: 0, file_id: file_page40_1.id, file_label: "2022年4月号", image_html_type: "image"
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 1, head: 'h2', text: 'PDF版広報SHIRASAGI'),
+    @form_columns4[5].value_type.new(
+      column: @form_columns4[5], order: 2, file_id: file_page40_2.id, file_label: "2022年4月号"
+    ),
+  ],
+  category_ids: [
+    @categories["kohoshi"].id, @categories["kohoshi/kongetsukoho"].id
+  ],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page41.html", name: "春の交通安全週間",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["kurashi/anzen"].id, @categories["kurashi/anzen/bohan"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page42.html", name: "シラサギ市地域防災計画、シラサギ市水防計画",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [
+    @categories["kurashi/bosai"].id, @categories["kurashi/bosai/jyoho"].id, @categories["kurashi/bosai/kanri"].id,
+    @categories["kurashi/bosai/keikaku"].id, @categories["kurashi/bosai/kunren"].id
+  ],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page43.html", name: "Web版ハザードマップを公開しました",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["kurashi"].id, @categories["kurashi/bosai"].id, @categories["kurashi/bosai/jyoho"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page44.html", name: "【募集終了】シラサギ市地域防災推進員養成研修受講者募集",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["kurashi"].id, @categories["kurashi/bosai"].id, @categories["kurashi/bosai/keikaku"].id],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow + 1 }
+save_page route: "article/page", filename: "docs/page45.html", name: "「シラサギ市　秋の収穫祭り」開催告知",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  category_ids: [@categories["oshirase"].id, @categories["oshirase/event"].id],
+  event_name: 'シラサギ市　秋の収穫祭り',
+  event_recurrences: [ recurrence ],
+  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page46.html", name: "婚姻届（結婚するときの戸籍の届出）について",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -490,7 +617,7 @@ save_page route: "article/page", filename: "docs/569.html", name: "婚姻届（�
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/570.html", name: "離婚届（離婚するときの戸籍の届出）について",
+save_page route: "article/page", filename: "docs/page47.html", name: "離婚届（離婚するときの戸籍の届出）について",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -498,7 +625,7 @@ save_page route: "article/page", filename: "docs/570.html", name: "離婚届（�
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/571.html", name: "シラサギ市結婚新生活支援事業（補助金）について",
+save_page route: "article/page", filename: "docs/page48.html", name: "シラサギ市結婚新生活支援事業（補助金）について",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",

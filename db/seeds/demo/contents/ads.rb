@@ -1,11 +1,11 @@
 puts "# ads"
 
-banner1 = save_ss_files "ss_files/ads/dummy_banner_1.gif", filename: "dummy_banner_1.gif", model: "ads/banner"
-banner2 = save_ss_files "ss_files/ads/dummy_banner_2.gif", filename: "dummy_banner_2.gif", model: "ads/banner"
-banner3 = save_ss_files "ss_files/ads/dummy_banner_3.gif", filename: "dummy_banner_3.gif", model: "ads/banner"
-banner4 = save_ss_files "ss_files/ads/dummy_banner_4.gif", filename: "dummy_banner_4.gif", model: "ads/banner"
-banner5 = save_ss_files "ss_files/ads/dummy_banner_5.gif", filename: "dummy_banner_5.gif", model: "ads/banner"
-banner6 = save_ss_files "ss_files/ads/dummy_banner_6.gif", filename: "dummy_banner_6.gif", model: "ads/banner"
+banner1 = save_ss_files "ss_files/ads/dummy_banner_1.png", filename: "dummy_banner_1.png", model: "ads/banner"
+banner2 = save_ss_files "ss_files/ads/dummy_banner_2.png", filename: "dummy_banner_2.png", model: "ads/banner"
+banner3 = save_ss_files "ss_files/ads/dummy_banner_3.png", filename: "dummy_banner_3.png", model: "ads/banner"
+banner4 = save_ss_files "ss_files/ads/dummy_banner_4.png", filename: "dummy_banner_4.png", model: "ads/banner"
+banner5 = save_ss_files "ss_files/ads/dummy_banner_5.png", filename: "dummy_banner_5.png", model: "ads/banner"
+banner6 = save_ss_files "ss_files/ads/dummy_banner_6.png", filename: "dummy_banner_6.png", model: "ads/banner"
 banner1.set(state: "public")
 banner2.set(state: "public")
 banner3.set(state: "public")

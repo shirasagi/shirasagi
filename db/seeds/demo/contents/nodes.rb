@@ -365,16 +365,16 @@ save_node route: "ezine/member_page", filename: "testmagazine", name: "テスト
 
 ## facility
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: @layouts["general"].id
-center_point = Map::Extensions::Point.mongoize(loc: [34.075593, 134.550614], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [134.550614, 34.075593], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/higashii",
   name: "東区", order: 10, center_point: center_point
-center_point = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [133.808902, 34.034417], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/nishi",
   name: "西区", order: 20, center_point: center_point
-center_point = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [134.352387, 33.609123], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/minami",
   name: "南区", order: 30, center_point: center_point
-center_point = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [134.608579, 34.179472], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/kita",
   name: "北区", order: 40, center_point: center_point
 save_node route: "cms/node", filename: "institution/shurui", name: "施設の種類", layout_id: @layouts["general"].id
@@ -416,6 +416,28 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
   location_ids: [facility_locations['institution/chiki/higashii'].id],
   service_ids: [facility_services['institution/yoto/manabu'].id],
   st_form_ids: [@form.id, @form4.id], st_form_default_id: @form4.id
+
+save_node route: "facility/page", filename: "institution/shisetsu/gym", name: "シラサギ市立体育館",
+  kana: "しらさぎしりつたいいくかん",
+  postcode: '000-0001',
+  address: "大鷺県シラサギ市小鷺町2丁目2番地2号",
+  tel: "00-0000-0000",
+  fax: "00-0000-0000",
+  related_url: @link_url,
+  category_ids: [facility_categories['institution/shurui/sports'].id],
+  location_ids: [facility_locations['institution/chiki/nishi'].id],
+  service_ids: [facility_services['institution/yoto/asobu'].id]
+
+save_node route: "facility/page", filename: "institution/shisetsu/pool", name: "シラサギ市民プール",
+  kana: "しらさぎしりつぷーる",
+  postcode: '000-0002',
+  address: "大鷺県シラサギ市小鷺町2丁目2番地3号",
+  tel: "00-0000-0000",
+  fax: "00-0000-0000",
+  related_url: @link_url,
+  category_ids: [facility_categories['institution/shurui/sports'].id],
+  location_ids: [facility_locations['institution/chiki/nishi'].id],
+  service_ids: [facility_services['institution/yoto/asobu'].id]
 
 save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
 

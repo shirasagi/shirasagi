@@ -148,19 +148,19 @@ save_node route: "member/blog", filename: "kanko-info/blog", name: "ブログ",
   layout_id: @layouts["kanko-info"].id, order: 20, page_limit: 4
 
 save_node route: "cms/node", filename: "kanko-info/blog/area", name: "地域", layout_id: @layouts["kanko-info"].id
-blog_l1 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/east",
+@blog_l1 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/east",
   name: "東区", layout_id: @layouts["kanko-info"].id, order: 10
-blog_l2 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/west",
+@blog_l2 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/west",
   name: "西区", layout_id: @layouts["kanko-info"].id, order: 20
-blog_l3 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/south",
+@blog_l3 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/south",
   name: "南区", layout_id: @layouts["kanko-info"].id, order: 30
-blog_l4 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/north",
+@blog_l4 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/north",
   name: "北区", layout_id: @layouts["kanko-info"].id, order: 40
 blog_thumb = Fs::UploadedFile.create_from_file("files/img/logo.png")
 
 save_node route: "member/blog_page", filename: "kanko-info/blog/shirasagi", name: "白鷺太郎のブログ",
   layout_id: @layouts["kanko-info/blog/blog1"].id, member_id: @member_1.id, description: "白鷺太郎のブログです。よろしくお願いしいます。",
-  genres: %w(ジャンル1 ジャンル2 ジャンル3), blog_page_location_ids: [blog_l1.id], in_image: blog_thumb
+  genres: %w(ジャンル1 ジャンル2 ジャンル3), blog_page_location_ids: [@blog_l1.id], in_image: blog_thumb
 save_node route: "member/blog_page", filename: "kanko-info/blog/newblog", name: "はじめてのブログ",
   layout_id: @layouts["kanko-info/blog/blog1"].id, member_id: @member_2.id, description: "はじめてのブログです。",
   genres: %w(自治体ブログ), in_image: blog_thumb
