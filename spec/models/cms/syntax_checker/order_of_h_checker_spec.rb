@@ -9,7 +9,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
     let(:content) do
       { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false,false) }
+    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false, 0) }
 
     context "with usual case" do
       let(:head_html1) { "<h2>#{unique_id}</h2>" }
@@ -152,7 +152,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:level) { rand(3..6) }
       let(:head_html1) { "<h#{level}>#{unique_id}</h#{level}>" }
       let(:head_htmls) { [ head_html1 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true) }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true, level) }
 
       it do
         described_class.new.check(context, id, idx, raw_html, fragment)
@@ -166,7 +166,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:level) { rand(3..6) }
       let(:head_html1) { "<h#{level}>#{unique_id}</h#{level}>" }
       let(:head_htmls) { [ head_html1 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false) }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false, level) }
 
       it do
         described_class.new.check(context, id, idx, raw_html, fragment)
@@ -184,17 +184,30 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       end
     end
 
-    context "header_checkがtrueでh2_checkがtrueのとき" do
+    context "h2,h3で数字が連続しているとき" do
       let(:head_html1) { "<h2>#{unique_id}</h2>" }
-      let(:head_html2) { "<h4>#{unique_id}</h4>" }
+      let(:head_html2) { "<h3>#{unique_id}</h3>" }
       let(:head_htmls) { [ head_html1, head_html2 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true,true) }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true, 2) }
 
       it do
         described_class.new.check(context, id, idx, raw_html, fragment)
 
         expect(context.header_check).to eq true
-        expect(context.h2_check).to eq true
+        expect(context.errors).to be_blank
+      end
+    end
+
+    context "h1,h3で数字が連続していないとき" do
+      let(:head_html1) { "<h1>#{unique_id}</h1>" }
+      let(:head_html2) { "<h3>#{unique_id}</h3>" }
+      let(:head_htmls) { [ head_html1, head_html2 ] }
+      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true, 1) }
+
+      it do
+        described_class.new.check(context, id, idx, raw_html, fragment)
+
+        expect(context.header_check).to eq true
         context.errors.first.tap do |error|
           expect(error[:id]).to eq id
             expect(error[:idx]).to eq idx
@@ -205,6 +218,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
         end
       end
     end
+    
   end
 
   describe "#correct" do
