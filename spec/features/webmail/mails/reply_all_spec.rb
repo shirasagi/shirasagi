@@ -40,7 +40,6 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           end
         end
         within_window new_window do
-          wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
             click_on I18n.t('ss.buttons.send')
