@@ -22,4 +22,12 @@ class Cms::Line::StatisticsController < ApplicationController
     @item.update_statistics
     render_update true, notice: I18n.t('ss.notice.updated')
   end
+
+  def download
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+    csv = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site).enum_csv(encoding: "UTF-8")
+    send_enum csv, type: 'text/csv; charset=UTF-8',
+      filename: "cms_line_statistics_#{Time.zone.now.strftime("%Y%m%d_%H%M")}.csv"
+  end
 end
