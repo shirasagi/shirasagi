@@ -31,7 +31,7 @@
 //= require mdn-polyfills/String.prototype.trim.js
 //= require popper.js/dist/umd/popper.js
 //= require tippy.js/dist/tippy-bundle.iife.js
-//= require crypto-js/3.2.0/crypto-js.min.js
+//= require crypto-js/crypto-js.js
 //= require ejs/ejs.min.js
 //= require ss/lib/base
 //= require_self
@@ -104,9 +104,9 @@
 //= require map/reference
 //= require webmail/lib/mail
 //= require webmail/lib/address
-//= require cropperjs/cropper.min.js
+//= require cropperjs/dist/cropper.js
 //= require service/lib/quota.js
-//= require flexibility-1.0.6.js
+//= require flexibility/flexibility.js
 //= require cms/lib/readable_setting
 //= require cms/lib/michecker
 //= require cms/lib/condition_forms
