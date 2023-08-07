@@ -1,0 +1,7 @@
+</ul><!-- .head-content__list -->
+    <div class="common-feed whats-new__feed">
+      <a class="rss common-feed__rss whats-new__rss" href="">RSS</a>
+      <a class="more common-feed__more whats-new__more" href="">防災の新着情報一覧を見る</a>
+    </div>
+  </div><!-- .head-content__list-wrap -->
+</section><!-- .head-content__area.head-content__area--disaster -->

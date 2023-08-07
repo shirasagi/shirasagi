@@ -11,6 +11,6 @@ FactoryBot.define do
   end
 
   trait :member_photo_with_map_points do
-    map_points { [{ "loc" => [34.065750, 134.559257] }] }
+    map_points { [{ "loc" => [134.559257, 34.065750] }] }
   end
 end
