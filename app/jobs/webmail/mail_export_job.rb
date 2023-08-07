@@ -16,7 +16,7 @@ module Webmail
           next
         end
 
-        @imap.mails.all.each(&block)
+        @imap.mails.per(nil).all.each(&block)
       end
     end
 

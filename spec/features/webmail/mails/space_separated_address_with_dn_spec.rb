@@ -19,7 +19,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
       it do
         visit index_path
+        wait_for_js_ready
         first("li.list-item").click
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic .subject", text: "たちつてと")
         expect(page).to have_css("#addon-basic .body--text", text: "なにぬねの")
       end
