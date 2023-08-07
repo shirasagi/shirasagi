@@ -33,7 +33,9 @@ describe Gws::Survey::FileEnumerator, type: :model, dbscope: :example do
           table[0].tap do |row|
             expect(row[Gws::Survey::File.t(:updated)]).to eq I18n.l(file1.updated, format: :csv)
             expect(row[Gws::User.t(:name)]).to eq user1.name
-            expect(row[Gws::User.t(:organization_uid)]).to eq (user1.organization_uid || user1.uid)
+            (user1.organization_uid.presence || user1.uid).tap do |organization_uid|
+              expect(row[Gws::User.t(:organization_uid)]).to eq organization_uid
+            end
             expect(row[column1.name]).to eq [ column1.prefix_label, column1_value, column1.postfix_label ].join
             expect(row[column2.name]).to eq [ column2.prefix_label, column2_value, column2.postfix_label ].join
           end
@@ -56,7 +58,9 @@ describe Gws::Survey::FileEnumerator, type: :model, dbscope: :example do
             table[0].tap do |row|
               expect(row[Gws::Survey::File.t(:updated)]).to eq I18n.l(file1.updated, format: :csv)
               expect(row[Gws::User.t(:name)]).to eq user1.name
-              expect(row[Gws::User.t(:organization_uid)]).to eq (user1.organization_uid || user1.uid)
+              (user1.organization_uid.presence || user1.uid).tap do |organization_uid|
+                expect(row[Gws::User.t(:organization_uid)]).to eq organization_uid
+              end
               expect(row[column2.name]).to eq [ column2.prefix_label, column2_value, column2.postfix_label ].join
               expect(row[column1.name]).to eq [ column1.prefix_label, column1_value, column1.postfix_label ].join
             end
