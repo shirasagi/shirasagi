@@ -21,6 +21,38 @@ def save_node(data)
   item
 end
 
+## article
+save_node route: "article/page", filename: "docs", name: "記事",
+  page_layout_id: @layouts["pages"].id, shortcut: "show", sort: 'order',
+  st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
+article_map_search = save_node(
+  route: "article/map_search", filename: "hinanjo", name: "避難所検索",
+  view_route: "category/node", conditions: %w(hinanjo_docs), sort: 'order', new_days: 0,
+  map_search_options: [{ name: '地域', values: "東部\n北部\n南部" }]
+)
+article_map_search_categories = [
+  save_node(
+    route: "category/page", filename: "hinanjo/jishin", name: "地震", order: 20,
+    sort: 'updated -1', new_days: 0, map_icon_url: '/img/ic-jishin.png'
+  ),
+  save_node(
+    route: "category/page", filename: "hinanjo/thunami", name: "津波", order: 20,
+    page_layout_id: @layouts["pages"].id, sort: 'updated -1', new_days: 0, map_icon_url: '/img/ic-thunami.png'
+  ),
+  save_node(
+    route: "category/page", filename: "hinanjo/dosya", name: "土砂災害", order: 0,
+    page_layout_id: @layouts["pages"].id, sort: 'updated -1', new_days: 0, map_icon_url: '/img/ic-dosha.png'
+  )
+]
+article_map_search.st_category_ids = article_map_search_categories.map(&:id)
+article_map_search.update
+save_node route: "article/page", filename: "hinanjo_docs", name: "避難所情報", layout_id: @layouts["more"].id,
+  page_layout_id: @layouts["general"].id, conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
+  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0, st_form_ids: [@form8.id],
+  st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
+save_node route: "article/page", filename: "population", name: "人口・世帯数", new_days: 0, st_form_ids: [@form7.id],
+  st_form_default_id: @form7.id
+
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order'
 save_node route: "category/node", filename: "kanko", name: "観光・文化・スポーツ", order: 40
@@ -183,38 +215,8 @@ array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m]
 
 ## node
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
-
-## article
-save_node route: "article/page", filename: "docs", name: "記事",
-  page_layout_id: @layouts["pages"].id, shortcut: "show", sort: 'order',
-  st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
-article_map_search = save_node(
-  route: "article/map_search", filename: "hinanjo", name: "避難所検索",
-  view_route: "category/node", conditions: %w(hinanjo_docs), sort: 'order', new_days: 0,
-  map_search_options: [{ name: '地域', values: "東部\n北部\n南部" }]
-)
-article_map_search_categories = [
-  save_node(
-    route: "category/page", filename: "hinanjo/jishin", name: "地震", order: 20,
-    sort: 'updated -1', new_days: 0, map_icon_url: '/img/ic-jishin.png'
-  ),
-  save_node(
-    route: "category/page", filename: "hinanjo/thunami", name: "津波", order: 20,
-    page_layout_id: @layouts["pages"].id, sort: 'updated -1', new_days: 0, map_icon_url: '/img/ic-thunami.png'
-  ),
-  save_node(
-    route: "category/page", filename: "hinanjo/dosya", name: "土砂災害", order: 0,
-    page_layout_id: @layouts["pages"].id, sort: 'updated -1', new_days: 0, map_icon_url: '/img/ic-dosha.png'
-  )
-]
-article_map_search.st_category_ids = article_map_search_categories.map(&:id)
-article_map_search.update
-save_node route: "article/page", filename: "hinanjo_docs", name: "避難所情報", layout_id: @layouts["more"].id,
-  page_layout_id: @layouts["general"].id, conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
-  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0, st_form_ids: [@form8.id],
-  st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
-save_node route: "article/page", filename: "population", name: "人口・世帯数", new_days: 0, st_form_ids: [@form7.id],
-  st_form_default_id: @form7.id
+save_node route: "cms/page", filename: "shinchaku", name: "新着情報", layout_id: @layouts["more"].id,
+  conditions: %w(oshirase oshirase/event shisei/jinji), new_days: 0
 
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: @layouts["more"].id,
@@ -449,15 +451,6 @@ save_node route: "key_visual/image", filename: "key_visual", name: "キービジ
 save_node route: "ckan/page", filename: "ckan", name: "CKAN", layout_id: @layouts["more"].id,
   ckan_url: 'https://ckan.open-governmentdata.org/', ckan_max_docs: 20,
   ckan_item_url: 'https://ckan.open-governmentdata.org/'
-
-## image map
-file = save_ss_files "ss_files/image_map/shirasagi_clickable.png", filename: "shirasagi_clickable.png",
-  name: "shirasagi_clickable.png", model: "ss/temp_file"
-save_node route: "image_map/page", filename: "map_clickable", name: "シラサギ市説明マップ",
-  layout_id: @layouts["category-middle"].id, image_id: file.id,
-  area_states: [
-    {"name"=>"西部", "value"=>"seibu"}, {"name"=>"北部", "value"=>"hokubu"}, {"name"=>"南部", "value"=>"toubu"}
-  ], supplement_state: 'enabled'
 
 ## import node
 save_node route: "cms/import_node", filename: "testf", name: "取込ページ", layout_id: @layouts["general"].id,

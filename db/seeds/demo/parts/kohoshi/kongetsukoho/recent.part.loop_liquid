@@ -1,21 +1,22 @@
-{% for node in nodes %}
-    {% if node.current? %}
-      {% for subnode in node.nodes %}
-  {% if forloop.first == true %}
-<div class="deepest-catelist-wrap">
-<section class="deepest-catelist">
-      <ul class="deepest-catelist__list">
-    {% endif %}
-      <li class="deepest-catelist__item deepest-catelist__item--{{ subnode.css_class }}">
-        <header class="deepest-catelist__item-header">
-          <h2 class="deepest-catelist__item-title"><a href="{{ subnode.url }}" class="deepest-catelist__item-link">{{ subnode.name }}</a></h2>
-        </header><!-- .deepest-catelist__item-header -->
-      </li><!-- .deepest-catelist__item -->
-  {% if forloop.last == true %}
-      </ul><!-- .deepest-catelist__list -->
-</section><!-- .deepest-catelist -->
-</div><!-- .deepest-catelist-wrap -->
-    {% endif %}
-      {% endfor %}
-    {% endif %}
+<section id="kohoshi" class="sec-cmn-top-02 sec-cmn-top-02--kohoshi">
+  <header class="sec-cmn-top-02__header">
+  	<h2 class="sec-cmn-top-02__header-title">広報SHIRASAGI</h2>
+  </header><!-- .sec-cmn-top-02__header -->
+
+  {% for page in pages %}
+  <article class="publicrelation">
+    <div class="publicrelation__content">
+      <a href="/kohoshi/kongetsukoho/" class="publicrelation__link">
+        <div class="publicrelation__image"><img src="{% assign img_src = page.html | ss_img_src | expand_path: page.parent.url %}{{ img_src | default: "/assets/img/dummy.png" }}" alt="広報SHIRASAGI"></div>
+      </a><!-- .publicrelation__link -->
+      <div class="publicrelation__info">
+        <div class="publicrelation__summary">{{ page.summary }}</div><!-- .publicrelation__summary -->
+      </div><!-- .publicrelation__info -->
+    </div><!-- .publicrelation__content-inner -->
+    <nav class="publicrelation__navlink-wrap">
+      <a href="/kohoshi/kakopdf/rss.xml" class="rss publicrelation__navlink--rss">RSS</a>
+      <a href="/kohoshi/kakopdf/" class="more publicrelation__navlink--list">広報SHIRASAGI一覧</a>
+    </nav><!-- .publicrelation__content -->
+  </article><!-- .publicrelation -->
   {% endfor %}
+</section><!-- #kohoshi.sec-cmn-top-02.sec-cmn-top-02--kohoshi -->

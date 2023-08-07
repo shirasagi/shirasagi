@@ -76,3 +76,6 @@ save_page route: "ezine/page", filename: "anpi-ezine/event/page38.html",
   html: "<p>シラサギ市イベント情報を配信します。</p>\r\n",
   text: "シラサギ市イベント情報を配信します。\r\n"
 
+puts "# testmagazine"
+save_page route: "ezine/page", filename: "testmagazine/page39.html", name: "【特集】定番から穴場までおススメの宿",
+  state: 'closed', released_type: 'same_as_updated'

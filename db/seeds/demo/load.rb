@@ -52,6 +52,7 @@ load "#{Rails.root}/db/seeds/demo/contents/postal_code.rb"
 load "#{Rails.root}/db/seeds/demo/contents/word_dictionary.rb"
 load "#{Rails.root}/db/seeds/demo/contents/translate_lang.rb"
 load "#{Rails.root}/db/seeds/demo/contents/line.rb"
+load "#{Rails.root}/db/seeds/demo/contents/image_map.rb"
 
 if @site.subdir.present?
   # rake cms:set_subdir_url site=@site.host
