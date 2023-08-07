@@ -37,7 +37,7 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::ImgAltChecker,
     Cms::SyntaxChecker::ImgDataUriSchemeChecker,
     Cms::SyntaxChecker::LinkTextChecker,
-    Cms::SyntaxChecker::OrderOfHChecker, 
+    Cms::SyntaxChecker::OrderOfHChecker,
     Cms::SyntaxChecker::TableChecker,
     Cms::SyntaxChecker::UrlSchemeChecker,
     Cms::SyntaxChecker::InternalLinkChecker
