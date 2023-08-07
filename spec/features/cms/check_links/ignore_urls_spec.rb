@@ -20,10 +20,6 @@ describe "cms/check_links/ignore_urls", type: :feature, dbscope: :example, js: t
   let(:edit_path) { edit_cms_check_links_ignore_url_path(site: site.id, id: item.id) }
   let(:delete_path) { delete_cms_check_links_ignore_url_path(site: site.id, id: item.id) }
 
-  def execute_job
-    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
-  end
-
   def latest_report
     Cms::CheckLinks::Report.site(site).first
   end
@@ -72,12 +68,14 @@ describe "cms/check_links/ignore_urls", type: :feature, dbscope: :example, js: t
     before { login_cms_user }
 
     it "#index" do
-      execute_job
+      job = Cms::CheckLinksJob.bind(site_id: site.id)
+      expect { job.perform_now }.to output(include("[1 errors]\n")).to_stdout
       expect(latest_report.pages.size).to eq 1
 
       item
 
-      execute_job
+      job = Cms::CheckLinksJob.bind(site_id: site.id)
+      expect { job.perform_now }.to output(include("[0 errors]\n")).to_stdout
       expect(latest_report.pages.size).to eq 0
     end
   end

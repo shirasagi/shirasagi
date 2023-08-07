@@ -37,11 +37,7 @@ module Chorg::MongoidSupport
   end
 
   def copy_attributes_deeply(entity)
-    hash = {}
-    entity.attributes.each do |k, v|
-      hash[k] = v
-    end
-    hash
+    Hash.from_bson(entity.attributes.to_bson).with_indifferent_access
   end
 
   def with_entity_updates(models, substitutor, scope = {})

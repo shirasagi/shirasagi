@@ -109,4 +109,119 @@ module Webmail
 
     size
   end
+
+  # rubocop:disable Style::RedundantAssignment
+  def text_to_html(text)
+    return text if text.blank?
+
+    text = ApplicationController.helpers.sanitize(text)
+    text = ERB::Util.h(text)
+    text = text.split(/\R\R+/).map { |t| "<p>#{t}</p>" }.join
+    text = text.gsub(/\R/, '<br />')
+    text
+  end
+  # rubocop:enable Style::RedundantAssignment
+
+  def html_to_text(html)
+    return html if html.blank?
+
+    fragment = Nokogiri::HTML.fragment(html.gsub(/<br.*?>/, "\n").gsub(/<hr.*?>/, "\n"))
+    fragment.text
+  end
+
+  def reply_text(text, send_date:, from:, sign: nil)
+    ret = "\n\n"
+    ret += "#{I18n.l(send_date, format: :long)}, #{from}:\n"
+    ret += text.to_s.gsub(/^/m, '> ')
+
+    if sign
+      ret += "\n\n#{sign}"
+    end
+
+    ret
+  end
+
+  FIGURE_STYLE = [
+    "margin-block: 0",
+    "margin-inline: 0"
+  ].join("; ").freeze
+
+  QUOTE_STYLE = [
+    "margin-inline-start: 1em",
+    "margin-inline-end: 1em",
+    "padding-inline-start: 1em",
+    "padding-inline-end: 1em",
+    "border-left: 1px solid #000"
+  ].join("; ").freeze
+
+  def reply_html(html, send_date:, from:, sign: nil)
+    ret = <<~HTML
+      <figure style="#{FIGURE_STYLE};">
+        <figcaption>
+          <time datetime="#{send_date.iso8601}">#{I18n.l(send_date, format: :long)}</time>
+          <cite>#{from}</cite>
+          :
+        </figcaption>
+        <blockquote style="#{QUOTE_STYLE};">
+          #{html}
+        </blockquote>
+      </figure>
+    HTML
+
+    if sign
+      ret += text_to_html(sign)
+    end
+
+    ret
+  end
+
+  def forward_text(text, subject:, send_date:, from:, sign: nil)
+    ret = "\n\n"
+    ret += "-------- #{I18n.t("gws/memo/message.forward_message_header")} --------\n"
+    header = I18n.t("mongoid.attributes.gws/model/memo/message.subject")
+    ret += "#{header}: #{subject}\n"
+    header = I18n.t("mongoid.attributes.gws/model/memo/message.send_date")
+    ret += "#{header}: #{I18n.l(send_date, format: :long)}\n"
+    header = I18n.t("mongoid.attributes.gws/model/memo/message.from")
+    ret += "#{header}: #{from}\n"
+    ret += "\n\n"
+    ret += "#{I18n.l(send_date, format: :long)}, #{from}:\n"
+    ret += text.to_s.gsub(/^/m, '> ')
+
+    if sign
+      ret += "\n\n#{sign}"
+    end
+
+    ret
+  end
+
+  def forward_html(html, subject:, send_date:, from:, sign: nil)
+    ret = <<~HTML
+      -------- #{I18n.t("gws/memo/message.forward_message_header")} --------<br>
+      <table>
+        <tbody>
+          <tr>
+            <th scope="row">#{I18n.t("mongoid.attributes.gws/model/memo/message.subject")}</th>
+            <td>#{subject}</td>
+          </tr>
+          <tr>
+            <th scope="row">#{I18n.t("mongoid.attributes.gws/model/memo/message.send_date")}</th>
+            <td><time datetime="#{send_date.iso8601}">#{I18n.l(send_date, format: :long)}</time></td>
+          </tr>
+          <tr>
+            <th scope="row">#{I18n.t("mongoid.attributes.gws/model/memo/message.from")}</th>
+            <td>#{from}</td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      #{html}
+    HTML
+
+    if sign
+      ret += text_to_html(sign)
+    end
+
+    ret
+  end
 end

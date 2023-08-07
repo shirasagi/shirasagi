@@ -1,0 +1,46 @@
+<%
+  if report
+    show_cell = true
+    if report.share_small_talk.present?
+      share_class = 'share-cell'
+      share_html = content_tag(:div, t('gws/daily_report.shared'), class: 'share-value')
+      show_value = true
+    elsif report.manageable?(@cur_user, site: @cur_site, date: date) && report.small_talk.present?
+      show_value = true
+    end
+  elsif @forms.blank?
+    return
+  end
+
+  share_class ||= ''
+  share_html ||= ''
+  show_cell ||= false
+  show_value ||= false
+%>
+
+<td class="<%= share_class %>">
+  <%= share_html %>
+  <% if show_value %>
+    <div class="report-value-wrap">
+      <div class="report-value"><%= br report.small_talk %></div>
+      <% if !print && user.id != @cur_user.id %>
+        <div class="comment-link">
+          <%= link_to({ controller: "#{controller_path}/comments", action: :new, report: report.id, column: 'small_talk' }, { class: 'add-plan' }) do %>
+            <i class="material-icons editicon" style="font-size: inherit"></i>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <% report.column_comments('small_talk').each do |comment| %>
+      <div class="comment-value">
+        <% if !print && comment.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to({ controller: "#{controller_path}/comments", action: :show, report: report.id, column: 'small_talk', id: comment.id }) do %>
+            <%= br comment.body %>(<%= comment.user.try(:name) %>)
+          <% end %>
+        <% else %>
+          <%= br comment.body %>(<%= comment.user.try(:name) %>)
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</td>

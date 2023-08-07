@@ -5,7 +5,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:folder) { create(:gws_notice_folder) }
   let!(:item) { create :gws_notice_post, folder: folder, readable_member_ids: [ gws_user.id ] }
 
-  before { login_gws_user }
+  before do
+    site.notice_browsed_state = "unread"
+    site.update
+    login_gws_user
+  end
 
   describe "set seen" do
     it do

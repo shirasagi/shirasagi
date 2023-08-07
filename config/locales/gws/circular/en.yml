@@ -42,7 +42,7 @@ en:
         normal: Regular circular
         simple: Simple circular
       article_state:
-        both: Show all
+        both: All
         unseen: Unread
       circular_delete_threshold:
         - 6 months
@@ -127,6 +127,8 @@ en:
         browsing_authority: Publication range
       gws/addon/circular/group_setting:
         circular_default_due_date: Initial value for circulation deadline date
+        circular_article_state: Display type of circular boards
+        circular_sort: Order of circular boards
         circular_max_member: Limit on number of people receiving circular
         circular_filesize_limit: Attachment size limit
         circular_delete_threshold: Period circulation can be restored
@@ -153,6 +155,10 @@ en:
       circular_default_due_date:
         - For the initial value of the circulation deadline date and time, enter a date within a few days of today.
         - The initial value is 7 days.
+      circular_article_state:
+        - Select display type of circular boards.
+      circular_sort:
+        - Select order of circular boards.
       circular_max_member:
         - Enter the maximum number of participants.
         - If unspecified, the number is not restricted.

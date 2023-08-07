@@ -70,6 +70,7 @@
 //= require ss/lib/emoji
 //= require ss/lib/role
 //= require ss/lib/date_time_picker
+//= require ss/lib/pdfjs
 //= require chat/lib/chart
 //= require cms/lib/base
 //= require cms/lib/editor
@@ -85,6 +86,7 @@
 //= require cms/lib/column_select_page
 //= require cms/lib/file_highlighter
 //= require cms/lib/branch
+//= require cms/lib/move
 //= require cms/lib/line
 //= require cms/lib/upload_file_order
 //= require cms/lib/image_map

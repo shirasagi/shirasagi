@@ -1,4 +1,9 @@
 <dl class="see mod-cms-json-form">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
+
+  <% if Cms::Line::Statistic.allowed?(:use, @cur_user, site: @cur_site) %>
+    <dt><%= @model.t :statistic_state %><%= @model.tt :statistic_state %></dt>
+    <dd><%= f.select :statistic_state, @item.statistic_state_options %></dd>
+  <% end %>
 </dl>

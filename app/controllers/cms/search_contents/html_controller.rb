@@ -51,6 +51,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
         replace_html_with_string(keyword, replacement)
       end
     rescue => e
+      logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
     location = {
@@ -130,6 +131,13 @@ class Cms::SearchContents::HtmlController < ApplicationController
       next unless item.try(field)
       html = yield item.send(field)
       attributes[field] = html if item.send(field) != html
+    end
+    unless item.try(:contact_group_related?)
+      CONTACT_FIELDS.each do |field|
+        next unless item.try(field)
+        html = yield item.send(field)
+        attributes[field] = html if item.send(field) != html
+      end
     end
     item.set(attributes) if attributes.present?
     true

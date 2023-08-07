@@ -51,14 +51,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       #delete
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
 
       #delete disabled user
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
@@ -73,7 +73,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       visit index_path
       click_link I18n.t('ss.links.import')
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/user/gws_users.csv"
         page.accept_confirm do
           click_button I18n.t('ss.import')
@@ -131,7 +131,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       #delete
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
@@ -212,7 +212,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t('ss.links.delete')
       end
-      within 'form' do
+      within 'form#item-form' do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

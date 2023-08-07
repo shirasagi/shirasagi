@@ -22,7 +22,7 @@ shared_examples "crud flow" do
 
     # delete/destroy
     click_link I18n.t('ss.links.delete')
-    within 'form' do
+    within 'form#item-form' do
       click_button I18n.t('ss.buttons.delete')
     end
 

@@ -44,6 +44,9 @@
   <dt><%= @model.t :action %></dt>
   <dd><%= @item.action %></dd>
 
+  <dt><%= @model.t :request_id %></dt>
+  <dd><%= @item.request_id %></dd>
+
   <% if @item.action == "multicast" %>
     <dt><%= @model.t :member_ids %></dt>
     <dd>

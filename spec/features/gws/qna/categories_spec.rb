@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_qna_categories", type: :feature, dbscope: :example do
+describe "gws_qna_categories", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:index_path) { gws_qna_categories_path site }
 
@@ -13,7 +13,6 @@ describe "gws_qna_categories", type: :feature, dbscope: :example do
 
     it do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
       #

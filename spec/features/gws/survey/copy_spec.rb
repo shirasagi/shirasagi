@@ -57,7 +57,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       click_on form_name
       click_on I18n.t("gws/workflow.links.publish")
 
-      within "form" do
+      within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
 
@@ -98,7 +98,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       click_on copy_name
       click_on I18n.t("gws/workflow.links.publish")
 
-      within "form" do
+      within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
 

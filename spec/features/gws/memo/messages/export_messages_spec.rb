@@ -306,7 +306,16 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
 
-        expect(page).to have_no_css('.popup-notice-items .list-item.unseen')
+        I18n.t("gws/memo/message.export_failed.subject", locale: I18n.default_locale).tap do |title|
+          expect(page).to have_css('.popup-notice-items .list-item.unseen', text: /#{::Regexp.escape(title)}/)
+          click_on title
+        end
+        wait_for_js_ready
+      end
+
+      within ".gws-memo-notices .body" do
+        message = I18n.t("gws/memo/message.export_failed.notify_message", locale: I18n.default_locale).split("\n").first
+        expect(page).to have_content(message)
       end
     end
   end

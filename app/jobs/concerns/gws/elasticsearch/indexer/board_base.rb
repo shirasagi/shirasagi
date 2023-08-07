@@ -25,6 +25,7 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:permission_level] = post.permission_level
 
       doc[:member_ids] = topic.members.pluck(:id) if topic.respond_to?(:members)
+      doc[:member_group_ids] = topic.member_groups.pluck(:id) if topic.respond_to?(:member_groups)
       doc[:member_custom_group_ids] = topic.member_custom_groups.pluck(:id) if topic.respond_to?(:member_custom_groups)
 
       doc[:readable_group_ids] = topic.readable_groups.pluck(:id) if topic.respond_to?(:readable_groups)

@@ -1,0 +1,35 @@
+<% form_limit = 50 %>
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% case @forms.count %>
+      <% when 0 %>
+      <% when 1 %>
+        <%= link_to(t('ss.links.new'), new_gws_daily_report_form_report_path(form_id: @forms.first)) %>
+      <% else %>
+        <%= dropdown_link(t('ss.links.new')) do %>
+          <% @forms.limit(form_limit).each do |form| %>
+            <%= link_to(form.name, new_gws_daily_report_form_report_path(form_id: form), class: 'dropdown-item') %>
+          <% end %>
+          <%= link_to(t('gws/workflow.forms.more'), new_gws_daily_report_report_path, class: 'dropdown-item more-forms') %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move|copy|soft_delete|request_cancel/ %>
+    <% if @item.readable?(@cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <%= link_to t('ss.links.print'), action: :print %>
+    <% if @item.editable?(@cur_user, site: @cur_site) && (@item.allowed?(:manage_all, @cur_user, site: @cur_site) || @item.user_id == @cur_user.id) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.destroyable?(@cur_user, site: @cur_site) && (@item.allowed?(:manage_all, @cur_user, site: @cur_site) || @item.user_id == @cur_user.id) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

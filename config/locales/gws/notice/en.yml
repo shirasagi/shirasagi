@@ -10,8 +10,10 @@ en:
     total_body_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
     total_file_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
     gws_addon_member_head: Contributors
+    severity: Severity
     links:
       set_seen: Mark as read
+      set_seen_all: Mark as read all
       unset_seen: Mark as unread
       reclaim_total_size: Recalculate usage
       create_my_folder: Create your own group folder
@@ -25,6 +27,17 @@ en:
       reclaimed: Usage has been recalculated.
     prefix:
       copy: "[Duplication]"
+    options:
+      toggle_browsed:
+        button: Toggle by button
+        read: Toggle by read
+      severity:
+        all: All
+        high: High
+        normal: Normal
+    apis:
+      posts:
+        index: Select announcements
 
   gws_role:
     use_gws_notice: Use of announcements
@@ -61,6 +74,7 @@ en:
       gws/notice/resource_limitation: Capacity limit
       gws/notice/member: Viewers
       gws/notice/group_setting: Announcements
+      gws/notice/calendar: Calendar
 
   gws_notification:
     gws/notice/post:
@@ -121,6 +135,14 @@ en:
         notice_id: Announcements
       gws/addon/notice/group_setting:
         notice_new_days: Display period for new items
+        notice_browsed_state: Read/Unread
+        notice_severity: Severity
+        notice_toggle_browsed: Toggle Read/Unread
+      gws/addon/notice/calendar:
+        start_on: Start date
+        end_on: End date
+        term: Date
+        color: Display color
 
   tooltip:
     gws/notice/post:
@@ -146,6 +168,18 @@ en:
     gws/addon/notice/group_setting:
       notice_new_days:
         - Enter the display period for new items.
+      notice_browsed_state:
+        - Select the default browsed state.
+      notice_severity:
+        - Select the default severity.
+      notice_toggle_browsed:
+        - Select the toggle method.
+
+    gws/addon/notice/calendar:
+      term:
+        - Enter the date when you want the announcement to appear in the calendar.
+      color:
+        - Enter the display color of the announcement in the calendar.
 
   job:
     models:

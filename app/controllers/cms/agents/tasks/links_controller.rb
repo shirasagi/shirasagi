@@ -11,6 +11,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def set_params
   end
 
+  def ignore_urls
+    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(@site).pluck(:name)
+  end
+
   def create_report
     @report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
     return if @report_max_age <= 0
@@ -202,6 +206,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if url.match?(/\/2\d{7}\.html$/) # calendar
     return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
     return false if url.match?(/\/https?:/) # b.hatena
+    return false if url.match?(/\/\/twitter\.com/) # twitter.com
+    return false if ignore_urls.include?(url)
     true
   end
 

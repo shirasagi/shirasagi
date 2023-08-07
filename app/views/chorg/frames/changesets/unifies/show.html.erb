@@ -1,44 +1,78 @@
-<div class="addon-views">
-  <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
-    <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
-    <%= t("chorg.views.unify_changesets.before_unify") %>
-  </h2>
+<%
+  return if @item.sources.blank?
 
-  <%=
-    { id: "chorg-before", class: "chorg-before" }.then do |addon_options|
-      render "ss/crud/addon", addon: addon_options do
-        render "show_before", addon: addon_options
+  group_ids = @item.sources.map { |source| source["id"] }
+  group_ids.select!(&:present?)
+  group_ids.uniq!
+  groups = Cms::Group.site(@cur_site).in(id: group_ids).order_by(order: 1, name: 1)
+  return if groups.blank?
+%>
+
+<% groups.each_with_index do |group, index| %>
+  <div class="addon-views chorg-before">
+    <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
+      <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
+      <%= t("chorg.views.unify_changesets.before_unify") %><%= index + 1 %>
+    </h2>
+
+    <%=
+      { id: "chorg-before-basic#{index}", class: "chorg-before-basic", head: t("ss.basic_info"), toggle: true }.then do |addon_options|
+        render "ss/crud/addon", addon: addon_options do
+          render "show_before_basic", addon: addon_options, group: group
+        end
       end
-    end
-  %>
-</div>
+    %>
+
+    <%=
+      { id: "chorg-before-ldap#{index}", class: "chorg-before-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+        content = render "show_before_ldap", addon: addon_options, group: group
+        if content.present?
+          render "ss/crud/addon", addon: addon_options do
+            content
+          end
+        end
+      end
+    %>
+
+    <%=
+      { id: "chorg-before-contact#{index}", class: "chorg-before-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+        content = render "show_before_contact", addon: addon_options, group: group
+        if content.present?
+          render "ss/crud/addon", addon: addon_options do
+            render "show_before_contact", addon: addon_options, group: group
+          end
+        end
+      end
+    %>
+  </div>
+<% end %>
 
 <div style="display: flex; justify-content: center; font-size: 400%;">
   <span class="material-icons-outlined" style="display: block; font-size: 100%;">arrow_circle_down</span>
 </div>
 
-<div class="addon-views">
+<div class="addon-views chorg-after">
   <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
     <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
     <%= t("chorg.views.unify_changesets.after_unify") %>
   </h2>
 
   <%=
-    { id: "chorg-basic", class: "chorg-basic", head: t("ss.basic_info") }.then do |addon_options|
+    { id: "chorg-after-basic", class: "chorg-after-basic", head: t("ss.basic_info") }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
         render "chorg/frames/changesets/main/show_basic", addon: addon_options
       end
     end
   %>
   <%=
-    { id: "chorg-ldap", class: "chorg-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+    { id: "chorg-after-ldap", class: "chorg-after-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
         render "chorg/frames/changesets/main/show_ldap", addon: addon_options
       end
     end
   %>
   <%=
-    { id: "chorg-contact", class: "chorg-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+    { id: "chorg-after-contact", class: "chorg-after-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options, data: SS::StimulusHelper::Utils.convert_to_data_params("contact/addon/group") do
         render "chorg/frames/changesets/main/show_contact", addon: addon_options
       end

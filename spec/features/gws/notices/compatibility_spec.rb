@@ -29,7 +29,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # portal
       visit gws_portal_path(site: site)
       expect(page).to have_css('.list-items', text: v170_item.name)
-      first('.list-items a.title', text: v170_item.name).click
+      first('.list-items .title a', text: v170_item.name).click
       expect(page).to have_content(v170_item.name)
 
       # readable list

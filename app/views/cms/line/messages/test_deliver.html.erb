@@ -1,33 +1,23 @@
-<%
-  confirm_message = "テスト配信を開始してよろしいですか？"
-  test_members = Cms::Line::TestMember.site(@cur_site).allow(:read, @cur_user, site: @cur_site).to_a
-%>
-
 <%= form_for :item, url: { action: :test_deliver }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
   <section class="main-box">
-    <header><h2>テスト配信</h2></header>
+    <header><h2><%= t("ss.test_deliver") %></h2></header>
     <div class="main-body">
       <div style="font-weight: bold; padding: 5px 0px 10px 0px;">
-        テストメンバー宛に本文を配信します。<br>
-        配信するボタンを押下するとテスト配信処理が開始されます。
+        <%=br t("ss.views.line.test_deliver").join("\n") %>
       </div>
 
       <dl class="see">
         <dt><%= @model.t :name %></dt>
         <dd><%= @item.name %></dd>
 
-        <dt><%= @item.t :deliver_condition_state %></dt>
-        <dd><%= "テストメンバーに配信" %></dd>
-
-        <dt><%= "対象" %></dt>
+        <dt><%= t("ss.target") %></dt>
         <dd>
           <%= f.hidden_field "item[test_member_ids]", value: "", id: nil %>
-          <% test_members.each do |member| %>
-            <% checked = @test_member_ids ? @test_member_ids.include?(member.id) : true %>
+          <% @test_members.each do |member| %>
             <label>
-              <%= check_box_tag 'item[test_member_ids][]', member.id, checked %>
+              <%= check_box_tag 'item[test_member_ids][]', member.id, @checked_ids.include?(member.id) %>
               <%= member.name %>
             </label><br>
           <% end %>
@@ -37,7 +27,7 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t('ss.links.deliver'), class: 'btn-primary save', onclick: "return confirm('#{confirm_message}')" %>
+    <%= f.submit t('ss.links.deliver'), class: 'btn-primary save', onclick: "return confirm('#{t("ss.confirm.test_deliver")}')" %>
     <%= link_to t('ss.buttons.cancel'), { action: :show }, { class: 'btn-default' } %>
   </footer>
 <% end %>

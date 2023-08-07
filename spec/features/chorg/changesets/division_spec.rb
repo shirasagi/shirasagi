@@ -46,7 +46,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("chorg.menus.revisions.division")
       end
       within "form#item-form" do
-        within "#chorg-before" do
+        within "#chorg-before-basic" do
           wait_cbox_open { click_on I18n.t("chorg.views.division_changesets.select_group") }
         end
       end
@@ -59,34 +59,34 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         # 1 番目の分割先
-        within "#chorg-basic1" do
+        within "#chorg-after-basic1" do
           fill_in "item[destinations][][name]", with: new_name1
           fill_in "item[destinations][][order]", with: new_order1
         end
-        within "#chorg-ldap1" do
+        within "#chorg-after-ldap1" do
           fill_in "item[destinations][][ldap_dn]", with: new_ldap_dn1
         end
-        within "#chorg-contact1" do
+        within "#chorg-after-contact1" do
           within first("tr[data-id='#{group.contact_groups[1].id}']") do
             click_on I18n.t("ss.buttons.delete")
           end
         end
 
         # 2 番目の分割先
-        within "#chorg-basic2" do
+        within "#chorg-after-basic2" do
           fill_in "item[destinations][][name]", with: new_name2
           fill_in "item[destinations][][order]", with: new_order2
         end
-        within "#chorg-ldap2" do
+        within "#chorg-after-ldap2" do
           fill_in "item[destinations][][ldap_dn]", with: new_ldap_dn2
         end
-        within "#chorg-contact2" do
+        within "#chorg-after-contact2" do
           within first("tr[data-id='#{group.contact_groups[0].id}']") do
             click_on I18n.t("ss.buttons.delete")
           end
           within first("tr[data-id='#{group.contact_groups[1].id}']") do
             # click_on I18n.t("contact.options.main_state.main")
-            first('[name="dummy[chorg-contact2][][main_state]"]').click
+            first('[name="dummy[chorg-after-contact2][][main_state]"]').click
           end
         end
 
@@ -156,10 +156,10 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-division" do
         click_on [ new_name1, new_name2 ].join(",")
       end
-      expect(page).to have_css("#chorg-basic1", text: new_name1)
+      expect(page).to have_css("#chorg-after-basic1", text: new_name1)
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        within "#chorg-basic1" do
+        within "#chorg-after-basic1" do
           fill_in "item[destinations][][name]", with: new_name11
         end
         click_on I18n.t("ss.buttons.save")
@@ -223,7 +223,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-division" do
         click_on [ new_name11, new_name2 ].join(",")
       end
-      expect(page).to have_css("#chorg-basic1", text: new_name11)
+      expect(page).to have_css("#chorg-after-basic1", text: new_name11)
       click_on I18n.t("ss.links.delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")

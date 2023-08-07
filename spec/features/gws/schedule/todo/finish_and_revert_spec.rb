@@ -13,7 +13,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       click_on item.name
       click_on I18n.t('gws/schedule/todo.links.finish')
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -44,7 +44,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       click_on item.name
       click_on I18n.t('gws/schedule/todo.links.revert')
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

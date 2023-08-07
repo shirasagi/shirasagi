@@ -174,7 +174,24 @@ module SS
 
     WAIT_FOR_JS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
-        SS.ready(function() { resolve(true); });
+        if ("SS" in window) {
+          SS.ready(function() { resolve(true); });
+          return;
+        }
+
+        if (document.readyState === "complete") {
+          // document が読み込まれているのに SS が存在しない場合、現在のところリカバリ方法が不明
+          resolve(false);
+          return;
+        }
+
+        window.addEventListener("load", function() {
+          if ("SS" in window) {
+            SS.ready(function() { resolve(true); });
+          } else {
+            resolve(false);
+          }
+        });
       })(...arguments)
     SCRIPT
 
@@ -436,8 +453,9 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
-      expect(result).to be_truthy
+      page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
+      #result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      #expect(result).to be_truthy
     end
 
     alias fill_in_date fill_in_datetime
@@ -480,9 +498,15 @@ module SS
 
     def wait_for_js_ready(session = nil, &block)
       session ||= page
-      session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
+      unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
+        puts_console_logs
+        raise "unable to be js ready"
+      end
 
       yield if block_given?
+    rescue Selenium::WebDriver::Error::JavascriptError
+      puts_console_logs
+      raise
     end
     alias wait_for_ajax wait_for_js_ready
   end

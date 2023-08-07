@@ -1,0 +1,12 @@
+<% @index_meta = proc do |item| %>
+  <span class="year"><%= @model.t(:year) %>: <%= item.year %></span>
+  <% if item.try(:daily_report_group) %>
+    <span class="group"><%= @model.t(:daily_report_group_id) %>: <%= item.daily_report_group.trailing_name %></span>
+  <% end %>
+  <span class="datetime"><%= @model.t(:updated) %>: <%= ss_time_tag item.updated %></span>
+  <% if item.try(:order) %>
+    <span class="order"><%= item.order %></span>
+  <% end %>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

@@ -84,7 +84,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
       visit gws_job_user_logs_path(site: site)
       click_on I18n.t("ss.links.download")
 
-      within "form" do
+      within "form#item-form" do
         select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
         click_on I18n.t("ss.buttons.download")
       end
@@ -132,7 +132,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.delete")
       end
 
-      within "form" do
+      within "form#item-form" do
         select I18n.t("ss.options.duration.1_week"), from: "item[save_term]"
         click_on I18n.t("ss.buttons.delete")
       end

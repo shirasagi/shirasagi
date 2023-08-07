@@ -1,0 +1,216 @@
+dl.see.mod-gws-daily-report-custom_form {
+  display: flex;
+  flex-wrap: wrap;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+  > dt {
+    width: 180px;
+    min-width: 0;
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+  > dd {
+    width: calc(100% - 180px);
+    margin: 0;
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
+    &:nth-of-type(n+2) {
+      margin-top: 15px;
+      @media only screen and (max-width: 768px) {
+        margin-top: 0;
+      }
+    }
+  }
+  .share-cell {
+    background-color: #ffe9b7;
+  }
+  .share-value {
+    color: #38c;
+    font-weight: bold;
+  }
+}
+
+.gws-daily-report-box {
+  .add-plan {
+    display: inline-flex;
+    margin-left: 0;
+    padding: 0;
+    background-color: transparent;
+  }
+  .comment-link {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    margin-left: 5px;
+  }
+  .comment-value {
+    margin-top: 1em;
+    padding-left: 1em;
+  }
+  .editicon {
+    color: #f25a38;
+    cursor: pointer;
+  }
+  .limited-access {
+    color: #f40;
+  }
+  .list-head-action {
+    float: none;
+  }
+  .report-value {
+    display: inline;
+  }
+  .report-value-wrap {
+    display: flex;
+    flex-direction: column;
+    min-width: 10em;
+  }
+  .share-cell {
+    background-color: #ffe9b7;
+  }
+  .share-value {
+    color: #38c;
+    font-weight: bold;
+  }
+  &.share-view {
+    .share-cell {
+      background: none;
+      .share-cell-in {
+        padding: 10px;
+        background-color: #ffe9b7;
+        .user-name {
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+        .report-name {
+          display: block;
+        }
+      }
+    }
+  }
+  .table-wrap {
+    overflow-x: scroll;
+  }
+  header {
+    .search {
+      margin: -5px 0 -5px 20px;
+      float: right;
+      @include mb {
+        margin: 0;
+        float: none;
+        input[type="text"] {
+          width: auto !important;
+        }
+      }
+    }
+    .operations {
+      margin: -5px 0 -5px 20px;
+      float: right;
+      @include mb {
+        margin: 0;
+        .btn-print { display: none; }
+      }
+    }
+  }
+  table.index {
+    width: auto;
+    thead th {
+      text-align: center;
+      white-space: nowrap;
+    }
+    td {
+      vertical-align: top;
+    }
+    tr td {
+      &:first-child {
+        white-space: nowrap;
+      }
+      &:nth-child(n+3) {
+        min-width: 170px;
+      }
+    }
+  }
+}
+
+.gws-daily-report-print {
+  .share-value {
+    font-weight: bold;
+  }
+  table.index {
+    width: auto;
+    border-collapse: collapse;
+    thead th {
+      text-align: center;
+    }
+    td {
+      vertical-align: top;
+    }
+    th,td {
+      border: 1px solid #dcdcdc;
+    }
+  }
+  .horizontal .sheet {
+    height: auto;
+  }
+}
+
+#addon-gws-agents-addons-daily_report-custom_form {
+  .table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    table.index.see.mod-gws-daily-report-custom_form {
+      width: auto;
+      min-width: 100%;
+      padding: 0;
+      table-layout: fixed;
+      tr {
+        display: flex;
+        &:hover {
+          background-color: transparent;
+        }
+        &.share-row {
+          background-color: #ffe9b7 !important;
+          &:hover {
+            background-color: #ffe9b7 !important;
+          }
+          td {
+            background-color: #ffe9b7 !important;
+          }
+        }
+        &:nth-child(2n) {
+          &:hover {
+            background: #f8f8f8;
+          }
+          &.share-row {
+            background-color: #ffe9b7 !important;
+            &:hover {
+              background-color: #ffe9b7 !important;
+            }
+          }
+        }
+        > td {
+          word-break: break-all;
+          vertical-align: top;
+          white-space: normal;
+          &:first-child {
+            width: 180px;
+            min-width: 180px;
+            float: left;
+            zoom: 1;
+            color: #a0522d;
+            font-weight: bold;
+            .share-value {
+              color: #38c;
+            }
+          }
+          &:nth-child(n+2) {
+            width: 12em;
+          }
+        }
+      }
+    }
+  }
+}

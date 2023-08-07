@@ -271,7 +271,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   context "#soft_delete plan" do
     def delete_plan
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -392,7 +392,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t("ss.buttons.delete")
       end
 
@@ -463,7 +463,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.trash")
       click_on item.name
       click_on I18n.t("ss.links.restore")
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t("ss.buttons.restore")
       end
 

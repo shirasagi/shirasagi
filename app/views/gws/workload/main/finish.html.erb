@@ -1,4 +1,4 @@
-<%= form_for :item, url: { action: :finish }, html: { method: :post } do |f| %>
+<%= form_for :item, url: { action: :finish }, html: { method: :post, id: "item-form" } do |f| %>
 <%= error_messages_for :item %>
 
 <div class="addon-views">
