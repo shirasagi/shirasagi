@@ -74,21 +74,27 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       wait_for_js_ready
       click_on mail1.subject
       wait_for_js_ready
-      first(".webmail-mail .icon-star.off a").click
+      within ".webmail-mail .icon-star" do
+        click_on "star"
+      end
       wait_for_notice I18n.t('ss.notice.set_star')
 
       visit webmail_mails_path(account: 0)
       wait_for_js_ready
       click_on mail1.subject
       wait_for_js_ready
-      first(".webmail-mail .icon-star.on a").click
+      within ".webmail-mail .icon-star" do
+        click_on "star"
+      end
       wait_for_notice I18n.t('ss.notice.unset_star')
 
       visit webmail_mails_path(account: 0)
       wait_for_js_ready
       click_on mail1.subject
       wait_for_js_ready
-      first(".webmail-mail .icon-star.off a").click
+      within ".webmail-mail .icon-star" do
+        click_on "star"
+      end
       wait_for_notice I18n.t('ss.notice.set_star')
     end
   end

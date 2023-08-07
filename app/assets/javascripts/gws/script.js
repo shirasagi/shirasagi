@@ -9,6 +9,7 @@
 //= require gws/lib/readable_setting
 //= require gws/lib/contrast
 //= require gws/lib/workload
+//= require gws/lib/search_form
 //= require gws/schedule/lib/plan
 //= require gws/schedule/lib/repeat_plan
 //= require gws/schedule/lib/integration

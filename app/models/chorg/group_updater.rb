@@ -92,17 +92,20 @@ class Chorg::GroupUpdater
       end
 
       if contact.blank?
+        hash = hash.dup
+        hash.delete("unifies_to_main")
         item_attributes["contact_groups"] << hash
         next
       end
 
-      contact["main_state"] = hash["main_state"] if hash.key?("main_state")
+      contact["name"] = hash["name"] if hash.key?("name")
       contact["contact_group_name"] = hash["contact_group_name"] if hash.key?("contact_group_name")
       contact["contact_tel"] = hash["contact_tel"] if hash.key?("contact_tel")
       contact["contact_fax"] = hash["contact_fax"] if hash.key?("contact_fax")
       contact["contact_email"] = hash["contact_email"] if hash.key?("contact_email")
       contact["contact_link_url"] = hash["contact_link_url"] if hash.key?("contact_link_url")
       contact["contact_link_name"] = hash["contact_link_name"] if hash.key?("contact_link_name")
+      contact["main_state"] = hash["main_state"] if hash.key?("main_state")
     end
   end
 

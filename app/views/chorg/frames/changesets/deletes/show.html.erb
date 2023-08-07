@@ -1,8 +1,38 @@
-<div class="addon-views">
+<%
+  source =  @item.sources.try(:first)
+  return unless source
+
+  group = Cms::Group.site(@cur_site).find(source["id"]) rescue nil
+  return unless group
+%>
+
+<div class="addon-views chorg-before">
   <%=
-    { id: "chorg-before", class: "chorg-before" }.then do |addon_options|
+    { id: "chorg-before-basic", class: "chorg-before-basic", head: t("ss.basic_info"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
-        render "show_before", addon: addon_options
+        render "show_before_basic", addon: addon_options, group: group
+      end
+    end
+  %>
+
+  <%=
+    { id: "chorg-before-ldap", class: "chorg-before-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+      content = render "show_before_ldap", addon: addon_options, group: group
+      if content.present?
+        render "ss/crud/addon", addon: addon_options do
+          content
+        end
+      end
+    end
+  %>
+
+  <%=
+    { id: "chorg-before-contact", class: "chorg-before-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+      content = render "show_before_contact", addon: addon_options, group: group
+      if content.present?
+        render "ss/crud/addon", addon: addon_options do
+          content
+        end
       end
     end
   %>

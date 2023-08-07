@@ -1,8 +1,23 @@
-<% return if @item.contact_groups.blank? %>
+<%
+  return if @item.contact_groups.blank?
+
+  addon = local_assigns.fetch(:addon, {})
+  addon[:head] = (t("modules.addons.contact/group") + tt("contact/addon/group.main")).html_safe
+
+  if @cur_site
+    page_count_service = Contact::PageCountService.new(cur_site: @cur_site, cur_user: @cur_user)
+  end
+%>
 
 <table class="index">
   <thead class="list-head">
   <tr>
+    <% if @cur_site %>
+      <th class="pages-used">
+        <%= t("contact.pages_used_label") %>
+        <%= tt "contact/page_count_service.page_count_notice", expire_in: SS::Duration.format(Contact::PageCountService.expires_in) %>
+      </th>
+    <% end %>
     <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
     <th class="name"><%= SS::Contact.t :name %></th>
     <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
@@ -16,6 +31,11 @@
   <tbody class="items">
   <% @item.contact_groups.each do |contact_group| %>
     <tr class="list-item" data-id="<%= contact_group.id %>">
+      <% if @cur_site %>
+        <td class="pages-used">
+          <%= page_count_service.render(group_id: @item.id, contact_id: contact_group.id) %>
+        </td>
+      <% end %>
       <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
       <td class="name"><%= contact_group.name %></td>
       <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
@@ -28,3 +48,9 @@
   <% end %>
   </tbody>
 </table>
+
+<% if @cur_site %>
+  <div style="margin-top: 10px;">
+    <%= link_to t("contact.links.unify_to_main"), contact_unify_path(group_id: @item.id), class: "btn" %>
+  </div>
+<% end %>

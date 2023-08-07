@@ -70,7 +70,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_notice I18n.t("ss.notice.deleted")
@@ -135,7 +135,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.import")
       end
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", csv_file
 
         page.accept_confirm I18n.t("ss.confirm.import") do

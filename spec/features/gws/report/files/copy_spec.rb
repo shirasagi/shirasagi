@@ -93,7 +93,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       click_on name
       click_on I18n.t("ss.links.copy")
 
-      within "form" do
+      within "form#item-form" do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
       end

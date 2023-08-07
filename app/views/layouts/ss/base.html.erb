@@ -11,18 +11,14 @@
     window_name = @item.try(:name) || @crumbs.last.try(:first)
   end
   if window_name.present?
-    title = "#{window_name} | #{SS.config.ss.application_name}"
+    title = "#{window_name} | #{ss_application_name}"
   else
-    title = SS.config.ss.application_name
+    title = ss_application_name
   end
 %>
 <title><%= title %></title>
 <%= safe_join controller.stylesheets.map { |path, options| stylesheet_link_tag(path, options || { media: "all" }) }, "\n" %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
-<!--[if lt IE 9]>
-<script src="/assets/js/html5.js"></script>
-<script src="/assets/js/selectivizr-min.js"></script>
-<![endif]-->
 <%= csrf_meta_tags %>
 </head>
 <body>

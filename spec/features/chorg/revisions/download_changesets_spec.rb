@@ -17,7 +17,7 @@ describe "chorg_download_revision", type: :feature, dbscope: :example do
   let!(:changeset1) { create(:move_changeset, revision_id: revision.id, source: group0) }
   let!(:changeset2) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
   let!(:changeset3) do
-    create(:division_changeset, revision_id: revision.id, source: group3, destinations: [group4, group5])
+    create(:division_changeset, revision_id: revision.id, source: group3, destination: [group4, group5])
   end
   let!(:changeset4) { create(:delete_changeset, revision_id: revision.id, source: group6) }
   let!(:show_path) { chorg_revision_path site: site.id, id: revision.id }

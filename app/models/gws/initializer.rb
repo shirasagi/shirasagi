@@ -44,7 +44,7 @@ module Gws
     SS::File.model "gws/history_archive_file", Gws::HistoryArchiveFile
 
     Gws.module_usable :bookmark do |site, user|
-      Gws::Bookmark.allowed?(:read, user, site: site)
+      Gws::Bookmark.allowed?(:edit, user, site: site)
     end
 
     Gws.module_usable :personal_address do |site, user|

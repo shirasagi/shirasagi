@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_report_categories", type: :feature, dbscope: :example do
+describe "gws_report_categories", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
 
   context "basic crud" do

@@ -47,6 +47,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         end
         wait_for_js_ready
         click_on item_subject
+        wait_for_js_ready
         expect(page).to have_css(".address-field", text: user2.email)
         expect(page).to have_css(".address-field", text: user3.email)
         expect(page).to have_css(".address-field", text: user4.email)

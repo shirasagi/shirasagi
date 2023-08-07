@@ -1,3 +1,8 @@
+<%= jquery do %>
+  var pdfviewer = new SS_Pdfjs("#pdf-viewer-warp");
+  pdfviewer.render();
+<% end %>
+
 <div class="addon-view" id="addon-basic">
   <div class="addon-head">
     <h2 class="subject">
@@ -28,9 +33,9 @@
     <% if @item.files.present? %>
       <div class="files">
         <% @item.files.each do |file| %>
-        <span id="file-<%= file.id %>">
-        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
-        </span>
+        <p id="file-<%= file.id %>">
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname} ext-#{file.extname}", target: '_blank', rel: "noopener" %>
+        </p>
         <% end %>
       </div>
     <% end %>
@@ -38,7 +43,8 @@
       <div class="links">
         <% @item.links.each_with_index do |link, i| %>
         <span id="link-<%= i %>">
-        <%= link_to link['name'], link['url'] %>
+          <% ext = ::File.extname(link['url']).delete(".") rescue "" %>
+          <%= link_to link['name'], link['url'], class: (ext.present? ? "ext-#{ext}" : "") %>
         </span>
         <% end %>
       </div>
@@ -51,4 +57,5 @@
       <%= button_to(t('gws/notice.links.set_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.set_seen'), class: 'btn') %>
     <% end %>
   </div>
+  <div id="pdf-viewer-warp"></div>
 </div>

@@ -12,10 +12,12 @@ class Gws::Schedule::PlanSearch
   field :interval, type: Integer
   field :repeat_base, type: String, default: 'date'
 
+  belongs_to :plan, class_name: "Gws::Schedule::Plan"
+
   embeds_ids :members, class_name: "Gws::User"
   embeds_ids :facilities, class_name: "Gws::Facility::Item"
 
-  permit_params :start_on, :end_on, :min_hour, :max_hour
+  permit_params :start_on, :end_on, :min_hour, :max_hour, :plan_id
   permit_params wdays: [], member_ids: [], facility_ids: []
   permit_params :repeat_type, :interval, :repeat_base
 
@@ -40,6 +42,7 @@ class Gws::Schedule::PlanSearch
     return [] if @condition.blank?
 
     plans = Gws::Schedule::Plan.site(@cur_site).
+      ne(id: plan_id).
       without_deleted.
       between_dates(start_on, end_on + 1.day).
       and('$or' => @condition)

@@ -57,11 +57,15 @@ en:
     under_maintenance_mode: Currently under maintenance.
     pagination: Pagination
     hours: hours
+    minutes: Minutes
     remark: Remark
     before: Before
     after: After
     time: Time
     fiscal_year: Fiscal year
+    test_deliver: Test deliver
+    target: Target
+    unlimited: Unlimited
 
     views:
       login/login:
@@ -69,12 +73,15 @@ en:
         password: Password
         organization_uid: Staff number or e-mail address
       index:
+        created: "Created：%{created}"
         updated: "Updated: %{updated}"
         released: "Published: %{released}"
         approved: "Approved: %{approved}"
         reserved: "Reserved：%{time}"
         delivered: "Delivered：%{time}"
         term: "Term：%{term}"
+        openrate: "Openrate：%{openrate}"
+        expiration_date: "Expiration date：%{expiration_date}"
       oauth2/application:
         header:
           name: Application Type
@@ -91,6 +98,7 @@ en:
       unseen: Unread list
       seen: Read list
       trash: Trash
+      calendar: Calendar
     links:
       add: Add
       cms: Site management
@@ -161,6 +169,8 @@ en:
       approve: Approve
       prev: Previous
       next: Next
+      update: Update
+      open_in_new_tab: Open in new tab
     buttons:
       save: Save
       saving: Saving
@@ -313,6 +323,7 @@ en:
         - The maximum file upload size is set to %{human_size} in the server settings.
         - Setting a size limit that exceeds it will not affect it.
         - If you would like to change the server settings, please contact your system administrator.
+      updated: Updated.
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.
@@ -1014,7 +1025,12 @@ en:
         timezone: Timezone
       ss/addon/workflow_setting:
         workflow_my_group: Display own group
-
+      ss/api_token:
+        name: Name
+        jwt_id: JWT ID (jti)
+        expiration_date: Expiration datetime
+        audience_id: Audience user
+        jwt: API token
   tooltip:
     ss/model/site:
       upload_policy:

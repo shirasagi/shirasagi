@@ -54,6 +54,9 @@ namespace :ss do
         ::Tasks::SS.invoke_task("opendata:report:generate_download", site.host)
         ::Tasks::SS.invoke_task("opendata:report:generate_access", site.host)
         ::Tasks::SS.invoke_task("opendata:report:generate_preview", site.host)
+
+        # LINE統計情報の更新
+        ::Tasks::SS.invoke_task("cms:line:update_statistics", site.host)
       end
 
       # 各種使用率の更新

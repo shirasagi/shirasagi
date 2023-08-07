@@ -44,7 +44,7 @@ describe "gws_schedule_list_plans", type: :feature, dbscope: :example, js: true 
 
     it "#delete" do
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).not_to eq delete_path

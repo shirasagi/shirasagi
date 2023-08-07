@@ -155,6 +155,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
     var planId = $(".gws-schedule-facility").attr("data-plan-id");
     if (planId) {
       formData.set("item[id]", planId);
+      formData.set("s[plan_id]", planId);
     }
 
     if (!SS.isEmptyObject(extraParams)) {

@@ -12047,7 +12047,6 @@ return jQuery;
       return false. The `confirm:complete` event is fired whether or not the user answered true or false to the dialog.
    */
     allowAction: function(element) {
-      console.log("allowAction")
       var message = element.data('confirm'),
           answer = false, callback;
       if (!message) { return true; }
@@ -12181,7 +12180,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.linkClickSelector, function(e) {
-      console.log({ on: 'click.rails', linkClickSelector: rails.linkClickSelector });
       var link = $(this), method = link.data('method'), data = link.data('params'), metaClick = e.metaKey || e.ctrlKey;
       if (!rails.allowAction(link)) return rails.stopEverything(e);
 
@@ -12206,7 +12204,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.buttonClickSelector, function(e) {
-      console.log({ on: 'click.rails', buttonClickSelector: rails.buttonClickSelector });
       var button = $(this);
 
       if (!rails.allowAction(button) || !rails.isRemote(button)) return rails.stopEverything(e);
@@ -12232,7 +12229,6 @@ return jQuery;
     });
 
     $document.on('submit.rails', rails.formSubmitSelector, function(e) {
-      console.log({ on: 'submit.rails', formSubmitSelector: rails.formSubmitSelector });
       var form = $(this),
         remote = rails.isRemote(form),
         blankRequiredInputs,
@@ -12278,7 +12274,6 @@ return jQuery;
     });
 
     $document.on('click.rails', rails.formInputClickSelector, function(event) {
-      console.log({ on: 'click.rails', formInputClickSelector: rails.formInputClickSelector });
       var button = $(this);
 
       if (!rails.allowAction(button)) return rails.stopEverything(event);
@@ -32796,6 +32791,9 @@ this.SS = (function () {
 
 
 
+
+
+
 //#
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 //#
@@ -35019,11 +35017,24 @@ this.SS_ListUI = (function () {
     }
 
     $el.find(".list-head input:checkbox").on("change", function () {
-      var chk;
-      chk = $(this).prop('checked');
+      var chk = $(this).prop('checked');
       $el.find('.list-item').each(function () {
-        $(this).toggleClass('checked', chk);
-        return $(this).find('input:checkbox').prop('checked', chk);
+        var $listItem = $(this);
+        var modified = false;
+        $listItem.find('input:checkbox').each(function() {
+          if (!this.disabled) {
+            this.checked = chk;
+            modified = true;
+          }
+        });
+
+        if (modified) {
+          if (chk) {
+            $listItem.addClass('checked', chk);
+          } else {
+            $listItem.removeClass('checked', chk);
+          }
+        }
       });
       $(this).trigger("ss:checked-all-list-items");
     });
@@ -38623,6 +38634,111 @@ this.SS_DateTimePicker = (function () {
   };
 
   return SS_DateTimePicker;
+})();
+this.SS_Pdfjs = (function () {
+  function SS_Pdfjs(el) {
+    this.$pdfViewerWarp = $(el);
+    this.viewerPath = "/assets/js/pdfjs-dist/web/ss-viewer.html";
+    this.links = [];
+    this.current = 0;
+  }
+
+  SS_Pdfjs.prototype.render = function () {
+    var self = this;
+    $("a.ext-pdf:visible").each(function(idx) {
+      var $a = $(this);
+      var file = $a.attr("href");
+
+      $a.attr("data-index", idx);
+      if ($a.data("original-href")) {
+        file = $a.data("original-href");
+      }
+
+      var regexp = new RegExp('^' + location.origin);
+      if (!file.match(/^\//) && !file.match(regexp)) {
+        return false
+      }
+
+      var $openLink = $('<a class="open-pdf btn"></a>');
+      $openLink.text(i18next.t("ss.links.open_in_new_tab"));
+      $openLink.attr("target", "_blank");
+      $openLink.attr("href", file);
+
+      $a.on("click", function(){
+        var $iframe = $("<iframe class='ss-pdf-inline'></iframe>");
+        var title = $a.text();
+        var file = $a.attr("href");
+        if ($a.data("original-href")) {
+          file = $a.data("original-href");
+        }
+
+        var src = self.viewerPath + "?file=" + file;
+        $iframe.attr("src", src);
+        $iframe.attr("title", title);
+        $iframe.hide();
+
+        self.$pdfViewerWarp.html("");
+        self.$pdfViewerWarp.append($iframe);
+        self.current = parseInt($(this).attr("data-index"));
+
+        $iframe.on("load", function(){
+          // title
+          $iframe.contents().find("#pdf-title").text($iframe.attr("title"));
+
+          // next pdf, prev pdf
+          var $prevPdf = $iframe.contents().find("button#previous-pdf");
+          var $nextPdf = $iframe.contents().find("button#next-pdf");
+          if (self.links.length == 1) {
+            $prevPdf.attr("disabled", "disabled");
+            $nextPdf.attr("disabled", "disabled");
+          } else {
+            if (self.current == 0) {
+              $prevPdf.attr("disabled", "disabled");
+              $nextPdf.removeAttr("disabled");
+            }
+            if (self.current == (self.links.length - 1)) {
+              $prevPdf.removeAttr("disabled");
+              $nextPdf.attr("disabled", "disabled");
+            }
+          }
+          $iframe.contents().find("button#previous-pdf").on("click", function(){
+            self.current -= 1;
+            self.links[self.current].trigger("click");
+            return false;
+          });
+          $iframe.contents().find("button#next-pdf").on("click", function(){
+            self.current += 1;
+            self.links[self.current].trigger("click");
+            return false;
+          });
+
+          // close
+          $iframe.contents().find("button#close").on("click", function(){
+            self.$pdfViewerWarp.html("");
+            return false;
+          });
+
+          // fullscreen
+          //$iframe.contents().find("button#fullscreen").on("click", function(){
+          //  location.href = $iframe.attr("src");
+          //  return false;
+          //});
+        });
+
+        $iframe.fadeIn();
+        return false;
+      });
+
+      $($a).after($openLink);
+      self.links.push($a);
+    });
+
+    if (self.links.length) {
+      self.links[self.current].trigger("click");
+    }
+  };
+
+  return SS_Pdfjs;
 })();
 this.Chat_Chart = (function() {
   function Chat_Chart() {}
@@ -42414,6 +42530,46 @@ Cms_Branch.prototype.toggleCreateBranchButton = function() {
     self.$result.hide();
   }
 };
+Cms_Move = function (el, url, keyword, confirm) {
+  this.$el = $(el);
+  this.url = url;
+  this.keyword = keyword;
+  this.confirm = confirm;
+  this.render();
+}
+
+Cms_Move.prototype.render = function() {
+  var self = this;
+  var $result = self.$el.find(".result");
+
+  if (self.confirm) {
+    data = {
+      s: {
+        keyword: self.keyword,
+        option: "string"
+      }
+    };
+    $result.closest(".see").show();
+    $.ajax({
+      type: "GET",
+      data: data,
+      url: self.url + "?" + $.param(data),
+      beforeSend: function () {
+        $result.html(SS.loading);
+      },
+      success: function (data) {
+        $result.html(data);
+        $result.find("th input").remove();
+        $result.find("input[name='page_ids[]']").remove();
+        $result.find("input[name='part_ids[]']").remove();
+        $result.find("input[name='layout_ids[]']").remove();
+      },
+      error: function (data, status) {
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+    });
+  }
+};
 this.Cms_Line_Message_Repeat_Plan = (function () {
   function Cms_Line_Message_Repeat_Plan() {
   }
@@ -42672,6 +42828,80 @@ Cms_UploadFileOrder.prototype.appendOrderedFiles = function ($filesEl) {
     $('.column-value-files').append($filesEl);
   }
 };
+this.Cms_Image_Map_Area_Cropper = (function () {
+  function Cms_Image_Map_Area_Cropper(el, opts) {
+    if (!opts) {
+      opts = {};
+    }
+    this.$el = $(el);
+    this.$currentArea = this.$el.find(".areas .area");
+    this.$image = this.$el.find(".image-warp img");
+    this.readonly = opts["readonly"];
+    this.render();
+  }
+
+  Cms_Image_Map_Area_Cropper.prototype.render = function () {
+    var self = this;
+    self.cropper = new Cropper(
+      self.$image[0],
+      {
+        viewMode: 1,
+        zoomOnWheel: false,
+        background: true,
+        autoCrop: false,
+        ready: function() {
+          self.cropCurrentArea();
+        },
+        cropmove: function() {
+          self.setCroppedArea();
+        }
+      }
+    );
+
+    self.$el.find(".reset-area").on("click", function() {
+      self.$currentArea.find('[name="item[in_area][x]"]').val("");
+      self.$currentArea.find('[name="item[in_area][y]"]').val("");
+      self.$currentArea.find('[name="item[in_area][width]"]').val("");
+      self.$currentArea.find('[name="item[in_area][height]"]').val("");
+      self.cropper.clear();
+      return false;
+    });
+  };
+
+  Cms_Image_Map_Area_Cropper.prototype.cropCurrentArea = function () {
+    var self = this;
+    var x = self.$currentArea.find('input[name="item[in_area][x]"]').val();
+    var y = self.$currentArea.find('input[name="item[in_area][y]"]').val();
+    var width = self.$currentArea.find('input[name="item[in_area][width]"]').val();
+    var height = self.$currentArea.find('input[name="item[in_area][height]"]').val();
+
+    if (x && y && width && height) {
+      var data = self.cropper.getData(true);
+      Object.assign(data, { x: parseInt(x), y: parseInt(y), width: parseInt(width), height: parseInt(height) });
+      self.cropper.enable();
+      self.cropper.crop();
+      self.cropper.setData(data);
+    } else {
+      self.cropper.enable();
+      self.cropper.clear();
+    }
+
+    if (self.readonly) {
+      self.cropper.disable();
+    }
+  };
+
+  Cms_Image_Map_Area_Cropper.prototype.setCroppedArea = function () {
+    var self = this;
+    var data = self.cropper.getData(true);
+    self.$currentArea.find('input[name="item[in_area][x]"]').val(data.x);
+    self.$currentArea.find('input[name="item[in_area][y]"]').val(data.y);
+    self.$currentArea.find('input[name="item[in_area][width]"]').val(data.width);
+    self.$currentArea.find('input[name="item[in_area][height]"]').val(data.height);
+  };
+
+  return Cms_Image_Map_Area_Cropper;
+})();
 this.Event_Form = (function () {
   function Event_Form(el, options) {
     this.$el = $(el);
@@ -43189,6 +43419,7 @@ this.Googlemaps_Map = (function () {
       // marker exists
       // set manually options or do fit
       var manuallyAdjust = false;
+      var idleAdjuster = function() {};
 
       if (Googlemaps_Map.center) {
         var center = Googlemaps_Map.getCenter();
@@ -43202,14 +43433,14 @@ this.Googlemaps_Map = (function () {
       }
 
       if (!manuallyAdjust) {
-        google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function(){
+        idleAdjuster = function() {
           if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.getZoom()) {
             Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
           }
-          Googlemaps_Map.hideMarkers();
-        })
+        };
         Googlemaps_Map.map.fitBounds(bounds);
       }
+      google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", idleAdjuster);
     } else {
       // marker not exists
       // set manually or default options
@@ -43217,20 +43448,6 @@ this.Googlemaps_Map = (function () {
       Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
       Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
     }
-  };
-
-  Googlemaps_Map.hideMarkers = function() {
-    $('.map-search-condition .category-settings').each(function() {
-      var settings = $(this).attr('data-category-settings');
-      if (!settings) return false;
-
-      $('.map-search-index .filters a').each(function() {
-        var $btn = $(this);
-        if (!settings.includes($btn.text())) {
-          $btn.click();
-        }
-      });
-    })
   };
 
   Googlemaps_Map.validateZoom = function (zoom) {
@@ -43684,12 +43901,14 @@ this.Facility_Search = (function () {
       columnTop = column.offset().top;
       indexTop = column.closest("#map-sidebar").offset().top;
       scrolled = column.closest("#map-sidebar").scrollTop();
-      return column.closest("#map-sidebar").animate({
+      column.closest("#map-sidebar").animate({
         scrollTop: columnTop - indexTop + scrolled
       }, 'fast');
     };
+
     //setup map
     Googlemaps_Map.load(selector, opts);
+
     //setup markers
     overrided = Googlemaps_Map.attachMessage;
     Googlemaps_Map.attachMessage = function (id) {
@@ -43699,14 +43918,17 @@ this.Facility_Search = (function () {
         $("#map-sidebar .column").removeClass("current");
         dataID = Googlemaps_Map.markers[id]["id"];
         column = $('#map-sidebar .column[data-id="' + dataID + '"]');
-        column.addClass("current");
-        return slideSidebar(column);
+        if (column.length) {
+          column.addClass("current");
+          slideSidebar(column);
+        }
       });
-      return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
-        return $("#map-sidebar .column").removeClass("current");
+      google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+        $("#map-sidebar .column").removeClass("current");
       });
     };
     Googlemaps_Map.setMarkers(markers, { markerCluster: opts['markerCluster'] });
+
     //setup sidebar
     $("#map-sidebar .column .click-marker").on("click", function () {
       var dataID;
@@ -43725,7 +43947,6 @@ this.Facility_Search = (function () {
             if (cluster) {
               m["window"].setPosition(cluster.getMarkers()[0].position);
               m["window"].pixelOffset = new google.maps.Size(0, -15);
-              console.log(cluster)
             }
           }
 
@@ -43743,6 +43964,7 @@ this.Facility_Search = (function () {
 
       return false;
     });
+
     //setup category filter
     $(".filters a").on("click", function () {
       var dataIDs;
@@ -43764,11 +43986,13 @@ this.Facility_Search = (function () {
         column = $('#map-sidebar .column[data-id="' + dataID + '"]');
         if (visible) {
           Googlemaps_Map.markers[id]["marker"].setVisible(true);
-          return column.show();
+          column.show();
         } else {
           Googlemaps_Map.markers[id]["marker"].setVisible(false);
-          Googlemaps_Map.markers[id]["window"].close();
-          return column.hide();
+          if (Googlemaps_Map.markers[id]["window"]) {
+            Googlemaps_Map.markers[id]["window"].close();
+          }
+          column.hide();
         }
       });
 
@@ -43792,11 +44016,12 @@ this.Facility_Search = (function () {
       }
       return false;
     });
+
     //setup location filter
-    return $(".filters .focus").on("change", function () {
+    $(".filters .focus").on("change", function () {
       var select;
       select = $(this);
-      return select.find("option:selected").each(function () {
+      select.find("option:selected").each(function () {
         var latlng, loc, zoomLevel;
         if ($(this).val() === "") {
           return false;
@@ -43808,7 +44033,19 @@ this.Facility_Search = (function () {
         if (zoomLevel) {
           Googlemaps_Map.map.setZoom(parseInt(zoomLevel));
         }
-        return select.val("");
+        select.val("");
+      });
+    });
+
+    //click selected category
+    $('.map-search-condition .category-settings').each(function() {
+      var settings = $(this).attr('data-category-settings');
+      if (!settings) return false;
+      $('.map-search-index .filters a').each(function() {
+        var $btn = $(this);
+        if (!settings.includes($btn.text())) {
+          $btn.click();
+        }
       });
     });
   };
@@ -45056,6 +45293,7 @@ this.Openlayers_Facility_Search = (function () {
 
   Openlayers_Facility_Search.render = function (selector, opts) {
     var canvas, map, overrided, slideSidebar;
+
     //define function
     if (opts == null) {
       opts = {};
@@ -45065,13 +45303,15 @@ this.Openlayers_Facility_Search = (function () {
       columnTop = column.offset().top;
       indexTop = column.closest("#map-sidebar").offset().top;
       scrolled = column.closest("#map-sidebar").scrollTop();
-      return column.closest("#map-sidebar").animate({
+      column.closest("#map-sidebar").animate({
         scrollTop: columnTop - indexTop + scrolled
       }, 'fast');
     };
+
     //setup map
     canvas = $(selector)[0];
     map = new Openlayers_Map(canvas, opts);
+
     //setup markers
     overrided = map.showPopup;
     map.showPopup = function (feature, coordinate) {
@@ -45080,10 +45320,13 @@ this.Openlayers_Facility_Search = (function () {
       $("#map-sidebar .column").removeClass("current");
       dataId = feature.get("markerId");
       column = $('#map-sidebar .column[data-id="' + dataId + '"]');
-      column.addClass("current");
-      return slideSidebar(column);
-      //setup sidebar
+      if (column.length) {
+        column.addClass("current");
+        slideSidebar(column);
+      }
     };
+
+    //setup sidebar
     $("#map-sidebar .column .click-marker").on("click", function () {
       var coordinate, dataId, marker;
       dataId = parseInt($(this).closest(".column").attr("data-id"));
@@ -45105,7 +45348,7 @@ this.Openlayers_Facility_Search = (function () {
       }
       dataIds = [];
       $(".filters a.clicked").each(function () {
-        return dataIds.push(parseInt($(this).attr("data-id")));
+        dataIds.push(parseInt($(this).attr("data-id")));
       });
       markers = map.getMarkers();
       $.each(markers, function () {
@@ -45126,21 +45369,23 @@ this.Openlayers_Facility_Search = (function () {
           style = map.createMarkerStyle(iconSrc);
           this.setStyle(style);
           column.show();
-          return
         } else {
           style = new ol.style.Style({});
           this.setStyle(style);
           column.hide();
-          return
         }
       });
+
+      var resultSize = $('#map-sidebar .column:visible').length;
+      $('.map-search-result .number').text(resultSize);
       return false;
     });
+
     //setup location filter
-    return $(".filters .focus").on("change", function () {
+    $(".filters .focus").on("change", function () {
       var select;
       select = $(this);
-      return select.find("option:selected").each(function () {
+      select.find("option:selected").each(function () {
         var loc, pos, zoomLevel;
         if ($(this).val() === "") {
           return false;
@@ -45152,7 +45397,19 @@ this.Openlayers_Facility_Search = (function () {
         if (zoomLevel) {
           map.setZoom(parseInt(zoomLevel));
         }
-        return select.val("");
+        select.val("");
+      });
+    });
+
+    //click selected category
+    $('.map-search-condition .category-settings').each(function() {
+      var settings = $(this).attr('data-category-settings');
+      if (!settings) return false;
+      $('.map-search-index .filters a').each(function() {
+        var $btn = $(this);
+        if (!settings.includes($btn.text())) {
+          $btn.click();
+        }
       });
     });
   };
@@ -46327,18 +46584,13 @@ this.Webmail_Mail_Form = (function () {
   };
 
   Webmail_Mail_Form.insertText = function (field, str) {
-    var np, p, r, s;
     field.focus();
     if (navigator.userAgent.match(/MSIE/)) {
-      r = document.selection.createRange();
+      var r = document.selection.createRange();
       r.text = str;
-      return r.select();
+      r.select();
     } else {
-      s = field.val();
-      p = field.get(0).selectionStart;
-      np = p + str.length;
-      field.val(s.substr(0, p) + str + s.substr(p));
-      return field.get(0).setSelectionRange(np, np);
+      field.get(0).setRangeText(str);
     }
   };
 

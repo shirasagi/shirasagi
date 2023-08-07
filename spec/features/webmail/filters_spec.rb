@@ -12,13 +12,15 @@ describe "webmail_filters", type: :feature, dbscope: :example, imap: true, js: t
 
         # new/create
         click_link I18n.t('ss.links.new')
+        wait_for_js_ready
         within "form#item-form" do
           fill_in "item[name]", with: item_title
           fill_in "item[conditions][][value]", with: item_title
           select I18n.t('webmail.box.inbox'), from: "item[mailbox]"
           #find("option[value='INBOX']").select_option
+
+          click_button I18n.t('ss.buttons.save')
         end
-        click_button I18n.t('ss.buttons.save')
         wait_for_notice I18n.t("ss.notice.saved")
         click_link I18n.t('ss.links.back_to_index')
 
@@ -26,17 +28,22 @@ describe "webmail_filters", type: :feature, dbscope: :example, imap: true, js: t
         click_link item_title
         click_link I18n.t('ss.links.edit')
         wait_for_js_ready
-        click_button I18n.t('ss.buttons.save')
+        within "form#item-form" do
+          click_button I18n.t('ss.buttons.save')
+        end
         wait_for_notice I18n.t("ss.notice.saved")
 
         # apply filter
         find(".apply-mailbox option[value='INBOX']").select_option
-        find(".apply-filter").click
-        page.accept_confirm
+        page.accept_confirm(I18n.t("webmail.confirm.apply_filter")) do
+          find(".apply-filter").click
+        end
 
         # delete/destroy
         click_link I18n.t('ss.links.delete')
-        click_button I18n.t('ss.buttons.delete')
+        within "form" do
+          click_button I18n.t('ss.buttons.delete')
+        end
         wait_for_notice I18n.t("ss.notice.deleted")
 
         expect(current_path).to eq index_path
