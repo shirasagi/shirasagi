@@ -34,7 +34,8 @@ export default class extends Controller {
     window.addEventListener("beforeunload", this.#beforeUnloadHandler);
 
     const autoSaveData = localStorage.getItem(this.#key());
-    if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing"))) {
+    console.log("-------------------------------auteSaveData\n" + autoSaveData);
+    if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing" ))) {
       await this.#restoreForm(autoSaveData);
     }
 
@@ -87,7 +88,6 @@ export default class extends Controller {
 
   async #restoreForm(stringifyData) {
     const formData = stringifyJsonToFormData(stringifyData)
-
     this.element.disabled = true;
 
     const response = await fetch(this.resumeUrlValue, {
@@ -104,13 +104,16 @@ export default class extends Controller {
     }
 
     // html 内には javascript が含まれており、javascript の動的実行はややこしいので jQuery を用いる。
-    const html = await response.text();
+    const html_text = await response.text();
+
+    var save_doc = document.implementation.createHTMLDocument();
+    save_doc.documentElement.innerHTML = html_text;
 
     // 理想は item-form の内容の置換だが javascript のエラーが発生する。
     // $(this.element).html($(html).find("#item-form").html());
 
     // しかたなく body 全体を置換する（これはこれで問題がでそうだが）。
-    $(document).find("body").html($(html).find("body").html());
+    $(document).find("body").html($(save_doc).find("body").html());
 
     this.element.disabled = false;
   }
