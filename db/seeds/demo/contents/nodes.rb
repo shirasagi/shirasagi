@@ -27,7 +27,7 @@ save_node route: "article/page", filename: "docs", name: "記事",
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
-  view_route: "category/node", conditions: %w(hinanjo_docs), sort: 'order', new_days: 0,
+  view_route: "category/node", conditions: %w(hinanjo-docs), sort: 'order', new_days: 0,
   map_search_options: [{ name: '地域', values: "東部\n北部\n南部" }]
 )
 article_map_search_categories = [
@@ -46,7 +46,7 @@ article_map_search_categories = [
 ]
 article_map_search.st_category_ids = article_map_search_categories.map(&:id)
 article_map_search.update
-save_node route: "article/page", filename: "hinanjo_docs", name: "避難所情報", layout_id: @layouts["more"].id,
+save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["general"].id, conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
   condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0, st_form_ids: [@form8.id],
   st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
@@ -59,19 +59,19 @@ save_node route: "category/node", filename: "kanko", name: "観光・文化・�
 save_node route: "category/node", filename: "kenko", name: "健康・福祉", order: 30
 save_node route: "category/node", filename: "kosodate", name: "子育て・教育", order: 20
 save_node route: "category/node", filename: "kurashi", name: "くらし・手続き", order: 10
-save_node route: "category/node", filename: "kurashi/anzen", name: "交通安全・防犯", order: 10
-save_node route: "category/node", filename: "kurashi/bosai", name: "防災情報", order: 20
-save_node route: "category/node", filename: "kurashi/kankyo", name: "環境", order: 40
-save_node route: "category/node", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
-save_node route: "category/node", filename: "kurashi/nenkin", name: "年金・保険", order: 60
+save_node route: "category/page", filename: "kurashi/anzen", name: "交通安全・防犯", order: 10
+save_node route: "category/page", filename: "kurashi/bosai", name: "防災情報", order: 20
+save_node route: "category/page", filename: "kurashi/kankyo", name: "環境", order: 40
+save_node route: "category/page", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
+save_node route: "category/page", filename: "kurashi/nenkin", name: "年金・保険", order: 60
 save_node route: "category/node", filename: "kurashi/zeikin", name: "税金", order: 110
 save_node route: "category/node", filename: "sangyo", name: "産業・仕事", order: 50
-save_node route: "category/node", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
-save_node route: "category/node", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
+save_node route: "category/page", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
+save_node route: "category/page", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
 save_node route: "category/page", filename: "sangyo/shinko", name: "産業振興", order: 40
-save_node route: "category/node", filename: "sangyo/todokede", name: "届出・証明・法令・規制", order: 70
+save_node route: "category/page", filename: "sangyo/todokede", name: "届出・証明・法令・規制", order: 70
 save_node route: "category/node", filename: "shisei", name: "市政情報", order: 60
-save_node route: "category/node", filename: "shisei/koho", name: "広報・広聴", order: 40
+save_node route: "category/page", filename: "shisei/koho", name: "広報・広聴", order: 40
 save_node route: "category/page", filename: "attention", name: "注目情報"
 save_node route: "category/page", filename: "guide/fukushi", name: "福祉・介護", order: 70
 save_node route: "category/page", filename: "guide/hikkoshi", name: "引越し・住まい", order: 50
@@ -441,7 +441,7 @@ save_node route: "facility/page", filename: "institution/shisetsu/pool", name: "
   location_ids: [facility_locations['institution/chiki/nishi'].id],
   service_ids: [facility_services['institution/yoto/asobu'].id]
 
-save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
+save_node route: "key_visual/image", filename: "key-visual", name: "キービジュアル"
 
 ## guide
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",

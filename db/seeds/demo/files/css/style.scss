@@ -24,7 +24,7 @@ body {
 }
 
 #wrap{
-  min-height:  calc(100vh - 215px - 362px);
+  // min-height:  calc(100vh - 215px - 362px);
   background-color: $bg;
 
   footer{
@@ -498,7 +498,7 @@ common
         color: $text;
         display: block;
         text-decoration: none;
-      
+
         &:hover,
         &:focus {
           opacity: 0.7;
@@ -2354,7 +2354,7 @@ body#body--index {
         width: 30px;
         transform: scale(1);
         transition: .3s ease-in-out;
-  
+
         img {
           width: 100%;
         }
@@ -2418,7 +2418,7 @@ body#body--index {
 
       transform: scale(1);
       transition: .3s ease-in-out;
-  
+
       &:hover,
       &:focus {
         transform: scale(1.05);
@@ -2514,7 +2514,7 @@ body#body--index {
   }
 }
 
-/* common - 
+/* common -
 ---------------------------------------------------------- */
 /* 汎用レイアウト */
 body.general {
@@ -3419,17 +3419,17 @@ body.general {
         align-items: center;
         height: 33px;
         border: none;
-  
+
         @media only screen and (max-width: 600px) {
           height: 41px;
           flex-wrap: wrap;
           margin-bottom: 47px;
         }
-  
+
         .site-search-categories {
           display: none;
         }
-  
+
         .site-search-type{
           dd{
             select{
@@ -3439,7 +3439,7 @@ body.general {
             }
           }
         }
-  
+
         .site-search-keyword {
           border: none;
           @media only screen and (max-width: 600px) {
@@ -3448,35 +3448,35 @@ body.general {
           dt {
             display: none;
           }
-  
+
           dd {
             input#s_keyword {
               width: auto;
               padding: 8px;
               border: 1px solid $hgry;
               border-right: none;
-  
+
               @media only screen and (max-width: 600px) {
                 padding: 5px;
-                
+
                 width: 98%;
                 border-right: 1px solid $hgry;
               }
             }
           }
         }
-  
+
         .send{
           border: 1px solid $hgry;
           border-left: none;
-  
+
           @media only screen and (max-width: 600px) {
             margin-top: 5px;
           }
-  
+
           input[type="submit"]{
             padding: 6px 10px;
-  
+
             @media only screen and (max-width: 600px) {
               padding: 5px;
               position: static;
@@ -3670,7 +3670,7 @@ body.general {
             width: 100%;
             margin-bottom: 24px;
             padding-bottom: 16px;
-    
+
             dt,
             legend {
               clear: both;
@@ -3679,12 +3679,12 @@ body.general {
               margin-right: 20px;
               padding: 6px 0;
               font-weight: bold;
-    
+
               @include tb {
                 float: none;
                 width: 100%;
               }
-    
+
               .required {
                 display: block;
                 font-size: $px14;
@@ -3692,23 +3692,23 @@ body.general {
                 font-weight: normal;
               }
             }
-    
+
             dd,
             .fields {
               float: left;
               width: calc(100% - 12em - 20px);
               padding: 6px 0;
-    
+
               @include tb {
                 float: none;
                 width: 100%;
               }
-    
+
               p {
                 margin-bottom: 0;
                 font-size: $px14;
               }
-    
+
               input[type="password"],
               input[type="text"] {
                 width: 80%;
@@ -3716,87 +3716,87 @@ body.general {
                 padding: 4px 0;
                 font-size: $px16;
                 box-sizing: border-box;
-    
+
                 @include tb {
                   width: 100%;
                 }
               }
-    
+
               input[type="email"] {
                 width: 80%;
                 max-width: 560px;
                 padding: 4px 0;
                 font-size: $px16;
                 box-sizing: border-box;
-    
+
                 @include tb {
                   width: 100%;
                 }
               }
-    
+
               input[type="radio"] {
                 &+span {
                   vertical-align: -0.1em;
                 }
               }
-    
+
               input[name="item[tel]"] {
                 width: 20em;
-    
+
                 @include mb {
                   width: 100%;
                 }
               }
-    
+
               input[name="item[postal_code]"] {
                 width: 16em;
               }
-    
+
               input[name="item[sex]"] {
                 margin-top: -3px;
               }
-    
+
               input[type="checkbox"] {
                 margin-top: -1px;
               }
-    
+
               button[name="postal-code-search"] {
                 font-size: $px14;
               }
-    
+
               textarea {
                 width: 80%;
                 max-width: 560px;
                 box-sizing: border-box;
                 min-height: 200px;
-    
+
                 @include tb {
                   width: 100%;
                 }
               }
-    
+
               input[name="item[in_birth][year]"] {
                 padding: 6px 0 8px;
               }
-    
+
               select {
                 width: 7em;
                 padding: 10px 0 12px;
                 font-size: $px14;
               }
-    
+
               div.parent {
                 margin-bottom: 32px;
-    
+
                 .parent {}
-    
+
                 div.child {
                   margin-top: 8px;
-    
+
                   label {
                     display: inline-block;
                     margin: 0 48px 8px 0;
-    
+
                     @include mb {
                       display: block;
                       margin-right: 0;
@@ -3805,16 +3805,16 @@ body.general {
                 }
               }
             }
-    
+
             .remarks ul li {
               font-size: $px14;
             }
-    
+
             .graph {
               margin-left: 200px;
             }
           }
-    
+
           fieldset.ages,
           fieldset.live,
           fieldset.sex,
@@ -3823,70 +3823,70 @@ body.general {
             label {
               display: inline-block;
               margin-right: 12px;
-    
+
               @include mb {
                 display: block;
                 margin-right: 0;
               }
-    
+
               .item_sex_male,
               .item_sex_female {
                 margin-top: -3px;
               }
             }
           }
-    
+
           fieldset.translate-targets .fields label {
             display: inline-block;
             margin: 0 48px 8px 0px;
-    
+
             @include mb {
               display: block;
               margin-right: 0;
             }
           }
-    
+
           .send {
             padding-left: 236px;
-    
+
             @include tb {
               padding-left: 0;
             }
-    
+
             input {
               margin-right: 12px;
               @include btn-darkblue;
             }
-    
+
             input[name="cancel"] {
               @include btn-gry;
             }
           }
-    
+
           #errorExplanation {
             margin-bottom: 24px;
             padding: 12px 12px 0;
             border: 2px solid $red;
             @include border-radius(5px);
             background: #ffffa4;
-    
+
             ul {
               list-style-position: inside;
             }
           }
-    
+
           .inquiry-confirm-message {
             padding: 24px 0;
-    
+
             ~dd {
               padding-bottom: 2em;
             }
           }
-    
+
           .simple-captcha {
             padding-left: 236px;
             margin-bottom: 24px;
-    
+
             @include tb {
               padding-left: 0;
               text-align: center;
@@ -3921,7 +3921,7 @@ body.general {
       border: 2px solid $red;
       @include border-radius(15px);
       color: $red;
-      
+
       .wrap{
         background-color: $white;
       }
@@ -3931,12 +3931,12 @@ body.general {
       @include clear;
       margin-bottom: 1em;
       border-bottom: 2px solid $blue;;
-    
+
       @include mb {
         padding: 10px 10px 0;
         border: 0;
       }
-    
+
       a {
         display: block;
         float: left;
@@ -3952,7 +3952,7 @@ body.general {
         // @include grd-gry;
         color: $text;
         text-decoration: none;
-    
+
         @include mb {
           margin: 0 10px 10px 0;
           padding: 3px 10px;
@@ -3964,20 +3964,20 @@ body.general {
           opacity: 0.75;
         }
       }
-    
+
       a.current {
         background-color: #0c53b7;
         color: $white;
       }
     }
-    
+
     .mypage-nav {
       margin-bottom: 1em;
-    
+
       @include mb {
         padding: 0 10px;
       }
-    
+
       a {
         display: inline-block;
         @include btn-gry;
@@ -3985,7 +3985,7 @@ body.general {
         margin-bottom: 1em;
         color: $text;
         text-decoration: none;
-    
+
         @include mb {
           margin-bottom: .5em;
           font-size: $px12;
@@ -4054,46 +4054,46 @@ body.general {
         text-decoration: none;
       }
     }
-    
+
     table.mypage-index,
     .member-my-group .index,
     table.member-invited-group {
       width: 100%;
       margin-bottom: $box-margin;
-    
+
       @include mb {
         @include border-radius(0);
-    
+
         tbody {
           width: 100%;
         }
       }
-    
+
       caption {
         padding: 0 10px;
         color: $blue;
         text-align: left;
       }
-    
+
       th {
         padding: 3px 8px 0;
         border: $border-hgry;
         background: #e2edee;
         text-align: left;
       }
-    
+
       td {
         padding: 3px 8px 0;
         border: $border-hgry;
       }
     }
-    
+
     @include mb {
       .invited-groups {
         margin: 0 10px;
       }
     }
-    
+
     .body--mypage {
       .ajax-box {
         display: inline-block;
@@ -4101,15 +4101,15 @@ body.general {
         color: $text;
         text-decoration: none;
       }
-    
+
       #selected-files {
         margin-top: 12px;
       }
-    
+
       .file-view {
         float: left;
         margin: 0 12px 12px 0;
-    
+
         .thumb {
           display: block;
           width: 120px;
@@ -4123,17 +4123,17 @@ body.general {
           text-decoration: none;
           text-align: center;
           line-height: 90px;
-    
+
           &:hover,
           &:focus {
             background: #007acd;
           }
         }
-    
+
         .name {
           margin-bottom: 7px;
         }
-    
+
         .action a,
         .menu a {
           display: inline-block;
@@ -4145,90 +4145,90 @@ body.general {
           letter-spacing: 0;
         }
       }
-    
+
       .clear-marker {
         @include btn-gry;
         margin-top: 6px;
       }
     }
-    
+
     .body--mypage-anpi {
       form.search {
         float: left;
         margin-bottom: 10px;
-    
+
         @include mb {
           float: none;
           padding: 0 10px;
         }
-    
+
         select {
           padding: 7px 10px;
         }
-    
+
         .btn {
           @include btn-gry;
         }
       }
     }
-    
+
     .member-anpi-map {
       float: right;
       margin-bottom: 10px;
-    
+
       @include mb {
         float: none;
         padding: 0 10px;
       }
-    
+
       a {
         // @include btn-org;
         color: $text;
         text-decoration: none;
       }
     }
-    
+
     .body--anpi .search-settings form {
       margin-bottom: 10px;
-    
+
       @include mb {
         padding: 0 10px;
       }
-    
+
       h2 {
         display: inline-block;
         margin-right: 10px;
       }
-    
+
       #keyword {
         padding: 7px 10px;
-    
+
         @include mb {
           margin-bottom: 10px;
         }
       }
-    
+
       input[type="submit"] {
         @include btn-gry;
       }
     }
-    
+
     .anpi-post {
       margin-bottom: $item-margin;
       padding: $item-margin;
       border: $border-hgry;
-    
+
       h2 {
         font-size: $px16;
         font-weight: bold;
       }
-    
+
       .body {
         margin-bottom: $item-margin;
         padding-bottom: $item-margin;
         border-bottom: $border-hgry;
       }
-    
+
       .poster span {
         display: inline-block;
         margin-right: 20px;
@@ -4603,7 +4603,7 @@ body.general {
           width: 100%;
           margin-bottom: 24px;
           padding-bottom: 16px;
-  
+
           dt,
           legend {
             clear: both;
@@ -4614,12 +4614,12 @@ body.general {
             font-weight: bold;
             background-color: #aae2fa;
             @include border-radius(10px);
-  
+
             @include tb {
               float: none;
               width: 100%;
             }
-  
+
             .required {
               display: block;
               font-size: $px14;
@@ -4627,7 +4627,7 @@ body.general {
               font-weight: normal;
             }
           }
-  
+
           &.category{
             .category{
               display: flex;
@@ -4638,7 +4638,7 @@ body.general {
               }
             }
           }
-  
+
           div.keyword{
             @include tb{
               margin-top: 20px;
@@ -4647,7 +4647,7 @@ body.general {
           .remarks ul li {
             font-size: $px14;
           }
-  
+
           .graph {
             margin-left: 200px;
           }
@@ -4656,7 +4656,7 @@ body.general {
           margin: 30px auto;
           display: flex;
           flex-direction: column;
-    
+
           input,
           button{
             width: 200px;
@@ -4668,23 +4668,23 @@ body.general {
             border: 1px solid $blue;
             @include border-radius(20px);
             background-color: $blue;
-    
+
             @include tb{
               width: 100%;
             }
-    
+
             &:hover,
             &:focus {
               color: $text;
               background-color: $white;
             }
           }
-    
+
           button[name="button"]{
             color: $text;
             background-color: $hgry;
             border: 1px solid $hgry;
-    
+
             &:hover,
             &:focus {
               background-color: $white;
@@ -4705,56 +4705,56 @@ body.general {
           font-weight: bold;
           box-sizing: border-box;
         }
-      
+
         .cms-nodes h2 {
           margin: 0;
           border: 0;
         }
-      
+
         #side-menu h2 {
           margin-bottom: 0;
         }
-      
+
         .keyword {
           input {
             width: 100%;
           }
         }
-      
+
         fieldset.keyword,
         fieldset.category,
         fieldset.service,
         fieldset.location {
           margin-bottom: 24px;
-      
+
           div.keyword {
             width: 97%;
-      
+
             @include mb {
               width: 100%;
             }
           }
         }
-      
+
         .send {
           margin-bottom: 24px;
           text-align: center;
-      
+
           input[type="submit"] {
             background-position: right 24px center;
-      
+
             &:hover,
             &:focus {
               background-position: right 24px center;
             }
           }
         }
-      
+
         .condition.map-search-condition {
           @include clear;
           font-size: $px14;
           letter-spacing: .7px;
-      
+
           dt {
             clear: both;
             float: left;
@@ -4765,19 +4765,19 @@ body.general {
             font-weight: bold;
             background-color: #aae2fa;
             @include border-radius(10px);
-      
+
             @include tb {
               display: block;
               float: none;
               margin-bottom: 0;
             }
           }
-      
+
           dd {
             float: left;
             padding: 10px 7px;
             margin-bottom: 6px;
-      
+
             @include tb {
               display: block;
               float: none;
@@ -4785,10 +4785,10 @@ body.general {
             }
           }
         }
-      
+
         .settings {
           @include clear;
-      
+
           .ajax-box {
             float: right;
             display: block;
@@ -4804,43 +4804,43 @@ body.general {
             box-sizing: border-box;
             transition: .3s;
             @include border-radius(10px);
-      
+
             @include tb {
               float: none;
               margin: 0 auto;
               margin-bottom: 24px;
             }
-      
+
             &:hover,
             &:focus {
               opacity: .7;
             }
           }
         }
-      
+
         .result {
           margin-bottom: 24px;
           border-bottom: 2px solid #cce0e6;
-      
+
           h2 {
             border: 0;
             font-size: $px14;
             font-weight: normal;
           }
         }
-      
+
         .tabs {
           @include clear;
           margin-bottom: 20px;
-      
+
           ul {
             @include clear;
             float: right;
             display: none;
-      
+
             li {
               float: left;
-      
+
               a {
                 display: block;
                 margin-left: 12px;
@@ -4849,13 +4849,13 @@ body.general {
                 text-decoration: none;
               }
             }
-      
+
             .current a {
               color: $white;
             }
           }
         }
-      
+
         #map-sidebar {
           float: left;
           width: 234px;
@@ -4865,19 +4865,19 @@ body.general {
           border: 1px solid $hgry;
           overflow-y: scroll;
           box-sizing: border-box;
-      
+
           .column {
             padding: 8px 12px;
             border-bottom: 1px solid $hgry;
-      
+
             &.current {
               background: #ddeff5;
             }
-      
+
             &:last-child {
               border-bottom: 0;
             }
-      
+
             p{
               margin-bottom: 0.5em;
             }
@@ -4892,18 +4892,18 @@ body.general {
               letter-spacing: .7px;
               text-decoration: none;
               @include border-radius(5px);
-      
+
               &:hover,
               &:focus {
                 opacity: .7;
               }
             }
-      
+
             .no-marker {
               font-size: $px12;
             }
           }
-      
+
           @include tb {
             float: none;
             width: 100%;
@@ -4911,7 +4911,7 @@ body.general {
             margin-right: 0;
           }
         }
-      
+
         #map-canvas {
           position: relative;
           width: calc(100% - 234px - 16px) !important;
@@ -4923,11 +4923,11 @@ body.general {
             width: 100% !important;
             height: 400px !important;
           }
-      
+
           .maker-info {
             width: 300px;
           }
-      
+
           .gm-style .gm-style-iw-d .marker-info {
             .name {
               display: block;
@@ -4936,17 +4936,17 @@ body.general {
               font-size: $px16;
               font-weight: bold;
             }
-      
+
             .form-name,
             .address {
               margin-bottom: 6px;
               font-size: $px14;
             }
-      
+
             .address {
               margin-bottom: 10px;
             }
-      
+
             .show a {
               display: inline-block;
               padding: 4px 8px 4px 8px;
@@ -4955,7 +4955,7 @@ body.general {
               font-size: 10px;
               text-decoration: none;
               transition: .3s;
-      
+
               &:hover,
               &:focus {
                 background: #e25b08;
@@ -4964,7 +4964,7 @@ body.general {
             }
           }
         }
-      
+
         .filters {
           @include tb{
             margin-top: 20px;
@@ -4972,15 +4972,15 @@ body.general {
           li {
             float: left;
             padding-left: 0.5em;
-      
+
             &:first-of-type{
               padding-left: 0;
             }
-      
+
             &::before{
               content: none;
             }
-      
+
             a {
               display: block;
               margin: 0 12px 12px 0;
@@ -4995,16 +4995,16 @@ body.general {
               font-weight: bold;
               text-decoration: none;
               @include border-radius(5px);
-      
+
               &:hover,
               &:focus {
                 background-color: $hgry;
               }
-      
+
               &.clicked {
                 background-color: #767676;
                 color: $white;
-      
+
                 &:hover,
                 &:focus {
                   background-color: #333;
@@ -5012,31 +5012,31 @@ body.general {
                 }
               }
             }
-      
+
             &.jishin a {
               background-image: url(../img/ic-jishin.png);
             }
-      
+
             &.thunami a {
               background-image: url(../img/ic-thunami.png);
             }
-      
+
             &.dosya a {
               background-image: url(../img/ic-dosha.png);
             }
           }
-      
+
           .area-list li a {
             padding: 3px 10px;
           }
         }
-      
+
         .columns {
           .column {
             clear: both;
             padding: 6px 0;
             border-bottom: 1px solid $hgry;
-      
+
             h2 {
               margin: 0;
               padding: 0;
@@ -5044,21 +5044,21 @@ body.general {
               font-size: $px14;
               font-weight: normal;
             }
-      
+
             .categories {
               margin-bottom: 0;
               border: 0;
               text-align: left;
-      
+
               ul {
                 @include clear;
               }
-      
+
               li {
                 float: left;
                 list-style: none;
                 background: url(../img/ic-li.png) no-repeat center left 2px;
-      
+
                 a {
                   display: block;
                   margin: 6px 6px 6px 0;
@@ -5066,7 +5066,7 @@ body.general {
                   background-color: $hgry;
                   color: #323232;
                   text-decoration: none;
-      
+
                   &:hover,
                   &:focus {
                     background-color: #dae4e7;
@@ -5076,25 +5076,25 @@ body.general {
             }
           }
         }
-      
+
         .summary-image {
           float: right;
           padding: 4px;
           border: 1px solid $hgry;
         }
-      
+
         .body {
           float: left;
           width: 528px;
-      
+
           dd {
             width: 344px;
           }
         }
-      
+
         .see {
           @include clear;
-      
+
           dt {
             clear: both;
             float: left;
@@ -5103,52 +5103,52 @@ body.general {
             padding: 3px 5px;
             background: #dae4e7;
           }
-      
+
           dd {
             float: left;
             margin-bottom: 12px;
             padding: 3px 0;
           }
-      
+
           +p {
             border: 1px solid $hgry;
             padding: 4px;
           }
         }
-      
+
         .additional-info {
           margin-bottom: 24px;
         }
-      
+
         .images {
           @include clear;
           margin-bottom: 24px;
-      
+
           .image {
             float: left;
             margin: 0 10px 10px 0;
             padding: 4px;
             border: 1px solid $hgry;
-      
+
             &:nth-child(4n) {
               margin-right: 0;
             }
           }
         }
-      
+
         .facility-nodes {
           width: 100%;
           margin-bottom: 12px;
-      
+
           caption {
             text-align: left;
           }
-      
+
           table {
             width: 100%;
             margin-bottom: 24px;
           }
-      
+
           caption {
             margin-bottom: 6px;
             padding: 0 10px;
@@ -5157,13 +5157,13 @@ body.general {
             font-size: $px16;
             font-weight: bold;
           }
-      
+
           th {
             padding: 3px 8px 0;
             border: 1px solid $hgry;
             background: #dae4e7;
           }
-      
+
           td {
             padding: 3px 8px 0;
             border: 1px solid $hgry;
@@ -5174,7 +5174,7 @@ body.general {
     }
   }
 
-  &.body--hinanjo_docs{
+  &.body--hinanjo-docs{
     .yield-wrap {
       display: flex;
       .body {
@@ -5222,11 +5222,11 @@ body.general {
           .column{
             clear: both;
             display: flex;
-  
+
             @include tb{
               flex-direction: column;
             }
-  
+
             dt,
             legend{
               width: 35%;
@@ -5236,7 +5236,7 @@ body.general {
               background-color: $lyblue;
               @include border-radius(10px);
               float: left;
-  
+
               @include tb{
                 width: 100%;
                 float: unset;
@@ -5246,19 +5246,19 @@ body.general {
               width: 60%;
               margin: 10px 10px 10px 0;
               padding: 5px 15px;
-  
+
               @include tb{
                 width: 100%;
               }
             }
-  
+
             dd.wide{
               display: flex;
               justify-content: left;
               width: 100%;
               justify-items: end;
               align-items: baseline;
-  
+
               #selected-files{
                 padding-left: 50px;
               }
@@ -5269,7 +5269,7 @@ body.general {
           margin: 30px auto;
           display: flex;
           flex-direction: column;
-    
+
           input,
           button{
             width: 200px;
@@ -5281,23 +5281,23 @@ body.general {
             border: 1px solid $blue;
             @include border-radius(20px);
             background-color: $blue;
-    
+
             @include tb{
               width: 100%;
             }
-    
+
             &:hover,
             &:focus {
               color: $text;
               background-color: $white;
             }
           }
-    
+
           button[name="button"]{
             color: $text;
             background-color: $hgry;
             border: 1px solid $hgry;
-    
+
             &:hover,
             &:focus {
               background-color: $white;
@@ -5310,7 +5310,7 @@ body.general {
 }
 
 /* ===================================================================================================
-pages 
+pages
 =================================================================================================== */
 
 /* pages - #body--index
@@ -5376,7 +5376,7 @@ body.category-top{
       #content{
         overflow : hidden
       }
-  
+
       #main{
         padding: 20px 30px 0 0;
         width: 75%;
@@ -5677,7 +5677,7 @@ body.category-top{
           border-bottom: 1px solid#96d7ff;
           position: relative;
           padding: 0 5px 5px;
-          
+
 
           &:nth-child(2n+1)::after{
             width: 1px;
@@ -5771,7 +5771,7 @@ body.category-top{
               @include submenu-ic(icon_okuyami#{'.png'});
             }
           }
-        } 
+        }
       }
 
       .sec-cmn-top--online{
@@ -5821,7 +5821,7 @@ body.category-top{
           border-bottom: 1px solid $white;
           position: relative;
           padding-bottom: 5px;
-          
+
 
           &:nth-child(2n+1)::after{
             width: 1px;
@@ -5862,7 +5862,7 @@ body.category-top{
               opacity: 1;
             }
           }
-        } 
+        }
       }
     }
   }
@@ -5927,7 +5927,7 @@ body.category-middle-layer{
               background-color: #abe2fb;
               border: 4px solid $white;
               @include border-radius(13px);
-    
+
               &:hover,
               &:focus{
                 background-color: $ygreen;
@@ -5953,7 +5953,7 @@ body.category-middle-layer{
                   width: 46%;
                   margin-left: 20px;
                   float: left;
-    
+
                   border-bottom: $text dashed 1px;
 
                   @include tb{
@@ -5965,7 +5965,7 @@ body.category-middle-layer{
                       border-bottom: none;
                     }
                   }
-    
+
                   a{
                     display: block;
                     width: 100%;
@@ -5990,6 +5990,13 @@ body.category-middle-layer{
             padding-bottom: 20px;
             border-top: 2px solid $blue;
 
+            .page{
+              .body{
+                margin: 20px;
+                @include docs;
+              }
+            }
+
             .category-pages{
               padding: 20px 20px 20px 0;
               display: flex;
@@ -6013,7 +6020,7 @@ body.category-middle-layer{
                 time{
                   display: none;
                 }
-  
+
                 a{
                   display: block;
                   width: 100%;
@@ -6030,6 +6037,47 @@ body.category-middle-layer{
                 }
               }
             }
+
+            .cms-group-pages{
+                article{
+                border-bottom: $text dashed 1px;
+                margin: 20px;
+
+                @include tb{
+
+                  /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
+                  &:last-child,
+                  &:nth-last-child(2):nth-child(odd){
+                    border-bottom: none;
+                  }
+                }
+                header{
+                  display: flex;
+                  align-items: center;
+                  margin: 10px 0;
+
+                  @include tb{
+                    flex-direction: column;
+                    align-items: flex-start;
+                  }
+
+                  time{
+                    font-size: $px12;
+                  }
+
+                  a{
+                    display: block;
+                    padding-left: 50px;
+                    font-size: $px14;
+                    font-weight: bold;
+
+                    @include tb{
+                      padding-left: 0px;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -6038,7 +6086,7 @@ body.category-middle-layer{
         padding-top: 20px;
         width: 25%;
         float: left;
-  
+
         @include tb{
           float: none;
           width: 100%;
@@ -6111,16 +6159,16 @@ body.category-middle-layer{
             }
           }
         }
-  
+
         .relation-link{
           margin: 0 auto;
           margin-top: 30px;
-  
+
           @include tb{
             width: 100%;
             padding: 0 10px;
           }
-  
+
           &__title{
             width: 100%;
             margin: 0 auto;
@@ -6131,21 +6179,21 @@ body.category-middle-layer{
             background-color: $blue;
             @include border-radius(15px);
           }
-  
+
           .ss-image-box-item-list{
             padding: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-  
+
             .ss-image-box-item{
               width: 95%;
-  
+
               @include tb{
                 max-width: 300px;
               }
-  
+
               a{
                 img{
                   width: 100%;
@@ -6154,16 +6202,16 @@ body.category-middle-layer{
             }
           }
         }
-  
+
         .mod-menu--lifeevent{
           width: 250px;
           margin-top: 30px;
-  
+
           @include tb{
             width: 100%;
             padding: 0 10px;
           }
-  
+
           .mod-menu__header{
             width: 80%;
             margin: 0 auto;
@@ -6176,25 +6224,25 @@ body.category-middle-layer{
             border-top-left-radius : 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
-  
+
             &-title{
               font-size: 15px;
               font-weight: bold;
             }
           }
-  
+
           .mod-menu__list-wrap{
             padding: 10px;
             background-color: $white;
             border: 5px solid #96d7ff;
             @include border-radius(20px);
-  
+
             .mod-menu__list{
               display: flex;
               flex-wrap:wrap
             }
           }
-  
+
           .mod-menu__item{
             display: block;
             width: 49%;
@@ -6202,8 +6250,8 @@ body.category-middle-layer{
             border-bottom: 1px solid#96d7ff;
             position: relative;
             padding: 0 5px 5px;
-            
-  
+
+
             &:nth-child(2n+1)::after{
               width: 1px;
               position: absolute;
@@ -6213,13 +6261,13 @@ body.category-middle-layer{
               height: calc(100% - 30%);
               background-color: #96d7ff;
             }
-  
+
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
             &:nth-last-child(2):nth-child(odd){
               border-bottom: none;
             }
-  
+
             .mod-menu__link{
               display: block;
               width: 100%;
@@ -6231,14 +6279,14 @@ body.category-middle-layer{
               flex-direction: column;
               align-items: center;
               justify-content: space-around;
-  
+
               &:hover,
               &:focus {
                 background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
               }
-  
+
               .mod-menu__icon{
                 width: 90px;
               }
@@ -6248,66 +6296,66 @@ body.category-middle-layer{
                 color: $text;
               }
             }
-  
+
             &--kekkon{
               .mod-menu__icon{
                 @include submenu-ic(icon_kekkon#{'.png'});
               }
             }
-  
+
             &--ninshin{
               .mod-menu__icon{
                 @include submenu-ic(icon_ninshin#{'.png'});
               }
             }
-  
+
             &--kosodate{
               .mod-menu__icon{
                 @include submenu-ic(icon_kosodate#{'.png'});
               }
             }
-  
+
             &--kyoiku{
               .mod-menu__icon{
                 @include submenu-ic(icon_kyoiku#{'.png'});
               }
             }
-  
+
             &--hikkoshi{
               .mod-menu__icon{
                 @include submenu-ic(icon_hikkoshi#{'.png'});
               }
             }
-  
+
             &--shushoku{
               .mod-menu__icon{
                 @include submenu-ic(icon_shushoku#{'.png'});
               }
             }
-  
+
             &--fukushi{
               .mod-menu__icon{
                 @include submenu-ic(icon_fukushi#{'.png'});
               }
             }
-  
+
             &--okuyami{
               .mod-menu__icon{
                 @include submenu-ic(icon_okuyami#{'.png'});
               }
             }
-          } 
+          }
         }
-  
+
         .sec-cmn-top--online{
           width: 250px;
           margin-top: 30px;
-  
+
           @include tb{
             width: 100%;
             padding: 0 10px;
           }
-  
+
           .sec-cmn-top__header{
             width: 80%;
             margin: 0 auto;
@@ -6320,25 +6368,25 @@ body.category-middle-layer{
             border-top-left-radius : 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
-  
+
             &-title{
               font-size: 15px;
               font-weight: bold;
             }
           }
-  
+
           .sec-cmn-top__list-wrap{
             padding: 10px;
             background-color: $lygreen;
             border: 5px solid $white;
             @include border-radius(20px);
-  
+
             .sec-cmn-top__list{
               display: flex;
               flex-wrap:wrap
             }
           }
-  
+
           .sec-cmn-top__item{
             display: block;
             width: 49%;
@@ -6346,8 +6394,8 @@ body.category-middle-layer{
             border-bottom: 1px solid $white;
             position: relative;
             padding-bottom: 5px;
-            
-  
+
+
             &:nth-child(2n+1)::after{
               width: 1px;
               position: absolute;
@@ -6356,15 +6404,15 @@ body.category-middle-layer{
               right: 0;
               height: calc(100% - 30%);
               background-color: $white
-  
+
             }
-  
+
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
             &:nth-last-child(2):nth-child(odd){
               border-bottom: none;
             }
-  
+
             a{
               display: block;
               width: 90%;
@@ -6379,7 +6427,7 @@ body.category-middle-layer{
               text-decoration: none;
 
               @include border-radius(15px);
-  
+
               &:hover,
               &:focus {
                 background-color: rgba(0, 0, 0, 0.1);
@@ -6387,7 +6435,7 @@ body.category-middle-layer{
                 opacity: 1;
               }
             }
-          } 
+          }
         }
       }
     }
@@ -6421,7 +6469,7 @@ body.category-middle-layer{
     }
   }
 
-  &.body--map_clickable{
+  &.body--map-clickable{
     .image-map-pages{
       text-align: center;
 
@@ -6768,7 +6816,7 @@ body.docs--list{
                 border-bottom: $text dashed 1px;
 
                 @include tb{
-  
+
                   /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
                   &:last-child,
                   &:nth-last-child(2):nth-child(odd){
@@ -6811,7 +6859,7 @@ body.docs--list{
         padding-top: 20px;
         width: 25%;
         float: left;
-  
+
         @include tb{
           float: none;
           width: 100%;
@@ -6885,16 +6933,16 @@ body.docs--list{
             }
           }
         }
-  
+
         .relation-link{
           margin: 0 auto;
           margin-top: 30px;
-  
+
           @include tb{
             width: 100%;
             padding: 0 10px;
           }
-  
+
           &__title{
             width: 100%;
             margin: 0 auto;
@@ -6905,21 +6953,21 @@ body.docs--list{
             background-color: $blue;
             @include border-radius(15px);
           }
-  
+
           .ss-image-box-item-list{
             padding: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-  
+
             .ss-image-box-item{
               width: 95%;
-  
+
               @include tb{
                 max-width: 300px;
               }
-  
+
               a{
                 img{
                   width: 100%;
@@ -6928,16 +6976,16 @@ body.docs--list{
             }
           }
         }
-  
+
         .mod-menu--lifeevent{
           width: 250px;
           margin-top: 30px;
-  
+
           @include tb{
             width: 100%;
             padding: 0 10px;
           }
-  
+
           .mod-menu__header{
             width: 80%;
             margin: 0 auto;
@@ -6950,25 +6998,25 @@ body.docs--list{
             border-top-left-radius : 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
-  
+
             &-title{
               font-size: 15px;
               font-weight: bold;
             }
           }
-  
+
           .mod-menu__list-wrap{
             padding: 10px;
             background-color: $white;
             border: 5px solid #96d7ff;
             @include border-radius(20px);
-  
+
             .mod-menu__list{
               display: flex;
               flex-wrap:wrap
             }
           }
-  
+
           .mod-menu__item{
             display: block;
             width: 49%;
@@ -6976,7 +7024,7 @@ body.docs--list{
             border-bottom: 1px solid#96d7ff;
             position: relative;
             padding: 0 5px 5px;
-            
+
             &:nth-child(2n+1)::after{
               width: 1px;
               position: absolute;
@@ -6985,15 +7033,15 @@ body.docs--list{
               right: 0;
               height: calc(100% - 30%);
               background-color: #96d7ff;
-  
+
             }
-  
+
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
             &:nth-last-child(2):nth-child(odd){
               border-bottom: none;
             }
-  
+
             .mod-menu__link{
               display: block;
               width: 100%;
@@ -7005,14 +7053,14 @@ body.docs--list{
               flex-direction: column;
               align-items: center;
               justify-content: space-around;
-  
+
               &:hover,
               &:focus {
                 background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
               }
-  
+
               .mod-menu__icon{
                 width: 90px;
               }
@@ -7022,66 +7070,66 @@ body.docs--list{
                 color: $text;
               }
             }
-  
+
             &--kekkon{
               .mod-menu__icon{
                 @include submenu-ic(icon_kekkon#{'.png'});
               }
             }
-  
+
             &--ninshin{
               .mod-menu__icon{
                 @include submenu-ic(icon_ninshin#{'.png'});
               }
             }
-  
+
             &--kosodate{
               .mod-menu__icon{
                 @include submenu-ic(icon_kosodate#{'.png'});
               }
             }
-  
+
             &--kyoiku{
               .mod-menu__icon{
                 @include submenu-ic(icon_kyoiku#{'.png'});
               }
             }
-  
+
             &--hikkoshi{
               .mod-menu__icon{
                 @include submenu-ic(icon_hikkoshi#{'.png'});
               }
             }
-  
+
             &--shushoku{
               .mod-menu__icon{
                 @include submenu-ic(icon_shushoku#{'.png'});
               }
             }
-  
+
             &--fukushi{
               .mod-menu__icon{
                 @include submenu-ic(icon_fukushi#{'.png'});
               }
             }
-  
+
             &--okuyami{
               .mod-menu__icon{
                 @include submenu-ic(icon_okuyami#{'.png'});
               }
             }
-          } 
+          }
         }
-  
+
         .sec-cmn-top--online{
           width: 250px;
           margin-top: 30px;
-  
+
           @include tb{
             width: 100%;
             padding: 0 10px;
           }
-  
+
           .sec-cmn-top__header{
             width: 80%;
             margin: 0 auto;
@@ -7094,25 +7142,25 @@ body.docs--list{
             border-top-left-radius : 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
-  
+
             &-title{
               font-size: 15px;
               font-weight: bold;
             }
           }
-  
+
           .sec-cmn-top__list-wrap{
             padding: 10px;
             background-color: $lygreen;
             border: 5px solid $white;
             @include border-radius(20px);
-  
+
             .sec-cmn-top__list{
               display: flex;
               flex-wrap:wrap
             }
           }
-  
+
           .sec-cmn-top__item{
             display: block;
             width: 49%;
@@ -7120,8 +7168,8 @@ body.docs--list{
             border-bottom: 1px solid $white;
             position: relative;
             padding-bottom: 5px;
-            
-  
+
+
             &:nth-child(2n+1)::after{
               width: 1px;
               position: absolute;
@@ -7130,15 +7178,15 @@ body.docs--list{
               right: 0;
               height: calc(100% - 30%);
               background-color: $white
-  
+
             }
-  
+
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
             &:nth-last-child(2):nth-child(odd){
               border-bottom: none;
             }
-  
+
             a{
               display: block;
               width: 90%;
@@ -7153,7 +7201,7 @@ body.docs--list{
               text-decoration: none;
 
               @include border-radius(15px);
-  
+
                 &:hover,
                 &:focus {
                 background-color: rgba(0, 0, 0, 0.1);
@@ -7161,7 +7209,7 @@ body.docs--list{
                 opacity: 1;
               }
             }
-          } 
+          }
         }
       }
     }
@@ -7234,7 +7282,7 @@ body.docs__layout{
               -webkit-border-top-left-radius: 7px;
               -moz-border-radius-topleft: 7px;
             }
-  
+
             &:last-child{
               border-top-right-radius : 7px;
               -webkit-top-bottom-right-radius: 7px;
@@ -7558,7 +7606,7 @@ body.docs__layout{
         border-bottom: 1px solid#96d7ff;
         position: relative;
         padding: 0 5px 5px;
-        
+
 
         &:nth-child(2n+1)::after{
           width: 1px;
@@ -7654,7 +7702,7 @@ body.docs__layout{
             @include submenu-ic(icon_okuyami#{'.png'});
           }
         }
-      } 
+      }
     }
 
     .sec-cmn-top--online{
@@ -7704,7 +7752,7 @@ body.docs__layout{
         border-bottom: 1px solid $white;
         position: relative;
         padding-bottom: 5px;
-        
+
         &:nth-child(2n+1)::after{
           width: 1px;
           position: absolute;
@@ -7744,7 +7792,7 @@ body.docs__layout{
             opacity: 1;
           }
         }
-      } 
+      }
     }
   }
 }
@@ -7838,7 +7886,7 @@ body.body--map{
         }
       }
     }
-  
+
     #side{
       width: 25%;
       margin-top: 45px;
@@ -7849,11 +7897,11 @@ body.body--map{
         margin: 45px auto;
         float: none;
       }
-  
+
       #side-menu{
         @include border-radius(16px);
         background-color: $white;
-  
+
         header{
           padding: 10px 20px;
           color: white;
@@ -7862,10 +7910,10 @@ body.body--map{
           background-color: $blue;
           @include border-radius(16px 16px 0 0);
         }
-  
+
         nav{
           padding: 0 10px;
-  
+
           a{
             display: block;
             width: 100%;
@@ -7873,13 +7921,13 @@ body.body--map{
             color: $text;
             text-decoration: none;
             border-bottom: #787878 dashed 1px;
-        
+
             &:hover {
               text-decoration: underline;
             }
-  
+
           }
-  
+
           li:last-child{
             a{
               border-bottom: 0;
@@ -8157,7 +8205,7 @@ body#body--map{
           a{
             font-weight: bold;
             color: $text;
-            
+
           }
         }
 
@@ -8176,7 +8224,7 @@ body#body--map{
                 @include border-radius(10px);
                 background-color: $ygreen;
                 text-decoration: none;
-  
+
                 &:hover {
                   text-decoration: underline;
                 }
@@ -8421,7 +8469,7 @@ body.body--garbage {
             margin: 30px auto;
             display: flex;
             flex-direction: column;
-    
+
             input{
               width: 200px;
               margin: 10px auto;
@@ -8436,7 +8484,7 @@ body.body--garbage {
               @include tb{
                 width: 100%;
               }
-    
+
                 &:hover,
                 &:focus {
                 color: $text;
@@ -8524,7 +8572,7 @@ body.body--garbage {
         }
       }
     }
-  
+
     #side{
       width: 25%;
       margin-top: 45px;
@@ -8535,11 +8583,11 @@ body.body--garbage {
         margin: 45px auto;
         float: none;
       }
-  
+
       #links-life{
         @include border-radius(16px);
         background-color: $white;
-  
+
         header{
           padding: 10px 20px;
           color: white;
@@ -8548,10 +8596,10 @@ body.body--garbage {
           background-color: $blue;
           @include border-radius(16px 16px 0 0);
         }
-  
+
         nav{
           padding: 0 10px;
-  
+
           a{
             display: block;
             width: 100%;
@@ -8559,12 +8607,12 @@ body.body--garbage {
             color: $text;
             text-decoration: none;
             border-bottom: #787878 dashed 1px;
-        
+
             &:hover {
               text-decoration: underline;
             }
           }
-  
+
           li:last-child{
             a{
               border-bottom: 0;
@@ -8716,7 +8764,7 @@ body.body--calendar{
           color: $white;
           font-weight: bold;
           background-color: #004bb4;
-    
+
           @include tb {
             font-size: $px20;
           }
@@ -8745,19 +8793,19 @@ body.body--calendar{
 
           form{
             padding: 0 35px 1px;
-      
+
             @include tb{
               padding-bottom: 1px;
             }
-      
+
             fieldset{
               margin-top: 20px;
-      
+
               &:first-child{
                 margin-top: 0px;
               }
             }
-      
+
             legend{
               display: block;
               width: 100%;
@@ -8767,9 +8815,9 @@ body.body--calendar{
               color: $blue;
               font-weight: bold;
               border-bottom: 1px solid $blue;
-      
+
             }
-      
+
             .keyword{
               input{
                 margin-left: 5px;
@@ -8782,7 +8830,7 @@ body.body--calendar{
                   width: 98%;
                 }
               }
-            
+
             }
             .event-date-range{
               input{
@@ -8809,19 +8857,19 @@ body.body--calendar{
                 }
               }
             }
-      
+
             footer.send{
               width: 50%;
               margin: 30px auto;
               display: flex;
               justify-content: space-around;
-      
+
               @include tb{
                 width: 100%;
                 flex-direction: column;
                 align-items: center;
               }
-      
+
               input{
                 padding: 10px 30px;
                 font-weight: bold;
@@ -8830,12 +8878,12 @@ body.body--calendar{
                 border: 1px solid $blue;
                 @include border-radius(20px);
                 background-color: $blue;
-      
+
                 @include tb{
                   width: 90%;
                   margin-top: 10px;
                 }
-      
+
                   &:hover,
                   &:focus {
                   color: $text;
@@ -8878,7 +8926,7 @@ body.body--calendar{
           @include tb {
             left: 34px;
           }
-          
+
           a{
             display: block;
             min-width: 80px;
@@ -8892,7 +8940,7 @@ body.body--calendar{
             background-color: $ivory;
             @include border-radius(16px 16px 0 0);
           }
-  
+
           .current{
             a{
               color: $white;
@@ -8961,7 +9009,7 @@ body.body--calendar{
 
           tr,
           td,
-          th { 
+          th {
             border: 1px #eee solid;
           }
 
@@ -9059,8 +9107,8 @@ body.body--calendar{
                   }
                 }
               }
-              
-              
+
+
               td.holiday {
                 background: #f8edf3;
                 color: #d90000;
@@ -9119,7 +9167,7 @@ body.body--calendar{
           @include tb{
             flex-direction: column;
           }
-  
+
           li{
             a{
               display: block;
@@ -9131,12 +9179,12 @@ body.body--calendar{
               text-decoration: none;
               @include border-radius(16px);
               background-color: $ygreen;
-  
+
               @include tb{
                 font-size: $px12;
                 margin-top: 10px;
               }
-  
+
               &:hover {
                 text-decoration: underline;
               }
@@ -9258,11 +9306,11 @@ body.body--calendar-search{
       #calendar-search{
         @include border-radius(16px);
         background-color: $white;
-    
+
         .content-body.search{
           background-color: transparent;
         }
-    
+
         form{
           footer.send{
             a{
@@ -9275,12 +9323,12 @@ body.body--calendar-search{
               border: 1px solid $blue;
               @include border-radius(20px);
               background-color: $blue;
-    
+
               @include tb{
                 width: 90%;
                 margin-top: 10px;
               }
-    
+
                 &:hover,
                 &:focus {
                 color: $text;
@@ -9381,11 +9429,11 @@ body.body--calendar{
         .nodes{
           ul{
             display: flex;
-    
+
             @include tb{
               flex-wrap: wrap;
             }
-    
+
             li{
               a{
                 display: block;
@@ -9397,13 +9445,13 @@ body.body--calendar{
                 text-decoration: none;
                 @include border-radius(16px);
                 background-color: $ygreen;
-    
+
                 @include tb{
                   font-size: $px12;
                   margin-top: 10px;
                   text-align: center;
                 }
-    
+
                 &:hover {
                   text-decoration: underline;
                 }
@@ -9460,12 +9508,12 @@ body.body--calendar{
 
       #calendar{
         margin: 0 auto;
-  
+
         @include tb{
           width: 100%;
           padding: 0 10px;
         }
-  
+
         .title{
           width: 100%;
           margin: 0 auto;
@@ -9476,32 +9524,32 @@ body.body--calendar{
           background-color: $blue;
           @include border-radius(15px);
         }
-  
+
         .calendar-nav{
           ul{
             padding: 5px 20px;
             display: flex;
             justify-content: space-between;
-  
+
             li{
               padding: 0 5px;
               font-size: $px12;
             }
-  
+
             li.current{
               font-weight: bold;
             }
           }
         }
-  
+
         table.calendar{
           width: 100%;
-  
+
           &,td,th{
             border-collapse: collapse;
             border:1px solid #999;
           }
-  
+
           .caption{
             font-size: $px14;
           }
@@ -9523,7 +9571,7 @@ body.body--calendar{
             font-size: $px14;
             text-align: center;
             background-color: $white;
-  
+
             tr {
               td.prev-month,td.next-month {
                 opacity: 0.5;
@@ -9541,7 +9589,7 @@ body.body--calendar{
 
       #calendar-search{
         margin-top: 30px;
-        
+
         .title{
           width: 100%;
           margin: 0 auto;
@@ -9552,7 +9600,7 @@ body.body--calendar{
           background-color: $main-blue;
           @include border-radius(15px 15px 0 0);
         }
-    
+
         form{
           padding: 10px 20px 20px;
           background-color: $white;
@@ -9599,12 +9647,12 @@ body.body--calendar{
               border: 1px solid $main-blue;
               @include border-radius(20px);
               background-color: $main-blue;
-    
+
               @include tb{
                 width: 90%;
                 margin-top: 10px;
               }
-    
+
                 &:hover,
                 &:focus {
                 color: $text;
@@ -9671,107 +9719,107 @@ body.body--faq{
       .body{
         padding: 30px 0px;
         order: 1;
-  
+
         p {
           margin-bottom: 20px;
           font-size: $px14;
-  
+
           @include tb {
             font-size: $px12;
             line-height: 1.57;
           }
-  
+
           img {
             max-width: 100%;
           }
         }
-  
+
         h2 {
           margin: 30px 0 12px;
           padding: 8px 12px;
           font-size: 15px;
           font-weight: bold;
           background-color: #ccf0ff;
-  
+
           @include tb {
             font-size: $px14;
           }
         }
-  
+
         h3 {
           margin-bottom: 12px;
           padding: 0 8px;
           font-size: $px14;
           font-weight: bold;
           border-left: 2px solid $main-blue;
-  
+
           @include tb {
             font-size: $px12;
           }
         }
-  
+
         h4 {
           margin-bottom: 12px;
           font-size: $px14;
           font-weight: bold;
           color: $main-blue;
-  
+
           @include tb {
             font-size: $px12;
           }
         }
-  
+
         ul,
         ol {
           margin-bottom: 20px;
           padding-left: 1em;
           font-size: $px14;
-  
+
           @include tb {
             font-size: $px12;
           }
 
         }
-  
+
         ul {
           list-style-type: disc;
         }
-  
+
         table {
           width: 100%;
           margin-bottom: 24px;
-  
+
           @include tb {
             font-size: $px14;
           }
-  
+
           @include mb {
             font-size: $px12;
           }
-  
+
           caption {
             padding: 0 10px;
             color: $main-blue;
             text-align: left;
           }
-  
+
           p {
             margin-bottom: 0;
           }
-  
+
           th {
             padding: 3px 8px 0;
             border: 1px solid $hgry;
             background: $ivory;
             text-align: left;
           }
-  
+
           td {
             padding: 3px 8px 0;
             border: 1px solid $hgry;
           }
         }
-  
+
         strong {
           font-weight: bold;
         }
@@ -9900,7 +9948,7 @@ body.ezine__layout{
             border-bottom: none;
           }
         }
-        
+
         a {
           display: block;
           width: 100%;
@@ -9980,7 +10028,7 @@ body.ezine__layout{
         margin: 30px auto;
         display: flex;
         flex-direction: column;
-  
+
         input,
         button{
           width: 200px;
@@ -9992,23 +10040,23 @@ body.ezine__layout{
           border: 1px solid $blue;
           @include border-radius(20px);
           background-color: $blue;
-  
+
           @include tb{
             width: 100%;
           }
-  
+
           &:hover,
           &:focus {
             color: $text;
             background-color: $white;
           }
         }
-  
+
         button[name="button"]{
           color: $text;
           background-color: $hgry;
           border: 1px solid $hgry;
-  
+
           &:hover,
           &:focus {
             background-color: $white;
