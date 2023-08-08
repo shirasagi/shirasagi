@@ -27,7 +27,7 @@ save_node route: "article/page", filename: "docs", name: "記事",
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
-  view_route: "category/node", conditions: %w(hinanjo_docs), sort: 'order', new_days: 0,
+  view_route: "category/node", conditions: %w(hinanjo-docs), sort: 'order', new_days: 0,
   map_search_options: [{ name: '地域', values: "東部\n北部\n南部" }]
 )
 article_map_search_categories = [
@@ -46,7 +46,7 @@ article_map_search_categories = [
 ]
 article_map_search.st_category_ids = article_map_search_categories.map(&:id)
 article_map_search.update
-save_node route: "article/page", filename: "hinanjo_docs", name: "避難所情報", layout_id: @layouts["more"].id,
+save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["general"].id, conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
   condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0, st_form_ids: [@form8.id],
   st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
@@ -441,7 +441,7 @@ save_node route: "facility/page", filename: "institution/shisetsu/pool", name: "
   location_ids: [facility_locations['institution/chiki/nishi'].id],
   service_ids: [facility_services['institution/yoto/asobu'].id]
 
-save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
+save_node route: "key_visual/image", filename: "key-visual", name: "キービジュアル"
 
 ## guide
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",

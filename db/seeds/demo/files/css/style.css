@@ -7087,27 +7087,27 @@ body.general.body--hinanjo .yield-wrap .map-search-index .facility-nodes td {
   border: 1px solid #ccc;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035178}}
-body.general.body--hinanjo_docs .yield-wrap {
+body.general.body--hinanjo-docs .yield-wrap {
   display: flex;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035180}}
-body.general.body--hinanjo_docs .yield-wrap .body {
+body.general.body--hinanjo-docs .yield-wrap .body {
   order: 1;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035191}}
-body.general.body--hinanjo_docs .yield-wrap .body div.hinanjo__contents div.hinanjo_info table tbody tr td div span.post-code {
+body.general.body--hinanjo-docs .yield-wrap .body div.hinanjo__contents div.hinanjo_info table tbody tr td div span.post-code {
   display: block;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035202}}
-body.general.body--hinanjo_docs .yield-wrap .categories {
+body.general.body--hinanjo-docs .yield-wrap .categories {
   display: none !important;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035205}}
-body.general.body--hinanjo_docs .yield-wrap section.map-page {
+body.general.body--hinanjo-docs .yield-wrap section.map-page {
   order: 2;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035208}}
-body.general.body--hinanjo_docs .yield-wrap section.map-page header h2 {
+body.general.body--hinanjo-docs .yield-wrap section.map-page header h2 {
   display: none;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000035222}}
@@ -8618,16 +8618,16 @@ body.category-middle-layer.body--shisei-gaiyo .image-map-pages .supplement-guide
   display: none;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000036473}}
-body.category-middle-layer.body--map_clickable .image-map-pages {
+body.category-middle-layer.body--map-clickable .image-map-pages {
   text-align: center;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000036476}}
-body.category-middle-layer.body--map_clickable .image-map-pages img {
+body.category-middle-layer.body--map-clickable .image-map-pages img {
   width: 500px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/_\/css\/style\.scss}line{font-family:\000036476}}
-  body.category-middle-layer.body--map_clickable .image-map-pages img {
+  body.category-middle-layer.body--map-clickable .image-map-pages img {
     width: 70%;
   }
 }
