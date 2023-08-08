@@ -52,7 +52,8 @@ save_part route: "cms/free", filename: "urgency-layout/head.part.html", name: "�
 save_part route: "cms/free", filename: "urgency-layout/mode.part.html", name: "緊急災害表示"
 save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "グローバルナビ"
 save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報"
-save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
+save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order",
+  loop_format: 'liquid'
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
 save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
 save_part route: "event/search", filename: "calendar/search/search.part.html", name: "イベント検索"

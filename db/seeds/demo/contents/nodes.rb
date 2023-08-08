@@ -59,19 +59,19 @@ save_node route: "category/node", filename: "kanko", name: "観光・文化・�
 save_node route: "category/node", filename: "kenko", name: "健康・福祉", order: 30
 save_node route: "category/node", filename: "kosodate", name: "子育て・教育", order: 20
 save_node route: "category/node", filename: "kurashi", name: "くらし・手続き", order: 10
-save_node route: "category/node", filename: "kurashi/anzen", name: "交通安全・防犯", order: 10
-save_node route: "category/node", filename: "kurashi/bosai", name: "防災情報", order: 20
-save_node route: "category/node", filename: "kurashi/kankyo", name: "環境", order: 40
-save_node route: "category/node", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
-save_node route: "category/node", filename: "kurashi/nenkin", name: "年金・保険", order: 60
+save_node route: "category/page", filename: "kurashi/anzen", name: "交通安全・防犯", order: 10
+save_node route: "category/page", filename: "kurashi/bosai", name: "防災情報", order: 20
+save_node route: "category/page", filename: "kurashi/kankyo", name: "環境", order: 40
+save_node route: "category/page", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
+save_node route: "category/page", filename: "kurashi/nenkin", name: "年金・保険", order: 60
 save_node route: "category/node", filename: "kurashi/zeikin", name: "税金", order: 110
 save_node route: "category/node", filename: "sangyo", name: "産業・仕事", order: 50
-save_node route: "category/node", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
-save_node route: "category/node", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
+save_node route: "category/page", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
+save_node route: "category/page", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
 save_node route: "category/page", filename: "sangyo/shinko", name: "産業振興", order: 40
-save_node route: "category/node", filename: "sangyo/todokede", name: "届出・証明・法令・規制", order: 70
+save_node route: "category/page", filename: "sangyo/todokede", name: "届出・証明・法令・規制", order: 70
 save_node route: "category/node", filename: "shisei", name: "市政情報", order: 60
-save_node route: "category/node", filename: "shisei/koho", name: "広報・広聴", order: 40
+save_node route: "category/page", filename: "shisei/koho", name: "広報・広聴", order: 40
 save_node route: "category/page", filename: "attention", name: "注目情報"
 save_node route: "category/page", filename: "guide/fukushi", name: "福祉・介護", order: 70
 save_node route: "category/page", filename: "guide/hikkoshi", name: "引越し・住まい", order: 50
