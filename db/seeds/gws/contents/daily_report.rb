@@ -67,6 +67,34 @@ def create_daily_report_report(data)
 end
 
 create_daily_report_report(
+  cur_user: u('sys'), cur_form: @wf_forms[0], name: u('sys').name,
+  daily_report_date: Time.zone.today,
+  column_values: [
+    @wf_form0_cols[0].serialize_value('その他業務'),
+    @wf_form0_cols[1].serialize_value('幹部会等'),
+    @wf_form0_cols[2].serialize_value('プロジェクト関連'),
+    @wf_form0_cols[3].serialize_value('議会'),
+    @wf_form0_cols[4].serialize_value('人事・給与・共済'),
+    @wf_form0_cols[5].serialize_value('企画'),
+    @wf_form0_cols[6].serialize_value('財政')
+  ]
+)
+
+create_daily_report_report(
+  cur_user: u('admin'), cur_form: @wf_forms[0], name: u('admin').name,
+  daily_report_date: Time.zone.today,
+  column_values: [
+    @wf_form0_cols[0].serialize_value('その他業務'),
+    @wf_form0_cols[1].serialize_value('幹部会等'),
+    @wf_form0_cols[2].serialize_value('プロジェクト関連'),
+    @wf_form0_cols[3].serialize_value('議会'),
+    @wf_form0_cols[4].serialize_value('人事・給与・共済'),
+    @wf_form0_cols[5].serialize_value('企画'),
+    @wf_form0_cols[6].serialize_value('財政')
+  ]
+)
+
+create_daily_report_report(
   cur_user: u('user1'), cur_form: @wf_forms[0], name: u('user1').name,
   daily_report_date: Time.zone.today,
   column_values: [
