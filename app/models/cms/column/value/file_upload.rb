@@ -4,18 +4,20 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
+  field :file_name, type: String
   field :file_label, type: String
   field :text, type: String
   field :image_html_type, type: String
   field :link_url, type: String
 
-  permit_values :file_id, :file_label, :text, :image_html_type, :link_url
+  permit_values :file_id, :file_name, :file_label, :text, :image_html_type, :link_url
 
   before_parent_save :before_save_file
   after_parent_destroy :destroy_file
 
   liquidize do
     export :file
+    export :file_name
     export :file_label
     export :text
     export :image_html_type
@@ -67,6 +69,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def history_summary
     h = []
+    h << "#{t("file_name")}: #{file_name}" if file_name.present?
     h << "#{t("file_label")}: #{file_label}" if file_label.present?
     h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}" if image_html_type.present?
     h << "#{t("text")}: #{text}" if text.present?
@@ -127,7 +130,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       self.errors.add(:link_url, :blank)
     end
 
-    return if file.blank?
+    self.file_name = file.name if file
   end
 
   def copy_column_settings

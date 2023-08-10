@@ -1328,6 +1328,7 @@ ja:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
         file_id: ファイル
+        file_name: ファイル名
         file_label: リンクテキスト・代替テキスト
         image_html_type: 貼付方法
         text: 動画の内容説明
