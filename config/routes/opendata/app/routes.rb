@@ -29,7 +29,7 @@ Rails.application.routes.draw do
 
   node "opendata" do
     get "app_category/" => "public#index", cell: "nodes/app/app_category"
-    get "app_category/rss.xml" => "public#index", cell: "nodes/app/app_category"
+    get "app_category/rss.xml" => "public#rss", cell: "nodes/app/app_category"
     get "app_category/:name/" => "public#index", cell: "nodes/app/app_category"
     get "app_category/:name/rss.xml" => "public#rss", cell: "nodes/app/app_category"
     # get "app_category/:name/areas" => "public#index_areas", cell: "nodes/app/app_category"

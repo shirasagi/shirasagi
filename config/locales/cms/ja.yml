@@ -779,6 +779,7 @@ ja:
       cms/parent_crumb: パンくず
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
+      cms/site/node_setting: フォルダー設定
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
@@ -973,6 +974,8 @@ ja:
         page_expiration_before: 公開期限
         page_expiration_mail_subject: 公開期限お知らせメール（件名）
         page_expiration_mail_upper_text: 公開期限お知らせメール（上部テキスト）
+      cms/addon/site/node_setting:
+        rss_recent_state: rss-recent.xml
       cms/model/member:
         name: 氏名
         email: メールアドレス
@@ -2091,6 +2094,11 @@ ja:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの件名を入力します。
       page_expiration_mail_upper_text:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
+
+    cms/addon/site/node_setting:
+      rss_recent_state:
+        - 有効にすると、一覧フォルダーにて動的にrssを応答するURLが利用可能となります。
+        - 'URL: 一覧フォルダー名/rss-recent.xml'
     cms/model/part:
       route:
         - |-
