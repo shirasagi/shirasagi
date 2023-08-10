@@ -105,9 +105,7 @@ module Cms::PublicFilter
 
     data = Fs.read(@scss)
     begin
-      opts = Rails.application.config.sass
-      load_paths = opts.load_paths[1..-1] || []
-      load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+      load_paths = Rails.application.config.assets.paths.dup
       load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
 
       sass = Sass::Engine.new(
