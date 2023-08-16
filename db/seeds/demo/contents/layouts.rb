@@ -15,7 +15,7 @@ def save_layout(data)
 end
 
 save_layout filename: "category-middle.layout.html", name: "カテゴリー：中間階層"
-save_layout filename: "category-middle_shisei_gaiyo.layout.html", name: "カテゴリー中間層：市の概要"
+save_layout filename: "category-middle-shisei-gaiyo.layout.html", name: "カテゴリー中間層：市の概要"
 save_layout filename: "category-top.layout.html", name: "カテゴリー：トップページ"
 save_layout filename: "more.layout.html", name: "記事一覧"
 save_layout filename: "oshirase.layout.html", name: "お知らせ"

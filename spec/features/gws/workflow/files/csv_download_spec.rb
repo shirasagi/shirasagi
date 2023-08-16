@@ -28,6 +28,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
+        wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_comment")
@@ -51,6 +52,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item2.name
+        wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_comment")
@@ -74,7 +76,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     context "all files download" do
       it do
         visit gws_workflow_files_path(site: site, state: "all")
-        find(".gws-workflow .list-head input[type=checkbox]").click
+        wait_event_to_fire("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
         accept_confirm do
           click_on I18n.t("ss.buttons.csv")
@@ -100,6 +102,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
+        wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_attachment")
@@ -121,6 +124,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item2.name
+        wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_attachment")
@@ -141,7 +145,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     context "all files download" do
       it do
         visit gws_workflow_files_path(site: site, state: "all")
-        find(".gws-workflow .list-head input[type=checkbox]").click
+        wait_event_to_fire("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
         accept_confirm do
           click_on I18n.t("gws/survey.buttons.zip_all_files")
@@ -173,6 +177,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
+        wait_for_js_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_attachment")

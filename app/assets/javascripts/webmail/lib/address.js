@@ -59,6 +59,7 @@ Webmail_Address_Autocomplete.render = function(selector, opts) {
     var span = Webmail_Address_Autocomplete.createSelectedElement($input.attr("data-name"), value, label);
     selected.append(span);
     $input.val("");
+    selected.trigger("ss:addressCommitted");
   };
 
   $(autocomplete).on('keypress', function(e) {

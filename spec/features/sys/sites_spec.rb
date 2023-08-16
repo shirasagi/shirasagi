@@ -139,7 +139,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
       visit sys_sites_path
 
       within ".list-head" do
-        first("[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end

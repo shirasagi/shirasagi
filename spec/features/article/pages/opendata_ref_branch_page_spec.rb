@@ -157,6 +157,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       click_on I18n.t('ss.links.edit')
+      wait_for_js_ready
       within "#item-form" do
         within "#file-#{article_page.file_ids.first}" do
           page.accept_confirm(I18n.t("ss.confirm.delete")) do
@@ -210,7 +211,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       within '#addon-cms-agents-addons-opendata_ref-resource' do
         expect(page).to have_css(".od-resource-file-save-status", text: I18n.t("ss.notice.saved"))
       end

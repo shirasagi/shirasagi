@@ -40,7 +40,8 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       @rs2 = page_dataset.resources.new
       @rs2.license = license
       @rs2.name = "shift_jis.csv"
-      @rs2.source_url = unique_url
+      # @rs2.source_url = unique_url
+      @rs2.source_url = "https://shirasagi.github.io/updation/manual.html"
       @rs2.text = "resource2"
       file = tmp_ss_file(contents: csv_path, site: site, model: "opendata/resource", owner_item: page_dataset)
       @rs2.file_id = file.id

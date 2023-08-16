@@ -88,9 +88,7 @@ module ApplicationHelper
 
   # @deprecated
   def scss(&block)
-    opts = Rails.application.config.sass
-    load_paths = opts.load_paths[1..-1] || []
-    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+    load_paths = Rails.application.config.assets.paths.dup
 
     sass = Sass::Engine.new(
       "@import 'compass-mixins/lib/compass';\n" + capture(&block),

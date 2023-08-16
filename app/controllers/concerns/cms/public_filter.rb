@@ -105,9 +105,7 @@ module Cms::PublicFilter
 
     data = Fs.read(@scss)
     begin
-      opts = Rails.application.config.sass
-      load_paths = opts.load_paths[1..-1] || []
-      load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+      load_paths = Rails.application.config.assets.paths.dup
       load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
 
       sass = Sass::Engine.new(
@@ -132,9 +130,7 @@ module Cms::PublicFilter
     response.headers["Expires"] = 1.day.from_now.httpdate if file.to_s.downcase.end_with?(*%w(.css .js .gif .jpg .jpeg .png))
     response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
-    content_type = Fs.content_type(file)
-    disposition = SS::MimeType.safe_for_inline?(content_type) ? :inline : :attachment
-    ss_send_file(file, type: content_type, disposition: disposition)
+    ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
   end
 
   def enum_contents

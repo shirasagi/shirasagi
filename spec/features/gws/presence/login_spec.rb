@@ -21,6 +21,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.disabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
       expect(page).to have_css(".login-box")
@@ -49,6 +50,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
       expect(page).to have_css(".login-box")
@@ -77,6 +79,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.disabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
       expect(page).to have_css(".login-box")
@@ -105,6 +108,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
       expect(page).to have_css(".login-box")

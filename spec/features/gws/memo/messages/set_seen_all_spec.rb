@@ -19,10 +19,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.links.set_seen')
         end
       end
-
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.set_seen'))
-      end
+      wait_for_notice I18n.t('ss.notice.set_seen')
 
       expect(page).to have_css(".list-item.seen", text: memo.name)
       memo.reload
@@ -43,10 +40,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.links.unset_seen')
         end
       end
-
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.unset_seen'))
-      end
+      wait_for_notice I18n.t('ss.notice.unset_seen')
 
       expect(page).to have_css(".list-item.unseen", text: memo.name)
       memo.reload
@@ -61,12 +55,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit portal_path
 
       first(".gws-memo-message.popup-notice-container").click
+      wait_for_js_ready
       within ".gws-memo-message.popup-notice-container" do
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item", text: memo.name)
         end
         click_on I18n.t("ss.links.more_all")
       end
+      wait_for_js_ready
 
       within ".gws-memos-index" do
         within ".list-items" do
@@ -79,6 +75,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit portal_path
 
       first(".gws-memo-message.popup-notice-container").click
+      wait_for_js_ready
       within ".gws-memo-message.popup-notice-container" do
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item", text: memo.name)
@@ -90,12 +87,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.set_seen")
 
       first(".gws-memo-message.popup-notice-container").click
+      wait_for_js_ready
       within ".gws-memo-message.popup-notice-container" do
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item.empty", text: I18n.t("gws/memo/message.notice.no_recents"))
         end
         click_on I18n.t("ss.links.more_all")
       end
+      wait_for_js_ready
 
       within ".gws-memos-index" do
         within ".list-items" do

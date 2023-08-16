@@ -15,14 +15,14 @@ describe "cms_page_pages", type: :feature, dbscope: :example do
       expect(page2.state).to eq "public"
       expect(page3.state).to eq "public"
 
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action-update" do
         click_button I18n.t('ss.links.make_them_close')
       end
 
-      wait_for_ajax
+      wait_for_js_ready
       click_button I18n.t("ss.buttons.make_them_close")
-      expect(current_path).to eq cms_pages_path(site)
+      wait_for_notice I18n.t("ss.notice.changed")
 
       page1.reload
       page2.reload
@@ -31,14 +31,14 @@ describe "cms_page_pages", type: :feature, dbscope: :example do
       expect(page2.state).to eq "closed"
       expect(page3.state).to eq "closed"
 
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action-update" do
         click_button I18n.t('ss.links.make_them_public')
       end
 
-      wait_for_ajax
+      wait_for_js_ready
       click_button I18n.t("ss.buttons.make_them_public")
-      expect(current_path).to eq cms_pages_path(site)
+      wait_for_notice I18n.t("ss.notice.changed")
 
       page1.reload
       page2.reload

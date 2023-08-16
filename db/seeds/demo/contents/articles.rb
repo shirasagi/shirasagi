@@ -259,15 +259,15 @@ save_page route: "article/page", filename: "urgency/page26.html", name: "黒鷺�
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
 file_1 = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", model: "article/page"
-file_2 = save_ss_files "ss_files/key_visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "画像1",
+file_2 = save_ss_files "ss_files/key-visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "画像1",
   model: "article/page"
-file_3 = save_ss_files "ss_files/key_visual/small/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "画像2",
+file_3 = save_ss_files "ss_files/key-visual/small/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "画像2",
   model: "article/page"
-file_4 = save_ss_files "ss_files/key_visual/small/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "画像3",
+file_4 = save_ss_files "ss_files/key-visual/small/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "画像3",
   model: "article/page"
-file_5 = save_ss_files "ss_files/key_visual/small/keyvisual04.jpg", filename: "keyvisual04.jpg", name: "画像4",
+file_5 = save_ss_files "ss_files/key-visual/small/keyvisual04.jpg", filename: "keyvisual04.jpg", name: "画像4",
   model: "article/page"
-file_6 = save_ss_files "ss_files/key_visual/small/keyvisual05.jpg", filename: "keyvisual05.jpg", name: "画像5",
+file_6 = save_ss_files "ss_files/key-visual/small/keyvisual05.jpg", filename: "keyvisual05.jpg", name: "画像5",
   model: "article/page"
 html = []
 html << '<p><a class="icon-pdf" href="' + file_1.url + '">サンプルファイル (PDF 783KB)</a></p>'
@@ -298,11 +298,11 @@ save_page route: "event/page", filename: "calendar/page28.html", name: "住民�
   content: "○○○○○○○○○○○○○○○○○○○○", related_url: @link_url,
   group_ids: [@g_seisaku.id]
 
-file_7 = save_ss_files "ss_files/key_visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg",
+file_7 = save_ss_files "ss_files/key-visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg",
                        model: "ss/temp_file"
-file_8 = save_ss_files "ss_files/key_visual/small/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "keyvisual02.jpg",
+file_8 = save_ss_files "ss_files/key-visual/small/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "keyvisual02.jpg",
                        model: "ss/temp_file"
-file_9 = save_ss_files "ss_files/key_visual/small/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg",
+file_9 = save_ss_files "ss_files/key-visual/small/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg",
                        model: "ss/temp_file"
 file_10_1 = save_ss_files "ss_files/article/img.png", filename: "img1.jpg", name: "img.jpg",
                         model: "ss/temp_file"
@@ -633,7 +633,7 @@ save_page route: "article/page", filename: "docs/page48.html", name: "シラサ�
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo_docs/page49.html", name: "小しらさぎ南公民館",
+save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "小しらさぎ南公民館",
   layout_id: @layouts["general"].id, form_id: @form8.id,
   column_values: [
     @form_columns8[0].value_type.new(column: @form_columns8[0], value: '南部'),
@@ -652,7 +652,7 @@ save_page route: "article/page", filename: "hinanjo_docs/page49.html", name: "�
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo_docs/page50.html", name: "白鷺城展望台",
+save_page route: "article/page", filename: "hinanjo-docs/page50.html", name: "白鷺城展望台",
   layout_id: @layouts["general"].id, form_id: @form8.id,
   column_values: [
     @form_columns8[0].value_type.new(column: @form_columns8[0], value: '北部'),
@@ -671,7 +671,7 @@ save_page route: "article/page", filename: "hinanjo_docs/page50.html", name: "�
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo_docs/page51.html", name: "みらいシラサギ市民パーク",
+save_page route: "article/page", filename: "hinanjo-docs/page51.html", name: "みらいシラサギ市民パーク",
   layout_id: @layouts["general"].id, form_id: @form8.id,
   column_values: [
     @form_columns8[0].value_type.new(column: @form_columns8[0], value: '東部'),

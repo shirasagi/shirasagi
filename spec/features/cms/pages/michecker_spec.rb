@@ -13,6 +13,7 @@ describe "michecker", type: :feature, dbscope: :example, js: true do
       visit show_path
       new_window = window_opened_by { click_on I18n.t('cms.links.michecker') }
       within_window new_window do
+        wait_for_document_loading
         wait_for_js_ready
         within ".michecker-head" do
           expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
@@ -37,6 +38,7 @@ describe "michecker", type: :feature, dbscope: :example, js: true do
         visit show_path
         new_window = window_opened_by { click_on I18n.t('cms.links.michecker') }
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           within ".michecker-head" do
             expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)

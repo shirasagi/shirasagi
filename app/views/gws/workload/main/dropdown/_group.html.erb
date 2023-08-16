@@ -7,7 +7,7 @@
 <div class="group-navi dropdown" style="display: inline-block;">
   <%= link_to({ action: :index, category: '-', client: '-' }, { class: 'btn dropdown-toggle', "data-id": @group.try(:id) }) do %>
     <%=  @group.try(:name) %>
-    <i class="material-icons md-13">&#xE313;</i>
+    <i class="material-icons md-13">keyboard_arrow_down</i>
   <% end %>
-  <div class="dropdown-menu wide dropdown-menu--white""></div>
+  <div class="dropdown-menu wide dropdown-menu--white"></div>
 </div>

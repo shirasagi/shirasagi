@@ -11,7 +11,7 @@
 </div>
 
 <% if !@item.deletion_locked? %>
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>

@@ -58,9 +58,9 @@ this.SS_AjaxFile = (function () {
         },
         error: function(xhr, status, data) {
           if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+            alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
           } else {
-            alert(["== Error =="].concat(xhr.statusText).join("\n"));
+            alert(["== Error(AjaxFile) =="].concat(xhr.statusText).join("\n"));
           }
         }
       }));
@@ -195,12 +195,12 @@ this.SS_AjaxFile = (function () {
   SS_AjaxFile.prototype.submitError = function(xhr) {
     var self = this;
     if (xhr.status === 413) {
-      alert(["== Error =="].concat(SS_AjaxFile.errors.entityTooLarge).join("\n"));
+      alert(["== Error(AjaxFile) =="].concat(SS_AjaxFile.errors.entityTooLarge).join("\n"));
     } else {
       try {
-        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+        alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
       } catch(_error) {
-        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+        alert(["== Error(AjaxFile) =="].concat(xhr.statusText).join("\n"));
       }
     }
 
@@ -260,7 +260,7 @@ this.SS_AjaxFile = (function () {
         });
       },
       error: function (data, status) {
-        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        alert(["== Error(AjaxFile) =="].concat(data.responseJSON).join("\n"));
       }
     });
   };

@@ -67,7 +67,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
 
       within ".list-head" do
-        first("input[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
 
         page.accept_confirm do
           click_on I18n.t("ss.buttons.delete")

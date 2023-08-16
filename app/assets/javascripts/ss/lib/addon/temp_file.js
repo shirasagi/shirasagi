@@ -136,13 +136,13 @@ this.SS_Addon_TempFile = (function () {
           var files = JSON.parse(request.response);
           _this.select(files, _this.$selector);
         } else if (request.status === 413) {
-          alert(["== Error =="].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
+          alert(["== Error(TempFile) =="].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
         } else {
           try {
             var json = $.parseJSON(request.response);
-            alert(["== Error =="].concat(json).join("\n"));
+            alert(["== Error(TempFile) =="].concat(json).join("\n"));
           } catch (_error) {
-            alert(["== Error =="].concat(request.statusText).join("\n"));
+            alert(["== Error(TempFile) =="].concat(request.statusText).join("\n"));
           }
         }
         _this.dropEventTriggered = false;

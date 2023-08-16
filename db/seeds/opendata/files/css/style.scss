@@ -1209,29 +1209,16 @@ textarea {
 .opendata-search-groups-form,
 .opendata-search-apps-form,
 .opendata-search-ideas-form {
-  @include clear;
   clear: both;
   @include display-flex;
   @include flex-wrap(wrap);
+  gap: $item-margin;
   margin: $box-margin 0;
   padding: 12px;
   border: 2px solid $sky;
 
   dl {
     width: 249px;
-    margin-right: $item-margin;
-
-    &:nth-child(3n+1) {
-      margin-right: 0;
-    }
-
-    &.group {
-      margin-right: $item-margin;
-    }
-
-    dd {
-      margin-bottom: $item-margin;
-    }
 
     input {
       width: 237px;
@@ -1252,20 +1239,6 @@ textarea {
     float: right;
     margin-top: 20px;
     @include btn-black;
-  }
-}
-
-.opendata-search-datasets-form {
-  display: block;
-
-  label {
-    input {
-      width: auto;
-    }
-
-    td {
-      text-align: left;
-    }
   }
 }
 

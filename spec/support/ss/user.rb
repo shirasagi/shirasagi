@@ -36,7 +36,7 @@ end
 # set value to hidden input
 def set_value_to_hidden_input(selector, value)
   if page.driver.is_a?(Capybara::Selenium::Driver)
-    page.execute_script("return $('#{selector}').val('#{value}');")
+    page.execute_script("$('#{selector}').val('#{value}');")
   else
     first(selector, visible: false).set(value)
   end

@@ -158,7 +158,7 @@ create_text_template(name: "テキストテンプレート", message_id: msg2.id
 create_page_template(name: "記事テンプレート", message_id: msg1.id, page: Article::Page.last, thumb_state: "none")
 
 image = save_line_files(
-  "ss_files/key_visual/small/keyvisual01.jpg", model: "cms/line/template/image", owner_item_id: image_template.id,
+  "ss_files/key-visual/small/keyvisual01.jpg", model: "cms/line/template/image", owner_item_id: image_template.id,
   name: "keyvisual01.jpg", filename: "keyvisual01.jpg", owner_item_type: "Cms::Line::Template::Image"
 )
 image_template.image_id = image.id

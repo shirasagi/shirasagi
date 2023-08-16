@@ -71,7 +71,7 @@ save_part route: "event/calendar", filename: "calendar/calendar.part.html", name
 save_part route: "event/search", filename: "calendar/search/search.part.html", name: "イベント検索"
 save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
-save_part route: "key_visual/swiper_slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide",
+save_part route: "key_visual/swiper_slide", filename: "key-visual/slide.part.html", name: "スライドショー", mobile_view: "hide",
   kv_autoplay: "started", kv_thumbnail: "show", kv_thumbnail_count: 5
 save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック", mobile_view: "hide",
   upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
@@ -82,7 +82,7 @@ save_part route: "key_visual/swiper_slide", filename: "kanko-info/photo/slide.pa
 save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
 save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"
-save_part route: "member/invited_group", filename: "invited_group.part.html", name: "招待されたグループ",
+save_part route: "member/invited_group", filename: "invited-group.part.html", name: "招待されたグループ",
   mobile_view: "hide", ajax_view: "enabled"
 save_part route: "cms/calendar_nav", filename: "docs/archive/calendar.part.html", name: "カレンダー"
 save_part route: "cms/monthly_nav", filename: "docs/archive/month.part.html", name: "月次", periods: 12

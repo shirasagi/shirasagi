@@ -11,12 +11,14 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_notice_main_path(site: site)
       click_on I18n.t("ss.navi.trash")
+      wait_for_js_ready
       click_on item.name
+      wait_for_js_ready
       click_on I18n.t("ss.links.restore")
       within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
 
       item.reload
       expect(item.deleted).to be_blank
@@ -31,14 +33,16 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_notice_main_path(site: site)
       click_on I18n.t("ss.navi.trash")
+      wait_for_js_ready
       click_on item.name
+      wait_for_js_ready
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
@@ -48,14 +52,15 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_notice_main_path(site: site)
       click_on I18n.t("ss.navi.trash")
+      wait_for_js_ready
 
       within ".list-head" do
-        first("input[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
