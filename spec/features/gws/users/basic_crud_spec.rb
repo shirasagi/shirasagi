@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe "gws_users", type: :feature, dbscope: :example, js: true do
-  let(:site) { gws_site }
-  let(:group) { gws_group }
+  let!(:site) { gws_site }
   let(:item) { create :ss_user, group_ids: [gws_user.group_ids.first] }
   let(:index_path) { gws_users_path site }
   let(:new_path) { "#{index_path}/new" }
@@ -24,18 +23,25 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       #new"
       visit new_path
       wait_for_js_ready
-      first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
-      wait_for_cbox
-      first('tbody.items a.select-item').click
-
       within "form#item-form" do
+        within first('.mod-gws-user-groups') do
+          wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
+        end
+      end
+      wait_for_cbox do
+        wait_cbox_close { click_on site.name }
+      end
+      within "form#item-form" do
+        within first('.mod-gws-user-groups') do
+          expect(page).to have_css("[data-id='#{site.id}']", text: site.name)
+        end
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: "pass"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #show
       visit show_path
@@ -47,13 +53,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #delete
       visit delete_path
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
 
       #delete disabled user
@@ -61,10 +68,18 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
 
-      #download
-      visit "#{index_path}/download_template"
+      #download template
+      visit index_path
+      click_on I18n.t("ss.links.import")
+      click_on I18n.t("ss.links.download_template")
+
+      wait_for_download
+
+      expect(downloads.first).to be_present
+      expect(::File.file?(downloads.first)).to be_truthy
 
       #import
       sys_role1
@@ -79,12 +94,15 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.import')
         end
       end
+      wait_for_notice I18n.t("ss.notice.saved")
+
       expect(current_path).to eq index_path
     end
 
     it "download all" do
       visit index_path
       click_on I18n.t("ss.links.download")
+      wait_for_js_ready
       within "form#item-form" do
         click_on I18n.t("ss.buttons.download")
       end
@@ -116,24 +134,32 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       #new"
       visit new_path
-      wait_for_js_ready
-      first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
-      wait_for_cbox
-      first('tbody.items a.select-item').click
-
       within "form#item-form" do
+        within first('.mod-gws-user-groups') do
+          wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
+        end
+      end
+      wait_for_cbox do
+        wait_cbox_close { click_on site.name }
+      end
+      within "form#item-form" do
+        within first('.mod-gws-user-groups') do
+          expect(page).to have_css("[data-id='#{site.id}']", text: site.name)
+        end
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: "pass"
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       #delete
       visit delete_path
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(current_path).to eq index_path
 
       #delete_all disabled user
@@ -142,20 +168,24 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         select I18n.t('ss.options.state.disabled'), from: 's[state]'
         click_button I18n.t("ss.buttons.search")
       end
-      expect(page).to have_css(".list-items", count: 1)
+      wait_for_js_ready
+      expect(page).to have_css(".list-item", count: 1)
 
       within ".list-head" do
-        find('label.check input').set(true)
-        click_button I18n.t("ss.links.delete")
+        wait_event_to_fire("ss:checked-all-list-items") { find('label.check input').set(true) }
+        page.accept_alert(I18n.t("ss.confirm.delete")) do
+          click_button I18n.t("ss.links.delete")
+        end
       end
-      page.accept_alert
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".index-search" do
         select I18n.t('ss.options.state.disabled'), from: 's[state]'
         click_button I18n.t("ss.buttons.search")
       end
+      wait_for_js_ready
       expect(page).to have_no_content(item.name)
+      expect(page).to have_css(".list-item", count: 0)
     end
   end
 
@@ -176,11 +206,18 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       #new
       visit new_path
       wait_for_js_ready
-      first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
-      wait_for_cbox
-      first('tbody.items a.select-item').click
-
       within 'form#item-form' do
+        within first('.mod-gws-user-groups') do
+          wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
+        end
+      end
+      wait_for_cbox do
+        wait_cbox_close { click_on site.name }
+      end
+      within 'form#item-form' do
+        within first('.mod-gws-user-groups') do
+          expect(page).to have_css("[data-id='#{site.id}']", text: site.name)
+        end
         fill_in 'item[name]', with: name
         fill_in 'item[email]', with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
@@ -188,12 +225,14 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "custom[#{column1.id}]", with: unique_id
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect { Gws::User.all.active.find_by(name: name) }.not_to raise_error
 
       #show
+      visit index_path
       click_on name
+      wait_for_js_ready
       expect(page).to have_css('dl.see dd', text: name)
 
       #edit
@@ -204,7 +243,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in 'item[name]', with: new_name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect { Gws::User.all.active.find_by(name: new_name) }.not_to raise_error
 
@@ -215,7 +254,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::User.all.active.find_by(name: new_name) }.to raise_error Mongoid::Errors::DocumentNotFound
     end

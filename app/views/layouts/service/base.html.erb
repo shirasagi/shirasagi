@@ -86,6 +86,7 @@
 <!-- /#page --></div>
 
 <%= javascript_tag do %>
+  SS.env = <%== Rails.env %>;
   SS.timezone = <%== Time.zone.name.to_json %>;
   <% if notice %>
     SS.ready(function() { SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>) });

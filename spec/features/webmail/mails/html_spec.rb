@@ -37,6 +37,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           end
         end
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
             click_on I18n.t("ss.buttons.send")
@@ -59,6 +60,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         new_window = window_opened_by { click_on I18n.t("webmail.links.forward") }
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"

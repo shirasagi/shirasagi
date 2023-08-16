@@ -65,6 +65,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     it "#delete" do
       visit index_path
       first('span.fc-title', text: item.name).click
+      wait_for_ajax
       expect(current_path).to eq show_path
       within ".nav-menu" do
         click_link I18n.t('ss.links.delete')
@@ -72,7 +73,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      wait_for_ajax
       expect(current_path).to eq index_path
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
@@ -131,6 +131,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       it "#delete" do
         visit index_path
         first('span.fc-title', text: item.name).click
+        wait_for_ajax
         expect(current_path).to eq show_path
         within ".nav-menu" do
           click_link I18n.t('ss.links.delete')
@@ -138,7 +139,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         within "form#item-form" do
           click_button I18n.t('ss.buttons.delete')
         end
-        wait_for_ajax
         expect(current_path).to eq index_path
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end

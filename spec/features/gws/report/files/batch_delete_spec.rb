@@ -18,13 +18,14 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.closed')
       end
+      wait_for_js_ready
       within ".list-head" do
-        first("input[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       subject.reload
       expect(subject.deleted).to be_present
@@ -34,13 +35,14 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within ".current-navi" do
         click_on I18n.t('ss.links.trash')
       end
+      wait_for_js_ready
       within ".list-head" do
-        first("input[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Report::File.find(subject.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end

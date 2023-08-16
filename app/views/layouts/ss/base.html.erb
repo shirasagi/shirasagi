@@ -118,6 +118,7 @@
 <!-- /#page --></div>
 
 <%= javascript_tag do %>
+  SS.env = <%== Rails.env.to_json %>;
   SS.timezone = <%== Time.zone.name.to_json %>;
   SS.disableConfirmUnloading = <%== Rails.env.test?.to_json %>;
   <% if notice %>

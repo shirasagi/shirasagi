@@ -23,6 +23,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.prev_day')
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_css(".list-item .dataset", text: history2.dataset_name)
@@ -33,6 +34,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.prev_day')
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_no_css(".list-item .dataset", text: history2.dataset_name)
@@ -43,6 +45,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.next_day')
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_css(".list-item .dataset", text: history2.dataset_name)
@@ -53,6 +56,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.today')
       end
+      wait_for_js_ready
       expect(page).to have_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_no_css(".list-item .dataset", text: history2.dataset_name)
@@ -63,6 +67,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
       within ".list-head-action" do
         fill_in_date "ymd", with: now - 1.day
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_css(".list-item .dataset", text: history2.dataset_name)

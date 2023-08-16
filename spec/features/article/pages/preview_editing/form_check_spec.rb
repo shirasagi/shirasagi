@@ -71,9 +71,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           #
           # Form Check
           #
-          page.within_frame page.first("#ss-preview-form-palette") do
-            within ".column-value-palette" do
-              click_on column1.name
+          wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+            page.within_frame page.first("#ss-preview-form-palette") do
+              within ".column-value-palette" do
+                click_on column1.name
+              end
             end
           end
           page.within_frame page.first("#ss-preview-dialog-frame") do

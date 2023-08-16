@@ -103,7 +103,7 @@ Cms_Column_FileUpload.prototype.selectFile = function($item) {
     },
     error: function(xhr, status, error) {
       if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-        return alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+        return alert(["== Error(ColumnFileUpload) =="].concat(xhr.responseJSON).join("\n"));
       }
       $fileView.html(error);
     },

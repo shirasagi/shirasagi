@@ -29,7 +29,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -43,12 +43,13 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('gws/portal.portlets.notice.name')
       end
       within 'form#item-form' do
-        click_link I18n.t('gws/share.apis.folders.index')
+        wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
       end
       wait_for_cbox do
-        click_link folder.name
+        wait_cbox_close { click_link folder.name }
       end
       within 'form#item-form' do
+        expect(page).to have_content(folder.name)
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -78,6 +79,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       within ".portlets .gws-notices" do
         click_on I18n.t("ss.links.more")
       end
+      wait_for_js_ready
       within ".index.gws-notices" do
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
@@ -103,7 +105,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -118,12 +120,13 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       end
       within 'form#item-form' do
         select I18n.t('gws/notice.options.severity.high'), from: "item[notice_severity]"
-        click_link I18n.t('gws/share.apis.folders.index')
+        wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
       end
       wait_for_cbox do
-        click_link folder.name
+        wait_cbox_close { click_link folder.name }
       end
       within 'form#item-form' do
+        expect(page).to have_content(folder.name)
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -153,6 +156,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       within ".portlets .gws-notices" do
         click_on I18n.t("ss.links.more")
       end
+      wait_for_js_ready
       within ".index.gws-notices" do
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
@@ -178,7 +182,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -193,12 +197,13 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       end
       within 'form#item-form' do
         select I18n.t('gws/notice.options.severity.normal'), from: "item[notice_severity]"
-        click_link I18n.t('gws/share.apis.folders.index')
+        wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
       end
       wait_for_cbox do
-        click_link folder.name
+        wait_cbox_close { click_link folder.name }
       end
       within 'form#item-form' do
+        expect(page).to have_content(folder.name)
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -228,6 +233,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       within ".portlets .gws-notices" do
         click_on I18n.t("ss.links.more")
       end
+      wait_for_js_ready
       within ".index.gws-notices" do
         expect(page).to have_no_css(".list-item", text: item1.name)
         expect(page).to have_no_css(".list-item", text: item2.name)

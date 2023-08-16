@@ -13,7 +13,7 @@
 <div class="gws-category-navi dropdown">
   <%= link_to({ year: "-" }, { class: 'btn dropdown-toggle' }) do %>
     <%= @cur_year == :all ? t("gws/affair.all_year_id") : "#{@cur_year.year}#{t("gws/affair.year_id")}" %>
-    <i class="material-icons md-13">&#xE313;</i>
+    <i class="material-icons md-13">keyboard_arrow_down</i>
   <% end %>
   <div class="dropdown-menu dropdown-menu--white"></div>
 </div>

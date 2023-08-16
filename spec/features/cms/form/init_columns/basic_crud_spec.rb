@@ -14,6 +14,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
+      wait_for_js_ready
       click_on I18n.t('ss.links.new')
       click_on column.name
 

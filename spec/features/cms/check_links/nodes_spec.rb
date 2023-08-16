@@ -92,6 +92,7 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
         end
       end
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       within "div#main" do
         expect(page).to have_css("a", text: docs_page1.name)

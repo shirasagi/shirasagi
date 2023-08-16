@@ -1,6 +1,6 @@
 <%= jquery do %>
   SS_ListUI.render("table.index");
-    $("table.index").each(function () {
+  $("table.index").each(function () {
     var table, tbody, thead;
     table = $(this);
     thead = table.find("thead");
@@ -33,7 +33,7 @@
   });
 <% end %>
 
-<dl class="see">
+<dl class="see cms-apis-contents-html cms-apis-contents-html-page">
   <dt class="wide">
     <%= t("cms.apis.contents.page") %>
     <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @pages.size %><%= t "ss.units.count" %></span>
@@ -68,7 +68,9 @@
       </tbody>
     </table>
   </dd>
+</dl>
 
+<dl class="see cms-apis-contents-html cms-apis-contents-html-part">
   <dt class="wide">
     <%= t("cms.part") %>
     <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @parts.size %><%= t "ss.units.count" %></span>
@@ -101,7 +103,9 @@
       </tbody>
     </table>
   </dd>
+</dl>
 
+<dl class="see cms-apis-contents-html cms-apis-contents-html-layout">
   <dt class="wide">
     <%= t("cms.layout") %>
     <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @layouts.size %><%= t "ss.units.count" %></span>
