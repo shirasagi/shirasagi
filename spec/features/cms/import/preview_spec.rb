@@ -36,9 +36,13 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
 
     script = <<~SCRIPT
       (function(resolve) {
-        window.addEventListener('DOMContentLoaded', () => {
-          window.ss.promiseLoaded.then(() => resolve(window.ss.errorCount));
-        });
+        if (document.readyState === "loading") {
+          window.addEventListener('DOMContentLoaded', () => {
+            window.ss.promiseLoaded.then(() => resolve(window.ss.errorCount));
+          });
+        } else {
+          resolve(window.ss.errorCount);
+        }
       })(arguments[0]);
     SCRIPT
 
