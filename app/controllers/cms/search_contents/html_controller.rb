@@ -37,11 +37,13 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
     begin
       raise "400" if keyword.blank?
-      if option == "regexp"
+
+      case option
+      when "regexp"
         search_html_with_regexp(keyword)
         exclude_search_results(page_ids, part_ids, layout_ids)
         replace_html_with_regexp(keyword, replacement)
-      elsif option == "url"
+      when "url"
         search_html_with_url(keyword)
         exclude_search_results(page_ids, part_ids, layout_ids)
         replace_html_with_url(keyword, replacement)
@@ -68,6 +70,11 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   private
+
+  def set_crumbs
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
+    @crumbs << [t("cms.search_contents_html"), url_for(action: :index)]
+  end
 
   def replace_html_with_string(string, replacement)
     @pages = @pages.select do |item|
