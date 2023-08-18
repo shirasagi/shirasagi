@@ -1,15 +1,17 @@
 <%
+change_state_all = url_for(action: :change_state_all) rescue nil
+if change_state_all
+  releasable = false
+  closeable = false
 
-releasable = false
-closeable = false
-if @model.include?(Cms::Addon::Release)
-  releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true)
-  closeable = @model.allowed?(:close, @cur_user, site: @cur_site, owned: true)
-elsif @model.include?(Cms::Model::Node)
-  releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true)
-  closeable = releasable
+  if @model.include?(Cms::Addon::Release)
+    releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true)
+    closeable = @model.allowed?(:close, @cur_user, site: @cur_site, owned: true)
+  elsif @model.include?(Cms::Model::Node)
+    releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true)
+    closeable = releasable
+  end
 end
-
 %>
 <div class="list-head">
   <label class="check"><input type="checkbox" /></label>
@@ -20,11 +22,11 @@ end
       <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
       <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
     </div>
-    <% if releasable || closeable %>
+    <% if change_state_all && (releasable || closeable) %>
       <div class="list-head-action-update">
-        <%= ss_button_to t("ss.links.make_them_public"), "",
+        <%= ss_button_to t("ss.links.make_them_public"), change_state_all,
           class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'public' } if releasable %>
-        <%= ss_button_to t("ss.links.make_them_close"), "",
+        <%= ss_button_to t("ss.links.make_them_close"), change_state_all,
           class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'closed' } if closeable %>
       </div>
     <% end %>
