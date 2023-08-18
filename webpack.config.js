@@ -16,6 +16,12 @@ module.exports = {
     colorbox: "./app/javascript/colorbox.js",
     jplayer: "./app/javascript/jplayer.js",
   },
+  externals: [
+    {
+      $: "jquery",
+      jquery: 'jQuery',
+    }
+  ],
   module: {
     rules: [
       {
