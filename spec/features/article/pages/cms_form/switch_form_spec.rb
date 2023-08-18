@@ -1,4 +1,5 @@
 require 'spec_helper'
+Selenium::WebDriver.logger
 
 describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
