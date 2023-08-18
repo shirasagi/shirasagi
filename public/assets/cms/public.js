@@ -10913,7 +10913,7 @@ if ( typeof jQuery.migrateMute === "undefined" ) {
 	jQuery.migrateMute = true;
 };
 /*!
- * jQuery Migrate - v3.3.0 - 2020-05-05T01:57Z
+ * jQuery Migrate - v3.4.1 - 2023-02-23T15:31Z
  * Copyright OpenJS Foundation and other contributors
  */
 ( function( factory ) {
@@ -10938,7 +10938,7 @@ if ( typeof jQuery.migrateMute === "undefined" ) {
 } )( function( jQuery, window ) {
 "use strict";
 
-jQuery.migrateVersion = "3.3.0";
+jQuery.migrateVersion = "3.4.1";
 
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
@@ -10962,6 +10962,40 @@ function jQueryVersionSince( version ) {
 	return compareVersions( jQuery.fn.jquery, version ) >= 0;
 }
 
+// A map from disabled patch codes to `true`. This should really
+// be a `Set` but those are unsupported in IE.
+var disabledPatches = Object.create( null );
+
+// Don't apply patches for specified codes. Helpful for code bases
+// where some Migrate warnings have been addressed and it's desirable
+// to avoid needless patches or false positives.
+jQuery.migrateDisablePatches = function() {
+	var i;
+	for ( i = 0; i < arguments.length; i++ ) {
+		disabledPatches[ arguments[ i ] ] = true;
+	}
+};
+
+// Allow enabling patches disabled via `jQuery.migrateDisablePatches`.
+// Helpful if you want to disable a patch only for some code that won't
+// be updated soon to be able to focus on other warnings - and enable it
+// immediately after such a call:
+// ```js
+// jQuery.migrateDisablePatches( "workaroundA" );
+// elem.pluginViolatingWarningA( "pluginMethod" );
+// jQuery.migrateEnablePatches( "workaroundA" );
+// ```
+jQuery.migrateEnablePatches = function() {
+	var i;
+	for ( i = 0; i < arguments.length; i++ ) {
+		delete disabledPatches[ arguments[ i ] ];
+	}
+};
+
+jQuery.migrateIsPatchEnabled = function( patchCode ) {
+	return !disabledPatches[ patchCode ];
+};
+
 ( function() {
 
 	// Support: IE9 only
@@ -10971,9 +11005,10 @@ function jQueryVersionSince( version ) {
 		return;
 	}
 
-	// Need jQuery 3.0.0+ and no older Migrate loaded
-	if ( !jQuery || !jQueryVersionSince( "3.0.0" ) ) {
-		window.console.log( "JQMIGRATE: jQuery 3.0.0+ REQUIRED" );
+	// Need jQuery 3.x-4.x and no older Migrate loaded
+	if ( !jQuery || !jQueryVersionSince( "3.0.0" ) ||
+			jQueryVersionSince( "5.0.0" ) ) {
+		window.console.log( "JQMIGRATE: jQuery 3.x-4.x REQUIRED" );
 	}
 	if ( jQuery.migrateWarnings ) {
 		window.console.log( "JQMIGRATE: Migrate plugin loaded multiple times" );
@@ -11005,11 +11040,12 @@ jQuery.migrateReset = function() {
 	jQuery.migrateWarnings.length = 0;
 };
 
-function migrateWarn( msg ) {
+function migrateWarn( code, msg ) {
 	var console = window.console;
-	if ( !jQuery.migrateDeduplicateWarnings || !warnedAbout[ msg ] ) {
+	if ( jQuery.migrateIsPatchEnabled( code ) &&
+		( !jQuery.migrateDeduplicateWarnings || !warnedAbout[ msg ] ) ) {
 		warnedAbout[ msg ] = true;
-		jQuery.migrateWarnings.push( msg );
+		jQuery.migrateWarnings.push( msg + " [" + code + "]" );
 		if ( console && console.warn && !jQuery.migrateMute ) {
 			console.warn( "JQMIGRATE: " + msg );
 			if ( jQuery.migrateTrace && console.trace ) {
@@ -11019,32 +11055,62 @@ function migrateWarn( msg ) {
 	}
 }
 
-function migrateWarnProp( obj, prop, value, msg ) {
+function migrateWarnProp( obj, prop, value, code, msg ) {
 	Object.defineProperty( obj, prop, {
 		configurable: true,
 		enumerable: true,
 		get: function() {
-			migrateWarn( msg );
+			migrateWarn( code, msg );
 			return value;
 		},
 		set: function( newValue ) {
-			migrateWarn( msg );
+			migrateWarn( code, msg );
 			value = newValue;
 		}
 	} );
 }
 
-function migrateWarnFunc( obj, prop, newFunc, msg ) {
+function migrateWarnFuncInternal( obj, prop, newFunc, code, msg ) {
+	var finalFunc,
+		origFunc = obj[ prop ];
+
 	obj[ prop ] = function() {
-		migrateWarn( msg );
-		return newFunc.apply( this, arguments );
+
+		// If `msg` not provided, do not warn; more sophisticated warnings
+		// logic is most likely embedded in `newFunc`, in that case here
+		// we just care about the logic choosing the proper implementation
+		// based on whether the patch is disabled or not.
+		if ( msg ) {
+			migrateWarn( code, msg );
+		}
+
+		// Since patches can be disabled & enabled dynamically, we
+		// need to decide which implementation to run on each invocation.
+		finalFunc = jQuery.migrateIsPatchEnabled( code ) ?
+			newFunc :
+
+			// The function may not have existed originally so we need a fallback.
+			( origFunc || jQuery.noop );
+
+		return finalFunc.apply( this, arguments );
 	};
+}
+
+function migratePatchAndWarnFunc( obj, prop, newFunc, code, msg ) {
+	if ( !msg ) {
+		throw new Error( "No warning message provided" );
+	}
+	return migrateWarnFuncInternal( obj, prop, newFunc, code, msg );
+}
+
+function migratePatchFunc( obj, prop, newFunc, code ) {
+	return migrateWarnFuncInternal( obj, prop, newFunc, code );
 }
 
 if ( window.document.compatMode === "BackCompat" ) {
 
-	// JQuery has never supported or tested Quirks Mode
-	migrateWarn( "jQuery is not compatible with Quirks Mode" );
+	// jQuery has never supported or tested Quirks Mode
+	migrateWarn( "quirks", "jQuery is not compatible with Quirks Mode" );
 }
 
 var findProp,
@@ -11055,25 +11121,31 @@ var findProp,
 	rattrHashTest = /\[(\s*[-\w]+\s*)([~|^$*]?=)\s*([-\w#]*?#[-\w#]*)\s*\]/,
 	rattrHashGlob = /\[(\s*[-\w]+\s*)([~|^$*]?=)\s*([-\w#]*?#[-\w#]*)\s*\]/g,
 
-	// Support: Android <=4.0 only
-	// Make sure we trim BOM and NBSP
-	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+	// Require that the "whitespace run" starts from a non-whitespace
+	// to avoid O(N^2) behavior when the engine would try matching "\s+$" at each space position.
+	rtrim = /^[\s\uFEFF\xA0]+|([^\s\uFEFF\xA0])[\s\uFEFF\xA0]+$/g;
 
-jQuery.fn.init = function( arg1 ) {
+migratePatchFunc( jQuery.fn, "init", function( arg1 ) {
 	var args = Array.prototype.slice.call( arguments );
 
-	if ( typeof arg1 === "string" && arg1 === "#" ) {
+	if ( jQuery.migrateIsPatchEnabled( "selector-empty-id" ) &&
+		typeof arg1 === "string" && arg1 === "#" ) {
 
-		// JQuery( "#" ) is a bogus ID selector, but it returned an empty set before jQuery 3.0
-		migrateWarn( "jQuery( '#' ) is not a valid selector" );
+		// JQuery( "#" ) is a bogus ID selector, but it returned an empty set
+		// before jQuery 3.0
+		migrateWarn( "selector-empty-id", "jQuery( '#' ) is not a valid selector" );
 		args[ 0 ] = [];
 	}
 
 	return oldInit.apply( this, args );
-};
+}, "selector-empty-id" );
+
+// This is already done in Core but the above patch will lose this assignment
+// so we need to redo it. It doesn't matter whether the patch is enabled or not
+// as the method is always going to be a Migrate-created wrapper.
 jQuery.fn.init.prototype = jQuery.fn;
 
-jQuery.find = function( selector ) {
+migratePatchFunc( jQuery, "find", function( selector ) {
 	var args = Array.prototype.slice.call( arguments );
 
 	// Support: PhantomJS 1.x
@@ -11095,16 +11167,18 @@ jQuery.find = function( selector ) {
 			// Note that there may be false alarms if selector uses jQuery extensions
 			try {
 				window.document.querySelector( selector );
-				migrateWarn( "Attribute selector with '#' must be quoted: " + args[ 0 ] );
+				migrateWarn( "selector-hash",
+					"Attribute selector with '#' must be quoted: " + args[ 0 ] );
 				args[ 0 ] = selector;
 			} catch ( err2 ) {
-				migrateWarn( "Attribute selector with '#' was not fixed: " + args[ 0 ] );
+				migrateWarn( "selector-hash",
+					"Attribute selector with '#' was not fixed: " + args[ 0 ] );
 			}
 		}
 	}
 
 	return oldFind.apply( this, args );
-};
+}, "selector-hash" );
 
 // Copy properties attached to original jQuery.find method (e.g. .attr, .isXML)
 for ( findProp in oldFind ) {
@@ -11114,49 +11188,53 @@ for ( findProp in oldFind ) {
 }
 
 // The number of elements contained in the matched element set
-migrateWarnFunc( jQuery.fn, "size", function() {
+migratePatchAndWarnFunc( jQuery.fn, "size", function() {
 	return this.length;
-},
+}, "size",
 "jQuery.fn.size() is deprecated and removed; use the .length property" );
 
-migrateWarnFunc( jQuery, "parseJSON", function() {
+migratePatchAndWarnFunc( jQuery, "parseJSON", function() {
 	return JSON.parse.apply( null, arguments );
-},
+}, "parseJSON",
 "jQuery.parseJSON is deprecated; use JSON.parse" );
 
-migrateWarnFunc( jQuery, "holdReady", jQuery.holdReady,
-	"jQuery.holdReady is deprecated" );
+migratePatchAndWarnFunc( jQuery, "holdReady", jQuery.holdReady,
+	"holdReady", "jQuery.holdReady is deprecated" );
 
-migrateWarnFunc( jQuery, "unique", jQuery.uniqueSort,
-	"jQuery.unique is deprecated; use jQuery.uniqueSort" );
+migratePatchAndWarnFunc( jQuery, "unique", jQuery.uniqueSort,
+	"unique", "jQuery.unique is deprecated; use jQuery.uniqueSort" );
 
 // Now jQuery.expr.pseudos is the standard incantation
-migrateWarnProp( jQuery.expr, "filters", jQuery.expr.pseudos,
+migrateWarnProp( jQuery.expr, "filters", jQuery.expr.pseudos, "expr-pre-pseudos",
 	"jQuery.expr.filters is deprecated; use jQuery.expr.pseudos" );
-migrateWarnProp( jQuery.expr, ":", jQuery.expr.pseudos,
+migrateWarnProp( jQuery.expr, ":", jQuery.expr.pseudos, "expr-pre-pseudos",
 	"jQuery.expr[':'] is deprecated; use jQuery.expr.pseudos" );
 
 // Prior to jQuery 3.1.1 there were internal refs so we don't warn there
 if ( jQueryVersionSince( "3.1.1" ) ) {
-	migrateWarnFunc( jQuery, "trim", function( text ) {
+	migratePatchAndWarnFunc( jQuery, "trim", function( text ) {
 		return text == null ?
 			"" :
-			( text + "" ).replace( rtrim, "" );
-	},
+			( text + "" ).replace( rtrim, "$1" );
+	}, "trim",
 	"jQuery.trim is deprecated; use String.prototype.trim" );
 }
 
 // Prior to jQuery 3.2 there were internal refs so we don't warn there
 if ( jQueryVersionSince( "3.2.0" ) ) {
-	migrateWarnFunc( jQuery, "nodeName", function( elem, name ) {
+	migratePatchAndWarnFunc( jQuery, "nodeName", function( elem, name ) {
 		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
-	},
+	}, "nodeName",
 	"jQuery.nodeName is deprecated" );
+
+	migratePatchAndWarnFunc( jQuery, "isArray", Array.isArray, "isArray",
+		"jQuery.isArray is deprecated; use Array.isArray"
+	);
 }
 
 if ( jQueryVersionSince( "3.3.0" ) ) {
 
-	migrateWarnFunc( jQuery, "isNumeric", function( obj ) {
+	migratePatchAndWarnFunc( jQuery, "isNumeric", function( obj ) {
 
 			// As of jQuery 3.0, isNumeric is limited to
 			// strings and numbers (primitives or objects)
@@ -11168,7 +11246,7 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 				// ...but misinterprets leading-number strings, e.g. hex literals ("0x...")
 				// subtraction forces infinities to NaN
 				!isNaN( obj - parseFloat( obj ) );
-		},
+		}, "isNumeric",
 		"jQuery.isNumeric() is deprecated"
 	);
 
@@ -11179,7 +11257,7 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 		class2type[ "[object " + name + "]" ] = name.toLowerCase();
 	} );
 
-	migrateWarnFunc( jQuery, "type", function( obj ) {
+	migratePatchAndWarnFunc( jQuery, "type", function( obj ) {
 		if ( obj == null ) {
 			return obj + "";
 		}
@@ -11188,47 +11266,66 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 		return typeof obj === "object" || typeof obj === "function" ?
 			class2type[ Object.prototype.toString.call( obj ) ] || "object" :
 			typeof obj;
-	},
+	}, "type",
 	"jQuery.type is deprecated" );
 
-	migrateWarnFunc( jQuery, "isFunction",
+	migratePatchAndWarnFunc( jQuery, "isFunction",
 		function( obj ) {
 			return typeof obj === "function";
-		},
+		}, "isFunction",
 		"jQuery.isFunction() is deprecated" );
 
-	migrateWarnFunc( jQuery, "isWindow",
+	migratePatchAndWarnFunc( jQuery, "isWindow",
 		function( obj ) {
 			return obj != null && obj === obj.window;
-		},
+		}, "isWindow",
 		"jQuery.isWindow() is deprecated"
-	);
-
-	migrateWarnFunc( jQuery, "isArray", Array.isArray,
-		"jQuery.isArray is deprecated; use Array.isArray"
 	);
 }
 
 // Support jQuery slim which excludes the ajax module
 if ( jQuery.ajax ) {
 
-var oldAjax = jQuery.ajax;
+var oldAjax = jQuery.ajax,
+	rjsonp = /(=)\?(?=&|$)|\?\?/;
 
-jQuery.ajax = function( ) {
+migratePatchFunc( jQuery, "ajax", function() {
 	var jQXHR = oldAjax.apply( this, arguments );
 
 	// Be sure we got a jQXHR (e.g., not sync)
 	if ( jQXHR.promise ) {
-		migrateWarnFunc( jQXHR, "success", jQXHR.done,
+		migratePatchAndWarnFunc( jQXHR, "success", jQXHR.done, "jqXHR-methods",
 			"jQXHR.success is deprecated and removed" );
-		migrateWarnFunc( jQXHR, "error", jQXHR.fail,
+		migratePatchAndWarnFunc( jQXHR, "error", jQXHR.fail, "jqXHR-methods",
 			"jQXHR.error is deprecated and removed" );
-		migrateWarnFunc( jQXHR, "complete", jQXHR.always,
+		migratePatchAndWarnFunc( jQXHR, "complete", jQXHR.always, "jqXHR-methods",
 			"jQXHR.complete is deprecated and removed" );
 	}
 
 	return jQXHR;
-};
+}, "jqXHR-methods" );
+
+// Only trigger the logic in jQuery <4 as the JSON-to-JSONP auto-promotion
+// behavior is gone in jQuery 4.0 and as it has security implications, we don't
+// want to restore the legacy behavior.
+if ( !jQueryVersionSince( "4.0.0" ) ) {
+
+	// Register this prefilter before the jQuery one. Otherwise, a promoted
+	// request is transformed into one with the script dataType and we can't
+	// catch it anymore.
+	jQuery.ajaxPrefilter( "+json", function( s ) {
+
+		// Warn if JSON-to-JSONP auto-promotion happens.
+		if ( s.jsonp !== false && ( rjsonp.test( s.url ) ||
+				typeof s.data === "string" &&
+				( s.contentType || "" )
+					.indexOf( "application/x-www-form-urlencoded" ) === 0 &&
+				rjsonp.test( s.data )
+		) ) {
+			migrateWarn( "jsonp-promotion", "JSON-to-JSONP auto-promotion is deprecated" );
+		}
+	} );
+}
 
 }
 
@@ -11236,27 +11333,43 @@ var oldRemoveAttr = jQuery.fn.removeAttr,
 	oldToggleClass = jQuery.fn.toggleClass,
 	rmatchNonSpace = /\S+/g;
 
-jQuery.fn.removeAttr = function( name ) {
-	var self = this;
+migratePatchFunc( jQuery.fn, "removeAttr", function( name ) {
+	var self = this,
+		patchNeeded = false;
 
 	jQuery.each( name.match( rmatchNonSpace ), function( _i, attr ) {
 		if ( jQuery.expr.match.bool.test( attr ) ) {
-			migrateWarn( "jQuery.fn.removeAttr no longer sets boolean properties: " + attr );
+
+			// Only warn if at least a single node had the property set to
+			// something else than `false`. Otherwise, this Migrate patch
+			// doesn't influence the behavior and there's no need to set or warn.
+			self.each( function() {
+				if ( jQuery( this ).prop( attr ) !== false ) {
+					patchNeeded = true;
+					return false;
+				}
+			} );
+		}
+
+		if ( patchNeeded ) {
+			migrateWarn( "removeAttr-bool",
+				"jQuery.fn.removeAttr no longer sets boolean properties: " + attr );
 			self.prop( attr, false );
 		}
 	} );
 
 	return oldRemoveAttr.apply( this, arguments );
-};
+}, "removeAttr-bool" );
 
-jQuery.fn.toggleClass = function( state ) {
+migratePatchFunc( jQuery.fn, "toggleClass", function( state ) {
 
 	// Only deprecating no-args or single boolean arg
 	if ( state !== undefined && typeof state !== "boolean" ) {
+
 		return oldToggleClass.apply( this, arguments );
 	}
 
-	migrateWarn( "jQuery.fn.toggleClass( boolean ) is deprecated" );
+	migrateWarn( "toggleClass-bool", "jQuery.fn.toggleClass( boolean ) is deprecated" );
 
 	// Toggle entire class name of each element
 	return this.each( function() {
@@ -11278,7 +11391,7 @@ jQuery.fn.toggleClass = function( state ) {
 			);
 		}
 	} );
-};
+}, "toggleClass-bool" );
 
 function camelCase( string ) {
 	return string.replace( /-([a-z])/g, function( _, letter ) {
@@ -11286,7 +11399,7 @@ function camelCase( string ) {
 	} );
 }
 
-var oldFnCss,
+var origFnCss, internalCssNumber,
 	internalSwapCall = false,
 	ralphaStart = /^[a-z]/,
 
@@ -11331,12 +11444,12 @@ if ( jQuery.swap ) {
 	} );
 }
 
-jQuery.swap = function( elem, options, callback, args ) {
+migratePatchFunc( jQuery, "swap", function( elem, options, callback, args ) {
 	var ret, name,
 		old = {};
 
 	if ( !internalSwapCall ) {
-		migrateWarn( "jQuery.swap() is undocumented and deprecated" );
+		migrateWarn( "swap", "jQuery.swap() is undocumented and deprecated" );
 	}
 
 	// Remember the old values, and insert the new ones
@@ -11353,22 +11466,71 @@ jQuery.swap = function( elem, options, callback, args ) {
 	}
 
 	return ret;
-};
+}, "swap" );
 
 if ( jQueryVersionSince( "3.4.0" ) && typeof Proxy !== "undefined" ) {
-
 	jQuery.cssProps = new Proxy( jQuery.cssProps || {}, {
 		set: function() {
-			migrateWarn( "JQMIGRATE: jQuery.cssProps is deprecated" );
+			migrateWarn( "cssProps", "jQuery.cssProps is deprecated" );
 			return Reflect.set.apply( this, arguments );
 		}
 	} );
 }
 
-// Create a dummy jQuery.cssNumber if missing. It won't be used by jQuery but
-// it will prevent code adding new keys to it unconditionally from crashing.
-if ( !jQuery.cssNumber ) {
-	jQuery.cssNumber = {};
+// In jQuery >=4 where jQuery.cssNumber is missing fill it with the latest 3.x version:
+// https://github.com/jquery/jquery/blob/3.6.0/src/css.js#L212-L233
+// This way, number values for the CSS properties below won't start triggering
+// Migrate warnings when jQuery gets updated to >=4.0.0 (gh-438).
+if ( jQueryVersionSince( "4.0.0" ) ) {
+
+	// We need to keep this as a local variable as we need it internally
+	// in a `jQuery.fn.css` patch and this usage shouldn't warn.
+	internalCssNumber = {
+		animationIterationCount: true,
+		columnCount: true,
+		fillOpacity: true,
+		flexGrow: true,
+		flexShrink: true,
+		fontWeight: true,
+		gridArea: true,
+		gridColumn: true,
+		gridColumnEnd: true,
+		gridColumnStart: true,
+		gridRow: true,
+		gridRowEnd: true,
+		gridRowStart: true,
+		lineHeight: true,
+		opacity: true,
+		order: true,
+		orphans: true,
+		widows: true,
+		zIndex: true,
+		zoom: true
+	};
+
+	if ( typeof Proxy !== "undefined" ) {
+		jQuery.cssNumber = new Proxy( internalCssNumber, {
+			get: function() {
+				migrateWarn( "css-number", "jQuery.cssNumber is deprecated" );
+				return Reflect.get.apply( this, arguments );
+			},
+			set: function() {
+				migrateWarn( "css-number", "jQuery.cssNumber is deprecated" );
+				return Reflect.set.apply( this, arguments );
+			}
+		} );
+	} else {
+
+		// Support: IE 9-11+
+		// IE doesn't support proxies, but we still want to restore the legacy
+		// jQuery.cssNumber there.
+		jQuery.cssNumber = internalCssNumber;
+	}
+} else {
+
+	// Make `internalCssNumber` defined for jQuery <4 as well as it's needed
+	// in the `jQuery.fn.css` patch below.
+	internalCssNumber = jQuery.cssNumber;
 }
 
 function isAutoPx( prop ) {
@@ -11380,50 +11542,66 @@ function isAutoPx( prop ) {
 		rautoPx.test( prop[ 0 ].toUpperCase() + prop.slice( 1 ) );
 }
 
-oldFnCss = jQuery.fn.css;
+origFnCss = jQuery.fn.css;
 
-jQuery.fn.css = function( name, value ) {
-	var origThis = this;
-	if ( typeof name !== "string" ) {
+migratePatchFunc( jQuery.fn, "css", function( name, value ) {
+	var camelName,
+		origThis = this;
+
+	if ( name && typeof name === "object" && !Array.isArray( name ) ) {
 		jQuery.each( name, function( n, v ) {
 			jQuery.fn.css.call( origThis, n, v );
 		} );
-	}
-	if ( typeof value === "number" && !isAutoPx( camelCase( name ) ) ) {
-		migrateWarn( "Use of number-typed values is deprecated in jQuery.fn.css" );
+		return this;
 	}
 
-	return oldFnCss.apply( this, arguments );
-};
+	if ( typeof value === "number" ) {
+		camelName = camelCase( name );
 
-var oldData = jQuery.data;
+		// Use `internalCssNumber` to avoid triggering our warnings in this
+		// internal check.
+		if ( !isAutoPx( camelName ) && !internalCssNumber[ camelName ] ) {
+			migrateWarn( "css-number",
+				"Number-typed values are deprecated for jQuery.fn.css( \"" +
+				name + "\", value )" );
+		}
+	}
 
-jQuery.data = function( elem, name, value ) {
+	return origFnCss.apply( this, arguments );
+}, "css-number" );
+
+var origData = jQuery.data;
+
+migratePatchFunc( jQuery, "data", function( elem, name, value ) {
 	var curData, sameKeys, key;
 
 	// Name can be an object, and each entry in the object is meant to be set as data
 	if ( name && typeof name === "object" && arguments.length === 2 ) {
-		curData = jQuery.hasData( elem ) && oldData.call( this, elem );
+
+		curData = jQuery.hasData( elem ) && origData.call( this, elem );
 		sameKeys = {};
 		for ( key in name ) {
 			if ( key !== camelCase( key ) ) {
-				migrateWarn( "jQuery.data() always sets/gets camelCased names: " + key );
+				migrateWarn( "data-camelCase",
+					"jQuery.data() always sets/gets camelCased names: " + key );
 				curData[ key ] = name[ key ];
 			} else {
 				sameKeys[ key ] = name[ key ];
 			}
 		}
 
-		oldData.call( this, elem, sameKeys );
+		origData.call( this, elem, sameKeys );
 
 		return name;
 	}
 
 	// If the name is transformed, look for the un-transformed name in the data object
 	if ( name && typeof name === "string" && name !== camelCase( name ) ) {
-		curData = jQuery.hasData( elem ) && oldData.call( this, elem );
+
+		curData = jQuery.hasData( elem ) && origData.call( this, elem );
 		if ( curData && name in curData ) {
-			migrateWarn( "jQuery.data() always sets/gets camelCased names: " + name );
+			migrateWarn( "data-camelCase",
+				"jQuery.data() always sets/gets camelCased names: " + name );
 			if ( arguments.length > 2 ) {
 				curData[ name ] = value;
 			}
@@ -11431,8 +11609,8 @@ jQuery.data = function( elem, name, value ) {
 		}
 	}
 
-	return oldData.apply( this, arguments );
-};
+	return origData.apply( this, arguments );
+}, "data-camelCase" );
 
 // Support jQuery slim which excludes the effects module
 if ( jQuery.fx ) {
@@ -11443,9 +11621,10 @@ var intervalValue, intervalMsg,
 		return pct;
 	};
 
-jQuery.Tween.prototype.run = function( ) {
+migratePatchFunc( jQuery.Tween.prototype, "run", function( ) {
 	if ( jQuery.easing[ this.easing ].length > 1 ) {
 		migrateWarn(
+			"easing-one-arg",
 			"'jQuery.easing." + this.easing.toString() + "' should use only one argument"
 		);
 
@@ -11453,9 +11632,9 @@ jQuery.Tween.prototype.run = function( ) {
 	}
 
 	oldTweenRun.apply( this, arguments );
-};
+}, "easing-one-arg" );
 
-intervalValue = jQuery.fx.interval || 13;
+intervalValue = jQuery.fx.interval;
 intervalMsg = "jQuery.fx.interval is deprecated";
 
 // Support: IE9, Android <=4.4
@@ -11467,12 +11646,17 @@ if ( window.requestAnimationFrame ) {
 		enumerable: true,
 		get: function() {
 			if ( !window.document.hidden ) {
-				migrateWarn( intervalMsg );
+				migrateWarn( "fx-interval", intervalMsg );
 			}
-			return intervalValue;
+
+			// Only fallback to the default if patch is enabled
+			if ( !jQuery.migrateIsPatchEnabled( "fx-interval" ) ) {
+				return intervalValue;
+			}
+			return intervalValue === undefined ? 13 : intervalValue;
 		},
 		set: function( newValue ) {
-			migrateWarn( intervalMsg );
+			migrateWarn( "fx-interval", intervalMsg );
 			intervalValue = newValue;
 		}
 	} );
@@ -11488,16 +11672,18 @@ jQuery.event.props = [];
 jQuery.event.fixHooks = {};
 
 migrateWarnProp( jQuery.event.props, "concat", jQuery.event.props.concat,
+	"event-old-patch",
 	"jQuery.event.props.concat() is deprecated and removed" );
 
-jQuery.event.fix = function( originalEvent ) {
+migratePatchFunc( jQuery.event, "fix", function( originalEvent ) {
 	var event,
 		type = originalEvent.type,
 		fixHook = this.fixHooks[ type ],
 		props = jQuery.event.props;
 
 	if ( props.length ) {
-		migrateWarn( "jQuery.event.props are deprecated and removed: " + props.join() );
+		migrateWarn( "event-old-patch",
+			"jQuery.event.props are deprecated and removed: " + props.join() );
 		while ( props.length ) {
 			jQuery.event.addProp( props.pop() );
 		}
@@ -11505,7 +11691,8 @@ jQuery.event.fix = function( originalEvent ) {
 
 	if ( fixHook && !fixHook._migrated_ ) {
 		fixHook._migrated_ = true;
-		migrateWarn( "jQuery.event.fixHooks are deprecated and removed: " + type );
+		migrateWarn( "event-old-patch",
+			"jQuery.event.fixHooks are deprecated and removed: " + type );
 		if ( ( props = fixHook.props ) && props.length ) {
 			while ( props.length ) {
 				jQuery.event.addProp( props.pop() );
@@ -11515,21 +11702,24 @@ jQuery.event.fix = function( originalEvent ) {
 
 	event = originalFix.call( this, originalEvent );
 
-	return fixHook && fixHook.filter ? fixHook.filter( event, originalEvent ) : event;
-};
+	return fixHook && fixHook.filter ?
+		fixHook.filter( event, originalEvent ) :
+		event;
+}, "event-old-patch" );
 
-jQuery.event.add = function( elem, types ) {
+migratePatchFunc( jQuery.event, "add", function( elem, types ) {
 
 	// This misses the multiple-types case but that seems awfully rare
 	if ( elem === window && types === "load" && window.document.readyState === "complete" ) {
-		migrateWarn( "jQuery(window).on('load'...) called after load event occurred" );
+		migrateWarn( "load-after-event",
+			"jQuery(window).on('load'...) called after load event occurred" );
 	}
 	return oldEventAdd.apply( this, arguments );
-};
+}, "load-after-event" );
 
 jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 
-	jQuery.fn[ name ] = function() {
+	migratePatchFunc( jQuery.fn, name, function() {
 		var args = Array.prototype.slice.call( arguments, 0 );
 
 		// If this is an ajax load() the first arg should be the string URL;
@@ -11540,7 +11730,8 @@ jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 			return oldLoad.apply( this, args );
 		}
 
-		migrateWarn( "jQuery.fn." + name + "() is deprecated" );
+		migrateWarn( "shorthand-removed-v3",
+			"jQuery.fn." + name + "() is deprecated" );
 
 		args.splice( 0, 0, name );
 		if ( arguments.length ) {
@@ -11553,7 +11744,7 @@ jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 		// See http://bugs.jquery.com/ticket/11820
 		this.triggerHandler.apply( this, args );
 		return this;
-	};
+	}, "shorthand-removed-v3" );
 
 } );
 
@@ -11563,12 +11754,13 @@ jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
 	function( _i, name ) {
 
 	// Handle event binding
-	jQuery.fn[ name ] = function( data, fn ) {
-		migrateWarn( "jQuery.fn." + name + "() event shorthand is deprecated" );
+	migratePatchAndWarnFunc( jQuery.fn, name, function( data, fn ) {
 		return arguments.length > 0 ?
 			this.on( name, null, data, fn ) :
 			this.trigger( name );
-	};
+		},
+		"shorthand-deprecated-v3",
+		"jQuery.fn." + name + "() event shorthand is deprecated" );
 } );
 
 // Trigger "ready" event only once, on document ready
@@ -11579,39 +11771,30 @@ jQuery( function() {
 jQuery.event.special.ready = {
 	setup: function() {
 		if ( this === window.document ) {
-			migrateWarn( "'ready' event is deprecated" );
+			migrateWarn( "ready-event", "'ready' event is deprecated" );
 		}
 	}
 };
 
-jQuery.fn.extend( {
-
-	bind: function( types, data, fn ) {
-		migrateWarn( "jQuery.fn.bind() is deprecated" );
-		return this.on( types, null, data, fn );
-	},
-	unbind: function( types, fn ) {
-		migrateWarn( "jQuery.fn.unbind() is deprecated" );
-		return this.off( types, null, fn );
-	},
-	delegate: function( selector, types, data, fn ) {
-		migrateWarn( "jQuery.fn.delegate() is deprecated" );
-		return this.on( types, selector, data, fn );
-	},
-	undelegate: function( selector, types, fn ) {
-		migrateWarn( "jQuery.fn.undelegate() is deprecated" );
-		return arguments.length === 1 ?
-			this.off( selector, "**" ) :
-			this.off( types, selector || "**", fn );
-	},
-	hover: function( fnOver, fnOut ) {
-		migrateWarn( "jQuery.fn.hover() is deprecated" );
-		return this.on( "mouseenter", fnOver ).on( "mouseleave", fnOut || fnOver );
-	}
-} );
+migratePatchAndWarnFunc( jQuery.fn, "bind", function( types, data, fn ) {
+	return this.on( types, null, data, fn );
+}, "pre-on-methods", "jQuery.fn.bind() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "unbind", function( types, fn ) {
+	return this.off( types, null, fn );
+}, "pre-on-methods", "jQuery.fn.unbind() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "delegate", function( selector, types, data, fn ) {
+	return this.on( types, selector, data, fn );
+}, "pre-on-methods", "jQuery.fn.delegate() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "undelegate", function( selector, types, fn ) {
+	return arguments.length === 1 ?
+		this.off( selector, "**" ) :
+		this.off( types, selector || "**", fn );
+}, "pre-on-methods", "jQuery.fn.undelegate() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "hover", function( fnOver, fnOut ) {
+	return this.on( "mouseenter", fnOver ).on( "mouseleave", fnOut || fnOver );
+}, "pre-on-methods", "jQuery.fn.hover() is deprecated" );
 
 var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi,
-	origHtmlPrefilter = jQuery.htmlPrefilter,
 	makeMarkup = function( html ) {
 		var doc = window.document.implementation.createHTMLDocument( "" );
 		doc.body.innerHTML = html;
@@ -11620,70 +11803,65 @@ var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\
 	warnIfChanged = function( html ) {
 		var changed = html.replace( rxhtmlTag, "<$1></$2>" );
 		if ( changed !== html && makeMarkup( html ) !== makeMarkup( changed ) ) {
-			migrateWarn( "HTML tags must be properly nested and closed: " + html );
+			migrateWarn( "self-closed-tags",
+				"HTML tags must be properly nested and closed: " + html );
 		}
 	};
 
+/**
+ * Deprecated, please use `jQuery.migrateDisablePatches( "self-closed-tags" )` instead.
+ * @deprecated
+ */
 jQuery.UNSAFE_restoreLegacyHtmlPrefilter = function() {
-	jQuery.htmlPrefilter = function( html ) {
-		warnIfChanged( html );
-		return html.replace( rxhtmlTag, "<$1></$2>" );
-	};
+	jQuery.migrateEnablePatches( "self-closed-tags" );
 };
 
-jQuery.htmlPrefilter = function( html ) {
+migratePatchFunc( jQuery, "htmlPrefilter", function( html ) {
 	warnIfChanged( html );
-	return origHtmlPrefilter( html );
-};
+	return html.replace( rxhtmlTag, "<$1></$2>" );
+}, "self-closed-tags" );
 
-var oldOffset = jQuery.fn.offset;
+// This patch needs to be disabled by default as it re-introduces
+// security issues (CVE-2020-11022, CVE-2020-11023).
+jQuery.migrateDisablePatches( "self-closed-tags" );
 
-jQuery.fn.offset = function() {
-	var docElem,
-		elem = this[ 0 ],
-		bogus = { top: 0, left: 0 };
+var origOffset = jQuery.fn.offset;
 
-	if ( !elem || !elem.nodeType ) {
-		migrateWarn( "jQuery.fn.offset() requires a valid DOM element" );
-		return undefined;
+migratePatchFunc( jQuery.fn, "offset", function() {
+	var elem = this[ 0 ];
+
+	if ( elem && ( !elem.nodeType || !elem.getBoundingClientRect ) ) {
+		migrateWarn( "offset-valid-elem", "jQuery.fn.offset() requires a valid DOM element" );
+		return arguments.length ? this : undefined;
 	}
 
-	docElem = ( elem.ownerDocument || window.document ).documentElement;
-	if ( !jQuery.contains( docElem, elem ) ) {
-		migrateWarn( "jQuery.fn.offset() requires an element connected to a document" );
-		return bogus;
-	}
-
-	return oldOffset.apply( this, arguments );
-};
+	return origOffset.apply( this, arguments );
+}, "offset-valid-elem" );
 
 // Support jQuery slim which excludes the ajax module
 // The jQuery.param patch is about respecting `jQuery.ajaxSettings.traditional`
 // so it doesn't make sense for the slim build.
 if ( jQuery.ajax ) {
 
-var oldParam = jQuery.param;
+var origParam = jQuery.param;
 
-jQuery.param = function( data, traditional ) {
+migratePatchFunc( jQuery, "param", function( data, traditional ) {
 	var ajaxTraditional = jQuery.ajaxSettings && jQuery.ajaxSettings.traditional;
 
 	if ( traditional === undefined && ajaxTraditional ) {
 
-		migrateWarn( "jQuery.param() no longer uses jQuery.ajaxSettings.traditional" );
+		migrateWarn( "param-ajax-traditional",
+			"jQuery.param() no longer uses jQuery.ajaxSettings.traditional" );
 		traditional = ajaxTraditional;
 	}
 
-	return oldParam.call( this, data, traditional );
-};
+	return origParam.call( this, data, traditional );
+}, "param-ajax-traditional" );
 
 }
 
-var oldSelf = jQuery.fn.andSelf || jQuery.fn.addBack;
-
-jQuery.fn.andSelf = function() {
-	migrateWarn( "jQuery.fn.andSelf() is deprecated and removed, use jQuery.fn.addBack()" );
-	return oldSelf.apply( this, arguments );
-};
+migratePatchAndWarnFunc( jQuery.fn, "andSelf", jQuery.fn.addBack, "andSelf",
+	"jQuery.fn.andSelf() is deprecated and removed, use jQuery.fn.addBack()" );
 
 // Support jQuery slim which excludes the deferred module in jQuery 4.0+
 if ( jQuery.Deferred ) {
@@ -11700,14 +11878,12 @@ var oldDeferred = jQuery.Deferred,
 			jQuery.Callbacks( "memory" ) ]
 	];
 
-jQuery.Deferred = function( func ) {
+migratePatchFunc( jQuery, "Deferred", function( func ) {
 	var deferred = oldDeferred(),
 		promise = deferred.promise();
 
-	deferred.pipe = promise.pipe = function( /* fnDone, fnFail, fnProgress */ ) {
+	function newDeferredPipe( /* fnDone, fnFail, fnProgress */ ) {
 		var fns = arguments;
-
-		migrateWarn( "deferred.pipe() is deprecated" );
 
 		return jQuery.Deferred( function( newDefer ) {
 			jQuery.each( tuples, function( i, tuple ) {
@@ -11733,15 +11909,19 @@ jQuery.Deferred = function( func ) {
 			} );
 			fns = null;
 		} ).promise();
+	}
 
-	};
+	migratePatchAndWarnFunc( deferred, "pipe", newDeferredPipe, "deferred-pipe",
+		"deferred.pipe() is deprecated" );
+	migratePatchAndWarnFunc( promise, "pipe", newDeferredPipe, "deferred-pipe",
+		"deferred.pipe() is deprecated" );
 
 	if ( func ) {
 		func.call( deferred, deferred );
 	}
 
 	return deferred;
-};
+}, "deferred-pipe" );
 
 // Preserve handler of uncaught exceptions in promise chains
 jQuery.Deferred.exceptionHook = oldDeferred.exceptionHook;
@@ -16467,7 +16647,6041 @@ var datetimepickerFactory = function ($) {
     }
 
 }));
-!function(t,e){"object"==typeof exports?module.exports=exports=e():"function"==typeof define&&define.amd?define([],e):t.CryptoJS=e()}(this,function(){var l,r,t,e,i,f,n,o,s,c,a,h,d,u,p,_,v,y,g,B,w,k,S,m,x,b,H,z,A,C,D,E,R,M,F,P,W,O,U,I,K,X,L,j,N,T,Z,q,G,J,V,$,Q,Y,tt,et,rt,it,nt,ot,st,ct,at,ht,lt,ft,dt,ut,pt,_t,vt,yt,gt,Bt,wt,kt,St,mt,xt,bt,Ht,zt,At,Ct,Dt,Et,Rt,Mt,Ft,Pt=Pt||(l=Math,r=Object.create||function(t){var e;return Ot.prototype=t,e=new Ot,Ot.prototype=null,e},e=(t={}).lib={},i=e.Base={extend:function(t){var e=r(this);return t&&e.mixIn(t),e.hasOwnProperty("init")&&this.init!==e.init||(e.init=function(){e.$super.init.apply(this,arguments)}),(e.init.prototype=e).$super=this,e},create:function(){var t=this.extend();return t.init.apply(t,arguments),t},init:function(){},mixIn:function(t){for(var e in t)t.hasOwnProperty(e)&&(this[e]=t[e]);t.hasOwnProperty("toString")&&(this.toString=t.toString)},clone:function(){return this.init.prototype.extend(this)}},f=e.WordArray=i.extend({init:function(t,e){t=this.words=t||[],this.sigBytes=null!=e?e:4*t.length},toString:function(t){return(t||o).stringify(this)},concat:function(t){var e=this.words,r=t.words,i=this.sigBytes,n=t.sigBytes;if(this.clamp(),i%4)for(var o=0;o<n;o++){var s=r[o>>>2]>>>24-o%4*8&255;e[i+o>>>2]|=s<<24-(i+o)%4*8}else for(o=0;o<n;o+=4)e[i+o>>>2]=r[o>>>2];return this.sigBytes+=n,this},clamp:function(){var t=this.words,e=this.sigBytes;t[e>>>2]&=4294967295<<32-e%4*8,t.length=l.ceil(e/4)},clone:function(){var t=i.clone.call(this);return t.words=this.words.slice(0),t},random:function(t){for(var e=[],r=0;r<t;r+=4)e.push(4294967296*Wt()|0);return new f.init(e,t)}}),n=t.enc={},o=n.Hex={stringify:function(t){for(var e=t.words,r=t.sigBytes,i=[],n=0;n<r;n++){var o=e[n>>>2]>>>24-n%4*8&255;i.push((o>>>4).toString(16)),i.push((15&o).toString(16))}return i.join("")},parse:function(t){for(var e=t.length,r=[],i=0;i<e;i+=2)r[i>>>3]|=parseInt(t.substr(i,2),16)<<24-i%8*4;return new f.init(r,e/2)}},s=n.Latin1={stringify:function(t){for(var e=t.words,r=t.sigBytes,i=[],n=0;n<r;n++){var o=e[n>>>2]>>>24-n%4*8&255;i.push(String.fromCharCode(o))}return i.join("")},parse:function(t){for(var e=t.length,r=[],i=0;i<e;i++)r[i>>>2]|=(255&t.charCodeAt(i))<<24-i%4*8;return new f.init(r,e)}},c=n.Utf8={stringify:function(t){try{return decodeURIComponent(escape(s.stringify(t)))}catch(t){throw new Error("Malformed UTF-8 data")}},parse:function(t){return s.parse(unescape(encodeURIComponent(t)))}},a=e.BufferedBlockAlgorithm=i.extend({reset:function(){this._data=new f.init,this._nDataBytes=0},_append:function(t){"string"==typeof t&&(t=c.parse(t)),this._data.concat(t),this._nDataBytes+=t.sigBytes},_process:function(t){var e,r=this._data,i=r.words,n=r.sigBytes,o=this.blockSize,s=n/(4*o),c=(s=t?l.ceil(s):l.max((0|s)-this._minBufferSize,0))*o,a=l.min(4*c,n);if(c){for(var h=0;h<c;h+=o)this._doProcessBlock(i,h);e=i.splice(0,c),r.sigBytes-=a}return new f.init(e,a)},clone:function(){var t=i.clone.call(this);return t._data=this._data.clone(),t},_minBufferSize:0}),e.Hasher=a.extend({cfg:i.extend(),init:function(t){this.cfg=this.cfg.extend(t),this.reset()},reset:function(){a.reset.call(this),this._doReset()},update:function(t){return this._append(t),this._process(),this},finalize:function(t){return t&&this._append(t),this._doFinalize()},blockSize:16,_createHelper:function(r){return function(t,e){return new r.init(e).finalize(t)}},_createHmacHelper:function(r){return function(t,e){return new h.HMAC.init(r,e).finalize(t)}}}),h=t.algo={},t);function Wt(){try{var t=global.crypto;return Number("0."+t.randomBytes(3).readUIntBE(0,3))}catch(t){}try{t=window.crypto||window.msCrypto;return Number("0."+window.crypto.getRandomValues(new Uint32Array(1))[0])}catch(t){}throw new Error("Native crypto module could not be used to get secure random number.")}function Ot(){}function Ut(t,e,r){return t^e^r}function It(t,e,r){return t&e|~t&r}function Kt(t,e,r){return(t|~e)^r}function Xt(t,e,r){return t&r|e&~r}function Lt(t,e,r){return t^(e|~r)}function jt(t,e){return t<<e|t>>>32-e}function Nt(t,e,r,i){var n,o=this._iv;o?(n=o.slice(0),this._iv=void 0):n=this._prevBlock,i.encryptBlock(n,0);for(var s=0;s<r;s++)t[e+s]^=n[s]}function Tt(t){if(255==(t>>24&255)){var e=t>>16&255,r=t>>8&255,i=255&t;255===e?(e=0,255===r?(r=0,255===i?i=0:++i):++r):++e,t=0,t+=e<<16,t+=r<<8,t+=i}else t+=1<<24;return t}function Zt(){for(var t=this._X,e=this._C,r=0;r<8;r++)mt[r]=e[r];e[0]=e[0]+1295307597+this._b|0,e[1]=e[1]+3545052371+(e[0]>>>0<mt[0]>>>0?1:0)|0,e[2]=e[2]+886263092+(e[1]>>>0<mt[1]>>>0?1:0)|0,e[3]=e[3]+1295307597+(e[2]>>>0<mt[2]>>>0?1:0)|0,e[4]=e[4]+3545052371+(e[3]>>>0<mt[3]>>>0?1:0)|0,e[5]=e[5]+886263092+(e[4]>>>0<mt[4]>>>0?1:0)|0,e[6]=e[6]+1295307597+(e[5]>>>0<mt[5]>>>0?1:0)|0,e[7]=e[7]+3545052371+(e[6]>>>0<mt[6]>>>0?1:0)|0,this._b=e[7]>>>0<mt[7]>>>0?1:0;for(r=0;r<8;r++){var i=t[r]+e[r],n=65535&i,o=i>>>16,s=((n*n>>>17)+n*o>>>15)+o*o,c=((4294901760&i)*i|0)+((65535&i)*i|0);xt[r]=s^c}t[0]=xt[0]+(xt[7]<<16|xt[7]>>>16)+(xt[6]<<16|xt[6]>>>16)|0,t[1]=xt[1]+(xt[0]<<8|xt[0]>>>24)+xt[7]|0,t[2]=xt[2]+(xt[1]<<16|xt[1]>>>16)+(xt[0]<<16|xt[0]>>>16)|0,t[3]=xt[3]+(xt[2]<<8|xt[2]>>>24)+xt[1]|0,t[4]=xt[4]+(xt[3]<<16|xt[3]>>>16)+(xt[2]<<16|xt[2]>>>16)|0,t[5]=xt[5]+(xt[4]<<8|xt[4]>>>24)+xt[3]|0,t[6]=xt[6]+(xt[5]<<16|xt[5]>>>16)+(xt[4]<<16|xt[4]>>>16)|0,t[7]=xt[7]+(xt[6]<<8|xt[6]>>>24)+xt[5]|0}function qt(){for(var t=this._X,e=this._C,r=0;r<8;r++)Rt[r]=e[r];e[0]=e[0]+1295307597+this._b|0,e[1]=e[1]+3545052371+(e[0]>>>0<Rt[0]>>>0?1:0)|0,e[2]=e[2]+886263092+(e[1]>>>0<Rt[1]>>>0?1:0)|0,e[3]=e[3]+1295307597+(e[2]>>>0<Rt[2]>>>0?1:0)|0,e[4]=e[4]+3545052371+(e[3]>>>0<Rt[3]>>>0?1:0)|0,e[5]=e[5]+886263092+(e[4]>>>0<Rt[4]>>>0?1:0)|0,e[6]=e[6]+1295307597+(e[5]>>>0<Rt[5]>>>0?1:0)|0,e[7]=e[7]+3545052371+(e[6]>>>0<Rt[6]>>>0?1:0)|0,this._b=e[7]>>>0<Rt[7]>>>0?1:0;for(r=0;r<8;r++){var i=t[r]+e[r],n=65535&i,o=i>>>16,s=((n*n>>>17)+n*o>>>15)+o*o,c=((4294901760&i)*i|0)+((65535&i)*i|0);Mt[r]=s^c}t[0]=Mt[0]+(Mt[7]<<16|Mt[7]>>>16)+(Mt[6]<<16|Mt[6]>>>16)|0,t[1]=Mt[1]+(Mt[0]<<8|Mt[0]>>>24)+Mt[7]|0,t[2]=Mt[2]+(Mt[1]<<16|Mt[1]>>>16)+(Mt[0]<<16|Mt[0]>>>16)|0,t[3]=Mt[3]+(Mt[2]<<8|Mt[2]>>>24)+Mt[1]|0,t[4]=Mt[4]+(Mt[3]<<16|Mt[3]>>>16)+(Mt[2]<<16|Mt[2]>>>16)|0,t[5]=Mt[5]+(Mt[4]<<8|Mt[4]>>>24)+Mt[3]|0,t[6]=Mt[6]+(Mt[5]<<16|Mt[5]>>>16)+(Mt[4]<<16|Mt[4]>>>16)|0,t[7]=Mt[7]+(Mt[6]<<8|Mt[6]>>>24)+Mt[5]|0}return d=Pt.lib.WordArray,Pt.enc.Base64={stringify:function(t){var e=t.words,r=t.sigBytes,i=this._map;t.clamp();for(var n=[],o=0;o<r;o+=3)for(var s=(e[o>>>2]>>>24-o%4*8&255)<<16|(e[o+1>>>2]>>>24-(o+1)%4*8&255)<<8|e[o+2>>>2]>>>24-(o+2)%4*8&255,c=0;c<4&&o+.75*c<r;c++)n.push(i.charAt(s>>>6*(3-c)&63));var a=i.charAt(64);if(a)for(;n.length%4;)n.push(a);return n.join("")},parse:function(t){var e=t.length,r=this._map,i=this._reverseMap;if(!i){i=this._reverseMap=[];for(var n=0;n<r.length;n++)i[r.charCodeAt(n)]=n}var o=r.charAt(64);if(o){var s=t.indexOf(o);-1!==s&&(e=s)}return function(t,e,r){for(var i=[],n=0,o=0;o<e;o++)if(o%4){var s=r[t.charCodeAt(o-1)]<<o%4*2,c=r[t.charCodeAt(o)]>>>6-o%4*2,a=s|c;i[n>>>2]|=a<<24-n%4*8,n++}return d.create(i,n)}(t,e,i)},_map:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="},function(l){var t=Pt,e=t.lib,r=e.WordArray,i=e.Hasher,n=t.algo,H=[];!function(){for(var t=0;t<64;t++)H[t]=4294967296*l.abs(l.sin(t+1))|0}();var o=n.MD5=i.extend({_doReset:function(){this._hash=new r.init([1732584193,4023233417,2562383102,271733878])},_doProcessBlock:function(t,e){for(var r=0;r<16;r++){var i=e+r,n=t[i];t[i]=16711935&(n<<8|n>>>24)|4278255360&(n<<24|n>>>8)}var o=this._hash.words,s=t[e+0],c=t[e+1],a=t[e+2],h=t[e+3],l=t[e+4],f=t[e+5],d=t[e+6],u=t[e+7],p=t[e+8],_=t[e+9],v=t[e+10],y=t[e+11],g=t[e+12],B=t[e+13],w=t[e+14],k=t[e+15],S=o[0],m=o[1],x=o[2],b=o[3];S=z(S,m,x,b,s,7,H[0]),b=z(b,S,m,x,c,12,H[1]),x=z(x,b,S,m,a,17,H[2]),m=z(m,x,b,S,h,22,H[3]),S=z(S,m,x,b,l,7,H[4]),b=z(b,S,m,x,f,12,H[5]),x=z(x,b,S,m,d,17,H[6]),m=z(m,x,b,S,u,22,H[7]),S=z(S,m,x,b,p,7,H[8]),b=z(b,S,m,x,_,12,H[9]),x=z(x,b,S,m,v,17,H[10]),m=z(m,x,b,S,y,22,H[11]),S=z(S,m,x,b,g,7,H[12]),b=z(b,S,m,x,B,12,H[13]),x=z(x,b,S,m,w,17,H[14]),S=A(S,m=z(m,x,b,S,k,22,H[15]),x,b,c,5,H[16]),b=A(b,S,m,x,d,9,H[17]),x=A(x,b,S,m,y,14,H[18]),m=A(m,x,b,S,s,20,H[19]),S=A(S,m,x,b,f,5,H[20]),b=A(b,S,m,x,v,9,H[21]),x=A(x,b,S,m,k,14,H[22]),m=A(m,x,b,S,l,20,H[23]),S=A(S,m,x,b,_,5,H[24]),b=A(b,S,m,x,w,9,H[25]),x=A(x,b,S,m,h,14,H[26]),m=A(m,x,b,S,p,20,H[27]),S=A(S,m,x,b,B,5,H[28]),b=A(b,S,m,x,a,9,H[29]),x=A(x,b,S,m,u,14,H[30]),S=C(S,m=A(m,x,b,S,g,20,H[31]),x,b,f,4,H[32]),b=C(b,S,m,x,p,11,H[33]),x=C(x,b,S,m,y,16,H[34]),m=C(m,x,b,S,w,23,H[35]),S=C(S,m,x,b,c,4,H[36]),b=C(b,S,m,x,l,11,H[37]),x=C(x,b,S,m,u,16,H[38]),m=C(m,x,b,S,v,23,H[39]),S=C(S,m,x,b,B,4,H[40]),b=C(b,S,m,x,s,11,H[41]),x=C(x,b,S,m,h,16,H[42]),m=C(m,x,b,S,d,23,H[43]),S=C(S,m,x,b,_,4,H[44]),b=C(b,S,m,x,g,11,H[45]),x=C(x,b,S,m,k,16,H[46]),S=D(S,m=C(m,x,b,S,a,23,H[47]),x,b,s,6,H[48]),b=D(b,S,m,x,u,10,H[49]),x=D(x,b,S,m,w,15,H[50]),m=D(m,x,b,S,f,21,H[51]),S=D(S,m,x,b,g,6,H[52]),b=D(b,S,m,x,h,10,H[53]),x=D(x,b,S,m,v,15,H[54]),m=D(m,x,b,S,c,21,H[55]),S=D(S,m,x,b,p,6,H[56]),b=D(b,S,m,x,k,10,H[57]),x=D(x,b,S,m,d,15,H[58]),m=D(m,x,b,S,B,21,H[59]),S=D(S,m,x,b,l,6,H[60]),b=D(b,S,m,x,y,10,H[61]),x=D(x,b,S,m,a,15,H[62]),m=D(m,x,b,S,_,21,H[63]),o[0]=o[0]+S|0,o[1]=o[1]+m|0,o[2]=o[2]+x|0,o[3]=o[3]+b|0},_doFinalize:function(){var t=this._data,e=t.words,r=8*this._nDataBytes,i=8*t.sigBytes;e[i>>>5]|=128<<24-i%32;var n=l.floor(r/4294967296),o=r;e[15+(64+i>>>9<<4)]=16711935&(n<<8|n>>>24)|4278255360&(n<<24|n>>>8),e[14+(64+i>>>9<<4)]=16711935&(o<<8|o>>>24)|4278255360&(o<<24|o>>>8),t.sigBytes=4*(e.length+1),this._process();for(var s=this._hash,c=s.words,a=0;a<4;a++){var h=c[a];c[a]=16711935&(h<<8|h>>>24)|4278255360&(h<<24|h>>>8)}return s},clone:function(){var t=i.clone.call(this);return t._hash=this._hash.clone(),t}});function z(t,e,r,i,n,o,s){var c=t+(e&r|~e&i)+n+s;return(c<<o|c>>>32-o)+e}function A(t,e,r,i,n,o,s){var c=t+(e&i|r&~i)+n+s;return(c<<o|c>>>32-o)+e}function C(t,e,r,i,n,o,s){var c=t+(e^r^i)+n+s;return(c<<o|c>>>32-o)+e}function D(t,e,r,i,n,o,s){var c=t+(r^(e|~i))+n+s;return(c<<o|c>>>32-o)+e}t.MD5=i._createHelper(o),t.HmacMD5=i._createHmacHelper(o)}(Math),p=(u=Pt).lib,_=p.WordArray,v=p.Hasher,y=u.algo,g=[],B=y.SHA1=v.extend({_doReset:function(){this._hash=new _.init([1732584193,4023233417,2562383102,271733878,3285377520])},_doProcessBlock:function(t,e){for(var r=this._hash.words,i=r[0],n=r[1],o=r[2],s=r[3],c=r[4],a=0;a<80;a++){if(a<16)g[a]=0|t[e+a];else{var h=g[a-3]^g[a-8]^g[a-14]^g[a-16];g[a]=h<<1|h>>>31}var l=(i<<5|i>>>27)+c+g[a];l+=a<20?1518500249+(n&o|~n&s):a<40?1859775393+(n^o^s):a<60?(n&o|n&s|o&s)-1894007588:(n^o^s)-899497514,c=s,s=o,o=n<<30|n>>>2,n=i,i=l}r[0]=r[0]+i|0,r[1]=r[1]+n|0,r[2]=r[2]+o|0,r[3]=r[3]+s|0,r[4]=r[4]+c|0},_doFinalize:function(){var t=this._data,e=t.words,r=8*this._nDataBytes,i=8*t.sigBytes;return e[i>>>5]|=128<<24-i%32,e[14+(64+i>>>9<<4)]=Math.floor(r/4294967296),e[15+(64+i>>>9<<4)]=r,t.sigBytes=4*e.length,this._process(),this._hash},clone:function(){var t=v.clone.call(this);return t._hash=this._hash.clone(),t}}),u.SHA1=v._createHelper(B),u.HmacSHA1=v._createHmacHelper(B),function(n){var t=Pt,e=t.lib,r=e.WordArray,i=e.Hasher,o=t.algo,s=[],B=[];!function(){function t(t){for(var e=n.sqrt(t),r=2;r<=e;r++)if(!(t%r))return;return 1}function e(t){return 4294967296*(t-(0|t))|0}for(var r=2,i=0;i<64;)t(r)&&(i<8&&(s[i]=e(n.pow(r,.5))),B[i]=e(n.pow(r,1/3)),i++),r++}();var w=[],c=o.SHA256=i.extend({_doReset:function(){this._hash=new r.init(s.slice(0))},_doProcessBlock:function(t,e){for(var r=this._hash.words,i=r[0],n=r[1],o=r[2],s=r[3],c=r[4],a=r[5],h=r[6],l=r[7],f=0;f<64;f++){if(f<16)w[f]=0|t[e+f];else{var d=w[f-15],u=(d<<25|d>>>7)^(d<<14|d>>>18)^d>>>3,p=w[f-2],_=(p<<15|p>>>17)^(p<<13|p>>>19)^p>>>10;w[f]=u+w[f-7]+_+w[f-16]}var v=i&n^i&o^n&o,y=(i<<30|i>>>2)^(i<<19|i>>>13)^(i<<10|i>>>22),g=l+((c<<26|c>>>6)^(c<<21|c>>>11)^(c<<7|c>>>25))+(c&a^~c&h)+B[f]+w[f];l=h,h=a,a=c,c=s+g|0,s=o,o=n,n=i,i=g+(y+v)|0}r[0]=r[0]+i|0,r[1]=r[1]+n|0,r[2]=r[2]+o|0,r[3]=r[3]+s|0,r[4]=r[4]+c|0,r[5]=r[5]+a|0,r[6]=r[6]+h|0,r[7]=r[7]+l|0},_doFinalize:function(){var t=this._data,e=t.words,r=8*this._nDataBytes,i=8*t.sigBytes;return e[i>>>5]|=128<<24-i%32,e[14+(64+i>>>9<<4)]=n.floor(r/4294967296),e[15+(64+i>>>9<<4)]=r,t.sigBytes=4*e.length,this._process(),this._hash},clone:function(){var t=i.clone.call(this);return t._hash=this._hash.clone(),t}});t.SHA256=i._createHelper(c),t.HmacSHA256=i._createHmacHelper(c)}(Math),function(){var n=Pt.lib.WordArray,t=Pt.enc;t.Utf16=t.Utf16BE={stringify:function(t){for(var e=t.words,r=t.sigBytes,i=[],n=0;n<r;n+=2){var o=e[n>>>2]>>>16-n%4*8&65535;i.push(String.fromCharCode(o))}return i.join("")},parse:function(t){for(var e=t.length,r=[],i=0;i<e;i++)r[i>>>1]|=t.charCodeAt(i)<<16-i%2*16;return n.create(r,2*e)}};function s(t){return t<<8&4278255360|t>>>8&16711935}t.Utf16LE={stringify:function(t){for(var e=t.words,r=t.sigBytes,i=[],n=0;n<r;n+=2){var o=s(e[n>>>2]>>>16-n%4*8&65535);i.push(String.fromCharCode(o))}return i.join("")},parse:function(t){for(var e=t.length,r=[],i=0;i<e;i++)r[i>>>1]|=s(t.charCodeAt(i)<<16-i%2*16);return n.create(r,2*e)}}}(),function(){if("function"==typeof ArrayBuffer){var t=Pt.lib.WordArray,n=t.init;(t.init=function(t){if(t instanceof ArrayBuffer&&(t=new Uint8Array(t)),(t instanceof Int8Array||"undefined"!=typeof Uint8ClampedArray&&t instanceof Uint8ClampedArray||t instanceof Int16Array||t instanceof Uint16Array||t instanceof Int32Array||t instanceof Uint32Array||t instanceof Float32Array||t instanceof Float64Array)&&(t=new Uint8Array(t.buffer,t.byteOffset,t.byteLength)),t instanceof Uint8Array){for(var e=t.byteLength,r=[],i=0;i<e;i++)r[i>>>2]|=t[i]<<24-i%4*8;n.call(this,r,e)}else n.apply(this,arguments)}).prototype=t}}(),Math,k=(w=Pt).lib,S=k.WordArray,m=k.Hasher,x=w.algo,b=S.create([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,7,4,13,1,10,6,15,3,12,0,9,5,2,14,11,8,3,10,14,4,9,15,8,1,2,7,0,6,13,11,5,12,1,9,11,10,0,8,12,4,13,3,7,15,14,5,6,2,4,0,5,9,7,12,2,10,14,1,3,8,11,6,15,13]),H=S.create([5,14,7,0,9,2,11,4,13,6,15,8,1,10,3,12,6,11,3,7,0,13,5,10,14,15,8,12,4,9,1,2,15,5,1,3,7,14,6,9,11,8,12,2,10,0,4,13,8,6,4,1,3,11,15,0,5,12,2,13,9,7,10,14,12,15,10,4,1,5,8,7,6,2,13,14,0,3,9,11]),z=S.create([11,14,15,12,5,8,7,9,11,13,14,15,6,7,9,8,7,6,8,13,11,9,7,15,7,12,15,9,11,7,13,12,11,13,6,7,14,9,13,15,14,8,13,6,5,12,7,5,11,12,14,15,14,15,9,8,9,14,5,6,8,6,5,12,9,15,5,11,6,8,13,12,5,12,13,14,11,8,5,6]),A=S.create([8,9,9,11,13,15,15,5,7,7,8,11,14,14,12,6,9,13,15,7,12,8,9,11,7,7,12,7,6,15,13,11,9,7,15,11,8,6,6,14,12,13,5,14,13,13,7,5,15,5,8,11,14,14,6,14,6,9,12,9,12,5,15,8,8,5,12,9,12,5,14,6,8,13,6,5,15,13,11,11]),C=S.create([0,1518500249,1859775393,2400959708,2840853838]),D=S.create([1352829926,1548603684,1836072691,2053994217,0]),E=x.RIPEMD160=m.extend({_doReset:function(){this._hash=S.create([1732584193,4023233417,2562383102,271733878,3285377520])},_doProcessBlock:function(t,e){for(var r=0;r<16;r++){var i=e+r,n=t[i];t[i]=16711935&(n<<8|n>>>24)|4278255360&(n<<24|n>>>8)}var o,s,c,a,h,l,f,d,u,p,_,v=this._hash.words,y=C.words,g=D.words,B=b.words,w=H.words,k=z.words,S=A.words;l=o=v[0],f=s=v[1],d=c=v[2],u=a=v[3],p=h=v[4];for(r=0;r<80;r+=1)_=o+t[e+B[r]]|0,_+=r<16?Ut(s,c,a)+y[0]:r<32?It(s,c,a)+y[1]:r<48?Kt(s,c,a)+y[2]:r<64?Xt(s,c,a)+y[3]:Lt(s,c,a)+y[4],_=(_=jt(_|=0,k[r]))+h|0,o=h,h=a,a=jt(c,10),c=s,s=_,_=l+t[e+w[r]]|0,_+=r<16?Lt(f,d,u)+g[0]:r<32?Xt(f,d,u)+g[1]:r<48?Kt(f,d,u)+g[2]:r<64?It(f,d,u)+g[3]:Ut(f,d,u)+g[4],_=(_=jt(_|=0,S[r]))+p|0,l=p,p=u,u=jt(d,10),d=f,f=_;_=v[1]+c+u|0,v[1]=v[2]+a+p|0,v[2]=v[3]+h+l|0,v[3]=v[4]+o+f|0,v[4]=v[0]+s+d|0,v[0]=_},_doFinalize:function(){var t=this._data,e=t.words,r=8*this._nDataBytes,i=8*t.sigBytes;e[i>>>5]|=128<<24-i%32,e[14+(64+i>>>9<<4)]=16711935&(r<<8|r>>>24)|4278255360&(r<<24|r>>>8),t.sigBytes=4*(e.length+1),this._process();for(var n=this._hash,o=n.words,s=0;s<5;s++){var c=o[s];o[s]=16711935&(c<<8|c>>>24)|4278255360&(c<<24|c>>>8)}return n},clone:function(){var t=m.clone.call(this);return t._hash=this._hash.clone(),t}}),w.RIPEMD160=m._createHelper(E),w.HmacRIPEMD160=m._createHmacHelper(E),R=Pt.lib.Base,M=Pt.enc.Utf8,Pt.algo.HMAC=R.extend({init:function(t,e){t=this._hasher=new t.init,"string"==typeof e&&(e=M.parse(e));var r=t.blockSize,i=4*r;e.sigBytes>i&&(e=t.finalize(e)),e.clamp();for(var n=this._oKey=e.clone(),o=this._iKey=e.clone(),s=n.words,c=o.words,a=0;a<r;a++)s[a]^=1549556828,c[a]^=909522486;n.sigBytes=o.sigBytes=i,this.reset()},reset:function(){var t=this._hasher;t.reset(),t.update(this._iKey)},update:function(t){return this._hasher.update(t),this},finalize:function(t){var e=this._hasher,r=e.finalize(t);return e.reset(),e.finalize(this._oKey.clone().concat(r))}}),P=(F=Pt).lib,W=P.Base,O=P.WordArray,U=F.algo,I=U.SHA1,K=U.HMAC,X=U.PBKDF2=W.extend({cfg:W.extend({keySize:4,hasher:I,iterations:1}),init:function(t){this.cfg=this.cfg.extend(t)},compute:function(t,e){for(var r=this.cfg,i=K.create(r.hasher,t),n=O.create(),o=O.create([1]),s=n.words,c=o.words,a=r.keySize,h=r.iterations;s.length<a;){var l=i.update(e).finalize(o);i.reset();for(var f=l.words,d=f.length,u=l,p=1;p<h;p++){u=i.finalize(u),i.reset();for(var _=u.words,v=0;v<d;v++)f[v]^=_[v]}n.concat(l),c[0]++}return n.sigBytes=4*a,n}}),F.PBKDF2=function(t,e,r){return X.create(r).compute(t,e)},j=(L=Pt).lib,N=j.Base,T=j.WordArray,Z=L.algo,q=Z.MD5,G=Z.EvpKDF=N.extend({cfg:N.extend({keySize:4,hasher:q,iterations:1}),init:function(t){this.cfg=this.cfg.extend(t)},compute:function(t,e){for(var r,i=this.cfg,n=i.hasher.create(),o=T.create(),s=o.words,c=i.keySize,a=i.iterations;s.length<c;){r&&n.update(r),r=n.update(t).finalize(e),n.reset();for(var h=1;h<a;h++)r=n.finalize(r),n.reset();o.concat(r)}return o.sigBytes=4*c,o}}),L.EvpKDF=function(t,e,r){return G.create(r).compute(t,e)},V=(J=Pt).lib.WordArray,$=J.algo,Q=$.SHA256,Y=$.SHA224=Q.extend({_doReset:function(){this._hash=new V.init([3238371032,914150663,812702999,4144912697,4290775857,1750603025,1694076839,3204075428])},_doFinalize:function(){var t=Q._doFinalize.call(this);return t.sigBytes-=4,t}}),J.SHA224=Q._createHelper(Y),J.HmacSHA224=Q._createHmacHelper(Y),tt=Pt.lib,et=tt.Base,rt=tt.WordArray,(it=Pt.x64={}).Word=et.extend({init:function(t,e){this.high=t,this.low=e}}),it.WordArray=et.extend({init:function(t,e){t=this.words=t||[],this.sigBytes=null!=e?e:8*t.length},toX32:function(){for(var t=this.words,e=t.length,r=[],i=0;i<e;i++){var n=t[i];r.push(n.high),r.push(n.low)}return rt.create(r,this.sigBytes)},clone:function(){for(var t=et.clone.call(this),e=t.words=this.words.slice(0),r=e.length,i=0;i<r;i++)e[i]=e[i].clone();return t}}),function(d){var t=Pt,e=t.lib,u=e.WordArray,i=e.Hasher,l=t.x64.Word,r=t.algo,C=[],D=[],E=[];!function(){for(var t=1,e=0,r=0;r<24;r++){C[t+5*e]=(r+1)*(r+2)/2%64;var i=(2*t+3*e)%5;t=e%5,e=i}for(t=0;t<5;t++)for(e=0;e<5;e++)D[t+5*e]=e+(2*t+3*e)%5*5;for(var n=1,o=0;o<24;o++){for(var s=0,c=0,a=0;a<7;a++){if(1&n){var h=(1<<a)-1;h<32?c^=1<<h:s^=1<<h-32}128&n?n=n<<1^113:n<<=1}E[o]=l.create(s,c)}}();var R=[];!function(){for(var t=0;t<25;t++)R[t]=l.create()}();var n=r.SHA3=i.extend({cfg:i.cfg.extend({outputLength:512}),_doReset:function(){for(var t=this._state=[],e=0;e<25;e++)t[e]=new l.init;this.blockSize=(1600-2*this.cfg.outputLength)/32},_doProcessBlock:function(t,e){for(var r=this._state,i=this.blockSize/2,n=0;n<i;n++){var o=t[e+2*n],s=t[e+2*n+1];o=16711935&(o<<8|o>>>24)|4278255360&(o<<24|o>>>8),s=16711935&(s<<8|s>>>24)|4278255360&(s<<24|s>>>8),(x=r[n]).high^=s,x.low^=o}for(var c=0;c<24;c++){for(var a=0;a<5;a++){for(var h=0,l=0,f=0;f<5;f++){h^=(x=r[a+5*f]).high,l^=x.low}var d=R[a];d.high=h,d.low=l}for(a=0;a<5;a++){var u=R[(a+4)%5],p=R[(a+1)%5],_=p.high,v=p.low;for(h=u.high^(_<<1|v>>>31),l=u.low^(v<<1|_>>>31),f=0;f<5;f++){(x=r[a+5*f]).high^=h,x.low^=l}}for(var y=1;y<25;y++){var g=(x=r[y]).high,B=x.low,w=C[y];l=w<32?(h=g<<w|B>>>32-w,B<<w|g>>>32-w):(h=B<<w-32|g>>>64-w,g<<w-32|B>>>64-w);var k=R[D[y]];k.high=h,k.low=l}var S=R[0],m=r[0];S.high=m.high,S.low=m.low;for(a=0;a<5;a++)for(f=0;f<5;f++){var x=r[y=a+5*f],b=R[y],H=R[(a+1)%5+5*f],z=R[(a+2)%5+5*f];x.high=b.high^~H.high&z.high,x.low=b.low^~H.low&z.low}x=r[0];var A=E[c];x.high^=A.high,x.low^=A.low}},_doFinalize:function(){var t=this._data,e=t.words,r=(this._nDataBytes,8*t.sigBytes),i=32*this.blockSize;e[r>>>5]|=1<<24-r%32,e[(d.ceil((1+r)/i)*i>>>5)-1]|=128,t.sigBytes=4*e.length,this._process();for(var n=this._state,o=this.cfg.outputLength/8,s=o/8,c=[],a=0;a<s;a++){var h=n[a],l=h.high,f=h.low;l=16711935&(l<<8|l>>>24)|4278255360&(l<<24|l>>>8),f=16711935&(f<<8|f>>>24)|4278255360&(f<<24|f>>>8),c.push(f),c.push(l)}return new u.init(c,o)},clone:function(){for(var t=i.clone.call(this),e=t._state=this._state.slice(0),r=0;r<25;r++)e[r]=e[r].clone();return t}});t.SHA3=i._createHelper(n),t.HmacSHA3=i._createHmacHelper(n)}(Math),function(){var t=Pt,e=t.lib.Hasher,r=t.x64,i=r.Word,n=r.WordArray,o=t.algo;function s(){return i.create.apply(i,arguments)}var mt=[s(1116352408,3609767458),s(1899447441,602891725),s(3049323471,3964484399),s(3921009573,2173295548),s(961987163,4081628472),s(1508970993,3053834265),s(2453635748,2937671579),s(2870763221,3664609560),s(3624381080,2734883394),s(310598401,1164996542),s(607225278,1323610764),s(1426881987,3590304994),s(1925078388,4068182383),s(2162078206,991336113),s(2614888103,633803317),s(3248222580,3479774868),s(3835390401,2666613458),s(4022224774,944711139),s(264347078,2341262773),s(604807628,2007800933),s(770255983,1495990901),s(1249150122,1856431235),s(1555081692,3175218132),s(1996064986,2198950837),s(2554220882,3999719339),s(2821834349,766784016),s(2952996808,2566594879),s(3210313671,3203337956),s(3336571891,1034457026),s(3584528711,2466948901),s(113926993,3758326383),s(338241895,168717936),s(666307205,1188179964),s(773529912,1546045734),s(1294757372,1522805485),s(1396182291,2643833823),s(1695183700,2343527390),s(1986661051,1014477480),s(2177026350,1206759142),s(2456956037,344077627),s(2730485921,1290863460),s(2820302411,3158454273),s(3259730800,3505952657),s(3345764771,106217008),s(3516065817,3606008344),s(3600352804,1432725776),s(4094571909,1467031594),s(275423344,851169720),s(430227734,3100823752),s(506948616,1363258195),s(659060556,3750685593),s(883997877,3785050280),s(958139571,3318307427),s(1322822218,3812723403),s(1537002063,2003034995),s(1747873779,3602036899),s(1955562222,1575990012),s(2024104815,1125592928),s(2227730452,2716904306),s(2361852424,442776044),s(2428436474,593698344),s(2756734187,3733110249),s(3204031479,2999351573),s(3329325298,3815920427),s(3391569614,3928383900),s(3515267271,566280711),s(3940187606,3454069534),s(4118630271,4000239992),s(116418474,1914138554),s(174292421,2731055270),s(289380356,3203993006),s(460393269,320620315),s(685471733,587496836),s(852142971,1086792851),s(1017036298,365543100),s(1126000580,2618297676),s(1288033470,3409855158),s(1501505948,4234509866),s(1607167915,987167468),s(1816402316,1246189591)],xt=[];!function(){for(var t=0;t<80;t++)xt[t]=s()}();var c=o.SHA512=e.extend({_doReset:function(){this._hash=new n.init([new i.init(1779033703,4089235720),new i.init(3144134277,2227873595),new i.init(1013904242,4271175723),new i.init(2773480762,1595750129),new i.init(1359893119,2917565137),new i.init(2600822924,725511199),new i.init(528734635,4215389547),new i.init(1541459225,327033209)])},_doProcessBlock:function(t,e){for(var r=this._hash.words,i=r[0],n=r[1],o=r[2],s=r[3],c=r[4],a=r[5],h=r[6],l=r[7],f=i.high,d=i.low,u=n.high,p=n.low,_=o.high,v=o.low,y=s.high,g=s.low,B=c.high,w=c.low,k=a.high,S=a.low,m=h.high,x=h.low,b=l.high,H=l.low,z=f,A=d,C=u,D=p,E=_,R=v,M=y,F=g,P=B,W=w,O=k,U=S,I=m,K=x,X=b,L=H,j=0;j<80;j++){var N,T,Z=xt[j];if(j<16)T=Z.high=0|t[e+2*j],N=Z.low=0|t[e+2*j+1];else{var q=xt[j-15],G=q.high,J=q.low,V=(G>>>1|J<<31)^(G>>>8|J<<24)^G>>>7,$=(J>>>1|G<<31)^(J>>>8|G<<24)^(J>>>7|G<<25),Q=xt[j-2],Y=Q.high,tt=Q.low,et=(Y>>>19|tt<<13)^(Y<<3|tt>>>29)^Y>>>6,rt=(tt>>>19|Y<<13)^(tt<<3|Y>>>29)^(tt>>>6|Y<<26),it=xt[j-7],nt=it.high,ot=it.low,st=xt[j-16],ct=st.high,at=st.low;T=(T=(T=V+nt+((N=$+ot)>>>0<$>>>0?1:0))+et+((N+=rt)>>>0<rt>>>0?1:0))+ct+((N+=at)>>>0<at>>>0?1:0),Z.high=T,Z.low=N}var ht,lt=P&O^~P&I,ft=W&U^~W&K,dt=z&C^z&E^C&E,ut=A&D^A&R^D&R,pt=(z>>>28|A<<4)^(z<<30|A>>>2)^(z<<25|A>>>7),_t=(A>>>28|z<<4)^(A<<30|z>>>2)^(A<<25|z>>>7),vt=(P>>>14|W<<18)^(P>>>18|W<<14)^(P<<23|W>>>9),yt=(W>>>14|P<<18)^(W>>>18|P<<14)^(W<<23|P>>>9),gt=mt[j],Bt=gt.high,wt=gt.low,kt=X+vt+((ht=L+yt)>>>0<L>>>0?1:0),St=_t+ut;X=I,L=K,I=O,K=U,O=P,U=W,P=M+(kt=(kt=(kt=kt+lt+((ht=ht+ft)>>>0<ft>>>0?1:0))+Bt+((ht=ht+wt)>>>0<wt>>>0?1:0))+T+((ht=ht+N)>>>0<N>>>0?1:0))+((W=F+ht|0)>>>0<F>>>0?1:0)|0,M=E,F=R,E=C,R=D,C=z,D=A,z=kt+(pt+dt+(St>>>0<_t>>>0?1:0))+((A=ht+St|0)>>>0<ht>>>0?1:0)|0}d=i.low=d+A,i.high=f+z+(d>>>0<A>>>0?1:0),p=n.low=p+D,n.high=u+C+(p>>>0<D>>>0?1:0),v=o.low=v+R,o.high=_+E+(v>>>0<R>>>0?1:0),g=s.low=g+F,s.high=y+M+(g>>>0<F>>>0?1:0),w=c.low=w+W,c.high=B+P+(w>>>0<W>>>0?1:0),S=a.low=S+U,a.high=k+O+(S>>>0<U>>>0?1:0),x=h.low=x+K,h.high=m+I+(x>>>0<K>>>0?1:0),H=l.low=H+L,l.high=b+X+(H>>>0<L>>>0?1:0)},_doFinalize:function(){var t=this._data,e=t.words,r=8*this._nDataBytes,i=8*t.sigBytes;return e[i>>>5]|=128<<24-i%32,e[30+(128+i>>>10<<5)]=Math.floor(r/4294967296),e[31+(128+i>>>10<<5)]=r,t.sigBytes=4*e.length,this._process(),this._hash.toX32()},clone:function(){var t=e.clone.call(this);return t._hash=this._hash.clone(),t},blockSize:32});t.SHA512=e._createHelper(c),t.HmacSHA512=e._createHmacHelper(c)}(),ot=(nt=Pt).x64,st=ot.Word,ct=ot.WordArray,at=nt.algo,ht=at.SHA512,lt=at.SHA384=ht.extend({_doReset:function(){this._hash=new ct.init([new st.init(3418070365,3238371032),new st.init(1654270250,914150663),new st.init(2438529370,812702999),new st.init(355462360,4144912697),new st.init(1731405415,4290775857),new st.init(2394180231,1750603025),new st.init(3675008525,1694076839),new st.init(1203062813,3204075428)])},_doFinalize:function(){var t=ht._doFinalize.call(this);return t.sigBytes-=16,t}}),nt.SHA384=ht._createHelper(lt),nt.HmacSHA384=ht._createHmacHelper(lt),Pt.lib.Cipher||function(){var t=Pt,e=t.lib,r=e.Base,a=e.WordArray,i=e.BufferedBlockAlgorithm,n=t.enc,o=(n.Utf8,n.Base64),s=t.algo.EvpKDF,c=e.Cipher=i.extend({cfg:r.extend(),createEncryptor:function(t,e){return this.create(this._ENC_XFORM_MODE,t,e)},createDecryptor:function(t,e){return this.create(this._DEC_XFORM_MODE,t,e)},init:function(t,e,r){this.cfg=this.cfg.extend(r),this._xformMode=t,this._key=e,this.reset()},reset:function(){i.reset.call(this),this._doReset()},process:function(t){return this._append(t),this._process()},finalize:function(t){return t&&this._append(t),this._doFinalize()},keySize:4,ivSize:4,_ENC_XFORM_MODE:1,_DEC_XFORM_MODE:2,_createHelper:function(i){return{encrypt:function(t,e,r){return h(e).encrypt(i,t,e,r)},decrypt:function(t,e,r){return h(e).decrypt(i,t,e,r)}}}});function h(t){return"string"==typeof t?w:g}e.StreamCipher=c.extend({_doFinalize:function(){return this._process(!0)},blockSize:1});var l,f=t.mode={},d=e.BlockCipherMode=r.extend({createEncryptor:function(t,e){return this.Encryptor.create(t,e)},createDecryptor:function(t,e){return this.Decryptor.create(t,e)},init:function(t,e){this._cipher=t,this._iv=e}}),u=f.CBC=((l=d.extend()).Encryptor=l.extend({processBlock:function(t,e){var r=this._cipher,i=r.blockSize;p.call(this,t,e,i),r.encryptBlock(t,e),this._prevBlock=t.slice(e,e+i)}}),l.Decryptor=l.extend({processBlock:function(t,e){var r=this._cipher,i=r.blockSize,n=t.slice(e,e+i);r.decryptBlock(t,e),p.call(this,t,e,i),this._prevBlock=n}}),l);function p(t,e,r){var i,n=this._iv;n?(i=n,this._iv=void 0):i=this._prevBlock;for(var o=0;o<r;o++)t[e+o]^=i[o]}var _=(t.pad={}).Pkcs7={pad:function(t,e){for(var r=4*e,i=r-t.sigBytes%r,n=i<<24|i<<16|i<<8|i,o=[],s=0;s<i;s+=4)o.push(n);var c=a.create(o,i);t.concat(c)},unpad:function(t){var e=255&t.words[t.sigBytes-1>>>2];t.sigBytes-=e}},v=(e.BlockCipher=c.extend({cfg:c.cfg.extend({mode:u,padding:_}),reset:function(){var t;c.reset.call(this);var e=this.cfg,r=e.iv,i=e.mode;this._xformMode==this._ENC_XFORM_MODE?t=i.createEncryptor:(t=i.createDecryptor,this._minBufferSize=1),this._mode&&this._mode.__creator==t?this._mode.init(this,r&&r.words):(this._mode=t.call(i,this,r&&r.words),this._mode.__creator=t)},_doProcessBlock:function(t,e){this._mode.processBlock(t,e)},_doFinalize:function(){var t,e=this.cfg.padding;return this._xformMode==this._ENC_XFORM_MODE?(e.pad(this._data,this.blockSize),t=this._process(!0)):(t=this._process(!0),e.unpad(t)),t},blockSize:4}),e.CipherParams=r.extend({init:function(t){this.mixIn(t)},toString:function(t){return(t||this.formatter).stringify(this)}})),y=(t.format={}).OpenSSL={stringify:function(t){var e=t.ciphertext,r=t.salt;return(r?a.create([1398893684,1701076831]).concat(r).concat(e):e).toString(o)},parse:function(t){var e,r=o.parse(t),i=r.words;return 1398893684==i[0]&&1701076831==i[1]&&(e=a.create(i.slice(2,4)),i.splice(0,4),r.sigBytes-=16),v.create({ciphertext:r,salt:e})}},g=e.SerializableCipher=r.extend({cfg:r.extend({format:y}),encrypt:function(t,e,r,i){i=this.cfg.extend(i);var n=t.createEncryptor(r,i),o=n.finalize(e),s=n.cfg;return v.create({ciphertext:o,key:r,iv:s.iv,algorithm:t,mode:s.mode,padding:s.padding,blockSize:t.blockSize,formatter:i.format})},decrypt:function(t,e,r,i){return i=this.cfg.extend(i),e=this._parse(e,i.format),t.createDecryptor(r,i).finalize(e.ciphertext)},_parse:function(t,e){return"string"==typeof t?e.parse(t,this):t}}),B=(t.kdf={}).OpenSSL={execute:function(t,e,r,i){i=i||a.random(8);var n=s.create({keySize:e+r}).compute(t,i),o=a.create(n.words.slice(e),4*r);return n.sigBytes=4*e,v.create({key:n,iv:o,salt:i})}},w=e.PasswordBasedCipher=g.extend({cfg:g.cfg.extend({kdf:B}),encrypt:function(t,e,r,i){var n=(i=this.cfg.extend(i)).kdf.execute(r,t.keySize,t.ivSize);i.iv=n.iv;var o=g.encrypt.call(this,t,e,n.key,i);return o.mixIn(n),o},decrypt:function(t,e,r,i){i=this.cfg.extend(i),e=this._parse(e,i.format);var n=i.kdf.execute(r,t.keySize,t.ivSize,e.salt);return i.iv=n.iv,g.decrypt.call(this,t,e,n.key,i)}})}(),Pt.mode.CFB=((ft=Pt.lib.BlockCipherMode.extend()).Encryptor=ft.extend({processBlock:function(t,e){var r=this._cipher,i=r.blockSize;Nt.call(this,t,e,i,r),this._prevBlock=t.slice(e,e+i)}}),ft.Decryptor=ft.extend({processBlock:function(t,e){var r=this._cipher,i=r.blockSize,n=t.slice(e,e+i);Nt.call(this,t,e,i,r),this._prevBlock=n}}),ft),Pt.mode.ECB=((dt=Pt.lib.BlockCipherMode.extend()).Encryptor=dt.extend({processBlock:function(t,e){this._cipher.encryptBlock(t,e)}}),dt.Decryptor=dt.extend({processBlock:function(t,e){this._cipher.decryptBlock(t,e)}}),dt),Pt.pad.AnsiX923={pad:function(t,e){var r=t.sigBytes,i=4*e,n=i-r%i,o=r+n-1;t.clamp(),t.words[o>>>2]|=n<<24-o%4*8,t.sigBytes+=n},unpad:function(t){var e=255&t.words[t.sigBytes-1>>>2];t.sigBytes-=e}},Pt.pad.Iso10126={pad:function(t,e){var r=4*e,i=r-t.sigBytes%r;t.concat(Pt.lib.WordArray.random(i-1)).concat(Pt.lib.WordArray.create([i<<24],1))},unpad:function(t){var e=255&t.words[t.sigBytes-1>>>2];t.sigBytes-=e}},Pt.pad.Iso97971={pad:function(t,e){t.concat(Pt.lib.WordArray.create([2147483648],1)),Pt.pad.ZeroPadding.pad(t,e)},unpad:function(t){Pt.pad.ZeroPadding.unpad(t),t.sigBytes--}},Pt.mode.OFB=(ut=Pt.lib.BlockCipherMode.extend(),pt=ut.Encryptor=ut.extend({processBlock:function(t,e){var r=this._cipher,i=r.blockSize,n=this._iv,o=this._keystream;n&&(o=this._keystream=n.slice(0),this._iv=void 0),r.encryptBlock(o,0);for(var s=0;s<i;s++)t[e+s]^=o[s]}}),ut.Decryptor=pt,ut),Pt.pad.NoPadding={pad:function(){},unpad:function(){}},_t=Pt.lib.CipherParams,vt=Pt.enc.Hex,Pt.format.Hex={stringify:function(t){return t.ciphertext.toString(vt)},parse:function(t){var e=vt.parse(t);return _t.create({ciphertext:e})}},function(){var t=Pt,e=t.lib.BlockCipher,r=t.algo,h=[],l=[],f=[],d=[],u=[],p=[],_=[],v=[],y=[],g=[];!function(){for(var t=[],e=0;e<256;e++)t[e]=e<128?e<<1:e<<1^283;var r=0,i=0;for(e=0;e<256;e++){var n=i^i<<1^i<<2^i<<3^i<<4;n=n>>>8^255&n^99,h[r]=n;var o=t[l[n]=r],s=t[o],c=t[s],a=257*t[n]^16843008*n;f[r]=a<<24|a>>>8,d[r]=a<<16|a>>>16,u[r]=a<<8|a>>>24,p[r]=a;a=16843009*c^65537*s^257*o^16843008*r;_[n]=a<<24|a>>>8,v[n]=a<<16|a>>>16,y[n]=a<<8|a>>>24,g[n]=a,r?(r=o^t[t[t[c^o]]],i^=t[t[i]]):r=i=1}}();var B=[0,1,2,4,8,16,32,64,128,27,54],i=r.AES=e.extend({_doReset:function(){if(!this._nRounds||this._keyPriorReset!==this._key){for(var t=this._keyPriorReset=this._key,e=t.words,r=t.sigBytes/4,i=4*(1+(this._nRounds=6+r)),n=this._keySchedule=[],o=0;o<i;o++)o<r?n[o]=e[o]:(a=n[o-1],o%r?6<r&&o%r==4&&(a=h[a>>>24]<<24|h[a>>>16&255]<<16|h[a>>>8&255]<<8|h[255&a]):(a=h[(a=a<<8|a>>>24)>>>24]<<24|h[a>>>16&255]<<16|h[a>>>8&255]<<8|h[255&a],a^=B[o/r|0]<<24),n[o]=n[o-r]^a);for(var s=this._invKeySchedule=[],c=0;c<i;c++){o=i-c;if(c%4)var a=n[o];else a=n[o-4];s[c]=c<4||o<=4?a:_[h[a>>>24]]^v[h[a>>>16&255]]^y[h[a>>>8&255]]^g[h[255&a]]}}},encryptBlock:function(t,e){this._doCryptBlock(t,e,this._keySchedule,f,d,u,p,h)},decryptBlock:function(t,e){var r=t[e+1];t[e+1]=t[e+3],t[e+3]=r,this._doCryptBlock(t,e,this._invKeySchedule,_,v,y,g,l);r=t[e+1];t[e+1]=t[e+3],t[e+3]=r},_doCryptBlock:function(t,e,r,i,n,o,s,c){for(var a=this._nRounds,h=t[e]^r[0],l=t[e+1]^r[1],f=t[e+2]^r[2],d=t[e+3]^r[3],u=4,p=1;p<a;p++){var _=i[h>>>24]^n[l>>>16&255]^o[f>>>8&255]^s[255&d]^r[u++],v=i[l>>>24]^n[f>>>16&255]^o[d>>>8&255]^s[255&h]^r[u++],y=i[f>>>24]^n[d>>>16&255]^o[h>>>8&255]^s[255&l]^r[u++],g=i[d>>>24]^n[h>>>16&255]^o[l>>>8&255]^s[255&f]^r[u++];h=_,l=v,f=y,d=g}_=(c[h>>>24]<<24|c[l>>>16&255]<<16|c[f>>>8&255]<<8|c[255&d])^r[u++],v=(c[l>>>24]<<24|c[f>>>16&255]<<16|c[d>>>8&255]<<8|c[255&h])^r[u++],y=(c[f>>>24]<<24|c[d>>>16&255]<<16|c[h>>>8&255]<<8|c[255&l])^r[u++],g=(c[d>>>24]<<24|c[h>>>16&255]<<16|c[l>>>8&255]<<8|c[255&f])^r[u++];t[e]=_,t[e+1]=v,t[e+2]=y,t[e+3]=g},keySize:8});t.AES=e._createHelper(i)}(),function(){var t=Pt,e=t.lib,n=e.WordArray,r=e.BlockCipher,i=t.algo,h=[57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52,44,36,63,55,47,39,31,23,15,7,62,54,46,38,30,22,14,6,61,53,45,37,29,21,13,5,28,20,12,4],l=[14,17,11,24,1,5,3,28,15,6,21,10,23,19,12,4,26,8,16,7,27,20,13,2,41,52,31,37,47,55,30,40,51,45,33,48,44,49,39,56,34,53,46,42,50,36,29,32],f=[1,2,4,6,8,10,12,14,15,17,19,21,23,25,27,28],d=[{0:8421888,268435456:32768,536870912:8421378,805306368:2,1073741824:512,1342177280:8421890,1610612736:8389122,1879048192:8388608,2147483648:514,2415919104:8389120,2684354560:33280,2952790016:8421376,3221225472:32770,3489660928:8388610,3758096384:0,4026531840:33282,134217728:0,402653184:8421890,671088640:33282,939524096:32768,1207959552:8421888,1476395008:512,1744830464:8421378,2013265920:2,2281701376:8389120,2550136832:33280,2818572288:8421376,3087007744:8389122,3355443200:8388610,3623878656:32770,3892314112:514,4160749568:8388608,1:32768,268435457:2,536870913:8421888,805306369:8388608,1073741825:8421378,1342177281:33280,1610612737:512,1879048193:8389122,2147483649:8421890,2415919105:8421376,2684354561:8388610,2952790017:33282,3221225473:514,3489660929:8389120,3758096385:32770,4026531841:0,134217729:8421890,402653185:8421376,671088641:8388608,939524097:512,1207959553:32768,1476395009:8388610,1744830465:2,2013265921:33282,2281701377:32770,2550136833:8389122,2818572289:514,3087007745:8421888,3355443201:8389120,3623878657:0,3892314113:33280,4160749569:8421378},{0:1074282512,16777216:16384,33554432:524288,50331648:1074266128,67108864:1073741840,83886080:1074282496,100663296:1073758208,117440512:16,134217728:540672,150994944:1073758224,167772160:1073741824,184549376:540688,201326592:524304,218103808:0,234881024:16400,251658240:1074266112,8388608:1073758208,25165824:540688,41943040:16,58720256:1073758224,75497472:1074282512,92274688:1073741824,109051904:524288,125829120:1074266128,142606336:524304,159383552:0,176160768:16384,192937984:1074266112,209715200:1073741840,226492416:540672,243269632:1074282496,260046848:16400,268435456:0,285212672:1074266128,301989888:1073758224,318767104:1074282496,335544320:1074266112,352321536:16,369098752:540688,385875968:16384,402653184:16400,419430400:524288,436207616:524304,452984832:1073741840,469762048:540672,486539264:1073758208,503316480:1073741824,520093696:1074282512,276824064:540688,293601280:524288,310378496:1074266112,327155712:16384,343932928:1073758208,360710144:1074282512,377487360:16,394264576:1073741824,411041792:1074282496,427819008:1073741840,444596224:1073758224,461373440:524304,478150656:0,494927872:16400,511705088:1074266128,528482304:540672},{0:260,1048576:0,2097152:67109120,3145728:65796,4194304:65540,5242880:67108868,6291456:67174660,7340032:67174400,8388608:67108864,9437184:67174656,10485760:65792,11534336:67174404,12582912:67109124,13631488:65536,14680064:4,15728640:256,524288:67174656,1572864:67174404,2621440:0,3670016:67109120,4718592:67108868,5767168:65536,6815744:65540,7864320:260,8912896:4,9961472:256,11010048:67174400,12058624:65796,13107200:65792,14155776:67109124,15204352:67174660,16252928:67108864,16777216:67174656,17825792:65540,18874368:65536,19922944:67109120,20971520:256,22020096:67174660,23068672:67108868,24117248:0,25165824:67109124,26214400:67108864,27262976:4,28311552:65792,29360128:67174400,30408704:260,31457280:65796,32505856:67174404,17301504:67108864,18350080:260,19398656:67174656,20447232:0,21495808:65540,22544384:67109120,23592960:256,24641536:67174404,25690112:65536,26738688:67174660,27787264:65796,28835840:67108868,29884416:67109124,30932992:67174400,31981568:4,33030144:65792},{0:2151682048,65536:2147487808,131072:4198464,196608:2151677952,262144:0,327680:4198400,393216:2147483712,458752:4194368,524288:2147483648,589824:4194304,655360:64,720896:2147487744,786432:2151678016,851968:4160,917504:4096,983040:2151682112,32768:2147487808,98304:64,163840:2151678016,229376:2147487744,294912:4198400,360448:2151682112,425984:0,491520:2151677952,557056:4096,622592:2151682048,688128:4194304,753664:4160,819200:2147483648,884736:4194368,950272:4198464,1015808:2147483712,1048576:4194368,1114112:4198400,1179648:2147483712,1245184:0,1310720:4160,1376256:2151678016,1441792:2151682048,1507328:2147487808,1572864:2151682112,1638400:2147483648,1703936:2151677952,1769472:4198464,1835008:2147487744,1900544:4194304,1966080:64,2031616:4096,1081344:2151677952,1146880:2151682112,1212416:0,1277952:4198400,1343488:4194368,1409024:2147483648,1474560:2147487808,1540096:64,1605632:2147483712,1671168:4096,1736704:2147487744,1802240:2151678016,1867776:4160,1933312:2151682048,1998848:4194304,2064384:4198464},{0:128,4096:17039360,8192:262144,12288:536870912,16384:537133184,20480:16777344,24576:553648256,28672:262272,32768:16777216,36864:537133056,40960:536871040,45056:553910400,49152:553910272,53248:0,57344:17039488,61440:553648128,2048:17039488,6144:553648256,10240:128,14336:17039360,18432:262144,22528:537133184,26624:553910272,30720:536870912,34816:537133056,38912:0,43008:553910400,47104:16777344,51200:536871040,55296:553648128,59392:16777216,63488:262272,65536:262144,69632:128,73728:536870912,77824:553648256,81920:16777344,86016:553910272,90112:537133184,94208:16777216,98304:553910400,102400:553648128,106496:17039360,110592:537133056,114688:262272,118784:536871040,122880:0,126976:17039488,67584:553648256,71680:16777216,75776:17039360,79872:537133184,83968:536870912,88064:17039488,92160:128,96256:553910272,100352:262272,104448:553910400,108544:0,112640:553648128,116736:16777344,120832:262144,124928:537133056,129024:536871040},{0:268435464,256:8192,512:270532608,768:270540808,1024:268443648,1280:2097152,1536:2097160,1792:268435456,2048:0,2304:268443656,2560:2105344,2816:8,3072:270532616,3328:2105352,3584:8200,3840:270540800,128:270532608,384:270540808,640:8,896:2097152,1152:2105352,1408:268435464,1664:268443648,1920:8200,2176:2097160,2432:8192,2688:268443656,2944:270532616,3200:0,3456:270540800,3712:2105344,3968:268435456,4096:268443648,4352:270532616,4608:270540808,4864:8200,5120:2097152,5376:268435456,5632:268435464,5888:2105344,6144:2105352,6400:0,6656:8,6912:270532608,7168:8192,7424:268443656,7680:270540800,7936:2097160,4224:8,4480:2105344,4736:2097152,4992:268435464,5248:268443648,5504:8200,5760:270540808,6016:270532608,6272:270540800,6528:270532616,6784:8192,7040:2105352,7296:2097160,7552:0,7808:268435456,8064:268443656},{0:1048576,16:33555457,32:1024,48:1049601,64:34604033,80:0,96:1,112:34603009,128:33555456,144:1048577,160:33554433,176:34604032,192:34603008,208:1025,224:1049600,240:33554432,8:34603009,24:0,40:33555457,56:34604032,72:1048576,88:33554433,104:33554432,120:1025,136:1049601,152:33555456,168:34603008,184:1048577,200:1024,216:34604033,232:1,248:1049600,256:33554432,272:1048576,288:33555457,304:34603009,320:1048577,336:33555456,352:34604032,368:1049601,384:1025,400:34604033,416:1049600,432:1,448:0,464:34603008,480:33554433,496:1024,264:1049600,280:33555457,296:34603009,312:1,328:33554432,344:1048576,360:1025,376:34604032,392:33554433,408:34603008,424:0,440:34604033,456:1049601,472:1024,488:33555456,504:1048577},{0:134219808,1:131072,2:134217728,3:32,4:131104,5:134350880,6:134350848,7:2048,8:134348800,9:134219776,10:133120,11:134348832,12:2080,13:0,14:134217760,15:133152,2147483648:2048,2147483649:134350880,2147483650:134219808,2147483651:134217728,2147483652:134348800,2147483653:133120,2147483654:133152,2147483655:32,2147483656:134217760,2147483657:2080,2147483658:131104,2147483659:134350848,2147483660:0,2147483661:134348832,2147483662:134219776,2147483663:131072,16:133152,17:134350848,18:32,19:2048,20:134219776,21:134217760,22:134348832,23:131072,24:0,25:131104,26:134348800,27:134219808,28:134350880,29:133120,30:2080,31:134217728,2147483664:131072,2147483665:2048,2147483666:134348832,2147483667:133152,2147483668:32,2147483669:134348800,2147483670:134217728,2147483671:134219808,2147483672:134350880,2147483673:134217760,2147483674:134219776,2147483675:0,2147483676:133120,2147483677:2080,2147483678:131104,2147483679:134350848}],u=[4160749569,528482304,33030144,2064384,129024,8064,504,2147483679],o=i.DES=r.extend({_doReset:function(){for(var t=this._key.words,e=[],r=0;r<56;r++){var i=h[r]-1;e[r]=t[i>>>5]>>>31-i%32&1}for(var n=this._subKeys=[],o=0;o<16;o++){var s=n[o]=[],c=f[o];for(r=0;r<24;r++)s[r/6|0]|=e[(l[r]-1+c)%28]<<31-r%6,s[4+(r/6|0)]|=e[28+(l[r+24]-1+c)%28]<<31-r%6;s[0]=s[0]<<1|s[0]>>>31;for(r=1;r<7;r++)s[r]=s[r]>>>4*(r-1)+3;s[7]=s[7]<<5|s[7]>>>27}var a=this._invSubKeys=[];for(r=0;r<16;r++)a[r]=n[15-r]},encryptBlock:function(t,e){this._doCryptBlock(t,e,this._subKeys)},decryptBlock:function(t,e){this._doCryptBlock(t,e,this._invSubKeys)},_doCryptBlock:function(t,e,r){this._lBlock=t[e],this._rBlock=t[e+1],p.call(this,4,252645135),p.call(this,16,65535),_.call(this,2,858993459),_.call(this,8,16711935),p.call(this,1,1431655765);for(var i=0;i<16;i++){for(var n=r[i],o=this._lBlock,s=this._rBlock,c=0,a=0;a<8;a++)c|=d[a][((s^n[a])&u[a])>>>0];this._lBlock=s,this._rBlock=o^c}var h=this._lBlock;this._lBlock=this._rBlock,this._rBlock=h,p.call(this,1,1431655765),_.call(this,8,16711935),_.call(this,2,858993459),p.call(this,16,65535),p.call(this,4,252645135),t[e]=this._lBlock,t[e+1]=this._rBlock},keySize:2,ivSize:2,blockSize:2});function p(t,e){var r=(this._lBlock>>>t^this._rBlock)&e;this._rBlock^=r,this._lBlock^=r<<t}function _(t,e){var r=(this._rBlock>>>t^this._lBlock)&e;this._lBlock^=r,this._rBlock^=r<<t}t.DES=r._createHelper(o);var s=i.TripleDES=r.extend({_doReset:function(){var t=this._key.words;if(2!==t.length&&4!==t.length&&t.length<6)throw new Error("Invalid key length - 3DES requires the key length to be 64, 128, 192 or >192.");var e=t.slice(0,2),r=t.length<4?t.slice(0,2):t.slice(2,4),i=t.length<6?t.slice(0,2):t.slice(4,6);this._des1=o.createEncryptor(n.create(e)),this._des2=o.createEncryptor(n.create(r)),this._des3=o.createEncryptor(n.create(i))},encryptBlock:function(t,e){this._des1.encryptBlock(t,e),this._des2.decryptBlock(t,e),this._des3.encryptBlock(t,e)},decryptBlock:function(t,e){this._des3.decryptBlock(t,e),this._des2.encryptBlock(t,e),this._des1.decryptBlock(t,e)},keySize:6,ivSize:2,blockSize:2});t.TripleDES=r._createHelper(s)}(),function(){var t=Pt,e=t.lib.StreamCipher,r=t.algo,i=r.RC4=e.extend({_doReset:function(){for(var t=this._key,e=t.words,r=t.sigBytes,i=this._S=[],n=0;n<256;n++)i[n]=n;n=0;for(var o=0;n<256;n++){var s=n%r,c=e[s>>>2]>>>24-s%4*8&255;o=(o+i[n]+c)%256;var a=i[n];i[n]=i[o],i[o]=a}this._i=this._j=0},_doProcessBlock:function(t,e){t[e]^=n.call(this)},keySize:8,ivSize:0});function n(){for(var t=this._S,e=this._i,r=this._j,i=0,n=0;n<4;n++){r=(r+t[e=(e+1)%256])%256;var o=t[e];t[e]=t[r],t[r]=o,i|=t[(t[e]+t[r])%256]<<24-8*n}return this._i=e,this._j=r,i}t.RC4=e._createHelper(i);var o=r.RC4Drop=i.extend({cfg:i.cfg.extend({drop:192}),_doReset:function(){i._doReset.call(this);for(var t=this.cfg.drop;0<t;t--)n.call(this)}});t.RC4Drop=e._createHelper(o)}(),Pt.mode.CTRGladman=(yt=Pt.lib.BlockCipherMode.extend(),gt=yt.Encryptor=yt.extend({processBlock:function(t,e){var r,i=this._cipher,n=i.blockSize,o=this._iv,s=this._counter;o&&(s=this._counter=o.slice(0),this._iv=void 0),0===((r=s)[0]=Tt(r[0]))&&(r[1]=Tt(r[1]));var c=s.slice(0);i.encryptBlock(c,0);for(var a=0;a<n;a++)t[e+a]^=c[a]}}),yt.Decryptor=gt,yt),wt=(Bt=Pt).lib.StreamCipher,kt=Bt.algo,St=[],mt=[],xt=[],bt=kt.Rabbit=wt.extend({_doReset:function(){for(var t=this._key.words,e=this.cfg.iv,r=0;r<4;r++)t[r]=16711935&(t[r]<<8|t[r]>>>24)|4278255360&(t[r]<<24|t[r]>>>8);var i=this._X=[t[0],t[3]<<16|t[2]>>>16,t[1],t[0]<<16|t[3]>>>16,t[2],t[1]<<16|t[0]>>>16,t[3],t[2]<<16|t[1]>>>16],n=this._C=[t[2]<<16|t[2]>>>16,4294901760&t[0]|65535&t[1],t[3]<<16|t[3]>>>16,4294901760&t[1]|65535&t[2],t[0]<<16|t[0]>>>16,4294901760&t[2]|65535&t[3],t[1]<<16|t[1]>>>16,4294901760&t[3]|65535&t[0]];for(r=this._b=0;r<4;r++)Zt.call(this);for(r=0;r<8;r++)n[r]^=i[r+4&7];if(e){var o=e.words,s=o[0],c=o[1],a=16711935&(s<<8|s>>>24)|4278255360&(s<<24|s>>>8),h=16711935&(c<<8|c>>>24)|4278255360&(c<<24|c>>>8),l=a>>>16|4294901760&h,f=h<<16|65535&a;n[0]^=a,n[1]^=l,n[2]^=h,n[3]^=f,n[4]^=a,n[5]^=l,n[6]^=h,n[7]^=f;for(r=0;r<4;r++)Zt.call(this)}},_doProcessBlock:function(t,e){var r=this._X;Zt.call(this),St[0]=r[0]^r[5]>>>16^r[3]<<16,St[1]=r[2]^r[7]>>>16^r[5]<<16,St[2]=r[4]^r[1]>>>16^r[7]<<16,St[3]=r[6]^r[3]>>>16^r[1]<<16;for(var i=0;i<4;i++)St[i]=16711935&(St[i]<<8|St[i]>>>24)|4278255360&(St[i]<<24|St[i]>>>8),t[e+i]^=St[i]},blockSize:4,ivSize:2}),Bt.Rabbit=wt._createHelper(bt),Pt.mode.CTR=(Ht=Pt.lib.BlockCipherMode.extend(),zt=Ht.Encryptor=Ht.extend({processBlock:function(t,e){var r=this._cipher,i=r.blockSize,n=this._iv,o=this._counter;n&&(o=this._counter=n.slice(0),this._iv=void 0);var s=o.slice(0);r.encryptBlock(s,0),o[i-1]=o[i-1]+1|0;for(var c=0;c<i;c++)t[e+c]^=s[c]}}),Ht.Decryptor=zt,Ht),Ct=(At=Pt).lib.StreamCipher,Dt=At.algo,Et=[],Rt=[],Mt=[],Ft=Dt.RabbitLegacy=Ct.extend({_doReset:function(){for(var t=this._key.words,e=this.cfg.iv,r=this._X=[t[0],t[3]<<16|t[2]>>>16,t[1],t[0]<<16|t[3]>>>16,t[2],t[1]<<16|t[0]>>>16,t[3],t[2]<<16|t[1]>>>16],i=this._C=[t[2]<<16|t[2]>>>16,4294901760&t[0]|65535&t[1],t[3]<<16|t[3]>>>16,4294901760&t[1]|65535&t[2],t[0]<<16|t[0]>>>16,4294901760&t[2]|65535&t[3],t[1]<<16|t[1]>>>16,4294901760&t[3]|65535&t[0]],n=this._b=0;n<4;n++)qt.call(this);for(n=0;n<8;n++)i[n]^=r[n+4&7];if(e){var o=e.words,s=o[0],c=o[1],a=16711935&(s<<8|s>>>24)|4278255360&(s<<24|s>>>8),h=16711935&(c<<8|c>>>24)|4278255360&(c<<24|c>>>8),l=a>>>16|4294901760&h,f=h<<16|65535&a;i[0]^=a,i[1]^=l,i[2]^=h,i[3]^=f,i[4]^=a,i[5]^=l,i[6]^=h,i[7]^=f;for(n=0;n<4;n++)qt.call(this)}},_doProcessBlock:function(t,e){var r=this._X;qt.call(this),Et[0]=r[0]^r[5]>>>16^r[3]<<16,Et[1]=r[2]^r[7]>>>16^r[5]<<16,Et[2]=r[4]^r[1]>>>16^r[7]<<16,Et[3]=r[6]^r[3]>>>16^r[1]<<16;for(var i=0;i<4;i++)Et[i]=16711935&(Et[i]<<8|Et[i]>>>24)|4278255360&(Et[i]<<24|Et[i]>>>8),t[e+i]^=Et[i]},blockSize:4,ivSize:2}),At.RabbitLegacy=Ct._createHelper(Ft),Pt.pad.ZeroPadding={pad:function(t,e){var r=4*e;t.clamp(),t.sigBytes+=r-(t.sigBytes%r||r)},unpad:function(t){var e=t.words,r=t.sigBytes-1;for(r=t.sigBytes-1;0<=r;r--)if(e[r>>>2]>>>24-r%4*8&255){t.sigBytes=r+1;break}}},Pt});
+;(function (root, factory) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory();
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define([], factory);
+	}
+	else {
+		// Global (browser)
+		root.CryptoJS = factory();
+	}
+}(this, function () {
+
+	/**
+	 * CryptoJS core components.
+	 */
+	var CryptoJS = CryptoJS || (function (Math, undefined) {
+
+	    /*
+	     * Cryptographically secure pseudorandom number generator
+	     *
+	     * As Math.random() is cryptographically not safe to use
+	     */
+	    var secureRandom = function () {
+	        // Native crypto module on NodeJS environment
+	        try {
+	            // Crypto from global object
+	            var crypto = global.crypto;
+
+	            // Create a random float number between 0 and 1
+	            return Number('0.' + crypto.randomBytes(3).readUIntBE(0, 3));
+	        } catch (err) {}
+
+	        // Native crypto module in Browser environment
+	        try {
+	            // Support experimental crypto module in IE 11
+	            var crypto = window.crypto || window.msCrypto;
+
+	            // Create a random float number between 0 and 1
+	            return Number('0.' + window.crypto.getRandomValues(new Uint32Array(1))[0]);
+	        } catch (err) {}
+
+	        throw new Error('Native crypto module could not be used to get secure random number.');
+	    };
+
+	    /*
+	     * Local polyfill of Object.create
+
+	     */
+	    var create = Object.create || (function () {
+	        function F() {}
+
+	        return function (obj) {
+	            var subtype;
+
+	            F.prototype = obj;
+
+	            subtype = new F();
+
+	            F.prototype = null;
+
+	            return subtype;
+	        };
+	    }())
+
+	    /**
+	     * CryptoJS namespace.
+	     */
+	    var C = {};
+
+	    /**
+	     * Library namespace.
+	     */
+	    var C_lib = C.lib = {};
+
+	    /**
+	     * Base object for prototypal inheritance.
+	     */
+	    var Base = C_lib.Base = (function () {
+
+
+	        return {
+	            /**
+	             * Creates a new object that inherits from this object.
+	             *
+	             * @param {Object} overrides Properties to copy into the new object.
+	             *
+	             * @return {Object} The new object.
+	             *
+	             * @static
+	             *
+	             * @example
+	             *
+	             *     var MyType = CryptoJS.lib.Base.extend({
+	             *         field: 'value',
+	             *
+	             *         method: function () {
+	             *         }
+	             *     });
+	             */
+	            extend: function (overrides) {
+	                // Spawn
+	                var subtype = create(this);
+
+	                // Augment
+	                if (overrides) {
+	                    subtype.mixIn(overrides);
+	                }
+
+	                // Create default initializer
+	                if (!subtype.hasOwnProperty('init') || this.init === subtype.init) {
+	                    subtype.init = function () {
+	                        subtype.$super.init.apply(this, arguments);
+	                    };
+	                }
+
+	                // Initializer's prototype is the subtype object
+	                subtype.init.prototype = subtype;
+
+	                // Reference supertype
+	                subtype.$super = this;
+
+	                return subtype;
+	            },
+
+	            /**
+	             * Extends this object and runs the init method.
+	             * Arguments to create() will be passed to init().
+	             *
+	             * @return {Object} The new object.
+	             *
+	             * @static
+	             *
+	             * @example
+	             *
+	             *     var instance = MyType.create();
+	             */
+	            create: function () {
+	                var instance = this.extend();
+	                instance.init.apply(instance, arguments);
+
+	                return instance;
+	            },
+
+	            /**
+	             * Initializes a newly created object.
+	             * Override this method to add some logic when your objects are created.
+	             *
+	             * @example
+	             *
+	             *     var MyType = CryptoJS.lib.Base.extend({
+	             *         init: function () {
+	             *             // ...
+	             *         }
+	             *     });
+	             */
+	            init: function () {
+	            },
+
+	            /**
+	             * Copies properties into this object.
+	             *
+	             * @param {Object} properties The properties to mix in.
+	             *
+	             * @example
+	             *
+	             *     MyType.mixIn({
+	             *         field: 'value'
+	             *     });
+	             */
+	            mixIn: function (properties) {
+	                for (var propertyName in properties) {
+	                    if (properties.hasOwnProperty(propertyName)) {
+	                        this[propertyName] = properties[propertyName];
+	                    }
+	                }
+
+	                // IE won't copy toString using the loop above
+	                if (properties.hasOwnProperty('toString')) {
+	                    this.toString = properties.toString;
+	                }
+	            },
+
+	            /**
+	             * Creates a copy of this object.
+	             *
+	             * @return {Object} The clone.
+	             *
+	             * @example
+	             *
+	             *     var clone = instance.clone();
+	             */
+	            clone: function () {
+	                return this.init.prototype.extend(this);
+	            }
+	        };
+	    }());
+
+	    /**
+	     * An array of 32-bit words.
+	     *
+	     * @property {Array} words The array of 32-bit words.
+	     * @property {number} sigBytes The number of significant bytes in this word array.
+	     */
+	    var WordArray = C_lib.WordArray = Base.extend({
+	        /**
+	         * Initializes a newly created word array.
+	         *
+	         * @param {Array} words (Optional) An array of 32-bit words.
+	         * @param {number} sigBytes (Optional) The number of significant bytes in the words.
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.lib.WordArray.create();
+	         *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607]);
+	         *     var wordArray = CryptoJS.lib.WordArray.create([0x00010203, 0x04050607], 6);
+	         */
+	        init: function (words, sigBytes) {
+	            words = this.words = words || [];
+
+	            if (sigBytes != undefined) {
+	                this.sigBytes = sigBytes;
+	            } else {
+	                this.sigBytes = words.length * 4;
+	            }
+	        },
+
+	        /**
+	         * Converts this word array to a string.
+	         *
+	         * @param {Encoder} encoder (Optional) The encoding strategy to use. Default: CryptoJS.enc.Hex
+	         *
+	         * @return {string} The stringified word array.
+	         *
+	         * @example
+	         *
+	         *     var string = wordArray + '';
+	         *     var string = wordArray.toString();
+	         *     var string = wordArray.toString(CryptoJS.enc.Utf8);
+	         */
+	        toString: function (encoder) {
+	            return (encoder || Hex).stringify(this);
+	        },
+
+	        /**
+	         * Concatenates a word array to this word array.
+	         *
+	         * @param {WordArray} wordArray The word array to append.
+	         *
+	         * @return {WordArray} This word array.
+	         *
+	         * @example
+	         *
+	         *     wordArray1.concat(wordArray2);
+	         */
+	        concat: function (wordArray) {
+	            // Shortcuts
+	            var thisWords = this.words;
+	            var thatWords = wordArray.words;
+	            var thisSigBytes = this.sigBytes;
+	            var thatSigBytes = wordArray.sigBytes;
+
+	            // Clamp excess bits
+	            this.clamp();
+
+	            // Concat
+	            if (thisSigBytes % 4) {
+	                // Copy one byte at a time
+	                for (var i = 0; i < thatSigBytes; i++) {
+	                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
+	                }
+	            } else {
+	                // Copy one word at a time
+	                for (var i = 0; i < thatSigBytes; i += 4) {
+	                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];
+	                }
+	            }
+	            this.sigBytes += thatSigBytes;
+
+	            // Chainable
+	            return this;
+	        },
+
+	        /**
+	         * Removes insignificant bits.
+	         *
+	         * @example
+	         *
+	         *     wordArray.clamp();
+	         */
+	        clamp: function () {
+	            // Shortcuts
+	            var words = this.words;
+	            var sigBytes = this.sigBytes;
+
+	            // Clamp
+	            words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);
+	            words.length = Math.ceil(sigBytes / 4);
+	        },
+
+	        /**
+	         * Creates a copy of this word array.
+	         *
+	         * @return {WordArray} The clone.
+	         *
+	         * @example
+	         *
+	         *     var clone = wordArray.clone();
+	         */
+	        clone: function () {
+	            var clone = Base.clone.call(this);
+	            clone.words = this.words.slice(0);
+
+	            return clone;
+	        },
+
+	        /**
+	         * Creates a word array filled with random bytes.
+	         *
+	         * @param {number} nBytes The number of random bytes to generate.
+	         *
+	         * @return {WordArray} The random word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.lib.WordArray.random(16);
+	         */
+	        random: function (nBytes) {
+	            var words = [];
+
+	            for (var i = 0; i < nBytes; i += 4) {
+	                words.push((secureRandom() * 0x100000000) | 0);
+	            }
+
+	            return new WordArray.init(words, nBytes);
+	        }
+	    });
+
+	    /**
+	     * Encoder namespace.
+	     */
+	    var C_enc = C.enc = {};
+
+	    /**
+	     * Hex encoding strategy.
+	     */
+	    var Hex = C_enc.Hex = {
+	        /**
+	         * Converts a word array to a hex string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The hex string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var hexString = CryptoJS.enc.Hex.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+
+	            // Convert
+	            var hexChars = [];
+	            for (var i = 0; i < sigBytes; i++) {
+	                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	                hexChars.push((bite >>> 4).toString(16));
+	                hexChars.push((bite & 0x0f).toString(16));
+	            }
+
+	            return hexChars.join('');
+	        },
+
+	        /**
+	         * Converts a hex string to a word array.
+	         *
+	         * @param {string} hexStr The hex string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Hex.parse(hexString);
+	         */
+	        parse: function (hexStr) {
+	            // Shortcut
+	            var hexStrLength = hexStr.length;
+
+	            // Convert
+	            var words = [];
+	            for (var i = 0; i < hexStrLength; i += 2) {
+	                words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
+	            }
+
+	            return new WordArray.init(words, hexStrLength / 2);
+	        }
+	    };
+
+	    /**
+	     * Latin1 encoding strategy.
+	     */
+	    var Latin1 = C_enc.Latin1 = {
+	        /**
+	         * Converts a word array to a Latin1 string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The Latin1 string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var latin1String = CryptoJS.enc.Latin1.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+
+	            // Convert
+	            var latin1Chars = [];
+	            for (var i = 0; i < sigBytes; i++) {
+	                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+	                latin1Chars.push(String.fromCharCode(bite));
+	            }
+
+	            return latin1Chars.join('');
+	        },
+
+	        /**
+	         * Converts a Latin1 string to a word array.
+	         *
+	         * @param {string} latin1Str The Latin1 string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Latin1.parse(latin1String);
+	         */
+	        parse: function (latin1Str) {
+	            // Shortcut
+	            var latin1StrLength = latin1Str.length;
+
+	            // Convert
+	            var words = [];
+	            for (var i = 0; i < latin1StrLength; i++) {
+	                words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
+	            }
+
+	            return new WordArray.init(words, latin1StrLength);
+	        }
+	    };
+
+	    /**
+	     * UTF-8 encoding strategy.
+	     */
+	    var Utf8 = C_enc.Utf8 = {
+	        /**
+	         * Converts a word array to a UTF-8 string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The UTF-8 string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var utf8String = CryptoJS.enc.Utf8.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            try {
+	                return decodeURIComponent(escape(Latin1.stringify(wordArray)));
+	            } catch (e) {
+	                throw new Error('Malformed UTF-8 data');
+	            }
+	        },
+
+	        /**
+	         * Converts a UTF-8 string to a word array.
+	         *
+	         * @param {string} utf8Str The UTF-8 string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Utf8.parse(utf8String);
+	         */
+	        parse: function (utf8Str) {
+	            return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
+	        }
+	    };
+
+	    /**
+	     * Abstract buffered block algorithm template.
+	     *
+	     * The property blockSize must be implemented in a concrete subtype.
+	     *
+	     * @property {number} _minBufferSize The number of blocks that should be kept unprocessed in the buffer. Default: 0
+	     */
+	    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({
+	        /**
+	         * Resets this block algorithm's data buffer to its initial state.
+	         *
+	         * @example
+	         *
+	         *     bufferedBlockAlgorithm.reset();
+	         */
+	        reset: function () {
+	            // Initial values
+	            this._data = new WordArray.init();
+	            this._nDataBytes = 0;
+	        },
+
+	        /**
+	         * Adds new data to this block algorithm's buffer.
+	         *
+	         * @param {WordArray|string} data The data to append. Strings are converted to a WordArray using UTF-8.
+	         *
+	         * @example
+	         *
+	         *     bufferedBlockAlgorithm._append('data');
+	         *     bufferedBlockAlgorithm._append(wordArray);
+	         */
+	        _append: function (data) {
+	            // Convert string to WordArray, else assume WordArray already
+	            if (typeof data == 'string') {
+	                data = Utf8.parse(data);
+	            }
+
+	            // Append
+	            this._data.concat(data);
+	            this._nDataBytes += data.sigBytes;
+	        },
+
+	        /**
+	         * Processes available data blocks.
+	         *
+	         * This method invokes _doProcessBlock(offset), which must be implemented by a concrete subtype.
+	         *
+	         * @param {boolean} doFlush Whether all blocks and partial blocks should be processed.
+	         *
+	         * @return {WordArray} The processed data.
+	         *
+	         * @example
+	         *
+	         *     var processedData = bufferedBlockAlgorithm._process();
+	         *     var processedData = bufferedBlockAlgorithm._process(!!'flush');
+	         */
+	        _process: function (doFlush) {
+	            var processedWords;
+
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+	            var dataSigBytes = data.sigBytes;
+	            var blockSize = this.blockSize;
+	            var blockSizeBytes = blockSize * 4;
+
+	            // Count blocks ready
+	            var nBlocksReady = dataSigBytes / blockSizeBytes;
+	            if (doFlush) {
+	                // Round up to include partial blocks
+	                nBlocksReady = Math.ceil(nBlocksReady);
+	            } else {
+	                // Round down to include only full blocks,
+	                // less the number of blocks that must remain in the buffer
+	                nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);
+	            }
+
+	            // Count words ready
+	            var nWordsReady = nBlocksReady * blockSize;
+
+	            // Count bytes ready
+	            var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);
+
+	            // Process blocks
+	            if (nWordsReady) {
+	                for (var offset = 0; offset < nWordsReady; offset += blockSize) {
+	                    // Perform concrete-algorithm logic
+	                    this._doProcessBlock(dataWords, offset);
+	                }
+
+	                // Remove processed words
+	                processedWords = dataWords.splice(0, nWordsReady);
+	                data.sigBytes -= nBytesReady;
+	            }
+
+	            // Return processed words
+	            return new WordArray.init(processedWords, nBytesReady);
+	        },
+
+	        /**
+	         * Creates a copy of this object.
+	         *
+	         * @return {Object} The clone.
+	         *
+	         * @example
+	         *
+	         *     var clone = bufferedBlockAlgorithm.clone();
+	         */
+	        clone: function () {
+	            var clone = Base.clone.call(this);
+	            clone._data = this._data.clone();
+
+	            return clone;
+	        },
+
+	        _minBufferSize: 0
+	    });
+
+	    /**
+	     * Abstract hasher template.
+	     *
+	     * @property {number} blockSize The number of 32-bit words this hasher operates on. Default: 16 (512 bits)
+	     */
+	    var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({
+	        /**
+	         * Configuration options.
+	         */
+	        cfg: Base.extend(),
+
+	        /**
+	         * Initializes a newly created hasher.
+	         *
+	         * @param {Object} cfg (Optional) The configuration options to use for this hash computation.
+	         *
+	         * @example
+	         *
+	         *     var hasher = CryptoJS.algo.SHA256.create();
+	         */
+	        init: function (cfg) {
+	            // Apply config defaults
+	            this.cfg = this.cfg.extend(cfg);
+
+	            // Set initial values
+	            this.reset();
+	        },
+
+	        /**
+	         * Resets this hasher to its initial state.
+	         *
+	         * @example
+	         *
+	         *     hasher.reset();
+	         */
+	        reset: function () {
+	            // Reset data buffer
+	            BufferedBlockAlgorithm.reset.call(this);
+
+	            // Perform concrete-hasher logic
+	            this._doReset();
+	        },
+
+	        /**
+	         * Updates this hasher with a message.
+	         *
+	         * @param {WordArray|string} messageUpdate The message to append.
+	         *
+	         * @return {Hasher} This hasher.
+	         *
+	         * @example
+	         *
+	         *     hasher.update('message');
+	         *     hasher.update(wordArray);
+	         */
+	        update: function (messageUpdate) {
+	            // Append
+	            this._append(messageUpdate);
+
+	            // Update the hash
+	            this._process();
+
+	            // Chainable
+	            return this;
+	        },
+
+	        /**
+	         * Finalizes the hash computation.
+	         * Note that the finalize operation is effectively a destructive, read-once operation.
+	         *
+	         * @param {WordArray|string} messageUpdate (Optional) A final message update.
+	         *
+	         * @return {WordArray} The hash.
+	         *
+	         * @example
+	         *
+	         *     var hash = hasher.finalize();
+	         *     var hash = hasher.finalize('message');
+	         *     var hash = hasher.finalize(wordArray);
+	         */
+	        finalize: function (messageUpdate) {
+	            // Final message update
+	            if (messageUpdate) {
+	                this._append(messageUpdate);
+	            }
+
+	            // Perform concrete-hasher logic
+	            var hash = this._doFinalize();
+
+	            return hash;
+	        },
+
+	        blockSize: 512/32,
+
+	        /**
+	         * Creates a shortcut function to a hasher's object interface.
+	         *
+	         * @param {Hasher} hasher The hasher to create a helper for.
+	         *
+	         * @return {Function} The shortcut function.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var SHA256 = CryptoJS.lib.Hasher._createHelper(CryptoJS.algo.SHA256);
+	         */
+	        _createHelper: function (hasher) {
+	            return function (message, cfg) {
+	                return new hasher.init(cfg).finalize(message);
+	            };
+	        },
+
+	        /**
+	         * Creates a shortcut function to the HMAC's object interface.
+	         *
+	         * @param {Hasher} hasher The hasher to use in this HMAC helper.
+	         *
+	         * @return {Function} The shortcut function.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var HmacSHA256 = CryptoJS.lib.Hasher._createHmacHelper(CryptoJS.algo.SHA256);
+	         */
+	        _createHmacHelper: function (hasher) {
+	            return function (message, key) {
+	                return new C_algo.HMAC.init(hasher, key).finalize(message);
+	            };
+	        }
+	    });
+
+	    /**
+	     * Algorithm namespace.
+	     */
+	    var C_algo = C.algo = {};
+
+	    return C;
+	}(Math));
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var C_enc = C.enc;
+
+	    /**
+	     * Base64 encoding strategy.
+	     */
+	    var Base64 = C_enc.Base64 = {
+	        /**
+	         * Converts a word array to a Base64 string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The Base64 string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var base64String = CryptoJS.enc.Base64.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+	            var map = this._map;
+
+	            // Clamp excess bits
+	            wordArray.clamp();
+
+	            // Convert
+	            var base64Chars = [];
+	            for (var i = 0; i < sigBytes; i += 3) {
+	                var byte1 = (words[i >>> 2]       >>> (24 - (i % 4) * 8))       & 0xff;
+	                var byte2 = (words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
+	                var byte3 = (words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
+
+	                var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
+
+	                for (var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++) {
+	                    base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
+	                }
+	            }
+
+	            // Add padding
+	            var paddingChar = map.charAt(64);
+	            if (paddingChar) {
+	                while (base64Chars.length % 4) {
+	                    base64Chars.push(paddingChar);
+	                }
+	            }
+
+	            return base64Chars.join('');
+	        },
+
+	        /**
+	         * Converts a Base64 string to a word array.
+	         *
+	         * @param {string} base64Str The Base64 string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Base64.parse(base64String);
+	         */
+	        parse: function (base64Str) {
+	            // Shortcuts
+	            var base64StrLength = base64Str.length;
+	            var map = this._map;
+	            var reverseMap = this._reverseMap;
+
+	            if (!reverseMap) {
+	                    reverseMap = this._reverseMap = [];
+	                    for (var j = 0; j < map.length; j++) {
+	                        reverseMap[map.charCodeAt(j)] = j;
+	                    }
+	            }
+
+	            // Ignore padding
+	            var paddingChar = map.charAt(64);
+	            if (paddingChar) {
+	                var paddingIndex = base64Str.indexOf(paddingChar);
+	                if (paddingIndex !== -1) {
+	                    base64StrLength = paddingIndex;
+	                }
+	            }
+
+	            // Convert
+	            return parseLoop(base64Str, base64StrLength, reverseMap);
+
+	        },
+
+	        _map: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+	    };
+
+	    function parseLoop(base64Str, base64StrLength, reverseMap) {
+	      var words = [];
+	      var nBytes = 0;
+	      for (var i = 0; i < base64StrLength; i++) {
+	          if (i % 4) {
+	              var bits1 = reverseMap[base64Str.charCodeAt(i - 1)] << ((i % 4) * 2);
+	              var bits2 = reverseMap[base64Str.charCodeAt(i)] >>> (6 - (i % 4) * 2);
+	              var bitsCombined = bits1 | bits2;
+	              words[nBytes >>> 2] |= bitsCombined << (24 - (nBytes % 4) * 8);
+	              nBytes++;
+	          }
+	      }
+	      return WordArray.create(words, nBytes);
+	    }
+	}());
+
+
+	(function (Math) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var Hasher = C_lib.Hasher;
+	    var C_algo = C.algo;
+
+	    // Constants table
+	    var T = [];
+
+	    // Compute constants
+	    (function () {
+	        for (var i = 0; i < 64; i++) {
+	            T[i] = (Math.abs(Math.sin(i + 1)) * 0x100000000) | 0;
+	        }
+	    }());
+
+	    /**
+	     * MD5 hash algorithm.
+	     */
+	    var MD5 = C_algo.MD5 = Hasher.extend({
+	        _doReset: function () {
+	            this._hash = new WordArray.init([
+	                0x67452301, 0xefcdab89,
+	                0x98badcfe, 0x10325476
+	            ]);
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Swap endian
+	            for (var i = 0; i < 16; i++) {
+	                // Shortcuts
+	                var offset_i = offset + i;
+	                var M_offset_i = M[offset_i];
+
+	                M[offset_i] = (
+	                    (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
+	                    (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
+	                );
+	            }
+
+	            // Shortcuts
+	            var H = this._hash.words;
+
+	            var M_offset_0  = M[offset + 0];
+	            var M_offset_1  = M[offset + 1];
+	            var M_offset_2  = M[offset + 2];
+	            var M_offset_3  = M[offset + 3];
+	            var M_offset_4  = M[offset + 4];
+	            var M_offset_5  = M[offset + 5];
+	            var M_offset_6  = M[offset + 6];
+	            var M_offset_7  = M[offset + 7];
+	            var M_offset_8  = M[offset + 8];
+	            var M_offset_9  = M[offset + 9];
+	            var M_offset_10 = M[offset + 10];
+	            var M_offset_11 = M[offset + 11];
+	            var M_offset_12 = M[offset + 12];
+	            var M_offset_13 = M[offset + 13];
+	            var M_offset_14 = M[offset + 14];
+	            var M_offset_15 = M[offset + 15];
+
+	            // Working varialbes
+	            var a = H[0];
+	            var b = H[1];
+	            var c = H[2];
+	            var d = H[3];
+
+	            // Computation
+	            a = FF(a, b, c, d, M_offset_0,  7,  T[0]);
+	            d = FF(d, a, b, c, M_offset_1,  12, T[1]);
+	            c = FF(c, d, a, b, M_offset_2,  17, T[2]);
+	            b = FF(b, c, d, a, M_offset_3,  22, T[3]);
+	            a = FF(a, b, c, d, M_offset_4,  7,  T[4]);
+	            d = FF(d, a, b, c, M_offset_5,  12, T[5]);
+	            c = FF(c, d, a, b, M_offset_6,  17, T[6]);
+	            b = FF(b, c, d, a, M_offset_7,  22, T[7]);
+	            a = FF(a, b, c, d, M_offset_8,  7,  T[8]);
+	            d = FF(d, a, b, c, M_offset_9,  12, T[9]);
+	            c = FF(c, d, a, b, M_offset_10, 17, T[10]);
+	            b = FF(b, c, d, a, M_offset_11, 22, T[11]);
+	            a = FF(a, b, c, d, M_offset_12, 7,  T[12]);
+	            d = FF(d, a, b, c, M_offset_13, 12, T[13]);
+	            c = FF(c, d, a, b, M_offset_14, 17, T[14]);
+	            b = FF(b, c, d, a, M_offset_15, 22, T[15]);
+
+	            a = GG(a, b, c, d, M_offset_1,  5,  T[16]);
+	            d = GG(d, a, b, c, M_offset_6,  9,  T[17]);
+	            c = GG(c, d, a, b, M_offset_11, 14, T[18]);
+	            b = GG(b, c, d, a, M_offset_0,  20, T[19]);
+	            a = GG(a, b, c, d, M_offset_5,  5,  T[20]);
+	            d = GG(d, a, b, c, M_offset_10, 9,  T[21]);
+	            c = GG(c, d, a, b, M_offset_15, 14, T[22]);
+	            b = GG(b, c, d, a, M_offset_4,  20, T[23]);
+	            a = GG(a, b, c, d, M_offset_9,  5,  T[24]);
+	            d = GG(d, a, b, c, M_offset_14, 9,  T[25]);
+	            c = GG(c, d, a, b, M_offset_3,  14, T[26]);
+	            b = GG(b, c, d, a, M_offset_8,  20, T[27]);
+	            a = GG(a, b, c, d, M_offset_13, 5,  T[28]);
+	            d = GG(d, a, b, c, M_offset_2,  9,  T[29]);
+	            c = GG(c, d, a, b, M_offset_7,  14, T[30]);
+	            b = GG(b, c, d, a, M_offset_12, 20, T[31]);
+
+	            a = HH(a, b, c, d, M_offset_5,  4,  T[32]);
+	            d = HH(d, a, b, c, M_offset_8,  11, T[33]);
+	            c = HH(c, d, a, b, M_offset_11, 16, T[34]);
+	            b = HH(b, c, d, a, M_offset_14, 23, T[35]);
+	            a = HH(a, b, c, d, M_offset_1,  4,  T[36]);
+	            d = HH(d, a, b, c, M_offset_4,  11, T[37]);
+	            c = HH(c, d, a, b, M_offset_7,  16, T[38]);
+	            b = HH(b, c, d, a, M_offset_10, 23, T[39]);
+	            a = HH(a, b, c, d, M_offset_13, 4,  T[40]);
+	            d = HH(d, a, b, c, M_offset_0,  11, T[41]);
+	            c = HH(c, d, a, b, M_offset_3,  16, T[42]);
+	            b = HH(b, c, d, a, M_offset_6,  23, T[43]);
+	            a = HH(a, b, c, d, M_offset_9,  4,  T[44]);
+	            d = HH(d, a, b, c, M_offset_12, 11, T[45]);
+	            c = HH(c, d, a, b, M_offset_15, 16, T[46]);
+	            b = HH(b, c, d, a, M_offset_2,  23, T[47]);
+
+	            a = II(a, b, c, d, M_offset_0,  6,  T[48]);
+	            d = II(d, a, b, c, M_offset_7,  10, T[49]);
+	            c = II(c, d, a, b, M_offset_14, 15, T[50]);
+	            b = II(b, c, d, a, M_offset_5,  21, T[51]);
+	            a = II(a, b, c, d, M_offset_12, 6,  T[52]);
+	            d = II(d, a, b, c, M_offset_3,  10, T[53]);
+	            c = II(c, d, a, b, M_offset_10, 15, T[54]);
+	            b = II(b, c, d, a, M_offset_1,  21, T[55]);
+	            a = II(a, b, c, d, M_offset_8,  6,  T[56]);
+	            d = II(d, a, b, c, M_offset_15, 10, T[57]);
+	            c = II(c, d, a, b, M_offset_6,  15, T[58]);
+	            b = II(b, c, d, a, M_offset_13, 21, T[59]);
+	            a = II(a, b, c, d, M_offset_4,  6,  T[60]);
+	            d = II(d, a, b, c, M_offset_11, 10, T[61]);
+	            c = II(c, d, a, b, M_offset_2,  15, T[62]);
+	            b = II(b, c, d, a, M_offset_9,  21, T[63]);
+
+	            // Intermediate hash value
+	            H[0] = (H[0] + a) | 0;
+	            H[1] = (H[1] + b) | 0;
+	            H[2] = (H[2] + c) | 0;
+	            H[3] = (H[3] + d) | 0;
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+
+	            var nBitsTotalH = Math.floor(nBitsTotal / 0x100000000);
+	            var nBitsTotalL = nBitsTotal;
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = (
+	                (((nBitsTotalH << 8)  | (nBitsTotalH >>> 24)) & 0x00ff00ff) |
+	                (((nBitsTotalH << 24) | (nBitsTotalH >>> 8))  & 0xff00ff00)
+	            );
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = (
+	                (((nBitsTotalL << 8)  | (nBitsTotalL >>> 24)) & 0x00ff00ff) |
+	                (((nBitsTotalL << 24) | (nBitsTotalL >>> 8))  & 0xff00ff00)
+	            );
+
+	            data.sigBytes = (dataWords.length + 1) * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Shortcuts
+	            var hash = this._hash;
+	            var H = hash.words;
+
+	            // Swap endian
+	            for (var i = 0; i < 4; i++) {
+	                // Shortcut
+	                var H_i = H[i];
+
+	                H[i] = (((H_i << 8)  | (H_i >>> 24)) & 0x00ff00ff) |
+	                       (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
+	            }
+
+	            // Return final computed hash
+	            return hash;
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+	            clone._hash = this._hash.clone();
+
+	            return clone;
+	        }
+	    });
+
+	    function FF(a, b, c, d, x, s, t) {
+	        var n = a + ((b & c) | (~b & d)) + x + t;
+	        return ((n << s) | (n >>> (32 - s))) + b;
+	    }
+
+	    function GG(a, b, c, d, x, s, t) {
+	        var n = a + ((b & d) | (c & ~d)) + x + t;
+	        return ((n << s) | (n >>> (32 - s))) + b;
+	    }
+
+	    function HH(a, b, c, d, x, s, t) {
+	        var n = a + (b ^ c ^ d) + x + t;
+	        return ((n << s) | (n >>> (32 - s))) + b;
+	    }
+
+	    function II(a, b, c, d, x, s, t) {
+	        var n = a + (c ^ (b | ~d)) + x + t;
+	        return ((n << s) | (n >>> (32 - s))) + b;
+	    }
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.MD5('message');
+	     *     var hash = CryptoJS.MD5(wordArray);
+	     */
+	    C.MD5 = Hasher._createHelper(MD5);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacMD5(message, key);
+	     */
+	    C.HmacMD5 = Hasher._createHmacHelper(MD5);
+	}(Math));
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var Hasher = C_lib.Hasher;
+	    var C_algo = C.algo;
+
+	    // Reusable object
+	    var W = [];
+
+	    /**
+	     * SHA-1 hash algorithm.
+	     */
+	    var SHA1 = C_algo.SHA1 = Hasher.extend({
+	        _doReset: function () {
+	            this._hash = new WordArray.init([
+	                0x67452301, 0xefcdab89,
+	                0x98badcfe, 0x10325476,
+	                0xc3d2e1f0
+	            ]);
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcut
+	            var H = this._hash.words;
+
+	            // Working variables
+	            var a = H[0];
+	            var b = H[1];
+	            var c = H[2];
+	            var d = H[3];
+	            var e = H[4];
+
+	            // Computation
+	            for (var i = 0; i < 80; i++) {
+	                if (i < 16) {
+	                    W[i] = M[offset + i] | 0;
+	                } else {
+	                    var n = W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16];
+	                    W[i] = (n << 1) | (n >>> 31);
+	                }
+
+	                var t = ((a << 5) | (a >>> 27)) + e + W[i];
+	                if (i < 20) {
+	                    t += ((b & c) | (~b & d)) + 0x5a827999;
+	                } else if (i < 40) {
+	                    t += (b ^ c ^ d) + 0x6ed9eba1;
+	                } else if (i < 60) {
+	                    t += ((b & c) | (b & d) | (c & d)) - 0x70e44324;
+	                } else /* if (i < 80) */ {
+	                    t += (b ^ c ^ d) - 0x359d3e2a;
+	                }
+
+	                e = d;
+	                d = c;
+	                c = (b << 30) | (b >>> 2);
+	                b = a;
+	                a = t;
+	            }
+
+	            // Intermediate hash value
+	            H[0] = (H[0] + a) | 0;
+	            H[1] = (H[1] + b) | 0;
+	            H[2] = (H[2] + c) | 0;
+	            H[3] = (H[3] + d) | 0;
+	            H[4] = (H[4] + e) | 0;
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
+	            data.sigBytes = dataWords.length * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Return final computed hash
+	            return this._hash;
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+	            clone._hash = this._hash.clone();
+
+	            return clone;
+	        }
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA1('message');
+	     *     var hash = CryptoJS.SHA1(wordArray);
+	     */
+	    C.SHA1 = Hasher._createHelper(SHA1);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA1(message, key);
+	     */
+	    C.HmacSHA1 = Hasher._createHmacHelper(SHA1);
+	}());
+
+
+	(function (Math) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var Hasher = C_lib.Hasher;
+	    var C_algo = C.algo;
+
+	    // Initialization and round constants tables
+	    var H = [];
+	    var K = [];
+
+	    // Compute constants
+	    (function () {
+	        function isPrime(n) {
+	            var sqrtN = Math.sqrt(n);
+	            for (var factor = 2; factor <= sqrtN; factor++) {
+	                if (!(n % factor)) {
+	                    return false;
+	                }
+	            }
+
+	            return true;
+	        }
+
+	        function getFractionalBits(n) {
+	            return ((n - (n | 0)) * 0x100000000) | 0;
+	        }
+
+	        var n = 2;
+	        var nPrime = 0;
+	        while (nPrime < 64) {
+	            if (isPrime(n)) {
+	                if (nPrime < 8) {
+	                    H[nPrime] = getFractionalBits(Math.pow(n, 1 / 2));
+	                }
+	                K[nPrime] = getFractionalBits(Math.pow(n, 1 / 3));
+
+	                nPrime++;
+	            }
+
+	            n++;
+	        }
+	    }());
+
+	    // Reusable object
+	    var W = [];
+
+	    /**
+	     * SHA-256 hash algorithm.
+	     */
+	    var SHA256 = C_algo.SHA256 = Hasher.extend({
+	        _doReset: function () {
+	            this._hash = new WordArray.init(H.slice(0));
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcut
+	            var H = this._hash.words;
+
+	            // Working variables
+	            var a = H[0];
+	            var b = H[1];
+	            var c = H[2];
+	            var d = H[3];
+	            var e = H[4];
+	            var f = H[5];
+	            var g = H[6];
+	            var h = H[7];
+
+	            // Computation
+	            for (var i = 0; i < 64; i++) {
+	                if (i < 16) {
+	                    W[i] = M[offset + i] | 0;
+	                } else {
+	                    var gamma0x = W[i - 15];
+	                    var gamma0  = ((gamma0x << 25) | (gamma0x >>> 7))  ^
+	                                  ((gamma0x << 14) | (gamma0x >>> 18)) ^
+	                                   (gamma0x >>> 3);
+
+	                    var gamma1x = W[i - 2];
+	                    var gamma1  = ((gamma1x << 15) | (gamma1x >>> 17)) ^
+	                                  ((gamma1x << 13) | (gamma1x >>> 19)) ^
+	                                   (gamma1x >>> 10);
+
+	                    W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
+	                }
+
+	                var ch  = (e & f) ^ (~e & g);
+	                var maj = (a & b) ^ (a & c) ^ (b & c);
+
+	                var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));
+	                var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7)  | (e >>> 25));
+
+	                var t1 = h + sigma1 + ch + K[i] + W[i];
+	                var t2 = sigma0 + maj;
+
+	                h = g;
+	                g = f;
+	                f = e;
+	                e = (d + t1) | 0;
+	                d = c;
+	                c = b;
+	                b = a;
+	                a = (t1 + t2) | 0;
+	            }
+
+	            // Intermediate hash value
+	            H[0] = (H[0] + a) | 0;
+	            H[1] = (H[1] + b) | 0;
+	            H[2] = (H[2] + c) | 0;
+	            H[3] = (H[3] + d) | 0;
+	            H[4] = (H[4] + e) | 0;
+	            H[5] = (H[5] + f) | 0;
+	            H[6] = (H[6] + g) | 0;
+	            H[7] = (H[7] + h) | 0;
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
+	            data.sigBytes = dataWords.length * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Return final computed hash
+	            return this._hash;
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+	            clone._hash = this._hash.clone();
+
+	            return clone;
+	        }
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA256('message');
+	     *     var hash = CryptoJS.SHA256(wordArray);
+	     */
+	    C.SHA256 = Hasher._createHelper(SHA256);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA256(message, key);
+	     */
+	    C.HmacSHA256 = Hasher._createHmacHelper(SHA256);
+	}(Math));
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var C_enc = C.enc;
+
+	    /**
+	     * UTF-16 BE encoding strategy.
+	     */
+	    var Utf16BE = C_enc.Utf16 = C_enc.Utf16BE = {
+	        /**
+	         * Converts a word array to a UTF-16 BE string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The UTF-16 BE string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var utf16String = CryptoJS.enc.Utf16.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+
+	            // Convert
+	            var utf16Chars = [];
+	            for (var i = 0; i < sigBytes; i += 2) {
+	                var codePoint = (words[i >>> 2] >>> (16 - (i % 4) * 8)) & 0xffff;
+	                utf16Chars.push(String.fromCharCode(codePoint));
+	            }
+
+	            return utf16Chars.join('');
+	        },
+
+	        /**
+	         * Converts a UTF-16 BE string to a word array.
+	         *
+	         * @param {string} utf16Str The UTF-16 BE string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Utf16.parse(utf16String);
+	         */
+	        parse: function (utf16Str) {
+	            // Shortcut
+	            var utf16StrLength = utf16Str.length;
+
+	            // Convert
+	            var words = [];
+	            for (var i = 0; i < utf16StrLength; i++) {
+	                words[i >>> 1] |= utf16Str.charCodeAt(i) << (16 - (i % 2) * 16);
+	            }
+
+	            return WordArray.create(words, utf16StrLength * 2);
+	        }
+	    };
+
+	    /**
+	     * UTF-16 LE encoding strategy.
+	     */
+	    C_enc.Utf16LE = {
+	        /**
+	         * Converts a word array to a UTF-16 LE string.
+	         *
+	         * @param {WordArray} wordArray The word array.
+	         *
+	         * @return {string} The UTF-16 LE string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var utf16Str = CryptoJS.enc.Utf16LE.stringify(wordArray);
+	         */
+	        stringify: function (wordArray) {
+	            // Shortcuts
+	            var words = wordArray.words;
+	            var sigBytes = wordArray.sigBytes;
+
+	            // Convert
+	            var utf16Chars = [];
+	            for (var i = 0; i < sigBytes; i += 2) {
+	                var codePoint = swapEndian((words[i >>> 2] >>> (16 - (i % 4) * 8)) & 0xffff);
+	                utf16Chars.push(String.fromCharCode(codePoint));
+	            }
+
+	            return utf16Chars.join('');
+	        },
+
+	        /**
+	         * Converts a UTF-16 LE string to a word array.
+	         *
+	         * @param {string} utf16Str The UTF-16 LE string.
+	         *
+	         * @return {WordArray} The word array.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.enc.Utf16LE.parse(utf16Str);
+	         */
+	        parse: function (utf16Str) {
+	            // Shortcut
+	            var utf16StrLength = utf16Str.length;
+
+	            // Convert
+	            var words = [];
+	            for (var i = 0; i < utf16StrLength; i++) {
+	                words[i >>> 1] |= swapEndian(utf16Str.charCodeAt(i) << (16 - (i % 2) * 16));
+	            }
+
+	            return WordArray.create(words, utf16StrLength * 2);
+	        }
+	    };
+
+	    function swapEndian(word) {
+	        return ((word << 8) & 0xff00ff00) | ((word >>> 8) & 0x00ff00ff);
+	    }
+	}());
+
+
+	(function () {
+	    // Check if typed arrays are supported
+	    if (typeof ArrayBuffer != 'function') {
+	        return;
+	    }
+
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+
+	    // Reference original init
+	    var superInit = WordArray.init;
+
+	    // Augment WordArray.init to handle typed arrays
+	    var subInit = WordArray.init = function (typedArray) {
+	        // Convert buffers to uint8
+	        if (typedArray instanceof ArrayBuffer) {
+	            typedArray = new Uint8Array(typedArray);
+	        }
+
+	        // Convert other array views to uint8
+	        if (
+	            typedArray instanceof Int8Array ||
+	            (typeof Uint8ClampedArray !== "undefined" && typedArray instanceof Uint8ClampedArray) ||
+	            typedArray instanceof Int16Array ||
+	            typedArray instanceof Uint16Array ||
+	            typedArray instanceof Int32Array ||
+	            typedArray instanceof Uint32Array ||
+	            typedArray instanceof Float32Array ||
+	            typedArray instanceof Float64Array
+	        ) {
+	            typedArray = new Uint8Array(typedArray.buffer, typedArray.byteOffset, typedArray.byteLength);
+	        }
+
+	        // Handle Uint8Array
+	        if (typedArray instanceof Uint8Array) {
+	            // Shortcut
+	            var typedArrayByteLength = typedArray.byteLength;
+
+	            // Extract bytes
+	            var words = [];
+	            for (var i = 0; i < typedArrayByteLength; i++) {
+	                words[i >>> 2] |= typedArray[i] << (24 - (i % 4) * 8);
+	            }
+
+	            // Initialize this word array
+	            superInit.call(this, words, typedArrayByteLength);
+	        } else {
+	            // Else call normal init
+	            superInit.apply(this, arguments);
+	        }
+	    };
+
+	    subInit.prototype = WordArray;
+	}());
+
+
+	/** @preserve
+	(c) 2012 by Cédric Mesnil. All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+	    - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+	    - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	*/
+
+	(function (Math) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var Hasher = C_lib.Hasher;
+	    var C_algo = C.algo;
+
+	    // Constants table
+	    var _zl = WordArray.create([
+	        0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+	        7,  4, 13,  1, 10,  6, 15,  3, 12,  0,  9,  5,  2, 14, 11,  8,
+	        3, 10, 14,  4,  9, 15,  8,  1,  2,  7,  0,  6, 13, 11,  5, 12,
+	        1,  9, 11, 10,  0,  8, 12,  4, 13,  3,  7, 15, 14,  5,  6,  2,
+	        4,  0,  5,  9,  7, 12,  2, 10, 14,  1,  3,  8, 11,  6, 15, 13]);
+	    var _zr = WordArray.create([
+	        5, 14,  7,  0,  9,  2, 11,  4, 13,  6, 15,  8,  1, 10,  3, 12,
+	        6, 11,  3,  7,  0, 13,  5, 10, 14, 15,  8, 12,  4,  9,  1,  2,
+	        15,  5,  1,  3,  7, 14,  6,  9, 11,  8, 12,  2, 10,  0,  4, 13,
+	        8,  6,  4,  1,  3, 11, 15,  0,  5, 12,  2, 13,  9,  7, 10, 14,
+	        12, 15, 10,  4,  1,  5,  8,  7,  6,  2, 13, 14,  0,  3,  9, 11]);
+	    var _sl = WordArray.create([
+	         11, 14, 15, 12,  5,  8,  7,  9, 11, 13, 14, 15,  6,  7,  9,  8,
+	        7, 6,   8, 13, 11,  9,  7, 15,  7, 12, 15,  9, 11,  7, 13, 12,
+	        11, 13,  6,  7, 14,  9, 13, 15, 14,  8, 13,  6,  5, 12,  7,  5,
+	          11, 12, 14, 15, 14, 15,  9,  8,  9, 14,  5,  6,  8,  6,  5, 12,
+	        9, 15,  5, 11,  6,  8, 13, 12,  5, 12, 13, 14, 11,  8,  5,  6 ]);
+	    var _sr = WordArray.create([
+	        8,  9,  9, 11, 13, 15, 15,  5,  7,  7,  8, 11, 14, 14, 12,  6,
+	        9, 13, 15,  7, 12,  8,  9, 11,  7,  7, 12,  7,  6, 15, 13, 11,
+	        9,  7, 15, 11,  8,  6,  6, 14, 12, 13,  5, 14, 13, 13,  7,  5,
+	        15,  5,  8, 11, 14, 14,  6, 14,  6,  9, 12,  9, 12,  5, 15,  8,
+	        8,  5, 12,  9, 12,  5, 14,  6,  8, 13,  6,  5, 15, 13, 11, 11 ]);
+
+	    var _hl =  WordArray.create([ 0x00000000, 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xA953FD4E]);
+	    var _hr =  WordArray.create([ 0x50A28BE6, 0x5C4DD124, 0x6D703EF3, 0x7A6D76E9, 0x00000000]);
+
+	    /**
+	     * RIPEMD160 hash algorithm.
+	     */
+	    var RIPEMD160 = C_algo.RIPEMD160 = Hasher.extend({
+	        _doReset: function () {
+	            this._hash  = WordArray.create([0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0]);
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+
+	            // Swap endian
+	            for (var i = 0; i < 16; i++) {
+	                // Shortcuts
+	                var offset_i = offset + i;
+	                var M_offset_i = M[offset_i];
+
+	                // Swap
+	                M[offset_i] = (
+	                    (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
+	                    (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
+	                );
+	            }
+	            // Shortcut
+	            var H  = this._hash.words;
+	            var hl = _hl.words;
+	            var hr = _hr.words;
+	            var zl = _zl.words;
+	            var zr = _zr.words;
+	            var sl = _sl.words;
+	            var sr = _sr.words;
+
+	            // Working variables
+	            var al, bl, cl, dl, el;
+	            var ar, br, cr, dr, er;
+
+	            ar = al = H[0];
+	            br = bl = H[1];
+	            cr = cl = H[2];
+	            dr = dl = H[3];
+	            er = el = H[4];
+	            // Computation
+	            var t;
+	            for (var i = 0; i < 80; i += 1) {
+	                t = (al +  M[offset+zl[i]])|0;
+	                if (i<16){
+		            t +=  f1(bl,cl,dl) + hl[0];
+	                } else if (i<32) {
+		            t +=  f2(bl,cl,dl) + hl[1];
+	                } else if (i<48) {
+		            t +=  f3(bl,cl,dl) + hl[2];
+	                } else if (i<64) {
+		            t +=  f4(bl,cl,dl) + hl[3];
+	                } else {// if (i<80) {
+		            t +=  f5(bl,cl,dl) + hl[4];
+	                }
+	                t = t|0;
+	                t =  rotl(t,sl[i]);
+	                t = (t+el)|0;
+	                al = el;
+	                el = dl;
+	                dl = rotl(cl, 10);
+	                cl = bl;
+	                bl = t;
+
+	                t = (ar + M[offset+zr[i]])|0;
+	                if (i<16){
+		            t +=  f5(br,cr,dr) + hr[0];
+	                } else if (i<32) {
+		            t +=  f4(br,cr,dr) + hr[1];
+	                } else if (i<48) {
+		            t +=  f3(br,cr,dr) + hr[2];
+	                } else if (i<64) {
+		            t +=  f2(br,cr,dr) + hr[3];
+	                } else {// if (i<80) {
+		            t +=  f1(br,cr,dr) + hr[4];
+	                }
+	                t = t|0;
+	                t =  rotl(t,sr[i]) ;
+	                t = (t+er)|0;
+	                ar = er;
+	                er = dr;
+	                dr = rotl(cr, 10);
+	                cr = br;
+	                br = t;
+	            }
+	            // Intermediate hash value
+	            t    = (H[1] + cl + dr)|0;
+	            H[1] = (H[2] + dl + er)|0;
+	            H[2] = (H[3] + el + ar)|0;
+	            H[3] = (H[4] + al + br)|0;
+	            H[4] = (H[0] + bl + cr)|0;
+	            H[0] =  t;
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+	            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = (
+	                (((nBitsTotal << 8)  | (nBitsTotal >>> 24)) & 0x00ff00ff) |
+	                (((nBitsTotal << 24) | (nBitsTotal >>> 8))  & 0xff00ff00)
+	            );
+	            data.sigBytes = (dataWords.length + 1) * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Shortcuts
+	            var hash = this._hash;
+	            var H = hash.words;
+
+	            // Swap endian
+	            for (var i = 0; i < 5; i++) {
+	                // Shortcut
+	                var H_i = H[i];
+
+	                // Swap
+	                H[i] = (((H_i << 8)  | (H_i >>> 24)) & 0x00ff00ff) |
+	                       (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
+	            }
+
+	            // Return final computed hash
+	            return hash;
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+	            clone._hash = this._hash.clone();
+
+	            return clone;
+	        }
+	    });
+
+
+	    function f1(x, y, z) {
+	        return ((x) ^ (y) ^ (z));
+
+	    }
+
+	    function f2(x, y, z) {
+	        return (((x)&(y)) | ((~x)&(z)));
+	    }
+
+	    function f3(x, y, z) {
+	        return (((x) | (~(y))) ^ (z));
+	    }
+
+	    function f4(x, y, z) {
+	        return (((x) & (z)) | ((y)&(~(z))));
+	    }
+
+	    function f5(x, y, z) {
+	        return ((x) ^ ((y) |(~(z))));
+
+	    }
+
+	    function rotl(x,n) {
+	        return (x<<n) | (x>>>(32-n));
+	    }
+
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.RIPEMD160('message');
+	     *     var hash = CryptoJS.RIPEMD160(wordArray);
+	     */
+	    C.RIPEMD160 = Hasher._createHelper(RIPEMD160);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacRIPEMD160(message, key);
+	     */
+	    C.HmacRIPEMD160 = Hasher._createHmacHelper(RIPEMD160);
+	}(Math));
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Base = C_lib.Base;
+	    var C_enc = C.enc;
+	    var Utf8 = C_enc.Utf8;
+	    var C_algo = C.algo;
+
+	    /**
+	     * HMAC algorithm.
+	     */
+	    var HMAC = C_algo.HMAC = Base.extend({
+	        /**
+	         * Initializes a newly created HMAC.
+	         *
+	         * @param {Hasher} hasher The hash algorithm to use.
+	         * @param {WordArray|string} key The secret key.
+	         *
+	         * @example
+	         *
+	         *     var hmacHasher = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, key);
+	         */
+	        init: function (hasher, key) {
+	            // Init hasher
+	            hasher = this._hasher = new hasher.init();
+
+	            // Convert string to WordArray, else assume WordArray already
+	            if (typeof key == 'string') {
+	                key = Utf8.parse(key);
+	            }
+
+	            // Shortcuts
+	            var hasherBlockSize = hasher.blockSize;
+	            var hasherBlockSizeBytes = hasherBlockSize * 4;
+
+	            // Allow arbitrary length keys
+	            if (key.sigBytes > hasherBlockSizeBytes) {
+	                key = hasher.finalize(key);
+	            }
+
+	            // Clamp excess bits
+	            key.clamp();
+
+	            // Clone key for inner and outer pads
+	            var oKey = this._oKey = key.clone();
+	            var iKey = this._iKey = key.clone();
+
+	            // Shortcuts
+	            var oKeyWords = oKey.words;
+	            var iKeyWords = iKey.words;
+
+	            // XOR keys with pad constants
+	            for (var i = 0; i < hasherBlockSize; i++) {
+	                oKeyWords[i] ^= 0x5c5c5c5c;
+	                iKeyWords[i] ^= 0x36363636;
+	            }
+	            oKey.sigBytes = iKey.sigBytes = hasherBlockSizeBytes;
+
+	            // Set initial values
+	            this.reset();
+	        },
+
+	        /**
+	         * Resets this HMAC to its initial state.
+	         *
+	         * @example
+	         *
+	         *     hmacHasher.reset();
+	         */
+	        reset: function () {
+	            // Shortcut
+	            var hasher = this._hasher;
+
+	            // Reset
+	            hasher.reset();
+	            hasher.update(this._iKey);
+	        },
+
+	        /**
+	         * Updates this HMAC with a message.
+	         *
+	         * @param {WordArray|string} messageUpdate The message to append.
+	         *
+	         * @return {HMAC} This HMAC instance.
+	         *
+	         * @example
+	         *
+	         *     hmacHasher.update('message');
+	         *     hmacHasher.update(wordArray);
+	         */
+	        update: function (messageUpdate) {
+	            this._hasher.update(messageUpdate);
+
+	            // Chainable
+	            return this;
+	        },
+
+	        /**
+	         * Finalizes the HMAC computation.
+	         * Note that the finalize operation is effectively a destructive, read-once operation.
+	         *
+	         * @param {WordArray|string} messageUpdate (Optional) A final message update.
+	         *
+	         * @return {WordArray} The HMAC.
+	         *
+	         * @example
+	         *
+	         *     var hmac = hmacHasher.finalize();
+	         *     var hmac = hmacHasher.finalize('message');
+	         *     var hmac = hmacHasher.finalize(wordArray);
+	         */
+	        finalize: function (messageUpdate) {
+	            // Shortcut
+	            var hasher = this._hasher;
+
+	            // Compute HMAC
+	            var innerHash = hasher.finalize(messageUpdate);
+	            hasher.reset();
+	            var hmac = hasher.finalize(this._oKey.clone().concat(innerHash));
+
+	            return hmac;
+	        }
+	    });
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Base = C_lib.Base;
+	    var WordArray = C_lib.WordArray;
+	    var C_algo = C.algo;
+	    var SHA1 = C_algo.SHA1;
+	    var HMAC = C_algo.HMAC;
+
+	    /**
+	     * Password-Based Key Derivation Function 2 algorithm.
+	     */
+	    var PBKDF2 = C_algo.PBKDF2 = Base.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {number} keySize The key size in words to generate. Default: 4 (128 bits)
+	         * @property {Hasher} hasher The hasher to use. Default: SHA1
+	         * @property {number} iterations The number of iterations to perform. Default: 1
+	         */
+	        cfg: Base.extend({
+	            keySize: 128/32,
+	            hasher: SHA1,
+	            iterations: 1
+	        }),
+
+	        /**
+	         * Initializes a newly created key derivation function.
+	         *
+	         * @param {Object} cfg (Optional) The configuration options to use for the derivation.
+	         *
+	         * @example
+	         *
+	         *     var kdf = CryptoJS.algo.PBKDF2.create();
+	         *     var kdf = CryptoJS.algo.PBKDF2.create({ keySize: 8 });
+	         *     var kdf = CryptoJS.algo.PBKDF2.create({ keySize: 8, iterations: 1000 });
+	         */
+	        init: function (cfg) {
+	            this.cfg = this.cfg.extend(cfg);
+	        },
+
+	        /**
+	         * Computes the Password-Based Key Derivation Function 2.
+	         *
+	         * @param {WordArray|string} password The password.
+	         * @param {WordArray|string} salt A salt.
+	         *
+	         * @return {WordArray} The derived key.
+	         *
+	         * @example
+	         *
+	         *     var key = kdf.compute(password, salt);
+	         */
+	        compute: function (password, salt) {
+	            // Shortcut
+	            var cfg = this.cfg;
+
+	            // Init HMAC
+	            var hmac = HMAC.create(cfg.hasher, password);
+
+	            // Initial values
+	            var derivedKey = WordArray.create();
+	            var blockIndex = WordArray.create([0x00000001]);
+
+	            // Shortcuts
+	            var derivedKeyWords = derivedKey.words;
+	            var blockIndexWords = blockIndex.words;
+	            var keySize = cfg.keySize;
+	            var iterations = cfg.iterations;
+
+	            // Generate key
+	            while (derivedKeyWords.length < keySize) {
+	                var block = hmac.update(salt).finalize(blockIndex);
+	                hmac.reset();
+
+	                // Shortcuts
+	                var blockWords = block.words;
+	                var blockWordsLength = blockWords.length;
+
+	                // Iterations
+	                var intermediate = block;
+	                for (var i = 1; i < iterations; i++) {
+	                    intermediate = hmac.finalize(intermediate);
+	                    hmac.reset();
+
+	                    // Shortcut
+	                    var intermediateWords = intermediate.words;
+
+	                    // XOR intermediate with block
+	                    for (var j = 0; j < blockWordsLength; j++) {
+	                        blockWords[j] ^= intermediateWords[j];
+	                    }
+	                }
+
+	                derivedKey.concat(block);
+	                blockIndexWords[0]++;
+	            }
+	            derivedKey.sigBytes = keySize * 4;
+
+	            return derivedKey;
+	        }
+	    });
+
+	    /**
+	     * Computes the Password-Based Key Derivation Function 2.
+	     *
+	     * @param {WordArray|string} password The password.
+	     * @param {WordArray|string} salt A salt.
+	     * @param {Object} cfg (Optional) The configuration options to use for this computation.
+	     *
+	     * @return {WordArray} The derived key.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var key = CryptoJS.PBKDF2(password, salt);
+	     *     var key = CryptoJS.PBKDF2(password, salt, { keySize: 8 });
+	     *     var key = CryptoJS.PBKDF2(password, salt, { keySize: 8, iterations: 1000 });
+	     */
+	    C.PBKDF2 = function (password, salt, cfg) {
+	        return PBKDF2.create(cfg).compute(password, salt);
+	    };
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Base = C_lib.Base;
+	    var WordArray = C_lib.WordArray;
+	    var C_algo = C.algo;
+	    var MD5 = C_algo.MD5;
+
+	    /**
+	     * This key derivation function is meant to conform with EVP_BytesToKey.
+	     * www.openssl.org/docs/crypto/EVP_BytesToKey.html
+	     */
+	    var EvpKDF = C_algo.EvpKDF = Base.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {number} keySize The key size in words to generate. Default: 4 (128 bits)
+	         * @property {Hasher} hasher The hash algorithm to use. Default: MD5
+	         * @property {number} iterations The number of iterations to perform. Default: 1
+	         */
+	        cfg: Base.extend({
+	            keySize: 128/32,
+	            hasher: MD5,
+	            iterations: 1
+	        }),
+
+	        /**
+	         * Initializes a newly created key derivation function.
+	         *
+	         * @param {Object} cfg (Optional) The configuration options to use for the derivation.
+	         *
+	         * @example
+	         *
+	         *     var kdf = CryptoJS.algo.EvpKDF.create();
+	         *     var kdf = CryptoJS.algo.EvpKDF.create({ keySize: 8 });
+	         *     var kdf = CryptoJS.algo.EvpKDF.create({ keySize: 8, iterations: 1000 });
+	         */
+	        init: function (cfg) {
+	            this.cfg = this.cfg.extend(cfg);
+	        },
+
+	        /**
+	         * Derives a key from a password.
+	         *
+	         * @param {WordArray|string} password The password.
+	         * @param {WordArray|string} salt A salt.
+	         *
+	         * @return {WordArray} The derived key.
+	         *
+	         * @example
+	         *
+	         *     var key = kdf.compute(password, salt);
+	         */
+	        compute: function (password, salt) {
+	            var block;
+
+	            // Shortcut
+	            var cfg = this.cfg;
+
+	            // Init hasher
+	            var hasher = cfg.hasher.create();
+
+	            // Initial values
+	            var derivedKey = WordArray.create();
+
+	            // Shortcuts
+	            var derivedKeyWords = derivedKey.words;
+	            var keySize = cfg.keySize;
+	            var iterations = cfg.iterations;
+
+	            // Generate key
+	            while (derivedKeyWords.length < keySize) {
+	                if (block) {
+	                    hasher.update(block);
+	                }
+	                block = hasher.update(password).finalize(salt);
+	                hasher.reset();
+
+	                // Iterations
+	                for (var i = 1; i < iterations; i++) {
+	                    block = hasher.finalize(block);
+	                    hasher.reset();
+	                }
+
+	                derivedKey.concat(block);
+	            }
+	            derivedKey.sigBytes = keySize * 4;
+
+	            return derivedKey;
+	        }
+	    });
+
+	    /**
+	     * Derives a key from a password.
+	     *
+	     * @param {WordArray|string} password The password.
+	     * @param {WordArray|string} salt A salt.
+	     * @param {Object} cfg (Optional) The configuration options to use for this computation.
+	     *
+	     * @return {WordArray} The derived key.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var key = CryptoJS.EvpKDF(password, salt);
+	     *     var key = CryptoJS.EvpKDF(password, salt, { keySize: 8 });
+	     *     var key = CryptoJS.EvpKDF(password, salt, { keySize: 8, iterations: 1000 });
+	     */
+	    C.EvpKDF = function (password, salt, cfg) {
+	        return EvpKDF.create(cfg).compute(password, salt);
+	    };
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var C_algo = C.algo;
+	    var SHA256 = C_algo.SHA256;
+
+	    /**
+	     * SHA-224 hash algorithm.
+	     */
+	    var SHA224 = C_algo.SHA224 = SHA256.extend({
+	        _doReset: function () {
+	            this._hash = new WordArray.init([
+	                0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+	                0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
+	            ]);
+	        },
+
+	        _doFinalize: function () {
+	            var hash = SHA256._doFinalize.call(this);
+
+	            hash.sigBytes -= 4;
+
+	            return hash;
+	        }
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA224('message');
+	     *     var hash = CryptoJS.SHA224(wordArray);
+	     */
+	    C.SHA224 = SHA256._createHelper(SHA224);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA224(message, key);
+	     */
+	    C.HmacSHA224 = SHA256._createHmacHelper(SHA224);
+	}());
+
+
+	(function (undefined) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Base = C_lib.Base;
+	    var X32WordArray = C_lib.WordArray;
+
+	    /**
+	     * x64 namespace.
+	     */
+	    var C_x64 = C.x64 = {};
+
+	    /**
+	     * A 64-bit word.
+	     */
+	    var X64Word = C_x64.Word = Base.extend({
+	        /**
+	         * Initializes a newly created 64-bit word.
+	         *
+	         * @param {number} high The high 32 bits.
+	         * @param {number} low The low 32 bits.
+	         *
+	         * @example
+	         *
+	         *     var x64Word = CryptoJS.x64.Word.create(0x00010203, 0x04050607);
+	         */
+	        init: function (high, low) {
+	            this.high = high;
+	            this.low = low;
+	        }
+
+	        /**
+	         * Bitwise NOTs this word.
+	         *
+	         * @return {X64Word} A new x64-Word object after negating.
+	         *
+	         * @example
+	         *
+	         *     var negated = x64Word.not();
+	         */
+	        // not: function () {
+	            // var high = ~this.high;
+	            // var low = ~this.low;
+
+	            // return X64Word.create(high, low);
+	        // },
+
+	        /**
+	         * Bitwise ANDs this word with the passed word.
+	         *
+	         * @param {X64Word} word The x64-Word to AND with this word.
+	         *
+	         * @return {X64Word} A new x64-Word object after ANDing.
+	         *
+	         * @example
+	         *
+	         *     var anded = x64Word.and(anotherX64Word);
+	         */
+	        // and: function (word) {
+	            // var high = this.high & word.high;
+	            // var low = this.low & word.low;
+
+	            // return X64Word.create(high, low);
+	        // },
+
+	        /**
+	         * Bitwise ORs this word with the passed word.
+	         *
+	         * @param {X64Word} word The x64-Word to OR with this word.
+	         *
+	         * @return {X64Word} A new x64-Word object after ORing.
+	         *
+	         * @example
+	         *
+	         *     var ored = x64Word.or(anotherX64Word);
+	         */
+	        // or: function (word) {
+	            // var high = this.high | word.high;
+	            // var low = this.low | word.low;
+
+	            // return X64Word.create(high, low);
+	        // },
+
+	        /**
+	         * Bitwise XORs this word with the passed word.
+	         *
+	         * @param {X64Word} word The x64-Word to XOR with this word.
+	         *
+	         * @return {X64Word} A new x64-Word object after XORing.
+	         *
+	         * @example
+	         *
+	         *     var xored = x64Word.xor(anotherX64Word);
+	         */
+	        // xor: function (word) {
+	            // var high = this.high ^ word.high;
+	            // var low = this.low ^ word.low;
+
+	            // return X64Word.create(high, low);
+	        // },
+
+	        /**
+	         * Shifts this word n bits to the left.
+	         *
+	         * @param {number} n The number of bits to shift.
+	         *
+	         * @return {X64Word} A new x64-Word object after shifting.
+	         *
+	         * @example
+	         *
+	         *     var shifted = x64Word.shiftL(25);
+	         */
+	        // shiftL: function (n) {
+	            // if (n < 32) {
+	                // var high = (this.high << n) | (this.low >>> (32 - n));
+	                // var low = this.low << n;
+	            // } else {
+	                // var high = this.low << (n - 32);
+	                // var low = 0;
+	            // }
+
+	            // return X64Word.create(high, low);
+	        // },
+
+	        /**
+	         * Shifts this word n bits to the right.
+	         *
+	         * @param {number} n The number of bits to shift.
+	         *
+	         * @return {X64Word} A new x64-Word object after shifting.
+	         *
+	         * @example
+	         *
+	         *     var shifted = x64Word.shiftR(7);
+	         */
+	        // shiftR: function (n) {
+	            // if (n < 32) {
+	                // var low = (this.low >>> n) | (this.high << (32 - n));
+	                // var high = this.high >>> n;
+	            // } else {
+	                // var low = this.high >>> (n - 32);
+	                // var high = 0;
+	            // }
+
+	            // return X64Word.create(high, low);
+	        // },
+
+	        /**
+	         * Rotates this word n bits to the left.
+	         *
+	         * @param {number} n The number of bits to rotate.
+	         *
+	         * @return {X64Word} A new x64-Word object after rotating.
+	         *
+	         * @example
+	         *
+	         *     var rotated = x64Word.rotL(25);
+	         */
+	        // rotL: function (n) {
+	            // return this.shiftL(n).or(this.shiftR(64 - n));
+	        // },
+
+	        /**
+	         * Rotates this word n bits to the right.
+	         *
+	         * @param {number} n The number of bits to rotate.
+	         *
+	         * @return {X64Word} A new x64-Word object after rotating.
+	         *
+	         * @example
+	         *
+	         *     var rotated = x64Word.rotR(7);
+	         */
+	        // rotR: function (n) {
+	            // return this.shiftR(n).or(this.shiftL(64 - n));
+	        // },
+
+	        /**
+	         * Adds this word with the passed word.
+	         *
+	         * @param {X64Word} word The x64-Word to add with this word.
+	         *
+	         * @return {X64Word} A new x64-Word object after adding.
+	         *
+	         * @example
+	         *
+	         *     var added = x64Word.add(anotherX64Word);
+	         */
+	        // add: function (word) {
+	            // var low = (this.low + word.low) | 0;
+	            // var carry = (low >>> 0) < (this.low >>> 0) ? 1 : 0;
+	            // var high = (this.high + word.high + carry) | 0;
+
+	            // return X64Word.create(high, low);
+	        // }
+	    });
+
+	    /**
+	     * An array of 64-bit words.
+	     *
+	     * @property {Array} words The array of CryptoJS.x64.Word objects.
+	     * @property {number} sigBytes The number of significant bytes in this word array.
+	     */
+	    var X64WordArray = C_x64.WordArray = Base.extend({
+	        /**
+	         * Initializes a newly created word array.
+	         *
+	         * @param {Array} words (Optional) An array of CryptoJS.x64.Word objects.
+	         * @param {number} sigBytes (Optional) The number of significant bytes in the words.
+	         *
+	         * @example
+	         *
+	         *     var wordArray = CryptoJS.x64.WordArray.create();
+	         *
+	         *     var wordArray = CryptoJS.x64.WordArray.create([
+	         *         CryptoJS.x64.Word.create(0x00010203, 0x04050607),
+	         *         CryptoJS.x64.Word.create(0x18191a1b, 0x1c1d1e1f)
+	         *     ]);
+	         *
+	         *     var wordArray = CryptoJS.x64.WordArray.create([
+	         *         CryptoJS.x64.Word.create(0x00010203, 0x04050607),
+	         *         CryptoJS.x64.Word.create(0x18191a1b, 0x1c1d1e1f)
+	         *     ], 10);
+	         */
+	        init: function (words, sigBytes) {
+	            words = this.words = words || [];
+
+	            if (sigBytes != undefined) {
+	                this.sigBytes = sigBytes;
+	            } else {
+	                this.sigBytes = words.length * 8;
+	            }
+	        },
+
+	        /**
+	         * Converts this 64-bit word array to a 32-bit word array.
+	         *
+	         * @return {CryptoJS.lib.WordArray} This word array's data as a 32-bit word array.
+	         *
+	         * @example
+	         *
+	         *     var x32WordArray = x64WordArray.toX32();
+	         */
+	        toX32: function () {
+	            // Shortcuts
+	            var x64Words = this.words;
+	            var x64WordsLength = x64Words.length;
+
+	            // Convert
+	            var x32Words = [];
+	            for (var i = 0; i < x64WordsLength; i++) {
+	                var x64Word = x64Words[i];
+	                x32Words.push(x64Word.high);
+	                x32Words.push(x64Word.low);
+	            }
+
+	            return X32WordArray.create(x32Words, this.sigBytes);
+	        },
+
+	        /**
+	         * Creates a copy of this word array.
+	         *
+	         * @return {X64WordArray} The clone.
+	         *
+	         * @example
+	         *
+	         *     var clone = x64WordArray.clone();
+	         */
+	        clone: function () {
+	            var clone = Base.clone.call(this);
+
+	            // Clone "words" array
+	            var words = clone.words = this.words.slice(0);
+
+	            // Clone each X64Word object
+	            var wordsLength = words.length;
+	            for (var i = 0; i < wordsLength; i++) {
+	                words[i] = words[i].clone();
+	            }
+
+	            return clone;
+	        }
+	    });
+	}());
+
+
+	(function (Math) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var Hasher = C_lib.Hasher;
+	    var C_x64 = C.x64;
+	    var X64Word = C_x64.Word;
+	    var C_algo = C.algo;
+
+	    // Constants tables
+	    var RHO_OFFSETS = [];
+	    var PI_INDEXES  = [];
+	    var ROUND_CONSTANTS = [];
+
+	    // Compute Constants
+	    (function () {
+	        // Compute rho offset constants
+	        var x = 1, y = 0;
+	        for (var t = 0; t < 24; t++) {
+	            RHO_OFFSETS[x + 5 * y] = ((t + 1) * (t + 2) / 2) % 64;
+
+	            var newX = y % 5;
+	            var newY = (2 * x + 3 * y) % 5;
+	            x = newX;
+	            y = newY;
+	        }
+
+	        // Compute pi index constants
+	        for (var x = 0; x < 5; x++) {
+	            for (var y = 0; y < 5; y++) {
+	                PI_INDEXES[x + 5 * y] = y + ((2 * x + 3 * y) % 5) * 5;
+	            }
+	        }
+
+	        // Compute round constants
+	        var LFSR = 0x01;
+	        for (var i = 0; i < 24; i++) {
+	            var roundConstantMsw = 0;
+	            var roundConstantLsw = 0;
+
+	            for (var j = 0; j < 7; j++) {
+	                if (LFSR & 0x01) {
+	                    var bitPosition = (1 << j) - 1;
+	                    if (bitPosition < 32) {
+	                        roundConstantLsw ^= 1 << bitPosition;
+	                    } else /* if (bitPosition >= 32) */ {
+	                        roundConstantMsw ^= 1 << (bitPosition - 32);
+	                    }
+	                }
+
+	                // Compute next LFSR
+	                if (LFSR & 0x80) {
+	                    // Primitive polynomial over GF(2): x^8 + x^6 + x^5 + x^4 + 1
+	                    LFSR = (LFSR << 1) ^ 0x71;
+	                } else {
+	                    LFSR <<= 1;
+	                }
+	            }
+
+	            ROUND_CONSTANTS[i] = X64Word.create(roundConstantMsw, roundConstantLsw);
+	        }
+	    }());
+
+	    // Reusable objects for temporary values
+	    var T = [];
+	    (function () {
+	        for (var i = 0; i < 25; i++) {
+	            T[i] = X64Word.create();
+	        }
+	    }());
+
+	    /**
+	     * SHA-3 hash algorithm.
+	     */
+	    var SHA3 = C_algo.SHA3 = Hasher.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {number} outputLength
+	         *   The desired number of bits in the output hash.
+	         *   Only values permitted are: 224, 256, 384, 512.
+	         *   Default: 512
+	         */
+	        cfg: Hasher.cfg.extend({
+	            outputLength: 512
+	        }),
+
+	        _doReset: function () {
+	            var state = this._state = []
+	            for (var i = 0; i < 25; i++) {
+	                state[i] = new X64Word.init();
+	            }
+
+	            this.blockSize = (1600 - 2 * this.cfg.outputLength) / 32;
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcuts
+	            var state = this._state;
+	            var nBlockSizeLanes = this.blockSize / 2;
+
+	            // Absorb
+	            for (var i = 0; i < nBlockSizeLanes; i++) {
+	                // Shortcuts
+	                var M2i  = M[offset + 2 * i];
+	                var M2i1 = M[offset + 2 * i + 1];
+
+	                // Swap endian
+	                M2i = (
+	                    (((M2i << 8)  | (M2i >>> 24)) & 0x00ff00ff) |
+	                    (((M2i << 24) | (M2i >>> 8))  & 0xff00ff00)
+	                );
+	                M2i1 = (
+	                    (((M2i1 << 8)  | (M2i1 >>> 24)) & 0x00ff00ff) |
+	                    (((M2i1 << 24) | (M2i1 >>> 8))  & 0xff00ff00)
+	                );
+
+	                // Absorb message into state
+	                var lane = state[i];
+	                lane.high ^= M2i1;
+	                lane.low  ^= M2i;
+	            }
+
+	            // Rounds
+	            for (var round = 0; round < 24; round++) {
+	                // Theta
+	                for (var x = 0; x < 5; x++) {
+	                    // Mix column lanes
+	                    var tMsw = 0, tLsw = 0;
+	                    for (var y = 0; y < 5; y++) {
+	                        var lane = state[x + 5 * y];
+	                        tMsw ^= lane.high;
+	                        tLsw ^= lane.low;
+	                    }
+
+	                    // Temporary values
+	                    var Tx = T[x];
+	                    Tx.high = tMsw;
+	                    Tx.low  = tLsw;
+	                }
+	                for (var x = 0; x < 5; x++) {
+	                    // Shortcuts
+	                    var Tx4 = T[(x + 4) % 5];
+	                    var Tx1 = T[(x + 1) % 5];
+	                    var Tx1Msw = Tx1.high;
+	                    var Tx1Lsw = Tx1.low;
+
+	                    // Mix surrounding columns
+	                    var tMsw = Tx4.high ^ ((Tx1Msw << 1) | (Tx1Lsw >>> 31));
+	                    var tLsw = Tx4.low  ^ ((Tx1Lsw << 1) | (Tx1Msw >>> 31));
+	                    for (var y = 0; y < 5; y++) {
+	                        var lane = state[x + 5 * y];
+	                        lane.high ^= tMsw;
+	                        lane.low  ^= tLsw;
+	                    }
+	                }
+
+	                // Rho Pi
+	                for (var laneIndex = 1; laneIndex < 25; laneIndex++) {
+	                    var tMsw;
+	                    var tLsw;
+
+	                    // Shortcuts
+	                    var lane = state[laneIndex];
+	                    var laneMsw = lane.high;
+	                    var laneLsw = lane.low;
+	                    var rhoOffset = RHO_OFFSETS[laneIndex];
+
+	                    // Rotate lanes
+	                    if (rhoOffset < 32) {
+	                        tMsw = (laneMsw << rhoOffset) | (laneLsw >>> (32 - rhoOffset));
+	                        tLsw = (laneLsw << rhoOffset) | (laneMsw >>> (32 - rhoOffset));
+	                    } else /* if (rhoOffset >= 32) */ {
+	                        tMsw = (laneLsw << (rhoOffset - 32)) | (laneMsw >>> (64 - rhoOffset));
+	                        tLsw = (laneMsw << (rhoOffset - 32)) | (laneLsw >>> (64 - rhoOffset));
+	                    }
+
+	                    // Transpose lanes
+	                    var TPiLane = T[PI_INDEXES[laneIndex]];
+	                    TPiLane.high = tMsw;
+	                    TPiLane.low  = tLsw;
+	                }
+
+	                // Rho pi at x = y = 0
+	                var T0 = T[0];
+	                var state0 = state[0];
+	                T0.high = state0.high;
+	                T0.low  = state0.low;
+
+	                // Chi
+	                for (var x = 0; x < 5; x++) {
+	                    for (var y = 0; y < 5; y++) {
+	                        // Shortcuts
+	                        var laneIndex = x + 5 * y;
+	                        var lane = state[laneIndex];
+	                        var TLane = T[laneIndex];
+	                        var Tx1Lane = T[((x + 1) % 5) + 5 * y];
+	                        var Tx2Lane = T[((x + 2) % 5) + 5 * y];
+
+	                        // Mix rows
+	                        lane.high = TLane.high ^ (~Tx1Lane.high & Tx2Lane.high);
+	                        lane.low  = TLane.low  ^ (~Tx1Lane.low  & Tx2Lane.low);
+	                    }
+	                }
+
+	                // Iota
+	                var lane = state[0];
+	                var roundConstant = ROUND_CONSTANTS[round];
+	                lane.high ^= roundConstant.high;
+	                lane.low  ^= roundConstant.low;
+	            }
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+	            var blockSizeBits = this.blockSize * 32;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x1 << (24 - nBitsLeft % 32);
+	            dataWords[((Math.ceil((nBitsLeft + 1) / blockSizeBits) * blockSizeBits) >>> 5) - 1] |= 0x80;
+	            data.sigBytes = dataWords.length * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Shortcuts
+	            var state = this._state;
+	            var outputLengthBytes = this.cfg.outputLength / 8;
+	            var outputLengthLanes = outputLengthBytes / 8;
+
+	            // Squeeze
+	            var hashWords = [];
+	            for (var i = 0; i < outputLengthLanes; i++) {
+	                // Shortcuts
+	                var lane = state[i];
+	                var laneMsw = lane.high;
+	                var laneLsw = lane.low;
+
+	                // Swap endian
+	                laneMsw = (
+	                    (((laneMsw << 8)  | (laneMsw >>> 24)) & 0x00ff00ff) |
+	                    (((laneMsw << 24) | (laneMsw >>> 8))  & 0xff00ff00)
+	                );
+	                laneLsw = (
+	                    (((laneLsw << 8)  | (laneLsw >>> 24)) & 0x00ff00ff) |
+	                    (((laneLsw << 24) | (laneLsw >>> 8))  & 0xff00ff00)
+	                );
+
+	                // Squeeze state to retrieve hash
+	                hashWords.push(laneLsw);
+	                hashWords.push(laneMsw);
+	            }
+
+	            // Return final computed hash
+	            return new WordArray.init(hashWords, outputLengthBytes);
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+
+	            var state = clone._state = this._state.slice(0);
+	            for (var i = 0; i < 25; i++) {
+	                state[i] = state[i].clone();
+	            }
+
+	            return clone;
+	        }
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA3('message');
+	     *     var hash = CryptoJS.SHA3(wordArray);
+	     */
+	    C.SHA3 = Hasher._createHelper(SHA3);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA3(message, key);
+	     */
+	    C.HmacSHA3 = Hasher._createHmacHelper(SHA3);
+	}(Math));
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Hasher = C_lib.Hasher;
+	    var C_x64 = C.x64;
+	    var X64Word = C_x64.Word;
+	    var X64WordArray = C_x64.WordArray;
+	    var C_algo = C.algo;
+
+	    function X64Word_create() {
+	        return X64Word.create.apply(X64Word, arguments);
+	    }
+
+	    // Constants
+	    var K = [
+	        X64Word_create(0x428a2f98, 0xd728ae22), X64Word_create(0x71374491, 0x23ef65cd),
+	        X64Word_create(0xb5c0fbcf, 0xec4d3b2f), X64Word_create(0xe9b5dba5, 0x8189dbbc),
+	        X64Word_create(0x3956c25b, 0xf348b538), X64Word_create(0x59f111f1, 0xb605d019),
+	        X64Word_create(0x923f82a4, 0xaf194f9b), X64Word_create(0xab1c5ed5, 0xda6d8118),
+	        X64Word_create(0xd807aa98, 0xa3030242), X64Word_create(0x12835b01, 0x45706fbe),
+	        X64Word_create(0x243185be, 0x4ee4b28c), X64Word_create(0x550c7dc3, 0xd5ffb4e2),
+	        X64Word_create(0x72be5d74, 0xf27b896f), X64Word_create(0x80deb1fe, 0x3b1696b1),
+	        X64Word_create(0x9bdc06a7, 0x25c71235), X64Word_create(0xc19bf174, 0xcf692694),
+	        X64Word_create(0xe49b69c1, 0x9ef14ad2), X64Word_create(0xefbe4786, 0x384f25e3),
+	        X64Word_create(0x0fc19dc6, 0x8b8cd5b5), X64Word_create(0x240ca1cc, 0x77ac9c65),
+	        X64Word_create(0x2de92c6f, 0x592b0275), X64Word_create(0x4a7484aa, 0x6ea6e483),
+	        X64Word_create(0x5cb0a9dc, 0xbd41fbd4), X64Word_create(0x76f988da, 0x831153b5),
+	        X64Word_create(0x983e5152, 0xee66dfab), X64Word_create(0xa831c66d, 0x2db43210),
+	        X64Word_create(0xb00327c8, 0x98fb213f), X64Word_create(0xbf597fc7, 0xbeef0ee4),
+	        X64Word_create(0xc6e00bf3, 0x3da88fc2), X64Word_create(0xd5a79147, 0x930aa725),
+	        X64Word_create(0x06ca6351, 0xe003826f), X64Word_create(0x14292967, 0x0a0e6e70),
+	        X64Word_create(0x27b70a85, 0x46d22ffc), X64Word_create(0x2e1b2138, 0x5c26c926),
+	        X64Word_create(0x4d2c6dfc, 0x5ac42aed), X64Word_create(0x53380d13, 0x9d95b3df),
+	        X64Word_create(0x650a7354, 0x8baf63de), X64Word_create(0x766a0abb, 0x3c77b2a8),
+	        X64Word_create(0x81c2c92e, 0x47edaee6), X64Word_create(0x92722c85, 0x1482353b),
+	        X64Word_create(0xa2bfe8a1, 0x4cf10364), X64Word_create(0xa81a664b, 0xbc423001),
+	        X64Word_create(0xc24b8b70, 0xd0f89791), X64Word_create(0xc76c51a3, 0x0654be30),
+	        X64Word_create(0xd192e819, 0xd6ef5218), X64Word_create(0xd6990624, 0x5565a910),
+	        X64Word_create(0xf40e3585, 0x5771202a), X64Word_create(0x106aa070, 0x32bbd1b8),
+	        X64Word_create(0x19a4c116, 0xb8d2d0c8), X64Word_create(0x1e376c08, 0x5141ab53),
+	        X64Word_create(0x2748774c, 0xdf8eeb99), X64Word_create(0x34b0bcb5, 0xe19b48a8),
+	        X64Word_create(0x391c0cb3, 0xc5c95a63), X64Word_create(0x4ed8aa4a, 0xe3418acb),
+	        X64Word_create(0x5b9cca4f, 0x7763e373), X64Word_create(0x682e6ff3, 0xd6b2b8a3),
+	        X64Word_create(0x748f82ee, 0x5defb2fc), X64Word_create(0x78a5636f, 0x43172f60),
+	        X64Word_create(0x84c87814, 0xa1f0ab72), X64Word_create(0x8cc70208, 0x1a6439ec),
+	        X64Word_create(0x90befffa, 0x23631e28), X64Word_create(0xa4506ceb, 0xde82bde9),
+	        X64Word_create(0xbef9a3f7, 0xb2c67915), X64Word_create(0xc67178f2, 0xe372532b),
+	        X64Word_create(0xca273ece, 0xea26619c), X64Word_create(0xd186b8c7, 0x21c0c207),
+	        X64Word_create(0xeada7dd6, 0xcde0eb1e), X64Word_create(0xf57d4f7f, 0xee6ed178),
+	        X64Word_create(0x06f067aa, 0x72176fba), X64Word_create(0x0a637dc5, 0xa2c898a6),
+	        X64Word_create(0x113f9804, 0xbef90dae), X64Word_create(0x1b710b35, 0x131c471b),
+	        X64Word_create(0x28db77f5, 0x23047d84), X64Word_create(0x32caab7b, 0x40c72493),
+	        X64Word_create(0x3c9ebe0a, 0x15c9bebc), X64Word_create(0x431d67c4, 0x9c100d4c),
+	        X64Word_create(0x4cc5d4be, 0xcb3e42b6), X64Word_create(0x597f299c, 0xfc657e2a),
+	        X64Word_create(0x5fcb6fab, 0x3ad6faec), X64Word_create(0x6c44198c, 0x4a475817)
+	    ];
+
+	    // Reusable objects
+	    var W = [];
+	    (function () {
+	        for (var i = 0; i < 80; i++) {
+	            W[i] = X64Word_create();
+	        }
+	    }());
+
+	    /**
+	     * SHA-512 hash algorithm.
+	     */
+	    var SHA512 = C_algo.SHA512 = Hasher.extend({
+	        _doReset: function () {
+	            this._hash = new X64WordArray.init([
+	                new X64Word.init(0x6a09e667, 0xf3bcc908), new X64Word.init(0xbb67ae85, 0x84caa73b),
+	                new X64Word.init(0x3c6ef372, 0xfe94f82b), new X64Word.init(0xa54ff53a, 0x5f1d36f1),
+	                new X64Word.init(0x510e527f, 0xade682d1), new X64Word.init(0x9b05688c, 0x2b3e6c1f),
+	                new X64Word.init(0x1f83d9ab, 0xfb41bd6b), new X64Word.init(0x5be0cd19, 0x137e2179)
+	            ]);
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcuts
+	            var H = this._hash.words;
+
+	            var H0 = H[0];
+	            var H1 = H[1];
+	            var H2 = H[2];
+	            var H3 = H[3];
+	            var H4 = H[4];
+	            var H5 = H[5];
+	            var H6 = H[6];
+	            var H7 = H[7];
+
+	            var H0h = H0.high;
+	            var H0l = H0.low;
+	            var H1h = H1.high;
+	            var H1l = H1.low;
+	            var H2h = H2.high;
+	            var H2l = H2.low;
+	            var H3h = H3.high;
+	            var H3l = H3.low;
+	            var H4h = H4.high;
+	            var H4l = H4.low;
+	            var H5h = H5.high;
+	            var H5l = H5.low;
+	            var H6h = H6.high;
+	            var H6l = H6.low;
+	            var H7h = H7.high;
+	            var H7l = H7.low;
+
+	            // Working variables
+	            var ah = H0h;
+	            var al = H0l;
+	            var bh = H1h;
+	            var bl = H1l;
+	            var ch = H2h;
+	            var cl = H2l;
+	            var dh = H3h;
+	            var dl = H3l;
+	            var eh = H4h;
+	            var el = H4l;
+	            var fh = H5h;
+	            var fl = H5l;
+	            var gh = H6h;
+	            var gl = H6l;
+	            var hh = H7h;
+	            var hl = H7l;
+
+	            // Rounds
+	            for (var i = 0; i < 80; i++) {
+	                var Wil;
+	                var Wih;
+
+	                // Shortcut
+	                var Wi = W[i];
+
+	                // Extend message
+	                if (i < 16) {
+	                    Wih = Wi.high = M[offset + i * 2]     | 0;
+	                    Wil = Wi.low  = M[offset + i * 2 + 1] | 0;
+	                } else {
+	                    // Gamma0
+	                    var gamma0x  = W[i - 15];
+	                    var gamma0xh = gamma0x.high;
+	                    var gamma0xl = gamma0x.low;
+	                    var gamma0h  = ((gamma0xh >>> 1) | (gamma0xl << 31)) ^ ((gamma0xh >>> 8) | (gamma0xl << 24)) ^ (gamma0xh >>> 7);
+	                    var gamma0l  = ((gamma0xl >>> 1) | (gamma0xh << 31)) ^ ((gamma0xl >>> 8) | (gamma0xh << 24)) ^ ((gamma0xl >>> 7) | (gamma0xh << 25));
+
+	                    // Gamma1
+	                    var gamma1x  = W[i - 2];
+	                    var gamma1xh = gamma1x.high;
+	                    var gamma1xl = gamma1x.low;
+	                    var gamma1h  = ((gamma1xh >>> 19) | (gamma1xl << 13)) ^ ((gamma1xh << 3) | (gamma1xl >>> 29)) ^ (gamma1xh >>> 6);
+	                    var gamma1l  = ((gamma1xl >>> 19) | (gamma1xh << 13)) ^ ((gamma1xl << 3) | (gamma1xh >>> 29)) ^ ((gamma1xl >>> 6) | (gamma1xh << 26));
+
+	                    // W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16]
+	                    var Wi7  = W[i - 7];
+	                    var Wi7h = Wi7.high;
+	                    var Wi7l = Wi7.low;
+
+	                    var Wi16  = W[i - 16];
+	                    var Wi16h = Wi16.high;
+	                    var Wi16l = Wi16.low;
+
+	                    Wil = gamma0l + Wi7l;
+	                    Wih = gamma0h + Wi7h + ((Wil >>> 0) < (gamma0l >>> 0) ? 1 : 0);
+	                    Wil = Wil + gamma1l;
+	                    Wih = Wih + gamma1h + ((Wil >>> 0) < (gamma1l >>> 0) ? 1 : 0);
+	                    Wil = Wil + Wi16l;
+	                    Wih = Wih + Wi16h + ((Wil >>> 0) < (Wi16l >>> 0) ? 1 : 0);
+
+	                    Wi.high = Wih;
+	                    Wi.low  = Wil;
+	                }
+
+	                var chh  = (eh & fh) ^ (~eh & gh);
+	                var chl  = (el & fl) ^ (~el & gl);
+	                var majh = (ah & bh) ^ (ah & ch) ^ (bh & ch);
+	                var majl = (al & bl) ^ (al & cl) ^ (bl & cl);
+
+	                var sigma0h = ((ah >>> 28) | (al << 4))  ^ ((ah << 30)  | (al >>> 2)) ^ ((ah << 25) | (al >>> 7));
+	                var sigma0l = ((al >>> 28) | (ah << 4))  ^ ((al << 30)  | (ah >>> 2)) ^ ((al << 25) | (ah >>> 7));
+	                var sigma1h = ((eh >>> 14) | (el << 18)) ^ ((eh >>> 18) | (el << 14)) ^ ((eh << 23) | (el >>> 9));
+	                var sigma1l = ((el >>> 14) | (eh << 18)) ^ ((el >>> 18) | (eh << 14)) ^ ((el << 23) | (eh >>> 9));
+
+	                // t1 = h + sigma1 + ch + K[i] + W[i]
+	                var Ki  = K[i];
+	                var Kih = Ki.high;
+	                var Kil = Ki.low;
+
+	                var t1l = hl + sigma1l;
+	                var t1h = hh + sigma1h + ((t1l >>> 0) < (hl >>> 0) ? 1 : 0);
+	                var t1l = t1l + chl;
+	                var t1h = t1h + chh + ((t1l >>> 0) < (chl >>> 0) ? 1 : 0);
+	                var t1l = t1l + Kil;
+	                var t1h = t1h + Kih + ((t1l >>> 0) < (Kil >>> 0) ? 1 : 0);
+	                var t1l = t1l + Wil;
+	                var t1h = t1h + Wih + ((t1l >>> 0) < (Wil >>> 0) ? 1 : 0);
+
+	                // t2 = sigma0 + maj
+	                var t2l = sigma0l + majl;
+	                var t2h = sigma0h + majh + ((t2l >>> 0) < (sigma0l >>> 0) ? 1 : 0);
+
+	                // Update working variables
+	                hh = gh;
+	                hl = gl;
+	                gh = fh;
+	                gl = fl;
+	                fh = eh;
+	                fl = el;
+	                el = (dl + t1l) | 0;
+	                eh = (dh + t1h + ((el >>> 0) < (dl >>> 0) ? 1 : 0)) | 0;
+	                dh = ch;
+	                dl = cl;
+	                ch = bh;
+	                cl = bl;
+	                bh = ah;
+	                bl = al;
+	                al = (t1l + t2l) | 0;
+	                ah = (t1h + t2h + ((al >>> 0) < (t1l >>> 0) ? 1 : 0)) | 0;
+	            }
+
+	            // Intermediate hash value
+	            H0l = H0.low  = (H0l + al);
+	            H0.high = (H0h + ah + ((H0l >>> 0) < (al >>> 0) ? 1 : 0));
+	            H1l = H1.low  = (H1l + bl);
+	            H1.high = (H1h + bh + ((H1l >>> 0) < (bl >>> 0) ? 1 : 0));
+	            H2l = H2.low  = (H2l + cl);
+	            H2.high = (H2h + ch + ((H2l >>> 0) < (cl >>> 0) ? 1 : 0));
+	            H3l = H3.low  = (H3l + dl);
+	            H3.high = (H3h + dh + ((H3l >>> 0) < (dl >>> 0) ? 1 : 0));
+	            H4l = H4.low  = (H4l + el);
+	            H4.high = (H4h + eh + ((H4l >>> 0) < (el >>> 0) ? 1 : 0));
+	            H5l = H5.low  = (H5l + fl);
+	            H5.high = (H5h + fh + ((H5l >>> 0) < (fl >>> 0) ? 1 : 0));
+	            H6l = H6.low  = (H6l + gl);
+	            H6.high = (H6h + gh + ((H6l >>> 0) < (gl >>> 0) ? 1 : 0));
+	            H7l = H7.low  = (H7l + hl);
+	            H7.high = (H7h + hh + ((H7l >>> 0) < (hl >>> 0) ? 1 : 0));
+	        },
+
+	        _doFinalize: function () {
+	            // Shortcuts
+	            var data = this._data;
+	            var dataWords = data.words;
+
+	            var nBitsTotal = this._nDataBytes * 8;
+	            var nBitsLeft = data.sigBytes * 8;
+
+	            // Add padding
+	            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+	            dataWords[(((nBitsLeft + 128) >>> 10) << 5) + 30] = Math.floor(nBitsTotal / 0x100000000);
+	            dataWords[(((nBitsLeft + 128) >>> 10) << 5) + 31] = nBitsTotal;
+	            data.sigBytes = dataWords.length * 4;
+
+	            // Hash final blocks
+	            this._process();
+
+	            // Convert hash to 32-bit word array before returning
+	            var hash = this._hash.toX32();
+
+	            // Return final computed hash
+	            return hash;
+	        },
+
+	        clone: function () {
+	            var clone = Hasher.clone.call(this);
+	            clone._hash = this._hash.clone();
+
+	            return clone;
+	        },
+
+	        blockSize: 1024/32
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA512('message');
+	     *     var hash = CryptoJS.SHA512(wordArray);
+	     */
+	    C.SHA512 = Hasher._createHelper(SHA512);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA512(message, key);
+	     */
+	    C.HmacSHA512 = Hasher._createHmacHelper(SHA512);
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_x64 = C.x64;
+	    var X64Word = C_x64.Word;
+	    var X64WordArray = C_x64.WordArray;
+	    var C_algo = C.algo;
+	    var SHA512 = C_algo.SHA512;
+
+	    /**
+	     * SHA-384 hash algorithm.
+	     */
+	    var SHA384 = C_algo.SHA384 = SHA512.extend({
+	        _doReset: function () {
+	            this._hash = new X64WordArray.init([
+	                new X64Word.init(0xcbbb9d5d, 0xc1059ed8), new X64Word.init(0x629a292a, 0x367cd507),
+	                new X64Word.init(0x9159015a, 0x3070dd17), new X64Word.init(0x152fecd8, 0xf70e5939),
+	                new X64Word.init(0x67332667, 0xffc00b31), new X64Word.init(0x8eb44a87, 0x68581511),
+	                new X64Word.init(0xdb0c2e0d, 0x64f98fa7), new X64Word.init(0x47b5481d, 0xbefa4fa4)
+	            ]);
+	        },
+
+	        _doFinalize: function () {
+	            var hash = SHA512._doFinalize.call(this);
+
+	            hash.sigBytes -= 16;
+
+	            return hash;
+	        }
+	    });
+
+	    /**
+	     * Shortcut function to the hasher's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     *
+	     * @return {WordArray} The hash.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hash = CryptoJS.SHA384('message');
+	     *     var hash = CryptoJS.SHA384(wordArray);
+	     */
+	    C.SHA384 = SHA512._createHelper(SHA384);
+
+	    /**
+	     * Shortcut function to the HMAC's object interface.
+	     *
+	     * @param {WordArray|string} message The message to hash.
+	     * @param {WordArray|string} key The secret key.
+	     *
+	     * @return {WordArray} The HMAC.
+	     *
+	     * @static
+	     *
+	     * @example
+	     *
+	     *     var hmac = CryptoJS.HmacSHA384(message, key);
+	     */
+	    C.HmacSHA384 = SHA512._createHmacHelper(SHA384);
+	}());
+
+
+	/**
+	 * Cipher core components.
+	 */
+	CryptoJS.lib.Cipher || (function (undefined) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var Base = C_lib.Base;
+	    var WordArray = C_lib.WordArray;
+	    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm;
+	    var C_enc = C.enc;
+	    var Utf8 = C_enc.Utf8;
+	    var Base64 = C_enc.Base64;
+	    var C_algo = C.algo;
+	    var EvpKDF = C_algo.EvpKDF;
+
+	    /**
+	     * Abstract base cipher template.
+	     *
+	     * @property {number} keySize This cipher's key size. Default: 4 (128 bits)
+	     * @property {number} ivSize This cipher's IV size. Default: 4 (128 bits)
+	     * @property {number} _ENC_XFORM_MODE A constant representing encryption mode.
+	     * @property {number} _DEC_XFORM_MODE A constant representing decryption mode.
+	     */
+	    var Cipher = C_lib.Cipher = BufferedBlockAlgorithm.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {WordArray} iv The IV to use for this operation.
+	         */
+	        cfg: Base.extend(),
+
+	        /**
+	         * Creates this cipher in encryption mode.
+	         *
+	         * @param {WordArray} key The key.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @return {Cipher} A cipher instance.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var cipher = CryptoJS.algo.AES.createEncryptor(keyWordArray, { iv: ivWordArray });
+	         */
+	        createEncryptor: function (key, cfg) {
+	            return this.create(this._ENC_XFORM_MODE, key, cfg);
+	        },
+
+	        /**
+	         * Creates this cipher in decryption mode.
+	         *
+	         * @param {WordArray} key The key.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @return {Cipher} A cipher instance.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var cipher = CryptoJS.algo.AES.createDecryptor(keyWordArray, { iv: ivWordArray });
+	         */
+	        createDecryptor: function (key, cfg) {
+	            return this.create(this._DEC_XFORM_MODE, key, cfg);
+	        },
+
+	        /**
+	         * Initializes a newly created cipher.
+	         *
+	         * @param {number} xformMode Either the encryption or decryption transormation mode constant.
+	         * @param {WordArray} key The key.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @example
+	         *
+	         *     var cipher = CryptoJS.algo.AES.create(CryptoJS.algo.AES._ENC_XFORM_MODE, keyWordArray, { iv: ivWordArray });
+	         */
+	        init: function (xformMode, key, cfg) {
+	            // Apply config defaults
+	            this.cfg = this.cfg.extend(cfg);
+
+	            // Store transform mode and key
+	            this._xformMode = xformMode;
+	            this._key = key;
+
+	            // Set initial values
+	            this.reset();
+	        },
+
+	        /**
+	         * Resets this cipher to its initial state.
+	         *
+	         * @example
+	         *
+	         *     cipher.reset();
+	         */
+	        reset: function () {
+	            // Reset data buffer
+	            BufferedBlockAlgorithm.reset.call(this);
+
+	            // Perform concrete-cipher logic
+	            this._doReset();
+	        },
+
+	        /**
+	         * Adds data to be encrypted or decrypted.
+	         *
+	         * @param {WordArray|string} dataUpdate The data to encrypt or decrypt.
+	         *
+	         * @return {WordArray} The data after processing.
+	         *
+	         * @example
+	         *
+	         *     var encrypted = cipher.process('data');
+	         *     var encrypted = cipher.process(wordArray);
+	         */
+	        process: function (dataUpdate) {
+	            // Append
+	            this._append(dataUpdate);
+
+	            // Process available blocks
+	            return this._process();
+	        },
+
+	        /**
+	         * Finalizes the encryption or decryption process.
+	         * Note that the finalize operation is effectively a destructive, read-once operation.
+	         *
+	         * @param {WordArray|string} dataUpdate The final data to encrypt or decrypt.
+	         *
+	         * @return {WordArray} The data after final processing.
+	         *
+	         * @example
+	         *
+	         *     var encrypted = cipher.finalize();
+	         *     var encrypted = cipher.finalize('data');
+	         *     var encrypted = cipher.finalize(wordArray);
+	         */
+	        finalize: function (dataUpdate) {
+	            // Final data update
+	            if (dataUpdate) {
+	                this._append(dataUpdate);
+	            }
+
+	            // Perform concrete-cipher logic
+	            var finalProcessedData = this._doFinalize();
+
+	            return finalProcessedData;
+	        },
+
+	        keySize: 128/32,
+
+	        ivSize: 128/32,
+
+	        _ENC_XFORM_MODE: 1,
+
+	        _DEC_XFORM_MODE: 2,
+
+	        /**
+	         * Creates shortcut functions to a cipher's object interface.
+	         *
+	         * @param {Cipher} cipher The cipher to create a helper for.
+	         *
+	         * @return {Object} An object with encrypt and decrypt shortcut functions.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var AES = CryptoJS.lib.Cipher._createHelper(CryptoJS.algo.AES);
+	         */
+	        _createHelper: (function () {
+	            function selectCipherStrategy(key) {
+	                if (typeof key == 'string') {
+	                    return PasswordBasedCipher;
+	                } else {
+	                    return SerializableCipher;
+	                }
+	            }
+
+	            return function (cipher) {
+	                return {
+	                    encrypt: function (message, key, cfg) {
+	                        return selectCipherStrategy(key).encrypt(cipher, message, key, cfg);
+	                    },
+
+	                    decrypt: function (ciphertext, key, cfg) {
+	                        return selectCipherStrategy(key).decrypt(cipher, ciphertext, key, cfg);
+	                    }
+	                };
+	            };
+	        }())
+	    });
+
+	    /**
+	     * Abstract base stream cipher template.
+	     *
+	     * @property {number} blockSize The number of 32-bit words this cipher operates on. Default: 1 (32 bits)
+	     */
+	    var StreamCipher = C_lib.StreamCipher = Cipher.extend({
+	        _doFinalize: function () {
+	            // Process partial blocks
+	            var finalProcessedBlocks = this._process(!!'flush');
+
+	            return finalProcessedBlocks;
+	        },
+
+	        blockSize: 1
+	    });
+
+	    /**
+	     * Mode namespace.
+	     */
+	    var C_mode = C.mode = {};
+
+	    /**
+	     * Abstract base block cipher mode template.
+	     */
+	    var BlockCipherMode = C_lib.BlockCipherMode = Base.extend({
+	        /**
+	         * Creates this mode for encryption.
+	         *
+	         * @param {Cipher} cipher A block cipher instance.
+	         * @param {Array} iv The IV words.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var mode = CryptoJS.mode.CBC.createEncryptor(cipher, iv.words);
+	         */
+	        createEncryptor: function (cipher, iv) {
+	            return this.Encryptor.create(cipher, iv);
+	        },
+
+	        /**
+	         * Creates this mode for decryption.
+	         *
+	         * @param {Cipher} cipher A block cipher instance.
+	         * @param {Array} iv The IV words.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var mode = CryptoJS.mode.CBC.createDecryptor(cipher, iv.words);
+	         */
+	        createDecryptor: function (cipher, iv) {
+	            return this.Decryptor.create(cipher, iv);
+	        },
+
+	        /**
+	         * Initializes a newly created mode.
+	         *
+	         * @param {Cipher} cipher A block cipher instance.
+	         * @param {Array} iv The IV words.
+	         *
+	         * @example
+	         *
+	         *     var mode = CryptoJS.mode.CBC.Encryptor.create(cipher, iv.words);
+	         */
+	        init: function (cipher, iv) {
+	            this._cipher = cipher;
+	            this._iv = iv;
+	        }
+	    });
+
+	    /**
+	     * Cipher Block Chaining mode.
+	     */
+	    var CBC = C_mode.CBC = (function () {
+	        /**
+	         * Abstract base CBC mode.
+	         */
+	        var CBC = BlockCipherMode.extend();
+
+	        /**
+	         * CBC encryptor.
+	         */
+	        CBC.Encryptor = CBC.extend({
+	            /**
+	             * Processes the data block at offset.
+	             *
+	             * @param {Array} words The data words to operate on.
+	             * @param {number} offset The offset where the block starts.
+	             *
+	             * @example
+	             *
+	             *     mode.processBlock(data.words, offset);
+	             */
+	            processBlock: function (words, offset) {
+	                // Shortcuts
+	                var cipher = this._cipher;
+	                var blockSize = cipher.blockSize;
+
+	                // XOR and encrypt
+	                xorBlock.call(this, words, offset, blockSize);
+	                cipher.encryptBlock(words, offset);
+
+	                // Remember this block to use with next block
+	                this._prevBlock = words.slice(offset, offset + blockSize);
+	            }
+	        });
+
+	        /**
+	         * CBC decryptor.
+	         */
+	        CBC.Decryptor = CBC.extend({
+	            /**
+	             * Processes the data block at offset.
+	             *
+	             * @param {Array} words The data words to operate on.
+	             * @param {number} offset The offset where the block starts.
+	             *
+	             * @example
+	             *
+	             *     mode.processBlock(data.words, offset);
+	             */
+	            processBlock: function (words, offset) {
+	                // Shortcuts
+	                var cipher = this._cipher;
+	                var blockSize = cipher.blockSize;
+
+	                // Remember this block to use with next block
+	                var thisBlock = words.slice(offset, offset + blockSize);
+
+	                // Decrypt and XOR
+	                cipher.decryptBlock(words, offset);
+	                xorBlock.call(this, words, offset, blockSize);
+
+	                // This block becomes the previous block
+	                this._prevBlock = thisBlock;
+	            }
+	        });
+
+	        function xorBlock(words, offset, blockSize) {
+	            var block;
+
+	            // Shortcut
+	            var iv = this._iv;
+
+	            // Choose mixing block
+	            if (iv) {
+	                block = iv;
+
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            } else {
+	                block = this._prevBlock;
+	            }
+
+	            // XOR blocks
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= block[i];
+	            }
+	        }
+
+	        return CBC;
+	    }());
+
+	    /**
+	     * Padding namespace.
+	     */
+	    var C_pad = C.pad = {};
+
+	    /**
+	     * PKCS #5/7 padding strategy.
+	     */
+	    var Pkcs7 = C_pad.Pkcs7 = {
+	        /**
+	         * Pads data using the algorithm defined in PKCS #5/7.
+	         *
+	         * @param {WordArray} data The data to pad.
+	         * @param {number} blockSize The multiple that the data should be padded to.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     CryptoJS.pad.Pkcs7.pad(wordArray, 4);
+	         */
+	        pad: function (data, blockSize) {
+	            // Shortcut
+	            var blockSizeBytes = blockSize * 4;
+
+	            // Count padding bytes
+	            var nPaddingBytes = blockSizeBytes - data.sigBytes % blockSizeBytes;
+
+	            // Create padding word
+	            var paddingWord = (nPaddingBytes << 24) | (nPaddingBytes << 16) | (nPaddingBytes << 8) | nPaddingBytes;
+
+	            // Create padding
+	            var paddingWords = [];
+	            for (var i = 0; i < nPaddingBytes; i += 4) {
+	                paddingWords.push(paddingWord);
+	            }
+	            var padding = WordArray.create(paddingWords, nPaddingBytes);
+
+	            // Add padding
+	            data.concat(padding);
+	        },
+
+	        /**
+	         * Unpads data that had been padded using the algorithm defined in PKCS #5/7.
+	         *
+	         * @param {WordArray} data The data to unpad.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     CryptoJS.pad.Pkcs7.unpad(wordArray);
+	         */
+	        unpad: function (data) {
+	            // Get number of padding bytes from last byte
+	            var nPaddingBytes = data.words[(data.sigBytes - 1) >>> 2] & 0xff;
+
+	            // Remove padding
+	            data.sigBytes -= nPaddingBytes;
+	        }
+	    };
+
+	    /**
+	     * Abstract base block cipher template.
+	     *
+	     * @property {number} blockSize The number of 32-bit words this cipher operates on. Default: 4 (128 bits)
+	     */
+	    var BlockCipher = C_lib.BlockCipher = Cipher.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {Mode} mode The block mode to use. Default: CBC
+	         * @property {Padding} padding The padding strategy to use. Default: Pkcs7
+	         */
+	        cfg: Cipher.cfg.extend({
+	            mode: CBC,
+	            padding: Pkcs7
+	        }),
+
+	        reset: function () {
+	            var modeCreator;
+
+	            // Reset cipher
+	            Cipher.reset.call(this);
+
+	            // Shortcuts
+	            var cfg = this.cfg;
+	            var iv = cfg.iv;
+	            var mode = cfg.mode;
+
+	            // Reset block mode
+	            if (this._xformMode == this._ENC_XFORM_MODE) {
+	                modeCreator = mode.createEncryptor;
+	            } else /* if (this._xformMode == this._DEC_XFORM_MODE) */ {
+	                modeCreator = mode.createDecryptor;
+	                // Keep at least one block in the buffer for unpadding
+	                this._minBufferSize = 1;
+	            }
+
+	            if (this._mode && this._mode.__creator == modeCreator) {
+	                this._mode.init(this, iv && iv.words);
+	            } else {
+	                this._mode = modeCreator.call(mode, this, iv && iv.words);
+	                this._mode.__creator = modeCreator;
+	            }
+	        },
+
+	        _doProcessBlock: function (words, offset) {
+	            this._mode.processBlock(words, offset);
+	        },
+
+	        _doFinalize: function () {
+	            var finalProcessedBlocks;
+
+	            // Shortcut
+	            var padding = this.cfg.padding;
+
+	            // Finalize
+	            if (this._xformMode == this._ENC_XFORM_MODE) {
+	                // Pad data
+	                padding.pad(this._data, this.blockSize);
+
+	                // Process final blocks
+	                finalProcessedBlocks = this._process(!!'flush');
+	            } else /* if (this._xformMode == this._DEC_XFORM_MODE) */ {
+	                // Process final blocks
+	                finalProcessedBlocks = this._process(!!'flush');
+
+	                // Unpad data
+	                padding.unpad(finalProcessedBlocks);
+	            }
+
+	            return finalProcessedBlocks;
+	        },
+
+	        blockSize: 128/32
+	    });
+
+	    /**
+	     * A collection of cipher parameters.
+	     *
+	     * @property {WordArray} ciphertext The raw ciphertext.
+	     * @property {WordArray} key The key to this ciphertext.
+	     * @property {WordArray} iv The IV used in the ciphering operation.
+	     * @property {WordArray} salt The salt used with a key derivation function.
+	     * @property {Cipher} algorithm The cipher algorithm.
+	     * @property {Mode} mode The block mode used in the ciphering operation.
+	     * @property {Padding} padding The padding scheme used in the ciphering operation.
+	     * @property {number} blockSize The block size of the cipher.
+	     * @property {Format} formatter The default formatting strategy to convert this cipher params object to a string.
+	     */
+	    var CipherParams = C_lib.CipherParams = Base.extend({
+	        /**
+	         * Initializes a newly created cipher params object.
+	         *
+	         * @param {Object} cipherParams An object with any of the possible cipher parameters.
+	         *
+	         * @example
+	         *
+	         *     var cipherParams = CryptoJS.lib.CipherParams.create({
+	         *         ciphertext: ciphertextWordArray,
+	         *         key: keyWordArray,
+	         *         iv: ivWordArray,
+	         *         salt: saltWordArray,
+	         *         algorithm: CryptoJS.algo.AES,
+	         *         mode: CryptoJS.mode.CBC,
+	         *         padding: CryptoJS.pad.PKCS7,
+	         *         blockSize: 4,
+	         *         formatter: CryptoJS.format.OpenSSL
+	         *     });
+	         */
+	        init: function (cipherParams) {
+	            this.mixIn(cipherParams);
+	        },
+
+	        /**
+	         * Converts this cipher params object to a string.
+	         *
+	         * @param {Format} formatter (Optional) The formatting strategy to use.
+	         *
+	         * @return {string} The stringified cipher params.
+	         *
+	         * @throws Error If neither the formatter nor the default formatter is set.
+	         *
+	         * @example
+	         *
+	         *     var string = cipherParams + '';
+	         *     var string = cipherParams.toString();
+	         *     var string = cipherParams.toString(CryptoJS.format.OpenSSL);
+	         */
+	        toString: function (formatter) {
+	            return (formatter || this.formatter).stringify(this);
+	        }
+	    });
+
+	    /**
+	     * Format namespace.
+	     */
+	    var C_format = C.format = {};
+
+	    /**
+	     * OpenSSL formatting strategy.
+	     */
+	    var OpenSSLFormatter = C_format.OpenSSL = {
+	        /**
+	         * Converts a cipher params object to an OpenSSL-compatible string.
+	         *
+	         * @param {CipherParams} cipherParams The cipher params object.
+	         *
+	         * @return {string} The OpenSSL-compatible string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var openSSLString = CryptoJS.format.OpenSSL.stringify(cipherParams);
+	         */
+	        stringify: function (cipherParams) {
+	            var wordArray;
+
+	            // Shortcuts
+	            var ciphertext = cipherParams.ciphertext;
+	            var salt = cipherParams.salt;
+
+	            // Format
+	            if (salt) {
+	                wordArray = WordArray.create([0x53616c74, 0x65645f5f]).concat(salt).concat(ciphertext);
+	            } else {
+	                wordArray = ciphertext;
+	            }
+
+	            return wordArray.toString(Base64);
+	        },
+
+	        /**
+	         * Converts an OpenSSL-compatible string to a cipher params object.
+	         *
+	         * @param {string} openSSLStr The OpenSSL-compatible string.
+	         *
+	         * @return {CipherParams} The cipher params object.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var cipherParams = CryptoJS.format.OpenSSL.parse(openSSLString);
+	         */
+	        parse: function (openSSLStr) {
+	            var salt;
+
+	            // Parse base64
+	            var ciphertext = Base64.parse(openSSLStr);
+
+	            // Shortcut
+	            var ciphertextWords = ciphertext.words;
+
+	            // Test for salt
+	            if (ciphertextWords[0] == 0x53616c74 && ciphertextWords[1] == 0x65645f5f) {
+	                // Extract salt
+	                salt = WordArray.create(ciphertextWords.slice(2, 4));
+
+	                // Remove salt from ciphertext
+	                ciphertextWords.splice(0, 4);
+	                ciphertext.sigBytes -= 16;
+	            }
+
+	            return CipherParams.create({ ciphertext: ciphertext, salt: salt });
+	        }
+	    };
+
+	    /**
+	     * A cipher wrapper that returns ciphertext as a serializable cipher params object.
+	     */
+	    var SerializableCipher = C_lib.SerializableCipher = Base.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {Formatter} format The formatting strategy to convert cipher param objects to and from a string. Default: OpenSSL
+	         */
+	        cfg: Base.extend({
+	            format: OpenSSLFormatter
+	        }),
+
+	        /**
+	         * Encrypts a message.
+	         *
+	         * @param {Cipher} cipher The cipher algorithm to use.
+	         * @param {WordArray|string} message The message to encrypt.
+	         * @param {WordArray} key The key.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @return {CipherParams} A cipher params object.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var ciphertextParams = CryptoJS.lib.SerializableCipher.encrypt(CryptoJS.algo.AES, message, key);
+	         *     var ciphertextParams = CryptoJS.lib.SerializableCipher.encrypt(CryptoJS.algo.AES, message, key, { iv: iv });
+	         *     var ciphertextParams = CryptoJS.lib.SerializableCipher.encrypt(CryptoJS.algo.AES, message, key, { iv: iv, format: CryptoJS.format.OpenSSL });
+	         */
+	        encrypt: function (cipher, message, key, cfg) {
+	            // Apply config defaults
+	            cfg = this.cfg.extend(cfg);
+
+	            // Encrypt
+	            var encryptor = cipher.createEncryptor(key, cfg);
+	            var ciphertext = encryptor.finalize(message);
+
+	            // Shortcut
+	            var cipherCfg = encryptor.cfg;
+
+	            // Create and return serializable cipher params
+	            return CipherParams.create({
+	                ciphertext: ciphertext,
+	                key: key,
+	                iv: cipherCfg.iv,
+	                algorithm: cipher,
+	                mode: cipherCfg.mode,
+	                padding: cipherCfg.padding,
+	                blockSize: cipher.blockSize,
+	                formatter: cfg.format
+	            });
+	        },
+
+	        /**
+	         * Decrypts serialized ciphertext.
+	         *
+	         * @param {Cipher} cipher The cipher algorithm to use.
+	         * @param {CipherParams|string} ciphertext The ciphertext to decrypt.
+	         * @param {WordArray} key The key.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @return {WordArray} The plaintext.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var plaintext = CryptoJS.lib.SerializableCipher.decrypt(CryptoJS.algo.AES, formattedCiphertext, key, { iv: iv, format: CryptoJS.format.OpenSSL });
+	         *     var plaintext = CryptoJS.lib.SerializableCipher.decrypt(CryptoJS.algo.AES, ciphertextParams, key, { iv: iv, format: CryptoJS.format.OpenSSL });
+	         */
+	        decrypt: function (cipher, ciphertext, key, cfg) {
+	            // Apply config defaults
+	            cfg = this.cfg.extend(cfg);
+
+	            // Convert string to CipherParams
+	            ciphertext = this._parse(ciphertext, cfg.format);
+
+	            // Decrypt
+	            var plaintext = cipher.createDecryptor(key, cfg).finalize(ciphertext.ciphertext);
+
+	            return plaintext;
+	        },
+
+	        /**
+	         * Converts serialized ciphertext to CipherParams,
+	         * else assumed CipherParams already and returns ciphertext unchanged.
+	         *
+	         * @param {CipherParams|string} ciphertext The ciphertext.
+	         * @param {Formatter} format The formatting strategy to use to parse serialized ciphertext.
+	         *
+	         * @return {CipherParams} The unserialized ciphertext.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var ciphertextParams = CryptoJS.lib.SerializableCipher._parse(ciphertextStringOrParams, format);
+	         */
+	        _parse: function (ciphertext, format) {
+	            if (typeof ciphertext == 'string') {
+	                return format.parse(ciphertext, this);
+	            } else {
+	                return ciphertext;
+	            }
+	        }
+	    });
+
+	    /**
+	     * Key derivation function namespace.
+	     */
+	    var C_kdf = C.kdf = {};
+
+	    /**
+	     * OpenSSL key derivation function.
+	     */
+	    var OpenSSLKdf = C_kdf.OpenSSL = {
+	        /**
+	         * Derives a key and IV from a password.
+	         *
+	         * @param {string} password The password to derive from.
+	         * @param {number} keySize The size in words of the key to generate.
+	         * @param {number} ivSize The size in words of the IV to generate.
+	         * @param {WordArray|string} salt (Optional) A 64-bit salt to use. If omitted, a salt will be generated randomly.
+	         *
+	         * @return {CipherParams} A cipher params object with the key, IV, and salt.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32);
+	         *     var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32, 'saltsalt');
+	         */
+	        execute: function (password, keySize, ivSize, salt) {
+	            // Generate random salt
+	            if (!salt) {
+	                salt = WordArray.random(64/8);
+	            }
+
+	            // Derive key and IV
+	            var key = EvpKDF.create({ keySize: keySize + ivSize }).compute(password, salt);
+
+	            // Separate key and IV
+	            var iv = WordArray.create(key.words.slice(keySize), ivSize * 4);
+	            key.sigBytes = keySize * 4;
+
+	            // Return params
+	            return CipherParams.create({ key: key, iv: iv, salt: salt });
+	        }
+	    };
+
+	    /**
+	     * A serializable cipher wrapper that derives the key from a password,
+	     * and returns ciphertext as a serializable cipher params object.
+	     */
+	    var PasswordBasedCipher = C_lib.PasswordBasedCipher = SerializableCipher.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {KDF} kdf The key derivation function to use to generate a key and IV from a password. Default: OpenSSL
+	         */
+	        cfg: SerializableCipher.cfg.extend({
+	            kdf: OpenSSLKdf
+	        }),
+
+	        /**
+	         * Encrypts a message using a password.
+	         *
+	         * @param {Cipher} cipher The cipher algorithm to use.
+	         * @param {WordArray|string} message The message to encrypt.
+	         * @param {string} password The password.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @return {CipherParams} A cipher params object.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var ciphertextParams = CryptoJS.lib.PasswordBasedCipher.encrypt(CryptoJS.algo.AES, message, 'password');
+	         *     var ciphertextParams = CryptoJS.lib.PasswordBasedCipher.encrypt(CryptoJS.algo.AES, message, 'password', { format: CryptoJS.format.OpenSSL });
+	         */
+	        encrypt: function (cipher, message, password, cfg) {
+	            // Apply config defaults
+	            cfg = this.cfg.extend(cfg);
+
+	            // Derive key and other params
+	            var derivedParams = cfg.kdf.execute(password, cipher.keySize, cipher.ivSize);
+
+	            // Add IV to config
+	            cfg.iv = derivedParams.iv;
+
+	            // Encrypt
+	            var ciphertext = SerializableCipher.encrypt.call(this, cipher, message, derivedParams.key, cfg);
+
+	            // Mix in derived params
+	            ciphertext.mixIn(derivedParams);
+
+	            return ciphertext;
+	        },
+
+	        /**
+	         * Decrypts serialized ciphertext using a password.
+	         *
+	         * @param {Cipher} cipher The cipher algorithm to use.
+	         * @param {CipherParams|string} ciphertext The ciphertext to decrypt.
+	         * @param {string} password The password.
+	         * @param {Object} cfg (Optional) The configuration options to use for this operation.
+	         *
+	         * @return {WordArray} The plaintext.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var plaintext = CryptoJS.lib.PasswordBasedCipher.decrypt(CryptoJS.algo.AES, formattedCiphertext, 'password', { format: CryptoJS.format.OpenSSL });
+	         *     var plaintext = CryptoJS.lib.PasswordBasedCipher.decrypt(CryptoJS.algo.AES, ciphertextParams, 'password', { format: CryptoJS.format.OpenSSL });
+	         */
+	        decrypt: function (cipher, ciphertext, password, cfg) {
+	            // Apply config defaults
+	            cfg = this.cfg.extend(cfg);
+
+	            // Convert string to CipherParams
+	            ciphertext = this._parse(ciphertext, cfg.format);
+
+	            // Derive key and other params
+	            var derivedParams = cfg.kdf.execute(password, cipher.keySize, cipher.ivSize, ciphertext.salt);
+
+	            // Add IV to config
+	            cfg.iv = derivedParams.iv;
+
+	            // Decrypt
+	            var plaintext = SerializableCipher.decrypt.call(this, cipher, ciphertext, derivedParams.key, cfg);
+
+	            return plaintext;
+	        }
+	    });
+	}());
+
+
+	/**
+	 * Cipher Feedback block mode.
+	 */
+	CryptoJS.mode.CFB = (function () {
+	    var CFB = CryptoJS.lib.BlockCipherMode.extend();
+
+	    CFB.Encryptor = CFB.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher;
+	            var blockSize = cipher.blockSize;
+
+	            generateKeystreamAndEncrypt.call(this, words, offset, blockSize, cipher);
+
+	            // Remember this block to use with next block
+	            this._prevBlock = words.slice(offset, offset + blockSize);
+	        }
+	    });
+
+	    CFB.Decryptor = CFB.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher;
+	            var blockSize = cipher.blockSize;
+
+	            // Remember this block to use with next block
+	            var thisBlock = words.slice(offset, offset + blockSize);
+
+	            generateKeystreamAndEncrypt.call(this, words, offset, blockSize, cipher);
+
+	            // This block becomes the previous block
+	            this._prevBlock = thisBlock;
+	        }
+	    });
+
+	    function generateKeystreamAndEncrypt(words, offset, blockSize, cipher) {
+	        var keystream;
+
+	        // Shortcut
+	        var iv = this._iv;
+
+	        // Generate keystream
+	        if (iv) {
+	            keystream = iv.slice(0);
+
+	            // Remove IV for subsequent blocks
+	            this._iv = undefined;
+	        } else {
+	            keystream = this._prevBlock;
+	        }
+	        cipher.encryptBlock(keystream, 0);
+
+	        // Encrypt
+	        for (var i = 0; i < blockSize; i++) {
+	            words[offset + i] ^= keystream[i];
+	        }
+	    }
+
+	    return CFB;
+	}());
+
+
+	/**
+	 * Electronic Codebook block mode.
+	 */
+	CryptoJS.mode.ECB = (function () {
+	    var ECB = CryptoJS.lib.BlockCipherMode.extend();
+
+	    ECB.Encryptor = ECB.extend({
+	        processBlock: function (words, offset) {
+	            this._cipher.encryptBlock(words, offset);
+	        }
+	    });
+
+	    ECB.Decryptor = ECB.extend({
+	        processBlock: function (words, offset) {
+	            this._cipher.decryptBlock(words, offset);
+	        }
+	    });
+
+	    return ECB;
+	}());
+
+
+	/**
+	 * ANSI X.923 padding strategy.
+	 */
+	CryptoJS.pad.AnsiX923 = {
+	    pad: function (data, blockSize) {
+	        // Shortcuts
+	        var dataSigBytes = data.sigBytes;
+	        var blockSizeBytes = blockSize * 4;
+
+	        // Count padding bytes
+	        var nPaddingBytes = blockSizeBytes - dataSigBytes % blockSizeBytes;
+
+	        // Compute last byte position
+	        var lastBytePos = dataSigBytes + nPaddingBytes - 1;
+
+	        // Pad
+	        data.clamp();
+	        data.words[lastBytePos >>> 2] |= nPaddingBytes << (24 - (lastBytePos % 4) * 8);
+	        data.sigBytes += nPaddingBytes;
+	    },
+
+	    unpad: function (data) {
+	        // Get number of padding bytes from last byte
+	        var nPaddingBytes = data.words[(data.sigBytes - 1) >>> 2] & 0xff;
+
+	        // Remove padding
+	        data.sigBytes -= nPaddingBytes;
+	    }
+	};
+
+
+	/**
+	 * ISO 10126 padding strategy.
+	 */
+	CryptoJS.pad.Iso10126 = {
+	    pad: function (data, blockSize) {
+	        // Shortcut
+	        var blockSizeBytes = blockSize * 4;
+
+	        // Count padding bytes
+	        var nPaddingBytes = blockSizeBytes - data.sigBytes % blockSizeBytes;
+
+	        // Pad
+	        data.concat(CryptoJS.lib.WordArray.random(nPaddingBytes - 1)).
+	             concat(CryptoJS.lib.WordArray.create([nPaddingBytes << 24], 1));
+	    },
+
+	    unpad: function (data) {
+	        // Get number of padding bytes from last byte
+	        var nPaddingBytes = data.words[(data.sigBytes - 1) >>> 2] & 0xff;
+
+	        // Remove padding
+	        data.sigBytes -= nPaddingBytes;
+	    }
+	};
+
+
+	/**
+	 * ISO/IEC 9797-1 Padding Method 2.
+	 */
+	CryptoJS.pad.Iso97971 = {
+	    pad: function (data, blockSize) {
+	        // Add 0x80 byte
+	        data.concat(CryptoJS.lib.WordArray.create([0x80000000], 1));
+
+	        // Zero pad the rest
+	        CryptoJS.pad.ZeroPadding.pad(data, blockSize);
+	    },
+
+	    unpad: function (data) {
+	        // Remove zero padding
+	        CryptoJS.pad.ZeroPadding.unpad(data);
+
+	        // Remove one more byte -- the 0x80 byte
+	        data.sigBytes--;
+	    }
+	};
+
+
+	/**
+	 * Output Feedback block mode.
+	 */
+	CryptoJS.mode.OFB = (function () {
+	    var OFB = CryptoJS.lib.BlockCipherMode.extend();
+
+	    var Encryptor = OFB.Encryptor = OFB.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher
+	            var blockSize = cipher.blockSize;
+	            var iv = this._iv;
+	            var keystream = this._keystream;
+
+	            // Generate keystream
+	            if (iv) {
+	                keystream = this._keystream = iv.slice(0);
+
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            }
+	            cipher.encryptBlock(keystream, 0);
+
+	            // Encrypt
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= keystream[i];
+	            }
+	        }
+	    });
+
+	    OFB.Decryptor = Encryptor;
+
+	    return OFB;
+	}());
+
+
+	/**
+	 * A noop padding strategy.
+	 */
+	CryptoJS.pad.NoPadding = {
+	    pad: function () {
+	    },
+
+	    unpad: function () {
+	    }
+	};
+
+
+	(function (undefined) {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var CipherParams = C_lib.CipherParams;
+	    var C_enc = C.enc;
+	    var Hex = C_enc.Hex;
+	    var C_format = C.format;
+
+	    var HexFormatter = C_format.Hex = {
+	        /**
+	         * Converts the ciphertext of a cipher params object to a hexadecimally encoded string.
+	         *
+	         * @param {CipherParams} cipherParams The cipher params object.
+	         *
+	         * @return {string} The hexadecimally encoded string.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var hexString = CryptoJS.format.Hex.stringify(cipherParams);
+	         */
+	        stringify: function (cipherParams) {
+	            return cipherParams.ciphertext.toString(Hex);
+	        },
+
+	        /**
+	         * Converts a hexadecimally encoded ciphertext string to a cipher params object.
+	         *
+	         * @param {string} input The hexadecimally encoded string.
+	         *
+	         * @return {CipherParams} The cipher params object.
+	         *
+	         * @static
+	         *
+	         * @example
+	         *
+	         *     var cipherParams = CryptoJS.format.Hex.parse(hexString);
+	         */
+	        parse: function (input) {
+	            var ciphertext = Hex.parse(input);
+	            return CipherParams.create({ ciphertext: ciphertext });
+	        }
+	    };
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var BlockCipher = C_lib.BlockCipher;
+	    var C_algo = C.algo;
+
+	    // Lookup tables
+	    var SBOX = [];
+	    var INV_SBOX = [];
+	    var SUB_MIX_0 = [];
+	    var SUB_MIX_1 = [];
+	    var SUB_MIX_2 = [];
+	    var SUB_MIX_3 = [];
+	    var INV_SUB_MIX_0 = [];
+	    var INV_SUB_MIX_1 = [];
+	    var INV_SUB_MIX_2 = [];
+	    var INV_SUB_MIX_3 = [];
+
+	    // Compute lookup tables
+	    (function () {
+	        // Compute double table
+	        var d = [];
+	        for (var i = 0; i < 256; i++) {
+	            if (i < 128) {
+	                d[i] = i << 1;
+	            } else {
+	                d[i] = (i << 1) ^ 0x11b;
+	            }
+	        }
+
+	        // Walk GF(2^8)
+	        var x = 0;
+	        var xi = 0;
+	        for (var i = 0; i < 256; i++) {
+	            // Compute sbox
+	            var sx = xi ^ (xi << 1) ^ (xi << 2) ^ (xi << 3) ^ (xi << 4);
+	            sx = (sx >>> 8) ^ (sx & 0xff) ^ 0x63;
+	            SBOX[x] = sx;
+	            INV_SBOX[sx] = x;
+
+	            // Compute multiplication
+	            var x2 = d[x];
+	            var x4 = d[x2];
+	            var x8 = d[x4];
+
+	            // Compute sub bytes, mix columns tables
+	            var t = (d[sx] * 0x101) ^ (sx * 0x1010100);
+	            SUB_MIX_0[x] = (t << 24) | (t >>> 8);
+	            SUB_MIX_1[x] = (t << 16) | (t >>> 16);
+	            SUB_MIX_2[x] = (t << 8)  | (t >>> 24);
+	            SUB_MIX_3[x] = t;
+
+	            // Compute inv sub bytes, inv mix columns tables
+	            var t = (x8 * 0x1010101) ^ (x4 * 0x10001) ^ (x2 * 0x101) ^ (x * 0x1010100);
+	            INV_SUB_MIX_0[sx] = (t << 24) | (t >>> 8);
+	            INV_SUB_MIX_1[sx] = (t << 16) | (t >>> 16);
+	            INV_SUB_MIX_2[sx] = (t << 8)  | (t >>> 24);
+	            INV_SUB_MIX_3[sx] = t;
+
+	            // Compute next counter
+	            if (!x) {
+	                x = xi = 1;
+	            } else {
+	                x = x2 ^ d[d[d[x8 ^ x2]]];
+	                xi ^= d[d[xi]];
+	            }
+	        }
+	    }());
+
+	    // Precomputed Rcon lookup
+	    var RCON = [0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36];
+
+	    /**
+	     * AES block cipher algorithm.
+	     */
+	    var AES = C_algo.AES = BlockCipher.extend({
+	        _doReset: function () {
+	            var t;
+
+	            // Skip reset of nRounds has been set before and key did not change
+	            if (this._nRounds && this._keyPriorReset === this._key) {
+	                return;
+	            }
+
+	            // Shortcuts
+	            var key = this._keyPriorReset = this._key;
+	            var keyWords = key.words;
+	            var keySize = key.sigBytes / 4;
+
+	            // Compute number of rounds
+	            var nRounds = this._nRounds = keySize + 6;
+
+	            // Compute number of key schedule rows
+	            var ksRows = (nRounds + 1) * 4;
+
+	            // Compute key schedule
+	            var keySchedule = this._keySchedule = [];
+	            for (var ksRow = 0; ksRow < ksRows; ksRow++) {
+	                if (ksRow < keySize) {
+	                    keySchedule[ksRow] = keyWords[ksRow];
+	                } else {
+	                    t = keySchedule[ksRow - 1];
+
+	                    if (!(ksRow % keySize)) {
+	                        // Rot word
+	                        t = (t << 8) | (t >>> 24);
+
+	                        // Sub word
+	                        t = (SBOX[t >>> 24] << 24) | (SBOX[(t >>> 16) & 0xff] << 16) | (SBOX[(t >>> 8) & 0xff] << 8) | SBOX[t & 0xff];
+
+	                        // Mix Rcon
+	                        t ^= RCON[(ksRow / keySize) | 0] << 24;
+	                    } else if (keySize > 6 && ksRow % keySize == 4) {
+	                        // Sub word
+	                        t = (SBOX[t >>> 24] << 24) | (SBOX[(t >>> 16) & 0xff] << 16) | (SBOX[(t >>> 8) & 0xff] << 8) | SBOX[t & 0xff];
+	                    }
+
+	                    keySchedule[ksRow] = keySchedule[ksRow - keySize] ^ t;
+	                }
+	            }
+
+	            // Compute inv key schedule
+	            var invKeySchedule = this._invKeySchedule = [];
+	            for (var invKsRow = 0; invKsRow < ksRows; invKsRow++) {
+	                var ksRow = ksRows - invKsRow;
+
+	                if (invKsRow % 4) {
+	                    var t = keySchedule[ksRow];
+	                } else {
+	                    var t = keySchedule[ksRow - 4];
+	                }
+
+	                if (invKsRow < 4 || ksRow <= 4) {
+	                    invKeySchedule[invKsRow] = t;
+	                } else {
+	                    invKeySchedule[invKsRow] = INV_SUB_MIX_0[SBOX[t >>> 24]] ^ INV_SUB_MIX_1[SBOX[(t >>> 16) & 0xff]] ^
+	                                               INV_SUB_MIX_2[SBOX[(t >>> 8) & 0xff]] ^ INV_SUB_MIX_3[SBOX[t & 0xff]];
+	                }
+	            }
+	        },
+
+	        encryptBlock: function (M, offset) {
+	            this._doCryptBlock(M, offset, this._keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX);
+	        },
+
+	        decryptBlock: function (M, offset) {
+	            // Swap 2nd and 4th rows
+	            var t = M[offset + 1];
+	            M[offset + 1] = M[offset + 3];
+	            M[offset + 3] = t;
+
+	            this._doCryptBlock(M, offset, this._invKeySchedule, INV_SUB_MIX_0, INV_SUB_MIX_1, INV_SUB_MIX_2, INV_SUB_MIX_3, INV_SBOX);
+
+	            // Inv swap 2nd and 4th rows
+	            var t = M[offset + 1];
+	            M[offset + 1] = M[offset + 3];
+	            M[offset + 3] = t;
+	        },
+
+	        _doCryptBlock: function (M, offset, keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX) {
+	            // Shortcut
+	            var nRounds = this._nRounds;
+
+	            // Get input, add round key
+	            var s0 = M[offset]     ^ keySchedule[0];
+	            var s1 = M[offset + 1] ^ keySchedule[1];
+	            var s2 = M[offset + 2] ^ keySchedule[2];
+	            var s3 = M[offset + 3] ^ keySchedule[3];
+
+	            // Key schedule row counter
+	            var ksRow = 4;
+
+	            // Rounds
+	            for (var round = 1; round < nRounds; round++) {
+	                // Shift rows, sub bytes, mix columns, add round key
+	                var t0 = SUB_MIX_0[s0 >>> 24] ^ SUB_MIX_1[(s1 >>> 16) & 0xff] ^ SUB_MIX_2[(s2 >>> 8) & 0xff] ^ SUB_MIX_3[s3 & 0xff] ^ keySchedule[ksRow++];
+	                var t1 = SUB_MIX_0[s1 >>> 24] ^ SUB_MIX_1[(s2 >>> 16) & 0xff] ^ SUB_MIX_2[(s3 >>> 8) & 0xff] ^ SUB_MIX_3[s0 & 0xff] ^ keySchedule[ksRow++];
+	                var t2 = SUB_MIX_0[s2 >>> 24] ^ SUB_MIX_1[(s3 >>> 16) & 0xff] ^ SUB_MIX_2[(s0 >>> 8) & 0xff] ^ SUB_MIX_3[s1 & 0xff] ^ keySchedule[ksRow++];
+	                var t3 = SUB_MIX_0[s3 >>> 24] ^ SUB_MIX_1[(s0 >>> 16) & 0xff] ^ SUB_MIX_2[(s1 >>> 8) & 0xff] ^ SUB_MIX_3[s2 & 0xff] ^ keySchedule[ksRow++];
+
+	                // Update state
+	                s0 = t0;
+	                s1 = t1;
+	                s2 = t2;
+	                s3 = t3;
+	            }
+
+	            // Shift rows, sub bytes, add round key
+	            var t0 = ((SBOX[s0 >>> 24] << 24) | (SBOX[(s1 >>> 16) & 0xff] << 16) | (SBOX[(s2 >>> 8) & 0xff] << 8) | SBOX[s3 & 0xff]) ^ keySchedule[ksRow++];
+	            var t1 = ((SBOX[s1 >>> 24] << 24) | (SBOX[(s2 >>> 16) & 0xff] << 16) | (SBOX[(s3 >>> 8) & 0xff] << 8) | SBOX[s0 & 0xff]) ^ keySchedule[ksRow++];
+	            var t2 = ((SBOX[s2 >>> 24] << 24) | (SBOX[(s3 >>> 16) & 0xff] << 16) | (SBOX[(s0 >>> 8) & 0xff] << 8) | SBOX[s1 & 0xff]) ^ keySchedule[ksRow++];
+	            var t3 = ((SBOX[s3 >>> 24] << 24) | (SBOX[(s0 >>> 16) & 0xff] << 16) | (SBOX[(s1 >>> 8) & 0xff] << 8) | SBOX[s2 & 0xff]) ^ keySchedule[ksRow++];
+
+	            // Set output
+	            M[offset]     = t0;
+	            M[offset + 1] = t1;
+	            M[offset + 2] = t2;
+	            M[offset + 3] = t3;
+	        },
+
+	        keySize: 256/32
+	    });
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.AES.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.AES.decrypt(ciphertext, key, cfg);
+	     */
+	    C.AES = BlockCipher._createHelper(AES);
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var WordArray = C_lib.WordArray;
+	    var BlockCipher = C_lib.BlockCipher;
+	    var C_algo = C.algo;
+
+	    // Permuted Choice 1 constants
+	    var PC1 = [
+	        57, 49, 41, 33, 25, 17, 9,  1,
+	        58, 50, 42, 34, 26, 18, 10, 2,
+	        59, 51, 43, 35, 27, 19, 11, 3,
+	        60, 52, 44, 36, 63, 55, 47, 39,
+	        31, 23, 15, 7,  62, 54, 46, 38,
+	        30, 22, 14, 6,  61, 53, 45, 37,
+	        29, 21, 13, 5,  28, 20, 12, 4
+	    ];
+
+	    // Permuted Choice 2 constants
+	    var PC2 = [
+	        14, 17, 11, 24, 1,  5,
+	        3,  28, 15, 6,  21, 10,
+	        23, 19, 12, 4,  26, 8,
+	        16, 7,  27, 20, 13, 2,
+	        41, 52, 31, 37, 47, 55,
+	        30, 40, 51, 45, 33, 48,
+	        44, 49, 39, 56, 34, 53,
+	        46, 42, 50, 36, 29, 32
+	    ];
+
+	    // Cumulative bit shift constants
+	    var BIT_SHIFTS = [1,  2,  4,  6,  8,  10, 12, 14, 15, 17, 19, 21, 23, 25, 27, 28];
+
+	    // SBOXes and round permutation constants
+	    var SBOX_P = [
+	        {
+	            0x0: 0x808200,
+	            0x10000000: 0x8000,
+	            0x20000000: 0x808002,
+	            0x30000000: 0x2,
+	            0x40000000: 0x200,
+	            0x50000000: 0x808202,
+	            0x60000000: 0x800202,
+	            0x70000000: 0x800000,
+	            0x80000000: 0x202,
+	            0x90000000: 0x800200,
+	            0xa0000000: 0x8200,
+	            0xb0000000: 0x808000,
+	            0xc0000000: 0x8002,
+	            0xd0000000: 0x800002,
+	            0xe0000000: 0x0,
+	            0xf0000000: 0x8202,
+	            0x8000000: 0x0,
+	            0x18000000: 0x808202,
+	            0x28000000: 0x8202,
+	            0x38000000: 0x8000,
+	            0x48000000: 0x808200,
+	            0x58000000: 0x200,
+	            0x68000000: 0x808002,
+	            0x78000000: 0x2,
+	            0x88000000: 0x800200,
+	            0x98000000: 0x8200,
+	            0xa8000000: 0x808000,
+	            0xb8000000: 0x800202,
+	            0xc8000000: 0x800002,
+	            0xd8000000: 0x8002,
+	            0xe8000000: 0x202,
+	            0xf8000000: 0x800000,
+	            0x1: 0x8000,
+	            0x10000001: 0x2,
+	            0x20000001: 0x808200,
+	            0x30000001: 0x800000,
+	            0x40000001: 0x808002,
+	            0x50000001: 0x8200,
+	            0x60000001: 0x200,
+	            0x70000001: 0x800202,
+	            0x80000001: 0x808202,
+	            0x90000001: 0x808000,
+	            0xa0000001: 0x800002,
+	            0xb0000001: 0x8202,
+	            0xc0000001: 0x202,
+	            0xd0000001: 0x800200,
+	            0xe0000001: 0x8002,
+	            0xf0000001: 0x0,
+	            0x8000001: 0x808202,
+	            0x18000001: 0x808000,
+	            0x28000001: 0x800000,
+	            0x38000001: 0x200,
+	            0x48000001: 0x8000,
+	            0x58000001: 0x800002,
+	            0x68000001: 0x2,
+	            0x78000001: 0x8202,
+	            0x88000001: 0x8002,
+	            0x98000001: 0x800202,
+	            0xa8000001: 0x202,
+	            0xb8000001: 0x808200,
+	            0xc8000001: 0x800200,
+	            0xd8000001: 0x0,
+	            0xe8000001: 0x8200,
+	            0xf8000001: 0x808002
+	        },
+	        {
+	            0x0: 0x40084010,
+	            0x1000000: 0x4000,
+	            0x2000000: 0x80000,
+	            0x3000000: 0x40080010,
+	            0x4000000: 0x40000010,
+	            0x5000000: 0x40084000,
+	            0x6000000: 0x40004000,
+	            0x7000000: 0x10,
+	            0x8000000: 0x84000,
+	            0x9000000: 0x40004010,
+	            0xa000000: 0x40000000,
+	            0xb000000: 0x84010,
+	            0xc000000: 0x80010,
+	            0xd000000: 0x0,
+	            0xe000000: 0x4010,
+	            0xf000000: 0x40080000,
+	            0x800000: 0x40004000,
+	            0x1800000: 0x84010,
+	            0x2800000: 0x10,
+	            0x3800000: 0x40004010,
+	            0x4800000: 0x40084010,
+	            0x5800000: 0x40000000,
+	            0x6800000: 0x80000,
+	            0x7800000: 0x40080010,
+	            0x8800000: 0x80010,
+	            0x9800000: 0x0,
+	            0xa800000: 0x4000,
+	            0xb800000: 0x40080000,
+	            0xc800000: 0x40000010,
+	            0xd800000: 0x84000,
+	            0xe800000: 0x40084000,
+	            0xf800000: 0x4010,
+	            0x10000000: 0x0,
+	            0x11000000: 0x40080010,
+	            0x12000000: 0x40004010,
+	            0x13000000: 0x40084000,
+	            0x14000000: 0x40080000,
+	            0x15000000: 0x10,
+	            0x16000000: 0x84010,
+	            0x17000000: 0x4000,
+	            0x18000000: 0x4010,
+	            0x19000000: 0x80000,
+	            0x1a000000: 0x80010,
+	            0x1b000000: 0x40000010,
+	            0x1c000000: 0x84000,
+	            0x1d000000: 0x40004000,
+	            0x1e000000: 0x40000000,
+	            0x1f000000: 0x40084010,
+	            0x10800000: 0x84010,
+	            0x11800000: 0x80000,
+	            0x12800000: 0x40080000,
+	            0x13800000: 0x4000,
+	            0x14800000: 0x40004000,
+	            0x15800000: 0x40084010,
+	            0x16800000: 0x10,
+	            0x17800000: 0x40000000,
+	            0x18800000: 0x40084000,
+	            0x19800000: 0x40000010,
+	            0x1a800000: 0x40004010,
+	            0x1b800000: 0x80010,
+	            0x1c800000: 0x0,
+	            0x1d800000: 0x4010,
+	            0x1e800000: 0x40080010,
+	            0x1f800000: 0x84000
+	        },
+	        {
+	            0x0: 0x104,
+	            0x100000: 0x0,
+	            0x200000: 0x4000100,
+	            0x300000: 0x10104,
+	            0x400000: 0x10004,
+	            0x500000: 0x4000004,
+	            0x600000: 0x4010104,
+	            0x700000: 0x4010000,
+	            0x800000: 0x4000000,
+	            0x900000: 0x4010100,
+	            0xa00000: 0x10100,
+	            0xb00000: 0x4010004,
+	            0xc00000: 0x4000104,
+	            0xd00000: 0x10000,
+	            0xe00000: 0x4,
+	            0xf00000: 0x100,
+	            0x80000: 0x4010100,
+	            0x180000: 0x4010004,
+	            0x280000: 0x0,
+	            0x380000: 0x4000100,
+	            0x480000: 0x4000004,
+	            0x580000: 0x10000,
+	            0x680000: 0x10004,
+	            0x780000: 0x104,
+	            0x880000: 0x4,
+	            0x980000: 0x100,
+	            0xa80000: 0x4010000,
+	            0xb80000: 0x10104,
+	            0xc80000: 0x10100,
+	            0xd80000: 0x4000104,
+	            0xe80000: 0x4010104,
+	            0xf80000: 0x4000000,
+	            0x1000000: 0x4010100,
+	            0x1100000: 0x10004,
+	            0x1200000: 0x10000,
+	            0x1300000: 0x4000100,
+	            0x1400000: 0x100,
+	            0x1500000: 0x4010104,
+	            0x1600000: 0x4000004,
+	            0x1700000: 0x0,
+	            0x1800000: 0x4000104,
+	            0x1900000: 0x4000000,
+	            0x1a00000: 0x4,
+	            0x1b00000: 0x10100,
+	            0x1c00000: 0x4010000,
+	            0x1d00000: 0x104,
+	            0x1e00000: 0x10104,
+	            0x1f00000: 0x4010004,
+	            0x1080000: 0x4000000,
+	            0x1180000: 0x104,
+	            0x1280000: 0x4010100,
+	            0x1380000: 0x0,
+	            0x1480000: 0x10004,
+	            0x1580000: 0x4000100,
+	            0x1680000: 0x100,
+	            0x1780000: 0x4010004,
+	            0x1880000: 0x10000,
+	            0x1980000: 0x4010104,
+	            0x1a80000: 0x10104,
+	            0x1b80000: 0x4000004,
+	            0x1c80000: 0x4000104,
+	            0x1d80000: 0x4010000,
+	            0x1e80000: 0x4,
+	            0x1f80000: 0x10100
+	        },
+	        {
+	            0x0: 0x80401000,
+	            0x10000: 0x80001040,
+	            0x20000: 0x401040,
+	            0x30000: 0x80400000,
+	            0x40000: 0x0,
+	            0x50000: 0x401000,
+	            0x60000: 0x80000040,
+	            0x70000: 0x400040,
+	            0x80000: 0x80000000,
+	            0x90000: 0x400000,
+	            0xa0000: 0x40,
+	            0xb0000: 0x80001000,
+	            0xc0000: 0x80400040,
+	            0xd0000: 0x1040,
+	            0xe0000: 0x1000,
+	            0xf0000: 0x80401040,
+	            0x8000: 0x80001040,
+	            0x18000: 0x40,
+	            0x28000: 0x80400040,
+	            0x38000: 0x80001000,
+	            0x48000: 0x401000,
+	            0x58000: 0x80401040,
+	            0x68000: 0x0,
+	            0x78000: 0x80400000,
+	            0x88000: 0x1000,
+	            0x98000: 0x80401000,
+	            0xa8000: 0x400000,
+	            0xb8000: 0x1040,
+	            0xc8000: 0x80000000,
+	            0xd8000: 0x400040,
+	            0xe8000: 0x401040,
+	            0xf8000: 0x80000040,
+	            0x100000: 0x400040,
+	            0x110000: 0x401000,
+	            0x120000: 0x80000040,
+	            0x130000: 0x0,
+	            0x140000: 0x1040,
+	            0x150000: 0x80400040,
+	            0x160000: 0x80401000,
+	            0x170000: 0x80001040,
+	            0x180000: 0x80401040,
+	            0x190000: 0x80000000,
+	            0x1a0000: 0x80400000,
+	            0x1b0000: 0x401040,
+	            0x1c0000: 0x80001000,
+	            0x1d0000: 0x400000,
+	            0x1e0000: 0x40,
+	            0x1f0000: 0x1000,
+	            0x108000: 0x80400000,
+	            0x118000: 0x80401040,
+	            0x128000: 0x0,
+	            0x138000: 0x401000,
+	            0x148000: 0x400040,
+	            0x158000: 0x80000000,
+	            0x168000: 0x80001040,
+	            0x178000: 0x40,
+	            0x188000: 0x80000040,
+	            0x198000: 0x1000,
+	            0x1a8000: 0x80001000,
+	            0x1b8000: 0x80400040,
+	            0x1c8000: 0x1040,
+	            0x1d8000: 0x80401000,
+	            0x1e8000: 0x400000,
+	            0x1f8000: 0x401040
+	        },
+	        {
+	            0x0: 0x80,
+	            0x1000: 0x1040000,
+	            0x2000: 0x40000,
+	            0x3000: 0x20000000,
+	            0x4000: 0x20040080,
+	            0x5000: 0x1000080,
+	            0x6000: 0x21000080,
+	            0x7000: 0x40080,
+	            0x8000: 0x1000000,
+	            0x9000: 0x20040000,
+	            0xa000: 0x20000080,
+	            0xb000: 0x21040080,
+	            0xc000: 0x21040000,
+	            0xd000: 0x0,
+	            0xe000: 0x1040080,
+	            0xf000: 0x21000000,
+	            0x800: 0x1040080,
+	            0x1800: 0x21000080,
+	            0x2800: 0x80,
+	            0x3800: 0x1040000,
+	            0x4800: 0x40000,
+	            0x5800: 0x20040080,
+	            0x6800: 0x21040000,
+	            0x7800: 0x20000000,
+	            0x8800: 0x20040000,
+	            0x9800: 0x0,
+	            0xa800: 0x21040080,
+	            0xb800: 0x1000080,
+	            0xc800: 0x20000080,
+	            0xd800: 0x21000000,
+	            0xe800: 0x1000000,
+	            0xf800: 0x40080,
+	            0x10000: 0x40000,
+	            0x11000: 0x80,
+	            0x12000: 0x20000000,
+	            0x13000: 0x21000080,
+	            0x14000: 0x1000080,
+	            0x15000: 0x21040000,
+	            0x16000: 0x20040080,
+	            0x17000: 0x1000000,
+	            0x18000: 0x21040080,
+	            0x19000: 0x21000000,
+	            0x1a000: 0x1040000,
+	            0x1b000: 0x20040000,
+	            0x1c000: 0x40080,
+	            0x1d000: 0x20000080,
+	            0x1e000: 0x0,
+	            0x1f000: 0x1040080,
+	            0x10800: 0x21000080,
+	            0x11800: 0x1000000,
+	            0x12800: 0x1040000,
+	            0x13800: 0x20040080,
+	            0x14800: 0x20000000,
+	            0x15800: 0x1040080,
+	            0x16800: 0x80,
+	            0x17800: 0x21040000,
+	            0x18800: 0x40080,
+	            0x19800: 0x21040080,
+	            0x1a800: 0x0,
+	            0x1b800: 0x21000000,
+	            0x1c800: 0x1000080,
+	            0x1d800: 0x40000,
+	            0x1e800: 0x20040000,
+	            0x1f800: 0x20000080
+	        },
+	        {
+	            0x0: 0x10000008,
+	            0x100: 0x2000,
+	            0x200: 0x10200000,
+	            0x300: 0x10202008,
+	            0x400: 0x10002000,
+	            0x500: 0x200000,
+	            0x600: 0x200008,
+	            0x700: 0x10000000,
+	            0x800: 0x0,
+	            0x900: 0x10002008,
+	            0xa00: 0x202000,
+	            0xb00: 0x8,
+	            0xc00: 0x10200008,
+	            0xd00: 0x202008,
+	            0xe00: 0x2008,
+	            0xf00: 0x10202000,
+	            0x80: 0x10200000,
+	            0x180: 0x10202008,
+	            0x280: 0x8,
+	            0x380: 0x200000,
+	            0x480: 0x202008,
+	            0x580: 0x10000008,
+	            0x680: 0x10002000,
+	            0x780: 0x2008,
+	            0x880: 0x200008,
+	            0x980: 0x2000,
+	            0xa80: 0x10002008,
+	            0xb80: 0x10200008,
+	            0xc80: 0x0,
+	            0xd80: 0x10202000,
+	            0xe80: 0x202000,
+	            0xf80: 0x10000000,
+	            0x1000: 0x10002000,
+	            0x1100: 0x10200008,
+	            0x1200: 0x10202008,
+	            0x1300: 0x2008,
+	            0x1400: 0x200000,
+	            0x1500: 0x10000000,
+	            0x1600: 0x10000008,
+	            0x1700: 0x202000,
+	            0x1800: 0x202008,
+	            0x1900: 0x0,
+	            0x1a00: 0x8,
+	            0x1b00: 0x10200000,
+	            0x1c00: 0x2000,
+	            0x1d00: 0x10002008,
+	            0x1e00: 0x10202000,
+	            0x1f00: 0x200008,
+	            0x1080: 0x8,
+	            0x1180: 0x202000,
+	            0x1280: 0x200000,
+	            0x1380: 0x10000008,
+	            0x1480: 0x10002000,
+	            0x1580: 0x2008,
+	            0x1680: 0x10202008,
+	            0x1780: 0x10200000,
+	            0x1880: 0x10202000,
+	            0x1980: 0x10200008,
+	            0x1a80: 0x2000,
+	            0x1b80: 0x202008,
+	            0x1c80: 0x200008,
+	            0x1d80: 0x0,
+	            0x1e80: 0x10000000,
+	            0x1f80: 0x10002008
+	        },
+	        {
+	            0x0: 0x100000,
+	            0x10: 0x2000401,
+	            0x20: 0x400,
+	            0x30: 0x100401,
+	            0x40: 0x2100401,
+	            0x50: 0x0,
+	            0x60: 0x1,
+	            0x70: 0x2100001,
+	            0x80: 0x2000400,
+	            0x90: 0x100001,
+	            0xa0: 0x2000001,
+	            0xb0: 0x2100400,
+	            0xc0: 0x2100000,
+	            0xd0: 0x401,
+	            0xe0: 0x100400,
+	            0xf0: 0x2000000,
+	            0x8: 0x2100001,
+	            0x18: 0x0,
+	            0x28: 0x2000401,
+	            0x38: 0x2100400,
+	            0x48: 0x100000,
+	            0x58: 0x2000001,
+	            0x68: 0x2000000,
+	            0x78: 0x401,
+	            0x88: 0x100401,
+	            0x98: 0x2000400,
+	            0xa8: 0x2100000,
+	            0xb8: 0x100001,
+	            0xc8: 0x400,
+	            0xd8: 0x2100401,
+	            0xe8: 0x1,
+	            0xf8: 0x100400,
+	            0x100: 0x2000000,
+	            0x110: 0x100000,
+	            0x120: 0x2000401,
+	            0x130: 0x2100001,
+	            0x140: 0x100001,
+	            0x150: 0x2000400,
+	            0x160: 0x2100400,
+	            0x170: 0x100401,
+	            0x180: 0x401,
+	            0x190: 0x2100401,
+	            0x1a0: 0x100400,
+	            0x1b0: 0x1,
+	            0x1c0: 0x0,
+	            0x1d0: 0x2100000,
+	            0x1e0: 0x2000001,
+	            0x1f0: 0x400,
+	            0x108: 0x100400,
+	            0x118: 0x2000401,
+	            0x128: 0x2100001,
+	            0x138: 0x1,
+	            0x148: 0x2000000,
+	            0x158: 0x100000,
+	            0x168: 0x401,
+	            0x178: 0x2100400,
+	            0x188: 0x2000001,
+	            0x198: 0x2100000,
+	            0x1a8: 0x0,
+	            0x1b8: 0x2100401,
+	            0x1c8: 0x100401,
+	            0x1d8: 0x400,
+	            0x1e8: 0x2000400,
+	            0x1f8: 0x100001
+	        },
+	        {
+	            0x0: 0x8000820,
+	            0x1: 0x20000,
+	            0x2: 0x8000000,
+	            0x3: 0x20,
+	            0x4: 0x20020,
+	            0x5: 0x8020820,
+	            0x6: 0x8020800,
+	            0x7: 0x800,
+	            0x8: 0x8020000,
+	            0x9: 0x8000800,
+	            0xa: 0x20800,
+	            0xb: 0x8020020,
+	            0xc: 0x820,
+	            0xd: 0x0,
+	            0xe: 0x8000020,
+	            0xf: 0x20820,
+	            0x80000000: 0x800,
+	            0x80000001: 0x8020820,
+	            0x80000002: 0x8000820,
+	            0x80000003: 0x8000000,
+	            0x80000004: 0x8020000,
+	            0x80000005: 0x20800,
+	            0x80000006: 0x20820,
+	            0x80000007: 0x20,
+	            0x80000008: 0x8000020,
+	            0x80000009: 0x820,
+	            0x8000000a: 0x20020,
+	            0x8000000b: 0x8020800,
+	            0x8000000c: 0x0,
+	            0x8000000d: 0x8020020,
+	            0x8000000e: 0x8000800,
+	            0x8000000f: 0x20000,
+	            0x10: 0x20820,
+	            0x11: 0x8020800,
+	            0x12: 0x20,
+	            0x13: 0x800,
+	            0x14: 0x8000800,
+	            0x15: 0x8000020,
+	            0x16: 0x8020020,
+	            0x17: 0x20000,
+	            0x18: 0x0,
+	            0x19: 0x20020,
+	            0x1a: 0x8020000,
+	            0x1b: 0x8000820,
+	            0x1c: 0x8020820,
+	            0x1d: 0x20800,
+	            0x1e: 0x820,
+	            0x1f: 0x8000000,
+	            0x80000010: 0x20000,
+	            0x80000011: 0x800,
+	            0x80000012: 0x8020020,
+	            0x80000013: 0x20820,
+	            0x80000014: 0x20,
+	            0x80000015: 0x8020000,
+	            0x80000016: 0x8000000,
+	            0x80000017: 0x8000820,
+	            0x80000018: 0x8020820,
+	            0x80000019: 0x8000020,
+	            0x8000001a: 0x8000800,
+	            0x8000001b: 0x0,
+	            0x8000001c: 0x20800,
+	            0x8000001d: 0x820,
+	            0x8000001e: 0x20020,
+	            0x8000001f: 0x8020800
+	        }
+	    ];
+
+	    // Masks that select the SBOX input
+	    var SBOX_MASK = [
+	        0xf8000001, 0x1f800000, 0x01f80000, 0x001f8000,
+	        0x0001f800, 0x00001f80, 0x000001f8, 0x8000001f
+	    ];
+
+	    /**
+	     * DES block cipher algorithm.
+	     */
+	    var DES = C_algo.DES = BlockCipher.extend({
+	        _doReset: function () {
+	            // Shortcuts
+	            var key = this._key;
+	            var keyWords = key.words;
+
+	            // Select 56 bits according to PC1
+	            var keyBits = [];
+	            for (var i = 0; i < 56; i++) {
+	                var keyBitPos = PC1[i] - 1;
+	                keyBits[i] = (keyWords[keyBitPos >>> 5] >>> (31 - keyBitPos % 32)) & 1;
+	            }
+
+	            // Assemble 16 subkeys
+	            var subKeys = this._subKeys = [];
+	            for (var nSubKey = 0; nSubKey < 16; nSubKey++) {
+	                // Create subkey
+	                var subKey = subKeys[nSubKey] = [];
+
+	                // Shortcut
+	                var bitShift = BIT_SHIFTS[nSubKey];
+
+	                // Select 48 bits according to PC2
+	                for (var i = 0; i < 24; i++) {
+	                    // Select from the left 28 key bits
+	                    subKey[(i / 6) | 0] |= keyBits[((PC2[i] - 1) + bitShift) % 28] << (31 - i % 6);
+
+	                    // Select from the right 28 key bits
+	                    subKey[4 + ((i / 6) | 0)] |= keyBits[28 + (((PC2[i + 24] - 1) + bitShift) % 28)] << (31 - i % 6);
+	                }
+
+	                // Since each subkey is applied to an expanded 32-bit input,
+	                // the subkey can be broken into 8 values scaled to 32-bits,
+	                // which allows the key to be used without expansion
+	                subKey[0] = (subKey[0] << 1) | (subKey[0] >>> 31);
+	                for (var i = 1; i < 7; i++) {
+	                    subKey[i] = subKey[i] >>> ((i - 1) * 4 + 3);
+	                }
+	                subKey[7] = (subKey[7] << 5) | (subKey[7] >>> 27);
+	            }
+
+	            // Compute inverse subkeys
+	            var invSubKeys = this._invSubKeys = [];
+	            for (var i = 0; i < 16; i++) {
+	                invSubKeys[i] = subKeys[15 - i];
+	            }
+	        },
+
+	        encryptBlock: function (M, offset) {
+	            this._doCryptBlock(M, offset, this._subKeys);
+	        },
+
+	        decryptBlock: function (M, offset) {
+	            this._doCryptBlock(M, offset, this._invSubKeys);
+	        },
+
+	        _doCryptBlock: function (M, offset, subKeys) {
+	            // Get input
+	            this._lBlock = M[offset];
+	            this._rBlock = M[offset + 1];
+
+	            // Initial permutation
+	            exchangeLR.call(this, 4,  0x0f0f0f0f);
+	            exchangeLR.call(this, 16, 0x0000ffff);
+	            exchangeRL.call(this, 2,  0x33333333);
+	            exchangeRL.call(this, 8,  0x00ff00ff);
+	            exchangeLR.call(this, 1,  0x55555555);
+
+	            // Rounds
+	            for (var round = 0; round < 16; round++) {
+	                // Shortcuts
+	                var subKey = subKeys[round];
+	                var lBlock = this._lBlock;
+	                var rBlock = this._rBlock;
+
+	                // Feistel function
+	                var f = 0;
+	                for (var i = 0; i < 8; i++) {
+	                    f |= SBOX_P[i][((rBlock ^ subKey[i]) & SBOX_MASK[i]) >>> 0];
+	                }
+	                this._lBlock = rBlock;
+	                this._rBlock = lBlock ^ f;
+	            }
+
+	            // Undo swap from last round
+	            var t = this._lBlock;
+	            this._lBlock = this._rBlock;
+	            this._rBlock = t;
+
+	            // Final permutation
+	            exchangeLR.call(this, 1,  0x55555555);
+	            exchangeRL.call(this, 8,  0x00ff00ff);
+	            exchangeRL.call(this, 2,  0x33333333);
+	            exchangeLR.call(this, 16, 0x0000ffff);
+	            exchangeLR.call(this, 4,  0x0f0f0f0f);
+
+	            // Set output
+	            M[offset] = this._lBlock;
+	            M[offset + 1] = this._rBlock;
+	        },
+
+	        keySize: 64/32,
+
+	        ivSize: 64/32,
+
+	        blockSize: 64/32
+	    });
+
+	    // Swap bits across the left and right words
+	    function exchangeLR(offset, mask) {
+	        var t = ((this._lBlock >>> offset) ^ this._rBlock) & mask;
+	        this._rBlock ^= t;
+	        this._lBlock ^= t << offset;
+	    }
+
+	    function exchangeRL(offset, mask) {
+	        var t = ((this._rBlock >>> offset) ^ this._lBlock) & mask;
+	        this._lBlock ^= t;
+	        this._rBlock ^= t << offset;
+	    }
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.DES.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.DES.decrypt(ciphertext, key, cfg);
+	     */
+	    C.DES = BlockCipher._createHelper(DES);
+
+	    /**
+	     * Triple-DES block cipher algorithm.
+	     */
+	    var TripleDES = C_algo.TripleDES = BlockCipher.extend({
+	        _doReset: function () {
+	            // Shortcuts
+	            var key = this._key;
+	            var keyWords = key.words;
+	            // Make sure the key length is valid (64, 128 or >= 192 bit)
+	            if (keyWords.length !== 2 && keyWords.length !== 4 && keyWords.length < 6) {
+	                throw new Error('Invalid key length - 3DES requires the key length to be 64, 128, 192 or >192.');
+	            }
+
+	            // Extend the key according to the keying options defined in 3DES standard
+	            var key1 = keyWords.slice(0, 2);
+	            var key2 = keyWords.length < 4 ? keyWords.slice(0, 2) : keyWords.slice(2, 4);
+	            var key3 = keyWords.length < 6 ? keyWords.slice(0, 2) : keyWords.slice(4, 6);
+
+	            // Create DES instances
+	            this._des1 = DES.createEncryptor(WordArray.create(key1));
+	            this._des2 = DES.createEncryptor(WordArray.create(key2));
+	            this._des3 = DES.createEncryptor(WordArray.create(key3));
+	        },
+
+	        encryptBlock: function (M, offset) {
+	            this._des1.encryptBlock(M, offset);
+	            this._des2.decryptBlock(M, offset);
+	            this._des3.encryptBlock(M, offset);
+	        },
+
+	        decryptBlock: function (M, offset) {
+	            this._des3.decryptBlock(M, offset);
+	            this._des2.encryptBlock(M, offset);
+	            this._des1.decryptBlock(M, offset);
+	        },
+
+	        keySize: 192/32,
+
+	        ivSize: 64/32,
+
+	        blockSize: 64/32
+	    });
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.TripleDES.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.TripleDES.decrypt(ciphertext, key, cfg);
+	     */
+	    C.TripleDES = BlockCipher._createHelper(TripleDES);
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var StreamCipher = C_lib.StreamCipher;
+	    var C_algo = C.algo;
+
+	    /**
+	     * RC4 stream cipher algorithm.
+	     */
+	    var RC4 = C_algo.RC4 = StreamCipher.extend({
+	        _doReset: function () {
+	            // Shortcuts
+	            var key = this._key;
+	            var keyWords = key.words;
+	            var keySigBytes = key.sigBytes;
+
+	            // Init sbox
+	            var S = this._S = [];
+	            for (var i = 0; i < 256; i++) {
+	                S[i] = i;
+	            }
+
+	            // Key setup
+	            for (var i = 0, j = 0; i < 256; i++) {
+	                var keyByteIndex = i % keySigBytes;
+	                var keyByte = (keyWords[keyByteIndex >>> 2] >>> (24 - (keyByteIndex % 4) * 8)) & 0xff;
+
+	                j = (j + S[i] + keyByte) % 256;
+
+	                // Swap
+	                var t = S[i];
+	                S[i] = S[j];
+	                S[j] = t;
+	            }
+
+	            // Counters
+	            this._i = this._j = 0;
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            M[offset] ^= generateKeystreamWord.call(this);
+	        },
+
+	        keySize: 256/32,
+
+	        ivSize: 0
+	    });
+
+	    function generateKeystreamWord() {
+	        // Shortcuts
+	        var S = this._S;
+	        var i = this._i;
+	        var j = this._j;
+
+	        // Generate keystream word
+	        var keystreamWord = 0;
+	        for (var n = 0; n < 4; n++) {
+	            i = (i + 1) % 256;
+	            j = (j + S[i]) % 256;
+
+	            // Swap
+	            var t = S[i];
+	            S[i] = S[j];
+	            S[j] = t;
+
+	            keystreamWord |= S[(S[i] + S[j]) % 256] << (24 - n * 8);
+	        }
+
+	        // Update counters
+	        this._i = i;
+	        this._j = j;
+
+	        return keystreamWord;
+	    }
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.RC4.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.RC4.decrypt(ciphertext, key, cfg);
+	     */
+	    C.RC4 = StreamCipher._createHelper(RC4);
+
+	    /**
+	     * Modified RC4 stream cipher algorithm.
+	     */
+	    var RC4Drop = C_algo.RC4Drop = RC4.extend({
+	        /**
+	         * Configuration options.
+	         *
+	         * @property {number} drop The number of keystream words to drop. Default 192
+	         */
+	        cfg: RC4.cfg.extend({
+	            drop: 192
+	        }),
+
+	        _doReset: function () {
+	            RC4._doReset.call(this);
+
+	            // Drop
+	            for (var i = this.cfg.drop; i > 0; i--) {
+	                generateKeystreamWord.call(this);
+	            }
+	        }
+	    });
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.RC4Drop.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.RC4Drop.decrypt(ciphertext, key, cfg);
+	     */
+	    C.RC4Drop = StreamCipher._createHelper(RC4Drop);
+	}());
+
+
+	/** @preserve
+	 * Counter block mode compatible with  Dr Brian Gladman fileenc.c
+	 * derived from CryptoJS.mode.CTR
+	 * Jan Hruby jhruby.web@gmail.com
+	 */
+	CryptoJS.mode.CTRGladman = (function () {
+	    var CTRGladman = CryptoJS.lib.BlockCipherMode.extend();
+
+		function incWord(word)
+		{
+			if (((word >> 24) & 0xff) === 0xff) { //overflow
+			var b1 = (word >> 16)&0xff;
+			var b2 = (word >> 8)&0xff;
+			var b3 = word & 0xff;
+
+			if (b1 === 0xff) // overflow b1
+			{
+			b1 = 0;
+			if (b2 === 0xff)
+			{
+				b2 = 0;
+				if (b3 === 0xff)
+				{
+					b3 = 0;
+				}
+				else
+				{
+					++b3;
+				}
+			}
+			else
+			{
+				++b2;
+			}
+			}
+			else
+			{
+			++b1;
+			}
+
+			word = 0;
+			word += (b1 << 16);
+			word += (b2 << 8);
+			word += b3;
+			}
+			else
+			{
+			word += (0x01 << 24);
+			}
+			return word;
+		}
+
+		function incCounter(counter)
+		{
+			if ((counter[0] = incWord(counter[0])) === 0)
+			{
+				// encr_data in fileenc.c from  Dr Brian Gladman's counts only with DWORD j < 8
+				counter[1] = incWord(counter[1]);
+			}
+			return counter;
+		}
+
+	    var Encryptor = CTRGladman.Encryptor = CTRGladman.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher
+	            var blockSize = cipher.blockSize;
+	            var iv = this._iv;
+	            var counter = this._counter;
+
+	            // Generate keystream
+	            if (iv) {
+	                counter = this._counter = iv.slice(0);
+
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            }
+
+				incCounter(counter);
+
+				var keystream = counter.slice(0);
+	            cipher.encryptBlock(keystream, 0);
+
+	            // Encrypt
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= keystream[i];
+	            }
+	        }
+	    });
+
+	    CTRGladman.Decryptor = Encryptor;
+
+	    return CTRGladman;
+	}());
+
+
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var StreamCipher = C_lib.StreamCipher;
+	    var C_algo = C.algo;
+
+	    // Reusable objects
+	    var S  = [];
+	    var C_ = [];
+	    var G  = [];
+
+	    /**
+	     * Rabbit stream cipher algorithm
+	     */
+	    var Rabbit = C_algo.Rabbit = StreamCipher.extend({
+	        _doReset: function () {
+	            // Shortcuts
+	            var K = this._key.words;
+	            var iv = this.cfg.iv;
+
+	            // Swap endian
+	            for (var i = 0; i < 4; i++) {
+	                K[i] = (((K[i] << 8)  | (K[i] >>> 24)) & 0x00ff00ff) |
+	                       (((K[i] << 24) | (K[i] >>> 8))  & 0xff00ff00);
+	            }
+
+	            // Generate initial state values
+	            var X = this._X = [
+	                K[0], (K[3] << 16) | (K[2] >>> 16),
+	                K[1], (K[0] << 16) | (K[3] >>> 16),
+	                K[2], (K[1] << 16) | (K[0] >>> 16),
+	                K[3], (K[2] << 16) | (K[1] >>> 16)
+	            ];
+
+	            // Generate initial counter values
+	            var C = this._C = [
+	                (K[2] << 16) | (K[2] >>> 16), (K[0] & 0xffff0000) | (K[1] & 0x0000ffff),
+	                (K[3] << 16) | (K[3] >>> 16), (K[1] & 0xffff0000) | (K[2] & 0x0000ffff),
+	                (K[0] << 16) | (K[0] >>> 16), (K[2] & 0xffff0000) | (K[3] & 0x0000ffff),
+	                (K[1] << 16) | (K[1] >>> 16), (K[3] & 0xffff0000) | (K[0] & 0x0000ffff)
+	            ];
+
+	            // Carry bit
+	            this._b = 0;
+
+	            // Iterate the system four times
+	            for (var i = 0; i < 4; i++) {
+	                nextState.call(this);
+	            }
+
+	            // Modify the counters
+	            for (var i = 0; i < 8; i++) {
+	                C[i] ^= X[(i + 4) & 7];
+	            }
+
+	            // IV setup
+	            if (iv) {
+	                // Shortcuts
+	                var IV = iv.words;
+	                var IV_0 = IV[0];
+	                var IV_1 = IV[1];
+
+	                // Generate four subvectors
+	                var i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
+	                var i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
+	                var i1 = (i0 >>> 16) | (i2 & 0xffff0000);
+	                var i3 = (i2 << 16)  | (i0 & 0x0000ffff);
+
+	                // Modify counter values
+	                C[0] ^= i0;
+	                C[1] ^= i1;
+	                C[2] ^= i2;
+	                C[3] ^= i3;
+	                C[4] ^= i0;
+	                C[5] ^= i1;
+	                C[6] ^= i2;
+	                C[7] ^= i3;
+
+	                // Iterate the system four times
+	                for (var i = 0; i < 4; i++) {
+	                    nextState.call(this);
+	                }
+	            }
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcut
+	            var X = this._X;
+
+	            // Iterate the system
+	            nextState.call(this);
+
+	            // Generate four keystream words
+	            S[0] = X[0] ^ (X[5] >>> 16) ^ (X[3] << 16);
+	            S[1] = X[2] ^ (X[7] >>> 16) ^ (X[5] << 16);
+	            S[2] = X[4] ^ (X[1] >>> 16) ^ (X[7] << 16);
+	            S[3] = X[6] ^ (X[3] >>> 16) ^ (X[1] << 16);
+
+	            for (var i = 0; i < 4; i++) {
+	                // Swap endian
+	                S[i] = (((S[i] << 8)  | (S[i] >>> 24)) & 0x00ff00ff) |
+	                       (((S[i] << 24) | (S[i] >>> 8))  & 0xff00ff00);
+
+	                // Encrypt
+	                M[offset + i] ^= S[i];
+	            }
+	        },
+
+	        blockSize: 128/32,
+
+	        ivSize: 64/32
+	    });
+
+	    function nextState() {
+	        // Shortcuts
+	        var X = this._X;
+	        var C = this._C;
+
+	        // Save old counter values
+	        for (var i = 0; i < 8; i++) {
+	            C_[i] = C[i];
+	        }
+
+	        // Calculate new counter values
+	        C[0] = (C[0] + 0x4d34d34d + this._b) | 0;
+	        C[1] = (C[1] + 0xd34d34d3 + ((C[0] >>> 0) < (C_[0] >>> 0) ? 1 : 0)) | 0;
+	        C[2] = (C[2] + 0x34d34d34 + ((C[1] >>> 0) < (C_[1] >>> 0) ? 1 : 0)) | 0;
+	        C[3] = (C[3] + 0x4d34d34d + ((C[2] >>> 0) < (C_[2] >>> 0) ? 1 : 0)) | 0;
+	        C[4] = (C[4] + 0xd34d34d3 + ((C[3] >>> 0) < (C_[3] >>> 0) ? 1 : 0)) | 0;
+	        C[5] = (C[5] + 0x34d34d34 + ((C[4] >>> 0) < (C_[4] >>> 0) ? 1 : 0)) | 0;
+	        C[6] = (C[6] + 0x4d34d34d + ((C[5] >>> 0) < (C_[5] >>> 0) ? 1 : 0)) | 0;
+	        C[7] = (C[7] + 0xd34d34d3 + ((C[6] >>> 0) < (C_[6] >>> 0) ? 1 : 0)) | 0;
+	        this._b = (C[7] >>> 0) < (C_[7] >>> 0) ? 1 : 0;
+
+	        // Calculate the g-values
+	        for (var i = 0; i < 8; i++) {
+	            var gx = X[i] + C[i];
+
+	            // Construct high and low argument for squaring
+	            var ga = gx & 0xffff;
+	            var gb = gx >>> 16;
+
+	            // Calculate high and low result of squaring
+	            var gh = ((((ga * ga) >>> 17) + ga * gb) >>> 15) + gb * gb;
+	            var gl = (((gx & 0xffff0000) * gx) | 0) + (((gx & 0x0000ffff) * gx) | 0);
+
+	            // High XOR low
+	            G[i] = gh ^ gl;
+	        }
+
+	        // Calculate new state values
+	        X[0] = (G[0] + ((G[7] << 16) | (G[7] >>> 16)) + ((G[6] << 16) | (G[6] >>> 16))) | 0;
+	        X[1] = (G[1] + ((G[0] << 8)  | (G[0] >>> 24)) + G[7]) | 0;
+	        X[2] = (G[2] + ((G[1] << 16) | (G[1] >>> 16)) + ((G[0] << 16) | (G[0] >>> 16))) | 0;
+	        X[3] = (G[3] + ((G[2] << 8)  | (G[2] >>> 24)) + G[1]) | 0;
+	        X[4] = (G[4] + ((G[3] << 16) | (G[3] >>> 16)) + ((G[2] << 16) | (G[2] >>> 16))) | 0;
+	        X[5] = (G[5] + ((G[4] << 8)  | (G[4] >>> 24)) + G[3]) | 0;
+	        X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
+	        X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
+	    }
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.Rabbit.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.Rabbit.decrypt(ciphertext, key, cfg);
+	     */
+	    C.Rabbit = StreamCipher._createHelper(Rabbit);
+	}());
+
+
+	/**
+	 * Counter block mode.
+	 */
+	CryptoJS.mode.CTR = (function () {
+	    var CTR = CryptoJS.lib.BlockCipherMode.extend();
+
+	    var Encryptor = CTR.Encryptor = CTR.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher
+	            var blockSize = cipher.blockSize;
+	            var iv = this._iv;
+	            var counter = this._counter;
+
+	            // Generate keystream
+	            if (iv) {
+	                counter = this._counter = iv.slice(0);
+
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            }
+	            var keystream = counter.slice(0);
+	            cipher.encryptBlock(keystream, 0);
+
+	            // Increment counter
+	            counter[blockSize - 1] = (counter[blockSize - 1] + 1) | 0
+
+	            // Encrypt
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= keystream[i];
+	            }
+	        }
+	    });
+
+	    CTR.Decryptor = Encryptor;
+
+	    return CTR;
+	}());
+
+
+	(function () {
+	    // Shortcuts
+	    var C = CryptoJS;
+	    var C_lib = C.lib;
+	    var StreamCipher = C_lib.StreamCipher;
+	    var C_algo = C.algo;
+
+	    // Reusable objects
+	    var S  = [];
+	    var C_ = [];
+	    var G  = [];
+
+	    /**
+	     * Rabbit stream cipher algorithm.
+	     *
+	     * This is a legacy version that neglected to convert the key to little-endian.
+	     * This error doesn't affect the cipher's security,
+	     * but it does affect its compatibility with other implementations.
+	     */
+	    var RabbitLegacy = C_algo.RabbitLegacy = StreamCipher.extend({
+	        _doReset: function () {
+	            // Shortcuts
+	            var K = this._key.words;
+	            var iv = this.cfg.iv;
+
+	            // Generate initial state values
+	            var X = this._X = [
+	                K[0], (K[3] << 16) | (K[2] >>> 16),
+	                K[1], (K[0] << 16) | (K[3] >>> 16),
+	                K[2], (K[1] << 16) | (K[0] >>> 16),
+	                K[3], (K[2] << 16) | (K[1] >>> 16)
+	            ];
+
+	            // Generate initial counter values
+	            var C = this._C = [
+	                (K[2] << 16) | (K[2] >>> 16), (K[0] & 0xffff0000) | (K[1] & 0x0000ffff),
+	                (K[3] << 16) | (K[3] >>> 16), (K[1] & 0xffff0000) | (K[2] & 0x0000ffff),
+	                (K[0] << 16) | (K[0] >>> 16), (K[2] & 0xffff0000) | (K[3] & 0x0000ffff),
+	                (K[1] << 16) | (K[1] >>> 16), (K[3] & 0xffff0000) | (K[0] & 0x0000ffff)
+	            ];
+
+	            // Carry bit
+	            this._b = 0;
+
+	            // Iterate the system four times
+	            for (var i = 0; i < 4; i++) {
+	                nextState.call(this);
+	            }
+
+	            // Modify the counters
+	            for (var i = 0; i < 8; i++) {
+	                C[i] ^= X[(i + 4) & 7];
+	            }
+
+	            // IV setup
+	            if (iv) {
+	                // Shortcuts
+	                var IV = iv.words;
+	                var IV_0 = IV[0];
+	                var IV_1 = IV[1];
+
+	                // Generate four subvectors
+	                var i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
+	                var i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
+	                var i1 = (i0 >>> 16) | (i2 & 0xffff0000);
+	                var i3 = (i2 << 16)  | (i0 & 0x0000ffff);
+
+	                // Modify counter values
+	                C[0] ^= i0;
+	                C[1] ^= i1;
+	                C[2] ^= i2;
+	                C[3] ^= i3;
+	                C[4] ^= i0;
+	                C[5] ^= i1;
+	                C[6] ^= i2;
+	                C[7] ^= i3;
+
+	                // Iterate the system four times
+	                for (var i = 0; i < 4; i++) {
+	                    nextState.call(this);
+	                }
+	            }
+	        },
+
+	        _doProcessBlock: function (M, offset) {
+	            // Shortcut
+	            var X = this._X;
+
+	            // Iterate the system
+	            nextState.call(this);
+
+	            // Generate four keystream words
+	            S[0] = X[0] ^ (X[5] >>> 16) ^ (X[3] << 16);
+	            S[1] = X[2] ^ (X[7] >>> 16) ^ (X[5] << 16);
+	            S[2] = X[4] ^ (X[1] >>> 16) ^ (X[7] << 16);
+	            S[3] = X[6] ^ (X[3] >>> 16) ^ (X[1] << 16);
+
+	            for (var i = 0; i < 4; i++) {
+	                // Swap endian
+	                S[i] = (((S[i] << 8)  | (S[i] >>> 24)) & 0x00ff00ff) |
+	                       (((S[i] << 24) | (S[i] >>> 8))  & 0xff00ff00);
+
+	                // Encrypt
+	                M[offset + i] ^= S[i];
+	            }
+	        },
+
+	        blockSize: 128/32,
+
+	        ivSize: 64/32
+	    });
+
+	    function nextState() {
+	        // Shortcuts
+	        var X = this._X;
+	        var C = this._C;
+
+	        // Save old counter values
+	        for (var i = 0; i < 8; i++) {
+	            C_[i] = C[i];
+	        }
+
+	        // Calculate new counter values
+	        C[0] = (C[0] + 0x4d34d34d + this._b) | 0;
+	        C[1] = (C[1] + 0xd34d34d3 + ((C[0] >>> 0) < (C_[0] >>> 0) ? 1 : 0)) | 0;
+	        C[2] = (C[2] + 0x34d34d34 + ((C[1] >>> 0) < (C_[1] >>> 0) ? 1 : 0)) | 0;
+	        C[3] = (C[3] + 0x4d34d34d + ((C[2] >>> 0) < (C_[2] >>> 0) ? 1 : 0)) | 0;
+	        C[4] = (C[4] + 0xd34d34d3 + ((C[3] >>> 0) < (C_[3] >>> 0) ? 1 : 0)) | 0;
+	        C[5] = (C[5] + 0x34d34d34 + ((C[4] >>> 0) < (C_[4] >>> 0) ? 1 : 0)) | 0;
+	        C[6] = (C[6] + 0x4d34d34d + ((C[5] >>> 0) < (C_[5] >>> 0) ? 1 : 0)) | 0;
+	        C[7] = (C[7] + 0xd34d34d3 + ((C[6] >>> 0) < (C_[6] >>> 0) ? 1 : 0)) | 0;
+	        this._b = (C[7] >>> 0) < (C_[7] >>> 0) ? 1 : 0;
+
+	        // Calculate the g-values
+	        for (var i = 0; i < 8; i++) {
+	            var gx = X[i] + C[i];
+
+	            // Construct high and low argument for squaring
+	            var ga = gx & 0xffff;
+	            var gb = gx >>> 16;
+
+	            // Calculate high and low result of squaring
+	            var gh = ((((ga * ga) >>> 17) + ga * gb) >>> 15) + gb * gb;
+	            var gl = (((gx & 0xffff0000) * gx) | 0) + (((gx & 0x0000ffff) * gx) | 0);
+
+	            // High XOR low
+	            G[i] = gh ^ gl;
+	        }
+
+	        // Calculate new state values
+	        X[0] = (G[0] + ((G[7] << 16) | (G[7] >>> 16)) + ((G[6] << 16) | (G[6] >>> 16))) | 0;
+	        X[1] = (G[1] + ((G[0] << 8)  | (G[0] >>> 24)) + G[7]) | 0;
+	        X[2] = (G[2] + ((G[1] << 16) | (G[1] >>> 16)) + ((G[0] << 16) | (G[0] >>> 16))) | 0;
+	        X[3] = (G[3] + ((G[2] << 8)  | (G[2] >>> 24)) + G[1]) | 0;
+	        X[4] = (G[4] + ((G[3] << 16) | (G[3] >>> 16)) + ((G[2] << 16) | (G[2] >>> 16))) | 0;
+	        X[5] = (G[5] + ((G[4] << 8)  | (G[4] >>> 24)) + G[3]) | 0;
+	        X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
+	        X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
+	    }
+
+	    /**
+	     * Shortcut functions to the cipher's object interface.
+	     *
+	     * @example
+	     *
+	     *     var ciphertext = CryptoJS.RabbitLegacy.encrypt(message, key, cfg);
+	     *     var plaintext  = CryptoJS.RabbitLegacy.decrypt(ciphertext, key, cfg);
+	     */
+	    C.RabbitLegacy = StreamCipher._createHelper(RabbitLegacy);
+	}());
+
+
+	/**
+	 * Zero padding strategy.
+	 */
+	CryptoJS.pad.ZeroPadding = {
+	    pad: function (data, blockSize) {
+	        // Shortcut
+	        var blockSizeBytes = blockSize * 4;
+
+	        // Pad
+	        data.clamp();
+	        data.sigBytes += blockSizeBytes - ((data.sigBytes % blockSizeBytes) || blockSizeBytes);
+	    },
+
+	    unpad: function (data) {
+	        // Shortcut
+	        var dataWords = data.words;
+
+	        // Unpad
+	        var i = data.sigBytes - 1;
+	        for (var i = data.sigBytes - 1; i >= 0; i--) {
+	            if (((dataWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff)) {
+	                data.sigBytes = i + 1;
+	                break;
+	            }
+	        }
+	    }
+	};
+
+
+	return CryptoJS;
+
+}));
 // ==ClosureCompiler==
 // @compilation_level ADVANCED_OPTIMIZATIONS
 // @externs_url https://raw.githubusercontent.com/google/closure-compiler/master/contrib/externs/maps/google_maps_api_v3.js
@@ -18824,7 +25038,6 @@ this.SS = (function () {
   return SS;
 
 })();
-
 
 
 
@@ -32950,6 +39163,1066 @@ this.Facility_Search = (function () {
 
   return Facility_Search;
 })();
+(function() {
+
+    var debug = false;
+
+    var root = this;
+
+    var EXIF = function(obj) {
+        if (obj instanceof EXIF) return obj;
+        if (!(this instanceof EXIF)) return new EXIF(obj);
+        this.EXIFwrapped = obj;
+    };
+
+    if (typeof exports !== 'undefined') {
+        if (typeof module !== 'undefined' && module.exports) {
+            exports = module.exports = EXIF;
+        }
+        exports.EXIF = EXIF;
+    } else {
+        root.EXIF = EXIF;
+    }
+
+    var ExifTags = EXIF.Tags = {
+
+        // version tags
+        0x9000 : "ExifVersion",             // EXIF version
+        0xA000 : "FlashpixVersion",         // Flashpix format version
+
+        // colorspace tags
+        0xA001 : "ColorSpace",              // Color space information tag
+
+        // image configuration
+        0xA002 : "PixelXDimension",         // Valid width of meaningful image
+        0xA003 : "PixelYDimension",         // Valid height of meaningful image
+        0x9101 : "ComponentsConfiguration", // Information about channels
+        0x9102 : "CompressedBitsPerPixel",  // Compressed bits per pixel
+
+        // user information
+        0x927C : "MakerNote",               // Any desired information written by the manufacturer
+        0x9286 : "UserComment",             // Comments by user
+
+        // related file
+        0xA004 : "RelatedSoundFile",        // Name of related sound file
+
+        // date and time
+        0x9003 : "DateTimeOriginal",        // Date and time when the original image was generated
+        0x9004 : "DateTimeDigitized",       // Date and time when the image was stored digitally
+        0x9290 : "SubsecTime",              // Fractions of seconds for DateTime
+        0x9291 : "SubsecTimeOriginal",      // Fractions of seconds for DateTimeOriginal
+        0x9292 : "SubsecTimeDigitized",     // Fractions of seconds for DateTimeDigitized
+
+        // picture-taking conditions
+        0x829A : "ExposureTime",            // Exposure time (in seconds)
+        0x829D : "FNumber",                 // F number
+        0x8822 : "ExposureProgram",         // Exposure program
+        0x8824 : "SpectralSensitivity",     // Spectral sensitivity
+        0x8827 : "ISOSpeedRatings",         // ISO speed rating
+        0x8828 : "OECF",                    // Optoelectric conversion factor
+        0x9201 : "ShutterSpeedValue",       // Shutter speed
+        0x9202 : "ApertureValue",           // Lens aperture
+        0x9203 : "BrightnessValue",         // Value of brightness
+        0x9204 : "ExposureBias",            // Exposure bias
+        0x9205 : "MaxApertureValue",        // Smallest F number of lens
+        0x9206 : "SubjectDistance",         // Distance to subject in meters
+        0x9207 : "MeteringMode",            // Metering mode
+        0x9208 : "LightSource",             // Kind of light source
+        0x9209 : "Flash",                   // Flash status
+        0x9214 : "SubjectArea",             // Location and area of main subject
+        0x920A : "FocalLength",             // Focal length of the lens in mm
+        0xA20B : "FlashEnergy",             // Strobe energy in BCPS
+        0xA20C : "SpatialFrequencyResponse",    //
+        0xA20E : "FocalPlaneXResolution",   // Number of pixels in width direction per FocalPlaneResolutionUnit
+        0xA20F : "FocalPlaneYResolution",   // Number of pixels in height direction per FocalPlaneResolutionUnit
+        0xA210 : "FocalPlaneResolutionUnit",    // Unit for measuring FocalPlaneXResolution and FocalPlaneYResolution
+        0xA214 : "SubjectLocation",         // Location of subject in image
+        0xA215 : "ExposureIndex",           // Exposure index selected on camera
+        0xA217 : "SensingMethod",           // Image sensor type
+        0xA300 : "FileSource",              // Image source (3 == DSC)
+        0xA301 : "SceneType",               // Scene type (1 == directly photographed)
+        0xA302 : "CFAPattern",              // Color filter array geometric pattern
+        0xA401 : "CustomRendered",          // Special processing
+        0xA402 : "ExposureMode",            // Exposure mode
+        0xA403 : "WhiteBalance",            // 1 = auto white balance, 2 = manual
+        0xA404 : "DigitalZoomRation",       // Digital zoom ratio
+        0xA405 : "FocalLengthIn35mmFilm",   // Equivalent foacl length assuming 35mm film camera (in mm)
+        0xA406 : "SceneCaptureType",        // Type of scene
+        0xA407 : "GainControl",             // Degree of overall image gain adjustment
+        0xA408 : "Contrast",                // Direction of contrast processing applied by camera
+        0xA409 : "Saturation",              // Direction of saturation processing applied by camera
+        0xA40A : "Sharpness",               // Direction of sharpness processing applied by camera
+        0xA40B : "DeviceSettingDescription",    //
+        0xA40C : "SubjectDistanceRange",    // Distance to subject
+
+        // other tags
+        0xA005 : "InteroperabilityIFDPointer",
+        0xA420 : "ImageUniqueID"            // Identifier assigned uniquely to each image
+    };
+
+    var TiffTags = EXIF.TiffTags = {
+        0x0100 : "ImageWidth",
+        0x0101 : "ImageHeight",
+        0x8769 : "ExifIFDPointer",
+        0x8825 : "GPSInfoIFDPointer",
+        0xA005 : "InteroperabilityIFDPointer",
+        0x0102 : "BitsPerSample",
+        0x0103 : "Compression",
+        0x0106 : "PhotometricInterpretation",
+        0x0112 : "Orientation",
+        0x0115 : "SamplesPerPixel",
+        0x011C : "PlanarConfiguration",
+        0x0212 : "YCbCrSubSampling",
+        0x0213 : "YCbCrPositioning",
+        0x011A : "XResolution",
+        0x011B : "YResolution",
+        0x0128 : "ResolutionUnit",
+        0x0111 : "StripOffsets",
+        0x0116 : "RowsPerStrip",
+        0x0117 : "StripByteCounts",
+        0x0201 : "JPEGInterchangeFormat",
+        0x0202 : "JPEGInterchangeFormatLength",
+        0x012D : "TransferFunction",
+        0x013E : "WhitePoint",
+        0x013F : "PrimaryChromaticities",
+        0x0211 : "YCbCrCoefficients",
+        0x0214 : "ReferenceBlackWhite",
+        0x0132 : "DateTime",
+        0x010E : "ImageDescription",
+        0x010F : "Make",
+        0x0110 : "Model",
+        0x0131 : "Software",
+        0x013B : "Artist",
+        0x8298 : "Copyright"
+    };
+
+    var GPSTags = EXIF.GPSTags = {
+        0x0000 : "GPSVersionID",
+        0x0001 : "GPSLatitudeRef",
+        0x0002 : "GPSLatitude",
+        0x0003 : "GPSLongitudeRef",
+        0x0004 : "GPSLongitude",
+        0x0005 : "GPSAltitudeRef",
+        0x0006 : "GPSAltitude",
+        0x0007 : "GPSTimeStamp",
+        0x0008 : "GPSSatellites",
+        0x0009 : "GPSStatus",
+        0x000A : "GPSMeasureMode",
+        0x000B : "GPSDOP",
+        0x000C : "GPSSpeedRef",
+        0x000D : "GPSSpeed",
+        0x000E : "GPSTrackRef",
+        0x000F : "GPSTrack",
+        0x0010 : "GPSImgDirectionRef",
+        0x0011 : "GPSImgDirection",
+        0x0012 : "GPSMapDatum",
+        0x0013 : "GPSDestLatitudeRef",
+        0x0014 : "GPSDestLatitude",
+        0x0015 : "GPSDestLongitudeRef",
+        0x0016 : "GPSDestLongitude",
+        0x0017 : "GPSDestBearingRef",
+        0x0018 : "GPSDestBearing",
+        0x0019 : "GPSDestDistanceRef",
+        0x001A : "GPSDestDistance",
+        0x001B : "GPSProcessingMethod",
+        0x001C : "GPSAreaInformation",
+        0x001D : "GPSDateStamp",
+        0x001E : "GPSDifferential"
+    };
+
+     // EXIF 2.3 Spec
+    var IFD1Tags = EXIF.IFD1Tags = {
+        0x0100: "ImageWidth",
+        0x0101: "ImageHeight",
+        0x0102: "BitsPerSample",
+        0x0103: "Compression",
+        0x0106: "PhotometricInterpretation",
+        0x0111: "StripOffsets",
+        0x0112: "Orientation",
+        0x0115: "SamplesPerPixel",
+        0x0116: "RowsPerStrip",
+        0x0117: "StripByteCounts",
+        0x011A: "XResolution",
+        0x011B: "YResolution",
+        0x011C: "PlanarConfiguration",
+        0x0128: "ResolutionUnit",
+        0x0201: "JpegIFOffset",    // When image format is JPEG, this value show offset to JPEG data stored.(aka "ThumbnailOffset" or "JPEGInterchangeFormat")
+        0x0202: "JpegIFByteCount", // When image format is JPEG, this value shows data size of JPEG image (aka "ThumbnailLength" or "JPEGInterchangeFormatLength")
+        0x0211: "YCbCrCoefficients",
+        0x0212: "YCbCrSubSampling",
+        0x0213: "YCbCrPositioning",
+        0x0214: "ReferenceBlackWhite"
+    };
+
+    var StringValues = EXIF.StringValues = {
+        ExposureProgram : {
+            0 : "Not defined",
+            1 : "Manual",
+            2 : "Normal program",
+            3 : "Aperture priority",
+            4 : "Shutter priority",
+            5 : "Creative program",
+            6 : "Action program",
+            7 : "Portrait mode",
+            8 : "Landscape mode"
+        },
+        MeteringMode : {
+            0 : "Unknown",
+            1 : "Average",
+            2 : "CenterWeightedAverage",
+            3 : "Spot",
+            4 : "MultiSpot",
+            5 : "Pattern",
+            6 : "Partial",
+            255 : "Other"
+        },
+        LightSource : {
+            0 : "Unknown",
+            1 : "Daylight",
+            2 : "Fluorescent",
+            3 : "Tungsten (incandescent light)",
+            4 : "Flash",
+            9 : "Fine weather",
+            10 : "Cloudy weather",
+            11 : "Shade",
+            12 : "Daylight fluorescent (D 5700 - 7100K)",
+            13 : "Day white fluorescent (N 4600 - 5400K)",
+            14 : "Cool white fluorescent (W 3900 - 4500K)",
+            15 : "White fluorescent (WW 3200 - 3700K)",
+            17 : "Standard light A",
+            18 : "Standard light B",
+            19 : "Standard light C",
+            20 : "D55",
+            21 : "D65",
+            22 : "D75",
+            23 : "D50",
+            24 : "ISO studio tungsten",
+            255 : "Other"
+        },
+        Flash : {
+            0x0000 : "Flash did not fire",
+            0x0001 : "Flash fired",
+            0x0005 : "Strobe return light not detected",
+            0x0007 : "Strobe return light detected",
+            0x0009 : "Flash fired, compulsory flash mode",
+            0x000D : "Flash fired, compulsory flash mode, return light not detected",
+            0x000F : "Flash fired, compulsory flash mode, return light detected",
+            0x0010 : "Flash did not fire, compulsory flash mode",
+            0x0018 : "Flash did not fire, auto mode",
+            0x0019 : "Flash fired, auto mode",
+            0x001D : "Flash fired, auto mode, return light not detected",
+            0x001F : "Flash fired, auto mode, return light detected",
+            0x0020 : "No flash function",
+            0x0041 : "Flash fired, red-eye reduction mode",
+            0x0045 : "Flash fired, red-eye reduction mode, return light not detected",
+            0x0047 : "Flash fired, red-eye reduction mode, return light detected",
+            0x0049 : "Flash fired, compulsory flash mode, red-eye reduction mode",
+            0x004D : "Flash fired, compulsory flash mode, red-eye reduction mode, return light not detected",
+            0x004F : "Flash fired, compulsory flash mode, red-eye reduction mode, return light detected",
+            0x0059 : "Flash fired, auto mode, red-eye reduction mode",
+            0x005D : "Flash fired, auto mode, return light not detected, red-eye reduction mode",
+            0x005F : "Flash fired, auto mode, return light detected, red-eye reduction mode"
+        },
+        SensingMethod : {
+            1 : "Not defined",
+            2 : "One-chip color area sensor",
+            3 : "Two-chip color area sensor",
+            4 : "Three-chip color area sensor",
+            5 : "Color sequential area sensor",
+            7 : "Trilinear sensor",
+            8 : "Color sequential linear sensor"
+        },
+        SceneCaptureType : {
+            0 : "Standard",
+            1 : "Landscape",
+            2 : "Portrait",
+            3 : "Night scene"
+        },
+        SceneType : {
+            1 : "Directly photographed"
+        },
+        CustomRendered : {
+            0 : "Normal process",
+            1 : "Custom process"
+        },
+        WhiteBalance : {
+            0 : "Auto white balance",
+            1 : "Manual white balance"
+        },
+        GainControl : {
+            0 : "None",
+            1 : "Low gain up",
+            2 : "High gain up",
+            3 : "Low gain down",
+            4 : "High gain down"
+        },
+        Contrast : {
+            0 : "Normal",
+            1 : "Soft",
+            2 : "Hard"
+        },
+        Saturation : {
+            0 : "Normal",
+            1 : "Low saturation",
+            2 : "High saturation"
+        },
+        Sharpness : {
+            0 : "Normal",
+            1 : "Soft",
+            2 : "Hard"
+        },
+        SubjectDistanceRange : {
+            0 : "Unknown",
+            1 : "Macro",
+            2 : "Close view",
+            3 : "Distant view"
+        },
+        FileSource : {
+            3 : "DSC"
+        },
+
+        Components : {
+            0 : "",
+            1 : "Y",
+            2 : "Cb",
+            3 : "Cr",
+            4 : "R",
+            5 : "G",
+            6 : "B"
+        }
+    };
+
+    function addEvent(element, event, handler) {
+        if (element.addEventListener) {
+            element.addEventListener(event, handler, false);
+        } else if (element.attachEvent) {
+            element.attachEvent("on" + event, handler);
+        }
+    }
+
+    function imageHasData(img) {
+        return !!(img.exifdata);
+    }
+
+
+    function base64ToArrayBuffer(base64, contentType) {
+        contentType = contentType || base64.match(/^data\:([^\;]+)\;base64,/mi)[1] || ''; // e.g. 'data:image/jpeg;base64,...' => 'image/jpeg'
+        base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
+        var binary = atob(base64);
+        var len = binary.length;
+        var buffer = new ArrayBuffer(len);
+        var view = new Uint8Array(buffer);
+        for (var i = 0; i < len; i++) {
+            view[i] = binary.charCodeAt(i);
+        }
+        return buffer;
+    }
+
+    function objectURLToBlob(url, callback) {
+        var http = new XMLHttpRequest();
+        http.open("GET", url, true);
+        http.responseType = "blob";
+        http.onload = function(e) {
+            if (this.status == 200 || this.status === 0) {
+                callback(this.response);
+            }
+        };
+        http.send();
+    }
+
+    function getImageData(img, callback) {
+        function handleBinaryFile(binFile) {
+            var data = findEXIFinJPEG(binFile);
+            img.exifdata = data || {};
+            var iptcdata = findIPTCinJPEG(binFile);
+            img.iptcdata = iptcdata || {};
+            if (EXIF.isXmpEnabled) {
+               var xmpdata= findXMPinJPEG(binFile);
+               img.xmpdata = xmpdata || {};               
+            }
+            if (callback) {
+                callback.call(img);
+            }
+        }
+
+        if (img.src) {
+            if (/^data\:/i.test(img.src)) { // Data URI
+                var arrayBuffer = base64ToArrayBuffer(img.src);
+                handleBinaryFile(arrayBuffer);
+
+            } else if (/^blob\:/i.test(img.src)) { // Object URL
+                var fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    handleBinaryFile(e.target.result);
+                };
+                objectURLToBlob(img.src, function (blob) {
+                    fileReader.readAsArrayBuffer(blob);
+                });
+            } else {
+                var http = new XMLHttpRequest();
+                http.onload = function() {
+                    if (this.status == 200 || this.status === 0) {
+                        handleBinaryFile(http.response);
+                    } else {
+                        throw "Could not load image";
+                    }
+                    http = null;
+                };
+                http.open("GET", img.src, true);
+                http.responseType = "arraybuffer";
+                http.send(null);
+            }
+        } else if (self.FileReader && (img instanceof self.Blob || img instanceof self.File)) {
+            var fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                if (debug) console.log("Got file of length " + e.target.result.byteLength);
+                handleBinaryFile(e.target.result);
+            };
+
+            fileReader.readAsArrayBuffer(img);
+        }
+    }
+
+    function findEXIFinJPEG(file) {
+        var dataView = new DataView(file);
+
+        if (debug) console.log("Got file of length " + file.byteLength);
+        if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
+            if (debug) console.log("Not a valid JPEG");
+            return false; // not a valid jpeg
+        }
+
+        var offset = 2,
+            length = file.byteLength,
+            marker;
+
+        while (offset < length) {
+            if (dataView.getUint8(offset) != 0xFF) {
+                if (debug) console.log("Not a valid marker at offset " + offset + ", found: " + dataView.getUint8(offset));
+                return false; // not a valid marker, something is wrong
+            }
+
+            marker = dataView.getUint8(offset + 1);
+            if (debug) console.log(marker);
+
+            // we could implement handling for other markers here,
+            // but we're only looking for 0xFFE1 for EXIF data
+
+            if (marker == 225) {
+                if (debug) console.log("Found 0xFFE1 marker");
+
+                return readEXIFData(dataView, offset + 4, dataView.getUint16(offset + 2) - 2);
+
+                // offset += 2 + file.getShortAt(offset+2, true);
+
+            } else {
+                offset += 2 + dataView.getUint16(offset+2);
+            }
+
+        }
+
+    }
+
+    function findIPTCinJPEG(file) {
+        var dataView = new DataView(file);
+
+        if (debug) console.log("Got file of length " + file.byteLength);
+        if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
+            if (debug) console.log("Not a valid JPEG");
+            return false; // not a valid jpeg
+        }
+
+        var offset = 2,
+            length = file.byteLength;
+
+
+        var isFieldSegmentStart = function(dataView, offset){
+            return (
+                dataView.getUint8(offset) === 0x38 &&
+                dataView.getUint8(offset+1) === 0x42 &&
+                dataView.getUint8(offset+2) === 0x49 &&
+                dataView.getUint8(offset+3) === 0x4D &&
+                dataView.getUint8(offset+4) === 0x04 &&
+                dataView.getUint8(offset+5) === 0x04
+            );
+        };
+
+        while (offset < length) {
+
+            if ( isFieldSegmentStart(dataView, offset )){
+
+                // Get the length of the name header (which is padded to an even number of bytes)
+                var nameHeaderLength = dataView.getUint8(offset+7);
+                if(nameHeaderLength % 2 !== 0) nameHeaderLength += 1;
+                // Check for pre photoshop 6 format
+                if(nameHeaderLength === 0) {
+                    // Always 4
+                    nameHeaderLength = 4;
+                }
+
+                var startOffset = offset + 8 + nameHeaderLength;
+                var sectionLength = dataView.getUint16(offset + 6 + nameHeaderLength);
+
+                return readIPTCData(file, startOffset, sectionLength);
+
+                break;
+
+            }
+
+
+            // Not the marker, continue searching
+            offset++;
+
+        }
+
+    }
+    var IptcFieldMap = {
+        0x78 : 'caption',
+        0x6E : 'credit',
+        0x19 : 'keywords',
+        0x37 : 'dateCreated',
+        0x50 : 'byline',
+        0x55 : 'bylineTitle',
+        0x7A : 'captionWriter',
+        0x69 : 'headline',
+        0x74 : 'copyright',
+        0x0F : 'category'
+    };
+    function readIPTCData(file, startOffset, sectionLength){
+        var dataView = new DataView(file);
+        var data = {};
+        var fieldValue, fieldName, dataSize, segmentType, segmentSize;
+        var segmentStartPos = startOffset;
+        while(segmentStartPos < startOffset+sectionLength) {
+            if(dataView.getUint8(segmentStartPos) === 0x1C && dataView.getUint8(segmentStartPos+1) === 0x02){
+                segmentType = dataView.getUint8(segmentStartPos+2);
+                if(segmentType in IptcFieldMap) {
+                    dataSize = dataView.getInt16(segmentStartPos+3);
+                    segmentSize = dataSize + 5;
+                    fieldName = IptcFieldMap[segmentType];
+                    fieldValue = getStringFromDB(dataView, segmentStartPos+5, dataSize);
+                    // Check if we already stored a value with this name
+                    if(data.hasOwnProperty(fieldName)) {
+                        // Value already stored with this name, create multivalue field
+                        if(data[fieldName] instanceof Array) {
+                            data[fieldName].push(fieldValue);
+                        }
+                        else {
+                            data[fieldName] = [data[fieldName], fieldValue];
+                        }
+                    }
+                    else {
+                        data[fieldName] = fieldValue;
+                    }
+                }
+
+            }
+            segmentStartPos++;
+        }
+        return data;
+    }
+
+
+
+    function readTags(file, tiffStart, dirStart, strings, bigEnd) {
+        var entries = file.getUint16(dirStart, !bigEnd),
+            tags = {},
+            entryOffset, tag,
+            i;
+
+        for (i=0;i<entries;i++) {
+            entryOffset = dirStart + i*12 + 2;
+            tag = strings[file.getUint16(entryOffset, !bigEnd)];
+            if (!tag && debug) console.log("Unknown tag: " + file.getUint16(entryOffset, !bigEnd));
+            tags[tag] = readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd);
+        }
+        return tags;
+    }
+
+
+    function readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd) {
+        var type = file.getUint16(entryOffset+2, !bigEnd),
+            numValues = file.getUint32(entryOffset+4, !bigEnd),
+            valueOffset = file.getUint32(entryOffset+8, !bigEnd) + tiffStart,
+            offset,
+            vals, val, n,
+            numerator, denominator;
+
+        switch (type) {
+            case 1: // byte, 8-bit unsigned int
+            case 7: // undefined, 8-bit byte, value depending on field
+                if (numValues == 1) {
+                    return file.getUint8(entryOffset + 8, !bigEnd);
+                } else {
+                    offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                    vals = [];
+                    for (n=0;n<numValues;n++) {
+                        vals[n] = file.getUint8(offset + n);
+                    }
+                    return vals;
+                }
+
+            case 2: // ascii, 8-bit byte
+                offset = numValues > 4 ? valueOffset : (entryOffset + 8);
+                return getStringFromDB(file, offset, numValues-1);
+
+            case 3: // short, 16 bit int
+                if (numValues == 1) {
+                    return file.getUint16(entryOffset + 8, !bigEnd);
+                } else {
+                    offset = numValues > 2 ? valueOffset : (entryOffset + 8);
+                    vals = [];
+                    for (n=0;n<numValues;n++) {
+                        vals[n] = file.getUint16(offset + 2*n, !bigEnd);
+                    }
+                    return vals;
+                }
+
+            case 4: // long, 32 bit int
+                if (numValues == 1) {
+                    return file.getUint32(entryOffset + 8, !bigEnd);
+                } else {
+                    vals = [];
+                    for (n=0;n<numValues;n++) {
+                        vals[n] = file.getUint32(valueOffset + 4*n, !bigEnd);
+                    }
+                    return vals;
+                }
+
+            case 5:    // rational = two long values, first is numerator, second is denominator
+                if (numValues == 1) {
+                    numerator = file.getUint32(valueOffset, !bigEnd);
+                    denominator = file.getUint32(valueOffset+4, !bigEnd);
+                    val = new Number(numerator / denominator);
+                    val.numerator = numerator;
+                    val.denominator = denominator;
+                    return val;
+                } else {
+                    vals = [];
+                    for (n=0;n<numValues;n++) {
+                        numerator = file.getUint32(valueOffset + 8*n, !bigEnd);
+                        denominator = file.getUint32(valueOffset+4 + 8*n, !bigEnd);
+                        vals[n] = new Number(numerator / denominator);
+                        vals[n].numerator = numerator;
+                        vals[n].denominator = denominator;
+                    }
+                    return vals;
+                }
+
+            case 9: // slong, 32 bit signed int
+                if (numValues == 1) {
+                    return file.getInt32(entryOffset + 8, !bigEnd);
+                } else {
+                    vals = [];
+                    for (n=0;n<numValues;n++) {
+                        vals[n] = file.getInt32(valueOffset + 4*n, !bigEnd);
+                    }
+                    return vals;
+                }
+
+            case 10: // signed rational, two slongs, first is numerator, second is denominator
+                if (numValues == 1) {
+                    return file.getInt32(valueOffset, !bigEnd) / file.getInt32(valueOffset+4, !bigEnd);
+                } else {
+                    vals = [];
+                    for (n=0;n<numValues;n++) {
+                        vals[n] = file.getInt32(valueOffset + 8*n, !bigEnd) / file.getInt32(valueOffset+4 + 8*n, !bigEnd);
+                    }
+                    return vals;
+                }
+        }
+    }
+
+    /**
+    * Given an IFD (Image File Directory) start offset
+    * returns an offset to next IFD or 0 if it's the last IFD.
+    */
+    function getNextIFDOffset(dataView, dirStart, bigEnd){
+        //the first 2bytes means the number of directory entries contains in this IFD
+        var entries = dataView.getUint16(dirStart, !bigEnd);
+
+        // After last directory entry, there is a 4bytes of data,
+        // it means an offset to next IFD.
+        // If its value is '0x00000000', it means this is the last IFD and there is no linked IFD.
+
+        return dataView.getUint32(dirStart + 2 + entries * 12, !bigEnd); // each entry is 12 bytes long
+    }
+
+    function readThumbnailImage(dataView, tiffStart, firstIFDOffset, bigEnd){
+        // get the IFD1 offset
+        var IFD1OffsetPointer = getNextIFDOffset(dataView, tiffStart+firstIFDOffset, bigEnd);
+
+        if (!IFD1OffsetPointer) {
+            // console.log('******** IFD1Offset is empty, image thumb not found ********');
+            return {};
+        }
+        else if (IFD1OffsetPointer > dataView.byteLength) { // this should not happen
+            // console.log('******** IFD1Offset is outside the bounds of the DataView ********');
+            return {};
+        }
+        // console.log('*******  thumbnail IFD offset (IFD1) is: %s', IFD1OffsetPointer);
+
+        var thumbTags = readTags(dataView, tiffStart, tiffStart + IFD1OffsetPointer, IFD1Tags, bigEnd)
+
+        // EXIF 2.3 specification for JPEG format thumbnail
+
+        // If the value of Compression(0x0103) Tag in IFD1 is '6', thumbnail image format is JPEG.
+        // Most of Exif image uses JPEG format for thumbnail. In that case, you can get offset of thumbnail
+        // by JpegIFOffset(0x0201) Tag in IFD1, size of thumbnail by JpegIFByteCount(0x0202) Tag.
+        // Data format is ordinary JPEG format, starts from 0xFFD8 and ends by 0xFFD9. It seems that
+        // JPEG format and 160x120pixels of size are recommended thumbnail format for Exif2.1 or later.
+
+        if (thumbTags['Compression']) {
+            // console.log('Thumbnail image found!');
+
+            switch (thumbTags['Compression']) {
+                case 6:
+                    // console.log('Thumbnail image format is JPEG');
+                    if (thumbTags.JpegIFOffset && thumbTags.JpegIFByteCount) {
+                    // extract the thumbnail
+                        var tOffset = tiffStart + thumbTags.JpegIFOffset;
+                        var tLength = thumbTags.JpegIFByteCount;
+                        thumbTags['blob'] = new Blob([new Uint8Array(dataView.buffer, tOffset, tLength)], {
+                            type: 'image/jpeg'
+                        });
+                    }
+                break;
+
+            case 1:
+                console.log("Thumbnail image format is TIFF, which is not implemented.");
+                break;
+            default:
+                console.log("Unknown thumbnail image format '%s'", thumbTags['Compression']);
+            }
+        }
+        else if (thumbTags['PhotometricInterpretation'] == 2) {
+            console.log("Thumbnail image format is RGB, which is not implemented.");
+        }
+        return thumbTags;
+    }
+
+    function getStringFromDB(buffer, start, length) {
+        var outstr = "";
+        for (n = start; n < start+length; n++) {
+            outstr += String.fromCharCode(buffer.getUint8(n));
+        }
+        return outstr;
+    }
+
+    function readEXIFData(file, start) {
+        if (getStringFromDB(file, start, 4) != "Exif") {
+            if (debug) console.log("Not valid EXIF data! " + getStringFromDB(file, start, 4));
+            return false;
+        }
+
+        var bigEnd,
+            tags, tag,
+            exifData, gpsData,
+            tiffOffset = start + 6;
+
+        // test for TIFF validity and endianness
+        if (file.getUint16(tiffOffset) == 0x4949) {
+            bigEnd = false;
+        } else if (file.getUint16(tiffOffset) == 0x4D4D) {
+            bigEnd = true;
+        } else {
+            if (debug) console.log("Not valid TIFF data! (no 0x4949 or 0x4D4D)");
+            return false;
+        }
+
+        if (file.getUint16(tiffOffset+2, !bigEnd) != 0x002A) {
+            if (debug) console.log("Not valid TIFF data! (no 0x002A)");
+            return false;
+        }
+
+        var firstIFDOffset = file.getUint32(tiffOffset+4, !bigEnd);
+
+        if (firstIFDOffset < 0x00000008) {
+            if (debug) console.log("Not valid TIFF data! (First offset less than 8)", file.getUint32(tiffOffset+4, !bigEnd));
+            return false;
+        }
+
+        tags = readTags(file, tiffOffset, tiffOffset + firstIFDOffset, TiffTags, bigEnd);
+
+        if (tags.ExifIFDPointer) {
+            exifData = readTags(file, tiffOffset, tiffOffset + tags.ExifIFDPointer, ExifTags, bigEnd);
+            for (tag in exifData) {
+                switch (tag) {
+                    case "LightSource" :
+                    case "Flash" :
+                    case "MeteringMode" :
+                    case "ExposureProgram" :
+                    case "SensingMethod" :
+                    case "SceneCaptureType" :
+                    case "SceneType" :
+                    case "CustomRendered" :
+                    case "WhiteBalance" :
+                    case "GainControl" :
+                    case "Contrast" :
+                    case "Saturation" :
+                    case "Sharpness" :
+                    case "SubjectDistanceRange" :
+                    case "FileSource" :
+                        exifData[tag] = StringValues[tag][exifData[tag]];
+                        break;
+
+                    case "ExifVersion" :
+                    case "FlashpixVersion" :
+                        exifData[tag] = String.fromCharCode(exifData[tag][0], exifData[tag][1], exifData[tag][2], exifData[tag][3]);
+                        break;
+
+                    case "ComponentsConfiguration" :
+                        exifData[tag] =
+                            StringValues.Components[exifData[tag][0]] +
+                            StringValues.Components[exifData[tag][1]] +
+                            StringValues.Components[exifData[tag][2]] +
+                            StringValues.Components[exifData[tag][3]];
+                        break;
+                }
+                tags[tag] = exifData[tag];
+            }
+        }
+
+        if (tags.GPSInfoIFDPointer) {
+            gpsData = readTags(file, tiffOffset, tiffOffset + tags.GPSInfoIFDPointer, GPSTags, bigEnd);
+            for (tag in gpsData) {
+                switch (tag) {
+                    case "GPSVersionID" :
+                        gpsData[tag] = gpsData[tag][0] +
+                            "." + gpsData[tag][1] +
+                            "." + gpsData[tag][2] +
+                            "." + gpsData[tag][3];
+                        break;
+                }
+                tags[tag] = gpsData[tag];
+            }
+        }
+
+        // extract thumbnail
+        tags['thumbnail'] = readThumbnailImage(file, tiffOffset, firstIFDOffset, bigEnd);
+
+        return tags;
+    }
+
+   function findXMPinJPEG(file) {
+
+        if (!('DOMParser' in self)) {
+            // console.warn('XML parsing not supported without DOMParser');
+            return;
+        }
+        var dataView = new DataView(file);
+
+        if (debug) console.log("Got file of length " + file.byteLength);
+        if ((dataView.getUint8(0) != 0xFF) || (dataView.getUint8(1) != 0xD8)) {
+           if (debug) console.log("Not a valid JPEG");
+           return false; // not a valid jpeg
+        }
+
+        var offset = 2,
+            length = file.byteLength,
+            dom = new DOMParser();
+
+        while (offset < (length-4)) {
+            if (getStringFromDB(dataView, offset, 4) == "http") {
+                var startOffset = offset - 1;
+                var sectionLength = dataView.getUint16(offset - 2) - 1;
+                var xmpString = getStringFromDB(dataView, startOffset, sectionLength)
+                var xmpEndIndex = xmpString.indexOf('xmpmeta>') + 8;
+                xmpString = xmpString.substring( xmpString.indexOf( '<x:xmpmeta' ), xmpEndIndex );
+
+                var indexOfXmp = xmpString.indexOf('x:xmpmeta') + 10
+                //Many custom written programs embed xmp/xml without any namespace. Following are some of them.
+                //Without these namespaces, XML is thought to be invalid by parsers
+                xmpString = xmpString.slice(0, indexOfXmp)
+                            + 'xmlns:Iptc4xmpCore="http://iptc.org/std/Iptc4xmpCore/1.0/xmlns/" '
+                            + 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                            + 'xmlns:tiff="http://ns.adobe.com/tiff/1.0/" '
+                            + 'xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus" '
+                            + 'xmlns:ext="http://www.gettyimages.com/xsltExtension/1.0" '
+                            + 'xmlns:exif="http://ns.adobe.com/exif/1.0/" '
+                            + 'xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#" '
+                            + 'xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" '
+                            + 'xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/" '
+                            + 'xmlns:xapGImg="http://ns.adobe.com/xap/1.0/g/img/" '
+                            + 'xmlns:Iptc4xmpExt="http://iptc.org/std/Iptc4xmpExt/2008-02-29/" '
+                            + xmpString.slice(indexOfXmp)
+
+                var domDocument = dom.parseFromString( xmpString, 'text/xml' );
+                return xml2Object(domDocument);
+            } else{
+             offset++;
+            }
+        }
+    }
+
+    function xml2json(xml) {
+        var json = {};
+      
+        if (xml.nodeType == 1) { // element node
+          if (xml.attributes.length > 0) {
+            json['@attributes'] = {};
+            for (var j = 0; j < xml.attributes.length; j++) {
+              var attribute = xml.attributes.item(j);
+              json['@attributes'][attribute.nodeName] = attribute.nodeValue;
+            }
+          }
+        } else if (xml.nodeType == 3) { // text node
+          return xml.nodeValue;
+        }
+      
+        // deal with children
+        if (xml.hasChildNodes()) {
+          for(var i = 0; i < xml.childNodes.length; i++) {
+            var child = xml.childNodes.item(i);
+            var nodeName = child.nodeName;
+            if (json[nodeName] == null) {
+              json[nodeName] = xml2json(child);
+            } else {
+              if (json[nodeName].push == null) {
+                var old = json[nodeName];
+                json[nodeName] = [];
+                json[nodeName].push(old);
+              }
+              json[nodeName].push(xml2json(child));
+            }
+          }
+        }
+        
+        return json;
+    }
+
+    function xml2Object(xml) {
+        try {
+            var obj = {};
+            if (xml.children.length > 0) {
+              for (var i = 0; i < xml.children.length; i++) {
+                var item = xml.children.item(i);
+                var attributes = item.attributes;
+                for(var idx in attributes) {
+                    var itemAtt = attributes[idx];
+                    var dataKey = itemAtt.nodeName;
+                    var dataValue = itemAtt.nodeValue;
+
+                    if(dataKey !== undefined) {
+                        obj[dataKey] = dataValue;
+                    }
+                }
+                var nodeName = item.nodeName;
+
+                if (typeof (obj[nodeName]) == "undefined") {
+                  obj[nodeName] = xml2json(item);
+                } else {
+                  if (typeof (obj[nodeName].push) == "undefined") {
+                    var old = obj[nodeName];
+
+                    obj[nodeName] = [];
+                    obj[nodeName].push(old);
+                  }
+                  obj[nodeName].push(xml2json(item));
+                }
+              }
+            } else {
+              obj = xml.textContent;
+            }
+            return obj;
+          } catch (e) {
+              console.log(e.message);
+          }
+    }
+
+    EXIF.enableXmp = function() {
+        EXIF.isXmpEnabled = true;
+    }
+
+    EXIF.disableXmp = function() {
+        EXIF.isXmpEnabled = false;
+    }
+
+    EXIF.getData = function(img, callback) {
+        if (((self.Image && img instanceof self.Image)
+            || (self.HTMLImageElement && img instanceof self.HTMLImageElement))
+            && !img.complete)
+            return false;
+
+        if (!imageHasData(img)) {
+            getImageData(img, callback);
+        } else {
+            if (callback) {
+                callback.call(img);
+            }
+        }
+        return true;
+    }
+
+    EXIF.getTag = function(img, tag) {
+        if (!imageHasData(img)) return;
+        return img.exifdata[tag];
+    }
+    
+    EXIF.getIptcTag = function(img, tag) {
+        if (!imageHasData(img)) return;
+        return img.iptcdata[tag];
+    }
+
+    EXIF.getAllTags = function(img) {
+        if (!imageHasData(img)) return {};
+        var a,
+            data = img.exifdata,
+            tags = {};
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                tags[a] = data[a];
+            }
+        }
+        return tags;
+    }
+    
+    EXIF.getAllIptcTags = function(img) {
+        if (!imageHasData(img)) return {};
+        var a,
+            data = img.iptcdata,
+            tags = {};
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                tags[a] = data[a];
+            }
+        }
+        return tags;
+    }
+
+    EXIF.pretty = function(img) {
+        if (!imageHasData(img)) return "";
+        var a,
+            data = img.exifdata,
+            strPretty = "";
+        for (a in data) {
+            if (data.hasOwnProperty(a)) {
+                if (typeof data[a] == "object") {
+                    if (data[a] instanceof Number) {
+                        strPretty += a + " : " + data[a] + " [" + data[a].numerator + "/" + data[a].denominator + "]\r\n";
+                    } else {
+                        strPretty += a + " : [" + data[a].length + " values]\r\n";
+                    }
+                } else {
+                    strPretty += a + " : " + data[a] + "\r\n";
+                }
+            }
+        }
+        return strPretty;
+    }
+
+    EXIF.readFromBinaryFile = function(file) {
+        return findEXIFinJPEG(file);
+    }
+
+    if (typeof define === 'function' && define.amd) {
+        define('exif-js', [], function() {
+            return EXIF;
+        });
+    }
+}.call(this));
+
+
 this.Member_Photo_Form = (function () {
   function Member_Photo_Form() {
   }
@@ -33659,6 +40932,7 @@ this.Openlayers_Facility_Search = (function () {
 
   return Openlayers_Facility_Search;
 })();
+
 this.Openlayers_Member_Photo_Form = (function () {
   function Openlayers_Member_Photo_Form(canvas, opts) {
     if (opts == null) {
@@ -34622,3509 +41896,3 @@ this.Opendata_Dataset_Graph = (function () {
 
   return Opendata_Dataset_Graph;
 })();
-/*
- * jPlayer Plugin for jQuery JavaScript Library
- * http://www.jplayer.org
- *
- * Copyright (c) 2009 - 2014 Happyworm Ltd
- * Licensed under the MIT license.
- * http://opensource.org/licenses/MIT
- *
- * Author: Mark J Panaghiston
- * Version: 2.9.2
- * Date: 14th December 2014
- */
-
-/* Support for Zepto 1.0 compiled with optional data module.
- * For AMD or NODE/CommonJS support, you will need to manually switch the related 2 lines in the code below.
- * Search terms: "jQuery Switch" and "Zepto Switch"
- */
-
-(function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		// AMD. Register as an anonymous module.
-		define(['jquery'], factory); // jQuery Switch
-		// define(['zepto'], factory); // Zepto Switch
-	} else if (typeof exports === 'object') {
-		// Node/CommonJS
-		factory(require('jquery')); // jQuery Switch
-		//factory(require('zepto')); // Zepto Switch
-	} else {
-		// Browser globals
-		if(root.jQuery) { // Use jQuery if available
-			factory(root.jQuery);
-		} else { // Otherwise, use Zepto
-			factory(root.Zepto);
-		}
-	}
-}(this, function ($, undefined) {
-
-	// Adapted from jquery.ui.widget.js (1.8.7): $.widget.bridge - Tweaked $.data(this,XYZ) to $(this).data(XYZ) for Zepto
-	$.fn.jPlayer = function( options ) {
-		var name = "jPlayer";
-		var isMethodCall = typeof options === "string",
-			args = Array.prototype.slice.call( arguments, 1 ),
-			returnValue = this;
-
-		// allow multiple hashes to be passed on init
-		options = !isMethodCall && args.length ?
-			$.extend.apply( null, [ true, options ].concat(args) ) :
-			options;
-
-		// prevent calls to internal methods
-		if ( isMethodCall && options.charAt( 0 ) === "_" ) {
-			return returnValue;
-		}
-
-		if ( isMethodCall ) {
-			this.each(function() {
-				var instance = $(this).data( name ),
-					methodValue = instance && $.isFunction( instance[options] ) ?
-						instance[ options ].apply( instance, args ) :
-						instance;
-				if ( methodValue !== instance && methodValue !== undefined ) {
-					returnValue = methodValue;
-					return false;
-				}
-			});
-		} else {
-			this.each(function() {
-				var instance = $(this).data( name );
-				if ( instance ) {
-					// instance.option( options || {} )._init(); // Orig jquery.ui.widget.js code: Not recommend for jPlayer. ie., Applying new options to an existing instance (via the jPlayer constructor) and performing the _init(). The _init() is what concerns me. It would leave a lot of event handlers acting on jPlayer instance and the interface.
-					instance.option( options || {} ); // The new constructor only changes the options. Changing options only has basic support atm.
-				} else {
-					$(this).data( name, new $.jPlayer( options, this ) );
-				}
-			});
-		}
-
-		return returnValue;
-	};
-
-	$.jPlayer = function( options, element ) {
-		// allow instantiation without initializing for simple inheritance
-		if ( arguments.length ) {
-			this.element = $(element);
-			this.options = $.extend(true, {},
-				this.options,
-				options
-			);
-			var self = this;
-			this.element.bind( "remove.jPlayer", function() {
-				self.destroy();
-			});
-			this._init();
-		}
-	};
-	// End of: (Adapted from jquery.ui.widget.js (1.8.7))
-
-	// Zepto is missing one of the animation methods.
-	if(typeof $.fn.stop !== 'function') {
-		$.fn.stop = function() {};
-	}
-
-	// Emulated HTML5 methods and properties
-	$.jPlayer.emulateMethods = "load play pause";
-	$.jPlayer.emulateStatus = "src readyState networkState currentTime duration paused ended playbackRate";
-	$.jPlayer.emulateOptions = "muted volume";
-
-	// Reserved event names generated by jPlayer that are not part of the HTML5 Media element spec
-	$.jPlayer.reservedEvent = "ready flashreset resize repeat error warning";
-
-	// Events generated by jPlayer
-	$.jPlayer.event = {};
-	$.each(
-		[
-			'ready',
-			'setmedia', // Fires when the media is set
-			'flashreset', // Similar to the ready event if the Flash solution is set to display:none and then shown again or if it's reloaded for another reason by the browser. For example, using CSS position:fixed on Firefox for the full screen feature.
-			'resize', // Occurs when the size changes through a full/restore screen operation or if the size/sizeFull options are changed.
-			'repeat', // Occurs when the repeat status changes. Usually through clicks on the repeat button of the interface.
-			'click', // Occurs when the user clicks on one of the following: poster image, html video, flash video.
-			'error', // Event error code in event.jPlayer.error.type. See $.jPlayer.error
-			'warning', // Event warning code in event.jPlayer.warning.type. See $.jPlayer.warning
-
-			// Other events match HTML5 spec.
-			'loadstart',
-			'progress',
-			'suspend',
-			'abort',
-			'emptied',
-			'stalled',
-			'play',
-			'pause',
-			'loadedmetadata',
-			'loadeddata',
-			'waiting',
-			'playing',
-			'canplay',
-			'canplaythrough',
-			'seeking',
-			'seeked',
-			'timeupdate',
-			'ended',
-			'ratechange',
-			'durationchange',
-			'volumechange'
-		],
-		function() {
-			$.jPlayer.event[ this ] = 'jPlayer_' + this;
-		}
-	);
-
-	$.jPlayer.htmlEvent = [ // These HTML events are bubbled through to the jPlayer event, without any internal action.
-		"loadstart",
-		// "progress", // jPlayer uses internally before bubbling.
-		// "suspend", // jPlayer uses internally before bubbling.
-		"abort",
-		// "error", // jPlayer uses internally before bubbling.
-		"emptied",
-		"stalled",
-		// "play", // jPlayer uses internally before bubbling.
-		// "pause", // jPlayer uses internally before bubbling.
-		"loadedmetadata",
-		// "loadeddata", // jPlayer uses internally before bubbling.
-		// "waiting", // jPlayer uses internally before bubbling.
-		// "playing", // jPlayer uses internally before bubbling.
-		"canplay",
-		"canplaythrough"
-		// "seeking", // jPlayer uses internally before bubbling.
-		// "seeked", // jPlayer uses internally before bubbling.
-		// "timeupdate", // jPlayer uses internally before bubbling.
-		// "ended", // jPlayer uses internally before bubbling.
-		// "ratechange" // jPlayer uses internally before bubbling.
-		// "durationchange" // jPlayer uses internally before bubbling.
-		// "volumechange" // jPlayer uses internally before bubbling.
-	];
-
-	$.jPlayer.pause = function() {
-		$.jPlayer.prototype.destroyRemoved();
-		$.each($.jPlayer.prototype.instances, function(i, element) {
-			if(element.data("jPlayer").status.srcSet) { // Check that media is set otherwise would cause error event.
-				element.jPlayer("pause");
-			}
-		});
-	};
-
-	// Default for jPlayer option.timeFormat
-	$.jPlayer.timeFormat = {
-		showHour: false,
-		showMin: true,
-		showSec: true,
-		padHour: false,
-		padMin: true,
-		padSec: true,
-		sepHour: ":",
-		sepMin: ":",
-		sepSec: ""
-	};
-	var ConvertTime = function() {
-		this.init();
-	};
-	ConvertTime.prototype = {
-		init: function() {
-			this.options = {
-				timeFormat: $.jPlayer.timeFormat
-			};
-		},
-		time: function(s) { // function used on jPlayer.prototype._convertTime to enable per instance options.
-			s = (s && typeof s === 'number') ? s : 0;
-
-			var myTime = new Date(s * 1000),
-				hour = myTime.getUTCHours(),
-				min = this.options.timeFormat.showHour ? myTime.getUTCMinutes() : myTime.getUTCMinutes() + hour * 60,
-				sec = this.options.timeFormat.showMin ? myTime.getUTCSeconds() : myTime.getUTCSeconds() + min * 60,
-				strHour = (this.options.timeFormat.padHour && hour < 10) ? "0" + hour : hour,
-				strMin = (this.options.timeFormat.padMin && min < 10) ? "0" + min : min,
-				strSec = (this.options.timeFormat.padSec && sec < 10) ? "0" + sec : sec,
-				strTime = "";
-
-			strTime += this.options.timeFormat.showHour ? strHour + this.options.timeFormat.sepHour : "";
-			strTime += this.options.timeFormat.showMin ? strMin + this.options.timeFormat.sepMin : "";
-			strTime += this.options.timeFormat.showSec ? strSec + this.options.timeFormat.sepSec : "";
-
-			return strTime;
-		}
-	};
-	var myConvertTime = new ConvertTime();
-	$.jPlayer.convertTime = function(s) {
-		return myConvertTime.time(s);
-	};
-
-	// Adapting jQuery 1.4.4 code for jQuery.browser. Required since jQuery 1.3.2 does not detect Chrome as webkit.
-	$.jPlayer.uaBrowser = function( userAgent ) {
-		var ua = userAgent.toLowerCase();
-
-		// Useragent RegExp
-		var rwebkit = /(webkit)[ \/]([\w.]+)/;
-		var ropera = /(opera)(?:.*version)?[ \/]([\w.]+)/;
-		var rmsie = /(msie) ([\w.]+)/;
-		var rmozilla = /(mozilla)(?:.*? rv:([\w.]+))?/;
-
-		var match = rwebkit.exec( ua ) ||
-			ropera.exec( ua ) ||
-			rmsie.exec( ua ) ||
-			ua.indexOf("compatible") < 0 && rmozilla.exec( ua ) ||
-			[];
-
-		return { browser: match[1] || "", version: match[2] || "0" };
-	};
-
-	// Platform sniffer for detecting mobile devices
-	$.jPlayer.uaPlatform = function( userAgent ) {
-		var ua = userAgent.toLowerCase();
-
-		// Useragent RegExp
-		var rplatform = /(ipad|iphone|ipod|android|blackberry|playbook|windows ce|webos)/;
-		var rtablet = /(ipad|playbook)/;
-		var randroid = /(android)/;
-		var rmobile = /(mobile)/;
-
-		var platform = rplatform.exec( ua ) || [];
-		var tablet = rtablet.exec( ua ) ||
-			!rmobile.exec( ua ) && randroid.exec( ua ) ||
-			[];
-
-		if(platform[1]) {
-			platform[1] = platform[1].replace(/\s/g, "_"); // Change whitespace to underscore. Enables dot notation.
-		}
-
-		return { platform: platform[1] || "", tablet: tablet[1] || "" };
-	};
-
-	$.jPlayer.browser = {
-	};
-	$.jPlayer.platform = {
-	};
-
-	var browserMatch = $.jPlayer.uaBrowser(navigator.userAgent);
-	if ( browserMatch.browser ) {
-		$.jPlayer.browser[ browserMatch.browser ] = true;
-		$.jPlayer.browser.version = browserMatch.version;
-	}
-	var platformMatch = $.jPlayer.uaPlatform(navigator.userAgent);
-	if ( platformMatch.platform ) {
-		$.jPlayer.platform[ platformMatch.platform ] = true;
-		$.jPlayer.platform.mobile = !platformMatch.tablet;
-		$.jPlayer.platform.tablet = !!platformMatch.tablet;
-	}
-
-	// Internet Explorer (IE) Browser Document Mode Sniffer. Based on code at:
-	// http://msdn.microsoft.com/en-us/library/cc288325%28v=vs.85%29.aspx#GetMode
-	$.jPlayer.getDocMode = function() {
-		var docMode;
-		if ($.jPlayer.browser.msie) {
-			if (document.documentMode) { // IE8 or later
-				docMode = document.documentMode;
-			} else { // IE 5-7
-				docMode = 5; // Assume quirks mode unless proven otherwise
-				if (document.compatMode) {
-					if (document.compatMode === "CSS1Compat") {
-						docMode = 7; // standards mode
-					}
-				}
-			}
-		}
-		return docMode;
-	};
-	$.jPlayer.browser.documentMode = $.jPlayer.getDocMode();
-
-	$.jPlayer.nativeFeatures = {
-		init: function() {
-
-			/* Fullscreen function naming influenced by W3C naming.
-			 * No support for: Mozilla Proposal: https://wiki.mozilla.org/Gecko:FullScreenAPI
-			 */
-
-			var d = document,
-				v = d.createElement('video'),
-				spec = {
-					// http://www.w3.org/TR/fullscreen/
-					w3c: [
-						'fullscreenEnabled',
-						'fullscreenElement',
-						'requestFullscreen',
-						'exitFullscreen',
-						'fullscreenchange',
-						'fullscreenerror'
-					],
-					// https://developer.mozilla.org/en-US/docs/DOM/Using_fullscreen_mode
-					moz: [
-						'mozFullScreenEnabled',
-						'mozFullScreenElement',
-						'mozRequestFullScreen',
-						'mozCancelFullScreen',
-						'mozfullscreenchange',
-						'mozfullscreenerror'
-					],
-					// http://developer.apple.com/library/safari/#documentation/WebKit/Reference/ElementClassRef/Element/Element.html
-					// http://developer.apple.com/library/safari/#documentation/UserExperience/Reference/DocumentAdditionsReference/DocumentAdditions/DocumentAdditions.html
-					webkit: [
-						'',
-						'webkitCurrentFullScreenElement',
-						'webkitRequestFullScreen',
-						'webkitCancelFullScreen',
-						'webkitfullscreenchange',
-						''
-					],
-					// http://developer.apple.com/library/safari/#documentation/AudioVideo/Reference/HTMLVideoElementClassReference/HTMLVideoElement/HTMLVideoElement.html
-					// https://developer.apple.com/library/safari/samplecode/HTML5VideoEventFlow/Listings/events_js.html#//apple_ref/doc/uid/DTS40010085-events_js-DontLinkElementID_5
-					// Events: 'webkitbeginfullscreen' and 'webkitendfullscreen'
-					webkitVideo: [
-						'webkitSupportsFullscreen',
-						'webkitDisplayingFullscreen',
-						'webkitEnterFullscreen',
-						'webkitExitFullscreen',
-						'',
-						''
-					],
-					ms: [
-						'',
-						'msFullscreenElement',
-						'msRequestFullscreen',
-						'msExitFullscreen',
-						'MSFullscreenChange',
-						'MSFullscreenError'
-					]
-				},
-				specOrder = [
-					'w3c',
-					'moz',
-					'webkit',
-					'webkitVideo',
-					'ms'
-				],
-				fs, i, il;
-
-			this.fullscreen = fs = {
-				support: {
-					w3c: !!d[spec.w3c[0]],
-					moz: !!d[spec.moz[0]],
-					webkit: typeof d[spec.webkit[3]] === 'function',
-					webkitVideo: typeof v[spec.webkitVideo[2]] === 'function',
-					ms: typeof v[spec.ms[2]] === 'function'
-				},
-				used: {}
-			};
-
-			// Store the name of the spec being used and as a handy boolean.
-			for(i = 0, il = specOrder.length; i < il; i++) {
-				var n = specOrder[i];
-				if(fs.support[n]) {
-					fs.spec = n;
-					fs.used[n] = true;
-					break;
-				}
-			}
-
-			if(fs.spec) {
-				var s = spec[fs.spec];
-				fs.api = {
-					fullscreenEnabled: true,
-					fullscreenElement: function(elem) {
-						elem = elem ? elem : d; // Video element required for webkitVideo
-						return elem[s[1]];
-					},
-					requestFullscreen: function(elem) {
-						return elem[s[2]](); // Chrome and Opera want parameter (Element.ALLOW_KEYBOARD_INPUT) but Safari fails if flag used.
-					},
-					exitFullscreen: function(elem) {
-						elem = elem ? elem : d; // Video element required for webkitVideo
-						return elem[s[3]]();
-					}
-				};
-				fs.event = {
-					fullscreenchange: s[4],
-					fullscreenerror: s[5]
-				};
-			} else {
-				fs.api = {
-					fullscreenEnabled: false,
-					fullscreenElement: function() {
-						return null;
-					},
-					requestFullscreen: function() {},
-					exitFullscreen: function() {}
-				};
-				fs.event = {};
-			}
-		}
-	};
-	$.jPlayer.nativeFeatures.init();
-
-	// The keyboard control system.
-
-	// The current jPlayer instance in focus.
-	$.jPlayer.focus = null;
-
-	// The list of element node names to ignore with key controls.
-	$.jPlayer.keyIgnoreElementNames = "A INPUT TEXTAREA SELECT BUTTON";
-
-	// The function that deals with key presses.
-	var keyBindings = function(event) {
-		var f = $.jPlayer.focus,
-			ignoreKey;
-
-		// A jPlayer instance must be in focus. ie., keyEnabled and the last one played.
-		if(f) {
-			// What generated the key press?
-			$.each( $.jPlayer.keyIgnoreElementNames.split(/\s+/g), function(i, name) {
-				// The strings should already be uppercase.
-				if(event.target.nodeName.toUpperCase() === name.toUpperCase()) {
-					ignoreKey = true;
-					return false; // exit each.
-				}
-			});
-			if(!ignoreKey) {
-				// See if the key pressed matches any of the bindings.
-				$.each(f.options.keyBindings, function(action, binding) {
-					// The binding could be a null when the default has been disabled. ie., 1st clause in if()
-					if(
-						(binding && $.isFunction(binding.fn)) &&
-						((typeof binding.key === 'number' && event.which === binding.key) ||
-						(typeof binding.key === 'string' && event.key === binding.key))
-					) {
-						event.preventDefault(); // Key being used by jPlayer, so prevent default operation.
-						binding.fn(f);
-						return false; // exit each.
-					}
-				});
-			}
-		}
-	};
-
-	$.jPlayer.keys = function(en) {
-		var event = "keydown.jPlayer";
-		// Remove any binding, just in case enabled more than once.
-		$(document.documentElement).unbind(event);
-		if(en) {
-			$(document.documentElement).bind(event, keyBindings);
-		}
-	};
-
-	// Enable the global key control handler ready for any jPlayer instance with the keyEnabled option enabled.
-	$.jPlayer.keys(true);
-
-	$.jPlayer.prototype = {
-		count: 0, // Static Variable: Change it via prototype.
-		version: { // Static Object
-			script: "2.9.2",
-			needFlash: "2.9.0",
-			flash: "unknown"
-		},
-		options: { // Instanced in $.jPlayer() constructor
-			swfPath: "js", // Path to jquery.jplayer.swf. Can be relative, absolute or server root relative.
-			solution: "html, flash", // Valid solutions: html, flash, aurora. Order defines priority. 1st is highest,
-			supplied: "mp3", // Defines which formats jPlayer will try and support and the priority by the order. 1st is highest,
-			auroraFormats: "wav", // List the aurora.js codecs being loaded externally. Its core supports "wav". Specify format in jPlayer context. EG., The aac.js codec gives the "m4a" format.
-			preload: 'metadata',  // HTML5 Spec values: none, metadata, auto.
-			volume: 0.8, // The volume. Number 0 to 1.
-			muted: false,
-			remainingDuration: false, // When true, the remaining time is shown in the duration GUI element.
-			toggleDuration: false, // When true, clicks on the duration toggle between the duration and remaining display.
-			captureDuration: true, // When true, clicks on the duration are captured and no longer propagate up the DOM.
-			playbackRate: 1,
-			defaultPlaybackRate: 1,
-			minPlaybackRate: 0.5,
-			maxPlaybackRate: 4,
-			wmode: "opaque", // Valid wmode: window, transparent, opaque, direct, gpu. 
-			backgroundColor: "#000000", // To define the jPlayer div and Flash background color.
-			cssSelectorAncestor: "#jp_container_1",
-			cssSelector: { // * denotes properties that should only be required when video media type required. _cssSelector() would require changes to enable splitting these into Audio and Video defaults.
-				videoPlay: ".jp-video-play", // *
-				play: ".jp-play",
-				pause: ".jp-pause",
-				stop: ".jp-stop",
-				seekBar: ".jp-seek-bar",
-				playBar: ".jp-play-bar",
-				mute: ".jp-mute",
-				unmute: ".jp-unmute",
-				volumeBar: ".jp-volume-bar",
-				volumeBarValue: ".jp-volume-bar-value",
-				volumeMax: ".jp-volume-max",
-				playbackRateBar: ".jp-playback-rate-bar",
-				playbackRateBarValue: ".jp-playback-rate-bar-value",
-				currentTime: ".jp-current-time",
-				duration: ".jp-duration",
-				title: ".jp-title",
-				fullScreen: ".jp-full-screen", // *
-				restoreScreen: ".jp-restore-screen", // *
-				repeat: ".jp-repeat",
-				repeatOff: ".jp-repeat-off",
-				gui: ".jp-gui", // The interface used with autohide feature.
-				noSolution: ".jp-no-solution" // For error feedback when jPlayer cannot find a solution.
-			},
-			stateClass: { // Classes added to the cssSelectorAncestor to indicate the state.
-				playing: "jp-state-playing",
-				seeking: "jp-state-seeking",
-				muted: "jp-state-muted",
-				looped: "jp-state-looped",
-				fullScreen: "jp-state-full-screen",
-				noVolume: "jp-state-no-volume"
-			},
-			useStateClassSkin: false, // A state class skin relies on the state classes to change the visual appearance. The single control toggles the effect, for example: play then pause, mute then unmute.
-			autoBlur: true, // GUI control handlers will drop focus after clicks.
-			smoothPlayBar: false, // Smooths the play bar transitions, which affects clicks and short media with big changes per second.
-			fullScreen: false, // Native Full Screen
-			fullWindow: false,
-			autohide: {
-				restored: false, // Controls the interface autohide feature.
-				full: true, // Controls the interface autohide feature.
-				fadeIn: 200, // Milliseconds. The period of the fadeIn anim.
-				fadeOut: 600, // Milliseconds. The period of the fadeOut anim.
-				hold: 1000 // Milliseconds. The period of the pause before autohide beings.
-			},
-			loop: false,
-			repeat: function(event) { // The default jPlayer repeat event handler
-				if(event.jPlayer.options.loop) {
-					$(this).unbind(".jPlayerRepeat").bind($.jPlayer.event.ended + ".jPlayer.jPlayerRepeat", function() {
-						$(this).jPlayer("play");
-					});
-				} else {
-					$(this).unbind(".jPlayerRepeat");
-				}
-			},
-			nativeVideoControls: {
-				// Works well on standard browsers.
-				// Phone and tablet browsers can have problems with the controls disappearing.
-			},
-			noFullWindow: {
-				msie: /msie [0-6]\./,
-				ipad: /ipad.*?os [0-4]\./,
-				iphone: /iphone/,
-				ipod: /ipod/,
-				android_pad: /android [0-3]\.(?!.*?mobile)/,
-				android_phone: /(?=.*android)(?!.*chrome)(?=.*mobile)/,
-				blackberry: /blackberry/,
-				windows_ce: /windows ce/,
-				iemobile: /iemobile/,
-				webos: /webos/
-			},
-			noVolume: {
-				ipad: /ipad/,
-				iphone: /iphone/,
-				ipod: /ipod/,
-				android_pad: /android(?!.*?mobile)/,
-				android_phone: /android.*?mobile/,
-				blackberry: /blackberry/,
-				windows_ce: /windows ce/,
-				iemobile: /iemobile/,
-				webos: /webos/,
-				playbook: /playbook/
-			},
-			timeFormat: {
-				// Specific time format for this instance. The supported options are defined in $.jPlayer.timeFormat
-				// For the undefined options we use the default from $.jPlayer.timeFormat
-			},
-			keyEnabled: false, // Enables keyboard controls.
-			audioFullScreen: false, // Enables keyboard controls to enter full screen with audio media.
-			keyBindings: { // The key control object, defining the key codes and the functions to execute.
-				// The parameter, f = $.jPlayer.focus, will be checked truethy before attempting to call any of these functions.
-				// Properties may be added to this object, in key/fn pairs, to enable other key controls. EG, for the playlist add-on.
-				play: {
-					key: 80, // p
-					fn: function(f) {
-						if(f.status.paused) {
-							f.play();
-						} else {
-							f.pause();
-						}
-					}
-				},
-				fullScreen: {
-					key: 70, // f
-					fn: function(f) {
-						if(f.status.video || f.options.audioFullScreen) {
-							f._setOption("fullScreen", !f.options.fullScreen);
-						}
-					}
-				},
-				muted: {
-					key: 77, // m
-					fn: function(f) {
-						f._muted(!f.options.muted);
-					}
-				},
-				volumeUp: {
-					key: 190, // .
-					fn: function(f) {
-						f.volume(f.options.volume + 0.1);
-					}
-				},
-				volumeDown: {
-					key: 188, // ,
-					fn: function(f) {
-						f.volume(f.options.volume - 0.1);
-					}
-				},
-				loop: {
-					key: 76, // l
-					fn: function(f) {
-						f._loop(!f.options.loop);
-					}
-				}
-			},
-			verticalVolume: false, // Calculate volume from the bottom of the volume bar. Default is from the left. Also volume affects either width or height.
-			verticalPlaybackRate: false,
-			globalVolume: false, // Set to make volume and muted changes affect all jPlayer instances with this option enabled
-			idPrefix: "jp", // Prefix for the ids of html elements created by jPlayer. For flash, this must not include characters: . - + * / \
-			noConflict: "jQuery",
-			emulateHtml: false, // Emulates the HTML5 Media element on the jPlayer element.
-			consoleAlerts: true, // Alerts are sent to the console.log() instead of alert().
-			errorAlerts: false,
-			warningAlerts: false
-		},
-		optionsAudio: {
-			size: {
-				width: "0px",
-				height: "0px",
-				cssClass: ""
-			},
-			sizeFull: {
-				width: "0px",
-				height: "0px",
-				cssClass: ""
-			}
-		},
-		optionsVideo: {
-			size: {
-				width: "480px",
-				height: "270px",
-				cssClass: "jp-video-270p"
-			},
-			sizeFull: {
-				width: "100%",
-				height: "100%",
-				cssClass: "jp-video-full"
-			}
-		},
-		instances: {}, // Static Object
-		status: { // Instanced in _init()
-			src: "",
-			media: {},
-			paused: true,
-			format: {},
-			formatType: "",
-			waitForPlay: true, // Same as waitForLoad except in case where preloading.
-			waitForLoad: true,
-			srcSet: false,
-			video: false, // True if playing a video
-			seekPercent: 0,
-			currentPercentRelative: 0,
-			currentPercentAbsolute: 0,
-			currentTime: 0,
-			duration: 0,
-			remaining: 0,
-			videoWidth: 0, // Intrinsic width of the video in pixels.
-			videoHeight: 0, // Intrinsic height of the video in pixels.
-			readyState: 0,
-			networkState: 0,
-			playbackRate: 1, // Warning - Now both an option and a status property
-			ended: 0
-
-/*		Persistant status properties created dynamically at _init():
-			width
-			height
-			cssClass
-			nativeVideoControls
-			noFullWindow
-			noVolume
-			playbackRateEnabled // Warning - Technically, we can have both Flash and HTML, so this might not be correct if the Flash is active. That is a niche case.
-*/
-		},
-
-		internal: { // Instanced in _init()
-			ready: false
-			// instance: undefined
-			// domNode: undefined
-			// htmlDlyCmdId: undefined
-			// autohideId: undefined
-			// mouse: undefined
-			// cmdsIgnored
-		},
-		solution: { // Static Object: Defines the solutions built in jPlayer.
-			html: true,
-			aurora: true,
-			flash: true
-		},
-		// 'MPEG-4 support' : canPlayType('video/mp4; codecs="mp4v.20.8"')
-		format: { // Static Object
-			mp3: {
-				codec: 'audio/mpeg',
-				flashCanPlay: true,
-				media: 'audio'
-			},
-			m4a: { // AAC / MP4
-				codec: 'audio/mp4; codecs="mp4a.40.2"',
-				flashCanPlay: true,
-				media: 'audio'
-			},
-			m3u8a: { // AAC / MP4 / Apple HLS
-				codec: 'application/vnd.apple.mpegurl; codecs="mp4a.40.2"',
-				flashCanPlay: false,
-				media: 'audio'
-			},
-			m3ua: { // M3U
-				codec: 'audio/mpegurl',
-				flashCanPlay: false,
-				media: 'audio'
-			},
-			oga: { // OGG
-				codec: 'audio/ogg; codecs="vorbis, opus"',
-				flashCanPlay: false,
-				media: 'audio'
-			},
-			flac: { // FLAC
-				codec: 'audio/x-flac',
-				flashCanPlay: false,
-				media: 'audio'
-			},
-			wav: { // PCM
-				codec: 'audio/wav; codecs="1"',
-				flashCanPlay: false,
-				media: 'audio'
-			},
-			webma: { // WEBM
-				codec: 'audio/webm; codecs="vorbis"',
-				flashCanPlay: false,
-				media: 'audio'
-			},
-			fla: { // FLV / F4A
-				codec: 'audio/x-flv',
-				flashCanPlay: true,
-				media: 'audio'
-			},
-			rtmpa: { // RTMP AUDIO
-				codec: 'audio/rtmp; codecs="rtmp"',
-				flashCanPlay: true,
-				media: 'audio'
-			},
-			m4v: { // H.264 / MP4
-				codec: 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
-				flashCanPlay: true,
-				media: 'video'
-			},
-			m3u8v: { // H.264 / AAC / MP4 / Apple HLS
-				codec: 'application/vnd.apple.mpegurl; codecs="avc1.42E01E, mp4a.40.2"',
-				flashCanPlay: false,
-				media: 'video'
-			},
-			m3uv: { // M3U
-				codec: 'audio/mpegurl',
-				flashCanPlay: false,
-				media: 'video'
-			},
-			ogv: { // OGG
-				codec: 'video/ogg; codecs="theora, vorbis"',
-				flashCanPlay: false,
-				media: 'video'
-			},
-			webmv: { // WEBM
-				codec: 'video/webm; codecs="vorbis, vp8"',
-				flashCanPlay: false,
-				media: 'video'
-			},
-			flv: { // FLV / F4V
-				codec: 'video/x-flv',
-				flashCanPlay: true,
-				media: 'video'
-			},
-			rtmpv: { // RTMP VIDEO
-				codec: 'video/rtmp; codecs="rtmp"',
-				flashCanPlay: true,
-				media: 'video'
-			}
-		},
-		_init: function() {
-			var self = this;
-			
-			this.element.empty();
-			
-			this.status = $.extend({}, this.status); // Copy static to unique instance.
-			this.internal = $.extend({}, this.internal); // Copy static to unique instance.
-
-			// Initialize the time format
-			this.options.timeFormat = $.extend({}, $.jPlayer.timeFormat, this.options.timeFormat);
-
-			// On iOS, assume commands will be ignored before user initiates them.
-			this.internal.cmdsIgnored = $.jPlayer.platform.ipad || $.jPlayer.platform.iphone || $.jPlayer.platform.ipod;
-
-			this.internal.domNode = this.element.get(0);
-
-			// Add key bindings focus to 1st jPlayer instanced with key control enabled.
-			if(this.options.keyEnabled && !$.jPlayer.focus) {
-				$.jPlayer.focus = this;
-			}
-
-			// A fix for Android where older (2.3) and even some 4.x devices fail to work when changing the *audio* SRC and then playing immediately.
-			this.androidFix = {
-				setMedia: false, // True when media set
-				play: false, // True when a progress event will instruct the media to play
-				pause: false, // True when a progress event will instruct the media to pause at a time.
-				time: NaN // The play(time) parameter
-			};
-			if($.jPlayer.platform.android) {
-				this.options.preload = this.options.preload !== 'auto' ? 'metadata' : 'auto'; // Default to metadata, but allow auto.
-			}
-
-			this.formats = []; // Array based on supplied string option. Order defines priority.
-			this.solutions = []; // Array based on solution string option. Order defines priority.
-			this.require = {}; // Which media types are required: video, audio.
-			
-			this.htmlElement = {}; // DOM elements created by jPlayer
-			this.html = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
-			this.html.audio = {};
-			this.html.video = {};
-			this.aurora = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
-			this.aurora.formats = [];
-			this.aurora.properties = [];
-			this.flash = {}; // In _init()'s this.desired code and setmedia(): Accessed via this[solution], where solution from this.solutions array.
-			
-			this.css = {};
-			this.css.cs = {}; // Holds the css selector strings
-			this.css.jq = {}; // Holds jQuery selectors. ie., $(css.cs.method)
-
-			this.ancestorJq = []; // Holds jQuery selector of cssSelectorAncestor. Init would use $() instead of [], but it is only 1.4+
-
-			this.options.volume = this._limitValue(this.options.volume, 0, 1); // Limit volume value's bounds.
-
-			// Create the formats array, with prority based on the order of the supplied formats string
-			$.each(this.options.supplied.toLowerCase().split(","), function(index1, value1) {
-				var format = value1.replace(/^\s+|\s+$/g, ""); //trim
-				if(self.format[format]) { // Check format is valid.
-					var dupFound = false;
-					$.each(self.formats, function(index2, value2) { // Check for duplicates
-						if(format === value2) {
-							dupFound = true;
-							return false;
-						}
-					});
-					if(!dupFound) {
-						self.formats.push(format);
-					}
-				}
-			});
-
-			// Create the solutions array, with prority based on the order of the solution string
-			$.each(this.options.solution.toLowerCase().split(","), function(index1, value1) {
-				var solution = value1.replace(/^\s+|\s+$/g, ""); //trim
-				if(self.solution[solution]) { // Check solution is valid.
-					var dupFound = false;
-					$.each(self.solutions, function(index2, value2) { // Check for duplicates
-						if(solution === value2) {
-							dupFound = true;
-							return false;
-						}
-					});
-					if(!dupFound) {
-						self.solutions.push(solution);
-					}
-				}
-			});
-				
-			// Create Aurora.js formats array
-			$.each(this.options.auroraFormats.toLowerCase().split(","), function(index1, value1) {
-				var format = value1.replace(/^\s+|\s+$/g, ""); //trim
-				if(self.format[format]) { // Check format is valid.
-					var dupFound = false;
-					$.each(self.aurora.formats, function(index2, value2) { // Check for duplicates
-						if(format === value2) {
-							dupFound = true;
-							return false;
-						}
-					});
-					if(!dupFound) {
-						self.aurora.formats.push(format);
-					}
-				}
-			});
-
-			this.internal.instance = "jp_" + this.count;
-			this.instances[this.internal.instance] = this.element;
-
-			// Check the jPlayer div has an id and create one if required. Important for Flash to know the unique id for comms.
-			if(!this.element.attr("id")) {
-				this.element.attr("id", this.options.idPrefix + "_jplayer_" + this.count);
-			}
-
-			this.internal.self = $.extend({}, {
-				id: this.element.attr("id"),
-				jq: this.element
-			});
-			this.internal.audio = $.extend({}, {
-				id: this.options.idPrefix + "_audio_" + this.count,
-				jq: undefined
-			});
-			this.internal.video = $.extend({}, {
-				id: this.options.idPrefix + "_video_" + this.count,
-				jq: undefined
-			});
-			this.internal.flash = $.extend({}, {
-				id: this.options.idPrefix + "_flash_" + this.count,
-				jq: undefined,
-				swf: this.options.swfPath + (this.options.swfPath.toLowerCase().slice(-4) !== ".swf" ? (this.options.swfPath && this.options.swfPath.slice(-1) !== "/" ? "/" : "") + "jquery.jplayer.swf" : "")
-			});
-			this.internal.poster = $.extend({}, {
-				id: this.options.idPrefix + "_poster_" + this.count,
-				jq: undefined
-			});
-
-			// Register listeners defined in the constructor
-			$.each($.jPlayer.event, function(eventName,eventType) {
-				if(self.options[eventName] !== undefined) {
-					self.element.bind(eventType + ".jPlayer", self.options[eventName]); // With .jPlayer namespace.
-					self.options[eventName] = undefined; // Destroy the handler pointer copy on the options. Reason, events can be added/removed in other ways so this could be obsolete and misleading.
-				}
-			});
-
-			// Determine if we require solutions for audio, video or both media types.
-			this.require.audio = false;
-			this.require.video = false;
-			$.each(this.formats, function(priority, format) {
-				self.require[self.format[format].media] = true;
-			});
-
-			// Now required types are known, finish the options default settings.
-			if(this.require.video) {
-				this.options = $.extend(true, {},
-					this.optionsVideo,
-					this.options
-				);
-			} else {
-				this.options = $.extend(true, {},
-					this.optionsAudio,
-					this.options
-				);
-			}
-			this._setSize(); // update status and jPlayer element size
-
-			// Determine the status for Blocklisted options.
-			this.status.nativeVideoControls = this._uaBlocklist(this.options.nativeVideoControls);
-			this.status.noFullWindow = this._uaBlocklist(this.options.noFullWindow);
-			this.status.noVolume = this._uaBlocklist(this.options.noVolume);
-
-			// Create event handlers if native fullscreen is supported
-			if($.jPlayer.nativeFeatures.fullscreen.api.fullscreenEnabled) {
-				this._fullscreenAddEventListeners();
-			}
-
-			// The native controls are only for video and are disabled when audio is also used.
-			this._restrictNativeVideoControls();
-
-			// Create the poster image.
-			this.htmlElement.poster = document.createElement('img');
-			this.htmlElement.poster.id = this.internal.poster.id;
-			this.htmlElement.poster.onload = function() { // Note that this did not work on Firefox 3.6: poster.addEventListener("onload", function() {}, false); Did not investigate x-browser.
-				if(!self.status.video || self.status.waitForPlay) {
-					self.internal.poster.jq.show();
-				}
-			};
-			this.element.append(this.htmlElement.poster);
-			this.internal.poster.jq = $("#" + this.internal.poster.id);
-			this.internal.poster.jq.css({'width': this.status.width, 'height': this.status.height});
-			this.internal.poster.jq.hide();
-			this.internal.poster.jq.bind("click.jPlayer", function() {
-				self._trigger($.jPlayer.event.click);
-			});
-			
-			// Generate the required media elements
-			this.html.audio.available = false;
-			if(this.require.audio) { // If a supplied format is audio
-				this.htmlElement.audio = document.createElement('audio');
-				this.htmlElement.audio.id = this.internal.audio.id;
-				this.html.audio.available = !!this.htmlElement.audio.canPlayType && this._testCanPlayType(this.htmlElement.audio); // Test is for IE9 on Win Server 2008.
-			}
-			this.html.video.available = false;
-			if(this.require.video) { // If a supplied format is video
-				this.htmlElement.video = document.createElement('video');
-				this.htmlElement.video.id = this.internal.video.id;
-				this.html.video.available = !!this.htmlElement.video.canPlayType && this._testCanPlayType(this.htmlElement.video); // Test is for IE9 on Win Server 2008.
-			}
-
-			this.flash.available = this._checkForFlash(10.1);
-
-			this.html.canPlay = {};
-			this.aurora.canPlay = {};
-			this.flash.canPlay = {};
-			$.each(this.formats, function(priority, format) {
-				self.html.canPlay[format] = self.html[self.format[format].media].available && "" !== self.htmlElement[self.format[format].media].canPlayType(self.format[format].codec);
-				self.aurora.canPlay[format] = ($.inArray(format, self.aurora.formats) > -1);
-				self.flash.canPlay[format] = self.format[format].flashCanPlay && self.flash.available;
-			});
-			this.html.desired = false;
-			this.aurora.desired = false;
-			this.flash.desired = false;
-			$.each(this.solutions, function(solutionPriority, solution) {
-				if(solutionPriority === 0) {
-					self[solution].desired = true;
-				} else {
-					var audioCanPlay = false;
-					var videoCanPlay = false;
-					$.each(self.formats, function(formatPriority, format) {
-						if(self[self.solutions[0]].canPlay[format]) { // The other solution can play
-							if(self.format[format].media === 'video') {
-								videoCanPlay = true;
-							} else {
-								audioCanPlay = true;
-							}
-						}
-					});
-					self[solution].desired = (self.require.audio && !audioCanPlay) || (self.require.video && !videoCanPlay);
-				}
-			});
-			// This is what jPlayer will support, based on solution and supplied.
-			this.html.support = {};
-			this.aurora.support = {};
-			this.flash.support = {};
-			$.each(this.formats, function(priority, format) {
-				self.html.support[format] = self.html.canPlay[format] && self.html.desired;
-				self.aurora.support[format] = self.aurora.canPlay[format] && self.aurora.desired;
-				self.flash.support[format] = self.flash.canPlay[format] && self.flash.desired;
-			});
-			// If jPlayer is supporting any format in a solution, then the solution is used.
-			this.html.used = false;
-			this.aurora.used = false;
-			this.flash.used = false;
-			$.each(this.solutions, function(solutionPriority, solution) {
-				$.each(self.formats, function(formatPriority, format) {
-					if(self[solution].support[format]) {
-						self[solution].used = true;
-						return false;
-					}
-				});
-			});
-
-			// Init solution active state and the event gates to false.
-			this._resetActive();
-			this._resetGate();
-
-			// Set up the css selectors for the control and feedback entities.
-			this._cssSelectorAncestor(this.options.cssSelectorAncestor);
-			
-			// If neither html nor aurora nor flash are being used by this browser, then media playback is not possible. Trigger an error event.
-			if(!(this.html.used || this.aurora.used || this.flash.used)) {
-				this._error( {
-					type: $.jPlayer.error.NO_SOLUTION, 
-					context: "{solution:'" + this.options.solution + "', supplied:'" + this.options.supplied + "'}",
-					message: $.jPlayer.errorMsg.NO_SOLUTION,
-					hint: $.jPlayer.errorHint.NO_SOLUTION
-				});
-				if(this.css.jq.noSolution.length) {
-					this.css.jq.noSolution.show();
-				}
-			} else {
-				if(this.css.jq.noSolution.length) {
-					this.css.jq.noSolution.hide();
-				}
-			}
-
-			// Add the flash solution if it is being used.
-			if(this.flash.used) {
-				var htmlObj,
-				flashVars = 'jQuery=' + encodeURI(this.options.noConflict) + '&id=' + encodeURI(this.internal.self.id) + '&vol=' + this.options.volume + '&muted=' + this.options.muted;
-
-				// Code influenced by SWFObject 2.2: http://code.google.com/p/swfobject/
-				// Non IE browsers have an initial Flash size of 1 by 1 otherwise the wmode affected the Flash ready event. 
-
-				if($.jPlayer.browser.msie && (Number($.jPlayer.browser.version) < 9 || $.jPlayer.browser.documentMode < 9)) {
-					var objStr = '<object id="' + this.internal.flash.id + '" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="0" height="0" tabindex="-1"></object>';
-
-					var paramStr = [
-						'<param name="movie" value="' + this.internal.flash.swf + '" />',
-						'<param name="FlashVars" value="' + flashVars + '" />',
-						'<param name="allowScriptAccess" value="always" />',
-						'<param name="bgcolor" value="' + this.options.backgroundColor + '" />',
-						'<param name="wmode" value="' + this.options.wmode + '" />'
-					];
-
-					htmlObj = document.createElement(objStr);
-					for(var i=0; i < paramStr.length; i++) {
-						htmlObj.appendChild(document.createElement(paramStr[i]));
-					}
-				} else {
-					var createParam = function(el, n, v) {
-						var p = document.createElement("param");
-						p.setAttribute("name", n);	
-						p.setAttribute("value", v);
-						el.appendChild(p);
-					};
-
-					htmlObj = document.createElement("object");
-					htmlObj.setAttribute("id", this.internal.flash.id);
-					htmlObj.setAttribute("name", this.internal.flash.id);
-					htmlObj.setAttribute("data", this.internal.flash.swf);
-					htmlObj.setAttribute("type", "application/x-shockwave-flash");
-					htmlObj.setAttribute("width", "1"); // Non-zero
-					htmlObj.setAttribute("height", "1"); // Non-zero
-					htmlObj.setAttribute("tabindex", "-1");
-					createParam(htmlObj, "flashvars", flashVars);
-					createParam(htmlObj, "allowscriptaccess", "always");
-					createParam(htmlObj, "bgcolor", this.options.backgroundColor);
-					createParam(htmlObj, "wmode", this.options.wmode);
-				}
-
-				this.element.append(htmlObj);
-				this.internal.flash.jq = $(htmlObj);
-			}
-
-			// Setup playbackRate ability before using _addHtmlEventListeners()
-			if(this.html.used && !this.flash.used) { // If only HTML
-				// Using the audio element capabilities for playbackRate. ie., Assuming video element is the same.
-				this.status.playbackRateEnabled = this._testPlaybackRate('audio');
-			} else {
-				this.status.playbackRateEnabled = false;
-			}
-
-			this._updatePlaybackRate();
-
-			// Add the HTML solution if being used.
-			if(this.html.used) {
-
-				// The HTML Audio handlers
-				if(this.html.audio.available) {
-					this._addHtmlEventListeners(this.htmlElement.audio, this.html.audio);
-					this.element.append(this.htmlElement.audio);
-					this.internal.audio.jq = $("#" + this.internal.audio.id);
-				}
-
-				// The HTML Video handlers
-				if(this.html.video.available) {
-					this._addHtmlEventListeners(this.htmlElement.video, this.html.video);
-					this.element.append(this.htmlElement.video);
-					this.internal.video.jq = $("#" + this.internal.video.id);
-					if(this.status.nativeVideoControls) {
-						this.internal.video.jq.css({'width': this.status.width, 'height': this.status.height});
-					} else {
-						this.internal.video.jq.css({'width':'0px', 'height':'0px'}); // Using size 0x0 since a .hide() causes issues in iOS
-					}
-					this.internal.video.jq.bind("click.jPlayer", function() {
-						self._trigger($.jPlayer.event.click);
-					});
-				}
-			}
-			
-			// Add the Aurora.js solution if being used.
-			if(this.aurora.used) {
-				// Aurora.js player need to be created for each media, see setMedia function.
-			}
-
-			// Create the bridge that emulates the HTML Media element on the jPlayer DIV
-			if( this.options.emulateHtml ) {
-				this._emulateHtmlBridge();
-			}
-
-			if((this.html.used || this.aurora.used) && !this.flash.used) { // If only HTML, then emulate flash ready() call after 100ms.
-				setTimeout( function() {
-					self.internal.ready = true;
-					self.version.flash = "n/a";
-					self._trigger($.jPlayer.event.repeat); // Trigger the repeat event so its handler can initialize itself with the loop option.
-					self._trigger($.jPlayer.event.ready);
-				}, 100);
-			}
-
-			// Initialize the interface components with the options.
-			this._updateNativeVideoControls();
-			// The other controls are now setup in _cssSelectorAncestor()
-			if(this.css.jq.videoPlay.length) {
-				this.css.jq.videoPlay.hide();
-			}
-
-			$.jPlayer.prototype.count++; // Change static variable via prototype.
-		},
-		destroy: function() {
-			// MJP: The background change remains. Would need to store the original to restore it correctly.
-			// MJP: The jPlayer element's size change remains.
-
-			// Clear the media to reset the GUI and stop any downloads. Streams on some browsers had persited. (Chrome)
-			this.clearMedia();
-			// Remove the size/sizeFull cssClass from the cssSelectorAncestor
-			this._removeUiClass();
-			// Remove the times from the GUI
-			if(this.css.jq.currentTime.length) {
-				this.css.jq.currentTime.text("");
-			}
-			if(this.css.jq.duration.length) {
-				this.css.jq.duration.text("");
-			}
-			// Remove any bindings from the interface controls.
-			$.each(this.css.jq, function(fn, jq) {
-				// Check selector is valid before trying to execute method.
-				if(jq.length) {
-					jq.unbind(".jPlayer");
-				}
-			});
-			// Remove the click handlers for $.jPlayer.event.click
-			this.internal.poster.jq.unbind(".jPlayer");
-			if(this.internal.video.jq) {
-				this.internal.video.jq.unbind(".jPlayer");
-			}
-			// Remove the fullscreen event handlers
-			this._fullscreenRemoveEventListeners();
-			// Remove key bindings
-			if(this === $.jPlayer.focus) {
-				$.jPlayer.focus = null;
-			}
-			// Destroy the HTML bridge.
-			if(this.options.emulateHtml) {
-				this._destroyHtmlBridge();
-			}
-			this.element.removeData("jPlayer"); // Remove jPlayer data
-			this.element.unbind(".jPlayer"); // Remove all event handlers created by the jPlayer constructor
-			this.element.empty(); // Remove the inserted child elements
-			
-			delete this.instances[this.internal.instance]; // Clear the instance on the static instance object
-		},
-		destroyRemoved: function() { // Destroy any instances that have gone away.
-			var self = this;
-			$.each(this.instances, function(i, element) {
-				if(self.element !== element) { // Do not destroy this instance.
-					if(!element.data("jPlayer")) { // Check that element is a real jPlayer.
-						element.jPlayer("destroy");
-						delete self.instances[i];
-					}
-				}
-			});
-		},
-		enable: function() { // Plan to implement
-			// options.disabled = false
-		},
-		disable: function () { // Plan to implement
-			// options.disabled = true
-		},
-		_testCanPlayType: function(elem) {
-			// IE9 on Win Server 2008 did not implement canPlayType(), but it has the property.
-			try {
-				elem.canPlayType(this.format.mp3.codec); // The type is irrelevant.
-				return true;
-			} catch(err) {
-				return false;
-			}
-		},
-		_testPlaybackRate: function(type) {
-			// type: String 'audio' or 'video'
-			var el, rate = 0.5;
-			type = typeof type === 'string' ? type : 'audio';
-			el = document.createElement(type);
-			// Wrapping in a try/catch, just in case older HTML5 browsers throw and error.
-			try {
-				if('playbackRate' in el) {
-					el.playbackRate = rate;
-					return el.playbackRate === rate;
-				} else {
-					return false;
-				}
-			} catch(err) {
-				return false;
-			}
-		},
-		_uaBlocklist: function(list) {
-			// list : object with properties that are all regular expressions. Property names are irrelevant.
-			// Returns true if the user agent is matched in list.
-			var	ua = navigator.userAgent.toLowerCase(),
-				block = false;
-
-			$.each(list, function(p, re) {
-				if(re && re.test(ua)) {
-					block = true;
-					return false; // exit $.each.
-				}
-			});
-			return block;
-		},
-		_restrictNativeVideoControls: function() {
-			// Fallback to noFullWindow when nativeVideoControls is true and audio media is being used. Affects when both media types are used.
-			if(this.require.audio) {
-				if(this.status.nativeVideoControls) {
-					this.status.nativeVideoControls = false;
-					this.status.noFullWindow = true;
-				}
-			}
-		},
-		_updateNativeVideoControls: function() {
-			if(this.html.video.available && this.html.used) {
-				// Turn the HTML Video controls on/off
-				this.htmlElement.video.controls = this.status.nativeVideoControls;
-				// Show/hide the jPlayer GUI.
-				this._updateAutohide();
-				// For when option changed. The poster image is not updated, as it is dealt with in setMedia(). Acceptable degradation since seriously doubt these options will change on the fly. Can again review later.
-				if(this.status.nativeVideoControls && this.require.video) {
-					this.internal.poster.jq.hide();
-					this.internal.video.jq.css({'width': this.status.width, 'height': this.status.height});
-				} else if(this.status.waitForPlay && this.status.video) {
-					this.internal.poster.jq.show();
-					this.internal.video.jq.css({'width': '0px', 'height': '0px'});
-				}
-			}
-		},
-		_addHtmlEventListeners: function(mediaElement, entity) {
-			var self = this;
-			mediaElement.preload = this.options.preload;
-			mediaElement.muted = this.options.muted;
-			mediaElement.volume = this.options.volume;
-
-			if(this.status.playbackRateEnabled) {
-				mediaElement.defaultPlaybackRate = this.options.defaultPlaybackRate;
-				mediaElement.playbackRate = this.options.playbackRate;
-			}
-
-			// Create the event listeners
-			// Only want the active entity to affect jPlayer and bubble events.
-			// Using entity.gate so that object is referenced and gate property always current
-			
-			mediaElement.addEventListener("progress", function() {
-				if(entity.gate) {
-					if(self.internal.cmdsIgnored && this.readyState > 0) { // Detect iOS executed the command
-						self.internal.cmdsIgnored = false;
-					}
-					self._getHtmlStatus(mediaElement);
-					self._updateInterface();
-					self._trigger($.jPlayer.event.progress);
-				}
-			}, false);
-			mediaElement.addEventListener("loadeddata", function() {
-				if(entity.gate) {
-					self.androidFix.setMedia = false; // Disable the fix after the first progress event.
-					if(self.androidFix.play) { // Play Android audio - performing the fix.
-						self.androidFix.play = false;
-						self.play(self.androidFix.time);
-					}
-					if(self.androidFix.pause) { // Pause Android audio at time - performing the fix.
-						self.androidFix.pause = false;
-						self.pause(self.androidFix.time);
-					}
-					self._trigger($.jPlayer.event.loadeddata);
-				}
-			}, false);
-			mediaElement.addEventListener("timeupdate", function() {
-				if(entity.gate) {
-					self._getHtmlStatus(mediaElement);
-					self._updateInterface();
-					self._trigger($.jPlayer.event.timeupdate);
-				}
-			}, false);
-			mediaElement.addEventListener("durationchange", function() {
-				if(entity.gate) {
-					self._getHtmlStatus(mediaElement);
-					self._updateInterface();
-					self._trigger($.jPlayer.event.durationchange);
-				}
-			}, false);
-			mediaElement.addEventListener("play", function() {
-				if(entity.gate) {
-					self._updateButtons(true);
-					self._html_checkWaitForPlay(); // So the native controls update this variable and puts the hidden interface in the correct state. Affects toggling native controls.
-					self._trigger($.jPlayer.event.play);
-				}
-			}, false);
-			mediaElement.addEventListener("playing", function() {
-				if(entity.gate) {
-					self._updateButtons(true);
-					self._seeked();
-					self._trigger($.jPlayer.event.playing);
-				}
-			}, false);
-			mediaElement.addEventListener("pause", function() {
-				if(entity.gate) {
-					self._updateButtons(false);
-					self._trigger($.jPlayer.event.pause);
-				}
-			}, false);
-			mediaElement.addEventListener("waiting", function() {
-				if(entity.gate) {
-					self._seeking();
-					self._trigger($.jPlayer.event.waiting);
-				}
-			}, false);
-			mediaElement.addEventListener("seeking", function() {
-				if(entity.gate) {
-					self._seeking();
-					self._trigger($.jPlayer.event.seeking);
-				}
-			}, false);
-			mediaElement.addEventListener("seeked", function() {
-				if(entity.gate) {
-					self._seeked();
-					self._trigger($.jPlayer.event.seeked);
-				}
-			}, false);
-			mediaElement.addEventListener("volumechange", function() {
-				if(entity.gate) {
-					// Read the values back from the element as the Blackberry PlayBook shares the volume with the physical buttons master volume control.
-					// However, when tested 6th July 2011, those buttons do not generate an event. The physical play/pause button does though.
-					self.options.volume = mediaElement.volume;
-					self.options.muted = mediaElement.muted;
-					self._updateMute();
-					self._updateVolume();
-					self._trigger($.jPlayer.event.volumechange);
-				}
-			}, false);
-			mediaElement.addEventListener("ratechange", function() {
-				if(entity.gate) {
-					self.options.defaultPlaybackRate = mediaElement.defaultPlaybackRate;
-					self.options.playbackRate = mediaElement.playbackRate;
-					self._updatePlaybackRate();
-					self._trigger($.jPlayer.event.ratechange);
-				}
-			}, false);
-			mediaElement.addEventListener("suspend", function() { // Seems to be the only way of capturing that the iOS4 browser did not actually play the media from the page code. ie., It needs a user gesture.
-				if(entity.gate) {
-					self._seeked();
-					self._trigger($.jPlayer.event.suspend);
-				}
-			}, false);
-			mediaElement.addEventListener("ended", function() {
-				if(entity.gate) {
-					// Order of the next few commands are important. Change the time and then pause.
-					// Solves a bug in Firefox, where issuing pause 1st causes the media to play from the start. ie., The pause is ignored.
-					if(!$.jPlayer.browser.webkit) { // Chrome crashes if you do this in conjunction with a setMedia command in an ended event handler. ie., The playlist demo.
-						self.htmlElement.media.currentTime = 0; // Safari does not care about this command. ie., It works with or without this line. (Both Safari and Chrome are Webkit.)
-					}
-					self.htmlElement.media.pause(); // Pause otherwise a click on the progress bar will play from that point, when it shouldn't, since it stopped playback.
-					self._updateButtons(false);
-					self._getHtmlStatus(mediaElement, true); // With override true. Otherwise Chrome leaves progress at full.
-					self._updateInterface();
-					self._trigger($.jPlayer.event.ended);
-				}
-			}, false);
-			mediaElement.addEventListener("error", function() {
-				if(entity.gate) {
-					self._updateButtons(false);
-					self._seeked();
-					if(self.status.srcSet) { // Deals with case of clearMedia() causing an error event.
-						clearTimeout(self.internal.htmlDlyCmdId); // Clears any delayed commands used in the HTML solution.
-						self.status.waitForLoad = true; // Allows the load operation to try again.
-						self.status.waitForPlay = true; // Reset since a play was captured.
-						if(self.status.video && !self.status.nativeVideoControls) {
-							self.internal.video.jq.css({'width':'0px', 'height':'0px'});
-						}
-						if(self._validString(self.status.media.poster) && !self.status.nativeVideoControls) {
-							self.internal.poster.jq.show();
-						}
-						if(self.css.jq.videoPlay.length) {
-							self.css.jq.videoPlay.show();
-						}
-						self._error( {
-							type: $.jPlayer.error.URL,
-							context: self.status.src, // this.src shows absolute urls. Want context to show the url given.
-							message: $.jPlayer.errorMsg.URL,
-							hint: $.jPlayer.errorHint.URL
-						});
-					}
-				}
-			}, false);
-			// Create all the other event listeners that bubble up to a jPlayer event from html, without being used by jPlayer.
-			$.each($.jPlayer.htmlEvent, function(i, eventType) {
-				mediaElement.addEventListener(this, function() {
-					if(entity.gate) {
-						self._trigger($.jPlayer.event[eventType]);
-					}
-				}, false);
-			});
-		},
-		_addAuroraEventListeners : function(player, entity) {
-			var self = this;
-			//player.preload = this.options.preload;
-			//player.muted = this.options.muted;
-			player.volume = this.options.volume * 100;
-
-			// Create the event listeners
-			// Only want the active entity to affect jPlayer and bubble events.
-			// Using entity.gate so that object is referenced and gate property always current
-			
-			player.on("progress", function() {
-				if(entity.gate) {
-					if(self.internal.cmdsIgnored && this.readyState > 0) { // Detect iOS executed the command
-						self.internal.cmdsIgnored = false;
-					}
-					self._getAuroraStatus(player);
-					self._updateInterface();
-					self._trigger($.jPlayer.event.progress);
-					// Progress with song duration, we estimate timeupdate need to be triggered too.
-					if (player.duration > 0) {
-						self._trigger($.jPlayer.event.timeupdate);
-					}
-				}
-			}, false);
-			player.on("ready", function() {
-				if(entity.gate) {
-					self._trigger($.jPlayer.event.loadeddata);
-				}
-			}, false);
-			player.on("duration", function() {
-				if(entity.gate) {
-					self._getAuroraStatus(player);
-					self._updateInterface();
-					self._trigger($.jPlayer.event.durationchange);
-				}
-			}, false);
-			player.on("end", function() {
-				if(entity.gate) {
-					// Order of the next few commands are important. Change the time and then pause.
-					self._updateButtons(false);
-					self._getAuroraStatus(player, true);
-					self._updateInterface();
-					self._trigger($.jPlayer.event.ended);
-				}
-			}, false);
-			player.on("error", function() {
-				if(entity.gate) {
-					self._updateButtons(false);
-					self._seeked();
-					if(self.status.srcSet) { // Deals with case of clearMedia() causing an error event.
-						self.status.waitForLoad = true; // Allows the load operation to try again.
-						self.status.waitForPlay = true; // Reset since a play was captured.
-						if(self.status.video && !self.status.nativeVideoControls) {
-							self.internal.video.jq.css({'width':'0px', 'height':'0px'});
-						}
-						if(self._validString(self.status.media.poster) && !self.status.nativeVideoControls) {
-							self.internal.poster.jq.show();
-						}
-						if(self.css.jq.videoPlay.length) {
-							self.css.jq.videoPlay.show();
-						}
-						self._error( {
-							type: $.jPlayer.error.URL,
-							context: self.status.src, // this.src shows absolute urls. Want context to show the url given.
-							message: $.jPlayer.errorMsg.URL,
-							hint: $.jPlayer.errorHint.URL
-						});
-					}
-				}
-			}, false);
-		},
-		_getHtmlStatus: function(media, override) {
-			var ct = 0, cpa = 0, sp = 0, cpr = 0;
-
-			// Fixes the duration bug in iOS, where the durationchange event occurs when media.duration is not always correct.
-			// Fixes the initial duration bug in BB OS7, where the media.duration is infinity and displays as NaN:NaN due to Date() using inifity.
-			if(isFinite(media.duration)) {
-				this.status.duration = media.duration;
-			}
-
-			ct = media.currentTime;
-			cpa = (this.status.duration > 0) ? 100 * ct / this.status.duration : 0;
-			if((typeof media.seekable === "object") && (media.seekable.length > 0)) {
-				sp = (this.status.duration > 0) ? 100 * media.seekable.end(media.seekable.length-1) / this.status.duration : 100;
-				cpr = (this.status.duration > 0) ? 100 * media.currentTime / media.seekable.end(media.seekable.length-1) : 0; // Duration conditional for iOS duration bug. ie., seekable.end is a NaN in that case.
-			} else {
-				sp = 100;
-				cpr = cpa;
-			}
-			
-			if(override) {
-				ct = 0;
-				cpr = 0;
-				cpa = 0;
-			}
-
-			this.status.seekPercent = sp;
-			this.status.currentPercentRelative = cpr;
-			this.status.currentPercentAbsolute = cpa;
-			this.status.currentTime = ct;
-
-			this.status.remaining = this.status.duration - this.status.currentTime;
-
-			this.status.videoWidth = media.videoWidth;
-			this.status.videoHeight = media.videoHeight;
-
-			this.status.readyState = media.readyState;
-			this.status.networkState = media.networkState;
-			this.status.playbackRate = media.playbackRate;
-			this.status.ended = media.ended;
-		},
-		_getAuroraStatus: function(player, override) {
-			var ct = 0, cpa = 0, sp = 0, cpr = 0;
-
-			this.status.duration = player.duration / 1000;
-
-			ct = player.currentTime / 1000;
-			cpa = (this.status.duration > 0) ? 100 * ct / this.status.duration : 0;
-			if(player.buffered > 0) {
-				sp = (this.status.duration > 0) ? (player.buffered * this.status.duration) / this.status.duration : 100;
-				cpr = (this.status.duration > 0) ? ct / (player.buffered * this.status.duration) : 0;
-			} else {
-				sp = 100;
-				cpr = cpa;
-			}
-			
-			if(override) {
-				ct = 0;
-				cpr = 0;
-				cpa = 0;
-			}
-
-			this.status.seekPercent = sp;
-			this.status.currentPercentRelative = cpr;
-			this.status.currentPercentAbsolute = cpa;
-			this.status.currentTime = ct;
-
-			this.status.remaining = this.status.duration - this.status.currentTime;
-
-			this.status.readyState = 4; // status.readyState;
-			this.status.networkState = 0; // status.networkState;
-			this.status.playbackRate = 1; // status.playbackRate;
-			this.status.ended = false; // status.ended;
-		},
-		_resetStatus: function() {
-			this.status = $.extend({}, this.status, $.jPlayer.prototype.status); // Maintains the status properties that persist through a reset.
-		},
-		_trigger: function(eventType, error, warning) { // eventType always valid as called using $.jPlayer.event.eventType
-			var event = $.Event(eventType);
-			event.jPlayer = {};
-			event.jPlayer.version = $.extend({}, this.version);
-			event.jPlayer.options = $.extend(true, {}, this.options); // Deep copy
-			event.jPlayer.status = $.extend(true, {}, this.status); // Deep copy
-			event.jPlayer.html = $.extend(true, {}, this.html); // Deep copy
-			event.jPlayer.aurora = $.extend(true, {}, this.aurora); // Deep copy
-			event.jPlayer.flash = $.extend(true, {}, this.flash); // Deep copy
-			if(error) {
-				event.jPlayer.error = $.extend({}, error);
-			}
-			if(warning) {
-				event.jPlayer.warning = $.extend({}, warning);
-			}
-			this.element.trigger(event);
-		},
-		jPlayerFlashEvent: function(eventType, status) { // Called from Flash
-			if(eventType === $.jPlayer.event.ready) {
-				if(!this.internal.ready) {
-					this.internal.ready = true;
-					this.internal.flash.jq.css({'width':'0px', 'height':'0px'}); // Once Flash generates the ready event, minimise to zero as it is not affected by wmode anymore.
-
-					this.version.flash = status.version;
-					if(this.version.needFlash !== this.version.flash) {
-						this._error( {
-							type: $.jPlayer.error.VERSION,
-							context: this.version.flash,
-							message: $.jPlayer.errorMsg.VERSION + this.version.flash,
-							hint: $.jPlayer.errorHint.VERSION
-						});
-					}
-					this._trigger($.jPlayer.event.repeat); // Trigger the repeat event so its handler can initialize itself with the loop option.
-					this._trigger(eventType);
-				} else {
-					// This condition occurs if the Flash is hidden and then shown again.
-					// Firefox also reloads the Flash if the CSS position changes. position:fixed is used for full screen.
-
-					// Only do this if the Flash is the solution being used at the moment. Affects Media players where both solution may be being used.
-					if(this.flash.gate) {
-
-						// Send the current status to the Flash now that it is ready (available) again.
-						if(this.status.srcSet) {
-
-							// Need to read original status before issuing the setMedia command.
-							var	currentTime = this.status.currentTime,
-								paused = this.status.paused; 
-
-							this.setMedia(this.status.media);
-							this.volumeWorker(this.options.volume);
-							if(currentTime > 0) {
-								if(paused) {
-									this.pause(currentTime);
-								} else {
-									this.play(currentTime);
-								}
-							}
-						}
-						this._trigger($.jPlayer.event.flashreset);
-					}
-				}
-			}
-			if(this.flash.gate) {
-				switch(eventType) {
-					case $.jPlayer.event.progress:
-						this._getFlashStatus(status);
-						this._updateInterface();
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.timeupdate:
-						this._getFlashStatus(status);
-						this._updateInterface();
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.play:
-						this._seeked();
-						this._updateButtons(true);
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.pause:
-						this._updateButtons(false);
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.ended:
-						this._updateButtons(false);
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.click:
-						this._trigger(eventType); // This could be dealt with by the default
-						break;
-					case $.jPlayer.event.error:
-						this.status.waitForLoad = true; // Allows the load operation to try again.
-						this.status.waitForPlay = true; // Reset since a play was captured.
-						if(this.status.video) {
-							this.internal.flash.jq.css({'width':'0px', 'height':'0px'});
-						}
-						if(this._validString(this.status.media.poster)) {
-							this.internal.poster.jq.show();
-						}
-						if(this.css.jq.videoPlay.length && this.status.video) {
-							this.css.jq.videoPlay.show();
-						}
-						if(this.status.video) { // Set up for another try. Execute before error event.
-							this._flash_setVideo(this.status.media);
-						} else {
-							this._flash_setAudio(this.status.media);
-						}
-						this._updateButtons(false);
-						this._error( {
-							type: $.jPlayer.error.URL,
-							context:status.src,
-							message: $.jPlayer.errorMsg.URL,
-							hint: $.jPlayer.errorHint.URL
-						});
-						break;
-					case $.jPlayer.event.seeking:
-						this._seeking();
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.seeked:
-						this._seeked();
-						this._trigger(eventType);
-						break;
-					case $.jPlayer.event.ready:
-						// The ready event is handled outside the switch statement.
-						// Captured here otherwise 2 ready events would be generated if the ready event handler used setMedia.
-						break;
-					default:
-						this._trigger(eventType);
-				}
-			}
-			return false;
-		},
-		_getFlashStatus: function(status) {
-			this.status.seekPercent = status.seekPercent;
-			this.status.currentPercentRelative = status.currentPercentRelative;
-			this.status.currentPercentAbsolute = status.currentPercentAbsolute;
-			this.status.currentTime = status.currentTime;
-			this.status.duration = status.duration;
-			this.status.remaining = status.duration - status.currentTime;
-
-			this.status.videoWidth = status.videoWidth;
-			this.status.videoHeight = status.videoHeight;
-
-			// The Flash does not generate this information in this release
-			this.status.readyState = 4; // status.readyState;
-			this.status.networkState = 0; // status.networkState;
-			this.status.playbackRate = 1; // status.playbackRate;
-			this.status.ended = false; // status.ended;
-		},
-		_updateButtons: function(playing) {
-			if(playing === undefined) {
-				playing = !this.status.paused;
-			} else {
-				this.status.paused = !playing;
-			}
-			// Apply the state classes. (For the useStateClassSkin:true option)
-			if(playing) {
-				this.addStateClass('playing');
-			} else {
-				this.removeStateClass('playing');
-			}
-			if(!this.status.noFullWindow && this.options.fullWindow) {
-				this.addStateClass('fullScreen');
-			} else {
-				this.removeStateClass('fullScreen');
-			}
-			if(this.options.loop) {
-				this.addStateClass('looped');
-			} else {
-				this.removeStateClass('looped');
-			}
-			// Toggle the GUI element pairs. (For the useStateClassSkin:false option)
-			if(this.css.jq.play.length && this.css.jq.pause.length) {
-				if(playing) {
-					this.css.jq.play.hide();
-					this.css.jq.pause.show();
-				} else {
-					this.css.jq.play.show();
-					this.css.jq.pause.hide();
-				}
-			}
-			if(this.css.jq.restoreScreen.length && this.css.jq.fullScreen.length) {
-				if(this.status.noFullWindow) {
-					this.css.jq.fullScreen.hide();
-					this.css.jq.restoreScreen.hide();
-				} else if(this.options.fullWindow) {
-					this.css.jq.fullScreen.hide();
-					this.css.jq.restoreScreen.show();
-				} else {
-					this.css.jq.fullScreen.show();
-					this.css.jq.restoreScreen.hide();
-				}
-			}
-			if(this.css.jq.repeat.length && this.css.jq.repeatOff.length) {
-				if(this.options.loop) {
-					this.css.jq.repeat.hide();
-					this.css.jq.repeatOff.show();
-				} else {
-					this.css.jq.repeat.show();
-					this.css.jq.repeatOff.hide();
-				}
-			}
-		},
-		_updateInterface: function() {
-			if(this.css.jq.seekBar.length) {
-				this.css.jq.seekBar.width(this.status.seekPercent+"%");
-			}
-			if(this.css.jq.playBar.length) {
-				if(this.options.smoothPlayBar) {
-					this.css.jq.playBar.stop().animate({
-						width: this.status.currentPercentAbsolute+"%"
-					}, 250, "linear");
-				} else {
-					this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
-				}
-			}
-			var currentTimeText = '';
-			if(this.css.jq.currentTime.length) {
-				currentTimeText = this._convertTime(this.status.currentTime);
-				if(currentTimeText !== this.css.jq.currentTime.text()) {
-					this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
-				}
-			}
-			var durationText = '',
-				duration = this.status.duration,
-				remaining = this.status.remaining;
-			if(this.css.jq.duration.length) {
-				if(typeof this.status.media.duration === 'string') {
-					durationText = this.status.media.duration;
-				} else {
-					if(typeof this.status.media.duration === 'number') {
-						duration = this.status.media.duration;
-						remaining = duration - this.status.currentTime;
-					}
-					if(this.options.remainingDuration) {
-						durationText = (remaining > 0 ? '-' : '') + this._convertTime(remaining);
-					} else {
-						durationText = this._convertTime(duration);
-					}
-				}
-				if(durationText !== this.css.jq.duration.text()) {
-					this.css.jq.duration.text(durationText);
-				}
-			}
-		},
-		_convertTime: ConvertTime.prototype.time,
-		_seeking: function() {
-			if(this.css.jq.seekBar.length) {
-				this.css.jq.seekBar.addClass("jp-seeking-bg");
-			}
-			this.addStateClass('seeking');
-		},
-		_seeked: function() {
-			if(this.css.jq.seekBar.length) {
-				this.css.jq.seekBar.removeClass("jp-seeking-bg");
-			}
-			this.removeStateClass('seeking');
-		},
-		_resetGate: function() {
-			this.html.audio.gate = false;
-			this.html.video.gate = false;
-			this.aurora.gate = false;
-			this.flash.gate = false;
-		},
-		_resetActive: function() {
-			this.html.active = false;
-			this.aurora.active = false;
-			this.flash.active = false;
-		},
-		_escapeHtml: function(s) {
-			return s.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split('"').join('&quot;');
-		},
-		_qualifyURL: function(url) {
-			var el = document.createElement('div');
-			el.innerHTML= '<a href="' + this._escapeHtml(url) + '">x</a>';
-			return el.firstChild.href;
-		},
-		_absoluteMediaUrls: function(media) {
-			var self = this;
-			$.each(media, function(type, url) {
-				if(url && self.format[type] && url.substr(0, 5) !== "data:") {
-					media[type] = self._qualifyURL(url);
-				}
-			});
-			return media;
-		},
-		addStateClass: function(state) {
-			if(this.ancestorJq.length) {
-				this.ancestorJq.addClass(this.options.stateClass[state]);
-			}
-		},
-		removeStateClass: function(state) {
-			if(this.ancestorJq.length) {
-				this.ancestorJq.removeClass(this.options.stateClass[state]);
-			}
-		},
-		setMedia: function(media) {
-		
-			/*	media[format] = String: URL of format. Must contain all of the supplied option's video or audio formats.
-			 *	media.poster = String: Video poster URL.
-			 *	media.track = Array: Of objects defining the track element: kind, src, srclang, label, def.
-			 *	media.stream = Boolean: * NOT IMPLEMENTED * Designating actual media streams. ie., "false/undefined" for files. Plan to refresh the flash every so often.
-			 */
-
-			var	self = this,
-				supported = false,
-				posterChanged = this.status.media.poster !== media.poster; // Compare before reset. Important for OSX Safari as this.htmlElement.poster.src is absolute, even if original poster URL was relative.
-
-			this._resetMedia();
-			this._resetGate();
-			this._resetActive();
-
-			// Clear the Android Fix.
-			this.androidFix.setMedia = false;
-			this.androidFix.play = false;
-			this.androidFix.pause = false;
-
-			// Convert all media URLs to absolute URLs.
-			media = this._absoluteMediaUrls(media);
-
-			$.each(this.formats, function(formatPriority, format) {
-				var isVideo = self.format[format].media === 'video';
-				$.each(self.solutions, function(solutionPriority, solution) {
-					if(self[solution].support[format] && self._validString(media[format])) { // Format supported in solution and url given for format.
-						var isHtml = solution === 'html';
-						var isAurora = solution === 'aurora';
-
-						if(isVideo) {
-							if(isHtml) {
-								self.html.video.gate = true;
-								self._html_setVideo(media);
-								self.html.active = true;
-							} else {
-								self.flash.gate = true;
-								self._flash_setVideo(media);
-								self.flash.active = true;
-							}
-							if(self.css.jq.videoPlay.length) {
-								self.css.jq.videoPlay.show();
-							}
-							self.status.video = true;
-						} else {
-							if(isHtml) {
-								self.html.audio.gate = true;
-								self._html_setAudio(media);
-								self.html.active = true;
-
-								// Setup the Android Fix - Only for HTML audio.
-								if($.jPlayer.platform.android) {
-									self.androidFix.setMedia = true;
-								}
-							} else if(isAurora) {
-								self.aurora.gate = true;
-								self._aurora_setAudio(media);
-								self.aurora.active = true;
-							} else {
-								self.flash.gate = true;
-								self._flash_setAudio(media);
-								self.flash.active = true;
-							}
-							if(self.css.jq.videoPlay.length) {
-								self.css.jq.videoPlay.hide();
-							}
-							self.status.video = false;
-						}
-						
-						supported = true;
-						return false; // Exit $.each
-					}
-				});
-				if(supported) {
-					return false; // Exit $.each
-				}
-			});
-
-			if(supported) {
-				if(!(this.status.nativeVideoControls && this.html.video.gate)) {
-					// Set poster IMG if native video controls are not being used
-					// Note: With IE the IMG onload event occurs immediately when cached.
-					// Note: Poster hidden by default in _resetMedia()
-					if(this._validString(media.poster)) {
-						if(posterChanged) { // Since some browsers do not generate img onload event.
-							this.htmlElement.poster.src = media.poster;
-						} else {
-							this.internal.poster.jq.show();
-						}
-					}
-				}
-				if(typeof media.title === 'string') {
-					if(this.css.jq.title.length) {
-						this.css.jq.title.html(media.title);
-					}
-					if(this.htmlElement.audio) {
-						this.htmlElement.audio.setAttribute('title', media.title);
-					}
-					if(this.htmlElement.video) {
-						this.htmlElement.video.setAttribute('title', media.title);
-					}
-				}
-				this.status.srcSet = true;
-				this.status.media = $.extend({}, media);
-				this._updateButtons(false);
-				this._updateInterface();
-				this._trigger($.jPlayer.event.setmedia);
-			} else { // jPlayer cannot support any formats provided in this browser
-				// Send an error event
-				this._error( {
-					type: $.jPlayer.error.NO_SUPPORT,
-					context: "{supplied:'" + this.options.supplied + "'}",
-					message: $.jPlayer.errorMsg.NO_SUPPORT,
-					hint: $.jPlayer.errorHint.NO_SUPPORT
-				});
-			}
-		},
-		_resetMedia: function() {
-			this._resetStatus();
-			this._updateButtons(false);
-			this._updateInterface();
-			this._seeked();
-			this.internal.poster.jq.hide();
-
-			clearTimeout(this.internal.htmlDlyCmdId);
-
-			if(this.html.active) {
-				this._html_resetMedia();
-			} else if(this.aurora.active) {
-				this._aurora_resetMedia();
-			} else if(this.flash.active) {
-				this._flash_resetMedia();
-			}
-		},
-		clearMedia: function() {
-			this._resetMedia();
-
-			if(this.html.active) {
-				this._html_clearMedia();
-			} else if(this.aurora.active) {
-				this._aurora_clearMedia();
-			} else if(this.flash.active) {
-				this._flash_clearMedia();
-			}
-
-			this._resetGate();
-			this._resetActive();
-		},
-		load: function() {
-			if(this.status.srcSet) {
-				if(this.html.active) {
-					this._html_load();
-				} else if(this.aurora.active) {
-					this._aurora_load();
-				} else if(this.flash.active) {
-					this._flash_load();
-				}
-			} else {
-				this._urlNotSetError("load");
-			}
-		},
-		focus: function() {
-			if(this.options.keyEnabled) {
-				$.jPlayer.focus = this;
-			}
-		},
-		play: function(time) {
-			var guiAction = typeof time === "object"; // Flags GUI click events so we know this was not a direct command, but an action taken by the user on the GUI.
-			if(guiAction && this.options.useStateClassSkin && !this.status.paused) {
-				this.pause(time); // The time would be the click event, but passing it over so info is not lost.
-			} else {
-				time = (typeof time === "number") ? time : NaN; // Remove jQuery event from click handler
-				if(this.status.srcSet) {
-					this.focus();
-					if(this.html.active) {
-						this._html_play(time);
-					} else if(this.aurora.active) {
-						this._aurora_play(time);
-					} else if(this.flash.active) {
-						this._flash_play(time);
-					}
-				} else {
-					this._urlNotSetError("play");
-				}
-			}
-		},
-		videoPlay: function() { // Handles clicks on the play button over the video poster
-			this.play();
-		},
-		pause: function(time) {
-			time = (typeof time === "number") ? time : NaN; // Remove jQuery event from click handler
-			if(this.status.srcSet) {
-				if(this.html.active) {
-					this._html_pause(time);
-				} else if(this.aurora.active) {
-					this._aurora_pause(time);
-				} else if(this.flash.active) {
-					this._flash_pause(time);
-				}
-			} else {
-				this._urlNotSetError("pause");
-			}
-		},
-		tellOthers: function(command, conditions) {
-			var self = this,
-				hasConditions = typeof conditions === 'function',
-				args = Array.prototype.slice.call(arguments); // Convert arguments to an Array.
-
-			if(typeof command !== 'string') { // Ignore, since no command.
-				return; // Return undefined to maintain chaining.
-			}
-			if(hasConditions) {
-				args.splice(1, 1); // Remove the conditions from the arguments
-			}
-
-			$.jPlayer.prototype.destroyRemoved();
-			$.each(this.instances, function() {
-				// Remember that "this" is the instance's "element" in the $.each() loop.
-				if(self.element !== this) { // Do not tell my instance.
-					if(!hasConditions || conditions.call(this.data("jPlayer"), self)) {
-						this.jPlayer.apply(this, args);
-					}
-				}
-			});
-		},
-		pauseOthers: function(time) {
-			this.tellOthers("pause", function() {
-				// In the conditions function, the "this" context is the other instance's jPlayer object.
-				return this.status.srcSet;
-			}, time);
-		},
-		stop: function() {
-			if(this.status.srcSet) {
-				if(this.html.active) {
-					this._html_pause(0);
-				} else if(this.aurora.active) {
-					this._aurora_pause(0);
-				} else if(this.flash.active) {
-					this._flash_pause(0);
-				}
-			} else {
-				this._urlNotSetError("stop");
-			}
-		},
-		playHead: function(p) {
-			p = this._limitValue(p, 0, 100);
-			if(this.status.srcSet) {
-				if(this.html.active) {
-					this._html_playHead(p);
-				} else if(this.aurora.active) {
-					this._aurora_playHead(p);
-				} else if(this.flash.active) {
-					this._flash_playHead(p);
-				}
-			} else {
-				this._urlNotSetError("playHead");
-			}
-		},
-		_muted: function(muted) {
-			this.mutedWorker(muted);
-			if(this.options.globalVolume) {
-				this.tellOthers("mutedWorker", function() {
-					// Check the other instance has global volume enabled.
-					return this.options.globalVolume;
-				}, muted);
-			}
-		},
-		mutedWorker: function(muted) {
-			this.options.muted = muted;
-			if(this.html.used) {
-				this._html_setProperty('muted', muted);
-			}
-			if(this.aurora.used) {
-				this._aurora_mute(muted);
-			}
-			if(this.flash.used) {
-				this._flash_mute(muted);
-			}
-
-			// The HTML solution generates this event from the media element itself.
-			if(!this.html.video.gate && !this.html.audio.gate) {
-				this._updateMute(muted);
-				this._updateVolume(this.options.volume);
-				this._trigger($.jPlayer.event.volumechange);
-			}
-		},
-		mute: function(mute) { // mute is either: undefined (true), an event object (true) or a boolean (muted).
-			var guiAction = typeof mute === "object"; // Flags GUI click events so we know this was not a direct command, but an action taken by the user on the GUI.
-			if(guiAction && this.options.useStateClassSkin && this.options.muted) {
-				this._muted(false);
-			} else {
-				mute = mute === undefined ? true : !!mute;
-				this._muted(mute);
-			}
-		},
-		unmute: function(unmute) { // unmute is either: undefined (true), an event object (true) or a boolean (!muted).
-			unmute = unmute === undefined ? true : !!unmute;
-			this._muted(!unmute);
-		},
-		_updateMute: function(mute) {
-			if(mute === undefined) {
-				mute = this.options.muted;
-			}
-			if(mute) {
-				this.addStateClass('muted');
-			} else {
-				this.removeStateClass('muted');
-			}
-			if(this.css.jq.mute.length && this.css.jq.unmute.length) {
-				if(this.status.noVolume) {
-					this.css.jq.mute.hide();
-					this.css.jq.unmute.hide();
-				} else if(mute) {
-					this.css.jq.mute.hide();
-					this.css.jq.unmute.show();
-				} else {
-					this.css.jq.mute.show();
-					this.css.jq.unmute.hide();
-				}
-			}
-		},
-		volume: function(v) {
-			this.volumeWorker(v);
-			if(this.options.globalVolume) {
-				this.tellOthers("volumeWorker", function() {
-					// Check the other instance has global volume enabled.
-					return this.options.globalVolume;
-				}, v);
-			}
-		},
-		volumeWorker: function(v) {
-			v = this._limitValue(v, 0, 1);
-			this.options.volume = v;
-
-			if(this.html.used) {
-				this._html_setProperty('volume', v);
-			}
-			if(this.aurora.used) {
-				this._aurora_volume(v);
-			}
-			if(this.flash.used) {
-				this._flash_volume(v);
-			}
-
-			// The HTML solution generates this event from the media element itself.
-			if(!this.html.video.gate && !this.html.audio.gate) {
-				this._updateVolume(v);
-				this._trigger($.jPlayer.event.volumechange);
-			}
-		},
-		volumeBar: function(e) { // Handles clicks on the volumeBar
-			if(this.css.jq.volumeBar.length) {
-				// Using $(e.currentTarget) to enable multiple volume bars
-				var $bar = $(e.currentTarget),
-					offset = $bar.offset(),
-					x = e.pageX - offset.left,
-					w = $bar.width(),
-					y = $bar.height() - e.pageY + offset.top,
-					h = $bar.height();
-				if(this.options.verticalVolume) {
-					this.volume(y/h);
-				} else {
-					this.volume(x/w);
-				}
-			}
-			if(this.options.muted) {
-				this._muted(false);
-			}
-		},
-		_updateVolume: function(v) {
-			if(v === undefined) {
-				v = this.options.volume;
-			}
-			v = this.options.muted ? 0 : v;
-
-			if(this.status.noVolume) {
-				this.addStateClass('noVolume');
-				if(this.css.jq.volumeBar.length) {
-					this.css.jq.volumeBar.hide();
-				}
-				if(this.css.jq.volumeBarValue.length) {
-					this.css.jq.volumeBarValue.hide();
-				}
-				if(this.css.jq.volumeMax.length) {
-					this.css.jq.volumeMax.hide();
-				}
-			} else {
-				this.removeStateClass('noVolume');
-				if(this.css.jq.volumeBar.length) {
-					this.css.jq.volumeBar.show();
-				}
-				if(this.css.jq.volumeBarValue.length) {
-					this.css.jq.volumeBarValue.show();
-					this.css.jq.volumeBarValue[this.options.verticalVolume ? "height" : "width"]((v*100)+"%");
-				}
-				if(this.css.jq.volumeMax.length) {
-					this.css.jq.volumeMax.show();
-				}
-			}
-		},
-		volumeMax: function() { // Handles clicks on the volume max
-			this.volume(1);
-			if(this.options.muted) {
-				this._muted(false);
-			}
-		},
-		_cssSelectorAncestor: function(ancestor) {
-			var self = this;
-			this.options.cssSelectorAncestor = ancestor;
-			this._removeUiClass();
-			this.ancestorJq = ancestor ? $(ancestor) : []; // Would use $() instead of [], but it is only 1.4+
-			if(ancestor && this.ancestorJq.length !== 1) { // So empty strings do not generate the warning.
-				this._warning( {
-					type: $.jPlayer.warning.CSS_SELECTOR_COUNT,
-					context: ancestor,
-					message: $.jPlayer.warningMsg.CSS_SELECTOR_COUNT + this.ancestorJq.length + " found for cssSelectorAncestor.",
-					hint: $.jPlayer.warningHint.CSS_SELECTOR_COUNT
-				});
-			}
-			this._addUiClass();
-			$.each(this.options.cssSelector, function(fn, cssSel) {
-				self._cssSelector(fn, cssSel);
-			});
-
-			// Set the GUI to the current state.
-			this._updateInterface();
-			this._updateButtons();
-			this._updateAutohide();
-			this._updateVolume();
-			this._updateMute();
-		},
-		_cssSelector: function(fn, cssSel) {
-			var self = this;
-			if(typeof cssSel === 'string') {
-				if($.jPlayer.prototype.options.cssSelector[fn]) {
-					if(this.css.jq[fn] && this.css.jq[fn].length) {
-						this.css.jq[fn].unbind(".jPlayer");
-					}
-					this.options.cssSelector[fn] = cssSel;
-					this.css.cs[fn] = this.options.cssSelectorAncestor + " " + cssSel;
-
-					if(cssSel) { // Checks for empty string
-						this.css.jq[fn] = $(this.css.cs[fn]);
-					} else {
-						this.css.jq[fn] = []; // To comply with the css.jq[fn].length check before its use. As of jQuery 1.4 could have used $() for an empty set. 
-					}
-
-					if(this.css.jq[fn].length && this[fn]) {
-						var handler = function(e) {
-							e.preventDefault();
-							self[fn](e);
-							if(self.options.autoBlur) {
-								$(this).blur();
-							} else {
-								$(this).focus(); // Force focus for ARIA.
-							}
-						};
-						this.css.jq[fn].bind("click.jPlayer", handler); // Using jPlayer namespace
-					}
-
-					if(cssSel && this.css.jq[fn].length !== 1) { // So empty strings do not generate the warning. ie., they just remove the old one.
-						this._warning( {
-							type: $.jPlayer.warning.CSS_SELECTOR_COUNT,
-							context: this.css.cs[fn],
-							message: $.jPlayer.warningMsg.CSS_SELECTOR_COUNT + this.css.jq[fn].length + " found for " + fn + " method.",
-							hint: $.jPlayer.warningHint.CSS_SELECTOR_COUNT
-						});
-					}
-				} else {
-					this._warning( {
-						type: $.jPlayer.warning.CSS_SELECTOR_METHOD,
-						context: fn,
-						message: $.jPlayer.warningMsg.CSS_SELECTOR_METHOD,
-						hint: $.jPlayer.warningHint.CSS_SELECTOR_METHOD
-					});
-				}
-			} else {
-				this._warning( {
-					type: $.jPlayer.warning.CSS_SELECTOR_STRING,
-					context: cssSel,
-					message: $.jPlayer.warningMsg.CSS_SELECTOR_STRING,
-					hint: $.jPlayer.warningHint.CSS_SELECTOR_STRING
-				});
-			}
-		},
-		duration: function(e) {
-			if(this.options.toggleDuration) {
-				if(this.options.captureDuration) {
-					e.stopPropagation();
-				}
-				this._setOption("remainingDuration", !this.options.remainingDuration);
-			}
-		},
-		seekBar: function(e) { // Handles clicks on the seekBar
-			if(this.css.jq.seekBar.length) {
-				// Using $(e.currentTarget) to enable multiple seek bars
-				var $bar = $(e.currentTarget),
-					offset = $bar.offset(),
-					x = e.pageX - offset.left,
-					w = $bar.width(),
-					p = 100 * x / w;
-				this.playHead(p);
-			}
-		},
-		playbackRate: function(pbr) {
-			this._setOption("playbackRate", pbr);
-		},
-		playbackRateBar: function(e) { // Handles clicks on the playbackRateBar
-			if(this.css.jq.playbackRateBar.length) {
-				// Using $(e.currentTarget) to enable multiple playbackRate bars
-				var $bar = $(e.currentTarget),
-					offset = $bar.offset(),
-					x = e.pageX - offset.left,
-					w = $bar.width(),
-					y = $bar.height() - e.pageY + offset.top,
-					h = $bar.height(),
-					ratio, pbr;
-				if(this.options.verticalPlaybackRate) {
-					ratio = y/h;
-				} else {
-					ratio = x/w;
-				}
-				pbr = ratio * (this.options.maxPlaybackRate - this.options.minPlaybackRate) + this.options.minPlaybackRate;
-				this.playbackRate(pbr);
-			}
-		},
-		_updatePlaybackRate: function() {
-			var pbr = this.options.playbackRate,
-				ratio = (pbr - this.options.minPlaybackRate) / (this.options.maxPlaybackRate - this.options.minPlaybackRate);
-			if(this.status.playbackRateEnabled) {
-				if(this.css.jq.playbackRateBar.length) {
-					this.css.jq.playbackRateBar.show();
-				}
-				if(this.css.jq.playbackRateBarValue.length) {
-					this.css.jq.playbackRateBarValue.show();
-					this.css.jq.playbackRateBarValue[this.options.verticalPlaybackRate ? "height" : "width"]((ratio*100)+"%");
-				}
-			} else {
-				if(this.css.jq.playbackRateBar.length) {
-					this.css.jq.playbackRateBar.hide();
-				}
-				if(this.css.jq.playbackRateBarValue.length) {
-					this.css.jq.playbackRateBarValue.hide();
-				}
-			}
-		},
-		repeat: function(event) { // Handle clicks on the repeat button
-			var guiAction = typeof event === "object"; // Flags GUI click events so we know this was not a direct command, but an action taken by the user on the GUI.
-			if(guiAction && this.options.useStateClassSkin && this.options.loop) {
-				this._loop(false);
-			} else {
-				this._loop(true);
-			}
-		},
-		repeatOff: function() { // Handle clicks on the repeatOff button
-			this._loop(false);
-		},
-		_loop: function(loop) {
-			if(this.options.loop !== loop) {
-				this.options.loop = loop;
-				this._updateButtons();
-				this._trigger($.jPlayer.event.repeat);
-			}
-		},
-
-		// Options code adapted from ui.widget.js (1.8.7).  Made changes so the key can use dot notation. To match previous getData solution in jPlayer 1.
-		option: function(key, value) {
-			var options = key;
-
-			 // Enables use: options().  Returns a copy of options object
-			if ( arguments.length === 0 ) {
-				return $.extend( true, {}, this.options );
-			}
-
-			if(typeof key === "string") {
-				var keys = key.split(".");
-
-				 // Enables use: options("someOption")  Returns a copy of the option. Supports dot notation.
-				if(value === undefined) {
-
-					var opt = $.extend(true, {}, this.options);
-					for(var i = 0; i < keys.length; i++) {
-						if(opt[keys[i]] !== undefined) {
-							opt = opt[keys[i]];
-						} else {
-							this._warning( {
-								type: $.jPlayer.warning.OPTION_KEY,
-								context: key,
-								message: $.jPlayer.warningMsg.OPTION_KEY,
-								hint: $.jPlayer.warningHint.OPTION_KEY
-							});
-							return undefined;
-						}
-					}
-					return opt;
-				}
-
-				 // Enables use: options("someOptionObject", someObject}).  Creates: {someOptionObject:someObject}
-				 // Enables use: options("someOption", someValue).  Creates: {someOption:someValue}
-				 // Enables use: options("someOptionObject.someOption", someValue).  Creates: {someOptionObject:{someOption:someValue}}
-
-				options = {};
-				var opts = options;
-
-				for(var j = 0; j < keys.length; j++) {
-					if(j < keys.length - 1) {
-						opts[keys[j]] = {};
-						opts = opts[keys[j]];
-					} else {
-						opts[keys[j]] = value;
-					}
-				}
-			}
-
-			 // Otherwise enables use: options(optionObject).  Uses original object (the key)
-
-			this._setOptions(options);
-
-			return this;
-		},
-		_setOptions: function(options) {
-			var self = this;
-			$.each(options, function(key, value) { // This supports the 2 level depth that the options of jPlayer has. Would review if we ever need more depth.
-				self._setOption(key, value);
-			});
-
-			return this;
-		},
-		_setOption: function(key, value) {
-			var self = this;
-
-			// The ability to set options is limited at this time.
-
-			switch(key) {
-				case "volume" :
-					this.volume(value);
-					break;
-				case "muted" :
-					this._muted(value);
-					break;
-				case "globalVolume" :
-					this.options[key] = value;
-					break;
-				case "cssSelectorAncestor" :
-					this._cssSelectorAncestor(value); // Set and refresh all associations for the new ancestor.
-					break;
-				case "cssSelector" :
-					$.each(value, function(fn, cssSel) {
-						self._cssSelector(fn, cssSel); // NB: The option is set inside this function, after further validity checks.
-					});
-					break;
-				case "playbackRate" :
-					this.options[key] = value = this._limitValue(value, this.options.minPlaybackRate, this.options.maxPlaybackRate);
-					if(this.html.used) {
-						this._html_setProperty('playbackRate', value);
-					}
-					this._updatePlaybackRate();
-					break;
-				case "defaultPlaybackRate" :
-					this.options[key] = value = this._limitValue(value, this.options.minPlaybackRate, this.options.maxPlaybackRate);
-					if(this.html.used) {
-						this._html_setProperty('defaultPlaybackRate', value);
-					}
-					this._updatePlaybackRate();
-					break;
-				case "minPlaybackRate" :
-					this.options[key] = value = this._limitValue(value, 0.1, this.options.maxPlaybackRate - 0.1);
-					this._updatePlaybackRate();
-					break;
-				case "maxPlaybackRate" :
-					this.options[key] = value = this._limitValue(value, this.options.minPlaybackRate + 0.1, 16);
-					this._updatePlaybackRate();
-					break;
-				case "fullScreen" :
-					if(this.options[key] !== value) { // if changed
-						var wkv = $.jPlayer.nativeFeatures.fullscreen.used.webkitVideo;
-						if(!wkv || wkv && !this.status.waitForPlay) {
-							if(!wkv) { // No sensible way to unset option on these devices.
-								this.options[key] = value;
-							}
-							if(value) {
-								this._requestFullscreen();
-							} else {
-								this._exitFullscreen();
-							}
-							if(!wkv) {
-								this._setOption("fullWindow", value);
-							}
-						}
-					}
-					break;
-				case "fullWindow" :
-					if(this.options[key] !== value) { // if changed
-						this._removeUiClass();
-						this.options[key] = value;
-						this._refreshSize();
-					}
-					break;
-				case "size" :
-					if(!this.options.fullWindow && this.options[key].cssClass !== value.cssClass) {
-						this._removeUiClass();
-					}
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					this._refreshSize();
-					break;
-				case "sizeFull" :
-					if(this.options.fullWindow && this.options[key].cssClass !== value.cssClass) {
-						this._removeUiClass();
-					}
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					this._refreshSize();
-					break;
-				case "autohide" :
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					this._updateAutohide();
-					break;
-				case "loop" :
-					this._loop(value);
-					break;
-				case "remainingDuration" :
-					this.options[key] = value;
-					this._updateInterface();
-					break;
-				case "toggleDuration" :
-					this.options[key] = value;
-					break;
-				case "nativeVideoControls" :
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					this.status.nativeVideoControls = this._uaBlocklist(this.options.nativeVideoControls);
-					this._restrictNativeVideoControls();
-					this._updateNativeVideoControls();
-					break;
-				case "noFullWindow" :
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					this.status.nativeVideoControls = this._uaBlocklist(this.options.nativeVideoControls); // Need to check again as noFullWindow can depend on this flag and the restrict() can override it.
-					this.status.noFullWindow = this._uaBlocklist(this.options.noFullWindow);
-					this._restrictNativeVideoControls();
-					this._updateButtons();
-					break;
-				case "noVolume" :
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					this.status.noVolume = this._uaBlocklist(this.options.noVolume);
-					this._updateVolume();
-					this._updateMute();
-					break;
-				case "emulateHtml" :
-					if(this.options[key] !== value) { // To avoid multiple event handlers being created, if true already.
-						this.options[key] = value;
-						if(value) {
-							this._emulateHtmlBridge();
-						} else {
-							this._destroyHtmlBridge();
-						}
-					}
-					break;
-				case "timeFormat" :
-					this.options[key] = $.extend({}, this.options[key], value); // store a merged copy of it, incase not all properties changed.
-					break;
-				case "keyEnabled" :
-					this.options[key] = value;
-					if(!value && this === $.jPlayer.focus) {
-						$.jPlayer.focus = null;
-					}
-					break;
-				case "keyBindings" :
-					this.options[key] = $.extend(true, {}, this.options[key], value); // store a merged DEEP copy of it, incase not all properties changed.
-					break;
-				case "audioFullScreen" :
-					this.options[key] = value;
-					break;
-				case "autoBlur" :
-					this.options[key] = value;
-					break;
-			}
-
-			return this;
-		},
-		// End of: (Options code adapted from ui.widget.js)
-
-		_refreshSize: function() {
-			this._setSize(); // update status and jPlayer element size
-			this._addUiClass(); // update the ui class
-			this._updateSize(); // update internal sizes
-			this._updateButtons();
-			this._updateAutohide();
-			this._trigger($.jPlayer.event.resize);
-		},
-		_setSize: function() {
-			// Determine the current size from the options
-			if(this.options.fullWindow) {
-				this.status.width = this.options.sizeFull.width;
-				this.status.height = this.options.sizeFull.height;
-				this.status.cssClass = this.options.sizeFull.cssClass;
-			} else {
-				this.status.width = this.options.size.width;
-				this.status.height = this.options.size.height;
-				this.status.cssClass = this.options.size.cssClass;
-			}
-
-			// Set the size of the jPlayer area.
-			this.element.css({'width': this.status.width, 'height': this.status.height});
-		},
-		_addUiClass: function() {
-			if(this.ancestorJq.length) {
-				this.ancestorJq.addClass(this.status.cssClass);
-			}
-		},
-		_removeUiClass: function() {
-			if(this.ancestorJq.length) {
-				this.ancestorJq.removeClass(this.status.cssClass);
-			}
-		},
-		_updateSize: function() {
-			// The poster uses show/hide so can simply resize it.
-			this.internal.poster.jq.css({'width': this.status.width, 'height': this.status.height});
-
-			// Video html or flash resized if necessary at this time, or if native video controls being used.
-			if(!this.status.waitForPlay && this.html.active && this.status.video || this.html.video.available && this.html.used && this.status.nativeVideoControls) {
-				this.internal.video.jq.css({'width': this.status.width, 'height': this.status.height});
-			}
-			else if(!this.status.waitForPlay && this.flash.active && this.status.video) {
-				this.internal.flash.jq.css({'width': this.status.width, 'height': this.status.height});
-			}
-		},
-		_updateAutohide: function() {
-			var	self = this,
-				event = "mousemove.jPlayer",
-				namespace = ".jPlayerAutohide",
-				eventType = event + namespace,
-				handler = function(event) {
-					var moved = false,
-						deltaX, deltaY;
-					if(typeof self.internal.mouse !== "undefined") {
-						//get the change from last position to this position
-						deltaX = self.internal.mouse.x - event.pageX;
-						deltaY = self.internal.mouse.y - event.pageY;
-						moved = (Math.floor(deltaX) > 0) || (Math.floor(deltaY)>0); 
-					} else {
-						moved = true;
-					}
-					// store current position for next method execution
-					self.internal.mouse = {
-							x : event.pageX,
-							y : event.pageY
-					};
-					// if mouse has been actually moved, do the gui fadeIn/fadeOut
-					if (moved) {
-						self.css.jq.gui.fadeIn(self.options.autohide.fadeIn, function() {
-							clearTimeout(self.internal.autohideId);
-							self.internal.autohideId = setTimeout( function() {
-								self.css.jq.gui.fadeOut(self.options.autohide.fadeOut);
-							}, self.options.autohide.hold);
-						});
-					}
-				};
-
-			if(this.css.jq.gui.length) {
-
-				// End animations first so that its callback is executed now.
-				// Otherwise an in progress fadeIn animation still has the callback to fadeOut again.
-				this.css.jq.gui.stop(true, true);
-
-				// Removes the fadeOut operation from the fadeIn callback.
-				clearTimeout(this.internal.autohideId);
-				// undefine mouse
-				delete this.internal.mouse;
-
-				this.element.unbind(namespace);
-				this.css.jq.gui.unbind(namespace);
-
-				if(!this.status.nativeVideoControls) {
-					if(this.options.fullWindow && this.options.autohide.full || !this.options.fullWindow && this.options.autohide.restored) {
-						this.element.bind(eventType, handler);
-						this.css.jq.gui.bind(eventType, handler);
-						this.css.jq.gui.hide();
-					} else {
-						this.css.jq.gui.show();
-					}
-				} else {
-					this.css.jq.gui.hide();
-				}
-			}
-		},
-		fullScreen: function(event) {
-			var guiAction = typeof event === "object"; // Flags GUI click events so we know this was not a direct command, but an action taken by the user on the GUI.
-			if(guiAction && this.options.useStateClassSkin && this.options.fullScreen) {
-				this._setOption("fullScreen", false);
-			} else {
-				this._setOption("fullScreen", true);
-			}
-		},
-		restoreScreen: function() {
-			this._setOption("fullScreen", false);
-		},
-		_fullscreenAddEventListeners: function() {
-			var self = this,
-				fs = $.jPlayer.nativeFeatures.fullscreen;
-
-			if(fs.api.fullscreenEnabled) {
-				if(fs.event.fullscreenchange) {
-					// Create the event handler function and store it for removal.
-					if(typeof this.internal.fullscreenchangeHandler !== 'function') {
-						this.internal.fullscreenchangeHandler = function() {
-							self._fullscreenchange();
-						};
-					}
-					document.addEventListener(fs.event.fullscreenchange, this.internal.fullscreenchangeHandler, false);
-				}
-				// No point creating handler for fullscreenerror.
-				// Either logic avoids fullscreen occurring (w3c/moz), or their is no event on the browser (webkit).
-			}
-		},
-		_fullscreenRemoveEventListeners: function() {
-			var fs = $.jPlayer.nativeFeatures.fullscreen;
-			if(this.internal.fullscreenchangeHandler) {
-				document.removeEventListener(fs.event.fullscreenchange, this.internal.fullscreenchangeHandler, false);
-			}
-		},
-		_fullscreenchange: function() {
-			// If nothing is fullscreen, then we cannot be in fullscreen mode.
-			if(this.options.fullScreen && !$.jPlayer.nativeFeatures.fullscreen.api.fullscreenElement()) {
-				this._setOption("fullScreen", false);
-			}
-		},
-		_requestFullscreen: function() {
-			// Either the container or the jPlayer div
-			var e = this.ancestorJq.length ? this.ancestorJq[0] : this.element[0],
-				fs = $.jPlayer.nativeFeatures.fullscreen;
-
-			// This method needs the video element. For iOS and Android.
-			if(fs.used.webkitVideo) {
-				e = this.htmlElement.video;
-			}
-
-			if(fs.api.fullscreenEnabled) {
-				fs.api.requestFullscreen(e);
-			}
-		},
-		_exitFullscreen: function() {
-
-			var fs = $.jPlayer.nativeFeatures.fullscreen,
-				e;
-
-			// This method needs the video element. For iOS and Android.
-			if(fs.used.webkitVideo) {
-				e = this.htmlElement.video;
-			}
-
-			if(fs.api.fullscreenEnabled) {
-				fs.api.exitFullscreen(e);
-			}
-		},
-		_html_initMedia: function(media) {
-			// Remove any existing track elements
-			var $media = $(this.htmlElement.media).empty();
-
-			// Create any track elements given with the media, as an Array of track Objects.
-			$.each(media.track || [], function(i,v) {
-				var track = document.createElement('track');
-				track.setAttribute("kind", v.kind ? v.kind : "");
-				track.setAttribute("src", v.src ? v.src : "");
-				track.setAttribute("srclang", v.srclang ? v.srclang : "");
-				track.setAttribute("label", v.label ? v.label : "");
-				if(v.def) {
-					track.setAttribute("default", v.def);
-				}
-				$media.append(track);
-			});
-
-			this.htmlElement.media.src = this.status.src;
-
-			if(this.options.preload !== 'none') {
-				this._html_load(); // See function for comments
-			}
-			this._trigger($.jPlayer.event.timeupdate); // The flash generates this event for its solution.
-		},
-		_html_setFormat: function(media) {
-			var self = this;
-			// Always finds a format due to checks in setMedia()
-			$.each(this.formats, function(priority, format) {
-				if(self.html.support[format] && media[format]) {
-					self.status.src = media[format];
-					self.status.format[format] = true;
-					self.status.formatType = format;
-					return false;
-				}
-			});
-		},
-		_html_setAudio: function(media) {
-			this._html_setFormat(media);
-			this.htmlElement.media = this.htmlElement.audio;
-			this._html_initMedia(media);
-		},
-		_html_setVideo: function(media) {
-			this._html_setFormat(media);
-			if(this.status.nativeVideoControls) {
-				this.htmlElement.video.poster = this._validString(media.poster) ? media.poster : "";
-			}
-			this.htmlElement.media = this.htmlElement.video;
-			this._html_initMedia(media);
-		},
-		_html_resetMedia: function() {
-			if(this.htmlElement.media) {
-				if(this.htmlElement.media.id === this.internal.video.id && !this.status.nativeVideoControls) {
-					this.internal.video.jq.css({'width':'0px', 'height':'0px'});
-				}
-				this.htmlElement.media.pause();
-			}
-		},
-		_html_clearMedia: function() {
-			if(this.htmlElement.media) {
-				this.htmlElement.media.src = "about:blank";
-				// The following load() is only required for Firefox 3.6 (PowerMacs).
-				// Recent HTMl5 browsers only require the src change. Due to changes in W3C spec and load() effect.
-				this.htmlElement.media.load(); // Stops an old, "in progress" download from continuing the download. Triggers the loadstart, error and emptied events, due to the empty src. Also an abort event if a download was in progress.
-			}
-		},
-		_html_load: function() {
-			// This function remains to allow the early HTML5 browsers to work, such as Firefox 3.6
-			// A change in the W3C spec for the media.load() command means that this is no longer necessary.
-			// This command should be removed and actually causes minor undesirable effects on some browsers. Such as loading the whole file and not only the metadata.
-			if(this.status.waitForLoad) {
-				this.status.waitForLoad = false;
-				this.htmlElement.media.load();
-			}
-			clearTimeout(this.internal.htmlDlyCmdId);
-		},
-		_html_play: function(time) {
-			var self = this,
-				media = this.htmlElement.media;
-
-			this.androidFix.pause = false; // Cancel the pause fix.
-
-			this._html_load(); // Loads if required and clears any delayed commands.
-
-			// Setup the Android Fix.
-			if(this.androidFix.setMedia) {
-				this.androidFix.play = true;
-				this.androidFix.time = time;
-
-			} else if(!isNaN(time)) {
-
-				// Attempt to play it, since iOS has been ignoring commands
-				if(this.internal.cmdsIgnored) {
-					media.play();
-				}
-
-				try {
-					// !media.seekable is for old HTML5 browsers, like Firefox 3.6.
-					// Checking seekable.length is important for iOS6 to work with setMedia().play(time)
-					if(!media.seekable || typeof media.seekable === "object" && media.seekable.length > 0) {
-						media.currentTime = time;
-						media.play();
-					} else {
-						throw 1;
-					}
-				} catch(err) {
-					this.internal.htmlDlyCmdId = setTimeout(function() {
-						self.play(time);
-					}, 250);
-					return; // Cancel execution and wait for the delayed command.
-				}
-			} else {
-				media.play();
-			}
-			this._html_checkWaitForPlay();
-		},
-		_html_pause: function(time) {
-			var self = this,
-				media = this.htmlElement.media;
-
-			this.androidFix.play = false; // Cancel the play fix.
-
-			if(time > 0) { // We do not want the stop() command, which does pause(0), causing a load operation.
-				this._html_load(); // Loads if required and clears any delayed commands.
-			} else {
-				clearTimeout(this.internal.htmlDlyCmdId);
-			}
-
-			// Order of these commands is important for Safari (Win) and IE9. Pause then change currentTime.
-			media.pause();
-
-			// Setup the Android Fix.
-			if(this.androidFix.setMedia) {
-				this.androidFix.pause = true;
-				this.androidFix.time = time;
-
-			} else if(!isNaN(time)) {
-				try {
-					if(!media.seekable || typeof media.seekable === "object" && media.seekable.length > 0) {
-						media.currentTime = time;
-					} else {
-						throw 1;
-					}
-				} catch(err) {
-					this.internal.htmlDlyCmdId = setTimeout(function() {
-						self.pause(time);
-					}, 250);
-					return; // Cancel execution and wait for the delayed command.
-				}
-			}
-			if(time > 0) { // Avoids a setMedia() followed by stop() or pause(0) hiding the video play button.
-				this._html_checkWaitForPlay();
-			}
-		},
-		_html_playHead: function(percent) {
-			var self = this,
-				media = this.htmlElement.media;
-
-			this._html_load(); // Loads if required and clears any delayed commands.
-
-			// This playHead() method needs a refactor to apply the android fix.
-
-			try {
-				if(typeof media.seekable === "object" && media.seekable.length > 0) {
-					media.currentTime = percent * media.seekable.end(media.seekable.length-1) / 100;
-				} else if(media.duration > 0 && !isNaN(media.duration)) {
-					media.currentTime = percent * media.duration / 100;
-				} else {
-					throw "e";
-				}
-			} catch(err) {
-				this.internal.htmlDlyCmdId = setTimeout(function() {
-					self.playHead(percent);
-				}, 250);
-				return; // Cancel execution and wait for the delayed command.
-			}
-			if(!this.status.waitForLoad) {
-				this._html_checkWaitForPlay();
-			}
-		},
-		_html_checkWaitForPlay: function() {
-			if(this.status.waitForPlay) {
-				this.status.waitForPlay = false;
-				if(this.css.jq.videoPlay.length) {
-					this.css.jq.videoPlay.hide();
-				}
-				if(this.status.video) {
-					this.internal.poster.jq.hide();
-					this.internal.video.jq.css({'width': this.status.width, 'height': this.status.height});
-				}
-			}
-		},
-		_html_setProperty: function(property, value) {
-			if(this.html.audio.available) {
-				this.htmlElement.audio[property] = value;
-			}
-			if(this.html.video.available) {
-				this.htmlElement.video[property] = value;
-			}
-		},
-		_aurora_setAudio: function(media) {
-			var self = this;            
-			
-			// Always finds a format due to checks in setMedia()
-			$.each(this.formats, function(priority, format) {
-				if(self.aurora.support[format] && media[format]) {
-					self.status.src = media[format];
-					self.status.format[format] = true;
-					self.status.formatType = format;
-			
-					return false;
-				}
-			});
-			
-			this.aurora.player = new AV.Player.fromURL(this.status.src);
-			this._addAuroraEventListeners(this.aurora.player, this.aurora);
-
-			if(this.options.preload === 'auto') {
-				this._aurora_load();
-				this.status.waitForLoad = false;
-			}
-		},
-		_aurora_resetMedia: function() {
-			if (this.aurora.player) {
-				this.aurora.player.stop();
-			}
-		},
-		_aurora_clearMedia: function() {
-			// Nothing to clear.
-		},
-		_aurora_load: function() {
-			if(this.status.waitForLoad) {
-				this.status.waitForLoad = false;
-				this.aurora.player.preload();
-			}
-		},
-		_aurora_play: function(time) {
-			if (!this.status.waitForLoad) {
-				if (!isNaN(time)) {
-					this.aurora.player.seek(time);
-				}
-			}
-			if (!this.aurora.player.playing) {
-				this.aurora.player.play();
-			}
-			this.status.waitForLoad = false;
-			this._aurora_checkWaitForPlay();
-			
-			// No event from the player, update UI now.
-			this._updateButtons(true);
-			this._trigger($.jPlayer.event.play);
-		},
-		_aurora_pause: function(time) {
-			if (!isNaN(time)) {
-				this.aurora.player.seek(time * 1000);
-			}
-			this.aurora.player.pause();
-			
-			if(time > 0) { // Avoids a setMedia() followed by stop() or pause(0) hiding the video play button.
-				this._aurora_checkWaitForPlay();
-			}
-			
-			// No event from the player, update UI now.
-			this._updateButtons(false);
-			this._trigger($.jPlayer.event.pause);
-		},
-		_aurora_playHead: function(percent) {
-			if(this.aurora.player.duration > 0) {
-				// The seek() sould be in milliseconds, but the only codec that works with seek (aac.js) uses seconds.
-				this.aurora.player.seek(percent * this.aurora.player.duration / 100); // Using seconds
-			}
-				
-			if(!this.status.waitForLoad) {
-				this._aurora_checkWaitForPlay();
-			}
-		},
-		_aurora_checkWaitForPlay: function() {
-			if(this.status.waitForPlay) {
-				this.status.waitForPlay = false;
-			}
-		},
-		_aurora_volume: function(v) {
-			this.aurora.player.volume = v * 100;
-		},
-		_aurora_mute: function(m) {
-			if (m) {
-				this.aurora.properties.lastvolume = this.aurora.player.volume;
-				this.aurora.player.volume = 0;
-			} else {
-				this.aurora.player.volume = this.aurora.properties.lastvolume;
-			}
-			this.aurora.properties.muted = m;
-		},
-		_flash_setAudio: function(media) {
-			var self = this;
-			try {
-				// Always finds a format due to checks in setMedia()
-				$.each(this.formats, function(priority, format) {
-					if(self.flash.support[format] && media[format]) {
-						switch (format) {
-							case "m4a" :
-							case "fla" :
-								self._getMovie().fl_setAudio_m4a(media[format]);
-								break;
-							case "mp3" :
-								self._getMovie().fl_setAudio_mp3(media[format]);
-								break;
-							case "rtmpa":
-								self._getMovie().fl_setAudio_rtmp(media[format]);
-								break;
-						}
-						self.status.src = media[format];
-						self.status.format[format] = true;
-						self.status.formatType = format;
-						return false;
-					}
-				});
-
-				if(this.options.preload === 'auto') {
-					this._flash_load();
-					this.status.waitForLoad = false;
-				}
-			} catch(err) { this._flashError(err); }
-		},
-		_flash_setVideo: function(media) {
-			var self = this;
-			try {
-				// Always finds a format due to checks in setMedia()
-				$.each(this.formats, function(priority, format) {
-					if(self.flash.support[format] && media[format]) {
-						switch (format) {
-							case "m4v" :
-							case "flv" :
-								self._getMovie().fl_setVideo_m4v(media[format]);
-								break;
-							case "rtmpv":
-								self._getMovie().fl_setVideo_rtmp(media[format]);
-								break;		
-						}
-						self.status.src = media[format];
-						self.status.format[format] = true;
-						self.status.formatType = format;
-						return false;
-					}
-				});
-
-				if(this.options.preload === 'auto') {
-					this._flash_load();
-					this.status.waitForLoad = false;
-				}
-			} catch(err) { this._flashError(err); }
-		},
-		_flash_resetMedia: function() {
-			this.internal.flash.jq.css({'width':'0px', 'height':'0px'}); // Must do via CSS as setting attr() to zero causes a jQuery error in IE.
-			this._flash_pause(NaN);
-		},
-		_flash_clearMedia: function() {
-			try {
-				this._getMovie().fl_clearMedia();
-			} catch(err) { this._flashError(err); }
-		},
-		_flash_load: function() {
-			try {
-				this._getMovie().fl_load();
-			} catch(err) { this._flashError(err); }
-			this.status.waitForLoad = false;
-		},
-		_flash_play: function(time) {
-			try {
-				this._getMovie().fl_play(time);
-			} catch(err) { this._flashError(err); }
-			this.status.waitForLoad = false;
-			this._flash_checkWaitForPlay();
-		},
-		_flash_pause: function(time) {
-			try {
-				this._getMovie().fl_pause(time);
-			} catch(err) { this._flashError(err); }
-			if(time > 0) { // Avoids a setMedia() followed by stop() or pause(0) hiding the video play button.
-				this.status.waitForLoad = false;
-				this._flash_checkWaitForPlay();
-			}
-		},
-		_flash_playHead: function(p) {
-			try {
-				this._getMovie().fl_play_head(p);
-			} catch(err) { this._flashError(err); }
-			if(!this.status.waitForLoad) {
-				this._flash_checkWaitForPlay();
-			}
-		},
-		_flash_checkWaitForPlay: function() {
-			if(this.status.waitForPlay) {
-				this.status.waitForPlay = false;
-				if(this.css.jq.videoPlay.length) {
-					this.css.jq.videoPlay.hide();
-				}
-				if(this.status.video) {
-					this.internal.poster.jq.hide();
-					this.internal.flash.jq.css({'width': this.status.width, 'height': this.status.height});
-				}
-			}
-		},
-		_flash_volume: function(v) {
-			try {
-				this._getMovie().fl_volume(v);
-			} catch(err) { this._flashError(err); }
-		},
-		_flash_mute: function(m) {
-			try {
-				this._getMovie().fl_mute(m);
-			} catch(err) { this._flashError(err); }
-		},
-		_getMovie: function() {
-			return document[this.internal.flash.id];
-		},
-		_getFlashPluginVersion: function() {
-
-			// _getFlashPluginVersion() code influenced by:
-			// - FlashReplace 1.01: http://code.google.com/p/flashreplace/
-			// - SWFObject 2.2: http://code.google.com/p/swfobject/
-
-			var version = 0,
-				flash;
-			if(window.ActiveXObject) {
-				try {
-					flash = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
-					if (flash) { // flash will return null when ActiveX is disabled
-						var v = flash.GetVariable("$version");
-						if(v) {
-							v = v.split(" ")[1].split(",");
-							version = parseInt(v[0], 10) + "." + parseInt(v[1], 10);
-						}
-					}
-				} catch(e) {}
-			}
-			else if(navigator.plugins && navigator.mimeTypes.length > 0) {
-				flash = navigator.plugins["Shockwave Flash"];
-				if(flash) {
-					version = navigator.plugins["Shockwave Flash"].description.replace(/.*\s(\d+\.\d+).*/, "$1");
-				}
-			}
-			return version * 1; // Converts to a number
-		},
-		_checkForFlash: function (version) {
-			var flashOk = false;
-			if(this._getFlashPluginVersion() >= version) {
-				flashOk = true;
-			}
-			return flashOk;
-		},
-		_validString: function(url) {
-			return (url && typeof url === "string"); // Empty strings return false
-		},
-		_limitValue: function(value, min, max) {
-			return (value < min) ? min : ((value > max) ? max : value);
-		},
-		_urlNotSetError: function(context) {
-			this._error( {
-				type: $.jPlayer.error.URL_NOT_SET,
-				context: context,
-				message: $.jPlayer.errorMsg.URL_NOT_SET,
-				hint: $.jPlayer.errorHint.URL_NOT_SET
-			});
-		},
-		_flashError: function(error) {
-			var errorType;
-			if(!this.internal.ready) {
-				errorType = "FLASH";
-			} else {
-				errorType = "FLASH_DISABLED";
-			}
-			this._error( {
-				type: $.jPlayer.error[errorType],
-				context: this.internal.flash.swf,
-				message: $.jPlayer.errorMsg[errorType] + error.message,
-				hint: $.jPlayer.errorHint[errorType]
-			});
-			// Allow the audio player to recover if display:none and then shown again, or with position:fixed on Firefox.
-			// This really only affects audio in a media player, as an audio player could easily move the jPlayer element away from such issues.
-			this.internal.flash.jq.css({'width':'1px', 'height':'1px'});
-		},
-		_error: function(error) {
-			this._trigger($.jPlayer.event.error, error);
-			if(this.options.errorAlerts) {
-				this._alert("Error!" + (error.message ? "\n" + error.message : "") + (error.hint ? "\n" + error.hint : "") + "\nContext: " + error.context);
-			}
-		},
-		_warning: function(warning) {
-			this._trigger($.jPlayer.event.warning, undefined, warning);
-			if(this.options.warningAlerts) {
-				this._alert("Warning!" + (warning.message ? "\n" + warning.message : "") + (warning.hint ? "\n" + warning.hint : "") + "\nContext: " + warning.context);
-			}
-		},
-		_alert: function(message) {
-			var msg = "jPlayer " + this.version.script + " : id='" + this.internal.self.id +"' : " + message;
-			if(!this.options.consoleAlerts) {
-				alert(msg);
-			} else if(window.console && window.console.log) {
-				window.console.log(msg);
-			}
-		},
-		_emulateHtmlBridge: function() {
-			var self = this;
-
-			// Emulate methods on jPlayer's DOM element.
-			$.each( $.jPlayer.emulateMethods.split(/\s+/g), function(i, name) {
-				self.internal.domNode[name] = function(arg) {
-					self[name](arg);
-				};
-
-			});
-
-			// Bubble jPlayer events to its DOM element.
-			$.each($.jPlayer.event, function(eventName,eventType) {
-				var nativeEvent = true;
-				$.each( $.jPlayer.reservedEvent.split(/\s+/g), function(i, name) {
-					if(name === eventName) {
-						nativeEvent = false;
-						return false;
-					}
-				});
-				if(nativeEvent) {
-					self.element.bind(eventType + ".jPlayer.jPlayerHtml", function() { // With .jPlayer & .jPlayerHtml namespaces.
-						self._emulateHtmlUpdate();
-						var domEvent = document.createEvent("Event");
-						domEvent.initEvent(eventName, false, true);
-						self.internal.domNode.dispatchEvent(domEvent);
-					});
-				}
-				// The error event would require a special case
-			});
-
-			// IE9 has a readyState property on all elements. The document should have it, but all (except media) elements inherit it in IE9. This conflicts with Popcorn, which polls the readyState.
-		},
-		_emulateHtmlUpdate: function() {
-			var self = this;
-
-			$.each( $.jPlayer.emulateStatus.split(/\s+/g), function(i, name) {
-				self.internal.domNode[name] = self.status[name];
-			});
-			$.each( $.jPlayer.emulateOptions.split(/\s+/g), function(i, name) {
-				self.internal.domNode[name] = self.options[name];
-			});
-		},
-		_destroyHtmlBridge: function() {
-			var self = this;
-
-			// Bridge event handlers are also removed by destroy() through .jPlayer namespace.
-			this.element.unbind(".jPlayerHtml"); // Remove all event handlers created by the jPlayer bridge. So you can change the emulateHtml option.
-
-			// Remove the methods and properties
-			var emulated = $.jPlayer.emulateMethods + " " + $.jPlayer.emulateStatus + " " + $.jPlayer.emulateOptions;
-			$.each( emulated.split(/\s+/g), function(i, name) {
-				delete self.internal.domNode[name];
-			});
-		}
-	};
-
-	$.jPlayer.error = {
-		FLASH: "e_flash",
-		FLASH_DISABLED: "e_flash_disabled",
-		NO_SOLUTION: "e_no_solution",
-		NO_SUPPORT: "e_no_support",
-		URL: "e_url",
-		URL_NOT_SET: "e_url_not_set",
-		VERSION: "e_version"
-	};
-
-	$.jPlayer.errorMsg = {
-		FLASH: "jPlayer's Flash fallback is not configured correctly, or a command was issued before the jPlayer Ready event. Details: ", // Used in: _flashError()
-		FLASH_DISABLED: "jPlayer's Flash fallback has been disabled by the browser due to the CSS rules you have used. Details: ", // Used in: _flashError()
-		NO_SOLUTION: "No solution can be found by jPlayer in this browser. Neither HTML nor Flash can be used.", // Used in: _init()
-		NO_SUPPORT: "It is not possible to play any media format provided in setMedia() on this browser using your current options.", // Used in: setMedia()
-		URL: "Media URL could not be loaded.", // Used in: jPlayerFlashEvent() and _addHtmlEventListeners()
-		URL_NOT_SET: "Attempt to issue media playback commands, while no media url is set.", // Used in: load(), play(), pause(), stop() and playHead()
-		VERSION: "jPlayer " + $.jPlayer.prototype.version.script + " needs Jplayer.swf version " + $.jPlayer.prototype.version.needFlash + " but found " // Used in: jPlayerReady()
-	};
-
-	$.jPlayer.errorHint = {
-		FLASH: "Check your swfPath option and that Jplayer.swf is there.",
-		FLASH_DISABLED: "Check that you have not display:none; the jPlayer entity or any ancestor.",
-		NO_SOLUTION: "Review the jPlayer options: support and supplied.",
-		NO_SUPPORT: "Video or audio formats defined in the supplied option are missing.",
-		URL: "Check media URL is valid.",
-		URL_NOT_SET: "Use setMedia() to set the media URL.",
-		VERSION: "Update jPlayer files."
-	};
-
-	$.jPlayer.warning = {
-		CSS_SELECTOR_COUNT: "e_css_selector_count",
-		CSS_SELECTOR_METHOD: "e_css_selector_method",
-		CSS_SELECTOR_STRING: "e_css_selector_string",
-		OPTION_KEY: "e_option_key"
-	};
-
-	$.jPlayer.warningMsg = {
-		CSS_SELECTOR_COUNT: "The number of css selectors found did not equal one: ",
-		CSS_SELECTOR_METHOD: "The methodName given in jPlayer('cssSelector') is not a valid jPlayer method.",
-		CSS_SELECTOR_STRING: "The methodCssSelector given in jPlayer('cssSelector') is not a String or is empty.",
-		OPTION_KEY: "The option requested in jPlayer('option') is undefined."
-	};
-
-	$.jPlayer.warningHint = {
-		CSS_SELECTOR_COUNT: "Check your css selector and the ancestor.",
-		CSS_SELECTOR_METHOD: "Check your method name.",
-		CSS_SELECTOR_STRING: "Check your css selector is a string.",
-		OPTION_KEY: "Check your option name."
-	};
-}));
