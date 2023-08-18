@@ -64,6 +64,7 @@
 //= link opendata/opendata.js
 //= link opendata/public.js
 //= link ss/chart.js
+//= link ss/chartjs-colorschemes.js
 //= link ss/debug.js
 //= link ss/script.js
 
