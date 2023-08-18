@@ -378,6 +378,8 @@ GEM
       date
       net-protocol
     net-ldap (0.17.1)
+    net-pop (0.1.2)
+      net-protocol
     net-protocol (0.2.1)
       timeout
     net-smtp (0.3.3)
@@ -802,6 +804,7 @@ DEPENDENCIES
   mongoid-rspec
   net-imap
   net-ldap
+  net-pop
   net-smtp
   non-stupid-digest-assets
   oauth2
@@ -872,4 +875,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.2.33
+   2.4.19
