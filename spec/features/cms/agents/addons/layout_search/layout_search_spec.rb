@@ -7,26 +7,26 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
   let(:user) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
 	let(:item) { create :cms_layout, filename: "#{node.filename}/name" }
   let(:layout_name) { unique_id }
-	subject(:search_index_path)  { cms_search_contents_pages_path node}
+	subject(:search_index_path)  { cms_search_contents_pages_path node }
   
-	before do 
+	before do
     dummy_item = create(:cms_layout, filename: "#{node.filename}/dummy_name")
     html1 = "<div>html1</div>"
     html2 = "<div>html2</div>"
 
     create(
       :cms_page, cur_site: site, user: user, name: "[TEST]A", filename: "A.html", state: "public",
-      layout_id: item.id, html: html1)  
+      layout_id: item.id, html: html1)
     create(
       :cms_page, cur_site: site, user: user, name: "[TEST]B", filename: "B.html", state: "public",
-      layout_id: dummy_item.id,  html: html1)  
+      layout_id: dummy_item.id,  html: html1)
 
-    login_cms_user 
+    login_cms_user
   end
 
   context "レイアウト詳細からサイト内検索へ" do
 		
-		subject(:layout_index_path)  { cms_layouts_path node}
+		subject(:layout_index_path)  { cms_layouts_path node }
 		subject(:layout_show_path) { "#{layout_index_path}/#{item.id}" }
 		 
 		it do
