@@ -17,10 +17,10 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
     create(
       :cms_page, cur_site: site, user: user, name: "[TEST]A", filename: "A.html", state: "public",
       layout_id: item.id, html: html1)  
-      create(
+    create(
       :cms_page, cur_site: site, user: user, name: "[TEST]B", filename: "B.html", state: "public",
       layout_id: dummy_item.id,  html: html1)  
-    
+
     login_cms_user 
   end
 
@@ -36,8 +36,7 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
 
 			click_on I18n.t("modules.addons.cms/layout_search/btn")
 			expect(current_path).to eq search_index_path
-      
-      # 検索画面でそのまま検索ボタンを押す
+
       click_button I18n.t('ss.buttons.search')
       expect(page).to have_css(".search-count", text: "1 件の検索結果")
       expect(page).to have_css("div.info a.title", text: "[TEST]A")
