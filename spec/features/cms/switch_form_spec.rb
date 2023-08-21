@@ -1,5 +1,4 @@
 require 'spec_helper'
-Selenium::WebDriver.logger
 
 describe 'フォルダー直下', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
