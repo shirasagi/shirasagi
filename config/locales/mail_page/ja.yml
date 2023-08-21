@@ -22,6 +22,7 @@ ja:
       mail_page/addon/mail_setting:
         mail_page_from_conditions: 送信者メールアドレス
         mail_page_to_conditions: 宛先メールアドレス
+        terminate_line: 終端文字列
         arrival_days: 緊急情報表示期間
       mail_page/addon/arrival_plan:
         arrival_start_date: 緊急情報表示開始日時
@@ -35,6 +36,10 @@ ja:
       mail_page_to_conditions:
         - メール取込の宛先メールアドレス（To）条件を設定します。
         - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にページを作成します。
+      terminate_line:
+        - メール本文の終端文字列を入力します。
+        - 本文内に終端文字列がある場合、それ以降の文章が削除されます。
+        - メールのシグネチャを削除する為に利用できます。
       arrival_days:
         - 取込ページの緊急情報パーツ表示期間を設定します。
     mail_page/addon/arrival_plan:

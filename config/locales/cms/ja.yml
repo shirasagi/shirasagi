@@ -1456,6 +1456,7 @@ ja:
         filename: ファイル名
         from_conditions: 送信者メールアドレス
         to_conditions: 宛先メールアドレス
+        terminate_line: 終端文字列
         order: 並び順
         handle_state: ステータス
         statistic_state: 統計情報
@@ -2054,6 +2055,10 @@ ja:
       to_conditions:
         - メール取込の宛先メールアドレス（To）条件を設定します。
         - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にメール連携を実行します。
+      terminate_line:
+        - メール本文の終端文字列を入力します。
+        - 本文内に終端文字列がある場合、それ以降の文章が削除されます。
+        - メールのシグネチャを削除する為に利用できます。
       order:
         - 並び順を入力します。
       handle_state:

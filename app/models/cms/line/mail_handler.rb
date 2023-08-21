@@ -14,12 +14,13 @@ class Cms::Line::MailHandler
   field :filename, type: String
   field :from_conditions, type: SS::Extensions::Lines
   field :to_conditions, type: SS::Extensions::Lines
+  field :terminate_line, type: String
   field :order, type: Integer, default: 0
   field :handle_state, type: String, default: "deliver"
   field :statistic_state, type: String, default: "disabled"
 
   permit_params :name, :filename, :from_conditions, :to_conditions,
-    :order, :handle_state, :statistic_state
+    :terminate_line, :order, :handle_state, :statistic_state
 
   validates :name, presence: true, length: { maximum: 40 }
   validates :filename, presence: true, uniqueness: { scope: :site_id }, length: { maximum: 200 }
@@ -56,7 +57,8 @@ class Cms::Line::MailHandler
     to_domain = to.sub(/^.+@/, "")
 
     body = mail.text_part ? mail.text_part.decoded : mail.decoded
-    body = body.gsub(/\r\n/, "\n").squeeze("\n")
+    body = body.gsub(/\r\n/, "\n").squeeze("\n").strip
+    body = body.sub(/#{terminate_line}.+$/m, "").strip if terminate_line.present?
     subject = mail.subject
 
     # check from, to
