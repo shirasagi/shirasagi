@@ -36,6 +36,7 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
 
 			click_on I18n.t("modules.addons.cms/layout_search/btn")
 			expect(current_path).to eq search_index_path
+      
       # 検索画面でそのまま検索ボタンを押す
       click_button I18n.t('ss.buttons.search')
       expect(page).to have_css(".search-count", text: "1 件の検索結果")
