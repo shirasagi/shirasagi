@@ -21,26 +21,22 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     cate2 = create(:category_node_page)
     cate3 = create(:category_node_page)
     cate4 = create(:category_node_page)
-    layout1 = create(:cms_layout)
-    layout2 = create(:cms_layout)
-    layout3 = create(:cms_layout)
-    layout4 = create(:cms_layout)
     html1 = "<div>html1</div>"
     html2 = "<div>[TEST]A</div>"
     html3 = "<div>html3</div>"
     html4 = "<div>html4</div>"
     create(
       :cms_page, cur_site: site, user: user, name: "[TEST]A", filename: "A.html", state: "public",
-      category_ids: [ cate1.id ], group_ids: [ cms_group.id ],  html: html1)
+      category_ids: [ cate1.id ], group_ids: [ cms_group.id ], html: html1)
     create(
       :article_page, cur_site: site, cur_node: node, name: "[TEST]B", filename: "B.html", state: "public",
-      category_ids: [ cate2.id ], group_ids: [ cms_group.id ], layout_id: [layout2.id], html: html2)
+      category_ids: [ cate2.id ], group_ids: [ cms_group.id ], html: html2)
     create(
       :event_page, cur_site: site, cur_node: node, name: "[TEST]C", filename: "C.html", state: "closed",
-      category_ids: [ cate3.id ], group_ids: [ cms_group.id ], layout_id: [layout3.id], html: html3)
+      category_ids: [ cate3.id ], group_ids: [ cms_group.id ], html: html3)
     create(
       :faq_page, cur_site: site, cur_node: node, name: "[TEST]D", filename: "D.html", state: "closed",
-      category_ids: [ cate4.id ], group_ids: [ cms_group.id ], layout_id: [layout4.id], html: html4)
+      category_ids: [ cate4.id ], group_ids: [ cms_group.id ], html: html4)
 
     opendata_node = create(:opendata_node_dataset)
     opendata_cate = create(:opendata_node_category, name: opendata_cate_name1)
@@ -397,5 +393,4 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     names = all("div.info a.title").map(&:text)
     expect(names).to eq all_pages { |criteria| criteria.reorder(approved: -1) }
   end
-
 end

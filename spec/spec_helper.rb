@@ -69,10 +69,6 @@ if Module.const_defined?(:WebMock)
 end
 
 RSpec.configure do |config|
-  #-----------------------------------------------
-  
-  # Capybara.javascript_driver = :selenium
-  #-----------------------------------------------
   # ## Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
