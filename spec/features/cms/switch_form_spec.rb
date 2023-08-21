@@ -13,7 +13,6 @@ describe 'フォルダー直下', type: :feature, dbscope: :example, js: true do
   let(:name) { unique_id }
   let(:column1_value) { unique_id }
   let(:html) { "<p>#{unique_id}</p>" }
-  let(:show_path) { cms_page_path site.id, node, item } #{"#{cms_page_path(site)}/#{item.id}"}
 
   before do
     node.st_form_ids = [form.id]
@@ -29,16 +28,16 @@ describe 'フォルダー直下', type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
-        select("#{form.id}", from: "in_form_id")
-        page.accept_confirm
+        wait_event_to_fire("ss:formActivated") do
+          page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+            select("#{form.name}", from: "in_form_id")
+          end
+        end
         click_on I18n.t('ss.buttons.draft_save')
       end
+      
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_no_css("#addon-cms-agents-addons-body")
-
-      visit show_path
-
-      expect(current_path).to eq show_path
       expect(page).to have_content("定型フォーム")
       expect(page).to have_content(form.name)
     end
