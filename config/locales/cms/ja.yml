@@ -1581,7 +1581,10 @@ ja:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
       cms/line/statistic:
+        name: 統計情報
         message_id: メッセージ
+        condition_state: 設定
+        condition_label: 配信条件
         overview_delivered: メッセージの送信数
         overview_unique_impression: メッセージを開封した人数
         overview_openrate: 開封率

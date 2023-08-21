@@ -215,7 +215,7 @@ Rails.application.routes.draw do
       end
 
       # statistics
-      resources :statistics, concerns: :deletion
+      resources :statistics, concerns: [:deletion, :download]
 
       # mail hanlders
       resources :mail_handlers, concerns: :deletion
