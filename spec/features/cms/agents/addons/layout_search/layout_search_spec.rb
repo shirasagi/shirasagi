@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'レイアウト検索', type: :feature, dbscope: :example, es: true do
+describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
 	
 	let(:site) { cms_site }
 	let(:node) { create :cms_node }
@@ -36,18 +36,25 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, es: true do
 
 			click_on I18n.t("modules.addons.cms/layout_search/btn")
 			expect(current_path).to eq search_index_path
+      
+      # 検索画面でそのまま検索ボタンを押す
+      click_button I18n.t('ss.buttons.search')
+      expect(page).to have_css(".search-count", text: "1 件の検索結果")
+      expect(page).to have_css("div.info a.title", text: "[TEST]A")
 		end
 	end
 
 	context "サイト内検索でレイアウト使用ページを検索" do
 		it "search with layout" do
       visit search_index_path
-      find('input[name="item[search_layout_ids][]"]').set(item.id)
+      wait_cbox_open { click_on I18n.t("cms.apis.layouts.index") }
+      wait_for_cbox do
+        click_on item.name
+      end
       click_button I18n.t('ss.buttons.search')
   
       expect(page).to have_css(".search-count", text: "1 件の検索結果")
       expect(page).to have_css("div.info a.title", text: "[TEST]A")
     end
 	end
-
 end
