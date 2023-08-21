@@ -122,6 +122,7 @@ module Cms::PageFilter
       task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
       item.save
     end
+    item.errors.blank?
   end
 
   def destroy_merged_branch(item)
