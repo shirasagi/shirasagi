@@ -23,7 +23,6 @@ describe 'フォルダー直下', type: :feature, dbscope: :example, js: true do
     it do
       visit new_cms_page_path(site.id)
 
-      expect(page).to have_css("#in_form_id")
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"

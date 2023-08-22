@@ -23,7 +23,7 @@
     <% if cur_form && !cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change", disabled: true) %> 
     <% else %>
-      <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: "in_form_id", class: "form-change") %>
+      <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change") %>
       <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
     <% end %>
     <%= jquery do %>
