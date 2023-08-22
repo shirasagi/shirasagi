@@ -21,12 +21,11 @@
   <dd>
     <%= f.hidden_field :form_id, value: cur_form.try(:id) %>
     <% if cur_form && !cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change", disabled: true) %>
+      <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change", disabled: true) %> 
     <% else %>
       <%= select_tag("in_form_id", options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form"), id: nil, class: "form-change") %>
       <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
     <% end %>
-
     <%= jquery do %>
       Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
       Cms_Column_FileUpload.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>
