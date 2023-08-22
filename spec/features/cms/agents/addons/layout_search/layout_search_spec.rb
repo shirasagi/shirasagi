@@ -26,34 +26,34 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
 
   context "レイアウト詳細からサイト内検索へ" do
 
-	  subject(:layout_index_path)  { cms_layouts_path node }
-	  subject(:layout_show_path) { "#{layout_index_path}/#{item.id}" }
+    subject(:layout_index_path)  { cms_layouts_path node }
+    subject(:layout_show_path) { "#{layout_index_path}/#{item.id}" }
 		 
-	  it do
-		  visit layout_show_path
-		  expect(current_path).to eq layout_show_path
-		  expect(page).to have_content ("レイアウト使用ページを検索する")
+    it do
+      visit layout_show_path
+      expect(current_path).to eq layout_show_path
+      expect(page).to have_content ("レイアウト使用ページを検索する")
 
-		  click_on I18n.t("modules.addons.cms/layout_search/btn")
-		  expect(current_path).to eq search_index_path
+      click_on I18n.t("modules.addons.cms/layout_search/btn")
+      expect(current_path).to eq search_index_path
 
       click_button I18n.t('ss.buttons.search')
       expect(page).to have_css(".search-count", text: "1 件の検索結果")
       expect(page).to have_css("div.info a.title", text: "[TEST]A")
-	  end
+    end
   end
 
   context "サイト内検索でレイアウト使用ページを検索" do
-	  it "search with layout" do
+    it "search with layout" do
       visit search_index_path
       wait_cbox_open { click_on I18n.t("cms.apis.layouts.index") }
       wait_for_cbox do
         click_on item.name
       end
       click_button I18n.t('ss.buttons.search')
-  
+
       expect(page).to have_css(".search-count", text: "1 件の検索結果")
       expect(page).to have_css("div.info a.title", text: "[TEST]A")
     end
-	end
+  end
 end
