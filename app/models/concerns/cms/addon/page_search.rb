@@ -287,7 +287,7 @@ module Cms::Addon
 
       def search_layouts
         return if @item.search_layout_ids.blank?
-        @criteria = @criteria.in(layout_id:  @item.search_layout_ids)
+        @criteria = @criteria.in(layout_id: @item.search_layout_ids)
       end
 
       def search_routes
