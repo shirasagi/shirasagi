@@ -6,7 +6,7 @@ module Cms::Addon
     def brief_search_condition
       info = [
         :search_name_info, :search_filename_info, :search_category_ids_info, :search_group_ids_info,
-        :search_node_ids_info, :search_routes_info, :search_released_info, :search_updated_info, :search_approved_info,
+        :search_node_ids_info, :search_layout_ids_info, :search_routes_info, :search_released_info, :search_updated_info, :search_approved_info,
         :search_state_info, :search_first_released_info, :search_approver_state_info ].map do |m|
         method(m).call
       end
@@ -75,6 +75,10 @@ module Cms::Addon
 
     def search_node_ids_info
       "#{I18n.t 'cms.node'}: #{search_nodes.pluck(:name).join(",")}" if search_node_ids.present?
+    end
+
+    def search_layout_ids_info
+      "#{I18n.t 'cms.layout'}: #{search_layouts.pluck(:name).join(",")}" if search_layout_ids.present?
     end
 
     def search_routes_info
@@ -178,6 +182,7 @@ module Cms::Addon
       embeds_ids :search_categories, class_name: "Category::Node::Base"
       embeds_ids :search_groups, class_name: "SS::Group"
       embeds_ids :search_nodes, class_name: "Cms::Node"
+      embeds_ids :search_layouts, class_name: "Cms::Layout"
       embeds_ids :search_users, class_name: "Cms::User"
 
       field :search_routes, type: SS::Extensions::Words, default: []
@@ -187,7 +192,7 @@ module Cms::Addon
       permit_params :search_released_condition, :search_released_start, :search_released_close, :search_released_after
       permit_params :search_updated_condition, :search_updated_start, :search_updated_close, :search_updated_after
       permit_params :search_approved_condition, :search_approved_start, :search_approved_close, :search_approved_after
-      permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [], search_user_ids: [], search_routes: []
+      permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [],search_layout_ids: [], search_user_ids: [], search_routes: []
 
       before_validation :normalize_search_routes
       validates :search_state, inclusion: { in: %w(public closed ready closing), allow_blank: true }
@@ -204,7 +209,7 @@ module Cms::Addon
       private_class_method :new
 
       HANDLERS = %i[
-        search_name search_filename search_nodes search_keyword search_categories search_groups search_routes
+        search_name search_filename search_nodes search_layouts search_keyword search_categories search_groups search_routes
         search_users search_state search_released search_updated search_approved search_approver search_first_released
         sort
       ].freeze
@@ -269,7 +274,6 @@ module Cms::Addon
 
       def search_categories
         return if @item.search_category_ids.blank?
-
         @criteria = @criteria.in(category_ids: @item.search_category_ids)
       end
 
@@ -278,6 +282,12 @@ module Cms::Addon
 
         @criteria = @criteria.in(group_ids: @item.search_group_ids)
       end
+
+      def search_layouts
+        return if @item.search_layout_ids.blank?
+        @criteria =  @criteria.in(layout_id:  @item.search_layout_ids)
+      end
+
 
       def search_routes
         return if @item.search_routes.blank?
@@ -290,7 +300,6 @@ module Cms::Addon
 
       def search_users
         return if @item.search_user_ids.blank?
-
         @criteria = @criteria.in(user_id: @item.search_user_ids)
       end
 
