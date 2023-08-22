@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+root = File.dirname(__dir__)
+dir = "#{root}/private/files/ss_files"
+list = {}
+
+Dir.glob("#{dir}/**/_/*") do |path|
+  data = path.split('/_/')
+  key = data[0].sub(dir, '')
+  list[key] ||= 0
+  list[key] += (data[1] =~ /_thumb\z/ ? 10 : 1)
+end
+
+list.each do |key, val|
+  next if val != 10
+  file = "#{dir}/#{key}/_/" + key.delete('ss_files').delete('/') + '_thumb'
+
+  puts "remove #{file}"
+  ::File.delete(file)
+end
