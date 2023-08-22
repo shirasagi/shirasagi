@@ -6,8 +6,9 @@ module Cms::Addon
     def brief_search_condition
       info = [
         :search_name_info, :search_filename_info, :search_category_ids_info, :search_group_ids_info,
-        :search_node_ids_info, :search_layout_ids_info, :search_routes_info, :search_released_info, :search_updated_info, :search_approved_info,
-        :search_state_info, :search_first_released_info, :search_approver_state_info ].map do |m|
+        :search_node_ids_info, :search_layout_ids_info, :search_routes_info, :search_released_info,
+        :search_updated_info, :search_approved_info, :search_state_info, :search_first_released_info,
+        :search_approver_state_info ].map do |m|
         method(m).call
       end
       info.select(&:present?).join(", ")
@@ -192,7 +193,8 @@ module Cms::Addon
       permit_params :search_released_condition, :search_released_start, :search_released_close, :search_released_after
       permit_params :search_updated_condition, :search_updated_start, :search_updated_close, :search_updated_after
       permit_params :search_approved_condition, :search_approved_start, :search_approved_close, :search_approved_after
-      permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [],search_layout_ids: [], search_user_ids: [], search_routes: []
+      permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [], search_layout_ids: []
+      permit_params search_user_ids: [], search_routes: []
 
       before_validation :normalize_search_routes
       validates :search_state, inclusion: { in: %w(public closed ready closing), allow_blank: true }
@@ -285,9 +287,8 @@ module Cms::Addon
 
       def search_layouts
         return if @item.search_layout_ids.blank?
-        @criteria =  @criteria.in(layout_id:  @item.search_layout_ids)
+        @criteria = @criteria.in(layout_id:  @item.search_layout_ids)
       end
-
 
       def search_routes
         return if @item.search_routes.blank?
