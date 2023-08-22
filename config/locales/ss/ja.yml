@@ -329,6 +329,8 @@ ja:
         - これを超える制限サイズを設定しても有効に機能しません。
         - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
       updated: 更新しました。
+      ordered_by_file_name_order: 名前順で並び変えました。
+      ordered_by_file_upload_order: アップロード順で並び変えました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
