@@ -278,6 +278,10 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      layouts:
+        index: レイアウトを選択する
+        search: レイアウトを検索
+        select: レイアウトを設定する
       nodes_routes:
         index: フォルダー属性を選択する
         search: フォルダー属性を検索
@@ -807,6 +811,8 @@ ja:
       cms/tag: タグ
       cms/layout_html: レイアウト
       cms/layout_part: 使用中パーツ
+      cms/layout_search: レイアウト使用ページを検索する
+      cms/layout_search/btn: レイアウト使用ページを検索
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
@@ -1141,6 +1147,7 @@ ja:
         name: 名前
         order: 並び順
       cms/addon/page_search:
+        search_layout_ids: レイアウト
         search_name: タイトル
         search_filename: ファイル名
         search_keyword: キーワード
@@ -2436,6 +2443,9 @@ ja:
       search_routes:
         - 検索したいページ属性を選択します。
         - いずれかのページ属性に該当するページが検索されます。
+      search_layout_ids:
+        - 検索したいレイアウトを選択します
+        - いずれかのレイアウトに該当するページが検索されます
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
