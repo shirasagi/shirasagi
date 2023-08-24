@@ -22,7 +22,7 @@
 
     <% if @item.line_posted.present? %>
       <dt><%= @model.t :line_posted %></dt>
-      <dd><%= tryb { br @item.line_posted.reverse.take(5).map { |posted| ss_time_tag(posted) }.join("\n") } %></dd>
+      <dd><%== tryb { @item.line_posted.reverse.take(5).map { |posted| ss_time_tag(posted) }.join("<br>") } %></dd>
     <% end%>
 
     <% if @item.line_post_error.present? %>
