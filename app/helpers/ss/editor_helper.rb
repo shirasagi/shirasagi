@@ -11,9 +11,8 @@ module SS::EditorHelper
     htmlmixed: %w(xml javascript css vbscript htmlmixed).freeze
   }.freeze
 
-  def code_editor(elem, opts = {})
-    mode   = opts[:mode].to_s.presence
-    mode ||= opts[:filename].sub(/.*\./, "") if opts[:filename]
+  def code_editor_option(mode: nil, filename: nil, readonly: false)
+    mode ||= filename.sub(/.*\./, "") if filename
 
     mode = CODE_EXT_MODES[mode.to_sym] if mode && CODE_EXT_MODES[mode.to_sym]
 
@@ -32,11 +31,25 @@ module SS::EditorHelper
 
     editor_opts = {}
     editor_opts[:mode]        = mode if mode.present?
-    editor_opts[:readOnly]    = true if opts[:readonly]
+    editor_opts[:readOnly]    = true if readonly
     editor_opts[:lineNumbers] = true
 
+    editor_opts
+  end
+
+  def code_editor(elem, delay_loads: nil, **opts)
+    editor_opts = code_editor_option(**opts)
+    scripts = []
+    if delay_loads
+      scripts << "SS_AddonTabs.findAddonView('#{delay_loads}').one('ss:addonShown', function() {"
+      scripts << "  Cms_Editor_CodeMirror.render('#{elem}', #{editor_opts.to_json});".html_safe
+      scripts << "});"
+    else
+      scripts << "Cms_Editor_CodeMirror.render('#{elem}', #{editor_opts.to_json});".html_safe
+    end
+
     jquery do
-      "Cms_Editor_CodeMirror.render('#{elem}', #{editor_opts.to_json});".html_safe
+      scripts.join("\n").html_safe
     end
   end
 
