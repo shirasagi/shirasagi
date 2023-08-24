@@ -159,6 +159,7 @@ module Opendata::Api
     package_resource[:id] = resource.file_id
     package_resource[:uuid] = resource.uuid
     package_resource[:revision_id] = resource.revision_id
+    package_resource[:state] = resource.state
     package_resource[:name] = resource.name
     package_resource[:filename] = resource.filename
     package_resource[:text] = resource.text
