@@ -3,6 +3,9 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    LINE_PAGE_NAME_MAX_LENGTH = 40
+    LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH = 500
+
     included do
       attr_accessor :skip_line_post
 
@@ -99,21 +102,17 @@ module Cms::Addon
         return
       end
 
-      if name.present? && name.size > 40
-        errors.add :name, :too_long_with_line_title, count: 40
+      if name.present? && name.size > LINE_PAGE_NAME_MAX_LENGTH
+        errors.add :name, :too_long_with_line_title, count: LINE_PAGE_NAME_MAX_LENGTH
+      end
+      if line_text_message.present? && line_text_message.size > LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH
+        errors.add :line_text_message, :too_long, count: LINE_TEXT_MESSAGE_TEXT_MAX_LENGTH
+      end
+      if line_text_message.blank?
+        errors.add :line_text_message, :blank
       end
       if line_post_format == "thumb_carousel" && thumb.blank?
         errors.add :thumb_id, :blank
-      end
-      if line_text_message.present?
-        if line_text_message.index("\n")
-          errors.add :line_text_message, :invalid_new_line_included
-        end
-        if line_text_message.size > 45
-          errors.add :line_text_message, :too_long, count: 45
-        end
-      else
-        errors.add :line_text_message, :blank
       end
     end
 
@@ -125,13 +124,23 @@ module Cms::Addon
           log.action = "broadcast"
 
           messages = []
+          image_url = nil
           if line_post_format == "thumb_carousel"
-            messages << line_message_carousel(thumb.try(:full_url))
+            image_url = thumb.try(:full_url)
           elsif line_post_format == "body_carousel"
-            messages << line_message_carousel(first_img_full_url)
-          elsif line_post_format == "message_only_carousel"
-            messages << line_message_carousel
+            image_url = first_img_full_url
           end
+          messages << Cms::LineUtils.flex_carousel_template(name, self) do |item, opts|
+            opts[:name] = name
+            opts[:text] = line_text_message
+            opts[:image_url] = image_url
+            opts[:action] = {
+              type: "uri",
+              label: I18n.t("cms.visit_article"),
+              uri: item.full_url
+            }
+          end
+
           raise "messages blank" if messages.blank?
           log.messages = messages
 
@@ -149,34 +158,6 @@ module Cms::Addon
           self.set(line_post_error: "#{e.class} (#{e.message})")
         end
       end
-    end
-
-    def line_message_carousel(thumb_url = nil)
-      column = {
-        title: name,
-        text: line_text_message.to_s,
-        actions: [
-          {
-            type: "uri",
-            label: I18n.t("cms.visit_article"),
-            uri: full_url
-          }
-        ]
-      }
-
-      if thumb_url.present?
-        column["thumbnailImageUrl"] = thumb_url
-        column["imageBackgroundColor"] = "#FFFFFF"
-      end
-
-      {
-        type: "template",
-        altText: name,
-        template: {
-          type: "carousel",
-          columns: [column]
-        }
-      }
     end
   end
 end
