@@ -126,8 +126,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_css('dd', text: I18n.t('ss.options.state.public'))
             end
             expect(capture.broadcast.count).to eq 1
-            expect(capture.broadcast.messages.dig(0, :template, :type)).to eq "carousel"
-            expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :text)).to eq line_text_message
+            expect(capture.broadcast.messages.dig(0, :contents, :type)).to eq "carousel"
+            expect(capture.broadcast.messages.dig(0, :contents, :contents, 0, :body, :contents, 1, :text)).to eq line_text_message
             expect(Cms::SnsPostLog::Line.count).to eq 1
           end
         end
@@ -243,11 +243,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
 
             expect(capture.broadcast.count).to eq 1
-            expect(capture.broadcast.messages.dig(0, :template, :type)).to eq "carousel"
+            expect(capture.broadcast.messages.dig(0, :contents, :type)).to eq "carousel"
             expect(capture.broadcast.messages.dig(0, :altText)).to eq item.name
-            expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :title)).to eq item.name
-            expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :text)).to eq line_text_message
-            expect(capture.broadcast.messages.dig(0, :template, :columns, 0, :actions, 0, :uri)).to eq item.full_url
+            expect(capture.broadcast.messages.dig(0, :contents, :contents, 0, :body, :contents, 0, :text)).to eq item.name
+            expect(capture.broadcast.messages.dig(0, :contents, :contents, 0, :body, :contents, 1, :text)).to eq line_text_message
+            expect(capture.broadcast.messages.dig(0, :contents, :contents, 0, :footer, :contents, 0, :action, :uri)).to eq item.full_url
             expect(Cms::SnsPostLog::Line.count).to eq 1
           end
         end
