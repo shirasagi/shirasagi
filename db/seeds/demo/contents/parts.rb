@@ -112,3 +112,4 @@ save_part route: "cms/page", filename: "urgency-disaster-top-list.part.html", na
     kurashi/bosai/jyoho kurashi/bosai/kanri kurashi/bosai/keikaku kurashi/bosai/kunren kurashi/bosai/shinsai
     kurashi/bosai/shobo
   ), new_days: 0
+save_part route: "chat/bot", filename: "bot.part.html", name: "チャットボット", chat_path: 'chatbot', mobile_view: "hide"

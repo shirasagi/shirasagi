@@ -21,6 +21,19 @@ def save_node(data)
   item
 end
 
+## chat
+save_node route: "chat/bot", filename: "chatbot", name: "チャットボット", layout_id: @layouts["general"].id,
+  first_text: '<p>どのような情報をお探しですか。</p>',
+  first_suggest: %w(戸籍について 子育てについて 税金について),
+  exception_text: '<p>回答が見つかりませんでした。キーワードを変えてご質問ください。</p>',
+  response_template: '<p>どのようなお問い合わせですか？<br />以下よりご選択ください。</p>',
+  question: '問題は解決しましたか？',
+  chat_success: '<p>ありがとうございます！また何かございましたらお気軽にご質問ください！</p>',
+  chat_retry: '<p>解決できず申し訳ございません。次はご満足いただけるように頑張ります。<br />
+お問い合わせが必要にな場合は<a href="/inquiry/" target="_blank" rel="noopener">問い合わせフォーム</a>よりご連絡ください。</p>',
+  set_location: '位置情報送信',
+  radius: 10
+
 ## article
 save_node route: "article/page", filename: "docs", name: "記事",
   page_layout_id: @layouts["pages"].id, shortcut: "show", sort: 'order',

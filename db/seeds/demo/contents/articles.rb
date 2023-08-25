@@ -208,19 +208,19 @@ save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届"
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page20.html", name: "犬・猫を譲り受けたい方",
-  layout_id: @layouts["oshirase"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page21.html", name: "平成26年度住宅補助金の募集について掲載しました。",
-  layout_id: @layouts["oshirase"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page22.html", name: "休日臨時窓口を開設します。",
-  layout_id: @layouts["oshirase"].id,
+  layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
                  @categories["shisei/soshiki"].id,
@@ -231,13 +231,13 @@ save_page route: "article/page", filename: "oshirase/kurashi/page22.html", name:
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page23.html", name: "身体障害者手帳の認定基準が変更",
-  layout_id: @layouts["oshirase"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
+  layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page24.html", name: "平成26年4月より国民健康保険税率が改正されます",
-  layout_id: @layouts["oshirase"].id,
+  layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
   ],

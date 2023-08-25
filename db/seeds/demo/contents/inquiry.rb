@@ -250,5 +250,7 @@ Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: @layouts["faq"].id)
 Cms::Node.where(site_id: @site._id, route: /facility\//).
   update_all(layout_id: @layouts["map"].id)
+Cms::Node.where(site_id: @site._id, route: /facility\/page/).
+  update_all(layout_id: @layouts["general"].id)
 Cms::Node.where(site_id: @site._id, route: /ezine\//).
   update_all(layout_id: @layouts["ezine"].id)
