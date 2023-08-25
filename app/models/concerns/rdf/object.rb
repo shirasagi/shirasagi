@@ -66,9 +66,8 @@ module Rdf::Object
   private
 
   def normalize_name
-    return if name.blank?
     # name must be NFKC
-    self.name = UNF::Normalizer.normalize(self.name.strip, :nfkc)
+    self.name = Rdf.normalize_name(self.name)
   end
 
   def validate_name
