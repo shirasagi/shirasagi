@@ -18,35 +18,6 @@ this.SS_ListUI = (function () {
       });
       $(this).trigger("ss:checked-all-list-items");
     });
-  /////////メッセージ機能用/////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $el.find(".message-list-head .checkbox-to-all input:checkbox").on("change", function () {
-      var chk;
-      chk = $(this).prop('checked');
-      $el.find('.list-item').each(function () {
-        $(this).toggleClass('checked', chk);
-        return $(this).find('.to-checkbox input:checkbox').prop('checked', chk);
-      });
-      $(this).trigger("ss:checked-all-list-items");
-    });
-    $el.find(".message-list-head .checkbox-cc-all input:checkbox").on("change", function () {
-      var chk;
-      chk = $(this).prop('checked');
-      $el.find('.list-item').each(function () {
-        $(this).toggleClass('checked', chk);
-        return $(this).find('.cc-checkbox input:checkbox').prop('checked', chk);
-      });
-      $(this).trigger("ss:checked-all-list-items");
-    });
-    $el.find(".message-list-head .checkbox-bcc-all input:checkbox").on("change", function () {
-      var chk;
-      chk = $(this).prop('checked');
-      $el.find('.list-item').each(function () {
-        $(this).toggleClass('checked', chk);
-        return $(this).find('.bcc-checkbox input:checkbox').prop('checked', chk);
-      });
-      $(this).trigger("ss:checked-all-list-items");
-    });
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     $el.find(".list-item").each(function () {
       var list;
       list = $(this);
