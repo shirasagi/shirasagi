@@ -1,5 +1,4 @@
-<% return "" if @cur_node.try(:opendata_site_ids).blank? %>
-<% return "" if @item.respond_to?(:master?) && !@item.master? %>
+<% return if @cur_node.try(:opendata_site_ids).blank? %>
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"

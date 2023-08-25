@@ -88,9 +88,7 @@ module ApplicationHelper
 
   # @deprecated
   def scss(&block)
-    opts = Rails.application.config.sass
-    load_paths = opts.load_paths[1..-1] || []
-    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+    load_paths = Rails.application.config.assets.paths.dup
 
     sass = Sass::Engine.new(
       "@import 'compass-mixins/lib/compass';\n" + capture(&block),
@@ -111,18 +109,18 @@ module ApplicationHelper
 
   def tt(key, *args)
     opts = args.extract_options!
-    symbol = opts[:symbol] || "?"
+    symbol = opts.delete(:symbol) || "?"
 
     html_wrap = args.shift
-    html_wrap = opts[:html_wrap] if html_wrap.nil?
+    html_wrap = opts.delete(:html_wrap) if html_wrap.nil?
     html_wrap = true if html_wrap.nil?
 
     msg = nil
-    Array(opts[:scope]).flatten.each do |scope|
-      msg = I18n.t(key, default: '', scope: scope)
+    Array(opts.delete(:scope)).flatten.each do |scope|
+      msg = I18n.t(key, **opts.merge(default: '', scope: scope))
       break if msg.present?
     end
-    msg = I18n.t(key, default: '', scope: 'tooltip') if msg.blank?
+    msg = I18n.t(key, **opts.merge(default: '', scope: 'tooltip')) if msg.blank?
     return msg if msg.blank? || !html_wrap
     msg = [msg] if msg.class.to_s == "String"
     list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
@@ -267,6 +265,10 @@ module ApplicationHelper
     end
   end
 
+  def ss_application_name
+    @cur_site.try(:logo_application_name).presence || SS.config.ss.application_name
+  end
+
   def render_application_logo(site = nil)
     site ||= @cur_site
     return SS.config.ss.application_logo_html.html_safe if site.blank?
@@ -275,14 +277,15 @@ module ApplicationHelper
     image = site.logo_application_image
     return SS.config.ss.application_logo_html.html_safe if name.blank? && image.blank?
 
-    content_tag(:div, class: "ss-logo-wrap") do
-      if image.present?
-        output_buffer << image_tag(image.url, alt: name || SS.config.ss.application_name)
-      end
-      if name.present?
-        output_buffer << content_tag(:span, name, class: "ss-logo-application-name")
-      end
+    logo_html = "".html_safe
+    if image.present?
+      logo_html += image_tag(image.url, alt: name.presence || SS.config.ss.application_name)
     end
+    if name.present?
+      logo_html += tag.span(name, class: "ss-logo-application-name")
+    end
+
+    tag.div(logo_html, class: "ss-logo-wrap")
   end
 
   def required_label

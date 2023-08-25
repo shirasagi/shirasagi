@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
 <title>
   <%=
-    title = SS.config.ss.application_name
+    title = ss_application_name
     if @ss_rescue
       title = "#{@ss_rescue[:status]} #{::Rack::Utils::HTTP_STATUS_CODES[@ss_rescue[:status]]} | #{title}"
     end

@@ -98,6 +98,13 @@ class Cms::ImportJobFile
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
         filename = entry.name.force_encoding("utf-8").scrub
+        next if filename.blank?
+
+        virtual_path = "/$"
+        filename = ::File.expand_path(filename, virtual_path)
+        next unless filename.start_with?("/$/")
+
+        filename = filename[3..-1]
         filename = filename.delete_prefix("#{root_node.basename}/") # remove root folder
         next if filename.blank?
         next if filename.start_with?('__MACOSX')

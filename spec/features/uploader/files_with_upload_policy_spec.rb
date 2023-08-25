@@ -21,6 +21,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         visit index_path
         index_path = current_path # redirect
         click_link I18n.t('uploader.links.new_directory')
+        wait_for_js_ready
 
         # create
         expectation = expect do
@@ -28,6 +29,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
             fill_in "item[directory]", with: name1
             click_button I18n.t("ss.buttons.save")
           end
+          wait_for_notice I18n.t("ss.notice.saved")
         end
         expectation.to have_enqueued_job.with [{ mkdir: [rel_path1] }]
         expect(page).to have_css(".list-item-title.dir")
@@ -61,12 +63,15 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         visit index_path
         index_path = current_path # redirect
         click_link I18n.t('ss.links.upload')
+        wait_for_js_ready
 
         # create
         within "form" do
           attach_file "item[files][]", file
+          expect(page).to have_css(".js-uploader-alert-message", text: "ok")
           click_button I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("div.info a.file")
 
         job_file = Uploader::JobFile.first
@@ -116,12 +121,15 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         visit index_path
         index_path = current_path # redirect
         click_link I18n.t('ss.links.upload')
+        wait_for_js_ready
 
         # create
         within "form" do
           attach_file "item[files][]", file
+          expect(page).to have_css(".js-uploader-alert-message", text: "ok")
           click_button I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("div.info a.file")
 
         job_file = Uploader::JobFile.first
@@ -167,12 +175,15 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         visit index_path
         index_path = current_path # redirect
         click_link I18n.t('ss.links.upload')
+        wait_for_js_ready
 
         # create
         within "form" do
           attach_file "item[files][]", file
+          expect(page).to have_css(".js-uploader-alert-message", text: "ok")
           click_button I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("div.info a.file")
 
         job_file = Uploader::JobFile.first

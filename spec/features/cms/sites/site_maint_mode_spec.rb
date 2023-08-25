@@ -25,7 +25,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     it do
       visit index_path
       click_on I18n.t("ss.links.edit")
-      find("#addon-ss-agents-addons-maintenance_mode").click
+      ensure_addon_opened "#addon-ss-agents-addons-maintenance_mode"
       within "form#item-form" do
         find("#item_maintenance_mode").find("option[value='enabled']").select_option
         fill_in "item[maint_remark]", with: maint_remark

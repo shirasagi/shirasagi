@@ -7,6 +7,12 @@
   <dt><%= @model.t :circular_default_due_date %></dt>
   <dd><%= @item.circular_default_due_date %> <%= t('datetime.prompts.day') %></dd>
 
+  <dt><%= @model.t :circular_article_state %></dt>
+  <dd><%= @item.label :circular_article_state %></dd>
+
+  <dt><%= @model.t :circular_sort %></dt>
+  <dd><%= @item.label :circular_sort %></dd>
+
   <dt><%= @model.t :circular_filesize_limit %></dt>
   <dd><%= @item.circular_filesize_limit %> <%= t('ss.units.mega_byte') if @item.circular_filesize_limit %></dd>
 

@@ -71,6 +71,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
       # download 1 form
       visit cms_forms_path(site: site.id)
+      wait_for_js_ready
       within "#main .index" do
         find("input[name='ids[]']", match: :first).set(true) #choose
         find(".btn-list-head-action.download").click
@@ -84,7 +85,10 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       File.delete(downloads.first)
 
       # download all forms
-      visit download_cms_forms_path(site: site.id)
+      visit cms_forms_path(site: site.id)
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.download")
+      end
       wait_for_download
 
       json = JSON.parse(File.read(downloads.first))

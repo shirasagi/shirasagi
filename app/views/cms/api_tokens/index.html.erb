@@ -1,0 +1,10 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= t("ss.views.index.created", created: l(item.created, format: :picker)) %></span>
+  <% if item.expiration_date %>
+    <span class="datetime"><%= t("ss.views.index.expiration_date", expiration_date: l(item.expiration_date, format: :picker)) %></span>
+  <% end %>
+  <span class="audience"><%= item.audience.name %></span>
+  <span class="state"><%= item.label :state %></span>
+<% end %>
+
+<%= render template: 'cms/crud/index' %>

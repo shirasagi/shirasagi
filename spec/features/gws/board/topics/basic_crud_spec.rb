@@ -147,7 +147,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           within ".nav-menu" do
             click_on I18n.t("ss.links.delete")
           end
-          within "form" do
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
@@ -201,7 +201,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           within ".nav-menu" do
             click_on I18n.t("ss.links.delete")
           end
-          within "form" do
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
@@ -227,7 +227,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           click_on I18n.t("ss.links.trash")
           click_on item.name
           click_on I18n.t("ss.links.restore")
-          within "form" do
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.restore")
           end
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.restored"))

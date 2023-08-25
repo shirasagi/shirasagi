@@ -55,4 +55,30 @@ class Event::Extensions::EventDates < Array
   def clustered
     Event.cluster_dates(self)
   end
+
+  def multiple_days?(date)
+    i = self.index(date)
+
+    return false unless i
+    return true if self[i - 1] == (date - 1.day)
+    return true if self[i + 1] == (date + 1.day)
+
+    false
+  end
+
+  def find_cluster(date)
+    return unless date
+
+    clustered.find { |cluster| cluster.find(date) }
+  end
+
+  def start_date(date = nil)
+    dates = find_cluster(date) || self
+    dates.first
+  end
+
+  def end_date(date = nil)
+    dates = find_cluster(date) || self
+    dates.last
+  end
 end

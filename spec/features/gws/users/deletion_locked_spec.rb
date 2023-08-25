@@ -37,7 +37,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
     it "#delete user" do
       visit delete_user1_path
-      within "form" do
+      within "form#item-form" do
         expect(page).to have_text(I18n.t("ss.info.soft_delete"))
         click_button I18n.t('ss.buttons.delete')
       end
@@ -50,7 +50,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
     it "#delete locked user" do
       visit delete_user2_path
-      within "form" do
+      within "form#item-form" do
         expect(page).to have_text(I18n.t("ss.info.soft_delete_locked"))
         expect(page).to have_no_css('input[type="submit"]')
       end
@@ -62,7 +62,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-items", text: user1.name)
       expect(page).to have_css(".list-items", text: user2.name)
 
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')

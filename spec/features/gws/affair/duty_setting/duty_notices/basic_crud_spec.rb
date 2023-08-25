@@ -46,7 +46,7 @@ describe "gws_affair_duty_notices", type: :feature, dbscope: :example do
 
       it "#delete" do
         visit delete_path
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.delete")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

@@ -15,8 +15,21 @@
       %>
       <li class="<%= css_classes.join(' ') %>">
         <div class="info">
-          <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'title' %>
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+
+          <div class="title marked">
+            <% if item.severity.present? %>
+              <i title="<%= item.label(:severity) %>" class="material-icons-outlined md-16 severity-<%= item.severity %>">error_outline</i>
+            <% end %>
+            <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'name' %>
+            <% if item.term_enabled? %>
+              <%= link_to gws_notice_calendars_path(@portal.notice_calendar_params(item)), { class: "index-cleander-link" } do %>
+                <i class="material-icons calendar-month md-18">calendar_month</i>
+              <% end %>
+            <% end %>
+            <% if item.new_flag? %>
+              <span class="gws-board-flag-new"></span>
+            <% end %>
+          </div>
 
           <div class="meta">
             <span class="datetime"><%= ss_time_tag item.updated %></span>
@@ -44,6 +57,6 @@
   </ul>
 
   <% if items.next_page %>
-    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_notice_main_path %></div>
+    <div class="list-more"><%= link_to I18n.t("ss.links.more"), @portlet.see_more_path(@portal, @cur_user) %></div>
   <% end %>
 </div>

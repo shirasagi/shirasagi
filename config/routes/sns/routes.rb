@@ -38,6 +38,7 @@ Rails.application.routes.draw do
     resources :notifications, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
       get :latest, on: :collection
+      post :set_seen_all, on: :collection
     end
   end
 

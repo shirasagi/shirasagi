@@ -18,7 +18,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
 
       click_on I18n.t("gws/discussion.links.topic.reply")
       text = "text-#{unique_id}"
-      within "form" do
+      within "form.reply" do
         fill_in "item[text]", with: text
         click_button I18n.t("ss.links.reply")
       end
@@ -41,7 +41,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
       end
       expect(page).to have_text(text)
 
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
 

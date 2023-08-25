@@ -161,6 +161,9 @@ production: &production
       download_yearly:
         threshold_minute: 225
 
+  bookmark:
+    root_folder: お気に入り
+
   memo:
     disable_unsend: true
     disable_mail_forward: false
@@ -176,7 +179,6 @@ production: &production
     default_notice_total_body_size_limit: 31_457_280
     default_notice_individual_file_size_limit: 10_485_760
     default_notice_total_file_size_limit: 31_457_280
-    portal_browsed_state: unread
 
   # Default state and style label in user presence
   presence:
@@ -193,10 +195,10 @@ production: &production
       dayoff: none
       '': none
     reset:
-      available: ''
-      unavailable: ''
-      leave: ''
-      dayoff: ''
+      available: 'unavailable'
+      unavailable: 'unavailable'
+      leave: 'leave'
+      dayoff: 'dayoff'
     sync_available:
       disable: false
       presence_logged_in:

@@ -11,9 +11,9 @@
       window_name = @item.try(:name) || @crumbs.last.try(:first)
     end
     if window_name.present?
-      title = "#{window_name} | #{SS.config.ss.application_name}"
+      title = "#{window_name} | #{ss_application_name}"
     else
-      title = SS.config.ss.application_name
+      title = ss_application_name
     end
   %>
   <title><%= title %></title>

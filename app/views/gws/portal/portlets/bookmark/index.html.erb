@@ -23,7 +23,7 @@
               <i class="material-icons md-dark">&#xE5D4;</i>
             </a>
             <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
-              <li><%= link_to t('ss.links.show'), gws_bookmark_path(id: item), class: 'dropdown-menu-item' %></li>
+              <li><%= link_to t('ss.links.show'), gws_bookmark_item_path(id: item), class: 'dropdown-menu-item' %></li>
             </ul>
           </div>
         </div>
@@ -32,6 +32,6 @@
   </ul>
 
   <% if items.next_page && @portal.my_portal? %>
-  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_bookmarks_path %></div>
+  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_bookmark_items_path %></div>
   <% end %>
 </div>

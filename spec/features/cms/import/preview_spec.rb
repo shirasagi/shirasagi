@@ -32,10 +32,17 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
     end
 
     switch_to_window(windows.last)
+    wait_for_document_loading
 
     script = <<~SCRIPT
       (function(resolve) {
-        window.ss.promiseLoaded.then(() => resolve(window.ss.errorCount));
+        if (document.readyState === "loading") {
+          window.addEventListener('DOMContentLoaded', () => {
+            window.ss.promiseLoaded.then(() => resolve(window.ss.errorCount));
+          });
+        } else {
+          resolve(window.ss.errorCount);
+        }
       })(arguments[0]);
     SCRIPT
 

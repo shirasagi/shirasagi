@@ -1,0 +1,26 @@
+<%
+  @search_externals ||= Gws::SearchForm::Target.site(@cur_site).and_enabled.and_external.to_a
+  return if @search_externals.blank?
+%>
+<div class="external-search">
+  <div class="list-notice">
+    <i class="material-icons md-16">error_outline</i>
+    <%= t("gws/search_form.views.try_external_search") %>
+    <ul>
+      <% @search_externals.each do |target| %>
+        <li>
+          <%= link_to target.url, "data-external-search-url": target.url_without_keyword, class: "search-for-keyword" do %>
+            <span class="with-keyword" style="display: none;">
+              <%== t("gws/search_form.links.search_for_keyword", target: target.place_holder) %>
+              <i class="material-icons md-18">open_in_new</i>
+            </span>
+            <span class="default">
+              <%= target.place_holder %>
+              <i class="material-icons md-18">open_in_new</i>
+            </span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

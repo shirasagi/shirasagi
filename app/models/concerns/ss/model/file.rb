@@ -455,6 +455,7 @@ module SS::Model::File
 
   def remove_file
     Fs.rm_rf(path)
+    Fs.rm_rf("#{path}_thumb")
     remove_public_file
   end
 

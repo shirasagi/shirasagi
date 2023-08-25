@@ -61,15 +61,14 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
     it do
       # import capitals
       visit import_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capitals.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq index_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -79,15 +78,14 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import members 1
       visit import_member_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_members1.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_member_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -102,15 +100,14 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import members 2
       visit import_member_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_members2.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_member_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -125,15 +122,14 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import group 1
       visit import_group_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_groups1.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_group_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -148,15 +144,14 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
       # import group 2
       visit import_group_path
-      within "form" do
+      within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/capital_groups2.csv"
         page.accept_confirm do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_group_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload

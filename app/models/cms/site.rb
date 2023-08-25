@@ -3,6 +3,7 @@ class Cms::Site
   include SS::Relation::File
   include Cms::SitePermission
   include Cms::Addon::PageSetting
+  include Cms::Addon::Site::NodeSetting
   include Cms::Addon::DefaultReleasePlan
   include SS::Addon::MobileSetting
   include SS::Addon::MapSetting

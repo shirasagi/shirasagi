@@ -57,6 +57,7 @@ en:
     options:
       severity:
         high: Important announcements
+        normal: Normal announcements
       input_type:
         text_field: Text box
         text_area: Text area
@@ -355,6 +356,8 @@ en:
         menu_attendance_state: Display attendance
         menu_affair_label: Display affair
         menu_affair_state: Display affair
+        menu_daily_report_label: Display daily report
+        menu_daily_report_state: Display daily report
         menu_bookmark_label: Display favorites
         menu_bookmark_state: Display favorites
         menu_memo_label: Display messages

@@ -18,10 +18,9 @@
       month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
     %>
     <%= form_for :s, url: "", html: { method: :get } do |f| %>
-      <%= f.select :group_id, group_options %>
-      <%= f.select :year, year_options %>
-      <%= f.select :month, month_options %>
-
+      <%= f.select :group_id, group_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+      <%= f.select :year, year_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+      <%= f.select :month, month_options, {}, { data: { controller: "ss--submit-on-change" } } %>
       <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
       <%= link_to t("ss.buttons.reset"), gws_affair_worktime_aggregate_path, class: "btn" %>
       <%= link_to t("ss.links.download"), { action: :download }.merge(s: @s.to_h), class: "btn", style: "float: right;" %>

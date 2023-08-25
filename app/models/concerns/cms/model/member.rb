@@ -71,6 +71,12 @@ module Cms::Model::Member
     end
   end
 
+  module ClassMethods
+    def state_options
+      %w(disabled enabled temporary).map { |m| [ I18n.t("cms.options.member_state.#{m}"), m ] }.to_a
+    end
+  end
+
   def encrypt_password
     self.password = SS::Crypto.crypt(in_password)
   end
@@ -93,9 +99,7 @@ module Cms::Model::Member
     %w(text html).map { |m| [ I18n.t("cms.options.email_type.#{m}"), m ] }.to_a
   end
 
-  def state_options
-    %w(disabled enabled temporary).map { |m| [ I18n.t("cms.options.member_state.#{m}"), m ] }.to_a
-  end
+  delegate :state_options, to: :class
 
   # 関連するデータの削除
   def delete_leave_member_data(site)

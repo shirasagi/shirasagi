@@ -1,0 +1,17 @@
+<td>
+  <div>
+    <% if !print && user.id == @cur_user.id %>
+      <% if report %>
+        <% link = { action: :edit, id: report.id } %>
+      <% elsif @forms.present? %>
+        <% link = new_gws_daily_report_form_group_report_path(form_id: @forms.first.try(:id)) %>
+      <% end %>
+      <%= link_to(link, { class: 'add-plan' }) do %>
+        <i class="material-icons editicon" style="font-size: inherit"></i>
+      <% end %>
+    <% end %>
+  </div>
+  <div>
+    <%= link_to gws_public_user_long_name(user.long_name), gws_daily_report_user_reports_path(year_month: (@cur_date || Time.zone.now).strftime('%Y%m'), user: user) %>
+  </div>
+</td>

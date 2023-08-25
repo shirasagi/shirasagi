@@ -40,9 +40,22 @@ module SS::Model::Task
     validates :closed, datetime: true
 
     after_initialize :init_variables
+    after_destroy ->{ ::FileUtils.rm_rf(base_dir) }
   end
 
   class Interrupt < StandardError
+  end
+
+  class TaskLogFormatter
+    class << self
+      def default
+        self
+      end
+
+      def call(_severity, _time, _progname, msg)
+        msg
+      end
+    end
   end
 
   module ClassMethods
@@ -134,13 +147,18 @@ module SS::Model::Task
     result = save
 
     if result
+      if @logger
+        @logger.close rescue nil
+        @logger = nil
+      end
+
       if @log_file
-        @log_file.close
+        @log_file.close rescue nil
         @log_file = nil
       end
 
       if @performance
-        @performance.close
+        @performance.close rescue nil
         @performance = nil
       end
     end
@@ -177,8 +195,13 @@ module SS::Model::Task
   end
 
   def clear_log(msg = nil)
+    if @logger
+      @logger.close rescue nil
+      @logger = nil
+    end
+
     if @log_file
-      @log_file.close
+      @log_file.close rescue nil
       @log_file = nil
     end
 
@@ -187,9 +210,14 @@ module SS::Model::Task
     ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exist?(log_file_path)
   end
 
+  def base_dir
+    return if new_record?
+    @base_dir ||= "#{SS::File.root}/ss_tasks/#{id.to_s.chars.join("/")}/_"
+  end
+
   def log_file_path
     return if new_record?
-    @log_file_path ||= "#{SS::File.root}/ss_tasks/" + id.to_s.chars.join("/") + "/_/#{id}.log"
+    @log_file_path ||= "#{base_dir}/#{id}.log"
   end
 
   def perf_log_file_path
@@ -209,19 +237,38 @@ module SS::Model::Task
     Fs.head_lines(log_file_path, limit: num_logs)
   end
 
-  def log(msg)
+  def logger
     @log_file ||= begin
       dirname = ::File.dirname(log_file_path)
       ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
 
       file = ::File.open(log_file_path, 'a')
+      # file = ::File.open(log_file_path, (File::WRONLY | File::APPEND))
       file.sync = true
       file
     end
 
-    puts msg
-    @log_file.puts msg
+    @logger ||= begin
+      base_logger = ActiveSupport::Logger.new(@log_file, formatter: TaskLogFormatter.default)
+      stdout_logger = ActiveSupport::Logger.new($stdout, formatter: TaskLogFormatter.default)
+      def stdout_logger.close
+        # do not close $stdout
+      end
+
+      base_logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
+      ActiveSupport::TaggedLogging.new(base_logger)
+    end
+  end
+
+  def log(msg)
+    logger.info msg
     Rails.logger.info msg
+  end
+
+  def tagged(name, &block)
+    logger.tagged(name) do
+      Rails.logger.tagged(name, &block)
+    end
   end
 
   def process(controller, action, params = {})

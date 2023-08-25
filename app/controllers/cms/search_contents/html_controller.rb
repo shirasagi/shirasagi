@@ -37,11 +37,13 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
     begin
       raise "400" if keyword.blank?
-      if option == "regexp"
+
+      case option
+      when "regexp"
         search_html_with_regexp(keyword)
         exclude_search_results(page_ids, part_ids, layout_ids)
         replace_html_with_regexp(keyword, replacement)
-      elsif option == "url"
+      when "url"
         search_html_with_url(keyword)
         exclude_search_results(page_ids, part_ids, layout_ids)
         replace_html_with_url(keyword, replacement)
@@ -51,6 +53,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
         replace_html_with_string(keyword, replacement)
       end
     rescue => e
+      logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
     location = {
@@ -67,6 +70,11 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   private
+
+  def set_crumbs
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
+    @crumbs << [t("cms.search_contents_html"), url_for(action: :index)]
+  end
 
   def replace_html_with_string(string, replacement)
     @pages = @pages.select do |item|
@@ -130,6 +138,13 @@ class Cms::SearchContents::HtmlController < ApplicationController
       next unless item.try(field)
       html = yield item.send(field)
       attributes[field] = html if item.send(field) != html
+    end
+    unless item.try(:contact_group_related?)
+      CONTACT_FIELDS.each do |field|
+        next unless item.try(field)
+        html = yield item.send(field)
+        attributes[field] = html if item.send(field) != html
+      end
     end
     item.set(attributes) if attributes.present?
     true

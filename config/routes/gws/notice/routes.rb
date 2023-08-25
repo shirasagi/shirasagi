@@ -19,6 +19,10 @@ Rails.application.routes.draw do
         post :toggle_browsed, on: :member
         get :print, on: :member
       end
+      resources :calendars, only: [:index, :show] do
+        get :events, on: :collection
+        get :print, on: :collection
+      end
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :move, on: :member, via: [:get, :post]
         match :create_my_folder, on: :collection, via: [:get, :post]

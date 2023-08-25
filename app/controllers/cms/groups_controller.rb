@@ -4,7 +4,7 @@ class Cms::GroupsController < ApplicationController
 
   model Cms::Group
 
-  navi_view "cms/main/conf_navi"
+  navi_view "cms/main/group_navi"
 
   after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
 

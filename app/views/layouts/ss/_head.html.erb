@@ -43,6 +43,10 @@
       <% end %>
     </div>
 
+    <% if @ss_mode == :gws %>
+      <%= render "layouts/ss/head_gws_search_form", local_assigns %>
+    <% end %>
+
     <% if @cur_user %>
       <%= render "layouts/ss/head_user", local_assigns %>
     <% end %>

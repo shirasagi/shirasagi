@@ -102,7 +102,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -121,7 +121,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -169,7 +169,9 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
+        page.accept_alert(/#{::Regexp.escape(I18n.t("errors.messages.upload_restricted"))}/) do
+          click_on I18n.t("ss.buttons.save")
+        end
       end
       expect(page).to have_no_css('.file-view')
       expect(Gws::Share::File.all.count).to eq 0

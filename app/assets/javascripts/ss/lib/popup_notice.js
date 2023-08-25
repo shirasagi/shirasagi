@@ -26,10 +26,10 @@ this.SS_PopupNotice = (function () {
     $(this.target).find(".popup-notice").hide();
     $(this.target).on("click", (function (_this) {
       return function (e) {
-        return e.stopPropagation();
+        e.stopPropagation();
       };
     })(this));
-    return $($(this.target).find(".ajax-popup-notice")).on("click", (function (_this) {
+    $($(this.target).find(".ajax-popup-notice")).on("click", (function (_this) {
       return function (e) {
         var url;
         if (SS_PopupNotice.ajaxTriggered) {
@@ -47,11 +47,14 @@ this.SS_PopupNotice = (function () {
         $.ajax({
           url: url,
           beforeSend: function () {
-            return SS_PopupNotice.ajaxTriggered = true;
+            SS_PopupNotice.ajaxTriggered = true;
           },
           success: function (data) {
             $(".popup-notice-loading").html(data).removeClass("popup-notice-loading");
-            return SS_PopupNotice.ajaxTriggered = false;
+            SS_PopupNotice.ajaxTriggered = false;
+          },
+          complete: function(_xhr, _status) {
+            $(_this.target).trigger("ss:dropdownOpened");
           }
         });
         return false;

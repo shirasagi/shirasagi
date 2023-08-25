@@ -1,0 +1,30 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :place_holder %></dt>
+  <dd><%= @item.place_holder %></dd>
+
+  <dt><%= @model.t :search_service %></dt>
+  <dd><%= @item.label :search_service %></dd>
+
+  <% if @item.search_external? %>
+    <dt><%= t("gws/search_form.options.search_service.external") %></dt>
+    <dd></dd>
+
+    <dt class="depth-2"><%= @model.t :search_url %></dt>
+    <dd class="depth-2"><%= @item.search_url %></dd>
+
+    <dt class="depth-2"><%= @model.t :search_keyword_name %></dt>
+    <dd class="depth-2"><%= @item.search_keyword_name %></dd>
+
+    <dt class="depth-2"><%= @model.t :search_other_query %></dt>
+    <dd class="depth-2"><%= @item.search_other_query %></dd>
+  <% end %>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+</dl>
