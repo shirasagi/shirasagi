@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe Rdf, dbscope: :example do
-  describe ".normalize_name" do
+describe SS, dbscope: :example do
+  describe ".normalize_str" do
     let(:whitespace_characters) do
       %W[\u000A \u2000 \u2001 \u2002 \u2003 \u2004 \u2005 \u2006 \u2007 \u2008 \u2009 \u200A \u202F \u205F \u3000]
     end
 
     context "usual case" do
       let(:name) { "Music" }
-      subject { Rdf.normalize_name(name) }
+      subject { SS.normalize_str(name) }
 
       it do
         expect(subject).to eq "Music"
@@ -17,7 +17,7 @@ describe Rdf, dbscope: :example do
 
     context "case1: with null byte" do
       let(:name) { "\t\n\v\f\r s \x00\ " }
-      subject { Rdf.normalize_name(name) }
+      subject { SS.normalize_str(name) }
 
       it do
         expect(subject).to eq "s"
@@ -29,7 +29,7 @@ describe Rdf, dbscope: :example do
         # surround s with some Unicode whitespace characters.
         whitespace_characters.sample(3).join + "s" + whitespace_characters.sample(3).join
       end
-      subject { Rdf.normalize_name(name) }
+      subject { SS.normalize_str(name) }
 
       it do
         expect(subject).to eq "s"
@@ -38,7 +38,7 @@ describe Rdf, dbscope: :example do
 
     context "case3: not invalid" do
       let(:name) { whitespace_characters.sample(7).join }
-      subject { Rdf.normalize_name(name) }
+      subject { SS.normalize_str(name) }
 
       it do
         expect(subject).to eq ""

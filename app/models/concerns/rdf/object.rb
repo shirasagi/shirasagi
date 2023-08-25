@@ -67,7 +67,7 @@ module Rdf::Object
 
   def normalize_name
     # name must be NFKC
-    self.name = Rdf.normalize_name(self.name)
+    self.name = SS.normalize_str(self.name)
   end
 
   def validate_name
