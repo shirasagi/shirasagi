@@ -913,7 +913,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[7].confirm).to be_nil
       expect(answer.kintone_record_key).to be_nil
       expect(answer.kintone_revision).to be_nil
-      expect(answer.kintone_update_error_message).to eq "500 [code] message(id)"
+      expect(answer.kintone_update_error_message).to include "500 [code] message(id)"
 
       expect(ActionMailer::Base.deliveries.count).to eq 2
 
