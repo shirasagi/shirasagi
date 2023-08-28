@@ -1932,22 +1932,22 @@ body#body--index {
             }
 
             &[href="/shinchaku/"],
-            &[href="/.s9/preview/shinchaku/"] {
+            &[href$="/preview/shinchaku/"] {
               background-color: #ebfc8a;
             }
 
             &[href="/oshirase/"],
-            &[href="/.s9/preview/oshirase/"]  {
+            &[href$="/preview/oshirase/"]  {
               background-color: #cae9ff;
             }
 
             &[href="/oshirase/event/"],
-            &[href="/.s9/preview/oshirase/event/"]  {
+            &[href$="/preview/oshirase/event/"]  {
               background-color: $yellow;
             }
 
             &[href="/shisei/jinji/"],
-            &[href="/.s9/preview/shisei/jinji/"]  {
+            &[href$="/preview/shisei/jinji/"]  {
               background-color: $orange;
             }
 
@@ -7316,17 +7316,17 @@ body.docs__layout{
           }
 
           &[href="/oshirase/"],
-          &[href="/.s9/preview/oshirase/"]  {
+          &[href$="/preview/oshirase/"]  {
             background-color: #cae9ff;
           }
 
           &[href="/oshirase/event/"],
-          &[href="/.s9/preview/oshirase/event/"]  {
+          &[href$="/preview/oshirase/event/"]  {
             background-color: $yellow;
           }
 
           &[href="/shisei/jinji/"],
-          &[href="/.s9/preview/shisei/jinji/"] {
+          &[href$="/preview/shisei/jinji/"] {
             background-color: $orange;
           }
 

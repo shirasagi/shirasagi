@@ -2281,19 +2281,19 @@ body#body--index #main section#news div.cms-tabs.tabs nav.names a.name {
   }
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000031934}}
-body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/shinchaku/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/shinchaku/"] {
+body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/shinchaku/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href$="/preview/shinchaku/"] {
   background-color: #ebfc8a;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000031939}}
-body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/oshirase/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/oshirase/"] {
+body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/oshirase/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href$="/preview/oshirase/"] {
   background-color: #cae9ff;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000031944}}
-body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/oshirase/event/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/oshirase/event/"] {
+body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/oshirase/event/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href$="/preview/oshirase/event/"] {
   background-color: #ffe969;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000031949}}
-body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/shisei/jinji/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/shisei/jinji/"] {
+body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href="/shisei/jinji/"], body#body--index #main section#news div.cms-tabs.tabs nav.names a.name[href$="/preview/shisei/jinji/"] {
   background-color: #ffdbbe;
 }
 @media only screen and (min-width: 769px) {
@@ -10498,21 +10498,21 @@ body.docs__layout #side div.cms-tabs.tabs nav.names a.name:last-child {
   }
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000037318}}
-body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/oshirase/"], body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/oshirase/"],
+body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/oshirase/"], body.body--docs #side div.cms-tabs.tabs nav.names a.name[href$="/preview/oshirase/"],
 body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href="/oshirase/"],
-body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/oshirase/"] {
+body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href$="/preview/oshirase/"] {
   background-color: #cae9ff;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000037323}}
-body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/oshirase/event/"], body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/oshirase/event/"],
+body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/oshirase/event/"], body.body--docs #side div.cms-tabs.tabs nav.names a.name[href$="/preview/oshirase/event/"],
 body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href="/oshirase/event/"],
-body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/oshirase/event/"] {
+body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href$="/preview/oshirase/event/"] {
   background-color: #ffe969;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000037328}}
-body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/shisei/jinji/"], body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/shisei/jinji/"],
+body.body--docs #side div.cms-tabs.tabs nav.names a.name[href="/shisei/jinji/"], body.body--docs #side div.cms-tabs.tabs nav.names a.name[href$="/preview/shisei/jinji/"],
 body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href="/shisei/jinji/"],
-body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href="/.s9/preview/shisei/jinji/"] {
+body.docs__layout #side div.cms-tabs.tabs nav.names a.name[href$="/preview/shisei/jinji/"] {
   background-color: #ffdbbe;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\000037333}}
