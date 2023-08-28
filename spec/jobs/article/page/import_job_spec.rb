@@ -332,7 +332,8 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            released: "2018/12/23 11:01", release_date: "2018/12/23 11:00", close_date: "2019/03/31 15:00"
+            released: Time.zone.now.strftime("%Y/%m/%d %H:%M"),
+            close_date: Time.zone.now.next_year.strftime("%Y/%m/%d %H:%M")
           )
         end
 
@@ -404,6 +405,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         expect(Article::Page.site(site).count).to eq 2
+
         expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
         expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
       end
