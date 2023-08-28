@@ -23,7 +23,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       create(:cms_column_text_field, cur_site: site, cur_form: form)
     end
   end
-  let!(:page_item) { create :cms_page, form: form }
   let(:name) { "name/#{unique_id}" }
 
   before { login_cms_user }

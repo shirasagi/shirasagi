@@ -294,7 +294,6 @@ describe Article::Page, dbscope: :example do
           end
 
           it do
-            # Cms::Addon::Body
             expect(subject.html).to eq "<p>#{page.column_values[0].value}</p>"
           end
         end
