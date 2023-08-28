@@ -34,6 +34,13 @@
       </table>
     </dd>
   <% end %>
+  <% if @ss_mode == :cms && @item.workflow_init_kind.present? %>
+    <dt><%= @model.t :workflow_kind %><%= @model.tt :workflow_kind %></dt>
+    <dd>
+      <%= t("workflow.options.kind.#{@item.workflow_init_kind}") %>
+      <%= hidden_field_tag "workflow_kind", @item.workflow_init_kind %>
+    </dd>
+  <% end %>
   <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
   <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
 </dl>

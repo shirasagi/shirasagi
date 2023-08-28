@@ -20,56 +20,60 @@
 <% end %>
 
 <div class="mod-workflow">
-  <% if @item.state == "closed" %>
-    <% if @item.allowed?(:approve, @cur_user, site: @cur_site) && @item.workflow_state == "request" %>
-      <% workflow_approver = @item.find_workflow_request_to(@cur_user) %>
-      <% if workflow_approver %>
-        <section class="mod-workflow-approve">
-          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}".html_safe } do %>
-            <% if @ss_mode == :cms %>
-              <%== render_sns_post_confirm rescue nil %>
-            <% end %>
-            <%= text_area :remand, :comment, value: "" %>
-            <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
-              <div class="upload">
-                <span class="upload-menu-new">
-                  <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
-                </span>
-                <div class="upload-drop-area">
-                  <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
-                </div>
-                <div id="selected-files"></div>
-              </div>
-            <% end %>
-            <div class="buttons">
-              <% if workflow_approver[:state] == 'request' %>
-                <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
-                <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true, data: { disable: '' } %>
-              <% elsif workflow_approver[:state] == 'pending' %>
-                <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
-              <% end %>
-            </div>
-            <% if @ss_mode == :cms %>
-            <div class="checkbox">
-              <label>
-                <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "disabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
-              </label>
-            </div>
-            <% end %>
+  <% if @item.allowed?(:approve, @cur_user, site: @cur_site) && @item.workflow_state == "request" %>
+    <% workflow_approver = @item.find_workflow_request_to(@cur_user) %>
+    <% if workflow_approver %>
+      <section class="mod-workflow-approve">
+        <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}".html_safe } do %>
+          <% if @ss_mode == :cms %>
+            <%== render_sns_post_confirm rescue nil %>
           <% end %>
-        </section>
-      <% end %>
+          <dl class="see">
+            <% if @item.workflow_kind.present? %>
+              <dt><%= @model.t :workflow_kind %><%= @model.tt :workflow_kind %></dt>
+              <dd><%= @item.label(:workflow_kind) %></dd>
+            <% end %>
+          </dl>
+          <%= text_area :remand, :comment, value: "" %>
+          <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
+            <div class="upload">
+              <span class="upload-menu-new">
+                <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+              </span>
+              <div class="upload-drop-area">
+                <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+              </div>
+              <div id="selected-files"></div>
+            </div>
+          <% end %>
+          <div class="buttons">
+            <% if workflow_approver[:state] == 'request' %>
+              <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+              <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true, data: { disable: '' } %>
+            <% elsif workflow_approver[:state] == 'pending' %>
+              <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+            <% end %>
+          </div>
+          <% if @ss_mode == :cms %>
+          <div class="checkbox">
+            <label>
+              <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "disabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
+            </label>
+          </div>
+          <% end %>
+        <% end %>
+      </section>
     <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @item.workflow_member.blank? %>
-      <% if @item.try(:cloned_name?) %>
-        <section class="mod-workflow-request">
-          <h1><%= t("errors.messages.invalid_approve_name") %></h1>
-        </section>
-      <% elsif !@item.workflow_requested? %>
-        <section class="mod-workflow-request">
-          <div class="see request-setting workflow-partial-section"></div>
-        </section>
-      <% end %>
+  <% end %>
+  <% if @item.allowed?(:edit, @cur_user, site: @cur_site) && @item.workflow_member.blank? %>
+    <% if @item.try(:cloned_name?) %>
+      <section class="mod-workflow-request">
+        <h1><%= t("errors.messages.invalid_approve_name") %></h1>
+      </section>
+    <% elsif !@item.workflow_requested? %>
+      <section class="mod-workflow-request">
+        <div class="see request-setting workflow-partial-section"></div>
+      </section>
     <% end %>
   <% end %>
   <% if @ss_mode == :gws && @item.workflow_state == @model::WORKFLOW_STATE_APPROVE %>
@@ -137,6 +141,11 @@
       <% if @item.workflow_comment.present? %>
         <dt><%= @model.t :workflow_comment %></dt>
         <dd><%= @item.workflow_comment %></dd>
+      <% end %>
+
+      <% if @item.workflow_kind.present? %>
+        <dt><%= @model.t :workflow_kind %></dt>
+        <dd><%= @item.label(:workflow_kind) %></dd>
       <% end %>
 
       <dt><%= @model.t :workflow_pull_up %></dt>
