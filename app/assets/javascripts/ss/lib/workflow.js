@@ -172,6 +172,7 @@ SS_Workflow.prototype = {
 
     var uri = this.composeWorkflowUrl('pages');
     uri += "/" + updatetype + "_update";
+    var workflow_kind = $("#workflow_kind").prop("value");
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
@@ -195,6 +196,7 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: {
+        workflow_kind: workflow_kind,
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
         workflow_on_remand: workflow_on_remand,

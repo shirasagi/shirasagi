@@ -195,6 +195,12 @@ production: &production
     category/node:
       disable: true
 
+  # column name validation type
+  #
+  # restricted: restrict reserved characters.
+  # unrestricted: not to restrict characters.
+  column_name_type: "unrestricted"
+
 test:
   <<: *production
 

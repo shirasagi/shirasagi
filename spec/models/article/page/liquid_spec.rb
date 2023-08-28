@@ -264,12 +264,13 @@ describe Article::Page, dbscope: :example do
           ]
         )
       end
+      let(:html) { "<p>{{ values['#{column1.name}'] }}</p>" }
 
       before do
         node.st_form_ids = [ form.id ]
         node.save!
 
-        form.html = "<p>{{ values['#{column1.name}'] }}</p>"
+        form.html = html
         form.save!
       end
 
@@ -277,6 +278,24 @@ describe Article::Page, dbscope: :example do
         it do
           # Cms::Addon::Body
           expect(subject.html).to eq "<p>#{page.column_values[0].value}</p>"
+        end
+
+        context "with column_name_type is unrestricted" do
+          let(:name) { "name/#{unique_id}" }
+          let!(:column1) do
+            create(:cms_column_text_field, cur_form: form, name: name, order: 1, input_type: 'text')
+          end
+          let(:html) { "<p>{{ values['#{name.sub('/', '_')}'] }}</p>" }
+
+          around do |example|
+            save_config = SS.config.replace_value_at(:cms, 'column_name_type', 'unrestricted')
+            example.run
+            SS.config.replace_value_at(:cms, 'column_name_type', save_config)
+          end
+
+          it do
+            expect(subject.html).to eq "<p>#{page.column_values[0].value}</p>"
+          end
         end
       end
 
