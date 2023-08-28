@@ -8,9 +8,9 @@ describe SS::Captcha, type: :model, dbscope: :example do
         expect(captcha).to be_persisted
         expect(captcha.captcha_text).to be_present
         expect(captcha.captcha_error).to be_blank
-        expect(captcha.image_path).to be_present
+        expect(captcha.out_captcha_image_base64).to be_present
 
-        binary = Base64.strict_decode64(captcha.image_path)
+        binary = Base64.strict_decode64(captcha.out_captcha_image_base64)
         expect(binary).to be_present
 
         image = MiniMagick::Image.read(StringIO.new(binary))

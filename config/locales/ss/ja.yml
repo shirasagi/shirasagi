@@ -55,6 +55,17 @@ ja:
     large_file_upload: 大容量アップロード
     upload_status: アップロード状況
     under_maintenance_mode: 現在メンテナンス中です。
+    pagination: ページネーション
+    hours: 時間
+    minutes: 分
+    remark: 備考
+    before: 前
+    after: 後
+    time: 時間
+    fiscal_year: 年度
+    test_deliver: テスト配信
+    target: 対象
+    unlimited: 制限無し
 
     views:
       login/login:
@@ -62,12 +73,15 @@ ja:
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
       index:
+        created: "作成日時：%{created}"
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
         approved: "承認日時：%{approved}"
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+        openrate: "開封率：%{openrate}"
+        expiration_date: "期限切れ日時：%{expiration_date}"
       oauth2/application:
         header:
           name: アプリケーション種別
@@ -78,12 +92,17 @@ ja:
         service:
           name: サービス
           text: OAuth 2.0 サービス・アプリケーションを作成します。サーバー間での認証を有効にします。
+      line:
+        test_deliver:
+          - テストメンバー宛に本文を配信します。
+          - 配信するボタンを押下するとテスト配信処理が開始されます。
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
       unseen: 未読一覧
       seen: 既読一覧
       trash: ゴミ箱
+      calendar: カレンダー
     links:
       add: 追加する
       cms: サイト管理
@@ -150,6 +169,12 @@ ja:
       copy_email_address: メールアドレスをコピー
       closed_save: 非公開にする
       edit_password: パスワード変更
+      registration: 登録する
+      approve: 承認する
+      prev: 前へ
+      next: 次へ
+      update: 更新する
+      open_in_new_tab: 別タブで開く
     buttons:
       save: 保存
       saving: 保存中
@@ -219,6 +244,9 @@ ja:
       file_name_order: 名前順
       file_upload_order: アップロード順
       make_them_closed: 非公開にする
+      update: 更新
+      prev: 前
+      next: 次
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -250,14 +278,18 @@ ja:
       target_to_delete: 削除対象の確認
       target_to_public: 公開対象の確認
       target_to_closed: 非公開対象の確認
+      approve: 承認してよろしいですか？
+      test_deliver: テスト配信を開始してよろしいですか？
     notice:
       saved: 保存しました。
+      not_saved_successfully: 正常に保存できませんでした。
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
       changed: 変更しました。
       unable_to_change: '%{items} を変更できませんでした。'
       copied: 複製しました。
       imported: インポートしました。
+      approved: 承認しました。
       started_import: インポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。
@@ -266,7 +298,7 @@ ja:
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。
-      file_droppable: ファイルをドロップすることでアップロードできます。
+      file_droppable: ここにファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。
@@ -296,6 +328,9 @@ ja:
         - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
         - これを超える制限サイズを設定しても有効に機能しません。
         - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
+      updated: 更新しました。
+      ordered_by_file_name_order: 名前順で並び変えました。
+      ordered_by_file_upload_order: アップロード順で並び変えました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -467,6 +502,8 @@ ja:
         zoom_in: '+'
         zoom_out: '-'
         reset: 標準
+        smaller: 小さく
+        larger: 大きく
       datetime_unit:
         day: 日
         week: 週
@@ -514,6 +551,12 @@ ja:
           end_with: が次で終わる
           include_any_of: が次を含む
           include_none_of: が次を含まない
+      lang:
+        ja: 日本語
+        en: English (Experimental)
+      link_target:
+        _self: 同じタブで開く
+        _blank: 新しいタブで開く
 
     tasks:
       started: 開始しました。
@@ -563,11 +606,13 @@ ja:
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
+      ss/workflow_setting: ワークフロー設定
       ss/maintenance_mode: メンテナンスモード
       ss/oauth2/sys_permission: システム権限
       ss/oauth2/cms_permission: CMS権限
       ss/oauth2/gws_permission: グループウェア権限
       ss/oauth2/webmail_permission: メール権限
+      ss/locale_setting: 言語設定
 
   activemodel:
     attributes:
@@ -900,7 +945,6 @@ ja:
       ss/model/editor_setting:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
-        syntax_check: アクセシビリティチェック
       ss/model/mail_setting:
         sender_name: 差出人名
         sender_email: 差出人メールアドレス
@@ -934,6 +978,7 @@ ja:
         translate_mock_api_request_count: APIリクエスト数
         translate_mock_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_key: "サブスクリプション キー"
+        translate_microsoft_api_region: リージョン
         translate_microsoft_api_request_count: APIリクエスト数
         translate_microsoft_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_request_metered_usage: "x-metered-usage"
@@ -983,7 +1028,17 @@ ja:
         public_key_type: 公開鍵種別
         public_key: 公開鍵
         public_key_encrypted: 公開鍵
-
+      ss/addon/locale_setting:
+        lang: 言語
+        timezone: タイムゾーン
+      ss/addon/workflow_setting:
+        workflow_my_group: 自所属の表示
+      ss/api_token:
+        name: 名前
+        jwt_id: JWT ID (jti)
+        expiration_date: 期限切れ日時
+        audience_id: 利用ユーザー
+        jwt: APIトークン
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1338,8 +1393,10 @@ ja:
       file_fs_access_restriction_env:
         - 許可する環境変数を設定します。
         -
-        - これが想定するユースケースですが、nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
-        - これらを nginx の proxy_set_header でシラサギへ伝播し、シラサギで設定内容を確認するというケースを想定しています。
+        - これが想定するユースケースですが、
+        - 1. nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
+        - 2. これらを nginx の proxy_set_header でシラサギへ伝播し、
+        - 3. シラサギで設定内容を確認するというケースを想定しています。
         -
         - "nginx の設定例:"
         - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
@@ -1383,8 +1440,6 @@ ja:
         - 文字色変更ボタンの表示を設定します。
       editor_css_path:
         - エディタ用スタイルシートのパスを設定します。
-      syntax_check:
-        - アクセシビリティチェックの有効無効を設定します。
 
     ss/model/mail_setting:
       sender_name:
@@ -1433,6 +1488,10 @@ ja:
       inquiry_form_id:
         - グループ共通のお問い合わせフォームを設定します。
 
+    ss/addon/workflow_setting:
+      workflow_my_group:
+        - ページの公開申請時「自所属」を表示するか設定します。
+
     ss:
       contrast_ratio:
         - 7以上でAAA、4.5以上でAA
@@ -1455,6 +1514,12 @@ ja:
         - $ openssl rsa -in private_key.pem -pubout -out public_key.pem
         -
         - public_key.pem が公開鍵ですので、この中身をペーストしてください。
+
+    ss/addon/locale_setting:
+      lang:
+        - 言語を選択してください。
+      timezone:
+        - タイムゾーンを選択してください。
 
   job:
     models:

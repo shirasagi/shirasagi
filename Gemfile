@@ -3,10 +3,10 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gem 'rails', '~> 6.1.0'
-gem 'sprockets', '< 4.0'
+gem 'sprockets'
 gem 'jsbundling-rails'
-gem 'sass'
-gem 'sassc-rails'
+gem 'sass-rails'
+gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'jbuilder'
@@ -17,7 +17,7 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 
 # Database
-gem 'mongoid', github: 'shirasagi/mongoid', branch: '7.3-stable-MONGOID-5183'
+gem 'mongoid'
 gem 'mongo_session_store'
 gem 'mongoid-grid_fs'
 
@@ -30,7 +30,6 @@ gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'marked-rails'
-gem 'momentjs-rails'
 
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'
@@ -41,9 +40,8 @@ gem 'diff-lcs'
 gem 'diffy'
 gem 'fast_blank'
 gem 'fastimage'
-gem 'fullcalendar.io-rails', '~> 2.6.0'
 gem 'geocoder'
-gem 'google-cloud-translate', '2.0.0'
+gem 'google-api-client'
 gem 'holiday_japan'
 gem 'http_accept_language'
 gem 'icalendar'
@@ -57,8 +55,12 @@ gem 'marcel'
 gem 'mini_magick'
 gem 'mongoid-geospatial'
 gem 'net-ldap'
+gem 'net-imap'
+gem 'net-pop'
+gem 'net-smtp'
 gem 'non-stupid-digest-assets'
 gem 'oj'
+gem 'psych', '< 4.0.0'
 gem 'rails_autolink'
 gem 'retriable'
 gem 'rexml'
@@ -67,6 +69,7 @@ gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
+gem 'shortuuid'
 gem 'thinreports'
 gem 'ungarbled'
 gem 'view_component'
@@ -103,7 +106,7 @@ gem 'unf'
 
 # elasticsearch
 gem 'faraday'
-gem 'elasticsearch'
+gem 'elasticsearch', '~> 7'
 
 # line
 gem 'line-bot-api'
@@ -115,7 +118,7 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'debase', '0.2.5.beta2', require: false
+  gem 'debase', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
@@ -139,7 +142,7 @@ group :development, :test do
   gem 'rubocop-rails', '2.11.3', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
-  gem 'selenium-webdriver', require: false
+  gem 'selenium-webdriver', '~> 4.11', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
@@ -147,7 +150,6 @@ group :development, :test do
   gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
-  gem 'webdrivers', require: false
 end
 
 group :development do

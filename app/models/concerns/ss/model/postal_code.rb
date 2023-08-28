@@ -62,19 +62,21 @@ module SS::Model::PostalCode
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << %w(code prefecture prefecture_kana prefecture_code city city_kana town town_kana)
-        criteria.each do |item|
-          line = []
-          line << item.code
-          line << item.prefecture
-          line << item.prefecture_kana
-          line << item.prefecture_code
-          line << item.city
-          line << item.city_kana
-          line << item.town
-          line << item.town_kana
-          data << line
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(code prefecture prefecture_kana prefecture_code city city_kana town town_kana)
+          criteria.each do |item|
+            line = []
+            line << item.code
+            line << item.prefecture
+            line << item.prefecture_kana
+            line << item.prefecture_code
+            line << item.city
+            line << item.city_kana
+            line << item.town
+            line << item.town_kana
+            data << line
+          end
         end
       end
     end

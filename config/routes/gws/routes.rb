@@ -6,11 +6,6 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
-  concern :download do
-    get :download, on: :collection
-    get :download_template, on: :collection
-  end
-
   concern :import do
     get :import, on: :collection
     post :import, on: :collection
@@ -44,9 +39,16 @@ Rails.application.routes.draw do
   namespace "gws", path: ".g:site/gws" do
     get "question_management" => "question_management#index"
     resource  :site
-    resources :groups, concerns: [:deletion, :download, :import]
-    resources :custom_groups, concerns: [:deletion, :download, :import]
-    resources :users, concerns: [:deletion, :download, :import, :webmail_import, :lock_and_unlock]
+    resources :groups, concerns: [:deletion, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+    end
+    resources :custom_groups, concerns: [:deletion, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+    end
+    resources :users, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
+      match :download_all, on: :collection, via: %i[get post]
+      get :download_template, on: :collection
+    end
     resources :user_titles, concerns: [:deletion] do
       match :download_all, on: :collection, via: %i[get post]
       match :import, on: :collection, via: %i[get post]
@@ -55,7 +57,9 @@ Rails.application.routes.draw do
       match :download_all, on: :collection, via: %i[get post]
       match :import, on: :collection, via: %i[get post]
     end
-    resources :roles, concerns: [:deletion, :download, :import]
+    resources :roles, concerns: [:deletion, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+    end
     resources :sys_notices, only: [:index, :show] do
       get :frame_content, on: :member
     end
@@ -70,7 +74,7 @@ Rails.application.routes.draw do
       get :edit_password, on: :member
       post :update_password, on: :member
     end
-    resource :user_setting, only: [:show, :edit, :update]
+    resource :user_locale_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do
       resources :user_form_columns, concerns: :deletion, path: '/columns'
     end

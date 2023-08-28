@@ -58,14 +58,14 @@ describe "event_pages", type: :feature, js: true do
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
 
     it "#copy" do
@@ -140,7 +140,8 @@ describe "event_pages", type: :feature, js: true do
     it "not permited and contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
-                                  release_private_event_pages release_other_event_pages))
+                                  release_private_event_pages release_other_event_pages
+                                  close_private_event_pages close_other_event_pages))
       visit edit_path2
       within "form" do
         click_on I18n.t("ss.buttons.withdraw")
@@ -152,7 +153,8 @@ describe "event_pages", type: :feature, js: true do
     it "not permited and not contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_event_pages edit_other_event_pages
-                                  release_private_event_pages release_other_event_pages))
+                                  release_private_event_pages release_other_event_pages
+                                  close_private_event_pages close_other_event_pages))
       visit edit_path
       within "form" do
         click_on I18n.t("ss.buttons.withdraw")

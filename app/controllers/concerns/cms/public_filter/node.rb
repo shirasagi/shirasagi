@@ -13,16 +13,8 @@ module Cms::PublicFilter::Node
     @node.reload if @node.changed?
   end
 
-  def find_node(path)
-    node = Cms::Node.site(@cur_site).in_path(path).order_by(depth: -1).to_a.first
-    return unless node
-    @preview || node.public? ? node : nil
-  end
-
   def render_node(node)
-    rest = @cur_main_path.sub(/^\/#{::Regexp.escape(node.filename)}/, "").sub(/\/index\.html$/, "")
-    path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
-    spec = recognize_agent path
+    spec = recognize_node(node, @cur_main_path)
     return unless spec
 
     @cur_node = node
@@ -59,6 +51,22 @@ module Cms::PublicFilter::Node
   end
 
   public
+
+  def recognize_node(node, path)
+    action = path.sub(/^\/#{::Regexp.escape(node.filename)}/, "")
+
+    rest = action.delete_suffix("index.html")
+    rest = action if ::File.extname(rest).present?
+
+    path = "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
+    recognize_agent path
+  end
+
+  def find_node(path)
+    node = Cms::Node.site(@cur_site).in_path(path).order_by(depth: -1).to_a.first
+    return unless node
+    @preview || node.public? ? node : nil
+  end
 
   def generate_node(node, opts = {})
     path = opts[:url] || "#{node.filename}/index.html"
@@ -103,7 +111,7 @@ module Cms::PublicFilter::Node
       end
     end
 
-    max = opts[:max] || 9999
+    max = opts[:max] || 1000
     num = max
 
     2.upto(max) do |i|

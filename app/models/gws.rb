@@ -27,7 +27,8 @@ module Gws
     Gws::Attendance::TimeCard
     Gws::Board::Category
     Gws::Board::Post
-    Gws::Bookmark
+    Gws::Bookmark::Item
+    Gws::Bookmark::Folder
     Gws::Chorg::Changeset
     Gws::Chorg::Revision
     Gws::Circular::Post

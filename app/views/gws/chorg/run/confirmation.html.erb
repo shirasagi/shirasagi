@@ -24,7 +24,7 @@
 
       <% if params[:type] == 'main' %>
       <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
-      <dd><%= f.text_field(:reservation, class: 'datetime js-datetime', data: { min_date: '+1970/01/02' }) %></dd>
+      <dd><%= f.ss_datetime_field :reservation %></dd>
 
       <dt><%= @model.t :staff_record_state %><%= @model.tt :staff_record_state %></dt>
       <dd><%= f.select(:staff_record_state, @item.staff_record_state_options, include_blank: true) %></dd>

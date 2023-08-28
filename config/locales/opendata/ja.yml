@@ -64,6 +64,10 @@ ja:
       remove_favorite: 登録解除しました。
       select_datasets_limit: 最大１０件までデータセットを選択できます。
       dataset_graph_select_resource: 「データセットを探す」よりデータセットを検索して、リソースを選択するとグラフが表示されます。
+      download_report_notice_md: |-
+        本集計では、以下のダウンロード履歴は除外して集計していますので、ダウンロード履歴を集計して得られる数値と、本集計の数値とが異なる場合があります。
+        - ダウンロード方法が「一括」は除外
+        - ボットは除外
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
@@ -503,6 +507,9 @@ ja:
     release_other_opendata_datasets: データセットの公開（全て）
     release_private_opendata_datasets: データセットの公開（所有）
     release_member_opendata_datasets: データセットの公開（メンバー）
+    close_other_opendata_datasets: データセットの非公開（全て）
+    close_private_opendata_datasets: データセットの非公開（所有）
+    close_member_opendata_datasets: データセットの非公開（メンバー）
     approve_other_opendata_datasets: データセットの承認（全て）
     approve_private_opendata_datasets: データセットの承認（所有）
     approve_member_opendata_datasets: データセットの承認（メンバー）
@@ -522,6 +529,9 @@ ja:
     release_other_opendata_apps: アプリの公開（全て）
     release_private_opendata_apps: アプリの公開（所有）
     release_member_opendata_apps: アプリの公開（メンバー）
+    close_other_opendata_apps: アプリの非公開（全て）
+    close_private_opendata_apps: アプリの非公開（所有）
+    close_member_opendata_apps: アプリの非公開（メンバー）
     approve_other_opendata_apps: アプリの承認（全て）
     approve_private_opendata_apps: アプリの承認（所有）
     approve_member_opendata_apps: アプリの承認（メンバー）
@@ -541,6 +551,9 @@ ja:
     release_other_opendata_ideas: アイデアの公開（全て）
     release_private_opendata_ideas: アイデアの公開（所有）
     release_member_opendata_ideas: アイデアの公開（メンバー）
+    close_other_opendata_ideas: アイデアの非公開（全て）
+    close_private_opendata_ideas: アイデアの非公開（所有）
+    close_member_opendata_ideas: アイデアの非公開（メンバー）
     approve_other_opendata_ideas: アイデアの承認（全て）
     approve_private_opendata_ideas: アイデアの承認（所有）
     approve_member_opendata_ideas: アイデアの承認（メンバー）

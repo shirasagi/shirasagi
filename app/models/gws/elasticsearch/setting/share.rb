@@ -17,7 +17,7 @@ class Gws::Elasticsearch::Setting::Share
     search_types
   end
 
-  def translate_category(es_type, cate_name)
+  def translate_category(es_type, cate_name, opts = {})
     @categories ||= Gws::Share::Category.site(cur_site).to_a
     cate = @categories.find { |cate| cate.name == cate_name }
     return if cate.blank?

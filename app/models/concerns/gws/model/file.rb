@@ -41,7 +41,7 @@ module Gws::Model::File
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :mangle_filename
-    before_save :rename_file, if: ->{ @db_changes.present? }
+    before_save :rename_file, if: ->{ changes.present? || previous_changes.present? }
     before_save :save_file
     before_destroy :remove_file
 
@@ -312,13 +312,15 @@ module Gws::Model::File
 
   def remove_file
     Fs.rm_rf(path)
+    Fs.rm_rf("#{path}_thumb")
     Dir.glob(path + "_history[0-9]*").each { |file| Fs.rm_rf(file) } if Dir.glob(path + "_history[0-9]*").count > 0
     remove_public_file
   end
 
   def rename_file
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
+    filename_changes = changes["filename"].presence || previous_changes["filename"]
+    return unless filename_changes
+    return unless filename_changes[0]
 
     remove_public_file if site
   end

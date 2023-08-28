@@ -1,0 +1,50 @@
+<%= render partial: 'gws/workload/main/base_navi' %>
+
+<div class="gws-workload-graphs">
+  <div class="navi">
+    <div class="gws-side-navi" style="overflow: auto;">
+      <h2 class="title"><%= t('gws/workload.tabs.graph') %></h2>
+
+      <% render_tree_item = proc do |cate| %>
+        <% url = url_for(action: :index, category: cate.id) %>
+        <% css_class = %w(tree-item is-open) %>
+        <% css_class << "is-current" if request.path.start_with?(url) %>
+        <%= content_tag("div", class: css_class, data: { id: cate.id, filename: cate.id }) do %>
+          <%= link_to cate.name, url, class: "item-name" %>
+        <% end %>
+      <% end %>
+
+      <div class="tree-navi">
+        <% cate = OpenStruct.new(id: "-", name: "総括表") %>
+        <% render_tree_item.call(cate) %>
+      </div>
+
+      <hr>
+
+      <div class="tree-navi">
+        <% @categories.each do |cate| %>
+          <% render_tree_item.call(cate) %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="head">
+      <div class="operations">
+        <%= link_to t("gws/workload.links.work_csv"), url_for(action: :download_works), class: "btn btn-csv" %>
+        <%= link_to t("gws/workload.links.work_comment_csv"), url_for(action: :download_work_comments), class: "btn btn-csv" %>
+      </div>
+    </div>
+    <div class="graphs">
+      <% if @category %>
+        <div class="graph"><%= render partial: "client" %></div>
+        <div class="graph"><%= render partial: "load" %></div>
+      <% else %>
+        <div class="graph"><%= render partial: "total" %></div>
+        <div class="graph"><%= render partial: "worktime" %></div>
+        <div class="graph"><%= render partial: "overtime" %></div>
+      <% end %>
+    </div>
+  </div>
+</div>

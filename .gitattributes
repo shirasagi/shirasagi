@@ -1,5 +1,6 @@
 spec/fixtures/cms/*.csv binary
 spec/fixtures/cms/role/*.csv binary
+spec/fixtures/gws/chorg/*.csv binary
 spec/fixtures/gws/memo/*.eml binary
 spec/fixtures/gws/schedule/*.csv binary
 spec/fixtures/gws/user/*.csv binary
@@ -7,3 +8,4 @@ spec/fixtures/opendata/*.csv binary
 spec/fixtures/webmail/*.csv binary
 spec/fixtures/webmail/*.eml binary
 spec/fixtures/sys/auth/*.der binary
+spec/fixtures/sys/groups/*.csv binary

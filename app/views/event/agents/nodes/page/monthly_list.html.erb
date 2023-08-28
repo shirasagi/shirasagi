@@ -18,7 +18,10 @@
 <% end %>
 
 <nav class="event-date" aria-label="<%= t("event.calendar") %>">
-  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <h2 class="<%= event_h1_class @month %>">
+    <span class="calendar-year"><%= @year %><%= t_date('year') %></span>
+    <span class="calendar-month"><%= @month %><%= t_date('month') %></span>
+  </h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
     <div class="event-format">
       <span class="list current">
@@ -55,7 +58,7 @@
     <% end %>
 
     <% pages.each do |page, categories| %>
-    <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+    <dd class="page <%= page.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>" data-start-date="<%= tryb { page.event_dates.start_date(date).strftime("%Y/%m/%d") } %>" data-end-date="<%= tryb { page.event_dates.end_date(date).strftime("%Y/%m/%d") } %>">
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <% if categories.present? %>
           <% cate = categories.entries.sort_by{ |c| c.order }.first %>

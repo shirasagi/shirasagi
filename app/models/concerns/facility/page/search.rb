@@ -1,14 +1,12 @@
 module Facility::Page
   module Search
     extend ActiveSupport::Concern
-    include Map::MapHelper
+    include Map::FacilityHelper
 
     included do
       before_save :set_map_points
-      before_save :set_sidebar_html
 
       field :map_points, type: Array, default: []
-      field :sidebar_html, type: String, default: ""
     end
 
     def set_map_points
@@ -29,10 +27,6 @@ module Facility::Page
           self.map_points << point
         end
       end
-    end
-
-    def set_sidebar_html
-      self.sidebar_html = render_map_sidebar(self)
     end
   end
 end

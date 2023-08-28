@@ -13,7 +13,7 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || filter_include?(:translate) || @preview }
+    before_action :x_sendfile, unless: ->{ filter_include_any?(:mobile, :kana, :translate) || @preview }
   end
 
   def index
@@ -105,9 +105,7 @@ module Cms::PublicFilter
 
     data = Fs.read(@scss)
     begin
-      opts = Rails.application.config.sass
-      load_paths = opts.load_paths[1..-1] || []
-      load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+      load_paths = Rails.application.config.assets.paths.dup
       load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
 
       sass = Sass::Engine.new(

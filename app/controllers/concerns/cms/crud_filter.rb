@@ -15,17 +15,25 @@ module Cms::CrudFilter
     append_view_path "app/views/ss/crud"
   end
 
-  def set_items
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site)
-  end
-
   def set_item
     @item = @model.site(@cur_site).find(params[:id])
     @item.attributes = fix_params
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def set_items
+    @items = @model.site(@cur_site).
+      allow(:read, @cur_user, site: @cur_site)
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @selected_items = @items = @model.in(id: ids).site(@cur_site)
+    raise "400" unless @items.present?
   end
 
   def destroy_items
@@ -53,10 +61,14 @@ module Cms::CrudFilter
     @items = []
 
     role_action = :edit
-    role_action = :release if @change_state && @item.class.include?(Cms::Addon::Release)
+    if @model.include?(Cms::Addon::Release)
+      role_action = :release if @change_state == 'public'
+      role_action = :close if @change_state == 'closed'
+    end
 
     entries.each do |item|
       if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
         item.state = @change_state if item.respond_to?(:state)
         next if item.save
       else
@@ -121,21 +133,6 @@ module Cms::CrudFilter
     render_destroy @item.destroy
   end
 
-  def change_state_all
-    raise "400" if @selected_items.blank?
-
-    @change_state = params[:state]
-    if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
-      return
-    end
-
-    respond_to do |format|
-      format.html { render "cms/crud/change_state_all" }
-      format.json { head json: errors }
-    end
-  end
-
   def destroy_all
     raise "400" if @selected_items.blank?
 
@@ -169,5 +166,20 @@ module Cms::CrudFilter
       @items << item
     end
     render_confirmed_all(entries.size != @items.size)
+  end
+
+  def change_state_all
+    raise "400" if @selected_items.blank?
+
+    @change_state = params[:state]
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: request.path)
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/crud/change_state_all" }
+      format.json { head json: errors }
+    end
   end
 end

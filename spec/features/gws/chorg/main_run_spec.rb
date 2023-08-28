@@ -26,7 +26,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
     let(:reservation_at) { Time.zone.now.beginning_of_minute + 7.days }
 
     before do
-      @save_config = SS.config.job.default
+      @save_config = SS.config.job.default.dup
 
       config = @save_config.dup
       config["mode"] = "service"
@@ -44,7 +44,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
 
       expectation = expect do
         within "form#item-form" do
-          fill_in "item[reservation]", with: I18n.l(reservation_at, format: :picker) + "\n"
+          fill_in_datetime "item[reservation]", with: reservation_at
           click_on I18n.t("chorg.views.run/confirmation.main.run_button")
         end
       end

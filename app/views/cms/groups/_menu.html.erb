@@ -2,10 +2,10 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
-      <%= link_to t('ss.links.download'), action: :download %>
+      <%= link_to t('ss.links.download'), action: :download_all %>
       <%= link_to t('ss.links.import'), action: :import %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|destroy_all/ %>
+  <% elsif params[:action] =~ /new|create|download_all|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <%= link_to t('ss.links.back_to_show'), action: :show, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
@@ -17,7 +17,9 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.role_setting'), action: :role_edit, id: @item if @item.users.present? %>
     <% end %>
-    <%= link_to t('ss.links.delete'), action: :delete, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @item.active? && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

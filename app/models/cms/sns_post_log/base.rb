@@ -43,7 +43,7 @@ class Cms::SnsPostLog::Base
   private
 
   def set_name
-    self.name ||= "[#{label(:state)}] #{label(:type)} #{created.strftime("%Y/%m/%d %H:%M")}"
+    self.name ||= "[#{label(:state)}] #{label(:type)} #{I18n.l(created, format: :picker)}"
   end
 
   class << self

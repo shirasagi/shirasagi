@@ -11,6 +11,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
     h = []
     h << '<a href="/">index</a>'
     h << '<a href="/docs/">docs</a>'
+    h << '<a href="/docs/?キー=値">docs</a>'
     h << '<a href="/docs/index.html">docs</a>'
     h << '<a href="/docs/page1.html">page.html</a>'
     h << '<a href="/docs/notfound1.html">notfound1.html</a>'
@@ -33,7 +34,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
   let(:page1_report_created) { docs_page1.latest_check_links_report.created }
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site).perform_now
+    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
   end
 
   def latest_report
@@ -103,6 +104,7 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
         end
       end
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       within "div#main" do
         expect(page).to have_no_css("a.ss-check-links-error", text: "[リンク切れ]index.html")

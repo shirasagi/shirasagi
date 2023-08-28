@@ -13,7 +13,7 @@
         <div class="info">
           <%= link_to item.subject_with_group, { action: :show, id: item }, class: "title" %>
           <div class="meta">
-            <span class="datetime"><%= item.send_date.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= ss_time_tag item.send_date %></span>
           </div>
         </div>
       </li>

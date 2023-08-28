@@ -20,33 +20,35 @@ module Cms::Addon::Import
       end
 
       def to_csv(opts = {})
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            roles = item.cms_roles
-            roles = roles.site(opts[:site]) if opts[:site]
-            line = []
-            line << item.id
-            line << item.name
-            line << item.kana
-            line << item.uid
-            line << item.organization_uid
-            line << item.email
-            line << nil
-            line << item.tel
-            line << item.tel_ext
-            line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
-            line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
-            if item.initial_password_warning.present?
-              line << I18n.t('ss.options.state.enabled')
-            else
-              line << I18n.t('ss.options.state.disabled')
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              roles = item.cms_roles
+              roles = roles.site(opts[:site]) if opts[:site]
+              line = []
+              line << item.id
+              line << item.name
+              line << item.kana
+              line << item.uid
+              line << item.organization_uid
+              line << item.email
+              line << nil
+              line << item.tel
+              line << item.tel_ext
+              line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
+              line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
+              if item.initial_password_warning.present?
+                line << I18n.t('ss.options.state.enabled')
+              else
+                line << I18n.t('ss.options.state.disabled')
+              end
+              line << item.organization&.name
+              line << Cms::Group.site(opts[:site]).in(id: item.group_ids).pluck(:name).join("\n")
+              line << item.ldap_dn
+              line << roles.pluck(:name).join("\n")
+              data << line
             end
-            line << item.organization&.name
-            line << Cms::Group.site(opts[:site]).in(id: item.group_ids).pluck(:name).join("\n")
-            line << item.ldap_dn
-            line << roles.pluck(:name).join("\n")
-            data << line
           end
         end
       end

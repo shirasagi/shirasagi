@@ -1,0 +1,71 @@
+<%= jquery do %>
+
+$('.popup-attributes .custom-group-name').on("click", function() {
+  $(this).parent().find('.custom-group-members').slideToggle('fast');
+  return false;
+});
+
+<% end %>
+
+<div class="popup-title"><%= link_to @item.name, { action: :show } %></div>
+<div class="popup-date"><%= term(@item) %></div>
+
+<span class="ss-quota-bar gws-achievement-bar">
+  <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate || 0) %></div>
+  <div class="usage " style="width: <%= @item.achievement_rate || 0 %>%"></div>
+</span>
+
+<% if @item.text.present? %>
+    <div class="popup-description">
+      <div class="text <%= "markdown-body" if @item.text_type == "markdown" %>">
+        <%= @item.html %>
+      </div>
+    </div>
+<% end %>
+
+<div class="popup-attributes">
+  <div class="popup-attr popup-members">
+    <div class="popup-label"><%= t("modules.addons.gws/member") %></div>
+    <div class="popup-value">
+
+      <% @item.member_group.tap do |g| %>
+        <div class="custom-group">
+          <a class="custom-group-name" href="#"><%= g.section_name %></a><br/>
+          <div class="custom-group-members" id="custom-group-<%= g.id %>">
+            <%= gws_public_user_long_names(Gws::User.active.in(group_ids: g.id).map(&:long_name)).join(', ') %>
+          </div>
+        </div>
+      <% end %>
+
+      <%= gws_public_user_long_names(@item.members.order_by_title(@cur_site).map(&:long_name)).join(', ') %>
+    </div>
+  </div>
+
+  <% if hist = @item.histories.where(mode: 'update').first %>
+      <div class="popup-attr popup-history">
+        <div class="popup-label"><%= t "gws.history.user.update" %></div>
+        <div class="popup-value">
+          <span class="user"><%= gws_public_user_long_name(hist.user_long_name) %></span>
+          <% if hist.user_tel.present? && @cur_site.user_profile_public?("tel") %><span class="tel"><%= hist.user_tel %></span><% end %>
+        </div>
+      </div>
+  <% end %>
+
+  <div class="popup-attr popup-history">
+    <div class="popup-label"><%= t "gws.history.user.create" %></div>
+    <div class="popup-value">
+      <span class="user"><%= gws_public_user_long_name(@item.user_long_name) %></span>
+      <% if @item.user_tel.present? && @cur_site.user_profile_public?("tel") %><span class="tel"><%= @item.user_tel %></span><% end %>
+    </div>
+  </div>
+</div>
+
+<%
+  menu = []
+  menu << link_to(I18n.t('ss.links.show'), { action: :show })
+  menu << link_to(I18n.t('ss.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, site: @cur_site)
+  menu << link_to(I18n.t('ss.links.delete'), { action: :soft_delete }) if @item.allowed?(:delete, @cur_user, site: @cur_site)
+%>
+<% if menu.present? %>
+    <div class="popup-menu"><%= safe_join(menu) %></div>
+<% end %>

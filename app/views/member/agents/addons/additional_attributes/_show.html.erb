@@ -14,5 +14,5 @@
   <dt><%= @model.t :sex %></dt>
   <dd><%= @item.label :sex %></dd>
   <dt><%= @model.t :birthday %></dt>
-  <dd><%= tryb { @item.birthday.strftime('%Y/%m/%d') } %></dd>
+  <dd><%= ss_time_tag(@item.birthday, type: :date) %></dd>
 </dl>

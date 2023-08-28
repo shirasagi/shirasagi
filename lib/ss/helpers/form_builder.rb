@@ -2,6 +2,7 @@ module SS::Helpers
   class FormBuilder < ActionView::Helpers::FormBuilder
     include SS::Helpers::FileFormBuilder
     include SS::Helpers::ColorPickerBuilder
+    include SS::Helpers::DateTimePickerBuilder
 
     def hidden_field(method, options = {})
       method = method.to_s
@@ -34,6 +35,10 @@ module SS::Helpers
       end
 
       @template.check_box_tag(object_method, checked_value, checked, options)
+    end
+
+    def ss_lines_field(method, options = {})
+      @template.ss_lines_field(@object_name, method, objectify_options(options))
     end
 
     private

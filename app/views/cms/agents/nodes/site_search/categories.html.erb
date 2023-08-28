@@ -9,7 +9,7 @@ var cboxLoad = function() {
       $("#cboxLoadedContent").html(data);
     },
     error: function (data, status) {
-      $("#cboxLoadedContent").html("== Error ==");
+      $("#cboxLoadedContent").text("== Error ==");
     }
   });
   return false;
@@ -50,7 +50,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
           <article style="display: none;" class="selected-item" data-name="<%= item.name %>">
             <header>
               <span class="category-name"><%= item.name %></span>
-              <%= hidden_field_tag('s[category_names][]', item.name) %>
+              <%= hidden_field_tag('s[category_names][]', item.name, id: nil) %>
               <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
             </header>
           </article>
@@ -81,7 +81,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
           <article style="display: none;" class="selected-item" data-name="<%= bucket['key'] %>">
             <header>
               <span class="category-name"><%= bucket['key'] %></span>
-              <%= hidden_field_tag('s[category_names][]', bucket['key']) %>
+              <%= hidden_field_tag('s[category_names][]', bucket['key'], id: nil) %>
               <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
             </header>
           </article>

@@ -6,7 +6,7 @@ module History::Addon
     included do
       attr_accessor :skip_history_backup, :history_backup_action
 
-      after_save :save_backup, if: -> { @db_changes.present? }
+      after_save :save_backup, if: -> { changes.present? || previous_changes.present? }
       before_destroy :destroy_backups
     end
 
@@ -33,7 +33,8 @@ module History::Addon
 
       # add backup
       backup = History::Backup.new
-      backup.user_id   = @cur_user.id if @cur_user
+      backup.user      = @cur_user
+      backup.member    = @cur_member
       backup.ref_coll  = collection_name
       backup.ref_class = self.class.to_s
       backup.action = history_backup_action if history_backup_action.present?

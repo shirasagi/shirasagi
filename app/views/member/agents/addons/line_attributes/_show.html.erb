@@ -1,6 +1,6 @@
 <dl class="see mod-line-member-additional-attributes">
   <dt><%= @item.t(:first_registered) %></dt>
-  <dd><%= tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= ss_time_tag @item.first_registered %></dd>
 
   <dt><%= @item.t(:subscribe_richmenu_id) %></dt>
   <dd><%= @item.subscribe_richmenu_id %></dd>

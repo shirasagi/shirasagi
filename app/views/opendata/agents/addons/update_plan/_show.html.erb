@@ -5,7 +5,7 @@
   <dt><%= @model.t :update_plan_date %></dt>
   <dd>
     <% if @item.update_plan_date.present? %>
-      <%= @item.update_plan_date.strftime("%Y/%m/%d") %>
+      <%= ss_time_tag(@item.update_plan_date, type: :date) %>
       <% if @item.update_plan_unit.present? %>
         <%= "-" %>
         <%= @item.label :update_plan_unit %>

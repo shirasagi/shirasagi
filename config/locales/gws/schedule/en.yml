@@ -1,0 +1,590 @@
+en:
+  gws/schedule:
+    reminder: Reminders
+    private_plan: Planned
+    loading: Loading
+    no_plan: Nothing planned
+    search_plans: Search plans
+    search_users: Search users
+    search_times: Search available times
+    today_wday: Today's week day
+    navi:
+      holiday: Holiday settings
+      category: Type settings
+      todo: To-do list
+      trash: Trash
+    tabs:
+      personal: Personal
+      personal_list: Plan list
+      group: All
+      facility: Facility reservations
+      search: Search
+      search/users: User search
+      search/times: Search available times
+      my_todo: My to-do tasks
+      manageable_todo: Other users’ to-do tasks
+    calendar:
+      buttonText:
+        listMonth: List
+        withTodo: ToDo
+        withAbsence: Absence
+      titleFormat:
+        month: "%m/%Y"
+        week: "(%a, %m/%d/%Y)"
+        day: "%a, %m/%d/%Y"
+      columnFormat:
+        month: "%a"
+        week: "%a, %m/%d"
+        day: "%a, %m/%d"
+    links:
+      add_plan: Create a plan
+      download: Download
+      import: Import
+      add_todo: Create a to-do task
+      add_workload: Create a work task
+      add_holiday: Create a holiday
+      show_month: Month view
+      show_week: Week view
+      show_day: Day view
+      create_report: Create a report
+      back_to_todo: Back to to-do
+      back_to_calendar: Back to calendar
+    buttons:
+      delete_one: This time only
+      delete_later: All since
+      delete_all: All schedules in a series
+      comment: Comments
+    options:
+      allday:
+        allday: All day
+      attendance_state:
+        unknown: Unconfirmed
+        attendance: Participating
+        absence: Not participating
+      approval_state:
+        unknown: Unconfirmed
+        approve: Approve
+        deny: Deny
+      approved_state:
+        request: Approval pending
+        approve: Approved
+        deny: Sent back
+      interval:
+        daily: Day
+        weekly: Week
+        monthly: Month
+        yearly: Year
+      repeat_base:
+        date: Date
+        wday: Day of week
+      repeat_type:
+        none: No repetition
+        daily: Every day
+        weekly: Every week
+        monthly: Every month
+        yearly: Every year
+      schedule_attachment_state:
+        allow: Allow
+        deny: Do not allow
+      schedule_drag_drop_state:
+        allow: Allow
+        deny: Do not allow
+      priority:
+        "1": Highest
+        "2": High
+        "3": Standard
+        "4": Low
+        "5": Lowest
+      schedule_custom_group_extra_state:
+        creator_name: Add an author name to a custom group
+      member_mode:
+        default: Default
+        current_user: Current user
+        under_current_group: Users under the current group
+        specific: Specific users (specified below)
+    operations:
+      expand_all: Expand all
+      collapse_all: Close all
+    facility_reservation:
+      index: Check reservation status
+      state: Reservation status
+      duplicate_register_message: Duplicate reservations are possible.
+      free: Reservable
+      exist: Cannot be reserved
+      registered: Registered
+    import:
+      result: Results
+      entry: Can be registered
+      exist: Registered
+      error: Error
+      saved: Registration completed
+      count: "%{count} plans were imported."
+    errors:
+      empty_plan_days: There are no days when you can register plans.
+      less_than_years: "Must be within %{count} year(s)."
+      less_than_max_date: "Enter the date and time until %{date}."
+      faciliy_time_gte: "The reserved time must be at least %{count} minutes."
+      faciliy_time_lte: "The reserved time must be %{count} minutes or less."
+      invalid_faciliy_reservate_member: '%{name} does not have permission to reserve.'
+      double_booking_facility: The facility is already reserved.
+      over_than_facility_hours: "Please register the facility reservation within the available time frame. (%{min} to %{max} hours)"
+      unable_to_reserve_all_days: You cannot reserve a facility all day due to limits on facility use.
+      faciliy_day_lte: "The reservation time must be within %{count} days."
+      not_found_reservable_facilities: No available facilities found.
+      resource_error: Failed to get schedule.
+
+    csv:
+      id: ID
+      name: Title
+      start_on: Start date
+      end_on: End date
+      color: Display color
+      repeat_plan_datas:
+        id: Repeat ID
+        repeat_type: Repeat
+        repeat_start: Repeat start date
+        repeat_end: Repeat end date
+        interval: Repeat interval
+        repeat_base: Repetition criteria
+        wdays: Day of week
+
+  gws/schedule/todo:
+    active: Undo delete
+    disabled_items: Deleted
+    finish_mark: "[Completed] "
+    todo_over: Overdue
+    achievement_rate: "%{count}%"
+    achievement_rate_unit: "%"
+    category_not_assigined: No project or process
+    discussion_forum_not_assigined: No electronic conference room
+    member: Person in charge
+    buttons:
+      finish: Complete
+      revert: Revert to incomplete
+    notice:
+      disable: Moved to Deleted
+      active: Deletion cancelled
+    confirm:
+      finish: Are you sure you want to mark this as completed?
+      revert: Are you sure you want to revert this to incomplete?
+      finish_all: Do you want to mark all selected items as completed?
+      revert_all: Do you want to revert all selected items to incomplete?
+    search_todos: Search for to-do tasks
+    links:
+      finish: Complete
+      revert: Revert to incomplete
+    navi:
+      category: Projects and processes
+    header:
+      out_dated: Overdue
+      today: Today
+      tomorrow: Tomorrow
+      day_after_tomorrow: After tomorrow
+    apis:
+      categories:
+        index: Select a project or process
+    options:
+      todo_state:
+        finished: Completed
+        progressing: In progress
+        unfinished: Not started
+      todo_state_filter:
+        finished: Completed
+        progressing: In progress
+        unfinished: Not started
+        except_finished: Exclude completed
+        all: All
+      sort:
+        created_asc:  Date and time created (in chronological order)
+        created_desc: Date and time created (by newest)
+        updated_asc:  Date and time updated (in chronological order)
+        updated_desc: Date and time updated (by newest)
+        end_at_asc:  Due date (ascending order)
+        end_at_desc: Due date (descending order)
+      grouping:
+        none: No grouping
+        category: Projects and processes
+        user: Person responsible
+        end_at: Deadline
+        discussion_forum: Electronic conference rooms
+  gws/schedule/group_setting:
+    options:
+      todo_delete_threshold:
+        - 6 months
+        - 1 year
+        - 1 year and 6 months
+        - 2 years
+        - 2 years and 6 months
+        - 3 years
+        - 3 years and 6 months
+  modules:
+    gws/schedule: Schedule
+    gws/schedule/todo: ToDo
+    gws/todo: ToDo
+    addons:
+      gws/schedule/facility: Facility reservations
+      gws/schedule/facility_column_values: Additional facility information
+      gws/schedule/repeat: Repeat
+      gws/schedule/todo: ToDo
+      gws/schedule/comments: Comments
+      gws/schedule/attendance: Confirm attendance
+      gws/schedule/approval: Approve
+      gws/schedule/reports: Reports
+      gws/schedule/group_setting: Schedule
+      gws/schedule/todo/member: Person responsible
+      gws/schedule/todo/comment_post: Comments
+      gws/schedule/todo/category: Projects and processes
+
+  gws_role:
+    edit_gws_schedule_holidays: Manage holidays
+    read_other_gws_schedule_plans: View plans (all)
+    read_private_gws_schedule_plans: View plans (own)
+    edit_other_gws_schedule_plans: Edit plans (all)
+    edit_private_gws_schedule_plans: Edit plans (own)
+    delete_other_gws_schedule_plans: Delete plans (all)
+    delete_private_gws_schedule_plans: Delete plans (own)
+    trash_other_gws_schedule_plans: Manage plan trash (all)
+    trash_private_gws_schedule_plans: Manage plan trash (own)
+    use_private_gws_schedule_plans: Use of plans
+    read_other_gws_schedule_categories: View types (all)
+    read_private_gws_schedule_categories: View types (own)
+    edit_other_gws_schedule_categories: Edit types (all)
+    edit_private_gws_schedule_categories: Edit types (own)
+    delete_other_gws_schedule_categories: Delete types (all)
+    delete_private_gws_schedule_categories: Delete types (own)
+    use_private_gws_schedule_todos: Use of to-do tasks
+    read_other_gws_schedule_todos: View to-do tasks (all)
+    read_private_gws_schedule_todos: View to-do tasks (own)
+    edit_other_gws_schedule_todos: Edit to-do tasks (all)
+    edit_private_gws_schedule_todos: Edit to-do tasks (own)
+    delete_other_gws_schedule_todos: Delete to-do tasks (all)
+    delete_private_gws_schedule_todos: Delete to-do tasks (own)
+    trash_other_gws_schedule_todos: Manage to-do trash (all)
+    trash_private_gws_schedule_todos: Manage to-do trash (own)
+    read_other_gws_schedule_todo_categories: View projects and processes (all)
+    read_private_gws_schedule_todo_categories: View projects and processes (own)
+    edit_other_gws_schedule_todo_categories: Edit projects and processes (all)
+    edit_private_gws_schedule_todo_categories: Edit project and processes (own)
+    delete_other_gws_schedule_todo_categories: Delete projects and processes (all)
+    delete_private_gws_schedule_todo_categories: Delete projects and processes (own)
+
+  mongoid:
+    models:
+      gws/schedule/plan: Schedule
+      gws/schedule/todo: ToDo
+      gws/schedule/category: Type
+      gws/schedule/holiday: Holiday
+      gws/schedule/comment: Comments
+      gws/schedule/attendance: Attendance
+      gws/schedule/approval: Approve
+      gws/schedule/todo_comment: To-do comments
+      gws/schedule/todo_category: Projects and processes
+    errors:
+      models:
+        gws/schedule/plan:
+          file_size_exceeds_limit: "The size of the attachment (%{size}) has exceeded the maximum size (%{limit})."
+        gws/schedule/holiday:
+          attributes:
+            base:
+              not_found: "%{line_no}: No holiday exists for ID %{id}."
+        gws/schedule/todo_category:
+          invalid_chars_as_name: "The following characters cannot be used: \\ / : * ? \" < > |"
+    attributes:
+      gws/schedule/planable:
+        name: Title
+        start_at: Start date and time
+        end_at: End date and time
+        start_on: Start date
+        end_on: End date
+        allday: All day
+        term: Date and time
+      gws/schedule/priority:
+        priority: Importance
+      gws/schedule/plan: &plan
+        repeat_plan_id: Repeat
+        category_id: Type
+        color: Display color
+      gws/schedule/repeat_plan: &repeat_plan
+        repeat_type: Repeat settings
+        interval: Repeat interval
+        repeat_start: Start date
+        repeat_end: End date
+        repeat_base: Repetition criteria
+        wdays: Day of week
+      gws/schedule/category:
+        name: Schedule type
+      gws/schedule/holiday:
+        term: Date
+        color: Display color
+      gws/addon/schedule/repeat:
+        <<: *repeat_plan
+        repeat_plan_id: Recurring plans
+        repeat_start: Repeat - Start date
+        repeat_end: Repeat - End date
+        wdays: Repeat day of the week
+      gws/addon/schedule/facility:
+        facility_ids: Facility reservations
+      gws/addon/schedule/group_setting:
+        schedule_state: Use of functions
+        schedule_menu_label: Menu name
+        schedule_max_date: Period that can be entered
+        schedule_max_years: Years
+        schedule_max_month: End month
+        schedule_hours: Display hours
+        schedule_min_hour: Start hour
+        schedule_max_hour: End hour
+        schedule_first_wday: Start day of week
+        schedule_max_file_size: Maximum attachment size
+        todo_delete_threshold: Period that to-do can be restored
+        schedule_attachment_state: File attachment
+        schedule_drag_drop_state: Drag and drop
+        schedule_personal_tab_state: Display personal tabs
+        schedule_personal_tab_label: Display personal tabs
+        schedule_group_tab_state: Show group tabs
+        schedule_custom_group_tab_state: Show custom group tabs
+        schedule_group_all_tab_state: Display global tabs
+        schedule_group_all_tab_label: Display global tabs
+        schedule_facility_tab_state: Display facility reservations tab
+        schedule_facility_tab_label: Display facility reservations tab
+      gws/schedule/user_setting:
+        schedule_tabs: Show tabs
+        schedule_tabs_group_ids: Show tabs/group
+        in_schedule_tabs_group_ids: Show tabs/group
+        schedule_tabs_custom_group_ids: Show tabs/custom groups
+        in_schedule_tabs_custom_group_ids: Show tabs/custom groups
+      gws/schedule/todo:
+        <<: *plan
+        name: ToDo
+        term: Deadline
+        todo_state: Status
+        deleted: Deletion date and time
+        discussion_forum_id: Electronic conference rooms
+        achievement_rate: Progress rate
+      gws/addon/schedule/attendance:
+        attendance_check_state: Confirm attendance
+        attendances: Attendance information
+      gws/addon/schedule/approval:
+        approval_state: Approval status
+        approval_member_ids: Approver
+        approvals: Approval information
+      gws/schedule/attendance:
+        attendance_state: Attendance
+      gws/schedule/approval:
+        approval_state: Approve
+      gws/addon/schedule/facility_column_values:
+        main_facility_id: Main facilities
+        facility_column_values: Additional facility information
+      gws/addon/schedule/todo/member:
+        member_ids: User responsible
+        member_group_ids: Group responsible
+        member_custom_group_ids: Custom group responsible
+      gws/addon/schedule/todo/comment_post:
+        comments: Comments
+      gws/schedule/todo_comment:
+        todo_id: ToDo
+        achievement_rate: Progress rate
+      gws/addon/schedule/todo/category:
+        category_ids: Projects and processes
+      gws/schedule/todo_category:
+        name: Project/Process name
+        depth_level: Depth
+        in_basename: Project/Process name
+        in_parent_id: Parent project or process name
+
+  tooltip:
+    gws/schedule/planable:
+      name:
+        - Enter a title for the schedule.
+      term:
+        - Enter the date and time for the schedule.
+        -
+        - "If you check “All day”, you can input a schedule that runs throughout the day. When “All day” is checked, input the schedule day."
+    gws/schedule/priority:
+      priority: Select the importance level.
+    gws/schedule/plan: &tooltip_plan
+      category_id:
+        - Select the schedule type.
+      color:
+        - Enter the display color.
+        -
+        - "Enter the display color in an \"#RRGGBB\" format (RR, GG, BB stand for red, green, and blue components in hexadecimal colors)."
+    gws/schedule/repeat_plan: &repeat_plan_tooltip
+      repeat_type:
+        - Select Repeat.
+      interval:
+        - Select a repeat interval.
+      repeat_start:
+        - Enter a start date.
+      repeat_end:
+        - Enter an end date.
+      repeat_base:
+        - Select the repetition criteria.
+      wdays:
+        - Select the day of the week.
+    gws/addon/schedule/repeat:
+      <<: *repeat_plan_tooltip
+    gws/addon/schedule/member:
+      member_ids:
+        - Select participants in the schedule.
+    gws/addon/schedule/facility:
+      facility_ids:
+        - Select the facility to use.
+    gws/addon/schedule/group_setting:
+      schedule_state:
+        - Select whether or not you want to use a function.
+      schedule_menu_label:
+        - Enter a menu name.
+        - The default value is “Schedule”.
+      schedule_max_years:
+        - Enter the number of years.
+      schedule_max_month:
+        - Enter the month when the period ends.
+      schedule_min_hour:
+        - Enter the start hour
+      schedule_max_hour:
+        - Enter the end hour
+      schedule_first_wday:
+        - Enter the start day of week
+      schedule_max_file_size:
+        - Enter the maximum attached file size.
+        - 0 means unlimited.
+      todo_delete_threshold:
+        - Enter the period that the to-do task can be restored.
+      schedule_attachment_state:
+        - Select whether to allow file attachments.
+      schedule_drag_drop_state:
+        - Select whether to allow drag and drop.
+    gws/schedule/holiday:
+      name:
+        - Enter a title.
+      term:
+        - Enter the start and end dates for the holiday.
+      color:
+        - Enter the display color.
+        -
+        - "Enter the display color in an \"#RRGGBB\" format (RR, GG, BB stand for red, green, and blue components in hexadecimal colors)."
+    gws/schedule/category:
+      name:
+        - Enter the schedule type.
+    gws/schedule/todo:
+      <<: *tooltip_plan
+      name:
+        - Enter a task name.
+      term:
+        - Enter the due date for the task.
+
+    gws/addon/schedule/attendance:
+      attendance_check_state:
+        - Select whether or not to enable attendance confirmation.
+
+  gws_notification:
+    gws/schedule/plan:
+      subject: "[Schedule] “%{name}” has been registered or updated."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/comment:
+      subject: "There is a comment in [Schedule] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/todo:
+      subject: "[To-do] “%{name}” has been registered or updated."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/todo_comment:
+      subject: "There is a comment in [To-do] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/attendance:
+      subject: "There is a reply for attendance confirmation of [Schedule] “%{name}”."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/plan/destroy:
+      subject: "[Schedule] “%{name}” has been removed."
+      text: ""
+
+    gws/schedule/plan/undo_delete:
+      subject: "Deletion of [Schedule] “%{name}” has been canceled."
+      text: "%{text}"
+
+    gws/schedule/comment/destroy:
+      subject: "A comment for [Schedule] “%{name}” has been deleted."
+      text: "%{text}"
+
+    gws/schedule/todo/destroy:
+      subject: "[To-do] “%{name}” has been deleted."
+      text: ""
+
+    gws/schedule/todo_comment/destroy:
+      subject: "A comment for [To-do] “%{name}”has been deleted."
+      text: "%{text}"
+
+    gws/schedule/todo/finish:
+      subject: "[To-do] “%{name}” is now complete."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+    gws/schedule/todo/revert:
+      subject: "[To-do] “%{name}” is incomplete."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+    gws/schedule/todo/undo_delete:
+      subject: "Deletion of [To-do] “%{name}” has been canceled."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+    gws/schedule/attendance/destroy:
+      subject: "An attendance confirmation response for [Schedule] “%{name}” has been removed."
+      text: "%{text}"
+
+    gws/schedule/plan/approval/request:
+      subject: "An approval request for [Schedule] “%{name}” has arrived."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/plan/approval/approve:
+      subject: "Approval of [Schedule] “%{name}” is complete."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/schedule/plan/approval/remand:
+      subject: "The request for approval of [Schedule] “%{name}” has been sent back by %{from}."
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+  job:
+    models:
+      gws/schedule/trash_purge_job: Empty plan trash
+      gws/schedule/todo_trash_purge_job: Empty to-do trash

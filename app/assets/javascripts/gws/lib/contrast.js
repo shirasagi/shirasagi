@@ -65,7 +65,7 @@ Gws_Contrast.prototype.completeLoading = function(xhr) {
 };
 
 Gws_Contrast.prototype.showMessage = function(message) {
-  this.$el.append($('<li/>').html('<div class="gws-contrast-error">' + message + '</div>'));
+  this.$el.append($('<li/>').html($('<div class="gws-contrast-error"/>').text(message)));
 };
 
 Gws_Contrast.prototype.renderContrasts = function(data) {
@@ -96,7 +96,7 @@ Gws_Contrast.prototype.renderContrast = function(id, name, color, textColor) {
   var $input = $('<input/>', { type: 'radio', name: 'gws-contrast-item', value: id });
   var $label = $('<label/>', { class: 'gws-contrast-item', data: dataAttrs });
   $label.append($input);
-  $label.append('<span class="gws-contrast-name">' + name + '</span>');
+  $label.append($('<span class="gws-contrast-name"/>').text(name));
 
   this.$el.append($('<li/>').append($label));
 };

@@ -1,5 +1,5 @@
 <%= javascript_tag do %>
-$(function() {
+SS.ready(function() {
   $(".search-date select").each(function() {
     return hideDateForm($(this));
   });
@@ -30,7 +30,7 @@ this.hideDateForm = function(self) {
 
   <dt><%= @model.t :search_category_ids %><%= @model.tt :search_category_ids %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[search_category_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_category_ids][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -44,7 +44,7 @@ this.hideDateForm = function(self) {
       <tbody>
       <% @item.search_categories.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "#{f.object_name}[search_category_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[search_category_ids][]", item.id, id: nil %> <%= item.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -56,7 +56,7 @@ this.hideDateForm = function(self) {
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_group_ids %><%= @model.tt :search_group_ids %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[search_group_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_group_ids][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -70,7 +70,7 @@ this.hideDateForm = function(self) {
       <tbody>
       <% @item.search_groups.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "#{f.object_name}[search_group_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[search_group_ids][]", item.id, id: nil %> <%= item.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -82,7 +82,7 @@ this.hideDateForm = function(self) {
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_user_ids %><%= @model.tt :search_user_ids %></dt>
   <dd>
-    <%= hidden_field_tag "item[search_user_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "item[search_user_ids][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.users.index"), cms_apis_users_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -96,7 +96,7 @@ this.hideDateForm = function(self) {
       <tbody>
       <% @item.search_users.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "item[search_user_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "item[search_user_ids][]", item.id, id: nil %> <%= item.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -108,7 +108,7 @@ this.hideDateForm = function(self) {
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_node_ids %><%= @model.tt :search_node_ids %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[search_node_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_node_ids][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -122,7 +122,33 @@ this.hideDateForm = function(self) {
       <tbody>
       <% @item.search_nodes.each do |item| %>
           <tr data-id="<%= item.id %>">
-            <td><%= hidden_field_tag "#{f.object_name}[search_node_ids][]", item.id %> <%= item.name %></td>
+            <td><%= hidden_field_tag "#{f.object_name}[search_node_ids][]", item.id, id: nil %> <%= item.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-cms-page-search">
+  <dt><%= @model.t :search_layout_ids %><%= @model.tt :search_layout_ids %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.layouts.index"), cms_apis_layouts_path , class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :search_layout_ids %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.search_layouts.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", item.id, id: nil%> <%= item.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
       <% end %>
@@ -134,7 +160,7 @@ this.hideDateForm = function(self) {
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_routes %><%= @model.tt :search_routes %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[search_routes][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_routes][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.pages_routes.index"), cms_apis_pages_routes_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -149,7 +175,7 @@ this.hideDateForm = function(self) {
       <% @item.search_routes.each do |route| %>
         <% next if route.blank? %>
         <tr data-id="<%= route %>">
-          <td><%= hidden_field_tag "#{f.object_name}[search_routes][]", route %> <%= I18n.t("mongoid.models.#{route}") %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[search_routes][]", route, id: nil %> <%= I18n.t("mongoid.models.#{route}") %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -160,27 +186,27 @@ this.hideDateForm = function(self) {
   <dt><%= @model.t :search_released %><%= @model.tt :search_released %></dt>
   <dd class="search-date"><%= f.select :search_released_condition, @item.search_date_options %></dd>
   <dd class="absolute">
-    <%= f.text_field :search_released_start, class: "datetime js-datetime search-released-start" %>
+    <%= f.ss_datetime_field :search_released_start, {}, { class: "search-released-start" } %>
     <%= "-" %>
-    <%= f.text_field :search_released_close, class: "datetime js-datetime search-released-close" %>
+    <%= f.ss_datetime_field :search_released_close, {}, { class: "search-released-close" } %>
   </dd>
   <dd class="relative"><%= f.number_field :search_released_after %><%= I18n.t('ss.units.days_progress') %></dd>
 
   <dt><%= @model.t :search_updated %><%= @model.tt :search_updated %></dt>
   <dd class="search-date"><%= f.select :search_updated_condition, @item.search_date_options %></dd>
   <dd class="absolute">
-    <%= f.text_field :search_updated_start, class: "datetime js-datetime search-updated-start" %>
+    <%= f.ss_datetime_field :search_updated_start, {}, { class: "search-updated-start" } %>
     <%= "-" %>
-    <%= f.text_field :search_updated_close, class: "datetime js-datetime search-updated-close" %>
+    <%= f.ss_datetime_field :search_updated_close, {}, { class: "search-updated-close" } %>
   </dd>
   <dd class="relative"><%= f.number_field :search_updated_after %><%= I18n.t('ss.units.days_progress') %></dd>
 
   <dt><%= @model.t :search_approved %><%= @model.tt :search_approved %></dt>
   <dd class="search-date"><%= f.select :search_approved_condition, @item.search_date_options %></dd>
   <dd class="absolute">
-    <%= f.text_field :search_approved_start, class: "datetime js-datetime search-approved-start" %>
+    <%= f.ss_datetime_field :search_approved_start, {}, { class: "search-approved-start" } %>
     <%= "-" %>
-    <%= f.text_field :search_approved_close, class: "datetime js-datetime search-approved-close" %>
+    <%= f.ss_datetime_field :search_approved_close, {}, { class: "search-approved-close" } %>
   </dd>
   <dd class="relative"><%= f.number_field :search_approved_after %><%= I18n.t('ss.units.days_progress') %></dd>
 

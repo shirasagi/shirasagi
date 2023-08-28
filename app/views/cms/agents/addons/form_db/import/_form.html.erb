@@ -10,7 +10,7 @@
 
   <dt><%= @model.t :import_column_options %><%= @model.tt :import_column_options %></dt>
   <dd>
-    <%= hidden_field_tag "item[import_column_options][0][name]", value: nil %>
+    <%= hidden_field_tag "item[import_column_options][0][name]", value: nil, id: nil %>
     <table class="index">
       <thead>
       <tr>
@@ -46,7 +46,7 @@
   </dd>
 
   <dt><%= @model.t :import_exclude_columns %><%= @model.tt :import_exclude_columns %></dt>
-  <dd><%= f.text_area :import_exclude_columns, style: 'max-width: 20rem; height: 10rem;' %></dd>
+  <dd><%= f.ss_lines_field :import_exclude_columns, style: 'max-width: 20rem; height: 10rem;' %></dd>
 
   <%
     import_options = []

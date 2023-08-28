@@ -11,9 +11,11 @@ this.Gws_Presence_User = (function () {
       return false;
     });
     $(".presence-state-selector [data-value]").on("click", function() {
-      var id = $(this).closest(".presence-state-selector").attr("data-id");
-      var url = $(this).closest(".presence-state-selector").attr("data-url");
-      var value = $(this).attr("data-value");
+      var $this = $(this);
+      var $presenceState = $this.closest(".presence-state-selector");
+      var id = $presenceState.attr("data-id");
+      var url = $presenceState.attr("data-url");
+      var value = $this.attr("data-value");
       $.ajax({
         url: url,
         type: "POST",
@@ -164,7 +166,7 @@ this.Gws_Presence_User_Reload = (function () {
     var page = opts["page"];
 
     $(".group-users .reload").on("click", function () {
-      param = $.param({
+      var param = $.param({
         "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
         "paginate_params": paginate_params,
         "page": page
@@ -183,7 +185,7 @@ this.Gws_Presence_User_Reload = (function () {
       });
     });
     $(".group-users .list-head .search").on("submit", function () {
-      param = $.param({
+      var param = $.param({
         "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
         "paginate_params": paginate_params,
       });

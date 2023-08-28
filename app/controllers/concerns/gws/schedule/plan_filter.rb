@@ -25,8 +25,18 @@ module Gws::Schedule::PlanFilter
   end
 
   def pre_params
+    now = Time.zone.now.change(min: 0)
+
+    start_at = params[:start].in_time_zone rescue nil
+    end_at = params[:end].in_time_zone rescue nil
+
+    start_at ||= now
+    end_at ||= start_at + 1.hour
     {
-      start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      start_at: start_at,
+      end_at: end_at,
+      start_on: start_at.to_date,
+      end_on: end_at.to_date,
       member_ids: params[:member_ids].presence || [@cur_user.id],
       facility_ids: params[:facility_ids].presence
     }
@@ -59,10 +69,10 @@ module Gws::Schedule::PlanFilter
 
   def redirection_url
     path = params.dig(:calendar, :path)
-    if path.present?
-      uri = URI(path)
+    if path.present? && trusted_url?(path)
+      uri = ::Addressable::URI.parse(path)
       uri.query = { calendar: redirection_calendar_params }.to_param
-      uri.to_s
+      uri.request_uri
     else
       url_for(controller: 'gws/schedule/main', action: :index, calendar: redirection_calendar_params)
     end
@@ -87,9 +97,11 @@ module Gws::Schedule::PlanFilter
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user, site: @cur_site)
-
-    render
+    if @item.readable?(@cur_user, site: @cur_site)
+      render template: 'show'
+    else
+      render template: 'private_plan'
+    end
   end
 
   def events
@@ -146,6 +158,7 @@ module Gws::Schedule::PlanFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.deleted = Time.zone.now
     @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.save, location: redirection_url
@@ -160,6 +173,7 @@ module Gws::Schedule::PlanFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.deleted = nil
     @item.edit_range = params.dig(:item, :edit_range)
     @item.reset_approvals

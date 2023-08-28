@@ -1,6 +1,6 @@
 class Cms::Part
   include Cms::Model::Part
-  include Cms::PluginRepository
+  include SS::PluginRepository
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -30,6 +30,19 @@ class Cms::Part
     include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/node") }
+  end
+
+  class Node2
+    include Cms::Model::Part
+    include Cms::Addon::NodeList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    self.use_conditions = false
+    self.use_node_routes = true
+
+    default_scope ->{ where(route: "cms/node2") }
   end
 
   class Page
@@ -91,6 +104,16 @@ class Cms::Part
     default_scope ->{ where(route: "cms/monthly_nav") }
   end
 
+  class SiteSearchKeyword
+    include Cms::Model::Part
+    include Cms::Addon::SiteSearch::Keyword
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/site_search_keyword") }
+  end
+
   class SiteSearchHistory
     include Cms::Model::Part
     include Cms::Addon::SiteSearch::History
@@ -109,5 +132,24 @@ class Cms::Part
     include ::History::Addon::Backup
 
     default_scope ->{ where(route: "cms/history_list") }
+  end
+
+  class Print
+    include Cms::Model::Part
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/print") }
+  end
+
+  class ClipboardCopy
+    include ::Cms::Model::Part
+    include ::Cms::Addon::ClipboardCopy
+    include ::Cms::Addon::Release
+    include ::Cms::Addon::GroupPermission
+    include ::History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/clipboard_copy") }
   end
 end

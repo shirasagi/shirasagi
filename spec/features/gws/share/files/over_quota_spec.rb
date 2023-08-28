@@ -23,20 +23,24 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
         within "#addon-basic" do
-          click_on I18n.t("ss.links.upload")
+          wait_cbox_open { click_on I18n.t("ss.links.upload") }
         end
       end
 
-      wait_for_ajax do
+      wait_for_cbox do
         attach_file "item[in_files][]", filepath
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
       end
 
       within "form#item-form" do
+        expect(page).to have_css("#addon-basic .file-view", text: ::File.basename(filepath))
         fill_in "item[memo]", with: unique_id
         within "footer.send" do
           click_on I18n.t("ss.links.upload")
@@ -55,20 +59,24 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     shared_examples "over a quota" do
       it do
         visit index_path
+        within ".tree-navi" do
+          expect(page).to have_css(".item-name", text: folder.name)
+        end
         click_on I18n.t("ss.links.new")
 
         within "form#item-form" do
           within "#addon-basic" do
-            click_on I18n.t("ss.links.upload")
+            wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
 
-        wait_for_ajax do
+        wait_for_cbox do
           attach_file "item[in_files][]", filepath
-          click_on I18n.t("ss.buttons.attach")
+          wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
         end
 
         within "form#item-form" do
+          expect(page).to have_css("#addon-basic .file-view", text: ::File.basename(filepath))
           fill_in "item[memo]", with: unique_id
           within "footer.send" do
             click_on I18n.t("ss.links.upload")
@@ -170,6 +178,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on ::File.basename(filepath)
       click_on I18n.t("ss.links.edit")
 

@@ -50,7 +50,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       #
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        click_on I18n.t("ss.links.new")
+        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on form.name
         end
@@ -61,8 +61,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         fill_in "custom[#{column1_text1.id}]", with: column_value1_text1
         fill_in "custom[#{column1_text2.id}]", with: column_value1_text2
         fill_in "custom[#{column1_text3.id}]", with: column_value1_text3
-        fill_in "custom[#{column2_date1.id}]", with: column_value2_date1.strftime("%Y/%m/%d")
-        fill_in "custom[#{column2_date2.id}]", with: column_value2_date2.strftime("%Y/%m/%d %H:%M")
+        fill_in_date "custom[#{column2_date1.id}]", with: column_value2_date1
+        fill_in_datetime "custom[#{column2_date2.id}]", with: column_value2_date2
         fill_in "custom[#{column3.id}]", with: column_value3
         fill_in "custom[#{column4.id}]", with: column_value4
         fill_in "custom[#{column5.id}]", with: column_value5
@@ -162,9 +162,11 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('gws/report.options.file_state.closed')
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -183,7 +185,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       click_on name2
       click_on I18n.t("ss.links.restore")
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
@@ -200,18 +202,22 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('gws/report.options.file_state.closed')
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
 
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('ss.links.trash')
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

@@ -1,6 +1,8 @@
 # workflow
 
 production: &production
+  # this option is deprecated.
+  # see cms or gws site setting.
   disable_my_group: false
 
 test:

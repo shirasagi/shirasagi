@@ -150,6 +150,20 @@ production: &production
   attendance:
     max_break: 3
 
+  affair:
+    overtime:
+      night_time:
+        start_hour: 22
+        end_hour: 29
+      aggregate:
+        threshold_hour: 60
+    leave_setting:
+      download_yearly:
+        threshold_minute: 225
+
+  bookmark:
+    root_folder: お気に入り
+
   memo:
     disable_unsend: true
     disable_mail_forward: false
@@ -165,7 +179,6 @@ production: &production
     default_notice_total_body_size_limit: 31_457_280
     default_notice_individual_file_size_limit: 10_485_760
     default_notice_total_file_size_limit: 31_457_280
-    portal_browsed_state: unread
 
   # Default state and style label in user presence
   presence:
@@ -182,10 +195,10 @@ production: &production
       dayoff: none
       '': none
     reset:
-      available: ''
-      unavailable: ''
-      leave: ''
-      dayoff: ''
+      available: 'unavailable'
+      unavailable: 'unavailable'
+      leave: 'leave'
+      dayoff: 'dayoff'
     sync_available:
       disable: false
       presence_logged_in:
@@ -208,6 +221,12 @@ production: &production
 
   share:
     max_history_count: 20
+    folder_navi_limit: 100
+    # 共有ファイルのフォルダーリストナビの表示フォルダー上限
+    # 1階層内での表示上限となる
+    #
+    # 100 : 1階層に最大 100 までフォルダーを表示可能。
+    # 空欄 : 制限無し
 
   readable_setting:
     setting_range: 'select'
@@ -221,6 +240,12 @@ production: &production
     #     閲覧権限を考慮する際に、権限「閲覧（所有）」や権限「閲覧（全て）」は考慮しない
     #     閲覧権限を「全公開」にすると閲覧できる。
     requires_read_permission: true
+
+  link:
+    default_target: _self
+
+  aggregation:
+    first_activation_date: "2000/1/1"
 
 test:
   <<: *production

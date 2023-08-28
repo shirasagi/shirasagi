@@ -16,10 +16,10 @@
 
 <dl class="column password">
   <dt><%= @item.t :in_password %><span class="required"><%= t("ss.required_field") %></span></dt>
-  <dd><%= f.password_field :in_password %><%= remarks :in_password %></dd>
+  <dd><%= f.password_field :in_password, autocomplete: "new-password" %><%= remarks :in_password %></dd>
 
   <dt><%= @item.class.t :in_password_again %><span class="required"><%= t("ss.required_field") %></span></dt>
-  <dd><%= f.password_field :in_password_again %><%= remarks :in_password_again %></dd>
+  <dd><%= f.password_field :in_password_again, autocomplete: "new-password" %><%= remarks :in_password_again %></dd>
 </dl>
 
 <dl class="column kana">

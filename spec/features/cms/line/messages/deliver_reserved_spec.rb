@@ -85,7 +85,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
   def check_deliver_members(selector)
     within selector do
-      first(".ajax-box", text: "確認する").click
+      wait_cbox_open { first(".ajax-box", text: "確認する").click }
     end
     wait_for_cbox do
       expect(page).to have_text(targets_count)
@@ -101,7 +101,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   end
 
   def execute_reserved_job
-    Cms::Line::DeliverReservedJob.bind(site_id: site).perform_now
+    Cms::Line::DeliverReservedJob.bind(site_id: site.id).perform_now
   end
 
   before do
@@ -111,6 +111,68 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   end
 
   context "deliver now" do
+    context "broadcast" do
+      let(:deliver_date) { Time.zone.today.advance(days: -1).strftime("%Y/%m/%d %H:%M") }
+
+      before { login_cms_user }
+
+      it "#new" do
+        visit new_path
+        within "form#item-form" do
+          fill_in "item[name]", with: name
+          select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
+          click_on I18n.t("ss.buttons.save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        add_deliver_plans(deliver_date)
+
+        add_template
+
+        within "#menu" do
+          expect(page).to have_link I18n.t("ss.links.deliver")
+          click_on I18n.t("ss.links.deliver")
+        end
+
+        within ".main-box" do
+          expect(page).to have_css("header", text: I18n.t("cms.options.deliver_mode.main"))
+        end
+
+        capture_line_bot_client do |capture|
+          perform_enqueued_jobs do
+            within "footer.send" do
+              page.accept_confirm do
+                click_on I18n.t("ss.links.deliver")
+              end
+            end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          end
+
+          expect(capture.broadcast.count).to eq 1
+          expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+
+          visit current_path
+          within "#addon-basic" do
+            expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.completed"))
+          end
+
+          visit index_path
+          within ".list-items" do
+            expect(page).to have_css(".list-item .title", text: name)
+            expect(page).to have_css(".list-item .meta .state-completed", text: I18n.t("cms.options.deliver_state.completed"))
+          end
+
+          visit logs_path
+          within ".list-items" do
+            expect(page).to have_css(".list-item .title", text: "[#{I18n.t("cms.options.deliver_mode.main")}] #{name}")
+            expect(page).to have_css(".list-item .meta .action", text: "broadcast")
+            expect(page).to have_css(".list-item .meta .state", text: I18n.t("cms.options.sns_post_log_state.success"))
+            click_on "[#{I18n.t("cms.options.deliver_mode.main")}] #{name}"
+          end
+        end
+      end
+    end
+
     context "multicast_with_no_condition" do
       let(:deliver_date) { Time.zone.today.advance(days: -1).strftime("%Y/%m/%d %H:%M") }
       let(:targets) { [member1, member2, member3] }
@@ -123,7 +185,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -180,11 +243,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   end
 
   context "deliver 1 days ago" do
-    context "multicast_with_no_condition" do
+    context "broadcast" do
       let(:deliver_date) { Time.zone.today.advance(days: 1).strftime("%Y/%m/%d %H:%M") }
-      let(:targets) { [member1, member2, member3] }
-      let(:non_targets) { [member4, member5, member6] }
-      let(:targets_count) { "#{I18n.t("cms.member")}#{targets.size}#{I18n.t("ss.units.count")}" }
 
       before { login_cms_user }
 
@@ -192,7 +252,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
         end
         click_on I18n.t("ss.buttons.save")
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -221,7 +281,75 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
           Timecop.travel(today.advance(days: 1)) do
             execute_reserved_job
-            expect(capture.multicast.count).to eq 1
+            expect(capture.broadcast.count).to eq 1
+            expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+          end
+
+          visit current_path
+
+          within "#addon-basic" do
+            expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.completed"))
+          end
+
+          visit index_path
+          within ".list-items" do
+            expect(page).to have_css(".list-item .title", text: name)
+            expect(page).to have_css(".list-item .meta .state-completed", text: I18n.t("cms.options.deliver_state.completed"))
+          end
+
+          visit logs_path
+          within ".list-items" do
+            expect(page).to have_css(".list-item .title", text: "[#{I18n.t("cms.options.deliver_mode.main")}] #{name}")
+            expect(page).to have_css(".list-item .meta .action", text: "broadcast")
+            expect(page).to have_css(".list-item .meta .state", text: I18n.t("cms.options.sns_post_log_state.success"))
+            click_on "[#{I18n.t("cms.options.deliver_mode.main")}] #{name}"
+          end
+        end
+      end
+    end
+
+    context "multicast_with_no_condition" do
+      let(:deliver_date) { Time.zone.today.advance(days: 1).strftime("%Y/%m/%d %H:%M") }
+      let(:targets) { [member1, member2, member3] }
+      let(:non_targets) { [member4, member5, member6] }
+      let(:targets_count) { "#{I18n.t("cms.member")}#{targets.size}#{I18n.t("ss.units.count")}" }
+
+      before { login_cms_user }
+
+      it "#new" do
+        visit new_path
+        within "form#item-form" do
+          fill_in "item[name]", with: name
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
+        end
+        click_on I18n.t("ss.buttons.save")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        add_deliver_plans(deliver_date)
+
+        add_template
+
+        within "#menu" do
+          expect(page).to have_link I18n.t("ss.links.deliver")
+          click_on I18n.t("ss.links.deliver")
+        end
+
+        within ".main-box" do
+          expect(page).to have_css("header", text: I18n.t("cms.options.deliver_mode.main"))
+        end
+
+        capture_line_bot_client do |capture|
+          within "footer.send" do
+            page.accept_confirm do
+              click_on I18n.t("ss.links.deliver")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          expect(enqueued_jobs.size).to eq 0
+
+          Timecop.travel(today.advance(days: 1)) do
+            execute_reserved_job
             expect(capture.multicast.count).to eq 1
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
@@ -264,7 +392,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
@@ -295,7 +424,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           Timecop.travel(today.advance(days: 1)) do
             execute_reserved_job
             expect(capture.multicast.count).to eq 1
-            expect(capture.multicast.count).to eq 1
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
           end
@@ -325,6 +453,75 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
   end
 
   context "deliver 3 days ago" do
+    context "broadcast" do
+      let(:deliver_date) { Time.zone.today.advance(days: 3).strftime("%Y/%m/%d %H:%M") }
+
+      before { login_cms_user }
+
+      it "#new" do
+        visit new_path
+        within "form#item-form" do
+          fill_in "item[name]", with: name
+          select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
+          click_on I18n.t("ss.buttons.save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        add_deliver_plans(deliver_date)
+
+        add_template
+
+        within "#menu" do
+          expect(page).to have_link I18n.t("ss.links.deliver")
+          click_on I18n.t("ss.links.deliver")
+        end
+
+        within ".main-box" do
+          expect(page).to have_css("header", text: I18n.t("cms.options.deliver_mode.main"))
+        end
+
+        capture_line_bot_client do |capture|
+          within "footer.send" do
+            page.accept_confirm do
+              click_on I18n.t("ss.links.deliver")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          expect(enqueued_jobs.size).to eq 0
+
+          Timecop.travel(today.advance(days: 1)) do
+            execute_reserved_job
+            expect(capture.broadcast.count).to eq 0
+          end
+
+          Timecop.travel(today.advance(days: 3)) do
+            execute_reserved_job
+            expect(capture.broadcast.count).to eq 1
+            expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+          end
+
+          visit current_path
+          within "#addon-basic" do
+            expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.completed"))
+          end
+
+          visit index_path
+          within ".list-items" do
+            expect(page).to have_css(".list-item .title", text: name)
+            expect(page).to have_css(".list-item .meta .state-completed", text: I18n.t("cms.options.deliver_state.completed"))
+          end
+
+          visit logs_path
+          within ".list-items" do
+            expect(page).to have_css(".list-item .title", text: "[#{I18n.t("cms.options.deliver_mode.main")}] #{name}")
+            expect(page).to have_css(".list-item .meta .action", text: "broadcast")
+            expect(page).to have_css(".list-item .meta .state", text: I18n.t("cms.options.sns_post_log_state.success"))
+            click_on "[#{I18n.t("cms.options.deliver_mode.main")}] #{name}"
+          end
+        end
+      end
+    end
+
     context "multicast_with_no_condition" do
       let(:deliver_date) { Time.zone.today.advance(days: 3).strftime("%Y/%m/%d %H:%M") }
       let(:targets) { [member1, member2, member3] }
@@ -337,7 +534,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -371,7 +569,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
           Timecop.travel(today.advance(days: 3)) do
             execute_reserved_job
-            expect(capture.multicast.count).to eq 1
             expect(capture.multicast.count).to eq 1
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
@@ -413,7 +610,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_input_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
@@ -448,7 +646,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
           Timecop.travel(today.advance(days: 3)) do
             execute_reserved_job
-            expect(capture.multicast.count).to eq 1
             expect(capture.multicast.count).to eq 1
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
@@ -493,7 +690,8 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
+          deliver_condition_state_label = I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition")
+          select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -523,7 +721,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           Timecop.travel(today.advance(days: 1)) do
             execute_reserved_job
             expect(capture.multicast.count).to eq 1
-            expect(capture.multicast.count).to eq 1
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
           end
@@ -535,7 +732,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           Timecop.travel(today.advance(days: 2)) do
             execute_reserved_job
             expect(capture.multicast.count).to eq 1
-            expect(capture.multicast.count).to eq 1
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
           end
           visit current_path
@@ -545,7 +741,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
           Timecop.travel(today.advance(days: 3)) do
             execute_reserved_job
-            expect(capture.multicast.count).to eq 2
             expect(capture.multicast.count).to eq 2
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 2
@@ -558,7 +753,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           Timecop.travel(today.advance(days: 4)) do
             execute_reserved_job
             expect(capture.multicast.count).to eq 2
-            expect(capture.multicast.count).to eq 2
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 2
           end
           visit current_path
@@ -568,7 +762,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
           Timecop.travel(today.advance(days: 5)) do
             execute_reserved_job
-            expect(capture.multicast.count).to eq 3
             expect(capture.multicast.count).to eq 3
             expect(capture.multicast.user_ids).to match_array targets.map(&:oauth_id)
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 3
@@ -580,7 +773,6 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
 
           Timecop.travel(today.advance(days: 6)) do
             execute_reserved_job
-            expect(capture.multicast.count).to eq 3
             expect(capture.multicast.count).to eq 3
             expect(Cms::SnsPostLog::LineDeliver.count).to eq 3
           end

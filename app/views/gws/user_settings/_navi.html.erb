@@ -1,14 +1,19 @@
 <nav class="mod-navi">
-  <h2><%= link_to t("sns.profile"), gws_user_profile_path %></h2>
   <h2><%= t "mongoid.models.gws/user_setting" %></h2>
 
-  <h3><%= link_to t('modules.gws/schedule'), gws_schedule_user_setting_path %></h3>
+  <h3><%= link_to t('sns.profile'), gws_user_profile_path %></h3>
 
-  <% if Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_schedule_visible? && Gws.module_usable?(:schedule, @cur_site, @cur_user) %>
+    <h3><%= link_to @cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_user_setting_path %></h3>
+  <% end %>
+
+  <% if @cur_site.menu_presence_visible? && Gws.module_usable?(:presence, @cur_site, @cur_user) %>
     <h3><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_user_setting_path %></h3>
   <% end %>
 
   <h3><%= link_to t('modules.addons.gws/system/notice_setting'), gws_memo_notice_user_settings_path %></h3>
+
+  <h3><%= link_to t('modules.addons.ss/locale_setting'), gws_user_locale_setting_path %></h3>
 </nav>
 
 <%= render partial: "gws/main/navi" %>

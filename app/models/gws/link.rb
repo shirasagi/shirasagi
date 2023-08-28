@@ -9,6 +9,9 @@ class Gws::Link
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  cattr_accessor :default_link_target
+  self.default_link_target = SS.config.gws.link["default_target"].presence || "_self"
+
   seqid :id
   field :name, type: String
 
@@ -19,11 +22,15 @@ class Gws::Link
   default_scope -> {
     order_by released: -1
   }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
-    criteria
-  }
+  class << self
+    def search(params)
+      all.search_keyword(params)
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :name, "links.name", "links.url"
+    end
+  end
 end

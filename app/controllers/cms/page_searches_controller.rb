@@ -25,18 +25,17 @@ class Cms::PageSearchesController < ApplicationController
     @model = Cms::Page
     set_selected_items
 
-    entries = @items.entries
-    @items = []
+    raise "400" if @selected_items.blank?
 
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
+    if params[:destroy_all]
+      render_confirmed_all(destroy_items, location: { action: :show })
+      return
     end
-    render_destroy_all(entries.size != @items.size, location: { action: :show })
+
+    respond_to do |format|
+      format.html { render "destroy_all" }
+      format.json { head json: errors }
+    end
   end
 
   def search

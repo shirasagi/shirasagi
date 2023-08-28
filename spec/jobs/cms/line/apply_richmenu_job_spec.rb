@@ -22,7 +22,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
 
     it do
       capture_line_bot_client do |capture|
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(Job::Log.count).to eq 1
         expect(capture.create_rich_menu.count).to eq 0
         expect(capture.get_rich_menus_alias_list.count).to eq 0
@@ -63,7 +63,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
     it do
       capture_line_bot_client do |capture|
         # create
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 1
         expect(capture.create_rich_menu.rich_menu).to eq richmenu_menu.richmenu_object
         expect(capture.get_rich_menus_alias_list.count).to eq 0
@@ -79,7 +79,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         expect(registration.line_richmenu_id).to eq "richMenuId-1"
 
         # update (not changed)
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 1
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0
@@ -96,7 +96,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         # update (changed)
         richmenu_menu.in_areas = menu1_in_area2
         richmenu_menu.save!
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0
@@ -113,7 +113,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
 
         # destroy
         richmenu_group.destroy
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0
@@ -182,7 +182,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
     it do
       capture_line_bot_client do |capture|
         # create
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.create_rich_menu.rich_menu).to eq tab_menu.richmenu_object
         expect(capture.get_rich_menus_alias_list.count).to eq 0
@@ -205,7 +205,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         tab_menu.save!
         tab_menu.reload
 
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 4
         expect(capture.create_rich_menu.rich_menu).to eq tab_menu.richmenu_object
         expect(capture.get_rich_menus_alias_list.count).to eq 1
@@ -225,7 +225,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         tab_menu.save!
         tab_menu.reload
 
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 5
         expect(capture.create_rich_menu.rich_menu).to eq tab_menu.richmenu_object
         expect(capture.get_rich_menus_alias_list.count).to eq 2
@@ -292,7 +292,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         member2
 
         # create
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0
@@ -322,7 +322,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         member3
         member4
 
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0
@@ -358,7 +358,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         member4_user_id = member4.oauth_id
         member4.destroy
 
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0
@@ -391,7 +391,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
         member3.state = "disabled"
         member3.save
 
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
@@ -423,7 +423,7 @@ describe Cms::Line::ApplyRichmenuJob, dbscope: :example do
 
         # destroy
         richmenu_group.destroy
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
         expect(capture.create_rich_menu.count).to eq 2
         expect(capture.get_rich_menus_alias_list.count).to eq 0
         expect(capture.set_rich_menus_alias.count).to eq 0

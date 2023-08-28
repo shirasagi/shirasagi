@@ -22,8 +22,6 @@ class Translate::RequestBuffer
       @api = Translate::Api::MicrosoftTranslator.new(@site)
     when "google_translation"
       @api = Translate::Api::GoogleTranslator.new(@site)
-    when "mock"
-      @api = Translate::Api::MockTranslator.new(@site)
     else
       raise "translate : unsupported api"
     end
@@ -86,11 +84,7 @@ class Translate::RequestBuffer
       cache_ids << cache.id.to_s
       size = cache.original_text.size
 
-      if @contents.size >= @array_size_limit
-        @requests << @contents
-        @contents = []
-        @contents_size = 0
-      elsif (@contents_size + size) > @contents_size_limit
+      if @contents.size >= @array_size_limit || (@contents_size + size) > @contents_size_limit
         @requests << @contents
         @contents = []
         @contents_size = 0
@@ -124,9 +118,8 @@ class Translate::RequestBuffer
       sleep @interval
     end
 
-    if !SS::Lgwan.enabled?
-      @site.update!
-    end
+    # update translate api count
+    @site.update
 
     @caches.each do |cache|
       if cache.text.blank?

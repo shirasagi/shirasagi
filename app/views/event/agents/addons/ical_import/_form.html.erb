@@ -9,7 +9,7 @@
   <dt><%= @model.t :ical_basic_certs %><%= @model.tt :ical_basic_certs %></dt>
   <dd>
     <%= f.text_field :ical_basic_user, style: "width: 30%", placeholder: "user" %>
-    <%= f.password_field :ical_basic_password, value: @item.ical_basic_password, style: "width: 30%", placeholder: "password" %>
+    <%= f.password_field :ical_basic_password, autocomplete: "new-password", value: @item.ical_basic_password, style: "width: 30%", placeholder: "password" %>
   </dd>
   <% end %>
 
@@ -30,21 +30,21 @@
 
   <dt><%= @model.t :ical_category_ids %><%= @model.tt :ical_category_ids %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", nil, id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path(single: 1), class: "btn ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
       <thead>
       <tr>
-        <th class="name"><%= @model.t :ical_category_ids %></th>
-        <th></th>
+        <th class="name" scope="col"><%= @model.t :ical_category_ids %></th>
+        <th scope="col"></th>
       </tr>
       </thead>
       <tbody>
       <% @item.ical_categories.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", item.id, id: nil %> <%= item.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

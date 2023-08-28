@@ -1,0 +1,15 @@
+<%= render partial: 'gws/workload/main/base_navi' %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% if item.show_graph? %>
+    <span class="gws-schedule-color-block" style="<%= "background-color: #{item.color}; color: #{item.text_color};" %>">
+      <%= item.t :graph_state %>
+    </span>
+  <% end %>
+  <span><%= item.year %></span>
+  <span class="order"><%= item.order %></span>
+<% end %>
+
+<%= render template: 'gws/crud/index' %>

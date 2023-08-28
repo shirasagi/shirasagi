@@ -1,3 +1,5 @@
+require 'kconv'
+
 class Webmail::MailPart
   attr_accessor :section, :part, :param, :disposition, :disposition_param, :data
 
@@ -19,7 +21,7 @@ class Webmail::MailPart
   end
 
   def image?
-    part.media_type == 'IMAGE'
+    part.media_type == 'IMAGE' && SS::SAFE_IMAGE_SUB_TYPES.include?(part.subtype.try(:downcase))
   end
 
   def link_target

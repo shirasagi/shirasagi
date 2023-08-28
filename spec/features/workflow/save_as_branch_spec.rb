@@ -5,7 +5,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
   let(:group) { cms_group }
 
   let!(:permissions) do
-    Cms::Role.permission_names.select { |item| item =~ /_private_/ && item !~ /^release_/ }
+    Cms::Role.permission_names.select { |item| item =~ /_private_/ && item !~ /^(release_|close_)/ }
   end
   let!(:role) { create :cms_role, name: unique_id, permissions: permissions, cur_site: site }
   let!(:user1) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [group.id], cms_role_ids: [role.id] }
@@ -23,6 +23,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
         expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
         expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -30,6 +33,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_closed_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
         expect(page).to have_no_css(".branch_save")
         expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -41,6 +47,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_no_css(".save")
         expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
         expect(page).to have_no_css(".publish_save")
@@ -65,10 +74,14 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
         within "#addon-workflow-agents-addons-branch" do
           expect(page).to have_css(".master .branches", text: item1.name)
         end
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
 
       it do
         visit edit_closed_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.save")}']")
         expect(page).to have_no_css(".branch_save")
         expect(page).to have_no_css(".publish_save")
@@ -91,6 +104,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -98,6 +118,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_closed_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -109,6 +136,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_no_css(".save")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_no_css(".publish_save")
@@ -116,6 +150,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_closed_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.save")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_no_css(".publish_save")
@@ -137,6 +178,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
         expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
         expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -144,6 +188,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_closed_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
         expect(page).to have_no_css(".branch_save")
         expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -155,6 +202,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_no_css(".save")
         expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
         expect(page).to have_no_css(".publish_save")
@@ -179,10 +229,14 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
         within "#addon-workflow-agents-addons-branch" do
           expect(page).to have_css(".master .branches", text: item1.name)
         end
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
 
       it do
         visit edit_closed_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.save")}']")
         expect(page).to have_no_css(".branch_save")
         expect(page).to have_no_css(".publish_save")
@@ -205,6 +259,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -212,6 +273,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_closed_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -223,6 +291,14 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
+          expect(page).to have_css("[type='reset']", text: I18n.t("ss.buttons.cancel"))
           expect(page).to have_no_css(".save")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_no_css(".publish_save")
@@ -230,7 +306,53 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_closed_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.save")}']")
+          expect(page).to have_css("[type='reset']", text: I18n.t("ss.buttons.cancel"))
+          expect(page).to have_no_css(".branch_save")
+          expect(page).to have_no_css(".publish_save")
+        end
+      end
+    end
+
+    context "when page has ready branch page" do
+      let!(:item1_branch) { create :cms_page, cur_node: node, master: item1, state: "ready", group_ids: [group.id] }
+      let(:edit_ready_branch_path) { edit_node_page_path site.id, node, item1_branch }
+
+      before do
+        item1.branch_ids = [ item1_branch.id ]
+        item1.save!
+      end
+
+      context "with admin" do
+        before { login_cms_user }
+
+        it do
+          visit edit_ready_branch_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+
+          expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+          expect(page).to have_no_css(".branch_save")
+          expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+        end
+      end
+
+      context "with user1" do
+        before { login_user user1 }
+
+        it do
+          visit edit_ready_branch_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+
+          expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_no_css(".publish_save")
         end
@@ -251,6 +373,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
         expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
         expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -258,6 +383,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_closed_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
         expect(page).to have_no_css(".branch_save")
         expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -269,6 +397,9 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_public_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_no_css(".save")
         expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
         expect(page).to have_no_css(".publish_save")
@@ -293,10 +424,14 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
         within "#addon-workflow-agents-addons-branch" do
           expect(page).to have_css(".master .branches", text: item1.name)
         end
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
 
       it do
         visit edit_closed_item_path
+        # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+        wait_ckeditor_ready("item[html]")
+
         expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.save")}']")
         expect(page).to have_no_css(".branch_save")
         expect(page).to have_no_css(".publish_save")
@@ -319,6 +454,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -326,6 +468,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_closed_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
@@ -337,6 +486,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_no_css(".save")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_no_css(".publish_save")
@@ -344,6 +500,13 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
         it do
           visit edit_closed_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+          wait_for_cbox do
+            expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
+            wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
+          end
+
           expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.save")}']")
           expect(page).to have_no_css(".branch_save")
           expect(page).to have_no_css(".publish_save")

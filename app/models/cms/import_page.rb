@@ -4,6 +4,7 @@ class Cms::ImportPage
   include Cms::Addon::Release
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Cms::Lgwan::Page
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 

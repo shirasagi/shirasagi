@@ -32,10 +32,10 @@ module Cms::Model::Page
 
     permit_params category_ids: []
 
-    after_save :rename_file, if: ->{ @db_changes }
-    after_save :generate_file, if: ->{ @db_changes }
-    after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
-    after_save :new_size_input, if: ->{ @db_changes }
+    after_save :rename_file, if: ->{ changes.present? || previous_changes.present? }
+    after_save :generate_file, if: ->{ changes.present? || previous_changes.present? }
+    after_save :remove_file, if: ->{ (state_changed? || state_previously_changed?) && !public? }
+    after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
     after_destroy :remove_file
 
     template_variable_handler(:categories, :template_variable_handler_categories)
@@ -120,17 +120,18 @@ module Cms::Model::Page
   end
 
   def rename_file
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
+    filename_changes = changes["filename"].presence || previous_changes["filename"]
+    return unless filename_changes
+    return unless filename_changes[0]
 
-    src = "#{(@cur_site || site).path}/#{@db_changes['filename'][0]}"
-    dst = "#{(@cur_site || site).path}/#{@db_changes['filename'][1]}"
+    src = "#{(@cur_site || site).path}/#{filename_changes[0]}"
+    dst = "#{(@cur_site || site).path}/#{filename_changes[1]}"
     dst_dir = ::File.dirname(dst)
 
     run_callbacks :rename_file do
       Fs.mkdir_p dst_dir unless Fs.exist?(dst_dir)
       Fs.mv src, dst if Fs.exist?(src)
-      Cms::PageRelease.close(self, @db_changes['filename'][0])
+      Cms::PageRelease.close(self, filename_changes[0])
     end
   end
 
@@ -139,32 +140,67 @@ module Cms::Model::Page
 
     return errors.add :filename, :empty if dst.blank?
     return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname)})?$/
+    return errors.add :base, :same_filename if filename == dst
     return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 
-    return errors.add :base, :same_filename if filename == dst
-    return errors.add :filename, :taken if Cms::Page.site(@cur_site || site).where(filename: dst).first
-    return errors.add :base, :exist_physical_file if Fs.exist?("#{(@cur_site || site).path}/#{dst}")
+    validate_destination_exists(dst)
 
     if dst_dir.present?
-      dst_parent = Cms::Node.site(@cur_site || site).where(filename: dst_dir).first
+      dst_parent = Cms::Node.site(site).where(filename: dst_dir).first
 
       return errors.add :base, :not_found_parent_node if dst_parent.blank?
 
-      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site)
+      allowed = dst_parent.allowed?(:read, cur_user, site: site)
       return errors.add :base, :not_have_parent_read_permission unless allowed
     elsif route != "cms/page"
       return errors.add :base, :not_cms_page_in_root
     end
   end
 
+  def validate_destination_exists(dst)
+    if Cms::Page.site(site).ne(id: id).where(filename: dst).first
+      errors.add :filename, :taken
+    end
+    return if errors.present?
+
+    if Fs.exist?("#{site.path}/#{dst}")
+      errors.add :base, :exist_physical_file
+    end
+  end
+
   def move(dst)
+    src = url
+
+    # validate self
     validate_destination_filename(dst)
     if is_a?(Cms::Addon::EditLock)
       errors.add :base, :locked, user: lock_owner.long_name if locked?
     end
     return false unless errors.empty?
 
-    src = url
+    # validate branch page
+    branch_page = nil
+    branch_dst = nil
+
+    branch_page = branches.first if is_a?(Workflow::Addon::Branch)
+    if branch_page
+      branch_page.cur_site = cur_site
+      branch_page.cur_user = cur_user
+
+      branch_dst = ::File.join(::File.dirname(dst), branch_page.basename)
+      branch_page.validate_destination_exists(branch_dst)
+      if branch_page.is_a?(Cms::Addon::EditLock)
+        branch_page.errors.add :base, :locked, user: branch_page.lock_owner.long_name if branch_page.locked?
+      end
+      if branch_page.errors.present?
+        branch_page.errors.each do |error|
+          errors.add :base, "#{I18n.t("workflow.branch_page")}: #{error.full_message}"
+        end
+      end
+    end
+    return false unless errors.empty?
+
+    # save master
     self.cur_node = nil
     self.filename = dst
     self.basename = nil
@@ -173,8 +209,21 @@ module Cms::Model::Page
       remove_attribute(:lock_until) if has_attribute?(:lock_until)
     end
     result = save
+
+    # save branch
+    if branch_page
+      branch_page.cur_node = nil
+      branch_page.filename = branch_dst
+      branch_page.basename = nil
+      if branch_page.is_a?(Cms::Addon::EditLock)
+        branch_page.remove_attribute(:lock_owner_id) if branch_page.has_attribute?(:lock_owner_id)
+        branch_page.remove_attribute(:lock_until) if branch_page.has_attribute?(:lock_until)
+      end
+      branch_page.save
+    end
+
     if result && SS.config.cms.replace_urls_after_move
-      Cms::Page::MoveJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(src: src, dst: url)
+      Cms::Page::MoveJob.bind(site_id: cur_site, user_id: cur_user).perform_later(src: src, dst: url)
     end
     result
   end

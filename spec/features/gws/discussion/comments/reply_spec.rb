@@ -15,14 +15,16 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example do
       #expect(page).to have_link I18n.t("gws/discussion.main_topic.name")
 
       text = "text-#{unique_id}"
-      within "form" do
+      within "form.reply" do
         fill_in "item[text]", with: text
-        click_button "返信する"
+        click_button I18n.t("ss.links.reply")
       end
       expect(page).to have_text(text)
 
       # edit
-      click_on I18n.t('ss.links.edit')
+      within "#topic-#{item.id}" do
+        click_on I18n.t('ss.links.edit')
+      end
 
       text = "text-#{unique_id}"
       within "form#item-form" do
@@ -32,10 +34,12 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example do
       expect(page).to have_text(text)
 
       # delete
-      click_on I18n.t('ss.links.delete')
+      within "#topic-#{item.id}" do
+        click_on I18n.t('ss.links.delete')
+      end
       expect(page).to have_text(text)
 
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
 

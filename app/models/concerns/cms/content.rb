@@ -18,6 +18,8 @@ module Cms::Content
     cattr_accessor(:default_released_type, instance_accessor: false)
     self.default_released_type = "fixed"
 
+    define_model_callbacks :chorg
+
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
@@ -60,16 +62,20 @@ module Cms::Content
       end
     end
 
+    def and_public_selector(date)
+      date = date ? date.dup : Time.zone.now
+      conditions = []
+      conditions << { state: "public", release_date: nil, close_date: nil }
+      conditions << { state: "public", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+      conditions << { state: "ready", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+      conditions << { state: "public", release_date: nil, close_date: { "$gt" => date } }
+      conditions << { state: "public", release_date: { "$lte" => date }, close_date: nil }
+      conditions << { state: "ready", release_date: { "$lte" => date }, close_date: nil }
+      { "$and" => [{ "$or" => conditions }] }
+    end
+
     def and_public(date = nil)
-      if date.nil?
-        all.where(state: "public")
-      else
-        date = date.dup
-        all.where("$and" => [
-          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
-          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-        ])
-      end
+      all.where(and_public_selector(date))
     end
 
     def split_path(path)
@@ -142,10 +148,6 @@ module Cms::Content
     def private_root
       "#{SS::Application.private_root}/#{self.collection_name}"
     end
-  end
-
-  def name_for_index
-    index_name || name
   end
 
   def basename

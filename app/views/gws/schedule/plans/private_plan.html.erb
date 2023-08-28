@@ -1,0 +1,15 @@
+<div class="addon-views">
+  <%
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+  %>
+  <%= render "ss/crud/addon", addon: addon_options do %>
+    <dl class="see">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= t("gws/schedule.private_plan") %></dd>
+
+      <dt><%= @model.t :term %></dt>
+      <dd><%= term(@item) %></dd>
+    </dl>
+  <% end %>
+</div>

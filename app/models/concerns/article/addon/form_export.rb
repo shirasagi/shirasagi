@@ -47,8 +47,10 @@ module Article::Addon
     end
 
     def pages_to_csv(pages)
-      csv = CSV.generate do |data|
-        pages_to_json(pages).each { |line| data << line }
+      csv = I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          pages_to_json(pages).each { |line| data << line }
+        end
       end
       ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
     end

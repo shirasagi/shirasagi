@@ -1,0 +1,187 @@
+en:
+  gws/notice:
+    all: All announcements
+    body_size: Body
+    individual_body_size: Individual capacity limit
+    total_body_size: Total capacity limit
+    file_size: Attached file
+    individual_file_size: Individual capacity limit
+    total_file_size: Total capacity limit
+    total_body_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
+    total_file_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
+    gws_addon_member_head: Contributors
+    severity: Severity
+    links:
+      set_seen: Mark as read
+      set_seen_all: Mark as read all
+      unset_seen: Mark as unread
+      reclaim_total_size: Recalculate usage
+      create_my_folder: Create your own group folder
+      move_to_my_folder: Open your own group folder
+    confirm:
+      set_seen: Are you sure you want to mark it as read?
+      unset_seen: Are you sure you want to mark it as unread?
+      create_my_folder: Are you sure you want to create your own group folder?
+    notice:
+      not_a_member_in_this_folder: You do not have permission to post announcements in this folder.
+      reclaimed: Usage has been recalculated.
+    prefix:
+      copy: "[Duplication]"
+    options:
+      toggle_browsed:
+        button: Toggle by button
+        read: Toggle by read
+      severity:
+        all: All
+        high: High
+        normal: Normal
+    apis:
+      posts:
+        index: Select announcements
+
+  gws_role:
+    use_gws_notice: Use of announcements
+    read_other_gws_notices: View announcements (all)
+    read_private_gws_notices: View announcements (own)
+    edit_other_gws_notices: Edit announcements (all)
+    edit_private_gws_notices: Edit announcements (own)
+    delete_other_gws_notices: Delete announcements (all)
+    delete_private_gws_notices: Delete announcements (own)
+    trash_other_gws_notices: Manage announcements trash (all)
+    trash_private_gws_notices: Manage announcement trash (own)
+
+    read_other_gws_notice_folders: View folders (all)
+    read_private_gws_notice_folders: View folders (own)
+    edit_other_gws_notice_folders: Edit folders (all)
+    edit_private_gws_notice_folders: Edit folders (own)
+    delete_other_gws_notice_folders: Delete folders (all)
+    delete_private_gws_notice_folders: Delete folders (own)
+    my_folder_private_gws_notice_folders: Create your own group folder
+
+    read_other_gws_notice_categories: View categories (all)
+    read_private_gws_notice_categories: View categories (own)
+    edit_other_gws_notice_categories: Edit categories (all)
+    edit_private_gws_notice_categories: Edit categories (own)
+    delete_other_gws_notice_categories: Delete categories (all)
+    delete_private_gws_notice_categories: Delete categories (own)
+
+  modules:
+    gws/notice: Announcements
+    addons:
+      gws/notice/comment_setting: Comment settings
+      gws/notice/comment_post: Comments
+      gws/notice/category: Category
+      gws/notice/resource_limitation: Capacity limit
+      gws/notice/member: Viewers
+      gws/notice/group_setting: Announcements
+      gws/notice/calendar: Calendar
+
+  gws_notification:
+    gws/notice/post:
+      subject: "[Announcement] “%{name}\" was posted."
+      text: "%{path}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+  mongoid:
+    models:
+      gws/notice/post: Announcements
+      gws/notice/folder: Folder
+      gws/notice/category: Category
+      gws/notice/comment: Comments
+    errors:
+      models:
+        gws/notice/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+        gws/notice/post:
+          exceeded_individual_body_size_limit: "The body (%{size}) exceeded the individual capacity limit (%{limit}). Reduce the length of the body text."
+          exceeded_total_body_size_limit: "The body capacity (%{size}) has exceeded the total capacity limit (%{limit}). Please delete unnecessary announcements."
+          exceeded_individual_file_size_limit: "The attachment file size (%{size}) has exceeded the individual capacity limit (%{limit}). Reduce the size of the attachments."
+          exceeded_total_file_size_limit: "The attachment file total capacity (%{size}) has exceeded the total capacity limit (%{limit}). Please delete unnecessary announcements."
+    attributes:
+      gws/notice/post:
+        name: Title
+        severity: Type
+        total_file_size: Total attachment file size
+      gws/notice/folder:
+        member_ids: Posting users
+        member_group_ids: Posting groups
+        member_custom_group_ids: Posting custom group
+      gws/notice/notification:
+        notification_noticed: Notification date and time
+      gws/addon/notice/comment_setting:
+        comment_state: Comment post
+      gws/addon/notice/comment_post:
+        notice_id: Announcements
+        text: Comments
+      gws/addon/notice/category:
+        category_ids: Category
+      gws/addon/notice/resource_limitation:
+        notice_individual_body_size_limit: Individual capacity limit for body
+        notice_total_body_size_limit: Total body capacity limit
+        notice_individual_file_size_limit: Individual capacity limit for attachments
+        notice_total_file_size_limit: Total capacity limit for attachments
+        notice_total_body_size: Total body size
+        notice_total_file_size: Total attachment file size
+      gws/reference/notice/folder:
+        folder_id: Folder
+      gws/notice/comment:
+        user_group_name: Group
+        user_name: Author
+        notice_id: Announcements
+      gws/addon/notice/group_setting:
+        notice_new_days: Display period for new items
+        notice_browsed_state: Read/Unread
+        notice_severity: Severity
+        notice_toggle_browsed: Toggle Read/Unread
+      gws/addon/notice/calendar:
+        start_on: Start date
+        end_on: End date
+        term: Date
+        color: Display color
+
+  tooltip:
+    gws/notice/post:
+      name:
+        - Enter a title.
+      severity:
+        - Select a type.
+        - Check the box if it is an “important announcement”.
+        - "If you check it as an important announcement, it will appear at the top of the content in a color that stands out."
+
+    gws/addon/notice/comment_setting:
+      comment_state:
+        - Select whether to enable comment posting.
+
+    gws/addon/notice/resource_limitation:
+      notice_total_body_size_limit:
+        - Enter the total body limit for the folder.
+      notice_individual_file_size_limit:
+        - Enter the maximum file size.
+      notice_total_file_size_limit:
+        - Enter the total capacity limit for the folder.
+
+    gws/addon/notice/group_setting:
+      notice_new_days:
+        - Enter the display period for new items.
+      notice_browsed_state:
+        - Select the default browsed state.
+      notice_severity:
+        - Select the default severity.
+      notice_toggle_browsed:
+        - Select the toggle method.
+
+    gws/addon/notice/calendar:
+      term:
+        - Enter the date when you want the announcement to appear in the calendar.
+      color:
+        - Enter the display color of the announcement in the calendar.
+
+  job:
+    models:
+      gws/notice/notification_job: Announcement notifications
+      gws/notice/trash_purge_job: Empty announcements trash

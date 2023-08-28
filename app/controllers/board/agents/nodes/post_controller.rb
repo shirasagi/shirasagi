@@ -57,11 +57,13 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def create
     @item = @model.new get_params
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@item)
-        render action: :new
-        return
-      end
+    @item.valid? # for reporting all errors at once
+    if @cur_node.captcha_enabled?
+      captcha_valid?(@item)
+    end
+    if @item.errors.present?
+      render action: :new
+      return
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new
@@ -74,11 +76,13 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def reply
     @item = @model.new get_params
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
-      unless captcha_valid?(@item)
-        render action: :new_reply
-        return
-      end
+    @item.valid? # for reporting all errors at once
+    if @cur_node.captcha_enabled?
+      captcha_valid?(@item)
+    end
+    if @item.errors.present?
+      render action: :new_reply
+      return
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new_reply
@@ -96,7 +100,8 @@ class Board::Agents::Nodes::PostController < ApplicationController
     @item.delete_key = ""
     @item.attributes = get_params
 
-    if @cur_node.captcha_enabled? && get_captcha[:captcha_error].nil?
+    @item.valid? # for reporting all errors at once
+    if @cur_node.captcha_enabled?
       if captcha_valid?(@item) && @item.delete_key_was == @item.delete_key
         render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
         return

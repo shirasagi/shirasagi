@@ -9,6 +9,7 @@
     delete_path = proc { |todo, comment| delete_gws_schedule_todo_apis_comment_path(todo_id: todo, id: comment, redirect_to: request.fullpath) }
   end
 %>
+<div class="gws-comment-post">
 <% if @item.comments.present? %>
   <div class="comments">
     <% @item.comments.order_by(created: 1).each do |comment| %>
@@ -50,3 +51,4 @@
     </div>
   <% end %>
 <% end %>
+</div>

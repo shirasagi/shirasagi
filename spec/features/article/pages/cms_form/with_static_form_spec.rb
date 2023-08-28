@@ -116,7 +116,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
         within ".column-value-cms-column-selectpage " do
-          click_on I18n.t("cms.apis.pages.index")
+          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
       end
       wait_for_cbox do
@@ -124,17 +124,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: selectable_page2.name)
         expect(page).to have_css(".list-item", text: selectable_page3.name)
         expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-        click_on selectable_page1.name
+        wait_cbox_close { click_on selectable_page1.name }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
+
+        wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
       click_on I18n.t('ss.buttons.ignore_alert')
       expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_selector('#errorExplanation ul li', count: 1)
       msg = I18n.t("mongoid.attributes.cms/column/value/file_upload.file_id") + I18n.t("errors.messages.blank")
-      msg = I18n.t("cms.column_value_error_template", name: column8.name, error: msg)
+      msg = I18n.t("errors.format2", name: column8.name, error: msg)
       expect(page).to have_selector('#errorExplanation', text: msg)
       expect(page).to have_selector('div.column-with-errors')
 
@@ -148,17 +150,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-          click_on I18n.t("ss.links.upload")
+          wait_cbox_open { click_on I18n.t("ss.links.upload") }
         end
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_content("logo.png")
         end
+
+        wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -190,6 +194,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       click_on name
       click_on I18n.t('ss.links.edit')
+      wait_for_js_ready
       within 'form#item-form' do
         within ".column-value-cms-column-textfield" do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value2
@@ -215,19 +220,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-          click_on I18n.t("ss.links.upload")
+          wait_cbox_open { click_on I18n.t("ss.links.upload") }
         end
       end
       wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_content("keyvisual.gif")
         end
         within ".column-value-cms-column-selectpage" do
-          click_on I18n.t("cms.apis.pages.index")
+          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
       end
       wait_for_cbox do
@@ -235,12 +240,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: selectable_page2.name)
         expect(page).to have_css(".list-item", text: selectable_page3.name)
         expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-        click_on selectable_page2.name
+        wait_cbox_close { click_on selectable_page2.name }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-selectpage " do
           expect(page).to have_css(".ajax-selected", text: selectable_page2.name)
         end
+
+        wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -269,6 +276,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       visit article_pages_path(site: site, cid: node)
       click_on name
       click_on I18n.t('ss.links.delete')
+      wait_for_js_ready
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end

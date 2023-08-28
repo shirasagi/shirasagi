@@ -17,7 +17,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
       readable_setting_range: 'public',
       user_ids: [user1.id, user2.id],
       severity: 'high',
-      links: [{ name: 'sample', url: 'http://sample.jp' }],
+      links: [{ name: 'sample', url: 'http://sample.jp', target: '' }],
       file_ids: [file.id]
     )
   end
@@ -84,9 +84,9 @@ describe "gws_notices", type: :feature, dbscope: :example do
       expect(copied_item.folder).to eq folder
       expect(copied_item.user).to eq user1
       expect(copied_item.comment_state).to eq 'disabled'
-      expect(copied_item.readable_setting_range). to eq 'public'
+      expect(copied_item.readable_setting_range).to eq 'public'
       expect(copied_item.severity).to eq 'high'
-      expect(copied_item.links).to eq [{ 'name' => 'sample', 'url' => 'http://sample.jp' }]
+      expect(copied_item.links).to eq [{ 'name' => 'sample', 'url' => 'http://sample.jp', 'target' => '' }]
       expect(copied_item.user_ids).to match_array [user1.id, user2.id]
       expect(copied_item.total_file_size).to eq item.total_file_size
       expect(copied_item.file_ids).not_to eq item.file_ids

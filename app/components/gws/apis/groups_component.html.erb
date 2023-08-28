@@ -16,7 +16,7 @@
     </thead>
     <tbody class="items">
     <% groups.each do |item| %>
-      <tr class="list-item" data-id="<%= item.id %>" data-depth="<%= item.depth %>">
+      <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>" data-depth="<%= item.depth %>">
         <td class="checkbox only-multi">
           <input type="checkbox" name="ids[]" value="<%= item.id %>"/>
         </td>
@@ -34,8 +34,8 @@
   </div>
 <% end %>
 
-<%= javascript_tag(defer: true) do %>
-  $(function() {
+<%= javascript_tag do %>
+  SS.ready(function() {
     <% if multi %>
       $("#ajax-box .only-single").remove();
     <% else %>

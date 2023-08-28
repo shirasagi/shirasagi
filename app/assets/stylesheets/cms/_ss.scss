@@ -74,11 +74,32 @@
   padding: 0 10px 10px;
   text-align: right;
 }
+i.calendar-month {
+  margin-top: -3px;
+}
 
 .list-item {
   .title.notice-severity-high {
     color: $pink;
     font-weight: bold;
+  }
+  .title.marked {
+    display: flex;
+    i.severity-high {
+      margin-top: 2px;
+      margin-right: 4px;
+      color: #333;
+    }
+    a.notice-severity-high {
+      color: $pink;
+      font-weight: bold;
+    }
+    .gws-board-flag-new {
+      margin-left: 8px;
+    }
+    .index-cleander-link {
+      margin-left: 6px;
+    }
   }
   .state {
     display: inline-block;
@@ -86,7 +107,7 @@
     @include border-radius(3px);
     font-size: 90%;
     font-weight: normal;
-    &.state-public, &.state-public-expired, &.state-closed, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
+    &.state-public, &.state-public-expired, &.state-completed, &.state-closed, &.state-draft, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
       color: #fff;
     }
     &.state-public, &.state-completed {
@@ -95,7 +116,7 @@
     &.state-public-expired {
       background-color: #2f7e42;
     }
-    &.state-closed {
+    &.state-closed, &.state-draft {
       background-color: #6c757d;
     }
     &.state-ready {

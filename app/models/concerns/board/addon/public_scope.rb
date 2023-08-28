@@ -23,7 +23,7 @@ module Board::Addon
         self.where("$or" => [public_criteria_part, private_criteria_part, group_criteria_part])
       end
 
-      def and_public
+      def and_public(_date = nil)
         where(public_scope: 'public')
       end
     end

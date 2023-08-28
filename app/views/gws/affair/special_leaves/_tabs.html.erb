@@ -1,0 +1,18 @@
+<%
+  def tab_cls(cls)
+    ret = []
+    ret << cls
+    ret << "current" if cls.to_s == @staff_category
+    ret.join(" ")
+  end
+%>
+<div class="gws-tabs gws-special-leaves-tabs">
+  <%= link_to gws_affair_special_leaves_path, class: tab_cls("all") do %>
+    <span class="tab-name readables">すべて</span>
+  <% end %>
+  <% @staff_category_options.each do |v, k| %>
+    <%= link_to gws_affair_special_leaves_path(staff_category: k), class: tab_cls(k) do %>
+      <span class="tab-name readables"><%= v %></span>
+    <% end %>
+  <% end %>
+</div>

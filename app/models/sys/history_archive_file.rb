@@ -1,6 +1,7 @@
 class Sys::HistoryArchiveFile
   include Sys::Permission
   include SS::Model::File
+  include Cms::Lgwan::File
   extend ActiveSupport::Concern
 
   set_permission_name "sys_users", :edit

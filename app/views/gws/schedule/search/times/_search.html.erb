@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
+  Gws_Schedule_Plan.renderForm();
 <% end %>
 
 <header>
@@ -8,21 +8,22 @@
 
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get, class: :search } do |f| %>
+  <%= error_messages_for :time_search %>
   <dl class="see gws-schedule-search-field">
     <dt><%= Gws::Schedule::Plan.t :term %></dt>
     <dd>
       <div class="dates-field">
-        <%= f.text_field :start_on, class: "date start", value: tryb { @time_search.start_on.strftime("%Y/%m/%d") } %>
-        - <%= f.text_field :end_on, class: "date end", value: tryb { @time_search.end_on.strftime("%Y/%m/%d") } %>
+        <%= f.ss_date_field :start_on, { value: @time_search.start_on, max_date: @cur_site.schedule_max_at }, { class: "start" } %>
+        - <%= f.ss_date_field :end_on, { value: @time_search.end_on, max_date: @cur_site.schedule_max_at }, { class: "date end" } %>
 
         <% range = (@cur_site.facility_min_hour..@cur_site.facility_max_hour).to_a.map { |i| ["#{i}:00", i] } %>
-        &nbsp; <%= f.select :min_hour, range, selected: @s[:min_hour] %>
-        - <%= f.select :max_hour, range, selected: (@s[:max_hour] || @cur_site.facility_max_hour) %>
+        &nbsp; <%= f.select :min_hour, range, selected: @time_search.min_hour %>
+        - <%= f.select :max_hour, range, selected: (@time_search.max_hour || @cur_site.facility_max_hour) %>
       </div>
     </dd>
     <dd>
       <div class="wdays-field">
-        <%= f.hidden_field "wdays[]", value: "" %>
+        <%= f.hidden_field "wdays[]", value: "", id: nil %>
         <% (0..6).each do |i| %>
         <label><%= f.check_box "wdays[]", {}, i.to_s %> <%= t("date.abbr_day_names")[i] %></label>
         <% end %>
@@ -30,7 +31,7 @@
     </dd>
 
     <dt>
-      <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "member_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box btn" %>
     </dt>
     <dd>
@@ -57,7 +58,7 @@
 
   <dl class="see gws-schedule-search-field">
     <dt>
-      <%= f.hidden_field "facility_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "facility_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("gws.apis.facilities.index"), gws_apis_facilities_path, class: "ajax-box btn" %>
     </dt>
     <dd>

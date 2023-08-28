@@ -5,7 +5,7 @@ require:
 
 AllCops:
   # be sure to set minimal support version
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.0
   NewCops: enable
   Exclude:
     - Guardfile
@@ -108,6 +108,9 @@ Style/EmptyElse:
     - empty
     - nil
     - both
+
+Style/IfInsideElse:
+  Enabled: false
 
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.

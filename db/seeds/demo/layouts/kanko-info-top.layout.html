@@ -1,55 +1,124 @@
 <html>
+
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <script src="/js/common.js"></script>
-  <!--[if lt IE 9]>
-  <script src="/js/selectivizr.js"></script>
-  <script src="/js/html5shiv.js"></script>
-  <![endif]-->
+<script src="/js/common.js"></script>
+<script src="/js/jquery.rwdImageMaps.min.js"></script>
 </head>
-<body>
-<div id="page">
 
-{{ part "tool" }}
-  <div class="translate-wrap">
-  <div class="translate-box">
-    {{ part "translate" }}
+<body class="category-middle-layer kanko-info-layer">
+  <div id="page">
+
+    <div class="accessibility">
+      <div class="accessibility-inner">
+        <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
+        <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
+        <div class="accessibility__translate translate-wrap">
+          <div class="translate-box">
+            {{ part "translate" }}
+          </div>
+        </div>
+        {{ part "tool" }}
+      </div><!-- /.accessibility-inner -->
+    </div><!-- .accessibility -->
+
+    <header id="head">
+      <div class="head__utility-wrap">
+        <h1 class="siteinfo__logo">
+          <a href="/"><img src="/img/logo.png" alt="シラサギ市" title="シラサギ市 ポータルサイト" /></a>
+        </h1>
+
+        <div class="head__utility">
+          <div class="head__utility-inner">
+            <div class="head-search">
+              <form id="site-search-history-part-371" action="/search/" accept-charset="UTF-8" method="get">
+                <div class="site-search-keyword">
+                  <input type="text" title=サイト内検索 placeholder=サイト内検索 class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
+                  <ul class="site-search-history" style="display: none;"></ul>
+                </div>
+                <button type="submit" id="search-button"><img src="/img/ic-search.svg" alt="検索"></button>
+              </form>
+            </div>
+
+            <div class="head-inquiry">
+              <a href="/inquiry/">お問い合わせ</a>
+            </div>
+          </div><!-- .head__utility-inner -->
+
+          {{ part "keyword" }}
+        </div><!-- /.head__utility -->
+      </div><!-- /.head__utility-wrap -->
+    </header>
+
+    {{ part "navi" }}
+
+    <!-- コンテンツ -->
+    <div id="wrap">
+      <div class="wrap__inner">
+
+        <!-- パンくず -->
+        {{ part "breadcrumb" }}
+
+        <div id="content">
+          <!-- メイン -->
+          <div id="main">
+            <div class="main-inner">
+              <!-- use-site-search -->
+              <header id="cat-header">
+                <h1 class="cat-header__title">#{page_name}</h1>
+              </header>
+              <!-- end-use-site-search -->
+
+              {{ part "kanko-info/photo/slide" }}
+
+              <div class="yield-wrap">
+                <!-- use-site-search -->
+                {{ yield }}
+                <!-- end-use-site-search -->
+              </div>
+            </div><!-- .main-inner -->
+          </div><!-- #main -->
+
+          <!-- サイド -->
+          <div id="side">
+            {{ part "login/login" }}
+            {{ part "invited-group" }}
+            <a class="registration" href="/registration/">会員登録</a>
+            {{ part "kanko-info/photo/recent" }}
+            {{ part "kanko-info/blog/recent" }}
+          </div><!-- #side -->
+
+        </div>
+        <!--.content-->
+      </div>
+      <!--.inner-->
     </div>
-  </div>
-{{ part "head" }}
-  <div class="search-wrap">
-  {{ part "search" }}
-  </div>
-{{ part "navi" }}
+    <!--#wrap-->
 
-<div id="wrap">
-  {{ part "breadcrumb" }}
-  <div id="main">
-    <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    {{ part "kanko-info/photo/slide" }}
-    {{ yield }}
-    {{ part "page-top" }}
-  </div>
-  <div id="side">
-    {{ part "login/login" }}
-    {{ part "invited_group" }}
-    <a class="registration" href="/registration/">会員登録</a>
-    {{ part "kanko-info/photo/recent" }}
-    {{ part "kanko-info/blog/recent" }}
-  </div>
-</div>
-<section id="chat">
-  <div class="chat-close">
-    <p>チャットボット</p>
-  </div>
-  <div class="chat-open">
-    <header><h2>チャットボット</h2><span class="close-btn"><img src="/img/chat-close.png" alt="閉じる" /></span></header>
-    {{ part "bot" }}
-  </div>
-</section>
-{{ part "foot" }}
+    <!-- チャットボット -->
+    <section id="chat" class="chat">
+      <div class="chat--close">
+        <p>なんでも聞いてね！</p>
+        <img src="/img/ic-chat.png" alt="chatbot" />
+      </div>
+      <div class="chat--open">
+        <header>
+          <h2>チャットボット</h2>
+          <span class="close-btn">
+            <img src="/img/chat-close.png" alt="閉じる" />
+          </span>
+        </header>
+        {{ part "bot" }}
+      </div>
+    </section>
 
-</div>
+    <!-- フッター -->
+    {{ part "foot" }}
+
+  </div><!-- #page -->
+  <div id="mobileNavLayer"></div>
+  <div style="display: none;">{{ part "browsing-history" }}</div>
 </body>
+
 </html>

@@ -5,6 +5,8 @@ ja:
     procedure: 手続き
     transition: 選択肢
     importer: インポート
+    explanation: 説明
+    diagnostic: 診断
     apis:
       questions:
         index: 質問項目を選択する
@@ -44,6 +46,7 @@ ja:
       your-answers: あなたの回答
       all_procedure: 全ての手続き
       input_choices_question: 選択肢の質問を入力
+      input_explanation: 説明を入力
     notice:
       import_summary: 以下の順番にインポートを実施してください。
     options:
@@ -57,7 +60,7 @@ ja:
       not_found_procedure: "手続きが見つかりませんでした。(%{id})"
       not_found_question: "質問が見つかりませんでした。(%{id})"
       not_found_transition: "選択肢が見つかりませんでした。(%{id})"
-      save_faild: "保存に失敗しました。%{message}"
+      save_failed: "保存に失敗しました。%{message}"
       already_registered: "[質問] %{name} は別の質問の選択肢に設定されています。"
 
   cms_role:
@@ -107,6 +110,7 @@ ja:
       guide/question:
         name: 表示名
         id_name: 管理名
+        explanation: 説明
         select_options: 選択肢
         question_type: 質問の形式
         check_type: 選択肢の形式
@@ -139,6 +143,8 @@ ja:
       id_name:
         - 管理用のタイトルを入力します。
         - この目的別ガイド内で重複しない名称を入力する必要があります。
+      explanation:
+        - 質問の説明を入力します。
       question:
         - 質問を入力します。
       select_options:
@@ -234,4 +240,4 @@ ja:
 
   job:
     models:
-      guide/procedure/import_job: 手続きインポート
+      guide/procedure/import_job: 目的別ガイド手続きインポート

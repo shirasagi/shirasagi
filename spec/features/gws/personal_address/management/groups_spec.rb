@@ -22,7 +22,8 @@ describe "gws_personal_address_management_groups", type: :feature, dbscope: :exa
     let(:user) do
       Gws::User.create!(
         name: uid, uid: uid, email: "#{uid}@example.jp", in_password: "pass",
-        group_ids: [gws_site.id], gws_role_ids: [role.id]
+        group_ids: [gws_site.id], gws_role_ids: [role.id],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
       )
     end
 

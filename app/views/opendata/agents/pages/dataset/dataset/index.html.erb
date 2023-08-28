@@ -1,5 +1,5 @@
-<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
-<script src="/assets/js/jquery.colorbox.js"></script>
+<%= stylesheet_link_tag "colorbox", media: 'all' %>
+<%= javascript_include_tag "colorbox", defer: true %>
 <%
   path_prefix = nil
   if controller.filter_include?(:preview)
@@ -193,7 +193,7 @@ SS.renderClipboardCopy();
             </div>
           <% end %>
 
-          <% @cur_page.resources.order(name: 1).each do |rs| %>
+          <% @cur_page.resources.and_public.order(name: 1).each do |rs| %>
             <% render_rs.call(rs) %>
           <% end %>
 

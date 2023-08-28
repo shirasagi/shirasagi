@@ -148,14 +148,26 @@ class Gws::UsersController < ApplicationController
     disable_all
   end
 
-  def download
-    @items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
+  def download_all
+    if request.get? || request.head?
+      @item = SS::DownloadParam.new
+      render
+      return
+    end
+
+    @item = SS::DownloadParam.new params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
+    items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
     filename = "gws_users_#{Time.zone.now.to_i}.csv"
     webmail_support = params[:webmail_support].present?
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, webmail_support: webmail_support),
-      type: 'text/csv; charset=Shift_JIS', filename: filename
+      Gws::UserCsv::Exporter.enum_csv(items, site: @cur_site, encoding: @item.encoding, webmail_support: webmail_support),
+      type: "text/csv; charset=#{@item.encoding}", filename: filename
     )
   end
 

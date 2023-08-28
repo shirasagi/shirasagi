@@ -15,12 +15,19 @@ require "action_view/railtie"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
+require_relative "../app/models/ss"
+require_relative "../app/models/ss/config"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.16.0" }
+  mattr_reader(:version) { "1.18.0" }
+
+  def self.config
+    @_ss_config ||= SS::Config.setup
+  end
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -42,6 +49,7 @@ module SS
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
 
     I18n.enforce_available_locales = true
+    I18n.available_locales = SS.config.env.available_locales.map(&:to_sym) if SS.config.env.available_locales.present?
     config.time_zone = 'Tokyo'
     config.i18n.default_locale = :ja
     config.i18n.fallbacks = [ :en ]
@@ -67,7 +75,7 @@ module SS
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
     cattr_accessor(:request_interceptor, instance_accessor: false)
 
-    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.token ss.organization).freeze
+    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.user_group ss.organization ss.token).freeze
 
     def call(*args, &block)
       save_context = {}
@@ -77,7 +85,12 @@ module SS
       Thread.current["ss.env"] = args.first
       Thread.current["ss.request"] = nil
       self.class.request_interceptor.call(*args) if self.class.request_interceptor
-      super
+
+      I18n.with_locale(I18n.locale) do
+        Time.use_zone(Time.zone) do
+          super
+        end
+      end
     ensure
       THREAD_LOCAL_VARIABLES.each do |variable_name|
         Thread.current[variable_name] = save_context[variable_name]
@@ -150,11 +163,6 @@ module SS
     end
   end
 
-  def self.config
-    # lazy loading
-    @_ss_config ||= "SS::Config".constantize.setup
-  end
-
   def self.current_site
     Thread.current["ss.site"]
   end
@@ -171,12 +179,12 @@ module SS
     Thread.current["ss.user"] = user
   end
 
-  def self.current_token
-    Thread.current["ss.token"]
+  def self.current_user_group
+    Thread.current["ss.user_group"]
   end
 
-  def self.current_token=(token)
-    Thread.current["ss.token"] = token
+  def self.current_user_group=(group)
+    Thread.current["ss.user_group"] = group
   end
 
   def self.current_organization
@@ -185,6 +193,14 @@ module SS
 
   def self.current_organization=(group)
     Thread.current["ss.organization"] = group
+  end
+
+  def self.current_token
+    Thread.current["ss.token"]
+  end
+
+  def self.current_token=(token)
+    Thread.current["ss.token"] = token
   end
 end
 

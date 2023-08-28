@@ -1,0 +1,45 @@
+.contact-groups-table-wrap {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.contact-groups-table {
+  tr:nth-child(2n) {
+    background: #f8f8f8;
+  }
+
+  th, td {
+    padding: 5px;
+  }
+
+  th {
+    background: $gray1;
+    color: $gray2;
+  }
+
+  thead {
+    tr:last-child {
+      th, td {
+        border-bottom: $border-gray5;
+      }
+    }
+  }
+
+  th.contact-main-state {
+    text-align: center;
+  }
+
+  .name, .contact-group-name, .contact-tel, .contact-fax, .contact-email, .contact-link-name {
+    min-width: 15em;
+  }
+  .contact-link-url {
+    min-width: 30em;
+  }
+  .contact-main-state {
+    min-width: 4em;
+  }
+  .operations {
+    min-width: 5em;
+  }
+}

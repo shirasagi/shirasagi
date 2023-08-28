@@ -6,8 +6,8 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.job_id %></span>
   <span class="state"><%= t(item.state, scope: "job.state") %></span>
-  <span class="datetime"><%= tryb { item.started.strftime("%Y/%m/%d %H:%M") } %></span>
-  <span class="datetime"><%= tryb { item.closed.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="datetime"><%= ss_time_tag item.started %></span>
+  <span class="datetime"><%= ss_time_tag item.closed %></span>
 <% end %>
 
 <%= render template: "gws/crud/index" %>

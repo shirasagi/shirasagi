@@ -32,8 +32,10 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   context "unrelated plan notification are sent when plan is deleted" do
     it do
       visit gws_schedule_plan_path(site: site, id: plan1)
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

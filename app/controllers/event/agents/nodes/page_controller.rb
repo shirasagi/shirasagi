@@ -103,7 +103,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
         next unless @events[d]
         @events[d] << [
           page,
-          page.categories.in(id: node_category_ids).and_public.order_by(order: 1)
+          page.categories.in(id: node_category_ids).and_public(@cur_date).order_by(order: 1)
         ]
       end
     end
@@ -141,7 +141,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @events = events([@date.mongoize]).map do |page|
       [
         page,
-        page.categories.in(id: node_category_ids).and_public.order_by(order: 1)
+        page.categories.in(id: node_category_ids).and_public(@cur_date).order_by(order: 1)
       ]
     end
 

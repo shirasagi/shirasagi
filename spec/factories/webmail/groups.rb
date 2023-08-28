@@ -1,7 +1,15 @@
 FactoryBot.define do
   factory :webmail_group, class: Webmail::Group do
     name { "group-#{unique_id}" }
-    contact_email { "#{name}@example.jp" }
+    contact_groups do
+      [
+        {
+          name: "name-#{unique_id}",
+          contact_email: "#{name}@example.jp",
+          main_state: "main"
+        }
+      ]
+    end
     imap_settings do
       conf = ::SS::WebmailSupport.test_conf
 

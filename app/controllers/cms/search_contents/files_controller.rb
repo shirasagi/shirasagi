@@ -14,7 +14,8 @@ class Cms::SearchContents::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("cms.file"), action: :index]
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
+    @crumbs << [t("cms.search_contents_files"), url_for(action: :index)]
   end
 
   def fix_params
@@ -25,7 +26,7 @@ class Cms::SearchContents::FilesController < ApplicationController
 
   def index
     service = Cms::FileSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
-    service.s = params.require(:s).permit(:keyword) if params[:s]
+    service.keyword = params.require(:s).permit(:keyword)[:keyword] if params[:s]
     service.page = params[:page].try { |page| page.to_s.numeric? ? page.to_s.to_i - 1 : nil } || 0
     @items = service.call
   end

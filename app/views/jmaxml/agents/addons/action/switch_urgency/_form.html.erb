@@ -1,7 +1,7 @@
 <dl class="see mod-jmaxml-switch-urgency">
   <dt><%= @model.t :urgency_layout_id %><%= @model.tt :urgency_layout_id %></dt>
   <dd>
-    <%= f.hidden_field "urgency_layout_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "urgency_layout_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("urgency.apis.layouts.index"), urgency_apis_layouts_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
@@ -15,7 +15,7 @@
       <tbody>
       <% if @item.urgency_layout.present? %>
           <tr data-id="<%= @item.urgency_layout.id %>">
-            <td><%= f.hidden_field "urgency_layout_id", value: @item.urgency_layout.id %> <%= @item.urgency_layout.name %></td>
+            <td><%= f.hidden_field "urgency_layout_id", value: @item.urgency_layout.id, id: nil %> <%= @item.urgency_layout.name %></td>
             <td style="width: 20%;"><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
       <% end %>

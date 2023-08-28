@@ -27,7 +27,35 @@ module Webmail::Imap
       self
     end
 
+    def reorder(sort_hash)
+      if sort_hash["to"] == 1
+        @sort = %w(TO REVERSE ARRIVAL)
+      elsif sort_hash["to"] == -1
+        @sort = %w(REVERSE TO REVERSE ARRIVAL)
+      elsif sort_hash["from"] == 1
+        @sort = %w(FROM REVERSE ARRIVAL)
+      elsif sort_hash["from"] == -1
+        @sort = %w(REVERSE FROM REVERSE ARRIVAL)
+      elsif sort_hash["subject"] == 1
+        @sort = %w(SUBJECT REVERSE ARRIVAL)
+      elsif sort_hash["subject"] == -1
+        @sort = %w(REVERSE SUBJECT REVERSE ARRIVAL)
+      elsif sort_hash["internal_date"] == 1
+        @sort = %w(ARRIVAL)
+      elsif sort_hash["internal_date"] == -1
+        @sort = %w(REVERSE ARRIVAL)
+      elsif sort_hash["size"] == 1
+        @sort = %w(SIZE REVERSE ARRIVAL)
+      elsif sort_hash["size"] == -1
+        @sort = %w(REVERSE SIZE REVERSE ARRIVAL)
+      else
+        @sort = %w(REVERSE ARRIVAL)
+      end
+      self
+    end
+
     def offset
+      return if @page.nil? || @limit.nil?
       (@page - 1) * @limit
     end
 
@@ -69,15 +97,20 @@ module Webmail::Imap
     def all
       uids = imap.conn.uid_sort(@sort, @search, 'UTF-8')
       size = uids.size
-      uids = uids.slice(offset, @limit) || []
+      if @page && @limit
+        uids = uids.slice(offset, @limit) || []
+      end
 
-      items = {}
-      uids.each { |uid| items[uid] = nil }
+      items = uids.index_with { nil }
 
       uids = cache_all(uids, items) if uids.present? && SS.config.webmail.cache_mails
-      uids = imap_all(uids, items) if uids.present?
+      imap_all(uids, items) if uids.present?
 
-      Kaminari.paginate_array(items.values, total_count: size).page(@page).per(@limit)
+      if @page && @limit
+        Kaminari.paginate_array(items.values, total_count: size).page(@page).per(@limit)
+      else
+        items.values
+      end
     end
 
     def find(uid, *division)

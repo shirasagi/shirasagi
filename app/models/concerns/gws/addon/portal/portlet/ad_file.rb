@@ -33,6 +33,8 @@ module Gws::Addon::Portal::Portlet
     private
 
     def save_files
+      return unless link_urls
+
       ids = []
       ad_files.each do |file|
         file = file.becomes_with(SS::LinkFile)

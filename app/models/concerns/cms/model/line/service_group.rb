@@ -40,9 +40,9 @@ module Cms::Model::Line::ServiceGroup
   def term_label
     return if start_date.blank? && close_date.blank?
     h = []
-    h << start_date.strftime("%Y/%m/%d") if start_date
+    h << I18n.l(start_date.to_date, format: :picker) if start_date
     h << I18n.t("ss.wave_dash")
-    h << close_date.strftime("%Y/%m/%d") if close_date
+    h << I18n.l(close_date.to_date, format: :picker) if close_date
     h.join(" ")
   end
 
@@ -61,7 +61,7 @@ module Cms::Model::Line::ServiceGroup
   end
 
   module ClassMethods
-    def and_public
+    def and_public(_date = nil)
       self.where(state: "public")
     end
 

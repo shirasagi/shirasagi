@@ -19,11 +19,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
       it do
         visit index_path
+        wait_for_js_ready
         first("li.list-item").click
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic .subject", text: I18n.t("webmail.no_subjects"))
         expect(page).to have_css("#addon-basic .body--text", text: "message-47ma7vziwcu")
 
         click_on I18n.t("ss.links.delete")
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic", text: I18n.t("webmail.no_subjects"))
       end
     end

@@ -31,6 +31,7 @@ module Gws::Schedule::PlanHelper
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]
     events += group_holidays opts[:holiday][0], opts[:holiday][1]
     events += calendar_todos(opts[:holiday][0], opts[:holiday][1])
+    events += calendar_works
     events
   end
 
@@ -38,6 +39,23 @@ module Gws::Schedule::PlanHelper
     Gws::Schedule::Holiday.site(@cur_site).and_public.
       search(start: start_at, end: end_at).
       map(&:calendar_format)
+
+    # 庶務事務機能の休日カレンダーをスケジュールに表示する機能（停止）
+    #duty_calendar = (@user || @cur_user).effective_duty_calendar(@cur_site)
+    #
+    #criteria = Gws::Schedule::Holiday.site(@cur_site).and_public
+    #if duty_calendar.holiday_type_system?
+    #  criteria = criteria.and_system
+    #else
+    #  calendar = duty_calendar.holiday_calendars.first
+    #  if calendar.present?
+    #    criteria = criteria.and_holiday_calendar(calendar)
+    #  else
+    #    criteria = criteria.none
+    #  end
+    #end
+    #
+    #criteria.search(start: start_at, end: end_at).map(&:calendar_format)
   end
 
   def calendar_holidays(start_at, end_at)
@@ -54,5 +72,19 @@ module Gws::Schedule::PlanHelper
       result[:restUrl] = gws_schedule_todo_readables_path(category: Gws::Schedule::TodoCategory::ALL.id)
       result
     end
+  end
+
+  def calendar_works
+    return [] if @works.blank?
+
+    @works.map do |work|
+      result = work.calendar_format(@cur_user, @cur_site)
+      result[:restUrl] = gws_workload_works_path
+      result
+    end
+  end
+
+  def use_workload?
+    Gws.module_usable?(:workload, @cur_site, @cur_user) && Gws::Workload::Work.allowed?(:edit, @cur_user, site: @cur_site)
   end
 end

@@ -1,0 +1,28 @@
+<%
+  @s = OpenStruct.new params[:s]
+
+  main_group = @cur_user.gws_main_group(@cur_site)
+  user_options = Gws::User.in(group_ids: main_group.id).and_enabled.map { |user| [user.long_name, user.id] }
+  user_options.unshift([t("mongoid.models.ss/user"), ""])
+
+  @current = Time.zone.now
+  year_options = ((@current.year - 5)..(@current.year)).map { |y| ["#{y}#{t("datetime.prompts.year")}", y] }.reverse
+  year_options.unshift([t("datetime.prompts.year"), ""])
+
+  month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
+  month_options.unshift([t("datetime.prompts.month"), ""])
+
+  workflow_state_options = %w(draft request approve).map { |k| [I18n.t("ss.state.#{k}"), k] }
+%>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get, autocomplete: :off } do |f| %>
+    <% if params[:state] != "mine" %>
+      <%= f.select :user_id, user_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+    <% end %>
+    <%= f.select :workflow_state, workflow_state_options, { include_blank: "承認状態" }, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :year, year_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :month, month_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= link_to t('ss.buttons.reset'), { action: :index }, class: "btn", style: "font-weight: normal;" %>
+  <% end %>
+</div>

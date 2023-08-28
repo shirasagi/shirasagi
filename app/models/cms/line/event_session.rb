@@ -11,7 +11,7 @@ class Cms::Line::EventSession
 
   field :channel_user_id, type: String
   field :data, type: Hash, default: {}
-  field :lock_until, type: DateTime, default: ::Time::EPOCH
+  field :lock_until, type: DateTime, default: ::SS::EPOCH_TIME
   field :locked_at, type: DateTime
   belongs_to :hook, class_name: "Cms::Line::Service::Hook::Base"
 
@@ -50,7 +50,7 @@ class Cms::Line::EventSession
         rescue ServiceExpiredError
           #
         ensure
-          item.set(lock_until: ::Time::EPOCH)
+          item.set(lock_until: ::SS::EPOCH_TIME)
         end
         true
       else

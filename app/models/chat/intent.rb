@@ -13,10 +13,10 @@ class Chat::Intent
 
   seqid :id
   field :name, type: String
-  field :phrase, type: SS::Extensions::Words
-  field :suggest, type: SS::Extensions::Words
+  field :phrase, type: SS::Extensions::Lines
+  field :suggest, type: SS::Extensions::Lines
   field :response, type: String
-  field :link, type: SS::Extensions::Words
+  field :link, type: SS::Extensions::Lines
   field :question, type: String
   field :site_search, type: String
   field :order, type: Integer
@@ -50,20 +50,22 @@ class Chat::Intent
     end
 
     def csv
-      CSV.generate do |data|
-        data << csv_headers.map { |k| t k }
-        criteria.each do |item|
-          data << [
-            item.id,
-            item.name,
-            item.phrase.join("\n"),
-            item.suggest.join("\n"),
-            item.response,
-            item.link,
-            item.site_search,
-            item.order,
-            item.categories.pluck(:name).join("\n")
-          ]
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << csv_headers.map { |k| t k }
+          criteria.each do |item|
+            data << [
+              item.id,
+              item.name,
+              item.phrase.join("\n"),
+              item.suggest.join("\n"),
+              item.response,
+              item.link,
+              item.site_search,
+              item.order,
+              item.categories.pluck(:name).join("\n")
+            ]
+          end
         end
       end
     end

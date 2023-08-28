@@ -6,19 +6,23 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     let(:admin) { gws_user }
     let!(:user1) do
       Gws::User.create name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user2) do
       Gws::User.create name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user3) do
       Gws::User.create name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user4) do
       Gws::User.create name: "一般ユーザー4", uid: "user4", email: "user4@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
 
     let(:route_name) { unique_id }

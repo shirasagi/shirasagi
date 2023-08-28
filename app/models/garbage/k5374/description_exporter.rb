@@ -22,16 +22,18 @@ class Garbage::K5374::DescriptionExporter < Garbage::K5374::BaseExporter
   end
 
   def description_csv
-    csv = CSV.generate do |data|
-      data << headers
-      nodes.each do |node|
-        row = []
-        row << node.name
-        row << nil # sublabel
-        row << nil # description
-        row << node.style
-        row << node.bgcolor
-        data << row
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << headers
+        nodes.each do |node|
+          row = []
+          row << node.name
+          row << nil # sublabel
+          row << nil # description
+          row << node.style
+          row << node.bgcolor
+          data << row
+        end
       end
     end
     ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)

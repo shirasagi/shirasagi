@@ -82,10 +82,6 @@ def save_layout(data)
 
   item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  if SS::Lgwan.enabled?
-    html.gsub!('{{ part "mypage-login" }}', '')
-    html.gsub!('{{ part "mypage-tabs" }}', '')
-  end
   item.cur_user = @user
   item.save
   item.add_to_set group_ids: @site.group_ids
@@ -104,9 +100,7 @@ save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
 save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
 save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
-if !SS::Lgwan.enabled?
-  save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
-end
+save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
 save_layout filename: "mypage-top.layout.html", name: "マイページ：トップ、メンバー、SPARQL"
 save_layout filename: "portal-event.layout.html", name: "ポータル：イベント"
 save_layout filename: "portal-general.layout.html", name: "ポータル：汎用"
@@ -119,7 +113,6 @@ layouts = Hash[*array.flatten]
 puts "# nodes"
 
 def save_node(data)
-  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -202,25 +195,23 @@ save_node filename: "api", name: "API", route: "opendata/api"
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
   layout_id: layouts["mypage-top"].id
 
-if !SS::Lgwan.enabled?
-  save_node filename: "auth", name: "ログイン", route: "member/login",
-    layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
-    twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
-    google_oauth2_oauth: "enabled", github_oauth: "enabled"
+save_node filename: "auth", name: "ログイン", route: "member/login",
+  layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
+  twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
+  google_oauth2_oauth: "enabled", github_oauth: "enabled"
 
-  save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
-    layout_id: layouts["mypage-top"].id
-  save_node filename: "mypage/favorite", name: "マイリスト", route: "opendata/my_favorite_dataset",
-    layout_id: layouts["mypage-page"].id, order: 10
-  save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
-    layout_id: layouts["mypage-page"].id, order: 20
-  save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
-    layout_id: layouts["mypage-page"].id, order: 30
-  save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
-    layout_id: layouts["mypage-page"].id, order: 40
-  save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
-    layout_id: layouts["mypage-page"].id, order: 50
-end
+save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
+  layout_id: layouts["mypage-top"].id
+save_node filename: "mypage/favorite", name: "マイリスト", route: "opendata/my_favorite_dataset",
+  layout_id: layouts["mypage-page"].id, order: 10
+save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
+  layout_id: layouts["mypage-page"].id, order: 20
+save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
+  layout_id: layouts["mypage-page"].id, order: 30
+save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
+  layout_id: layouts["mypage-page"].id, order: 40
+save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
+  layout_id: layouts["mypage-page"].id, order: 50
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kanko", name: "観光・文化・スポーツ", route: "opendata/category", order: 1
@@ -355,7 +346,6 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", 
 puts "# parts"
 
 def save_part(data)
-  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -365,17 +355,7 @@ def save_part(data)
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
-  if html
-    if SS::Lgwan.enabled?
-      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセットを登録する</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデア登録</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデアを登録する</a></li>', '')
-    end
-    item.html = html
-  end
+  item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -405,11 +385,9 @@ save_part filename: "idea-attention.part.html", name: "アイデア：注目順"
   route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-if !SS::Lgwan.enabled?
-  save_part filename: "mypage-login.part.html", name: "ログイン", \
-    route: "opendata/mypage_login", ajax_view: "enabled"
-  save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
-end
+save_part filename: "mypage-login.part.html", name: "ログイン", \
+  route: "opendata/mypage_login", ajax_view: "enabled"
+save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
 save_part filename: "portal-about.part.html", name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-app.part.html", name: "ポータル：オープンアプリマーケット", \
   route: "opendata/app", limit: 5, sort: "released"
@@ -448,31 +426,29 @@ def save_page(data)
   item
 end
 
-contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
 contact_group_id = contact_group.id rescue nil
-contact_charge = contact_group_id ? "オープンデータ担当" : nil
-contact_email = contact_group_id ? "admin@example.jp" : nil
-contact_tel = contact_group_id ? "000-000-0000" : nil
-contact_fax = contact_group_id ? "000-000-0000" : nil
-contact_link_url = contact_group_id ? link_url : nil
-contact_link_name = contact_group_id ? link_url : nil
+contact = contact_group.contact_groups.first
 
 save_page route: "cms/page", filename: "index.html", name: "トップページ", layout_id: layouts["portal-top"].id
 save_page route: "cms/page", filename: "tutorial-data.html", name: "データ登録手順", layout_id: layouts["portal-general"].id
 save_page route: "cms/page", filename: "tutorial-app.html", name: "アプリ登録手順", layout_id: layouts["portal-general"].id
 save_page route: "cms/page", filename: "tutorial-idea.html", name: "アイデア登録手順", layout_id: layouts["portal-general"].id
-page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id, \
-  map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([34.067022, 134.589982])}]), \
-  contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, \
-  contact_tel: contact_tel, contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
-page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。", \
-  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
-  contact_link_url: contact_link_url, contact_link_name: contact_link_name
-page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。", \
-  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
-  contact_link_url: contact_link_url, contact_link_name: contact_link_name
+page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id,
+  map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([134.589982, 34.067022])}]),
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。",
+  layout_id: layouts["portal-general"].id,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。",
+  layout_id: layouts["portal-general"].id,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 recurrence = { kind: "date", start_at: Time.zone.today + 7, frequency: "daily", until_on: Time.zone.today + 18 }
 event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
   layout_id: layouts["portal-event"].id,

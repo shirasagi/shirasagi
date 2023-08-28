@@ -14,6 +14,7 @@ class Opendata::App
   include Workflow::MemberPermission
   include Opendata::AppSearchable
   include Opendata::AppTemplateVariables
+  include Cms::Lgwan::Page
 
   set_permission_name "opendata_apps"
 
@@ -74,7 +75,7 @@ class Opendata::App
     get_url(url, "/file_index/")
   end
 
-  def contact_present?
+  def show_contact?
     return false if member_id.present?
     super
   end

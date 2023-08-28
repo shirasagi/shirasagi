@@ -1,5 +1,4 @@
 <%= jquery do %>
-$(function() {
   $('.resolve-topic').on("click", function() {
     if (!confirm($(this).data('confirm'))) return false;
     var token = $('meta[name="csrf-token"]').attr('content');
@@ -11,7 +10,6 @@ $(function() {
       submit();
     return false;
   });
-});
 <% end %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>

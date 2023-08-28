@@ -10,7 +10,7 @@
 <dl class="see">
   <dt><%= @model.t :translate_source_id %><%= @model.tt :translate_source_id %></dt>
   <dd>
-    <%= f.hidden_field "translate_source_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "translate_source_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t('translate.apis.langs.index'), cms_apis_translate_langs_path(single: 1), class: "ajax-box btn" %>
   </dd>
   <dd>
@@ -31,7 +31,7 @@
 <dl class="see">
   <dt><%= @model.t :translate_target_ids %><%= @model.tt :translate_target_ids %></dt>
   <dd>
-    <%= f.hidden_field "translate_target_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "translate_target_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t('translate.apis.langs.index'), cms_apis_translate_langs_path, class: "ajax-box btn" %>
   </dd>
   <dd>

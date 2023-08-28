@@ -5,7 +5,7 @@ $('.sortable-index tbody').sortable();
 <dl class="see column-cms-select_page">
   <dt><%= @model.t :node_ids %><%= @model.tt :node_ids %></dt>
   <dd>
-    <%= f.hidden_field "node_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "node_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <% page_params = { model: "Article::Node::Page" } %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(page_params), class: "ajax-box" %>
   </dd>
@@ -20,7 +20,7 @@ $('.sortable-index tbody').sortable();
       <tbody>
         <% @item.ordered_nodes.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= f.hidden_field "node_ids[]", value: item.id %> <%= item.name %></td>
+          <td><%= f.hidden_field "node_ids[]", value: item.id, id: nil %><%= item.name %> (<%= item.filename %>)</td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

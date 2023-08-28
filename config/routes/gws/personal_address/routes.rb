@@ -7,10 +7,9 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    get :download, on: :collection
+    match :download_all, on: :collection, via: %i[get post]
     get :download_template, on: :collection
-    get :import, on: :collection
-    post :import, on: :collection
+    match :import, on: :collection, via: %i[get post]
   end
 
   gws "personal_address" do

@@ -1,9 +1,23 @@
+<%
+  calendar_options = {
+    firstDay: @cur_site.schedule_first_day,
+    views: {
+      timelineDay: {
+        minTime: @cur_site.schedule_min_time,
+        maxTime: @cur_site.schedule_max_time
+      }
+    }
+  }
+  init_options = params[:calendar] || {}
+%>
 <%= jquery do %>
-Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%== (params[:calendar] || {}).to_json %>);
-SS_Clipboard.renderCopy();
-Gws_Schedule_Integration.paths.newMemoMessage = <%== new_gws_memo_message_path(folder: "INBOX").to_json %>;
-Gws_Schedule_Integration.paths.newWebmail = <%== new_webmail_mail_path(webmail_mode: "account", account: 0, mailbox: "INBOX").to_json %>;
-Gws_Schedule_Integration.render();
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+    SS_Clipboard.renderCopy();
+    Gws_Schedule_Integration.paths.newMemoMessage = <%== new_gws_memo_message_path(folder: "INBOX").to_json %>;
+    Gws_Schedule_Integration.paths.newWebmail = <%== new_webmail_mail_path(webmail_mode: "account", account: 0, mailbox: "INBOX").to_json %>;
+    Gws_Schedule_Integration.render();
+  });
 <% end %>
 
 <% if @portal.my_portal? %>
@@ -27,7 +41,15 @@ Gws_Schedule_Integration.render();
       calendar_options = {
         tapMenu: item.id == @cur_user.id,
         restUrl: gws_schedule_user_plans_path(user: item.id),
-        eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: item.id, format: :json)}?#{search_query}" }]
+        eventSources: [{ url: "#{events_gws_schedule_user_plans_path(user: item.id, format: :json)}?#{search_query}" }],
+        useWorkload: use_workload?,
+        firstDay: @cur_site.schedule_first_day,
+        views: {
+          timelineDay: {
+            minTime: @cur_site.schedule_min_time,
+            maxTime: @cur_site.schedule_max_time
+          }
+        }
       }
       if @cur_site.schedule_drag_drop_denied?
         calendar_options[:eventStartEditable] = false
@@ -35,7 +57,9 @@ Gws_Schedule_Integration.render();
       init_options = params[:calendar] || {}
     %>
     <%= jquery do %>
-      Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+      $(document).on("gws:calendarInitialized", function() {
+        Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+      });
     <% end %>
   <% end %>
 </div>

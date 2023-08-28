@@ -63,7 +63,7 @@ describe Opendata::ResourceDownloadHistoryArchiveJob, dbscope: :example do
 
       it do
         expect(Opendata::ResourceDownloadHistory.site(site).count).to eq 3
-        described_class.bind(site_id: site).perform_now(now: I18n.l(now))
+        described_class.bind(site_id: site).perform_now(now: I18n.l(now, format: :picker))
         expect(Opendata::ResourceDownloadHistory.site(site).count).to eq 2
 
         expect(Job::Log.count).to eq 1

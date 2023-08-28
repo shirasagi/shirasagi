@@ -1,6 +1,6 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.uid.presence || item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
 
   <% if item.email.present? %>
     <span><%= mail_to item.email %></span>

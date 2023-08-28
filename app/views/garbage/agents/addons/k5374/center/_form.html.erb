@@ -1,7 +1,7 @@
 <dl class="see mod-garbage-center">
   <dt><%= @model.t :rest_start %><%= @model.tt :rest_start %></dt>
-  <dd><%= f.text_field :rest_start, value: tryb { @item.rest_start.strftime("%Y/%m/%d") }, class: "date js-date" %></dd>
+  <dd><%= f.ss_date_field :rest_start %></dd>
 
   <dt><%= @model.t :rest_end %><%= @model.tt :rest_end %></dt>
-  <dd><%= f.text_field :rest_end, value: tryb { @item.rest_end.strftime("%Y/%m/%d") }, class: "date js-date" %></dd>
+  <dd><%= f.ss_date_field :rest_end %></dd>
 </dl>

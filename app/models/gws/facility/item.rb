@@ -12,6 +12,8 @@ class Gws::Facility::Item
   include Gws::Addon::History
   include Gws::Addon::Import::Facility::Item
 
+  MINUTES_LIMIT_MAX_BASE = 10_080 * 100
+
   store_in collection: "gws_facilities"
 
   seqid :id
@@ -33,15 +35,20 @@ class Gws::Facility::Item
   permit_params :reservation_start_date, :reservation_end_date
   permit_params :approval_check_state
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
   validates :activation_date, datetime: true
   validates :expiration_date, datetime: true
-  validates :min_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
-  validates :max_minutes_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
+  validates :min_minutes_limit, numericality: {
+    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: MINUTES_LIMIT_MAX_BASE, allow_blank: true
+  }
+  validates :max_minutes_limit, numericality: {
+    only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: MINUTES_LIMIT_MAX_BASE, allow_blank: true
+  }
   validates :max_days_limit, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :reservation_start_date, datetime: true
   validates :reservation_end_date, datetime: true
   validates :approval_check_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+  validate :validate_minutes_limit
   validate :validate_approval_check_state, if: ->{ approval_check_state == 'enabled' }
 
   default_scope -> { order_by order: 1, name: 1 }
@@ -79,6 +86,14 @@ class Gws::Facility::Item
   end
 
   private
+
+  def validate_minutes_limit
+    return if min_minutes_limit.blank?
+    return if max_minutes_limit.blank?
+    return if min_minutes_limit <= max_minutes_limit
+
+    errors.add :max_minutes_limit, :greater_than, count: t(:min_minutes_limit)
+  end
 
   def validate_approval_check_state
     errors.add(:base, I18n.t('gws/facility.errors.require_approver')) if user_ids.blank?

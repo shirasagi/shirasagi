@@ -1,5 +1,5 @@
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="state"><%= t "ss.state.#{item.state}" %></span>
   <span class="order"><%= item.order %></span>
   <span class="text_color"><%= @model.t(:text_color) %>: <span style="display: inline-block; width: 2em; background-color: <%= item.text_color %>; border: 1px solid gray; margin: 0px;">&nbsp;</span> <%= item.text_color %></span>

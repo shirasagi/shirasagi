@@ -39,6 +39,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit facility_pages_path(site: site, cid: node)
+        expect(page).to have_css(".tree-navi", text: "refresh")
 
         #
         # Create Facility::Node::Page
@@ -115,7 +116,10 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         expect(page_node.new_days).to eq new_days
 
         visit facility_pages_path(site.id, node)
-        click_on name
+        expect(page).to have_css(".tree-navi", text: "refresh")
+        within ".list-items" do
+          click_on name
+        end
         expect(page).to have_css("#facility-info", text: name)
 
         #
@@ -135,12 +139,16 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         # Delete Facility::Node::Page
         #
         visit facility_pages_path(site.id, node)
-        click_on name2
+        expect(page).to have_css(".tree-navi", text: "refresh")
+        within ".list-items" do
+          click_on name2
+        end
         click_on I18n.t("ss.links.delete")
         within "form" do
           click_on I18n.t('ss.buttons.delete')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        expect(page).to have_css(".tree-navi", text: "refresh")
 
         expect { page_node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       end

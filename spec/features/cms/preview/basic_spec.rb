@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe "cms_preview", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  category_part_node = nil
 
   context "with article page" do
     let(:node) { create :article_node_page, cur_site: site }
@@ -42,16 +41,17 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:faq_part_search) { create(:faq_part_search, cur_site: site, cur_node: node_faq_search) }
     let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
     let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{node_root.url}"[1..-1]) }
-
-    before do
-      category_part_node = create(
+    let!(:category_part_node) do
+      create(
         :category_part_node,
         cur_site: site,
         cur_node: node_root,
         upper_html: '<nav id="category-list"><header><h2>#{parent.parent_name} > #{parent_name}</h2></header>',
         loop_html: '<article class="#{class} #{current}"><header><h3><a href="#{url}">#{name}</a></h3></header></article>',
         lower_html: '<footer>#{part_parent.parent_name} > #{part_parent_name} > #{part_name}</footer></nav>')
+    end
 
+    before do
       layout_html = ''
       layout_html << '<html><body>'
       layout_html << "<title>#{cms_site.name}</title>"
@@ -140,7 +140,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
   context "with sub site" do
     let!(:user) { cms_user }
     let!(:sub_site) { create(:cms_site_subdir, parent_id: site.id, group_ids: user.group_ids) }
-    let!(:admin_role) { create(:cms_role_admin, cur_site: sub_site, site: sub_site, site_id: sub_site) }
+    let!(:admin_role) { create(:cms_role_admin, cur_site: sub_site, site: sub_site, site_id: sub_site.id) }
     let!(:layout) { create_cms_layout(cur_site: sub_site, cur_user: user) }
     let!(:html) { '<h2 class="heading">見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
     let!(:item) { create(:cms_page, filename: "index.html", cur_site: sub_site, cur_user: user, layout: layout, html: html) }
@@ -162,11 +162,13 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
       end
 
       within_window new_window do
+        wait_for_document_loading
+        wait_for_js_ready
         expect(page).to have_css(".heading", text: "見出し2")
 
         within ".ss-preview-wrap" do
-          # fill_in "#ss-preview-date", with: I18n.l(preview_time, format: :picker)
-          first("#ss-preview-date").set(I18n.l(preview_time, format: :picker))
+          fill_in_datetime "ss-preview-date", with: preview_time
+          # first("#ss-preview-date").set(I18n.l(preview_time, format: :picker))
           click_on "PC"
         end
 

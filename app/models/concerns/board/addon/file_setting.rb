@@ -8,7 +8,7 @@ module Board::Addon
     included do
       field :file_limit, type: Integer, default: 0
       field :file_size_limit, type: Integer, default: (2 * 1024 * 1024)
-      field :file_ext_limit, type: SS::Extensions::Words, default: ""
+      field :file_ext_limit, type: SS::Extensions::Lines, default: ""
       field :file_scan, type: String, default: "disabled"
 
       permit_params :file_limit, :file_size_limit, :file_ext_limit, :file_scan
@@ -29,9 +29,7 @@ module Board::Addon
 
     def file_limit_options
       %w(none 1n 2n 3n).collect.with_index do |v, i|
-        label = I18n.t("board.options.file_limit.#{v}")
-        label += I18n.t("board.cannot_use") if v != "none" && SS::Lgwan.enabled?
-        [ label, i ]
+        [ I18n.t("board.options.file_limit.#{v}"), i ]
       end
     end
 

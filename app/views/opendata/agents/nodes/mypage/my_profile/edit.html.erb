@@ -24,7 +24,7 @@
     <% if @item.oauth_type.blank? %>
     <tr class="parent-row">
       <td class="field"><%= f.label(:in_password, @model.t(:in_password)) %></td>
-      <td class="input"><%= f.password_field :in_password %></td>
+      <td class="input"><%= f.password_field :in_password, autocomplete: "new-password" %></td>
     </tr>
     <% end %>
   </table>

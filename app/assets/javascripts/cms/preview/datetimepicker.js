@@ -1,1 +1,1 @@
-//= require jquery.datetimepicker
+//= require jquery-datetimepicker/build/jquery.datetimepicker.full.js

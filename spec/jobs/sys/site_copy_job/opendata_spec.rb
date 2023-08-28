@@ -288,9 +288,9 @@ describe Sys::SiteCopyJob, dbscope: :example do
       let(:member) { cms_member }
 
       before do
-        create :opendata_idea_comment, site_id: site, idea_id: idea1.id, member_id: member.id
-        create :opendata_idea_comment, site_id: site, idea_id: idea1.id, member_id: member.id
-        create :opendata_idea_comment, site_id: site, idea_id: idea2.id, member_id: member.id
+        create :opendata_idea_comment, cur_site: site, idea: idea1, member: member
+        create :opendata_idea_comment, cur_site: site, idea: idea1, member: member
+        create :opendata_idea_comment, cur_site: site, idea: idea2, member: member
 
         idea1.commented = idea1.comments.order_by(updated: -1).first.updated
         idea1.total_comment = idea1.comments.count

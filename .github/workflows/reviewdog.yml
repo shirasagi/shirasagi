@@ -1,17 +1,19 @@
 name: reviewdog
 on: [pull_request]
+env:
+  DISABLE_SPRING: 1
 jobs:
   reviewdog:
     name: reviewdog
     runs-on: ubuntu-latest
     # uncomment blow line if you don't want to run reviewdog on your repository
     # if: ${{ github.repository == 'shirasagi/shirasagi' }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: 3.0.5
           bundler-cache: true
       - uses: actions/setup-node@v3
         with:

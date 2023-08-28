@@ -14,16 +14,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       visit gws_memo_messages_path(site)
       first(".list-item input[type=checkbox]").click
-      within ".list-head-action" do
+      within ".move-menu" do
         click_on I18n.t('gws/memo/message.links.move')
         page.accept_confirm do
           click_on folder.name
         end
       end
-
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.move_all'))
-      end
+      wait_for_notice I18n.t('ss.notice.move_all')
 
       memo.reload
       expect(memo.path(gws_user)).to eq folder.id.to_s

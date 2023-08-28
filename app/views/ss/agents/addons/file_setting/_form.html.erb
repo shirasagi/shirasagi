@@ -22,12 +22,12 @@
   <dd><%= f.select :file_fs_access_restriction_state, @item.file_fs_access_restriction_state_options, include_blank: true %></dd>
 
   <dt class="depth-2"><%= @model.t :file_fs_access_restriction_allowed_ip_addresses %><%= @model.tt :file_fs_access_restriction_allowed_ip_addresses %></dt>
-  <dd class="depth-2"><%= f.text_area :file_fs_access_restriction_allowed_ip_addresses %></dd>
+  <dd class="depth-2"><%= f.ss_lines_field :file_fs_access_restriction_allowed_ip_addresses %></dd>
 
   <dt class="depth-2"><%= @model.t :file_fs_access_restriction_basic_auth %><%= @model.tt :file_fs_access_restriction_basic_auth %></dt>
   <dd class="depth-2">
     <%= f.text_field :file_fs_access_restriction_basic_auth_id, style: "width: 40%", placeholder: @model.t(:file_fs_access_restriction_basic_auth_id) %>
-    <%= f.password_field :in_file_fs_access_restriction_basic_auth_password, style: "width: 40%", placeholder: @model.t(:file_fs_access_restriction_basic_auth_password) %>
+    <%= f.password_field :in_file_fs_access_restriction_basic_auth_password, autocomplete: "new-password", style: "width: 40%", placeholder: @model.t(:file_fs_access_restriction_basic_auth_password) %>
   </dd>
 
   <dt class="depth-2"><%= @model.t :file_fs_access_restriction_env %><%= @model.tt :file_fs_access_restriction_env %></dt>

@@ -1,0 +1,12 @@
+<%= code_editor ".mod-cms-site_search_keyword .html", mode: :html %>
+
+<dl class="see mod-cms-site_search_keyword">
+  <dt><%= @item.t :site_search_keywords %><%= @item.tt :site_search_keywords %></dt>
+  <dd><%= f.ss_lines_field :site_search_keywords, style: "height: 180px;" %></dd>
+
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+  <dd><%= f.text_area :lower_html, class: :html %></dd>
+</dl>

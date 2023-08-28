@@ -38,7 +38,7 @@
           <% @time_search.hours.each do |hour| %>
             <% next if @plan.facility_ids_was.to_a.include?(item.id) %>
             <% next if hours[1][item.id].present? && hours[1][item.id].include?(hour) %>
-            <% next unless @hour_range[date].include?(hour) %>
+            <% next unless @hour_range[date].present? && @hour_range[date].include?(hour) %>
             <% hours[2].dig(item.id, hour).try(:each) do |plan| %>
               <% users << plan[:user_long_name] %>
             <% end %>

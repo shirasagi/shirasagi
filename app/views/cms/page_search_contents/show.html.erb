@@ -7,7 +7,8 @@
     <div class="search-info" style="float: right;"><%= I18n.t("cms.search_contents_condition", condition: truncate(@item.brief_search_condition, length: 60)) %></div>
     <div class="search-count"><%= I18n.t("cms.search_contents_count", count: @result_count) %></div>
     <label class="check"><input type="checkbox"/></label>
-    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+    <%# ページの一括削除の場合、特別な削除確認画面が表示されるので confirmation は不要 %>
+    <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
     <% if @list_head_search %>
       <div class="list-head-search" style="margin-top: 10px;"><%= render partial: "list_head_search" %></div>
     <% end %>
@@ -19,27 +20,22 @@
         <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
         <nav class="tap-menu">
           <%= link_to t("cms.content"), item.private_show_path %>
-          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
-          <% if @cur_site.mobile_enabled? %>
-            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-            <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") %>
-          <% else %>
-            <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-          <% end %>
+          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
+          <%= safe_join cms_preview_links(item) %>
         </nav>
         <div class="info">
           <%= link_to item.name, item.private_show_path, class: "title" %>
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <% if item.try(:updated) %>
-              <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% if item.updated %>
+              <span class="datetime"><%= t("ss.views.index.updated", updated: I18n.l(item.updated, format: :picker)) %></span>
             <% end %>
-            <% if item.try(:released) %>
-              <span class="datetime"><%= t("ss.views.index.released", released: item.released.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% if item.released %>
+              <span class="datetime"><%= t("ss.views.index.released", released: I18n.l(item.released, format: :picker)) %></span>
             <% end %>
-            <% if item.try(:approved) %>
-              <span class="datetime"><%= t("ss.views.index.approved", approved: item.approved.strftime("%Y/%m/%d %H:%M")) %></span>
+            <% if item.respond_to?(:approved) && item.approved %>
+              <span class="datetime"><%= t("ss.views.index.approved", approved: I18n.l(item.approved, format: :picker)) %></span>
             <% end %>
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
@@ -49,8 +45,12 @@
             <%= colored_state_label(item) %>
             <%
               term = []
-              term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.try(:release_date)
-              term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.try(:close_date)
+              if item.respond_to?(:release_date) && item.release_date
+                term << "開始:" + I18n.l(item.release_date, format: :picker)
+              end
+              if item.respond_to?(:close_date) && item.close_date
+                term << "終了:" + I18n.l(item.close_date, format: :picker)
+              end
             %>
             <%= "( #{term.join(", ")} )" if term.present? %>
             </span>

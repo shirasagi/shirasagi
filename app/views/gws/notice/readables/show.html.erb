@@ -1,57 +1,10 @@
-<h2 class="gws-notice-post"><%= @item.name %></h2>
-
+<!-- <h2 class="gws-notice-post"><%= @item.name %></h2> -->
+<%
+  addons = @item.addons.select do |addon|
+    [Gws::Addon::Notice::Calendar, Gws::Addon::Notice::CommentPost].include?(addon.klass)
+  end
+%>
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head">
-      <div class="main">
-        <% if @item.categories.present? %>
-          <span class="categories">
-          <% @item.categories.compact.each do |category| %>
-            <%= link_to category.trailing_name, url_for(action: :index, category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
-          <% end %>
-          </span>
-        <% end %>
-      </div>
-      <div class="aside">
-        <span class="updated"><%= I18n.l(@item.updated) %></span>
-        <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
-        <span class="severity">
-          <span class="severity-label"><%= @model.t :severity %></span>
-          <span class="severity-value"><%= @item.label(:severity) %></span>
-        </span>
-      </div>
-    </div>
-    <div class="addon-body">
-      <div class="main <%= @item.text_type == 'markdown' ? "markdown-body" : nil %>" id="gws-notice-text">
-        <%= @item.html %>
-      </div>
-      <% if @item.files.present? %>
-        <div class="files">
-          <% @item.files.each do |file| %>
-          <span id="file-<%= file.id %>">
-            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
-          </span>
-          <% end %>
-        </div>
-      <% end %>
-      <% if @item.links.present? %>
-        <div class="links">
-        <% @item.links.each_with_index do |link, i| %>
-          <span id="link-<%= i %>">
-            <%= link_to link['name'], link['url'] %>
-          </span>
-        <% end %>
-        </div>
-      <% end %>
-    </div>
-    <div class="menu">
-      <% if @item.browsed?(@cur_user) %>
-        <%= button_to(t('gws/notice.links.unset_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.unset_seen'), class: 'btn') %>
-      <% else %>
-        <%= button_to(t('gws/notice.links.set_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.set_seen'), class: 'btn') %>
-      <% end %>
-    </div>
-  </div>
-
-  <%= render template: "_addons_show", locals: { addons: @item.addons.select { |addon| [Gws::Addon::Notice::CommentPost].include?(addon.klass) } } %>
+  <%= render template: "_show" %>
+  <%= render template: "_addons_show", locals: { addons: addons } %>
 </div>

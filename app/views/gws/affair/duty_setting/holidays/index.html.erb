@@ -1,0 +1,32 @@
+<%
+  now ||= Time.zone.now
+  start_year = now.year - @cur_site.attendance_management_year
+  end_year = now.year + @cur_site.attendance_management_year
+%>
+
+<%= jquery do %>
+  var navi = new Gws_Category_Navi('.gws-category-navi');
+  navi.setBaseUrl('<%= url_for(year: 'ID') %>');
+  navi.render(<%== (start_year..end_year).to_a.reverse.map { |y| { _id: y, name: "#{y}#{t("gws/affair.year_id")}", trailing_name: "#{y}#{t("gws/affair.year_id")}" } }.to_json %>);
+<% end %>
+
+<div class="gws-category-navi dropdown">
+  <%= link_to({ year: "-" }, { class: 'btn dropdown-toggle' }) do %>
+    <%= @cur_year == :all ? t("gws/affair.all_year_id") : "#{@cur_year.year}#{t("gws/affair.year_id")}" %>
+    <i class="material-icons md-13">keyboard_arrow_down</i>
+  <% end %>
+  <div class="dropdown-menu dropdown-menu--white"></div>
+</div>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if @holiday_calendar.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if @holiday_calendar.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if @holiday_calendar.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= term(item) %></span>
+  <span class="gws-schedule-color-block" style="<%= "background-color: #{item.color}; color: #{item.text_color}" %>"><%= item.name %></span>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

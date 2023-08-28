@@ -6,15 +6,18 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     let(:admin) { gws_user }
     let!(:user1) do
       Gws::User.create name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user2) do
       Gws::User.create name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user3) do
       Gws::User.create name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let(:item) { create :gws_workflow_file }
     let(:show_path) { gws_workflow_file_path(site, item, state: 'all') }
@@ -32,7 +35,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        click_on I18n.t("workflow.search_approvers.index")
+        wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
       end
       wait_for_cbox do
         expect(page).to have_content(user1.long_name)
@@ -40,7 +43,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       end
 
       within ".mod-workflow-request" do
-        click_on I18n.t("workflow.search_circulations.index")
+        wait_cbox_open { click_on I18n.t("workflow.search_circulations.index") }
       end
       wait_for_cbox do
         expect(page).to have_content(user2.long_name)

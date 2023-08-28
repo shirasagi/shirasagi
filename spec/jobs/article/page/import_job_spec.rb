@@ -38,7 +38,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       end
 
       before do
-        job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
         expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
@@ -66,14 +66,14 @@ describe Article::Page::ImportJob, dbscope: :example do
         filename = "#{unique_id}.csv"
         csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
           ::File.open(file.path, "wb") do |f|
-            exporter = Cms::PageExporter.new(site: site, criteria: Article::Page.site(site).node(source_node))
+            exporter = Cms::PageExporter.new(mode: "article", site: site, criteria: Article::Page.site(site).node(source_node))
             exporter.enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
             end
           end
         end
 
-        job = Article::Page::ImportJob.bind(site_id: site, node_id: dest_node, user_id: cms_user)
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: dest_node.id, user_id: cms_user.id)
         expect { job.perform_now(csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
 
         Job::Log.first.tap do |log|
@@ -176,6 +176,41 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
       end
 
+      context "map section fields is given" do
+        let(:map_point) do
+          {
+            name: unique_id, loc: [ 138.235266, 36.244941 ], text: Array.new(2) { unique_id }.join("\n"),
+            image: "/assets/img/openlayers/marker3.png"
+          }
+        end
+        let(:map_zoom_level) { rand(5..12) }
+        let(:center_setting) { %w(auto designated_location).sample }
+        let(:set_center_position) { "138.252924,36.204824" }
+        let(:zoom_setting) { %w(auto designated_level).sample }
+        let(:set_zoom_level) { rand(5..12) }
+        let(:map_reference_method) { "direct" }
+        let!(:source_page) do
+          Article::Page.create!(
+            cur_site: site, cur_node: source_node, cur_user: cms_user,
+            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
+            map_points: [ map_point ], map_zoom_level: map_zoom_level, center_setting: center_setting,
+            set_center_position: set_center_position, zoom_setting: zoom_setting, set_zoom_level: set_zoom_level,
+            map_reference_method: map_reference_method
+          )
+        end
+
+        it do
+          Article::Page.site(site).node(dest_node).first.tap do |page|
+            expect(page.map_points).to eq source_page.map_points
+            expect(page.center_setting).to eq source_page.center_setting
+            expect(page.set_center_position).to eq source_page.set_center_position
+            expect(page.zoom_setting).to eq source_page.zoom_setting
+            expect(page.set_zoom_level).to eq source_page.set_zoom_level
+            expect(page.map_reference_method).to eq source_page.map_reference_method
+          end
+        end
+      end
+
       context "related_pages section fields is given" do
         let(:related_page) { create :article_page, cur_site: site, cur_node: category_node }
         let(:related_page_sort) { [ "name", "filename", "updated -1" ].sample }
@@ -214,25 +249,80 @@ describe Article::Page::ImportJob, dbscope: :example do
       context "contact section fields is given" do
         let(:contact_state) { %w(show hide).sample }
         let!(:source_page) do
+          cms_group.update(contact_groups: [
+            {
+              main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+              contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+            }
+          ])
+
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            contact_state: contact_state, contact_group: cms_group, contact_charge: unique_id, contact_tel: unique_id,
+            contact_state: contact_state, contact_group: cms_group, contact_group_contact_id: cms_group.contact_groups.first.id,
+            contact_group_relation: contact_group_relation, contact_charge: unique_id, contact_tel: unique_id,
             contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
           )
         end
 
-        it do
-          Article::Page.site(site).node(dest_node).first.tap do |page|
-            expect(page.contact_state).to eq source_page.contact_state
-            expect(page.contact_group_id).to eq source_page.contact_group_id
-            expect(page.contact_charge).to eq source_page.contact_charge
-            expect(page.contact_tel).to eq source_page.contact_tel
-            expect(page.contact_fax).to eq source_page.contact_fax
-            expect(page.contact_email).to eq source_page.contact_email
-            expect(page.contact_link_url).to eq source_page.contact_link_url
-            expect(page.contact_link_name).to eq source_page.contact_link_name
+        context "when contact_group_relation is blank" do
+          let(:contact_group_relation) { nil }
+
+          it do
+            Article::Page.site(site).node(dest_node).first.tap do |page|
+              expect(page.contact_state).to eq source_page.contact_state
+              expect(page.contact_group_id).to eq source_page.contact_group_id
+              expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
+              expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_charge).to eq source_page.contact_charge
+              expect(page.contact_tel).to eq source_page.contact_tel
+              expect(page.contact_fax).to eq source_page.contact_fax
+              expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_link_url).to eq source_page.contact_link_url
+              expect(page.contact_link_name).to eq source_page.contact_link_name
+            end
+          end
+        end
+
+        context "when contact_group_relation is related" do
+          let(:contact_group_relation) { "related" }
+
+          it do
+            Article::Page.site(site).node(dest_node).first.tap do |page|
+              expect(page.contact_state).to eq source_page.contact_state
+              expect(page.contact_group_id).to eq source_page.contact_group_id
+              expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
+              expect(page.contact_group_relation).to eq contact_group_relation
+              cms_group.contact_groups.first.tap do |contact|
+                expect(page.contact_charge).to eq contact.contact_group_name
+                expect(page.contact_tel).to eq contact.contact_tel
+                expect(page.contact_fax).to eq contact.contact_fax
+                expect(page.contact_email).to eq contact.contact_email
+                expect(page.contact_link_url).to eq contact.contact_link_url
+                expect(page.contact_link_name).to eq contact.contact_link_name
+              end
+            end
+          end
+        end
+
+        context "when contact_group_relation is unrelated" do
+          let(:contact_group_relation) { "unrelated" }
+
+          it do
+            Article::Page.site(site).node(dest_node).first.tap do |page|
+              expect(page.contact_state).to eq source_page.contact_state
+              expect(page.contact_group_id).to eq source_page.contact_group_id
+              expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
+              expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_charge).to eq source_page.contact_charge
+              expect(page.contact_tel).to eq source_page.contact_tel
+              expect(page.contact_fax).to eq source_page.contact_fax
+              expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_link_url).to eq source_page.contact_link_url
+              expect(page.contact_link_name).to eq source_page.contact_link_name
+            end
           end
         end
       end
@@ -303,7 +393,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       end
 
       before do
-        job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
         expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
@@ -331,7 +421,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       end
 
       before do
-        job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
         expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
@@ -389,7 +479,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       end
 
       before do
-        job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
         expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 

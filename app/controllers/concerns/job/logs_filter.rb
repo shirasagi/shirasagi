@@ -132,18 +132,21 @@ module Job::LogsFilter
 
   def build_csv(items)
     require "csv"
-    CSV.generate do |data|
-      data << %w(ClassName Started Closed State Args Logs)
-      items.each do |item|
-        class_name = item.class_name.underscore
-        data << [
-          t(class_name, scope: "job.models", default: class_name.humanize),
-          item.start_label,
-          item.closed_label,
-          t(item.state, scope: "job.state"),
-          item.args,
-          item.joined_jobs
-        ]
+
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << %w(ClassName Started Closed State Args Logs)
+        items.each do |item|
+          class_name = item.class_name.underscore
+          data << [
+            t(class_name, scope: "job.models", default: class_name.humanize),
+            item.start_label,
+            item.closed_label,
+            t(item.state, scope: "job.state"),
+            item.args,
+            item.joined_jobs
+          ]
+        end
       end
     end
   end

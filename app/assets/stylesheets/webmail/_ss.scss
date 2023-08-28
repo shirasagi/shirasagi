@@ -40,9 +40,9 @@
   content: none !important;
 }
 li.webmail-accounts {
-  float: right;
   margin-top: 5px;
   margin-right: 10px;
+  float: right;
 }
 .webmail-category-label {
   @include border-radius(3px);
@@ -73,9 +73,9 @@ li.webmail-accounts {
 .webmail-navi-mailboxes {
   .reload {
     position: absolute;
+    z-index: 1;
     top: 0;
     right: 0;
-    z-index: 1;
     padding: 7px 8px 9px;
   }
   .unseen {
@@ -128,10 +128,10 @@ li.webmail-accounts {
   }
 }
 .webmail-quota-alert {
-  margin-left: 230px;
   margin-bottom: 20px;
-  font-weight: bold;
+  margin-left: 230px;
   color: #ff0f0f;
+  font-weight: bold;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -186,19 +186,22 @@ li.webmail-accounts {
 // index
 .webmail-mails {
   .list-item {
-    padding: 5px 8px;
     display: block;
+    padding: 5px 8px;
   }
   .list-item-head {
     @include mb { display: none; }
-    font-weight: bold;
     padding-bottom: 8px;
+    font-weight: bold;
     .head {
       @include display-flex;
       position: relative;
       height: 1.2em;
       margin-left: 82px;
-      .field { display: inline-block; }
+      .field {
+         display: inline-block;
+         cursor: pointer;
+       }
       .from, .to { width: 194px; }
       .title { width: calc(100% - 425px); }
       .datetime { width: 10em; }
@@ -218,8 +221,8 @@ li.webmail-accounts {
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
       vertical-align: text-top;
+      white-space: nowrap;
     }
     .from, .to {
       width: 200px;
@@ -256,12 +259,13 @@ li.webmail-accounts {
 .webmail-mail {
   .addon-head {
     padding: 1px 15px 15px;
-    .icon-star {
-      float: right;
-      margin: 12px 0 0;
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+
+    .d-flex {
+      @include display-flex;
+      @include align-items(center);
+    }
+    .ml-auto {
+      margin-left: auto;
     }
     .subject {
       display: block;
@@ -269,17 +273,24 @@ li.webmail-accounts {
       font-size: 130%;
       line-height: 1.4;
     }
+    .icon-star {
+      //margin: 12px 0 0;
+      //float: right;
+      &.on    .material-icons { color: #f70; }
+      &.off   .material-icons { color: #ddd; }
+      &:hover .material-icons { opacity: .8; }
+    }
     .from {
       float: left;
       line-height: 1.4;
       @include mb {
-        float: none;
         margin-bottom: 10px;
+        float: none;
       }
     }
     .date {
-      text-align: right;
       line-height: 1.4;
+      text-align: right;
     }
   }
   .address-header {
@@ -324,8 +335,8 @@ li.webmail-accounts {
     border: 1px solid #fd8;
     background-color: rgba(255, 255, 0, .2);
     background-color: #ffc;
-    text-decoration: none;
     text-align: center;
+    text-decoration: none;
     &:hover {
       border-color: #fb8;
       background-color: rgba(255, 255, 0, .35);
@@ -341,9 +352,9 @@ li.webmail-accounts {
       }
       blockquote {
         padding: 2px 8px 2px 20px;
+        border-left-width: 5px;
         border-left-style: solid;
         border-left-color: #ccc;
-        border-left-width: 5px;
       }
       img[data-url] {
         height: unset;
@@ -363,6 +374,53 @@ li.webmail-accounts {
       text-align: right;
     }
   }
+  .move-tool-wrap {
+    @include display-flex;
+    position: relative;
+    z-index: 1;
+    @include align-items(center);
+    @include justify-content(flex-end);
+    padding: 15px;
+
+    .page-order {
+      @include display-flex;
+    }
+
+    .move-tool {
+      @include display-flex;
+      margin-left: 20px;
+      @include mb {
+        margin-left: 10px;
+      }
+    }
+
+    .prev, .next {
+      @include display-flex;
+      width: 20px;
+      height: 20px;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: $black;
+      }
+      &:not(.inactive):hover {
+        a {
+          color: #f25a38;
+        }
+      }
+      &.inactive {
+        a {
+          color: $gray2;
+          pointer-events: none;
+        }
+      }
+    }
+    .next {
+      margin-left: 10px;
+    }
+  }
 }
 
 // form
@@ -375,8 +433,8 @@ li.webmail-accounts {
     border-top: 1px solid #e4e4e4;
   }
   dt {
-    float: left;
     min-width: 50px;
+    float: left;
     color: #a0522d;
     font-weight: bold;
   }
@@ -391,10 +449,10 @@ li.webmail-accounts {
     margin-top: 10px;
     cursor: pointer;
     span {
-      float: left;
       max-width: 500px;
       margin: 0 4px 4px 0;
       padding: 2px 5px;
+      float: left;
       border: 1px solid #bcd;
       border-radius: 3px;
       background: #def;
@@ -416,38 +474,10 @@ li.webmail-accounts {
   color: #888;
 }
 .webmail-addon-mail-body {
-  @include clear;
-  .subject {
-    float: left;
-    width: calc(100% - 300px);
-    width: -webkit-calc(100% - 300px);
-    min-width: 300px;
-    margin-bottom: 15px;
-    input {
-      width: 100%;
-      padding: 10px 6px;
-    }
-  }
-  .options {
-    float: right;
-    margin-bottom: 15px;
-    text-align: right;
-  }
-  #item_signature {
-    max-width: 200px;
-  }
-  .body-content {
-    clear: both;
-    margin-top: 15px;
-  }
-  .template-options {
-    margin-top: 10px;
-    float: left;
-  }
-  .header-options {
-    margin-top: 10px;
-    float: right;
-  }
+  @include display-flex();
+  @include flex-direction(column);
+  grid-row-gap: 10px;  // for old browsers
+  row-gap: 10px;
 }
 // form-addresses
 .webmail-address-field.see {
@@ -494,8 +524,8 @@ li.webmail-accounts {
   margin-top: -1px;
   a {
     display: block;
-    float: left;
     margin: 1px 0 -1px 6px;
+    float: left;
     border: 1px solid $gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;

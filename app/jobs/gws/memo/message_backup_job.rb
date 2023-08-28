@@ -1,3 +1,5 @@
+require 'kconv'
+
 class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
   include Gws::Memo::Helper
 

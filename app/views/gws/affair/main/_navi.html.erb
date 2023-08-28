@@ -1,0 +1,121 @@
+<%
+  def current_navi
+    case request.path
+    when /affair\/overtime\/management\/aggregate/
+      "overtime-aggregate"
+    when /working_time\/management\/aggregate/
+      "worktime-aggregate"
+    when /affair\/attendance/
+      "attendance"
+    when /affair\/overtime/
+      "overtime"
+    when /affair\/leave/
+      "leave"
+    when /affair\/shift_work/
+      "shift-work"
+    end
+  end
+%>
+<%= jquery do %>
+new Gws_Affair_Menu("<%= current_navi %>", "ss_affair_navi_site_<%= @cur_site.id %>");
+<% end %>
+
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-affair" %></h2>
+
+  <!-- 庶務事務/出退勤 -->
+  <h3><%= link_to(t('modules.gws/affair/attendance'), "", class: "toggle-narrow-page") %></h3>
+  <ul class="narrow-page" data-navi="attendance">
+    <% if Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site, permission_name: module_name) %>
+      <li><%= link_to t('modules.gws/affair/attendance/time_card'), gws_affair_attendance_main_path %></li>
+    <% end %>
+    <% if %i[aggregate_private aggregate_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: module_name) } %>
+      <li><%= link_to t('modules.gws/affair/attendance/group'), gws_affair_attendance_group_main_path %></li>
+    <% end %>
+    <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site, permission_name: module_name) } %>
+      <li><%= link_to t('modules.gws/affair/attendance/management/time_card'), gws_affair_attendance_management_main_path, class: "management" %></li>
+    <% end %>
+  </ul>
+
+  <!-- 庶務事務/時間外申請 -->
+  <% if Gws::Affair::OvertimeFile.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(t('modules.gws/affair/overtime'), gws_affair_overtime_main_path, class: "toggle-narrow-page") %></h3>
+    <ul class="narrow-page" data-navi="overtime">
+      <li><%= link_to(t('modules.gws/affair/overtime/file/mine'), gws_affair_overtime_files_path(state: "mine")) %></li>
+      <% if Gws::Affair::OvertimeFile.allowed?(:approve, @cur_user, site: @cur_site) %>
+        <li><%= link_to(t("modules.gws/affair/overtime/file/approve"), gws_affair_overtime_files_path(state: "approve")) %></li>
+      <% end %>
+      <li><%= link_to(t("modules.gws/affair/overtime/file/all"), gws_affair_overtime_files_path(state: "all")) %></li>
+      <% if Gws::Affair::OvertimeFile.allowed_aggregate?(:use, @cur_user, @cur_site) %>
+        <li><%= link_to(t("modules.gws/affair/overtime/detail"), gws_affair_overtime_details_path) %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <!-- 庶務事務/休暇申請 -->
+  <% if Gws::Affair::LeaveFile.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(t('modules.gws/affair/leave'), gws_affair_leave_main_path, class: "toggle-narrow-page") %></h3>
+    <ul class="narrow-page" data-navi="leave">
+      <li><%= link_to(t('modules.gws/affair/leave/file/mine'), gws_affair_leave_files_path(state: "mine")) %></li>
+      <% if Gws::Affair::LeaveFile.allowed?(:approve, @cur_user, site: @cur_site) %>
+        <li><%= link_to(t("modules.gws/affair/leave/file/approve"), gws_affair_leave_files_path(state: "approve")) %></li>
+      <% end %>
+      <li><%= link_to(t("modules.gws/affair/leave/file/all"), gws_affair_leave_files_path(state: "all")) %></li>
+      <% if Gws::Affair::LeaveFile.allowed_aggregate?(:use, @cur_user, @cur_site) %>
+        <li><%= link_to(t("modules.gws/affair/leave/detail"), gws_affair_leave_details_path) %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <!-- 庶務事務/シフト勤務 -->
+  <!-- 利用停止
+  <% if %i[use manage_private manage_all].find { |priv| Gws::Affair::ShiftRecord.allowed?(priv, @cur_user, site: @cur_site) } %>
+    <h3><%= link_to(t('modules.gws/affair/shift_work'), gws_affair_shift_work_main_path, class: "toggle-narrow-page") %></h3>
+    <ul class="narrow-page" data-navi="shift-work">
+      <li><%= link_to t('modules.gws/affair/shift_work/calendar'), gws_affair_shift_work_calendar_main_path %></li>
+      <li><%= link_to t('modules.gws/affair/shift_work/shift_calendar'), gws_affair_shift_work_shift_calendars_path %></li>
+    </ul>
+  <% end %>
+  -->
+
+  <!-- 庶務事務/時間外集計 -->
+  <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(t("modules.gws/affair/overtime/aggregate"), gws_affair_overtime_aggregate_main_path, class: "toggle-narrow-page") %></h3>
+    <ul class="narrow-page" data-navi="overtime-aggregate">
+      <li><%= link_to t("modules.gws/affair/overtime/aggregate/user"), gws_affair_overtime_aggregate_users_main_path %></li>
+      <li><%= link_to t("modules.gws/affair/overtime/aggregate/capital"), gws_affair_overtime_aggregate_capitals_main_path %></li>
+      <li><%= link_to t("modules.gws/affair/overtime/aggregate/search_groups"), gws_affair_overtime_aggregate_search_groups_main_path %></li>
+      <li><%= link_to t("modules.gws/affair/overtime/aggregate/search_users"), gws_affair_overtime_aggregate_search_users_main_path %></li>
+    </ul>
+  <% end %>
+
+  <!-- 庶務事務/勤務時間集計 -->
+  <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to(t("modules.gws/affair/worktime/aggregate"), gws_affair_worktime_main_path, class: "toggle-narrow-page") %></h3>
+    <ul class="narrow-page" data-navi="worktime-aggregate">
+      <li><%= link_to(t("modules.gws/affair/worktime/aggregate/default"), gws_affair_worktime_aggregate_path(duty_type: "default")) %></li>
+    </ul>
+  <% end %>
+
+  <!-- 庶務事務/勤務体系 -->
+  <% if Gws::Affair::DutySetting.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("modules.gws/affair/duty_calendar"), gws_affair_duty_setting_duty_calendars_path, class: "management" %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("modules.gws/affair/duty_hour"), gws_affair_duty_setting_duty_hours_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/holiday_calendar"), gws_affair_duty_setting_holiday_calendars_path, class: "management" %></li>
+      <li><%= link_to t("modules.gws/affair/duty_notice"), gws_affair_duty_setting_duty_notices_path, class: "management" %></li>
+    </ul>
+  <% end %>
+
+  <!-- 庶務事務/年度設定 -->
+  <% if Gws::Affair::CapitalYear.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("modules.gws/affair/capital_years"), gws_affair_capital_years_path, class: "management" %></h3>
+  <% end %>
+
+  <!-- 庶務事務/特別休暇区分 -->
+  <% if Gws::Affair::SpecialLeave.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("modules.gws/affair/special_leave"), gws_affair_special_leaves_path, class: "management" %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

@@ -45,8 +45,38 @@
       setIntervalStep(this);
     });
   };
-  var sort1 = new SS_SortableForm('#reminder-conditions', { limit: 5, onInsert: changeIntervalStep });
-  var sort2 = new SS_SortableForm('#reminder-conditions-allday', { limit: 5, onInsert: changeIntervalStep });
+
+  var setIntervalMax = function(ele) {
+    var max = <%= @model::INTERVAL_MAX_BASE %>;
+    switch ($(ele).val()) {
+      case 'weeks':
+        max /= 7;
+      case 'days':
+        max /= 24;
+      case 'hours':
+        max /= 60;
+    }
+    $(ele).closest("tr").find(".interval").attr("max", max);
+  };
+  var changeIntervalMax = function(newItem) {
+    $(newItem).find(".interval_type").on("change", function() {
+      setIntervalMax(this);
+    });
+  };
+
+  var sort1 = new SS_SortableForm('#reminder-conditions', { limit: 5, onInsert: function(newItem) {
+    changeIntervalStep(newItem);
+    changeIntervalMax(newItem);
+  }});
+  var sort2 = new SS_SortableForm('#reminder-conditions-allday', { limit: 5, onInsert: function(newItem) {
+    changeIntervalStep(newItem);
+    changeIntervalMax(newItem);
+  }});
+
+  if (<%== reminder_conditions.to_json %>.length) {
+    sort1.body.find('tr').remove();
+    sort2.body.find('tr').remove();
+  }
 
   <% if @item.allday == "allday" %>
   sort2.renderItems(<%== reminder_conditions.to_json %>);
@@ -54,8 +84,16 @@
   sort1.renderItems(<%== reminder_conditions.to_json %>);
   <% end %>
 
+  $(".reminder-conditions tr .interval").on('focusout', function() {
+    if ($(this).closest("tr").find(".interval_type").val() == "minutes"){
+      $(this).val(Math.round($(this).val() / 10) * 10);
+    }
+  });
+
   $(".gws-addon-reminder table tr").each(function() { changeIntervalStep(this); });
+  $(".gws-addon-reminder table tr").each(function() { changeIntervalMax(this); });
   $(".gws-addon-reminder table tr .interval_type").each(function() { setIntervalStep(this); });
+  $(".gws-addon-reminder table tr .interval_type").each(function() { setIntervalMax(this); });
 <% end %>
 
 <dl class="see gws-addon-reminder">
@@ -71,7 +109,7 @@
             'class' => 'state', 'data-name' => 'item[in_reminder_conditions][][state]' %>
         </td>
         <td>
-          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0,
+          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 10, step: 10, min: 0, max: @model::INTERVAL_MAX_BASE,
             'class' => 'interval', 'data-name' => 'item[in_reminder_conditions][][interval]' %>
         </td>
         <td>
@@ -90,7 +128,7 @@
             'class' => 'state', 'data-name' => 'item[in_reminder_conditions][][state]' %>
         </td>
         <td>
-          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0,
+          <%= number_field_tag 'item[in_reminder_conditions][][interval]', 1, step: 1, min: 0, max: @model::INTERVAL_MAX_BASE,
             'class' => 'interval', 'data-name' => 'item[in_reminder_conditions][][interval]' %>
         </td>
         <td>

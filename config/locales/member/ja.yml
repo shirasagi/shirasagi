@@ -101,10 +101,13 @@ ja:
       slide: スライド
       search: 検索
       create_unregisted_anpi: 未登録者安否作成
+      register_bookmark: お気に入りに登録
+      cancel_bookmark: お気に入りを解除
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。
       posted_gpf: Google Person Finder に登録しました。
+      member_created: メンバーを登録しました。
     confirm:
       leave: ボタンをクリックすると退会します。よろしいですか。
       group:
@@ -181,6 +184,8 @@ ja:
       member/photo_search: フォトサーチ
       member/photo_spot: フォトスポット
       member/my_line_profile: LINEプロフィール
+      member/line_first_registration: LINE初回登録
+      member/bookmark: ブックマーク
 
     parts:
       member/blog_page: ブログページ一覧
@@ -189,6 +194,7 @@ ja:
       member/photo_slide: フォトスライド
       member/login: ログイン
       member/invited_group: 招待されたグループ
+      member/bookmark: ブックマーク
 
   mongoid:
     models:
@@ -360,6 +366,8 @@ ja:
     delete_private_member_blogs: メンバーブログの削除（所有）
     release_other_member_blogs: メンバーブログの公開（全て）
     release_private_member_blogs: メンバーブログの公開（所有）
+    close_other_member_blogs: メンバーブログの非公開（全て）
+    close_private_member_blogs: メンバーブログの非公開（所有）
     approve_other_member_blogs: メンバーブログの承認（全て）
     approve_private_member_blogs: メンバーブログの承認（所有）
     reroute_other_member_blogs: メンバーブログの承認申請取消（全て）
@@ -374,6 +382,8 @@ ja:
     delete_private_member_photos: メンバーフォトの削除（所有）
     release_other_member_photos: メンバーフォトの公開（全て）
     release_private_member_photos: メンバーフォトの公開（所有）
+    close_other_member_photos: メンバーフォトの非公開（全て）
+    close_private_member_photos: メンバーフォトの非公開（所有）
     approve_other_member_photos: メンバーフォトの承認（全て）
     approve_private_member_photos: メンバーフォトの承認（所有）
     reroute_other_member_photos: メンバーフォトの承認申請取消（全て）
@@ -419,18 +429,6 @@ ja:
       input_again: をもう一度入力してください。
       not_registerd: は登録されていません。
       already_registerd: は、確認済みです。
-      password_short: "は%{count}文字以上にしてください。"
-      password_short_upcase: "は英大文字（A-Z）を%{count}文字以上含むようにしてください。"
-      password_short_downcase: "は英小文字（a-z）を%{count}文字以上含むようにしてください。"
-      password_short_digit: "は数字（0-9）を%{count}文字以上含むようにしてください。"
-      password_short_symbol: "は記号を%{count}文字以上含むようにしてください。"
-      password_contains_prohibited_chars: "に使用禁止文字（%{prohibited_chars}）が含まれています。"
-      password_min_change_chars: "は以前のものから%{count}文字以上違う文字を含むようにしてください。"
-      password_alphabet_only: に英字のみの文字は使用できません。
-      password_numeric_only: に数字のみの文字は使用できません。
-      password_include_email: にメールアドレスが含まれています。
-      password_include_name: に氏名が含まれています。
-      password_include_kana: によみがなが含まれています。
       please_confirm_personal_data_protection: 個人情報の保護に同意してください。
 
   tooltip:

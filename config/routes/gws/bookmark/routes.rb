@@ -1,15 +1,24 @@
 Rails.application.routes.draw do
-  Gws::Initializer
-
   concern :deletion do
     get :delete, on: :member
     delete :destroy_all, on: :collection, path: ''
   end
 
-  namespace "gws", path: ".g:site/gws" do
-    resources :bookmarks, concerns: [:deletion]
+  gws "bookmark" do
+    get '/' => "main#index", as: :main
+
     namespace "apis" do
-      resources :bookmarks, only: [:create, :update, :destroy]
+      post "item" => "items#update", as: "update_item"
+      delete "item" => "items#destroy", as: "destroy_item"
+      get "folders" => "folders#index", as: "folders"
+      get "folder_list" => "folder_list#index"
+    end
+
+    scope(path: ':folder_id', defaults: { folder_id: '-' }) do
+      resources :items, concerns: [:deletion]
+    end
+    resources :folders, concerns: [:deletion] do
+      match :move, on: :member, via: [:get, :post]
     end
   end
 end

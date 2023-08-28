@@ -1,4 +1,4 @@
 <dl class="see">
   <dt><%= @model.t :deliver_date %><%= @model.tt :deliver_date %></dt>
-  <dd><%= f.text_field :deliver_date, value: tryb{@item.send(:deliver_date).strftime("%Y/%m/%d %H:%M")}, class: "js-datetime datetime" %></dd>
+  <dd><%= f.ss_datetime_field :deliver_date %></dd>
 </dl>

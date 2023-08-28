@@ -4,14 +4,5 @@
 
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <%= select_tag("#{f.object_name}[][in_wrap][head]", options_for_select(column.headline_list.invert, value.try(:head)), column.form_options(:head).merge(id: nil, style: "width: 10%;")) %>
-  <%= text_field_tag(name, value.try(:text), column.form_options(:text).merge(id: nil, style: "width: 70%;")) %>
-
-  <%= jquery do %>
-    Cms_Form.addSyntaxCheck("<%= id %>", {
-      resolve: "text",
-      name: "<%= column.name %>",
-      getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
-      setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
-    });
-  <% end %>
+  <%= text_field_tag(name, value.try(:text), column.form_options(:text).merge(id: nil, style: "width: 70%;", data: { syntax_check: "value", syntax_check_name: column.name })) %>
 <% end %>

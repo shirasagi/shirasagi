@@ -27,6 +27,9 @@
   <% if Gws::Contrast.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/contrast'), gws_contrasts_path %></h3>
   <% end %>
+  <% if Gws::SearchForm::Target.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("gws/search_form.main"), gws_search_form_targets_path %></h3>
+  <% end %>
   <% if Gws::Chorg::Revision.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/chorg'), gws_chorg_main_path %></h3>
   <% end %>
@@ -35,5 +38,8 @@
   <% end %>
   <% if Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/job'), gws_job_logs_path %></h3>
+  <% end %>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_groups) && @cur_site.elasticsearch_client %>
+    <h3><%= link_to "Elasticsearch", gws_elasticsearch_diagnostic_main_path %></h3>
   <% end %>
 </nav>

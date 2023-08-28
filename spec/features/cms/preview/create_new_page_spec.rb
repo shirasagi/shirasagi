@@ -56,6 +56,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
 
       click_button I18n.t("ss.buttons.new")
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       expect(current_path).to eq new_category_node_path(site: site, cid: node_root.id)
     end
@@ -93,6 +94,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
 
       click_button I18n.t("ss.buttons.new")
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       expect(current_path).to eq new_category_node_path(site: site, cid: node_root.id)
     end
@@ -130,6 +132,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
 
       click_button I18n.t("ss.buttons.new")
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       expect(current_path).to eq new_article_page_path(site: site, cid: node_root.id)
     end

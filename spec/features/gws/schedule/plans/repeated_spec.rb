@@ -24,25 +24,17 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
 
       it do
         visit index_path
-        click_on "予定を作成"
+        click_on I18n.t("gws/schedule.links.add_plan")
 
         within "form#item-form" do
           fill_in "item[name]", with: name
-          fill_in "item[start_at]", with: start_at_text
-          fill_in "item[end_at]", with: end_at_text
+          fill_in_datetime "item[start_at]", with: start_at
+          fill_in_datetime "item[end_at]", with: end_at
           select repeat_type_label, from: "item[repeat_type]"
           select interval.to_s, from: "item[interval]"
-          fill_in "item[repeat_start]", with: repeat_start_text
-          fill_in "item[repeat_end]", with: repeat_end_text
+          fill_in_date "item[repeat_start]", with: repeat_start
+          fill_in_date "item[repeat_end]", with: repeat_end
           fill_in "item[text]", with: text
-
-          # 1 回目の end_at への入力が強制的に 20:00 にされてしまう。
-          # 2 回入力することで、意図した年月日を設定する。
-          fill_in "item[end_at]", with: end_at_text
-
-          # 1 回目の repeat_end への入力が強制的に現在日にされてしまう。
-          # 2 回入力することで、意図した年月日を設定する。
-          fill_in "item[repeat_end]", with: repeat_end_text
 
           click_on I18n.t('ss.buttons.save')
         end
@@ -93,25 +85,17 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
 
       it do
         visit index_path
-        click_on "予定を作成"
+        click_on I18n.t("gws/schedule.links.add_plan")
 
         within "form#item-form" do
           fill_in "item[name]", with: name
-          fill_in "item[start_at]", with: start_at_text
-          fill_in "item[end_at]", with: end_at_text
+          fill_in_datetime "item[start_at]", with: start_at
+          fill_in_datetime "item[end_at]", with: end_at
           select repeat_type_label, from: "item[repeat_type]"
           select interval.to_s, from: "item[interval]"
           choose "item_repeat_base_#{repeat_base}"
-          fill_in "item[repeat_start]", with: repeat_start_text
-          fill_in "item[repeat_end]", with: repeat_end_text
-
-          # 1 回目の end_at への入力が強制的に 20:00 にされてしまう。
-          # 2 回入力することで、意図した年月日を設定する。
-          fill_in "item[end_at]", with: end_at_text
-
-          # 1 回目の repeat_end への入力が強制的に現在日にされてしまう。
-          # 2 回入力することで、意図した年月日を設定する。
-          fill_in "item[repeat_end]", with: repeat_end_text
+          fill_in_date "item[repeat_start]", with: repeat_start
+          fill_in_date "item[repeat_end]", with: repeat_end
 
           click_on I18n.t('ss.buttons.save')
         end

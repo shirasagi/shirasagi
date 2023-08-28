@@ -1,4 +1,4 @@
-<%= form_for :item, url: { action: :copy_situation }, html: { method: :post } do |f| %>
+<%= form_for :item, url: { action: :copy_situation }, html: { method: :post, id: "item-form" } do |f| %>
 <%= error_messages_for :item %>
 
 <div class="addon-views">
@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t('ss.buttons.run'), class: 'btn-primary run', data: { disable_with: t("ss.buttons.running") } %>
   <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>

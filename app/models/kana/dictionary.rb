@@ -45,6 +45,12 @@ class Kana::Dictionary
       self.master_root + "/" + site_id.to_s.chars.join("/") + "/_/user.dic"
     end
 
+    def master_dic_timestamp(site_id)
+      master_file = master_dic(site_id)
+      return unless ::File.exist?(master_file)
+      ::File.mtime(master_file)
+    end
+
     def build_dic(site_id, item_ids)
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir

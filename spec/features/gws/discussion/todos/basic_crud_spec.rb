@@ -77,8 +77,10 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".addon-view.my-todo" do
         click_on item.name
       end
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

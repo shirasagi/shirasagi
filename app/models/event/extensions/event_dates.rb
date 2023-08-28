@@ -4,7 +4,17 @@ class Event::Extensions::EventDates < Array
     # this custom class from it.
     def demongoize(object)
       return if object.nil?
-      new(object.select { |item| item.respond_to?(:in_time_zone) }.map(&:in_time_zone).compact.map(&:to_date))
+
+      case object
+      when Event::Extensions::EventDates
+        object
+      when Array
+        new(object.select { |item| item.respond_to?(:in_time_zone) }.map(&:in_time_zone).compact.map(&:to_date))
+      when Time, Date, DateTime, String
+        new([ object.in_time_zone.to_date ])
+      else
+        raise "not supported event_dates"
+      end
     end
 
     # Takes any possible object and converts it to how it would be
@@ -33,7 +43,7 @@ class Event::Extensions::EventDates < Array
     end
 
     def mongoize_array(array)
-      array = array.select { |item| item.respond_to?(:in_time_zone) }.map(&:in_time_zone).compact.map(&:to_date)
+      array = array.filter_map { |item| item.in_time_zone if item.respond_to?(:in_time_zone) }.map(&:to_date)
       array.compact!
       array.uniq!
       array.sort!
@@ -44,5 +54,31 @@ class Event::Extensions::EventDates < Array
 
   def clustered
     Event.cluster_dates(self)
+  end
+
+  def multiple_days?(date)
+    i = self.index(date)
+
+    return false unless i
+    return true if self[i - 1] == (date - 1.day)
+    return true if self[i + 1] == (date + 1.day)
+
+    false
+  end
+
+  def find_cluster(date)
+    return unless date
+
+    clustered.find { |cluster| cluster.find(date) }
+  end
+
+  def start_date(date = nil)
+    dates = find_cluster(date) || self
+    dates.first
+  end
+
+  def end_date(date = nil)
+    dates = find_cluster(date) || self
+    dates.last
   end
 end

@@ -1,5 +1,29 @@
 <%= jquery do %>
   Webmail_Mail_List.render();
+
+  <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
+  $(".list-item-head .to").on("click", function() {
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "to").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
+    return false;
+  });
+  <% else %>
+  $(".list-item-head .from").on("click", function() {
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "from").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
+    return false;
+  });
+  <% end %>
+  $(".list-item-head .title").on("click", function() {
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "subject").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
+    return false;
+  });
+  $(".list-item-head .datetime").on("click", function() {
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "internal_date").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
+    return false;
+  });
+  $(".list-item-head .size").on("click", function() {
+    location.href = "<%== webmail_mails_path(@cur_user.webmail_message_sort_query(@sort_hash, "size").merge(webmail_mode: @webmail_mode, account: params[:account], mailbox: @mailbox)) %>";
+    return false;
+  });
 <% end %>
 
 <% if @sys_notices.present? %>
@@ -13,7 +37,7 @@
       <li class="list-item">
         <div class="info">
           <%= link_to item.name, webmail_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
-          <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="datetime"><%= ss_time_tag item.released %></span>
         </div>
       </li>
       <% end %>
@@ -34,13 +58,14 @@
     <li class="list-item-head">
       <div class="head">
         <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
-          <span class="field to"><%= @model.t :to %></span>
+          <span class="field to"><%= @model.t :to %><%== @cur_user.webmail_message_sort_icon(@sort_hash, "to") %></span>
+
         <% else %>
-          <span class="field from"><%= @model.t :from %></span>
+          <span class="field from"><%= @model.t :from %><%== @cur_user.webmail_message_sort_icon(@sort_hash, "from") %></span>
         <% end %>
-        <span class="field title"><%= @model.t :subject %></span>
-        <span class="field datetime"><%= @model.t :internal_date %></span>
-        <span class="field size"><%= @model.t :size %></span>
+        <span class="field title"><%= @model.t :subject %><%== @cur_user.webmail_message_sort_icon(@sort_hash, "subject") %></span>
+        <span class="field datetime"><%= @model.t :internal_date %><%== @cur_user.webmail_message_sort_icon(@sort_hash, "internal_date") %></span>
+        <span class="field size"><%= @model.t :size %><%== @cur_user.webmail_message_sort_icon(@sort_hash, "size") %></span>
       </div>
     </li>
 
@@ -68,7 +93,7 @@
       </label>
       <div class="icon icon-star <%= item.star? ? 'on' : 'off' %>">
         <%= link_to action: :show, id: item.uid do %>
-          <i class="material-icons md-18">&#xE838;</i>
+          <i class="material-icons md-18">star</i>
         <% end %>
       </div>
       <div class="icon icon-attachment">
@@ -92,7 +117,7 @@
           <% title_flag = item.answered? ? %(<i class="material-icons md-18 icon-reply">&#xE15E;</i>) : nil %>
           <%== title_flag %><%= item.display_subject %>
         <% end %>
-        <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
+        <span class="field datetime"><%= ss_time_tag item.internal_date %></span>
         <span class="field size"><%= item.display_size %></span>
       </div>
     </li>

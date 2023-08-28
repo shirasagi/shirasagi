@@ -1,11 +1,14883 @@
 /*!
- * Chart.js
- * http://chartjs.org/
- * Version: 2.7.2
- *
- * Copyright 2018 Chart.js Contributors
+ * Chart.js v3.9.1
+ * https://www.chartjs.org
+ * (c) 2022 Chart.js Contributors
+ * Released under the MIT License
+ */
+(function (global, factory) {
+typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+typeof define === 'function' && define.amd ? define(factory) :
+(global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Chart = factory());
+})(this, (function () { 'use strict';
+
+function noop() {}
+const uid = (function() {
+  let id = 0;
+  return function() {
+    return id++;
+  };
+}());
+function isNullOrUndef(value) {
+  return value === null || typeof value === 'undefined';
+}
+function isArray(value) {
+  if (Array.isArray && Array.isArray(value)) {
+    return true;
+  }
+  const type = Object.prototype.toString.call(value);
+  if (type.slice(0, 7) === '[object' && type.slice(-6) === 'Array]') {
+    return true;
+  }
+  return false;
+}
+function isObject(value) {
+  return value !== null && Object.prototype.toString.call(value) === '[object Object]';
+}
+const isNumberFinite = (value) => (typeof value === 'number' || value instanceof Number) && isFinite(+value);
+function finiteOrDefault(value, defaultValue) {
+  return isNumberFinite(value) ? value : defaultValue;
+}
+function valueOrDefault(value, defaultValue) {
+  return typeof value === 'undefined' ? defaultValue : value;
+}
+const toPercentage = (value, dimension) =>
+  typeof value === 'string' && value.endsWith('%') ?
+    parseFloat(value) / 100
+    : value / dimension;
+const toDimension = (value, dimension) =>
+  typeof value === 'string' && value.endsWith('%') ?
+    parseFloat(value) / 100 * dimension
+    : +value;
+function callback(fn, args, thisArg) {
+  if (fn && typeof fn.call === 'function') {
+    return fn.apply(thisArg, args);
+  }
+}
+function each(loopable, fn, thisArg, reverse) {
+  let i, len, keys;
+  if (isArray(loopable)) {
+    len = loopable.length;
+    if (reverse) {
+      for (i = len - 1; i >= 0; i--) {
+        fn.call(thisArg, loopable[i], i);
+      }
+    } else {
+      for (i = 0; i < len; i++) {
+        fn.call(thisArg, loopable[i], i);
+      }
+    }
+  } else if (isObject(loopable)) {
+    keys = Object.keys(loopable);
+    len = keys.length;
+    for (i = 0; i < len; i++) {
+      fn.call(thisArg, loopable[keys[i]], keys[i]);
+    }
+  }
+}
+function _elementsEqual(a0, a1) {
+  let i, ilen, v0, v1;
+  if (!a0 || !a1 || a0.length !== a1.length) {
+    return false;
+  }
+  for (i = 0, ilen = a0.length; i < ilen; ++i) {
+    v0 = a0[i];
+    v1 = a1[i];
+    if (v0.datasetIndex !== v1.datasetIndex || v0.index !== v1.index) {
+      return false;
+    }
+  }
+  return true;
+}
+function clone$1(source) {
+  if (isArray(source)) {
+    return source.map(clone$1);
+  }
+  if (isObject(source)) {
+    const target = Object.create(null);
+    const keys = Object.keys(source);
+    const klen = keys.length;
+    let k = 0;
+    for (; k < klen; ++k) {
+      target[keys[k]] = clone$1(source[keys[k]]);
+    }
+    return target;
+  }
+  return source;
+}
+function isValidKey(key) {
+  return ['__proto__', 'prototype', 'constructor'].indexOf(key) === -1;
+}
+function _merger(key, target, source, options) {
+  if (!isValidKey(key)) {
+    return;
+  }
+  const tval = target[key];
+  const sval = source[key];
+  if (isObject(tval) && isObject(sval)) {
+    merge(tval, sval, options);
+  } else {
+    target[key] = clone$1(sval);
+  }
+}
+function merge(target, source, options) {
+  const sources = isArray(source) ? source : [source];
+  const ilen = sources.length;
+  if (!isObject(target)) {
+    return target;
+  }
+  options = options || {};
+  const merger = options.merger || _merger;
+  for (let i = 0; i < ilen; ++i) {
+    source = sources[i];
+    if (!isObject(source)) {
+      continue;
+    }
+    const keys = Object.keys(source);
+    for (let k = 0, klen = keys.length; k < klen; ++k) {
+      merger(keys[k], target, source, options);
+    }
+  }
+  return target;
+}
+function mergeIf(target, source) {
+  return merge(target, source, {merger: _mergerIf});
+}
+function _mergerIf(key, target, source) {
+  if (!isValidKey(key)) {
+    return;
+  }
+  const tval = target[key];
+  const sval = source[key];
+  if (isObject(tval) && isObject(sval)) {
+    mergeIf(tval, sval);
+  } else if (!Object.prototype.hasOwnProperty.call(target, key)) {
+    target[key] = clone$1(sval);
+  }
+}
+function _deprecated(scope, value, previous, current) {
+  if (value !== undefined) {
+    console.warn(scope + ': "' + previous +
+			'" is deprecated. Please use "' + current + '" instead');
+  }
+}
+const keyResolvers = {
+  '': v => v,
+  x: o => o.x,
+  y: o => o.y
+};
+function resolveObjectKey(obj, key) {
+  const resolver = keyResolvers[key] || (keyResolvers[key] = _getKeyResolver(key));
+  return resolver(obj);
+}
+function _getKeyResolver(key) {
+  const keys = _splitKey(key);
+  return obj => {
+    for (const k of keys) {
+      if (k === '') {
+        break;
+      }
+      obj = obj && obj[k];
+    }
+    return obj;
+  };
+}
+function _splitKey(key) {
+  const parts = key.split('.');
+  const keys = [];
+  let tmp = '';
+  for (const part of parts) {
+    tmp += part;
+    if (tmp.endsWith('\\')) {
+      tmp = tmp.slice(0, -1) + '.';
+    } else {
+      keys.push(tmp);
+      tmp = '';
+    }
+  }
+  return keys;
+}
+function _capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+const defined = (value) => typeof value !== 'undefined';
+const isFunction = (value) => typeof value === 'function';
+const setsEqual = (a, b) => {
+  if (a.size !== b.size) {
+    return false;
+  }
+  for (const item of a) {
+    if (!b.has(item)) {
+      return false;
+    }
+  }
+  return true;
+};
+function _isClickEvent(e) {
+  return e.type === 'mouseup' || e.type === 'click' || e.type === 'contextmenu';
+}
+
+const PI = Math.PI;
+const TAU = 2 * PI;
+const PITAU = TAU + PI;
+const INFINITY = Number.POSITIVE_INFINITY;
+const RAD_PER_DEG = PI / 180;
+const HALF_PI = PI / 2;
+const QUARTER_PI = PI / 4;
+const TWO_THIRDS_PI = PI * 2 / 3;
+const log10 = Math.log10;
+const sign = Math.sign;
+function niceNum(range) {
+  const roundedRange = Math.round(range);
+  range = almostEquals(range, roundedRange, range / 1000) ? roundedRange : range;
+  const niceRange = Math.pow(10, Math.floor(log10(range)));
+  const fraction = range / niceRange;
+  const niceFraction = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
+  return niceFraction * niceRange;
+}
+function _factorize(value) {
+  const result = [];
+  const sqrt = Math.sqrt(value);
+  let i;
+  for (i = 1; i < sqrt; i++) {
+    if (value % i === 0) {
+      result.push(i);
+      result.push(value / i);
+    }
+  }
+  if (sqrt === (sqrt | 0)) {
+    result.push(sqrt);
+  }
+  result.sort((a, b) => a - b).pop();
+  return result;
+}
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function almostEquals(x, y, epsilon) {
+  return Math.abs(x - y) < epsilon;
+}
+function almostWhole(x, epsilon) {
+  const rounded = Math.round(x);
+  return ((rounded - epsilon) <= x) && ((rounded + epsilon) >= x);
+}
+function _setMinAndMaxByKey(array, target, property) {
+  let i, ilen, value;
+  for (i = 0, ilen = array.length; i < ilen; i++) {
+    value = array[i][property];
+    if (!isNaN(value)) {
+      target.min = Math.min(target.min, value);
+      target.max = Math.max(target.max, value);
+    }
+  }
+}
+function toRadians(degrees) {
+  return degrees * (PI / 180);
+}
+function toDegrees(radians) {
+  return radians * (180 / PI);
+}
+function _decimalPlaces(x) {
+  if (!isNumberFinite(x)) {
+    return;
+  }
+  let e = 1;
+  let p = 0;
+  while (Math.round(x * e) / e !== x) {
+    e *= 10;
+    p++;
+  }
+  return p;
+}
+function getAngleFromPoint(centrePoint, anglePoint) {
+  const distanceFromXCenter = anglePoint.x - centrePoint.x;
+  const distanceFromYCenter = anglePoint.y - centrePoint.y;
+  const radialDistanceFromCenter = Math.sqrt(distanceFromXCenter * distanceFromXCenter + distanceFromYCenter * distanceFromYCenter);
+  let angle = Math.atan2(distanceFromYCenter, distanceFromXCenter);
+  if (angle < (-0.5 * PI)) {
+    angle += TAU;
+  }
+  return {
+    angle,
+    distance: radialDistanceFromCenter
+  };
+}
+function distanceBetweenPoints(pt1, pt2) {
+  return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
+}
+function _angleDiff(a, b) {
+  return (a - b + PITAU) % TAU - PI;
+}
+function _normalizeAngle(a) {
+  return (a % TAU + TAU) % TAU;
+}
+function _angleBetween(angle, start, end, sameAngleIsFullCircle) {
+  const a = _normalizeAngle(angle);
+  const s = _normalizeAngle(start);
+  const e = _normalizeAngle(end);
+  const angleToStart = _normalizeAngle(s - a);
+  const angleToEnd = _normalizeAngle(e - a);
+  const startToAngle = _normalizeAngle(a - s);
+  const endToAngle = _normalizeAngle(a - e);
+  return a === s || a === e || (sameAngleIsFullCircle && s === e)
+    || (angleToStart > angleToEnd && startToAngle < endToAngle);
+}
+function _limitValue(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+function _int16Range(value) {
+  return _limitValue(value, -32768, 32767);
+}
+function _isBetween(value, start, end, epsilon = 1e-6) {
+  return value >= Math.min(start, end) - epsilon && value <= Math.max(start, end) + epsilon;
+}
+
+function _lookup(table, value, cmp) {
+  cmp = cmp || ((index) => table[index] < value);
+  let hi = table.length - 1;
+  let lo = 0;
+  let mid;
+  while (hi - lo > 1) {
+    mid = (lo + hi) >> 1;
+    if (cmp(mid)) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  return {lo, hi};
+}
+const _lookupByKey = (table, key, value, last) =>
+  _lookup(table, value, last
+    ? index => table[index][key] <= value
+    : index => table[index][key] < value);
+const _rlookupByKey = (table, key, value) =>
+  _lookup(table, value, index => table[index][key] >= value);
+function _filterBetween(values, min, max) {
+  let start = 0;
+  let end = values.length;
+  while (start < end && values[start] < min) {
+    start++;
+  }
+  while (end > start && values[end - 1] > max) {
+    end--;
+  }
+  return start > 0 || end < values.length
+    ? values.slice(start, end)
+    : values;
+}
+const arrayEvents = ['push', 'pop', 'shift', 'splice', 'unshift'];
+function listenArrayEvents(array, listener) {
+  if (array._chartjs) {
+    array._chartjs.listeners.push(listener);
+    return;
+  }
+  Object.defineProperty(array, '_chartjs', {
+    configurable: true,
+    enumerable: false,
+    value: {
+      listeners: [listener]
+    }
+  });
+  arrayEvents.forEach((key) => {
+    const method = '_onData' + _capitalize(key);
+    const base = array[key];
+    Object.defineProperty(array, key, {
+      configurable: true,
+      enumerable: false,
+      value(...args) {
+        const res = base.apply(this, args);
+        array._chartjs.listeners.forEach((object) => {
+          if (typeof object[method] === 'function') {
+            object[method](...args);
+          }
+        });
+        return res;
+      }
+    });
+  });
+}
+function unlistenArrayEvents(array, listener) {
+  const stub = array._chartjs;
+  if (!stub) {
+    return;
+  }
+  const listeners = stub.listeners;
+  const index = listeners.indexOf(listener);
+  if (index !== -1) {
+    listeners.splice(index, 1);
+  }
+  if (listeners.length > 0) {
+    return;
+  }
+  arrayEvents.forEach((key) => {
+    delete array[key];
+  });
+  delete array._chartjs;
+}
+function _arrayUnique(items) {
+  const set = new Set();
+  let i, ilen;
+  for (i = 0, ilen = items.length; i < ilen; ++i) {
+    set.add(items[i]);
+  }
+  if (set.size === ilen) {
+    return items;
+  }
+  return Array.from(set);
+}
+
+function fontString(pixelSize, fontStyle, fontFamily) {
+  return fontStyle + ' ' + pixelSize + 'px ' + fontFamily;
+}
+const requestAnimFrame = (function() {
+  if (typeof window === 'undefined') {
+    return function(callback) {
+      return callback();
+    };
+  }
+  return window.requestAnimationFrame;
+}());
+function throttled(fn, thisArg, updateFn) {
+  const updateArgs = updateFn || ((args) => Array.prototype.slice.call(args));
+  let ticking = false;
+  let args = [];
+  return function(...rest) {
+    args = updateArgs(rest);
+    if (!ticking) {
+      ticking = true;
+      requestAnimFrame.call(window, () => {
+        ticking = false;
+        fn.apply(thisArg, args);
+      });
+    }
+  };
+}
+function debounce(fn, delay) {
+  let timeout;
+  return function(...args) {
+    if (delay) {
+      clearTimeout(timeout);
+      timeout = setTimeout(fn, delay, args);
+    } else {
+      fn.apply(this, args);
+    }
+    return delay;
+  };
+}
+const _toLeftRightCenter = (align) => align === 'start' ? 'left' : align === 'end' ? 'right' : 'center';
+const _alignStartEnd = (align, start, end) => align === 'start' ? start : align === 'end' ? end : (start + end) / 2;
+const _textX = (align, left, right, rtl) => {
+  const check = rtl ? 'left' : 'right';
+  return align === check ? right : align === 'center' ? (left + right) / 2 : left;
+};
+function _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled) {
+  const pointCount = points.length;
+  let start = 0;
+  let count = pointCount;
+  if (meta._sorted) {
+    const {iScale, _parsed} = meta;
+    const axis = iScale.axis;
+    const {min, max, minDefined, maxDefined} = iScale.getUserBounds();
+    if (minDefined) {
+      start = _limitValue(Math.min(
+        _lookupByKey(_parsed, iScale.axis, min).lo,
+        animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo),
+      0, pointCount - 1);
+    }
+    if (maxDefined) {
+      count = _limitValue(Math.max(
+        _lookupByKey(_parsed, iScale.axis, max, true).hi + 1,
+        animationsDisabled ? 0 : _lookupByKey(points, axis, iScale.getPixelForValue(max), true).hi + 1),
+      start, pointCount) - start;
+    } else {
+      count = pointCount - start;
+    }
+  }
+  return {start, count};
+}
+function _scaleRangesChanged(meta) {
+  const {xScale, yScale, _scaleRanges} = meta;
+  const newRanges = {
+    xmin: xScale.min,
+    xmax: xScale.max,
+    ymin: yScale.min,
+    ymax: yScale.max
+  };
+  if (!_scaleRanges) {
+    meta._scaleRanges = newRanges;
+    return true;
+  }
+  const changed = _scaleRanges.xmin !== xScale.min
+		|| _scaleRanges.xmax !== xScale.max
+		|| _scaleRanges.ymin !== yScale.min
+		|| _scaleRanges.ymax !== yScale.max;
+  Object.assign(_scaleRanges, newRanges);
+  return changed;
+}
+
+class Animator {
+  constructor() {
+    this._request = null;
+    this._charts = new Map();
+    this._running = false;
+    this._lastDate = undefined;
+  }
+  _notify(chart, anims, date, type) {
+    const callbacks = anims.listeners[type];
+    const numSteps = anims.duration;
+    callbacks.forEach(fn => fn({
+      chart,
+      initial: anims.initial,
+      numSteps,
+      currentStep: Math.min(date - anims.start, numSteps)
+    }));
+  }
+  _refresh() {
+    if (this._request) {
+      return;
+    }
+    this._running = true;
+    this._request = requestAnimFrame.call(window, () => {
+      this._update();
+      this._request = null;
+      if (this._running) {
+        this._refresh();
+      }
+    });
+  }
+  _update(date = Date.now()) {
+    let remaining = 0;
+    this._charts.forEach((anims, chart) => {
+      if (!anims.running || !anims.items.length) {
+        return;
+      }
+      const items = anims.items;
+      let i = items.length - 1;
+      let draw = false;
+      let item;
+      for (; i >= 0; --i) {
+        item = items[i];
+        if (item._active) {
+          if (item._total > anims.duration) {
+            anims.duration = item._total;
+          }
+          item.tick(date);
+          draw = true;
+        } else {
+          items[i] = items[items.length - 1];
+          items.pop();
+        }
+      }
+      if (draw) {
+        chart.draw();
+        this._notify(chart, anims, date, 'progress');
+      }
+      if (!items.length) {
+        anims.running = false;
+        this._notify(chart, anims, date, 'complete');
+        anims.initial = false;
+      }
+      remaining += items.length;
+    });
+    this._lastDate = date;
+    if (remaining === 0) {
+      this._running = false;
+    }
+  }
+  _getAnims(chart) {
+    const charts = this._charts;
+    let anims = charts.get(chart);
+    if (!anims) {
+      anims = {
+        running: false,
+        initial: true,
+        items: [],
+        listeners: {
+          complete: [],
+          progress: []
+        }
+      };
+      charts.set(chart, anims);
+    }
+    return anims;
+  }
+  listen(chart, event, cb) {
+    this._getAnims(chart).listeners[event].push(cb);
+  }
+  add(chart, items) {
+    if (!items || !items.length) {
+      return;
+    }
+    this._getAnims(chart).items.push(...items);
+  }
+  has(chart) {
+    return this._getAnims(chart).items.length > 0;
+  }
+  start(chart) {
+    const anims = this._charts.get(chart);
+    if (!anims) {
+      return;
+    }
+    anims.running = true;
+    anims.start = Date.now();
+    anims.duration = anims.items.reduce((acc, cur) => Math.max(acc, cur._duration), 0);
+    this._refresh();
+  }
+  running(chart) {
+    if (!this._running) {
+      return false;
+    }
+    const anims = this._charts.get(chart);
+    if (!anims || !anims.running || !anims.items.length) {
+      return false;
+    }
+    return true;
+  }
+  stop(chart) {
+    const anims = this._charts.get(chart);
+    if (!anims || !anims.items.length) {
+      return;
+    }
+    const items = anims.items;
+    let i = items.length - 1;
+    for (; i >= 0; --i) {
+      items[i].cancel();
+    }
+    anims.items = [];
+    this._notify(chart, anims, Date.now(), 'complete');
+  }
+  remove(chart) {
+    return this._charts.delete(chart);
+  }
+}
+var animator = new Animator();
+
+/*!
+ * @kurkle/color v0.2.1
+ * https://github.com/kurkle/color#readme
+ * (c) 2022 Jukka Kurkela
+ * Released under the MIT License
+ */
+function round(v) {
+  return v + 0.5 | 0;
+}
+const lim = (v, l, h) => Math.max(Math.min(v, h), l);
+function p2b(v) {
+  return lim(round(v * 2.55), 0, 255);
+}
+function n2b(v) {
+  return lim(round(v * 255), 0, 255);
+}
+function b2n(v) {
+  return lim(round(v / 2.55) / 100, 0, 1);
+}
+function n2p(v) {
+  return lim(round(v * 100), 0, 100);
+}
+const map$1 = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, a: 10, b: 11, c: 12, d: 13, e: 14, f: 15};
+const hex = [...'0123456789ABCDEF'];
+const h1 = b => hex[b & 0xF];
+const h2 = b => hex[(b & 0xF0) >> 4] + hex[b & 0xF];
+const eq = b => ((b & 0xF0) >> 4) === (b & 0xF);
+const isShort = v => eq(v.r) && eq(v.g) && eq(v.b) && eq(v.a);
+function hexParse(str) {
+  var len = str.length;
+  var ret;
+  if (str[0] === '#') {
+    if (len === 4 || len === 5) {
+      ret = {
+        r: 255 & map$1[str[1]] * 17,
+        g: 255 & map$1[str[2]] * 17,
+        b: 255 & map$1[str[3]] * 17,
+        a: len === 5 ? map$1[str[4]] * 17 : 255
+      };
+    } else if (len === 7 || len === 9) {
+      ret = {
+        r: map$1[str[1]] << 4 | map$1[str[2]],
+        g: map$1[str[3]] << 4 | map$1[str[4]],
+        b: map$1[str[5]] << 4 | map$1[str[6]],
+        a: len === 9 ? (map$1[str[7]] << 4 | map$1[str[8]]) : 255
+      };
+    }
+  }
+  return ret;
+}
+const alpha = (a, f) => a < 255 ? f(a) : '';
+function hexString(v) {
+  var f = isShort(v) ? h1 : h2;
+  return v
+    ? '#' + f(v.r) + f(v.g) + f(v.b) + alpha(v.a, f)
+    : undefined;
+}
+const HUE_RE = /^(hsla?|hwb|hsv)\(\s*([-+.e\d]+)(?:deg)?[\s,]+([-+.e\d]+)%[\s,]+([-+.e\d]+)%(?:[\s,]+([-+.e\d]+)(%)?)?\s*\)$/;
+function hsl2rgbn(h, s, l) {
+  const a = s * Math.min(l, 1 - l);
+  const f = (n, k = (n + h / 30) % 12) => l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+  return [f(0), f(8), f(4)];
+}
+function hsv2rgbn(h, s, v) {
+  const f = (n, k = (n + h / 60) % 6) => v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
+  return [f(5), f(3), f(1)];
+}
+function hwb2rgbn(h, w, b) {
+  const rgb = hsl2rgbn(h, 1, 0.5);
+  let i;
+  if (w + b > 1) {
+    i = 1 / (w + b);
+    w *= i;
+    b *= i;
+  }
+  for (i = 0; i < 3; i++) {
+    rgb[i] *= 1 - w - b;
+    rgb[i] += w;
+  }
+  return rgb;
+}
+function hueValue(r, g, b, d, max) {
+  if (r === max) {
+    return ((g - b) / d) + (g < b ? 6 : 0);
+  }
+  if (g === max) {
+    return (b - r) / d + 2;
+  }
+  return (r - g) / d + 4;
+}
+function rgb2hsl(v) {
+  const range = 255;
+  const r = v.r / range;
+  const g = v.g / range;
+  const b = v.b / range;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h, s, d;
+  if (max !== min) {
+    d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    h = hueValue(r, g, b, d, max);
+    h = h * 60 + 0.5;
+  }
+  return [h | 0, s || 0, l];
+}
+function calln(f, a, b, c) {
+  return (
+    Array.isArray(a)
+      ? f(a[0], a[1], a[2])
+      : f(a, b, c)
+  ).map(n2b);
+}
+function hsl2rgb(h, s, l) {
+  return calln(hsl2rgbn, h, s, l);
+}
+function hwb2rgb(h, w, b) {
+  return calln(hwb2rgbn, h, w, b);
+}
+function hsv2rgb(h, s, v) {
+  return calln(hsv2rgbn, h, s, v);
+}
+function hue(h) {
+  return (h % 360 + 360) % 360;
+}
+function hueParse(str) {
+  const m = HUE_RE.exec(str);
+  let a = 255;
+  let v;
+  if (!m) {
+    return;
+  }
+  if (m[5] !== v) {
+    a = m[6] ? p2b(+m[5]) : n2b(+m[5]);
+  }
+  const h = hue(+m[2]);
+  const p1 = +m[3] / 100;
+  const p2 = +m[4] / 100;
+  if (m[1] === 'hwb') {
+    v = hwb2rgb(h, p1, p2);
+  } else if (m[1] === 'hsv') {
+    v = hsv2rgb(h, p1, p2);
+  } else {
+    v = hsl2rgb(h, p1, p2);
+  }
+  return {
+    r: v[0],
+    g: v[1],
+    b: v[2],
+    a: a
+  };
+}
+function rotate(v, deg) {
+  var h = rgb2hsl(v);
+  h[0] = hue(h[0] + deg);
+  h = hsl2rgb(h);
+  v.r = h[0];
+  v.g = h[1];
+  v.b = h[2];
+}
+function hslString(v) {
+  if (!v) {
+    return;
+  }
+  const a = rgb2hsl(v);
+  const h = a[0];
+  const s = n2p(a[1]);
+  const l = n2p(a[2]);
+  return v.a < 255
+    ? `hsla(${h}, ${s}%, ${l}%, ${b2n(v.a)})`
+    : `hsl(${h}, ${s}%, ${l}%)`;
+}
+const map$2 = {
+  x: 'dark',
+  Z: 'light',
+  Y: 're',
+  X: 'blu',
+  W: 'gr',
+  V: 'medium',
+  U: 'slate',
+  A: 'ee',
+  T: 'ol',
+  S: 'or',
+  B: 'ra',
+  C: 'lateg',
+  D: 'ights',
+  R: 'in',
+  Q: 'turquois',
+  E: 'hi',
+  P: 'ro',
+  O: 'al',
+  N: 'le',
+  M: 'de',
+  L: 'yello',
+  F: 'en',
+  K: 'ch',
+  G: 'arks',
+  H: 'ea',
+  I: 'ightg',
+  J: 'wh'
+};
+const names$1 = {
+  OiceXe: 'f0f8ff',
+  antiquewEte: 'faebd7',
+  aqua: 'ffff',
+  aquamarRe: '7fffd4',
+  azuY: 'f0ffff',
+  beige: 'f5f5dc',
+  bisque: 'ffe4c4',
+  black: '0',
+  blanKedOmond: 'ffebcd',
+  Xe: 'ff',
+  XeviTet: '8a2be2',
+  bPwn: 'a52a2a',
+  burlywood: 'deb887',
+  caMtXe: '5f9ea0',
+  KartYuse: '7fff00',
+  KocTate: 'd2691e',
+  cSO: 'ff7f50',
+  cSnflowerXe: '6495ed',
+  cSnsilk: 'fff8dc',
+  crimson: 'dc143c',
+  cyan: 'ffff',
+  xXe: '8b',
+  xcyan: '8b8b',
+  xgTMnPd: 'b8860b',
+  xWay: 'a9a9a9',
+  xgYF: '6400',
+  xgYy: 'a9a9a9',
+  xkhaki: 'bdb76b',
+  xmagFta: '8b008b',
+  xTivegYF: '556b2f',
+  xSange: 'ff8c00',
+  xScEd: '9932cc',
+  xYd: '8b0000',
+  xsOmon: 'e9967a',
+  xsHgYF: '8fbc8f',
+  xUXe: '483d8b',
+  xUWay: '2f4f4f',
+  xUgYy: '2f4f4f',
+  xQe: 'ced1',
+  xviTet: '9400d3',
+  dAppRk: 'ff1493',
+  dApskyXe: 'bfff',
+  dimWay: '696969',
+  dimgYy: '696969',
+  dodgerXe: '1e90ff',
+  fiYbrick: 'b22222',
+  flSOwEte: 'fffaf0',
+  foYstWAn: '228b22',
+  fuKsia: 'ff00ff',
+  gaRsbSo: 'dcdcdc',
+  ghostwEte: 'f8f8ff',
+  gTd: 'ffd700',
+  gTMnPd: 'daa520',
+  Way: '808080',
+  gYF: '8000',
+  gYFLw: 'adff2f',
+  gYy: '808080',
+  honeyMw: 'f0fff0',
+  hotpRk: 'ff69b4',
+  RdianYd: 'cd5c5c',
+  Rdigo: '4b0082',
+  ivSy: 'fffff0',
+  khaki: 'f0e68c',
+  lavFMr: 'e6e6fa',
+  lavFMrXsh: 'fff0f5',
+  lawngYF: '7cfc00',
+  NmoncEffon: 'fffacd',
+  ZXe: 'add8e6',
+  ZcSO: 'f08080',
+  Zcyan: 'e0ffff',
+  ZgTMnPdLw: 'fafad2',
+  ZWay: 'd3d3d3',
+  ZgYF: '90ee90',
+  ZgYy: 'd3d3d3',
+  ZpRk: 'ffb6c1',
+  ZsOmon: 'ffa07a',
+  ZsHgYF: '20b2aa',
+  ZskyXe: '87cefa',
+  ZUWay: '778899',
+  ZUgYy: '778899',
+  ZstAlXe: 'b0c4de',
+  ZLw: 'ffffe0',
+  lime: 'ff00',
+  limegYF: '32cd32',
+  lRF: 'faf0e6',
+  magFta: 'ff00ff',
+  maPon: '800000',
+  VaquamarRe: '66cdaa',
+  VXe: 'cd',
+  VScEd: 'ba55d3',
+  VpurpN: '9370db',
+  VsHgYF: '3cb371',
+  VUXe: '7b68ee',
+  VsprRggYF: 'fa9a',
+  VQe: '48d1cc',
+  VviTetYd: 'c71585',
+  midnightXe: '191970',
+  mRtcYam: 'f5fffa',
+  mistyPse: 'ffe4e1',
+  moccasR: 'ffe4b5',
+  navajowEte: 'ffdead',
+  navy: '80',
+  Tdlace: 'fdf5e6',
+  Tive: '808000',
+  TivedBb: '6b8e23',
+  Sange: 'ffa500',
+  SangeYd: 'ff4500',
+  ScEd: 'da70d6',
+  pOegTMnPd: 'eee8aa',
+  pOegYF: '98fb98',
+  pOeQe: 'afeeee',
+  pOeviTetYd: 'db7093',
+  papayawEp: 'ffefd5',
+  pHKpuff: 'ffdab9',
+  peru: 'cd853f',
+  pRk: 'ffc0cb',
+  plum: 'dda0dd',
+  powMrXe: 'b0e0e6',
+  purpN: '800080',
+  YbeccapurpN: '663399',
+  Yd: 'ff0000',
+  Psybrown: 'bc8f8f',
+  PyOXe: '4169e1',
+  saddNbPwn: '8b4513',
+  sOmon: 'fa8072',
+  sandybPwn: 'f4a460',
+  sHgYF: '2e8b57',
+  sHshell: 'fff5ee',
+  siFna: 'a0522d',
+  silver: 'c0c0c0',
+  skyXe: '87ceeb',
+  UXe: '6a5acd',
+  UWay: '708090',
+  UgYy: '708090',
+  snow: 'fffafa',
+  sprRggYF: 'ff7f',
+  stAlXe: '4682b4',
+  tan: 'd2b48c',
+  teO: '8080',
+  tEstN: 'd8bfd8',
+  tomato: 'ff6347',
+  Qe: '40e0d0',
+  viTet: 'ee82ee',
+  JHt: 'f5deb3',
+  wEte: 'ffffff',
+  wEtesmoke: 'f5f5f5',
+  Lw: 'ffff00',
+  LwgYF: '9acd32'
+};
+function unpack() {
+  const unpacked = {};
+  const keys = Object.keys(names$1);
+  const tkeys = Object.keys(map$2);
+  let i, j, k, ok, nk;
+  for (i = 0; i < keys.length; i++) {
+    ok = nk = keys[i];
+    for (j = 0; j < tkeys.length; j++) {
+      k = tkeys[j];
+      nk = nk.replace(k, map$2[k]);
+    }
+    k = parseInt(names$1[ok], 16);
+    unpacked[nk] = [k >> 16 & 0xFF, k >> 8 & 0xFF, k & 0xFF];
+  }
+  return unpacked;
+}
+let names;
+function nameParse(str) {
+  if (!names) {
+    names = unpack();
+    names.transparent = [0, 0, 0, 0];
+  }
+  const a = names[str.toLowerCase()];
+  return a && {
+    r: a[0],
+    g: a[1],
+    b: a[2],
+    a: a.length === 4 ? a[3] : 255
+  };
+}
+const RGB_RE = /^rgba?\(\s*([-+.\d]+)(%)?[\s,]+([-+.e\d]+)(%)?[\s,]+([-+.e\d]+)(%)?(?:[\s,/]+([-+.e\d]+)(%)?)?\s*\)$/;
+function rgbParse(str) {
+  const m = RGB_RE.exec(str);
+  let a = 255;
+  let r, g, b;
+  if (!m) {
+    return;
+  }
+  if (m[7] !== r) {
+    const v = +m[7];
+    a = m[8] ? p2b(v) : lim(v * 255, 0, 255);
+  }
+  r = +m[1];
+  g = +m[3];
+  b = +m[5];
+  r = 255 & (m[2] ? p2b(r) : lim(r, 0, 255));
+  g = 255 & (m[4] ? p2b(g) : lim(g, 0, 255));
+  b = 255 & (m[6] ? p2b(b) : lim(b, 0, 255));
+  return {
+    r: r,
+    g: g,
+    b: b,
+    a: a
+  };
+}
+function rgbString(v) {
+  return v && (
+    v.a < 255
+      ? `rgba(${v.r}, ${v.g}, ${v.b}, ${b2n(v.a)})`
+      : `rgb(${v.r}, ${v.g}, ${v.b})`
+  );
+}
+const to = v => v <= 0.0031308 ? v * 12.92 : Math.pow(v, 1.0 / 2.4) * 1.055 - 0.055;
+const from = v => v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+function interpolate$1(rgb1, rgb2, t) {
+  const r = from(b2n(rgb1.r));
+  const g = from(b2n(rgb1.g));
+  const b = from(b2n(rgb1.b));
+  return {
+    r: n2b(to(r + t * (from(b2n(rgb2.r)) - r))),
+    g: n2b(to(g + t * (from(b2n(rgb2.g)) - g))),
+    b: n2b(to(b + t * (from(b2n(rgb2.b)) - b))),
+    a: rgb1.a + t * (rgb2.a - rgb1.a)
+  };
+}
+function modHSL(v, i, ratio) {
+  if (v) {
+    let tmp = rgb2hsl(v);
+    tmp[i] = Math.max(0, Math.min(tmp[i] + tmp[i] * ratio, i === 0 ? 360 : 1));
+    tmp = hsl2rgb(tmp);
+    v.r = tmp[0];
+    v.g = tmp[1];
+    v.b = tmp[2];
+  }
+}
+function clone(v, proto) {
+  return v ? Object.assign(proto || {}, v) : v;
+}
+function fromObject(input) {
+  var v = {r: 0, g: 0, b: 0, a: 255};
+  if (Array.isArray(input)) {
+    if (input.length >= 3) {
+      v = {r: input[0], g: input[1], b: input[2], a: 255};
+      if (input.length > 3) {
+        v.a = n2b(input[3]);
+      }
+    }
+  } else {
+    v = clone(input, {r: 0, g: 0, b: 0, a: 1});
+    v.a = n2b(v.a);
+  }
+  return v;
+}
+function functionParse(str) {
+  if (str.charAt(0) === 'r') {
+    return rgbParse(str);
+  }
+  return hueParse(str);
+}
+class Color {
+  constructor(input) {
+    if (input instanceof Color) {
+      return input;
+    }
+    const type = typeof input;
+    let v;
+    if (type === 'object') {
+      v = fromObject(input);
+    } else if (type === 'string') {
+      v = hexParse(input) || nameParse(input) || functionParse(input);
+    }
+    this._rgb = v;
+    this._valid = !!v;
+  }
+  get valid() {
+    return this._valid;
+  }
+  get rgb() {
+    var v = clone(this._rgb);
+    if (v) {
+      v.a = b2n(v.a);
+    }
+    return v;
+  }
+  set rgb(obj) {
+    this._rgb = fromObject(obj);
+  }
+  rgbString() {
+    return this._valid ? rgbString(this._rgb) : undefined;
+  }
+  hexString() {
+    return this._valid ? hexString(this._rgb) : undefined;
+  }
+  hslString() {
+    return this._valid ? hslString(this._rgb) : undefined;
+  }
+  mix(color, weight) {
+    if (color) {
+      const c1 = this.rgb;
+      const c2 = color.rgb;
+      let w2;
+      const p = weight === w2 ? 0.5 : weight;
+      const w = 2 * p - 1;
+      const a = c1.a - c2.a;
+      const w1 = ((w * a === -1 ? w : (w + a) / (1 + w * a)) + 1) / 2.0;
+      w2 = 1 - w1;
+      c1.r = 0xFF & w1 * c1.r + w2 * c2.r + 0.5;
+      c1.g = 0xFF & w1 * c1.g + w2 * c2.g + 0.5;
+      c1.b = 0xFF & w1 * c1.b + w2 * c2.b + 0.5;
+      c1.a = p * c1.a + (1 - p) * c2.a;
+      this.rgb = c1;
+    }
+    return this;
+  }
+  interpolate(color, t) {
+    if (color) {
+      this._rgb = interpolate$1(this._rgb, color._rgb, t);
+    }
+    return this;
+  }
+  clone() {
+    return new Color(this.rgb);
+  }
+  alpha(a) {
+    this._rgb.a = n2b(a);
+    return this;
+  }
+  clearer(ratio) {
+    const rgb = this._rgb;
+    rgb.a *= 1 - ratio;
+    return this;
+  }
+  greyscale() {
+    const rgb = this._rgb;
+    const val = round(rgb.r * 0.3 + rgb.g * 0.59 + rgb.b * 0.11);
+    rgb.r = rgb.g = rgb.b = val;
+    return this;
+  }
+  opaquer(ratio) {
+    const rgb = this._rgb;
+    rgb.a *= 1 + ratio;
+    return this;
+  }
+  negate() {
+    const v = this._rgb;
+    v.r = 255 - v.r;
+    v.g = 255 - v.g;
+    v.b = 255 - v.b;
+    return this;
+  }
+  lighten(ratio) {
+    modHSL(this._rgb, 2, ratio);
+    return this;
+  }
+  darken(ratio) {
+    modHSL(this._rgb, 2, -ratio);
+    return this;
+  }
+  saturate(ratio) {
+    modHSL(this._rgb, 1, ratio);
+    return this;
+  }
+  desaturate(ratio) {
+    modHSL(this._rgb, 1, -ratio);
+    return this;
+  }
+  rotate(deg) {
+    rotate(this._rgb, deg);
+    return this;
+  }
+}
+function index_esm(input) {
+  return new Color(input);
+}
+
+function isPatternOrGradient(value) {
+  if (value && typeof value === 'object') {
+    const type = value.toString();
+    return type === '[object CanvasPattern]' || type === '[object CanvasGradient]';
+  }
+  return false;
+}
+function color(value) {
+  return isPatternOrGradient(value) ? value : index_esm(value);
+}
+function getHoverColor(value) {
+  return isPatternOrGradient(value)
+    ? value
+    : index_esm(value).saturate(0.5).darken(0.1).hexString();
+}
+
+const overrides = Object.create(null);
+const descriptors = Object.create(null);
+function getScope$1(node, key) {
+  if (!key) {
+    return node;
+  }
+  const keys = key.split('.');
+  for (let i = 0, n = keys.length; i < n; ++i) {
+    const k = keys[i];
+    node = node[k] || (node[k] = Object.create(null));
+  }
+  return node;
+}
+function set(root, scope, values) {
+  if (typeof scope === 'string') {
+    return merge(getScope$1(root, scope), values);
+  }
+  return merge(getScope$1(root, ''), scope);
+}
+class Defaults {
+  constructor(_descriptors) {
+    this.animation = undefined;
+    this.backgroundColor = 'rgba(0,0,0,0.1)';
+    this.borderColor = 'rgba(0,0,0,0.1)';
+    this.color = '#666';
+    this.datasets = {};
+    this.devicePixelRatio = (context) => context.chart.platform.getDevicePixelRatio();
+    this.elements = {};
+    this.events = [
+      'mousemove',
+      'mouseout',
+      'click',
+      'touchstart',
+      'touchmove'
+    ];
+    this.font = {
+      family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+      size: 12,
+      style: 'normal',
+      lineHeight: 1.2,
+      weight: null
+    };
+    this.hover = {};
+    this.hoverBackgroundColor = (ctx, options) => getHoverColor(options.backgroundColor);
+    this.hoverBorderColor = (ctx, options) => getHoverColor(options.borderColor);
+    this.hoverColor = (ctx, options) => getHoverColor(options.color);
+    this.indexAxis = 'x';
+    this.interaction = {
+      mode: 'nearest',
+      intersect: true,
+      includeInvisible: false
+    };
+    this.maintainAspectRatio = true;
+    this.onHover = null;
+    this.onClick = null;
+    this.parsing = true;
+    this.plugins = {};
+    this.responsive = true;
+    this.scale = undefined;
+    this.scales = {};
+    this.showLine = true;
+    this.drawActiveElementsOnTop = true;
+    this.describe(_descriptors);
+  }
+  set(scope, values) {
+    return set(this, scope, values);
+  }
+  get(scope) {
+    return getScope$1(this, scope);
+  }
+  describe(scope, values) {
+    return set(descriptors, scope, values);
+  }
+  override(scope, values) {
+    return set(overrides, scope, values);
+  }
+  route(scope, name, targetScope, targetName) {
+    const scopeObject = getScope$1(this, scope);
+    const targetScopeObject = getScope$1(this, targetScope);
+    const privateName = '_' + name;
+    Object.defineProperties(scopeObject, {
+      [privateName]: {
+        value: scopeObject[name],
+        writable: true
+      },
+      [name]: {
+        enumerable: true,
+        get() {
+          const local = this[privateName];
+          const target = targetScopeObject[targetName];
+          if (isObject(local)) {
+            return Object.assign({}, target, local);
+          }
+          return valueOrDefault(local, target);
+        },
+        set(value) {
+          this[privateName] = value;
+        }
+      }
+    });
+  }
+}
+var defaults = new Defaults({
+  _scriptable: (name) => !name.startsWith('on'),
+  _indexable: (name) => name !== 'events',
+  hover: {
+    _fallback: 'interaction'
+  },
+  interaction: {
+    _scriptable: false,
+    _indexable: false,
+  }
+});
+
+function _isDomSupported() {
+  return typeof window !== 'undefined' && typeof document !== 'undefined';
+}
+function _getParentNode(domNode) {
+  let parent = domNode.parentNode;
+  if (parent && parent.toString() === '[object ShadowRoot]') {
+    parent = parent.host;
+  }
+  return parent;
+}
+function parseMaxStyle(styleValue, node, parentProperty) {
+  let valueInPixels;
+  if (typeof styleValue === 'string') {
+    valueInPixels = parseInt(styleValue, 10);
+    if (styleValue.indexOf('%') !== -1) {
+      valueInPixels = valueInPixels / 100 * node.parentNode[parentProperty];
+    }
+  } else {
+    valueInPixels = styleValue;
+  }
+  return valueInPixels;
+}
+const getComputedStyle = (element) => window.getComputedStyle(element, null);
+function getStyle(el, property) {
+  return getComputedStyle(el).getPropertyValue(property);
+}
+const positions = ['top', 'right', 'bottom', 'left'];
+function getPositionedStyle(styles, style, suffix) {
+  const result = {};
+  suffix = suffix ? '-' + suffix : '';
+  for (let i = 0; i < 4; i++) {
+    const pos = positions[i];
+    result[pos] = parseFloat(styles[style + '-' + pos + suffix]) || 0;
+  }
+  result.width = result.left + result.right;
+  result.height = result.top + result.bottom;
+  return result;
+}
+const useOffsetPos = (x, y, target) => (x > 0 || y > 0) && (!target || !target.shadowRoot);
+function getCanvasPosition(e, canvas) {
+  const touches = e.touches;
+  const source = touches && touches.length ? touches[0] : e;
+  const {offsetX, offsetY} = source;
+  let box = false;
+  let x, y;
+  if (useOffsetPos(offsetX, offsetY, e.target)) {
+    x = offsetX;
+    y = offsetY;
+  } else {
+    const rect = canvas.getBoundingClientRect();
+    x = source.clientX - rect.left;
+    y = source.clientY - rect.top;
+    box = true;
+  }
+  return {x, y, box};
+}
+function getRelativePosition(evt, chart) {
+  if ('native' in evt) {
+    return evt;
+  }
+  const {canvas, currentDevicePixelRatio} = chart;
+  const style = getComputedStyle(canvas);
+  const borderBox = style.boxSizing === 'border-box';
+  const paddings = getPositionedStyle(style, 'padding');
+  const borders = getPositionedStyle(style, 'border', 'width');
+  const {x, y, box} = getCanvasPosition(evt, canvas);
+  const xOffset = paddings.left + (box && borders.left);
+  const yOffset = paddings.top + (box && borders.top);
+  let {width, height} = chart;
+  if (borderBox) {
+    width -= paddings.width + borders.width;
+    height -= paddings.height + borders.height;
+  }
+  return {
+    x: Math.round((x - xOffset) / width * canvas.width / currentDevicePixelRatio),
+    y: Math.round((y - yOffset) / height * canvas.height / currentDevicePixelRatio)
+  };
+}
+function getContainerSize(canvas, width, height) {
+  let maxWidth, maxHeight;
+  if (width === undefined || height === undefined) {
+    const container = _getParentNode(canvas);
+    if (!container) {
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+    } else {
+      const rect = container.getBoundingClientRect();
+      const containerStyle = getComputedStyle(container);
+      const containerBorder = getPositionedStyle(containerStyle, 'border', 'width');
+      const containerPadding = getPositionedStyle(containerStyle, 'padding');
+      width = rect.width - containerPadding.width - containerBorder.width;
+      height = rect.height - containerPadding.height - containerBorder.height;
+      maxWidth = parseMaxStyle(containerStyle.maxWidth, container, 'clientWidth');
+      maxHeight = parseMaxStyle(containerStyle.maxHeight, container, 'clientHeight');
+    }
+  }
+  return {
+    width,
+    height,
+    maxWidth: maxWidth || INFINITY,
+    maxHeight: maxHeight || INFINITY
+  };
+}
+const round1 = v => Math.round(v * 10) / 10;
+function getMaximumSize(canvas, bbWidth, bbHeight, aspectRatio) {
+  const style = getComputedStyle(canvas);
+  const margins = getPositionedStyle(style, 'margin');
+  const maxWidth = parseMaxStyle(style.maxWidth, canvas, 'clientWidth') || INFINITY;
+  const maxHeight = parseMaxStyle(style.maxHeight, canvas, 'clientHeight') || INFINITY;
+  const containerSize = getContainerSize(canvas, bbWidth, bbHeight);
+  let {width, height} = containerSize;
+  if (style.boxSizing === 'content-box') {
+    const borders = getPositionedStyle(style, 'border', 'width');
+    const paddings = getPositionedStyle(style, 'padding');
+    width -= paddings.width + borders.width;
+    height -= paddings.height + borders.height;
+  }
+  width = Math.max(0, width - margins.width);
+  height = Math.max(0, aspectRatio ? Math.floor(width / aspectRatio) : height - margins.height);
+  width = round1(Math.min(width, maxWidth, containerSize.maxWidth));
+  height = round1(Math.min(height, maxHeight, containerSize.maxHeight));
+  if (width && !height) {
+    height = round1(width / 2);
+  }
+  return {
+    width,
+    height
+  };
+}
+function retinaScale(chart, forceRatio, forceStyle) {
+  const pixelRatio = forceRatio || 1;
+  const deviceHeight = Math.floor(chart.height * pixelRatio);
+  const deviceWidth = Math.floor(chart.width * pixelRatio);
+  chart.height = deviceHeight / pixelRatio;
+  chart.width = deviceWidth / pixelRatio;
+  const canvas = chart.canvas;
+  if (canvas.style && (forceStyle || (!canvas.style.height && !canvas.style.width))) {
+    canvas.style.height = `${chart.height}px`;
+    canvas.style.width = `${chart.width}px`;
+  }
+  if (chart.currentDevicePixelRatio !== pixelRatio
+      || canvas.height !== deviceHeight
+      || canvas.width !== deviceWidth) {
+    chart.currentDevicePixelRatio = pixelRatio;
+    canvas.height = deviceHeight;
+    canvas.width = deviceWidth;
+    chart.ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    return true;
+  }
+  return false;
+}
+const supportsEventListenerOptions = (function() {
+  let passiveSupported = false;
+  try {
+    const options = {
+      get passive() {
+        passiveSupported = true;
+        return false;
+      }
+    };
+    window.addEventListener('test', null, options);
+    window.removeEventListener('test', null, options);
+  } catch (e) {
+  }
+  return passiveSupported;
+}());
+function readUsedSize(element, property) {
+  const value = getStyle(element, property);
+  const matches = value && value.match(/^(\d+)(\.\d+)?px$/);
+  return matches ? +matches[1] : undefined;
+}
+
+function toFontString(font) {
+  if (!font || isNullOrUndef(font.size) || isNullOrUndef(font.family)) {
+    return null;
+  }
+  return (font.style ? font.style + ' ' : '')
+		+ (font.weight ? font.weight + ' ' : '')
+		+ font.size + 'px '
+		+ font.family;
+}
+function _measureText(ctx, data, gc, longest, string) {
+  let textWidth = data[string];
+  if (!textWidth) {
+    textWidth = data[string] = ctx.measureText(string).width;
+    gc.push(string);
+  }
+  if (textWidth > longest) {
+    longest = textWidth;
+  }
+  return longest;
+}
+function _longestText(ctx, font, arrayOfThings, cache) {
+  cache = cache || {};
+  let data = cache.data = cache.data || {};
+  let gc = cache.garbageCollect = cache.garbageCollect || [];
+  if (cache.font !== font) {
+    data = cache.data = {};
+    gc = cache.garbageCollect = [];
+    cache.font = font;
+  }
+  ctx.save();
+  ctx.font = font;
+  let longest = 0;
+  const ilen = arrayOfThings.length;
+  let i, j, jlen, thing, nestedThing;
+  for (i = 0; i < ilen; i++) {
+    thing = arrayOfThings[i];
+    if (thing !== undefined && thing !== null && isArray(thing) !== true) {
+      longest = _measureText(ctx, data, gc, longest, thing);
+    } else if (isArray(thing)) {
+      for (j = 0, jlen = thing.length; j < jlen; j++) {
+        nestedThing = thing[j];
+        if (nestedThing !== undefined && nestedThing !== null && !isArray(nestedThing)) {
+          longest = _measureText(ctx, data, gc, longest, nestedThing);
+        }
+      }
+    }
+  }
+  ctx.restore();
+  const gcLen = gc.length / 2;
+  if (gcLen > arrayOfThings.length) {
+    for (i = 0; i < gcLen; i++) {
+      delete data[gc[i]];
+    }
+    gc.splice(0, gcLen);
+  }
+  return longest;
+}
+function _alignPixel(chart, pixel, width) {
+  const devicePixelRatio = chart.currentDevicePixelRatio;
+  const halfWidth = width !== 0 ? Math.max(width / 2, 0.5) : 0;
+  return Math.round((pixel - halfWidth) * devicePixelRatio) / devicePixelRatio + halfWidth;
+}
+function clearCanvas(canvas, ctx) {
+  ctx = ctx || canvas.getContext('2d');
+  ctx.save();
+  ctx.resetTransform();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+}
+function drawPoint(ctx, options, x, y) {
+  drawPointLegend(ctx, options, x, y, null);
+}
+function drawPointLegend(ctx, options, x, y, w) {
+  let type, xOffset, yOffset, size, cornerRadius, width;
+  const style = options.pointStyle;
+  const rotation = options.rotation;
+  const radius = options.radius;
+  let rad = (rotation || 0) * RAD_PER_DEG;
+  if (style && typeof style === 'object') {
+    type = style.toString();
+    if (type === '[object HTMLImageElement]' || type === '[object HTMLCanvasElement]') {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rad);
+      ctx.drawImage(style, -style.width / 2, -style.height / 2, style.width, style.height);
+      ctx.restore();
+      return;
+    }
+  }
+  if (isNaN(radius) || radius <= 0) {
+    return;
+  }
+  ctx.beginPath();
+  switch (style) {
+  default:
+    if (w) {
+      ctx.ellipse(x, y, w / 2, radius, 0, 0, TAU);
+    } else {
+      ctx.arc(x, y, radius, 0, TAU);
+    }
+    ctx.closePath();
+    break;
+  case 'triangle':
+    ctx.moveTo(x + Math.sin(rad) * radius, y - Math.cos(rad) * radius);
+    rad += TWO_THIRDS_PI;
+    ctx.lineTo(x + Math.sin(rad) * radius, y - Math.cos(rad) * radius);
+    rad += TWO_THIRDS_PI;
+    ctx.lineTo(x + Math.sin(rad) * radius, y - Math.cos(rad) * radius);
+    ctx.closePath();
+    break;
+  case 'rectRounded':
+    cornerRadius = radius * 0.516;
+    size = radius - cornerRadius;
+    xOffset = Math.cos(rad + QUARTER_PI) * size;
+    yOffset = Math.sin(rad + QUARTER_PI) * size;
+    ctx.arc(x - xOffset, y - yOffset, cornerRadius, rad - PI, rad - HALF_PI);
+    ctx.arc(x + yOffset, y - xOffset, cornerRadius, rad - HALF_PI, rad);
+    ctx.arc(x + xOffset, y + yOffset, cornerRadius, rad, rad + HALF_PI);
+    ctx.arc(x - yOffset, y + xOffset, cornerRadius, rad + HALF_PI, rad + PI);
+    ctx.closePath();
+    break;
+  case 'rect':
+    if (!rotation) {
+      size = Math.SQRT1_2 * radius;
+      width = w ? w / 2 : size;
+      ctx.rect(x - width, y - size, 2 * width, 2 * size);
+      break;
+    }
+    rad += QUARTER_PI;
+  case 'rectRot':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    ctx.closePath();
+    break;
+  case 'crossRot':
+    rad += QUARTER_PI;
+  case 'cross':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.moveTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    break;
+  case 'star':
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.moveTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    rad += QUARTER_PI;
+    xOffset = Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    ctx.moveTo(x + yOffset, y - xOffset);
+    ctx.lineTo(x - yOffset, y + xOffset);
+    break;
+  case 'line':
+    xOffset = w ? w / 2 : Math.cos(rad) * radius;
+    yOffset = Math.sin(rad) * radius;
+    ctx.moveTo(x - xOffset, y - yOffset);
+    ctx.lineTo(x + xOffset, y + yOffset);
+    break;
+  case 'dash':
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + Math.cos(rad) * radius, y + Math.sin(rad) * radius);
+    break;
+  }
+  ctx.fill();
+  if (options.borderWidth > 0) {
+    ctx.stroke();
+  }
+}
+function _isPointInArea(point, area, margin) {
+  margin = margin || 0.5;
+  return !area || (point && point.x > area.left - margin && point.x < area.right + margin &&
+		point.y > area.top - margin && point.y < area.bottom + margin);
+}
+function clipArea(ctx, area) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(area.left, area.top, area.right - area.left, area.bottom - area.top);
+  ctx.clip();
+}
+function unclipArea(ctx) {
+  ctx.restore();
+}
+function _steppedLineTo(ctx, previous, target, flip, mode) {
+  if (!previous) {
+    return ctx.lineTo(target.x, target.y);
+  }
+  if (mode === 'middle') {
+    const midpoint = (previous.x + target.x) / 2.0;
+    ctx.lineTo(midpoint, previous.y);
+    ctx.lineTo(midpoint, target.y);
+  } else if (mode === 'after' !== !!flip) {
+    ctx.lineTo(previous.x, target.y);
+  } else {
+    ctx.lineTo(target.x, previous.y);
+  }
+  ctx.lineTo(target.x, target.y);
+}
+function _bezierCurveTo(ctx, previous, target, flip) {
+  if (!previous) {
+    return ctx.lineTo(target.x, target.y);
+  }
+  ctx.bezierCurveTo(
+    flip ? previous.cp1x : previous.cp2x,
+    flip ? previous.cp1y : previous.cp2y,
+    flip ? target.cp2x : target.cp1x,
+    flip ? target.cp2y : target.cp1y,
+    target.x,
+    target.y);
+}
+function renderText(ctx, text, x, y, font, opts = {}) {
+  const lines = isArray(text) ? text : [text];
+  const stroke = opts.strokeWidth > 0 && opts.strokeColor !== '';
+  let i, line;
+  ctx.save();
+  ctx.font = font.string;
+  setRenderOpts(ctx, opts);
+  for (i = 0; i < lines.length; ++i) {
+    line = lines[i];
+    if (stroke) {
+      if (opts.strokeColor) {
+        ctx.strokeStyle = opts.strokeColor;
+      }
+      if (!isNullOrUndef(opts.strokeWidth)) {
+        ctx.lineWidth = opts.strokeWidth;
+      }
+      ctx.strokeText(line, x, y, opts.maxWidth);
+    }
+    ctx.fillText(line, x, y, opts.maxWidth);
+    decorateText(ctx, x, y, line, opts);
+    y += font.lineHeight;
+  }
+  ctx.restore();
+}
+function setRenderOpts(ctx, opts) {
+  if (opts.translation) {
+    ctx.translate(opts.translation[0], opts.translation[1]);
+  }
+  if (!isNullOrUndef(opts.rotation)) {
+    ctx.rotate(opts.rotation);
+  }
+  if (opts.color) {
+    ctx.fillStyle = opts.color;
+  }
+  if (opts.textAlign) {
+    ctx.textAlign = opts.textAlign;
+  }
+  if (opts.textBaseline) {
+    ctx.textBaseline = opts.textBaseline;
+  }
+}
+function decorateText(ctx, x, y, line, opts) {
+  if (opts.strikethrough || opts.underline) {
+    const metrics = ctx.measureText(line);
+    const left = x - metrics.actualBoundingBoxLeft;
+    const right = x + metrics.actualBoundingBoxRight;
+    const top = y - metrics.actualBoundingBoxAscent;
+    const bottom = y + metrics.actualBoundingBoxDescent;
+    const yDecoration = opts.strikethrough ? (top + bottom) / 2 : bottom;
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.beginPath();
+    ctx.lineWidth = opts.decorationWidth || 2;
+    ctx.moveTo(left, yDecoration);
+    ctx.lineTo(right, yDecoration);
+    ctx.stroke();
+  }
+}
+function addRoundedRectPath(ctx, rect) {
+  const {x, y, w, h, radius} = rect;
+  ctx.arc(x + radius.topLeft, y + radius.topLeft, radius.topLeft, -HALF_PI, PI, true);
+  ctx.lineTo(x, y + h - radius.bottomLeft);
+  ctx.arc(x + radius.bottomLeft, y + h - radius.bottomLeft, radius.bottomLeft, PI, HALF_PI, true);
+  ctx.lineTo(x + w - radius.bottomRight, y + h);
+  ctx.arc(x + w - radius.bottomRight, y + h - radius.bottomRight, radius.bottomRight, HALF_PI, 0, true);
+  ctx.lineTo(x + w, y + radius.topRight);
+  ctx.arc(x + w - radius.topRight, y + radius.topRight, radius.topRight, 0, -HALF_PI, true);
+  ctx.lineTo(x + radius.topLeft, y);
+}
+
+function _createResolver(scopes, prefixes = [''], rootScopes = scopes, fallback, getTarget = () => scopes[0]) {
+  if (!defined(fallback)) {
+    fallback = _resolve('_fallback', scopes);
+  }
+  const cache = {
+    [Symbol.toStringTag]: 'Object',
+    _cacheable: true,
+    _scopes: scopes,
+    _rootScopes: rootScopes,
+    _fallback: fallback,
+    _getTarget: getTarget,
+    override: (scope) => _createResolver([scope, ...scopes], prefixes, rootScopes, fallback),
+  };
+  return new Proxy(cache, {
+    deleteProperty(target, prop) {
+      delete target[prop];
+      delete target._keys;
+      delete scopes[0][prop];
+      return true;
+    },
+    get(target, prop) {
+      return _cached(target, prop,
+        () => _resolveWithPrefixes(prop, prefixes, scopes, target));
+    },
+    getOwnPropertyDescriptor(target, prop) {
+      return Reflect.getOwnPropertyDescriptor(target._scopes[0], prop);
+    },
+    getPrototypeOf() {
+      return Reflect.getPrototypeOf(scopes[0]);
+    },
+    has(target, prop) {
+      return getKeysFromAllScopes(target).includes(prop);
+    },
+    ownKeys(target) {
+      return getKeysFromAllScopes(target);
+    },
+    set(target, prop, value) {
+      const storage = target._storage || (target._storage = getTarget());
+      target[prop] = storage[prop] = value;
+      delete target._keys;
+      return true;
+    }
+  });
+}
+function _attachContext(proxy, context, subProxy, descriptorDefaults) {
+  const cache = {
+    _cacheable: false,
+    _proxy: proxy,
+    _context: context,
+    _subProxy: subProxy,
+    _stack: new Set(),
+    _descriptors: _descriptors(proxy, descriptorDefaults),
+    setContext: (ctx) => _attachContext(proxy, ctx, subProxy, descriptorDefaults),
+    override: (scope) => _attachContext(proxy.override(scope), context, subProxy, descriptorDefaults)
+  };
+  return new Proxy(cache, {
+    deleteProperty(target, prop) {
+      delete target[prop];
+      delete proxy[prop];
+      return true;
+    },
+    get(target, prop, receiver) {
+      return _cached(target, prop,
+        () => _resolveWithContext(target, prop, receiver));
+    },
+    getOwnPropertyDescriptor(target, prop) {
+      return target._descriptors.allKeys
+        ? Reflect.has(proxy, prop) ? {enumerable: true, configurable: true} : undefined
+        : Reflect.getOwnPropertyDescriptor(proxy, prop);
+    },
+    getPrototypeOf() {
+      return Reflect.getPrototypeOf(proxy);
+    },
+    has(target, prop) {
+      return Reflect.has(proxy, prop);
+    },
+    ownKeys() {
+      return Reflect.ownKeys(proxy);
+    },
+    set(target, prop, value) {
+      proxy[prop] = value;
+      delete target[prop];
+      return true;
+    }
+  });
+}
+function _descriptors(proxy, defaults = {scriptable: true, indexable: true}) {
+  const {_scriptable = defaults.scriptable, _indexable = defaults.indexable, _allKeys = defaults.allKeys} = proxy;
+  return {
+    allKeys: _allKeys,
+    scriptable: _scriptable,
+    indexable: _indexable,
+    isScriptable: isFunction(_scriptable) ? _scriptable : () => _scriptable,
+    isIndexable: isFunction(_indexable) ? _indexable : () => _indexable
+  };
+}
+const readKey = (prefix, name) => prefix ? prefix + _capitalize(name) : name;
+const needsSubResolver = (prop, value) => isObject(value) && prop !== 'adapters' &&
+  (Object.getPrototypeOf(value) === null || value.constructor === Object);
+function _cached(target, prop, resolve) {
+  if (Object.prototype.hasOwnProperty.call(target, prop)) {
+    return target[prop];
+  }
+  const value = resolve();
+  target[prop] = value;
+  return value;
+}
+function _resolveWithContext(target, prop, receiver) {
+  const {_proxy, _context, _subProxy, _descriptors: descriptors} = target;
+  let value = _proxy[prop];
+  if (isFunction(value) && descriptors.isScriptable(prop)) {
+    value = _resolveScriptable(prop, value, target, receiver);
+  }
+  if (isArray(value) && value.length) {
+    value = _resolveArray(prop, value, target, descriptors.isIndexable);
+  }
+  if (needsSubResolver(prop, value)) {
+    value = _attachContext(value, _context, _subProxy && _subProxy[prop], descriptors);
+  }
+  return value;
+}
+function _resolveScriptable(prop, value, target, receiver) {
+  const {_proxy, _context, _subProxy, _stack} = target;
+  if (_stack.has(prop)) {
+    throw new Error('Recursion detected: ' + Array.from(_stack).join('->') + '->' + prop);
+  }
+  _stack.add(prop);
+  value = value(_context, _subProxy || receiver);
+  _stack.delete(prop);
+  if (needsSubResolver(prop, value)) {
+    value = createSubResolver(_proxy._scopes, _proxy, prop, value);
+  }
+  return value;
+}
+function _resolveArray(prop, value, target, isIndexable) {
+  const {_proxy, _context, _subProxy, _descriptors: descriptors} = target;
+  if (defined(_context.index) && isIndexable(prop)) {
+    value = value[_context.index % value.length];
+  } else if (isObject(value[0])) {
+    const arr = value;
+    const scopes = _proxy._scopes.filter(s => s !== arr);
+    value = [];
+    for (const item of arr) {
+      const resolver = createSubResolver(scopes, _proxy, prop, item);
+      value.push(_attachContext(resolver, _context, _subProxy && _subProxy[prop], descriptors));
+    }
+  }
+  return value;
+}
+function resolveFallback(fallback, prop, value) {
+  return isFunction(fallback) ? fallback(prop, value) : fallback;
+}
+const getScope = (key, parent) => key === true ? parent
+  : typeof key === 'string' ? resolveObjectKey(parent, key) : undefined;
+function addScopes(set, parentScopes, key, parentFallback, value) {
+  for (const parent of parentScopes) {
+    const scope = getScope(key, parent);
+    if (scope) {
+      set.add(scope);
+      const fallback = resolveFallback(scope._fallback, key, value);
+      if (defined(fallback) && fallback !== key && fallback !== parentFallback) {
+        return fallback;
+      }
+    } else if (scope === false && defined(parentFallback) && key !== parentFallback) {
+      return null;
+    }
+  }
+  return false;
+}
+function createSubResolver(parentScopes, resolver, prop, value) {
+  const rootScopes = resolver._rootScopes;
+  const fallback = resolveFallback(resolver._fallback, prop, value);
+  const allScopes = [...parentScopes, ...rootScopes];
+  const set = new Set();
+  set.add(value);
+  let key = addScopesFromKey(set, allScopes, prop, fallback || prop, value);
+  if (key === null) {
+    return false;
+  }
+  if (defined(fallback) && fallback !== prop) {
+    key = addScopesFromKey(set, allScopes, fallback, key, value);
+    if (key === null) {
+      return false;
+    }
+  }
+  return _createResolver(Array.from(set), [''], rootScopes, fallback,
+    () => subGetTarget(resolver, prop, value));
+}
+function addScopesFromKey(set, allScopes, key, fallback, item) {
+  while (key) {
+    key = addScopes(set, allScopes, key, fallback, item);
+  }
+  return key;
+}
+function subGetTarget(resolver, prop, value) {
+  const parent = resolver._getTarget();
+  if (!(prop in parent)) {
+    parent[prop] = {};
+  }
+  const target = parent[prop];
+  if (isArray(target) && isObject(value)) {
+    return value;
+  }
+  return target;
+}
+function _resolveWithPrefixes(prop, prefixes, scopes, proxy) {
+  let value;
+  for (const prefix of prefixes) {
+    value = _resolve(readKey(prefix, prop), scopes);
+    if (defined(value)) {
+      return needsSubResolver(prop, value)
+        ? createSubResolver(scopes, proxy, prop, value)
+        : value;
+    }
+  }
+}
+function _resolve(key, scopes) {
+  for (const scope of scopes) {
+    if (!scope) {
+      continue;
+    }
+    const value = scope[key];
+    if (defined(value)) {
+      return value;
+    }
+  }
+}
+function getKeysFromAllScopes(target) {
+  let keys = target._keys;
+  if (!keys) {
+    keys = target._keys = resolveKeysFromAllScopes(target._scopes);
+  }
+  return keys;
+}
+function resolveKeysFromAllScopes(scopes) {
+  const set = new Set();
+  for (const scope of scopes) {
+    for (const key of Object.keys(scope).filter(k => !k.startsWith('_'))) {
+      set.add(key);
+    }
+  }
+  return Array.from(set);
+}
+function _parseObjectDataRadialScale(meta, data, start, count) {
+  const {iScale} = meta;
+  const {key = 'r'} = this._parsing;
+  const parsed = new Array(count);
+  let i, ilen, index, item;
+  for (i = 0, ilen = count; i < ilen; ++i) {
+    index = i + start;
+    item = data[index];
+    parsed[i] = {
+      r: iScale.parse(resolveObjectKey(item, key), index)
+    };
+  }
+  return parsed;
+}
+
+const EPSILON = Number.EPSILON || 1e-14;
+const getPoint = (points, i) => i < points.length && !points[i].skip && points[i];
+const getValueAxis = (indexAxis) => indexAxis === 'x' ? 'y' : 'x';
+function splineCurve(firstPoint, middlePoint, afterPoint, t) {
+  const previous = firstPoint.skip ? middlePoint : firstPoint;
+  const current = middlePoint;
+  const next = afterPoint.skip ? middlePoint : afterPoint;
+  const d01 = distanceBetweenPoints(current, previous);
+  const d12 = distanceBetweenPoints(next, current);
+  let s01 = d01 / (d01 + d12);
+  let s12 = d12 / (d01 + d12);
+  s01 = isNaN(s01) ? 0 : s01;
+  s12 = isNaN(s12) ? 0 : s12;
+  const fa = t * s01;
+  const fb = t * s12;
+  return {
+    previous: {
+      x: current.x - fa * (next.x - previous.x),
+      y: current.y - fa * (next.y - previous.y)
+    },
+    next: {
+      x: current.x + fb * (next.x - previous.x),
+      y: current.y + fb * (next.y - previous.y)
+    }
+  };
+}
+function monotoneAdjust(points, deltaK, mK) {
+  const pointsLen = points.length;
+  let alphaK, betaK, tauK, squaredMagnitude, pointCurrent;
+  let pointAfter = getPoint(points, 0);
+  for (let i = 0; i < pointsLen - 1; ++i) {
+    pointCurrent = pointAfter;
+    pointAfter = getPoint(points, i + 1);
+    if (!pointCurrent || !pointAfter) {
+      continue;
+    }
+    if (almostEquals(deltaK[i], 0, EPSILON)) {
+      mK[i] = mK[i + 1] = 0;
+      continue;
+    }
+    alphaK = mK[i] / deltaK[i];
+    betaK = mK[i + 1] / deltaK[i];
+    squaredMagnitude = Math.pow(alphaK, 2) + Math.pow(betaK, 2);
+    if (squaredMagnitude <= 9) {
+      continue;
+    }
+    tauK = 3 / Math.sqrt(squaredMagnitude);
+    mK[i] = alphaK * tauK * deltaK[i];
+    mK[i + 1] = betaK * tauK * deltaK[i];
+  }
+}
+function monotoneCompute(points, mK, indexAxis = 'x') {
+  const valueAxis = getValueAxis(indexAxis);
+  const pointsLen = points.length;
+  let delta, pointBefore, pointCurrent;
+  let pointAfter = getPoint(points, 0);
+  for (let i = 0; i < pointsLen; ++i) {
+    pointBefore = pointCurrent;
+    pointCurrent = pointAfter;
+    pointAfter = getPoint(points, i + 1);
+    if (!pointCurrent) {
+      continue;
+    }
+    const iPixel = pointCurrent[indexAxis];
+    const vPixel = pointCurrent[valueAxis];
+    if (pointBefore) {
+      delta = (iPixel - pointBefore[indexAxis]) / 3;
+      pointCurrent[`cp1${indexAxis}`] = iPixel - delta;
+      pointCurrent[`cp1${valueAxis}`] = vPixel - delta * mK[i];
+    }
+    if (pointAfter) {
+      delta = (pointAfter[indexAxis] - iPixel) / 3;
+      pointCurrent[`cp2${indexAxis}`] = iPixel + delta;
+      pointCurrent[`cp2${valueAxis}`] = vPixel + delta * mK[i];
+    }
+  }
+}
+function splineCurveMonotone(points, indexAxis = 'x') {
+  const valueAxis = getValueAxis(indexAxis);
+  const pointsLen = points.length;
+  const deltaK = Array(pointsLen).fill(0);
+  const mK = Array(pointsLen);
+  let i, pointBefore, pointCurrent;
+  let pointAfter = getPoint(points, 0);
+  for (i = 0; i < pointsLen; ++i) {
+    pointBefore = pointCurrent;
+    pointCurrent = pointAfter;
+    pointAfter = getPoint(points, i + 1);
+    if (!pointCurrent) {
+      continue;
+    }
+    if (pointAfter) {
+      const slopeDelta = pointAfter[indexAxis] - pointCurrent[indexAxis];
+      deltaK[i] = slopeDelta !== 0 ? (pointAfter[valueAxis] - pointCurrent[valueAxis]) / slopeDelta : 0;
+    }
+    mK[i] = !pointBefore ? deltaK[i]
+      : !pointAfter ? deltaK[i - 1]
+      : (sign(deltaK[i - 1]) !== sign(deltaK[i])) ? 0
+      : (deltaK[i - 1] + deltaK[i]) / 2;
+  }
+  monotoneAdjust(points, deltaK, mK);
+  monotoneCompute(points, mK, indexAxis);
+}
+function capControlPoint(pt, min, max) {
+  return Math.max(Math.min(pt, max), min);
+}
+function capBezierPoints(points, area) {
+  let i, ilen, point, inArea, inAreaPrev;
+  let inAreaNext = _isPointInArea(points[0], area);
+  for (i = 0, ilen = points.length; i < ilen; ++i) {
+    inAreaPrev = inArea;
+    inArea = inAreaNext;
+    inAreaNext = i < ilen - 1 && _isPointInArea(points[i + 1], area);
+    if (!inArea) {
+      continue;
+    }
+    point = points[i];
+    if (inAreaPrev) {
+      point.cp1x = capControlPoint(point.cp1x, area.left, area.right);
+      point.cp1y = capControlPoint(point.cp1y, area.top, area.bottom);
+    }
+    if (inAreaNext) {
+      point.cp2x = capControlPoint(point.cp2x, area.left, area.right);
+      point.cp2y = capControlPoint(point.cp2y, area.top, area.bottom);
+    }
+  }
+}
+function _updateBezierControlPoints(points, options, area, loop, indexAxis) {
+  let i, ilen, point, controlPoints;
+  if (options.spanGaps) {
+    points = points.filter((pt) => !pt.skip);
+  }
+  if (options.cubicInterpolationMode === 'monotone') {
+    splineCurveMonotone(points, indexAxis);
+  } else {
+    let prev = loop ? points[points.length - 1] : points[0];
+    for (i = 0, ilen = points.length; i < ilen; ++i) {
+      point = points[i];
+      controlPoints = splineCurve(
+        prev,
+        point,
+        points[Math.min(i + 1, ilen - (loop ? 0 : 1)) % ilen],
+        options.tension
+      );
+      point.cp1x = controlPoints.previous.x;
+      point.cp1y = controlPoints.previous.y;
+      point.cp2x = controlPoints.next.x;
+      point.cp2y = controlPoints.next.y;
+      prev = point;
+    }
+  }
+  if (options.capBezierPoints) {
+    capBezierPoints(points, area);
+  }
+}
+
+const atEdge = (t) => t === 0 || t === 1;
+const elasticIn = (t, s, p) => -(Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * TAU / p));
+const elasticOut = (t, s, p) => Math.pow(2, -10 * t) * Math.sin((t - s) * TAU / p) + 1;
+const effects = {
+  linear: t => t,
+  easeInQuad: t => t * t,
+  easeOutQuad: t => -t * (t - 2),
+  easeInOutQuad: t => ((t /= 0.5) < 1)
+    ? 0.5 * t * t
+    : -0.5 * ((--t) * (t - 2) - 1),
+  easeInCubic: t => t * t * t,
+  easeOutCubic: t => (t -= 1) * t * t + 1,
+  easeInOutCubic: t => ((t /= 0.5) < 1)
+    ? 0.5 * t * t * t
+    : 0.5 * ((t -= 2) * t * t + 2),
+  easeInQuart: t => t * t * t * t,
+  easeOutQuart: t => -((t -= 1) * t * t * t - 1),
+  easeInOutQuart: t => ((t /= 0.5) < 1)
+    ? 0.5 * t * t * t * t
+    : -0.5 * ((t -= 2) * t * t * t - 2),
+  easeInQuint: t => t * t * t * t * t,
+  easeOutQuint: t => (t -= 1) * t * t * t * t + 1,
+  easeInOutQuint: t => ((t /= 0.5) < 1)
+    ? 0.5 * t * t * t * t * t
+    : 0.5 * ((t -= 2) * t * t * t * t + 2),
+  easeInSine: t => -Math.cos(t * HALF_PI) + 1,
+  easeOutSine: t => Math.sin(t * HALF_PI),
+  easeInOutSine: t => -0.5 * (Math.cos(PI * t) - 1),
+  easeInExpo: t => (t === 0) ? 0 : Math.pow(2, 10 * (t - 1)),
+  easeOutExpo: t => (t === 1) ? 1 : -Math.pow(2, -10 * t) + 1,
+  easeInOutExpo: t => atEdge(t) ? t : t < 0.5
+    ? 0.5 * Math.pow(2, 10 * (t * 2 - 1))
+    : 0.5 * (-Math.pow(2, -10 * (t * 2 - 1)) + 2),
+  easeInCirc: t => (t >= 1) ? t : -(Math.sqrt(1 - t * t) - 1),
+  easeOutCirc: t => Math.sqrt(1 - (t -= 1) * t),
+  easeInOutCirc: t => ((t /= 0.5) < 1)
+    ? -0.5 * (Math.sqrt(1 - t * t) - 1)
+    : 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1),
+  easeInElastic: t => atEdge(t) ? t : elasticIn(t, 0.075, 0.3),
+  easeOutElastic: t => atEdge(t) ? t : elasticOut(t, 0.075, 0.3),
+  easeInOutElastic(t) {
+    const s = 0.1125;
+    const p = 0.45;
+    return atEdge(t) ? t :
+      t < 0.5
+        ? 0.5 * elasticIn(t * 2, s, p)
+        : 0.5 + 0.5 * elasticOut(t * 2 - 1, s, p);
+  },
+  easeInBack(t) {
+    const s = 1.70158;
+    return t * t * ((s + 1) * t - s);
+  },
+  easeOutBack(t) {
+    const s = 1.70158;
+    return (t -= 1) * t * ((s + 1) * t + s) + 1;
+  },
+  easeInOutBack(t) {
+    let s = 1.70158;
+    if ((t /= 0.5) < 1) {
+      return 0.5 * (t * t * (((s *= (1.525)) + 1) * t - s));
+    }
+    return 0.5 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2);
+  },
+  easeInBounce: t => 1 - effects.easeOutBounce(1 - t),
+  easeOutBounce(t) {
+    const m = 7.5625;
+    const d = 2.75;
+    if (t < (1 / d)) {
+      return m * t * t;
+    }
+    if (t < (2 / d)) {
+      return m * (t -= (1.5 / d)) * t + 0.75;
+    }
+    if (t < (2.5 / d)) {
+      return m * (t -= (2.25 / d)) * t + 0.9375;
+    }
+    return m * (t -= (2.625 / d)) * t + 0.984375;
+  },
+  easeInOutBounce: t => (t < 0.5)
+    ? effects.easeInBounce(t * 2) * 0.5
+    : effects.easeOutBounce(t * 2 - 1) * 0.5 + 0.5,
+};
+
+function _pointInLine(p1, p2, t, mode) {
+  return {
+    x: p1.x + t * (p2.x - p1.x),
+    y: p1.y + t * (p2.y - p1.y)
+  };
+}
+function _steppedInterpolation(p1, p2, t, mode) {
+  return {
+    x: p1.x + t * (p2.x - p1.x),
+    y: mode === 'middle' ? t < 0.5 ? p1.y : p2.y
+    : mode === 'after' ? t < 1 ? p1.y : p2.y
+    : t > 0 ? p2.y : p1.y
+  };
+}
+function _bezierInterpolation(p1, p2, t, mode) {
+  const cp1 = {x: p1.cp2x, y: p1.cp2y};
+  const cp2 = {x: p2.cp1x, y: p2.cp1y};
+  const a = _pointInLine(p1, cp1, t);
+  const b = _pointInLine(cp1, cp2, t);
+  const c = _pointInLine(cp2, p2, t);
+  const d = _pointInLine(a, b, t);
+  const e = _pointInLine(b, c, t);
+  return _pointInLine(d, e, t);
+}
+
+const intlCache = new Map();
+function getNumberFormat(locale, options) {
+  options = options || {};
+  const cacheKey = locale + JSON.stringify(options);
+  let formatter = intlCache.get(cacheKey);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, options);
+    intlCache.set(cacheKey, formatter);
+  }
+  return formatter;
+}
+function formatNumber(num, locale, options) {
+  return getNumberFormat(locale, options).format(num);
+}
+
+const LINE_HEIGHT = new RegExp(/^(normal|(\d+(?:\.\d+)?)(px|em|%)?)$/);
+const FONT_STYLE = new RegExp(/^(normal|italic|initial|inherit|unset|(oblique( -?[0-9]?[0-9]deg)?))$/);
+function toLineHeight(value, size) {
+  const matches = ('' + value).match(LINE_HEIGHT);
+  if (!matches || matches[1] === 'normal') {
+    return size * 1.2;
+  }
+  value = +matches[2];
+  switch (matches[3]) {
+  case 'px':
+    return value;
+  case '%':
+    value /= 100;
+    break;
+  }
+  return size * value;
+}
+const numberOrZero = v => +v || 0;
+function _readValueToProps(value, props) {
+  const ret = {};
+  const objProps = isObject(props);
+  const keys = objProps ? Object.keys(props) : props;
+  const read = isObject(value)
+    ? objProps
+      ? prop => valueOrDefault(value[prop], value[props[prop]])
+      : prop => value[prop]
+    : () => value;
+  for (const prop of keys) {
+    ret[prop] = numberOrZero(read(prop));
+  }
+  return ret;
+}
+function toTRBL(value) {
+  return _readValueToProps(value, {top: 'y', right: 'x', bottom: 'y', left: 'x'});
+}
+function toTRBLCorners(value) {
+  return _readValueToProps(value, ['topLeft', 'topRight', 'bottomLeft', 'bottomRight']);
+}
+function toPadding(value) {
+  const obj = toTRBL(value);
+  obj.width = obj.left + obj.right;
+  obj.height = obj.top + obj.bottom;
+  return obj;
+}
+function toFont(options, fallback) {
+  options = options || {};
+  fallback = fallback || defaults.font;
+  let size = valueOrDefault(options.size, fallback.size);
+  if (typeof size === 'string') {
+    size = parseInt(size, 10);
+  }
+  let style = valueOrDefault(options.style, fallback.style);
+  if (style && !('' + style).match(FONT_STYLE)) {
+    console.warn('Invalid font style specified: "' + style + '"');
+    style = '';
+  }
+  const font = {
+    family: valueOrDefault(options.family, fallback.family),
+    lineHeight: toLineHeight(valueOrDefault(options.lineHeight, fallback.lineHeight), size),
+    size,
+    style,
+    weight: valueOrDefault(options.weight, fallback.weight),
+    string: ''
+  };
+  font.string = toFontString(font);
+  return font;
+}
+function resolve(inputs, context, index, info) {
+  let cacheable = true;
+  let i, ilen, value;
+  for (i = 0, ilen = inputs.length; i < ilen; ++i) {
+    value = inputs[i];
+    if (value === undefined) {
+      continue;
+    }
+    if (context !== undefined && typeof value === 'function') {
+      value = value(context);
+      cacheable = false;
+    }
+    if (index !== undefined && isArray(value)) {
+      value = value[index % value.length];
+      cacheable = false;
+    }
+    if (value !== undefined) {
+      if (info && !cacheable) {
+        info.cacheable = false;
+      }
+      return value;
+    }
+  }
+}
+function _addGrace(minmax, grace, beginAtZero) {
+  const {min, max} = minmax;
+  const change = toDimension(grace, (max - min) / 2);
+  const keepZero = (value, add) => beginAtZero && value === 0 ? 0 : value + add;
+  return {
+    min: keepZero(min, -Math.abs(change)),
+    max: keepZero(max, change)
+  };
+}
+function createContext(parentContext, context) {
+  return Object.assign(Object.create(parentContext), context);
+}
+
+const getRightToLeftAdapter = function(rectX, width) {
+  return {
+    x(x) {
+      return rectX + rectX + width - x;
+    },
+    setWidth(w) {
+      width = w;
+    },
+    textAlign(align) {
+      if (align === 'center') {
+        return align;
+      }
+      return align === 'right' ? 'left' : 'right';
+    },
+    xPlus(x, value) {
+      return x - value;
+    },
+    leftForLtr(x, itemWidth) {
+      return x - itemWidth;
+    },
+  };
+};
+const getLeftToRightAdapter = function() {
+  return {
+    x(x) {
+      return x;
+    },
+    setWidth(w) {
+    },
+    textAlign(align) {
+      return align;
+    },
+    xPlus(x, value) {
+      return x + value;
+    },
+    leftForLtr(x, _itemWidth) {
+      return x;
+    },
+  };
+};
+function getRtlAdapter(rtl, rectX, width) {
+  return rtl ? getRightToLeftAdapter(rectX, width) : getLeftToRightAdapter();
+}
+function overrideTextDirection(ctx, direction) {
+  let style, original;
+  if (direction === 'ltr' || direction === 'rtl') {
+    style = ctx.canvas.style;
+    original = [
+      style.getPropertyValue('direction'),
+      style.getPropertyPriority('direction'),
+    ];
+    style.setProperty('direction', direction, 'important');
+    ctx.prevTextDirection = original;
+  }
+}
+function restoreTextDirection(ctx, original) {
+  if (original !== undefined) {
+    delete ctx.prevTextDirection;
+    ctx.canvas.style.setProperty('direction', original[0], original[1]);
+  }
+}
+
+function propertyFn(property) {
+  if (property === 'angle') {
+    return {
+      between: _angleBetween,
+      compare: _angleDiff,
+      normalize: _normalizeAngle,
+    };
+  }
+  return {
+    between: _isBetween,
+    compare: (a, b) => a - b,
+    normalize: x => x
+  };
+}
+function normalizeSegment({start, end, count, loop, style}) {
+  return {
+    start: start % count,
+    end: end % count,
+    loop: loop && (end - start + 1) % count === 0,
+    style
+  };
+}
+function getSegment(segment, points, bounds) {
+  const {property, start: startBound, end: endBound} = bounds;
+  const {between, normalize} = propertyFn(property);
+  const count = points.length;
+  let {start, end, loop} = segment;
+  let i, ilen;
+  if (loop) {
+    start += count;
+    end += count;
+    for (i = 0, ilen = count; i < ilen; ++i) {
+      if (!between(normalize(points[start % count][property]), startBound, endBound)) {
+        break;
+      }
+      start--;
+      end--;
+    }
+    start %= count;
+    end %= count;
+  }
+  if (end < start) {
+    end += count;
+  }
+  return {start, end, loop, style: segment.style};
+}
+function _boundSegment(segment, points, bounds) {
+  if (!bounds) {
+    return [segment];
+  }
+  const {property, start: startBound, end: endBound} = bounds;
+  const count = points.length;
+  const {compare, between, normalize} = propertyFn(property);
+  const {start, end, loop, style} = getSegment(segment, points, bounds);
+  const result = [];
+  let inside = false;
+  let subStart = null;
+  let value, point, prevValue;
+  const startIsBefore = () => between(startBound, prevValue, value) && compare(startBound, prevValue) !== 0;
+  const endIsBefore = () => compare(endBound, value) === 0 || between(endBound, prevValue, value);
+  const shouldStart = () => inside || startIsBefore();
+  const shouldStop = () => !inside || endIsBefore();
+  for (let i = start, prev = start; i <= end; ++i) {
+    point = points[i % count];
+    if (point.skip) {
+      continue;
+    }
+    value = normalize(point[property]);
+    if (value === prevValue) {
+      continue;
+    }
+    inside = between(value, startBound, endBound);
+    if (subStart === null && shouldStart()) {
+      subStart = compare(value, startBound) === 0 ? i : prev;
+    }
+    if (subStart !== null && shouldStop()) {
+      result.push(normalizeSegment({start: subStart, end: i, loop, count, style}));
+      subStart = null;
+    }
+    prev = i;
+    prevValue = value;
+  }
+  if (subStart !== null) {
+    result.push(normalizeSegment({start: subStart, end, loop, count, style}));
+  }
+  return result;
+}
+function _boundSegments(line, bounds) {
+  const result = [];
+  const segments = line.segments;
+  for (let i = 0; i < segments.length; i++) {
+    const sub = _boundSegment(segments[i], line.points, bounds);
+    if (sub.length) {
+      result.push(...sub);
+    }
+  }
+  return result;
+}
+function findStartAndEnd(points, count, loop, spanGaps) {
+  let start = 0;
+  let end = count - 1;
+  if (loop && !spanGaps) {
+    while (start < count && !points[start].skip) {
+      start++;
+    }
+  }
+  while (start < count && points[start].skip) {
+    start++;
+  }
+  start %= count;
+  if (loop) {
+    end += start;
+  }
+  while (end > start && points[end % count].skip) {
+    end--;
+  }
+  end %= count;
+  return {start, end};
+}
+function solidSegments(points, start, max, loop) {
+  const count = points.length;
+  const result = [];
+  let last = start;
+  let prev = points[start];
+  let end;
+  for (end = start + 1; end <= max; ++end) {
+    const cur = points[end % count];
+    if (cur.skip || cur.stop) {
+      if (!prev.skip) {
+        loop = false;
+        result.push({start: start % count, end: (end - 1) % count, loop});
+        start = last = cur.stop ? end : null;
+      }
+    } else {
+      last = end;
+      if (prev.skip) {
+        start = end;
+      }
+    }
+    prev = cur;
+  }
+  if (last !== null) {
+    result.push({start: start % count, end: last % count, loop});
+  }
+  return result;
+}
+function _computeSegments(line, segmentOptions) {
+  const points = line.points;
+  const spanGaps = line.options.spanGaps;
+  const count = points.length;
+  if (!count) {
+    return [];
+  }
+  const loop = !!line._loop;
+  const {start, end} = findStartAndEnd(points, count, loop, spanGaps);
+  if (spanGaps === true) {
+    return splitByStyles(line, [{start, end, loop}], points, segmentOptions);
+  }
+  const max = end < start ? end + count : end;
+  const completeLoop = !!line._fullLoop && start === 0 && end === count - 1;
+  return splitByStyles(line, solidSegments(points, start, max, completeLoop), points, segmentOptions);
+}
+function splitByStyles(line, segments, points, segmentOptions) {
+  if (!segmentOptions || !segmentOptions.setContext || !points) {
+    return segments;
+  }
+  return doSplitByStyles(line, segments, points, segmentOptions);
+}
+function doSplitByStyles(line, segments, points, segmentOptions) {
+  const chartContext = line._chart.getContext();
+  const baseStyle = readStyle(line.options);
+  const {_datasetIndex: datasetIndex, options: {spanGaps}} = line;
+  const count = points.length;
+  const result = [];
+  let prevStyle = baseStyle;
+  let start = segments[0].start;
+  let i = start;
+  function addStyle(s, e, l, st) {
+    const dir = spanGaps ? -1 : 1;
+    if (s === e) {
+      return;
+    }
+    s += count;
+    while (points[s % count].skip) {
+      s -= dir;
+    }
+    while (points[e % count].skip) {
+      e += dir;
+    }
+    if (s % count !== e % count) {
+      result.push({start: s % count, end: e % count, loop: l, style: st});
+      prevStyle = st;
+      start = e % count;
+    }
+  }
+  for (const segment of segments) {
+    start = spanGaps ? start : segment.start;
+    let prev = points[start % count];
+    let style;
+    for (i = start + 1; i <= segment.end; i++) {
+      const pt = points[i % count];
+      style = readStyle(segmentOptions.setContext(createContext(chartContext, {
+        type: 'segment',
+        p0: prev,
+        p1: pt,
+        p0DataIndex: (i - 1) % count,
+        p1DataIndex: i % count,
+        datasetIndex
+      })));
+      if (styleChanged(style, prevStyle)) {
+        addStyle(start, i - 1, segment.loop, prevStyle);
+      }
+      prev = pt;
+      prevStyle = style;
+    }
+    if (start < i - 1) {
+      addStyle(start, i - 1, segment.loop, prevStyle);
+    }
+  }
+  return result;
+}
+function readStyle(options) {
+  return {
+    backgroundColor: options.backgroundColor,
+    borderCapStyle: options.borderCapStyle,
+    borderDash: options.borderDash,
+    borderDashOffset: options.borderDashOffset,
+    borderJoinStyle: options.borderJoinStyle,
+    borderWidth: options.borderWidth,
+    borderColor: options.borderColor
+  };
+}
+function styleChanged(style, prevStyle) {
+  return prevStyle && JSON.stringify(style) !== JSON.stringify(prevStyle);
+}
+
+var helpers = /*#__PURE__*/Object.freeze({
+__proto__: null,
+easingEffects: effects,
+isPatternOrGradient: isPatternOrGradient,
+color: color,
+getHoverColor: getHoverColor,
+noop: noop,
+uid: uid,
+isNullOrUndef: isNullOrUndef,
+isArray: isArray,
+isObject: isObject,
+isFinite: isNumberFinite,
+finiteOrDefault: finiteOrDefault,
+valueOrDefault: valueOrDefault,
+toPercentage: toPercentage,
+toDimension: toDimension,
+callback: callback,
+each: each,
+_elementsEqual: _elementsEqual,
+clone: clone$1,
+_merger: _merger,
+merge: merge,
+mergeIf: mergeIf,
+_mergerIf: _mergerIf,
+_deprecated: _deprecated,
+resolveObjectKey: resolveObjectKey,
+_splitKey: _splitKey,
+_capitalize: _capitalize,
+defined: defined,
+isFunction: isFunction,
+setsEqual: setsEqual,
+_isClickEvent: _isClickEvent,
+toFontString: toFontString,
+_measureText: _measureText,
+_longestText: _longestText,
+_alignPixel: _alignPixel,
+clearCanvas: clearCanvas,
+drawPoint: drawPoint,
+drawPointLegend: drawPointLegend,
+_isPointInArea: _isPointInArea,
+clipArea: clipArea,
+unclipArea: unclipArea,
+_steppedLineTo: _steppedLineTo,
+_bezierCurveTo: _bezierCurveTo,
+renderText: renderText,
+addRoundedRectPath: addRoundedRectPath,
+_lookup: _lookup,
+_lookupByKey: _lookupByKey,
+_rlookupByKey: _rlookupByKey,
+_filterBetween: _filterBetween,
+listenArrayEvents: listenArrayEvents,
+unlistenArrayEvents: unlistenArrayEvents,
+_arrayUnique: _arrayUnique,
+_createResolver: _createResolver,
+_attachContext: _attachContext,
+_descriptors: _descriptors,
+_parseObjectDataRadialScale: _parseObjectDataRadialScale,
+splineCurve: splineCurve,
+splineCurveMonotone: splineCurveMonotone,
+_updateBezierControlPoints: _updateBezierControlPoints,
+_isDomSupported: _isDomSupported,
+_getParentNode: _getParentNode,
+getStyle: getStyle,
+getRelativePosition: getRelativePosition,
+getMaximumSize: getMaximumSize,
+retinaScale: retinaScale,
+supportsEventListenerOptions: supportsEventListenerOptions,
+readUsedSize: readUsedSize,
+fontString: fontString,
+requestAnimFrame: requestAnimFrame,
+throttled: throttled,
+debounce: debounce,
+_toLeftRightCenter: _toLeftRightCenter,
+_alignStartEnd: _alignStartEnd,
+_textX: _textX,
+_getStartAndCountOfVisiblePoints: _getStartAndCountOfVisiblePoints,
+_scaleRangesChanged: _scaleRangesChanged,
+_pointInLine: _pointInLine,
+_steppedInterpolation: _steppedInterpolation,
+_bezierInterpolation: _bezierInterpolation,
+formatNumber: formatNumber,
+toLineHeight: toLineHeight,
+_readValueToProps: _readValueToProps,
+toTRBL: toTRBL,
+toTRBLCorners: toTRBLCorners,
+toPadding: toPadding,
+toFont: toFont,
+resolve: resolve,
+_addGrace: _addGrace,
+createContext: createContext,
+PI: PI,
+TAU: TAU,
+PITAU: PITAU,
+INFINITY: INFINITY,
+RAD_PER_DEG: RAD_PER_DEG,
+HALF_PI: HALF_PI,
+QUARTER_PI: QUARTER_PI,
+TWO_THIRDS_PI: TWO_THIRDS_PI,
+log10: log10,
+sign: sign,
+niceNum: niceNum,
+_factorize: _factorize,
+isNumber: isNumber,
+almostEquals: almostEquals,
+almostWhole: almostWhole,
+_setMinAndMaxByKey: _setMinAndMaxByKey,
+toRadians: toRadians,
+toDegrees: toDegrees,
+_decimalPlaces: _decimalPlaces,
+getAngleFromPoint: getAngleFromPoint,
+distanceBetweenPoints: distanceBetweenPoints,
+_angleDiff: _angleDiff,
+_normalizeAngle: _normalizeAngle,
+_angleBetween: _angleBetween,
+_limitValue: _limitValue,
+_int16Range: _int16Range,
+_isBetween: _isBetween,
+getRtlAdapter: getRtlAdapter,
+overrideTextDirection: overrideTextDirection,
+restoreTextDirection: restoreTextDirection,
+_boundSegment: _boundSegment,
+_boundSegments: _boundSegments,
+_computeSegments: _computeSegments
+});
+
+function binarySearch(metaset, axis, value, intersect) {
+  const {controller, data, _sorted} = metaset;
+  const iScale = controller._cachedMeta.iScale;
+  if (iScale && axis === iScale.axis && axis !== 'r' && _sorted && data.length) {
+    const lookupMethod = iScale._reversePixels ? _rlookupByKey : _lookupByKey;
+    if (!intersect) {
+      return lookupMethod(data, axis, value);
+    } else if (controller._sharedOptions) {
+      const el = data[0];
+      const range = typeof el.getRange === 'function' && el.getRange(axis);
+      if (range) {
+        const start = lookupMethod(data, axis, value - range);
+        const end = lookupMethod(data, axis, value + range);
+        return {lo: start.lo, hi: end.hi};
+      }
+    }
+  }
+  return {lo: 0, hi: data.length - 1};
+}
+function evaluateInteractionItems(chart, axis, position, handler, intersect) {
+  const metasets = chart.getSortedVisibleDatasetMetas();
+  const value = position[axis];
+  for (let i = 0, ilen = metasets.length; i < ilen; ++i) {
+    const {index, data} = metasets[i];
+    const {lo, hi} = binarySearch(metasets[i], axis, value, intersect);
+    for (let j = lo; j <= hi; ++j) {
+      const element = data[j];
+      if (!element.skip) {
+        handler(element, index, j);
+      }
+    }
+  }
+}
+function getDistanceMetricForAxis(axis) {
+  const useX = axis.indexOf('x') !== -1;
+  const useY = axis.indexOf('y') !== -1;
+  return function(pt1, pt2) {
+    const deltaX = useX ? Math.abs(pt1.x - pt2.x) : 0;
+    const deltaY = useY ? Math.abs(pt1.y - pt2.y) : 0;
+    return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+  };
+}
+function getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible) {
+  const items = [];
+  if (!includeInvisible && !chart.isPointInArea(position)) {
+    return items;
+  }
+  const evaluationFunc = function(element, datasetIndex, index) {
+    if (!includeInvisible && !_isPointInArea(element, chart.chartArea, 0)) {
+      return;
+    }
+    if (element.inRange(position.x, position.y, useFinalPosition)) {
+      items.push({element, datasetIndex, index});
+    }
+  };
+  evaluateInteractionItems(chart, axis, position, evaluationFunc, true);
+  return items;
+}
+function getNearestRadialItems(chart, position, axis, useFinalPosition) {
+  let items = [];
+  function evaluationFunc(element, datasetIndex, index) {
+    const {startAngle, endAngle} = element.getProps(['startAngle', 'endAngle'], useFinalPosition);
+    const {angle} = getAngleFromPoint(element, {x: position.x, y: position.y});
+    if (_angleBetween(angle, startAngle, endAngle)) {
+      items.push({element, datasetIndex, index});
+    }
+  }
+  evaluateInteractionItems(chart, axis, position, evaluationFunc);
+  return items;
+}
+function getNearestCartesianItems(chart, position, axis, intersect, useFinalPosition, includeInvisible) {
+  let items = [];
+  const distanceMetric = getDistanceMetricForAxis(axis);
+  let minDistance = Number.POSITIVE_INFINITY;
+  function evaluationFunc(element, datasetIndex, index) {
+    const inRange = element.inRange(position.x, position.y, useFinalPosition);
+    if (intersect && !inRange) {
+      return;
+    }
+    const center = element.getCenterPoint(useFinalPosition);
+    const pointInArea = !!includeInvisible || chart.isPointInArea(center);
+    if (!pointInArea && !inRange) {
+      return;
+    }
+    const distance = distanceMetric(position, center);
+    if (distance < minDistance) {
+      items = [{element, datasetIndex, index}];
+      minDistance = distance;
+    } else if (distance === minDistance) {
+      items.push({element, datasetIndex, index});
+    }
+  }
+  evaluateInteractionItems(chart, axis, position, evaluationFunc);
+  return items;
+}
+function getNearestItems(chart, position, axis, intersect, useFinalPosition, includeInvisible) {
+  if (!includeInvisible && !chart.isPointInArea(position)) {
+    return [];
+  }
+  return axis === 'r' && !intersect
+    ? getNearestRadialItems(chart, position, axis, useFinalPosition)
+    : getNearestCartesianItems(chart, position, axis, intersect, useFinalPosition, includeInvisible);
+}
+function getAxisItems(chart, position, axis, intersect, useFinalPosition) {
+  const items = [];
+  const rangeMethod = axis === 'x' ? 'inXRange' : 'inYRange';
+  let intersectsItem = false;
+  evaluateInteractionItems(chart, axis, position, (element, datasetIndex, index) => {
+    if (element[rangeMethod](position[axis], useFinalPosition)) {
+      items.push({element, datasetIndex, index});
+      intersectsItem = intersectsItem || element.inRange(position.x, position.y, useFinalPosition);
+    }
+  });
+  if (intersect && !intersectsItem) {
+    return [];
+  }
+  return items;
+}
+var Interaction = {
+  evaluateInteractionItems,
+  modes: {
+    index(chart, e, options, useFinalPosition) {
+      const position = getRelativePosition(e, chart);
+      const axis = options.axis || 'x';
+      const includeInvisible = options.includeInvisible || false;
+      const items = options.intersect
+        ? getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible)
+        : getNearestItems(chart, position, axis, false, useFinalPosition, includeInvisible);
+      const elements = [];
+      if (!items.length) {
+        return [];
+      }
+      chart.getSortedVisibleDatasetMetas().forEach((meta) => {
+        const index = items[0].index;
+        const element = meta.data[index];
+        if (element && !element.skip) {
+          elements.push({element, datasetIndex: meta.index, index});
+        }
+      });
+      return elements;
+    },
+    dataset(chart, e, options, useFinalPosition) {
+      const position = getRelativePosition(e, chart);
+      const axis = options.axis || 'xy';
+      const includeInvisible = options.includeInvisible || false;
+      let items = options.intersect
+        ? getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible) :
+        getNearestItems(chart, position, axis, false, useFinalPosition, includeInvisible);
+      if (items.length > 0) {
+        const datasetIndex = items[0].datasetIndex;
+        const data = chart.getDatasetMeta(datasetIndex).data;
+        items = [];
+        for (let i = 0; i < data.length; ++i) {
+          items.push({element: data[i], datasetIndex, index: i});
+        }
+      }
+      return items;
+    },
+    point(chart, e, options, useFinalPosition) {
+      const position = getRelativePosition(e, chart);
+      const axis = options.axis || 'xy';
+      const includeInvisible = options.includeInvisible || false;
+      return getIntersectItems(chart, position, axis, useFinalPosition, includeInvisible);
+    },
+    nearest(chart, e, options, useFinalPosition) {
+      const position = getRelativePosition(e, chart);
+      const axis = options.axis || 'xy';
+      const includeInvisible = options.includeInvisible || false;
+      return getNearestItems(chart, position, axis, options.intersect, useFinalPosition, includeInvisible);
+    },
+    x(chart, e, options, useFinalPosition) {
+      const position = getRelativePosition(e, chart);
+      return getAxisItems(chart, position, 'x', options.intersect, useFinalPosition);
+    },
+    y(chart, e, options, useFinalPosition) {
+      const position = getRelativePosition(e, chart);
+      return getAxisItems(chart, position, 'y', options.intersect, useFinalPosition);
+    }
+  }
+};
+
+const STATIC_POSITIONS = ['left', 'top', 'right', 'bottom'];
+function filterByPosition(array, position) {
+  return array.filter(v => v.pos === position);
+}
+function filterDynamicPositionByAxis(array, axis) {
+  return array.filter(v => STATIC_POSITIONS.indexOf(v.pos) === -1 && v.box.axis === axis);
+}
+function sortByWeight(array, reverse) {
+  return array.sort((a, b) => {
+    const v0 = reverse ? b : a;
+    const v1 = reverse ? a : b;
+    return v0.weight === v1.weight ?
+      v0.index - v1.index :
+      v0.weight - v1.weight;
+  });
+}
+function wrapBoxes(boxes) {
+  const layoutBoxes = [];
+  let i, ilen, box, pos, stack, stackWeight;
+  for (i = 0, ilen = (boxes || []).length; i < ilen; ++i) {
+    box = boxes[i];
+    ({position: pos, options: {stack, stackWeight = 1}} = box);
+    layoutBoxes.push({
+      index: i,
+      box,
+      pos,
+      horizontal: box.isHorizontal(),
+      weight: box.weight,
+      stack: stack && (pos + stack),
+      stackWeight
+    });
+  }
+  return layoutBoxes;
+}
+function buildStacks(layouts) {
+  const stacks = {};
+  for (const wrap of layouts) {
+    const {stack, pos, stackWeight} = wrap;
+    if (!stack || !STATIC_POSITIONS.includes(pos)) {
+      continue;
+    }
+    const _stack = stacks[stack] || (stacks[stack] = {count: 0, placed: 0, weight: 0, size: 0});
+    _stack.count++;
+    _stack.weight += stackWeight;
+  }
+  return stacks;
+}
+function setLayoutDims(layouts, params) {
+  const stacks = buildStacks(layouts);
+  const {vBoxMaxWidth, hBoxMaxHeight} = params;
+  let i, ilen, layout;
+  for (i = 0, ilen = layouts.length; i < ilen; ++i) {
+    layout = layouts[i];
+    const {fullSize} = layout.box;
+    const stack = stacks[layout.stack];
+    const factor = stack && layout.stackWeight / stack.weight;
+    if (layout.horizontal) {
+      layout.width = factor ? factor * vBoxMaxWidth : fullSize && params.availableWidth;
+      layout.height = hBoxMaxHeight;
+    } else {
+      layout.width = vBoxMaxWidth;
+      layout.height = factor ? factor * hBoxMaxHeight : fullSize && params.availableHeight;
+    }
+  }
+  return stacks;
+}
+function buildLayoutBoxes(boxes) {
+  const layoutBoxes = wrapBoxes(boxes);
+  const fullSize = sortByWeight(layoutBoxes.filter(wrap => wrap.box.fullSize), true);
+  const left = sortByWeight(filterByPosition(layoutBoxes, 'left'), true);
+  const right = sortByWeight(filterByPosition(layoutBoxes, 'right'));
+  const top = sortByWeight(filterByPosition(layoutBoxes, 'top'), true);
+  const bottom = sortByWeight(filterByPosition(layoutBoxes, 'bottom'));
+  const centerHorizontal = filterDynamicPositionByAxis(layoutBoxes, 'x');
+  const centerVertical = filterDynamicPositionByAxis(layoutBoxes, 'y');
+  return {
+    fullSize,
+    leftAndTop: left.concat(top),
+    rightAndBottom: right.concat(centerVertical).concat(bottom).concat(centerHorizontal),
+    chartArea: filterByPosition(layoutBoxes, 'chartArea'),
+    vertical: left.concat(right).concat(centerVertical),
+    horizontal: top.concat(bottom).concat(centerHorizontal)
+  };
+}
+function getCombinedMax(maxPadding, chartArea, a, b) {
+  return Math.max(maxPadding[a], chartArea[a]) + Math.max(maxPadding[b], chartArea[b]);
+}
+function updateMaxPadding(maxPadding, boxPadding) {
+  maxPadding.top = Math.max(maxPadding.top, boxPadding.top);
+  maxPadding.left = Math.max(maxPadding.left, boxPadding.left);
+  maxPadding.bottom = Math.max(maxPadding.bottom, boxPadding.bottom);
+  maxPadding.right = Math.max(maxPadding.right, boxPadding.right);
+}
+function updateDims(chartArea, params, layout, stacks) {
+  const {pos, box} = layout;
+  const maxPadding = chartArea.maxPadding;
+  if (!isObject(pos)) {
+    if (layout.size) {
+      chartArea[pos] -= layout.size;
+    }
+    const stack = stacks[layout.stack] || {size: 0, count: 1};
+    stack.size = Math.max(stack.size, layout.horizontal ? box.height : box.width);
+    layout.size = stack.size / stack.count;
+    chartArea[pos] += layout.size;
+  }
+  if (box.getPadding) {
+    updateMaxPadding(maxPadding, box.getPadding());
+  }
+  const newWidth = Math.max(0, params.outerWidth - getCombinedMax(maxPadding, chartArea, 'left', 'right'));
+  const newHeight = Math.max(0, params.outerHeight - getCombinedMax(maxPadding, chartArea, 'top', 'bottom'));
+  const widthChanged = newWidth !== chartArea.w;
+  const heightChanged = newHeight !== chartArea.h;
+  chartArea.w = newWidth;
+  chartArea.h = newHeight;
+  return layout.horizontal
+    ? {same: widthChanged, other: heightChanged}
+    : {same: heightChanged, other: widthChanged};
+}
+function handleMaxPadding(chartArea) {
+  const maxPadding = chartArea.maxPadding;
+  function updatePos(pos) {
+    const change = Math.max(maxPadding[pos] - chartArea[pos], 0);
+    chartArea[pos] += change;
+    return change;
+  }
+  chartArea.y += updatePos('top');
+  chartArea.x += updatePos('left');
+  updatePos('right');
+  updatePos('bottom');
+}
+function getMargins(horizontal, chartArea) {
+  const maxPadding = chartArea.maxPadding;
+  function marginForPositions(positions) {
+    const margin = {left: 0, top: 0, right: 0, bottom: 0};
+    positions.forEach((pos) => {
+      margin[pos] = Math.max(chartArea[pos], maxPadding[pos]);
+    });
+    return margin;
+  }
+  return horizontal
+    ? marginForPositions(['left', 'right'])
+    : marginForPositions(['top', 'bottom']);
+}
+function fitBoxes(boxes, chartArea, params, stacks) {
+  const refitBoxes = [];
+  let i, ilen, layout, box, refit, changed;
+  for (i = 0, ilen = boxes.length, refit = 0; i < ilen; ++i) {
+    layout = boxes[i];
+    box = layout.box;
+    box.update(
+      layout.width || chartArea.w,
+      layout.height || chartArea.h,
+      getMargins(layout.horizontal, chartArea)
+    );
+    const {same, other} = updateDims(chartArea, params, layout, stacks);
+    refit |= same && refitBoxes.length;
+    changed = changed || other;
+    if (!box.fullSize) {
+      refitBoxes.push(layout);
+    }
+  }
+  return refit && fitBoxes(refitBoxes, chartArea, params, stacks) || changed;
+}
+function setBoxDims(box, left, top, width, height) {
+  box.top = top;
+  box.left = left;
+  box.right = left + width;
+  box.bottom = top + height;
+  box.width = width;
+  box.height = height;
+}
+function placeBoxes(boxes, chartArea, params, stacks) {
+  const userPadding = params.padding;
+  let {x, y} = chartArea;
+  for (const layout of boxes) {
+    const box = layout.box;
+    const stack = stacks[layout.stack] || {count: 1, placed: 0, weight: 1};
+    const weight = (layout.stackWeight / stack.weight) || 1;
+    if (layout.horizontal) {
+      const width = chartArea.w * weight;
+      const height = stack.size || box.height;
+      if (defined(stack.start)) {
+        y = stack.start;
+      }
+      if (box.fullSize) {
+        setBoxDims(box, userPadding.left, y, params.outerWidth - userPadding.right - userPadding.left, height);
+      } else {
+        setBoxDims(box, chartArea.left + stack.placed, y, width, height);
+      }
+      stack.start = y;
+      stack.placed += width;
+      y = box.bottom;
+    } else {
+      const height = chartArea.h * weight;
+      const width = stack.size || box.width;
+      if (defined(stack.start)) {
+        x = stack.start;
+      }
+      if (box.fullSize) {
+        setBoxDims(box, x, userPadding.top, width, params.outerHeight - userPadding.bottom - userPadding.top);
+      } else {
+        setBoxDims(box, x, chartArea.top + stack.placed, width, height);
+      }
+      stack.start = x;
+      stack.placed += height;
+      x = box.right;
+    }
+  }
+  chartArea.x = x;
+  chartArea.y = y;
+}
+defaults.set('layout', {
+  autoPadding: true,
+  padding: {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  }
+});
+var layouts = {
+  addBox(chart, item) {
+    if (!chart.boxes) {
+      chart.boxes = [];
+    }
+    item.fullSize = item.fullSize || false;
+    item.position = item.position || 'top';
+    item.weight = item.weight || 0;
+    item._layers = item._layers || function() {
+      return [{
+        z: 0,
+        draw(chartArea) {
+          item.draw(chartArea);
+        }
+      }];
+    };
+    chart.boxes.push(item);
+  },
+  removeBox(chart, layoutItem) {
+    const index = chart.boxes ? chart.boxes.indexOf(layoutItem) : -1;
+    if (index !== -1) {
+      chart.boxes.splice(index, 1);
+    }
+  },
+  configure(chart, item, options) {
+    item.fullSize = options.fullSize;
+    item.position = options.position;
+    item.weight = options.weight;
+  },
+  update(chart, width, height, minPadding) {
+    if (!chart) {
+      return;
+    }
+    const padding = toPadding(chart.options.layout.padding);
+    const availableWidth = Math.max(width - padding.width, 0);
+    const availableHeight = Math.max(height - padding.height, 0);
+    const boxes = buildLayoutBoxes(chart.boxes);
+    const verticalBoxes = boxes.vertical;
+    const horizontalBoxes = boxes.horizontal;
+    each(chart.boxes, box => {
+      if (typeof box.beforeLayout === 'function') {
+        box.beforeLayout();
+      }
+    });
+    const visibleVerticalBoxCount = verticalBoxes.reduce((total, wrap) =>
+      wrap.box.options && wrap.box.options.display === false ? total : total + 1, 0) || 1;
+    const params = Object.freeze({
+      outerWidth: width,
+      outerHeight: height,
+      padding,
+      availableWidth,
+      availableHeight,
+      vBoxMaxWidth: availableWidth / 2 / visibleVerticalBoxCount,
+      hBoxMaxHeight: availableHeight / 2
+    });
+    const maxPadding = Object.assign({}, padding);
+    updateMaxPadding(maxPadding, toPadding(minPadding));
+    const chartArea = Object.assign({
+      maxPadding,
+      w: availableWidth,
+      h: availableHeight,
+      x: padding.left,
+      y: padding.top
+    }, padding);
+    const stacks = setLayoutDims(verticalBoxes.concat(horizontalBoxes), params);
+    fitBoxes(boxes.fullSize, chartArea, params, stacks);
+    fitBoxes(verticalBoxes, chartArea, params, stacks);
+    if (fitBoxes(horizontalBoxes, chartArea, params, stacks)) {
+      fitBoxes(verticalBoxes, chartArea, params, stacks);
+    }
+    handleMaxPadding(chartArea);
+    placeBoxes(boxes.leftAndTop, chartArea, params, stacks);
+    chartArea.x += chartArea.w;
+    chartArea.y += chartArea.h;
+    placeBoxes(boxes.rightAndBottom, chartArea, params, stacks);
+    chart.chartArea = {
+      left: chartArea.left,
+      top: chartArea.top,
+      right: chartArea.left + chartArea.w,
+      bottom: chartArea.top + chartArea.h,
+      height: chartArea.h,
+      width: chartArea.w,
+    };
+    each(boxes.chartArea, (layout) => {
+      const box = layout.box;
+      Object.assign(box, chart.chartArea);
+      box.update(chartArea.w, chartArea.h, {left: 0, top: 0, right: 0, bottom: 0});
+    });
+  }
+};
+
+class BasePlatform {
+  acquireContext(canvas, aspectRatio) {}
+  releaseContext(context) {
+    return false;
+  }
+  addEventListener(chart, type, listener) {}
+  removeEventListener(chart, type, listener) {}
+  getDevicePixelRatio() {
+    return 1;
+  }
+  getMaximumSize(element, width, height, aspectRatio) {
+    width = Math.max(0, width || element.width);
+    height = height || element.height;
+    return {
+      width,
+      height: Math.max(0, aspectRatio ? Math.floor(width / aspectRatio) : height)
+    };
+  }
+  isAttached(canvas) {
+    return true;
+  }
+  updateConfig(config) {
+  }
+}
+
+class BasicPlatform extends BasePlatform {
+  acquireContext(item) {
+    return item && item.getContext && item.getContext('2d') || null;
+  }
+  updateConfig(config) {
+    config.options.animation = false;
+  }
+}
+
+const EXPANDO_KEY = '$chartjs';
+const EVENT_TYPES = {
+  touchstart: 'mousedown',
+  touchmove: 'mousemove',
+  touchend: 'mouseup',
+  pointerenter: 'mouseenter',
+  pointerdown: 'mousedown',
+  pointermove: 'mousemove',
+  pointerup: 'mouseup',
+  pointerleave: 'mouseout',
+  pointerout: 'mouseout'
+};
+const isNullOrEmpty = value => value === null || value === '';
+function initCanvas(canvas, aspectRatio) {
+  const style = canvas.style;
+  const renderHeight = canvas.getAttribute('height');
+  const renderWidth = canvas.getAttribute('width');
+  canvas[EXPANDO_KEY] = {
+    initial: {
+      height: renderHeight,
+      width: renderWidth,
+      style: {
+        display: style.display,
+        height: style.height,
+        width: style.width
+      }
+    }
+  };
+  style.display = style.display || 'block';
+  style.boxSizing = style.boxSizing || 'border-box';
+  if (isNullOrEmpty(renderWidth)) {
+    const displayWidth = readUsedSize(canvas, 'width');
+    if (displayWidth !== undefined) {
+      canvas.width = displayWidth;
+    }
+  }
+  if (isNullOrEmpty(renderHeight)) {
+    if (canvas.style.height === '') {
+      canvas.height = canvas.width / (aspectRatio || 2);
+    } else {
+      const displayHeight = readUsedSize(canvas, 'height');
+      if (displayHeight !== undefined) {
+        canvas.height = displayHeight;
+      }
+    }
+  }
+  return canvas;
+}
+const eventListenerOptions = supportsEventListenerOptions ? {passive: true} : false;
+function addListener(node, type, listener) {
+  node.addEventListener(type, listener, eventListenerOptions);
+}
+function removeListener(chart, type, listener) {
+  chart.canvas.removeEventListener(type, listener, eventListenerOptions);
+}
+function fromNativeEvent(event, chart) {
+  const type = EVENT_TYPES[event.type] || event.type;
+  const {x, y} = getRelativePosition(event, chart);
+  return {
+    type,
+    chart,
+    native: event,
+    x: x !== undefined ? x : null,
+    y: y !== undefined ? y : null,
+  };
+}
+function nodeListContains(nodeList, canvas) {
+  for (const node of nodeList) {
+    if (node === canvas || node.contains(canvas)) {
+      return true;
+    }
+  }
+}
+function createAttachObserver(chart, type, listener) {
+  const canvas = chart.canvas;
+  const observer = new MutationObserver(entries => {
+    let trigger = false;
+    for (const entry of entries) {
+      trigger = trigger || nodeListContains(entry.addedNodes, canvas);
+      trigger = trigger && !nodeListContains(entry.removedNodes, canvas);
+    }
+    if (trigger) {
+      listener();
+    }
+  });
+  observer.observe(document, {childList: true, subtree: true});
+  return observer;
+}
+function createDetachObserver(chart, type, listener) {
+  const canvas = chart.canvas;
+  const observer = new MutationObserver(entries => {
+    let trigger = false;
+    for (const entry of entries) {
+      trigger = trigger || nodeListContains(entry.removedNodes, canvas);
+      trigger = trigger && !nodeListContains(entry.addedNodes, canvas);
+    }
+    if (trigger) {
+      listener();
+    }
+  });
+  observer.observe(document, {childList: true, subtree: true});
+  return observer;
+}
+const drpListeningCharts = new Map();
+let oldDevicePixelRatio = 0;
+function onWindowResize() {
+  const dpr = window.devicePixelRatio;
+  if (dpr === oldDevicePixelRatio) {
+    return;
+  }
+  oldDevicePixelRatio = dpr;
+  drpListeningCharts.forEach((resize, chart) => {
+    if (chart.currentDevicePixelRatio !== dpr) {
+      resize();
+    }
+  });
+}
+function listenDevicePixelRatioChanges(chart, resize) {
+  if (!drpListeningCharts.size) {
+    window.addEventListener('resize', onWindowResize);
+  }
+  drpListeningCharts.set(chart, resize);
+}
+function unlistenDevicePixelRatioChanges(chart) {
+  drpListeningCharts.delete(chart);
+  if (!drpListeningCharts.size) {
+    window.removeEventListener('resize', onWindowResize);
+  }
+}
+function createResizeObserver(chart, type, listener) {
+  const canvas = chart.canvas;
+  const container = canvas && _getParentNode(canvas);
+  if (!container) {
+    return;
+  }
+  const resize = throttled((width, height) => {
+    const w = container.clientWidth;
+    listener(width, height);
+    if (w < container.clientWidth) {
+      listener();
+    }
+  }, window);
+  const observer = new ResizeObserver(entries => {
+    const entry = entries[0];
+    const width = entry.contentRect.width;
+    const height = entry.contentRect.height;
+    if (width === 0 && height === 0) {
+      return;
+    }
+    resize(width, height);
+  });
+  observer.observe(container);
+  listenDevicePixelRatioChanges(chart, resize);
+  return observer;
+}
+function releaseObserver(chart, type, observer) {
+  if (observer) {
+    observer.disconnect();
+  }
+  if (type === 'resize') {
+    unlistenDevicePixelRatioChanges(chart);
+  }
+}
+function createProxyAndListen(chart, type, listener) {
+  const canvas = chart.canvas;
+  const proxy = throttled((event) => {
+    if (chart.ctx !== null) {
+      listener(fromNativeEvent(event, chart));
+    }
+  }, chart, (args) => {
+    const event = args[0];
+    return [event, event.offsetX, event.offsetY];
+  });
+  addListener(canvas, type, proxy);
+  return proxy;
+}
+class DomPlatform extends BasePlatform {
+  acquireContext(canvas, aspectRatio) {
+    const context = canvas && canvas.getContext && canvas.getContext('2d');
+    if (context && context.canvas === canvas) {
+      initCanvas(canvas, aspectRatio);
+      return context;
+    }
+    return null;
+  }
+  releaseContext(context) {
+    const canvas = context.canvas;
+    if (!canvas[EXPANDO_KEY]) {
+      return false;
+    }
+    const initial = canvas[EXPANDO_KEY].initial;
+    ['height', 'width'].forEach((prop) => {
+      const value = initial[prop];
+      if (isNullOrUndef(value)) {
+        canvas.removeAttribute(prop);
+      } else {
+        canvas.setAttribute(prop, value);
+      }
+    });
+    const style = initial.style || {};
+    Object.keys(style).forEach((key) => {
+      canvas.style[key] = style[key];
+    });
+    canvas.width = canvas.width;
+    delete canvas[EXPANDO_KEY];
+    return true;
+  }
+  addEventListener(chart, type, listener) {
+    this.removeEventListener(chart, type);
+    const proxies = chart.$proxies || (chart.$proxies = {});
+    const handlers = {
+      attach: createAttachObserver,
+      detach: createDetachObserver,
+      resize: createResizeObserver
+    };
+    const handler = handlers[type] || createProxyAndListen;
+    proxies[type] = handler(chart, type, listener);
+  }
+  removeEventListener(chart, type) {
+    const proxies = chart.$proxies || (chart.$proxies = {});
+    const proxy = proxies[type];
+    if (!proxy) {
+      return;
+    }
+    const handlers = {
+      attach: releaseObserver,
+      detach: releaseObserver,
+      resize: releaseObserver
+    };
+    const handler = handlers[type] || removeListener;
+    handler(chart, type, proxy);
+    proxies[type] = undefined;
+  }
+  getDevicePixelRatio() {
+    return window.devicePixelRatio;
+  }
+  getMaximumSize(canvas, width, height, aspectRatio) {
+    return getMaximumSize(canvas, width, height, aspectRatio);
+  }
+  isAttached(canvas) {
+    const container = _getParentNode(canvas);
+    return !!(container && container.isConnected);
+  }
+}
+
+function _detectPlatform(canvas) {
+  if (!_isDomSupported() || (typeof OffscreenCanvas !== 'undefined' && canvas instanceof OffscreenCanvas)) {
+    return BasicPlatform;
+  }
+  return DomPlatform;
+}
+
+var platforms = /*#__PURE__*/Object.freeze({
+__proto__: null,
+_detectPlatform: _detectPlatform,
+BasePlatform: BasePlatform,
+BasicPlatform: BasicPlatform,
+DomPlatform: DomPlatform
+});
+
+const transparent = 'transparent';
+const interpolators = {
+  boolean(from, to, factor) {
+    return factor > 0.5 ? to : from;
+  },
+  color(from, to, factor) {
+    const c0 = color(from || transparent);
+    const c1 = c0.valid && color(to || transparent);
+    return c1 && c1.valid
+      ? c1.mix(c0, factor).hexString()
+      : to;
+  },
+  number(from, to, factor) {
+    return from + (to - from) * factor;
+  }
+};
+class Animation {
+  constructor(cfg, target, prop, to) {
+    const currentValue = target[prop];
+    to = resolve([cfg.to, to, currentValue, cfg.from]);
+    const from = resolve([cfg.from, currentValue, to]);
+    this._active = true;
+    this._fn = cfg.fn || interpolators[cfg.type || typeof from];
+    this._easing = effects[cfg.easing] || effects.linear;
+    this._start = Math.floor(Date.now() + (cfg.delay || 0));
+    this._duration = this._total = Math.floor(cfg.duration);
+    this._loop = !!cfg.loop;
+    this._target = target;
+    this._prop = prop;
+    this._from = from;
+    this._to = to;
+    this._promises = undefined;
+  }
+  active() {
+    return this._active;
+  }
+  update(cfg, to, date) {
+    if (this._active) {
+      this._notify(false);
+      const currentValue = this._target[this._prop];
+      const elapsed = date - this._start;
+      const remain = this._duration - elapsed;
+      this._start = date;
+      this._duration = Math.floor(Math.max(remain, cfg.duration));
+      this._total += elapsed;
+      this._loop = !!cfg.loop;
+      this._to = resolve([cfg.to, to, currentValue, cfg.from]);
+      this._from = resolve([cfg.from, currentValue, to]);
+    }
+  }
+  cancel() {
+    if (this._active) {
+      this.tick(Date.now());
+      this._active = false;
+      this._notify(false);
+    }
+  }
+  tick(date) {
+    const elapsed = date - this._start;
+    const duration = this._duration;
+    const prop = this._prop;
+    const from = this._from;
+    const loop = this._loop;
+    const to = this._to;
+    let factor;
+    this._active = from !== to && (loop || (elapsed < duration));
+    if (!this._active) {
+      this._target[prop] = to;
+      this._notify(true);
+      return;
+    }
+    if (elapsed < 0) {
+      this._target[prop] = from;
+      return;
+    }
+    factor = (elapsed / duration) % 2;
+    factor = loop && factor > 1 ? 2 - factor : factor;
+    factor = this._easing(Math.min(1, Math.max(0, factor)));
+    this._target[prop] = this._fn(from, to, factor);
+  }
+  wait() {
+    const promises = this._promises || (this._promises = []);
+    return new Promise((res, rej) => {
+      promises.push({res, rej});
+    });
+  }
+  _notify(resolved) {
+    const method = resolved ? 'res' : 'rej';
+    const promises = this._promises || [];
+    for (let i = 0; i < promises.length; i++) {
+      promises[i][method]();
+    }
+  }
+}
+
+const numbers = ['x', 'y', 'borderWidth', 'radius', 'tension'];
+const colors = ['color', 'borderColor', 'backgroundColor'];
+defaults.set('animation', {
+  delay: undefined,
+  duration: 1000,
+  easing: 'easeOutQuart',
+  fn: undefined,
+  from: undefined,
+  loop: undefined,
+  to: undefined,
+  type: undefined,
+});
+const animationOptions = Object.keys(defaults.animation);
+defaults.describe('animation', {
+  _fallback: false,
+  _indexable: false,
+  _scriptable: (name) => name !== 'onProgress' && name !== 'onComplete' && name !== 'fn',
+});
+defaults.set('animations', {
+  colors: {
+    type: 'color',
+    properties: colors
+  },
+  numbers: {
+    type: 'number',
+    properties: numbers
+  },
+});
+defaults.describe('animations', {
+  _fallback: 'animation',
+});
+defaults.set('transitions', {
+  active: {
+    animation: {
+      duration: 400
+    }
+  },
+  resize: {
+    animation: {
+      duration: 0
+    }
+  },
+  show: {
+    animations: {
+      colors: {
+        from: 'transparent'
+      },
+      visible: {
+        type: 'boolean',
+        duration: 0
+      },
+    }
+  },
+  hide: {
+    animations: {
+      colors: {
+        to: 'transparent'
+      },
+      visible: {
+        type: 'boolean',
+        easing: 'linear',
+        fn: v => v | 0
+      },
+    }
+  }
+});
+class Animations {
+  constructor(chart, config) {
+    this._chart = chart;
+    this._properties = new Map();
+    this.configure(config);
+  }
+  configure(config) {
+    if (!isObject(config)) {
+      return;
+    }
+    const animatedProps = this._properties;
+    Object.getOwnPropertyNames(config).forEach(key => {
+      const cfg = config[key];
+      if (!isObject(cfg)) {
+        return;
+      }
+      const resolved = {};
+      for (const option of animationOptions) {
+        resolved[option] = cfg[option];
+      }
+      (isArray(cfg.properties) && cfg.properties || [key]).forEach((prop) => {
+        if (prop === key || !animatedProps.has(prop)) {
+          animatedProps.set(prop, resolved);
+        }
+      });
+    });
+  }
+  _animateOptions(target, values) {
+    const newOptions = values.options;
+    const options = resolveTargetOptions(target, newOptions);
+    if (!options) {
+      return [];
+    }
+    const animations = this._createAnimations(options, newOptions);
+    if (newOptions.$shared) {
+      awaitAll(target.options.$animations, newOptions).then(() => {
+        target.options = newOptions;
+      }, () => {
+      });
+    }
+    return animations;
+  }
+  _createAnimations(target, values) {
+    const animatedProps = this._properties;
+    const animations = [];
+    const running = target.$animations || (target.$animations = {});
+    const props = Object.keys(values);
+    const date = Date.now();
+    let i;
+    for (i = props.length - 1; i >= 0; --i) {
+      const prop = props[i];
+      if (prop.charAt(0) === '$') {
+        continue;
+      }
+      if (prop === 'options') {
+        animations.push(...this._animateOptions(target, values));
+        continue;
+      }
+      const value = values[prop];
+      let animation = running[prop];
+      const cfg = animatedProps.get(prop);
+      if (animation) {
+        if (cfg && animation.active()) {
+          animation.update(cfg, value, date);
+          continue;
+        } else {
+          animation.cancel();
+        }
+      }
+      if (!cfg || !cfg.duration) {
+        target[prop] = value;
+        continue;
+      }
+      running[prop] = animation = new Animation(cfg, target, prop, value);
+      animations.push(animation);
+    }
+    return animations;
+  }
+  update(target, values) {
+    if (this._properties.size === 0) {
+      Object.assign(target, values);
+      return;
+    }
+    const animations = this._createAnimations(target, values);
+    if (animations.length) {
+      animator.add(this._chart, animations);
+      return true;
+    }
+  }
+}
+function awaitAll(animations, properties) {
+  const running = [];
+  const keys = Object.keys(properties);
+  for (let i = 0; i < keys.length; i++) {
+    const anim = animations[keys[i]];
+    if (anim && anim.active()) {
+      running.push(anim.wait());
+    }
+  }
+  return Promise.all(running);
+}
+function resolveTargetOptions(target, newOptions) {
+  if (!newOptions) {
+    return;
+  }
+  let options = target.options;
+  if (!options) {
+    target.options = newOptions;
+    return;
+  }
+  if (options.$shared) {
+    target.options = options = Object.assign({}, options, {$shared: false, $animations: {}});
+  }
+  return options;
+}
+
+function scaleClip(scale, allowedOverflow) {
+  const opts = scale && scale.options || {};
+  const reverse = opts.reverse;
+  const min = opts.min === undefined ? allowedOverflow : 0;
+  const max = opts.max === undefined ? allowedOverflow : 0;
+  return {
+    start: reverse ? max : min,
+    end: reverse ? min : max
+  };
+}
+function defaultClip(xScale, yScale, allowedOverflow) {
+  if (allowedOverflow === false) {
+    return false;
+  }
+  const x = scaleClip(xScale, allowedOverflow);
+  const y = scaleClip(yScale, allowedOverflow);
+  return {
+    top: y.end,
+    right: x.end,
+    bottom: y.start,
+    left: x.start
+  };
+}
+function toClip(value) {
+  let t, r, b, l;
+  if (isObject(value)) {
+    t = value.top;
+    r = value.right;
+    b = value.bottom;
+    l = value.left;
+  } else {
+    t = r = b = l = value;
+  }
+  return {
+    top: t,
+    right: r,
+    bottom: b,
+    left: l,
+    disabled: value === false
+  };
+}
+function getSortedDatasetIndices(chart, filterVisible) {
+  const keys = [];
+  const metasets = chart._getSortedDatasetMetas(filterVisible);
+  let i, ilen;
+  for (i = 0, ilen = metasets.length; i < ilen; ++i) {
+    keys.push(metasets[i].index);
+  }
+  return keys;
+}
+function applyStack(stack, value, dsIndex, options = {}) {
+  const keys = stack.keys;
+  const singleMode = options.mode === 'single';
+  let i, ilen, datasetIndex, otherValue;
+  if (value === null) {
+    return;
+  }
+  for (i = 0, ilen = keys.length; i < ilen; ++i) {
+    datasetIndex = +keys[i];
+    if (datasetIndex === dsIndex) {
+      if (options.all) {
+        continue;
+      }
+      break;
+    }
+    otherValue = stack.values[datasetIndex];
+    if (isNumberFinite(otherValue) && (singleMode || (value === 0 || sign(value) === sign(otherValue)))) {
+      value += otherValue;
+    }
+  }
+  return value;
+}
+function convertObjectDataToArray(data) {
+  const keys = Object.keys(data);
+  const adata = new Array(keys.length);
+  let i, ilen, key;
+  for (i = 0, ilen = keys.length; i < ilen; ++i) {
+    key = keys[i];
+    adata[i] = {
+      x: key,
+      y: data[key]
+    };
+  }
+  return adata;
+}
+function isStacked(scale, meta) {
+  const stacked = scale && scale.options.stacked;
+  return stacked || (stacked === undefined && meta.stack !== undefined);
+}
+function getStackKey(indexScale, valueScale, meta) {
+  return `${indexScale.id}.${valueScale.id}.${meta.stack || meta.type}`;
+}
+function getUserBounds(scale) {
+  const {min, max, minDefined, maxDefined} = scale.getUserBounds();
+  return {
+    min: minDefined ? min : Number.NEGATIVE_INFINITY,
+    max: maxDefined ? max : Number.POSITIVE_INFINITY
+  };
+}
+function getOrCreateStack(stacks, stackKey, indexValue) {
+  const subStack = stacks[stackKey] || (stacks[stackKey] = {});
+  return subStack[indexValue] || (subStack[indexValue] = {});
+}
+function getLastIndexInStack(stack, vScale, positive, type) {
+  for (const meta of vScale.getMatchingVisibleMetas(type).reverse()) {
+    const value = stack[meta.index];
+    if ((positive && value > 0) || (!positive && value < 0)) {
+      return meta.index;
+    }
+  }
+  return null;
+}
+function updateStacks(controller, parsed) {
+  const {chart, _cachedMeta: meta} = controller;
+  const stacks = chart._stacks || (chart._stacks = {});
+  const {iScale, vScale, index: datasetIndex} = meta;
+  const iAxis = iScale.axis;
+  const vAxis = vScale.axis;
+  const key = getStackKey(iScale, vScale, meta);
+  const ilen = parsed.length;
+  let stack;
+  for (let i = 0; i < ilen; ++i) {
+    const item = parsed[i];
+    const {[iAxis]: index, [vAxis]: value} = item;
+    const itemStacks = item._stacks || (item._stacks = {});
+    stack = itemStacks[vAxis] = getOrCreateStack(stacks, key, index);
+    stack[datasetIndex] = value;
+    stack._top = getLastIndexInStack(stack, vScale, true, meta.type);
+    stack._bottom = getLastIndexInStack(stack, vScale, false, meta.type);
+  }
+}
+function getFirstScaleId(chart, axis) {
+  const scales = chart.scales;
+  return Object.keys(scales).filter(key => scales[key].axis === axis).shift();
+}
+function createDatasetContext(parent, index) {
+  return createContext(parent,
+    {
+      active: false,
+      dataset: undefined,
+      datasetIndex: index,
+      index,
+      mode: 'default',
+      type: 'dataset'
+    }
+  );
+}
+function createDataContext(parent, index, element) {
+  return createContext(parent, {
+    active: false,
+    dataIndex: index,
+    parsed: undefined,
+    raw: undefined,
+    element,
+    index,
+    mode: 'default',
+    type: 'data'
+  });
+}
+function clearStacks(meta, items) {
+  const datasetIndex = meta.controller.index;
+  const axis = meta.vScale && meta.vScale.axis;
+  if (!axis) {
+    return;
+  }
+  items = items || meta._parsed;
+  for (const parsed of items) {
+    const stacks = parsed._stacks;
+    if (!stacks || stacks[axis] === undefined || stacks[axis][datasetIndex] === undefined) {
+      return;
+    }
+    delete stacks[axis][datasetIndex];
+  }
+}
+const isDirectUpdateMode = (mode) => mode === 'reset' || mode === 'none';
+const cloneIfNotShared = (cached, shared) => shared ? cached : Object.assign({}, cached);
+const createStack = (canStack, meta, chart) => canStack && !meta.hidden && meta._stacked
+  && {keys: getSortedDatasetIndices(chart, true), values: null};
+class DatasetController {
+  constructor(chart, datasetIndex) {
+    this.chart = chart;
+    this._ctx = chart.ctx;
+    this.index = datasetIndex;
+    this._cachedDataOpts = {};
+    this._cachedMeta = this.getMeta();
+    this._type = this._cachedMeta.type;
+    this.options = undefined;
+    this._parsing = false;
+    this._data = undefined;
+    this._objectData = undefined;
+    this._sharedOptions = undefined;
+    this._drawStart = undefined;
+    this._drawCount = undefined;
+    this.enableOptionSharing = false;
+    this.supportsDecimation = false;
+    this.$context = undefined;
+    this._syncList = [];
+    this.initialize();
+  }
+  initialize() {
+    const meta = this._cachedMeta;
+    this.configure();
+    this.linkScales();
+    meta._stacked = isStacked(meta.vScale, meta);
+    this.addElements();
+  }
+  updateIndex(datasetIndex) {
+    if (this.index !== datasetIndex) {
+      clearStacks(this._cachedMeta);
+    }
+    this.index = datasetIndex;
+  }
+  linkScales() {
+    const chart = this.chart;
+    const meta = this._cachedMeta;
+    const dataset = this.getDataset();
+    const chooseId = (axis, x, y, r) => axis === 'x' ? x : axis === 'r' ? r : y;
+    const xid = meta.xAxisID = valueOrDefault(dataset.xAxisID, getFirstScaleId(chart, 'x'));
+    const yid = meta.yAxisID = valueOrDefault(dataset.yAxisID, getFirstScaleId(chart, 'y'));
+    const rid = meta.rAxisID = valueOrDefault(dataset.rAxisID, getFirstScaleId(chart, 'r'));
+    const indexAxis = meta.indexAxis;
+    const iid = meta.iAxisID = chooseId(indexAxis, xid, yid, rid);
+    const vid = meta.vAxisID = chooseId(indexAxis, yid, xid, rid);
+    meta.xScale = this.getScaleForId(xid);
+    meta.yScale = this.getScaleForId(yid);
+    meta.rScale = this.getScaleForId(rid);
+    meta.iScale = this.getScaleForId(iid);
+    meta.vScale = this.getScaleForId(vid);
+  }
+  getDataset() {
+    return this.chart.data.datasets[this.index];
+  }
+  getMeta() {
+    return this.chart.getDatasetMeta(this.index);
+  }
+  getScaleForId(scaleID) {
+    return this.chart.scales[scaleID];
+  }
+  _getOtherScale(scale) {
+    const meta = this._cachedMeta;
+    return scale === meta.iScale
+      ? meta.vScale
+      : meta.iScale;
+  }
+  reset() {
+    this._update('reset');
+  }
+  _destroy() {
+    const meta = this._cachedMeta;
+    if (this._data) {
+      unlistenArrayEvents(this._data, this);
+    }
+    if (meta._stacked) {
+      clearStacks(meta);
+    }
+  }
+  _dataCheck() {
+    const dataset = this.getDataset();
+    const data = dataset.data || (dataset.data = []);
+    const _data = this._data;
+    if (isObject(data)) {
+      this._data = convertObjectDataToArray(data);
+    } else if (_data !== data) {
+      if (_data) {
+        unlistenArrayEvents(_data, this);
+        const meta = this._cachedMeta;
+        clearStacks(meta);
+        meta._parsed = [];
+      }
+      if (data && Object.isExtensible(data)) {
+        listenArrayEvents(data, this);
+      }
+      this._syncList = [];
+      this._data = data;
+    }
+  }
+  addElements() {
+    const meta = this._cachedMeta;
+    this._dataCheck();
+    if (this.datasetElementType) {
+      meta.dataset = new this.datasetElementType();
+    }
+  }
+  buildOrUpdateElements(resetNewElements) {
+    const meta = this._cachedMeta;
+    const dataset = this.getDataset();
+    let stackChanged = false;
+    this._dataCheck();
+    const oldStacked = meta._stacked;
+    meta._stacked = isStacked(meta.vScale, meta);
+    if (meta.stack !== dataset.stack) {
+      stackChanged = true;
+      clearStacks(meta);
+      meta.stack = dataset.stack;
+    }
+    this._resyncElements(resetNewElements);
+    if (stackChanged || oldStacked !== meta._stacked) {
+      updateStacks(this, meta._parsed);
+    }
+  }
+  configure() {
+    const config = this.chart.config;
+    const scopeKeys = config.datasetScopeKeys(this._type);
+    const scopes = config.getOptionScopes(this.getDataset(), scopeKeys, true);
+    this.options = config.createResolver(scopes, this.getContext());
+    this._parsing = this.options.parsing;
+    this._cachedDataOpts = {};
+  }
+  parse(start, count) {
+    const {_cachedMeta: meta, _data: data} = this;
+    const {iScale, _stacked} = meta;
+    const iAxis = iScale.axis;
+    let sorted = start === 0 && count === data.length ? true : meta._sorted;
+    let prev = start > 0 && meta._parsed[start - 1];
+    let i, cur, parsed;
+    if (this._parsing === false) {
+      meta._parsed = data;
+      meta._sorted = true;
+      parsed = data;
+    } else {
+      if (isArray(data[start])) {
+        parsed = this.parseArrayData(meta, data, start, count);
+      } else if (isObject(data[start])) {
+        parsed = this.parseObjectData(meta, data, start, count);
+      } else {
+        parsed = this.parsePrimitiveData(meta, data, start, count);
+      }
+      const isNotInOrderComparedToPrev = () => cur[iAxis] === null || (prev && cur[iAxis] < prev[iAxis]);
+      for (i = 0; i < count; ++i) {
+        meta._parsed[i + start] = cur = parsed[i];
+        if (sorted) {
+          if (isNotInOrderComparedToPrev()) {
+            sorted = false;
+          }
+          prev = cur;
+        }
+      }
+      meta._sorted = sorted;
+    }
+    if (_stacked) {
+      updateStacks(this, parsed);
+    }
+  }
+  parsePrimitiveData(meta, data, start, count) {
+    const {iScale, vScale} = meta;
+    const iAxis = iScale.axis;
+    const vAxis = vScale.axis;
+    const labels = iScale.getLabels();
+    const singleScale = iScale === vScale;
+    const parsed = new Array(count);
+    let i, ilen, index;
+    for (i = 0, ilen = count; i < ilen; ++i) {
+      index = i + start;
+      parsed[i] = {
+        [iAxis]: singleScale || iScale.parse(labels[index], index),
+        [vAxis]: vScale.parse(data[index], index)
+      };
+    }
+    return parsed;
+  }
+  parseArrayData(meta, data, start, count) {
+    const {xScale, yScale} = meta;
+    const parsed = new Array(count);
+    let i, ilen, index, item;
+    for (i = 0, ilen = count; i < ilen; ++i) {
+      index = i + start;
+      item = data[index];
+      parsed[i] = {
+        x: xScale.parse(item[0], index),
+        y: yScale.parse(item[1], index)
+      };
+    }
+    return parsed;
+  }
+  parseObjectData(meta, data, start, count) {
+    const {xScale, yScale} = meta;
+    const {xAxisKey = 'x', yAxisKey = 'y'} = this._parsing;
+    const parsed = new Array(count);
+    let i, ilen, index, item;
+    for (i = 0, ilen = count; i < ilen; ++i) {
+      index = i + start;
+      item = data[index];
+      parsed[i] = {
+        x: xScale.parse(resolveObjectKey(item, xAxisKey), index),
+        y: yScale.parse(resolveObjectKey(item, yAxisKey), index)
+      };
+    }
+    return parsed;
+  }
+  getParsed(index) {
+    return this._cachedMeta._parsed[index];
+  }
+  getDataElement(index) {
+    return this._cachedMeta.data[index];
+  }
+  applyStack(scale, parsed, mode) {
+    const chart = this.chart;
+    const meta = this._cachedMeta;
+    const value = parsed[scale.axis];
+    const stack = {
+      keys: getSortedDatasetIndices(chart, true),
+      values: parsed._stacks[scale.axis]
+    };
+    return applyStack(stack, value, meta.index, {mode});
+  }
+  updateRangeFromParsed(range, scale, parsed, stack) {
+    const parsedValue = parsed[scale.axis];
+    let value = parsedValue === null ? NaN : parsedValue;
+    const values = stack && parsed._stacks[scale.axis];
+    if (stack && values) {
+      stack.values = values;
+      value = applyStack(stack, parsedValue, this._cachedMeta.index);
+    }
+    range.min = Math.min(range.min, value);
+    range.max = Math.max(range.max, value);
+  }
+  getMinMax(scale, canStack) {
+    const meta = this._cachedMeta;
+    const _parsed = meta._parsed;
+    const sorted = meta._sorted && scale === meta.iScale;
+    const ilen = _parsed.length;
+    const otherScale = this._getOtherScale(scale);
+    const stack = createStack(canStack, meta, this.chart);
+    const range = {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY};
+    const {min: otherMin, max: otherMax} = getUserBounds(otherScale);
+    let i, parsed;
+    function _skip() {
+      parsed = _parsed[i];
+      const otherValue = parsed[otherScale.axis];
+      return !isNumberFinite(parsed[scale.axis]) || otherMin > otherValue || otherMax < otherValue;
+    }
+    for (i = 0; i < ilen; ++i) {
+      if (_skip()) {
+        continue;
+      }
+      this.updateRangeFromParsed(range, scale, parsed, stack);
+      if (sorted) {
+        break;
+      }
+    }
+    if (sorted) {
+      for (i = ilen - 1; i >= 0; --i) {
+        if (_skip()) {
+          continue;
+        }
+        this.updateRangeFromParsed(range, scale, parsed, stack);
+        break;
+      }
+    }
+    return range;
+  }
+  getAllParsedValues(scale) {
+    const parsed = this._cachedMeta._parsed;
+    const values = [];
+    let i, ilen, value;
+    for (i = 0, ilen = parsed.length; i < ilen; ++i) {
+      value = parsed[i][scale.axis];
+      if (isNumberFinite(value)) {
+        values.push(value);
+      }
+    }
+    return values;
+  }
+  getMaxOverflow() {
+    return false;
+  }
+  getLabelAndValue(index) {
+    const meta = this._cachedMeta;
+    const iScale = meta.iScale;
+    const vScale = meta.vScale;
+    const parsed = this.getParsed(index);
+    return {
+      label: iScale ? '' + iScale.getLabelForValue(parsed[iScale.axis]) : '',
+      value: vScale ? '' + vScale.getLabelForValue(parsed[vScale.axis]) : ''
+    };
+  }
+  _update(mode) {
+    const meta = this._cachedMeta;
+    this.update(mode || 'default');
+    meta._clip = toClip(valueOrDefault(this.options.clip, defaultClip(meta.xScale, meta.yScale, this.getMaxOverflow())));
+  }
+  update(mode) {}
+  draw() {
+    const ctx = this._ctx;
+    const chart = this.chart;
+    const meta = this._cachedMeta;
+    const elements = meta.data || [];
+    const area = chart.chartArea;
+    const active = [];
+    const start = this._drawStart || 0;
+    const count = this._drawCount || (elements.length - start);
+    const drawActiveElementsOnTop = this.options.drawActiveElementsOnTop;
+    let i;
+    if (meta.dataset) {
+      meta.dataset.draw(ctx, area, start, count);
+    }
+    for (i = start; i < start + count; ++i) {
+      const element = elements[i];
+      if (element.hidden) {
+        continue;
+      }
+      if (element.active && drawActiveElementsOnTop) {
+        active.push(element);
+      } else {
+        element.draw(ctx, area);
+      }
+    }
+    for (i = 0; i < active.length; ++i) {
+      active[i].draw(ctx, area);
+    }
+  }
+  getStyle(index, active) {
+    const mode = active ? 'active' : 'default';
+    return index === undefined && this._cachedMeta.dataset
+      ? this.resolveDatasetElementOptions(mode)
+      : this.resolveDataElementOptions(index || 0, mode);
+  }
+  getContext(index, active, mode) {
+    const dataset = this.getDataset();
+    let context;
+    if (index >= 0 && index < this._cachedMeta.data.length) {
+      const element = this._cachedMeta.data[index];
+      context = element.$context ||
+        (element.$context = createDataContext(this.getContext(), index, element));
+      context.parsed = this.getParsed(index);
+      context.raw = dataset.data[index];
+      context.index = context.dataIndex = index;
+    } else {
+      context = this.$context ||
+        (this.$context = createDatasetContext(this.chart.getContext(), this.index));
+      context.dataset = dataset;
+      context.index = context.datasetIndex = this.index;
+    }
+    context.active = !!active;
+    context.mode = mode;
+    return context;
+  }
+  resolveDatasetElementOptions(mode) {
+    return this._resolveElementOptions(this.datasetElementType.id, mode);
+  }
+  resolveDataElementOptions(index, mode) {
+    return this._resolveElementOptions(this.dataElementType.id, mode, index);
+  }
+  _resolveElementOptions(elementType, mode = 'default', index) {
+    const active = mode === 'active';
+    const cache = this._cachedDataOpts;
+    const cacheKey = elementType + '-' + mode;
+    const cached = cache[cacheKey];
+    const sharing = this.enableOptionSharing && defined(index);
+    if (cached) {
+      return cloneIfNotShared(cached, sharing);
+    }
+    const config = this.chart.config;
+    const scopeKeys = config.datasetElementScopeKeys(this._type, elementType);
+    const prefixes = active ? [`${elementType}Hover`, 'hover', elementType, ''] : [elementType, ''];
+    const scopes = config.getOptionScopes(this.getDataset(), scopeKeys);
+    const names = Object.keys(defaults.elements[elementType]);
+    const context = () => this.getContext(index, active);
+    const values = config.resolveNamedOptions(scopes, names, context, prefixes);
+    if (values.$shared) {
+      values.$shared = sharing;
+      cache[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
+    }
+    return values;
+  }
+  _resolveAnimations(index, transition, active) {
+    const chart = this.chart;
+    const cache = this._cachedDataOpts;
+    const cacheKey = `animation-${transition}`;
+    const cached = cache[cacheKey];
+    if (cached) {
+      return cached;
+    }
+    let options;
+    if (chart.options.animation !== false) {
+      const config = this.chart.config;
+      const scopeKeys = config.datasetAnimationScopeKeys(this._type, transition);
+      const scopes = config.getOptionScopes(this.getDataset(), scopeKeys);
+      options = config.createResolver(scopes, this.getContext(index, active, transition));
+    }
+    const animations = new Animations(chart, options && options.animations);
+    if (options && options._cacheable) {
+      cache[cacheKey] = Object.freeze(animations);
+    }
+    return animations;
+  }
+  getSharedOptions(options) {
+    if (!options.$shared) {
+      return;
+    }
+    return this._sharedOptions || (this._sharedOptions = Object.assign({}, options));
+  }
+  includeOptions(mode, sharedOptions) {
+    return !sharedOptions || isDirectUpdateMode(mode) || this.chart._animationsDisabled;
+  }
+  _getSharedOptions(start, mode) {
+    const firstOpts = this.resolveDataElementOptions(start, mode);
+    const previouslySharedOptions = this._sharedOptions;
+    const sharedOptions = this.getSharedOptions(firstOpts);
+    const includeOptions = this.includeOptions(mode, sharedOptions) || (sharedOptions !== previouslySharedOptions);
+    this.updateSharedOptions(sharedOptions, mode, firstOpts);
+    return {sharedOptions, includeOptions};
+  }
+  updateElement(element, index, properties, mode) {
+    if (isDirectUpdateMode(mode)) {
+      Object.assign(element, properties);
+    } else {
+      this._resolveAnimations(index, mode).update(element, properties);
+    }
+  }
+  updateSharedOptions(sharedOptions, mode, newOptions) {
+    if (sharedOptions && !isDirectUpdateMode(mode)) {
+      this._resolveAnimations(undefined, mode).update(sharedOptions, newOptions);
+    }
+  }
+  _setStyle(element, index, mode, active) {
+    element.active = active;
+    const options = this.getStyle(index, active);
+    this._resolveAnimations(index, mode, active).update(element, {
+      options: (!active && this.getSharedOptions(options)) || options
+    });
+  }
+  removeHoverStyle(element, datasetIndex, index) {
+    this._setStyle(element, index, 'active', false);
+  }
+  setHoverStyle(element, datasetIndex, index) {
+    this._setStyle(element, index, 'active', true);
+  }
+  _removeDatasetHoverStyle() {
+    const element = this._cachedMeta.dataset;
+    if (element) {
+      this._setStyle(element, undefined, 'active', false);
+    }
+  }
+  _setDatasetHoverStyle() {
+    const element = this._cachedMeta.dataset;
+    if (element) {
+      this._setStyle(element, undefined, 'active', true);
+    }
+  }
+  _resyncElements(resetNewElements) {
+    const data = this._data;
+    const elements = this._cachedMeta.data;
+    for (const [method, arg1, arg2] of this._syncList) {
+      this[method](arg1, arg2);
+    }
+    this._syncList = [];
+    const numMeta = elements.length;
+    const numData = data.length;
+    const count = Math.min(numData, numMeta);
+    if (count) {
+      this.parse(0, count);
+    }
+    if (numData > numMeta) {
+      this._insertElements(numMeta, numData - numMeta, resetNewElements);
+    } else if (numData < numMeta) {
+      this._removeElements(numData, numMeta - numData);
+    }
+  }
+  _insertElements(start, count, resetNewElements = true) {
+    const meta = this._cachedMeta;
+    const data = meta.data;
+    const end = start + count;
+    let i;
+    const move = (arr) => {
+      arr.length += count;
+      for (i = arr.length - 1; i >= end; i--) {
+        arr[i] = arr[i - count];
+      }
+    };
+    move(data);
+    for (i = start; i < end; ++i) {
+      data[i] = new this.dataElementType();
+    }
+    if (this._parsing) {
+      move(meta._parsed);
+    }
+    this.parse(start, count);
+    if (resetNewElements) {
+      this.updateElements(data, start, count, 'reset');
+    }
+  }
+  updateElements(element, start, count, mode) {}
+  _removeElements(start, count) {
+    const meta = this._cachedMeta;
+    if (this._parsing) {
+      const removed = meta._parsed.splice(start, count);
+      if (meta._stacked) {
+        clearStacks(meta, removed);
+      }
+    }
+    meta.data.splice(start, count);
+  }
+  _sync(args) {
+    if (this._parsing) {
+      this._syncList.push(args);
+    } else {
+      const [method, arg1, arg2] = args;
+      this[method](arg1, arg2);
+    }
+    this.chart._dataChanges.push([this.index, ...args]);
+  }
+  _onDataPush() {
+    const count = arguments.length;
+    this._sync(['_insertElements', this.getDataset().data.length - count, count]);
+  }
+  _onDataPop() {
+    this._sync(['_removeElements', this._cachedMeta.data.length - 1, 1]);
+  }
+  _onDataShift() {
+    this._sync(['_removeElements', 0, 1]);
+  }
+  _onDataSplice(start, count) {
+    if (count) {
+      this._sync(['_removeElements', start, count]);
+    }
+    const newCount = arguments.length - 2;
+    if (newCount) {
+      this._sync(['_insertElements', start, newCount]);
+    }
+  }
+  _onDataUnshift() {
+    this._sync(['_insertElements', 0, arguments.length]);
+  }
+}
+DatasetController.defaults = {};
+DatasetController.prototype.datasetElementType = null;
+DatasetController.prototype.dataElementType = null;
+
+class Element {
+  constructor() {
+    this.x = undefined;
+    this.y = undefined;
+    this.active = false;
+    this.options = undefined;
+    this.$animations = undefined;
+  }
+  tooltipPosition(useFinalPosition) {
+    const {x, y} = this.getProps(['x', 'y'], useFinalPosition);
+    return {x, y};
+  }
+  hasValue() {
+    return isNumber(this.x) && isNumber(this.y);
+  }
+  getProps(props, final) {
+    const anims = this.$animations;
+    if (!final || !anims) {
+      return this;
+    }
+    const ret = {};
+    props.forEach(prop => {
+      ret[prop] = anims[prop] && anims[prop].active() ? anims[prop]._to : this[prop];
+    });
+    return ret;
+  }
+}
+Element.defaults = {};
+Element.defaultRoutes = undefined;
+
+const formatters = {
+  values(value) {
+    return isArray(value) ? value : '' + value;
+  },
+  numeric(tickValue, index, ticks) {
+    if (tickValue === 0) {
+      return '0';
+    }
+    const locale = this.chart.options.locale;
+    let notation;
+    let delta = tickValue;
+    if (ticks.length > 1) {
+      const maxTick = Math.max(Math.abs(ticks[0].value), Math.abs(ticks[ticks.length - 1].value));
+      if (maxTick < 1e-4 || maxTick > 1e+15) {
+        notation = 'scientific';
+      }
+      delta = calculateDelta(tickValue, ticks);
+    }
+    const logDelta = log10(Math.abs(delta));
+    const numDecimal = Math.max(Math.min(-1 * Math.floor(logDelta), 20), 0);
+    const options = {notation, minimumFractionDigits: numDecimal, maximumFractionDigits: numDecimal};
+    Object.assign(options, this.options.ticks.format);
+    return formatNumber(tickValue, locale, options);
+  },
+  logarithmic(tickValue, index, ticks) {
+    if (tickValue === 0) {
+      return '0';
+    }
+    const remain = tickValue / (Math.pow(10, Math.floor(log10(tickValue))));
+    if (remain === 1 || remain === 2 || remain === 5) {
+      return formatters.numeric.call(this, tickValue, index, ticks);
+    }
+    return '';
+  }
+};
+function calculateDelta(tickValue, ticks) {
+  let delta = ticks.length > 3 ? ticks[2].value - ticks[1].value : ticks[1].value - ticks[0].value;
+  if (Math.abs(delta) >= 1 && tickValue !== Math.floor(tickValue)) {
+    delta = tickValue - Math.floor(tickValue);
+  }
+  return delta;
+}
+var Ticks = {formatters};
+
+defaults.set('scale', {
+  display: true,
+  offset: false,
+  reverse: false,
+  beginAtZero: false,
+  bounds: 'ticks',
+  grace: 0,
+  grid: {
+    display: true,
+    lineWidth: 1,
+    drawBorder: true,
+    drawOnChartArea: true,
+    drawTicks: true,
+    tickLength: 8,
+    tickWidth: (_ctx, options) => options.lineWidth,
+    tickColor: (_ctx, options) => options.color,
+    offset: false,
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderWidth: 1
+  },
+  title: {
+    display: false,
+    text: '',
+    padding: {
+      top: 4,
+      bottom: 4
+    }
+  },
+  ticks: {
+    minRotation: 0,
+    maxRotation: 50,
+    mirror: false,
+    textStrokeWidth: 0,
+    textStrokeColor: '',
+    padding: 3,
+    display: true,
+    autoSkip: true,
+    autoSkipPadding: 3,
+    labelOffset: 0,
+    callback: Ticks.formatters.values,
+    minor: {},
+    major: {},
+    align: 'center',
+    crossAlign: 'near',
+    showLabelBackdrop: false,
+    backdropColor: 'rgba(255, 255, 255, 0.75)',
+    backdropPadding: 2,
+  }
+});
+defaults.route('scale.ticks', 'color', '', 'color');
+defaults.route('scale.grid', 'color', '', 'borderColor');
+defaults.route('scale.grid', 'borderColor', '', 'borderColor');
+defaults.route('scale.title', 'color', '', 'color');
+defaults.describe('scale', {
+  _fallback: false,
+  _scriptable: (name) => !name.startsWith('before') && !name.startsWith('after') && name !== 'callback' && name !== 'parser',
+  _indexable: (name) => name !== 'borderDash' && name !== 'tickBorderDash',
+});
+defaults.describe('scales', {
+  _fallback: 'scale',
+});
+defaults.describe('scale.ticks', {
+  _scriptable: (name) => name !== 'backdropPadding' && name !== 'callback',
+  _indexable: (name) => name !== 'backdropPadding',
+});
+
+function autoSkip(scale, ticks) {
+  const tickOpts = scale.options.ticks;
+  const ticksLimit = tickOpts.maxTicksLimit || determineMaxTicks(scale);
+  const majorIndices = tickOpts.major.enabled ? getMajorIndices(ticks) : [];
+  const numMajorIndices = majorIndices.length;
+  const first = majorIndices[0];
+  const last = majorIndices[numMajorIndices - 1];
+  const newTicks = [];
+  if (numMajorIndices > ticksLimit) {
+    skipMajors(ticks, newTicks, majorIndices, numMajorIndices / ticksLimit);
+    return newTicks;
+  }
+  const spacing = calculateSpacing(majorIndices, ticks, ticksLimit);
+  if (numMajorIndices > 0) {
+    let i, ilen;
+    const avgMajorSpacing = numMajorIndices > 1 ? Math.round((last - first) / (numMajorIndices - 1)) : null;
+    skip(ticks, newTicks, spacing, isNullOrUndef(avgMajorSpacing) ? 0 : first - avgMajorSpacing, first);
+    for (i = 0, ilen = numMajorIndices - 1; i < ilen; i++) {
+      skip(ticks, newTicks, spacing, majorIndices[i], majorIndices[i + 1]);
+    }
+    skip(ticks, newTicks, spacing, last, isNullOrUndef(avgMajorSpacing) ? ticks.length : last + avgMajorSpacing);
+    return newTicks;
+  }
+  skip(ticks, newTicks, spacing);
+  return newTicks;
+}
+function determineMaxTicks(scale) {
+  const offset = scale.options.offset;
+  const tickLength = scale._tickSize();
+  const maxScale = scale._length / tickLength + (offset ? 0 : 1);
+  const maxChart = scale._maxLength / tickLength;
+  return Math.floor(Math.min(maxScale, maxChart));
+}
+function calculateSpacing(majorIndices, ticks, ticksLimit) {
+  const evenMajorSpacing = getEvenSpacing(majorIndices);
+  const spacing = ticks.length / ticksLimit;
+  if (!evenMajorSpacing) {
+    return Math.max(spacing, 1);
+  }
+  const factors = _factorize(evenMajorSpacing);
+  for (let i = 0, ilen = factors.length - 1; i < ilen; i++) {
+    const factor = factors[i];
+    if (factor > spacing) {
+      return factor;
+    }
+  }
+  return Math.max(spacing, 1);
+}
+function getMajorIndices(ticks) {
+  const result = [];
+  let i, ilen;
+  for (i = 0, ilen = ticks.length; i < ilen; i++) {
+    if (ticks[i].major) {
+      result.push(i);
+    }
+  }
+  return result;
+}
+function skipMajors(ticks, newTicks, majorIndices, spacing) {
+  let count = 0;
+  let next = majorIndices[0];
+  let i;
+  spacing = Math.ceil(spacing);
+  for (i = 0; i < ticks.length; i++) {
+    if (i === next) {
+      newTicks.push(ticks[i]);
+      count++;
+      next = majorIndices[count * spacing];
+    }
+  }
+}
+function skip(ticks, newTicks, spacing, majorStart, majorEnd) {
+  const start = valueOrDefault(majorStart, 0);
+  const end = Math.min(valueOrDefault(majorEnd, ticks.length), ticks.length);
+  let count = 0;
+  let length, i, next;
+  spacing = Math.ceil(spacing);
+  if (majorEnd) {
+    length = majorEnd - majorStart;
+    spacing = length / Math.floor(length / spacing);
+  }
+  next = start;
+  while (next < 0) {
+    count++;
+    next = Math.round(start + count * spacing);
+  }
+  for (i = Math.max(start, 0); i < end; i++) {
+    if (i === next) {
+      newTicks.push(ticks[i]);
+      count++;
+      next = Math.round(start + count * spacing);
+    }
+  }
+}
+function getEvenSpacing(arr) {
+  const len = arr.length;
+  let i, diff;
+  if (len < 2) {
+    return false;
+  }
+  for (diff = arr[0], i = 1; i < len; ++i) {
+    if (arr[i] - arr[i - 1] !== diff) {
+      return false;
+    }
+  }
+  return diff;
+}
+
+const reverseAlign = (align) => align === 'left' ? 'right' : align === 'right' ? 'left' : align;
+const offsetFromEdge = (scale, edge, offset) => edge === 'top' || edge === 'left' ? scale[edge] + offset : scale[edge] - offset;
+function sample(arr, numItems) {
+  const result = [];
+  const increment = arr.length / numItems;
+  const len = arr.length;
+  let i = 0;
+  for (; i < len; i += increment) {
+    result.push(arr[Math.floor(i)]);
+  }
+  return result;
+}
+function getPixelForGridLine(scale, index, offsetGridLines) {
+  const length = scale.ticks.length;
+  const validIndex = Math.min(index, length - 1);
+  const start = scale._startPixel;
+  const end = scale._endPixel;
+  const epsilon = 1e-6;
+  let lineValue = scale.getPixelForTick(validIndex);
+  let offset;
+  if (offsetGridLines) {
+    if (length === 1) {
+      offset = Math.max(lineValue - start, end - lineValue);
+    } else if (index === 0) {
+      offset = (scale.getPixelForTick(1) - lineValue) / 2;
+    } else {
+      offset = (lineValue - scale.getPixelForTick(validIndex - 1)) / 2;
+    }
+    lineValue += validIndex < index ? offset : -offset;
+    if (lineValue < start - epsilon || lineValue > end + epsilon) {
+      return;
+    }
+  }
+  return lineValue;
+}
+function garbageCollect(caches, length) {
+  each(caches, (cache) => {
+    const gc = cache.gc;
+    const gcLen = gc.length / 2;
+    let i;
+    if (gcLen > length) {
+      for (i = 0; i < gcLen; ++i) {
+        delete cache.data[gc[i]];
+      }
+      gc.splice(0, gcLen);
+    }
+  });
+}
+function getTickMarkLength(options) {
+  return options.drawTicks ? options.tickLength : 0;
+}
+function getTitleHeight(options, fallback) {
+  if (!options.display) {
+    return 0;
+  }
+  const font = toFont(options.font, fallback);
+  const padding = toPadding(options.padding);
+  const lines = isArray(options.text) ? options.text.length : 1;
+  return (lines * font.lineHeight) + padding.height;
+}
+function createScaleContext(parent, scale) {
+  return createContext(parent, {
+    scale,
+    type: 'scale'
+  });
+}
+function createTickContext(parent, index, tick) {
+  return createContext(parent, {
+    tick,
+    index,
+    type: 'tick'
+  });
+}
+function titleAlign(align, position, reverse) {
+  let ret = _toLeftRightCenter(align);
+  if ((reverse && position !== 'right') || (!reverse && position === 'right')) {
+    ret = reverseAlign(ret);
+  }
+  return ret;
+}
+function titleArgs(scale, offset, position, align) {
+  const {top, left, bottom, right, chart} = scale;
+  const {chartArea, scales} = chart;
+  let rotation = 0;
+  let maxWidth, titleX, titleY;
+  const height = bottom - top;
+  const width = right - left;
+  if (scale.isHorizontal()) {
+    titleX = _alignStartEnd(align, left, right);
+    if (isObject(position)) {
+      const positionAxisID = Object.keys(position)[0];
+      const value = position[positionAxisID];
+      titleY = scales[positionAxisID].getPixelForValue(value) + height - offset;
+    } else if (position === 'center') {
+      titleY = (chartArea.bottom + chartArea.top) / 2 + height - offset;
+    } else {
+      titleY = offsetFromEdge(scale, position, offset);
+    }
+    maxWidth = right - left;
+  } else {
+    if (isObject(position)) {
+      const positionAxisID = Object.keys(position)[0];
+      const value = position[positionAxisID];
+      titleX = scales[positionAxisID].getPixelForValue(value) - width + offset;
+    } else if (position === 'center') {
+      titleX = (chartArea.left + chartArea.right) / 2 - width + offset;
+    } else {
+      titleX = offsetFromEdge(scale, position, offset);
+    }
+    titleY = _alignStartEnd(align, bottom, top);
+    rotation = position === 'left' ? -HALF_PI : HALF_PI;
+  }
+  return {titleX, titleY, maxWidth, rotation};
+}
+class Scale extends Element {
+  constructor(cfg) {
+    super();
+    this.id = cfg.id;
+    this.type = cfg.type;
+    this.options = undefined;
+    this.ctx = cfg.ctx;
+    this.chart = cfg.chart;
+    this.top = undefined;
+    this.bottom = undefined;
+    this.left = undefined;
+    this.right = undefined;
+    this.width = undefined;
+    this.height = undefined;
+    this._margins = {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0
+    };
+    this.maxWidth = undefined;
+    this.maxHeight = undefined;
+    this.paddingTop = undefined;
+    this.paddingBottom = undefined;
+    this.paddingLeft = undefined;
+    this.paddingRight = undefined;
+    this.axis = undefined;
+    this.labelRotation = undefined;
+    this.min = undefined;
+    this.max = undefined;
+    this._range = undefined;
+    this.ticks = [];
+    this._gridLineItems = null;
+    this._labelItems = null;
+    this._labelSizes = null;
+    this._length = 0;
+    this._maxLength = 0;
+    this._longestTextCache = {};
+    this._startPixel = undefined;
+    this._endPixel = undefined;
+    this._reversePixels = false;
+    this._userMax = undefined;
+    this._userMin = undefined;
+    this._suggestedMax = undefined;
+    this._suggestedMin = undefined;
+    this._ticksLength = 0;
+    this._borderValue = 0;
+    this._cache = {};
+    this._dataLimitsCached = false;
+    this.$context = undefined;
+  }
+  init(options) {
+    this.options = options.setContext(this.getContext());
+    this.axis = options.axis;
+    this._userMin = this.parse(options.min);
+    this._userMax = this.parse(options.max);
+    this._suggestedMin = this.parse(options.suggestedMin);
+    this._suggestedMax = this.parse(options.suggestedMax);
+  }
+  parse(raw, index) {
+    return raw;
+  }
+  getUserBounds() {
+    let {_userMin, _userMax, _suggestedMin, _suggestedMax} = this;
+    _userMin = finiteOrDefault(_userMin, Number.POSITIVE_INFINITY);
+    _userMax = finiteOrDefault(_userMax, Number.NEGATIVE_INFINITY);
+    _suggestedMin = finiteOrDefault(_suggestedMin, Number.POSITIVE_INFINITY);
+    _suggestedMax = finiteOrDefault(_suggestedMax, Number.NEGATIVE_INFINITY);
+    return {
+      min: finiteOrDefault(_userMin, _suggestedMin),
+      max: finiteOrDefault(_userMax, _suggestedMax),
+      minDefined: isNumberFinite(_userMin),
+      maxDefined: isNumberFinite(_userMax)
+    };
+  }
+  getMinMax(canStack) {
+    let {min, max, minDefined, maxDefined} = this.getUserBounds();
+    let range;
+    if (minDefined && maxDefined) {
+      return {min, max};
+    }
+    const metas = this.getMatchingVisibleMetas();
+    for (let i = 0, ilen = metas.length; i < ilen; ++i) {
+      range = metas[i].controller.getMinMax(this, canStack);
+      if (!minDefined) {
+        min = Math.min(min, range.min);
+      }
+      if (!maxDefined) {
+        max = Math.max(max, range.max);
+      }
+    }
+    min = maxDefined && min > max ? max : min;
+    max = minDefined && min > max ? min : max;
+    return {
+      min: finiteOrDefault(min, finiteOrDefault(max, min)),
+      max: finiteOrDefault(max, finiteOrDefault(min, max))
+    };
+  }
+  getPadding() {
+    return {
+      left: this.paddingLeft || 0,
+      top: this.paddingTop || 0,
+      right: this.paddingRight || 0,
+      bottom: this.paddingBottom || 0
+    };
+  }
+  getTicks() {
+    return this.ticks;
+  }
+  getLabels() {
+    const data = this.chart.data;
+    return this.options.labels || (this.isHorizontal() ? data.xLabels : data.yLabels) || data.labels || [];
+  }
+  beforeLayout() {
+    this._cache = {};
+    this._dataLimitsCached = false;
+  }
+  beforeUpdate() {
+    callback(this.options.beforeUpdate, [this]);
+  }
+  update(maxWidth, maxHeight, margins) {
+    const {beginAtZero, grace, ticks: tickOpts} = this.options;
+    const sampleSize = tickOpts.sampleSize;
+    this.beforeUpdate();
+    this.maxWidth = maxWidth;
+    this.maxHeight = maxHeight;
+    this._margins = margins = Object.assign({
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0
+    }, margins);
+    this.ticks = null;
+    this._labelSizes = null;
+    this._gridLineItems = null;
+    this._labelItems = null;
+    this.beforeSetDimensions();
+    this.setDimensions();
+    this.afterSetDimensions();
+    this._maxLength = this.isHorizontal()
+      ? this.width + margins.left + margins.right
+      : this.height + margins.top + margins.bottom;
+    if (!this._dataLimitsCached) {
+      this.beforeDataLimits();
+      this.determineDataLimits();
+      this.afterDataLimits();
+      this._range = _addGrace(this, grace, beginAtZero);
+      this._dataLimitsCached = true;
+    }
+    this.beforeBuildTicks();
+    this.ticks = this.buildTicks() || [];
+    this.afterBuildTicks();
+    const samplingEnabled = sampleSize < this.ticks.length;
+    this._convertTicksToLabels(samplingEnabled ? sample(this.ticks, sampleSize) : this.ticks);
+    this.configure();
+    this.beforeCalculateLabelRotation();
+    this.calculateLabelRotation();
+    this.afterCalculateLabelRotation();
+    if (tickOpts.display && (tickOpts.autoSkip || tickOpts.source === 'auto')) {
+      this.ticks = autoSkip(this, this.ticks);
+      this._labelSizes = null;
+      this.afterAutoSkip();
+    }
+    if (samplingEnabled) {
+      this._convertTicksToLabels(this.ticks);
+    }
+    this.beforeFit();
+    this.fit();
+    this.afterFit();
+    this.afterUpdate();
+  }
+  configure() {
+    let reversePixels = this.options.reverse;
+    let startPixel, endPixel;
+    if (this.isHorizontal()) {
+      startPixel = this.left;
+      endPixel = this.right;
+    } else {
+      startPixel = this.top;
+      endPixel = this.bottom;
+      reversePixels = !reversePixels;
+    }
+    this._startPixel = startPixel;
+    this._endPixel = endPixel;
+    this._reversePixels = reversePixels;
+    this._length = endPixel - startPixel;
+    this._alignToPixels = this.options.alignToPixels;
+  }
+  afterUpdate() {
+    callback(this.options.afterUpdate, [this]);
+  }
+  beforeSetDimensions() {
+    callback(this.options.beforeSetDimensions, [this]);
+  }
+  setDimensions() {
+    if (this.isHorizontal()) {
+      this.width = this.maxWidth;
+      this.left = 0;
+      this.right = this.width;
+    } else {
+      this.height = this.maxHeight;
+      this.top = 0;
+      this.bottom = this.height;
+    }
+    this.paddingLeft = 0;
+    this.paddingTop = 0;
+    this.paddingRight = 0;
+    this.paddingBottom = 0;
+  }
+  afterSetDimensions() {
+    callback(this.options.afterSetDimensions, [this]);
+  }
+  _callHooks(name) {
+    this.chart.notifyPlugins(name, this.getContext());
+    callback(this.options[name], [this]);
+  }
+  beforeDataLimits() {
+    this._callHooks('beforeDataLimits');
+  }
+  determineDataLimits() {}
+  afterDataLimits() {
+    this._callHooks('afterDataLimits');
+  }
+  beforeBuildTicks() {
+    this._callHooks('beforeBuildTicks');
+  }
+  buildTicks() {
+    return [];
+  }
+  afterBuildTicks() {
+    this._callHooks('afterBuildTicks');
+  }
+  beforeTickToLabelConversion() {
+    callback(this.options.beforeTickToLabelConversion, [this]);
+  }
+  generateTickLabels(ticks) {
+    const tickOpts = this.options.ticks;
+    let i, ilen, tick;
+    for (i = 0, ilen = ticks.length; i < ilen; i++) {
+      tick = ticks[i];
+      tick.label = callback(tickOpts.callback, [tick.value, i, ticks], this);
+    }
+  }
+  afterTickToLabelConversion() {
+    callback(this.options.afterTickToLabelConversion, [this]);
+  }
+  beforeCalculateLabelRotation() {
+    callback(this.options.beforeCalculateLabelRotation, [this]);
+  }
+  calculateLabelRotation() {
+    const options = this.options;
+    const tickOpts = options.ticks;
+    const numTicks = this.ticks.length;
+    const minRotation = tickOpts.minRotation || 0;
+    const maxRotation = tickOpts.maxRotation;
+    let labelRotation = minRotation;
+    let tickWidth, maxHeight, maxLabelDiagonal;
+    if (!this._isVisible() || !tickOpts.display || minRotation >= maxRotation || numTicks <= 1 || !this.isHorizontal()) {
+      this.labelRotation = minRotation;
+      return;
+    }
+    const labelSizes = this._getLabelSizes();
+    const maxLabelWidth = labelSizes.widest.width;
+    const maxLabelHeight = labelSizes.highest.height;
+    const maxWidth = _limitValue(this.chart.width - maxLabelWidth, 0, this.maxWidth);
+    tickWidth = options.offset ? this.maxWidth / numTicks : maxWidth / (numTicks - 1);
+    if (maxLabelWidth + 6 > tickWidth) {
+      tickWidth = maxWidth / (numTicks - (options.offset ? 0.5 : 1));
+      maxHeight = this.maxHeight - getTickMarkLength(options.grid)
+				- tickOpts.padding - getTitleHeight(options.title, this.chart.options.font);
+      maxLabelDiagonal = Math.sqrt(maxLabelWidth * maxLabelWidth + maxLabelHeight * maxLabelHeight);
+      labelRotation = toDegrees(Math.min(
+        Math.asin(_limitValue((labelSizes.highest.height + 6) / tickWidth, -1, 1)),
+        Math.asin(_limitValue(maxHeight / maxLabelDiagonal, -1, 1)) - Math.asin(_limitValue(maxLabelHeight / maxLabelDiagonal, -1, 1))
+      ));
+      labelRotation = Math.max(minRotation, Math.min(maxRotation, labelRotation));
+    }
+    this.labelRotation = labelRotation;
+  }
+  afterCalculateLabelRotation() {
+    callback(this.options.afterCalculateLabelRotation, [this]);
+  }
+  afterAutoSkip() {}
+  beforeFit() {
+    callback(this.options.beforeFit, [this]);
+  }
+  fit() {
+    const minSize = {
+      width: 0,
+      height: 0
+    };
+    const {chart, options: {ticks: tickOpts, title: titleOpts, grid: gridOpts}} = this;
+    const display = this._isVisible();
+    const isHorizontal = this.isHorizontal();
+    if (display) {
+      const titleHeight = getTitleHeight(titleOpts, chart.options.font);
+      if (isHorizontal) {
+        minSize.width = this.maxWidth;
+        minSize.height = getTickMarkLength(gridOpts) + titleHeight;
+      } else {
+        minSize.height = this.maxHeight;
+        minSize.width = getTickMarkLength(gridOpts) + titleHeight;
+      }
+      if (tickOpts.display && this.ticks.length) {
+        const {first, last, widest, highest} = this._getLabelSizes();
+        const tickPadding = tickOpts.padding * 2;
+        const angleRadians = toRadians(this.labelRotation);
+        const cos = Math.cos(angleRadians);
+        const sin = Math.sin(angleRadians);
+        if (isHorizontal) {
+          const labelHeight = tickOpts.mirror ? 0 : sin * widest.width + cos * highest.height;
+          minSize.height = Math.min(this.maxHeight, minSize.height + labelHeight + tickPadding);
+        } else {
+          const labelWidth = tickOpts.mirror ? 0 : cos * widest.width + sin * highest.height;
+          minSize.width = Math.min(this.maxWidth, minSize.width + labelWidth + tickPadding);
+        }
+        this._calculatePadding(first, last, sin, cos);
+      }
+    }
+    this._handleMargins();
+    if (isHorizontal) {
+      this.width = this._length = chart.width - this._margins.left - this._margins.right;
+      this.height = minSize.height;
+    } else {
+      this.width = minSize.width;
+      this.height = this._length = chart.height - this._margins.top - this._margins.bottom;
+    }
+  }
+  _calculatePadding(first, last, sin, cos) {
+    const {ticks: {align, padding}, position} = this.options;
+    const isRotated = this.labelRotation !== 0;
+    const labelsBelowTicks = position !== 'top' && this.axis === 'x';
+    if (this.isHorizontal()) {
+      const offsetLeft = this.getPixelForTick(0) - this.left;
+      const offsetRight = this.right - this.getPixelForTick(this.ticks.length - 1);
+      let paddingLeft = 0;
+      let paddingRight = 0;
+      if (isRotated) {
+        if (labelsBelowTicks) {
+          paddingLeft = cos * first.width;
+          paddingRight = sin * last.height;
+        } else {
+          paddingLeft = sin * first.height;
+          paddingRight = cos * last.width;
+        }
+      } else if (align === 'start') {
+        paddingRight = last.width;
+      } else if (align === 'end') {
+        paddingLeft = first.width;
+      } else if (align !== 'inner') {
+        paddingLeft = first.width / 2;
+        paddingRight = last.width / 2;
+      }
+      this.paddingLeft = Math.max((paddingLeft - offsetLeft + padding) * this.width / (this.width - offsetLeft), 0);
+      this.paddingRight = Math.max((paddingRight - offsetRight + padding) * this.width / (this.width - offsetRight), 0);
+    } else {
+      let paddingTop = last.height / 2;
+      let paddingBottom = first.height / 2;
+      if (align === 'start') {
+        paddingTop = 0;
+        paddingBottom = first.height;
+      } else if (align === 'end') {
+        paddingTop = last.height;
+        paddingBottom = 0;
+      }
+      this.paddingTop = paddingTop + padding;
+      this.paddingBottom = paddingBottom + padding;
+    }
+  }
+  _handleMargins() {
+    if (this._margins) {
+      this._margins.left = Math.max(this.paddingLeft, this._margins.left);
+      this._margins.top = Math.max(this.paddingTop, this._margins.top);
+      this._margins.right = Math.max(this.paddingRight, this._margins.right);
+      this._margins.bottom = Math.max(this.paddingBottom, this._margins.bottom);
+    }
+  }
+  afterFit() {
+    callback(this.options.afterFit, [this]);
+  }
+  isHorizontal() {
+    const {axis, position} = this.options;
+    return position === 'top' || position === 'bottom' || axis === 'x';
+  }
+  isFullSize() {
+    return this.options.fullSize;
+  }
+  _convertTicksToLabels(ticks) {
+    this.beforeTickToLabelConversion();
+    this.generateTickLabels(ticks);
+    let i, ilen;
+    for (i = 0, ilen = ticks.length; i < ilen; i++) {
+      if (isNullOrUndef(ticks[i].label)) {
+        ticks.splice(i, 1);
+        ilen--;
+        i--;
+      }
+    }
+    this.afterTickToLabelConversion();
+  }
+  _getLabelSizes() {
+    let labelSizes = this._labelSizes;
+    if (!labelSizes) {
+      const sampleSize = this.options.ticks.sampleSize;
+      let ticks = this.ticks;
+      if (sampleSize < ticks.length) {
+        ticks = sample(ticks, sampleSize);
+      }
+      this._labelSizes = labelSizes = this._computeLabelSizes(ticks, ticks.length);
+    }
+    return labelSizes;
+  }
+  _computeLabelSizes(ticks, length) {
+    const {ctx, _longestTextCache: caches} = this;
+    const widths = [];
+    const heights = [];
+    let widestLabelSize = 0;
+    let highestLabelSize = 0;
+    let i, j, jlen, label, tickFont, fontString, cache, lineHeight, width, height, nestedLabel;
+    for (i = 0; i < length; ++i) {
+      label = ticks[i].label;
+      tickFont = this._resolveTickFontOptions(i);
+      ctx.font = fontString = tickFont.string;
+      cache = caches[fontString] = caches[fontString] || {data: {}, gc: []};
+      lineHeight = tickFont.lineHeight;
+      width = height = 0;
+      if (!isNullOrUndef(label) && !isArray(label)) {
+        width = _measureText(ctx, cache.data, cache.gc, width, label);
+        height = lineHeight;
+      } else if (isArray(label)) {
+        for (j = 0, jlen = label.length; j < jlen; ++j) {
+          nestedLabel = label[j];
+          if (!isNullOrUndef(nestedLabel) && !isArray(nestedLabel)) {
+            width = _measureText(ctx, cache.data, cache.gc, width, nestedLabel);
+            height += lineHeight;
+          }
+        }
+      }
+      widths.push(width);
+      heights.push(height);
+      widestLabelSize = Math.max(width, widestLabelSize);
+      highestLabelSize = Math.max(height, highestLabelSize);
+    }
+    garbageCollect(caches, length);
+    const widest = widths.indexOf(widestLabelSize);
+    const highest = heights.indexOf(highestLabelSize);
+    const valueAt = (idx) => ({width: widths[idx] || 0, height: heights[idx] || 0});
+    return {
+      first: valueAt(0),
+      last: valueAt(length - 1),
+      widest: valueAt(widest),
+      highest: valueAt(highest),
+      widths,
+      heights,
+    };
+  }
+  getLabelForValue(value) {
+    return value;
+  }
+  getPixelForValue(value, index) {
+    return NaN;
+  }
+  getValueForPixel(pixel) {}
+  getPixelForTick(index) {
+    const ticks = this.ticks;
+    if (index < 0 || index > ticks.length - 1) {
+      return null;
+    }
+    return this.getPixelForValue(ticks[index].value);
+  }
+  getPixelForDecimal(decimal) {
+    if (this._reversePixels) {
+      decimal = 1 - decimal;
+    }
+    const pixel = this._startPixel + decimal * this._length;
+    return _int16Range(this._alignToPixels ? _alignPixel(this.chart, pixel, 0) : pixel);
+  }
+  getDecimalForPixel(pixel) {
+    const decimal = (pixel - this._startPixel) / this._length;
+    return this._reversePixels ? 1 - decimal : decimal;
+  }
+  getBasePixel() {
+    return this.getPixelForValue(this.getBaseValue());
+  }
+  getBaseValue() {
+    const {min, max} = this;
+    return min < 0 && max < 0 ? max :
+      min > 0 && max > 0 ? min :
+      0;
+  }
+  getContext(index) {
+    const ticks = this.ticks || [];
+    if (index >= 0 && index < ticks.length) {
+      const tick = ticks[index];
+      return tick.$context ||
+				(tick.$context = createTickContext(this.getContext(), index, tick));
+    }
+    return this.$context ||
+			(this.$context = createScaleContext(this.chart.getContext(), this));
+  }
+  _tickSize() {
+    const optionTicks = this.options.ticks;
+    const rot = toRadians(this.labelRotation);
+    const cos = Math.abs(Math.cos(rot));
+    const sin = Math.abs(Math.sin(rot));
+    const labelSizes = this._getLabelSizes();
+    const padding = optionTicks.autoSkipPadding || 0;
+    const w = labelSizes ? labelSizes.widest.width + padding : 0;
+    const h = labelSizes ? labelSizes.highest.height + padding : 0;
+    return this.isHorizontal()
+      ? h * cos > w * sin ? w / cos : h / sin
+      : h * sin < w * cos ? h / cos : w / sin;
+  }
+  _isVisible() {
+    const display = this.options.display;
+    if (display !== 'auto') {
+      return !!display;
+    }
+    return this.getMatchingVisibleMetas().length > 0;
+  }
+  _computeGridLineItems(chartArea) {
+    const axis = this.axis;
+    const chart = this.chart;
+    const options = this.options;
+    const {grid, position} = options;
+    const offset = grid.offset;
+    const isHorizontal = this.isHorizontal();
+    const ticks = this.ticks;
+    const ticksLength = ticks.length + (offset ? 1 : 0);
+    const tl = getTickMarkLength(grid);
+    const items = [];
+    const borderOpts = grid.setContext(this.getContext());
+    const axisWidth = borderOpts.drawBorder ? borderOpts.borderWidth : 0;
+    const axisHalfWidth = axisWidth / 2;
+    const alignBorderValue = function(pixel) {
+      return _alignPixel(chart, pixel, axisWidth);
+    };
+    let borderValue, i, lineValue, alignedLineValue;
+    let tx1, ty1, tx2, ty2, x1, y1, x2, y2;
+    if (position === 'top') {
+      borderValue = alignBorderValue(this.bottom);
+      ty1 = this.bottom - tl;
+      ty2 = borderValue - axisHalfWidth;
+      y1 = alignBorderValue(chartArea.top) + axisHalfWidth;
+      y2 = chartArea.bottom;
+    } else if (position === 'bottom') {
+      borderValue = alignBorderValue(this.top);
+      y1 = chartArea.top;
+      y2 = alignBorderValue(chartArea.bottom) - axisHalfWidth;
+      ty1 = borderValue + axisHalfWidth;
+      ty2 = this.top + tl;
+    } else if (position === 'left') {
+      borderValue = alignBorderValue(this.right);
+      tx1 = this.right - tl;
+      tx2 = borderValue - axisHalfWidth;
+      x1 = alignBorderValue(chartArea.left) + axisHalfWidth;
+      x2 = chartArea.right;
+    } else if (position === 'right') {
+      borderValue = alignBorderValue(this.left);
+      x1 = chartArea.left;
+      x2 = alignBorderValue(chartArea.right) - axisHalfWidth;
+      tx1 = borderValue + axisHalfWidth;
+      tx2 = this.left + tl;
+    } else if (axis === 'x') {
+      if (position === 'center') {
+        borderValue = alignBorderValue((chartArea.top + chartArea.bottom) / 2 + 0.5);
+      } else if (isObject(position)) {
+        const positionAxisID = Object.keys(position)[0];
+        const value = position[positionAxisID];
+        borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
+      }
+      y1 = chartArea.top;
+      y2 = chartArea.bottom;
+      ty1 = borderValue + axisHalfWidth;
+      ty2 = ty1 + tl;
+    } else if (axis === 'y') {
+      if (position === 'center') {
+        borderValue = alignBorderValue((chartArea.left + chartArea.right) / 2);
+      } else if (isObject(position)) {
+        const positionAxisID = Object.keys(position)[0];
+        const value = position[positionAxisID];
+        borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
+      }
+      tx1 = borderValue - axisHalfWidth;
+      tx2 = tx1 - tl;
+      x1 = chartArea.left;
+      x2 = chartArea.right;
+    }
+    const limit = valueOrDefault(options.ticks.maxTicksLimit, ticksLength);
+    const step = Math.max(1, Math.ceil(ticksLength / limit));
+    for (i = 0; i < ticksLength; i += step) {
+      const optsAtIndex = grid.setContext(this.getContext(i));
+      const lineWidth = optsAtIndex.lineWidth;
+      const lineColor = optsAtIndex.color;
+      const borderDash = optsAtIndex.borderDash || [];
+      const borderDashOffset = optsAtIndex.borderDashOffset;
+      const tickWidth = optsAtIndex.tickWidth;
+      const tickColor = optsAtIndex.tickColor;
+      const tickBorderDash = optsAtIndex.tickBorderDash || [];
+      const tickBorderDashOffset = optsAtIndex.tickBorderDashOffset;
+      lineValue = getPixelForGridLine(this, i, offset);
+      if (lineValue === undefined) {
+        continue;
+      }
+      alignedLineValue = _alignPixel(chart, lineValue, lineWidth);
+      if (isHorizontal) {
+        tx1 = tx2 = x1 = x2 = alignedLineValue;
+      } else {
+        ty1 = ty2 = y1 = y2 = alignedLineValue;
+      }
+      items.push({
+        tx1,
+        ty1,
+        tx2,
+        ty2,
+        x1,
+        y1,
+        x2,
+        y2,
+        width: lineWidth,
+        color: lineColor,
+        borderDash,
+        borderDashOffset,
+        tickWidth,
+        tickColor,
+        tickBorderDash,
+        tickBorderDashOffset,
+      });
+    }
+    this._ticksLength = ticksLength;
+    this._borderValue = borderValue;
+    return items;
+  }
+  _computeLabelItems(chartArea) {
+    const axis = this.axis;
+    const options = this.options;
+    const {position, ticks: optionTicks} = options;
+    const isHorizontal = this.isHorizontal();
+    const ticks = this.ticks;
+    const {align, crossAlign, padding, mirror} = optionTicks;
+    const tl = getTickMarkLength(options.grid);
+    const tickAndPadding = tl + padding;
+    const hTickAndPadding = mirror ? -padding : tickAndPadding;
+    const rotation = -toRadians(this.labelRotation);
+    const items = [];
+    let i, ilen, tick, label, x, y, textAlign, pixel, font, lineHeight, lineCount, textOffset;
+    let textBaseline = 'middle';
+    if (position === 'top') {
+      y = this.bottom - hTickAndPadding;
+      textAlign = this._getXAxisLabelAlignment();
+    } else if (position === 'bottom') {
+      y = this.top + hTickAndPadding;
+      textAlign = this._getXAxisLabelAlignment();
+    } else if (position === 'left') {
+      const ret = this._getYAxisLabelAlignment(tl);
+      textAlign = ret.textAlign;
+      x = ret.x;
+    } else if (position === 'right') {
+      const ret = this._getYAxisLabelAlignment(tl);
+      textAlign = ret.textAlign;
+      x = ret.x;
+    } else if (axis === 'x') {
+      if (position === 'center') {
+        y = ((chartArea.top + chartArea.bottom) / 2) + tickAndPadding;
+      } else if (isObject(position)) {
+        const positionAxisID = Object.keys(position)[0];
+        const value = position[positionAxisID];
+        y = this.chart.scales[positionAxisID].getPixelForValue(value) + tickAndPadding;
+      }
+      textAlign = this._getXAxisLabelAlignment();
+    } else if (axis === 'y') {
+      if (position === 'center') {
+        x = ((chartArea.left + chartArea.right) / 2) - tickAndPadding;
+      } else if (isObject(position)) {
+        const positionAxisID = Object.keys(position)[0];
+        const value = position[positionAxisID];
+        x = this.chart.scales[positionAxisID].getPixelForValue(value);
+      }
+      textAlign = this._getYAxisLabelAlignment(tl).textAlign;
+    }
+    if (axis === 'y') {
+      if (align === 'start') {
+        textBaseline = 'top';
+      } else if (align === 'end') {
+        textBaseline = 'bottom';
+      }
+    }
+    const labelSizes = this._getLabelSizes();
+    for (i = 0, ilen = ticks.length; i < ilen; ++i) {
+      tick = ticks[i];
+      label = tick.label;
+      const optsAtIndex = optionTicks.setContext(this.getContext(i));
+      pixel = this.getPixelForTick(i) + optionTicks.labelOffset;
+      font = this._resolveTickFontOptions(i);
+      lineHeight = font.lineHeight;
+      lineCount = isArray(label) ? label.length : 1;
+      const halfCount = lineCount / 2;
+      const color = optsAtIndex.color;
+      const strokeColor = optsAtIndex.textStrokeColor;
+      const strokeWidth = optsAtIndex.textStrokeWidth;
+      let tickTextAlign = textAlign;
+      if (isHorizontal) {
+        x = pixel;
+        if (textAlign === 'inner') {
+          if (i === ilen - 1) {
+            tickTextAlign = !this.options.reverse ? 'right' : 'left';
+          } else if (i === 0) {
+            tickTextAlign = !this.options.reverse ? 'left' : 'right';
+          } else {
+            tickTextAlign = 'center';
+          }
+        }
+        if (position === 'top') {
+          if (crossAlign === 'near' || rotation !== 0) {
+            textOffset = -lineCount * lineHeight + lineHeight / 2;
+          } else if (crossAlign === 'center') {
+            textOffset = -labelSizes.highest.height / 2 - halfCount * lineHeight + lineHeight;
+          } else {
+            textOffset = -labelSizes.highest.height + lineHeight / 2;
+          }
+        } else {
+          if (crossAlign === 'near' || rotation !== 0) {
+            textOffset = lineHeight / 2;
+          } else if (crossAlign === 'center') {
+            textOffset = labelSizes.highest.height / 2 - halfCount * lineHeight;
+          } else {
+            textOffset = labelSizes.highest.height - lineCount * lineHeight;
+          }
+        }
+        if (mirror) {
+          textOffset *= -1;
+        }
+      } else {
+        y = pixel;
+        textOffset = (1 - lineCount) * lineHeight / 2;
+      }
+      let backdrop;
+      if (optsAtIndex.showLabelBackdrop) {
+        const labelPadding = toPadding(optsAtIndex.backdropPadding);
+        const height = labelSizes.heights[i];
+        const width = labelSizes.widths[i];
+        let top = y + textOffset - labelPadding.top;
+        let left = x - labelPadding.left;
+        switch (textBaseline) {
+        case 'middle':
+          top -= height / 2;
+          break;
+        case 'bottom':
+          top -= height;
+          break;
+        }
+        switch (textAlign) {
+        case 'center':
+          left -= width / 2;
+          break;
+        case 'right':
+          left -= width;
+          break;
+        }
+        backdrop = {
+          left,
+          top,
+          width: width + labelPadding.width,
+          height: height + labelPadding.height,
+          color: optsAtIndex.backdropColor,
+        };
+      }
+      items.push({
+        rotation,
+        label,
+        font,
+        color,
+        strokeColor,
+        strokeWidth,
+        textOffset,
+        textAlign: tickTextAlign,
+        textBaseline,
+        translation: [x, y],
+        backdrop,
+      });
+    }
+    return items;
+  }
+  _getXAxisLabelAlignment() {
+    const {position, ticks} = this.options;
+    const rotation = -toRadians(this.labelRotation);
+    if (rotation) {
+      return position === 'top' ? 'left' : 'right';
+    }
+    let align = 'center';
+    if (ticks.align === 'start') {
+      align = 'left';
+    } else if (ticks.align === 'end') {
+      align = 'right';
+    } else if (ticks.align === 'inner') {
+      align = 'inner';
+    }
+    return align;
+  }
+  _getYAxisLabelAlignment(tl) {
+    const {position, ticks: {crossAlign, mirror, padding}} = this.options;
+    const labelSizes = this._getLabelSizes();
+    const tickAndPadding = tl + padding;
+    const widest = labelSizes.widest.width;
+    let textAlign;
+    let x;
+    if (position === 'left') {
+      if (mirror) {
+        x = this.right + padding;
+        if (crossAlign === 'near') {
+          textAlign = 'left';
+        } else if (crossAlign === 'center') {
+          textAlign = 'center';
+          x += (widest / 2);
+        } else {
+          textAlign = 'right';
+          x += widest;
+        }
+      } else {
+        x = this.right - tickAndPadding;
+        if (crossAlign === 'near') {
+          textAlign = 'right';
+        } else if (crossAlign === 'center') {
+          textAlign = 'center';
+          x -= (widest / 2);
+        } else {
+          textAlign = 'left';
+          x = this.left;
+        }
+      }
+    } else if (position === 'right') {
+      if (mirror) {
+        x = this.left + padding;
+        if (crossAlign === 'near') {
+          textAlign = 'right';
+        } else if (crossAlign === 'center') {
+          textAlign = 'center';
+          x -= (widest / 2);
+        } else {
+          textAlign = 'left';
+          x -= widest;
+        }
+      } else {
+        x = this.left + tickAndPadding;
+        if (crossAlign === 'near') {
+          textAlign = 'left';
+        } else if (crossAlign === 'center') {
+          textAlign = 'center';
+          x += widest / 2;
+        } else {
+          textAlign = 'right';
+          x = this.right;
+        }
+      }
+    } else {
+      textAlign = 'right';
+    }
+    return {textAlign, x};
+  }
+  _computeLabelArea() {
+    if (this.options.ticks.mirror) {
+      return;
+    }
+    const chart = this.chart;
+    const position = this.options.position;
+    if (position === 'left' || position === 'right') {
+      return {top: 0, left: this.left, bottom: chart.height, right: this.right};
+    } if (position === 'top' || position === 'bottom') {
+      return {top: this.top, left: 0, bottom: this.bottom, right: chart.width};
+    }
+  }
+  drawBackground() {
+    const {ctx, options: {backgroundColor}, left, top, width, height} = this;
+    if (backgroundColor) {
+      ctx.save();
+      ctx.fillStyle = backgroundColor;
+      ctx.fillRect(left, top, width, height);
+      ctx.restore();
+    }
+  }
+  getLineWidthForValue(value) {
+    const grid = this.options.grid;
+    if (!this._isVisible() || !grid.display) {
+      return 0;
+    }
+    const ticks = this.ticks;
+    const index = ticks.findIndex(t => t.value === value);
+    if (index >= 0) {
+      const opts = grid.setContext(this.getContext(index));
+      return opts.lineWidth;
+    }
+    return 0;
+  }
+  drawGrid(chartArea) {
+    const grid = this.options.grid;
+    const ctx = this.ctx;
+    const items = this._gridLineItems || (this._gridLineItems = this._computeGridLineItems(chartArea));
+    let i, ilen;
+    const drawLine = (p1, p2, style) => {
+      if (!style.width || !style.color) {
+        return;
+      }
+      ctx.save();
+      ctx.lineWidth = style.width;
+      ctx.strokeStyle = style.color;
+      ctx.setLineDash(style.borderDash || []);
+      ctx.lineDashOffset = style.borderDashOffset;
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.stroke();
+      ctx.restore();
+    };
+    if (grid.display) {
+      for (i = 0, ilen = items.length; i < ilen; ++i) {
+        const item = items[i];
+        if (grid.drawOnChartArea) {
+          drawLine(
+            {x: item.x1, y: item.y1},
+            {x: item.x2, y: item.y2},
+            item
+          );
+        }
+        if (grid.drawTicks) {
+          drawLine(
+            {x: item.tx1, y: item.ty1},
+            {x: item.tx2, y: item.ty2},
+            {
+              color: item.tickColor,
+              width: item.tickWidth,
+              borderDash: item.tickBorderDash,
+              borderDashOffset: item.tickBorderDashOffset
+            }
+          );
+        }
+      }
+    }
+  }
+  drawBorder() {
+    const {chart, ctx, options: {grid}} = this;
+    const borderOpts = grid.setContext(this.getContext());
+    const axisWidth = grid.drawBorder ? borderOpts.borderWidth : 0;
+    if (!axisWidth) {
+      return;
+    }
+    const lastLineWidth = grid.setContext(this.getContext(0)).lineWidth;
+    const borderValue = this._borderValue;
+    let x1, x2, y1, y2;
+    if (this.isHorizontal()) {
+      x1 = _alignPixel(chart, this.left, axisWidth) - axisWidth / 2;
+      x2 = _alignPixel(chart, this.right, lastLineWidth) + lastLineWidth / 2;
+      y1 = y2 = borderValue;
+    } else {
+      y1 = _alignPixel(chart, this.top, axisWidth) - axisWidth / 2;
+      y2 = _alignPixel(chart, this.bottom, lastLineWidth) + lastLineWidth / 2;
+      x1 = x2 = borderValue;
+    }
+    ctx.save();
+    ctx.lineWidth = borderOpts.borderWidth;
+    ctx.strokeStyle = borderOpts.borderColor;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.restore();
+  }
+  drawLabels(chartArea) {
+    const optionTicks = this.options.ticks;
+    if (!optionTicks.display) {
+      return;
+    }
+    const ctx = this.ctx;
+    const area = this._computeLabelArea();
+    if (area) {
+      clipArea(ctx, area);
+    }
+    const items = this._labelItems || (this._labelItems = this._computeLabelItems(chartArea));
+    let i, ilen;
+    for (i = 0, ilen = items.length; i < ilen; ++i) {
+      const item = items[i];
+      const tickFont = item.font;
+      const label = item.label;
+      if (item.backdrop) {
+        ctx.fillStyle = item.backdrop.color;
+        ctx.fillRect(item.backdrop.left, item.backdrop.top, item.backdrop.width, item.backdrop.height);
+      }
+      let y = item.textOffset;
+      renderText(ctx, label, 0, y, tickFont, item);
+    }
+    if (area) {
+      unclipArea(ctx);
+    }
+  }
+  drawTitle() {
+    const {ctx, options: {position, title, reverse}} = this;
+    if (!title.display) {
+      return;
+    }
+    const font = toFont(title.font);
+    const padding = toPadding(title.padding);
+    const align = title.align;
+    let offset = font.lineHeight / 2;
+    if (position === 'bottom' || position === 'center' || isObject(position)) {
+      offset += padding.bottom;
+      if (isArray(title.text)) {
+        offset += font.lineHeight * (title.text.length - 1);
+      }
+    } else {
+      offset += padding.top;
+    }
+    const {titleX, titleY, maxWidth, rotation} = titleArgs(this, offset, position, align);
+    renderText(ctx, title.text, 0, 0, font, {
+      color: title.color,
+      maxWidth,
+      rotation,
+      textAlign: titleAlign(align, position, reverse),
+      textBaseline: 'middle',
+      translation: [titleX, titleY],
+    });
+  }
+  draw(chartArea) {
+    if (!this._isVisible()) {
+      return;
+    }
+    this.drawBackground();
+    this.drawGrid(chartArea);
+    this.drawBorder();
+    this.drawTitle();
+    this.drawLabels(chartArea);
+  }
+  _layers() {
+    const opts = this.options;
+    const tz = opts.ticks && opts.ticks.z || 0;
+    const gz = valueOrDefault(opts.grid && opts.grid.z, -1);
+    if (!this._isVisible() || this.draw !== Scale.prototype.draw) {
+      return [{
+        z: tz,
+        draw: (chartArea) => {
+          this.draw(chartArea);
+        }
+      }];
+    }
+    return [{
+      z: gz,
+      draw: (chartArea) => {
+        this.drawBackground();
+        this.drawGrid(chartArea);
+        this.drawTitle();
+      }
+    }, {
+      z: gz + 1,
+      draw: () => {
+        this.drawBorder();
+      }
+    }, {
+      z: tz,
+      draw: (chartArea) => {
+        this.drawLabels(chartArea);
+      }
+    }];
+  }
+  getMatchingVisibleMetas(type) {
+    const metas = this.chart.getSortedVisibleDatasetMetas();
+    const axisID = this.axis + 'AxisID';
+    const result = [];
+    let i, ilen;
+    for (i = 0, ilen = metas.length; i < ilen; ++i) {
+      const meta = metas[i];
+      if (meta[axisID] === this.id && (!type || meta.type === type)) {
+        result.push(meta);
+      }
+    }
+    return result;
+  }
+  _resolveTickFontOptions(index) {
+    const opts = this.options.ticks.setContext(this.getContext(index));
+    return toFont(opts.font);
+  }
+  _maxDigits() {
+    const fontSize = this._resolveTickFontOptions(0).lineHeight;
+    return (this.isHorizontal() ? this.width : this.height) / fontSize;
+  }
+}
+
+class TypedRegistry {
+  constructor(type, scope, override) {
+    this.type = type;
+    this.scope = scope;
+    this.override = override;
+    this.items = Object.create(null);
+  }
+  isForType(type) {
+    return Object.prototype.isPrototypeOf.call(this.type.prototype, type.prototype);
+  }
+  register(item) {
+    const proto = Object.getPrototypeOf(item);
+    let parentScope;
+    if (isIChartComponent(proto)) {
+      parentScope = this.register(proto);
+    }
+    const items = this.items;
+    const id = item.id;
+    const scope = this.scope + '.' + id;
+    if (!id) {
+      throw new Error('class does not have id: ' + item);
+    }
+    if (id in items) {
+      return scope;
+    }
+    items[id] = item;
+    registerDefaults(item, scope, parentScope);
+    if (this.override) {
+      defaults.override(item.id, item.overrides);
+    }
+    return scope;
+  }
+  get(id) {
+    return this.items[id];
+  }
+  unregister(item) {
+    const items = this.items;
+    const id = item.id;
+    const scope = this.scope;
+    if (id in items) {
+      delete items[id];
+    }
+    if (scope && id in defaults[scope]) {
+      delete defaults[scope][id];
+      if (this.override) {
+        delete overrides[id];
+      }
+    }
+  }
+}
+function registerDefaults(item, scope, parentScope) {
+  const itemDefaults = merge(Object.create(null), [
+    parentScope ? defaults.get(parentScope) : {},
+    defaults.get(scope),
+    item.defaults
+  ]);
+  defaults.set(scope, itemDefaults);
+  if (item.defaultRoutes) {
+    routeDefaults(scope, item.defaultRoutes);
+  }
+  if (item.descriptors) {
+    defaults.describe(scope, item.descriptors);
+  }
+}
+function routeDefaults(scope, routes) {
+  Object.keys(routes).forEach(property => {
+    const propertyParts = property.split('.');
+    const sourceName = propertyParts.pop();
+    const sourceScope = [scope].concat(propertyParts).join('.');
+    const parts = routes[property].split('.');
+    const targetName = parts.pop();
+    const targetScope = parts.join('.');
+    defaults.route(sourceScope, sourceName, targetScope, targetName);
+  });
+}
+function isIChartComponent(proto) {
+  return 'id' in proto && 'defaults' in proto;
+}
+
+class Registry {
+  constructor() {
+    this.controllers = new TypedRegistry(DatasetController, 'datasets', true);
+    this.elements = new TypedRegistry(Element, 'elements');
+    this.plugins = new TypedRegistry(Object, 'plugins');
+    this.scales = new TypedRegistry(Scale, 'scales');
+    this._typedRegistries = [this.controllers, this.scales, this.elements];
+  }
+  add(...args) {
+    this._each('register', args);
+  }
+  remove(...args) {
+    this._each('unregister', args);
+  }
+  addControllers(...args) {
+    this._each('register', args, this.controllers);
+  }
+  addElements(...args) {
+    this._each('register', args, this.elements);
+  }
+  addPlugins(...args) {
+    this._each('register', args, this.plugins);
+  }
+  addScales(...args) {
+    this._each('register', args, this.scales);
+  }
+  getController(id) {
+    return this._get(id, this.controllers, 'controller');
+  }
+  getElement(id) {
+    return this._get(id, this.elements, 'element');
+  }
+  getPlugin(id) {
+    return this._get(id, this.plugins, 'plugin');
+  }
+  getScale(id) {
+    return this._get(id, this.scales, 'scale');
+  }
+  removeControllers(...args) {
+    this._each('unregister', args, this.controllers);
+  }
+  removeElements(...args) {
+    this._each('unregister', args, this.elements);
+  }
+  removePlugins(...args) {
+    this._each('unregister', args, this.plugins);
+  }
+  removeScales(...args) {
+    this._each('unregister', args, this.scales);
+  }
+  _each(method, args, typedRegistry) {
+    [...args].forEach(arg => {
+      const reg = typedRegistry || this._getRegistryForType(arg);
+      if (typedRegistry || reg.isForType(arg) || (reg === this.plugins && arg.id)) {
+        this._exec(method, reg, arg);
+      } else {
+        each(arg, item => {
+          const itemReg = typedRegistry || this._getRegistryForType(item);
+          this._exec(method, itemReg, item);
+        });
+      }
+    });
+  }
+  _exec(method, registry, component) {
+    const camelMethod = _capitalize(method);
+    callback(component['before' + camelMethod], [], component);
+    registry[method](component);
+    callback(component['after' + camelMethod], [], component);
+  }
+  _getRegistryForType(type) {
+    for (let i = 0; i < this._typedRegistries.length; i++) {
+      const reg = this._typedRegistries[i];
+      if (reg.isForType(type)) {
+        return reg;
+      }
+    }
+    return this.plugins;
+  }
+  _get(id, typedRegistry, type) {
+    const item = typedRegistry.get(id);
+    if (item === undefined) {
+      throw new Error('"' + id + '" is not a registered ' + type + '.');
+    }
+    return item;
+  }
+}
+var registry = new Registry();
+
+class PluginService {
+  constructor() {
+    this._init = [];
+  }
+  notify(chart, hook, args, filter) {
+    if (hook === 'beforeInit') {
+      this._init = this._createDescriptors(chart, true);
+      this._notify(this._init, chart, 'install');
+    }
+    const descriptors = filter ? this._descriptors(chart).filter(filter) : this._descriptors(chart);
+    const result = this._notify(descriptors, chart, hook, args);
+    if (hook === 'afterDestroy') {
+      this._notify(descriptors, chart, 'stop');
+      this._notify(this._init, chart, 'uninstall');
+    }
+    return result;
+  }
+  _notify(descriptors, chart, hook, args) {
+    args = args || {};
+    for (const descriptor of descriptors) {
+      const plugin = descriptor.plugin;
+      const method = plugin[hook];
+      const params = [chart, args, descriptor.options];
+      if (callback(method, params, plugin) === false && args.cancelable) {
+        return false;
+      }
+    }
+    return true;
+  }
+  invalidate() {
+    if (!isNullOrUndef(this._cache)) {
+      this._oldCache = this._cache;
+      this._cache = undefined;
+    }
+  }
+  _descriptors(chart) {
+    if (this._cache) {
+      return this._cache;
+    }
+    const descriptors = this._cache = this._createDescriptors(chart);
+    this._notifyStateChanges(chart);
+    return descriptors;
+  }
+  _createDescriptors(chart, all) {
+    const config = chart && chart.config;
+    const options = valueOrDefault(config.options && config.options.plugins, {});
+    const plugins = allPlugins(config);
+    return options === false && !all ? [] : createDescriptors(chart, plugins, options, all);
+  }
+  _notifyStateChanges(chart) {
+    const previousDescriptors = this._oldCache || [];
+    const descriptors = this._cache;
+    const diff = (a, b) => a.filter(x => !b.some(y => x.plugin.id === y.plugin.id));
+    this._notify(diff(previousDescriptors, descriptors), chart, 'stop');
+    this._notify(diff(descriptors, previousDescriptors), chart, 'start');
+  }
+}
+function allPlugins(config) {
+  const localIds = {};
+  const plugins = [];
+  const keys = Object.keys(registry.plugins.items);
+  for (let i = 0; i < keys.length; i++) {
+    plugins.push(registry.getPlugin(keys[i]));
+  }
+  const local = config.plugins || [];
+  for (let i = 0; i < local.length; i++) {
+    const plugin = local[i];
+    if (plugins.indexOf(plugin) === -1) {
+      plugins.push(plugin);
+      localIds[plugin.id] = true;
+    }
+  }
+  return {plugins, localIds};
+}
+function getOpts(options, all) {
+  if (!all && options === false) {
+    return null;
+  }
+  if (options === true) {
+    return {};
+  }
+  return options;
+}
+function createDescriptors(chart, {plugins, localIds}, options, all) {
+  const result = [];
+  const context = chart.getContext();
+  for (const plugin of plugins) {
+    const id = plugin.id;
+    const opts = getOpts(options[id], all);
+    if (opts === null) {
+      continue;
+    }
+    result.push({
+      plugin,
+      options: pluginOpts(chart.config, {plugin, local: localIds[id]}, opts, context)
+    });
+  }
+  return result;
+}
+function pluginOpts(config, {plugin, local}, opts, context) {
+  const keys = config.pluginScopeKeys(plugin);
+  const scopes = config.getOptionScopes(opts, keys);
+  if (local && plugin.defaults) {
+    scopes.push(plugin.defaults);
+  }
+  return config.createResolver(scopes, context, [''], {
+    scriptable: false,
+    indexable: false,
+    allKeys: true
+  });
+}
+
+function getIndexAxis(type, options) {
+  const datasetDefaults = defaults.datasets[type] || {};
+  const datasetOptions = (options.datasets || {})[type] || {};
+  return datasetOptions.indexAxis || options.indexAxis || datasetDefaults.indexAxis || 'x';
+}
+function getAxisFromDefaultScaleID(id, indexAxis) {
+  let axis = id;
+  if (id === '_index_') {
+    axis = indexAxis;
+  } else if (id === '_value_') {
+    axis = indexAxis === 'x' ? 'y' : 'x';
+  }
+  return axis;
+}
+function getDefaultScaleIDFromAxis(axis, indexAxis) {
+  return axis === indexAxis ? '_index_' : '_value_';
+}
+function axisFromPosition(position) {
+  if (position === 'top' || position === 'bottom') {
+    return 'x';
+  }
+  if (position === 'left' || position === 'right') {
+    return 'y';
+  }
+}
+function determineAxis(id, scaleOptions) {
+  if (id === 'x' || id === 'y') {
+    return id;
+  }
+  return scaleOptions.axis || axisFromPosition(scaleOptions.position) || id.charAt(0).toLowerCase();
+}
+function mergeScaleConfig(config, options) {
+  const chartDefaults = overrides[config.type] || {scales: {}};
+  const configScales = options.scales || {};
+  const chartIndexAxis = getIndexAxis(config.type, options);
+  const firstIDs = Object.create(null);
+  const scales = Object.create(null);
+  Object.keys(configScales).forEach(id => {
+    const scaleConf = configScales[id];
+    if (!isObject(scaleConf)) {
+      return console.error(`Invalid scale configuration for scale: ${id}`);
+    }
+    if (scaleConf._proxy) {
+      return console.warn(`Ignoring resolver passed as options for scale: ${id}`);
+    }
+    const axis = determineAxis(id, scaleConf);
+    const defaultId = getDefaultScaleIDFromAxis(axis, chartIndexAxis);
+    const defaultScaleOptions = chartDefaults.scales || {};
+    firstIDs[axis] = firstIDs[axis] || id;
+    scales[id] = mergeIf(Object.create(null), [{axis}, scaleConf, defaultScaleOptions[axis], defaultScaleOptions[defaultId]]);
+  });
+  config.data.datasets.forEach(dataset => {
+    const type = dataset.type || config.type;
+    const indexAxis = dataset.indexAxis || getIndexAxis(type, options);
+    const datasetDefaults = overrides[type] || {};
+    const defaultScaleOptions = datasetDefaults.scales || {};
+    Object.keys(defaultScaleOptions).forEach(defaultID => {
+      const axis = getAxisFromDefaultScaleID(defaultID, indexAxis);
+      const id = dataset[axis + 'AxisID'] || firstIDs[axis] || axis;
+      scales[id] = scales[id] || Object.create(null);
+      mergeIf(scales[id], [{axis}, configScales[id], defaultScaleOptions[defaultID]]);
+    });
+  });
+  Object.keys(scales).forEach(key => {
+    const scale = scales[key];
+    mergeIf(scale, [defaults.scales[scale.type], defaults.scale]);
+  });
+  return scales;
+}
+function initOptions(config) {
+  const options = config.options || (config.options = {});
+  options.plugins = valueOrDefault(options.plugins, {});
+  options.scales = mergeScaleConfig(config, options);
+}
+function initData(data) {
+  data = data || {};
+  data.datasets = data.datasets || [];
+  data.labels = data.labels || [];
+  return data;
+}
+function initConfig(config) {
+  config = config || {};
+  config.data = initData(config.data);
+  initOptions(config);
+  return config;
+}
+const keyCache = new Map();
+const keysCached = new Set();
+function cachedKeys(cacheKey, generate) {
+  let keys = keyCache.get(cacheKey);
+  if (!keys) {
+    keys = generate();
+    keyCache.set(cacheKey, keys);
+    keysCached.add(keys);
+  }
+  return keys;
+}
+const addIfFound = (set, obj, key) => {
+  const opts = resolveObjectKey(obj, key);
+  if (opts !== undefined) {
+    set.add(opts);
+  }
+};
+class Config {
+  constructor(config) {
+    this._config = initConfig(config);
+    this._scopeCache = new Map();
+    this._resolverCache = new Map();
+  }
+  get platform() {
+    return this._config.platform;
+  }
+  get type() {
+    return this._config.type;
+  }
+  set type(type) {
+    this._config.type = type;
+  }
+  get data() {
+    return this._config.data;
+  }
+  set data(data) {
+    this._config.data = initData(data);
+  }
+  get options() {
+    return this._config.options;
+  }
+  set options(options) {
+    this._config.options = options;
+  }
+  get plugins() {
+    return this._config.plugins;
+  }
+  update() {
+    const config = this._config;
+    this.clearCache();
+    initOptions(config);
+  }
+  clearCache() {
+    this._scopeCache.clear();
+    this._resolverCache.clear();
+  }
+  datasetScopeKeys(datasetType) {
+    return cachedKeys(datasetType,
+      () => [[
+        `datasets.${datasetType}`,
+        ''
+      ]]);
+  }
+  datasetAnimationScopeKeys(datasetType, transition) {
+    return cachedKeys(`${datasetType}.transition.${transition}`,
+      () => [
+        [
+          `datasets.${datasetType}.transitions.${transition}`,
+          `transitions.${transition}`,
+        ],
+        [
+          `datasets.${datasetType}`,
+          ''
+        ]
+      ]);
+  }
+  datasetElementScopeKeys(datasetType, elementType) {
+    return cachedKeys(`${datasetType}-${elementType}`,
+      () => [[
+        `datasets.${datasetType}.elements.${elementType}`,
+        `datasets.${datasetType}`,
+        `elements.${elementType}`,
+        ''
+      ]]);
+  }
+  pluginScopeKeys(plugin) {
+    const id = plugin.id;
+    const type = this.type;
+    return cachedKeys(`${type}-plugin-${id}`,
+      () => [[
+        `plugins.${id}`,
+        ...plugin.additionalOptionScopes || [],
+      ]]);
+  }
+  _cachedScopes(mainScope, resetCache) {
+    const _scopeCache = this._scopeCache;
+    let cache = _scopeCache.get(mainScope);
+    if (!cache || resetCache) {
+      cache = new Map();
+      _scopeCache.set(mainScope, cache);
+    }
+    return cache;
+  }
+  getOptionScopes(mainScope, keyLists, resetCache) {
+    const {options, type} = this;
+    const cache = this._cachedScopes(mainScope, resetCache);
+    const cached = cache.get(keyLists);
+    if (cached) {
+      return cached;
+    }
+    const scopes = new Set();
+    keyLists.forEach(keys => {
+      if (mainScope) {
+        scopes.add(mainScope);
+        keys.forEach(key => addIfFound(scopes, mainScope, key));
+      }
+      keys.forEach(key => addIfFound(scopes, options, key));
+      keys.forEach(key => addIfFound(scopes, overrides[type] || {}, key));
+      keys.forEach(key => addIfFound(scopes, defaults, key));
+      keys.forEach(key => addIfFound(scopes, descriptors, key));
+    });
+    const array = Array.from(scopes);
+    if (array.length === 0) {
+      array.push(Object.create(null));
+    }
+    if (keysCached.has(keyLists)) {
+      cache.set(keyLists, array);
+    }
+    return array;
+  }
+  chartOptionScopes() {
+    const {options, type} = this;
+    return [
+      options,
+      overrides[type] || {},
+      defaults.datasets[type] || {},
+      {type},
+      defaults,
+      descriptors
+    ];
+  }
+  resolveNamedOptions(scopes, names, context, prefixes = ['']) {
+    const result = {$shared: true};
+    const {resolver, subPrefixes} = getResolver(this._resolverCache, scopes, prefixes);
+    let options = resolver;
+    if (needContext(resolver, names)) {
+      result.$shared = false;
+      context = isFunction(context) ? context() : context;
+      const subResolver = this.createResolver(scopes, context, subPrefixes);
+      options = _attachContext(resolver, context, subResolver);
+    }
+    for (const prop of names) {
+      result[prop] = options[prop];
+    }
+    return result;
+  }
+  createResolver(scopes, context, prefixes = [''], descriptorDefaults) {
+    const {resolver} = getResolver(this._resolverCache, scopes, prefixes);
+    return isObject(context)
+      ? _attachContext(resolver, context, undefined, descriptorDefaults)
+      : resolver;
+  }
+}
+function getResolver(resolverCache, scopes, prefixes) {
+  let cache = resolverCache.get(scopes);
+  if (!cache) {
+    cache = new Map();
+    resolverCache.set(scopes, cache);
+  }
+  const cacheKey = prefixes.join();
+  let cached = cache.get(cacheKey);
+  if (!cached) {
+    const resolver = _createResolver(scopes, prefixes);
+    cached = {
+      resolver,
+      subPrefixes: prefixes.filter(p => !p.toLowerCase().includes('hover'))
+    };
+    cache.set(cacheKey, cached);
+  }
+  return cached;
+}
+const hasFunction = value => isObject(value)
+  && Object.getOwnPropertyNames(value).reduce((acc, key) => acc || isFunction(value[key]), false);
+function needContext(proxy, names) {
+  const {isScriptable, isIndexable} = _descriptors(proxy);
+  for (const prop of names) {
+    const scriptable = isScriptable(prop);
+    const indexable = isIndexable(prop);
+    const value = (indexable || scriptable) && proxy[prop];
+    if ((scriptable && (isFunction(value) || hasFunction(value)))
+      || (indexable && isArray(value))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+var version = "3.9.1";
+
+const KNOWN_POSITIONS = ['top', 'bottom', 'left', 'right', 'chartArea'];
+function positionIsHorizontal(position, axis) {
+  return position === 'top' || position === 'bottom' || (KNOWN_POSITIONS.indexOf(position) === -1 && axis === 'x');
+}
+function compare2Level(l1, l2) {
+  return function(a, b) {
+    return a[l1] === b[l1]
+      ? a[l2] - b[l2]
+      : a[l1] - b[l1];
+  };
+}
+function onAnimationsComplete(context) {
+  const chart = context.chart;
+  const animationOptions = chart.options.animation;
+  chart.notifyPlugins('afterRender');
+  callback(animationOptions && animationOptions.onComplete, [context], chart);
+}
+function onAnimationProgress(context) {
+  const chart = context.chart;
+  const animationOptions = chart.options.animation;
+  callback(animationOptions && animationOptions.onProgress, [context], chart);
+}
+function getCanvas(item) {
+  if (_isDomSupported() && typeof item === 'string') {
+    item = document.getElementById(item);
+  } else if (item && item.length) {
+    item = item[0];
+  }
+  if (item && item.canvas) {
+    item = item.canvas;
+  }
+  return item;
+}
+const instances = {};
+const getChart = (key) => {
+  const canvas = getCanvas(key);
+  return Object.values(instances).filter((c) => c.canvas === canvas).pop();
+};
+function moveNumericKeys(obj, start, move) {
+  const keys = Object.keys(obj);
+  for (const key of keys) {
+    const intKey = +key;
+    if (intKey >= start) {
+      const value = obj[key];
+      delete obj[key];
+      if (move > 0 || intKey > start) {
+        obj[intKey + move] = value;
+      }
+    }
+  }
+}
+function determineLastEvent(e, lastEvent, inChartArea, isClick) {
+  if (!inChartArea || e.type === 'mouseout') {
+    return null;
+  }
+  if (isClick) {
+    return lastEvent;
+  }
+  return e;
+}
+class Chart {
+  constructor(item, userConfig) {
+    const config = this.config = new Config(userConfig);
+    const initialCanvas = getCanvas(item);
+    const existingChart = getChart(initialCanvas);
+    if (existingChart) {
+      throw new Error(
+        'Canvas is already in use. Chart with ID \'' + existingChart.id + '\'' +
+				' must be destroyed before the canvas with ID \'' + existingChart.canvas.id + '\' can be reused.'
+      );
+    }
+    const options = config.createResolver(config.chartOptionScopes(), this.getContext());
+    this.platform = new (config.platform || _detectPlatform(initialCanvas))();
+    this.platform.updateConfig(config);
+    const context = this.platform.acquireContext(initialCanvas, options.aspectRatio);
+    const canvas = context && context.canvas;
+    const height = canvas && canvas.height;
+    const width = canvas && canvas.width;
+    this.id = uid();
+    this.ctx = context;
+    this.canvas = canvas;
+    this.width = width;
+    this.height = height;
+    this._options = options;
+    this._aspectRatio = this.aspectRatio;
+    this._layers = [];
+    this._metasets = [];
+    this._stacks = undefined;
+    this.boxes = [];
+    this.currentDevicePixelRatio = undefined;
+    this.chartArea = undefined;
+    this._active = [];
+    this._lastEvent = undefined;
+    this._listeners = {};
+    this._responsiveListeners = undefined;
+    this._sortedMetasets = [];
+    this.scales = {};
+    this._plugins = new PluginService();
+    this.$proxies = {};
+    this._hiddenIndices = {};
+    this.attached = false;
+    this._animationsDisabled = undefined;
+    this.$context = undefined;
+    this._doResize = debounce(mode => this.update(mode), options.resizeDelay || 0);
+    this._dataChanges = [];
+    instances[this.id] = this;
+    if (!context || !canvas) {
+      console.error("Failed to create chart: can't acquire context from the given item");
+      return;
+    }
+    animator.listen(this, 'complete', onAnimationsComplete);
+    animator.listen(this, 'progress', onAnimationProgress);
+    this._initialize();
+    if (this.attached) {
+      this.update();
+    }
+  }
+  get aspectRatio() {
+    const {options: {aspectRatio, maintainAspectRatio}, width, height, _aspectRatio} = this;
+    if (!isNullOrUndef(aspectRatio)) {
+      return aspectRatio;
+    }
+    if (maintainAspectRatio && _aspectRatio) {
+      return _aspectRatio;
+    }
+    return height ? width / height : null;
+  }
+  get data() {
+    return this.config.data;
+  }
+  set data(data) {
+    this.config.data = data;
+  }
+  get options() {
+    return this._options;
+  }
+  set options(options) {
+    this.config.options = options;
+  }
+  _initialize() {
+    this.notifyPlugins('beforeInit');
+    if (this.options.responsive) {
+      this.resize();
+    } else {
+      retinaScale(this, this.options.devicePixelRatio);
+    }
+    this.bindEvents();
+    this.notifyPlugins('afterInit');
+    return this;
+  }
+  clear() {
+    clearCanvas(this.canvas, this.ctx);
+    return this;
+  }
+  stop() {
+    animator.stop(this);
+    return this;
+  }
+  resize(width, height) {
+    if (!animator.running(this)) {
+      this._resize(width, height);
+    } else {
+      this._resizeBeforeDraw = {width, height};
+    }
+  }
+  _resize(width, height) {
+    const options = this.options;
+    const canvas = this.canvas;
+    const aspectRatio = options.maintainAspectRatio && this.aspectRatio;
+    const newSize = this.platform.getMaximumSize(canvas, width, height, aspectRatio);
+    const newRatio = options.devicePixelRatio || this.platform.getDevicePixelRatio();
+    const mode = this.width ? 'resize' : 'attach';
+    this.width = newSize.width;
+    this.height = newSize.height;
+    this._aspectRatio = this.aspectRatio;
+    if (!retinaScale(this, newRatio, true)) {
+      return;
+    }
+    this.notifyPlugins('resize', {size: newSize});
+    callback(options.onResize, [this, newSize], this);
+    if (this.attached) {
+      if (this._doResize(mode)) {
+        this.render();
+      }
+    }
+  }
+  ensureScalesHaveIDs() {
+    const options = this.options;
+    const scalesOptions = options.scales || {};
+    each(scalesOptions, (axisOptions, axisID) => {
+      axisOptions.id = axisID;
+    });
+  }
+  buildOrUpdateScales() {
+    const options = this.options;
+    const scaleOpts = options.scales;
+    const scales = this.scales;
+    const updated = Object.keys(scales).reduce((obj, id) => {
+      obj[id] = false;
+      return obj;
+    }, {});
+    let items = [];
+    if (scaleOpts) {
+      items = items.concat(
+        Object.keys(scaleOpts).map((id) => {
+          const scaleOptions = scaleOpts[id];
+          const axis = determineAxis(id, scaleOptions);
+          const isRadial = axis === 'r';
+          const isHorizontal = axis === 'x';
+          return {
+            options: scaleOptions,
+            dposition: isRadial ? 'chartArea' : isHorizontal ? 'bottom' : 'left',
+            dtype: isRadial ? 'radialLinear' : isHorizontal ? 'category' : 'linear'
+          };
+        })
+      );
+    }
+    each(items, (item) => {
+      const scaleOptions = item.options;
+      const id = scaleOptions.id;
+      const axis = determineAxis(id, scaleOptions);
+      const scaleType = valueOrDefault(scaleOptions.type, item.dtype);
+      if (scaleOptions.position === undefined || positionIsHorizontal(scaleOptions.position, axis) !== positionIsHorizontal(item.dposition)) {
+        scaleOptions.position = item.dposition;
+      }
+      updated[id] = true;
+      let scale = null;
+      if (id in scales && scales[id].type === scaleType) {
+        scale = scales[id];
+      } else {
+        const scaleClass = registry.getScale(scaleType);
+        scale = new scaleClass({
+          id,
+          type: scaleType,
+          ctx: this.ctx,
+          chart: this
+        });
+        scales[scale.id] = scale;
+      }
+      scale.init(scaleOptions, options);
+    });
+    each(updated, (hasUpdated, id) => {
+      if (!hasUpdated) {
+        delete scales[id];
+      }
+    });
+    each(scales, (scale) => {
+      layouts.configure(this, scale, scale.options);
+      layouts.addBox(this, scale);
+    });
+  }
+  _updateMetasets() {
+    const metasets = this._metasets;
+    const numData = this.data.datasets.length;
+    const numMeta = metasets.length;
+    metasets.sort((a, b) => a.index - b.index);
+    if (numMeta > numData) {
+      for (let i = numData; i < numMeta; ++i) {
+        this._destroyDatasetMeta(i);
+      }
+      metasets.splice(numData, numMeta - numData);
+    }
+    this._sortedMetasets = metasets.slice(0).sort(compare2Level('order', 'index'));
+  }
+  _removeUnreferencedMetasets() {
+    const {_metasets: metasets, data: {datasets}} = this;
+    if (metasets.length > datasets.length) {
+      delete this._stacks;
+    }
+    metasets.forEach((meta, index) => {
+      if (datasets.filter(x => x === meta._dataset).length === 0) {
+        this._destroyDatasetMeta(index);
+      }
+    });
+  }
+  buildOrUpdateControllers() {
+    const newControllers = [];
+    const datasets = this.data.datasets;
+    let i, ilen;
+    this._removeUnreferencedMetasets();
+    for (i = 0, ilen = datasets.length; i < ilen; i++) {
+      const dataset = datasets[i];
+      let meta = this.getDatasetMeta(i);
+      const type = dataset.type || this.config.type;
+      if (meta.type && meta.type !== type) {
+        this._destroyDatasetMeta(i);
+        meta = this.getDatasetMeta(i);
+      }
+      meta.type = type;
+      meta.indexAxis = dataset.indexAxis || getIndexAxis(type, this.options);
+      meta.order = dataset.order || 0;
+      meta.index = i;
+      meta.label = '' + dataset.label;
+      meta.visible = this.isDatasetVisible(i);
+      if (meta.controller) {
+        meta.controller.updateIndex(i);
+        meta.controller.linkScales();
+      } else {
+        const ControllerClass = registry.getController(type);
+        const {datasetElementType, dataElementType} = defaults.datasets[type];
+        Object.assign(ControllerClass.prototype, {
+          dataElementType: registry.getElement(dataElementType),
+          datasetElementType: datasetElementType && registry.getElement(datasetElementType)
+        });
+        meta.controller = new ControllerClass(this, i);
+        newControllers.push(meta.controller);
+      }
+    }
+    this._updateMetasets();
+    return newControllers;
+  }
+  _resetElements() {
+    each(this.data.datasets, (dataset, datasetIndex) => {
+      this.getDatasetMeta(datasetIndex).controller.reset();
+    }, this);
+  }
+  reset() {
+    this._resetElements();
+    this.notifyPlugins('reset');
+  }
+  update(mode) {
+    const config = this.config;
+    config.update();
+    const options = this._options = config.createResolver(config.chartOptionScopes(), this.getContext());
+    const animsDisabled = this._animationsDisabled = !options.animation;
+    this._updateScales();
+    this._checkEventBindings();
+    this._updateHiddenIndices();
+    this._plugins.invalidate();
+    if (this.notifyPlugins('beforeUpdate', {mode, cancelable: true}) === false) {
+      return;
+    }
+    const newControllers = this.buildOrUpdateControllers();
+    this.notifyPlugins('beforeElementsUpdate');
+    let minPadding = 0;
+    for (let i = 0, ilen = this.data.datasets.length; i < ilen; i++) {
+      const {controller} = this.getDatasetMeta(i);
+      const reset = !animsDisabled && newControllers.indexOf(controller) === -1;
+      controller.buildOrUpdateElements(reset);
+      minPadding = Math.max(+controller.getMaxOverflow(), minPadding);
+    }
+    minPadding = this._minPadding = options.layout.autoPadding ? minPadding : 0;
+    this._updateLayout(minPadding);
+    if (!animsDisabled) {
+      each(newControllers, (controller) => {
+        controller.reset();
+      });
+    }
+    this._updateDatasets(mode);
+    this.notifyPlugins('afterUpdate', {mode});
+    this._layers.sort(compare2Level('z', '_idx'));
+    const {_active, _lastEvent} = this;
+    if (_lastEvent) {
+      this._eventHandler(_lastEvent, true);
+    } else if (_active.length) {
+      this._updateHoverStyles(_active, _active, true);
+    }
+    this.render();
+  }
+  _updateScales() {
+    each(this.scales, (scale) => {
+      layouts.removeBox(this, scale);
+    });
+    this.ensureScalesHaveIDs();
+    this.buildOrUpdateScales();
+  }
+  _checkEventBindings() {
+    const options = this.options;
+    const existingEvents = new Set(Object.keys(this._listeners));
+    const newEvents = new Set(options.events);
+    if (!setsEqual(existingEvents, newEvents) || !!this._responsiveListeners !== options.responsive) {
+      this.unbindEvents();
+      this.bindEvents();
+    }
+  }
+  _updateHiddenIndices() {
+    const {_hiddenIndices} = this;
+    const changes = this._getUniformDataChanges() || [];
+    for (const {method, start, count} of changes) {
+      const move = method === '_removeElements' ? -count : count;
+      moveNumericKeys(_hiddenIndices, start, move);
+    }
+  }
+  _getUniformDataChanges() {
+    const _dataChanges = this._dataChanges;
+    if (!_dataChanges || !_dataChanges.length) {
+      return;
+    }
+    this._dataChanges = [];
+    const datasetCount = this.data.datasets.length;
+    const makeSet = (idx) => new Set(
+      _dataChanges
+        .filter(c => c[0] === idx)
+        .map((c, i) => i + ',' + c.splice(1).join(','))
+    );
+    const changeSet = makeSet(0);
+    for (let i = 1; i < datasetCount; i++) {
+      if (!setsEqual(changeSet, makeSet(i))) {
+        return;
+      }
+    }
+    return Array.from(changeSet)
+      .map(c => c.split(','))
+      .map(a => ({method: a[1], start: +a[2], count: +a[3]}));
+  }
+  _updateLayout(minPadding) {
+    if (this.notifyPlugins('beforeLayout', {cancelable: true}) === false) {
+      return;
+    }
+    layouts.update(this, this.width, this.height, minPadding);
+    const area = this.chartArea;
+    const noArea = area.width <= 0 || area.height <= 0;
+    this._layers = [];
+    each(this.boxes, (box) => {
+      if (noArea && box.position === 'chartArea') {
+        return;
+      }
+      if (box.configure) {
+        box.configure();
+      }
+      this._layers.push(...box._layers());
+    }, this);
+    this._layers.forEach((item, index) => {
+      item._idx = index;
+    });
+    this.notifyPlugins('afterLayout');
+  }
+  _updateDatasets(mode) {
+    if (this.notifyPlugins('beforeDatasetsUpdate', {mode, cancelable: true}) === false) {
+      return;
+    }
+    for (let i = 0, ilen = this.data.datasets.length; i < ilen; ++i) {
+      this.getDatasetMeta(i).controller.configure();
+    }
+    for (let i = 0, ilen = this.data.datasets.length; i < ilen; ++i) {
+      this._updateDataset(i, isFunction(mode) ? mode({datasetIndex: i}) : mode);
+    }
+    this.notifyPlugins('afterDatasetsUpdate', {mode});
+  }
+  _updateDataset(index, mode) {
+    const meta = this.getDatasetMeta(index);
+    const args = {meta, index, mode, cancelable: true};
+    if (this.notifyPlugins('beforeDatasetUpdate', args) === false) {
+      return;
+    }
+    meta.controller._update(mode);
+    args.cancelable = false;
+    this.notifyPlugins('afterDatasetUpdate', args);
+  }
+  render() {
+    if (this.notifyPlugins('beforeRender', {cancelable: true}) === false) {
+      return;
+    }
+    if (animator.has(this)) {
+      if (this.attached && !animator.running(this)) {
+        animator.start(this);
+      }
+    } else {
+      this.draw();
+      onAnimationsComplete({chart: this});
+    }
+  }
+  draw() {
+    let i;
+    if (this._resizeBeforeDraw) {
+      const {width, height} = this._resizeBeforeDraw;
+      this._resize(width, height);
+      this._resizeBeforeDraw = null;
+    }
+    this.clear();
+    if (this.width <= 0 || this.height <= 0) {
+      return;
+    }
+    if (this.notifyPlugins('beforeDraw', {cancelable: true}) === false) {
+      return;
+    }
+    const layers = this._layers;
+    for (i = 0; i < layers.length && layers[i].z <= 0; ++i) {
+      layers[i].draw(this.chartArea);
+    }
+    this._drawDatasets();
+    for (; i < layers.length; ++i) {
+      layers[i].draw(this.chartArea);
+    }
+    this.notifyPlugins('afterDraw');
+  }
+  _getSortedDatasetMetas(filterVisible) {
+    const metasets = this._sortedMetasets;
+    const result = [];
+    let i, ilen;
+    for (i = 0, ilen = metasets.length; i < ilen; ++i) {
+      const meta = metasets[i];
+      if (!filterVisible || meta.visible) {
+        result.push(meta);
+      }
+    }
+    return result;
+  }
+  getSortedVisibleDatasetMetas() {
+    return this._getSortedDatasetMetas(true);
+  }
+  _drawDatasets() {
+    if (this.notifyPlugins('beforeDatasetsDraw', {cancelable: true}) === false) {
+      return;
+    }
+    const metasets = this.getSortedVisibleDatasetMetas();
+    for (let i = metasets.length - 1; i >= 0; --i) {
+      this._drawDataset(metasets[i]);
+    }
+    this.notifyPlugins('afterDatasetsDraw');
+  }
+  _drawDataset(meta) {
+    const ctx = this.ctx;
+    const clip = meta._clip;
+    const useClip = !clip.disabled;
+    const area = this.chartArea;
+    const args = {
+      meta,
+      index: meta.index,
+      cancelable: true
+    };
+    if (this.notifyPlugins('beforeDatasetDraw', args) === false) {
+      return;
+    }
+    if (useClip) {
+      clipArea(ctx, {
+        left: clip.left === false ? 0 : area.left - clip.left,
+        right: clip.right === false ? this.width : area.right + clip.right,
+        top: clip.top === false ? 0 : area.top - clip.top,
+        bottom: clip.bottom === false ? this.height : area.bottom + clip.bottom
+      });
+    }
+    meta.controller.draw();
+    if (useClip) {
+      unclipArea(ctx);
+    }
+    args.cancelable = false;
+    this.notifyPlugins('afterDatasetDraw', args);
+  }
+  isPointInArea(point) {
+    return _isPointInArea(point, this.chartArea, this._minPadding);
+  }
+  getElementsAtEventForMode(e, mode, options, useFinalPosition) {
+    const method = Interaction.modes[mode];
+    if (typeof method === 'function') {
+      return method(this, e, options, useFinalPosition);
+    }
+    return [];
+  }
+  getDatasetMeta(datasetIndex) {
+    const dataset = this.data.datasets[datasetIndex];
+    const metasets = this._metasets;
+    let meta = metasets.filter(x => x && x._dataset === dataset).pop();
+    if (!meta) {
+      meta = {
+        type: null,
+        data: [],
+        dataset: null,
+        controller: null,
+        hidden: null,
+        xAxisID: null,
+        yAxisID: null,
+        order: dataset && dataset.order || 0,
+        index: datasetIndex,
+        _dataset: dataset,
+        _parsed: [],
+        _sorted: false
+      };
+      metasets.push(meta);
+    }
+    return meta;
+  }
+  getContext() {
+    return this.$context || (this.$context = createContext(null, {chart: this, type: 'chart'}));
+  }
+  getVisibleDatasetCount() {
+    return this.getSortedVisibleDatasetMetas().length;
+  }
+  isDatasetVisible(datasetIndex) {
+    const dataset = this.data.datasets[datasetIndex];
+    if (!dataset) {
+      return false;
+    }
+    const meta = this.getDatasetMeta(datasetIndex);
+    return typeof meta.hidden === 'boolean' ? !meta.hidden : !dataset.hidden;
+  }
+  setDatasetVisibility(datasetIndex, visible) {
+    const meta = this.getDatasetMeta(datasetIndex);
+    meta.hidden = !visible;
+  }
+  toggleDataVisibility(index) {
+    this._hiddenIndices[index] = !this._hiddenIndices[index];
+  }
+  getDataVisibility(index) {
+    return !this._hiddenIndices[index];
+  }
+  _updateVisibility(datasetIndex, dataIndex, visible) {
+    const mode = visible ? 'show' : 'hide';
+    const meta = this.getDatasetMeta(datasetIndex);
+    const anims = meta.controller._resolveAnimations(undefined, mode);
+    if (defined(dataIndex)) {
+      meta.data[dataIndex].hidden = !visible;
+      this.update();
+    } else {
+      this.setDatasetVisibility(datasetIndex, visible);
+      anims.update(meta, {visible});
+      this.update((ctx) => ctx.datasetIndex === datasetIndex ? mode : undefined);
+    }
+  }
+  hide(datasetIndex, dataIndex) {
+    this._updateVisibility(datasetIndex, dataIndex, false);
+  }
+  show(datasetIndex, dataIndex) {
+    this._updateVisibility(datasetIndex, dataIndex, true);
+  }
+  _destroyDatasetMeta(datasetIndex) {
+    const meta = this._metasets[datasetIndex];
+    if (meta && meta.controller) {
+      meta.controller._destroy();
+    }
+    delete this._metasets[datasetIndex];
+  }
+  _stop() {
+    let i, ilen;
+    this.stop();
+    animator.remove(this);
+    for (i = 0, ilen = this.data.datasets.length; i < ilen; ++i) {
+      this._destroyDatasetMeta(i);
+    }
+  }
+  destroy() {
+    this.notifyPlugins('beforeDestroy');
+    const {canvas, ctx} = this;
+    this._stop();
+    this.config.clearCache();
+    if (canvas) {
+      this.unbindEvents();
+      clearCanvas(canvas, ctx);
+      this.platform.releaseContext(ctx);
+      this.canvas = null;
+      this.ctx = null;
+    }
+    this.notifyPlugins('destroy');
+    delete instances[this.id];
+    this.notifyPlugins('afterDestroy');
+  }
+  toBase64Image(...args) {
+    return this.canvas.toDataURL(...args);
+  }
+  bindEvents() {
+    this.bindUserEvents();
+    if (this.options.responsive) {
+      this.bindResponsiveEvents();
+    } else {
+      this.attached = true;
+    }
+  }
+  bindUserEvents() {
+    const listeners = this._listeners;
+    const platform = this.platform;
+    const _add = (type, listener) => {
+      platform.addEventListener(this, type, listener);
+      listeners[type] = listener;
+    };
+    const listener = (e, x, y) => {
+      e.offsetX = x;
+      e.offsetY = y;
+      this._eventHandler(e);
+    };
+    each(this.options.events, (type) => _add(type, listener));
+  }
+  bindResponsiveEvents() {
+    if (!this._responsiveListeners) {
+      this._responsiveListeners = {};
+    }
+    const listeners = this._responsiveListeners;
+    const platform = this.platform;
+    const _add = (type, listener) => {
+      platform.addEventListener(this, type, listener);
+      listeners[type] = listener;
+    };
+    const _remove = (type, listener) => {
+      if (listeners[type]) {
+        platform.removeEventListener(this, type, listener);
+        delete listeners[type];
+      }
+    };
+    const listener = (width, height) => {
+      if (this.canvas) {
+        this.resize(width, height);
+      }
+    };
+    let detached;
+    const attached = () => {
+      _remove('attach', attached);
+      this.attached = true;
+      this.resize();
+      _add('resize', listener);
+      _add('detach', detached);
+    };
+    detached = () => {
+      this.attached = false;
+      _remove('resize', listener);
+      this._stop();
+      this._resize(0, 0);
+      _add('attach', attached);
+    };
+    if (platform.isAttached(this.canvas)) {
+      attached();
+    } else {
+      detached();
+    }
+  }
+  unbindEvents() {
+    each(this._listeners, (listener, type) => {
+      this.platform.removeEventListener(this, type, listener);
+    });
+    this._listeners = {};
+    each(this._responsiveListeners, (listener, type) => {
+      this.platform.removeEventListener(this, type, listener);
+    });
+    this._responsiveListeners = undefined;
+  }
+  updateHoverStyle(items, mode, enabled) {
+    const prefix = enabled ? 'set' : 'remove';
+    let meta, item, i, ilen;
+    if (mode === 'dataset') {
+      meta = this.getDatasetMeta(items[0].datasetIndex);
+      meta.controller['_' + prefix + 'DatasetHoverStyle']();
+    }
+    for (i = 0, ilen = items.length; i < ilen; ++i) {
+      item = items[i];
+      const controller = item && this.getDatasetMeta(item.datasetIndex).controller;
+      if (controller) {
+        controller[prefix + 'HoverStyle'](item.element, item.datasetIndex, item.index);
+      }
+    }
+  }
+  getActiveElements() {
+    return this._active || [];
+  }
+  setActiveElements(activeElements) {
+    const lastActive = this._active || [];
+    const active = activeElements.map(({datasetIndex, index}) => {
+      const meta = this.getDatasetMeta(datasetIndex);
+      if (!meta) {
+        throw new Error('No dataset found at index ' + datasetIndex);
+      }
+      return {
+        datasetIndex,
+        element: meta.data[index],
+        index,
+      };
+    });
+    const changed = !_elementsEqual(active, lastActive);
+    if (changed) {
+      this._active = active;
+      this._lastEvent = null;
+      this._updateHoverStyles(active, lastActive);
+    }
+  }
+  notifyPlugins(hook, args, filter) {
+    return this._plugins.notify(this, hook, args, filter);
+  }
+  _updateHoverStyles(active, lastActive, replay) {
+    const hoverOptions = this.options.hover;
+    const diff = (a, b) => a.filter(x => !b.some(y => x.datasetIndex === y.datasetIndex && x.index === y.index));
+    const deactivated = diff(lastActive, active);
+    const activated = replay ? active : diff(active, lastActive);
+    if (deactivated.length) {
+      this.updateHoverStyle(deactivated, hoverOptions.mode, false);
+    }
+    if (activated.length && hoverOptions.mode) {
+      this.updateHoverStyle(activated, hoverOptions.mode, true);
+    }
+  }
+  _eventHandler(e, replay) {
+    const args = {
+      event: e,
+      replay,
+      cancelable: true,
+      inChartArea: this.isPointInArea(e)
+    };
+    const eventFilter = (plugin) => (plugin.options.events || this.options.events).includes(e.native.type);
+    if (this.notifyPlugins('beforeEvent', args, eventFilter) === false) {
+      return;
+    }
+    const changed = this._handleEvent(e, replay, args.inChartArea);
+    args.cancelable = false;
+    this.notifyPlugins('afterEvent', args, eventFilter);
+    if (changed || args.changed) {
+      this.render();
+    }
+    return this;
+  }
+  _handleEvent(e, replay, inChartArea) {
+    const {_active: lastActive = [], options} = this;
+    const useFinalPosition = replay;
+    const active = this._getActiveElements(e, lastActive, inChartArea, useFinalPosition);
+    const isClick = _isClickEvent(e);
+    const lastEvent = determineLastEvent(e, this._lastEvent, inChartArea, isClick);
+    if (inChartArea) {
+      this._lastEvent = null;
+      callback(options.onHover, [e, active, this], this);
+      if (isClick) {
+        callback(options.onClick, [e, active, this], this);
+      }
+    }
+    const changed = !_elementsEqual(active, lastActive);
+    if (changed || replay) {
+      this._active = active;
+      this._updateHoverStyles(active, lastActive, replay);
+    }
+    this._lastEvent = lastEvent;
+    return changed;
+  }
+  _getActiveElements(e, lastActive, inChartArea, useFinalPosition) {
+    if (e.type === 'mouseout') {
+      return [];
+    }
+    if (!inChartArea) {
+      return lastActive;
+    }
+    const hoverOptions = this.options.hover;
+    return this.getElementsAtEventForMode(e, hoverOptions.mode, hoverOptions, useFinalPosition);
+  }
+}
+const invalidatePlugins = () => each(Chart.instances, (chart) => chart._plugins.invalidate());
+const enumerable = true;
+Object.defineProperties(Chart, {
+  defaults: {
+    enumerable,
+    value: defaults
+  },
+  instances: {
+    enumerable,
+    value: instances
+  },
+  overrides: {
+    enumerable,
+    value: overrides
+  },
+  registry: {
+    enumerable,
+    value: registry
+  },
+  version: {
+    enumerable,
+    value: version
+  },
+  getChart: {
+    enumerable,
+    value: getChart
+  },
+  register: {
+    enumerable,
+    value: (...items) => {
+      registry.add(...items);
+      invalidatePlugins();
+    }
+  },
+  unregister: {
+    enumerable,
+    value: (...items) => {
+      registry.remove(...items);
+      invalidatePlugins();
+    }
+  }
+});
+
+function abstract() {
+  throw new Error('This method is not implemented: Check that a complete date adapter is provided.');
+}
+class DateAdapter {
+  constructor(options) {
+    this.options = options || {};
+  }
+  init(chartOptions) {}
+  formats() {
+    return abstract();
+  }
+  parse(value, format) {
+    return abstract();
+  }
+  format(timestamp, format) {
+    return abstract();
+  }
+  add(timestamp, amount, unit) {
+    return abstract();
+  }
+  diff(a, b, unit) {
+    return abstract();
+  }
+  startOf(timestamp, unit, weekday) {
+    return abstract();
+  }
+  endOf(timestamp, unit) {
+    return abstract();
+  }
+}
+DateAdapter.override = function(members) {
+  Object.assign(DateAdapter.prototype, members);
+};
+var _adapters = {
+  _date: DateAdapter
+};
+
+function getAllScaleValues(scale, type) {
+  if (!scale._cache.$bar) {
+    const visibleMetas = scale.getMatchingVisibleMetas(type);
+    let values = [];
+    for (let i = 0, ilen = visibleMetas.length; i < ilen; i++) {
+      values = values.concat(visibleMetas[i].controller.getAllParsedValues(scale));
+    }
+    scale._cache.$bar = _arrayUnique(values.sort((a, b) => a - b));
+  }
+  return scale._cache.$bar;
+}
+function computeMinSampleSize(meta) {
+  const scale = meta.iScale;
+  const values = getAllScaleValues(scale, meta.type);
+  let min = scale._length;
+  let i, ilen, curr, prev;
+  const updateMinAndPrev = () => {
+    if (curr === 32767 || curr === -32768) {
+      return;
+    }
+    if (defined(prev)) {
+      min = Math.min(min, Math.abs(curr - prev) || min);
+    }
+    prev = curr;
+  };
+  for (i = 0, ilen = values.length; i < ilen; ++i) {
+    curr = scale.getPixelForValue(values[i]);
+    updateMinAndPrev();
+  }
+  prev = undefined;
+  for (i = 0, ilen = scale.ticks.length; i < ilen; ++i) {
+    curr = scale.getPixelForTick(i);
+    updateMinAndPrev();
+  }
+  return min;
+}
+function computeFitCategoryTraits(index, ruler, options, stackCount) {
+  const thickness = options.barThickness;
+  let size, ratio;
+  if (isNullOrUndef(thickness)) {
+    size = ruler.min * options.categoryPercentage;
+    ratio = options.barPercentage;
+  } else {
+    size = thickness * stackCount;
+    ratio = 1;
+  }
+  return {
+    chunk: size / stackCount,
+    ratio,
+    start: ruler.pixels[index] - (size / 2)
+  };
+}
+function computeFlexCategoryTraits(index, ruler, options, stackCount) {
+  const pixels = ruler.pixels;
+  const curr = pixels[index];
+  let prev = index > 0 ? pixels[index - 1] : null;
+  let next = index < pixels.length - 1 ? pixels[index + 1] : null;
+  const percent = options.categoryPercentage;
+  if (prev === null) {
+    prev = curr - (next === null ? ruler.end - ruler.start : next - curr);
+  }
+  if (next === null) {
+    next = curr + curr - prev;
+  }
+  const start = curr - (curr - Math.min(prev, next)) / 2 * percent;
+  const size = Math.abs(next - prev) / 2 * percent;
+  return {
+    chunk: size / stackCount,
+    ratio: options.barPercentage,
+    start
+  };
+}
+function parseFloatBar(entry, item, vScale, i) {
+  const startValue = vScale.parse(entry[0], i);
+  const endValue = vScale.parse(entry[1], i);
+  const min = Math.min(startValue, endValue);
+  const max = Math.max(startValue, endValue);
+  let barStart = min;
+  let barEnd = max;
+  if (Math.abs(min) > Math.abs(max)) {
+    barStart = max;
+    barEnd = min;
+  }
+  item[vScale.axis] = barEnd;
+  item._custom = {
+    barStart,
+    barEnd,
+    start: startValue,
+    end: endValue,
+    min,
+    max
+  };
+}
+function parseValue(entry, item, vScale, i) {
+  if (isArray(entry)) {
+    parseFloatBar(entry, item, vScale, i);
+  } else {
+    item[vScale.axis] = vScale.parse(entry, i);
+  }
+  return item;
+}
+function parseArrayOrPrimitive(meta, data, start, count) {
+  const iScale = meta.iScale;
+  const vScale = meta.vScale;
+  const labels = iScale.getLabels();
+  const singleScale = iScale === vScale;
+  const parsed = [];
+  let i, ilen, item, entry;
+  for (i = start, ilen = start + count; i < ilen; ++i) {
+    entry = data[i];
+    item = {};
+    item[iScale.axis] = singleScale || iScale.parse(labels[i], i);
+    parsed.push(parseValue(entry, item, vScale, i));
+  }
+  return parsed;
+}
+function isFloatBar(custom) {
+  return custom && custom.barStart !== undefined && custom.barEnd !== undefined;
+}
+function barSign(size, vScale, actualBase) {
+  if (size !== 0) {
+    return sign(size);
+  }
+  return (vScale.isHorizontal() ? 1 : -1) * (vScale.min >= actualBase ? 1 : -1);
+}
+function borderProps(properties) {
+  let reverse, start, end, top, bottom;
+  if (properties.horizontal) {
+    reverse = properties.base > properties.x;
+    start = 'left';
+    end = 'right';
+  } else {
+    reverse = properties.base < properties.y;
+    start = 'bottom';
+    end = 'top';
+  }
+  if (reverse) {
+    top = 'end';
+    bottom = 'start';
+  } else {
+    top = 'start';
+    bottom = 'end';
+  }
+  return {start, end, reverse, top, bottom};
+}
+function setBorderSkipped(properties, options, stack, index) {
+  let edge = options.borderSkipped;
+  const res = {};
+  if (!edge) {
+    properties.borderSkipped = res;
+    return;
+  }
+  if (edge === true) {
+    properties.borderSkipped = {top: true, right: true, bottom: true, left: true};
+    return;
+  }
+  const {start, end, reverse, top, bottom} = borderProps(properties);
+  if (edge === 'middle' && stack) {
+    properties.enableBorderRadius = true;
+    if ((stack._top || 0) === index) {
+      edge = top;
+    } else if ((stack._bottom || 0) === index) {
+      edge = bottom;
+    } else {
+      res[parseEdge(bottom, start, end, reverse)] = true;
+      edge = top;
+    }
+  }
+  res[parseEdge(edge, start, end, reverse)] = true;
+  properties.borderSkipped = res;
+}
+function parseEdge(edge, a, b, reverse) {
+  if (reverse) {
+    edge = swap(edge, a, b);
+    edge = startEnd(edge, b, a);
+  } else {
+    edge = startEnd(edge, a, b);
+  }
+  return edge;
+}
+function swap(orig, v1, v2) {
+  return orig === v1 ? v2 : orig === v2 ? v1 : orig;
+}
+function startEnd(v, start, end) {
+  return v === 'start' ? start : v === 'end' ? end : v;
+}
+function setInflateAmount(properties, {inflateAmount}, ratio) {
+  properties.inflateAmount = inflateAmount === 'auto'
+    ? ratio === 1 ? 0.33 : 0
+    : inflateAmount;
+}
+class BarController extends DatasetController {
+  parsePrimitiveData(meta, data, start, count) {
+    return parseArrayOrPrimitive(meta, data, start, count);
+  }
+  parseArrayData(meta, data, start, count) {
+    return parseArrayOrPrimitive(meta, data, start, count);
+  }
+  parseObjectData(meta, data, start, count) {
+    const {iScale, vScale} = meta;
+    const {xAxisKey = 'x', yAxisKey = 'y'} = this._parsing;
+    const iAxisKey = iScale.axis === 'x' ? xAxisKey : yAxisKey;
+    const vAxisKey = vScale.axis === 'x' ? xAxisKey : yAxisKey;
+    const parsed = [];
+    let i, ilen, item, obj;
+    for (i = start, ilen = start + count; i < ilen; ++i) {
+      obj = data[i];
+      item = {};
+      item[iScale.axis] = iScale.parse(resolveObjectKey(obj, iAxisKey), i);
+      parsed.push(parseValue(resolveObjectKey(obj, vAxisKey), item, vScale, i));
+    }
+    return parsed;
+  }
+  updateRangeFromParsed(range, scale, parsed, stack) {
+    super.updateRangeFromParsed(range, scale, parsed, stack);
+    const custom = parsed._custom;
+    if (custom && scale === this._cachedMeta.vScale) {
+      range.min = Math.min(range.min, custom.min);
+      range.max = Math.max(range.max, custom.max);
+    }
+  }
+  getMaxOverflow() {
+    return 0;
+  }
+  getLabelAndValue(index) {
+    const meta = this._cachedMeta;
+    const {iScale, vScale} = meta;
+    const parsed = this.getParsed(index);
+    const custom = parsed._custom;
+    const value = isFloatBar(custom)
+      ? '[' + custom.start + ', ' + custom.end + ']'
+      : '' + vScale.getLabelForValue(parsed[vScale.axis]);
+    return {
+      label: '' + iScale.getLabelForValue(parsed[iScale.axis]),
+      value
+    };
+  }
+  initialize() {
+    this.enableOptionSharing = true;
+    super.initialize();
+    const meta = this._cachedMeta;
+    meta.stack = this.getDataset().stack;
+  }
+  update(mode) {
+    const meta = this._cachedMeta;
+    this.updateElements(meta.data, 0, meta.data.length, mode);
+  }
+  updateElements(bars, start, count, mode) {
+    const reset = mode === 'reset';
+    const {index, _cachedMeta: {vScale}} = this;
+    const base = vScale.getBasePixel();
+    const horizontal = vScale.isHorizontal();
+    const ruler = this._getRuler();
+    const {sharedOptions, includeOptions} = this._getSharedOptions(start, mode);
+    for (let i = start; i < start + count; i++) {
+      const parsed = this.getParsed(i);
+      const vpixels = reset || isNullOrUndef(parsed[vScale.axis]) ? {base, head: base} : this._calculateBarValuePixels(i);
+      const ipixels = this._calculateBarIndexPixels(i, ruler);
+      const stack = (parsed._stacks || {})[vScale.axis];
+      const properties = {
+        horizontal,
+        base: vpixels.base,
+        enableBorderRadius: !stack || isFloatBar(parsed._custom) || (index === stack._top || index === stack._bottom),
+        x: horizontal ? vpixels.head : ipixels.center,
+        y: horizontal ? ipixels.center : vpixels.head,
+        height: horizontal ? ipixels.size : Math.abs(vpixels.size),
+        width: horizontal ? Math.abs(vpixels.size) : ipixels.size
+      };
+      if (includeOptions) {
+        properties.options = sharedOptions || this.resolveDataElementOptions(i, bars[i].active ? 'active' : mode);
+      }
+      const options = properties.options || bars[i].options;
+      setBorderSkipped(properties, options, stack, index);
+      setInflateAmount(properties, options, ruler.ratio);
+      this.updateElement(bars[i], i, properties, mode);
+    }
+  }
+  _getStacks(last, dataIndex) {
+    const {iScale} = this._cachedMeta;
+    const metasets = iScale.getMatchingVisibleMetas(this._type)
+      .filter(meta => meta.controller.options.grouped);
+    const stacked = iScale.options.stacked;
+    const stacks = [];
+    const skipNull = (meta) => {
+      const parsed = meta.controller.getParsed(dataIndex);
+      const val = parsed && parsed[meta.vScale.axis];
+      if (isNullOrUndef(val) || isNaN(val)) {
+        return true;
+      }
+    };
+    for (const meta of metasets) {
+      if (dataIndex !== undefined && skipNull(meta)) {
+        continue;
+      }
+      if (stacked === false || stacks.indexOf(meta.stack) === -1 ||
+				(stacked === undefined && meta.stack === undefined)) {
+        stacks.push(meta.stack);
+      }
+      if (meta.index === last) {
+        break;
+      }
+    }
+    if (!stacks.length) {
+      stacks.push(undefined);
+    }
+    return stacks;
+  }
+  _getStackCount(index) {
+    return this._getStacks(undefined, index).length;
+  }
+  _getStackIndex(datasetIndex, name, dataIndex) {
+    const stacks = this._getStacks(datasetIndex, dataIndex);
+    const index = (name !== undefined)
+      ? stacks.indexOf(name)
+      : -1;
+    return (index === -1)
+      ? stacks.length - 1
+      : index;
+  }
+  _getRuler() {
+    const opts = this.options;
+    const meta = this._cachedMeta;
+    const iScale = meta.iScale;
+    const pixels = [];
+    let i, ilen;
+    for (i = 0, ilen = meta.data.length; i < ilen; ++i) {
+      pixels.push(iScale.getPixelForValue(this.getParsed(i)[iScale.axis], i));
+    }
+    const barThickness = opts.barThickness;
+    const min = barThickness || computeMinSampleSize(meta);
+    return {
+      min,
+      pixels,
+      start: iScale._startPixel,
+      end: iScale._endPixel,
+      stackCount: this._getStackCount(),
+      scale: iScale,
+      grouped: opts.grouped,
+      ratio: barThickness ? 1 : opts.categoryPercentage * opts.barPercentage
+    };
+  }
+  _calculateBarValuePixels(index) {
+    const {_cachedMeta: {vScale, _stacked}, options: {base: baseValue, minBarLength}} = this;
+    const actualBase = baseValue || 0;
+    const parsed = this.getParsed(index);
+    const custom = parsed._custom;
+    const floating = isFloatBar(custom);
+    let value = parsed[vScale.axis];
+    let start = 0;
+    let length = _stacked ? this.applyStack(vScale, parsed, _stacked) : value;
+    let head, size;
+    if (length !== value) {
+      start = length - value;
+      length = value;
+    }
+    if (floating) {
+      value = custom.barStart;
+      length = custom.barEnd - custom.barStart;
+      if (value !== 0 && sign(value) !== sign(custom.barEnd)) {
+        start = 0;
+      }
+      start += value;
+    }
+    const startValue = !isNullOrUndef(baseValue) && !floating ? baseValue : start;
+    let base = vScale.getPixelForValue(startValue);
+    if (this.chart.getDataVisibility(index)) {
+      head = vScale.getPixelForValue(start + length);
+    } else {
+      head = base;
+    }
+    size = head - base;
+    if (Math.abs(size) < minBarLength) {
+      size = barSign(size, vScale, actualBase) * minBarLength;
+      if (value === actualBase) {
+        base -= size / 2;
+      }
+      const startPixel = vScale.getPixelForDecimal(0);
+      const endPixel = vScale.getPixelForDecimal(1);
+      const min = Math.min(startPixel, endPixel);
+      const max = Math.max(startPixel, endPixel);
+      base = Math.max(Math.min(base, max), min);
+      head = base + size;
+    }
+    if (base === vScale.getPixelForValue(actualBase)) {
+      const halfGrid = sign(size) * vScale.getLineWidthForValue(actualBase) / 2;
+      base += halfGrid;
+      size -= halfGrid;
+    }
+    return {
+      size,
+      base,
+      head,
+      center: head + size / 2
+    };
+  }
+  _calculateBarIndexPixels(index, ruler) {
+    const scale = ruler.scale;
+    const options = this.options;
+    const skipNull = options.skipNull;
+    const maxBarThickness = valueOrDefault(options.maxBarThickness, Infinity);
+    let center, size;
+    if (ruler.grouped) {
+      const stackCount = skipNull ? this._getStackCount(index) : ruler.stackCount;
+      const range = options.barThickness === 'flex'
+        ? computeFlexCategoryTraits(index, ruler, options, stackCount)
+        : computeFitCategoryTraits(index, ruler, options, stackCount);
+      const stackIndex = this._getStackIndex(this.index, this._cachedMeta.stack, skipNull ? index : undefined);
+      center = range.start + (range.chunk * stackIndex) + (range.chunk / 2);
+      size = Math.min(maxBarThickness, range.chunk * range.ratio);
+    } else {
+      center = scale.getPixelForValue(this.getParsed(index)[scale.axis], index);
+      size = Math.min(maxBarThickness, ruler.min * ruler.ratio);
+    }
+    return {
+      base: center - size / 2,
+      head: center + size / 2,
+      center,
+      size
+    };
+  }
+  draw() {
+    const meta = this._cachedMeta;
+    const vScale = meta.vScale;
+    const rects = meta.data;
+    const ilen = rects.length;
+    let i = 0;
+    for (; i < ilen; ++i) {
+      if (this.getParsed(i)[vScale.axis] !== null) {
+        rects[i].draw(this._ctx);
+      }
+    }
+  }
+}
+BarController.id = 'bar';
+BarController.defaults = {
+  datasetElementType: false,
+  dataElementType: 'bar',
+  categoryPercentage: 0.8,
+  barPercentage: 0.9,
+  grouped: true,
+  animations: {
+    numbers: {
+      type: 'number',
+      properties: ['x', 'y', 'base', 'width', 'height']
+    }
+  }
+};
+BarController.overrides = {
+  scales: {
+    _index_: {
+      type: 'category',
+      offset: true,
+      grid: {
+        offset: true
+      }
+    },
+    _value_: {
+      type: 'linear',
+      beginAtZero: true,
+    }
+  }
+};
+
+class BubbleController extends DatasetController {
+  initialize() {
+    this.enableOptionSharing = true;
+    super.initialize();
+  }
+  parsePrimitiveData(meta, data, start, count) {
+    const parsed = super.parsePrimitiveData(meta, data, start, count);
+    for (let i = 0; i < parsed.length; i++) {
+      parsed[i]._custom = this.resolveDataElementOptions(i + start).radius;
+    }
+    return parsed;
+  }
+  parseArrayData(meta, data, start, count) {
+    const parsed = super.parseArrayData(meta, data, start, count);
+    for (let i = 0; i < parsed.length; i++) {
+      const item = data[start + i];
+      parsed[i]._custom = valueOrDefault(item[2], this.resolveDataElementOptions(i + start).radius);
+    }
+    return parsed;
+  }
+  parseObjectData(meta, data, start, count) {
+    const parsed = super.parseObjectData(meta, data, start, count);
+    for (let i = 0; i < parsed.length; i++) {
+      const item = data[start + i];
+      parsed[i]._custom = valueOrDefault(item && item.r && +item.r, this.resolveDataElementOptions(i + start).radius);
+    }
+    return parsed;
+  }
+  getMaxOverflow() {
+    const data = this._cachedMeta.data;
+    let max = 0;
+    for (let i = data.length - 1; i >= 0; --i) {
+      max = Math.max(max, data[i].size(this.resolveDataElementOptions(i)) / 2);
+    }
+    return max > 0 && max;
+  }
+  getLabelAndValue(index) {
+    const meta = this._cachedMeta;
+    const {xScale, yScale} = meta;
+    const parsed = this.getParsed(index);
+    const x = xScale.getLabelForValue(parsed.x);
+    const y = yScale.getLabelForValue(parsed.y);
+    const r = parsed._custom;
+    return {
+      label: meta.label,
+      value: '(' + x + ', ' + y + (r ? ', ' + r : '') + ')'
+    };
+  }
+  update(mode) {
+    const points = this._cachedMeta.data;
+    this.updateElements(points, 0, points.length, mode);
+  }
+  updateElements(points, start, count, mode) {
+    const reset = mode === 'reset';
+    const {iScale, vScale} = this._cachedMeta;
+    const {sharedOptions, includeOptions} = this._getSharedOptions(start, mode);
+    const iAxis = iScale.axis;
+    const vAxis = vScale.axis;
+    for (let i = start; i < start + count; i++) {
+      const point = points[i];
+      const parsed = !reset && this.getParsed(i);
+      const properties = {};
+      const iPixel = properties[iAxis] = reset ? iScale.getPixelForDecimal(0.5) : iScale.getPixelForValue(parsed[iAxis]);
+      const vPixel = properties[vAxis] = reset ? vScale.getBasePixel() : vScale.getPixelForValue(parsed[vAxis]);
+      properties.skip = isNaN(iPixel) || isNaN(vPixel);
+      if (includeOptions) {
+        properties.options = sharedOptions || this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+        if (reset) {
+          properties.options.radius = 0;
+        }
+      }
+      this.updateElement(point, i, properties, mode);
+    }
+  }
+  resolveDataElementOptions(index, mode) {
+    const parsed = this.getParsed(index);
+    let values = super.resolveDataElementOptions(index, mode);
+    if (values.$shared) {
+      values = Object.assign({}, values, {$shared: false});
+    }
+    const radius = values.radius;
+    if (mode !== 'active') {
+      values.radius = 0;
+    }
+    values.radius += valueOrDefault(parsed && parsed._custom, radius);
+    return values;
+  }
+}
+BubbleController.id = 'bubble';
+BubbleController.defaults = {
+  datasetElementType: false,
+  dataElementType: 'point',
+  animations: {
+    numbers: {
+      type: 'number',
+      properties: ['x', 'y', 'borderWidth', 'radius']
+    }
+  }
+};
+BubbleController.overrides = {
+  scales: {
+    x: {
+      type: 'linear'
+    },
+    y: {
+      type: 'linear'
+    }
+  },
+  plugins: {
+    tooltip: {
+      callbacks: {
+        title() {
+          return '';
+        }
+      }
+    }
+  }
+};
+
+function getRatioAndOffset(rotation, circumference, cutout) {
+  let ratioX = 1;
+  let ratioY = 1;
+  let offsetX = 0;
+  let offsetY = 0;
+  if (circumference < TAU) {
+    const startAngle = rotation;
+    const endAngle = startAngle + circumference;
+    const startX = Math.cos(startAngle);
+    const startY = Math.sin(startAngle);
+    const endX = Math.cos(endAngle);
+    const endY = Math.sin(endAngle);
+    const calcMax = (angle, a, b) => _angleBetween(angle, startAngle, endAngle, true) ? 1 : Math.max(a, a * cutout, b, b * cutout);
+    const calcMin = (angle, a, b) => _angleBetween(angle, startAngle, endAngle, true) ? -1 : Math.min(a, a * cutout, b, b * cutout);
+    const maxX = calcMax(0, startX, endX);
+    const maxY = calcMax(HALF_PI, startY, endY);
+    const minX = calcMin(PI, startX, endX);
+    const minY = calcMin(PI + HALF_PI, startY, endY);
+    ratioX = (maxX - minX) / 2;
+    ratioY = (maxY - minY) / 2;
+    offsetX = -(maxX + minX) / 2;
+    offsetY = -(maxY + minY) / 2;
+  }
+  return {ratioX, ratioY, offsetX, offsetY};
+}
+class DoughnutController extends DatasetController {
+  constructor(chart, datasetIndex) {
+    super(chart, datasetIndex);
+    this.enableOptionSharing = true;
+    this.innerRadius = undefined;
+    this.outerRadius = undefined;
+    this.offsetX = undefined;
+    this.offsetY = undefined;
+  }
+  linkScales() {}
+  parse(start, count) {
+    const data = this.getDataset().data;
+    const meta = this._cachedMeta;
+    if (this._parsing === false) {
+      meta._parsed = data;
+    } else {
+      let getter = (i) => +data[i];
+      if (isObject(data[start])) {
+        const {key = 'value'} = this._parsing;
+        getter = (i) => +resolveObjectKey(data[i], key);
+      }
+      let i, ilen;
+      for (i = start, ilen = start + count; i < ilen; ++i) {
+        meta._parsed[i] = getter(i);
+      }
+    }
+  }
+  _getRotation() {
+    return toRadians(this.options.rotation - 90);
+  }
+  _getCircumference() {
+    return toRadians(this.options.circumference);
+  }
+  _getRotationExtents() {
+    let min = TAU;
+    let max = -TAU;
+    for (let i = 0; i < this.chart.data.datasets.length; ++i) {
+      if (this.chart.isDatasetVisible(i)) {
+        const controller = this.chart.getDatasetMeta(i).controller;
+        const rotation = controller._getRotation();
+        const circumference = controller._getCircumference();
+        min = Math.min(min, rotation);
+        max = Math.max(max, rotation + circumference);
+      }
+    }
+    return {
+      rotation: min,
+      circumference: max - min,
+    };
+  }
+  update(mode) {
+    const chart = this.chart;
+    const {chartArea} = chart;
+    const meta = this._cachedMeta;
+    const arcs = meta.data;
+    const spacing = this.getMaxBorderWidth() + this.getMaxOffset(arcs) + this.options.spacing;
+    const maxSize = Math.max((Math.min(chartArea.width, chartArea.height) - spacing) / 2, 0);
+    const cutout = Math.min(toPercentage(this.options.cutout, maxSize), 1);
+    const chartWeight = this._getRingWeight(this.index);
+    const {circumference, rotation} = this._getRotationExtents();
+    const {ratioX, ratioY, offsetX, offsetY} = getRatioAndOffset(rotation, circumference, cutout);
+    const maxWidth = (chartArea.width - spacing) / ratioX;
+    const maxHeight = (chartArea.height - spacing) / ratioY;
+    const maxRadius = Math.max(Math.min(maxWidth, maxHeight) / 2, 0);
+    const outerRadius = toDimension(this.options.radius, maxRadius);
+    const innerRadius = Math.max(outerRadius * cutout, 0);
+    const radiusLength = (outerRadius - innerRadius) / this._getVisibleDatasetWeightTotal();
+    this.offsetX = offsetX * outerRadius;
+    this.offsetY = offsetY * outerRadius;
+    meta.total = this.calculateTotal();
+    this.outerRadius = outerRadius - radiusLength * this._getRingWeightOffset(this.index);
+    this.innerRadius = Math.max(this.outerRadius - radiusLength * chartWeight, 0);
+    this.updateElements(arcs, 0, arcs.length, mode);
+  }
+  _circumference(i, reset) {
+    const opts = this.options;
+    const meta = this._cachedMeta;
+    const circumference = this._getCircumference();
+    if ((reset && opts.animation.animateRotate) || !this.chart.getDataVisibility(i) || meta._parsed[i] === null || meta.data[i].hidden) {
+      return 0;
+    }
+    return this.calculateCircumference(meta._parsed[i] * circumference / TAU);
+  }
+  updateElements(arcs, start, count, mode) {
+    const reset = mode === 'reset';
+    const chart = this.chart;
+    const chartArea = chart.chartArea;
+    const opts = chart.options;
+    const animationOpts = opts.animation;
+    const centerX = (chartArea.left + chartArea.right) / 2;
+    const centerY = (chartArea.top + chartArea.bottom) / 2;
+    const animateScale = reset && animationOpts.animateScale;
+    const innerRadius = animateScale ? 0 : this.innerRadius;
+    const outerRadius = animateScale ? 0 : this.outerRadius;
+    const {sharedOptions, includeOptions} = this._getSharedOptions(start, mode);
+    let startAngle = this._getRotation();
+    let i;
+    for (i = 0; i < start; ++i) {
+      startAngle += this._circumference(i, reset);
+    }
+    for (i = start; i < start + count; ++i) {
+      const circumference = this._circumference(i, reset);
+      const arc = arcs[i];
+      const properties = {
+        x: centerX + this.offsetX,
+        y: centerY + this.offsetY,
+        startAngle,
+        endAngle: startAngle + circumference,
+        circumference,
+        outerRadius,
+        innerRadius
+      };
+      if (includeOptions) {
+        properties.options = sharedOptions || this.resolveDataElementOptions(i, arc.active ? 'active' : mode);
+      }
+      startAngle += circumference;
+      this.updateElement(arc, i, properties, mode);
+    }
+  }
+  calculateTotal() {
+    const meta = this._cachedMeta;
+    const metaData = meta.data;
+    let total = 0;
+    let i;
+    for (i = 0; i < metaData.length; i++) {
+      const value = meta._parsed[i];
+      if (value !== null && !isNaN(value) && this.chart.getDataVisibility(i) && !metaData[i].hidden) {
+        total += Math.abs(value);
+      }
+    }
+    return total;
+  }
+  calculateCircumference(value) {
+    const total = this._cachedMeta.total;
+    if (total > 0 && !isNaN(value)) {
+      return TAU * (Math.abs(value) / total);
+    }
+    return 0;
+  }
+  getLabelAndValue(index) {
+    const meta = this._cachedMeta;
+    const chart = this.chart;
+    const labels = chart.data.labels || [];
+    const value = formatNumber(meta._parsed[index], chart.options.locale);
+    return {
+      label: labels[index] || '',
+      value,
+    };
+  }
+  getMaxBorderWidth(arcs) {
+    let max = 0;
+    const chart = this.chart;
+    let i, ilen, meta, controller, options;
+    if (!arcs) {
+      for (i = 0, ilen = chart.data.datasets.length; i < ilen; ++i) {
+        if (chart.isDatasetVisible(i)) {
+          meta = chart.getDatasetMeta(i);
+          arcs = meta.data;
+          controller = meta.controller;
+          break;
+        }
+      }
+    }
+    if (!arcs) {
+      return 0;
+    }
+    for (i = 0, ilen = arcs.length; i < ilen; ++i) {
+      options = controller.resolveDataElementOptions(i);
+      if (options.borderAlign !== 'inner') {
+        max = Math.max(max, options.borderWidth || 0, options.hoverBorderWidth || 0);
+      }
+    }
+    return max;
+  }
+  getMaxOffset(arcs) {
+    let max = 0;
+    for (let i = 0, ilen = arcs.length; i < ilen; ++i) {
+      const options = this.resolveDataElementOptions(i);
+      max = Math.max(max, options.offset || 0, options.hoverOffset || 0);
+    }
+    return max;
+  }
+  _getRingWeightOffset(datasetIndex) {
+    let ringWeightOffset = 0;
+    for (let i = 0; i < datasetIndex; ++i) {
+      if (this.chart.isDatasetVisible(i)) {
+        ringWeightOffset += this._getRingWeight(i);
+      }
+    }
+    return ringWeightOffset;
+  }
+  _getRingWeight(datasetIndex) {
+    return Math.max(valueOrDefault(this.chart.data.datasets[datasetIndex].weight, 1), 0);
+  }
+  _getVisibleDatasetWeightTotal() {
+    return this._getRingWeightOffset(this.chart.data.datasets.length) || 1;
+  }
+}
+DoughnutController.id = 'doughnut';
+DoughnutController.defaults = {
+  datasetElementType: false,
+  dataElementType: 'arc',
+  animation: {
+    animateRotate: true,
+    animateScale: false
+  },
+  animations: {
+    numbers: {
+      type: 'number',
+      properties: ['circumference', 'endAngle', 'innerRadius', 'outerRadius', 'startAngle', 'x', 'y', 'offset', 'borderWidth', 'spacing']
+    },
+  },
+  cutout: '50%',
+  rotation: 0,
+  circumference: 360,
+  radius: '100%',
+  spacing: 0,
+  indexAxis: 'r',
+};
+DoughnutController.descriptors = {
+  _scriptable: (name) => name !== 'spacing',
+  _indexable: (name) => name !== 'spacing',
+};
+DoughnutController.overrides = {
+  aspectRatio: 1,
+  plugins: {
+    legend: {
+      labels: {
+        generateLabels(chart) {
+          const data = chart.data;
+          if (data.labels.length && data.datasets.length) {
+            const {labels: {pointStyle}} = chart.legend.options;
+            return data.labels.map((label, i) => {
+              const meta = chart.getDatasetMeta(0);
+              const style = meta.controller.getStyle(i);
+              return {
+                text: label,
+                fillStyle: style.backgroundColor,
+                strokeStyle: style.borderColor,
+                lineWidth: style.borderWidth,
+                pointStyle: pointStyle,
+                hidden: !chart.getDataVisibility(i),
+                index: i
+              };
+            });
+          }
+          return [];
+        }
+      },
+      onClick(e, legendItem, legend) {
+        legend.chart.toggleDataVisibility(legendItem.index);
+        legend.chart.update();
+      }
+    },
+    tooltip: {
+      callbacks: {
+        title() {
+          return '';
+        },
+        label(tooltipItem) {
+          let dataLabel = tooltipItem.label;
+          const value = ': ' + tooltipItem.formattedValue;
+          if (isArray(dataLabel)) {
+            dataLabel = dataLabel.slice();
+            dataLabel[0] += value;
+          } else {
+            dataLabel += value;
+          }
+          return dataLabel;
+        }
+      }
+    }
+  }
+};
+
+class LineController extends DatasetController {
+  initialize() {
+    this.enableOptionSharing = true;
+    this.supportsDecimation = true;
+    super.initialize();
+  }
+  update(mode) {
+    const meta = this._cachedMeta;
+    const {dataset: line, data: points = [], _dataset} = meta;
+    const animationsDisabled = this.chart._animationsDisabled;
+    let {start, count} = _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled);
+    this._drawStart = start;
+    this._drawCount = count;
+    if (_scaleRangesChanged(meta)) {
+      start = 0;
+      count = points.length;
+    }
+    line._chart = this.chart;
+    line._datasetIndex = this.index;
+    line._decimated = !!_dataset._decimated;
+    line.points = points;
+    const options = this.resolveDatasetElementOptions(mode);
+    if (!this.options.showLine) {
+      options.borderWidth = 0;
+    }
+    options.segment = this.options.segment;
+    this.updateElement(line, undefined, {
+      animated: !animationsDisabled,
+      options
+    }, mode);
+    this.updateElements(points, start, count, mode);
+  }
+  updateElements(points, start, count, mode) {
+    const reset = mode === 'reset';
+    const {iScale, vScale, _stacked, _dataset} = this._cachedMeta;
+    const {sharedOptions, includeOptions} = this._getSharedOptions(start, mode);
+    const iAxis = iScale.axis;
+    const vAxis = vScale.axis;
+    const {spanGaps, segment} = this.options;
+    const maxGapLength = isNumber(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
+    const directUpdate = this.chart._animationsDisabled || reset || mode === 'none';
+    let prevParsed = start > 0 && this.getParsed(start - 1);
+    for (let i = start; i < start + count; ++i) {
+      const point = points[i];
+      const parsed = this.getParsed(i);
+      const properties = directUpdate ? point : {};
+      const nullData = isNullOrUndef(parsed[vAxis]);
+      const iPixel = properties[iAxis] = iScale.getPixelForValue(parsed[iAxis], i);
+      const vPixel = properties[vAxis] = reset || nullData ? vScale.getBasePixel() : vScale.getPixelForValue(_stacked ? this.applyStack(vScale, parsed, _stacked) : parsed[vAxis], i);
+      properties.skip = isNaN(iPixel) || isNaN(vPixel) || nullData;
+      properties.stop = i > 0 && (Math.abs(parsed[iAxis] - prevParsed[iAxis])) > maxGapLength;
+      if (segment) {
+        properties.parsed = parsed;
+        properties.raw = _dataset.data[i];
+      }
+      if (includeOptions) {
+        properties.options = sharedOptions || this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+      }
+      if (!directUpdate) {
+        this.updateElement(point, i, properties, mode);
+      }
+      prevParsed = parsed;
+    }
+  }
+  getMaxOverflow() {
+    const meta = this._cachedMeta;
+    const dataset = meta.dataset;
+    const border = dataset.options && dataset.options.borderWidth || 0;
+    const data = meta.data || [];
+    if (!data.length) {
+      return border;
+    }
+    const firstPoint = data[0].size(this.resolveDataElementOptions(0));
+    const lastPoint = data[data.length - 1].size(this.resolveDataElementOptions(data.length - 1));
+    return Math.max(border, firstPoint, lastPoint) / 2;
+  }
+  draw() {
+    const meta = this._cachedMeta;
+    meta.dataset.updateControlPoints(this.chart.chartArea, meta.iScale.axis);
+    super.draw();
+  }
+}
+LineController.id = 'line';
+LineController.defaults = {
+  datasetElementType: 'line',
+  dataElementType: 'point',
+  showLine: true,
+  spanGaps: false,
+};
+LineController.overrides = {
+  scales: {
+    _index_: {
+      type: 'category',
+    },
+    _value_: {
+      type: 'linear',
+    },
+  }
+};
+
+class PolarAreaController extends DatasetController {
+  constructor(chart, datasetIndex) {
+    super(chart, datasetIndex);
+    this.innerRadius = undefined;
+    this.outerRadius = undefined;
+  }
+  getLabelAndValue(index) {
+    const meta = this._cachedMeta;
+    const chart = this.chart;
+    const labels = chart.data.labels || [];
+    const value = formatNumber(meta._parsed[index].r, chart.options.locale);
+    return {
+      label: labels[index] || '',
+      value,
+    };
+  }
+  parseObjectData(meta, data, start, count) {
+    return _parseObjectDataRadialScale.bind(this)(meta, data, start, count);
+  }
+  update(mode) {
+    const arcs = this._cachedMeta.data;
+    this._updateRadius();
+    this.updateElements(arcs, 0, arcs.length, mode);
+  }
+  getMinMax() {
+    const meta = this._cachedMeta;
+    const range = {min: Number.POSITIVE_INFINITY, max: Number.NEGATIVE_INFINITY};
+    meta.data.forEach((element, index) => {
+      const parsed = this.getParsed(index).r;
+      if (!isNaN(parsed) && this.chart.getDataVisibility(index)) {
+        if (parsed < range.min) {
+          range.min = parsed;
+        }
+        if (parsed > range.max) {
+          range.max = parsed;
+        }
+      }
+    });
+    return range;
+  }
+  _updateRadius() {
+    const chart = this.chart;
+    const chartArea = chart.chartArea;
+    const opts = chart.options;
+    const minSize = Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
+    const outerRadius = Math.max(minSize / 2, 0);
+    const innerRadius = Math.max(opts.cutoutPercentage ? (outerRadius / 100) * (opts.cutoutPercentage) : 1, 0);
+    const radiusLength = (outerRadius - innerRadius) / chart.getVisibleDatasetCount();
+    this.outerRadius = outerRadius - (radiusLength * this.index);
+    this.innerRadius = this.outerRadius - radiusLength;
+  }
+  updateElements(arcs, start, count, mode) {
+    const reset = mode === 'reset';
+    const chart = this.chart;
+    const opts = chart.options;
+    const animationOpts = opts.animation;
+    const scale = this._cachedMeta.rScale;
+    const centerX = scale.xCenter;
+    const centerY = scale.yCenter;
+    const datasetStartAngle = scale.getIndexAngle(0) - 0.5 * PI;
+    let angle = datasetStartAngle;
+    let i;
+    const defaultAngle = 360 / this.countVisibleElements();
+    for (i = 0; i < start; ++i) {
+      angle += this._computeAngle(i, mode, defaultAngle);
+    }
+    for (i = start; i < start + count; i++) {
+      const arc = arcs[i];
+      let startAngle = angle;
+      let endAngle = angle + this._computeAngle(i, mode, defaultAngle);
+      let outerRadius = chart.getDataVisibility(i) ? scale.getDistanceFromCenterForValue(this.getParsed(i).r) : 0;
+      angle = endAngle;
+      if (reset) {
+        if (animationOpts.animateScale) {
+          outerRadius = 0;
+        }
+        if (animationOpts.animateRotate) {
+          startAngle = endAngle = datasetStartAngle;
+        }
+      }
+      const properties = {
+        x: centerX,
+        y: centerY,
+        innerRadius: 0,
+        outerRadius,
+        startAngle,
+        endAngle,
+        options: this.resolveDataElementOptions(i, arc.active ? 'active' : mode)
+      };
+      this.updateElement(arc, i, properties, mode);
+    }
+  }
+  countVisibleElements() {
+    const meta = this._cachedMeta;
+    let count = 0;
+    meta.data.forEach((element, index) => {
+      if (!isNaN(this.getParsed(index).r) && this.chart.getDataVisibility(index)) {
+        count++;
+      }
+    });
+    return count;
+  }
+  _computeAngle(index, mode, defaultAngle) {
+    return this.chart.getDataVisibility(index)
+      ? toRadians(this.resolveDataElementOptions(index, mode).angle || defaultAngle)
+      : 0;
+  }
+}
+PolarAreaController.id = 'polarArea';
+PolarAreaController.defaults = {
+  dataElementType: 'arc',
+  animation: {
+    animateRotate: true,
+    animateScale: true
+  },
+  animations: {
+    numbers: {
+      type: 'number',
+      properties: ['x', 'y', 'startAngle', 'endAngle', 'innerRadius', 'outerRadius']
+    },
+  },
+  indexAxis: 'r',
+  startAngle: 0,
+};
+PolarAreaController.overrides = {
+  aspectRatio: 1,
+  plugins: {
+    legend: {
+      labels: {
+        generateLabels(chart) {
+          const data = chart.data;
+          if (data.labels.length && data.datasets.length) {
+            const {labels: {pointStyle}} = chart.legend.options;
+            return data.labels.map((label, i) => {
+              const meta = chart.getDatasetMeta(0);
+              const style = meta.controller.getStyle(i);
+              return {
+                text: label,
+                fillStyle: style.backgroundColor,
+                strokeStyle: style.borderColor,
+                lineWidth: style.borderWidth,
+                pointStyle: pointStyle,
+                hidden: !chart.getDataVisibility(i),
+                index: i
+              };
+            });
+          }
+          return [];
+        }
+      },
+      onClick(e, legendItem, legend) {
+        legend.chart.toggleDataVisibility(legendItem.index);
+        legend.chart.update();
+      }
+    },
+    tooltip: {
+      callbacks: {
+        title() {
+          return '';
+        },
+        label(context) {
+          return context.chart.data.labels[context.dataIndex] + ': ' + context.formattedValue;
+        }
+      }
+    }
+  },
+  scales: {
+    r: {
+      type: 'radialLinear',
+      angleLines: {
+        display: false
+      },
+      beginAtZero: true,
+      grid: {
+        circular: true
+      },
+      pointLabels: {
+        display: false
+      },
+      startAngle: 0
+    }
+  }
+};
+
+class PieController extends DoughnutController {
+}
+PieController.id = 'pie';
+PieController.defaults = {
+  cutout: 0,
+  rotation: 0,
+  circumference: 360,
+  radius: '100%'
+};
+
+class RadarController extends DatasetController {
+  getLabelAndValue(index) {
+    const vScale = this._cachedMeta.vScale;
+    const parsed = this.getParsed(index);
+    return {
+      label: vScale.getLabels()[index],
+      value: '' + vScale.getLabelForValue(parsed[vScale.axis])
+    };
+  }
+  parseObjectData(meta, data, start, count) {
+    return _parseObjectDataRadialScale.bind(this)(meta, data, start, count);
+  }
+  update(mode) {
+    const meta = this._cachedMeta;
+    const line = meta.dataset;
+    const points = meta.data || [];
+    const labels = meta.iScale.getLabels();
+    line.points = points;
+    if (mode !== 'resize') {
+      const options = this.resolveDatasetElementOptions(mode);
+      if (!this.options.showLine) {
+        options.borderWidth = 0;
+      }
+      const properties = {
+        _loop: true,
+        _fullLoop: labels.length === points.length,
+        options
+      };
+      this.updateElement(line, undefined, properties, mode);
+    }
+    this.updateElements(points, 0, points.length, mode);
+  }
+  updateElements(points, start, count, mode) {
+    const scale = this._cachedMeta.rScale;
+    const reset = mode === 'reset';
+    for (let i = start; i < start + count; i++) {
+      const point = points[i];
+      const options = this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+      const pointPosition = scale.getPointPositionForValue(i, this.getParsed(i).r);
+      const x = reset ? scale.xCenter : pointPosition.x;
+      const y = reset ? scale.yCenter : pointPosition.y;
+      const properties = {
+        x,
+        y,
+        angle: pointPosition.angle,
+        skip: isNaN(x) || isNaN(y),
+        options
+      };
+      this.updateElement(point, i, properties, mode);
+    }
+  }
+}
+RadarController.id = 'radar';
+RadarController.defaults = {
+  datasetElementType: 'line',
+  dataElementType: 'point',
+  indexAxis: 'r',
+  showLine: true,
+  elements: {
+    line: {
+      fill: 'start'
+    }
+  },
+};
+RadarController.overrides = {
+  aspectRatio: 1,
+  scales: {
+    r: {
+      type: 'radialLinear',
+    }
+  }
+};
+
+class ScatterController extends DatasetController {
+  update(mode) {
+    const meta = this._cachedMeta;
+    const {data: points = []} = meta;
+    const animationsDisabled = this.chart._animationsDisabled;
+    let {start, count} = _getStartAndCountOfVisiblePoints(meta, points, animationsDisabled);
+    this._drawStart = start;
+    this._drawCount = count;
+    if (_scaleRangesChanged(meta)) {
+      start = 0;
+      count = points.length;
+    }
+    if (this.options.showLine) {
+      const {dataset: line, _dataset} = meta;
+      line._chart = this.chart;
+      line._datasetIndex = this.index;
+      line._decimated = !!_dataset._decimated;
+      line.points = points;
+      const options = this.resolveDatasetElementOptions(mode);
+      options.segment = this.options.segment;
+      this.updateElement(line, undefined, {
+        animated: !animationsDisabled,
+        options
+      }, mode);
+    }
+    this.updateElements(points, start, count, mode);
+  }
+  addElements() {
+    const {showLine} = this.options;
+    if (!this.datasetElementType && showLine) {
+      this.datasetElementType = registry.getElement('line');
+    }
+    super.addElements();
+  }
+  updateElements(points, start, count, mode) {
+    const reset = mode === 'reset';
+    const {iScale, vScale, _stacked, _dataset} = this._cachedMeta;
+    const firstOpts = this.resolveDataElementOptions(start, mode);
+    const sharedOptions = this.getSharedOptions(firstOpts);
+    const includeOptions = this.includeOptions(mode, sharedOptions);
+    const iAxis = iScale.axis;
+    const vAxis = vScale.axis;
+    const {spanGaps, segment} = this.options;
+    const maxGapLength = isNumber(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
+    const directUpdate = this.chart._animationsDisabled || reset || mode === 'none';
+    let prevParsed = start > 0 && this.getParsed(start - 1);
+    for (let i = start; i < start + count; ++i) {
+      const point = points[i];
+      const parsed = this.getParsed(i);
+      const properties = directUpdate ? point : {};
+      const nullData = isNullOrUndef(parsed[vAxis]);
+      const iPixel = properties[iAxis] = iScale.getPixelForValue(parsed[iAxis], i);
+      const vPixel = properties[vAxis] = reset || nullData ? vScale.getBasePixel() : vScale.getPixelForValue(_stacked ? this.applyStack(vScale, parsed, _stacked) : parsed[vAxis], i);
+      properties.skip = isNaN(iPixel) || isNaN(vPixel) || nullData;
+      properties.stop = i > 0 && (Math.abs(parsed[iAxis] - prevParsed[iAxis])) > maxGapLength;
+      if (segment) {
+        properties.parsed = parsed;
+        properties.raw = _dataset.data[i];
+      }
+      if (includeOptions) {
+        properties.options = sharedOptions || this.resolveDataElementOptions(i, point.active ? 'active' : mode);
+      }
+      if (!directUpdate) {
+        this.updateElement(point, i, properties, mode);
+      }
+      prevParsed = parsed;
+    }
+    this.updateSharedOptions(sharedOptions, mode, firstOpts);
+  }
+  getMaxOverflow() {
+    const meta = this._cachedMeta;
+    const data = meta.data || [];
+    if (!this.options.showLine) {
+      let max = 0;
+      for (let i = data.length - 1; i >= 0; --i) {
+        max = Math.max(max, data[i].size(this.resolveDataElementOptions(i)) / 2);
+      }
+      return max > 0 && max;
+    }
+    const dataset = meta.dataset;
+    const border = dataset.options && dataset.options.borderWidth || 0;
+    if (!data.length) {
+      return border;
+    }
+    const firstPoint = data[0].size(this.resolveDataElementOptions(0));
+    const lastPoint = data[data.length - 1].size(this.resolveDataElementOptions(data.length - 1));
+    return Math.max(border, firstPoint, lastPoint) / 2;
+  }
+}
+ScatterController.id = 'scatter';
+ScatterController.defaults = {
+  datasetElementType: false,
+  dataElementType: 'point',
+  showLine: false,
+  fill: false
+};
+ScatterController.overrides = {
+  interaction: {
+    mode: 'point'
+  },
+  plugins: {
+    tooltip: {
+      callbacks: {
+        title() {
+          return '';
+        },
+        label(item) {
+          return '(' + item.label + ', ' + item.formattedValue + ')';
+        }
+      }
+    }
+  },
+  scales: {
+    x: {
+      type: 'linear'
+    },
+    y: {
+      type: 'linear'
+    }
+  }
+};
+
+var controllers = /*#__PURE__*/Object.freeze({
+__proto__: null,
+BarController: BarController,
+BubbleController: BubbleController,
+DoughnutController: DoughnutController,
+LineController: LineController,
+PolarAreaController: PolarAreaController,
+PieController: PieController,
+RadarController: RadarController,
+ScatterController: ScatterController
+});
+
+function clipArc(ctx, element, endAngle) {
+  const {startAngle, pixelMargin, x, y, outerRadius, innerRadius} = element;
+  let angleMargin = pixelMargin / outerRadius;
+  ctx.beginPath();
+  ctx.arc(x, y, outerRadius, startAngle - angleMargin, endAngle + angleMargin);
+  if (innerRadius > pixelMargin) {
+    angleMargin = pixelMargin / innerRadius;
+    ctx.arc(x, y, innerRadius, endAngle + angleMargin, startAngle - angleMargin, true);
+  } else {
+    ctx.arc(x, y, pixelMargin, endAngle + HALF_PI, startAngle - HALF_PI);
+  }
+  ctx.closePath();
+  ctx.clip();
+}
+function toRadiusCorners(value) {
+  return _readValueToProps(value, ['outerStart', 'outerEnd', 'innerStart', 'innerEnd']);
+}
+function parseBorderRadius$1(arc, innerRadius, outerRadius, angleDelta) {
+  const o = toRadiusCorners(arc.options.borderRadius);
+  const halfThickness = (outerRadius - innerRadius) / 2;
+  const innerLimit = Math.min(halfThickness, angleDelta * innerRadius / 2);
+  const computeOuterLimit = (val) => {
+    const outerArcLimit = (outerRadius - Math.min(halfThickness, val)) * angleDelta / 2;
+    return _limitValue(val, 0, Math.min(halfThickness, outerArcLimit));
+  };
+  return {
+    outerStart: computeOuterLimit(o.outerStart),
+    outerEnd: computeOuterLimit(o.outerEnd),
+    innerStart: _limitValue(o.innerStart, 0, innerLimit),
+    innerEnd: _limitValue(o.innerEnd, 0, innerLimit),
+  };
+}
+function rThetaToXY(r, theta, x, y) {
+  return {
+    x: x + r * Math.cos(theta),
+    y: y + r * Math.sin(theta),
+  };
+}
+function pathArc(ctx, element, offset, spacing, end, circular) {
+  const {x, y, startAngle: start, pixelMargin, innerRadius: innerR} = element;
+  const outerRadius = Math.max(element.outerRadius + spacing + offset - pixelMargin, 0);
+  const innerRadius = innerR > 0 ? innerR + spacing + offset + pixelMargin : 0;
+  let spacingOffset = 0;
+  const alpha = end - start;
+  if (spacing) {
+    const noSpacingInnerRadius = innerR > 0 ? innerR - spacing : 0;
+    const noSpacingOuterRadius = outerRadius > 0 ? outerRadius - spacing : 0;
+    const avNogSpacingRadius = (noSpacingInnerRadius + noSpacingOuterRadius) / 2;
+    const adjustedAngle = avNogSpacingRadius !== 0 ? (alpha * avNogSpacingRadius) / (avNogSpacingRadius + spacing) : alpha;
+    spacingOffset = (alpha - adjustedAngle) / 2;
+  }
+  const beta = Math.max(0.001, alpha * outerRadius - offset / PI) / outerRadius;
+  const angleOffset = (alpha - beta) / 2;
+  const startAngle = start + angleOffset + spacingOffset;
+  const endAngle = end - angleOffset - spacingOffset;
+  const {outerStart, outerEnd, innerStart, innerEnd} = parseBorderRadius$1(element, innerRadius, outerRadius, endAngle - startAngle);
+  const outerStartAdjustedRadius = outerRadius - outerStart;
+  const outerEndAdjustedRadius = outerRadius - outerEnd;
+  const outerStartAdjustedAngle = startAngle + outerStart / outerStartAdjustedRadius;
+  const outerEndAdjustedAngle = endAngle - outerEnd / outerEndAdjustedRadius;
+  const innerStartAdjustedRadius = innerRadius + innerStart;
+  const innerEndAdjustedRadius = innerRadius + innerEnd;
+  const innerStartAdjustedAngle = startAngle + innerStart / innerStartAdjustedRadius;
+  const innerEndAdjustedAngle = endAngle - innerEnd / innerEndAdjustedRadius;
+  ctx.beginPath();
+  if (circular) {
+    ctx.arc(x, y, outerRadius, outerStartAdjustedAngle, outerEndAdjustedAngle);
+    if (outerEnd > 0) {
+      const pCenter = rThetaToXY(outerEndAdjustedRadius, outerEndAdjustedAngle, x, y);
+      ctx.arc(pCenter.x, pCenter.y, outerEnd, outerEndAdjustedAngle, endAngle + HALF_PI);
+    }
+    const p4 = rThetaToXY(innerEndAdjustedRadius, endAngle, x, y);
+    ctx.lineTo(p4.x, p4.y);
+    if (innerEnd > 0) {
+      const pCenter = rThetaToXY(innerEndAdjustedRadius, innerEndAdjustedAngle, x, y);
+      ctx.arc(pCenter.x, pCenter.y, innerEnd, endAngle + HALF_PI, innerEndAdjustedAngle + Math.PI);
+    }
+    ctx.arc(x, y, innerRadius, endAngle - (innerEnd / innerRadius), startAngle + (innerStart / innerRadius), true);
+    if (innerStart > 0) {
+      const pCenter = rThetaToXY(innerStartAdjustedRadius, innerStartAdjustedAngle, x, y);
+      ctx.arc(pCenter.x, pCenter.y, innerStart, innerStartAdjustedAngle + Math.PI, startAngle - HALF_PI);
+    }
+    const p8 = rThetaToXY(outerStartAdjustedRadius, startAngle, x, y);
+    ctx.lineTo(p8.x, p8.y);
+    if (outerStart > 0) {
+      const pCenter = rThetaToXY(outerStartAdjustedRadius, outerStartAdjustedAngle, x, y);
+      ctx.arc(pCenter.x, pCenter.y, outerStart, startAngle - HALF_PI, outerStartAdjustedAngle);
+    }
+  } else {
+    ctx.moveTo(x, y);
+    const outerStartX = Math.cos(outerStartAdjustedAngle) * outerRadius + x;
+    const outerStartY = Math.sin(outerStartAdjustedAngle) * outerRadius + y;
+    ctx.lineTo(outerStartX, outerStartY);
+    const outerEndX = Math.cos(outerEndAdjustedAngle) * outerRadius + x;
+    const outerEndY = Math.sin(outerEndAdjustedAngle) * outerRadius + y;
+    ctx.lineTo(outerEndX, outerEndY);
+  }
+  ctx.closePath();
+}
+function drawArc(ctx, element, offset, spacing, circular) {
+  const {fullCircles, startAngle, circumference} = element;
+  let endAngle = element.endAngle;
+  if (fullCircles) {
+    pathArc(ctx, element, offset, spacing, startAngle + TAU, circular);
+    for (let i = 0; i < fullCircles; ++i) {
+      ctx.fill();
+    }
+    if (!isNaN(circumference)) {
+      endAngle = startAngle + circumference % TAU;
+      if (circumference % TAU === 0) {
+        endAngle += TAU;
+      }
+    }
+  }
+  pathArc(ctx, element, offset, spacing, endAngle, circular);
+  ctx.fill();
+  return endAngle;
+}
+function drawFullCircleBorders(ctx, element, inner) {
+  const {x, y, startAngle, pixelMargin, fullCircles} = element;
+  const outerRadius = Math.max(element.outerRadius - pixelMargin, 0);
+  const innerRadius = element.innerRadius + pixelMargin;
+  let i;
+  if (inner) {
+    clipArc(ctx, element, startAngle + TAU);
+  }
+  ctx.beginPath();
+  ctx.arc(x, y, innerRadius, startAngle + TAU, startAngle, true);
+  for (i = 0; i < fullCircles; ++i) {
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  ctx.arc(x, y, outerRadius, startAngle, startAngle + TAU);
+  for (i = 0; i < fullCircles; ++i) {
+    ctx.stroke();
+  }
+}
+function drawBorder(ctx, element, offset, spacing, endAngle, circular) {
+  const {options} = element;
+  const {borderWidth, borderJoinStyle} = options;
+  const inner = options.borderAlign === 'inner';
+  if (!borderWidth) {
+    return;
+  }
+  if (inner) {
+    ctx.lineWidth = borderWidth * 2;
+    ctx.lineJoin = borderJoinStyle || 'round';
+  } else {
+    ctx.lineWidth = borderWidth;
+    ctx.lineJoin = borderJoinStyle || 'bevel';
+  }
+  if (element.fullCircles) {
+    drawFullCircleBorders(ctx, element, inner);
+  }
+  if (inner) {
+    clipArc(ctx, element, endAngle);
+  }
+  pathArc(ctx, element, offset, spacing, endAngle, circular);
+  ctx.stroke();
+}
+class ArcElement extends Element {
+  constructor(cfg) {
+    super();
+    this.options = undefined;
+    this.circumference = undefined;
+    this.startAngle = undefined;
+    this.endAngle = undefined;
+    this.innerRadius = undefined;
+    this.outerRadius = undefined;
+    this.pixelMargin = 0;
+    this.fullCircles = 0;
+    if (cfg) {
+      Object.assign(this, cfg);
+    }
+  }
+  inRange(chartX, chartY, useFinalPosition) {
+    const point = this.getProps(['x', 'y'], useFinalPosition);
+    const {angle, distance} = getAngleFromPoint(point, {x: chartX, y: chartY});
+    const {startAngle, endAngle, innerRadius, outerRadius, circumference} = this.getProps([
+      'startAngle',
+      'endAngle',
+      'innerRadius',
+      'outerRadius',
+      'circumference'
+    ], useFinalPosition);
+    const rAdjust = this.options.spacing / 2;
+    const _circumference = valueOrDefault(circumference, endAngle - startAngle);
+    const betweenAngles = _circumference >= TAU || _angleBetween(angle, startAngle, endAngle);
+    const withinRadius = _isBetween(distance, innerRadius + rAdjust, outerRadius + rAdjust);
+    return (betweenAngles && withinRadius);
+  }
+  getCenterPoint(useFinalPosition) {
+    const {x, y, startAngle, endAngle, innerRadius, outerRadius} = this.getProps([
+      'x',
+      'y',
+      'startAngle',
+      'endAngle',
+      'innerRadius',
+      'outerRadius',
+      'circumference',
+    ], useFinalPosition);
+    const {offset, spacing} = this.options;
+    const halfAngle = (startAngle + endAngle) / 2;
+    const halfRadius = (innerRadius + outerRadius + spacing + offset) / 2;
+    return {
+      x: x + Math.cos(halfAngle) * halfRadius,
+      y: y + Math.sin(halfAngle) * halfRadius
+    };
+  }
+  tooltipPosition(useFinalPosition) {
+    return this.getCenterPoint(useFinalPosition);
+  }
+  draw(ctx) {
+    const {options, circumference} = this;
+    const offset = (options.offset || 0) / 2;
+    const spacing = (options.spacing || 0) / 2;
+    const circular = options.circular;
+    this.pixelMargin = (options.borderAlign === 'inner') ? 0.33 : 0;
+    this.fullCircles = circumference > TAU ? Math.floor(circumference / TAU) : 0;
+    if (circumference === 0 || this.innerRadius < 0 || this.outerRadius < 0) {
+      return;
+    }
+    ctx.save();
+    let radiusOffset = 0;
+    if (offset) {
+      radiusOffset = offset / 2;
+      const halfAngle = (this.startAngle + this.endAngle) / 2;
+      ctx.translate(Math.cos(halfAngle) * radiusOffset, Math.sin(halfAngle) * radiusOffset);
+      if (this.circumference >= PI) {
+        radiusOffset = offset;
+      }
+    }
+    ctx.fillStyle = options.backgroundColor;
+    ctx.strokeStyle = options.borderColor;
+    const endAngle = drawArc(ctx, this, radiusOffset, spacing, circular);
+    drawBorder(ctx, this, radiusOffset, spacing, endAngle, circular);
+    ctx.restore();
+  }
+}
+ArcElement.id = 'arc';
+ArcElement.defaults = {
+  borderAlign: 'center',
+  borderColor: '#fff',
+  borderJoinStyle: undefined,
+  borderRadius: 0,
+  borderWidth: 2,
+  offset: 0,
+  spacing: 0,
+  angle: undefined,
+  circular: true,
+};
+ArcElement.defaultRoutes = {
+  backgroundColor: 'backgroundColor'
+};
+
+function setStyle(ctx, options, style = options) {
+  ctx.lineCap = valueOrDefault(style.borderCapStyle, options.borderCapStyle);
+  ctx.setLineDash(valueOrDefault(style.borderDash, options.borderDash));
+  ctx.lineDashOffset = valueOrDefault(style.borderDashOffset, options.borderDashOffset);
+  ctx.lineJoin = valueOrDefault(style.borderJoinStyle, options.borderJoinStyle);
+  ctx.lineWidth = valueOrDefault(style.borderWidth, options.borderWidth);
+  ctx.strokeStyle = valueOrDefault(style.borderColor, options.borderColor);
+}
+function lineTo(ctx, previous, target) {
+  ctx.lineTo(target.x, target.y);
+}
+function getLineMethod(options) {
+  if (options.stepped) {
+    return _steppedLineTo;
+  }
+  if (options.tension || options.cubicInterpolationMode === 'monotone') {
+    return _bezierCurveTo;
+  }
+  return lineTo;
+}
+function pathVars(points, segment, params = {}) {
+  const count = points.length;
+  const {start: paramsStart = 0, end: paramsEnd = count - 1} = params;
+  const {start: segmentStart, end: segmentEnd} = segment;
+  const start = Math.max(paramsStart, segmentStart);
+  const end = Math.min(paramsEnd, segmentEnd);
+  const outside = paramsStart < segmentStart && paramsEnd < segmentStart || paramsStart > segmentEnd && paramsEnd > segmentEnd;
+  return {
+    count,
+    start,
+    loop: segment.loop,
+    ilen: end < start && !outside ? count + end - start : end - start
+  };
+}
+function pathSegment(ctx, line, segment, params) {
+  const {points, options} = line;
+  const {count, start, loop, ilen} = pathVars(points, segment, params);
+  const lineMethod = getLineMethod(options);
+  let {move = true, reverse} = params || {};
+  let i, point, prev;
+  for (i = 0; i <= ilen; ++i) {
+    point = points[(start + (reverse ? ilen - i : i)) % count];
+    if (point.skip) {
+      continue;
+    } else if (move) {
+      ctx.moveTo(point.x, point.y);
+      move = false;
+    } else {
+      lineMethod(ctx, prev, point, reverse, options.stepped);
+    }
+    prev = point;
+  }
+  if (loop) {
+    point = points[(start + (reverse ? ilen : 0)) % count];
+    lineMethod(ctx, prev, point, reverse, options.stepped);
+  }
+  return !!loop;
+}
+function fastPathSegment(ctx, line, segment, params) {
+  const points = line.points;
+  const {count, start, ilen} = pathVars(points, segment, params);
+  const {move = true, reverse} = params || {};
+  let avgX = 0;
+  let countX = 0;
+  let i, point, prevX, minY, maxY, lastY;
+  const pointIndex = (index) => (start + (reverse ? ilen - index : index)) % count;
+  const drawX = () => {
+    if (minY !== maxY) {
+      ctx.lineTo(avgX, maxY);
+      ctx.lineTo(avgX, minY);
+      ctx.lineTo(avgX, lastY);
+    }
+  };
+  if (move) {
+    point = points[pointIndex(0)];
+    ctx.moveTo(point.x, point.y);
+  }
+  for (i = 0; i <= ilen; ++i) {
+    point = points[pointIndex(i)];
+    if (point.skip) {
+      continue;
+    }
+    const x = point.x;
+    const y = point.y;
+    const truncX = x | 0;
+    if (truncX === prevX) {
+      if (y < minY) {
+        minY = y;
+      } else if (y > maxY) {
+        maxY = y;
+      }
+      avgX = (countX * avgX + x) / ++countX;
+    } else {
+      drawX();
+      ctx.lineTo(x, y);
+      prevX = truncX;
+      countX = 0;
+      minY = maxY = y;
+    }
+    lastY = y;
+  }
+  drawX();
+}
+function _getSegmentMethod(line) {
+  const opts = line.options;
+  const borderDash = opts.borderDash && opts.borderDash.length;
+  const useFastPath = !line._decimated && !line._loop && !opts.tension && opts.cubicInterpolationMode !== 'monotone' && !opts.stepped && !borderDash;
+  return useFastPath ? fastPathSegment : pathSegment;
+}
+function _getInterpolationMethod(options) {
+  if (options.stepped) {
+    return _steppedInterpolation;
+  }
+  if (options.tension || options.cubicInterpolationMode === 'monotone') {
+    return _bezierInterpolation;
+  }
+  return _pointInLine;
+}
+function strokePathWithCache(ctx, line, start, count) {
+  let path = line._path;
+  if (!path) {
+    path = line._path = new Path2D();
+    if (line.path(path, start, count)) {
+      path.closePath();
+    }
+  }
+  setStyle(ctx, line.options);
+  ctx.stroke(path);
+}
+function strokePathDirect(ctx, line, start, count) {
+  const {segments, options} = line;
+  const segmentMethod = _getSegmentMethod(line);
+  for (const segment of segments) {
+    setStyle(ctx, options, segment.style);
+    ctx.beginPath();
+    if (segmentMethod(ctx, line, segment, {start, end: start + count - 1})) {
+      ctx.closePath();
+    }
+    ctx.stroke();
+  }
+}
+const usePath2D = typeof Path2D === 'function';
+function draw(ctx, line, start, count) {
+  if (usePath2D && !line.options.segment) {
+    strokePathWithCache(ctx, line, start, count);
+  } else {
+    strokePathDirect(ctx, line, start, count);
+  }
+}
+class LineElement extends Element {
+  constructor(cfg) {
+    super();
+    this.animated = true;
+    this.options = undefined;
+    this._chart = undefined;
+    this._loop = undefined;
+    this._fullLoop = undefined;
+    this._path = undefined;
+    this._points = undefined;
+    this._segments = undefined;
+    this._decimated = false;
+    this._pointsUpdated = false;
+    this._datasetIndex = undefined;
+    if (cfg) {
+      Object.assign(this, cfg);
+    }
+  }
+  updateControlPoints(chartArea, indexAxis) {
+    const options = this.options;
+    if ((options.tension || options.cubicInterpolationMode === 'monotone') && !options.stepped && !this._pointsUpdated) {
+      const loop = options.spanGaps ? this._loop : this._fullLoop;
+      _updateBezierControlPoints(this._points, options, chartArea, loop, indexAxis);
+      this._pointsUpdated = true;
+    }
+  }
+  set points(points) {
+    this._points = points;
+    delete this._segments;
+    delete this._path;
+    this._pointsUpdated = false;
+  }
+  get points() {
+    return this._points;
+  }
+  get segments() {
+    return this._segments || (this._segments = _computeSegments(this, this.options.segment));
+  }
+  first() {
+    const segments = this.segments;
+    const points = this.points;
+    return segments.length && points[segments[0].start];
+  }
+  last() {
+    const segments = this.segments;
+    const points = this.points;
+    const count = segments.length;
+    return count && points[segments[count - 1].end];
+  }
+  interpolate(point, property) {
+    const options = this.options;
+    const value = point[property];
+    const points = this.points;
+    const segments = _boundSegments(this, {property, start: value, end: value});
+    if (!segments.length) {
+      return;
+    }
+    const result = [];
+    const _interpolate = _getInterpolationMethod(options);
+    let i, ilen;
+    for (i = 0, ilen = segments.length; i < ilen; ++i) {
+      const {start, end} = segments[i];
+      const p1 = points[start];
+      const p2 = points[end];
+      if (p1 === p2) {
+        result.push(p1);
+        continue;
+      }
+      const t = Math.abs((value - p1[property]) / (p2[property] - p1[property]));
+      const interpolated = _interpolate(p1, p2, t, options.stepped);
+      interpolated[property] = point[property];
+      result.push(interpolated);
+    }
+    return result.length === 1 ? result[0] : result;
+  }
+  pathSegment(ctx, segment, params) {
+    const segmentMethod = _getSegmentMethod(this);
+    return segmentMethod(ctx, this, segment, params);
+  }
+  path(ctx, start, count) {
+    const segments = this.segments;
+    const segmentMethod = _getSegmentMethod(this);
+    let loop = this._loop;
+    start = start || 0;
+    count = count || (this.points.length - start);
+    for (const segment of segments) {
+      loop &= segmentMethod(ctx, this, segment, {start, end: start + count - 1});
+    }
+    return !!loop;
+  }
+  draw(ctx, chartArea, start, count) {
+    const options = this.options || {};
+    const points = this.points || [];
+    if (points.length && options.borderWidth) {
+      ctx.save();
+      draw(ctx, this, start, count);
+      ctx.restore();
+    }
+    if (this.animated) {
+      this._pointsUpdated = false;
+      this._path = undefined;
+    }
+  }
+}
+LineElement.id = 'line';
+LineElement.defaults = {
+  borderCapStyle: 'butt',
+  borderDash: [],
+  borderDashOffset: 0,
+  borderJoinStyle: 'miter',
+  borderWidth: 3,
+  capBezierPoints: true,
+  cubicInterpolationMode: 'default',
+  fill: false,
+  spanGaps: false,
+  stepped: false,
+  tension: 0,
+};
+LineElement.defaultRoutes = {
+  backgroundColor: 'backgroundColor',
+  borderColor: 'borderColor'
+};
+LineElement.descriptors = {
+  _scriptable: true,
+  _indexable: (name) => name !== 'borderDash' && name !== 'fill',
+};
+
+function inRange$1(el, pos, axis, useFinalPosition) {
+  const options = el.options;
+  const {[axis]: value} = el.getProps([axis], useFinalPosition);
+  return (Math.abs(pos - value) < options.radius + options.hitRadius);
+}
+class PointElement extends Element {
+  constructor(cfg) {
+    super();
+    this.options = undefined;
+    this.parsed = undefined;
+    this.skip = undefined;
+    this.stop = undefined;
+    if (cfg) {
+      Object.assign(this, cfg);
+    }
+  }
+  inRange(mouseX, mouseY, useFinalPosition) {
+    const options = this.options;
+    const {x, y} = this.getProps(['x', 'y'], useFinalPosition);
+    return ((Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2)) < Math.pow(options.hitRadius + options.radius, 2));
+  }
+  inXRange(mouseX, useFinalPosition) {
+    return inRange$1(this, mouseX, 'x', useFinalPosition);
+  }
+  inYRange(mouseY, useFinalPosition) {
+    return inRange$1(this, mouseY, 'y', useFinalPosition);
+  }
+  getCenterPoint(useFinalPosition) {
+    const {x, y} = this.getProps(['x', 'y'], useFinalPosition);
+    return {x, y};
+  }
+  size(options) {
+    options = options || this.options || {};
+    let radius = options.radius || 0;
+    radius = Math.max(radius, radius && options.hoverRadius || 0);
+    const borderWidth = radius && options.borderWidth || 0;
+    return (radius + borderWidth) * 2;
+  }
+  draw(ctx, area) {
+    const options = this.options;
+    if (this.skip || options.radius < 0.1 || !_isPointInArea(this, area, this.size(options) / 2)) {
+      return;
+    }
+    ctx.strokeStyle = options.borderColor;
+    ctx.lineWidth = options.borderWidth;
+    ctx.fillStyle = options.backgroundColor;
+    drawPoint(ctx, options, this.x, this.y);
+  }
+  getRange() {
+    const options = this.options || {};
+    return options.radius + options.hitRadius;
+  }
+}
+PointElement.id = 'point';
+PointElement.defaults = {
+  borderWidth: 1,
+  hitRadius: 1,
+  hoverBorderWidth: 1,
+  hoverRadius: 4,
+  pointStyle: 'circle',
+  radius: 3,
+  rotation: 0
+};
+PointElement.defaultRoutes = {
+  backgroundColor: 'backgroundColor',
+  borderColor: 'borderColor'
+};
+
+function getBarBounds(bar, useFinalPosition) {
+  const {x, y, base, width, height} = bar.getProps(['x', 'y', 'base', 'width', 'height'], useFinalPosition);
+  let left, right, top, bottom, half;
+  if (bar.horizontal) {
+    half = height / 2;
+    left = Math.min(x, base);
+    right = Math.max(x, base);
+    top = y - half;
+    bottom = y + half;
+  } else {
+    half = width / 2;
+    left = x - half;
+    right = x + half;
+    top = Math.min(y, base);
+    bottom = Math.max(y, base);
+  }
+  return {left, top, right, bottom};
+}
+function skipOrLimit(skip, value, min, max) {
+  return skip ? 0 : _limitValue(value, min, max);
+}
+function parseBorderWidth(bar, maxW, maxH) {
+  const value = bar.options.borderWidth;
+  const skip = bar.borderSkipped;
+  const o = toTRBL(value);
+  return {
+    t: skipOrLimit(skip.top, o.top, 0, maxH),
+    r: skipOrLimit(skip.right, o.right, 0, maxW),
+    b: skipOrLimit(skip.bottom, o.bottom, 0, maxH),
+    l: skipOrLimit(skip.left, o.left, 0, maxW)
+  };
+}
+function parseBorderRadius(bar, maxW, maxH) {
+  const {enableBorderRadius} = bar.getProps(['enableBorderRadius']);
+  const value = bar.options.borderRadius;
+  const o = toTRBLCorners(value);
+  const maxR = Math.min(maxW, maxH);
+  const skip = bar.borderSkipped;
+  const enableBorder = enableBorderRadius || isObject(value);
+  return {
+    topLeft: skipOrLimit(!enableBorder || skip.top || skip.left, o.topLeft, 0, maxR),
+    topRight: skipOrLimit(!enableBorder || skip.top || skip.right, o.topRight, 0, maxR),
+    bottomLeft: skipOrLimit(!enableBorder || skip.bottom || skip.left, o.bottomLeft, 0, maxR),
+    bottomRight: skipOrLimit(!enableBorder || skip.bottom || skip.right, o.bottomRight, 0, maxR)
+  };
+}
+function boundingRects(bar) {
+  const bounds = getBarBounds(bar);
+  const width = bounds.right - bounds.left;
+  const height = bounds.bottom - bounds.top;
+  const border = parseBorderWidth(bar, width / 2, height / 2);
+  const radius = parseBorderRadius(bar, width / 2, height / 2);
+  return {
+    outer: {
+      x: bounds.left,
+      y: bounds.top,
+      w: width,
+      h: height,
+      radius
+    },
+    inner: {
+      x: bounds.left + border.l,
+      y: bounds.top + border.t,
+      w: width - border.l - border.r,
+      h: height - border.t - border.b,
+      radius: {
+        topLeft: Math.max(0, radius.topLeft - Math.max(border.t, border.l)),
+        topRight: Math.max(0, radius.topRight - Math.max(border.t, border.r)),
+        bottomLeft: Math.max(0, radius.bottomLeft - Math.max(border.b, border.l)),
+        bottomRight: Math.max(0, radius.bottomRight - Math.max(border.b, border.r)),
+      }
+    }
+  };
+}
+function inRange(bar, x, y, useFinalPosition) {
+  const skipX = x === null;
+  const skipY = y === null;
+  const skipBoth = skipX && skipY;
+  const bounds = bar && !skipBoth && getBarBounds(bar, useFinalPosition);
+  return bounds
+		&& (skipX || _isBetween(x, bounds.left, bounds.right))
+		&& (skipY || _isBetween(y, bounds.top, bounds.bottom));
+}
+function hasRadius(radius) {
+  return radius.topLeft || radius.topRight || radius.bottomLeft || radius.bottomRight;
+}
+function addNormalRectPath(ctx, rect) {
+  ctx.rect(rect.x, rect.y, rect.w, rect.h);
+}
+function inflateRect(rect, amount, refRect = {}) {
+  const x = rect.x !== refRect.x ? -amount : 0;
+  const y = rect.y !== refRect.y ? -amount : 0;
+  const w = (rect.x + rect.w !== refRect.x + refRect.w ? amount : 0) - x;
+  const h = (rect.y + rect.h !== refRect.y + refRect.h ? amount : 0) - y;
+  return {
+    x: rect.x + x,
+    y: rect.y + y,
+    w: rect.w + w,
+    h: rect.h + h,
+    radius: rect.radius
+  };
+}
+class BarElement extends Element {
+  constructor(cfg) {
+    super();
+    this.options = undefined;
+    this.horizontal = undefined;
+    this.base = undefined;
+    this.width = undefined;
+    this.height = undefined;
+    this.inflateAmount = undefined;
+    if (cfg) {
+      Object.assign(this, cfg);
+    }
+  }
+  draw(ctx) {
+    const {inflateAmount, options: {borderColor, backgroundColor}} = this;
+    const {inner, outer} = boundingRects(this);
+    const addRectPath = hasRadius(outer.radius) ? addRoundedRectPath : addNormalRectPath;
+    ctx.save();
+    if (outer.w !== inner.w || outer.h !== inner.h) {
+      ctx.beginPath();
+      addRectPath(ctx, inflateRect(outer, inflateAmount, inner));
+      ctx.clip();
+      addRectPath(ctx, inflateRect(inner, -inflateAmount, outer));
+      ctx.fillStyle = borderColor;
+      ctx.fill('evenodd');
+    }
+    ctx.beginPath();
+    addRectPath(ctx, inflateRect(inner, inflateAmount));
+    ctx.fillStyle = backgroundColor;
+    ctx.fill();
+    ctx.restore();
+  }
+  inRange(mouseX, mouseY, useFinalPosition) {
+    return inRange(this, mouseX, mouseY, useFinalPosition);
+  }
+  inXRange(mouseX, useFinalPosition) {
+    return inRange(this, mouseX, null, useFinalPosition);
+  }
+  inYRange(mouseY, useFinalPosition) {
+    return inRange(this, null, mouseY, useFinalPosition);
+  }
+  getCenterPoint(useFinalPosition) {
+    const {x, y, base, horizontal} = this.getProps(['x', 'y', 'base', 'horizontal'], useFinalPosition);
+    return {
+      x: horizontal ? (x + base) / 2 : x,
+      y: horizontal ? y : (y + base) / 2
+    };
+  }
+  getRange(axis) {
+    return axis === 'x' ? this.width / 2 : this.height / 2;
+  }
+}
+BarElement.id = 'bar';
+BarElement.defaults = {
+  borderSkipped: 'start',
+  borderWidth: 0,
+  borderRadius: 0,
+  inflateAmount: 'auto',
+  pointStyle: undefined
+};
+BarElement.defaultRoutes = {
+  backgroundColor: 'backgroundColor',
+  borderColor: 'borderColor'
+};
+
+var elements = /*#__PURE__*/Object.freeze({
+__proto__: null,
+ArcElement: ArcElement,
+LineElement: LineElement,
+PointElement: PointElement,
+BarElement: BarElement
+});
+
+function lttbDecimation(data, start, count, availableWidth, options) {
+  const samples = options.samples || availableWidth;
+  if (samples >= count) {
+    return data.slice(start, start + count);
+  }
+  const decimated = [];
+  const bucketWidth = (count - 2) / (samples - 2);
+  let sampledIndex = 0;
+  const endIndex = start + count - 1;
+  let a = start;
+  let i, maxAreaPoint, maxArea, area, nextA;
+  decimated[sampledIndex++] = data[a];
+  for (i = 0; i < samples - 2; i++) {
+    let avgX = 0;
+    let avgY = 0;
+    let j;
+    const avgRangeStart = Math.floor((i + 1) * bucketWidth) + 1 + start;
+    const avgRangeEnd = Math.min(Math.floor((i + 2) * bucketWidth) + 1, count) + start;
+    const avgRangeLength = avgRangeEnd - avgRangeStart;
+    for (j = avgRangeStart; j < avgRangeEnd; j++) {
+      avgX += data[j].x;
+      avgY += data[j].y;
+    }
+    avgX /= avgRangeLength;
+    avgY /= avgRangeLength;
+    const rangeOffs = Math.floor(i * bucketWidth) + 1 + start;
+    const rangeTo = Math.min(Math.floor((i + 1) * bucketWidth) + 1, count) + start;
+    const {x: pointAx, y: pointAy} = data[a];
+    maxArea = area = -1;
+    for (j = rangeOffs; j < rangeTo; j++) {
+      area = 0.5 * Math.abs(
+        (pointAx - avgX) * (data[j].y - pointAy) -
+        (pointAx - data[j].x) * (avgY - pointAy)
+      );
+      if (area > maxArea) {
+        maxArea = area;
+        maxAreaPoint = data[j];
+        nextA = j;
+      }
+    }
+    decimated[sampledIndex++] = maxAreaPoint;
+    a = nextA;
+  }
+  decimated[sampledIndex++] = data[endIndex];
+  return decimated;
+}
+function minMaxDecimation(data, start, count, availableWidth) {
+  let avgX = 0;
+  let countX = 0;
+  let i, point, x, y, prevX, minIndex, maxIndex, startIndex, minY, maxY;
+  const decimated = [];
+  const endIndex = start + count - 1;
+  const xMin = data[start].x;
+  const xMax = data[endIndex].x;
+  const dx = xMax - xMin;
+  for (i = start; i < start + count; ++i) {
+    point = data[i];
+    x = (point.x - xMin) / dx * availableWidth;
+    y = point.y;
+    const truncX = x | 0;
+    if (truncX === prevX) {
+      if (y < minY) {
+        minY = y;
+        minIndex = i;
+      } else if (y > maxY) {
+        maxY = y;
+        maxIndex = i;
+      }
+      avgX = (countX * avgX + point.x) / ++countX;
+    } else {
+      const lastIndex = i - 1;
+      if (!isNullOrUndef(minIndex) && !isNullOrUndef(maxIndex)) {
+        const intermediateIndex1 = Math.min(minIndex, maxIndex);
+        const intermediateIndex2 = Math.max(minIndex, maxIndex);
+        if (intermediateIndex1 !== startIndex && intermediateIndex1 !== lastIndex) {
+          decimated.push({
+            ...data[intermediateIndex1],
+            x: avgX,
+          });
+        }
+        if (intermediateIndex2 !== startIndex && intermediateIndex2 !== lastIndex) {
+          decimated.push({
+            ...data[intermediateIndex2],
+            x: avgX
+          });
+        }
+      }
+      if (i > 0 && lastIndex !== startIndex) {
+        decimated.push(data[lastIndex]);
+      }
+      decimated.push(point);
+      prevX = truncX;
+      countX = 0;
+      minY = maxY = y;
+      minIndex = maxIndex = startIndex = i;
+    }
+  }
+  return decimated;
+}
+function cleanDecimatedDataset(dataset) {
+  if (dataset._decimated) {
+    const data = dataset._data;
+    delete dataset._decimated;
+    delete dataset._data;
+    Object.defineProperty(dataset, 'data', {value: data});
+  }
+}
+function cleanDecimatedData(chart) {
+  chart.data.datasets.forEach((dataset) => {
+    cleanDecimatedDataset(dataset);
+  });
+}
+function getStartAndCountOfVisiblePointsSimplified(meta, points) {
+  const pointCount = points.length;
+  let start = 0;
+  let count;
+  const {iScale} = meta;
+  const {min, max, minDefined, maxDefined} = iScale.getUserBounds();
+  if (minDefined) {
+    start = _limitValue(_lookupByKey(points, iScale.axis, min).lo, 0, pointCount - 1);
+  }
+  if (maxDefined) {
+    count = _limitValue(_lookupByKey(points, iScale.axis, max).hi + 1, start, pointCount) - start;
+  } else {
+    count = pointCount - start;
+  }
+  return {start, count};
+}
+var plugin_decimation = {
+  id: 'decimation',
+  defaults: {
+    algorithm: 'min-max',
+    enabled: false,
+  },
+  beforeElementsUpdate: (chart, args, options) => {
+    if (!options.enabled) {
+      cleanDecimatedData(chart);
+      return;
+    }
+    const availableWidth = chart.width;
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+      const {_data, indexAxis} = dataset;
+      const meta = chart.getDatasetMeta(datasetIndex);
+      const data = _data || dataset.data;
+      if (resolve([indexAxis, chart.options.indexAxis]) === 'y') {
+        return;
+      }
+      if (!meta.controller.supportsDecimation) {
+        return;
+      }
+      const xAxis = chart.scales[meta.xAxisID];
+      if (xAxis.type !== 'linear' && xAxis.type !== 'time') {
+        return;
+      }
+      if (chart.options.parsing) {
+        return;
+      }
+      let {start, count} = getStartAndCountOfVisiblePointsSimplified(meta, data);
+      const threshold = options.threshold || 4 * availableWidth;
+      if (count <= threshold) {
+        cleanDecimatedDataset(dataset);
+        return;
+      }
+      if (isNullOrUndef(_data)) {
+        dataset._data = data;
+        delete dataset.data;
+        Object.defineProperty(dataset, 'data', {
+          configurable: true,
+          enumerable: true,
+          get: function() {
+            return this._decimated;
+          },
+          set: function(d) {
+            this._data = d;
+          }
+        });
+      }
+      let decimated;
+      switch (options.algorithm) {
+      case 'lttb':
+        decimated = lttbDecimation(data, start, count, availableWidth, options);
+        break;
+      case 'min-max':
+        decimated = minMaxDecimation(data, start, count, availableWidth);
+        break;
+      default:
+        throw new Error(`Unsupported decimation algorithm '${options.algorithm}'`);
+      }
+      dataset._decimated = decimated;
+    });
+  },
+  destroy(chart) {
+    cleanDecimatedData(chart);
+  }
+};
+
+function _segments(line, target, property) {
+  const segments = line.segments;
+  const points = line.points;
+  const tpoints = target.points;
+  const parts = [];
+  for (const segment of segments) {
+    let {start, end} = segment;
+    end = _findSegmentEnd(start, end, points);
+    const bounds = _getBounds(property, points[start], points[end], segment.loop);
+    if (!target.segments) {
+      parts.push({
+        source: segment,
+        target: bounds,
+        start: points[start],
+        end: points[end]
+      });
+      continue;
+    }
+    const targetSegments = _boundSegments(target, bounds);
+    for (const tgt of targetSegments) {
+      const subBounds = _getBounds(property, tpoints[tgt.start], tpoints[tgt.end], tgt.loop);
+      const fillSources = _boundSegment(segment, points, subBounds);
+      for (const fillSource of fillSources) {
+        parts.push({
+          source: fillSource,
+          target: tgt,
+          start: {
+            [property]: _getEdge(bounds, subBounds, 'start', Math.max)
+          },
+          end: {
+            [property]: _getEdge(bounds, subBounds, 'end', Math.min)
+          }
+        });
+      }
+    }
+  }
+  return parts;
+}
+function _getBounds(property, first, last, loop) {
+  if (loop) {
+    return;
+  }
+  let start = first[property];
+  let end = last[property];
+  if (property === 'angle') {
+    start = _normalizeAngle(start);
+    end = _normalizeAngle(end);
+  }
+  return {property, start, end};
+}
+function _pointsFromSegments(boundary, line) {
+  const {x = null, y = null} = boundary || {};
+  const linePoints = line.points;
+  const points = [];
+  line.segments.forEach(({start, end}) => {
+    end = _findSegmentEnd(start, end, linePoints);
+    const first = linePoints[start];
+    const last = linePoints[end];
+    if (y !== null) {
+      points.push({x: first.x, y});
+      points.push({x: last.x, y});
+    } else if (x !== null) {
+      points.push({x, y: first.y});
+      points.push({x, y: last.y});
+    }
+  });
+  return points;
+}
+function _findSegmentEnd(start, end, points) {
+  for (;end > start; end--) {
+    const point = points[end];
+    if (!isNaN(point.x) && !isNaN(point.y)) {
+      break;
+    }
+  }
+  return end;
+}
+function _getEdge(a, b, prop, fn) {
+  if (a && b) {
+    return fn(a[prop], b[prop]);
+  }
+  return a ? a[prop] : b ? b[prop] : 0;
+}
+
+function _createBoundaryLine(boundary, line) {
+  let points = [];
+  let _loop = false;
+  if (isArray(boundary)) {
+    _loop = true;
+    points = boundary;
+  } else {
+    points = _pointsFromSegments(boundary, line);
+  }
+  return points.length ? new LineElement({
+    points,
+    options: {tension: 0},
+    _loop,
+    _fullLoop: _loop
+  }) : null;
+}
+function _shouldApplyFill(source) {
+  return source && source.fill !== false;
+}
+
+function _resolveTarget(sources, index, propagate) {
+  const source = sources[index];
+  let fill = source.fill;
+  const visited = [index];
+  let target;
+  if (!propagate) {
+    return fill;
+  }
+  while (fill !== false && visited.indexOf(fill) === -1) {
+    if (!isNumberFinite(fill)) {
+      return fill;
+    }
+    target = sources[fill];
+    if (!target) {
+      return false;
+    }
+    if (target.visible) {
+      return fill;
+    }
+    visited.push(fill);
+    fill = target.fill;
+  }
+  return false;
+}
+function _decodeFill(line, index, count) {
+  const fill = parseFillOption(line);
+  if (isObject(fill)) {
+    return isNaN(fill.value) ? false : fill;
+  }
+  let target = parseFloat(fill);
+  if (isNumberFinite(target) && Math.floor(target) === target) {
+    return decodeTargetIndex(fill[0], index, target, count);
+  }
+  return ['origin', 'start', 'end', 'stack', 'shape'].indexOf(fill) >= 0 && fill;
+}
+function decodeTargetIndex(firstCh, index, target, count) {
+  if (firstCh === '-' || firstCh === '+') {
+    target = index + target;
+  }
+  if (target === index || target < 0 || target >= count) {
+    return false;
+  }
+  return target;
+}
+function _getTargetPixel(fill, scale) {
+  let pixel = null;
+  if (fill === 'start') {
+    pixel = scale.bottom;
+  } else if (fill === 'end') {
+    pixel = scale.top;
+  } else if (isObject(fill)) {
+    pixel = scale.getPixelForValue(fill.value);
+  } else if (scale.getBasePixel) {
+    pixel = scale.getBasePixel();
+  }
+  return pixel;
+}
+function _getTargetValue(fill, scale, startValue) {
+  let value;
+  if (fill === 'start') {
+    value = startValue;
+  } else if (fill === 'end') {
+    value = scale.options.reverse ? scale.min : scale.max;
+  } else if (isObject(fill)) {
+    value = fill.value;
+  } else {
+    value = scale.getBaseValue();
+  }
+  return value;
+}
+function parseFillOption(line) {
+  const options = line.options;
+  const fillOption = options.fill;
+  let fill = valueOrDefault(fillOption && fillOption.target, fillOption);
+  if (fill === undefined) {
+    fill = !!options.backgroundColor;
+  }
+  if (fill === false || fill === null) {
+    return false;
+  }
+  if (fill === true) {
+    return 'origin';
+  }
+  return fill;
+}
+
+function _buildStackLine(source) {
+  const {scale, index, line} = source;
+  const points = [];
+  const segments = line.segments;
+  const sourcePoints = line.points;
+  const linesBelow = getLinesBelow(scale, index);
+  linesBelow.push(_createBoundaryLine({x: null, y: scale.bottom}, line));
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+    for (let j = segment.start; j <= segment.end; j++) {
+      addPointsBelow(points, sourcePoints[j], linesBelow);
+    }
+  }
+  return new LineElement({points, options: {}});
+}
+function getLinesBelow(scale, index) {
+  const below = [];
+  const metas = scale.getMatchingVisibleMetas('line');
+  for (let i = 0; i < metas.length; i++) {
+    const meta = metas[i];
+    if (meta.index === index) {
+      break;
+    }
+    if (!meta.hidden) {
+      below.unshift(meta.dataset);
+    }
+  }
+  return below;
+}
+function addPointsBelow(points, sourcePoint, linesBelow) {
+  const postponed = [];
+  for (let j = 0; j < linesBelow.length; j++) {
+    const line = linesBelow[j];
+    const {first, last, point} = findPoint(line, sourcePoint, 'x');
+    if (!point || (first && last)) {
+      continue;
+    }
+    if (first) {
+      postponed.unshift(point);
+    } else {
+      points.push(point);
+      if (!last) {
+        break;
+      }
+    }
+  }
+  points.push(...postponed);
+}
+function findPoint(line, sourcePoint, property) {
+  const point = line.interpolate(sourcePoint, property);
+  if (!point) {
+    return {};
+  }
+  const pointValue = point[property];
+  const segments = line.segments;
+  const linePoints = line.points;
+  let first = false;
+  let last = false;
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+    const firstValue = linePoints[segment.start][property];
+    const lastValue = linePoints[segment.end][property];
+    if (_isBetween(pointValue, firstValue, lastValue)) {
+      first = pointValue === firstValue;
+      last = pointValue === lastValue;
+      break;
+    }
+  }
+  return {first, last, point};
+}
+
+class simpleArc {
+  constructor(opts) {
+    this.x = opts.x;
+    this.y = opts.y;
+    this.radius = opts.radius;
+  }
+  pathSegment(ctx, bounds, opts) {
+    const {x, y, radius} = this;
+    bounds = bounds || {start: 0, end: TAU};
+    ctx.arc(x, y, radius, bounds.end, bounds.start, true);
+    return !opts.bounds;
+  }
+  interpolate(point) {
+    const {x, y, radius} = this;
+    const angle = point.angle;
+    return {
+      x: x + Math.cos(angle) * radius,
+      y: y + Math.sin(angle) * radius,
+      angle
+    };
+  }
+}
+
+function _getTarget(source) {
+  const {chart, fill, line} = source;
+  if (isNumberFinite(fill)) {
+    return getLineByIndex(chart, fill);
+  }
+  if (fill === 'stack') {
+    return _buildStackLine(source);
+  }
+  if (fill === 'shape') {
+    return true;
+  }
+  const boundary = computeBoundary(source);
+  if (boundary instanceof simpleArc) {
+    return boundary;
+  }
+  return _createBoundaryLine(boundary, line);
+}
+function getLineByIndex(chart, index) {
+  const meta = chart.getDatasetMeta(index);
+  const visible = meta && chart.isDatasetVisible(index);
+  return visible ? meta.dataset : null;
+}
+function computeBoundary(source) {
+  const scale = source.scale || {};
+  if (scale.getPointPositionForValue) {
+    return computeCircularBoundary(source);
+  }
+  return computeLinearBoundary(source);
+}
+function computeLinearBoundary(source) {
+  const {scale = {}, fill} = source;
+  const pixel = _getTargetPixel(fill, scale);
+  if (isNumberFinite(pixel)) {
+    const horizontal = scale.isHorizontal();
+    return {
+      x: horizontal ? pixel : null,
+      y: horizontal ? null : pixel
+    };
+  }
+  return null;
+}
+function computeCircularBoundary(source) {
+  const {scale, fill} = source;
+  const options = scale.options;
+  const length = scale.getLabels().length;
+  const start = options.reverse ? scale.max : scale.min;
+  const value = _getTargetValue(fill, scale, start);
+  const target = [];
+  if (options.grid.circular) {
+    const center = scale.getPointPositionForValue(0, start);
+    return new simpleArc({
+      x: center.x,
+      y: center.y,
+      radius: scale.getDistanceFromCenterForValue(value)
+    });
+  }
+  for (let i = 0; i < length; ++i) {
+    target.push(scale.getPointPositionForValue(i, value));
+  }
+  return target;
+}
+
+function _drawfill(ctx, source, area) {
+  const target = _getTarget(source);
+  const {line, scale, axis} = source;
+  const lineOpts = line.options;
+  const fillOption = lineOpts.fill;
+  const color = lineOpts.backgroundColor;
+  const {above = color, below = color} = fillOption || {};
+  if (target && line.points.length) {
+    clipArea(ctx, area);
+    doFill(ctx, {line, target, above, below, area, scale, axis});
+    unclipArea(ctx);
+  }
+}
+function doFill(ctx, cfg) {
+  const {line, target, above, below, area, scale} = cfg;
+  const property = line._loop ? 'angle' : cfg.axis;
+  ctx.save();
+  if (property === 'x' && below !== above) {
+    clipVertical(ctx, target, area.top);
+    fill(ctx, {line, target, color: above, scale, property});
+    ctx.restore();
+    ctx.save();
+    clipVertical(ctx, target, area.bottom);
+  }
+  fill(ctx, {line, target, color: below, scale, property});
+  ctx.restore();
+}
+function clipVertical(ctx, target, clipY) {
+  const {segments, points} = target;
+  let first = true;
+  let lineLoop = false;
+  ctx.beginPath();
+  for (const segment of segments) {
+    const {start, end} = segment;
+    const firstPoint = points[start];
+    const lastPoint = points[_findSegmentEnd(start, end, points)];
+    if (first) {
+      ctx.moveTo(firstPoint.x, firstPoint.y);
+      first = false;
+    } else {
+      ctx.lineTo(firstPoint.x, clipY);
+      ctx.lineTo(firstPoint.x, firstPoint.y);
+    }
+    lineLoop = !!target.pathSegment(ctx, segment, {move: lineLoop});
+    if (lineLoop) {
+      ctx.closePath();
+    } else {
+      ctx.lineTo(lastPoint.x, clipY);
+    }
+  }
+  ctx.lineTo(target.first().x, clipY);
+  ctx.closePath();
+  ctx.clip();
+}
+function fill(ctx, cfg) {
+  const {line, target, property, color, scale} = cfg;
+  const segments = _segments(line, target, property);
+  for (const {source: src, target: tgt, start, end} of segments) {
+    const {style: {backgroundColor = color} = {}} = src;
+    const notShape = target !== true;
+    ctx.save();
+    ctx.fillStyle = backgroundColor;
+    clipBounds(ctx, scale, notShape && _getBounds(property, start, end));
+    ctx.beginPath();
+    const lineLoop = !!line.pathSegment(ctx, src);
+    let loop;
+    if (notShape) {
+      if (lineLoop) {
+        ctx.closePath();
+      } else {
+        interpolatedLineTo(ctx, target, end, property);
+      }
+      const targetLoop = !!target.pathSegment(ctx, tgt, {move: lineLoop, reverse: true});
+      loop = lineLoop && targetLoop;
+      if (!loop) {
+        interpolatedLineTo(ctx, target, start, property);
+      }
+    }
+    ctx.closePath();
+    ctx.fill(loop ? 'evenodd' : 'nonzero');
+    ctx.restore();
+  }
+}
+function clipBounds(ctx, scale, bounds) {
+  const {top, bottom} = scale.chart.chartArea;
+  const {property, start, end} = bounds || {};
+  if (property === 'x') {
+    ctx.beginPath();
+    ctx.rect(start, top, end - start, bottom - top);
+    ctx.clip();
+  }
+}
+function interpolatedLineTo(ctx, target, point, property) {
+  const interpolatedPoint = target.interpolate(point, property);
+  if (interpolatedPoint) {
+    ctx.lineTo(interpolatedPoint.x, interpolatedPoint.y);
+  }
+}
+
+var index = {
+  id: 'filler',
+  afterDatasetsUpdate(chart, _args, options) {
+    const count = (chart.data.datasets || []).length;
+    const sources = [];
+    let meta, i, line, source;
+    for (i = 0; i < count; ++i) {
+      meta = chart.getDatasetMeta(i);
+      line = meta.dataset;
+      source = null;
+      if (line && line.options && line instanceof LineElement) {
+        source = {
+          visible: chart.isDatasetVisible(i),
+          index: i,
+          fill: _decodeFill(line, i, count),
+          chart,
+          axis: meta.controller.options.indexAxis,
+          scale: meta.vScale,
+          line,
+        };
+      }
+      meta.$filler = source;
+      sources.push(source);
+    }
+    for (i = 0; i < count; ++i) {
+      source = sources[i];
+      if (!source || source.fill === false) {
+        continue;
+      }
+      source.fill = _resolveTarget(sources, i, options.propagate);
+    }
+  },
+  beforeDraw(chart, _args, options) {
+    const draw = options.drawTime === 'beforeDraw';
+    const metasets = chart.getSortedVisibleDatasetMetas();
+    const area = chart.chartArea;
+    for (let i = metasets.length - 1; i >= 0; --i) {
+      const source = metasets[i].$filler;
+      if (!source) {
+        continue;
+      }
+      source.line.updateControlPoints(area, source.axis);
+      if (draw && source.fill) {
+        _drawfill(chart.ctx, source, area);
+      }
+    }
+  },
+  beforeDatasetsDraw(chart, _args, options) {
+    if (options.drawTime !== 'beforeDatasetsDraw') {
+      return;
+    }
+    const metasets = chart.getSortedVisibleDatasetMetas();
+    for (let i = metasets.length - 1; i >= 0; --i) {
+      const source = metasets[i].$filler;
+      if (_shouldApplyFill(source)) {
+        _drawfill(chart.ctx, source, chart.chartArea);
+      }
+    }
+  },
+  beforeDatasetDraw(chart, args, options) {
+    const source = args.meta.$filler;
+    if (!_shouldApplyFill(source) || options.drawTime !== 'beforeDatasetDraw') {
+      return;
+    }
+    _drawfill(chart.ctx, source, chart.chartArea);
+  },
+  defaults: {
+    propagate: true,
+    drawTime: 'beforeDatasetDraw'
+  }
+};
+
+const getBoxSize = (labelOpts, fontSize) => {
+  let {boxHeight = fontSize, boxWidth = fontSize} = labelOpts;
+  if (labelOpts.usePointStyle) {
+    boxHeight = Math.min(boxHeight, fontSize);
+    boxWidth = labelOpts.pointStyleWidth || Math.min(boxWidth, fontSize);
+  }
+  return {
+    boxWidth,
+    boxHeight,
+    itemHeight: Math.max(fontSize, boxHeight)
+  };
+};
+const itemsEqual = (a, b) => a !== null && b !== null && a.datasetIndex === b.datasetIndex && a.index === b.index;
+class Legend extends Element {
+  constructor(config) {
+    super();
+    this._added = false;
+    this.legendHitBoxes = [];
+    this._hoveredItem = null;
+    this.doughnutMode = false;
+    this.chart = config.chart;
+    this.options = config.options;
+    this.ctx = config.ctx;
+    this.legendItems = undefined;
+    this.columnSizes = undefined;
+    this.lineWidths = undefined;
+    this.maxHeight = undefined;
+    this.maxWidth = undefined;
+    this.top = undefined;
+    this.bottom = undefined;
+    this.left = undefined;
+    this.right = undefined;
+    this.height = undefined;
+    this.width = undefined;
+    this._margins = undefined;
+    this.position = undefined;
+    this.weight = undefined;
+    this.fullSize = undefined;
+  }
+  update(maxWidth, maxHeight, margins) {
+    this.maxWidth = maxWidth;
+    this.maxHeight = maxHeight;
+    this._margins = margins;
+    this.setDimensions();
+    this.buildLabels();
+    this.fit();
+  }
+  setDimensions() {
+    if (this.isHorizontal()) {
+      this.width = this.maxWidth;
+      this.left = this._margins.left;
+      this.right = this.width;
+    } else {
+      this.height = this.maxHeight;
+      this.top = this._margins.top;
+      this.bottom = this.height;
+    }
+  }
+  buildLabels() {
+    const labelOpts = this.options.labels || {};
+    let legendItems = callback(labelOpts.generateLabels, [this.chart], this) || [];
+    if (labelOpts.filter) {
+      legendItems = legendItems.filter((item) => labelOpts.filter(item, this.chart.data));
+    }
+    if (labelOpts.sort) {
+      legendItems = legendItems.sort((a, b) => labelOpts.sort(a, b, this.chart.data));
+    }
+    if (this.options.reverse) {
+      legendItems.reverse();
+    }
+    this.legendItems = legendItems;
+  }
+  fit() {
+    const {options, ctx} = this;
+    if (!options.display) {
+      this.width = this.height = 0;
+      return;
+    }
+    const labelOpts = options.labels;
+    const labelFont = toFont(labelOpts.font);
+    const fontSize = labelFont.size;
+    const titleHeight = this._computeTitleHeight();
+    const {boxWidth, itemHeight} = getBoxSize(labelOpts, fontSize);
+    let width, height;
+    ctx.font = labelFont.string;
+    if (this.isHorizontal()) {
+      width = this.maxWidth;
+      height = this._fitRows(titleHeight, fontSize, boxWidth, itemHeight) + 10;
+    } else {
+      height = this.maxHeight;
+      width = this._fitCols(titleHeight, fontSize, boxWidth, itemHeight) + 10;
+    }
+    this.width = Math.min(width, options.maxWidth || this.maxWidth);
+    this.height = Math.min(height, options.maxHeight || this.maxHeight);
+  }
+  _fitRows(titleHeight, fontSize, boxWidth, itemHeight) {
+    const {ctx, maxWidth, options: {labels: {padding}}} = this;
+    const hitboxes = this.legendHitBoxes = [];
+    const lineWidths = this.lineWidths = [0];
+    const lineHeight = itemHeight + padding;
+    let totalHeight = titleHeight;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    let row = -1;
+    let top = -lineHeight;
+    this.legendItems.forEach((legendItem, i) => {
+      const itemWidth = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+      if (i === 0 || lineWidths[lineWidths.length - 1] + itemWidth + 2 * padding > maxWidth) {
+        totalHeight += lineHeight;
+        lineWidths[lineWidths.length - (i > 0 ? 0 : 1)] = 0;
+        top += lineHeight;
+        row++;
+      }
+      hitboxes[i] = {left: 0, top, row, width: itemWidth, height: itemHeight};
+      lineWidths[lineWidths.length - 1] += itemWidth + padding;
+    });
+    return totalHeight;
+  }
+  _fitCols(titleHeight, fontSize, boxWidth, itemHeight) {
+    const {ctx, maxHeight, options: {labels: {padding}}} = this;
+    const hitboxes = this.legendHitBoxes = [];
+    const columnSizes = this.columnSizes = [];
+    const heightLimit = maxHeight - titleHeight;
+    let totalWidth = padding;
+    let currentColWidth = 0;
+    let currentColHeight = 0;
+    let left = 0;
+    let col = 0;
+    this.legendItems.forEach((legendItem, i) => {
+      const itemWidth = boxWidth + (fontSize / 2) + ctx.measureText(legendItem.text).width;
+      if (i > 0 && currentColHeight + itemHeight + 2 * padding > heightLimit) {
+        totalWidth += currentColWidth + padding;
+        columnSizes.push({width: currentColWidth, height: currentColHeight});
+        left += currentColWidth + padding;
+        col++;
+        currentColWidth = currentColHeight = 0;
+      }
+      hitboxes[i] = {left, top: currentColHeight, col, width: itemWidth, height: itemHeight};
+      currentColWidth = Math.max(currentColWidth, itemWidth);
+      currentColHeight += itemHeight + padding;
+    });
+    totalWidth += currentColWidth;
+    columnSizes.push({width: currentColWidth, height: currentColHeight});
+    return totalWidth;
+  }
+  adjustHitBoxes() {
+    if (!this.options.display) {
+      return;
+    }
+    const titleHeight = this._computeTitleHeight();
+    const {legendHitBoxes: hitboxes, options: {align, labels: {padding}, rtl}} = this;
+    const rtlHelper = getRtlAdapter(rtl, this.left, this.width);
+    if (this.isHorizontal()) {
+      let row = 0;
+      let left = _alignStartEnd(align, this.left + padding, this.right - this.lineWidths[row]);
+      for (const hitbox of hitboxes) {
+        if (row !== hitbox.row) {
+          row = hitbox.row;
+          left = _alignStartEnd(align, this.left + padding, this.right - this.lineWidths[row]);
+        }
+        hitbox.top += this.top + titleHeight + padding;
+        hitbox.left = rtlHelper.leftForLtr(rtlHelper.x(left), hitbox.width);
+        left += hitbox.width + padding;
+      }
+    } else {
+      let col = 0;
+      let top = _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - this.columnSizes[col].height);
+      for (const hitbox of hitboxes) {
+        if (hitbox.col !== col) {
+          col = hitbox.col;
+          top = _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - this.columnSizes[col].height);
+        }
+        hitbox.top = top;
+        hitbox.left += this.left + padding;
+        hitbox.left = rtlHelper.leftForLtr(rtlHelper.x(hitbox.left), hitbox.width);
+        top += hitbox.height + padding;
+      }
+    }
+  }
+  isHorizontal() {
+    return this.options.position === 'top' || this.options.position === 'bottom';
+  }
+  draw() {
+    if (this.options.display) {
+      const ctx = this.ctx;
+      clipArea(ctx, this);
+      this._draw();
+      unclipArea(ctx);
+    }
+  }
+  _draw() {
+    const {options: opts, columnSizes, lineWidths, ctx} = this;
+    const {align, labels: labelOpts} = opts;
+    const defaultColor = defaults.color;
+    const rtlHelper = getRtlAdapter(opts.rtl, this.left, this.width);
+    const labelFont = toFont(labelOpts.font);
+    const {color: fontColor, padding} = labelOpts;
+    const fontSize = labelFont.size;
+    const halfFontSize = fontSize / 2;
+    let cursor;
+    this.drawTitle();
+    ctx.textAlign = rtlHelper.textAlign('left');
+    ctx.textBaseline = 'middle';
+    ctx.lineWidth = 0.5;
+    ctx.font = labelFont.string;
+    const {boxWidth, boxHeight, itemHeight} = getBoxSize(labelOpts, fontSize);
+    const drawLegendBox = function(x, y, legendItem) {
+      if (isNaN(boxWidth) || boxWidth <= 0 || isNaN(boxHeight) || boxHeight < 0) {
+        return;
+      }
+      ctx.save();
+      const lineWidth = valueOrDefault(legendItem.lineWidth, 1);
+      ctx.fillStyle = valueOrDefault(legendItem.fillStyle, defaultColor);
+      ctx.lineCap = valueOrDefault(legendItem.lineCap, 'butt');
+      ctx.lineDashOffset = valueOrDefault(legendItem.lineDashOffset, 0);
+      ctx.lineJoin = valueOrDefault(legendItem.lineJoin, 'miter');
+      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = valueOrDefault(legendItem.strokeStyle, defaultColor);
+      ctx.setLineDash(valueOrDefault(legendItem.lineDash, []));
+      if (labelOpts.usePointStyle) {
+        const drawOptions = {
+          radius: boxHeight * Math.SQRT2 / 2,
+          pointStyle: legendItem.pointStyle,
+          rotation: legendItem.rotation,
+          borderWidth: lineWidth
+        };
+        const centerX = rtlHelper.xPlus(x, boxWidth / 2);
+        const centerY = y + halfFontSize;
+        drawPointLegend(ctx, drawOptions, centerX, centerY, labelOpts.pointStyleWidth && boxWidth);
+      } else {
+        const yBoxTop = y + Math.max((fontSize - boxHeight) / 2, 0);
+        const xBoxLeft = rtlHelper.leftForLtr(x, boxWidth);
+        const borderRadius = toTRBLCorners(legendItem.borderRadius);
+        ctx.beginPath();
+        if (Object.values(borderRadius).some(v => v !== 0)) {
+          addRoundedRectPath(ctx, {
+            x: xBoxLeft,
+            y: yBoxTop,
+            w: boxWidth,
+            h: boxHeight,
+            radius: borderRadius,
+          });
+        } else {
+          ctx.rect(xBoxLeft, yBoxTop, boxWidth, boxHeight);
+        }
+        ctx.fill();
+        if (lineWidth !== 0) {
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    };
+    const fillText = function(x, y, legendItem) {
+      renderText(ctx, legendItem.text, x, y + (itemHeight / 2), labelFont, {
+        strikethrough: legendItem.hidden,
+        textAlign: rtlHelper.textAlign(legendItem.textAlign)
+      });
+    };
+    const isHorizontal = this.isHorizontal();
+    const titleHeight = this._computeTitleHeight();
+    if (isHorizontal) {
+      cursor = {
+        x: _alignStartEnd(align, this.left + padding, this.right - lineWidths[0]),
+        y: this.top + padding + titleHeight,
+        line: 0
+      };
+    } else {
+      cursor = {
+        x: this.left + padding,
+        y: _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - columnSizes[0].height),
+        line: 0
+      };
+    }
+    overrideTextDirection(this.ctx, opts.textDirection);
+    const lineHeight = itemHeight + padding;
+    this.legendItems.forEach((legendItem, i) => {
+      ctx.strokeStyle = legendItem.fontColor || fontColor;
+      ctx.fillStyle = legendItem.fontColor || fontColor;
+      const textWidth = ctx.measureText(legendItem.text).width;
+      const textAlign = rtlHelper.textAlign(legendItem.textAlign || (legendItem.textAlign = labelOpts.textAlign));
+      const width = boxWidth + halfFontSize + textWidth;
+      let x = cursor.x;
+      let y = cursor.y;
+      rtlHelper.setWidth(this.width);
+      if (isHorizontal) {
+        if (i > 0 && x + width + padding > this.right) {
+          y = cursor.y += lineHeight;
+          cursor.line++;
+          x = cursor.x = _alignStartEnd(align, this.left + padding, this.right - lineWidths[cursor.line]);
+        }
+      } else if (i > 0 && y + lineHeight > this.bottom) {
+        x = cursor.x = x + columnSizes[cursor.line].width + padding;
+        cursor.line++;
+        y = cursor.y = _alignStartEnd(align, this.top + titleHeight + padding, this.bottom - columnSizes[cursor.line].height);
+      }
+      const realX = rtlHelper.x(x);
+      drawLegendBox(realX, y, legendItem);
+      x = _textX(textAlign, x + boxWidth + halfFontSize, isHorizontal ? x + width : this.right, opts.rtl);
+      fillText(rtlHelper.x(x), y, legendItem);
+      if (isHorizontal) {
+        cursor.x += width + padding;
+      } else {
+        cursor.y += lineHeight;
+      }
+    });
+    restoreTextDirection(this.ctx, opts.textDirection);
+  }
+  drawTitle() {
+    const opts = this.options;
+    const titleOpts = opts.title;
+    const titleFont = toFont(titleOpts.font);
+    const titlePadding = toPadding(titleOpts.padding);
+    if (!titleOpts.display) {
+      return;
+    }
+    const rtlHelper = getRtlAdapter(opts.rtl, this.left, this.width);
+    const ctx = this.ctx;
+    const position = titleOpts.position;
+    const halfFontSize = titleFont.size / 2;
+    const topPaddingPlusHalfFontSize = titlePadding.top + halfFontSize;
+    let y;
+    let left = this.left;
+    let maxWidth = this.width;
+    if (this.isHorizontal()) {
+      maxWidth = Math.max(...this.lineWidths);
+      y = this.top + topPaddingPlusHalfFontSize;
+      left = _alignStartEnd(opts.align, left, this.right - maxWidth);
+    } else {
+      const maxHeight = this.columnSizes.reduce((acc, size) => Math.max(acc, size.height), 0);
+      y = topPaddingPlusHalfFontSize + _alignStartEnd(opts.align, this.top, this.bottom - maxHeight - opts.labels.padding - this._computeTitleHeight());
+    }
+    const x = _alignStartEnd(position, left, left + maxWidth);
+    ctx.textAlign = rtlHelper.textAlign(_toLeftRightCenter(position));
+    ctx.textBaseline = 'middle';
+    ctx.strokeStyle = titleOpts.color;
+    ctx.fillStyle = titleOpts.color;
+    ctx.font = titleFont.string;
+    renderText(ctx, titleOpts.text, x, y, titleFont);
+  }
+  _computeTitleHeight() {
+    const titleOpts = this.options.title;
+    const titleFont = toFont(titleOpts.font);
+    const titlePadding = toPadding(titleOpts.padding);
+    return titleOpts.display ? titleFont.lineHeight + titlePadding.height : 0;
+  }
+  _getLegendItemAt(x, y) {
+    let i, hitBox, lh;
+    if (_isBetween(x, this.left, this.right)
+      && _isBetween(y, this.top, this.bottom)) {
+      lh = this.legendHitBoxes;
+      for (i = 0; i < lh.length; ++i) {
+        hitBox = lh[i];
+        if (_isBetween(x, hitBox.left, hitBox.left + hitBox.width)
+          && _isBetween(y, hitBox.top, hitBox.top + hitBox.height)) {
+          return this.legendItems[i];
+        }
+      }
+    }
+    return null;
+  }
+  handleEvent(e) {
+    const opts = this.options;
+    if (!isListened(e.type, opts)) {
+      return;
+    }
+    const hoveredItem = this._getLegendItemAt(e.x, e.y);
+    if (e.type === 'mousemove' || e.type === 'mouseout') {
+      const previous = this._hoveredItem;
+      const sameItem = itemsEqual(previous, hoveredItem);
+      if (previous && !sameItem) {
+        callback(opts.onLeave, [e, previous, this], this);
+      }
+      this._hoveredItem = hoveredItem;
+      if (hoveredItem && !sameItem) {
+        callback(opts.onHover, [e, hoveredItem, this], this);
+      }
+    } else if (hoveredItem) {
+      callback(opts.onClick, [e, hoveredItem, this], this);
+    }
+  }
+}
+function isListened(type, opts) {
+  if ((type === 'mousemove' || type === 'mouseout') && (opts.onHover || opts.onLeave)) {
+    return true;
+  }
+  if (opts.onClick && (type === 'click' || type === 'mouseup')) {
+    return true;
+  }
+  return false;
+}
+var plugin_legend = {
+  id: 'legend',
+  _element: Legend,
+  start(chart, _args, options) {
+    const legend = chart.legend = new Legend({ctx: chart.ctx, options, chart});
+    layouts.configure(chart, legend, options);
+    layouts.addBox(chart, legend);
+  },
+  stop(chart) {
+    layouts.removeBox(chart, chart.legend);
+    delete chart.legend;
+  },
+  beforeUpdate(chart, _args, options) {
+    const legend = chart.legend;
+    layouts.configure(chart, legend, options);
+    legend.options = options;
+  },
+  afterUpdate(chart) {
+    const legend = chart.legend;
+    legend.buildLabels();
+    legend.adjustHitBoxes();
+  },
+  afterEvent(chart, args) {
+    if (!args.replay) {
+      chart.legend.handleEvent(args.event);
+    }
+  },
+  defaults: {
+    display: true,
+    position: 'top',
+    align: 'center',
+    fullSize: true,
+    reverse: false,
+    weight: 1000,
+    onClick(e, legendItem, legend) {
+      const index = legendItem.datasetIndex;
+      const ci = legend.chart;
+      if (ci.isDatasetVisible(index)) {
+        ci.hide(index);
+        legendItem.hidden = true;
+      } else {
+        ci.show(index);
+        legendItem.hidden = false;
+      }
+    },
+    onHover: null,
+    onLeave: null,
+    labels: {
+      color: (ctx) => ctx.chart.options.color,
+      boxWidth: 40,
+      padding: 10,
+      generateLabels(chart) {
+        const datasets = chart.data.datasets;
+        const {labels: {usePointStyle, pointStyle, textAlign, color}} = chart.legend.options;
+        return chart._getSortedDatasetMetas().map((meta) => {
+          const style = meta.controller.getStyle(usePointStyle ? 0 : undefined);
+          const borderWidth = toPadding(style.borderWidth);
+          return {
+            text: datasets[meta.index].label,
+            fillStyle: style.backgroundColor,
+            fontColor: color,
+            hidden: !meta.visible,
+            lineCap: style.borderCapStyle,
+            lineDash: style.borderDash,
+            lineDashOffset: style.borderDashOffset,
+            lineJoin: style.borderJoinStyle,
+            lineWidth: (borderWidth.width + borderWidth.height) / 4,
+            strokeStyle: style.borderColor,
+            pointStyle: pointStyle || style.pointStyle,
+            rotation: style.rotation,
+            textAlign: textAlign || style.textAlign,
+            borderRadius: 0,
+            datasetIndex: meta.index
+          };
+        }, this);
+      }
+    },
+    title: {
+      color: (ctx) => ctx.chart.options.color,
+      display: false,
+      position: 'center',
+      text: '',
+    }
+  },
+  descriptors: {
+    _scriptable: (name) => !name.startsWith('on'),
+    labels: {
+      _scriptable: (name) => !['generateLabels', 'filter', 'sort'].includes(name),
+    }
+  },
+};
+
+class Title extends Element {
+  constructor(config) {
+    super();
+    this.chart = config.chart;
+    this.options = config.options;
+    this.ctx = config.ctx;
+    this._padding = undefined;
+    this.top = undefined;
+    this.bottom = undefined;
+    this.left = undefined;
+    this.right = undefined;
+    this.width = undefined;
+    this.height = undefined;
+    this.position = undefined;
+    this.weight = undefined;
+    this.fullSize = undefined;
+  }
+  update(maxWidth, maxHeight) {
+    const opts = this.options;
+    this.left = 0;
+    this.top = 0;
+    if (!opts.display) {
+      this.width = this.height = this.right = this.bottom = 0;
+      return;
+    }
+    this.width = this.right = maxWidth;
+    this.height = this.bottom = maxHeight;
+    const lineCount = isArray(opts.text) ? opts.text.length : 1;
+    this._padding = toPadding(opts.padding);
+    const textSize = lineCount * toFont(opts.font).lineHeight + this._padding.height;
+    if (this.isHorizontal()) {
+      this.height = textSize;
+    } else {
+      this.width = textSize;
+    }
+  }
+  isHorizontal() {
+    const pos = this.options.position;
+    return pos === 'top' || pos === 'bottom';
+  }
+  _drawArgs(offset) {
+    const {top, left, bottom, right, options} = this;
+    const align = options.align;
+    let rotation = 0;
+    let maxWidth, titleX, titleY;
+    if (this.isHorizontal()) {
+      titleX = _alignStartEnd(align, left, right);
+      titleY = top + offset;
+      maxWidth = right - left;
+    } else {
+      if (options.position === 'left') {
+        titleX = left + offset;
+        titleY = _alignStartEnd(align, bottom, top);
+        rotation = PI * -0.5;
+      } else {
+        titleX = right - offset;
+        titleY = _alignStartEnd(align, top, bottom);
+        rotation = PI * 0.5;
+      }
+      maxWidth = bottom - top;
+    }
+    return {titleX, titleY, maxWidth, rotation};
+  }
+  draw() {
+    const ctx = this.ctx;
+    const opts = this.options;
+    if (!opts.display) {
+      return;
+    }
+    const fontOpts = toFont(opts.font);
+    const lineHeight = fontOpts.lineHeight;
+    const offset = lineHeight / 2 + this._padding.top;
+    const {titleX, titleY, maxWidth, rotation} = this._drawArgs(offset);
+    renderText(ctx, opts.text, 0, 0, fontOpts, {
+      color: opts.color,
+      maxWidth,
+      rotation,
+      textAlign: _toLeftRightCenter(opts.align),
+      textBaseline: 'middle',
+      translation: [titleX, titleY],
+    });
+  }
+}
+function createTitle(chart, titleOpts) {
+  const title = new Title({
+    ctx: chart.ctx,
+    options: titleOpts,
+    chart
+  });
+  layouts.configure(chart, title, titleOpts);
+  layouts.addBox(chart, title);
+  chart.titleBlock = title;
+}
+var plugin_title = {
+  id: 'title',
+  _element: Title,
+  start(chart, _args, options) {
+    createTitle(chart, options);
+  },
+  stop(chart) {
+    const titleBlock = chart.titleBlock;
+    layouts.removeBox(chart, titleBlock);
+    delete chart.titleBlock;
+  },
+  beforeUpdate(chart, _args, options) {
+    const title = chart.titleBlock;
+    layouts.configure(chart, title, options);
+    title.options = options;
+  },
+  defaults: {
+    align: 'center',
+    display: false,
+    font: {
+      weight: 'bold',
+    },
+    fullSize: true,
+    padding: 10,
+    position: 'top',
+    text: '',
+    weight: 2000
+  },
+  defaultRoutes: {
+    color: 'color'
+  },
+  descriptors: {
+    _scriptable: true,
+    _indexable: false,
+  },
+};
+
+const map = new WeakMap();
+var plugin_subtitle = {
+  id: 'subtitle',
+  start(chart, _args, options) {
+    const title = new Title({
+      ctx: chart.ctx,
+      options,
+      chart
+    });
+    layouts.configure(chart, title, options);
+    layouts.addBox(chart, title);
+    map.set(chart, title);
+  },
+  stop(chart) {
+    layouts.removeBox(chart, map.get(chart));
+    map.delete(chart);
+  },
+  beforeUpdate(chart, _args, options) {
+    const title = map.get(chart);
+    layouts.configure(chart, title, options);
+    title.options = options;
+  },
+  defaults: {
+    align: 'center',
+    display: false,
+    font: {
+      weight: 'normal',
+    },
+    fullSize: true,
+    padding: 0,
+    position: 'top',
+    text: '',
+    weight: 1500
+  },
+  defaultRoutes: {
+    color: 'color'
+  },
+  descriptors: {
+    _scriptable: true,
+    _indexable: false,
+  },
+};
+
+const positioners = {
+  average(items) {
+    if (!items.length) {
+      return false;
+    }
+    let i, len;
+    let x = 0;
+    let y = 0;
+    let count = 0;
+    for (i = 0, len = items.length; i < len; ++i) {
+      const el = items[i].element;
+      if (el && el.hasValue()) {
+        const pos = el.tooltipPosition();
+        x += pos.x;
+        y += pos.y;
+        ++count;
+      }
+    }
+    return {
+      x: x / count,
+      y: y / count
+    };
+  },
+  nearest(items, eventPosition) {
+    if (!items.length) {
+      return false;
+    }
+    let x = eventPosition.x;
+    let y = eventPosition.y;
+    let minDistance = Number.POSITIVE_INFINITY;
+    let i, len, nearestElement;
+    for (i = 0, len = items.length; i < len; ++i) {
+      const el = items[i].element;
+      if (el && el.hasValue()) {
+        const center = el.getCenterPoint();
+        const d = distanceBetweenPoints(eventPosition, center);
+        if (d < minDistance) {
+          minDistance = d;
+          nearestElement = el;
+        }
+      }
+    }
+    if (nearestElement) {
+      const tp = nearestElement.tooltipPosition();
+      x = tp.x;
+      y = tp.y;
+    }
+    return {
+      x,
+      y
+    };
+  }
+};
+function pushOrConcat(base, toPush) {
+  if (toPush) {
+    if (isArray(toPush)) {
+      Array.prototype.push.apply(base, toPush);
+    } else {
+      base.push(toPush);
+    }
+  }
+  return base;
+}
+function splitNewlines(str) {
+  if ((typeof str === 'string' || str instanceof String) && str.indexOf('\n') > -1) {
+    return str.split('\n');
+  }
+  return str;
+}
+function createTooltipItem(chart, item) {
+  const {element, datasetIndex, index} = item;
+  const controller = chart.getDatasetMeta(datasetIndex).controller;
+  const {label, value} = controller.getLabelAndValue(index);
+  return {
+    chart,
+    label,
+    parsed: controller.getParsed(index),
+    raw: chart.data.datasets[datasetIndex].data[index],
+    formattedValue: value,
+    dataset: controller.getDataset(),
+    dataIndex: index,
+    datasetIndex,
+    element
+  };
+}
+function getTooltipSize(tooltip, options) {
+  const ctx = tooltip.chart.ctx;
+  const {body, footer, title} = tooltip;
+  const {boxWidth, boxHeight} = options;
+  const bodyFont = toFont(options.bodyFont);
+  const titleFont = toFont(options.titleFont);
+  const footerFont = toFont(options.footerFont);
+  const titleLineCount = title.length;
+  const footerLineCount = footer.length;
+  const bodyLineItemCount = body.length;
+  const padding = toPadding(options.padding);
+  let height = padding.height;
+  let width = 0;
+  let combinedBodyLength = body.reduce((count, bodyItem) => count + bodyItem.before.length + bodyItem.lines.length + bodyItem.after.length, 0);
+  combinedBodyLength += tooltip.beforeBody.length + tooltip.afterBody.length;
+  if (titleLineCount) {
+    height += titleLineCount * titleFont.lineHeight
+			+ (titleLineCount - 1) * options.titleSpacing
+			+ options.titleMarginBottom;
+  }
+  if (combinedBodyLength) {
+    const bodyLineHeight = options.displayColors ? Math.max(boxHeight, bodyFont.lineHeight) : bodyFont.lineHeight;
+    height += bodyLineItemCount * bodyLineHeight
+			+ (combinedBodyLength - bodyLineItemCount) * bodyFont.lineHeight
+			+ (combinedBodyLength - 1) * options.bodySpacing;
+  }
+  if (footerLineCount) {
+    height += options.footerMarginTop
+			+ footerLineCount * footerFont.lineHeight
+			+ (footerLineCount - 1) * options.footerSpacing;
+  }
+  let widthPadding = 0;
+  const maxLineWidth = function(line) {
+    width = Math.max(width, ctx.measureText(line).width + widthPadding);
+  };
+  ctx.save();
+  ctx.font = titleFont.string;
+  each(tooltip.title, maxLineWidth);
+  ctx.font = bodyFont.string;
+  each(tooltip.beforeBody.concat(tooltip.afterBody), maxLineWidth);
+  widthPadding = options.displayColors ? (boxWidth + 2 + options.boxPadding) : 0;
+  each(body, (bodyItem) => {
+    each(bodyItem.before, maxLineWidth);
+    each(bodyItem.lines, maxLineWidth);
+    each(bodyItem.after, maxLineWidth);
+  });
+  widthPadding = 0;
+  ctx.font = footerFont.string;
+  each(tooltip.footer, maxLineWidth);
+  ctx.restore();
+  width += padding.width;
+  return {width, height};
+}
+function determineYAlign(chart, size) {
+  const {y, height} = size;
+  if (y < height / 2) {
+    return 'top';
+  } else if (y > (chart.height - height / 2)) {
+    return 'bottom';
+  }
+  return 'center';
+}
+function doesNotFitWithAlign(xAlign, chart, options, size) {
+  const {x, width} = size;
+  const caret = options.caretSize + options.caretPadding;
+  if (xAlign === 'left' && x + width + caret > chart.width) {
+    return true;
+  }
+  if (xAlign === 'right' && x - width - caret < 0) {
+    return true;
+  }
+}
+function determineXAlign(chart, options, size, yAlign) {
+  const {x, width} = size;
+  const {width: chartWidth, chartArea: {left, right}} = chart;
+  let xAlign = 'center';
+  if (yAlign === 'center') {
+    xAlign = x <= (left + right) / 2 ? 'left' : 'right';
+  } else if (x <= width / 2) {
+    xAlign = 'left';
+  } else if (x >= chartWidth - width / 2) {
+    xAlign = 'right';
+  }
+  if (doesNotFitWithAlign(xAlign, chart, options, size)) {
+    xAlign = 'center';
+  }
+  return xAlign;
+}
+function determineAlignment(chart, options, size) {
+  const yAlign = size.yAlign || options.yAlign || determineYAlign(chart, size);
+  return {
+    xAlign: size.xAlign || options.xAlign || determineXAlign(chart, options, size, yAlign),
+    yAlign
+  };
+}
+function alignX(size, xAlign) {
+  let {x, width} = size;
+  if (xAlign === 'right') {
+    x -= width;
+  } else if (xAlign === 'center') {
+    x -= (width / 2);
+  }
+  return x;
+}
+function alignY(size, yAlign, paddingAndSize) {
+  let {y, height} = size;
+  if (yAlign === 'top') {
+    y += paddingAndSize;
+  } else if (yAlign === 'bottom') {
+    y -= height + paddingAndSize;
+  } else {
+    y -= (height / 2);
+  }
+  return y;
+}
+function getBackgroundPoint(options, size, alignment, chart) {
+  const {caretSize, caretPadding, cornerRadius} = options;
+  const {xAlign, yAlign} = alignment;
+  const paddingAndSize = caretSize + caretPadding;
+  const {topLeft, topRight, bottomLeft, bottomRight} = toTRBLCorners(cornerRadius);
+  let x = alignX(size, xAlign);
+  const y = alignY(size, yAlign, paddingAndSize);
+  if (yAlign === 'center') {
+    if (xAlign === 'left') {
+      x += paddingAndSize;
+    } else if (xAlign === 'right') {
+      x -= paddingAndSize;
+    }
+  } else if (xAlign === 'left') {
+    x -= Math.max(topLeft, bottomLeft) + caretSize;
+  } else if (xAlign === 'right') {
+    x += Math.max(topRight, bottomRight) + caretSize;
+  }
+  return {
+    x: _limitValue(x, 0, chart.width - size.width),
+    y: _limitValue(y, 0, chart.height - size.height)
+  };
+}
+function getAlignedX(tooltip, align, options) {
+  const padding = toPadding(options.padding);
+  return align === 'center'
+    ? tooltip.x + tooltip.width / 2
+    : align === 'right'
+      ? tooltip.x + tooltip.width - padding.right
+      : tooltip.x + padding.left;
+}
+function getBeforeAfterBodyLines(callback) {
+  return pushOrConcat([], splitNewlines(callback));
+}
+function createTooltipContext(parent, tooltip, tooltipItems) {
+  return createContext(parent, {
+    tooltip,
+    tooltipItems,
+    type: 'tooltip'
+  });
+}
+function overrideCallbacks(callbacks, context) {
+  const override = context && context.dataset && context.dataset.tooltip && context.dataset.tooltip.callbacks;
+  return override ? callbacks.override(override) : callbacks;
+}
+class Tooltip extends Element {
+  constructor(config) {
+    super();
+    this.opacity = 0;
+    this._active = [];
+    this._eventPosition = undefined;
+    this._size = undefined;
+    this._cachedAnimations = undefined;
+    this._tooltipItems = [];
+    this.$animations = undefined;
+    this.$context = undefined;
+    this.chart = config.chart || config._chart;
+    this._chart = this.chart;
+    this.options = config.options;
+    this.dataPoints = undefined;
+    this.title = undefined;
+    this.beforeBody = undefined;
+    this.body = undefined;
+    this.afterBody = undefined;
+    this.footer = undefined;
+    this.xAlign = undefined;
+    this.yAlign = undefined;
+    this.x = undefined;
+    this.y = undefined;
+    this.height = undefined;
+    this.width = undefined;
+    this.caretX = undefined;
+    this.caretY = undefined;
+    this.labelColors = undefined;
+    this.labelPointStyles = undefined;
+    this.labelTextColors = undefined;
+  }
+  initialize(options) {
+    this.options = options;
+    this._cachedAnimations = undefined;
+    this.$context = undefined;
+  }
+  _resolveAnimations() {
+    const cached = this._cachedAnimations;
+    if (cached) {
+      return cached;
+    }
+    const chart = this.chart;
+    const options = this.options.setContext(this.getContext());
+    const opts = options.enabled && chart.options.animation && options.animations;
+    const animations = new Animations(this.chart, opts);
+    if (opts._cacheable) {
+      this._cachedAnimations = Object.freeze(animations);
+    }
+    return animations;
+  }
+  getContext() {
+    return this.$context ||
+			(this.$context = createTooltipContext(this.chart.getContext(), this, this._tooltipItems));
+  }
+  getTitle(context, options) {
+    const {callbacks} = options;
+    const beforeTitle = callbacks.beforeTitle.apply(this, [context]);
+    const title = callbacks.title.apply(this, [context]);
+    const afterTitle = callbacks.afterTitle.apply(this, [context]);
+    let lines = [];
+    lines = pushOrConcat(lines, splitNewlines(beforeTitle));
+    lines = pushOrConcat(lines, splitNewlines(title));
+    lines = pushOrConcat(lines, splitNewlines(afterTitle));
+    return lines;
+  }
+  getBeforeBody(tooltipItems, options) {
+    return getBeforeAfterBodyLines(options.callbacks.beforeBody.apply(this, [tooltipItems]));
+  }
+  getBody(tooltipItems, options) {
+    const {callbacks} = options;
+    const bodyItems = [];
+    each(tooltipItems, (context) => {
+      const bodyItem = {
+        before: [],
+        lines: [],
+        after: []
+      };
+      const scoped = overrideCallbacks(callbacks, context);
+      pushOrConcat(bodyItem.before, splitNewlines(scoped.beforeLabel.call(this, context)));
+      pushOrConcat(bodyItem.lines, scoped.label.call(this, context));
+      pushOrConcat(bodyItem.after, splitNewlines(scoped.afterLabel.call(this, context)));
+      bodyItems.push(bodyItem);
+    });
+    return bodyItems;
+  }
+  getAfterBody(tooltipItems, options) {
+    return getBeforeAfterBodyLines(options.callbacks.afterBody.apply(this, [tooltipItems]));
+  }
+  getFooter(tooltipItems, options) {
+    const {callbacks} = options;
+    const beforeFooter = callbacks.beforeFooter.apply(this, [tooltipItems]);
+    const footer = callbacks.footer.apply(this, [tooltipItems]);
+    const afterFooter = callbacks.afterFooter.apply(this, [tooltipItems]);
+    let lines = [];
+    lines = pushOrConcat(lines, splitNewlines(beforeFooter));
+    lines = pushOrConcat(lines, splitNewlines(footer));
+    lines = pushOrConcat(lines, splitNewlines(afterFooter));
+    return lines;
+  }
+  _createItems(options) {
+    const active = this._active;
+    const data = this.chart.data;
+    const labelColors = [];
+    const labelPointStyles = [];
+    const labelTextColors = [];
+    let tooltipItems = [];
+    let i, len;
+    for (i = 0, len = active.length; i < len; ++i) {
+      tooltipItems.push(createTooltipItem(this.chart, active[i]));
+    }
+    if (options.filter) {
+      tooltipItems = tooltipItems.filter((element, index, array) => options.filter(element, index, array, data));
+    }
+    if (options.itemSort) {
+      tooltipItems = tooltipItems.sort((a, b) => options.itemSort(a, b, data));
+    }
+    each(tooltipItems, (context) => {
+      const scoped = overrideCallbacks(options.callbacks, context);
+      labelColors.push(scoped.labelColor.call(this, context));
+      labelPointStyles.push(scoped.labelPointStyle.call(this, context));
+      labelTextColors.push(scoped.labelTextColor.call(this, context));
+    });
+    this.labelColors = labelColors;
+    this.labelPointStyles = labelPointStyles;
+    this.labelTextColors = labelTextColors;
+    this.dataPoints = tooltipItems;
+    return tooltipItems;
+  }
+  update(changed, replay) {
+    const options = this.options.setContext(this.getContext());
+    const active = this._active;
+    let properties;
+    let tooltipItems = [];
+    if (!active.length) {
+      if (this.opacity !== 0) {
+        properties = {
+          opacity: 0
+        };
+      }
+    } else {
+      const position = positioners[options.position].call(this, active, this._eventPosition);
+      tooltipItems = this._createItems(options);
+      this.title = this.getTitle(tooltipItems, options);
+      this.beforeBody = this.getBeforeBody(tooltipItems, options);
+      this.body = this.getBody(tooltipItems, options);
+      this.afterBody = this.getAfterBody(tooltipItems, options);
+      this.footer = this.getFooter(tooltipItems, options);
+      const size = this._size = getTooltipSize(this, options);
+      const positionAndSize = Object.assign({}, position, size);
+      const alignment = determineAlignment(this.chart, options, positionAndSize);
+      const backgroundPoint = getBackgroundPoint(options, positionAndSize, alignment, this.chart);
+      this.xAlign = alignment.xAlign;
+      this.yAlign = alignment.yAlign;
+      properties = {
+        opacity: 1,
+        x: backgroundPoint.x,
+        y: backgroundPoint.y,
+        width: size.width,
+        height: size.height,
+        caretX: position.x,
+        caretY: position.y
+      };
+    }
+    this._tooltipItems = tooltipItems;
+    this.$context = undefined;
+    if (properties) {
+      this._resolveAnimations().update(this, properties);
+    }
+    if (changed && options.external) {
+      options.external.call(this, {chart: this.chart, tooltip: this, replay});
+    }
+  }
+  drawCaret(tooltipPoint, ctx, size, options) {
+    const caretPosition = this.getCaretPosition(tooltipPoint, size, options);
+    ctx.lineTo(caretPosition.x1, caretPosition.y1);
+    ctx.lineTo(caretPosition.x2, caretPosition.y2);
+    ctx.lineTo(caretPosition.x3, caretPosition.y3);
+  }
+  getCaretPosition(tooltipPoint, size, options) {
+    const {xAlign, yAlign} = this;
+    const {caretSize, cornerRadius} = options;
+    const {topLeft, topRight, bottomLeft, bottomRight} = toTRBLCorners(cornerRadius);
+    const {x: ptX, y: ptY} = tooltipPoint;
+    const {width, height} = size;
+    let x1, x2, x3, y1, y2, y3;
+    if (yAlign === 'center') {
+      y2 = ptY + (height / 2);
+      if (xAlign === 'left') {
+        x1 = ptX;
+        x2 = x1 - caretSize;
+        y1 = y2 + caretSize;
+        y3 = y2 - caretSize;
+      } else {
+        x1 = ptX + width;
+        x2 = x1 + caretSize;
+        y1 = y2 - caretSize;
+        y3 = y2 + caretSize;
+      }
+      x3 = x1;
+    } else {
+      if (xAlign === 'left') {
+        x2 = ptX + Math.max(topLeft, bottomLeft) + (caretSize);
+      } else if (xAlign === 'right') {
+        x2 = ptX + width - Math.max(topRight, bottomRight) - caretSize;
+      } else {
+        x2 = this.caretX;
+      }
+      if (yAlign === 'top') {
+        y1 = ptY;
+        y2 = y1 - caretSize;
+        x1 = x2 - caretSize;
+        x3 = x2 + caretSize;
+      } else {
+        y1 = ptY + height;
+        y2 = y1 + caretSize;
+        x1 = x2 + caretSize;
+        x3 = x2 - caretSize;
+      }
+      y3 = y1;
+    }
+    return {x1, x2, x3, y1, y2, y3};
+  }
+  drawTitle(pt, ctx, options) {
+    const title = this.title;
+    const length = title.length;
+    let titleFont, titleSpacing, i;
+    if (length) {
+      const rtlHelper = getRtlAdapter(options.rtl, this.x, this.width);
+      pt.x = getAlignedX(this, options.titleAlign, options);
+      ctx.textAlign = rtlHelper.textAlign(options.titleAlign);
+      ctx.textBaseline = 'middle';
+      titleFont = toFont(options.titleFont);
+      titleSpacing = options.titleSpacing;
+      ctx.fillStyle = options.titleColor;
+      ctx.font = titleFont.string;
+      for (i = 0; i < length; ++i) {
+        ctx.fillText(title[i], rtlHelper.x(pt.x), pt.y + titleFont.lineHeight / 2);
+        pt.y += titleFont.lineHeight + titleSpacing;
+        if (i + 1 === length) {
+          pt.y += options.titleMarginBottom - titleSpacing;
+        }
+      }
+    }
+  }
+  _drawColorBox(ctx, pt, i, rtlHelper, options) {
+    const labelColors = this.labelColors[i];
+    const labelPointStyle = this.labelPointStyles[i];
+    const {boxHeight, boxWidth, boxPadding} = options;
+    const bodyFont = toFont(options.bodyFont);
+    const colorX = getAlignedX(this, 'left', options);
+    const rtlColorX = rtlHelper.x(colorX);
+    const yOffSet = boxHeight < bodyFont.lineHeight ? (bodyFont.lineHeight - boxHeight) / 2 : 0;
+    const colorY = pt.y + yOffSet;
+    if (options.usePointStyle) {
+      const drawOptions = {
+        radius: Math.min(boxWidth, boxHeight) / 2,
+        pointStyle: labelPointStyle.pointStyle,
+        rotation: labelPointStyle.rotation,
+        borderWidth: 1
+      };
+      const centerX = rtlHelper.leftForLtr(rtlColorX, boxWidth) + boxWidth / 2;
+      const centerY = colorY + boxHeight / 2;
+      ctx.strokeStyle = options.multiKeyBackground;
+      ctx.fillStyle = options.multiKeyBackground;
+      drawPoint(ctx, drawOptions, centerX, centerY);
+      ctx.strokeStyle = labelColors.borderColor;
+      ctx.fillStyle = labelColors.backgroundColor;
+      drawPoint(ctx, drawOptions, centerX, centerY);
+    } else {
+      ctx.lineWidth = isObject(labelColors.borderWidth) ? Math.max(...Object.values(labelColors.borderWidth)) : (labelColors.borderWidth || 1);
+      ctx.strokeStyle = labelColors.borderColor;
+      ctx.setLineDash(labelColors.borderDash || []);
+      ctx.lineDashOffset = labelColors.borderDashOffset || 0;
+      const outerX = rtlHelper.leftForLtr(rtlColorX, boxWidth - boxPadding);
+      const innerX = rtlHelper.leftForLtr(rtlHelper.xPlus(rtlColorX, 1), boxWidth - boxPadding - 2);
+      const borderRadius = toTRBLCorners(labelColors.borderRadius);
+      if (Object.values(borderRadius).some(v => v !== 0)) {
+        ctx.beginPath();
+        ctx.fillStyle = options.multiKeyBackground;
+        addRoundedRectPath(ctx, {
+          x: outerX,
+          y: colorY,
+          w: boxWidth,
+          h: boxHeight,
+          radius: borderRadius,
+        });
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = labelColors.backgroundColor;
+        ctx.beginPath();
+        addRoundedRectPath(ctx, {
+          x: innerX,
+          y: colorY + 1,
+          w: boxWidth - 2,
+          h: boxHeight - 2,
+          radius: borderRadius,
+        });
+        ctx.fill();
+      } else {
+        ctx.fillStyle = options.multiKeyBackground;
+        ctx.fillRect(outerX, colorY, boxWidth, boxHeight);
+        ctx.strokeRect(outerX, colorY, boxWidth, boxHeight);
+        ctx.fillStyle = labelColors.backgroundColor;
+        ctx.fillRect(innerX, colorY + 1, boxWidth - 2, boxHeight - 2);
+      }
+    }
+    ctx.fillStyle = this.labelTextColors[i];
+  }
+  drawBody(pt, ctx, options) {
+    const {body} = this;
+    const {bodySpacing, bodyAlign, displayColors, boxHeight, boxWidth, boxPadding} = options;
+    const bodyFont = toFont(options.bodyFont);
+    let bodyLineHeight = bodyFont.lineHeight;
+    let xLinePadding = 0;
+    const rtlHelper = getRtlAdapter(options.rtl, this.x, this.width);
+    const fillLineOfText = function(line) {
+      ctx.fillText(line, rtlHelper.x(pt.x + xLinePadding), pt.y + bodyLineHeight / 2);
+      pt.y += bodyLineHeight + bodySpacing;
+    };
+    const bodyAlignForCalculation = rtlHelper.textAlign(bodyAlign);
+    let bodyItem, textColor, lines, i, j, ilen, jlen;
+    ctx.textAlign = bodyAlign;
+    ctx.textBaseline = 'middle';
+    ctx.font = bodyFont.string;
+    pt.x = getAlignedX(this, bodyAlignForCalculation, options);
+    ctx.fillStyle = options.bodyColor;
+    each(this.beforeBody, fillLineOfText);
+    xLinePadding = displayColors && bodyAlignForCalculation !== 'right'
+      ? bodyAlign === 'center' ? (boxWidth / 2 + boxPadding) : (boxWidth + 2 + boxPadding)
+      : 0;
+    for (i = 0, ilen = body.length; i < ilen; ++i) {
+      bodyItem = body[i];
+      textColor = this.labelTextColors[i];
+      ctx.fillStyle = textColor;
+      each(bodyItem.before, fillLineOfText);
+      lines = bodyItem.lines;
+      if (displayColors && lines.length) {
+        this._drawColorBox(ctx, pt, i, rtlHelper, options);
+        bodyLineHeight = Math.max(bodyFont.lineHeight, boxHeight);
+      }
+      for (j = 0, jlen = lines.length; j < jlen; ++j) {
+        fillLineOfText(lines[j]);
+        bodyLineHeight = bodyFont.lineHeight;
+      }
+      each(bodyItem.after, fillLineOfText);
+    }
+    xLinePadding = 0;
+    bodyLineHeight = bodyFont.lineHeight;
+    each(this.afterBody, fillLineOfText);
+    pt.y -= bodySpacing;
+  }
+  drawFooter(pt, ctx, options) {
+    const footer = this.footer;
+    const length = footer.length;
+    let footerFont, i;
+    if (length) {
+      const rtlHelper = getRtlAdapter(options.rtl, this.x, this.width);
+      pt.x = getAlignedX(this, options.footerAlign, options);
+      pt.y += options.footerMarginTop;
+      ctx.textAlign = rtlHelper.textAlign(options.footerAlign);
+      ctx.textBaseline = 'middle';
+      footerFont = toFont(options.footerFont);
+      ctx.fillStyle = options.footerColor;
+      ctx.font = footerFont.string;
+      for (i = 0; i < length; ++i) {
+        ctx.fillText(footer[i], rtlHelper.x(pt.x), pt.y + footerFont.lineHeight / 2);
+        pt.y += footerFont.lineHeight + options.footerSpacing;
+      }
+    }
+  }
+  drawBackground(pt, ctx, tooltipSize, options) {
+    const {xAlign, yAlign} = this;
+    const {x, y} = pt;
+    const {width, height} = tooltipSize;
+    const {topLeft, topRight, bottomLeft, bottomRight} = toTRBLCorners(options.cornerRadius);
+    ctx.fillStyle = options.backgroundColor;
+    ctx.strokeStyle = options.borderColor;
+    ctx.lineWidth = options.borderWidth;
+    ctx.beginPath();
+    ctx.moveTo(x + topLeft, y);
+    if (yAlign === 'top') {
+      this.drawCaret(pt, ctx, tooltipSize, options);
+    }
+    ctx.lineTo(x + width - topRight, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + topRight);
+    if (yAlign === 'center' && xAlign === 'right') {
+      this.drawCaret(pt, ctx, tooltipSize, options);
+    }
+    ctx.lineTo(x + width, y + height - bottomRight);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - bottomRight, y + height);
+    if (yAlign === 'bottom') {
+      this.drawCaret(pt, ctx, tooltipSize, options);
+    }
+    ctx.lineTo(x + bottomLeft, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - bottomLeft);
+    if (yAlign === 'center' && xAlign === 'left') {
+      this.drawCaret(pt, ctx, tooltipSize, options);
+    }
+    ctx.lineTo(x, y + topLeft);
+    ctx.quadraticCurveTo(x, y, x + topLeft, y);
+    ctx.closePath();
+    ctx.fill();
+    if (options.borderWidth > 0) {
+      ctx.stroke();
+    }
+  }
+  _updateAnimationTarget(options) {
+    const chart = this.chart;
+    const anims = this.$animations;
+    const animX = anims && anims.x;
+    const animY = anims && anims.y;
+    if (animX || animY) {
+      const position = positioners[options.position].call(this, this._active, this._eventPosition);
+      if (!position) {
+        return;
+      }
+      const size = this._size = getTooltipSize(this, options);
+      const positionAndSize = Object.assign({}, position, this._size);
+      const alignment = determineAlignment(chart, options, positionAndSize);
+      const point = getBackgroundPoint(options, positionAndSize, alignment, chart);
+      if (animX._to !== point.x || animY._to !== point.y) {
+        this.xAlign = alignment.xAlign;
+        this.yAlign = alignment.yAlign;
+        this.width = size.width;
+        this.height = size.height;
+        this.caretX = position.x;
+        this.caretY = position.y;
+        this._resolveAnimations().update(this, point);
+      }
+    }
+  }
+  _willRender() {
+    return !!this.opacity;
+  }
+  draw(ctx) {
+    const options = this.options.setContext(this.getContext());
+    let opacity = this.opacity;
+    if (!opacity) {
+      return;
+    }
+    this._updateAnimationTarget(options);
+    const tooltipSize = {
+      width: this.width,
+      height: this.height
+    };
+    const pt = {
+      x: this.x,
+      y: this.y
+    };
+    opacity = Math.abs(opacity) < 1e-3 ? 0 : opacity;
+    const padding = toPadding(options.padding);
+    const hasTooltipContent = this.title.length || this.beforeBody.length || this.body.length || this.afterBody.length || this.footer.length;
+    if (options.enabled && hasTooltipContent) {
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      this.drawBackground(pt, ctx, tooltipSize, options);
+      overrideTextDirection(ctx, options.textDirection);
+      pt.y += padding.top;
+      this.drawTitle(pt, ctx, options);
+      this.drawBody(pt, ctx, options);
+      this.drawFooter(pt, ctx, options);
+      restoreTextDirection(ctx, options.textDirection);
+      ctx.restore();
+    }
+  }
+  getActiveElements() {
+    return this._active || [];
+  }
+  setActiveElements(activeElements, eventPosition) {
+    const lastActive = this._active;
+    const active = activeElements.map(({datasetIndex, index}) => {
+      const meta = this.chart.getDatasetMeta(datasetIndex);
+      if (!meta) {
+        throw new Error('Cannot find a dataset at index ' + datasetIndex);
+      }
+      return {
+        datasetIndex,
+        element: meta.data[index],
+        index,
+      };
+    });
+    const changed = !_elementsEqual(lastActive, active);
+    const positionChanged = this._positionChanged(active, eventPosition);
+    if (changed || positionChanged) {
+      this._active = active;
+      this._eventPosition = eventPosition;
+      this._ignoreReplayEvents = true;
+      this.update(true);
+    }
+  }
+  handleEvent(e, replay, inChartArea = true) {
+    if (replay && this._ignoreReplayEvents) {
+      return false;
+    }
+    this._ignoreReplayEvents = false;
+    const options = this.options;
+    const lastActive = this._active || [];
+    const active = this._getActiveElements(e, lastActive, replay, inChartArea);
+    const positionChanged = this._positionChanged(active, e);
+    const changed = replay || !_elementsEqual(active, lastActive) || positionChanged;
+    if (changed) {
+      this._active = active;
+      if (options.enabled || options.external) {
+        this._eventPosition = {
+          x: e.x,
+          y: e.y
+        };
+        this.update(true, replay);
+      }
+    }
+    return changed;
+  }
+  _getActiveElements(e, lastActive, replay, inChartArea) {
+    const options = this.options;
+    if (e.type === 'mouseout') {
+      return [];
+    }
+    if (!inChartArea) {
+      return lastActive;
+    }
+    const active = this.chart.getElementsAtEventForMode(e, options.mode, options, replay);
+    if (options.reverse) {
+      active.reverse();
+    }
+    return active;
+  }
+  _positionChanged(active, e) {
+    const {caretX, caretY, options} = this;
+    const position = positioners[options.position].call(this, active, e);
+    return position !== false && (caretX !== position.x || caretY !== position.y);
+  }
+}
+Tooltip.positioners = positioners;
+var plugin_tooltip = {
+  id: 'tooltip',
+  _element: Tooltip,
+  positioners,
+  afterInit(chart, _args, options) {
+    if (options) {
+      chart.tooltip = new Tooltip({chart, options});
+    }
+  },
+  beforeUpdate(chart, _args, options) {
+    if (chart.tooltip) {
+      chart.tooltip.initialize(options);
+    }
+  },
+  reset(chart, _args, options) {
+    if (chart.tooltip) {
+      chart.tooltip.initialize(options);
+    }
+  },
+  afterDraw(chart) {
+    const tooltip = chart.tooltip;
+    if (tooltip && tooltip._willRender()) {
+      const args = {
+        tooltip
+      };
+      if (chart.notifyPlugins('beforeTooltipDraw', args) === false) {
+        return;
+      }
+      tooltip.draw(chart.ctx);
+      chart.notifyPlugins('afterTooltipDraw', args);
+    }
+  },
+  afterEvent(chart, args) {
+    if (chart.tooltip) {
+      const useFinalPosition = args.replay;
+      if (chart.tooltip.handleEvent(args.event, useFinalPosition, args.inChartArea)) {
+        args.changed = true;
+      }
+    }
+  },
+  defaults: {
+    enabled: true,
+    external: null,
+    position: 'average',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    titleColor: '#fff',
+    titleFont: {
+      weight: 'bold',
+    },
+    titleSpacing: 2,
+    titleMarginBottom: 6,
+    titleAlign: 'left',
+    bodyColor: '#fff',
+    bodySpacing: 2,
+    bodyFont: {
+    },
+    bodyAlign: 'left',
+    footerColor: '#fff',
+    footerSpacing: 2,
+    footerMarginTop: 6,
+    footerFont: {
+      weight: 'bold',
+    },
+    footerAlign: 'left',
+    padding: 6,
+    caretPadding: 2,
+    caretSize: 5,
+    cornerRadius: 6,
+    boxHeight: (ctx, opts) => opts.bodyFont.size,
+    boxWidth: (ctx, opts) => opts.bodyFont.size,
+    multiKeyBackground: '#fff',
+    displayColors: true,
+    boxPadding: 0,
+    borderColor: 'rgba(0,0,0,0)',
+    borderWidth: 0,
+    animation: {
+      duration: 400,
+      easing: 'easeOutQuart',
+    },
+    animations: {
+      numbers: {
+        type: 'number',
+        properties: ['x', 'y', 'width', 'height', 'caretX', 'caretY'],
+      },
+      opacity: {
+        easing: 'linear',
+        duration: 200
+      }
+    },
+    callbacks: {
+      beforeTitle: noop,
+      title(tooltipItems) {
+        if (tooltipItems.length > 0) {
+          const item = tooltipItems[0];
+          const labels = item.chart.data.labels;
+          const labelCount = labels ? labels.length : 0;
+          if (this && this.options && this.options.mode === 'dataset') {
+            return item.dataset.label || '';
+          } else if (item.label) {
+            return item.label;
+          } else if (labelCount > 0 && item.dataIndex < labelCount) {
+            return labels[item.dataIndex];
+          }
+        }
+        return '';
+      },
+      afterTitle: noop,
+      beforeBody: noop,
+      beforeLabel: noop,
+      label(tooltipItem) {
+        if (this && this.options && this.options.mode === 'dataset') {
+          return tooltipItem.label + ': ' + tooltipItem.formattedValue || tooltipItem.formattedValue;
+        }
+        let label = tooltipItem.dataset.label || '';
+        if (label) {
+          label += ': ';
+        }
+        const value = tooltipItem.formattedValue;
+        if (!isNullOrUndef(value)) {
+          label += value;
+        }
+        return label;
+      },
+      labelColor(tooltipItem) {
+        const meta = tooltipItem.chart.getDatasetMeta(tooltipItem.datasetIndex);
+        const options = meta.controller.getStyle(tooltipItem.dataIndex);
+        return {
+          borderColor: options.borderColor,
+          backgroundColor: options.backgroundColor,
+          borderWidth: options.borderWidth,
+          borderDash: options.borderDash,
+          borderDashOffset: options.borderDashOffset,
+          borderRadius: 0,
+        };
+      },
+      labelTextColor() {
+        return this.options.bodyColor;
+      },
+      labelPointStyle(tooltipItem) {
+        const meta = tooltipItem.chart.getDatasetMeta(tooltipItem.datasetIndex);
+        const options = meta.controller.getStyle(tooltipItem.dataIndex);
+        return {
+          pointStyle: options.pointStyle,
+          rotation: options.rotation,
+        };
+      },
+      afterLabel: noop,
+      afterBody: noop,
+      beforeFooter: noop,
+      footer: noop,
+      afterFooter: noop
+    }
+  },
+  defaultRoutes: {
+    bodyFont: 'font',
+    footerFont: 'font',
+    titleFont: 'font'
+  },
+  descriptors: {
+    _scriptable: (name) => name !== 'filter' && name !== 'itemSort' && name !== 'external',
+    _indexable: false,
+    callbacks: {
+      _scriptable: false,
+      _indexable: false,
+    },
+    animation: {
+      _fallback: false
+    },
+    animations: {
+      _fallback: 'animation'
+    }
+  },
+  additionalOptionScopes: ['interaction']
+};
+
+var plugins = /*#__PURE__*/Object.freeze({
+__proto__: null,
+Decimation: plugin_decimation,
+Filler: index,
+Legend: plugin_legend,
+SubTitle: plugin_subtitle,
+Title: plugin_title,
+Tooltip: plugin_tooltip
+});
+
+const addIfString = (labels, raw, index, addedLabels) => {
+  if (typeof raw === 'string') {
+    index = labels.push(raw) - 1;
+    addedLabels.unshift({index, label: raw});
+  } else if (isNaN(raw)) {
+    index = null;
+  }
+  return index;
+};
+function findOrAddLabel(labels, raw, index, addedLabels) {
+  const first = labels.indexOf(raw);
+  if (first === -1) {
+    return addIfString(labels, raw, index, addedLabels);
+  }
+  const last = labels.lastIndexOf(raw);
+  return first !== last ? index : first;
+}
+const validIndex = (index, max) => index === null ? null : _limitValue(Math.round(index), 0, max);
+class CategoryScale extends Scale {
+  constructor(cfg) {
+    super(cfg);
+    this._startValue = undefined;
+    this._valueRange = 0;
+    this._addedLabels = [];
+  }
+  init(scaleOptions) {
+    const added = this._addedLabels;
+    if (added.length) {
+      const labels = this.getLabels();
+      for (const {index, label} of added) {
+        if (labels[index] === label) {
+          labels.splice(index, 1);
+        }
+      }
+      this._addedLabels = [];
+    }
+    super.init(scaleOptions);
+  }
+  parse(raw, index) {
+    if (isNullOrUndef(raw)) {
+      return null;
+    }
+    const labels = this.getLabels();
+    index = isFinite(index) && labels[index] === raw ? index
+      : findOrAddLabel(labels, raw, valueOrDefault(index, raw), this._addedLabels);
+    return validIndex(index, labels.length - 1);
+  }
+  determineDataLimits() {
+    const {minDefined, maxDefined} = this.getUserBounds();
+    let {min, max} = this.getMinMax(true);
+    if (this.options.bounds === 'ticks') {
+      if (!minDefined) {
+        min = 0;
+      }
+      if (!maxDefined) {
+        max = this.getLabels().length - 1;
+      }
+    }
+    this.min = min;
+    this.max = max;
+  }
+  buildTicks() {
+    const min = this.min;
+    const max = this.max;
+    const offset = this.options.offset;
+    const ticks = [];
+    let labels = this.getLabels();
+    labels = (min === 0 && max === labels.length - 1) ? labels : labels.slice(min, max + 1);
+    this._valueRange = Math.max(labels.length - (offset ? 0 : 1), 1);
+    this._startValue = this.min - (offset ? 0.5 : 0);
+    for (let value = min; value <= max; value++) {
+      ticks.push({value});
+    }
+    return ticks;
+  }
+  getLabelForValue(value) {
+    const labels = this.getLabels();
+    if (value >= 0 && value < labels.length) {
+      return labels[value];
+    }
+    return value;
+  }
+  configure() {
+    super.configure();
+    if (!this.isHorizontal()) {
+      this._reversePixels = !this._reversePixels;
+    }
+  }
+  getPixelForValue(value) {
+    if (typeof value !== 'number') {
+      value = this.parse(value);
+    }
+    return value === null ? NaN : this.getPixelForDecimal((value - this._startValue) / this._valueRange);
+  }
+  getPixelForTick(index) {
+    const ticks = this.ticks;
+    if (index < 0 || index > ticks.length - 1) {
+      return null;
+    }
+    return this.getPixelForValue(ticks[index].value);
+  }
+  getValueForPixel(pixel) {
+    return Math.round(this._startValue + this.getDecimalForPixel(pixel) * this._valueRange);
+  }
+  getBasePixel() {
+    return this.bottom;
+  }
+}
+CategoryScale.id = 'category';
+CategoryScale.defaults = {
+  ticks: {
+    callback: CategoryScale.prototype.getLabelForValue
+  }
+};
+
+function generateTicks$1(generationOptions, dataRange) {
+  const ticks = [];
+  const MIN_SPACING = 1e-14;
+  const {bounds, step, min, max, precision, count, maxTicks, maxDigits, includeBounds} = generationOptions;
+  const unit = step || 1;
+  const maxSpaces = maxTicks - 1;
+  const {min: rmin, max: rmax} = dataRange;
+  const minDefined = !isNullOrUndef(min);
+  const maxDefined = !isNullOrUndef(max);
+  const countDefined = !isNullOrUndef(count);
+  const minSpacing = (rmax - rmin) / (maxDigits + 1);
+  let spacing = niceNum((rmax - rmin) / maxSpaces / unit) * unit;
+  let factor, niceMin, niceMax, numSpaces;
+  if (spacing < MIN_SPACING && !minDefined && !maxDefined) {
+    return [{value: rmin}, {value: rmax}];
+  }
+  numSpaces = Math.ceil(rmax / spacing) - Math.floor(rmin / spacing);
+  if (numSpaces > maxSpaces) {
+    spacing = niceNum(numSpaces * spacing / maxSpaces / unit) * unit;
+  }
+  if (!isNullOrUndef(precision)) {
+    factor = Math.pow(10, precision);
+    spacing = Math.ceil(spacing * factor) / factor;
+  }
+  if (bounds === 'ticks') {
+    niceMin = Math.floor(rmin / spacing) * spacing;
+    niceMax = Math.ceil(rmax / spacing) * spacing;
+  } else {
+    niceMin = rmin;
+    niceMax = rmax;
+  }
+  if (minDefined && maxDefined && step && almostWhole((max - min) / step, spacing / 1000)) {
+    numSpaces = Math.round(Math.min((max - min) / spacing, maxTicks));
+    spacing = (max - min) / numSpaces;
+    niceMin = min;
+    niceMax = max;
+  } else if (countDefined) {
+    niceMin = minDefined ? min : niceMin;
+    niceMax = maxDefined ? max : niceMax;
+    numSpaces = count - 1;
+    spacing = (niceMax - niceMin) / numSpaces;
+  } else {
+    numSpaces = (niceMax - niceMin) / spacing;
+    if (almostEquals(numSpaces, Math.round(numSpaces), spacing / 1000)) {
+      numSpaces = Math.round(numSpaces);
+    } else {
+      numSpaces = Math.ceil(numSpaces);
+    }
+  }
+  const decimalPlaces = Math.max(
+    _decimalPlaces(spacing),
+    _decimalPlaces(niceMin)
+  );
+  factor = Math.pow(10, isNullOrUndef(precision) ? decimalPlaces : precision);
+  niceMin = Math.round(niceMin * factor) / factor;
+  niceMax = Math.round(niceMax * factor) / factor;
+  let j = 0;
+  if (minDefined) {
+    if (includeBounds && niceMin !== min) {
+      ticks.push({value: min});
+      if (niceMin < min) {
+        j++;
+      }
+      if (almostEquals(Math.round((niceMin + j * spacing) * factor) / factor, min, relativeLabelSize(min, minSpacing, generationOptions))) {
+        j++;
+      }
+    } else if (niceMin < min) {
+      j++;
+    }
+  }
+  for (; j < numSpaces; ++j) {
+    ticks.push({value: Math.round((niceMin + j * spacing) * factor) / factor});
+  }
+  if (maxDefined && includeBounds && niceMax !== max) {
+    if (ticks.length && almostEquals(ticks[ticks.length - 1].value, max, relativeLabelSize(max, minSpacing, generationOptions))) {
+      ticks[ticks.length - 1].value = max;
+    } else {
+      ticks.push({value: max});
+    }
+  } else if (!maxDefined || niceMax === max) {
+    ticks.push({value: niceMax});
+  }
+  return ticks;
+}
+function relativeLabelSize(value, minSpacing, {horizontal, minRotation}) {
+  const rad = toRadians(minRotation);
+  const ratio = (horizontal ? Math.sin(rad) : Math.cos(rad)) || 0.001;
+  const length = 0.75 * minSpacing * ('' + value).length;
+  return Math.min(minSpacing / ratio, length);
+}
+class LinearScaleBase extends Scale {
+  constructor(cfg) {
+    super(cfg);
+    this.start = undefined;
+    this.end = undefined;
+    this._startValue = undefined;
+    this._endValue = undefined;
+    this._valueRange = 0;
+  }
+  parse(raw, index) {
+    if (isNullOrUndef(raw)) {
+      return null;
+    }
+    if ((typeof raw === 'number' || raw instanceof Number) && !isFinite(+raw)) {
+      return null;
+    }
+    return +raw;
+  }
+  handleTickRangeOptions() {
+    const {beginAtZero} = this.options;
+    const {minDefined, maxDefined} = this.getUserBounds();
+    let {min, max} = this;
+    const setMin = v => (min = minDefined ? min : v);
+    const setMax = v => (max = maxDefined ? max : v);
+    if (beginAtZero) {
+      const minSign = sign(min);
+      const maxSign = sign(max);
+      if (minSign < 0 && maxSign < 0) {
+        setMax(0);
+      } else if (minSign > 0 && maxSign > 0) {
+        setMin(0);
+      }
+    }
+    if (min === max) {
+      let offset = 1;
+      if (max >= Number.MAX_SAFE_INTEGER || min <= Number.MIN_SAFE_INTEGER) {
+        offset = Math.abs(max * 0.05);
+      }
+      setMax(max + offset);
+      if (!beginAtZero) {
+        setMin(min - offset);
+      }
+    }
+    this.min = min;
+    this.max = max;
+  }
+  getTickLimit() {
+    const tickOpts = this.options.ticks;
+    let {maxTicksLimit, stepSize} = tickOpts;
+    let maxTicks;
+    if (stepSize) {
+      maxTicks = Math.ceil(this.max / stepSize) - Math.floor(this.min / stepSize) + 1;
+      if (maxTicks > 1000) {
+        console.warn(`scales.${this.id}.ticks.stepSize: ${stepSize} would result generating up to ${maxTicks} ticks. Limiting to 1000.`);
+        maxTicks = 1000;
+      }
+    } else {
+      maxTicks = this.computeTickLimit();
+      maxTicksLimit = maxTicksLimit || 11;
+    }
+    if (maxTicksLimit) {
+      maxTicks = Math.min(maxTicksLimit, maxTicks);
+    }
+    return maxTicks;
+  }
+  computeTickLimit() {
+    return Number.POSITIVE_INFINITY;
+  }
+  buildTicks() {
+    const opts = this.options;
+    const tickOpts = opts.ticks;
+    let maxTicks = this.getTickLimit();
+    maxTicks = Math.max(2, maxTicks);
+    const numericGeneratorOptions = {
+      maxTicks,
+      bounds: opts.bounds,
+      min: opts.min,
+      max: opts.max,
+      precision: tickOpts.precision,
+      step: tickOpts.stepSize,
+      count: tickOpts.count,
+      maxDigits: this._maxDigits(),
+      horizontal: this.isHorizontal(),
+      minRotation: tickOpts.minRotation || 0,
+      includeBounds: tickOpts.includeBounds !== false
+    };
+    const dataRange = this._range || this;
+    const ticks = generateTicks$1(numericGeneratorOptions, dataRange);
+    if (opts.bounds === 'ticks') {
+      _setMinAndMaxByKey(ticks, this, 'value');
+    }
+    if (opts.reverse) {
+      ticks.reverse();
+      this.start = this.max;
+      this.end = this.min;
+    } else {
+      this.start = this.min;
+      this.end = this.max;
+    }
+    return ticks;
+  }
+  configure() {
+    const ticks = this.ticks;
+    let start = this.min;
+    let end = this.max;
+    super.configure();
+    if (this.options.offset && ticks.length) {
+      const offset = (end - start) / Math.max(ticks.length - 1, 1) / 2;
+      start -= offset;
+      end += offset;
+    }
+    this._startValue = start;
+    this._endValue = end;
+    this._valueRange = end - start;
+  }
+  getLabelForValue(value) {
+    return formatNumber(value, this.chart.options.locale, this.options.ticks.format);
+  }
+}
+
+class LinearScale extends LinearScaleBase {
+  determineDataLimits() {
+    const {min, max} = this.getMinMax(true);
+    this.min = isNumberFinite(min) ? min : 0;
+    this.max = isNumberFinite(max) ? max : 1;
+    this.handleTickRangeOptions();
+  }
+  computeTickLimit() {
+    const horizontal = this.isHorizontal();
+    const length = horizontal ? this.width : this.height;
+    const minRotation = toRadians(this.options.ticks.minRotation);
+    const ratio = (horizontal ? Math.sin(minRotation) : Math.cos(minRotation)) || 0.001;
+    const tickFont = this._resolveTickFontOptions(0);
+    return Math.ceil(length / Math.min(40, tickFont.lineHeight / ratio));
+  }
+  getPixelForValue(value) {
+    return value === null ? NaN : this.getPixelForDecimal((value - this._startValue) / this._valueRange);
+  }
+  getValueForPixel(pixel) {
+    return this._startValue + this.getDecimalForPixel(pixel) * this._valueRange;
+  }
+}
+LinearScale.id = 'linear';
+LinearScale.defaults = {
+  ticks: {
+    callback: Ticks.formatters.numeric
+  }
+};
+
+function isMajor(tickVal) {
+  const remain = tickVal / (Math.pow(10, Math.floor(log10(tickVal))));
+  return remain === 1;
+}
+function generateTicks(generationOptions, dataRange) {
+  const endExp = Math.floor(log10(dataRange.max));
+  const endSignificand = Math.ceil(dataRange.max / Math.pow(10, endExp));
+  const ticks = [];
+  let tickVal = finiteOrDefault(generationOptions.min, Math.pow(10, Math.floor(log10(dataRange.min))));
+  let exp = Math.floor(log10(tickVal));
+  let significand = Math.floor(tickVal / Math.pow(10, exp));
+  let precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
+  do {
+    ticks.push({value: tickVal, major: isMajor(tickVal)});
+    ++significand;
+    if (significand === 10) {
+      significand = 1;
+      ++exp;
+      precision = exp >= 0 ? 1 : precision;
+    }
+    tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
+  } while (exp < endExp || (exp === endExp && significand < endSignificand));
+  const lastTick = finiteOrDefault(generationOptions.max, tickVal);
+  ticks.push({value: lastTick, major: isMajor(tickVal)});
+  return ticks;
+}
+class LogarithmicScale extends Scale {
+  constructor(cfg) {
+    super(cfg);
+    this.start = undefined;
+    this.end = undefined;
+    this._startValue = undefined;
+    this._valueRange = 0;
+  }
+  parse(raw, index) {
+    const value = LinearScaleBase.prototype.parse.apply(this, [raw, index]);
+    if (value === 0) {
+      this._zero = true;
+      return undefined;
+    }
+    return isNumberFinite(value) && value > 0 ? value : null;
+  }
+  determineDataLimits() {
+    const {min, max} = this.getMinMax(true);
+    this.min = isNumberFinite(min) ? Math.max(0, min) : null;
+    this.max = isNumberFinite(max) ? Math.max(0, max) : null;
+    if (this.options.beginAtZero) {
+      this._zero = true;
+    }
+    this.handleTickRangeOptions();
+  }
+  handleTickRangeOptions() {
+    const {minDefined, maxDefined} = this.getUserBounds();
+    let min = this.min;
+    let max = this.max;
+    const setMin = v => (min = minDefined ? min : v);
+    const setMax = v => (max = maxDefined ? max : v);
+    const exp = (v, m) => Math.pow(10, Math.floor(log10(v)) + m);
+    if (min === max) {
+      if (min <= 0) {
+        setMin(1);
+        setMax(10);
+      } else {
+        setMin(exp(min, -1));
+        setMax(exp(max, +1));
+      }
+    }
+    if (min <= 0) {
+      setMin(exp(max, -1));
+    }
+    if (max <= 0) {
+      setMax(exp(min, +1));
+    }
+    if (this._zero && this.min !== this._suggestedMin && min === exp(this.min, 0)) {
+      setMin(exp(min, -1));
+    }
+    this.min = min;
+    this.max = max;
+  }
+  buildTicks() {
+    const opts = this.options;
+    const generationOptions = {
+      min: this._userMin,
+      max: this._userMax
+    };
+    const ticks = generateTicks(generationOptions, this);
+    if (opts.bounds === 'ticks') {
+      _setMinAndMaxByKey(ticks, this, 'value');
+    }
+    if (opts.reverse) {
+      ticks.reverse();
+      this.start = this.max;
+      this.end = this.min;
+    } else {
+      this.start = this.min;
+      this.end = this.max;
+    }
+    return ticks;
+  }
+  getLabelForValue(value) {
+    return value === undefined
+      ? '0'
+      : formatNumber(value, this.chart.options.locale, this.options.ticks.format);
+  }
+  configure() {
+    const start = this.min;
+    super.configure();
+    this._startValue = log10(start);
+    this._valueRange = log10(this.max) - log10(start);
+  }
+  getPixelForValue(value) {
+    if (value === undefined || value === 0) {
+      value = this.min;
+    }
+    if (value === null || isNaN(value)) {
+      return NaN;
+    }
+    return this.getPixelForDecimal(value === this.min
+      ? 0
+      : (log10(value) - this._startValue) / this._valueRange);
+  }
+  getValueForPixel(pixel) {
+    const decimal = this.getDecimalForPixel(pixel);
+    return Math.pow(10, this._startValue + decimal * this._valueRange);
+  }
+}
+LogarithmicScale.id = 'logarithmic';
+LogarithmicScale.defaults = {
+  ticks: {
+    callback: Ticks.formatters.logarithmic,
+    major: {
+      enabled: true
+    }
+  }
+};
+
+function getTickBackdropHeight(opts) {
+  const tickOpts = opts.ticks;
+  if (tickOpts.display && opts.display) {
+    const padding = toPadding(tickOpts.backdropPadding);
+    return valueOrDefault(tickOpts.font && tickOpts.font.size, defaults.font.size) + padding.height;
+  }
+  return 0;
+}
+function measureLabelSize(ctx, font, label) {
+  label = isArray(label) ? label : [label];
+  return {
+    w: _longestText(ctx, font.string, label),
+    h: label.length * font.lineHeight
+  };
+}
+function determineLimits(angle, pos, size, min, max) {
+  if (angle === min || angle === max) {
+    return {
+      start: pos - (size / 2),
+      end: pos + (size / 2)
+    };
+  } else if (angle < min || angle > max) {
+    return {
+      start: pos - size,
+      end: pos
+    };
+  }
+  return {
+    start: pos,
+    end: pos + size
+  };
+}
+function fitWithPointLabels(scale) {
+  const orig = {
+    l: scale.left + scale._padding.left,
+    r: scale.right - scale._padding.right,
+    t: scale.top + scale._padding.top,
+    b: scale.bottom - scale._padding.bottom
+  };
+  const limits = Object.assign({}, orig);
+  const labelSizes = [];
+  const padding = [];
+  const valueCount = scale._pointLabels.length;
+  const pointLabelOpts = scale.options.pointLabels;
+  const additionalAngle = pointLabelOpts.centerPointLabels ? PI / valueCount : 0;
+  for (let i = 0; i < valueCount; i++) {
+    const opts = pointLabelOpts.setContext(scale.getPointLabelContext(i));
+    padding[i] = opts.padding;
+    const pointPosition = scale.getPointPosition(i, scale.drawingArea + padding[i], additionalAngle);
+    const plFont = toFont(opts.font);
+    const textSize = measureLabelSize(scale.ctx, plFont, scale._pointLabels[i]);
+    labelSizes[i] = textSize;
+    const angleRadians = _normalizeAngle(scale.getIndexAngle(i) + additionalAngle);
+    const angle = Math.round(toDegrees(angleRadians));
+    const hLimits = determineLimits(angle, pointPosition.x, textSize.w, 0, 180);
+    const vLimits = determineLimits(angle, pointPosition.y, textSize.h, 90, 270);
+    updateLimits(limits, orig, angleRadians, hLimits, vLimits);
+  }
+  scale.setCenterPoint(
+    orig.l - limits.l,
+    limits.r - orig.r,
+    orig.t - limits.t,
+    limits.b - orig.b
+  );
+  scale._pointLabelItems = buildPointLabelItems(scale, labelSizes, padding);
+}
+function updateLimits(limits, orig, angle, hLimits, vLimits) {
+  const sin = Math.abs(Math.sin(angle));
+  const cos = Math.abs(Math.cos(angle));
+  let x = 0;
+  let y = 0;
+  if (hLimits.start < orig.l) {
+    x = (orig.l - hLimits.start) / sin;
+    limits.l = Math.min(limits.l, orig.l - x);
+  } else if (hLimits.end > orig.r) {
+    x = (hLimits.end - orig.r) / sin;
+    limits.r = Math.max(limits.r, orig.r + x);
+  }
+  if (vLimits.start < orig.t) {
+    y = (orig.t - vLimits.start) / cos;
+    limits.t = Math.min(limits.t, orig.t - y);
+  } else if (vLimits.end > orig.b) {
+    y = (vLimits.end - orig.b) / cos;
+    limits.b = Math.max(limits.b, orig.b + y);
+  }
+}
+function buildPointLabelItems(scale, labelSizes, padding) {
+  const items = [];
+  const valueCount = scale._pointLabels.length;
+  const opts = scale.options;
+  const extra = getTickBackdropHeight(opts) / 2;
+  const outerDistance = scale.drawingArea;
+  const additionalAngle = opts.pointLabels.centerPointLabels ? PI / valueCount : 0;
+  for (let i = 0; i < valueCount; i++) {
+    const pointLabelPosition = scale.getPointPosition(i, outerDistance + extra + padding[i], additionalAngle);
+    const angle = Math.round(toDegrees(_normalizeAngle(pointLabelPosition.angle + HALF_PI)));
+    const size = labelSizes[i];
+    const y = yForAngle(pointLabelPosition.y, size.h, angle);
+    const textAlign = getTextAlignForAngle(angle);
+    const left = leftForTextAlign(pointLabelPosition.x, size.w, textAlign);
+    items.push({
+      x: pointLabelPosition.x,
+      y,
+      textAlign,
+      left,
+      top: y,
+      right: left + size.w,
+      bottom: y + size.h
+    });
+  }
+  return items;
+}
+function getTextAlignForAngle(angle) {
+  if (angle === 0 || angle === 180) {
+    return 'center';
+  } else if (angle < 180) {
+    return 'left';
+  }
+  return 'right';
+}
+function leftForTextAlign(x, w, align) {
+  if (align === 'right') {
+    x -= w;
+  } else if (align === 'center') {
+    x -= (w / 2);
+  }
+  return x;
+}
+function yForAngle(y, h, angle) {
+  if (angle === 90 || angle === 270) {
+    y -= (h / 2);
+  } else if (angle > 270 || angle < 90) {
+    y -= h;
+  }
+  return y;
+}
+function drawPointLabels(scale, labelCount) {
+  const {ctx, options: {pointLabels}} = scale;
+  for (let i = labelCount - 1; i >= 0; i--) {
+    const optsAtIndex = pointLabels.setContext(scale.getPointLabelContext(i));
+    const plFont = toFont(optsAtIndex.font);
+    const {x, y, textAlign, left, top, right, bottom} = scale._pointLabelItems[i];
+    const {backdropColor} = optsAtIndex;
+    if (!isNullOrUndef(backdropColor)) {
+      const borderRadius = toTRBLCorners(optsAtIndex.borderRadius);
+      const padding = toPadding(optsAtIndex.backdropPadding);
+      ctx.fillStyle = backdropColor;
+      const backdropLeft = left - padding.left;
+      const backdropTop = top - padding.top;
+      const backdropWidth = right - left + padding.width;
+      const backdropHeight = bottom - top + padding.height;
+      if (Object.values(borderRadius).some(v => v !== 0)) {
+        ctx.beginPath();
+        addRoundedRectPath(ctx, {
+          x: backdropLeft,
+          y: backdropTop,
+          w: backdropWidth,
+          h: backdropHeight,
+          radius: borderRadius,
+        });
+        ctx.fill();
+      } else {
+        ctx.fillRect(backdropLeft, backdropTop, backdropWidth, backdropHeight);
+      }
+    }
+    renderText(
+      ctx,
+      scale._pointLabels[i],
+      x,
+      y + (plFont.lineHeight / 2),
+      plFont,
+      {
+        color: optsAtIndex.color,
+        textAlign: textAlign,
+        textBaseline: 'middle'
+      }
+    );
+  }
+}
+function pathRadiusLine(scale, radius, circular, labelCount) {
+  const {ctx} = scale;
+  if (circular) {
+    ctx.arc(scale.xCenter, scale.yCenter, radius, 0, TAU);
+  } else {
+    let pointPosition = scale.getPointPosition(0, radius);
+    ctx.moveTo(pointPosition.x, pointPosition.y);
+    for (let i = 1; i < labelCount; i++) {
+      pointPosition = scale.getPointPosition(i, radius);
+      ctx.lineTo(pointPosition.x, pointPosition.y);
+    }
+  }
+}
+function drawRadiusLine(scale, gridLineOpts, radius, labelCount) {
+  const ctx = scale.ctx;
+  const circular = gridLineOpts.circular;
+  const {color, lineWidth} = gridLineOpts;
+  if ((!circular && !labelCount) || !color || !lineWidth || radius < 0) {
+    return;
+  }
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.setLineDash(gridLineOpts.borderDash);
+  ctx.lineDashOffset = gridLineOpts.borderDashOffset;
+  ctx.beginPath();
+  pathRadiusLine(scale, radius, circular, labelCount);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+function createPointLabelContext(parent, index, label) {
+  return createContext(parent, {
+    label,
+    index,
+    type: 'pointLabel'
+  });
+}
+class RadialLinearScale extends LinearScaleBase {
+  constructor(cfg) {
+    super(cfg);
+    this.xCenter = undefined;
+    this.yCenter = undefined;
+    this.drawingArea = undefined;
+    this._pointLabels = [];
+    this._pointLabelItems = [];
+  }
+  setDimensions() {
+    const padding = this._padding = toPadding(getTickBackdropHeight(this.options) / 2);
+    const w = this.width = this.maxWidth - padding.width;
+    const h = this.height = this.maxHeight - padding.height;
+    this.xCenter = Math.floor(this.left + w / 2 + padding.left);
+    this.yCenter = Math.floor(this.top + h / 2 + padding.top);
+    this.drawingArea = Math.floor(Math.min(w, h) / 2);
+  }
+  determineDataLimits() {
+    const {min, max} = this.getMinMax(false);
+    this.min = isNumberFinite(min) && !isNaN(min) ? min : 0;
+    this.max = isNumberFinite(max) && !isNaN(max) ? max : 0;
+    this.handleTickRangeOptions();
+  }
+  computeTickLimit() {
+    return Math.ceil(this.drawingArea / getTickBackdropHeight(this.options));
+  }
+  generateTickLabels(ticks) {
+    LinearScaleBase.prototype.generateTickLabels.call(this, ticks);
+    this._pointLabels = this.getLabels()
+      .map((value, index) => {
+        const label = callback(this.options.pointLabels.callback, [value, index], this);
+        return label || label === 0 ? label : '';
+      })
+      .filter((v, i) => this.chart.getDataVisibility(i));
+  }
+  fit() {
+    const opts = this.options;
+    if (opts.display && opts.pointLabels.display) {
+      fitWithPointLabels(this);
+    } else {
+      this.setCenterPoint(0, 0, 0, 0);
+    }
+  }
+  setCenterPoint(leftMovement, rightMovement, topMovement, bottomMovement) {
+    this.xCenter += Math.floor((leftMovement - rightMovement) / 2);
+    this.yCenter += Math.floor((topMovement - bottomMovement) / 2);
+    this.drawingArea -= Math.min(this.drawingArea / 2, Math.max(leftMovement, rightMovement, topMovement, bottomMovement));
+  }
+  getIndexAngle(index) {
+    const angleMultiplier = TAU / (this._pointLabels.length || 1);
+    const startAngle = this.options.startAngle || 0;
+    return _normalizeAngle(index * angleMultiplier + toRadians(startAngle));
+  }
+  getDistanceFromCenterForValue(value) {
+    if (isNullOrUndef(value)) {
+      return NaN;
+    }
+    const scalingFactor = this.drawingArea / (this.max - this.min);
+    if (this.options.reverse) {
+      return (this.max - value) * scalingFactor;
+    }
+    return (value - this.min) * scalingFactor;
+  }
+  getValueForDistanceFromCenter(distance) {
+    if (isNullOrUndef(distance)) {
+      return NaN;
+    }
+    const scaledDistance = distance / (this.drawingArea / (this.max - this.min));
+    return this.options.reverse ? this.max - scaledDistance : this.min + scaledDistance;
+  }
+  getPointLabelContext(index) {
+    const pointLabels = this._pointLabels || [];
+    if (index >= 0 && index < pointLabels.length) {
+      const pointLabel = pointLabels[index];
+      return createPointLabelContext(this.getContext(), index, pointLabel);
+    }
+  }
+  getPointPosition(index, distanceFromCenter, additionalAngle = 0) {
+    const angle = this.getIndexAngle(index) - HALF_PI + additionalAngle;
+    return {
+      x: Math.cos(angle) * distanceFromCenter + this.xCenter,
+      y: Math.sin(angle) * distanceFromCenter + this.yCenter,
+      angle
+    };
+  }
+  getPointPositionForValue(index, value) {
+    return this.getPointPosition(index, this.getDistanceFromCenterForValue(value));
+  }
+  getBasePosition(index) {
+    return this.getPointPositionForValue(index || 0, this.getBaseValue());
+  }
+  getPointLabelPosition(index) {
+    const {left, top, right, bottom} = this._pointLabelItems[index];
+    return {
+      left,
+      top,
+      right,
+      bottom,
+    };
+  }
+  drawBackground() {
+    const {backgroundColor, grid: {circular}} = this.options;
+    if (backgroundColor) {
+      const ctx = this.ctx;
+      ctx.save();
+      ctx.beginPath();
+      pathRadiusLine(this, this.getDistanceFromCenterForValue(this._endValue), circular, this._pointLabels.length);
+      ctx.closePath();
+      ctx.fillStyle = backgroundColor;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  drawGrid() {
+    const ctx = this.ctx;
+    const opts = this.options;
+    const {angleLines, grid} = opts;
+    const labelCount = this._pointLabels.length;
+    let i, offset, position;
+    if (opts.pointLabels.display) {
+      drawPointLabels(this, labelCount);
+    }
+    if (grid.display) {
+      this.ticks.forEach((tick, index) => {
+        if (index !== 0) {
+          offset = this.getDistanceFromCenterForValue(tick.value);
+          const optsAtIndex = grid.setContext(this.getContext(index - 1));
+          drawRadiusLine(this, optsAtIndex, offset, labelCount);
+        }
+      });
+    }
+    if (angleLines.display) {
+      ctx.save();
+      for (i = labelCount - 1; i >= 0; i--) {
+        const optsAtIndex = angleLines.setContext(this.getPointLabelContext(i));
+        const {color, lineWidth} = optsAtIndex;
+        if (!lineWidth || !color) {
+          continue;
+        }
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = color;
+        ctx.setLineDash(optsAtIndex.borderDash);
+        ctx.lineDashOffset = optsAtIndex.borderDashOffset;
+        offset = this.getDistanceFromCenterForValue(opts.ticks.reverse ? this.min : this.max);
+        position = this.getPointPosition(i, offset);
+        ctx.beginPath();
+        ctx.moveTo(this.xCenter, this.yCenter);
+        ctx.lineTo(position.x, position.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+  drawBorder() {}
+  drawLabels() {
+    const ctx = this.ctx;
+    const opts = this.options;
+    const tickOpts = opts.ticks;
+    if (!tickOpts.display) {
+      return;
+    }
+    const startAngle = this.getIndexAngle(0);
+    let offset, width;
+    ctx.save();
+    ctx.translate(this.xCenter, this.yCenter);
+    ctx.rotate(startAngle);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    this.ticks.forEach((tick, index) => {
+      if (index === 0 && !opts.reverse) {
+        return;
+      }
+      const optsAtIndex = tickOpts.setContext(this.getContext(index));
+      const tickFont = toFont(optsAtIndex.font);
+      offset = this.getDistanceFromCenterForValue(this.ticks[index].value);
+      if (optsAtIndex.showLabelBackdrop) {
+        ctx.font = tickFont.string;
+        width = ctx.measureText(tick.label).width;
+        ctx.fillStyle = optsAtIndex.backdropColor;
+        const padding = toPadding(optsAtIndex.backdropPadding);
+        ctx.fillRect(
+          -width / 2 - padding.left,
+          -offset - tickFont.size / 2 - padding.top,
+          width + padding.width,
+          tickFont.size + padding.height
+        );
+      }
+      renderText(ctx, tick.label, 0, -offset, tickFont, {
+        color: optsAtIndex.color,
+      });
+    });
+    ctx.restore();
+  }
+  drawTitle() {}
+}
+RadialLinearScale.id = 'radialLinear';
+RadialLinearScale.defaults = {
+  display: true,
+  animate: true,
+  position: 'chartArea',
+  angleLines: {
+    display: true,
+    lineWidth: 1,
+    borderDash: [],
+    borderDashOffset: 0.0
+  },
+  grid: {
+    circular: false
+  },
+  startAngle: 0,
+  ticks: {
+    showLabelBackdrop: true,
+    callback: Ticks.formatters.numeric
+  },
+  pointLabels: {
+    backdropColor: undefined,
+    backdropPadding: 2,
+    display: true,
+    font: {
+      size: 10
+    },
+    callback(label) {
+      return label;
+    },
+    padding: 5,
+    centerPointLabels: false
+  }
+};
+RadialLinearScale.defaultRoutes = {
+  'angleLines.color': 'borderColor',
+  'pointLabels.color': 'color',
+  'ticks.color': 'color'
+};
+RadialLinearScale.descriptors = {
+  angleLines: {
+    _fallback: 'grid'
+  }
+};
+
+const INTERVALS = {
+  millisecond: {common: true, size: 1, steps: 1000},
+  second: {common: true, size: 1000, steps: 60},
+  minute: {common: true, size: 60000, steps: 60},
+  hour: {common: true, size: 3600000, steps: 24},
+  day: {common: true, size: 86400000, steps: 30},
+  week: {common: false, size: 604800000, steps: 4},
+  month: {common: true, size: 2.628e9, steps: 12},
+  quarter: {common: false, size: 7.884e9, steps: 4},
+  year: {common: true, size: 3.154e10}
+};
+const UNITS = (Object.keys(INTERVALS));
+function sorter(a, b) {
+  return a - b;
+}
+function parse(scale, input) {
+  if (isNullOrUndef(input)) {
+    return null;
+  }
+  const adapter = scale._adapter;
+  const {parser, round, isoWeekday} = scale._parseOpts;
+  let value = input;
+  if (typeof parser === 'function') {
+    value = parser(value);
+  }
+  if (!isNumberFinite(value)) {
+    value = typeof parser === 'string'
+      ? adapter.parse(value, parser)
+      : adapter.parse(value);
+  }
+  if (value === null) {
+    return null;
+  }
+  if (round) {
+    value = round === 'week' && (isNumber(isoWeekday) || isoWeekday === true)
+      ? adapter.startOf(value, 'isoWeek', isoWeekday)
+      : adapter.startOf(value, round);
+  }
+  return +value;
+}
+function determineUnitForAutoTicks(minUnit, min, max, capacity) {
+  const ilen = UNITS.length;
+  for (let i = UNITS.indexOf(minUnit); i < ilen - 1; ++i) {
+    const interval = INTERVALS[UNITS[i]];
+    const factor = interval.steps ? interval.steps : Number.MAX_SAFE_INTEGER;
+    if (interval.common && Math.ceil((max - min) / (factor * interval.size)) <= capacity) {
+      return UNITS[i];
+    }
+  }
+  return UNITS[ilen - 1];
+}
+function determineUnitForFormatting(scale, numTicks, minUnit, min, max) {
+  for (let i = UNITS.length - 1; i >= UNITS.indexOf(minUnit); i--) {
+    const unit = UNITS[i];
+    if (INTERVALS[unit].common && scale._adapter.diff(max, min, unit) >= numTicks - 1) {
+      return unit;
+    }
+  }
+  return UNITS[minUnit ? UNITS.indexOf(minUnit) : 0];
+}
+function determineMajorUnit(unit) {
+  for (let i = UNITS.indexOf(unit) + 1, ilen = UNITS.length; i < ilen; ++i) {
+    if (INTERVALS[UNITS[i]].common) {
+      return UNITS[i];
+    }
+  }
+}
+function addTick(ticks, time, timestamps) {
+  if (!timestamps) {
+    ticks[time] = true;
+  } else if (timestamps.length) {
+    const {lo, hi} = _lookup(timestamps, time);
+    const timestamp = timestamps[lo] >= time ? timestamps[lo] : timestamps[hi];
+    ticks[timestamp] = true;
+  }
+}
+function setMajorTicks(scale, ticks, map, majorUnit) {
+  const adapter = scale._adapter;
+  const first = +adapter.startOf(ticks[0].value, majorUnit);
+  const last = ticks[ticks.length - 1].value;
+  let major, index;
+  for (major = first; major <= last; major = +adapter.add(major, 1, majorUnit)) {
+    index = map[major];
+    if (index >= 0) {
+      ticks[index].major = true;
+    }
+  }
+  return ticks;
+}
+function ticksFromTimestamps(scale, values, majorUnit) {
+  const ticks = [];
+  const map = {};
+  const ilen = values.length;
+  let i, value;
+  for (i = 0; i < ilen; ++i) {
+    value = values[i];
+    map[value] = i;
+    ticks.push({
+      value,
+      major: false
+    });
+  }
+  return (ilen === 0 || !majorUnit) ? ticks : setMajorTicks(scale, ticks, map, majorUnit);
+}
+class TimeScale extends Scale {
+  constructor(props) {
+    super(props);
+    this._cache = {
+      data: [],
+      labels: [],
+      all: []
+    };
+    this._unit = 'day';
+    this._majorUnit = undefined;
+    this._offsets = {};
+    this._normalized = false;
+    this._parseOpts = undefined;
+  }
+  init(scaleOpts, opts) {
+    const time = scaleOpts.time || (scaleOpts.time = {});
+    const adapter = this._adapter = new _adapters._date(scaleOpts.adapters.date);
+    adapter.init(opts);
+    mergeIf(time.displayFormats, adapter.formats());
+    this._parseOpts = {
+      parser: time.parser,
+      round: time.round,
+      isoWeekday: time.isoWeekday
+    };
+    super.init(scaleOpts);
+    this._normalized = opts.normalized;
+  }
+  parse(raw, index) {
+    if (raw === undefined) {
+      return null;
+    }
+    return parse(this, raw);
+  }
+  beforeLayout() {
+    super.beforeLayout();
+    this._cache = {
+      data: [],
+      labels: [],
+      all: []
+    };
+  }
+  determineDataLimits() {
+    const options = this.options;
+    const adapter = this._adapter;
+    const unit = options.time.unit || 'day';
+    let {min, max, minDefined, maxDefined} = this.getUserBounds();
+    function _applyBounds(bounds) {
+      if (!minDefined && !isNaN(bounds.min)) {
+        min = Math.min(min, bounds.min);
+      }
+      if (!maxDefined && !isNaN(bounds.max)) {
+        max = Math.max(max, bounds.max);
+      }
+    }
+    if (!minDefined || !maxDefined) {
+      _applyBounds(this._getLabelBounds());
+      if (options.bounds !== 'ticks' || options.ticks.source !== 'labels') {
+        _applyBounds(this.getMinMax(false));
+      }
+    }
+    min = isNumberFinite(min) && !isNaN(min) ? min : +adapter.startOf(Date.now(), unit);
+    max = isNumberFinite(max) && !isNaN(max) ? max : +adapter.endOf(Date.now(), unit) + 1;
+    this.min = Math.min(min, max - 1);
+    this.max = Math.max(min + 1, max);
+  }
+  _getLabelBounds() {
+    const arr = this.getLabelTimestamps();
+    let min = Number.POSITIVE_INFINITY;
+    let max = Number.NEGATIVE_INFINITY;
+    if (arr.length) {
+      min = arr[0];
+      max = arr[arr.length - 1];
+    }
+    return {min, max};
+  }
+  buildTicks() {
+    const options = this.options;
+    const timeOpts = options.time;
+    const tickOpts = options.ticks;
+    const timestamps = tickOpts.source === 'labels' ? this.getLabelTimestamps() : this._generate();
+    if (options.bounds === 'ticks' && timestamps.length) {
+      this.min = this._userMin || timestamps[0];
+      this.max = this._userMax || timestamps[timestamps.length - 1];
+    }
+    const min = this.min;
+    const max = this.max;
+    const ticks = _filterBetween(timestamps, min, max);
+    this._unit = timeOpts.unit || (tickOpts.autoSkip
+      ? determineUnitForAutoTicks(timeOpts.minUnit, this.min, this.max, this._getLabelCapacity(min))
+      : determineUnitForFormatting(this, ticks.length, timeOpts.minUnit, this.min, this.max));
+    this._majorUnit = !tickOpts.major.enabled || this._unit === 'year' ? undefined
+      : determineMajorUnit(this._unit);
+    this.initOffsets(timestamps);
+    if (options.reverse) {
+      ticks.reverse();
+    }
+    return ticksFromTimestamps(this, ticks, this._majorUnit);
+  }
+  afterAutoSkip() {
+    if (this.options.offsetAfterAutoskip) {
+      this.initOffsets(this.ticks.map(tick => +tick.value));
+    }
+  }
+  initOffsets(timestamps) {
+    let start = 0;
+    let end = 0;
+    let first, last;
+    if (this.options.offset && timestamps.length) {
+      first = this.getDecimalForValue(timestamps[0]);
+      if (timestamps.length === 1) {
+        start = 1 - first;
+      } else {
+        start = (this.getDecimalForValue(timestamps[1]) - first) / 2;
+      }
+      last = this.getDecimalForValue(timestamps[timestamps.length - 1]);
+      if (timestamps.length === 1) {
+        end = last;
+      } else {
+        end = (last - this.getDecimalForValue(timestamps[timestamps.length - 2])) / 2;
+      }
+    }
+    const limit = timestamps.length < 3 ? 0.5 : 0.25;
+    start = _limitValue(start, 0, limit);
+    end = _limitValue(end, 0, limit);
+    this._offsets = {start, end, factor: 1 / (start + 1 + end)};
+  }
+  _generate() {
+    const adapter = this._adapter;
+    const min = this.min;
+    const max = this.max;
+    const options = this.options;
+    const timeOpts = options.time;
+    const minor = timeOpts.unit || determineUnitForAutoTicks(timeOpts.minUnit, min, max, this._getLabelCapacity(min));
+    const stepSize = valueOrDefault(timeOpts.stepSize, 1);
+    const weekday = minor === 'week' ? timeOpts.isoWeekday : false;
+    const hasWeekday = isNumber(weekday) || weekday === true;
+    const ticks = {};
+    let first = min;
+    let time, count;
+    if (hasWeekday) {
+      first = +adapter.startOf(first, 'isoWeek', weekday);
+    }
+    first = +adapter.startOf(first, hasWeekday ? 'day' : minor);
+    if (adapter.diff(max, min, minor) > 100000 * stepSize) {
+      throw new Error(min + ' and ' + max + ' are too far apart with stepSize of ' + stepSize + ' ' + minor);
+    }
+    const timestamps = options.ticks.source === 'data' && this.getDataTimestamps();
+    for (time = first, count = 0; time < max; time = +adapter.add(time, stepSize, minor), count++) {
+      addTick(ticks, time, timestamps);
+    }
+    if (time === max || options.bounds === 'ticks' || count === 1) {
+      addTick(ticks, time, timestamps);
+    }
+    return Object.keys(ticks).sort((a, b) => a - b).map(x => +x);
+  }
+  getLabelForValue(value) {
+    const adapter = this._adapter;
+    const timeOpts = this.options.time;
+    if (timeOpts.tooltipFormat) {
+      return adapter.format(value, timeOpts.tooltipFormat);
+    }
+    return adapter.format(value, timeOpts.displayFormats.datetime);
+  }
+  _tickFormatFunction(time, index, ticks, format) {
+    const options = this.options;
+    const formats = options.time.displayFormats;
+    const unit = this._unit;
+    const majorUnit = this._majorUnit;
+    const minorFormat = unit && formats[unit];
+    const majorFormat = majorUnit && formats[majorUnit];
+    const tick = ticks[index];
+    const major = majorUnit && majorFormat && tick && tick.major;
+    const label = this._adapter.format(time, format || (major ? majorFormat : minorFormat));
+    const formatter = options.ticks.callback;
+    return formatter ? callback(formatter, [label, index, ticks], this) : label;
+  }
+  generateTickLabels(ticks) {
+    let i, ilen, tick;
+    for (i = 0, ilen = ticks.length; i < ilen; ++i) {
+      tick = ticks[i];
+      tick.label = this._tickFormatFunction(tick.value, i, ticks);
+    }
+  }
+  getDecimalForValue(value) {
+    return value === null ? NaN : (value - this.min) / (this.max - this.min);
+  }
+  getPixelForValue(value) {
+    const offsets = this._offsets;
+    const pos = this.getDecimalForValue(value);
+    return this.getPixelForDecimal((offsets.start + pos) * offsets.factor);
+  }
+  getValueForPixel(pixel) {
+    const offsets = this._offsets;
+    const pos = this.getDecimalForPixel(pixel) / offsets.factor - offsets.end;
+    return this.min + pos * (this.max - this.min);
+  }
+  _getLabelSize(label) {
+    const ticksOpts = this.options.ticks;
+    const tickLabelWidth = this.ctx.measureText(label).width;
+    const angle = toRadians(this.isHorizontal() ? ticksOpts.maxRotation : ticksOpts.minRotation);
+    const cosRotation = Math.cos(angle);
+    const sinRotation = Math.sin(angle);
+    const tickFontSize = this._resolveTickFontOptions(0).size;
+    return {
+      w: (tickLabelWidth * cosRotation) + (tickFontSize * sinRotation),
+      h: (tickLabelWidth * sinRotation) + (tickFontSize * cosRotation)
+    };
+  }
+  _getLabelCapacity(exampleTime) {
+    const timeOpts = this.options.time;
+    const displayFormats = timeOpts.displayFormats;
+    const format = displayFormats[timeOpts.unit] || displayFormats.millisecond;
+    const exampleLabel = this._tickFormatFunction(exampleTime, 0, ticksFromTimestamps(this, [exampleTime], this._majorUnit), format);
+    const size = this._getLabelSize(exampleLabel);
+    const capacity = Math.floor(this.isHorizontal() ? this.width / size.w : this.height / size.h) - 1;
+    return capacity > 0 ? capacity : 1;
+  }
+  getDataTimestamps() {
+    let timestamps = this._cache.data || [];
+    let i, ilen;
+    if (timestamps.length) {
+      return timestamps;
+    }
+    const metas = this.getMatchingVisibleMetas();
+    if (this._normalized && metas.length) {
+      return (this._cache.data = metas[0].controller.getAllParsedValues(this));
+    }
+    for (i = 0, ilen = metas.length; i < ilen; ++i) {
+      timestamps = timestamps.concat(metas[i].controller.getAllParsedValues(this));
+    }
+    return (this._cache.data = this.normalize(timestamps));
+  }
+  getLabelTimestamps() {
+    const timestamps = this._cache.labels || [];
+    let i, ilen;
+    if (timestamps.length) {
+      return timestamps;
+    }
+    const labels = this.getLabels();
+    for (i = 0, ilen = labels.length; i < ilen; ++i) {
+      timestamps.push(parse(this, labels[i]));
+    }
+    return (this._cache.labels = this._normalized ? timestamps : this.normalize(timestamps));
+  }
+  normalize(values) {
+    return _arrayUnique(values.sort(sorter));
+  }
+}
+TimeScale.id = 'time';
+TimeScale.defaults = {
+  bounds: 'data',
+  adapters: {},
+  time: {
+    parser: false,
+    unit: false,
+    round: false,
+    isoWeekday: false,
+    minUnit: 'millisecond',
+    displayFormats: {}
+  },
+  ticks: {
+    source: 'auto',
+    major: {
+      enabled: false
+    }
+  }
+};
+
+function interpolate(table, val, reverse) {
+  let lo = 0;
+  let hi = table.length - 1;
+  let prevSource, nextSource, prevTarget, nextTarget;
+  if (reverse) {
+    if (val >= table[lo].pos && val <= table[hi].pos) {
+      ({lo, hi} = _lookupByKey(table, 'pos', val));
+    }
+    ({pos: prevSource, time: prevTarget} = table[lo]);
+    ({pos: nextSource, time: nextTarget} = table[hi]);
+  } else {
+    if (val >= table[lo].time && val <= table[hi].time) {
+      ({lo, hi} = _lookupByKey(table, 'time', val));
+    }
+    ({time: prevSource, pos: prevTarget} = table[lo]);
+    ({time: nextSource, pos: nextTarget} = table[hi]);
+  }
+  const span = nextSource - prevSource;
+  return span ? prevTarget + (nextTarget - prevTarget) * (val - prevSource) / span : prevTarget;
+}
+class TimeSeriesScale extends TimeScale {
+  constructor(props) {
+    super(props);
+    this._table = [];
+    this._minPos = undefined;
+    this._tableRange = undefined;
+  }
+  initOffsets() {
+    const timestamps = this._getTimestampsForTable();
+    const table = this._table = this.buildLookupTable(timestamps);
+    this._minPos = interpolate(table, this.min);
+    this._tableRange = interpolate(table, this.max) - this._minPos;
+    super.initOffsets(timestamps);
+  }
+  buildLookupTable(timestamps) {
+    const {min, max} = this;
+    const items = [];
+    const table = [];
+    let i, ilen, prev, curr, next;
+    for (i = 0, ilen = timestamps.length; i < ilen; ++i) {
+      curr = timestamps[i];
+      if (curr >= min && curr <= max) {
+        items.push(curr);
+      }
+    }
+    if (items.length < 2) {
+      return [
+        {time: min, pos: 0},
+        {time: max, pos: 1}
+      ];
+    }
+    for (i = 0, ilen = items.length; i < ilen; ++i) {
+      next = items[i + 1];
+      prev = items[i - 1];
+      curr = items[i];
+      if (Math.round((next + prev) / 2) !== curr) {
+        table.push({time: curr, pos: i / (ilen - 1)});
+      }
+    }
+    return table;
+  }
+  _getTimestampsForTable() {
+    let timestamps = this._cache.all || [];
+    if (timestamps.length) {
+      return timestamps;
+    }
+    const data = this.getDataTimestamps();
+    const label = this.getLabelTimestamps();
+    if (data.length && label.length) {
+      timestamps = this.normalize(data.concat(label));
+    } else {
+      timestamps = data.length ? data : label;
+    }
+    timestamps = this._cache.all = timestamps;
+    return timestamps;
+  }
+  getDecimalForValue(value) {
+    return (interpolate(this._table, value) - this._minPos) / this._tableRange;
+  }
+  getValueForPixel(pixel) {
+    const offsets = this._offsets;
+    const decimal = this.getDecimalForPixel(pixel) / offsets.factor - offsets.end;
+    return interpolate(this._table, decimal * this._tableRange + this._minPos, true);
+  }
+}
+TimeSeriesScale.id = 'timeseries';
+TimeSeriesScale.defaults = TimeScale.defaults;
+
+var scales = /*#__PURE__*/Object.freeze({
+__proto__: null,
+CategoryScale: CategoryScale,
+LinearScale: LinearScale,
+LogarithmicScale: LogarithmicScale,
+RadialLinearScale: RadialLinearScale,
+TimeScale: TimeScale,
+TimeSeriesScale: TimeSeriesScale
+});
+
+Chart.register(controllers, scales, elements, plugins);
+Chart.helpers = {...helpers};
+Chart._adapters = _adapters;
+Chart.Animation = Animation;
+Chart.Animations = Animations;
+Chart.animator = animator;
+Chart.controllers = registry.controllers.items;
+Chart.DatasetController = DatasetController;
+Chart.Element = Element;
+Chart.elements = elements;
+Chart.Interaction = Interaction;
+Chart.layouts = layouts;
+Chart.platforms = platforms;
+Chart.Scale = Scale;
+Chart.Ticks = Ticks;
+Object.assign(Chart, controllers, scales, elements, plugins, platforms);
+Chart.Chart = Chart;
+if (typeof window !== 'undefined') {
+  window.Chart = Chart;
+}
+
+return Chart;
+
+}));
+/*!
+ * chartjs-plugin-datalabels v2.2.0
+ * https://chartjs-plugin-datalabels.netlify.app
+ * (c) 2017-2022 chartjs-plugin-datalabels contributors
  * Released under the MIT license
- * https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
+ */
+(function (global, factory) {
+typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('chart.js/helpers'), require('chart.js')) :
+typeof define === 'function' && define.amd ? define(['chart.js/helpers', 'chart.js'], factory) :
+(global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.ChartDataLabels = factory(global.Chart.helpers, global.Chart));
+})(this, (function (helpers, chart_js) { 'use strict';
+
+var devicePixelRatio = (function() {
+  if (typeof window !== 'undefined') {
+    if (window.devicePixelRatio) {
+      return window.devicePixelRatio;
+    }
+
+    // devicePixelRatio is undefined on IE10
+    // https://stackoverflow.com/a/20204180/8837887
+    // https://github.com/chartjs/chartjs-plugin-datalabels/issues/85
+    var screen = window.screen;
+    if (screen) {
+      return (screen.deviceXDPI || 1) / (screen.logicalXDPI || 1);
+    }
+  }
+
+  return 1;
+}());
+
+var utils = {
+  // @todo move this in Chart.helpers.toTextLines
+  toTextLines: function(inputs) {
+    var lines = [];
+    var input;
+
+    inputs = [].concat(inputs);
+    while (inputs.length) {
+      input = inputs.pop();
+      if (typeof input === 'string') {
+        lines.unshift.apply(lines, input.split('\n'));
+      } else if (Array.isArray(input)) {
+        inputs.push.apply(inputs, input);
+      } else if (!helpers.isNullOrUndef(inputs)) {
+        lines.unshift('' + input);
+      }
+    }
+
+    return lines;
+  },
+
+  // @todo move this in Chart.helpers.canvas.textSize
+  // @todo cache calls of measureText if font doesn't change?!
+  textSize: function(ctx, lines, font) {
+    var items = [].concat(lines);
+    var ilen = items.length;
+    var prev = ctx.font;
+    var width = 0;
+    var i;
+
+    ctx.font = font.string;
+
+    for (i = 0; i < ilen; ++i) {
+      width = Math.max(ctx.measureText(items[i]).width, width);
+    }
+
+    ctx.font = prev;
+
+    return {
+      height: ilen * font.lineHeight,
+      width: width
+    };
+  },
+
+  /**
+   * Returns value bounded by min and max. This is equivalent to max(min, min(value, max)).
+   * @todo move this method in Chart.helpers.bound
+   * https://doc.qt.io/qt-5/qtglobal.html#qBound
+   */
+  bound: function(min, value, max) {
+    return Math.max(min, Math.min(value, max));
+  },
+
+  /**
+   * Returns an array of pair [value, state] where state is:
+   * * -1: value is only in a0 (removed)
+   * *  1: value is only in a1 (added)
+   */
+  arrayDiff: function(a0, a1) {
+    var prev = a0.slice();
+    var updates = [];
+    var i, j, ilen, v;
+
+    for (i = 0, ilen = a1.length; i < ilen; ++i) {
+      v = a1[i];
+      j = prev.indexOf(v);
+
+      if (j === -1) {
+        updates.push([v, 1]);
+      } else {
+        prev.splice(j, 1);
+      }
+    }
+
+    for (i = 0, ilen = prev.length; i < ilen; ++i) {
+      updates.push([prev[i], -1]);
+    }
+
+    return updates;
+  },
+
+  /**
+   * https://github.com/chartjs/chartjs-plugin-datalabels/issues/70
+   */
+  rasterize: function(v) {
+    return Math.round(v * devicePixelRatio) / devicePixelRatio;
+  }
+};
+
+function orient(point, origin) {
+  var x0 = origin.x;
+  var y0 = origin.y;
+
+  if (x0 === null) {
+    return {x: 0, y: -1};
+  }
+  if (y0 === null) {
+    return {x: 1, y: 0};
+  }
+
+  var dx = point.x - x0;
+  var dy = point.y - y0;
+  var ln = Math.sqrt(dx * dx + dy * dy);
+
+  return {
+    x: ln ? dx / ln : 0,
+    y: ln ? dy / ln : -1
+  };
+}
+
+function aligned(x, y, vx, vy, align) {
+  switch (align) {
+  case 'center':
+    vx = vy = 0;
+    break;
+  case 'bottom':
+    vx = 0;
+    vy = 1;
+    break;
+  case 'right':
+    vx = 1;
+    vy = 0;
+    break;
+  case 'left':
+    vx = -1;
+    vy = 0;
+    break;
+  case 'top':
+    vx = 0;
+    vy = -1;
+    break;
+  case 'start':
+    vx = -vx;
+    vy = -vy;
+    break;
+  case 'end':
+    // keep natural orientation
+    break;
+  default:
+    // clockwise rotation (in degree)
+    align *= (Math.PI / 180);
+    vx = Math.cos(align);
+    vy = Math.sin(align);
+    break;
+  }
+
+  return {
+    x: x,
+    y: y,
+    vx: vx,
+    vy: vy
+  };
+}
+
+// Line clipping (Cohen–Sutherland algorithm)
+// https://en.wikipedia.org/wiki/Cohen–Sutherland_algorithm
+
+var R_INSIDE = 0;
+var R_LEFT = 1;
+var R_RIGHT = 2;
+var R_BOTTOM = 4;
+var R_TOP = 8;
+
+function region(x, y, rect) {
+  var res = R_INSIDE;
+
+  if (x < rect.left) {
+    res |= R_LEFT;
+  } else if (x > rect.right) {
+    res |= R_RIGHT;
+  }
+  if (y < rect.top) {
+    res |= R_TOP;
+  } else if (y > rect.bottom) {
+    res |= R_BOTTOM;
+  }
+
+  return res;
+}
+
+function clipped(segment, area) {
+  var x0 = segment.x0;
+  var y0 = segment.y0;
+  var x1 = segment.x1;
+  var y1 = segment.y1;
+  var r0 = region(x0, y0, area);
+  var r1 = region(x1, y1, area);
+  var r, x, y;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    if (!(r0 | r1) || (r0 & r1)) {
+      // both points inside or on the same side: no clipping
+      break;
+    }
+
+    // at least one point is outside
+    r = r0 || r1;
+
+    if (r & R_TOP) {
+      x = x0 + (x1 - x0) * (area.top - y0) / (y1 - y0);
+      y = area.top;
+    } else if (r & R_BOTTOM) {
+      x = x0 + (x1 - x0) * (area.bottom - y0) / (y1 - y0);
+      y = area.bottom;
+    } else if (r & R_RIGHT) {
+      y = y0 + (y1 - y0) * (area.right - x0) / (x1 - x0);
+      x = area.right;
+    } else if (r & R_LEFT) {
+      y = y0 + (y1 - y0) * (area.left - x0) / (x1 - x0);
+      x = area.left;
+    }
+
+    if (r === r0) {
+      x0 = x;
+      y0 = y;
+      r0 = region(x0, y0, area);
+    } else {
+      x1 = x;
+      y1 = y;
+      r1 = region(x1, y1, area);
+    }
+  }
+
+  return {
+    x0: x0,
+    x1: x1,
+    y0: y0,
+    y1: y1
+  };
+}
+
+function compute$1(range, config) {
+  var anchor = config.anchor;
+  var segment = range;
+  var x, y;
+
+  if (config.clamp) {
+    segment = clipped(segment, config.area);
+  }
+
+  if (anchor === 'start') {
+    x = segment.x0;
+    y = segment.y0;
+  } else if (anchor === 'end') {
+    x = segment.x1;
+    y = segment.y1;
+  } else {
+    x = (segment.x0 + segment.x1) / 2;
+    y = (segment.y0 + segment.y1) / 2;
+  }
+
+  return aligned(x, y, range.vx, range.vy, config.align);
+}
+
+var positioners = {
+  arc: function(el, config) {
+    var angle = (el.startAngle + el.endAngle) / 2;
+    var vx = Math.cos(angle);
+    var vy = Math.sin(angle);
+    var r0 = el.innerRadius;
+    var r1 = el.outerRadius;
+
+    return compute$1({
+      x0: el.x + vx * r0,
+      y0: el.y + vy * r0,
+      x1: el.x + vx * r1,
+      y1: el.y + vy * r1,
+      vx: vx,
+      vy: vy
+    }, config);
+  },
+
+  point: function(el, config) {
+    var v = orient(el, config.origin);
+    var rx = v.x * el.options.radius;
+    var ry = v.y * el.options.radius;
+
+    return compute$1({
+      x0: el.x - rx,
+      y0: el.y - ry,
+      x1: el.x + rx,
+      y1: el.y + ry,
+      vx: v.x,
+      vy: v.y
+    }, config);
+  },
+
+  bar: function(el, config) {
+    var v = orient(el, config.origin);
+    var x = el.x;
+    var y = el.y;
+    var sx = 0;
+    var sy = 0;
+
+    if (el.horizontal) {
+      x = Math.min(el.x, el.base);
+      sx = Math.abs(el.base - el.x);
+    } else {
+      y = Math.min(el.y, el.base);
+      sy = Math.abs(el.base - el.y);
+    }
+
+    return compute$1({
+      x0: x,
+      y0: y + sy,
+      x1: x + sx,
+      y1: y,
+      vx: v.x,
+      vy: v.y
+    }, config);
+  },
+
+  fallback: function(el, config) {
+    var v = orient(el, config.origin);
+
+    return compute$1({
+      x0: el.x,
+      y0: el.y,
+      x1: el.x + (el.width || 0),
+      y1: el.y + (el.height || 0),
+      vx: v.x,
+      vy: v.y
+    }, config);
+  }
+};
+
+var rasterize = utils.rasterize;
+
+function boundingRects(model) {
+  var borderWidth = model.borderWidth || 0;
+  var padding = model.padding;
+  var th = model.size.height;
+  var tw = model.size.width;
+  var tx = -tw / 2;
+  var ty = -th / 2;
+
+  return {
+    frame: {
+      x: tx - padding.left - borderWidth,
+      y: ty - padding.top - borderWidth,
+      w: tw + padding.width + borderWidth * 2,
+      h: th + padding.height + borderWidth * 2
+    },
+    text: {
+      x: tx,
+      y: ty,
+      w: tw,
+      h: th
+    }
+  };
+}
+
+function getScaleOrigin(el, context) {
+  var scale = context.chart.getDatasetMeta(context.datasetIndex).vScale;
+
+  if (!scale) {
+    return null;
+  }
+
+  if (scale.xCenter !== undefined && scale.yCenter !== undefined) {
+    return {x: scale.xCenter, y: scale.yCenter};
+  }
+
+  var pixel = scale.getBasePixel();
+  return el.horizontal ?
+    {x: pixel, y: null} :
+    {x: null, y: pixel};
+}
+
+function getPositioner(el) {
+  if (el instanceof chart_js.ArcElement) {
+    return positioners.arc;
+  }
+  if (el instanceof chart_js.PointElement) {
+    return positioners.point;
+  }
+  if (el instanceof chart_js.BarElement) {
+    return positioners.bar;
+  }
+  return positioners.fallback;
+}
+
+function drawRoundedRect(ctx, x, y, w, h, radius) {
+  var HALF_PI = Math.PI / 2;
+
+  if (radius) {
+    var r = Math.min(radius, h / 2, w / 2);
+    var left = x + r;
+    var top = y + r;
+    var right = x + w - r;
+    var bottom = y + h - r;
+
+    ctx.moveTo(x, top);
+    if (left < right && top < bottom) {
+      ctx.arc(left, top, r, -Math.PI, -HALF_PI);
+      ctx.arc(right, top, r, -HALF_PI, 0);
+      ctx.arc(right, bottom, r, 0, HALF_PI);
+      ctx.arc(left, bottom, r, HALF_PI, Math.PI);
+    } else if (left < right) {
+      ctx.moveTo(left, y);
+      ctx.arc(right, top, r, -HALF_PI, HALF_PI);
+      ctx.arc(left, top, r, HALF_PI, Math.PI + HALF_PI);
+    } else if (top < bottom) {
+      ctx.arc(left, top, r, -Math.PI, 0);
+      ctx.arc(left, bottom, r, 0, Math.PI);
+    } else {
+      ctx.arc(left, top, r, -Math.PI, Math.PI);
+    }
+    ctx.closePath();
+    ctx.moveTo(x, y);
+  } else {
+    ctx.rect(x, y, w, h);
+  }
+}
+
+function drawFrame(ctx, rect, model) {
+  var bgColor = model.backgroundColor;
+  var borderColor = model.borderColor;
+  var borderWidth = model.borderWidth;
+
+  if (!bgColor && (!borderColor || !borderWidth)) {
+    return;
+  }
+
+  ctx.beginPath();
+
+  drawRoundedRect(
+    ctx,
+    rasterize(rect.x) + borderWidth / 2,
+    rasterize(rect.y) + borderWidth / 2,
+    rasterize(rect.w) - borderWidth,
+    rasterize(rect.h) - borderWidth,
+    model.borderRadius);
+
+  ctx.closePath();
+
+  if (bgColor) {
+    ctx.fillStyle = bgColor;
+    ctx.fill();
+  }
+
+  if (borderColor && borderWidth) {
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = borderWidth;
+    ctx.lineJoin = 'miter';
+    ctx.stroke();
+  }
+}
+
+function textGeometry(rect, align, font) {
+  var h = font.lineHeight;
+  var w = rect.w;
+  var x = rect.x;
+  var y = rect.y + h / 2;
+
+  if (align === 'center') {
+    x += w / 2;
+  } else if (align === 'end' || align === 'right') {
+    x += w;
+  }
+
+  return {
+    h: h,
+    w: w,
+    x: x,
+    y: y
+  };
+}
+
+function drawTextLine(ctx, text, cfg) {
+  var shadow = ctx.shadowBlur;
+  var stroked = cfg.stroked;
+  var x = rasterize(cfg.x);
+  var y = rasterize(cfg.y);
+  var w = rasterize(cfg.w);
+
+  if (stroked) {
+    ctx.strokeText(text, x, y, w);
+  }
+
+  if (cfg.filled) {
+    if (shadow && stroked) {
+      // Prevent drawing shadow on both the text stroke and fill, so
+      // if the text is stroked, remove the shadow for the text fill.
+      ctx.shadowBlur = 0;
+    }
+
+    ctx.fillText(text, x, y, w);
+
+    if (shadow && stroked) {
+      ctx.shadowBlur = shadow;
+    }
+  }
+}
+
+function drawText(ctx, lines, rect, model) {
+  var align = model.textAlign;
+  var color = model.color;
+  var filled = !!color;
+  var font = model.font;
+  var ilen = lines.length;
+  var strokeColor = model.textStrokeColor;
+  var strokeWidth = model.textStrokeWidth;
+  var stroked = strokeColor && strokeWidth;
+  var i;
+
+  if (!ilen || (!filled && !stroked)) {
+    return;
+  }
+
+  // Adjust coordinates based on text alignment and line height
+  rect = textGeometry(rect, align, font);
+
+  ctx.font = font.string;
+  ctx.textAlign = align;
+  ctx.textBaseline = 'middle';
+  ctx.shadowBlur = model.textShadowBlur;
+  ctx.shadowColor = model.textShadowColor;
+
+  if (filled) {
+    ctx.fillStyle = color;
+  }
+  if (stroked) {
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = strokeWidth;
+    ctx.strokeStyle = strokeColor;
+  }
+
+  for (i = 0, ilen = lines.length; i < ilen; ++i) {
+    drawTextLine(ctx, lines[i], {
+      stroked: stroked,
+      filled: filled,
+      w: rect.w,
+      x: rect.x,
+      y: rect.y + rect.h * i
+    });
+  }
+}
+
+var Label = function(config, ctx, el, index) {
+  var me = this;
+
+  me._config = config;
+  me._index = index;
+  me._model = null;
+  me._rects = null;
+  me._ctx = ctx;
+  me._el = el;
+};
+
+helpers.merge(Label.prototype, {
+  /**
+   * @private
+   */
+  _modelize: function(display, lines, config, context) {
+    var me = this;
+    var index = me._index;
+    var font = helpers.toFont(helpers.resolve([config.font, {}], context, index));
+    var color = helpers.resolve([config.color, chart_js.defaults.color], context, index);
+
+    return {
+      align: helpers.resolve([config.align, 'center'], context, index),
+      anchor: helpers.resolve([config.anchor, 'center'], context, index),
+      area: context.chart.chartArea,
+      backgroundColor: helpers.resolve([config.backgroundColor, null], context, index),
+      borderColor: helpers.resolve([config.borderColor, null], context, index),
+      borderRadius: helpers.resolve([config.borderRadius, 0], context, index),
+      borderWidth: helpers.resolve([config.borderWidth, 0], context, index),
+      clamp: helpers.resolve([config.clamp, false], context, index),
+      clip: helpers.resolve([config.clip, false], context, index),
+      color: color,
+      display: display,
+      font: font,
+      lines: lines,
+      offset: helpers.resolve([config.offset, 4], context, index),
+      opacity: helpers.resolve([config.opacity, 1], context, index),
+      origin: getScaleOrigin(me._el, context),
+      padding: helpers.toPadding(helpers.resolve([config.padding, 4], context, index)),
+      positioner: getPositioner(me._el),
+      rotation: helpers.resolve([config.rotation, 0], context, index) * (Math.PI / 180),
+      size: utils.textSize(me._ctx, lines, font),
+      textAlign: helpers.resolve([config.textAlign, 'start'], context, index),
+      textShadowBlur: helpers.resolve([config.textShadowBlur, 0], context, index),
+      textShadowColor: helpers.resolve([config.textShadowColor, color], context, index),
+      textStrokeColor: helpers.resolve([config.textStrokeColor, color], context, index),
+      textStrokeWidth: helpers.resolve([config.textStrokeWidth, 0], context, index)
+    };
+  },
+
+  update: function(context) {
+    var me = this;
+    var model = null;
+    var rects = null;
+    var index = me._index;
+    var config = me._config;
+    var value, label, lines;
+
+    // We first resolve the display option (separately) to avoid computing
+    // other options in case the label is hidden (i.e. display: false).
+    var display = helpers.resolve([config.display, true], context, index);
+
+    if (display) {
+      value = context.dataset.data[index];
+      label = helpers.valueOrDefault(helpers.callback(config.formatter, [value, context]), value);
+      lines = helpers.isNullOrUndef(label) ? [] : utils.toTextLines(label);
+
+      if (lines.length) {
+        model = me._modelize(display, lines, config, context);
+        rects = boundingRects(model);
+      }
+    }
+
+    me._model = model;
+    me._rects = rects;
+  },
+
+  geometry: function() {
+    return this._rects ? this._rects.frame : {};
+  },
+
+  rotation: function() {
+    return this._model ? this._model.rotation : 0;
+  },
+
+  visible: function() {
+    return this._model && this._model.opacity;
+  },
+
+  model: function() {
+    return this._model;
+  },
+
+  draw: function(chart, center) {
+    var me = this;
+    var ctx = chart.ctx;
+    var model = me._model;
+    var rects = me._rects;
+    var area;
+
+    if (!this.visible()) {
+      return;
+    }
+
+    ctx.save();
+
+    if (model.clip) {
+      area = model.area;
+      ctx.beginPath();
+      ctx.rect(
+        area.left,
+        area.top,
+        area.right - area.left,
+        area.bottom - area.top);
+      ctx.clip();
+    }
+
+    ctx.globalAlpha = utils.bound(0, model.opacity, 1);
+    ctx.translate(rasterize(center.x), rasterize(center.y));
+    ctx.rotate(model.rotation);
+
+    drawFrame(ctx, rects.frame, model);
+    drawText(ctx, model.lines, rects.text, model);
+
+    ctx.restore();
+  }
+});
+
+var MIN_INTEGER = Number.MIN_SAFE_INTEGER || -9007199254740991; // eslint-disable-line es/no-number-minsafeinteger
+var MAX_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;  // eslint-disable-line es/no-number-maxsafeinteger
+
+function rotated(point, center, angle) {
+  var cos = Math.cos(angle);
+  var sin = Math.sin(angle);
+  var cx = center.x;
+  var cy = center.y;
+
+  return {
+    x: cx + cos * (point.x - cx) - sin * (point.y - cy),
+    y: cy + sin * (point.x - cx) + cos * (point.y - cy)
+  };
+}
+
+function projected(points, axis) {
+  var min = MAX_INTEGER;
+  var max = MIN_INTEGER;
+  var origin = axis.origin;
+  var i, pt, vx, vy, dp;
+
+  for (i = 0; i < points.length; ++i) {
+    pt = points[i];
+    vx = pt.x - origin.x;
+    vy = pt.y - origin.y;
+    dp = axis.vx * vx + axis.vy * vy;
+    min = Math.min(min, dp);
+    max = Math.max(max, dp);
+  }
+
+  return {
+    min: min,
+    max: max
+  };
+}
+
+function toAxis(p0, p1) {
+  var vx = p1.x - p0.x;
+  var vy = p1.y - p0.y;
+  var ln = Math.sqrt(vx * vx + vy * vy);
+
+  return {
+    vx: (p1.x - p0.x) / ln,
+    vy: (p1.y - p0.y) / ln,
+    origin: p0,
+    ln: ln
+  };
+}
+
+var HitBox = function() {
+  this._rotation = 0;
+  this._rect = {
+    x: 0,
+    y: 0,
+    w: 0,
+    h: 0
+  };
+};
+
+helpers.merge(HitBox.prototype, {
+  center: function() {
+    var r = this._rect;
+    return {
+      x: r.x + r.w / 2,
+      y: r.y + r.h / 2
+    };
+  },
+
+  update: function(center, rect, rotation) {
+    this._rotation = rotation;
+    this._rect = {
+      x: rect.x + center.x,
+      y: rect.y + center.y,
+      w: rect.w,
+      h: rect.h
+    };
+  },
+
+  contains: function(point) {
+    var me = this;
+    var margin = 1;
+    var rect = me._rect;
+
+    point = rotated(point, me.center(), -me._rotation);
+
+    return !(point.x < rect.x - margin
+      || point.y < rect.y - margin
+      || point.x > rect.x + rect.w + margin * 2
+      || point.y > rect.y + rect.h + margin * 2);
+  },
+
+  // Separating Axis Theorem
+  // https://gamedevelopment.tutsplus.com/tutorials/collision-detection-using-the-separating-axis-theorem--gamedev-169
+  intersects: function(other) {
+    var r0 = this._points();
+    var r1 = other._points();
+    var axes = [
+      toAxis(r0[0], r0[1]),
+      toAxis(r0[0], r0[3])
+    ];
+    var i, pr0, pr1;
+
+    if (this._rotation !== other._rotation) {
+      // Only separate with r1 axis if the rotation is different,
+      // else it's enough to separate r0 and r1 with r0 axis only!
+      axes.push(
+        toAxis(r1[0], r1[1]),
+        toAxis(r1[0], r1[3])
+      );
+    }
+
+    for (i = 0; i < axes.length; ++i) {
+      pr0 = projected(r0, axes[i]);
+      pr1 = projected(r1, axes[i]);
+
+      if (pr0.max < pr1.min || pr1.max < pr0.min) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+
+  /**
+   * @private
+   */
+  _points: function() {
+    var me = this;
+    var rect = me._rect;
+    var angle = me._rotation;
+    var center = me.center();
+
+    return [
+      rotated({x: rect.x, y: rect.y}, center, angle),
+      rotated({x: rect.x + rect.w, y: rect.y}, center, angle),
+      rotated({x: rect.x + rect.w, y: rect.y + rect.h}, center, angle),
+      rotated({x: rect.x, y: rect.y + rect.h}, center, angle)
+    ];
+  }
+});
+
+function coordinates(el, model, geometry) {
+  var point = model.positioner(el, model);
+  var vx = point.vx;
+  var vy = point.vy;
+
+  if (!vx && !vy) {
+    // if aligned center, we don't want to offset the center point
+    return {x: point.x, y: point.y};
+  }
+
+  var w = geometry.w;
+  var h = geometry.h;
+
+  // take in account the label rotation
+  var rotation = model.rotation;
+  var dx = Math.abs(w / 2 * Math.cos(rotation)) + Math.abs(h / 2 * Math.sin(rotation));
+  var dy = Math.abs(w / 2 * Math.sin(rotation)) + Math.abs(h / 2 * Math.cos(rotation));
+
+  // scale the unit vector (vx, vy) to get at least dx or dy equal to
+  // w or h respectively (else we would calculate the distance to the
+  // ellipse inscribed in the bounding rect)
+  var vs = 1 / Math.max(Math.abs(vx), Math.abs(vy));
+  dx *= vx * vs;
+  dy *= vy * vs;
+
+  // finally, include the explicit offset
+  dx += model.offset * vx;
+  dy += model.offset * vy;
+
+  return {
+    x: point.x + dx,
+    y: point.y + dy
+  };
+}
+
+function collide(labels, collider) {
+  var i, j, s0, s1;
+
+  // IMPORTANT Iterate in the reverse order since items at the end of the
+  // list have an higher weight/priority and thus should be less impacted
+  // by the overlapping strategy.
+
+  for (i = labels.length - 1; i >= 0; --i) {
+    s0 = labels[i].$layout;
+
+    for (j = i - 1; j >= 0 && s0._visible; --j) {
+      s1 = labels[j].$layout;
+
+      if (s1._visible && s0._box.intersects(s1._box)) {
+        collider(s0, s1);
+      }
+    }
+  }
+
+  return labels;
+}
+
+function compute(labels) {
+  var i, ilen, label, state, geometry, center, proxy;
+
+  // Initialize labels for overlap detection
+  for (i = 0, ilen = labels.length; i < ilen; ++i) {
+    label = labels[i];
+    state = label.$layout;
+
+    if (state._visible) {
+      // Chart.js 3 removed el._model in favor of getProps(), making harder to
+      // abstract reading values in positioners. Also, using string arrays to
+      // read values (i.e. var {a,b,c} = el.getProps(["a","b","c"])) would make
+      // positioners inefficient in the normal case (i.e. not the final values)
+      // and the code a bit ugly, so let's use a Proxy instead.
+      proxy = new Proxy(label._el, {get: (el, p) => el.getProps([p], true)[p]});
+
+      geometry = label.geometry();
+      center = coordinates(proxy, label.model(), geometry);
+      state._box.update(center, geometry, label.rotation());
+    }
+  }
+
+  // Auto hide overlapping labels
+  return collide(labels, function(s0, s1) {
+    var h0 = s0._hidable;
+    var h1 = s1._hidable;
+
+    if ((h0 && h1) || h1) {
+      s1._visible = false;
+    } else if (h0) {
+      s0._visible = false;
+    }
+  });
+}
+
+var layout = {
+  prepare: function(datasets) {
+    var labels = [];
+    var i, j, ilen, jlen, label;
+
+    for (i = 0, ilen = datasets.length; i < ilen; ++i) {
+      for (j = 0, jlen = datasets[i].length; j < jlen; ++j) {
+        label = datasets[i][j];
+        labels.push(label);
+        label.$layout = {
+          _box: new HitBox(),
+          _hidable: false,
+          _visible: true,
+          _set: i,
+          _idx: label._index
+        };
+      }
+    }
+
+    // TODO New `z` option: labels with a higher z-index are drawn
+    // of top of the ones with a lower index. Lowest z-index labels
+    // are also discarded first when hiding overlapping labels.
+    labels.sort(function(a, b) {
+      var sa = a.$layout;
+      var sb = b.$layout;
+
+      return sa._idx === sb._idx
+        ? sb._set - sa._set
+        : sb._idx - sa._idx;
+    });
+
+    this.update(labels);
+
+    return labels;
+  },
+
+  update: function(labels) {
+    var dirty = false;
+    var i, ilen, label, model, state;
+
+    for (i = 0, ilen = labels.length; i < ilen; ++i) {
+      label = labels[i];
+      model = label.model();
+      state = label.$layout;
+      state._hidable = model && model.display === 'auto';
+      state._visible = label.visible();
+      dirty |= state._hidable;
+    }
+
+    if (dirty) {
+      compute(labels);
+    }
+  },
+
+  lookup: function(labels, point) {
+    var i, state;
+
+    // IMPORTANT Iterate in the reverse order since items at the end of
+    // the list have an higher z-index, thus should be picked first.
+
+    for (i = labels.length - 1; i >= 0; --i) {
+      state = labels[i].$layout;
+
+      if (state && state._visible && state._box.contains(point)) {
+        return labels[i];
+      }
+    }
+
+    return null;
+  },
+
+  draw: function(chart, labels) {
+    var i, ilen, label, state, geometry, center;
+
+    for (i = 0, ilen = labels.length; i < ilen; ++i) {
+      label = labels[i];
+      state = label.$layout;
+
+      if (state._visible) {
+        geometry = label.geometry();
+        center = coordinates(label._el, label.model(), geometry);
+        state._box.update(center, geometry, label.rotation());
+        label.draw(chart, center);
+      }
+    }
+  }
+};
+
+var formatter = function(value) {
+  if (helpers.isNullOrUndef(value)) {
+    return null;
+  }
+
+  var label = value;
+  var keys, klen, k;
+  if (helpers.isObject(value)) {
+    if (!helpers.isNullOrUndef(value.label)) {
+      label = value.label;
+    } else if (!helpers.isNullOrUndef(value.r)) {
+      label = value.r;
+    } else {
+      label = '';
+      keys = Object.keys(value);
+      for (k = 0, klen = keys.length; k < klen; ++k) {
+        label += (k !== 0 ? ', ' : '') + keys[k] + ': ' + value[keys[k]];
+      }
+    }
+  }
+
+  return '' + label;
+};
+
+/**
+ * IMPORTANT: make sure to also update tests and TypeScript definition
+ * files (`/test/specs/defaults.spec.js` and `/types/options.d.ts`)
  */
 
-!function(t){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=t();else if("function"==typeof define&&define.amd)define([],t);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Chart=t()}}(function(){return function t(e,i,n){function a(r,s){if(!i[r]){if(!e[r]){var l="function"==typeof require&&require;if(!s&&l)return l(r,!0);if(o)return o(r,!0);var u=new Error("Cannot find module '"+r+"'");throw u.code="MODULE_NOT_FOUND",u}var d=i[r]={exports:{}};e[r][0].call(d.exports,function(t){var i=e[r][1][t];return a(i||t)},d,d.exports,t,e,i,n)}return i[r].exports}for(var o="function"==typeof require&&require,r=0;r<n.length;r++)a(n[r]);return a}({1:[function(t,e,i){},{}],2:[function(t,e,i){var n=t(6);function a(t){if(t){var e=[0,0,0],i=1,a=t.match(/^#([a-fA-F0-9]{3})$/i);if(a){a=a[1];for(var o=0;o<e.length;o++)e[o]=parseInt(a[o]+a[o],16)}else if(a=t.match(/^#([a-fA-F0-9]{6})$/i)){a=a[1];for(o=0;o<e.length;o++)e[o]=parseInt(a.slice(2*o,2*o+2),16)}else if(a=t.match(/^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/i)){for(o=0;o<e.length;o++)e[o]=parseInt(a[o+1]);i=parseFloat(a[4])}else if(a=t.match(/^rgba?\(\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*,\s*([+-]?[\d\.]+)\%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)$/i)){for(o=0;o<e.length;o++)e[o]=Math.round(2.55*parseFloat(a[o+1]));i=parseFloat(a[4])}else if(a=t.match(/(\w+)/)){if("transparent"==a[1])return[0,0,0,0];if(!(e=n[a[1]]))return}for(o=0;o<e.length;o++)e[o]=d(e[o],0,255);return i=i||0==i?d(i,0,1):1,e[3]=i,e}}function o(t){if(t){var e=t.match(/^hsla?\(\s*([+-]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)/);if(e){var i=parseFloat(e[4]);return[d(parseInt(e[1]),0,360),d(parseFloat(e[2]),0,100),d(parseFloat(e[3]),0,100),d(isNaN(i)?1:i,0,1)]}}}function r(t){if(t){var e=t.match(/^hwb\(\s*([+-]?\d+)(?:deg)?\s*,\s*([+-]?[\d\.]+)%\s*,\s*([+-]?[\d\.]+)%\s*(?:,\s*([+-]?[\d\.]+)\s*)?\)/);if(e){var i=parseFloat(e[4]);return[d(parseInt(e[1]),0,360),d(parseFloat(e[2]),0,100),d(parseFloat(e[3]),0,100),d(isNaN(i)?1:i,0,1)]}}}function s(t,e){return void 0===e&&(e=void 0!==t[3]?t[3]:1),"rgba("+t[0]+", "+t[1]+", "+t[2]+", "+e+")"}function l(t,e){return"rgba("+Math.round(t[0]/255*100)+"%, "+Math.round(t[1]/255*100)+"%, "+Math.round(t[2]/255*100)+"%, "+(e||t[3]||1)+")"}function u(t,e){return void 0===e&&(e=void 0!==t[3]?t[3]:1),"hsla("+t[0]+", "+t[1]+"%, "+t[2]+"%, "+e+")"}function d(t,e,i){return Math.min(Math.max(e,t),i)}function c(t){var e=t.toString(16).toUpperCase();return e.length<2?"0"+e:e}e.exports={getRgba:a,getHsla:o,getRgb:function(t){var e=a(t);return e&&e.slice(0,3)},getHsl:function(t){var e=o(t);return e&&e.slice(0,3)},getHwb:r,getAlpha:function(t){var e=a(t);{if(e)return e[3];if(e=o(t))return e[3];if(e=r(t))return e[3]}},hexString:function(t){return"#"+c(t[0])+c(t[1])+c(t[2])},rgbString:function(t,e){if(e<1||t[3]&&t[3]<1)return s(t,e);return"rgb("+t[0]+", "+t[1]+", "+t[2]+")"},rgbaString:s,percentString:function(t,e){if(e<1||t[3]&&t[3]<1)return l(t,e);var i=Math.round(t[0]/255*100),n=Math.round(t[1]/255*100),a=Math.round(t[2]/255*100);return"rgb("+i+"%, "+n+"%, "+a+"%)"},percentaString:l,hslString:function(t,e){if(e<1||t[3]&&t[3]<1)return u(t,e);return"hsl("+t[0]+", "+t[1]+"%, "+t[2]+"%)"},hslaString:u,hwbString:function(t,e){void 0===e&&(e=void 0!==t[3]?t[3]:1);return"hwb("+t[0]+", "+t[1]+"%, "+t[2]+"%"+(void 0!==e&&1!==e?", "+e:"")+")"},keyword:function(t){return h[t.slice(0,3)]}};var h={};for(var f in n)h[n[f]]=f},{6:6}],3:[function(t,e,i){var n=t(5),a=t(2),o=function(t){return t instanceof o?t:this instanceof o?(this.valid=!1,this.values={rgb:[0,0,0],hsl:[0,0,0],hsv:[0,0,0],hwb:[0,0,0],cmyk:[0,0,0,0],alpha:1},void("string"==typeof t?(e=a.getRgba(t))?this.setValues("rgb",e):(e=a.getHsla(t))?this.setValues("hsl",e):(e=a.getHwb(t))&&this.setValues("hwb",e):"object"==typeof t&&(void 0!==(e=t).r||void 0!==e.red?this.setValues("rgb",e):void 0!==e.l||void 0!==e.lightness?this.setValues("hsl",e):void 0!==e.v||void 0!==e.value?this.setValues("hsv",e):void 0!==e.w||void 0!==e.whiteness?this.setValues("hwb",e):void 0===e.c&&void 0===e.cyan||this.setValues("cmyk",e)))):new o(t);var e};o.prototype={isValid:function(){return this.valid},rgb:function(){return this.setSpace("rgb",arguments)},hsl:function(){return this.setSpace("hsl",arguments)},hsv:function(){return this.setSpace("hsv",arguments)},hwb:function(){return this.setSpace("hwb",arguments)},cmyk:function(){return this.setSpace("cmyk",arguments)},rgbArray:function(){return this.values.rgb},hslArray:function(){return this.values.hsl},hsvArray:function(){return this.values.hsv},hwbArray:function(){var t=this.values;return 1!==t.alpha?t.hwb.concat([t.alpha]):t.hwb},cmykArray:function(){return this.values.cmyk},rgbaArray:function(){var t=this.values;return t.rgb.concat([t.alpha])},hslaArray:function(){var t=this.values;return t.hsl.concat([t.alpha])},alpha:function(t){return void 0===t?this.values.alpha:(this.setValues("alpha",t),this)},red:function(t){return this.setChannel("rgb",0,t)},green:function(t){return this.setChannel("rgb",1,t)},blue:function(t){return this.setChannel("rgb",2,t)},hue:function(t){return t&&(t=(t%=360)<0?360+t:t),this.setChannel("hsl",0,t)},saturation:function(t){return this.setChannel("hsl",1,t)},lightness:function(t){return this.setChannel("hsl",2,t)},saturationv:function(t){return this.setChannel("hsv",1,t)},whiteness:function(t){return this.setChannel("hwb",1,t)},blackness:function(t){return this.setChannel("hwb",2,t)},value:function(t){return this.setChannel("hsv",2,t)},cyan:function(t){return this.setChannel("cmyk",0,t)},magenta:function(t){return this.setChannel("cmyk",1,t)},yellow:function(t){return this.setChannel("cmyk",2,t)},black:function(t){return this.setChannel("cmyk",3,t)},hexString:function(){return a.hexString(this.values.rgb)},rgbString:function(){return a.rgbString(this.values.rgb,this.values.alpha)},rgbaString:function(){return a.rgbaString(this.values.rgb,this.values.alpha)},percentString:function(){return a.percentString(this.values.rgb,this.values.alpha)},hslString:function(){return a.hslString(this.values.hsl,this.values.alpha)},hslaString:function(){return a.hslaString(this.values.hsl,this.values.alpha)},hwbString:function(){return a.hwbString(this.values.hwb,this.values.alpha)},keyword:function(){return a.keyword(this.values.rgb,this.values.alpha)},rgbNumber:function(){var t=this.values.rgb;return t[0]<<16|t[1]<<8|t[2]},luminosity:function(){for(var t=this.values.rgb,e=[],i=0;i<t.length;i++){var n=t[i]/255;e[i]=n<=.03928?n/12.92:Math.pow((n+.055)/1.055,2.4)}return.2126*e[0]+.7152*e[1]+.0722*e[2]},contrast:function(t){var e=this.luminosity(),i=t.luminosity();return e>i?(e+.05)/(i+.05):(i+.05)/(e+.05)},level:function(t){var e=this.contrast(t);return e>=7.1?"AAA":e>=4.5?"AA":""},dark:function(){var t=this.values.rgb;return(299*t[0]+587*t[1]+114*t[2])/1e3<128},light:function(){return!this.dark()},negate:function(){for(var t=[],e=0;e<3;e++)t[e]=255-this.values.rgb[e];return this.setValues("rgb",t),this},lighten:function(t){var e=this.values.hsl;return e[2]+=e[2]*t,this.setValues("hsl",e),this},darken:function(t){var e=this.values.hsl;return e[2]-=e[2]*t,this.setValues("hsl",e),this},saturate:function(t){var e=this.values.hsl;return e[1]+=e[1]*t,this.setValues("hsl",e),this},desaturate:function(t){var e=this.values.hsl;return e[1]-=e[1]*t,this.setValues("hsl",e),this},whiten:function(t){var e=this.values.hwb;return e[1]+=e[1]*t,this.setValues("hwb",e),this},blacken:function(t){var e=this.values.hwb;return e[2]+=e[2]*t,this.setValues("hwb",e),this},greyscale:function(){var t=this.values.rgb,e=.3*t[0]+.59*t[1]+.11*t[2];return this.setValues("rgb",[e,e,e]),this},clearer:function(t){var e=this.values.alpha;return this.setValues("alpha",e-e*t),this},opaquer:function(t){var e=this.values.alpha;return this.setValues("alpha",e+e*t),this},rotate:function(t){var e=this.values.hsl,i=(e[0]+t)%360;return e[0]=i<0?360+i:i,this.setValues("hsl",e),this},mix:function(t,e){var i=this,n=t,a=void 0===e?.5:e,o=2*a-1,r=i.alpha()-n.alpha(),s=((o*r==-1?o:(o+r)/(1+o*r))+1)/2,l=1-s;return this.rgb(s*i.red()+l*n.red(),s*i.green()+l*n.green(),s*i.blue()+l*n.blue()).alpha(i.alpha()*a+n.alpha()*(1-a))},toJSON:function(){return this.rgb()},clone:function(){var t,e,i=new o,n=this.values,a=i.values;for(var r in n)n.hasOwnProperty(r)&&(t=n[r],"[object Array]"===(e={}.toString.call(t))?a[r]=t.slice(0):"[object Number]"===e?a[r]=t:console.error("unexpected color value:",t));return i}},o.prototype.spaces={rgb:["red","green","blue"],hsl:["hue","saturation","lightness"],hsv:["hue","saturation","value"],hwb:["hue","whiteness","blackness"],cmyk:["cyan","magenta","yellow","black"]},o.prototype.maxes={rgb:[255,255,255],hsl:[360,100,100],hsv:[360,100,100],hwb:[360,100,100],cmyk:[100,100,100,100]},o.prototype.getValues=function(t){for(var e=this.values,i={},n=0;n<t.length;n++)i[t.charAt(n)]=e[t][n];return 1!==e.alpha&&(i.a=e.alpha),i},o.prototype.setValues=function(t,e){var i,a,o=this.values,r=this.spaces,s=this.maxes,l=1;if(this.valid=!0,"alpha"===t)l=e;else if(e.length)o[t]=e.slice(0,t.length),l=e[t.length];else if(void 0!==e[t.charAt(0)]){for(i=0;i<t.length;i++)o[t][i]=e[t.charAt(i)];l=e.a}else if(void 0!==e[r[t][0]]){var u=r[t];for(i=0;i<t.length;i++)o[t][i]=e[u[i]];l=e.alpha}if(o.alpha=Math.max(0,Math.min(1,void 0===l?o.alpha:l)),"alpha"===t)return!1;for(i=0;i<t.length;i++)a=Math.max(0,Math.min(s[t][i],o[t][i])),o[t][i]=Math.round(a);for(var d in r)d!==t&&(o[d]=n[t][d](o[t]));return!0},o.prototype.setSpace=function(t,e){var i=e[0];return void 0===i?this.getValues(t):("number"==typeof i&&(i=Array.prototype.slice.call(e)),this.setValues(t,i),this)},o.prototype.setChannel=function(t,e,i){var n=this.values[t];return void 0===i?n[e]:i===n[e]?this:(n[e]=i,this.setValues(t,n),this)},"undefined"!=typeof window&&(window.Color=o),e.exports=o},{2:2,5:5}],4:[function(t,e,i){function n(t){var e,i,n=t[0]/255,a=t[1]/255,o=t[2]/255,r=Math.min(n,a,o),s=Math.max(n,a,o),l=s-r;return s==r?e=0:n==s?e=(a-o)/l:a==s?e=2+(o-n)/l:o==s&&(e=4+(n-a)/l),(e=Math.min(60*e,360))<0&&(e+=360),i=(r+s)/2,[e,100*(s==r?0:i<=.5?l/(s+r):l/(2-s-r)),100*i]}function a(t){var e,i,n=t[0],a=t[1],o=t[2],r=Math.min(n,a,o),s=Math.max(n,a,o),l=s-r;return i=0==s?0:l/s*1e3/10,s==r?e=0:n==s?e=(a-o)/l:a==s?e=2+(o-n)/l:o==s&&(e=4+(n-a)/l),(e=Math.min(60*e,360))<0&&(e+=360),[e,i,s/255*1e3/10]}function o(t){var e=t[0],i=t[1],a=t[2];return[n(t)[0],100*(1/255*Math.min(e,Math.min(i,a))),100*(a=1-1/255*Math.max(e,Math.max(i,a)))]}function s(t){var e,i=t[0]/255,n=t[1]/255,a=t[2]/255;return[100*((1-i-(e=Math.min(1-i,1-n,1-a)))/(1-e)||0),100*((1-n-e)/(1-e)||0),100*((1-a-e)/(1-e)||0),100*e]}function l(t){return C[JSON.stringify(t)]}function u(t){var e=t[0]/255,i=t[1]/255,n=t[2]/255;return[100*(.4124*(e=e>.04045?Math.pow((e+.055)/1.055,2.4):e/12.92)+.3576*(i=i>.04045?Math.pow((i+.055)/1.055,2.4):i/12.92)+.1805*(n=n>.04045?Math.pow((n+.055)/1.055,2.4):n/12.92)),100*(.2126*e+.7152*i+.0722*n),100*(.0193*e+.1192*i+.9505*n)]}function d(t){var e=u(t),i=e[0],n=e[1],a=e[2];return n/=100,a/=108.883,i=(i/=95.047)>.008856?Math.pow(i,1/3):7.787*i+16/116,[116*(n=n>.008856?Math.pow(n,1/3):7.787*n+16/116)-16,500*(i-n),200*(n-(a=a>.008856?Math.pow(a,1/3):7.787*a+16/116))]}function c(t){var e,i,n,a,o,r=t[0]/360,s=t[1]/100,l=t[2]/100;if(0==s)return[o=255*l,o,o];e=2*l-(i=l<.5?l*(1+s):l+s-l*s),a=[0,0,0];for(var u=0;u<3;u++)(n=r+1/3*-(u-1))<0&&n++,n>1&&n--,o=6*n<1?e+6*(i-e)*n:2*n<1?i:3*n<2?e+(i-e)*(2/3-n)*6:e,a[u]=255*o;return a}function h(t){var e=t[0]/60,i=t[1]/100,n=t[2]/100,a=Math.floor(e)%6,o=e-Math.floor(e),r=255*n*(1-i),s=255*n*(1-i*o),l=255*n*(1-i*(1-o));n*=255;switch(a){case 0:return[n,l,r];case 1:return[s,n,r];case 2:return[r,n,l];case 3:return[r,s,n];case 4:return[l,r,n];case 5:return[n,r,s]}}function f(t){var e,i,n,a,o=t[0]/360,s=t[1]/100,l=t[2]/100,u=s+l;switch(u>1&&(s/=u,l/=u),n=6*o-(e=Math.floor(6*o)),0!=(1&e)&&(n=1-n),a=s+n*((i=1-l)-s),e){default:case 6:case 0:r=i,g=a,b=s;break;case 1:r=a,g=i,b=s;break;case 2:r=s,g=i,b=a;break;case 3:r=s,g=a,b=i;break;case 4:r=a,g=s,b=i;break;case 5:r=i,g=s,b=a}return[255*r,255*g,255*b]}function p(t){var e=t[0]/100,i=t[1]/100,n=t[2]/100,a=t[3]/100;return[255*(1-Math.min(1,e*(1-a)+a)),255*(1-Math.min(1,i*(1-a)+a)),255*(1-Math.min(1,n*(1-a)+a))]}function m(t){var e,i,n,a=t[0]/100,o=t[1]/100,r=t[2]/100;return i=-.9689*a+1.8758*o+.0415*r,n=.0557*a+-.204*o+1.057*r,e=(e=3.2406*a+-1.5372*o+-.4986*r)>.0031308?1.055*Math.pow(e,1/2.4)-.055:e*=12.92,i=i>.0031308?1.055*Math.pow(i,1/2.4)-.055:i*=12.92,n=n>.0031308?1.055*Math.pow(n,1/2.4)-.055:n*=12.92,[255*(e=Math.min(Math.max(0,e),1)),255*(i=Math.min(Math.max(0,i),1)),255*(n=Math.min(Math.max(0,n),1))]}function v(t){var e=t[0],i=t[1],n=t[2];return i/=100,n/=108.883,e=(e/=95.047)>.008856?Math.pow(e,1/3):7.787*e+16/116,[116*(i=i>.008856?Math.pow(i,1/3):7.787*i+16/116)-16,500*(e-i),200*(i-(n=n>.008856?Math.pow(n,1/3):7.787*n+16/116))]}function x(t){var e,i,n,a,o=t[0],r=t[1],s=t[2];return o<=8?a=(i=100*o/903.3)/100*7.787+16/116:(i=100*Math.pow((o+16)/116,3),a=Math.pow(i/100,1/3)),[e=e/95.047<=.008856?e=95.047*(r/500+a-16/116)/7.787:95.047*Math.pow(r/500+a,3),i,n=n/108.883<=.008859?n=108.883*(a-s/200-16/116)/7.787:108.883*Math.pow(a-s/200,3)]}function y(t){var e,i=t[0],n=t[1],a=t[2];return(e=360*Math.atan2(a,n)/2/Math.PI)<0&&(e+=360),[i,Math.sqrt(n*n+a*a),e]}function k(t){return m(x(t))}function M(t){var e,i=t[0],n=t[1];return e=t[2]/360*2*Math.PI,[i,n*Math.cos(e),n*Math.sin(e)]}function w(t){return S[t]}e.exports={rgb2hsl:n,rgb2hsv:a,rgb2hwb:o,rgb2cmyk:s,rgb2keyword:l,rgb2xyz:u,rgb2lab:d,rgb2lch:function(t){return y(d(t))},hsl2rgb:c,hsl2hsv:function(t){var e=t[0],i=t[1]/100,n=t[2]/100;if(0===n)return[0,0,0];return[e,100*(2*(i*=(n*=2)<=1?n:2-n)/(n+i)),100*((n+i)/2)]},hsl2hwb:function(t){return o(c(t))},hsl2cmyk:function(t){return s(c(t))},hsl2keyword:function(t){return l(c(t))},hsv2rgb:h,hsv2hsl:function(t){var e,i,n=t[0],a=t[1]/100,o=t[2]/100;return e=a*o,[n,100*(e=(e/=(i=(2-a)*o)<=1?i:2-i)||0),100*(i/=2)]},hsv2hwb:function(t){return o(h(t))},hsv2cmyk:function(t){return s(h(t))},hsv2keyword:function(t){return l(h(t))},hwb2rgb:f,hwb2hsl:function(t){return n(f(t))},hwb2hsv:function(t){return a(f(t))},hwb2cmyk:function(t){return s(f(t))},hwb2keyword:function(t){return l(f(t))},cmyk2rgb:p,cmyk2hsl:function(t){return n(p(t))},cmyk2hsv:function(t){return a(p(t))},cmyk2hwb:function(t){return o(p(t))},cmyk2keyword:function(t){return l(p(t))},keyword2rgb:w,keyword2hsl:function(t){return n(w(t))},keyword2hsv:function(t){return a(w(t))},keyword2hwb:function(t){return o(w(t))},keyword2cmyk:function(t){return s(w(t))},keyword2lab:function(t){return d(w(t))},keyword2xyz:function(t){return u(w(t))},xyz2rgb:m,xyz2lab:v,xyz2lch:function(t){return y(v(t))},lab2xyz:x,lab2rgb:k,lab2lch:y,lch2lab:M,lch2xyz:function(t){return x(M(t))},lch2rgb:function(t){return k(M(t))}};var S={aliceblue:[240,248,255],antiquewhite:[250,235,215],aqua:[0,255,255],aquamarine:[127,255,212],azure:[240,255,255],beige:[245,245,220],bisque:[255,228,196],black:[0,0,0],blanchedalmond:[255,235,205],blue:[0,0,255],blueviolet:[138,43,226],brown:[165,42,42],burlywood:[222,184,135],cadetblue:[95,158,160],chartreuse:[127,255,0],chocolate:[210,105,30],coral:[255,127,80],cornflowerblue:[100,149,237],cornsilk:[255,248,220],crimson:[220,20,60],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgoldenrod:[184,134,11],darkgray:[169,169,169],darkgreen:[0,100,0],darkgrey:[169,169,169],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkseagreen:[143,188,143],darkslateblue:[72,61,139],darkslategray:[47,79,79],darkslategrey:[47,79,79],darkturquoise:[0,206,209],darkviolet:[148,0,211],deeppink:[255,20,147],deepskyblue:[0,191,255],dimgray:[105,105,105],dimgrey:[105,105,105],dodgerblue:[30,144,255],firebrick:[178,34,34],floralwhite:[255,250,240],forestgreen:[34,139,34],fuchsia:[255,0,255],gainsboro:[220,220,220],ghostwhite:[248,248,255],gold:[255,215,0],goldenrod:[218,165,32],gray:[128,128,128],green:[0,128,0],greenyellow:[173,255,47],grey:[128,128,128],honeydew:[240,255,240],hotpink:[255,105,180],indianred:[205,92,92],indigo:[75,0,130],ivory:[255,255,240],khaki:[240,230,140],lavender:[230,230,250],lavenderblush:[255,240,245],lawngreen:[124,252,0],lemonchiffon:[255,250,205],lightblue:[173,216,230],lightcoral:[240,128,128],lightcyan:[224,255,255],lightgoldenrodyellow:[250,250,210],lightgray:[211,211,211],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightsalmon:[255,160,122],lightseagreen:[32,178,170],lightskyblue:[135,206,250],lightslategray:[119,136,153],lightslategrey:[119,136,153],lightsteelblue:[176,196,222],lightyellow:[255,255,224],lime:[0,255,0],limegreen:[50,205,50],linen:[250,240,230],magenta:[255,0,255],maroon:[128,0,0],mediumaquamarine:[102,205,170],mediumblue:[0,0,205],mediumorchid:[186,85,211],mediumpurple:[147,112,219],mediumseagreen:[60,179,113],mediumslateblue:[123,104,238],mediumspringgreen:[0,250,154],mediumturquoise:[72,209,204],mediumvioletred:[199,21,133],midnightblue:[25,25,112],mintcream:[245,255,250],mistyrose:[255,228,225],moccasin:[255,228,181],navajowhite:[255,222,173],navy:[0,0,128],oldlace:[253,245,230],olive:[128,128,0],olivedrab:[107,142,35],orange:[255,165,0],orangered:[255,69,0],orchid:[218,112,214],palegoldenrod:[238,232,170],palegreen:[152,251,152],paleturquoise:[175,238,238],palevioletred:[219,112,147],papayawhip:[255,239,213],peachpuff:[255,218,185],peru:[205,133,63],pink:[255,192,203],plum:[221,160,221],powderblue:[176,224,230],purple:[128,0,128],rebeccapurple:[102,51,153],red:[255,0,0],rosybrown:[188,143,143],royalblue:[65,105,225],saddlebrown:[139,69,19],salmon:[250,128,114],sandybrown:[244,164,96],seagreen:[46,139,87],seashell:[255,245,238],sienna:[160,82,45],silver:[192,192,192],skyblue:[135,206,235],slateblue:[106,90,205],slategray:[112,128,144],slategrey:[112,128,144],snow:[255,250,250],springgreen:[0,255,127],steelblue:[70,130,180],tan:[210,180,140],teal:[0,128,128],thistle:[216,191,216],tomato:[255,99,71],turquoise:[64,224,208],violet:[238,130,238],wheat:[245,222,179],white:[255,255,255],whitesmoke:[245,245,245],yellow:[255,255,0],yellowgreen:[154,205,50]},C={};for(var _ in S)C[JSON.stringify(S[_])]=_},{}],5:[function(t,e,i){var n=t(4),a=function(){return new u};for(var o in n){a[o+"Raw"]=function(t){return function(e){return"number"==typeof e&&(e=Array.prototype.slice.call(arguments)),n[t](e)}}(o);var r=/(\w+)2(\w+)/.exec(o),s=r[1],l=r[2];(a[s]=a[s]||{})[l]=a[o]=function(t){return function(e){"number"==typeof e&&(e=Array.prototype.slice.call(arguments));var i=n[t](e);if("string"==typeof i||void 0===i)return i;for(var a=0;a<i.length;a++)i[a]=Math.round(i[a]);return i}}(o)}var u=function(){this.convs={}};u.prototype.routeSpace=function(t,e){var i=e[0];return void 0===i?this.getValues(t):("number"==typeof i&&(i=Array.prototype.slice.call(e)),this.setValues(t,i))},u.prototype.setValues=function(t,e){return this.space=t,this.convs={},this.convs[t]=e,this},u.prototype.getValues=function(t){var e=this.convs[t];if(!e){var i=this.space,n=this.convs[i];e=a[i][t](n),this.convs[t]=e}return e},["rgb","hsl","hsv","cmyk","keyword"].forEach(function(t){u.prototype[t]=function(e){return this.routeSpace(t,arguments)}}),e.exports=a},{4:4}],6:[function(t,e,i){"use strict";e.exports={aliceblue:[240,248,255],antiquewhite:[250,235,215],aqua:[0,255,255],aquamarine:[127,255,212],azure:[240,255,255],beige:[245,245,220],bisque:[255,228,196],black:[0,0,0],blanchedalmond:[255,235,205],blue:[0,0,255],blueviolet:[138,43,226],brown:[165,42,42],burlywood:[222,184,135],cadetblue:[95,158,160],chartreuse:[127,255,0],chocolate:[210,105,30],coral:[255,127,80],cornflowerblue:[100,149,237],cornsilk:[255,248,220],crimson:[220,20,60],cyan:[0,255,255],darkblue:[0,0,139],darkcyan:[0,139,139],darkgoldenrod:[184,134,11],darkgray:[169,169,169],darkgreen:[0,100,0],darkgrey:[169,169,169],darkkhaki:[189,183,107],darkmagenta:[139,0,139],darkolivegreen:[85,107,47],darkorange:[255,140,0],darkorchid:[153,50,204],darkred:[139,0,0],darksalmon:[233,150,122],darkseagreen:[143,188,143],darkslateblue:[72,61,139],darkslategray:[47,79,79],darkslategrey:[47,79,79],darkturquoise:[0,206,209],darkviolet:[148,0,211],deeppink:[255,20,147],deepskyblue:[0,191,255],dimgray:[105,105,105],dimgrey:[105,105,105],dodgerblue:[30,144,255],firebrick:[178,34,34],floralwhite:[255,250,240],forestgreen:[34,139,34],fuchsia:[255,0,255],gainsboro:[220,220,220],ghostwhite:[248,248,255],gold:[255,215,0],goldenrod:[218,165,32],gray:[128,128,128],green:[0,128,0],greenyellow:[173,255,47],grey:[128,128,128],honeydew:[240,255,240],hotpink:[255,105,180],indianred:[205,92,92],indigo:[75,0,130],ivory:[255,255,240],khaki:[240,230,140],lavender:[230,230,250],lavenderblush:[255,240,245],lawngreen:[124,252,0],lemonchiffon:[255,250,205],lightblue:[173,216,230],lightcoral:[240,128,128],lightcyan:[224,255,255],lightgoldenrodyellow:[250,250,210],lightgray:[211,211,211],lightgreen:[144,238,144],lightgrey:[211,211,211],lightpink:[255,182,193],lightsalmon:[255,160,122],lightseagreen:[32,178,170],lightskyblue:[135,206,250],lightslategray:[119,136,153],lightslategrey:[119,136,153],lightsteelblue:[176,196,222],lightyellow:[255,255,224],lime:[0,255,0],limegreen:[50,205,50],linen:[250,240,230],magenta:[255,0,255],maroon:[128,0,0],mediumaquamarine:[102,205,170],mediumblue:[0,0,205],mediumorchid:[186,85,211],mediumpurple:[147,112,219],mediumseagreen:[60,179,113],mediumslateblue:[123,104,238],mediumspringgreen:[0,250,154],mediumturquoise:[72,209,204],mediumvioletred:[199,21,133],midnightblue:[25,25,112],mintcream:[245,255,250],mistyrose:[255,228,225],moccasin:[255,228,181],navajowhite:[255,222,173],navy:[0,0,128],oldlace:[253,245,230],olive:[128,128,0],olivedrab:[107,142,35],orange:[255,165,0],orangered:[255,69,0],orchid:[218,112,214],palegoldenrod:[238,232,170],palegreen:[152,251,152],paleturquoise:[175,238,238],palevioletred:[219,112,147],papayawhip:[255,239,213],peachpuff:[255,218,185],peru:[205,133,63],pink:[255,192,203],plum:[221,160,221],powderblue:[176,224,230],purple:[128,0,128],rebeccapurple:[102,51,153],red:[255,0,0],rosybrown:[188,143,143],royalblue:[65,105,225],saddlebrown:[139,69,19],salmon:[250,128,114],sandybrown:[244,164,96],seagreen:[46,139,87],seashell:[255,245,238],sienna:[160,82,45],silver:[192,192,192],skyblue:[135,206,235],slateblue:[106,90,205],slategray:[112,128,144],slategrey:[112,128,144],snow:[255,250,250],springgreen:[0,255,127],steelblue:[70,130,180],tan:[210,180,140],teal:[0,128,128],thistle:[216,191,216],tomato:[255,99,71],turquoise:[64,224,208],violet:[238,130,238],wheat:[245,222,179],white:[255,255,255],whitesmoke:[245,245,245],yellow:[255,255,0],yellowgreen:[154,205,50]}},{}],7:[function(t,e,i){var n=t(29)();n.helpers=t(45),t(27)(n),n.defaults=t(25),n.Element=t(26),n.elements=t(40),n.Interaction=t(28),n.layouts=t(30),n.platform=t(48),n.plugins=t(31),n.Ticks=t(34),t(22)(n),t(23)(n),t(24)(n),t(33)(n),t(32)(n),t(35)(n),t(55)(n),t(53)(n),t(54)(n),t(56)(n),t(57)(n),t(58)(n),t(15)(n),t(16)(n),t(17)(n),t(18)(n),t(19)(n),t(20)(n),t(21)(n),t(8)(n),t(9)(n),t(10)(n),t(11)(n),t(12)(n),t(13)(n),t(14)(n);var a=t(49);for(var o in a)a.hasOwnProperty(o)&&n.plugins.register(a[o]);n.platform.initialize(),e.exports=n,"undefined"!=typeof window&&(window.Chart=n),n.Legend=a.legend._element,n.Title=a.title._element,n.pluginService=n.plugins,n.PluginBase=n.Element.extend({}),n.canvasHelpers=n.helpers.canvas,n.layoutService=n.layouts},{10:10,11:11,12:12,13:13,14:14,15:15,16:16,17:17,18:18,19:19,20:20,21:21,22:22,23:23,24:24,25:25,26:26,27:27,28:28,29:29,30:30,31:31,32:32,33:33,34:34,35:35,40:40,45:45,48:48,49:49,53:53,54:54,55:55,56:56,57:57,58:58,8:8,9:9}],8:[function(t,e,i){"use strict";e.exports=function(t){t.Bar=function(e,i){return i.type="bar",new t(e,i)}}},{}],9:[function(t,e,i){"use strict";e.exports=function(t){t.Bubble=function(e,i){return i.type="bubble",new t(e,i)}}},{}],10:[function(t,e,i){"use strict";e.exports=function(t){t.Doughnut=function(e,i){return i.type="doughnut",new t(e,i)}}},{}],11:[function(t,e,i){"use strict";e.exports=function(t){t.Line=function(e,i){return i.type="line",new t(e,i)}}},{}],12:[function(t,e,i){"use strict";e.exports=function(t){t.PolarArea=function(e,i){return i.type="polarArea",new t(e,i)}}},{}],13:[function(t,e,i){"use strict";e.exports=function(t){t.Radar=function(e,i){return i.type="radar",new t(e,i)}}},{}],14:[function(t,e,i){"use strict";e.exports=function(t){t.Scatter=function(e,i){return i.type="scatter",new t(e,i)}}},{}],15:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("bar",{hover:{mode:"label"},scales:{xAxes:[{type:"category",categoryPercentage:.8,barPercentage:.9,offset:!0,gridLines:{offsetGridLines:!0}}],yAxes:[{type:"linear"}]}}),n._set("horizontalBar",{hover:{mode:"index",axis:"y"},scales:{xAxes:[{type:"linear",position:"bottom"}],yAxes:[{position:"left",type:"category",categoryPercentage:.8,barPercentage:.9,offset:!0,gridLines:{offsetGridLines:!0}}]},elements:{rectangle:{borderSkipped:"left"}},tooltips:{callbacks:{title:function(t,e){var i="";return t.length>0&&(t[0].yLabel?i=t[0].yLabel:e.labels.length>0&&t[0].index<e.labels.length&&(i=e.labels[t[0].index])),i},label:function(t,e){return(e.datasets[t.datasetIndex].label||"")+": "+t.xLabel}},mode:"index",axis:"y"}}),e.exports=function(t){t.controllers.bar=t.DatasetController.extend({dataElementType:a.Rectangle,initialize:function(){var e;t.DatasetController.prototype.initialize.apply(this,arguments),(e=this.getMeta()).stack=this.getDataset().stack,e.bar=!0},update:function(t){var e,i,n=this.getMeta().data;for(this._ruler=this.getRuler(),e=0,i=n.length;e<i;++e)this.updateElement(n[e],e,t)},updateElement:function(t,e,i){var n=this,a=n.chart,r=n.getMeta(),s=n.getDataset(),l=t.custom||{},u=a.options.elements.rectangle;t._xScale=n.getScaleForId(r.xAxisID),t._yScale=n.getScaleForId(r.yAxisID),t._datasetIndex=n.index,t._index=e,t._model={datasetLabel:s.label,label:a.data.labels[e],borderSkipped:l.borderSkipped?l.borderSkipped:u.borderSkipped,backgroundColor:l.backgroundColor?l.backgroundColor:o.valueAtIndexOrDefault(s.backgroundColor,e,u.backgroundColor),borderColor:l.borderColor?l.borderColor:o.valueAtIndexOrDefault(s.borderColor,e,u.borderColor),borderWidth:l.borderWidth?l.borderWidth:o.valueAtIndexOrDefault(s.borderWidth,e,u.borderWidth)},n.updateElementGeometry(t,e,i),t.pivot()},updateElementGeometry:function(t,e,i){var n=this,a=t._model,o=n.getValueScale(),r=o.getBasePixel(),s=o.isHorizontal(),l=n._ruler||n.getRuler(),u=n.calculateBarValuePixels(n.index,e),d=n.calculateBarIndexPixels(n.index,e,l);a.horizontal=s,a.base=i?r:u.base,a.x=s?i?r:u.head:d.center,a.y=s?d.center:i?r:u.head,a.height=s?d.size:void 0,a.width=s?void 0:d.size},getValueScaleId:function(){return this.getMeta().yAxisID},getIndexScaleId:function(){return this.getMeta().xAxisID},getValueScale:function(){return this.getScaleForId(this.getValueScaleId())},getIndexScale:function(){return this.getScaleForId(this.getIndexScaleId())},_getStacks:function(t){var e,i,n=this.chart,a=this.getIndexScale().options.stacked,o=void 0===t?n.data.datasets.length:t+1,r=[];for(e=0;e<o;++e)(i=n.getDatasetMeta(e)).bar&&n.isDatasetVisible(e)&&(!1===a||!0===a&&-1===r.indexOf(i.stack)||void 0===a&&(void 0===i.stack||-1===r.indexOf(i.stack)))&&r.push(i.stack);return r},getStackCount:function(){return this._getStacks().length},getStackIndex:function(t,e){var i=this._getStacks(t),n=void 0!==e?i.indexOf(e):-1;return-1===n?i.length-1:n},getRuler:function(){var t,e,i=this.getIndexScale(),n=this.getStackCount(),a=this.index,r=i.isHorizontal(),s=r?i.left:i.top,l=s+(r?i.width:i.height),u=[];for(t=0,e=this.getMeta().data.length;t<e;++t)u.push(i.getPixelForValue(null,t,a));return{min:o.isNullOrUndef(i.options.barThickness)?function(t,e){var i,n,a,o,r=t.isHorizontal()?t.width:t.height,s=t.getTicks();for(a=1,o=e.length;a<o;++a)r=Math.min(r,e[a]-e[a-1]);for(a=0,o=s.length;a<o;++a)n=t.getPixelForTick(a),r=a>0?Math.min(r,n-i):r,i=n;return r}(i,u):-1,pixels:u,start:s,end:l,stackCount:n,scale:i}},calculateBarValuePixels:function(t,e){var i,n,a,o,r,s,l=this.chart,u=this.getMeta(),d=this.getValueScale(),c=l.data.datasets,h=d.getRightValue(c[t].data[e]),f=d.options.stacked,g=u.stack,p=0;if(f||void 0===f&&void 0!==g)for(i=0;i<t;++i)(n=l.getDatasetMeta(i)).bar&&n.stack===g&&n.controller.getValueScaleId()===d.id&&l.isDatasetVisible(i)&&(a=d.getRightValue(c[i].data[e]),(h<0&&a<0||h>=0&&a>0)&&(p+=a));return o=d.getPixelForValue(p),{size:s=((r=d.getPixelForValue(p+h))-o)/2,base:o,head:r,center:r+s/2}},calculateBarIndexPixels:function(t,e,i){var n,a,r,s,l,u,d,c,h,f,g,p,m,v,b,x,y,k=i.scale.options,M="flex"===k.barThickness?(h=e,g=k,m=(f=i).pixels,v=m[h],b=h>0?m[h-1]:null,x=h<m.length-1?m[h+1]:null,y=g.categoryPercentage,null===b&&(b=v-(null===x?f.end-v:x-v)),null===x&&(x=v+v-b),p=v-(v-b)/2*y,{chunk:(x-b)/2*y/f.stackCount,ratio:g.barPercentage,start:p}):(n=e,a=i,u=(r=k).barThickness,d=a.stackCount,c=a.pixels[n],o.isNullOrUndef(u)?(s=a.min*r.categoryPercentage,l=r.barPercentage):(s=u*d,l=1),{chunk:s/d,ratio:l,start:c-s/2}),w=this.getStackIndex(t,this.getMeta().stack),S=M.start+M.chunk*w+M.chunk/2,C=Math.min(o.valueOrDefault(k.maxBarThickness,1/0),M.chunk*M.ratio);return{base:S-C/2,head:S+C/2,center:S,size:C}},draw:function(){var t=this.chart,e=this.getValueScale(),i=this.getMeta().data,n=this.getDataset(),a=i.length,r=0;for(o.canvas.clipArea(t.ctx,t.chartArea);r<a;++r)isNaN(e.getRightValue(n.data[r]))||i[r].draw();o.canvas.unclipArea(t.ctx)},setHoverStyle:function(t){var e=this.chart.data.datasets[t._datasetIndex],i=t._index,n=t.custom||{},a=t._model;a.backgroundColor=n.hoverBackgroundColor?n.hoverBackgroundColor:o.valueAtIndexOrDefault(e.hoverBackgroundColor,i,o.getHoverColor(a.backgroundColor)),a.borderColor=n.hoverBorderColor?n.hoverBorderColor:o.valueAtIndexOrDefault(e.hoverBorderColor,i,o.getHoverColor(a.borderColor)),a.borderWidth=n.hoverBorderWidth?n.hoverBorderWidth:o.valueAtIndexOrDefault(e.hoverBorderWidth,i,a.borderWidth)},removeHoverStyle:function(t){var e=this.chart.data.datasets[t._datasetIndex],i=t._index,n=t.custom||{},a=t._model,r=this.chart.options.elements.rectangle;a.backgroundColor=n.backgroundColor?n.backgroundColor:o.valueAtIndexOrDefault(e.backgroundColor,i,r.backgroundColor),a.borderColor=n.borderColor?n.borderColor:o.valueAtIndexOrDefault(e.borderColor,i,r.borderColor),a.borderWidth=n.borderWidth?n.borderWidth:o.valueAtIndexOrDefault(e.borderWidth,i,r.borderWidth)}}),t.controllers.horizontalBar=t.controllers.bar.extend({getValueScaleId:function(){return this.getMeta().xAxisID},getIndexScaleId:function(){return this.getMeta().yAxisID}})}},{25:25,40:40,45:45}],16:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("bubble",{hover:{mode:"single"},scales:{xAxes:[{type:"linear",position:"bottom",id:"x-axis-0"}],yAxes:[{type:"linear",position:"left",id:"y-axis-0"}]},tooltips:{callbacks:{title:function(){return""},label:function(t,e){var i=e.datasets[t.datasetIndex].label||"",n=e.datasets[t.datasetIndex].data[t.index];return i+": ("+t.xLabel+", "+t.yLabel+", "+n.r+")"}}}}),e.exports=function(t){t.controllers.bubble=t.DatasetController.extend({dataElementType:a.Point,update:function(t){var e=this,i=e.getMeta().data;o.each(i,function(i,n){e.updateElement(i,n,t)})},updateElement:function(t,e,i){var n=this,a=n.getMeta(),o=t.custom||{},r=n.getScaleForId(a.xAxisID),s=n.getScaleForId(a.yAxisID),l=n._resolveElementOptions(t,e),u=n.getDataset().data[e],d=n.index,c=i?r.getPixelForDecimal(.5):r.getPixelForValue("object"==typeof u?u:NaN,e,d),h=i?s.getBasePixel():s.getPixelForValue(u,e,d);t._xScale=r,t._yScale=s,t._options=l,t._datasetIndex=d,t._index=e,t._model={backgroundColor:l.backgroundColor,borderColor:l.borderColor,borderWidth:l.borderWidth,hitRadius:l.hitRadius,pointStyle:l.pointStyle,radius:i?0:l.radius,skip:o.skip||isNaN(c)||isNaN(h),x:c,y:h},t.pivot()},setHoverStyle:function(t){var e=t._model,i=t._options;e.backgroundColor=o.valueOrDefault(i.hoverBackgroundColor,o.getHoverColor(i.backgroundColor)),e.borderColor=o.valueOrDefault(i.hoverBorderColor,o.getHoverColor(i.borderColor)),e.borderWidth=o.valueOrDefault(i.hoverBorderWidth,i.borderWidth),e.radius=i.radius+i.hoverRadius},removeHoverStyle:function(t){var e=t._model,i=t._options;e.backgroundColor=i.backgroundColor,e.borderColor=i.borderColor,e.borderWidth=i.borderWidth,e.radius=i.radius},_resolveElementOptions:function(t,e){var i,n,a,r=this.chart,s=r.data.datasets[this.index],l=t.custom||{},u=r.options.elements.point,d=o.options.resolve,c=s.data[e],h={},f={chart:r,dataIndex:e,dataset:s,datasetIndex:this.index},g=["backgroundColor","borderColor","borderWidth","hoverBackgroundColor","hoverBorderColor","hoverBorderWidth","hoverRadius","hitRadius","pointStyle"];for(i=0,n=g.length;i<n;++i)h[a=g[i]]=d([l[a],s[a],u[a]],f,e);return h.radius=d([l.radius,c?c.r:void 0,s.radius,u.radius],f,e),h}})}},{25:25,40:40,45:45}],17:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("doughnut",{animation:{animateRotate:!0,animateScale:!1},hover:{mode:"single"},legendCallback:function(t){var e=[];e.push('<ul class="'+t.id+'-legend">');var i=t.data,n=i.datasets,a=i.labels;if(n.length)for(var o=0;o<n[0].data.length;++o)e.push('<li><span style="background-color:'+n[0].backgroundColor[o]+'"></span>'),a[o]&&e.push(a[o]),e.push("</li>");return e.push("</ul>"),e.join("")},legend:{labels:{generateLabels:function(t){var e=t.data;return e.labels.length&&e.datasets.length?e.labels.map(function(i,n){var a=t.getDatasetMeta(0),r=e.datasets[0],s=a.data[n],l=s&&s.custom||{},u=o.valueAtIndexOrDefault,d=t.options.elements.arc;return{text:i,fillStyle:l.backgroundColor?l.backgroundColor:u(r.backgroundColor,n,d.backgroundColor),strokeStyle:l.borderColor?l.borderColor:u(r.borderColor,n,d.borderColor),lineWidth:l.borderWidth?l.borderWidth:u(r.borderWidth,n,d.borderWidth),hidden:isNaN(r.data[n])||a.data[n].hidden,index:n}}):[]}},onClick:function(t,e){var i,n,a,o=e.index,r=this.chart;for(i=0,n=(r.data.datasets||[]).length;i<n;++i)(a=r.getDatasetMeta(i)).data[o]&&(a.data[o].hidden=!a.data[o].hidden);r.update()}},cutoutPercentage:50,rotation:-.5*Math.PI,circumference:2*Math.PI,tooltips:{callbacks:{title:function(){return""},label:function(t,e){var i=e.labels[t.index],n=": "+e.datasets[t.datasetIndex].data[t.index];return o.isArray(i)?(i=i.slice())[0]+=n:i+=n,i}}}}),n._set("pie",o.clone(n.doughnut)),n._set("pie",{cutoutPercentage:0}),e.exports=function(t){t.controllers.doughnut=t.controllers.pie=t.DatasetController.extend({dataElementType:a.Arc,linkScales:o.noop,getRingIndex:function(t){for(var e=0,i=0;i<t;++i)this.chart.isDatasetVisible(i)&&++e;return e},update:function(t){var e=this,i=e.chart,n=i.chartArea,a=i.options,r=a.elements.arc,s=n.right-n.left-r.borderWidth,l=n.bottom-n.top-r.borderWidth,u=Math.min(s,l),d={x:0,y:0},c=e.getMeta(),h=a.cutoutPercentage,f=a.circumference;if(f<2*Math.PI){var g=a.rotation%(2*Math.PI),p=(g+=2*Math.PI*(g>=Math.PI?-1:g<-Math.PI?1:0))+f,m=Math.cos(g),v=Math.sin(g),b=Math.cos(p),x=Math.sin(p),y=g<=0&&p>=0||g<=2*Math.PI&&2*Math.PI<=p,k=g<=.5*Math.PI&&.5*Math.PI<=p||g<=2.5*Math.PI&&2.5*Math.PI<=p,M=g<=-Math.PI&&-Math.PI<=p||g<=Math.PI&&Math.PI<=p,w=g<=.5*-Math.PI&&.5*-Math.PI<=p||g<=1.5*Math.PI&&1.5*Math.PI<=p,S=h/100,C=M?-1:Math.min(m*(m<0?1:S),b*(b<0?1:S)),_=w?-1:Math.min(v*(v<0?1:S),x*(x<0?1:S)),D=y?1:Math.max(m*(m>0?1:S),b*(b>0?1:S)),I=k?1:Math.max(v*(v>0?1:S),x*(x>0?1:S)),P=.5*(D-C),A=.5*(I-_);u=Math.min(s/P,l/A),d={x:-.5*(D+C),y:-.5*(I+_)}}i.borderWidth=e.getMaxBorderWidth(c.data),i.outerRadius=Math.max((u-i.borderWidth)/2,0),i.innerRadius=Math.max(h?i.outerRadius/100*h:0,0),i.radiusLength=(i.outerRadius-i.innerRadius)/i.getVisibleDatasetCount(),i.offsetX=d.x*i.outerRadius,i.offsetY=d.y*i.outerRadius,c.total=e.calculateTotal(),e.outerRadius=i.outerRadius-i.radiusLength*e.getRingIndex(e.index),e.innerRadius=Math.max(e.outerRadius-i.radiusLength,0),o.each(c.data,function(i,n){e.updateElement(i,n,t)})},updateElement:function(t,e,i){var n=this,a=n.chart,r=a.chartArea,s=a.options,l=s.animation,u=(r.left+r.right)/2,d=(r.top+r.bottom)/2,c=s.rotation,h=s.rotation,f=n.getDataset(),g=i&&l.animateRotate?0:t.hidden?0:n.calculateCircumference(f.data[e])*(s.circumference/(2*Math.PI)),p=i&&l.animateScale?0:n.innerRadius,m=i&&l.animateScale?0:n.outerRadius,v=o.valueAtIndexOrDefault;o.extend(t,{_datasetIndex:n.index,_index:e,_model:{x:u+a.offsetX,y:d+a.offsetY,startAngle:c,endAngle:h,circumference:g,outerRadius:m,innerRadius:p,label:v(f.label,e,a.data.labels[e])}});var b=t._model;this.removeHoverStyle(t),i&&l.animateRotate||(b.startAngle=0===e?s.rotation:n.getMeta().data[e-1]._model.endAngle,b.endAngle=b.startAngle+b.circumference),t.pivot()},removeHoverStyle:function(e){t.DatasetController.prototype.removeHoverStyle.call(this,e,this.chart.options.elements.arc)},calculateTotal:function(){var t,e=this.getDataset(),i=this.getMeta(),n=0;return o.each(i.data,function(i,a){t=e.data[a],isNaN(t)||i.hidden||(n+=Math.abs(t))}),n},calculateCircumference:function(t){var e=this.getMeta().total;return e>0&&!isNaN(t)?2*Math.PI*(Math.abs(t)/e):0},getMaxBorderWidth:function(t){for(var e,i,n=0,a=this.index,o=t.length,r=0;r<o;r++)e=t[r]._model?t[r]._model.borderWidth:0,n=(i=t[r]._chart?t[r]._chart.config.data.datasets[a].hoverBorderWidth:0)>(n=e>n?e:n)?i:n;return n}})}},{25:25,40:40,45:45}],18:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("line",{showLines:!0,spanGaps:!1,hover:{mode:"label"},scales:{xAxes:[{type:"category",id:"x-axis-0"}],yAxes:[{type:"linear",id:"y-axis-0"}]}}),e.exports=function(t){function e(t,e){return o.valueOrDefault(t.showLine,e.showLines)}t.controllers.line=t.DatasetController.extend({datasetElementType:a.Line,dataElementType:a.Point,update:function(t){var i,n,a,r=this,s=r.getMeta(),l=s.dataset,u=s.data||[],d=r.chart.options,c=d.elements.line,h=r.getScaleForId(s.yAxisID),f=r.getDataset(),g=e(f,d);for(g&&(a=l.custom||{},void 0!==f.tension&&void 0===f.lineTension&&(f.lineTension=f.tension),l._scale=h,l._datasetIndex=r.index,l._children=u,l._model={spanGaps:f.spanGaps?f.spanGaps:d.spanGaps,tension:a.tension?a.tension:o.valueOrDefault(f.lineTension,c.tension),backgroundColor:a.backgroundColor?a.backgroundColor:f.backgroundColor||c.backgroundColor,borderWidth:a.borderWidth?a.borderWidth:f.borderWidth||c.borderWidth,borderColor:a.borderColor?a.borderColor:f.borderColor||c.borderColor,borderCapStyle:a.borderCapStyle?a.borderCapStyle:f.borderCapStyle||c.borderCapStyle,borderDash:a.borderDash?a.borderDash:f.borderDash||c.borderDash,borderDashOffset:a.borderDashOffset?a.borderDashOffset:f.borderDashOffset||c.borderDashOffset,borderJoinStyle:a.borderJoinStyle?a.borderJoinStyle:f.borderJoinStyle||c.borderJoinStyle,fill:a.fill?a.fill:void 0!==f.fill?f.fill:c.fill,steppedLine:a.steppedLine?a.steppedLine:o.valueOrDefault(f.steppedLine,c.stepped),cubicInterpolationMode:a.cubicInterpolationMode?a.cubicInterpolationMode:o.valueOrDefault(f.cubicInterpolationMode,c.cubicInterpolationMode)},l.pivot()),i=0,n=u.length;i<n;++i)r.updateElement(u[i],i,t);for(g&&0!==l._model.tension&&r.updateBezierControlPoints(),i=0,n=u.length;i<n;++i)u[i].pivot()},getPointBackgroundColor:function(t,e){var i=this.chart.options.elements.point.backgroundColor,n=this.getDataset(),a=t.custom||{};return a.backgroundColor?i=a.backgroundColor:n.pointBackgroundColor?i=o.valueAtIndexOrDefault(n.pointBackgroundColor,e,i):n.backgroundColor&&(i=n.backgroundColor),i},getPointBorderColor:function(t,e){var i=this.chart.options.elements.point.borderColor,n=this.getDataset(),a=t.custom||{};return a.borderColor?i=a.borderColor:n.pointBorderColor?i=o.valueAtIndexOrDefault(n.pointBorderColor,e,i):n.borderColor&&(i=n.borderColor),i},getPointBorderWidth:function(t,e){var i=this.chart.options.elements.point.borderWidth,n=this.getDataset(),a=t.custom||{};return isNaN(a.borderWidth)?!isNaN(n.pointBorderWidth)||o.isArray(n.pointBorderWidth)?i=o.valueAtIndexOrDefault(n.pointBorderWidth,e,i):isNaN(n.borderWidth)||(i=n.borderWidth):i=a.borderWidth,i},updateElement:function(t,e,i){var n,a,r=this,s=r.getMeta(),l=t.custom||{},u=r.getDataset(),d=r.index,c=u.data[e],h=r.getScaleForId(s.yAxisID),f=r.getScaleForId(s.xAxisID),g=r.chart.options.elements.point;void 0!==u.radius&&void 0===u.pointRadius&&(u.pointRadius=u.radius),void 0!==u.hitRadius&&void 0===u.pointHitRadius&&(u.pointHitRadius=u.hitRadius),n=f.getPixelForValue("object"==typeof c?c:NaN,e,d),a=i?h.getBasePixel():r.calculatePointY(c,e,d),t._xScale=f,t._yScale=h,t._datasetIndex=d,t._index=e,t._model={x:n,y:a,skip:l.skip||isNaN(n)||isNaN(a),radius:l.radius||o.valueAtIndexOrDefault(u.pointRadius,e,g.radius),pointStyle:l.pointStyle||o.valueAtIndexOrDefault(u.pointStyle,e,g.pointStyle),backgroundColor:r.getPointBackgroundColor(t,e),borderColor:r.getPointBorderColor(t,e),borderWidth:r.getPointBorderWidth(t,e),tension:s.dataset._model?s.dataset._model.tension:0,steppedLine:!!s.dataset._model&&s.dataset._model.steppedLine,hitRadius:l.hitRadius||o.valueAtIndexOrDefault(u.pointHitRadius,e,g.hitRadius)}},calculatePointY:function(t,e,i){var n,a,o,r=this.chart,s=this.getMeta(),l=this.getScaleForId(s.yAxisID),u=0,d=0;if(l.options.stacked){for(n=0;n<i;n++)if(a=r.data.datasets[n],"line"===(o=r.getDatasetMeta(n)).type&&o.yAxisID===l.id&&r.isDatasetVisible(n)){var c=Number(l.getRightValue(a.data[e]));c<0?d+=c||0:u+=c||0}var h=Number(l.getRightValue(t));return h<0?l.getPixelForValue(d+h):l.getPixelForValue(u+h)}return l.getPixelForValue(t)},updateBezierControlPoints:function(){var t,e,i,n,a=this.getMeta(),r=this.chart.chartArea,s=a.data||[];function l(t,e,i){return Math.max(Math.min(t,i),e)}if(a.dataset._model.spanGaps&&(s=s.filter(function(t){return!t._model.skip})),"monotone"===a.dataset._model.cubicInterpolationMode)o.splineCurveMonotone(s);else for(t=0,e=s.length;t<e;++t)i=s[t]._model,n=o.splineCurve(o.previousItem(s,t)._model,i,o.nextItem(s,t)._model,a.dataset._model.tension),i.controlPointPreviousX=n.previous.x,i.controlPointPreviousY=n.previous.y,i.controlPointNextX=n.next.x,i.controlPointNextY=n.next.y;if(this.chart.options.elements.line.capBezierPoints)for(t=0,e=s.length;t<e;++t)(i=s[t]._model).controlPointPreviousX=l(i.controlPointPreviousX,r.left,r.right),i.controlPointPreviousY=l(i.controlPointPreviousY,r.top,r.bottom),i.controlPointNextX=l(i.controlPointNextX,r.left,r.right),i.controlPointNextY=l(i.controlPointNextY,r.top,r.bottom)},draw:function(){var t=this.chart,i=this.getMeta(),n=i.data||[],a=t.chartArea,r=n.length,s=0;for(o.canvas.clipArea(t.ctx,a),e(this.getDataset(),t.options)&&i.dataset.draw(),o.canvas.unclipArea(t.ctx);s<r;++s)n[s].draw(a)},setHoverStyle:function(t){var e=this.chart.data.datasets[t._datasetIndex],i=t._index,n=t.custom||{},a=t._model;a.radius=n.hoverRadius||o.valueAtIndexOrDefault(e.pointHoverRadius,i,this.chart.options.elements.point.hoverRadius),a.backgroundColor=n.hoverBackgroundColor||o.valueAtIndexOrDefault(e.pointHoverBackgroundColor,i,o.getHoverColor(a.backgroundColor)),a.borderColor=n.hoverBorderColor||o.valueAtIndexOrDefault(e.pointHoverBorderColor,i,o.getHoverColor(a.borderColor)),a.borderWidth=n.hoverBorderWidth||o.valueAtIndexOrDefault(e.pointHoverBorderWidth,i,a.borderWidth)},removeHoverStyle:function(t){var e=this,i=e.chart.data.datasets[t._datasetIndex],n=t._index,a=t.custom||{},r=t._model;void 0!==i.radius&&void 0===i.pointRadius&&(i.pointRadius=i.radius),r.radius=a.radius||o.valueAtIndexOrDefault(i.pointRadius,n,e.chart.options.elements.point.radius),r.backgroundColor=e.getPointBackgroundColor(t,n),r.borderColor=e.getPointBorderColor(t,n),r.borderWidth=e.getPointBorderWidth(t,n)}})}},{25:25,40:40,45:45}],19:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("polarArea",{scale:{type:"radialLinear",angleLines:{display:!1},gridLines:{circular:!0},pointLabels:{display:!1},ticks:{beginAtZero:!0}},animation:{animateRotate:!0,animateScale:!0},startAngle:-.5*Math.PI,legendCallback:function(t){var e=[];e.push('<ul class="'+t.id+'-legend">');var i=t.data,n=i.datasets,a=i.labels;if(n.length)for(var o=0;o<n[0].data.length;++o)e.push('<li><span style="background-color:'+n[0].backgroundColor[o]+'"></span>'),a[o]&&e.push(a[o]),e.push("</li>");return e.push("</ul>"),e.join("")},legend:{labels:{generateLabels:function(t){var e=t.data;return e.labels.length&&e.datasets.length?e.labels.map(function(i,n){var a=t.getDatasetMeta(0),r=e.datasets[0],s=a.data[n].custom||{},l=o.valueAtIndexOrDefault,u=t.options.elements.arc;return{text:i,fillStyle:s.backgroundColor?s.backgroundColor:l(r.backgroundColor,n,u.backgroundColor),strokeStyle:s.borderColor?s.borderColor:l(r.borderColor,n,u.borderColor),lineWidth:s.borderWidth?s.borderWidth:l(r.borderWidth,n,u.borderWidth),hidden:isNaN(r.data[n])||a.data[n].hidden,index:n}}):[]}},onClick:function(t,e){var i,n,a,o=e.index,r=this.chart;for(i=0,n=(r.data.datasets||[]).length;i<n;++i)(a=r.getDatasetMeta(i)).data[o].hidden=!a.data[o].hidden;r.update()}},tooltips:{callbacks:{title:function(){return""},label:function(t,e){return e.labels[t.index]+": "+t.yLabel}}}}),e.exports=function(t){t.controllers.polarArea=t.DatasetController.extend({dataElementType:a.Arc,linkScales:o.noop,update:function(t){var e=this,i=e.chart,n=i.chartArea,a=e.getMeta(),r=i.options,s=r.elements.arc,l=Math.min(n.right-n.left,n.bottom-n.top);i.outerRadius=Math.max((l-s.borderWidth/2)/2,0),i.innerRadius=Math.max(r.cutoutPercentage?i.outerRadius/100*r.cutoutPercentage:1,0),i.radiusLength=(i.outerRadius-i.innerRadius)/i.getVisibleDatasetCount(),e.outerRadius=i.outerRadius-i.radiusLength*e.index,e.innerRadius=e.outerRadius-i.radiusLength,a.count=e.countVisibleElements(),o.each(a.data,function(i,n){e.updateElement(i,n,t)})},updateElement:function(t,e,i){for(var n=this,a=n.chart,r=n.getDataset(),s=a.options,l=s.animation,u=a.scale,d=a.data.labels,c=n.calculateCircumference(r.data[e]),h=u.xCenter,f=u.yCenter,g=0,p=n.getMeta(),m=0;m<e;++m)isNaN(r.data[m])||p.data[m].hidden||++g;var v=s.startAngle,b=t.hidden?0:u.getDistanceFromCenterForValue(r.data[e]),x=v+c*g,y=x+(t.hidden?0:c),k=l.animateScale?0:u.getDistanceFromCenterForValue(r.data[e]);o.extend(t,{_datasetIndex:n.index,_index:e,_scale:u,_model:{x:h,y:f,innerRadius:0,outerRadius:i?k:b,startAngle:i&&l.animateRotate?v:x,endAngle:i&&l.animateRotate?v:y,label:o.valueAtIndexOrDefault(d,e,d[e])}}),n.removeHoverStyle(t),t.pivot()},removeHoverStyle:function(e){t.DatasetController.prototype.removeHoverStyle.call(this,e,this.chart.options.elements.arc)},countVisibleElements:function(){var t=this.getDataset(),e=this.getMeta(),i=0;return o.each(e.data,function(e,n){isNaN(t.data[n])||e.hidden||i++}),i},calculateCircumference:function(t){var e=this.getMeta().count;return e>0&&!isNaN(t)?2*Math.PI/e:0}})}},{25:25,40:40,45:45}],20:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("radar",{scale:{type:"radialLinear"},elements:{line:{tension:0}}}),e.exports=function(t){t.controllers.radar=t.DatasetController.extend({datasetElementType:a.Line,dataElementType:a.Point,linkScales:o.noop,update:function(t){var e=this,i=e.getMeta(),n=i.dataset,a=i.data,r=n.custom||{},s=e.getDataset(),l=e.chart.options.elements.line,u=e.chart.scale;void 0!==s.tension&&void 0===s.lineTension&&(s.lineTension=s.tension),o.extend(i.dataset,{_datasetIndex:e.index,_scale:u,_children:a,_loop:!0,_model:{tension:r.tension?r.tension:o.valueOrDefault(s.lineTension,l.tension),backgroundColor:r.backgroundColor?r.backgroundColor:s.backgroundColor||l.backgroundColor,borderWidth:r.borderWidth?r.borderWidth:s.borderWidth||l.borderWidth,borderColor:r.borderColor?r.borderColor:s.borderColor||l.borderColor,fill:r.fill?r.fill:void 0!==s.fill?s.fill:l.fill,borderCapStyle:r.borderCapStyle?r.borderCapStyle:s.borderCapStyle||l.borderCapStyle,borderDash:r.borderDash?r.borderDash:s.borderDash||l.borderDash,borderDashOffset:r.borderDashOffset?r.borderDashOffset:s.borderDashOffset||l.borderDashOffset,borderJoinStyle:r.borderJoinStyle?r.borderJoinStyle:s.borderJoinStyle||l.borderJoinStyle}}),i.dataset.pivot(),o.each(a,function(i,n){e.updateElement(i,n,t)},e),e.updateBezierControlPoints()},updateElement:function(t,e,i){var n=this,a=t.custom||{},r=n.getDataset(),s=n.chart.scale,l=n.chart.options.elements.point,u=s.getPointPositionForValue(e,r.data[e]);void 0!==r.radius&&void 0===r.pointRadius&&(r.pointRadius=r.radius),void 0!==r.hitRadius&&void 0===r.pointHitRadius&&(r.pointHitRadius=r.hitRadius),o.extend(t,{_datasetIndex:n.index,_index:e,_scale:s,_model:{x:i?s.xCenter:u.x,y:i?s.yCenter:u.y,tension:a.tension?a.tension:o.valueOrDefault(r.lineTension,n.chart.options.elements.line.tension),radius:a.radius?a.radius:o.valueAtIndexOrDefault(r.pointRadius,e,l.radius),backgroundColor:a.backgroundColor?a.backgroundColor:o.valueAtIndexOrDefault(r.pointBackgroundColor,e,l.backgroundColor),borderColor:a.borderColor?a.borderColor:o.valueAtIndexOrDefault(r.pointBorderColor,e,l.borderColor),borderWidth:a.borderWidth?a.borderWidth:o.valueAtIndexOrDefault(r.pointBorderWidth,e,l.borderWidth),pointStyle:a.pointStyle?a.pointStyle:o.valueAtIndexOrDefault(r.pointStyle,e,l.pointStyle),hitRadius:a.hitRadius?a.hitRadius:o.valueAtIndexOrDefault(r.pointHitRadius,e,l.hitRadius)}}),t._model.skip=a.skip?a.skip:isNaN(t._model.x)||isNaN(t._model.y)},updateBezierControlPoints:function(){var t=this.chart.chartArea,e=this.getMeta();o.each(e.data,function(i,n){var a=i._model,r=o.splineCurve(o.previousItem(e.data,n,!0)._model,a,o.nextItem(e.data,n,!0)._model,a.tension);a.controlPointPreviousX=Math.max(Math.min(r.previous.x,t.right),t.left),a.controlPointPreviousY=Math.max(Math.min(r.previous.y,t.bottom),t.top),a.controlPointNextX=Math.max(Math.min(r.next.x,t.right),t.left),a.controlPointNextY=Math.max(Math.min(r.next.y,t.bottom),t.top),i.pivot()})},setHoverStyle:function(t){var e=this.chart.data.datasets[t._datasetIndex],i=t.custom||{},n=t._index,a=t._model;a.radius=i.hoverRadius?i.hoverRadius:o.valueAtIndexOrDefault(e.pointHoverRadius,n,this.chart.options.elements.point.hoverRadius),a.backgroundColor=i.hoverBackgroundColor?i.hoverBackgroundColor:o.valueAtIndexOrDefault(e.pointHoverBackgroundColor,n,o.getHoverColor(a.backgroundColor)),a.borderColor=i.hoverBorderColor?i.hoverBorderColor:o.valueAtIndexOrDefault(e.pointHoverBorderColor,n,o.getHoverColor(a.borderColor)),a.borderWidth=i.hoverBorderWidth?i.hoverBorderWidth:o.valueAtIndexOrDefault(e.pointHoverBorderWidth,n,a.borderWidth)},removeHoverStyle:function(t){var e=this.chart.data.datasets[t._datasetIndex],i=t.custom||{},n=t._index,a=t._model,r=this.chart.options.elements.point;a.radius=i.radius?i.radius:o.valueAtIndexOrDefault(e.pointRadius,n,r.radius),a.backgroundColor=i.backgroundColor?i.backgroundColor:o.valueAtIndexOrDefault(e.pointBackgroundColor,n,r.backgroundColor),a.borderColor=i.borderColor?i.borderColor:o.valueAtIndexOrDefault(e.pointBorderColor,n,r.borderColor),a.borderWidth=i.borderWidth?i.borderWidth:o.valueAtIndexOrDefault(e.pointBorderWidth,n,r.borderWidth)}})}},{25:25,40:40,45:45}],21:[function(t,e,i){"use strict";t(25)._set("scatter",{hover:{mode:"single"},scales:{xAxes:[{id:"x-axis-1",type:"linear",position:"bottom"}],yAxes:[{id:"y-axis-1",type:"linear",position:"left"}]},showLines:!1,tooltips:{callbacks:{title:function(){return""},label:function(t){return"("+t.xLabel+", "+t.yLabel+")"}}}}),e.exports=function(t){t.controllers.scatter=t.controllers.line}},{25:25}],22:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45);n._set("global",{animation:{duration:1e3,easing:"easeOutQuart",onProgress:o.noop,onComplete:o.noop}}),e.exports=function(t){t.Animation=a.extend({chart:null,currentStep:0,numSteps:60,easing:"",render:null,onAnimationProgress:null,onAnimationComplete:null}),t.animationService={frameDuration:17,animations:[],dropFrames:0,request:null,addAnimation:function(t,e,i,n){var a,o,r=this.animations;for(e.chart=t,n||(t.animating=!0),a=0,o=r.length;a<o;++a)if(r[a].chart===t)return void(r[a]=e);r.push(e),1===r.length&&this.requestAnimationFrame()},cancelAnimation:function(t){var e=o.findIndex(this.animations,function(e){return e.chart===t});-1!==e&&(this.animations.splice(e,1),t.animating=!1)},requestAnimationFrame:function(){var t=this;null===t.request&&(t.request=o.requestAnimFrame.call(window,function(){t.request=null,t.startDigest()}))},startDigest:function(){var t=this,e=Date.now(),i=0;t.dropFrames>1&&(i=Math.floor(t.dropFrames),t.dropFrames=t.dropFrames%1),t.advance(1+i);var n=Date.now();t.dropFrames+=(n-e)/t.frameDuration,t.animations.length>0&&t.requestAnimationFrame()},advance:function(t){for(var e,i,n=this.animations,a=0;a<n.length;)i=(e=n[a]).chart,e.currentStep=(e.currentStep||0)+t,e.currentStep=Math.min(e.currentStep,e.numSteps),o.callback(e.render,[i,e],i),o.callback(e.onAnimationProgress,[e],i),e.currentStep>=e.numSteps?(o.callback(e.onAnimationComplete,[e],i),i.animating=!1,n.splice(a,1)):++a}},Object.defineProperty(t.Animation.prototype,"animationObject",{get:function(){return this}}),Object.defineProperty(t.Animation.prototype,"chartInstance",{get:function(){return this.chart},set:function(t){this.chart=t}})}},{25:25,26:26,45:45}],23:[function(t,e,i){"use strict";var n=t(25),a=t(45),o=t(28),r=t(30),s=t(48),l=t(31);e.exports=function(t){function e(t){return"top"===t||"bottom"===t}t.types={},t.instances={},t.controllers={},a.extend(t.prototype,{construct:function(e,i){var o,r,l=this;(r=(o=(o=i)||{}).data=o.data||{}).datasets=r.datasets||[],r.labels=r.labels||[],o.options=a.configMerge(n.global,n[o.type],o.options||{}),i=o;var u=s.acquireContext(e,i),d=u&&u.canvas,c=d&&d.height,h=d&&d.width;l.id=a.uid(),l.ctx=u,l.canvas=d,l.config=i,l.width=h,l.height=c,l.aspectRatio=c?h/c:null,l.options=i.options,l._bufferedRender=!1,l.chart=l,l.controller=l,t.instances[l.id]=l,Object.defineProperty(l,"data",{get:function(){return l.config.data},set:function(t){l.config.data=t}}),u&&d?(l.initialize(),l.update()):console.error("Failed to create chart: can't acquire context from the given item")},initialize:function(){var t=this;return l.notify(t,"beforeInit"),a.retinaScale(t,t.options.devicePixelRatio),t.bindEvents(),t.options.responsive&&t.resize(!0),t.ensureScalesHaveIDs(),t.buildOrUpdateScales(),t.initToolTip(),l.notify(t,"afterInit"),t},clear:function(){return a.canvas.clear(this),this},stop:function(){return t.animationService.cancelAnimation(this),this},resize:function(t){var e=this,i=e.options,n=e.canvas,o=i.maintainAspectRatio&&e.aspectRatio||null,r=Math.max(0,Math.floor(a.getMaximumWidth(n))),s=Math.max(0,Math.floor(o?r/o:a.getMaximumHeight(n)));if((e.width!==r||e.height!==s)&&(n.width=e.width=r,n.height=e.height=s,n.style.width=r+"px",n.style.height=s+"px",a.retinaScale(e,i.devicePixelRatio),!t)){var u={width:r,height:s};l.notify(e,"resize",[u]),e.options.onResize&&e.options.onResize(e,u),e.stop(),e.update(e.options.responsiveAnimationDuration)}},ensureScalesHaveIDs:function(){var t=this.options,e=t.scales||{},i=t.scale;a.each(e.xAxes,function(t,e){t.id=t.id||"x-axis-"+e}),a.each(e.yAxes,function(t,e){t.id=t.id||"y-axis-"+e}),i&&(i.id=i.id||"scale")},buildOrUpdateScales:function(){var i=this,n=i.options,o=i.scales||{},r=[],s=Object.keys(o).reduce(function(t,e){return t[e]=!1,t},{});n.scales&&(r=r.concat((n.scales.xAxes||[]).map(function(t){return{options:t,dtype:"category",dposition:"bottom"}}),(n.scales.yAxes||[]).map(function(t){return{options:t,dtype:"linear",dposition:"left"}}))),n.scale&&r.push({options:n.scale,dtype:"radialLinear",isDefault:!0,dposition:"chartArea"}),a.each(r,function(n){var r=n.options,l=r.id,u=a.valueOrDefault(r.type,n.dtype);e(r.position)!==e(n.dposition)&&(r.position=n.dposition),s[l]=!0;var d=null;if(l in o&&o[l].type===u)(d=o[l]).options=r,d.ctx=i.ctx,d.chart=i;else{var c=t.scaleService.getScaleConstructor(u);if(!c)return;d=new c({id:l,type:u,options:r,ctx:i.ctx,chart:i}),o[d.id]=d}d.mergeTicksOptions(),n.isDefault&&(i.scale=d)}),a.each(s,function(t,e){t||delete o[e]}),i.scales=o,t.scaleService.addScalesToLayout(this)},buildOrUpdateControllers:function(){var e=this,i=[],n=[];return a.each(e.data.datasets,function(a,o){var r=e.getDatasetMeta(o),s=a.type||e.config.type;if(r.type&&r.type!==s&&(e.destroyDatasetMeta(o),r=e.getDatasetMeta(o)),r.type=s,i.push(r.type),r.controller)r.controller.updateIndex(o),r.controller.linkScales();else{var l=t.controllers[r.type];if(void 0===l)throw new Error('"'+r.type+'" is not a chart type.');r.controller=new l(e,o),n.push(r.controller)}},e),n},resetElements:function(){var t=this;a.each(t.data.datasets,function(e,i){t.getDatasetMeta(i).controller.reset()},t)},reset:function(){this.resetElements(),this.tooltip.initialize()},update:function(e){var i,n,o=this;if(e&&"object"==typeof e||(e={duration:e,lazy:arguments[1]}),n=(i=o).options,a.each(i.scales,function(t){r.removeBox(i,t)}),n=a.configMerge(t.defaults.global,t.defaults[i.config.type],n),i.options=i.config.options=n,i.ensureScalesHaveIDs(),i.buildOrUpdateScales(),i.tooltip._options=n.tooltips,i.tooltip.initialize(),l._invalidate(o),!1!==l.notify(o,"beforeUpdate")){o.tooltip._data=o.data;var s=o.buildOrUpdateControllers();a.each(o.data.datasets,function(t,e){o.getDatasetMeta(e).controller.buildOrUpdateElements()},o),o.updateLayout(),o.options.animation&&o.options.animation.duration&&a.each(s,function(t){t.reset()}),o.updateDatasets(),o.tooltip.initialize(),o.lastActive=[],l.notify(o,"afterUpdate"),o._bufferedRender?o._bufferedRequest={duration:e.duration,easing:e.easing,lazy:e.lazy}:o.render(e)}},updateLayout:function(){!1!==l.notify(this,"beforeLayout")&&(r.update(this,this.width,this.height),l.notify(this,"afterScaleUpdate"),l.notify(this,"afterLayout"))},updateDatasets:function(){if(!1!==l.notify(this,"beforeDatasetsUpdate")){for(var t=0,e=this.data.datasets.length;t<e;++t)this.updateDataset(t);l.notify(this,"afterDatasetsUpdate")}},updateDataset:function(t){var e=this.getDatasetMeta(t),i={meta:e,index:t};!1!==l.notify(this,"beforeDatasetUpdate",[i])&&(e.controller.update(),l.notify(this,"afterDatasetUpdate",[i]))},render:function(e){var i=this;e&&"object"==typeof e||(e={duration:e,lazy:arguments[1]});var n=e.duration,o=e.lazy;if(!1!==l.notify(i,"beforeRender")){var r=i.options.animation,s=function(t){l.notify(i,"afterRender"),a.callback(r&&r.onComplete,[t],i)};if(r&&(void 0!==n&&0!==n||void 0===n&&0!==r.duration)){var u=new t.Animation({numSteps:(n||r.duration)/16.66,easing:e.easing||r.easing,render:function(t,e){var i=a.easing.effects[e.easing],n=e.currentStep,o=n/e.numSteps;t.draw(i(o),o,n)},onAnimationProgress:r.onProgress,onAnimationComplete:s});t.animationService.addAnimation(i,u,n,o)}else i.draw(),s(new t.Animation({numSteps:0,chart:i}));return i}},draw:function(t){var e=this;e.clear(),a.isNullOrUndef(t)&&(t=1),e.transition(t),!1!==l.notify(e,"beforeDraw",[t])&&(a.each(e.boxes,function(t){t.draw(e.chartArea)},e),e.scale&&e.scale.draw(),e.drawDatasets(t),e._drawTooltip(t),l.notify(e,"afterDraw",[t]))},transition:function(t){for(var e=0,i=(this.data.datasets||[]).length;e<i;++e)this.isDatasetVisible(e)&&this.getDatasetMeta(e).controller.transition(t);this.tooltip.transition(t)},drawDatasets:function(t){var e=this;if(!1!==l.notify(e,"beforeDatasetsDraw",[t])){for(var i=(e.data.datasets||[]).length-1;i>=0;--i)e.isDatasetVisible(i)&&e.drawDataset(i,t);l.notify(e,"afterDatasetsDraw",[t])}},drawDataset:function(t,e){var i=this.getDatasetMeta(t),n={meta:i,index:t,easingValue:e};!1!==l.notify(this,"beforeDatasetDraw",[n])&&(i.controller.draw(e),l.notify(this,"afterDatasetDraw",[n]))},_drawTooltip:function(t){var e=this.tooltip,i={tooltip:e,easingValue:t};!1!==l.notify(this,"beforeTooltipDraw",[i])&&(e.draw(),l.notify(this,"afterTooltipDraw",[i]))},getElementAtEvent:function(t){return o.modes.single(this,t)},getElementsAtEvent:function(t){return o.modes.label(this,t,{intersect:!0})},getElementsAtXAxis:function(t){return o.modes["x-axis"](this,t,{intersect:!0})},getElementsAtEventForMode:function(t,e,i){var n=o.modes[e];return"function"==typeof n?n(this,t,i):[]},getDatasetAtEvent:function(t){return o.modes.dataset(this,t,{intersect:!0})},getDatasetMeta:function(t){var e=this.data.datasets[t];e._meta||(e._meta={});var i=e._meta[this.id];return i||(i=e._meta[this.id]={type:null,data:[],dataset:null,controller:null,hidden:null,xAxisID:null,yAxisID:null}),i},getVisibleDatasetCount:function(){for(var t=0,e=0,i=this.data.datasets.length;e<i;++e)this.isDatasetVisible(e)&&t++;return t},isDatasetVisible:function(t){var e=this.getDatasetMeta(t);return"boolean"==typeof e.hidden?!e.hidden:!this.data.datasets[t].hidden},generateLegend:function(){return this.options.legendCallback(this)},destroyDatasetMeta:function(t){var e=this.id,i=this.data.datasets[t],n=i._meta&&i._meta[e];n&&(n.controller.destroy(),delete i._meta[e])},destroy:function(){var e,i,n=this,o=n.canvas;for(n.stop(),e=0,i=n.data.datasets.length;e<i;++e)n.destroyDatasetMeta(e);o&&(n.unbindEvents(),a.canvas.clear(n),s.releaseContext(n.ctx),n.canvas=null,n.ctx=null),l.notify(n,"destroy"),delete t.instances[n.id]},toBase64Image:function(){return this.canvas.toDataURL.apply(this.canvas,arguments)},initToolTip:function(){var e=this;e.tooltip=new t.Tooltip({_chart:e,_chartInstance:e,_data:e.data,_options:e.options.tooltips},e)},bindEvents:function(){var t=this,e=t._listeners={},i=function(){t.eventHandler.apply(t,arguments)};a.each(t.options.events,function(n){s.addEventListener(t,n,i),e[n]=i}),t.options.responsive&&(i=function(){t.resize()},s.addEventListener(t,"resize",i),e.resize=i)},unbindEvents:function(){var t=this,e=t._listeners;e&&(delete t._listeners,a.each(e,function(e,i){s.removeEventListener(t,i,e)}))},updateHoverStyle:function(t,e,i){var n,a,o,r=i?"setHoverStyle":"removeHoverStyle";for(a=0,o=t.length;a<o;++a)(n=t[a])&&this.getDatasetMeta(n._datasetIndex).controller[r](n)},eventHandler:function(t){var e=this,i=e.tooltip;if(!1!==l.notify(e,"beforeEvent",[t])){e._bufferedRender=!0,e._bufferedRequest=null;var n=e.handleEvent(t);i&&(n=i._start?i.handleEvent(t):n|i.handleEvent(t)),l.notify(e,"afterEvent",[t]);var a=e._bufferedRequest;return a?e.render(a):n&&!e.animating&&(e.stop(),e.render(e.options.hover.animationDuration,!0)),e._bufferedRender=!1,e._bufferedRequest=null,e}},handleEvent:function(t){var e,i=this,n=i.options||{},o=n.hover;return i.lastActive=i.lastActive||[],"mouseout"===t.type?i.active=[]:i.active=i.getElementsAtEventForMode(t,o.mode,o),a.callback(n.onHover||n.hover.onHover,[t.native,i.active],i),"mouseup"!==t.type&&"click"!==t.type||n.onClick&&n.onClick.call(i,t.native,i.active),i.lastActive.length&&i.updateHoverStyle(i.lastActive,o.mode,!1),i.active.length&&o.mode&&i.updateHoverStyle(i.active,o.mode,!0),e=!a.arrayEquals(i.active,i.lastActive),i.lastActive=i.active,e}}),t.Controller=t}},{25:25,28:28,30:30,31:31,45:45,48:48}],24:[function(t,e,i){"use strict";var n=t(45);e.exports=function(t){var e=["push","pop","shift","splice","unshift"];function i(t,i){var n=t._chartjs;if(n){var a=n.listeners,o=a.indexOf(i);-1!==o&&a.splice(o,1),a.length>0||(e.forEach(function(e){delete t[e]}),delete t._chartjs)}}t.DatasetController=function(t,e){this.initialize(t,e)},n.extend(t.DatasetController.prototype,{datasetElementType:null,dataElementType:null,initialize:function(t,e){this.chart=t,this.index=e,this.linkScales(),this.addElements()},updateIndex:function(t){this.index=t},linkScales:function(){var t=this,e=t.getMeta(),i=t.getDataset();null!==e.xAxisID&&e.xAxisID in t.chart.scales||(e.xAxisID=i.xAxisID||t.chart.options.scales.xAxes[0].id),null!==e.yAxisID&&e.yAxisID in t.chart.scales||(e.yAxisID=i.yAxisID||t.chart.options.scales.yAxes[0].id)},getDataset:function(){return this.chart.data.datasets[this.index]},getMeta:function(){return this.chart.getDatasetMeta(this.index)},getScaleForId:function(t){return this.chart.scales[t]},reset:function(){this.update(!0)},destroy:function(){this._data&&i(this._data,this)},createMetaDataset:function(){var t=this.datasetElementType;return t&&new t({_chart:this.chart,_datasetIndex:this.index})},createMetaData:function(t){var e=this.dataElementType;return e&&new e({_chart:this.chart,_datasetIndex:this.index,_index:t})},addElements:function(){var t,e,i=this.getMeta(),n=this.getDataset().data||[],a=i.data;for(t=0,e=n.length;t<e;++t)a[t]=a[t]||this.createMetaData(t);i.dataset=i.dataset||this.createMetaDataset()},addElementAndReset:function(t){var e=this.createMetaData(t);this.getMeta().data.splice(t,0,e),this.updateElement(e,t,!0)},buildOrUpdateElements:function(){var t,a,o=this,r=o.getDataset(),s=r.data||(r.data=[]);o._data!==s&&(o._data&&i(o._data,o),a=o,(t=s)._chartjs?t._chartjs.listeners.push(a):(Object.defineProperty(t,"_chartjs",{configurable:!0,enumerable:!1,value:{listeners:[a]}}),e.forEach(function(e){var i="onData"+e.charAt(0).toUpperCase()+e.slice(1),a=t[e];Object.defineProperty(t,e,{configurable:!0,enumerable:!1,value:function(){var e=Array.prototype.slice.call(arguments),o=a.apply(this,e);return n.each(t._chartjs.listeners,function(t){"function"==typeof t[i]&&t[i].apply(t,e)}),o}})})),o._data=s),o.resyncElements()},update:n.noop,transition:function(t){for(var e=this.getMeta(),i=e.data||[],n=i.length,a=0;a<n;++a)i[a].transition(t);e.dataset&&e.dataset.transition(t)},draw:function(){var t=this.getMeta(),e=t.data||[],i=e.length,n=0;for(t.dataset&&t.dataset.draw();n<i;++n)e[n].draw()},removeHoverStyle:function(t,e){var i=this.chart.data.datasets[t._datasetIndex],a=t._index,o=t.custom||{},r=n.valueAtIndexOrDefault,s=t._model;s.backgroundColor=o.backgroundColor?o.backgroundColor:r(i.backgroundColor,a,e.backgroundColor),s.borderColor=o.borderColor?o.borderColor:r(i.borderColor,a,e.borderColor),s.borderWidth=o.borderWidth?o.borderWidth:r(i.borderWidth,a,e.borderWidth)},setHoverStyle:function(t){var e=this.chart.data.datasets[t._datasetIndex],i=t._index,a=t.custom||{},o=n.valueAtIndexOrDefault,r=n.getHoverColor,s=t._model;s.backgroundColor=a.hoverBackgroundColor?a.hoverBackgroundColor:o(e.hoverBackgroundColor,i,r(s.backgroundColor)),s.borderColor=a.hoverBorderColor?a.hoverBorderColor:o(e.hoverBorderColor,i,r(s.borderColor)),s.borderWidth=a.hoverBorderWidth?a.hoverBorderWidth:o(e.hoverBorderWidth,i,s.borderWidth)},resyncElements:function(){var t=this.getMeta(),e=this.getDataset().data,i=t.data.length,n=e.length;n<i?t.data.splice(n,i-n):n>i&&this.insertElements(i,n-i)},insertElements:function(t,e){for(var i=0;i<e;++i)this.addElementAndReset(t+i)},onDataPush:function(){this.insertElements(this.getDataset().data.length-1,arguments.length)},onDataPop:function(){this.getMeta().data.pop()},onDataShift:function(){this.getMeta().data.shift()},onDataSplice:function(t,e){this.getMeta().data.splice(t,e),this.insertElements(t,arguments.length-2)},onDataUnshift:function(){this.insertElements(0,arguments.length)}}),t.DatasetController.extend=n.inherits}},{45:45}],25:[function(t,e,i){"use strict";var n=t(45);e.exports={_set:function(t,e){return n.merge(this[t]||(this[t]={}),e)}}},{45:45}],26:[function(t,e,i){"use strict";var n=t(3),a=t(45);var o=function(t){a.extend(this,t),this.initialize.apply(this,arguments)};a.extend(o.prototype,{initialize:function(){this.hidden=!1},pivot:function(){var t=this;return t._view||(t._view=a.clone(t._model)),t._start={},t},transition:function(t){var e=this,i=e._model,a=e._start,o=e._view;return i&&1!==t?(o||(o=e._view={}),a||(a=e._start={}),function(t,e,i,a){var o,r,s,l,u,d,c,h,f,g=Object.keys(i);for(o=0,r=g.length;o<r;++o)if(d=i[s=g[o]],e.hasOwnProperty(s)||(e[s]=d),(l=e[s])!==d&&"_"!==s[0]){if(t.hasOwnProperty(s)||(t[s]=l),(c=typeof d)==typeof(u=t[s]))if("string"===c){if((h=n(u)).valid&&(f=n(d)).valid){e[s]=f.mix(h,a).rgbString();continue}}else if("number"===c&&isFinite(u)&&isFinite(d)){e[s]=u+(d-u)*a;continue}e[s]=d}}(a,o,i,t),e):(e._view=i,e._start=null,e)},tooltipPosition:function(){return{x:this._model.x,y:this._model.y}},hasValue:function(){return a.isNumber(this._model.x)&&a.isNumber(this._model.y)}}),o.extend=a.inherits,e.exports=o},{3:3,45:45}],27:[function(t,e,i){"use strict";var n=t(3),a=t(25),o=t(45);e.exports=function(t){function e(t,e,i){var n;return"string"==typeof t?(n=parseInt(t,10),-1!==t.indexOf("%")&&(n=n/100*e.parentNode[i])):n=t,n}function i(t){return null!=t&&"none"!==t}function r(t,n,a){var o=document.defaultView,r=t.parentNode,s=o.getComputedStyle(t)[n],l=o.getComputedStyle(r)[n],u=i(s),d=i(l),c=Number.POSITIVE_INFINITY;return u||d?Math.min(u?e(s,t,a):c,d?e(l,r,a):c):"none"}o.configMerge=function(){return o.merge(o.clone(arguments[0]),[].slice.call(arguments,1),{merger:function(e,i,n,a){var r=i[e]||{},s=n[e];"scales"===e?i[e]=o.scaleMerge(r,s):"scale"===e?i[e]=o.merge(r,[t.scaleService.getScaleDefaults(s.type),s]):o._merger(e,i,n,a)}})},o.scaleMerge=function(){return o.merge(o.clone(arguments[0]),[].slice.call(arguments,1),{merger:function(e,i,n,a){if("xAxes"===e||"yAxes"===e){var r,s,l,u=n[e].length;for(i[e]||(i[e]=[]),r=0;r<u;++r)l=n[e][r],s=o.valueOrDefault(l.type,"xAxes"===e?"category":"linear"),r>=i[e].length&&i[e].push({}),!i[e][r].type||l.type&&l.type!==i[e][r].type?o.merge(i[e][r],[t.scaleService.getScaleDefaults(s),l]):o.merge(i[e][r],l)}else o._merger(e,i,n,a)}})},o.where=function(t,e){if(o.isArray(t)&&Array.prototype.filter)return t.filter(e);var i=[];return o.each(t,function(t){e(t)&&i.push(t)}),i},o.findIndex=Array.prototype.findIndex?function(t,e,i){return t.findIndex(e,i)}:function(t,e,i){i=void 0===i?t:i;for(var n=0,a=t.length;n<a;++n)if(e.call(i,t[n],n,t))return n;return-1},o.findNextWhere=function(t,e,i){o.isNullOrUndef(i)&&(i=-1);for(var n=i+1;n<t.length;n++){var a=t[n];if(e(a))return a}},o.findPreviousWhere=function(t,e,i){o.isNullOrUndef(i)&&(i=t.length);for(var n=i-1;n>=0;n--){var a=t[n];if(e(a))return a}},o.isNumber=function(t){return!isNaN(parseFloat(t))&&isFinite(t)},o.almostEquals=function(t,e,i){return Math.abs(t-e)<i},o.almostWhole=function(t,e){var i=Math.round(t);return i-e<t&&i+e>t},o.max=function(t){return t.reduce(function(t,e){return isNaN(e)?t:Math.max(t,e)},Number.NEGATIVE_INFINITY)},o.min=function(t){return t.reduce(function(t,e){return isNaN(e)?t:Math.min(t,e)},Number.POSITIVE_INFINITY)},o.sign=Math.sign?function(t){return Math.sign(t)}:function(t){return 0===(t=+t)||isNaN(t)?t:t>0?1:-1},o.log10=Math.log10?function(t){return Math.log10(t)}:function(t){var e=Math.log(t)*Math.LOG10E,i=Math.round(e);return t===Math.pow(10,i)?i:e},o.toRadians=function(t){return t*(Math.PI/180)},o.toDegrees=function(t){return t*(180/Math.PI)},o.getAngleFromPoint=function(t,e){var i=e.x-t.x,n=e.y-t.y,a=Math.sqrt(i*i+n*n),o=Math.atan2(n,i);return o<-.5*Math.PI&&(o+=2*Math.PI),{angle:o,distance:a}},o.distanceBetweenPoints=function(t,e){return Math.sqrt(Math.pow(e.x-t.x,2)+Math.pow(e.y-t.y,2))},o.aliasPixel=function(t){return t%2==0?0:.5},o.splineCurve=function(t,e,i,n){var a=t.skip?e:t,o=e,r=i.skip?e:i,s=Math.sqrt(Math.pow(o.x-a.x,2)+Math.pow(o.y-a.y,2)),l=Math.sqrt(Math.pow(r.x-o.x,2)+Math.pow(r.y-o.y,2)),u=s/(s+l),d=l/(s+l),c=n*(u=isNaN(u)?0:u),h=n*(d=isNaN(d)?0:d);return{previous:{x:o.x-c*(r.x-a.x),y:o.y-c*(r.y-a.y)},next:{x:o.x+h*(r.x-a.x),y:o.y+h*(r.y-a.y)}}},o.EPSILON=Number.EPSILON||1e-14,o.splineCurveMonotone=function(t){var e,i,n,a,r,s,l,u,d,c=(t||[]).map(function(t){return{model:t._model,deltaK:0,mK:0}}),h=c.length;for(e=0;e<h;++e)if(!(n=c[e]).model.skip){if(i=e>0?c[e-1]:null,(a=e<h-1?c[e+1]:null)&&!a.model.skip){var f=a.model.x-n.model.x;n.deltaK=0!==f?(a.model.y-n.model.y)/f:0}!i||i.model.skip?n.mK=n.deltaK:!a||a.model.skip?n.mK=i.deltaK:this.sign(i.deltaK)!==this.sign(n.deltaK)?n.mK=0:n.mK=(i.deltaK+n.deltaK)/2}for(e=0;e<h-1;++e)n=c[e],a=c[e+1],n.model.skip||a.model.skip||(o.almostEquals(n.deltaK,0,this.EPSILON)?n.mK=a.mK=0:(r=n.mK/n.deltaK,s=a.mK/n.deltaK,(u=Math.pow(r,2)+Math.pow(s,2))<=9||(l=3/Math.sqrt(u),n.mK=r*l*n.deltaK,a.mK=s*l*n.deltaK)));for(e=0;e<h;++e)(n=c[e]).model.skip||(i=e>0?c[e-1]:null,a=e<h-1?c[e+1]:null,i&&!i.model.skip&&(d=(n.model.x-i.model.x)/3,n.model.controlPointPreviousX=n.model.x-d,n.model.controlPointPreviousY=n.model.y-d*n.mK),a&&!a.model.skip&&(d=(a.model.x-n.model.x)/3,n.model.controlPointNextX=n.model.x+d,n.model.controlPointNextY=n.model.y+d*n.mK))},o.nextItem=function(t,e,i){return i?e>=t.length-1?t[0]:t[e+1]:e>=t.length-1?t[t.length-1]:t[e+1]},o.previousItem=function(t,e,i){return i?e<=0?t[t.length-1]:t[e-1]:e<=0?t[0]:t[e-1]},o.niceNum=function(t,e){var i=Math.floor(o.log10(t)),n=t/Math.pow(10,i);return(e?n<1.5?1:n<3?2:n<7?5:10:n<=1?1:n<=2?2:n<=5?5:10)*Math.pow(10,i)},o.requestAnimFrame="undefined"==typeof window?function(t){t()}:window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(t){return window.setTimeout(t,1e3/60)},o.getRelativePosition=function(t,e){var i,n,a=t.originalEvent||t,r=t.currentTarget||t.srcElement,s=r.getBoundingClientRect(),l=a.touches;l&&l.length>0?(i=l[0].clientX,n=l[0].clientY):(i=a.clientX,n=a.clientY);var u=parseFloat(o.getStyle(r,"padding-left")),d=parseFloat(o.getStyle(r,"padding-top")),c=parseFloat(o.getStyle(r,"padding-right")),h=parseFloat(o.getStyle(r,"padding-bottom")),f=s.right-s.left-u-c,g=s.bottom-s.top-d-h;return{x:i=Math.round((i-s.left-u)/f*r.width/e.currentDevicePixelRatio),y:n=Math.round((n-s.top-d)/g*r.height/e.currentDevicePixelRatio)}},o.getConstraintWidth=function(t){return r(t,"max-width","clientWidth")},o.getConstraintHeight=function(t){return r(t,"max-height","clientHeight")},o.getMaximumWidth=function(t){var e=t.parentNode;if(!e)return t.clientWidth;var i=parseInt(o.getStyle(e,"padding-left"),10),n=parseInt(o.getStyle(e,"padding-right"),10),a=e.clientWidth-i-n,r=o.getConstraintWidth(t);return isNaN(r)?a:Math.min(a,r)},o.getMaximumHeight=function(t){var e=t.parentNode;if(!e)return t.clientHeight;var i=parseInt(o.getStyle(e,"padding-top"),10),n=parseInt(o.getStyle(e,"padding-bottom"),10),a=e.clientHeight-i-n,r=o.getConstraintHeight(t);return isNaN(r)?a:Math.min(a,r)},o.getStyle=function(t,e){return t.currentStyle?t.currentStyle[e]:document.defaultView.getComputedStyle(t,null).getPropertyValue(e)},o.retinaScale=function(t,e){var i=t.currentDevicePixelRatio=e||window.devicePixelRatio||1;if(1!==i){var n=t.canvas,a=t.height,o=t.width;n.height=a*i,n.width=o*i,t.ctx.scale(i,i),n.style.height||n.style.width||(n.style.height=a+"px",n.style.width=o+"px")}},o.fontString=function(t,e,i){return e+" "+t+"px "+i},o.longestText=function(t,e,i,n){var a=(n=n||{}).data=n.data||{},r=n.garbageCollect=n.garbageCollect||[];n.font!==e&&(a=n.data={},r=n.garbageCollect=[],n.font=e),t.font=e;var s=0;o.each(i,function(e){null!=e&&!0!==o.isArray(e)?s=o.measureText(t,a,r,s,e):o.isArray(e)&&o.each(e,function(e){null==e||o.isArray(e)||(s=o.measureText(t,a,r,s,e))})});var l=r.length/2;if(l>i.length){for(var u=0;u<l;u++)delete a[r[u]];r.splice(0,l)}return s},o.measureText=function(t,e,i,n,a){var o=e[a];return o||(o=e[a]=t.measureText(a).width,i.push(a)),o>n&&(n=o),n},o.numberOfLabelLines=function(t){var e=1;return o.each(t,function(t){o.isArray(t)&&t.length>e&&(e=t.length)}),e},o.color=n?function(t){return t instanceof CanvasGradient&&(t=a.global.defaultColor),n(t)}:function(t){return console.error("Color.js not found!"),t},o.getHoverColor=function(t){return t instanceof CanvasPattern?t:o.color(t).saturate(.5).darken(.1).rgbString()}}},{25:25,3:3,45:45}],28:[function(t,e,i){"use strict";var n=t(45);function a(t,e){return t.native?{x:t.x,y:t.y}:n.getRelativePosition(t,e)}function o(t,e){var i,n,a,o,r;for(n=0,o=t.data.datasets.length;n<o;++n)if(t.isDatasetVisible(n))for(a=0,r=(i=t.getDatasetMeta(n)).data.length;a<r;++a){var s=i.data[a];s._view.skip||e(s)}}function r(t,e){var i=[];return o(t,function(t){t.inRange(e.x,e.y)&&i.push(t)}),i}function s(t,e,i,n){var a=Number.POSITIVE_INFINITY,r=[];return o(t,function(t){if(!i||t.inRange(e.x,e.y)){var o=t.getCenterPoint(),s=n(e,o);s<a?(r=[t],a=s):s===a&&r.push(t)}}),r}function l(t){var e=-1!==t.indexOf("x"),i=-1!==t.indexOf("y");return function(t,n){var a=e?Math.abs(t.x-n.x):0,o=i?Math.abs(t.y-n.y):0;return Math.sqrt(Math.pow(a,2)+Math.pow(o,2))}}function u(t,e,i){var n=a(e,t);i.axis=i.axis||"x";var o=l(i.axis),u=i.intersect?r(t,n):s(t,n,!1,o),d=[];return u.length?(t.data.datasets.forEach(function(e,i){if(t.isDatasetVisible(i)){var n=t.getDatasetMeta(i).data[u[0]._index];n&&!n._view.skip&&d.push(n)}}),d):[]}e.exports={modes:{single:function(t,e){var i=a(e,t),n=[];return o(t,function(t){if(t.inRange(i.x,i.y))return n.push(t),n}),n.slice(0,1)},label:u,index:u,dataset:function(t,e,i){var n=a(e,t);i.axis=i.axis||"xy";var o=l(i.axis),u=i.intersect?r(t,n):s(t,n,!1,o);return u.length>0&&(u=t.getDatasetMeta(u[0]._datasetIndex).data),u},"x-axis":function(t,e){return u(t,e,{intersect:!1})},point:function(t,e){return r(t,a(e,t))},nearest:function(t,e,i){var n=a(e,t);i.axis=i.axis||"xy";var o=l(i.axis),r=s(t,n,i.intersect,o);return r.length>1&&r.sort(function(t,e){var i=t.getArea()-e.getArea();return 0===i&&(i=t._datasetIndex-e._datasetIndex),i}),r.slice(0,1)},x:function(t,e,i){var n=a(e,t),r=[],s=!1;return o(t,function(t){t.inXRange(n.x)&&r.push(t),t.inRange(n.x,n.y)&&(s=!0)}),i.intersect&&!s&&(r=[]),r},y:function(t,e,i){var n=a(e,t),r=[],s=!1;return o(t,function(t){t.inYRange(n.y)&&r.push(t),t.inRange(n.x,n.y)&&(s=!0)}),i.intersect&&!s&&(r=[]),r}}}},{45:45}],29:[function(t,e,i){"use strict";t(25)._set("global",{responsive:!0,responsiveAnimationDuration:0,maintainAspectRatio:!0,events:["mousemove","mouseout","click","touchstart","touchmove"],hover:{onHover:null,mode:"nearest",intersect:!0,animationDuration:400},onClick:null,defaultColor:"rgba(0,0,0,0.1)",defaultFontColor:"#666",defaultFontFamily:"'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",defaultFontSize:12,defaultFontStyle:"normal",showLines:!0,elements:{},layout:{padding:{top:0,right:0,bottom:0,left:0}}}),e.exports=function(){var t=function(t,e){return this.construct(t,e),this};return t.Chart=t,t}},{25:25}],30:[function(t,e,i){"use strict";var n=t(45);function a(t,e){return n.where(t,function(t){return t.position===e})}function o(t,e){t.forEach(function(t,e){return t._tmpIndex_=e,t}),t.sort(function(t,i){var n=e?i:t,a=e?t:i;return n.weight===a.weight?n._tmpIndex_-a._tmpIndex_:n.weight-a.weight}),t.forEach(function(t){delete t._tmpIndex_})}e.exports={defaults:{},addBox:function(t,e){t.boxes||(t.boxes=[]),e.fullWidth=e.fullWidth||!1,e.position=e.position||"top",e.weight=e.weight||0,t.boxes.push(e)},removeBox:function(t,e){var i=t.boxes?t.boxes.indexOf(e):-1;-1!==i&&t.boxes.splice(i,1)},configure:function(t,e,i){for(var n,a=["fullWidth","position","weight"],o=a.length,r=0;r<o;++r)n=a[r],i.hasOwnProperty(n)&&(e[n]=i[n])},update:function(t,e,i){if(t){var r=t.options.layout||{},s=n.options.toPadding(r.padding),l=s.left,u=s.right,d=s.top,c=s.bottom,h=a(t.boxes,"left"),f=a(t.boxes,"right"),g=a(t.boxes,"top"),p=a(t.boxes,"bottom"),m=a(t.boxes,"chartArea");o(h,!0),o(f,!1),o(g,!0),o(p,!1);var v=e-l-u,b=i-d-c,x=b/2,y=(e-v/2)/(h.length+f.length),k=(i-x)/(g.length+p.length),M=v,w=b,S=[];n.each(h.concat(f,g,p),function(t){var e,i=t.isHorizontal();i?(e=t.update(t.fullWidth?v:M,k),w-=e.height):(e=t.update(y,w),M-=e.width),S.push({horizontal:i,minSize:e,box:t})});var C=0,_=0,D=0,I=0;n.each(g.concat(p),function(t){if(t.getPadding){var e=t.getPadding();C=Math.max(C,e.left),_=Math.max(_,e.right)}}),n.each(h.concat(f),function(t){if(t.getPadding){var e=t.getPadding();D=Math.max(D,e.top),I=Math.max(I,e.bottom)}});var P=l,A=u,T=d,F=c;n.each(h.concat(f),N),n.each(h,function(t){P+=t.width}),n.each(f,function(t){A+=t.width}),n.each(g.concat(p),N),n.each(g,function(t){T+=t.height}),n.each(p,function(t){F+=t.height}),n.each(h.concat(f),function(t){var e=n.findNextWhere(S,function(e){return e.box===t}),i={left:0,right:0,top:T,bottom:F};e&&t.update(e.minSize.width,w,i)}),P=l,A=u,T=d,F=c,n.each(h,function(t){P+=t.width}),n.each(f,function(t){A+=t.width}),n.each(g,function(t){T+=t.height}),n.each(p,function(t){F+=t.height});var O=Math.max(C-P,0);P+=O,A+=Math.max(_-A,0);var R=Math.max(D-T,0);T+=R,F+=Math.max(I-F,0);var L=i-T-F,z=e-P-A;z===M&&L===w||(n.each(h,function(t){t.height=L}),n.each(f,function(t){t.height=L}),n.each(g,function(t){t.fullWidth||(t.width=z)}),n.each(p,function(t){t.fullWidth||(t.width=z)}),w=L,M=z);var B=l+O,W=d+R;n.each(h.concat(g),V),B+=M,W+=w,n.each(f,V),n.each(p,V),t.chartArea={left:P,top:T,right:P+M,bottom:T+w},n.each(m,function(e){e.left=t.chartArea.left,e.top=t.chartArea.top,e.right=t.chartArea.right,e.bottom=t.chartArea.bottom,e.update(M,w)})}function N(t){var e=n.findNextWhere(S,function(e){return e.box===t});if(e)if(t.isHorizontal()){var i={left:Math.max(P,C),right:Math.max(A,_),top:0,bottom:0};t.update(t.fullWidth?v:M,b/2,i)}else t.update(e.minSize.width,w)}function V(t){t.isHorizontal()?(t.left=t.fullWidth?l:P,t.right=t.fullWidth?e-u:P+M,t.top=W,t.bottom=W+t.height,W=t.bottom):(t.left=B,t.right=B+t.width,t.top=T,t.bottom=T+w,B=t.right)}}}},{45:45}],31:[function(t,e,i){"use strict";var n=t(25),a=t(45);n._set("global",{plugins:{}}),e.exports={_plugins:[],_cacheId:0,register:function(t){var e=this._plugins;[].concat(t).forEach(function(t){-1===e.indexOf(t)&&e.push(t)}),this._cacheId++},unregister:function(t){var e=this._plugins;[].concat(t).forEach(function(t){var i=e.indexOf(t);-1!==i&&e.splice(i,1)}),this._cacheId++},clear:function(){this._plugins=[],this._cacheId++},count:function(){return this._plugins.length},getAll:function(){return this._plugins},notify:function(t,e,i){var n,a,o,r,s,l=this.descriptors(t),u=l.length;for(n=0;n<u;++n)if("function"==typeof(s=(o=(a=l[n]).plugin)[e])&&((r=[t].concat(i||[])).push(a.options),!1===s.apply(o,r)))return!1;return!0},descriptors:function(t){var e=t.$plugins||(t.$plugins={});if(e.id===this._cacheId)return e.descriptors;var i=[],o=[],r=t&&t.config||{},s=r.options&&r.options.plugins||{};return this._plugins.concat(r.plugins||[]).forEach(function(t){if(-1===i.indexOf(t)){var e=t.id,r=s[e];!1!==r&&(!0===r&&(r=a.clone(n.global.plugins[e])),i.push(t),o.push({plugin:t,options:r||{}}))}}),e.descriptors=o,e.id=this._cacheId,o},_invalidate:function(t){delete t.$plugins}}},{25:25,45:45}],32:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45),r=t(34);function s(t){var e,i,n=[];for(e=0,i=t.length;e<i;++e)n.push(t[e].label);return n}function l(t,e,i){var n=t.getPixelForTick(e);return i&&(n-=0===e?(t.getPixelForTick(1)-n)/2:(n-t.getPixelForTick(e-1))/2),n}n._set("scale",{display:!0,position:"left",offset:!1,gridLines:{display:!0,color:"rgba(0, 0, 0, 0.1)",lineWidth:1,drawBorder:!0,drawOnChartArea:!0,drawTicks:!0,tickMarkLength:10,zeroLineWidth:1,zeroLineColor:"rgba(0,0,0,0.25)",zeroLineBorderDash:[],zeroLineBorderDashOffset:0,offsetGridLines:!1,borderDash:[],borderDashOffset:0},scaleLabel:{display:!1,labelString:"",lineHeight:1.2,padding:{top:4,bottom:4}},ticks:{beginAtZero:!1,minRotation:0,maxRotation:50,mirror:!1,padding:0,reverse:!1,display:!0,autoSkip:!0,autoSkipPadding:0,labelOffset:0,callback:r.formatters.values,minor:{},major:{}}}),e.exports=function(t){function e(t,e,i){return o.isArray(e)?o.longestText(t,i,e):t.measureText(e).width}function i(t){var e=o.valueOrDefault,i=n.global,a=e(t.fontSize,i.defaultFontSize),r=e(t.fontStyle,i.defaultFontStyle),s=e(t.fontFamily,i.defaultFontFamily);return{size:a,style:r,family:s,font:o.fontString(a,r,s)}}function r(t){return o.options.toLineHeight(o.valueOrDefault(t.lineHeight,1.2),o.valueOrDefault(t.fontSize,n.global.defaultFontSize))}t.Scale=a.extend({getPadding:function(){return{left:this.paddingLeft||0,top:this.paddingTop||0,right:this.paddingRight||0,bottom:this.paddingBottom||0}},getTicks:function(){return this._ticks},mergeTicksOptions:function(){var t=this.options.ticks;for(var e in!1===t.minor&&(t.minor={display:!1}),!1===t.major&&(t.major={display:!1}),t)"major"!==e&&"minor"!==e&&(void 0===t.minor[e]&&(t.minor[e]=t[e]),void 0===t.major[e]&&(t.major[e]=t[e]))},beforeUpdate:function(){o.callback(this.options.beforeUpdate,[this])},update:function(t,e,i){var n,a,r,s,l,u,d=this;for(d.beforeUpdate(),d.maxWidth=t,d.maxHeight=e,d.margins=o.extend({left:0,right:0,top:0,bottom:0},i),d.longestTextCache=d.longestTextCache||{},d.beforeSetDimensions(),d.setDimensions(),d.afterSetDimensions(),d.beforeDataLimits(),d.determineDataLimits(),d.afterDataLimits(),d.beforeBuildTicks(),l=d.buildTicks()||[],d.afterBuildTicks(),d.beforeTickToLabelConversion(),r=d.convertTicksToLabels(l)||d.ticks,d.afterTickToLabelConversion(),d.ticks=r,n=0,a=r.length;n<a;++n)s=r[n],(u=l[n])?u.label=s:l.push(u={label:s,major:!1});return d._ticks=l,d.beforeCalculateTickRotation(),d.calculateTickRotation(),d.afterCalculateTickRotation(),d.beforeFit(),d.fit(),d.afterFit(),d.afterUpdate(),d.minSize},afterUpdate:function(){o.callback(this.options.afterUpdate,[this])},beforeSetDimensions:function(){o.callback(this.options.beforeSetDimensions,[this])},setDimensions:function(){var t=this;t.isHorizontal()?(t.width=t.maxWidth,t.left=0,t.right=t.width):(t.height=t.maxHeight,t.top=0,t.bottom=t.height),t.paddingLeft=0,t.paddingTop=0,t.paddingRight=0,t.paddingBottom=0},afterSetDimensions:function(){o.callback(this.options.afterSetDimensions,[this])},beforeDataLimits:function(){o.callback(this.options.beforeDataLimits,[this])},determineDataLimits:o.noop,afterDataLimits:function(){o.callback(this.options.afterDataLimits,[this])},beforeBuildTicks:function(){o.callback(this.options.beforeBuildTicks,[this])},buildTicks:o.noop,afterBuildTicks:function(){o.callback(this.options.afterBuildTicks,[this])},beforeTickToLabelConversion:function(){o.callback(this.options.beforeTickToLabelConversion,[this])},convertTicksToLabels:function(){var t=this.options.ticks;this.ticks=this.ticks.map(t.userCallback||t.callback,this)},afterTickToLabelConversion:function(){o.callback(this.options.afterTickToLabelConversion,[this])},beforeCalculateTickRotation:function(){o.callback(this.options.beforeCalculateTickRotation,[this])},calculateTickRotation:function(){var t=this,e=t.ctx,n=t.options.ticks,a=s(t._ticks),r=i(n);e.font=r.font;var l=n.minRotation||0;if(a.length&&t.options.display&&t.isHorizontal())for(var u,d=o.longestText(e,r.font,a,t.longestTextCache),c=d,h=t.getPixelForTick(1)-t.getPixelForTick(0)-6;c>h&&l<n.maxRotation;){var f=o.toRadians(l);if(u=Math.cos(f),Math.sin(f)*d>t.maxHeight){l--;break}l++,c=u*d}t.labelRotation=l},afterCalculateTickRotation:function(){o.callback(this.options.afterCalculateTickRotation,[this])},beforeFit:function(){o.callback(this.options.beforeFit,[this])},fit:function(){var t=this,n=t.minSize={width:0,height:0},a=s(t._ticks),l=t.options,u=l.ticks,d=l.scaleLabel,c=l.gridLines,h=l.display,f=t.isHorizontal(),g=i(u),p=l.gridLines.tickMarkLength;if(n.width=f?t.isFullWidth()?t.maxWidth-t.margins.left-t.margins.right:t.maxWidth:h&&c.drawTicks?p:0,n.height=f?h&&c.drawTicks?p:0:t.maxHeight,d.display&&h){var m=r(d)+o.options.toPadding(d.padding).height;f?n.height+=m:n.width+=m}if(u.display&&h){var v=o.longestText(t.ctx,g.font,a,t.longestTextCache),b=o.numberOfLabelLines(a),x=.5*g.size,y=t.options.ticks.padding;if(f){t.longestLabelWidth=v;var k=o.toRadians(t.labelRotation),M=Math.cos(k),w=Math.sin(k)*v+g.size*b+x*(b-1)+x;n.height=Math.min(t.maxHeight,n.height+w+y),t.ctx.font=g.font;var S=e(t.ctx,a[0],g.font),C=e(t.ctx,a[a.length-1],g.font);0!==t.labelRotation?(t.paddingLeft="bottom"===l.position?M*S+3:M*x+3,t.paddingRight="bottom"===l.position?M*x+3:M*C+3):(t.paddingLeft=S/2+3,t.paddingRight=C/2+3)}else u.mirror?v=0:v+=y+x,n.width=Math.min(t.maxWidth,n.width+v),t.paddingTop=g.size/2,t.paddingBottom=g.size/2}t.handleMargins(),t.width=n.width,t.height=n.height},handleMargins:function(){var t=this;t.margins&&(t.paddingLeft=Math.max(t.paddingLeft-t.margins.left,0),t.paddingTop=Math.max(t.paddingTop-t.margins.top,0),t.paddingRight=Math.max(t.paddingRight-t.margins.right,0),t.paddingBottom=Math.max(t.paddingBottom-t.margins.bottom,0))},afterFit:function(){o.callback(this.options.afterFit,[this])},isHorizontal:function(){return"top"===this.options.position||"bottom"===this.options.position},isFullWidth:function(){return this.options.fullWidth},getRightValue:function(t){if(o.isNullOrUndef(t))return NaN;if("number"==typeof t&&!isFinite(t))return NaN;if(t)if(this.isHorizontal()){if(void 0!==t.x)return this.getRightValue(t.x)}else if(void 0!==t.y)return this.getRightValue(t.y);return t},getLabelForIndex:o.noop,getPixelForValue:o.noop,getValueForPixel:o.noop,getPixelForTick:function(t){var e=this,i=e.options.offset;if(e.isHorizontal()){var n=(e.width-(e.paddingLeft+e.paddingRight))/Math.max(e._ticks.length-(i?0:1),1),a=n*t+e.paddingLeft;i&&(a+=n/2);var o=e.left+Math.round(a);return o+=e.isFullWidth()?e.margins.left:0}var r=e.height-(e.paddingTop+e.paddingBottom);return e.top+t*(r/(e._ticks.length-1))},getPixelForDecimal:function(t){var e=this;if(e.isHorizontal()){var i=(e.width-(e.paddingLeft+e.paddingRight))*t+e.paddingLeft,n=e.left+Math.round(i);return n+=e.isFullWidth()?e.margins.left:0}return e.top+t*e.height},getBasePixel:function(){return this.getPixelForValue(this.getBaseValue())},getBaseValue:function(){var t=this.min,e=this.max;return this.beginAtZero?0:t<0&&e<0?e:t>0&&e>0?t:0},_autoSkip:function(t){var e,i,n,a,r=this,s=r.isHorizontal(),l=r.options.ticks.minor,u=t.length,d=o.toRadians(r.labelRotation),c=Math.cos(d),h=r.longestLabelWidth*c,f=[];for(l.maxTicksLimit&&(a=l.maxTicksLimit),s&&(e=!1,(h+l.autoSkipPadding)*u>r.width-(r.paddingLeft+r.paddingRight)&&(e=1+Math.floor((h+l.autoSkipPadding)*u/(r.width-(r.paddingLeft+r.paddingRight)))),a&&u>a&&(e=Math.max(e,Math.floor(u/a)))),i=0;i<u;i++)n=t[i],(e>1&&i%e>0||i%e==0&&i+e>=u)&&i!==u-1&&delete n.label,f.push(n);return f},draw:function(t){var e=this,a=e.options;if(a.display){var s=e.ctx,u=n.global,d=a.ticks.minor,c=a.ticks.major||d,h=a.gridLines,f=a.scaleLabel,g=0!==e.labelRotation,p=e.isHorizontal(),m=d.autoSkip?e._autoSkip(e.getTicks()):e.getTicks(),v=o.valueOrDefault(d.fontColor,u.defaultFontColor),b=i(d),x=o.valueOrDefault(c.fontColor,u.defaultFontColor),y=i(c),k=h.drawTicks?h.tickMarkLength:0,M=o.valueOrDefault(f.fontColor,u.defaultFontColor),w=i(f),S=o.options.toPadding(f.padding),C=o.toRadians(e.labelRotation),_=[],D=e.options.gridLines.lineWidth,I="right"===a.position?e.right:e.right-D-k,P="right"===a.position?e.right+k:e.right,A="bottom"===a.position?e.top+D:e.bottom-k-D,T="bottom"===a.position?e.top+D+k:e.bottom+D;if(o.each(m,function(i,n){if(!o.isNullOrUndef(i.label)){var r,s,c,f,v,b,x,y,M,w,S,F,O,R,L=i.label;n===e.zeroLineIndex&&a.offset===h.offsetGridLines?(r=h.zeroLineWidth,s=h.zeroLineColor,c=h.zeroLineBorderDash,f=h.zeroLineBorderDashOffset):(r=o.valueAtIndexOrDefault(h.lineWidth,n),s=o.valueAtIndexOrDefault(h.color,n),c=o.valueOrDefault(h.borderDash,u.borderDash),f=o.valueOrDefault(h.borderDashOffset,u.borderDashOffset));var z="middle",B="middle",W=d.padding;if(p){var N=k+W;"bottom"===a.position?(B=g?"middle":"top",z=g?"right":"center",R=e.top+N):(B=g?"middle":"bottom",z=g?"left":"center",R=e.bottom-N);var V=l(e,n,h.offsetGridLines&&m.length>1);V<e.left&&(s="rgba(0,0,0,0)"),V+=o.aliasPixel(r),O=e.getPixelForTick(n)+d.labelOffset,v=x=M=S=V,b=A,y=T,w=t.top,F=t.bottom+D}else{var E,H="left"===a.position;d.mirror?(z=H?"left":"right",E=W):(z=H?"right":"left",E=k+W),O=H?e.right-E:e.left+E;var j=l(e,n,h.offsetGridLines&&m.length>1);j<e.top&&(s="rgba(0,0,0,0)"),j+=o.aliasPixel(r),R=e.getPixelForTick(n)+d.labelOffset,v=I,x=P,M=t.left,S=t.right+D,b=y=w=F=j}_.push({tx1:v,ty1:b,tx2:x,ty2:y,x1:M,y1:w,x2:S,y2:F,labelX:O,labelY:R,glWidth:r,glColor:s,glBorderDash:c,glBorderDashOffset:f,rotation:-1*C,label:L,major:i.major,textBaseline:B,textAlign:z})}}),o.each(_,function(t){if(h.display&&(s.save(),s.lineWidth=t.glWidth,s.strokeStyle=t.glColor,s.setLineDash&&(s.setLineDash(t.glBorderDash),s.lineDashOffset=t.glBorderDashOffset),s.beginPath(),h.drawTicks&&(s.moveTo(t.tx1,t.ty1),s.lineTo(t.tx2,t.ty2)),h.drawOnChartArea&&(s.moveTo(t.x1,t.y1),s.lineTo(t.x2,t.y2)),s.stroke(),s.restore()),d.display){s.save(),s.translate(t.labelX,t.labelY),s.rotate(t.rotation),s.font=t.major?y.font:b.font,s.fillStyle=t.major?x:v,s.textBaseline=t.textBaseline,s.textAlign=t.textAlign;var i=t.label;if(o.isArray(i))for(var n=i.length,a=1.5*b.size,r=e.isHorizontal()?0:-a*(n-1)/2,l=0;l<n;++l)s.fillText(""+i[l],0,r),r+=a;else s.fillText(i,0,0);s.restore()}}),f.display){var F,O,R=0,L=r(f)/2;if(p)F=e.left+(e.right-e.left)/2,O="bottom"===a.position?e.bottom-L-S.bottom:e.top+L+S.top;else{var z="left"===a.position;F=z?e.left+L+S.top:e.right-L-S.top,O=e.top+(e.bottom-e.top)/2,R=z?-.5*Math.PI:.5*Math.PI}s.save(),s.translate(F,O),s.rotate(R),s.textAlign="center",s.textBaseline="middle",s.fillStyle=M,s.font=w.font,s.fillText(f.labelString,0,0),s.restore()}if(h.drawBorder){s.lineWidth=o.valueAtIndexOrDefault(h.lineWidth,0),s.strokeStyle=o.valueAtIndexOrDefault(h.color,0);var B=e.left,W=e.right+D,N=e.top,V=e.bottom+D,E=o.aliasPixel(s.lineWidth);p?(N=V="top"===a.position?e.bottom:e.top,N+=E,V+=E):(B=W="left"===a.position?e.right:e.left,B+=E,W+=E),s.beginPath(),s.moveTo(B,N),s.lineTo(W,V),s.stroke()}}}})}},{25:25,26:26,34:34,45:45}],33:[function(t,e,i){"use strict";var n=t(25),a=t(45),o=t(30);e.exports=function(t){t.scaleService={constructors:{},defaults:{},registerScaleType:function(t,e,i){this.constructors[t]=e,this.defaults[t]=a.clone(i)},getScaleConstructor:function(t){return this.constructors.hasOwnProperty(t)?this.constructors[t]:void 0},getScaleDefaults:function(t){return this.defaults.hasOwnProperty(t)?a.merge({},[n.scale,this.defaults[t]]):{}},updateScaleDefaults:function(t,e){this.defaults.hasOwnProperty(t)&&(this.defaults[t]=a.extend(this.defaults[t],e))},addScalesToLayout:function(t){a.each(t.scales,function(e){e.fullWidth=e.options.fullWidth,e.position=e.options.position,e.weight=e.options.weight,o.addBox(t,e)})}}}},{25:25,30:30,45:45}],34:[function(t,e,i){"use strict";var n=t(45);e.exports={formatters:{values:function(t){return n.isArray(t)?t:""+t},linear:function(t,e,i){var a=i.length>3?i[2]-i[1]:i[1]-i[0];Math.abs(a)>1&&t!==Math.floor(t)&&(a=t-Math.floor(t));var o=n.log10(Math.abs(a)),r="";if(0!==t){var s=-1*Math.floor(o);s=Math.max(Math.min(s,20),0),r=t.toFixed(s)}else r="0";return r},logarithmic:function(t,e,i){var a=t/Math.pow(10,Math.floor(n.log10(t)));return 0===t?"0":1===a||2===a||5===a||0===e||e===i.length-1?t.toExponential():""}}}},{45:45}],35:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45);n._set("global",{tooltips:{enabled:!0,custom:null,mode:"nearest",position:"average",intersect:!0,backgroundColor:"rgba(0,0,0,0.8)",titleFontStyle:"bold",titleSpacing:2,titleMarginBottom:6,titleFontColor:"#fff",titleAlign:"left",bodySpacing:2,bodyFontColor:"#fff",bodyAlign:"left",footerFontStyle:"bold",footerSpacing:2,footerMarginTop:6,footerFontColor:"#fff",footerAlign:"left",yPadding:6,xPadding:6,caretPadding:2,caretSize:5,cornerRadius:6,multiKeyBackground:"#fff",displayColors:!0,borderColor:"rgba(0,0,0,0)",borderWidth:0,callbacks:{beforeTitle:o.noop,title:function(t,e){var i="",n=e.labels,a=n?n.length:0;if(t.length>0){var o=t[0];o.xLabel?i=o.xLabel:a>0&&o.index<a&&(i=n[o.index])}return i},afterTitle:o.noop,beforeBody:o.noop,beforeLabel:o.noop,label:function(t,e){var i=e.datasets[t.datasetIndex].label||"";return i&&(i+=": "),i+=t.yLabel},labelColor:function(t,e){var i=e.getDatasetMeta(t.datasetIndex).data[t.index]._view;return{borderColor:i.borderColor,backgroundColor:i.backgroundColor}},labelTextColor:function(){return this._options.bodyFontColor},afterLabel:o.noop,afterBody:o.noop,beforeFooter:o.noop,footer:o.noop,afterFooter:o.noop}}}),e.exports=function(t){function e(t,e){var i=o.color(t);return i.alpha(e*i.alpha()).rgbaString()}function i(t,e){return e&&(o.isArray(e)?Array.prototype.push.apply(t,e):t.push(e)),t}function r(t){var e=n.global,i=o.valueOrDefault;return{xPadding:t.xPadding,yPadding:t.yPadding,xAlign:t.xAlign,yAlign:t.yAlign,bodyFontColor:t.bodyFontColor,_bodyFontFamily:i(t.bodyFontFamily,e.defaultFontFamily),_bodyFontStyle:i(t.bodyFontStyle,e.defaultFontStyle),_bodyAlign:t.bodyAlign,bodyFontSize:i(t.bodyFontSize,e.defaultFontSize),bodySpacing:t.bodySpacing,titleFontColor:t.titleFontColor,_titleFontFamily:i(t.titleFontFamily,e.defaultFontFamily),_titleFontStyle:i(t.titleFontStyle,e.defaultFontStyle),titleFontSize:i(t.titleFontSize,e.defaultFontSize),_titleAlign:t.titleAlign,titleSpacing:t.titleSpacing,titleMarginBottom:t.titleMarginBottom,footerFontColor:t.footerFontColor,_footerFontFamily:i(t.footerFontFamily,e.defaultFontFamily),_footerFontStyle:i(t.footerFontStyle,e.defaultFontStyle),footerFontSize:i(t.footerFontSize,e.defaultFontSize),_footerAlign:t.footerAlign,footerSpacing:t.footerSpacing,footerMarginTop:t.footerMarginTop,caretSize:t.caretSize,cornerRadius:t.cornerRadius,backgroundColor:t.backgroundColor,opacity:0,legendColorBackground:t.multiKeyBackground,displayColors:t.displayColors,borderColor:t.borderColor,borderWidth:t.borderWidth}}t.Tooltip=a.extend({initialize:function(){this._model=r(this._options),this._lastActive=[]},getTitle:function(){var t=this._options.callbacks,e=t.beforeTitle.apply(this,arguments),n=t.title.apply(this,arguments),a=t.afterTitle.apply(this,arguments),o=[];return o=i(o=i(o=i(o,e),n),a)},getBeforeBody:function(){var t=this._options.callbacks.beforeBody.apply(this,arguments);return o.isArray(t)?t:void 0!==t?[t]:[]},getBody:function(t,e){var n=this,a=n._options.callbacks,r=[];return o.each(t,function(t){var o={before:[],lines:[],after:[]};i(o.before,a.beforeLabel.call(n,t,e)),i(o.lines,a.label.call(n,t,e)),i(o.after,a.afterLabel.call(n,t,e)),r.push(o)}),r},getAfterBody:function(){var t=this._options.callbacks.afterBody.apply(this,arguments);return o.isArray(t)?t:void 0!==t?[t]:[]},getFooter:function(){var t=this._options.callbacks,e=t.beforeFooter.apply(this,arguments),n=t.footer.apply(this,arguments),a=t.afterFooter.apply(this,arguments),o=[];return o=i(o=i(o=i(o,e),n),a)},update:function(e){var i,n,a,s,l,u,d,c,h,f,g,p,m,v,b,x,y,k,M,w,S=this,C=S._options,_=S._model,D=S._model=r(C),I=S._active,P=S._data,A={xAlign:_.xAlign,yAlign:_.yAlign},T={x:_.x,y:_.y},F={width:_.width,height:_.height},O={x:_.caretX,y:_.caretY};if(I.length){D.opacity=1;var R=[],L=[];O=t.Tooltip.positioners[C.position].call(S,I,S._eventPosition);var z=[];for(i=0,n=I.length;i<n;++i)z.push((x=I[i],y=void 0,k=void 0,void 0,void 0,y=x._xScale,k=x._yScale||x._scale,M=x._index,w=x._datasetIndex,{xLabel:y?y.getLabelForIndex(M,w):"",yLabel:k?k.getLabelForIndex(M,w):"",index:M,datasetIndex:w,x:x._model.x,y:x._model.y}));C.filter&&(z=z.filter(function(t){return C.filter(t,P)})),C.itemSort&&(z=z.sort(function(t,e){return C.itemSort(t,e,P)})),o.each(z,function(t){R.push(C.callbacks.labelColor.call(S,t,S._chart)),L.push(C.callbacks.labelTextColor.call(S,t,S._chart))}),D.title=S.getTitle(z,P),D.beforeBody=S.getBeforeBody(z,P),D.body=S.getBody(z,P),D.afterBody=S.getAfterBody(z,P),D.footer=S.getFooter(z,P),D.x=Math.round(O.x),D.y=Math.round(O.y),D.caretPadding=C.caretPadding,D.labelColors=R,D.labelTextColors=L,D.dataPoints=z,A=function(t,e){var i,n,a,o,r,s=t._model,l=t._chart,u=t._chart.chartArea,d="center",c="center";s.y<e.height?c="top":s.y>l.height-e.height&&(c="bottom");var h=(u.left+u.right)/2,f=(u.top+u.bottom)/2;"center"===c?(i=function(t){return t<=h},n=function(t){return t>h}):(i=function(t){return t<=e.width/2},n=function(t){return t>=l.width-e.width/2}),a=function(t){return t+e.width+s.caretSize+s.caretPadding>l.width},o=function(t){return t-e.width-s.caretSize-s.caretPadding<0},r=function(t){return t<=f?"top":"bottom"},i(s.x)?(d="left",a(s.x)&&(d="center",c=r(s.y))):n(s.x)&&(d="right",o(s.x)&&(d="center",c=r(s.y)));var g=t._options;return{xAlign:g.xAlign?g.xAlign:d,yAlign:g.yAlign?g.yAlign:c}}(this,F=function(t,e){var i=t._chart.ctx,n=2*e.yPadding,a=0,r=e.body,s=r.reduce(function(t,e){return t+e.before.length+e.lines.length+e.after.length},0);s+=e.beforeBody.length+e.afterBody.length;var l=e.title.length,u=e.footer.length,d=e.titleFontSize,c=e.bodyFontSize,h=e.footerFontSize;n+=l*d,n+=l?(l-1)*e.titleSpacing:0,n+=l?e.titleMarginBottom:0,n+=s*c,n+=s?(s-1)*e.bodySpacing:0,n+=u?e.footerMarginTop:0,n+=u*h,n+=u?(u-1)*e.footerSpacing:0;var f=0,g=function(t){a=Math.max(a,i.measureText(t).width+f)};return i.font=o.fontString(d,e._titleFontStyle,e._titleFontFamily),o.each(e.title,g),i.font=o.fontString(c,e._bodyFontStyle,e._bodyFontFamily),o.each(e.beforeBody.concat(e.afterBody),g),f=e.displayColors?c+2:0,o.each(r,function(t){o.each(t.before,g),o.each(t.lines,g),o.each(t.after,g)}),f=0,i.font=o.fontString(h,e._footerFontStyle,e._footerFontFamily),o.each(e.footer,g),{width:a+=2*e.xPadding,height:n}}(this,D)),a=D,s=F,l=A,u=S._chart,d=a.x,c=a.y,h=a.caretSize,f=a.caretPadding,g=a.cornerRadius,p=l.xAlign,m=l.yAlign,v=h+f,b=g+f,"right"===p?d-=s.width:"center"===p&&((d-=s.width/2)+s.width>u.width&&(d=u.width-s.width),d<0&&(d=0)),"top"===m?c+=v:c-="bottom"===m?s.height+v:s.height/2,"center"===m?"left"===p?d+=v:"right"===p&&(d-=v):"left"===p?d-=b:"right"===p&&(d+=b),T={x:d,y:c}}else D.opacity=0;return D.xAlign=A.xAlign,D.yAlign=A.yAlign,D.x=T.x,D.y=T.y,D.width=F.width,D.height=F.height,D.caretX=O.x,D.caretY=O.y,S._model=D,e&&C.custom&&C.custom.call(S,D),S},drawCaret:function(t,e){var i=this._chart.ctx,n=this._view,a=this.getCaretPosition(t,e,n);i.lineTo(a.x1,a.y1),i.lineTo(a.x2,a.y2),i.lineTo(a.x3,a.y3)},getCaretPosition:function(t,e,i){var n,a,o,r,s,l,u=i.caretSize,d=i.cornerRadius,c=i.xAlign,h=i.yAlign,f=t.x,g=t.y,p=e.width,m=e.height;if("center"===h)s=g+m/2,"left"===c?(a=(n=f)-u,o=n,r=s+u,l=s-u):(a=(n=f+p)+u,o=n,r=s-u,l=s+u);else if("left"===c?(n=(a=f+d+u)-u,o=a+u):"right"===c?(n=(a=f+p-d-u)-u,o=a+u):(n=(a=i.caretX)-u,o=a+u),"top"===h)s=(r=g)-u,l=r;else{s=(r=g+m)+u,l=r;var v=o;o=n,n=v}return{x1:n,x2:a,x3:o,y1:r,y2:s,y3:l}},drawTitle:function(t,i,n,a){var r=i.title;if(r.length){n.textAlign=i._titleAlign,n.textBaseline="top";var s,l,u=i.titleFontSize,d=i.titleSpacing;for(n.fillStyle=e(i.titleFontColor,a),n.font=o.fontString(u,i._titleFontStyle,i._titleFontFamily),s=0,l=r.length;s<l;++s)n.fillText(r[s],t.x,t.y),t.y+=u+d,s+1===r.length&&(t.y+=i.titleMarginBottom-d)}},drawBody:function(t,i,n,a){var r=i.bodyFontSize,s=i.bodySpacing,l=i.body;n.textAlign=i._bodyAlign,n.textBaseline="top",n.font=o.fontString(r,i._bodyFontStyle,i._bodyFontFamily);var u=0,d=function(e){n.fillText(e,t.x+u,t.y),t.y+=r+s};n.fillStyle=e(i.bodyFontColor,a),o.each(i.beforeBody,d);var c=i.displayColors;u=c?r+2:0,o.each(l,function(s,l){var u=e(i.labelTextColors[l],a);n.fillStyle=u,o.each(s.before,d),o.each(s.lines,function(o){c&&(n.fillStyle=e(i.legendColorBackground,a),n.fillRect(t.x,t.y,r,r),n.lineWidth=1,n.strokeStyle=e(i.labelColors[l].borderColor,a),n.strokeRect(t.x,t.y,r,r),n.fillStyle=e(i.labelColors[l].backgroundColor,a),n.fillRect(t.x+1,t.y+1,r-2,r-2),n.fillStyle=u),d(o)}),o.each(s.after,d)}),u=0,o.each(i.afterBody,d),t.y-=s},drawFooter:function(t,i,n,a){var r=i.footer;r.length&&(t.y+=i.footerMarginTop,n.textAlign=i._footerAlign,n.textBaseline="top",n.fillStyle=e(i.footerFontColor,a),n.font=o.fontString(i.footerFontSize,i._footerFontStyle,i._footerFontFamily),o.each(r,function(e){n.fillText(e,t.x,t.y),t.y+=i.footerFontSize+i.footerSpacing}))},drawBackground:function(t,i,n,a,o){n.fillStyle=e(i.backgroundColor,o),n.strokeStyle=e(i.borderColor,o),n.lineWidth=i.borderWidth;var r=i.xAlign,s=i.yAlign,l=t.x,u=t.y,d=a.width,c=a.height,h=i.cornerRadius;n.beginPath(),n.moveTo(l+h,u),"top"===s&&this.drawCaret(t,a),n.lineTo(l+d-h,u),n.quadraticCurveTo(l+d,u,l+d,u+h),"center"===s&&"right"===r&&this.drawCaret(t,a),n.lineTo(l+d,u+c-h),n.quadraticCurveTo(l+d,u+c,l+d-h,u+c),"bottom"===s&&this.drawCaret(t,a),n.lineTo(l+h,u+c),n.quadraticCurveTo(l,u+c,l,u+c-h),"center"===s&&"left"===r&&this.drawCaret(t,a),n.lineTo(l,u+h),n.quadraticCurveTo(l,u,l+h,u),n.closePath(),n.fill(),i.borderWidth>0&&n.stroke()},draw:function(){var t=this._chart.ctx,e=this._view;if(0!==e.opacity){var i={width:e.width,height:e.height},n={x:e.x,y:e.y},a=Math.abs(e.opacity<.001)?0:e.opacity,o=e.title.length||e.beforeBody.length||e.body.length||e.afterBody.length||e.footer.length;this._options.enabled&&o&&(this.drawBackground(n,e,t,i,a),n.x+=e.xPadding,n.y+=e.yPadding,this.drawTitle(n,e,t,a),this.drawBody(n,e,t,a),this.drawFooter(n,e,t,a))}},handleEvent:function(t){var e,i=this,n=i._options;return i._lastActive=i._lastActive||[],"mouseout"===t.type?i._active=[]:i._active=i._chart.getElementsAtEventForMode(t,n.mode,n),(e=!o.arrayEquals(i._active,i._lastActive))&&(i._lastActive=i._active,(n.enabled||n.custom)&&(i._eventPosition={x:t.x,y:t.y},i.update(!0),i.pivot())),e}}),t.Tooltip.positioners={average:function(t){if(!t.length)return!1;var e,i,n=0,a=0,o=0;for(e=0,i=t.length;e<i;++e){var r=t[e];if(r&&r.hasValue()){var s=r.tooltipPosition();n+=s.x,a+=s.y,++o}}return{x:Math.round(n/o),y:Math.round(a/o)}},nearest:function(t,e){var i,n,a,r=e.x,s=e.y,l=Number.POSITIVE_INFINITY;for(i=0,n=t.length;i<n;++i){var u=t[i];if(u&&u.hasValue()){var d=u.getCenterPoint(),c=o.distanceBetweenPoints(e,d);c<l&&(l=c,a=u)}}if(a){var h=a.tooltipPosition();r=h.x,s=h.y}return{x:r,y:s}}}}},{25:25,26:26,45:45}],36:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45);n._set("global",{elements:{arc:{backgroundColor:n.global.defaultColor,borderColor:"#fff",borderWidth:2}}}),e.exports=a.extend({inLabelRange:function(t){var e=this._view;return!!e&&Math.pow(t-e.x,2)<Math.pow(e.radius+e.hoverRadius,2)},inRange:function(t,e){var i=this._view;if(i){for(var n=o.getAngleFromPoint(i,{x:t,y:e}),a=n.angle,r=n.distance,s=i.startAngle,l=i.endAngle;l<s;)l+=2*Math.PI;for(;a>l;)a-=2*Math.PI;for(;a<s;)a+=2*Math.PI;var u=a>=s&&a<=l,d=r>=i.innerRadius&&r<=i.outerRadius;return u&&d}return!1},getCenterPoint:function(){var t=this._view,e=(t.startAngle+t.endAngle)/2,i=(t.innerRadius+t.outerRadius)/2;return{x:t.x+Math.cos(e)*i,y:t.y+Math.sin(e)*i}},getArea:function(){var t=this._view;return Math.PI*((t.endAngle-t.startAngle)/(2*Math.PI))*(Math.pow(t.outerRadius,2)-Math.pow(t.innerRadius,2))},tooltipPosition:function(){var t=this._view,e=t.startAngle+(t.endAngle-t.startAngle)/2,i=(t.outerRadius-t.innerRadius)/2+t.innerRadius;return{x:t.x+Math.cos(e)*i,y:t.y+Math.sin(e)*i}},draw:function(){var t=this._chart.ctx,e=this._view,i=e.startAngle,n=e.endAngle;t.beginPath(),t.arc(e.x,e.y,e.outerRadius,i,n),t.arc(e.x,e.y,e.innerRadius,n,i,!0),t.closePath(),t.strokeStyle=e.borderColor,t.lineWidth=e.borderWidth,t.fillStyle=e.backgroundColor,t.fill(),t.lineJoin="bevel",e.borderWidth&&t.stroke()}})},{25:25,26:26,45:45}],37:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45),r=n.global;n._set("global",{elements:{line:{tension:.4,backgroundColor:r.defaultColor,borderWidth:3,borderColor:r.defaultColor,borderCapStyle:"butt",borderDash:[],borderDashOffset:0,borderJoinStyle:"miter",capBezierPoints:!0,fill:!0}}}),e.exports=a.extend({draw:function(){var t,e,i,n,a=this._view,s=this._chart.ctx,l=a.spanGaps,u=this._children.slice(),d=r.elements.line,c=-1;for(this._loop&&u.length&&u.push(u[0]),s.save(),s.lineCap=a.borderCapStyle||d.borderCapStyle,s.setLineDash&&s.setLineDash(a.borderDash||d.borderDash),s.lineDashOffset=a.borderDashOffset||d.borderDashOffset,s.lineJoin=a.borderJoinStyle||d.borderJoinStyle,s.lineWidth=a.borderWidth||d.borderWidth,s.strokeStyle=a.borderColor||r.defaultColor,s.beginPath(),c=-1,t=0;t<u.length;++t)e=u[t],i=o.previousItem(u,t),n=e._view,0===t?n.skip||(s.moveTo(n.x,n.y),c=t):(i=-1===c?i:u[c],n.skip||(c!==t-1&&!l||-1===c?s.moveTo(n.x,n.y):o.canvas.lineTo(s,i._view,e._view),c=t));s.stroke(),s.restore()}})},{25:25,26:26,45:45}],38:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45),r=n.global.defaultColor;function s(t){var e=this._view;return!!e&&Math.abs(t-e.x)<e.radius+e.hitRadius}n._set("global",{elements:{point:{radius:3,pointStyle:"circle",backgroundColor:r,borderColor:r,borderWidth:1,hitRadius:1,hoverRadius:4,hoverBorderWidth:1}}}),e.exports=a.extend({inRange:function(t,e){var i=this._view;return!!i&&Math.pow(t-i.x,2)+Math.pow(e-i.y,2)<Math.pow(i.hitRadius+i.radius,2)},inLabelRange:s,inXRange:s,inYRange:function(t){var e=this._view;return!!e&&Math.abs(t-e.y)<e.radius+e.hitRadius},getCenterPoint:function(){var t=this._view;return{x:t.x,y:t.y}},getArea:function(){return Math.PI*Math.pow(this._view.radius,2)},tooltipPosition:function(){var t=this._view;return{x:t.x,y:t.y,padding:t.radius+t.borderWidth}},draw:function(t){var e=this._view,i=this._model,a=this._chart.ctx,s=e.pointStyle,l=e.radius,u=e.x,d=e.y,c=o.color,h=0;e.skip||(a.strokeStyle=e.borderColor||r,a.lineWidth=o.valueOrDefault(e.borderWidth,n.global.elements.point.borderWidth),a.fillStyle=e.backgroundColor||r,void 0!==t&&(i.x<t.left||1.01*t.right<i.x||i.y<t.top||1.01*t.bottom<i.y)&&(i.x<t.left?h=(u-i.x)/(t.left-i.x):1.01*t.right<i.x?h=(i.x-u)/(i.x-t.right):i.y<t.top?h=(d-i.y)/(t.top-i.y):1.01*t.bottom<i.y&&(h=(i.y-d)/(i.y-t.bottom)),h=Math.round(100*h)/100,a.strokeStyle=c(a.strokeStyle).alpha(h).rgbString(),a.fillStyle=c(a.fillStyle).alpha(h).rgbString()),o.canvas.drawPoint(a,s,l,u,d))}})},{25:25,26:26,45:45}],39:[function(t,e,i){"use strict";var n=t(25),a=t(26);function o(t){return void 0!==t._view.width}function r(t){var e,i,n,a,r=t._view;if(o(t)){var s=r.width/2;e=r.x-s,i=r.x+s,n=Math.min(r.y,r.base),a=Math.max(r.y,r.base)}else{var l=r.height/2;e=Math.min(r.x,r.base),i=Math.max(r.x,r.base),n=r.y-l,a=r.y+l}return{left:e,top:n,right:i,bottom:a}}n._set("global",{elements:{rectangle:{backgroundColor:n.global.defaultColor,borderColor:n.global.defaultColor,borderSkipped:"bottom",borderWidth:0}}}),e.exports=a.extend({draw:function(){var t,e,i,n,a,o,r,s=this._chart.ctx,l=this._view,u=l.borderWidth;if(l.horizontal?(t=l.base,e=l.x,i=l.y-l.height/2,n=l.y+l.height/2,a=e>t?1:-1,o=1,r=l.borderSkipped||"left"):(t=l.x-l.width/2,e=l.x+l.width/2,i=l.y,a=1,o=(n=l.base)>i?1:-1,r=l.borderSkipped||"bottom"),u){var d=Math.min(Math.abs(t-e),Math.abs(i-n)),c=(u=u>d?d:u)/2,h=t+("left"!==r?c*a:0),f=e+("right"!==r?-c*a:0),g=i+("top"!==r?c*o:0),p=n+("bottom"!==r?-c*o:0);h!==f&&(i=g,n=p),g!==p&&(t=h,e=f)}s.beginPath(),s.fillStyle=l.backgroundColor,s.strokeStyle=l.borderColor,s.lineWidth=u;var m=[[t,n],[t,i],[e,i],[e,n]],v=["bottom","left","top","right"].indexOf(r,0);function b(t){return m[(v+t)%4]}-1===v&&(v=0);var x=b(0);s.moveTo(x[0],x[1]);for(var y=1;y<4;y++)x=b(y),s.lineTo(x[0],x[1]);s.fill(),u&&s.stroke()},height:function(){var t=this._view;return t.base-t.y},inRange:function(t,e){var i=!1;if(this._view){var n=r(this);i=t>=n.left&&t<=n.right&&e>=n.top&&e<=n.bottom}return i},inLabelRange:function(t,e){if(!this._view)return!1;var i=r(this);return o(this)?t>=i.left&&t<=i.right:e>=i.top&&e<=i.bottom},inXRange:function(t){var e=r(this);return t>=e.left&&t<=e.right},inYRange:function(t){var e=r(this);return t>=e.top&&t<=e.bottom},getCenterPoint:function(){var t,e,i=this._view;return o(this)?(t=i.x,e=(i.y+i.base)/2):(t=(i.x+i.base)/2,e=i.y),{x:t,y:e}},getArea:function(){var t=this._view;return t.width*Math.abs(t.y-t.base)},tooltipPosition:function(){var t=this._view;return{x:t.x,y:t.y}}})},{25:25,26:26}],40:[function(t,e,i){"use strict";e.exports={},e.exports.Arc=t(36),e.exports.Line=t(37),e.exports.Point=t(38),e.exports.Rectangle=t(39)},{36:36,37:37,38:38,39:39}],41:[function(t,e,i){"use strict";var n=t(42);i=e.exports={clear:function(t){t.ctx.clearRect(0,0,t.width,t.height)},roundedRect:function(t,e,i,n,a,o){if(o){var r=Math.min(o,n/2),s=Math.min(o,a/2);t.moveTo(e+r,i),t.lineTo(e+n-r,i),t.quadraticCurveTo(e+n,i,e+n,i+s),t.lineTo(e+n,i+a-s),t.quadraticCurveTo(e+n,i+a,e+n-r,i+a),t.lineTo(e+r,i+a),t.quadraticCurveTo(e,i+a,e,i+a-s),t.lineTo(e,i+s),t.quadraticCurveTo(e,i,e+r,i)}else t.rect(e,i,n,a)},drawPoint:function(t,e,i,n,a){var o,r,s,l,u,d;if(!e||"object"!=typeof e||"[object HTMLImageElement]"!==(o=e.toString())&&"[object HTMLCanvasElement]"!==o){if(!(isNaN(i)||i<=0)){switch(e){default:t.beginPath(),t.arc(n,a,i,0,2*Math.PI),t.closePath(),t.fill();break;case"triangle":t.beginPath(),u=(r=3*i/Math.sqrt(3))*Math.sqrt(3)/2,t.moveTo(n-r/2,a+u/3),t.lineTo(n+r/2,a+u/3),t.lineTo(n,a-2*u/3),t.closePath(),t.fill();break;case"rect":d=1/Math.SQRT2*i,t.beginPath(),t.fillRect(n-d,a-d,2*d,2*d),t.strokeRect(n-d,a-d,2*d,2*d);break;case"rectRounded":var c=i/Math.SQRT2,h=n-c,f=a-c,g=Math.SQRT2*i;t.beginPath(),this.roundedRect(t,h,f,g,g,i/2),t.closePath(),t.fill();break;case"rectRot":d=1/Math.SQRT2*i,t.beginPath(),t.moveTo(n-d,a),t.lineTo(n,a+d),t.lineTo(n+d,a),t.lineTo(n,a-d),t.closePath(),t.fill();break;case"cross":t.beginPath(),t.moveTo(n,a+i),t.lineTo(n,a-i),t.moveTo(n-i,a),t.lineTo(n+i,a),t.closePath();break;case"crossRot":t.beginPath(),s=Math.cos(Math.PI/4)*i,l=Math.sin(Math.PI/4)*i,t.moveTo(n-s,a-l),t.lineTo(n+s,a+l),t.moveTo(n-s,a+l),t.lineTo(n+s,a-l),t.closePath();break;case"star":t.beginPath(),t.moveTo(n,a+i),t.lineTo(n,a-i),t.moveTo(n-i,a),t.lineTo(n+i,a),s=Math.cos(Math.PI/4)*i,l=Math.sin(Math.PI/4)*i,t.moveTo(n-s,a-l),t.lineTo(n+s,a+l),t.moveTo(n-s,a+l),t.lineTo(n+s,a-l),t.closePath();break;case"line":t.beginPath(),t.moveTo(n-i,a),t.lineTo(n+i,a),t.closePath();break;case"dash":t.beginPath(),t.moveTo(n,a),t.lineTo(n+i,a),t.closePath()}t.stroke()}}else t.drawImage(e,n-e.width/2,a-e.height/2,e.width,e.height)},clipArea:function(t,e){t.save(),t.beginPath(),t.rect(e.left,e.top,e.right-e.left,e.bottom-e.top),t.clip()},unclipArea:function(t){t.restore()},lineTo:function(t,e,i,n){if(i.steppedLine)return"after"===i.steppedLine&&!n||"after"!==i.steppedLine&&n?t.lineTo(e.x,i.y):t.lineTo(i.x,e.y),void t.lineTo(i.x,i.y);i.tension?t.bezierCurveTo(n?e.controlPointPreviousX:e.controlPointNextX,n?e.controlPointPreviousY:e.controlPointNextY,n?i.controlPointNextX:i.controlPointPreviousX,n?i.controlPointNextY:i.controlPointPreviousY,i.x,i.y):t.lineTo(i.x,i.y)}};n.clear=i.clear,n.drawRoundedRectangle=function(t){t.beginPath(),i.roundedRect.apply(i,arguments),t.closePath()}},{42:42}],42:[function(t,e,i){"use strict";var n,a={noop:function(){},uid:(n=0,function(){return n++}),isNullOrUndef:function(t){return null==t},isArray:Array.isArray?Array.isArray:function(t){return"[object Array]"===Object.prototype.toString.call(t)},isObject:function(t){return null!==t&&"[object Object]"===Object.prototype.toString.call(t)},valueOrDefault:function(t,e){return void 0===t?e:t},valueAtIndexOrDefault:function(t,e,i){return a.valueOrDefault(a.isArray(t)?t[e]:t,i)},callback:function(t,e,i){if(t&&"function"==typeof t.call)return t.apply(i,e)},each:function(t,e,i,n){var o,r,s;if(a.isArray(t))if(r=t.length,n)for(o=r-1;o>=0;o--)e.call(i,t[o],o);else for(o=0;o<r;o++)e.call(i,t[o],o);else if(a.isObject(t))for(r=(s=Object.keys(t)).length,o=0;o<r;o++)e.call(i,t[s[o]],s[o])},arrayEquals:function(t,e){var i,n,o,r;if(!t||!e||t.length!==e.length)return!1;for(i=0,n=t.length;i<n;++i)if(o=t[i],r=e[i],o instanceof Array&&r instanceof Array){if(!a.arrayEquals(o,r))return!1}else if(o!==r)return!1;return!0},clone:function(t){if(a.isArray(t))return t.map(a.clone);if(a.isObject(t)){for(var e={},i=Object.keys(t),n=i.length,o=0;o<n;++o)e[i[o]]=a.clone(t[i[o]]);return e}return t},_merger:function(t,e,i,n){var o=e[t],r=i[t];a.isObject(o)&&a.isObject(r)?a.merge(o,r,n):e[t]=a.clone(r)},_mergerIf:function(t,e,i){var n=e[t],o=i[t];a.isObject(n)&&a.isObject(o)?a.mergeIf(n,o):e.hasOwnProperty(t)||(e[t]=a.clone(o))},merge:function(t,e,i){var n,o,r,s,l,u=a.isArray(e)?e:[e],d=u.length;if(!a.isObject(t))return t;for(n=(i=i||{}).merger||a._merger,o=0;o<d;++o)if(e=u[o],a.isObject(e))for(l=0,s=(r=Object.keys(e)).length;l<s;++l)n(r[l],t,e,i);return t},mergeIf:function(t,e){return a.merge(t,e,{merger:a._mergerIf})},extend:function(t){for(var e=function(e,i){t[i]=e},i=1,n=arguments.length;i<n;++i)a.each(arguments[i],e);return t},inherits:function(t){var e=this,i=t&&t.hasOwnProperty("constructor")?t.constructor:function(){return e.apply(this,arguments)},n=function(){this.constructor=i};return n.prototype=e.prototype,i.prototype=new n,i.extend=a.inherits,t&&a.extend(i.prototype,t),i.__super__=e.prototype,i}};e.exports=a,a.callCallback=a.callback,a.indexOf=function(t,e,i){return Array.prototype.indexOf.call(t,e,i)},a.getValueOrDefault=a.valueOrDefault,a.getValueAtIndexOrDefault=a.valueAtIndexOrDefault},{}],43:[function(t,e,i){"use strict";var n=t(42),a={linear:function(t){return t},easeInQuad:function(t){return t*t},easeOutQuad:function(t){return-t*(t-2)},easeInOutQuad:function(t){return(t/=.5)<1?.5*t*t:-.5*(--t*(t-2)-1)},easeInCubic:function(t){return t*t*t},easeOutCubic:function(t){return(t-=1)*t*t+1},easeInOutCubic:function(t){return(t/=.5)<1?.5*t*t*t:.5*((t-=2)*t*t+2)},easeInQuart:function(t){return t*t*t*t},easeOutQuart:function(t){return-((t-=1)*t*t*t-1)},easeInOutQuart:function(t){return(t/=.5)<1?.5*t*t*t*t:-.5*((t-=2)*t*t*t-2)},easeInQuint:function(t){return t*t*t*t*t},easeOutQuint:function(t){return(t-=1)*t*t*t*t+1},easeInOutQuint:function(t){return(t/=.5)<1?.5*t*t*t*t*t:.5*((t-=2)*t*t*t*t+2)},easeInSine:function(t){return 1-Math.cos(t*(Math.PI/2))},easeOutSine:function(t){return Math.sin(t*(Math.PI/2))},easeInOutSine:function(t){return-.5*(Math.cos(Math.PI*t)-1)},easeInExpo:function(t){return 0===t?0:Math.pow(2,10*(t-1))},easeOutExpo:function(t){return 1===t?1:1-Math.pow(2,-10*t)},easeInOutExpo:function(t){return 0===t?0:1===t?1:(t/=.5)<1?.5*Math.pow(2,10*(t-1)):.5*(2-Math.pow(2,-10*--t))},easeInCirc:function(t){return t>=1?t:-(Math.sqrt(1-t*t)-1)},easeOutCirc:function(t){return Math.sqrt(1-(t-=1)*t)},easeInOutCirc:function(t){return(t/=.5)<1?-.5*(Math.sqrt(1-t*t)-1):.5*(Math.sqrt(1-(t-=2)*t)+1)},easeInElastic:function(t){var e=1.70158,i=0,n=1;return 0===t?0:1===t?1:(i||(i=.3),n<1?(n=1,e=i/4):e=i/(2*Math.PI)*Math.asin(1/n),-n*Math.pow(2,10*(t-=1))*Math.sin((t-e)*(2*Math.PI)/i))},easeOutElastic:function(t){var e=1.70158,i=0,n=1;return 0===t?0:1===t?1:(i||(i=.3),n<1?(n=1,e=i/4):e=i/(2*Math.PI)*Math.asin(1/n),n*Math.pow(2,-10*t)*Math.sin((t-e)*(2*Math.PI)/i)+1)},easeInOutElastic:function(t){var e=1.70158,i=0,n=1;return 0===t?0:2==(t/=.5)?1:(i||(i=.45),n<1?(n=1,e=i/4):e=i/(2*Math.PI)*Math.asin(1/n),t<1?n*Math.pow(2,10*(t-=1))*Math.sin((t-e)*(2*Math.PI)/i)*-.5:n*Math.pow(2,-10*(t-=1))*Math.sin((t-e)*(2*Math.PI)/i)*.5+1)},easeInBack:function(t){return t*t*(2.70158*t-1.70158)},easeOutBack:function(t){return(t-=1)*t*(2.70158*t+1.70158)+1},easeInOutBack:function(t){var e=1.70158;return(t/=.5)<1?t*t*((1+(e*=1.525))*t-e)*.5:.5*((t-=2)*t*((1+(e*=1.525))*t+e)+2)},easeInBounce:function(t){return 1-a.easeOutBounce(1-t)},easeOutBounce:function(t){return t<1/2.75?7.5625*t*t:t<2/2.75?7.5625*(t-=1.5/2.75)*t+.75:t<2.5/2.75?7.5625*(t-=2.25/2.75)*t+.9375:7.5625*(t-=2.625/2.75)*t+.984375},easeInOutBounce:function(t){return t<.5?.5*a.easeInBounce(2*t):.5*a.easeOutBounce(2*t-1)+.5}};e.exports={effects:a},n.easingEffects=a},{42:42}],44:[function(t,e,i){"use strict";var n=t(42);e.exports={toLineHeight:function(t,e){var i=(""+t).match(/^(normal|(\d+(?:\.\d+)?)(px|em|%)?)$/);if(!i||"normal"===i[1])return 1.2*e;switch(t=+i[2],i[3]){case"px":return t;case"%":t/=100}return e*t},toPadding:function(t){var e,i,a,o;return n.isObject(t)?(e=+t.top||0,i=+t.right||0,a=+t.bottom||0,o=+t.left||0):e=i=a=o=+t||0,{top:e,right:i,bottom:a,left:o,height:e+a,width:o+i}},resolve:function(t,e,i){var a,o,r;for(a=0,o=t.length;a<o;++a)if(void 0!==(r=t[a])&&(void 0!==e&&"function"==typeof r&&(r=r(e)),void 0!==i&&n.isArray(r)&&(r=r[i]),void 0!==r))return r}}},{42:42}],45:[function(t,e,i){"use strict";e.exports=t(42),e.exports.easing=t(43),e.exports.canvas=t(41),e.exports.options=t(44)},{41:41,42:42,43:43,44:44}],46:[function(t,e,i){e.exports={acquireContext:function(t){return t&&t.canvas&&(t=t.canvas),t&&t.getContext("2d")||null}}},{}],47:[function(t,e,i){"use strict";var n=t(45),a="$chartjs",o="chartjs-",r=o+"render-monitor",s=o+"render-animation",l=["animationstart","webkitAnimationStart"],u={touchstart:"mousedown",touchmove:"mousemove",touchend:"mouseup",pointerenter:"mouseenter",pointerdown:"mousedown",pointermove:"mousemove",pointerup:"mouseup",pointerleave:"mouseout",pointerout:"mouseout"};function d(t,e){var i=n.getStyle(t,e),a=i&&i.match(/^(\d+)(\.\d+)?px$/);return a?Number(a[1]):void 0}var c=!!function(){var t=!1;try{var e=Object.defineProperty({},"passive",{get:function(){t=!0}});window.addEventListener("e",null,e)}catch(t){}return t}()&&{passive:!0};function h(t,e,i){t.addEventListener(e,i,c)}function f(t,e,i){t.removeEventListener(e,i,c)}function g(t,e,i,n,a){return{type:t,chart:e,native:a||null,x:void 0!==i?i:null,y:void 0!==n?n:null}}function p(t,e,i){var u,d,c,f,p,m,v,b,x=t[a]||(t[a]={}),y=x.resizer=function(t){var e=document.createElement("div"),i=o+"size-monitor",n="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;";e.style.cssText=n,e.className=i,e.innerHTML='<div class="'+i+'-expand" style="'+n+'"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="'+i+'-shrink" style="'+n+'"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div>';var a=e.childNodes[0],r=e.childNodes[1];e._reset=function(){a.scrollLeft=1e6,a.scrollTop=1e6,r.scrollLeft=1e6,r.scrollTop=1e6};var s=function(){e._reset(),t()};return h(a,"scroll",s.bind(a,"expand")),h(r,"scroll",s.bind(r,"shrink")),e}((u=function(){if(x.resizer)return e(g("resize",i))},c=!1,f=[],function(){f=Array.prototype.slice.call(arguments),d=d||this,c||(c=!0,n.requestAnimFrame.call(window,function(){c=!1,u.apply(d,f)}))}));m=function(){if(x.resizer){var e=t.parentNode;e&&e!==y.parentNode&&e.insertBefore(y,e.firstChild),y._reset()}},v=(p=t)[a]||(p[a]={}),b=v.renderProxy=function(t){t.animationName===s&&m()},n.each(l,function(t){h(p,t,b)}),v.reflow=!!p.offsetParent,p.classList.add(r)}function m(t){var e,i,o,s=t[a]||{},u=s.resizer;delete s.resizer,i=(e=t)[a]||{},(o=i.renderProxy)&&(n.each(l,function(t){f(e,t,o)}),delete i.renderProxy),e.classList.remove(r),u&&u.parentNode&&u.parentNode.removeChild(u)}e.exports={_enabled:"undefined"!=typeof window&&"undefined"!=typeof document,initialize:function(){var t,e,i,n="from{opacity:0.99}to{opacity:1}";e="@-webkit-keyframes "+s+"{"+n+"}@keyframes "+s+"{"+n+"}."+r+"{-webkit-animation:"+s+" 0.001s;animation:"+s+" 0.001s;}",i=(t=this)._style||document.createElement("style"),t._style||(t._style=i,e="/* Chart.js */\n"+e,i.setAttribute("type","text/css"),document.getElementsByTagName("head")[0].appendChild(i)),i.appendChild(document.createTextNode(e))},acquireContext:function(t,e){"string"==typeof t?t=document.getElementById(t):t.length&&(t=t[0]),t&&t.canvas&&(t=t.canvas);var i=t&&t.getContext&&t.getContext("2d");return i&&i.canvas===t?(function(t,e){var i=t.style,n=t.getAttribute("height"),o=t.getAttribute("width");if(t[a]={initial:{height:n,width:o,style:{display:i.display,height:i.height,width:i.width}}},i.display=i.display||"block",null===o||""===o){var r=d(t,"width");void 0!==r&&(t.width=r)}if(null===n||""===n)if(""===t.style.height)t.height=t.width/(e.options.aspectRatio||2);else{var s=d(t,"height");void 0!==r&&(t.height=s)}}(t,e),i):null},releaseContext:function(t){var e=t.canvas;if(e[a]){var i=e[a].initial;["height","width"].forEach(function(t){var a=i[t];n.isNullOrUndef(a)?e.removeAttribute(t):e.setAttribute(t,a)}),n.each(i.style||{},function(t,i){e.style[i]=t}),e.width=e.width,delete e[a]}},addEventListener:function(t,e,i){var o=t.canvas;if("resize"!==e){var r=i[a]||(i[a]={});h(o,e,(r.proxies||(r.proxies={}))[t.id+"_"+e]=function(e){var a,o,r,s;i((o=t,r=u[(a=e).type]||a.type,s=n.getRelativePosition(a,o),g(r,o,s.x,s.y,a)))})}else p(o,i,t)},removeEventListener:function(t,e,i){var n=t.canvas;if("resize"!==e){var o=((i[a]||{}).proxies||{})[t.id+"_"+e];o&&f(n,e,o)}else m(n)}},n.addEvent=h,n.removeEvent=f},{45:45}],48:[function(t,e,i){"use strict";var n=t(45),a=t(46),o=t(47),r=o._enabled?o:a;e.exports=n.extend({initialize:function(){},acquireContext:function(){},releaseContext:function(){},addEventListener:function(){},removeEventListener:function(){}},r)},{45:45,46:46,47:47}],49:[function(t,e,i){"use strict";e.exports={},e.exports.filler=t(50),e.exports.legend=t(51),e.exports.title=t(52)},{50:50,51:51,52:52}],50:[function(t,e,i){"use strict";var n=t(25),a=t(40),o=t(45);n._set("global",{plugins:{filler:{propagate:!0}}});var r={dataset:function(t){var e=t.fill,i=t.chart,n=i.getDatasetMeta(e),a=n&&i.isDatasetVisible(e)&&n.dataset._children||[],o=a.length||0;return o?function(t,e){return e<o&&a[e]._view||null}:null},boundary:function(t){var e=t.boundary,i=e?e.x:null,n=e?e.y:null;return function(t){return{x:null===i?t.x:i,y:null===n?t.y:n}}}};function s(t,e,i){var n,a=t._model||{},o=a.fill;if(void 0===o&&(o=!!a.backgroundColor),!1===o||null===o)return!1;if(!0===o)return"origin";if(n=parseFloat(o,10),isFinite(n)&&Math.floor(n)===n)return"-"!==o[0]&&"+"!==o[0]||(n=e+n),!(n===e||n<0||n>=i)&&n;switch(o){case"bottom":return"start";case"top":return"end";case"zero":return"origin";case"origin":case"start":case"end":return o;default:return!1}}function l(t){var e,i=t.el._model||{},n=t.el._scale||{},a=t.fill,o=null;if(isFinite(a))return null;if("start"===a?o=void 0===i.scaleBottom?n.bottom:i.scaleBottom:"end"===a?o=void 0===i.scaleTop?n.top:i.scaleTop:void 0!==i.scaleZero?o=i.scaleZero:n.getBasePosition?o=n.getBasePosition():n.getBasePixel&&(o=n.getBasePixel()),null!=o){if(void 0!==o.x&&void 0!==o.y)return o;if("number"==typeof o&&isFinite(o))return{x:(e=n.isHorizontal())?o:null,y:e?null:o}}return null}function u(t,e,i){var n,a=t[e].fill,o=[e];if(!i)return a;for(;!1!==a&&-1===o.indexOf(a);){if(!isFinite(a))return a;if(!(n=t[a]))return!1;if(n.visible)return a;o.push(a),a=n.fill}return!1}function d(t){return t&&!t.skip}function c(t,e,i,n,a){var r;if(n&&a){for(t.moveTo(e[0].x,e[0].y),r=1;r<n;++r)o.canvas.lineTo(t,e[r-1],e[r]);for(t.lineTo(i[a-1].x,i[a-1].y),r=a-1;r>0;--r)o.canvas.lineTo(t,i[r],i[r-1],!0)}}e.exports={id:"filler",afterDatasetsUpdate:function(t,e){var i,n,o,d,c,h,f,g=(t.data.datasets||[]).length,p=e.propagate,m=[];for(n=0;n<g;++n)d=null,(o=(i=t.getDatasetMeta(n)).dataset)&&o._model&&o instanceof a.Line&&(d={visible:t.isDatasetVisible(n),fill:s(o,n,g),chart:t,el:o}),i.$filler=d,m.push(d);for(n=0;n<g;++n)(d=m[n])&&(d.fill=u(m,n,p),d.boundary=l(d),d.mapper=(void 0,f=void 0,h=(c=d).fill,f="dataset",!1===h?null:(isFinite(h)||(f="boundary"),r[f](c))))},beforeDatasetDraw:function(t,e){var i=e.meta.$filler;if(i){var a=t.ctx,r=i.el,s=r._view,l=r._children||[],u=i.mapper,h=s.backgroundColor||n.global.defaultColor;u&&h&&l.length&&(o.canvas.clipArea(a,t.chartArea),function(t,e,i,n,a,o){var r,s,l,u,h,f,g,p=e.length,m=n.spanGaps,v=[],b=[],x=0,y=0;for(t.beginPath(),r=0,s=p+!!o;r<s;++r)h=i(u=e[l=r%p]._view,l,n),f=d(u),g=d(h),f&&g?(x=v.push(u),y=b.push(h)):x&&y&&(m?(f&&v.push(u),g&&b.push(h)):(c(t,v,b,x,y),x=y=0,v=[],b=[]));c(t,v,b,x,y),t.closePath(),t.fillStyle=a,t.fill()}(a,l,u,s,h,r._loop),o.canvas.unclipArea(a))}}}},{25:25,40:40,45:45}],51:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45),r=t(30),s=o.noop;function l(t,e){return t.usePointStyle?e*Math.SQRT2:t.boxWidth}n._set("global",{legend:{display:!0,position:"top",fullWidth:!0,reverse:!1,weight:1e3,onClick:function(t,e){var i=e.datasetIndex,n=this.chart,a=n.getDatasetMeta(i);a.hidden=null===a.hidden?!n.data.datasets[i].hidden:null,n.update()},onHover:null,labels:{boxWidth:40,padding:10,generateLabels:function(t){var e=t.data;return o.isArray(e.datasets)?e.datasets.map(function(e,i){return{text:e.label,fillStyle:o.isArray(e.backgroundColor)?e.backgroundColor[0]:e.backgroundColor,hidden:!t.isDatasetVisible(i),lineCap:e.borderCapStyle,lineDash:e.borderDash,lineDashOffset:e.borderDashOffset,lineJoin:e.borderJoinStyle,lineWidth:e.borderWidth,strokeStyle:e.borderColor,pointStyle:e.pointStyle,datasetIndex:i}},this):[]}}},legendCallback:function(t){var e=[];e.push('<ul class="'+t.id+'-legend">');for(var i=0;i<t.data.datasets.length;i++)e.push('<li><span style="background-color:'+t.data.datasets[i].backgroundColor+'"></span>'),t.data.datasets[i].label&&e.push(t.data.datasets[i].label),e.push("</li>");return e.push("</ul>"),e.join("")}});var u=a.extend({initialize:function(t){o.extend(this,t),this.legendHitBoxes=[],this.doughnutMode=!1},beforeUpdate:s,update:function(t,e,i){var n=this;return n.beforeUpdate(),n.maxWidth=t,n.maxHeight=e,n.margins=i,n.beforeSetDimensions(),n.setDimensions(),n.afterSetDimensions(),n.beforeBuildLabels(),n.buildLabels(),n.afterBuildLabels(),n.beforeFit(),n.fit(),n.afterFit(),n.afterUpdate(),n.minSize},afterUpdate:s,beforeSetDimensions:s,setDimensions:function(){var t=this;t.isHorizontal()?(t.width=t.maxWidth,t.left=0,t.right=t.width):(t.height=t.maxHeight,t.top=0,t.bottom=t.height),t.paddingLeft=0,t.paddingTop=0,t.paddingRight=0,t.paddingBottom=0,t.minSize={width:0,height:0}},afterSetDimensions:s,beforeBuildLabels:s,buildLabels:function(){var t=this,e=t.options.labels||{},i=o.callback(e.generateLabels,[t.chart],t)||[];e.filter&&(i=i.filter(function(i){return e.filter(i,t.chart.data)})),t.options.reverse&&i.reverse(),t.legendItems=i},afterBuildLabels:s,beforeFit:s,fit:function(){var t=this,e=t.options,i=e.labels,a=e.display,r=t.ctx,s=n.global,u=o.valueOrDefault,d=u(i.fontSize,s.defaultFontSize),c=u(i.fontStyle,s.defaultFontStyle),h=u(i.fontFamily,s.defaultFontFamily),f=o.fontString(d,c,h),g=t.legendHitBoxes=[],p=t.minSize,m=t.isHorizontal();if(m?(p.width=t.maxWidth,p.height=a?10:0):(p.width=a?10:0,p.height=t.maxHeight),a)if(r.font=f,m){var v=t.lineWidths=[0],b=t.legendItems.length?d+i.padding:0;r.textAlign="left",r.textBaseline="top",o.each(t.legendItems,function(e,n){var a=l(i,d)+d/2+r.measureText(e.text).width;v[v.length-1]+a+i.padding>=t.width&&(b+=d+i.padding,v[v.length]=t.left),g[n]={left:0,top:0,width:a,height:d},v[v.length-1]+=a+i.padding}),p.height+=b}else{var x=i.padding,y=t.columnWidths=[],k=i.padding,M=0,w=0,S=d+x;o.each(t.legendItems,function(t,e){var n=l(i,d)+d/2+r.measureText(t.text).width;w+S>p.height&&(k+=M+i.padding,y.push(M),M=0,w=0),M=Math.max(M,n),w+=S,g[e]={left:0,top:0,width:n,height:d}}),k+=M,y.push(M),p.width+=k}t.width=p.width,t.height=p.height},afterFit:s,isHorizontal:function(){return"top"===this.options.position||"bottom"===this.options.position},draw:function(){var t=this,e=t.options,i=e.labels,a=n.global,r=a.elements.line,s=t.width,u=t.lineWidths;if(e.display){var d,c=t.ctx,h=o.valueOrDefault,f=h(i.fontColor,a.defaultFontColor),g=h(i.fontSize,a.defaultFontSize),p=h(i.fontStyle,a.defaultFontStyle),m=h(i.fontFamily,a.defaultFontFamily),v=o.fontString(g,p,m);c.textAlign="left",c.textBaseline="middle",c.lineWidth=.5,c.strokeStyle=f,c.fillStyle=f,c.font=v;var b=l(i,g),x=t.legendHitBoxes,y=t.isHorizontal();d=y?{x:t.left+(s-u[0])/2,y:t.top+i.padding,line:0}:{x:t.left+i.padding,y:t.top+i.padding,line:0};var k=g+i.padding;o.each(t.legendItems,function(n,l){var f,p,m,v,M,w=c.measureText(n.text).width,S=b+g/2+w,C=d.x,_=d.y;y?C+S>=s&&(_=d.y+=k,d.line++,C=d.x=t.left+(s-u[d.line])/2):_+k>t.bottom&&(C=d.x=C+t.columnWidths[d.line]+i.padding,_=d.y=t.top+i.padding,d.line++),function(t,i,n){if(!(isNaN(b)||b<=0)){c.save(),c.fillStyle=h(n.fillStyle,a.defaultColor),c.lineCap=h(n.lineCap,r.borderCapStyle),c.lineDashOffset=h(n.lineDashOffset,r.borderDashOffset),c.lineJoin=h(n.lineJoin,r.borderJoinStyle),c.lineWidth=h(n.lineWidth,r.borderWidth),c.strokeStyle=h(n.strokeStyle,a.defaultColor);var s=0===h(n.lineWidth,r.borderWidth);if(c.setLineDash&&c.setLineDash(h(n.lineDash,r.borderDash)),e.labels&&e.labels.usePointStyle){var l=g*Math.SQRT2/2,u=l/Math.SQRT2,d=t+u,f=i+u;o.canvas.drawPoint(c,n.pointStyle,l,d,f)}else s||c.strokeRect(t,i,b,g),c.fillRect(t,i,b,g);c.restore()}}(C,_,n),x[l].left=C,x[l].top=_,f=n,p=w,v=b+(m=g/2)+C,M=_+m,c.fillText(f.text,v,M),f.hidden&&(c.beginPath(),c.lineWidth=2,c.moveTo(v,M),c.lineTo(v+p,M),c.stroke()),y?d.x+=S+i.padding:d.y+=k})}},handleEvent:function(t){var e=this,i=e.options,n="mouseup"===t.type?"click":t.type,a=!1;if("mousemove"===n){if(!i.onHover)return}else{if("click"!==n)return;if(!i.onClick)return}var o=t.x,r=t.y;if(o>=e.left&&o<=e.right&&r>=e.top&&r<=e.bottom)for(var s=e.legendHitBoxes,l=0;l<s.length;++l){var u=s[l];if(o>=u.left&&o<=u.left+u.width&&r>=u.top&&r<=u.top+u.height){if("click"===n){i.onClick.call(e,t.native,e.legendItems[l]),a=!0;break}if("mousemove"===n){i.onHover.call(e,t.native,e.legendItems[l]),a=!0;break}}}return a}});function d(t,e){var i=new u({ctx:t.ctx,options:e,chart:t});r.configure(t,i,e),r.addBox(t,i),t.legend=i}e.exports={id:"legend",_element:u,beforeInit:function(t){var e=t.options.legend;e&&d(t,e)},beforeUpdate:function(t){var e=t.options.legend,i=t.legend;e?(o.mergeIf(e,n.global.legend),i?(r.configure(t,i,e),i.options=e):d(t,e)):i&&(r.removeBox(t,i),delete t.legend)},afterEvent:function(t,e){var i=t.legend;i&&i.handleEvent(e)}}},{25:25,26:26,30:30,45:45}],52:[function(t,e,i){"use strict";var n=t(25),a=t(26),o=t(45),r=t(30),s=o.noop;n._set("global",{title:{display:!1,fontStyle:"bold",fullWidth:!0,lineHeight:1.2,padding:10,position:"top",text:"",weight:2e3}});var l=a.extend({initialize:function(t){o.extend(this,t),this.legendHitBoxes=[]},beforeUpdate:s,update:function(t,e,i){var n=this;return n.beforeUpdate(),n.maxWidth=t,n.maxHeight=e,n.margins=i,n.beforeSetDimensions(),n.setDimensions(),n.afterSetDimensions(),n.beforeBuildLabels(),n.buildLabels(),n.afterBuildLabels(),n.beforeFit(),n.fit(),n.afterFit(),n.afterUpdate(),n.minSize},afterUpdate:s,beforeSetDimensions:s,setDimensions:function(){var t=this;t.isHorizontal()?(t.width=t.maxWidth,t.left=0,t.right=t.width):(t.height=t.maxHeight,t.top=0,t.bottom=t.height),t.paddingLeft=0,t.paddingTop=0,t.paddingRight=0,t.paddingBottom=0,t.minSize={width:0,height:0}},afterSetDimensions:s,beforeBuildLabels:s,buildLabels:s,afterBuildLabels:s,beforeFit:s,fit:function(){var t=this,e=o.valueOrDefault,i=t.options,a=i.display,r=e(i.fontSize,n.global.defaultFontSize),s=t.minSize,l=o.isArray(i.text)?i.text.length:1,u=o.options.toLineHeight(i.lineHeight,r),d=a?l*u+2*i.padding:0;t.isHorizontal()?(s.width=t.maxWidth,s.height=d):(s.width=d,s.height=t.maxHeight),t.width=s.width,t.height=s.height},afterFit:s,isHorizontal:function(){var t=this.options.position;return"top"===t||"bottom"===t},draw:function(){var t=this,e=t.ctx,i=o.valueOrDefault,a=t.options,r=n.global;if(a.display){var s,l,u,d=i(a.fontSize,r.defaultFontSize),c=i(a.fontStyle,r.defaultFontStyle),h=i(a.fontFamily,r.defaultFontFamily),f=o.fontString(d,c,h),g=o.options.toLineHeight(a.lineHeight,d),p=g/2+a.padding,m=0,v=t.top,b=t.left,x=t.bottom,y=t.right;e.fillStyle=i(a.fontColor,r.defaultFontColor),e.font=f,t.isHorizontal()?(l=b+(y-b)/2,u=v+p,s=y-b):(l="left"===a.position?b+p:y-p,u=v+(x-v)/2,s=x-v,m=Math.PI*("left"===a.position?-.5:.5)),e.save(),e.translate(l,u),e.rotate(m),e.textAlign="center",e.textBaseline="middle";var k=a.text;if(o.isArray(k))for(var M=0,w=0;w<k.length;++w)e.fillText(k[w],0,M,s),M+=g;else e.fillText(k,0,0,s);e.restore()}}});function u(t,e){var i=new l({ctx:t.ctx,options:e,chart:t});r.configure(t,i,e),r.addBox(t,i),t.titleBlock=i}e.exports={id:"title",_element:l,beforeInit:function(t){var e=t.options.title;e&&u(t,e)},beforeUpdate:function(t){var e=t.options.title,i=t.titleBlock;e?(o.mergeIf(e,n.global.title),i?(r.configure(t,i,e),i.options=e):u(t,e)):i&&(r.removeBox(t,i),delete t.titleBlock)}}},{25:25,26:26,30:30,45:45}],53:[function(t,e,i){"use strict";e.exports=function(t){var e=t.Scale.extend({getLabels:function(){var t=this.chart.data;return this.options.labels||(this.isHorizontal()?t.xLabels:t.yLabels)||t.labels},determineDataLimits:function(){var t,e=this,i=e.getLabels();e.minIndex=0,e.maxIndex=i.length-1,void 0!==e.options.ticks.min&&(t=i.indexOf(e.options.ticks.min),e.minIndex=-1!==t?t:e.minIndex),void 0!==e.options.ticks.max&&(t=i.indexOf(e.options.ticks.max),e.maxIndex=-1!==t?t:e.maxIndex),e.min=i[e.minIndex],e.max=i[e.maxIndex]},buildTicks:function(){var t=this,e=t.getLabels();t.ticks=0===t.minIndex&&t.maxIndex===e.length-1?e:e.slice(t.minIndex,t.maxIndex+1)},getLabelForIndex:function(t,e){var i=this,n=i.chart.data,a=i.isHorizontal();return n.yLabels&&!a?i.getRightValue(n.datasets[e].data[t]):i.ticks[t-i.minIndex]},getPixelForValue:function(t,e){var i,n=this,a=n.options.offset,o=Math.max(n.maxIndex+1-n.minIndex-(a?0:1),1);if(null!=t&&(i=n.isHorizontal()?t.x:t.y),void 0!==i||void 0!==t&&isNaN(e)){t=i||t;var r=n.getLabels().indexOf(t);e=-1!==r?r:e}if(n.isHorizontal()){var s=n.width/o,l=s*(e-n.minIndex);return a&&(l+=s/2),n.left+Math.round(l)}var u=n.height/o,d=u*(e-n.minIndex);return a&&(d+=u/2),n.top+Math.round(d)},getPixelForTick:function(t){return this.getPixelForValue(this.ticks[t],t+this.minIndex,null)},getValueForPixel:function(t){var e=this,i=e.options.offset,n=Math.max(e._ticks.length-(i?0:1),1),a=e.isHorizontal(),o=(a?e.width:e.height)/n;return t-=a?e.left:e.top,i&&(t-=o/2),(t<=0?0:Math.round(t/o))+e.minIndex},getBasePixel:function(){return this.bottom}});t.scaleService.registerScaleType("category",e,{position:"bottom"})}},{}],54:[function(t,e,i){"use strict";var n=t(25),a=t(45),o=t(34);e.exports=function(t){var e={position:"left",ticks:{callback:o.formatters.linear}},i=t.LinearScaleBase.extend({determineDataLimits:function(){var t=this,e=t.options,i=t.chart,n=i.data.datasets,o=t.isHorizontal();function r(e){return o?e.xAxisID===t.id:e.yAxisID===t.id}t.min=null,t.max=null;var s=e.stacked;if(void 0===s&&a.each(n,function(t,e){if(!s){var n=i.getDatasetMeta(e);i.isDatasetVisible(e)&&r(n)&&void 0!==n.stack&&(s=!0)}}),e.stacked||s){var l={};a.each(n,function(n,o){var s=i.getDatasetMeta(o),u=[s.type,void 0===e.stacked&&void 0===s.stack?o:"",s.stack].join(".");void 0===l[u]&&(l[u]={positiveValues:[],negativeValues:[]});var d=l[u].positiveValues,c=l[u].negativeValues;i.isDatasetVisible(o)&&r(s)&&a.each(n.data,function(i,n){var a=+t.getRightValue(i);isNaN(a)||s.data[n].hidden||(d[n]=d[n]||0,c[n]=c[n]||0,e.relativePoints?d[n]=100:a<0?c[n]+=a:d[n]+=a)})}),a.each(l,function(e){var i=e.positiveValues.concat(e.negativeValues),n=a.min(i),o=a.max(i);t.min=null===t.min?n:Math.min(t.min,n),t.max=null===t.max?o:Math.max(t.max,o)})}else a.each(n,function(e,n){var o=i.getDatasetMeta(n);i.isDatasetVisible(n)&&r(o)&&a.each(e.data,function(e,i){var n=+t.getRightValue(e);isNaN(n)||o.data[i].hidden||(null===t.min?t.min=n:n<t.min&&(t.min=n),null===t.max?t.max=n:n>t.max&&(t.max=n))})});t.min=isFinite(t.min)&&!isNaN(t.min)?t.min:0,t.max=isFinite(t.max)&&!isNaN(t.max)?t.max:1,this.handleTickRangeOptions()},getTickLimit:function(){var t,e=this.options.ticks;if(this.isHorizontal())t=Math.min(e.maxTicksLimit?e.maxTicksLimit:11,Math.ceil(this.width/50));else{var i=a.valueOrDefault(e.fontSize,n.global.defaultFontSize);t=Math.min(e.maxTicksLimit?e.maxTicksLimit:11,Math.ceil(this.height/(2*i)))}return t},handleDirectionalChanges:function(){this.isHorizontal()||this.ticks.reverse()},getLabelForIndex:function(t,e){return+this.getRightValue(this.chart.data.datasets[e].data[t])},getPixelForValue:function(t){var e=this,i=e.start,n=+e.getRightValue(t),a=e.end-i;return e.isHorizontal()?e.left+e.width/a*(n-i):e.bottom-e.height/a*(n-i)},getValueForPixel:function(t){var e=this,i=e.isHorizontal(),n=i?e.width:e.height,a=(i?t-e.left:e.bottom-t)/n;return e.start+(e.end-e.start)*a},getPixelForTick:function(t){return this.getPixelForValue(this.ticksAsNumbers[t])}});t.scaleService.registerScaleType("linear",i,e)}},{25:25,34:34,45:45}],55:[function(t,e,i){"use strict";var n=t(45);e.exports=function(t){var e=n.noop;t.LinearScaleBase=t.Scale.extend({getRightValue:function(e){return"string"==typeof e?+e:t.Scale.prototype.getRightValue.call(this,e)},handleTickRangeOptions:function(){var t=this,e=t.options.ticks;if(e.beginAtZero){var i=n.sign(t.min),a=n.sign(t.max);i<0&&a<0?t.max=0:i>0&&a>0&&(t.min=0)}var o=void 0!==e.min||void 0!==e.suggestedMin,r=void 0!==e.max||void 0!==e.suggestedMax;void 0!==e.min?t.min=e.min:void 0!==e.suggestedMin&&(null===t.min?t.min=e.suggestedMin:t.min=Math.min(t.min,e.suggestedMin)),void 0!==e.max?t.max=e.max:void 0!==e.suggestedMax&&(null===t.max?t.max=e.suggestedMax:t.max=Math.max(t.max,e.suggestedMax)),o!==r&&t.min>=t.max&&(o?t.max=t.min+1:t.min=t.max-1),t.min===t.max&&(t.max++,e.beginAtZero||t.min--)},getTickLimit:e,handleDirectionalChanges:e,buildTicks:function(){var t=this,e=t.options.ticks,i=t.getTickLimit(),a={maxTicks:i=Math.max(2,i),min:e.min,max:e.max,stepSize:n.valueOrDefault(e.fixedStepSize,e.stepSize)},o=t.ticks=function(t,e){var i,a=[];if(t.stepSize&&t.stepSize>0)i=t.stepSize;else{var o=n.niceNum(e.max-e.min,!1);i=n.niceNum(o/(t.maxTicks-1),!0)}var r=Math.floor(e.min/i)*i,s=Math.ceil(e.max/i)*i;t.min&&t.max&&t.stepSize&&n.almostWhole((t.max-t.min)/t.stepSize,i/1e3)&&(r=t.min,s=t.max);var l=(s-r)/i;l=n.almostEquals(l,Math.round(l),i/1e3)?Math.round(l):Math.ceil(l);var u=1;i<1&&(u=Math.pow(10,i.toString().length-2),r=Math.round(r*u)/u,s=Math.round(s*u)/u),a.push(void 0!==t.min?t.min:r);for(var d=1;d<l;++d)a.push(Math.round((r+d*i)*u)/u);return a.push(void 0!==t.max?t.max:s),a}(a,t);t.handleDirectionalChanges(),t.max=n.max(o),t.min=n.min(o),e.reverse?(o.reverse(),t.start=t.max,t.end=t.min):(t.start=t.min,t.end=t.max)},convertTicksToLabels:function(){var e=this;e.ticksAsNumbers=e.ticks.slice(),e.zeroLineIndex=e.ticks.indexOf(0),t.Scale.prototype.convertTicksToLabels.call(e)}})}},{45:45}],56:[function(t,e,i){"use strict";var n=t(45),a=t(34);e.exports=function(t){var e={position:"left",ticks:{callback:a.formatters.logarithmic}},i=t.Scale.extend({determineDataLimits:function(){var t=this,e=t.options,i=t.chart,a=i.data.datasets,o=t.isHorizontal();function r(e){return o?e.xAxisID===t.id:e.yAxisID===t.id}t.min=null,t.max=null,t.minNotZero=null;var s=e.stacked;if(void 0===s&&n.each(a,function(t,e){if(!s){var n=i.getDatasetMeta(e);i.isDatasetVisible(e)&&r(n)&&void 0!==n.stack&&(s=!0)}}),e.stacked||s){var l={};n.each(a,function(a,o){var s=i.getDatasetMeta(o),u=[s.type,void 0===e.stacked&&void 0===s.stack?o:"",s.stack].join(".");i.isDatasetVisible(o)&&r(s)&&(void 0===l[u]&&(l[u]=[]),n.each(a.data,function(e,i){var n=l[u],a=+t.getRightValue(e);isNaN(a)||s.data[i].hidden||a<0||(n[i]=n[i]||0,n[i]+=a)}))}),n.each(l,function(e){if(e.length>0){var i=n.min(e),a=n.max(e);t.min=null===t.min?i:Math.min(t.min,i),t.max=null===t.max?a:Math.max(t.max,a)}})}else n.each(a,function(e,a){var o=i.getDatasetMeta(a);i.isDatasetVisible(a)&&r(o)&&n.each(e.data,function(e,i){var n=+t.getRightValue(e);isNaN(n)||o.data[i].hidden||n<0||(null===t.min?t.min=n:n<t.min&&(t.min=n),null===t.max?t.max=n:n>t.max&&(t.max=n),0!==n&&(null===t.minNotZero||n<t.minNotZero)&&(t.minNotZero=n))})});this.handleTickRangeOptions()},handleTickRangeOptions:function(){var t=this,e=t.options.ticks,i=n.valueOrDefault;t.min=i(e.min,t.min),t.max=i(e.max,t.max),t.min===t.max&&(0!==t.min&&null!==t.min?(t.min=Math.pow(10,Math.floor(n.log10(t.min))-1),t.max=Math.pow(10,Math.floor(n.log10(t.max))+1)):(t.min=1,t.max=10)),null===t.min&&(t.min=Math.pow(10,Math.floor(n.log10(t.max))-1)),null===t.max&&(t.max=0!==t.min?Math.pow(10,Math.floor(n.log10(t.min))+1):10),null===t.minNotZero&&(t.min>0?t.minNotZero=t.min:t.max<1?t.minNotZero=Math.pow(10,Math.floor(n.log10(t.max))):t.minNotZero=1)},buildTicks:function(){var t=this,e=t.options.ticks,i=!t.isHorizontal(),a={min:e.min,max:e.max},o=t.ticks=function(t,e){var i,a,o=[],r=n.valueOrDefault,s=r(t.min,Math.pow(10,Math.floor(n.log10(e.min)))),l=Math.floor(n.log10(e.max)),u=Math.ceil(e.max/Math.pow(10,l));0===s?(i=Math.floor(n.log10(e.minNotZero)),a=Math.floor(e.minNotZero/Math.pow(10,i)),o.push(s),s=a*Math.pow(10,i)):(i=Math.floor(n.log10(s)),a=Math.floor(s/Math.pow(10,i)));for(var d=i<0?Math.pow(10,Math.abs(i)):1;o.push(s),10==++a&&(a=1,d=++i>=0?1:d),s=Math.round(a*Math.pow(10,i)*d)/d,i<l||i===l&&a<u;);var c=r(t.max,s);return o.push(c),o}(a,t);t.max=n.max(o),t.min=n.min(o),e.reverse?(i=!i,t.start=t.max,t.end=t.min):(t.start=t.min,t.end=t.max),i&&o.reverse()},convertTicksToLabels:function(){this.tickValues=this.ticks.slice(),t.Scale.prototype.convertTicksToLabels.call(this)},getLabelForIndex:function(t,e){return+this.getRightValue(this.chart.data.datasets[e].data[t])},getPixelForTick:function(t){return this.getPixelForValue(this.tickValues[t])},_getFirstTickValue:function(t){var e=Math.floor(n.log10(t));return Math.floor(t/Math.pow(10,e))*Math.pow(10,e)},getPixelForValue:function(e){var i,a,o,r,s,l=this,u=l.options.ticks.reverse,d=n.log10,c=l._getFirstTickValue(l.minNotZero),h=0;return e=+l.getRightValue(e),u?(o=l.end,r=l.start,s=-1):(o=l.start,r=l.end,s=1),l.isHorizontal()?(i=l.width,a=u?l.right:l.left):(i=l.height,s*=-1,a=u?l.top:l.bottom),e!==o&&(0===o&&(i-=h=n.getValueOrDefault(l.options.ticks.fontSize,t.defaults.global.defaultFontSize),o=c),0!==e&&(h+=i/(d(r)-d(o))*(d(e)-d(o))),a+=s*h),a},getValueForPixel:function(e){var i,a,o,r,s=this,l=s.options.ticks.reverse,u=n.log10,d=s._getFirstTickValue(s.minNotZero);if(l?(a=s.end,o=s.start):(a=s.start,o=s.end),s.isHorizontal()?(i=s.width,r=l?s.right-e:e-s.left):(i=s.height,r=l?e-s.top:s.bottom-e),r!==a){if(0===a){var c=n.getValueOrDefault(s.options.ticks.fontSize,t.defaults.global.defaultFontSize);r-=c,i-=c,a=d}r*=u(o)-u(a),r/=i,r=Math.pow(10,u(a)+r)}return r}});t.scaleService.registerScaleType("logarithmic",i,e)}},{34:34,45:45}],57:[function(t,e,i){"use strict";var n=t(25),a=t(45),o=t(34);e.exports=function(t){var e=n.global,i={display:!0,animate:!0,position:"chartArea",angleLines:{display:!0,color:"rgba(0, 0, 0, 0.1)",lineWidth:1},gridLines:{circular:!1},ticks:{showLabelBackdrop:!0,backdropColor:"rgba(255,255,255,0.75)",backdropPaddingY:2,backdropPaddingX:2,callback:o.formatters.linear},pointLabels:{display:!0,fontSize:10,callback:function(t){return t}}};function r(t){var e=t.options;return e.angleLines.display||e.pointLabels.display?t.chart.data.labels.length:0}function s(t){var i=t.options.pointLabels,n=a.valueOrDefault(i.fontSize,e.defaultFontSize),o=a.valueOrDefault(i.fontStyle,e.defaultFontStyle),r=a.valueOrDefault(i.fontFamily,e.defaultFontFamily);return{size:n,style:o,family:r,font:a.fontString(n,o,r)}}function l(t,e,i,n,a){return t===n||t===a?{start:e-i/2,end:e+i/2}:t<n||t>a?{start:e-i-5,end:e}:{start:e,end:e+i+5}}function u(t,e,i,n){if(a.isArray(e))for(var o=i.y,r=1.5*n,s=0;s<e.length;++s)t.fillText(e[s],i.x,o),o+=r;else t.fillText(e,i.x,i.y)}function d(t){return a.isNumber(t)?t:0}var c=t.LinearScaleBase.extend({setDimensions:function(){var t=this,i=t.options,n=i.ticks;t.width=t.maxWidth,t.height=t.maxHeight,t.xCenter=Math.round(t.width/2),t.yCenter=Math.round(t.height/2);var o=a.min([t.height,t.width]),r=a.valueOrDefault(n.fontSize,e.defaultFontSize);t.drawingArea=i.display?o/2-(r/2+n.backdropPaddingY):o/2},determineDataLimits:function(){var t=this,e=t.chart,i=Number.POSITIVE_INFINITY,n=Number.NEGATIVE_INFINITY;a.each(e.data.datasets,function(o,r){if(e.isDatasetVisible(r)){var s=e.getDatasetMeta(r);a.each(o.data,function(e,a){var o=+t.getRightValue(e);isNaN(o)||s.data[a].hidden||(i=Math.min(o,i),n=Math.max(o,n))})}}),t.min=i===Number.POSITIVE_INFINITY?0:i,t.max=n===Number.NEGATIVE_INFINITY?0:n,t.handleTickRangeOptions()},getTickLimit:function(){var t=this.options.ticks,i=a.valueOrDefault(t.fontSize,e.defaultFontSize);return Math.min(t.maxTicksLimit?t.maxTicksLimit:11,Math.ceil(this.drawingArea/(1.5*i)))},convertTicksToLabels:function(){var e=this;t.LinearScaleBase.prototype.convertTicksToLabels.call(e),e.pointLabels=e.chart.data.labels.map(e.options.pointLabels.callback,e)},getLabelForIndex:function(t,e){return+this.getRightValue(this.chart.data.datasets[e].data[t])},fit:function(){var t,e;this.options.pointLabels.display?function(t){var e,i,n,o=s(t),u=Math.min(t.height/2,t.width/2),d={r:t.width,l:0,t:t.height,b:0},c={};t.ctx.font=o.font,t._pointLabelSizes=[];var h,f,g,p=r(t);for(e=0;e<p;e++){n=t.getPointPosition(e,u),h=t.ctx,f=o.size,g=t.pointLabels[e]||"",i=a.isArray(g)?{w:a.longestText(h,h.font,g),h:g.length*f+1.5*(g.length-1)*f}:{w:h.measureText(g).width,h:f},t._pointLabelSizes[e]=i;var m=t.getIndexAngle(e),v=a.toDegrees(m)%360,b=l(v,n.x,i.w,0,180),x=l(v,n.y,i.h,90,270);b.start<d.l&&(d.l=b.start,c.l=m),b.end>d.r&&(d.r=b.end,c.r=m),x.start<d.t&&(d.t=x.start,c.t=m),x.end>d.b&&(d.b=x.end,c.b=m)}t.setReductions(u,d,c)}(this):(t=this,e=Math.min(t.height/2,t.width/2),t.drawingArea=Math.round(e),t.setCenterPoint(0,0,0,0))},setReductions:function(t,e,i){var n=e.l/Math.sin(i.l),a=Math.max(e.r-this.width,0)/Math.sin(i.r),o=-e.t/Math.cos(i.t),r=-Math.max(e.b-this.height,0)/Math.cos(i.b);n=d(n),a=d(a),o=d(o),r=d(r),this.drawingArea=Math.min(Math.round(t-(n+a)/2),Math.round(t-(o+r)/2)),this.setCenterPoint(n,a,o,r)},setCenterPoint:function(t,e,i,n){var a=this,o=a.width-e-a.drawingArea,r=t+a.drawingArea,s=i+a.drawingArea,l=a.height-n-a.drawingArea;a.xCenter=Math.round((r+o)/2+a.left),a.yCenter=Math.round((s+l)/2+a.top)},getIndexAngle:function(t){return t*(2*Math.PI/r(this))+(this.chart.options&&this.chart.options.startAngle?this.chart.options.startAngle:0)*Math.PI*2/360},getDistanceFromCenterForValue:function(t){var e=this;if(null===t)return 0;var i=e.drawingArea/(e.max-e.min);return e.options.ticks.reverse?(e.max-t)*i:(t-e.min)*i},getPointPosition:function(t,e){var i=this.getIndexAngle(t)-Math.PI/2;return{x:Math.round(Math.cos(i)*e)+this.xCenter,y:Math.round(Math.sin(i)*e)+this.yCenter}},getPointPositionForValue:function(t,e){return this.getPointPosition(t,this.getDistanceFromCenterForValue(e))},getBasePosition:function(){var t=this.min,e=this.max;return this.getPointPositionForValue(0,this.beginAtZero?0:t<0&&e<0?e:t>0&&e>0?t:0)},draw:function(){var t=this,i=t.options,n=i.gridLines,o=i.ticks,l=a.valueOrDefault;if(i.display){var d=t.ctx,c=this.getIndexAngle(0),h=l(o.fontSize,e.defaultFontSize),f=l(o.fontStyle,e.defaultFontStyle),g=l(o.fontFamily,e.defaultFontFamily),p=a.fontString(h,f,g);a.each(t.ticks,function(i,s){if(s>0||o.reverse){var u=t.getDistanceFromCenterForValue(t.ticksAsNumbers[s]);if(n.display&&0!==s&&function(t,e,i,n){var o=t.ctx;if(o.strokeStyle=a.valueAtIndexOrDefault(e.color,n-1),o.lineWidth=a.valueAtIndexOrDefault(e.lineWidth,n-1),t.options.gridLines.circular)o.beginPath(),o.arc(t.xCenter,t.yCenter,i,0,2*Math.PI),o.closePath(),o.stroke();else{var s=r(t);if(0===s)return;o.beginPath();var l=t.getPointPosition(0,i);o.moveTo(l.x,l.y);for(var u=1;u<s;u++)l=t.getPointPosition(u,i),o.lineTo(l.x,l.y);o.closePath(),o.stroke()}}(t,n,u,s),o.display){var f=l(o.fontColor,e.defaultFontColor);if(d.font=p,d.save(),d.translate(t.xCenter,t.yCenter),d.rotate(c),o.showLabelBackdrop){var g=d.measureText(i).width;d.fillStyle=o.backdropColor,d.fillRect(-g/2-o.backdropPaddingX,-u-h/2-o.backdropPaddingY,g+2*o.backdropPaddingX,h+2*o.backdropPaddingY)}d.textAlign="center",d.textBaseline="middle",d.fillStyle=f,d.fillText(i,0,-u),d.restore()}}}),(i.angleLines.display||i.pointLabels.display)&&function(t){var i=t.ctx,n=t.options,o=n.angleLines,l=n.pointLabels;i.lineWidth=o.lineWidth,i.strokeStyle=o.color;var d,c,h,f,g=t.getDistanceFromCenterForValue(n.ticks.reverse?t.min:t.max),p=s(t);i.textBaseline="top";for(var m=r(t)-1;m>=0;m--){if(o.display){var v=t.getPointPosition(m,g);i.beginPath(),i.moveTo(t.xCenter,t.yCenter),i.lineTo(v.x,v.y),i.stroke(),i.closePath()}if(l.display){var b=t.getPointPosition(m,g+5),x=a.valueAtIndexOrDefault(l.fontColor,m,e.defaultFontColor);i.font=p.font,i.fillStyle=x;var y=t.getIndexAngle(m),k=a.toDegrees(y);i.textAlign=0===(f=k)||180===f?"center":f<180?"left":"right",d=k,c=t._pointLabelSizes[m],h=b,90===d||270===d?h.y-=c.h/2:(d>270||d<90)&&(h.y-=c.h),u(i,t.pointLabels[m]||"",b,p.size)}}}(t)}}});t.scaleService.registerScaleType("radialLinear",c,i)}},{25:25,34:34,45:45}],58:[function(t,e,i){"use strict";var n=t(1);n="function"==typeof n?n:window.moment;var a=t(25),o=t(45),r=Number.MIN_SAFE_INTEGER||-9007199254740991,s=Number.MAX_SAFE_INTEGER||9007199254740991,l={millisecond:{common:!0,size:1,steps:[1,2,5,10,20,50,100,250,500]},second:{common:!0,size:1e3,steps:[1,2,5,10,30]},minute:{common:!0,size:6e4,steps:[1,2,5,10,30]},hour:{common:!0,size:36e5,steps:[1,2,3,6,12]},day:{common:!0,size:864e5,steps:[1,2,5]},week:{common:!1,size:6048e5,steps:[1,2,3,4]},month:{common:!0,size:2628e6,steps:[1,2,3]},quarter:{common:!1,size:7884e6,steps:[1,2,3,4]},year:{common:!0,size:3154e7}},u=Object.keys(l);function d(t,e){return t-e}function c(t){var e,i,n,a={},o=[];for(e=0,i=t.length;e<i;++e)a[n=t[e]]||(a[n]=!0,o.push(n));return o}function h(t,e,i,n){var a=function(t,e,i){for(var n,a,o,r=0,s=t.length-1;r>=0&&r<=s;){if(a=t[(n=r+s>>1)-1]||null,o=t[n],!a)return{lo:null,hi:o};if(o[e]<i)r=n+1;else{if(!(a[e]>i))return{lo:a,hi:o};s=n-1}}return{lo:o,hi:null}}(t,e,i),o=a.lo?a.hi?a.lo:t[t.length-2]:t[0],r=a.lo?a.hi?a.hi:t[t.length-1]:t[1],s=r[e]-o[e],l=s?(i-o[e])/s:0,u=(r[n]-o[n])*l;return o[n]+u}function f(t,e){var i=e.parser,a=e.parser||e.format;return"function"==typeof i?i(t):"string"==typeof t&&"string"==typeof a?n(t,a):(t instanceof n||(t=n(t)),t.isValid()?t:"function"==typeof a?a(t):t)}function g(t,e){if(o.isNullOrUndef(t))return null;var i=e.options.time,n=f(e.getRightValue(t),i);return n.isValid()?(i.round&&n.startOf(i.round),n.valueOf()):null}function p(t){for(var e=u.indexOf(t)+1,i=u.length;e<i;++e)if(l[u[e]].common)return u[e]}function m(t,e,i,a){var r,d=a.time,c=d.unit||function(t,e,i,n){var a,o,r,d=u.length;for(a=u.indexOf(t);a<d-1;++a)if(r=(o=l[u[a]]).steps?o.steps[o.steps.length-1]:s,o.common&&Math.ceil((i-e)/(r*o.size))<=n)return u[a];return u[d-1]}(d.minUnit,t,e,i),h=p(c),f=o.valueOrDefault(d.stepSize,d.unitStepSize),g="week"===c&&d.isoWeekday,m=a.ticks.major.enabled,v=l[c],b=n(t),x=n(e),y=[];for(f||(f=function(t,e,i,n){var a,o,r,s=e-t,u=l[i],d=u.size,c=u.steps;if(!c)return Math.ceil(s/(n*d));for(a=0,o=c.length;a<o&&(r=c[a],!(Math.ceil(s/(d*r))<=n));++a);return r}(t,e,c,i)),g&&(b=b.isoWeekday(g),x=x.isoWeekday(g)),b=b.startOf(g?"day":c),(x=x.startOf(g?"day":c))<e&&x.add(1,c),r=n(b),m&&h&&!g&&!d.round&&(r.startOf(h),r.add(~~((b-r)/(v.size*f))*f,c));r<x;r.add(f,c))y.push(+r);return y.push(+r),y}e.exports=function(t){var e=t.Scale.extend({initialize:function(){if(!n)throw new Error("Chart.js - Moment.js could not be found! You must include it before Chart.js to use the time scale. Download at https://momentjs.com");this.mergeTicksOptions(),t.Scale.prototype.initialize.call(this)},update:function(){var e=this.options;return e.time&&e.time.format&&console.warn("options.time.format is deprecated and replaced by options.time.parser."),t.Scale.prototype.update.apply(this,arguments)},getRightValue:function(e){return e&&void 0!==e.t&&(e=e.t),t.Scale.prototype.getRightValue.call(this,e)},determineDataLimits:function(){var t,e,i,a,l,u,h=this,f=h.chart,p=h.options.time,m=p.unit||"day",v=s,b=r,x=[],y=[],k=[];for(t=0,i=f.data.labels.length;t<i;++t)k.push(g(f.data.labels[t],h));for(t=0,i=(f.data.datasets||[]).length;t<i;++t)if(f.isDatasetVisible(t))if(l=f.data.datasets[t].data,o.isObject(l[0]))for(y[t]=[],e=0,a=l.length;e<a;++e)u=g(l[e],h),x.push(u),y[t][e]=u;else x.push.apply(x,k),y[t]=k.slice(0);else y[t]=[];k.length&&(k=c(k).sort(d),v=Math.min(v,k[0]),b=Math.max(b,k[k.length-1])),x.length&&(x=c(x).sort(d),v=Math.min(v,x[0]),b=Math.max(b,x[x.length-1])),v=g(p.min,h)||v,b=g(p.max,h)||b,v=v===s?+n().startOf(m):v,b=b===r?+n().endOf(m)+1:b,h.min=Math.min(v,b),h.max=Math.max(v+1,b),h._horizontal=h.isHorizontal(),h._table=[],h._timestamps={data:x,datasets:y,labels:k}},buildTicks:function(){var t,e,i,a,o,r,s,d,c,v,b,x,y=this,k=y.min,M=y.max,w=y.options,S=w.time,C=[],_=[];switch(w.ticks.source){case"data":C=y._timestamps.data;break;case"labels":C=y._timestamps.labels;break;case"auto":default:C=m(k,M,y.getLabelCapacity(k),w)}for("ticks"===w.bounds&&C.length&&(k=C[0],M=C[C.length-1]),k=g(S.min,y)||k,M=g(S.max,y)||M,t=0,e=C.length;t<e;++t)(i=C[t])>=k&&i<=M&&_.push(i);return y.min=k,y.max=M,y._unit=S.unit||function(t,e,i,a){var o,r,s=n.duration(n(a).diff(n(i)));for(o=u.length-1;o>=u.indexOf(e);o--)if(r=u[o],l[r].common&&s.as(r)>=t.length)return r;return u[e?u.indexOf(e):0]}(_,S.minUnit,y.min,y.max),y._majorUnit=p(y._unit),y._table=function(t,e,i,n){if("linear"===n||!t.length)return[{time:e,pos:0},{time:i,pos:1}];var a,o,r,s,l,u=[],d=[e];for(a=0,o=t.length;a<o;++a)(s=t[a])>e&&s<i&&d.push(s);for(d.push(i),a=0,o=d.length;a<o;++a)l=d[a+1],r=d[a-1],s=d[a],void 0!==r&&void 0!==l&&Math.round((l+r)/2)===s||u.push({time:s,pos:a/(o-1)});return u}(y._timestamps.data,k,M,w.distribution),y._offsets=(a=y._table,o=_,r=k,s=M,b=0,x=0,(d=w).offset&&o.length&&(d.time.min||(c=o.length>1?o[1]:s,v=o[0],b=(h(a,"time",c,"pos")-h(a,"time",v,"pos"))/2),d.time.max||(c=o[o.length-1],v=o.length>1?o[o.length-2]:r,x=(h(a,"time",c,"pos")-h(a,"time",v,"pos"))/2)),{left:b,right:x}),y._labelFormat=function(t,e){var i,n,a,o=t.length;for(i=0;i<o;i++){if(0!==(n=f(t[i],e)).millisecond())return"MMM D, YYYY h:mm:ss.SSS a";0===n.second()&&0===n.minute()&&0===n.hour()||(a=!0)}return a?"MMM D, YYYY h:mm:ss a":"MMM D, YYYY"}(y._timestamps.data,S),function(t,e){var i,a,o,r,s=[];for(i=0,a=t.length;i<a;++i)o=t[i],r=!!e&&o===+n(o).startOf(e),s.push({value:o,major:r});return s}(_,y._majorUnit)},getLabelForIndex:function(t,e){var i=this.chart.data,n=this.options.time,a=i.labels&&t<i.labels.length?i.labels[t]:"",r=i.datasets[e].data[t];return o.isObject(r)&&(a=this.getRightValue(r)),n.tooltipFormat?f(a,n).format(n.tooltipFormat):"string"==typeof a?a:f(a,n).format(this._labelFormat)},tickFormatFunction:function(t,e,i,n){var a=this.options,r=t.valueOf(),s=a.time.displayFormats,l=s[this._unit],u=this._majorUnit,d=s[u],c=t.clone().startOf(u).valueOf(),h=a.ticks.major,f=h.enabled&&u&&d&&r===c,g=t.format(n||(f?d:l)),p=f?h:a.ticks.minor,m=o.valueOrDefault(p.callback,p.userCallback);return m?m(g,e,i):g},convertTicksToLabels:function(t){var e,i,a=[];for(e=0,i=t.length;e<i;++e)a.push(this.tickFormatFunction(n(t[e].value),e,t));return a},getPixelForOffset:function(t){var e=this,i=e._horizontal?e.width:e.height,n=e._horizontal?e.left:e.top,a=h(e._table,"time",t,"pos");return n+i*(e._offsets.left+a)/(e._offsets.left+1+e._offsets.right)},getPixelForValue:function(t,e,i){var n=null;if(void 0!==e&&void 0!==i&&(n=this._timestamps.datasets[i][e]),null===n&&(n=g(t,this)),null!==n)return this.getPixelForOffset(n)},getPixelForTick:function(t){var e=this.getTicks();return t>=0&&t<e.length?this.getPixelForOffset(e[t].value):null},getValueForPixel:function(t){var e=this,i=e._horizontal?e.width:e.height,a=e._horizontal?e.left:e.top,o=(i?(t-a)/i:0)*(e._offsets.left+1+e._offsets.left)-e._offsets.right,r=h(e._table,"pos",o,"time");return n(r)},getLabelWidth:function(t){var e=this.options.ticks,i=this.ctx.measureText(t).width,n=o.toRadians(e.maxRotation),r=Math.cos(n),s=Math.sin(n);return i*r+o.valueOrDefault(e.fontSize,a.global.defaultFontSize)*s},getLabelCapacity:function(t){var e=this,i=e.options.time.displayFormats.millisecond,a=e.tickFormatFunction(n(t),0,[],i),o=e.getLabelWidth(a),r=e.isHorizontal()?e.width:e.height,s=Math.floor(r/o);return s>0?s:1}});t.scaleService.registerScaleType("time",e,{position:"bottom",distribution:"linear",bounds:"data",time:{parser:!1,format:!1,unit:!1,round:!1,displayFormat:!1,isoWeekday:!1,minUnit:"millisecond",displayFormats:{millisecond:"h:mm:ss.SSS a",second:"h:mm:ss a",minute:"h:mm a",hour:"hA",day:"MMM D",week:"ll",month:"MMM YYYY",quarter:"[Q]Q - YYYY",year:"YYYY"}},ticks:{autoSkip:!1,source:"auto",major:{enabled:!1}}})}},{1:1,25:25,45:45}]},{},[7])(7)});
+var defaults = {
+  align: 'center',
+  anchor: 'center',
+  backgroundColor: null,
+  borderColor: null,
+  borderRadius: 0,
+  borderWidth: 0,
+  clamp: false,
+  clip: false,
+  color: undefined,
+  display: true,
+  font: {
+    family: undefined,
+    lineHeight: 1.2,
+    size: undefined,
+    style: undefined,
+    weight: null
+  },
+  formatter: formatter,
+  labels: undefined,
+  listeners: {},
+  offset: 4,
+  opacity: 1,
+  padding: {
+    top: 4,
+    right: 4,
+    bottom: 4,
+    left: 4
+  },
+  rotation: 0,
+  textAlign: 'start',
+  textStrokeColor: undefined,
+  textStrokeWidth: 0,
+  textShadowBlur: 0,
+  textShadowColor: undefined
+};
+
+/**
+ * @see https://github.com/chartjs/Chart.js/issues/4176
+ */
+
+var EXPANDO_KEY = '$datalabels';
+var DEFAULT_KEY = '$default';
+
+function configure(dataset, options) {
+  var override = dataset.datalabels;
+  var listeners = {};
+  var configs = [];
+  var labels, keys;
+
+  if (override === false) {
+    return null;
+  }
+  if (override === true) {
+    override = {};
+  }
+
+  options = helpers.merge({}, [options, override]);
+  labels = options.labels || {};
+  keys = Object.keys(labels);
+  delete options.labels;
+
+  if (keys.length) {
+    keys.forEach(function(key) {
+      if (labels[key]) {
+        configs.push(helpers.merge({}, [
+          options,
+          labels[key],
+          {_key: key}
+        ]));
+      }
+    });
+  } else {
+    // Default label if no "named" label defined.
+    configs.push(options);
+  }
+
+  // listeners: {<event-type>: {<label-key>: <fn>}}
+  listeners = configs.reduce(function(target, config) {
+    helpers.each(config.listeners || {}, function(fn, event) {
+      target[event] = target[event] || {};
+      target[event][config._key || DEFAULT_KEY] = fn;
+    });
+
+    delete config.listeners;
+    return target;
+  }, {});
+
+  return {
+    labels: configs,
+    listeners: listeners
+  };
+}
+
+function dispatchEvent(chart, listeners, label, event) {
+  if (!listeners) {
+    return;
+  }
+
+  var context = label.$context;
+  var groups = label.$groups;
+  var callback;
+
+  if (!listeners[groups._set]) {
+    return;
+  }
+
+  callback = listeners[groups._set][groups._key];
+  if (!callback) {
+    return;
+  }
+
+  if (helpers.callback(callback, [context, event]) === true) {
+    // Users are allowed to tweak the given context by injecting values that can be
+    // used in scriptable options to display labels differently based on the current
+    // event (e.g. highlight an hovered label). That's why we update the label with
+    // the output context and schedule a new chart render by setting it dirty.
+    chart[EXPANDO_KEY]._dirty = true;
+    label.update(context);
+  }
+}
+
+function dispatchMoveEvents(chart, listeners, previous, label, event) {
+  var enter, leave;
+
+  if (!previous && !label) {
+    return;
+  }
+
+  if (!previous) {
+    enter = true;
+  } else if (!label) {
+    leave = true;
+  } else if (previous !== label) {
+    leave = enter = true;
+  }
+
+  if (leave) {
+    dispatchEvent(chart, listeners.leave, previous, event);
+  }
+  if (enter) {
+    dispatchEvent(chart, listeners.enter, label, event);
+  }
+}
+
+function handleMoveEvents(chart, event) {
+  var expando = chart[EXPANDO_KEY];
+  var listeners = expando._listeners;
+  var previous, label;
+
+  if (!listeners.enter && !listeners.leave) {
+    return;
+  }
+
+  if (event.type === 'mousemove') {
+    label = layout.lookup(expando._labels, event);
+  } else if (event.type !== 'mouseout') {
+    return;
+  }
+
+  previous = expando._hovered;
+  expando._hovered = label;
+  dispatchMoveEvents(chart, listeners, previous, label, event);
+}
+
+function handleClickEvents(chart, event) {
+  var expando = chart[EXPANDO_KEY];
+  var handlers = expando._listeners.click;
+  var label = handlers && layout.lookup(expando._labels, event);
+  if (label) {
+    dispatchEvent(chart, handlers, label, event);
+  }
+}
+
+var plugin = {
+  id: 'datalabels',
+
+  defaults: defaults,
+
+  beforeInit: function(chart) {
+    chart[EXPANDO_KEY] = {
+      _actives: []
+    };
+  },
+
+  beforeUpdate: function(chart) {
+    var expando = chart[EXPANDO_KEY];
+    expando._listened = false;
+    expando._listeners = {};     // {<event-type>: {<dataset-index>: {<label-key>: <fn>}}}
+    expando._datasets = [];      // per dataset labels: [Label[]]
+    expando._labels = [];        // layouted labels: Label[]
+  },
+
+  afterDatasetUpdate: function(chart, args, options) {
+    var datasetIndex = args.index;
+    var expando = chart[EXPANDO_KEY];
+    var labels = expando._datasets[datasetIndex] = [];
+    var visible = chart.isDatasetVisible(datasetIndex);
+    var dataset = chart.data.datasets[datasetIndex];
+    var config = configure(dataset, options);
+    var elements = args.meta.data || [];
+    var ctx = chart.ctx;
+    var i, j, ilen, jlen, cfg, key, el, label;
+
+    ctx.save();
+
+    for (i = 0, ilen = elements.length; i < ilen; ++i) {
+      el = elements[i];
+      el[EXPANDO_KEY] = [];
+
+      if (visible && el && chart.getDataVisibility(i) && !el.skip) {
+        for (j = 0, jlen = config.labels.length; j < jlen; ++j) {
+          cfg = config.labels[j];
+          key = cfg._key;
+
+          label = new Label(cfg, ctx, el, i);
+          label.$groups = {
+            _set: datasetIndex,
+            _key: key || DEFAULT_KEY
+          };
+          label.$context = {
+            active: false,
+            chart: chart,
+            dataIndex: i,
+            dataset: dataset,
+            datasetIndex: datasetIndex
+          };
+
+          label.update(label.$context);
+          el[EXPANDO_KEY].push(label);
+          labels.push(label);
+        }
+      }
+    }
+
+    ctx.restore();
+
+    // Store listeners at the chart level and per event type to optimize
+    // cases where no listeners are registered for a specific event.
+    helpers.merge(expando._listeners, config.listeners, {
+      merger: function(event, target, source) {
+        target[event] = target[event] || {};
+        target[event][args.index] = source[event];
+        expando._listened = true;
+      }
+    });
+  },
+
+  afterUpdate: function(chart) {
+    chart[EXPANDO_KEY]._labels = layout.prepare(chart[EXPANDO_KEY]._datasets);
+  },
+
+  // Draw labels on top of all dataset elements
+  // https://github.com/chartjs/chartjs-plugin-datalabels/issues/29
+  // https://github.com/chartjs/chartjs-plugin-datalabels/issues/32
+  afterDatasetsDraw: function(chart) {
+    layout.draw(chart, chart[EXPANDO_KEY]._labels);
+  },
+
+  beforeEvent: function(chart, args) {
+    // If there is no listener registered for this chart, `listened` will be false,
+    // meaning we can immediately ignore the incoming event and avoid useless extra
+    // computation for users who don't implement label interactions.
+    if (chart[EXPANDO_KEY]._listened) {
+      var event = args.event;
+      switch (event.type) {
+      case 'mousemove':
+      case 'mouseout':
+        handleMoveEvents(chart, event);
+        break;
+      case 'click':
+        handleClickEvents(chart, event);
+        break;
+      }
+    }
+  },
+
+  afterEvent: function(chart) {
+    var expando = chart[EXPANDO_KEY];
+    var previous = expando._actives;
+    var actives = expando._actives = chart.getActiveElements();
+    var updates = utils.arrayDiff(previous, actives);
+    var i, ilen, j, jlen, update, label, labels;
+
+    for (i = 0, ilen = updates.length; i < ilen; ++i) {
+      update = updates[i];
+      if (update[1]) {
+        labels = update[0].element[EXPANDO_KEY] || [];
+        for (j = 0, jlen = labels.length; j < jlen; ++j) {
+          label = labels[j];
+          label.$context.active = (update[1] === 1);
+          label.update(label.$context);
+        }
+      }
+    }
+
+    if (expando._dirty || updates.length) {
+      layout.update(expando._labels);
+      chart.render();
+    }
+
+    delete expando._dirty;
+  }
+};
+
+return plugin;
+
+}));
+
+

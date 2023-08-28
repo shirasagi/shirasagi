@@ -156,7 +156,7 @@ module Opendata::ResourceReportBase
         if resources.blank?
           [ [ dataset_id, -1 ] ]
         else
-          resources.map { |hash| [ dataset_id, hash["_id"] ] }
+          resources.map { |resource_id| [ dataset_id, resource_id ] }
         end
       end
       available_dataset_and_resources.flatten!(1)

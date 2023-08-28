@@ -20,10 +20,10 @@ class Gws::Schedule::UserPlansController < ApplicationController
     super.merge member_ids: [@user.id]
   end
 
-  def redirection_view
-    return 'month' if params.dig(:calendar, :view) == 'timelineDay'
-    super
-  end
+  #def redirection_view
+  #  return 'month' if params.dig(:calendar, :view) == 'timelineDay'
+  #  super
+  #end
 
   def set_items
     set_user
@@ -47,5 +47,8 @@ class Gws::Schedule::UserPlansController < ApplicationController
     @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@user).
       search(todo_search)
+
+    @works = Gws::Workload::Work.site(@cur_site).without_deleted.
+      member(@user)
   end
 end

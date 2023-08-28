@@ -1,42 +1,38 @@
-class Gws::Bookmark
-  include SS::Document
-  include Gws::Reference::User
-  include Gws::Reference::Site
-  include Gws::SitePermission
+module Gws::Bookmark
+  extend Gws::ModulePermission
+
+  set_permission_name :gws_bookmarks, :edit
+
+  module_function
 
   BOOKMARK_MODEL_TYPES = %w(
-    portal reminder bookmark schedule memo board faq qna report workflow
-    circular discussion monitor share shared_address elasticsearch staff_record
+    portal notice schedule todo reminder presence memo bookmark attendance affair daily_report report workflow workload
+    circular monitor survey board faq qna discussion share shared_address personal_address elasticsearch staff_record
   ).freeze
+  BOOKMARK_MODEL_SPECIAL_TYPES = %w(external_link other).freeze
+  BOOKMARK_MODEL_DEFAULT_TYPE = "external_link".freeze
+  BOOKMARK_MODEL_FALLBACK_TYPE = "other".freeze
+  BOOKMARK_MODEL_ALL_TYPES = (BOOKMARK_MODEL_TYPES + BOOKMARK_MODEL_SPECIAL_TYPES).freeze
 
-  set_permission_name 'gws_bookmarks', :edit
+  def bookmark_model_options_all(site)
+    options = []
+    private_options = []
 
-  seqid :id
-  field :name, type: String
-  field :url, type: String
-  field :bookmark_model, type: String
+    BOOKMARK_MODEL_TYPES.each do |model_type|
+      next if site.nil?
 
-  permit_params :name, :url, :bookmark_model
-
-  validates :name, presence: true, length: { maximum: 80 }
-  validates :url, presence: true
-  validates :bookmark_model, presence: true, inclusion: { in: (%w(other) << BOOKMARK_MODEL_TYPES).flatten }
-
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
-    criteria = criteria.where(bookmark_model: params[:bookmark_model]) if params[:bookmark_model].present?
-    criteria
-  }
-
-  default_scope ->{ order_by(updated: -1) }
-
-  def bookmark_model_options
-    options = BOOKMARK_MODEL_TYPES.map do |model_type|
-      [@cur_site.try(:"menu_#{model_type}_label") || I18n.t("modules.gws/#{model_type}"), model_type]
+      name = site.send("menu_#{model_type}_label") || I18n.t("modules.gws/#{model_type}")
+      if site.menu_visible?(model_type)
+        options << [name, model_type]
+      else
+        private_options << [name, model_type]
+      end
     end
-    options.push([I18n.t('gws/bookmark.options.bookmark_model.other'), 'other'])
+
+    BOOKMARK_MODEL_SPECIAL_TYPES.each do |model_type|
+      options << [I18n.t("gws/bookmark.options.bookmark_model.#{model_type}"), model_type]
+    end
+
+    [options, private_options]
   end
 end

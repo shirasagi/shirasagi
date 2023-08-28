@@ -76,12 +76,31 @@ class Webmail::MailsController < ApplicationController
   def index
     @sys_notices = Sys::Notice.and_public.webmail_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
 
+    @sort_hash = @cur_user.webmail_message_sort_hash(
+      params[:webmail_mode], params[:account], @mailbox, params[:sort], params[:order])
     @items = @imap.mails.
       mailbox(@mailbox).
       search(params[:s]).
+      reorder(@sort_hash).
       page(params[:page]).
       per(50).
       all
+
+    uid_list = []
+    @items.each do |item|
+      uid_list << item.uid
+    end
+
+    webmail_uid_list_session = session[:webmail_uid_list]
+    webmail_uid_list_session ||= {}
+    webmail_uid_list_session['uid_list'] = uid_list
+    if params[:s]
+      webmail_uid_list_session['search'] = params[:s].to_unsafe_h
+    else
+      webmail_uid_list_session['search'] = nil
+    end
+    webmail_uid_list_session['page'] = params[:page]
+    session[:webmail_uid_list] = webmail_uid_list_session
   end
 
   def show
@@ -89,6 +108,31 @@ class Webmail::MailsController < ApplicationController
       @imap.select(@mailbox)
       @item.set_seen
       @mailboxes = @imap.mailboxes.update_status
+    end
+
+    # 念の為初期化する（本アクションで設定するメンバー変数一覧を明示的に示す意図もある）
+    @uid_list = nil
+    @uid_index = nil
+    @next_uid = nil
+    @prev_uid = nil
+    @search = nil
+    @page = 1
+    webmail_uid_list_session = session[:webmail_uid_list]
+    return if webmail_uid_list_session.blank?
+
+    @uid_list = webmail_uid_list_session['uid_list']
+    @search = webmail_uid_list_session['search']
+    @page = webmail_uid_list_session['page']
+    return if @uid_list.blank?
+
+    @uid_index = @uid_list.index(@item.uid)
+    return if @uid_index.blank?
+
+    if @uid_index > 0
+      @prev_uid = @uid_list[@uid_index - 1]
+    end
+    if @uid_index < @uid_list.size
+      @next_uid = @uid_list[@uid_index + 1]
     end
   end
 

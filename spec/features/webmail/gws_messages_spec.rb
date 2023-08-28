@@ -26,8 +26,11 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
       it "#show" do
         # new/create
         visit index_path
+        wait_for_js_ready
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"
             fill_in "item[subject]", with: item_title
@@ -48,22 +51,27 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
 
         # reload mails
         visit index_path
+        wait_for_js_ready
         click_link item_title
+        wait_for_js_ready
 
         # forward
         new_window = window_opened_by { click_link I18n.t('webmail.links.forward_gws_message') }
         within_window new_window do
-          first('.gws-addon-memo-member .ajax-box').click
+          wait_for_document_loading
+          wait_for_js_ready
+          wait_cbox_open { first('.gws-addon-memo-member .ajax-box').click }
           wait_for_cbox do
-            click_on user.name
+            wait_cbox_close { click_on user.name }
           end
-          page.accept_alert do
+          page.accept_alert I18n.t("ss.confirm.send") do
             click_on I18n.t('ss.buttons.send')
           end
         end
         wait_for_notice I18n.t('ss.notice.sent')
 
         visit gws_memo_messages_path(site: site, folder: 'INBOX.Sent')
+        wait_for_js_ready
         expect(has_link?(item_title)).to be_truthy
       end
     end

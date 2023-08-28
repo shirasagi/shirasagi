@@ -20,7 +20,7 @@ describe Opendata::Harvest::ImportDatasetsJob, type: :feature, dbscope: :example
         stub_request(:get, "http://source.example.jp/dataset/search/index.p1.html").
           to_return(body: search_html, status: 200, headers: { 'Content-Type' => 'text/html' })
 
-        job = described_class.bind(site_id: site)
+        job = described_class.bind(site_id: site.id)
         expect { job.perform_now(importer.id) }.to output(include("dataset_urls 0\n")).to_stdout
       end
 
@@ -70,7 +70,7 @@ describe Opendata::Harvest::ImportDatasetsJob, type: :feature, dbscope: :example
         stub_request(:get, 'https://source.example.jp/fs/1/6/7/_/sample2.xlsx').
           to_return(body: sample2_xlsx, status: 200, headers: { 'Content-Type' => 'application/octet-stream' })
 
-        job = described_class.bind(site_id: site)
+        job = described_class.bind(site_id: site.id)
         expect { job.perform_now(importer.id) }.to output(include("dataset_urls 5\n")).to_stdout
       end
 
@@ -174,7 +174,7 @@ describe Opendata::Harvest::ImportDatasetsJob, type: :feature, dbscope: :example
 
         Opendata::Dataset.destroy_all
 
-        job = described_class.bind(site_id: site)
+        job = described_class.bind(site_id: site.id)
         expect { job.perform_now(importer.id) }.to output(include("dataset_urls 5\n")).to_stdout
 
         log = Job::Log.first

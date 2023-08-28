@@ -21,6 +21,13 @@ describe Cms::Part::Free, type: :model, dbscope: :example do
     end
   end
 
+  # released フィールドを用いて公開予約的な働きをさせていたみたいだが、以下の理由から、この仕様・動作を改めた。
+  #
+  # 1) 公開予約機能を表すアドオン Cms::Addon::ReleasePlan があった。
+  # 2) v1.16.0 よりフォルダーにも公開予約機能をつけた。この際 Cms::Addon::ReleasePlan を用いて公開予約機能を実現した。
+  # 3) https://github.com/shirasagi/shirasagi/issues/4868 を修正するために掲題の仕様・動作の修正が必要だった。
+  #
+  # 今後、公開予約機能が必要な際は Cms::Addon::ReleasePlan を用いるようにする
   describe ".and_public" do
     let(:site) { cms_site }
     let(:node) { create :cms_node_node, site: site }
@@ -38,10 +45,10 @@ describe Cms::Part::Free, type: :model, dbscope: :example do
       expect(Cms::Part.and_public.pluck(:id)).to include(part1.id, part3.id)
 
       # at current
-      expect(described_class.and_public(current).count).to eq 1
-      expect(described_class.and_public(current).pluck(:id)).to include(part1.id)
-      expect(Cms::Part.and_public(current).count).to eq 1
-      expect(Cms::Part.and_public(current).pluck(:id)).to include(part1.id)
+      expect(described_class.and_public(current).count).to eq 2
+      expect(described_class.and_public(current).pluck(:id)).to include(part1.id, part3.id)
+      expect(Cms::Part.and_public(current).count).to eq 2
+      expect(Cms::Part.and_public(current).pluck(:id)).to include(part1.id, part3.id)
 
       # at current + 1.day
       expect(described_class.and_public(current + 1.day).count).to eq 2

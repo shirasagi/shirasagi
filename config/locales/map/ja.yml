@@ -43,15 +43,23 @@ ja:
       map_reference_method:
         direct: 地図上で個別に地点を選択する
         page: 定型フォームで選択されたページの地点を参照する
+      center_setting:
+        auto: 自動
+        fixed: 指定位置
+      zoom_setting:
+        auto: 自動
+        fixed: 指定レベル
 
   modules:
     map: 地図
     addons:
       map/page: 地図
+      map/search_setting: 地図設定
 
   mongoid:
     attributes:
       map/addon/page:
+        map_points: マーカー設定
         map_loc: 緯度,経度
         map_zoom: 縮尺
         marker_name: マーカー名
@@ -59,9 +67,18 @@ ja:
         marker_loc: 座標
         marker_link: リンク
         set_center_position: 中心位置
-        set_zoom_level: ズームレベル
-        map_reference_method: 指定方法
-        map_reference_column_name: 項目名
+        set_zoom_level: 指定ズームレベル
+        map_reference_method: マーカー指定方法
+        map_reference_column_name: マーカー項目名
+        center_setting: 中心位置指定方法
+        zoom_setting: ズーム指定方法
+        map_zoom_level: 地図の縮尺（自動ズームレベル）
+      map/addon/search_setting:
+        map_cluster_setting: マーカークラスター
+        map_center_setting: 中心位置設定
+        map_center: 中心位置
+        map_zoom_setting: ズーム設定
+        map_zoom_level: ズーム
 
   tooltip:
     map/addon/page:
@@ -74,8 +91,8 @@ ja:
         -
         - 「指定位置」の場合
         - 「現在の中心に位置をコピー」を選択することで現在表示されている地図の中心座標を取得できます。
-        - 座標を直接入力し中心位置を設定する場合は、入力欄にカンマ(,)区切りで緯度経度を入力します。
-        - 例:33.8957612,133.6806607
+        - 座標を直接入力し中心位置を設定する場合は、入力欄にカンマ(,)区切りで経度緯度を入力します。
+        - 例:133.6806607,33.8957612
       zoom_setting:
         - ズームレベルを設定できます。
         - 「自動」の場合
@@ -115,3 +132,28 @@ ja:
         - 選択された地点が公開画面に表示されます。
         -
         - 項目名を選択した場合、選択した項目名に設定されているページの地点が公開画面に表示されます。
+    map/addon/search_setting:
+      map_cluster_setting:
+        - 有効にすると距離の近いマーカーをクラスター表示します。
+        - この設定は地図APIが「Googleマップ」の時にのみ有効です。
+      map_center:
+        - 地図の中心位置を設定できます。
+        - 「自動」の場合
+        - マーカーを設置していない場合、デフォルトの中心座標が地図の中央に設定されます。
+        - マーカーが1個の場合は、マーカーの座標が地図の中央に設定されます。
+        - マーカーが2個以上の場合は、全てのマーカーの中心が地図の中央に設定されます。
+        -
+        - 「指定位置」の場合
+        - 入力欄にカンマ(,)区切りで経度緯度を入力します。
+        - 例:133.6806607,33.8957612
+      map_zoom_level:
+        - ズームレベルを設定できます。
+        - 「自動」の場合
+        - マーカーが0～1個の場合、デフォルトのズームレベルが設定されます。
+        - マーカーが2個以上の場合、全てのマーカーが地図上に表示されるように調節されます。
+        -
+        - 「指定レベル」の場合
+        - ズームレベルは入力した数値に設定されます。
+        - GoogleMapでは1から21の範囲で設定してください。
+        - OpenLayersでは1から18の範囲で設定してください。
+        - OpenStreetMapでは1から18の範囲で設定してください。

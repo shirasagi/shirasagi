@@ -30,10 +30,14 @@ module Cms::ContentLiquid
       end
       export :current? do |context|
         # ApplicationHelper#current_url?
+        site = context.registers[:cur_site]
         cur_path = context.registers[:cur_path]
         next false if cur_path.blank?
 
         current = cur_path.sub(/\?.*/, "")
+        current = current.sub(site.mobile_location, '') if site.mobile_enabled?
+        current = current.sub(SS.config.kana.location, '') if !SS.config.kana.disable
+        current = current.sub(/#{::Regexp.escape(SS.config.translate.location)}\/[^\/]*/, '') if site.translate_enabled?
         next false if current.delete("/").blank?
         next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
         next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/

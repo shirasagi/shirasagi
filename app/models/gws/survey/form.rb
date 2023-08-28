@@ -41,6 +41,13 @@ class Gws::Survey::Form
   validates :file_state, inclusion: { in: %w(closed public), allow_blank: true }
   validates :file_edit_state, inclusion: { in: %w(disabled enabled enabled_until_due_date), allow_blank: true }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
+  update_form do |form|
+    ::Gws::Elasticsearch::Indexer::SurveyFormJob.around_save(form) { true }
+  end
+
   scope :and_public, ->(date = Time.zone.now) {
     date = date.dup
     where("$and" => [
@@ -48,6 +55,18 @@ class Gws::Survey::Form
       { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
       { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
     ])
+  }
+
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      all.reorder(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('due_date')
+      all.reorder(due_date: key.end_with?('_asc') ? 1 : -1)
+    else
+      all
+    end
   }
 
   class << self

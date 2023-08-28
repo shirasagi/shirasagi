@@ -40,11 +40,16 @@ module Workflow::Model::Route
 
   module ClassMethods
     def route_options(user, options = {})
+      item = options[:item]
+      site = options[:site]
+
       ret = []
-      if options[:item].present? && options[:item].workflow_approvers.present?
+      if item && item.workflow_approvers.present?
         ret << [ I18n.t("workflow.restart_workflow"), "restart" ]
       end
-      ret << [ t("my_group"), "my_group" ] unless SS.config.workflow.disable_my_group
+      if !(site && site.try(:workflow_my_group_disabled?))
+        ret << [ t("my_group"), "my_group" ]
+      end
       group_ids = user.group_ids.to_a
       criteria.and(:group_ids.in => group_ids).each do |route|
         ret << [ route.name, route.id ]

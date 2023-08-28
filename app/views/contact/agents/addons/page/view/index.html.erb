@@ -1,60 +1,123 @@
-<% return if @cur_page.contact_state == "hide" || !@cur_page.contact_present? %>
-
 <%
+  return unless @cur_page.show_contact?
+
   contact_parts = []
   contact_group = @cur_page.contact_group
-%>
 
-<%
-  if contact_group
-    contact_parts << content_tag(:p, contact_group.contact_group_name.presence || contact_group.section_name, class: "group")
+  if contact_group.present? && @cur_page.contact_group_contact_id.present?
+    contact = contact_group.contact_groups.where(id: @cur_page.contact_group_contact_id).first
   end
 %>
 
 <%
-  if @cur_page.contact_charge.present?
-    contact_parts << content_tag(:p, @cur_page.contact_charge, class: "charge")
+  if @cur_page.contact_group_related?
+    # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+    group_name = contact ? contact.contact_group_name.presence : @cur_page.contact_charge.presence
+  else
+    group_name = @cur_page.contact_charge.presence
+  end
+  if group_name.blank? && contact_group
+    group_name = contact_group.contact_group_name.presence || contact_group.section_name
+  end
+  if group_name
+    contact_parts << content_tag(:p, group_name, class: "group")
   end
 %>
 
 <%
-  if @cur_page.contact_tel.present?
+  if @cur_page.contact_group_related?
+    # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+    contact_charge = contact ? contact.contact_group_name : @cur_page.contact_charge
+  else
+    contact_charge = @cur_page.contact_charge
+  end
+
+  if contact_charge.present?
+    contact_parts << content_tag(:p, contact_charge, class: "charge")
+  end
+%>
+
+<%
+  if @cur_page.contact_group_related?
+    # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+    contact_tel = contact ? contact.contact_tel : @cur_page.contact_tel
+  else
+    contact_tel = @cur_page.contact_tel
+  end
+
+  if contact_tel.present?
     contact_parts << content_tag(:dl, class: "tel") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.tel")}:")
-      @output_buffer << content_tag(:dd, link_to(@cur_page.contact_tel, "tel:#{@cur_page.contact_tel.delete("-")}"))
+      @output_buffer << content_tag(:dd, link_to(contact_tel, "tel:#{contact_tel.delete("-")}"))
     end
   end
 %>
 
 <%
-  if @cur_page.contact_fax.present?
+  if @cur_page.contact_group_related?
+    # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+    contact_fax = contact ? contact.contact_fax : @cur_page.contact_fax
+  else
+    contact_fax = @cur_page.contact_fax
+  end
+
+  if contact_fax.present?
     contact_parts << content_tag(:dl, class: "fax") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.fax")}:")
-      @output_buffer << content_tag(:dd, @cur_page.contact_fax)
+      @output_buffer << content_tag(:dd, contact_fax)
     end
   end
 %>
 
 <%
-  if @cur_page.contact_email.present?
+  if @cur_page.contact_group_related?
+    # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+    contact_email = contact ? contact.contact_email : @cur_page.contact_email
+  else
+    contact_email = @cur_page.contact_email
+  end
+
+  if contact_email.present?
     contact_parts << content_tag(:dl, class: "email") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.email")}:")
-      @output_buffer << content_tag(:dd, mail_to_entity(@cur_page.contact_email))
+      @output_buffer << content_tag(:dd, mail_to_entity(contact_email))
     end
   end
 %>
 
 <%
-  if @cur_page.contact_link_url.present?
+  if @cur_page.contact_group_related?
+    if contact
+      contact_link = contact.contact_link_name.presence
+      contact_link ||= contact.contact_group_name.presence
+      contact_link_url = contact.contact_link_url
+    else
+      # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+      contact_link = @cur_page.contact_link_name.presence
+      contact_link ||= @cur_page.contact_charge.presence
+      contact_link_url = @cur_page.contact_link_url
+    end
+    contact_link ||= contact_group.try(:section_name).presence
+  else
+    contact_link = @cur_page.contact_link_name.presence
+    contact_link ||= @cur_page.contact_charge.presence
+    contact_link ||= contact_group.try(:section_name).presence
+    contact_link_url = @cur_page.contact_link_url
+  end
+  contact_link ||= contact_link_url
+
+  if contact_link_url.present?
     contact_parts << content_tag(:dl, class: "link") do
       @output_buffer << content_tag(:dt, "#{t("contact.view.link_url")}:")
-      @output_buffer << content_tag(:dd, link_to(@cur_page.contact_link, @cur_page.contact_link_url))
+      @output_buffer << content_tag(:dd, link_to(contact_link, contact_link_url))
     end
   end
 %>
 
 <%
-  if contact_group.present? && contact_group.contact_email.present? && @cur_site.inquiry_form.present?
+  # グループに主メールアドレスが設定されているかどうかで、お問い合わせフォームのリンクを表示するかどうかを切り替えている。
+  # 分かりずらい仕様だと思うので、将来のどこかのタイミングで、別のスイッチを儲けた方が良さそう。
+  if contact_group.present? && contact_group.contact_email.present? && @cur_site.inquiry_form.present? && @cur_site.inquiry_form.public?
     url = @cur_site.inquiry_form.url
     url = url + "?" + { group: contact_group.id, page: @cur_page.id }.to_query
     contact_parts << content_tag(:div, link_to(t("contact.view.inquiry_form"), url), class: "inquiry-form")

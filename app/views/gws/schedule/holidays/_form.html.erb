@@ -2,6 +2,10 @@
   Gws_Schedule_Plan.renderForm();
 <% end %>
 
+<%= hidden_field_tag 'calendar[path]', params.dig(:calendar, :path) %>
+<%= hidden_field_tag 'calendar[view]', params.dig(:calendar, :view) %>
+<%= hidden_field_tag 'calendar[viewFormat]', params.dig(:calendar, :viewFormat) %>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
@@ -9,8 +13,8 @@
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>
     <div class="dates-field">
-      <%= f.text_field :start_on, class: "date start", value: tryb{@item.start_on.strftime("%Y/%m/%d")} %>
-      - <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
+      <%= f.ss_date_field :start_on, {}, class: "start" %>
+      - <%= f.ss_date_field :end_on, {}, class: "end" %>
     </div>
   </dd>
 

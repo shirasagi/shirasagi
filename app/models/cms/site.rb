@@ -3,6 +3,7 @@ class Cms::Site
   include SS::Relation::File
   include Cms::SitePermission
   include Cms::Addon::PageSetting
+  include Cms::Addon::Site::NodeSetting
   include Cms::Addon::DefaultReleasePlan
   include SS::Addon::MobileSetting
   include SS::Addon::MapSetting
@@ -23,10 +24,13 @@ class Cms::Site
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::PartnerSetting
   include SS::Addon::InquirySetting
+  include SS::Addon::WorkflowSetting
   include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
   include SS::Addon::MaintenanceMode
+  include Cms::SyntaxChecker::MainSetting
+  include Cms::SyntaxChecker::UrlSchemeSetting
 
   set_permission_name "cms_sites", :edit
 end

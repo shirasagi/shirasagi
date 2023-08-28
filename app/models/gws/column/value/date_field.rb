@@ -48,7 +48,7 @@ class Gws::Column::Value::DateField < Gws::Column::Value::Base
   # end
 
   def value
-    if column.input_type == "datetime"
+    if column.try(:input_type) == "datetime"
       I18n.l(self.date) rescue nil
     else
       I18n.l(self.date.to_date) rescue nil

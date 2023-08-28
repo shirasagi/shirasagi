@@ -15,7 +15,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit gws_notice_folders_path(site: site)
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
         fill_in "item[order]", with: order
@@ -53,7 +55,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_notice_folders_path(site: site)
       click_on name
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name2
         click_on I18n.t("ss.buttons.save")
@@ -71,8 +75,10 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_notice_folders_path(site: site)
       click_on name2
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
@@ -93,7 +99,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         # Create
         #
         visit gws_notice_folders_path(site: site)
-        click_on I18n.t("ss.links.new")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.new")
+        end
         within "form#item-form" do
           fill_in "item[in_basename]", with: name
           fill_in "item[order]", with: order
@@ -145,7 +153,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_notice_folders_path(site: site)
         click_on "#{folder0.name}/#{name}"
-        click_on I18n.t("ss.links.edit")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
         within "form#item-form" do
           fill_in "item[in_basename]", with: name2
           click_on I18n.t("ss.buttons.save")
@@ -163,8 +173,10 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_notice_folders_path(site: site)
         click_on "#{folder0.name}/#{name2}"
-        click_on I18n.t("ss.links.delete")
-        within "form" do
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.delete")
+        end
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.delete")
         end
         expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
@@ -176,7 +188,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
     context "when parent folder is not exist" do
       it do
         visit gws_notice_folders_path(site: site)
-        click_on I18n.t("ss.links.new")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.new")
+        end
         within "form#item-form" do
           fill_in "item[in_basename]", with: "#{unique_id}/#{unique_id}"
 
@@ -199,10 +213,11 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.save")
         end
         within "#errorExplanation" do
-          error = [
-            I18n.t("mongoid.attributes.gws/model/folder.name"),
-            I18n.t("mongoid.errors.models.gws/model/folder.invalid_chars_as_name")
-          ].join
+          error = I18n.t(
+            "errors.format",
+            attribute: I18n.t("mongoid.attributes.gws/model/folder.name"),
+            message: I18n.t("mongoid.errors.models.gws/model/folder.invalid_chars_as_name")
+          )
           expect(page).to have_css("li", text: error)
           expect(page).to have_css("li", text: I18n.t("mongoid.errors.models.gws/model/folder.not_found_parent"))
         end
@@ -219,7 +234,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_notice_folders_path(site: site)
       click_on item.name
-      click_on I18n.t("ss.links.move")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.move")
+      end
       within "form#item-form" do
         within "#addon-basic" do
           wait_cbox_open do

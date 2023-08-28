@@ -29,7 +29,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # portal
       visit gws_portal_path(site: site)
       expect(page).to have_css('.list-items', text: v170_item.name)
-      first('.list-items a.title', text: v170_item.name).click
+      first('.list-items .title a', text: v170_item.name).click
       expect(page).to have_content(v170_item.name)
 
       # readable list
@@ -54,7 +54,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # move post to appropriate folder
       click_on I18n.t('ss.links.move')
       within 'form#item-form' do
-        click_on I18n.t('gws/share.apis.folders.index')
+        wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
       end
       wait_for_cbox do
         expect(page).to have_content(folder.name)

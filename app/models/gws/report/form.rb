@@ -23,7 +23,7 @@ class Gws::Report::Form
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
 
-  scope :and_public, ->{
+  scope :and_public, ->(_date = nil){
     where(state: 'public')
   }
 

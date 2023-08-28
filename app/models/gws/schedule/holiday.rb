@@ -3,6 +3,7 @@ class Gws::Schedule::Holiday
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  #include Gws::Reference::Affair::HolidayCalendar
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::Cloneable
@@ -17,7 +18,7 @@ class Gws::Schedule::Holiday
 
   permit_params :color
 
-  validates :color, presence: true
+  validates :color, presence: true, "ss/color" => true
 
   def readable?(user, opts = {})
     true

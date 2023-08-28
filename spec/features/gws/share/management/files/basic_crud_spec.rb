@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_share_files", type: :feature, dbscope: :example do
+describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
@@ -18,18 +18,26 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       expect(folder.descendants_total_file_size).to eq item.size
 
       visit gws_share_files_path(site: site)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
+
       click_on I18n.t('ss.navi.trash')
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
+
       click_on item.name
       click_on I18n.t('ss.links.restore')
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('ss.buttons.restore')
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
-      # within "#content-navi" do
-      #   expect(page).to have_css(".tree-item", text: folder.name)
-      # end
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
       item.reload
       expect(item.deleted).to be_blank
@@ -47,18 +55,27 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       expect(folder.descendants_total_file_size).to eq item.size
 
       visit gws_share_files_path(site: site)
-      click_on I18n.t('ss.navi.trash')
-      click_on item.name
-      click_on I18n.t('ss.links.delete')
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
-      within "form" do
+      click_on I18n.t('ss.navi.trash')
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
+
+      click_on item.name
+      within ".nav-menu" do
         click_on I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.delete')
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      # within "#content-navi" do
-      #   expect(page).to have_css(".tree-item", text: folder.name)
-      # end
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
       expect(Gws::Share::File.where(id: item.id)).to be_blank
 

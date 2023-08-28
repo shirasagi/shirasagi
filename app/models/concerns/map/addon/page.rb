@@ -24,9 +24,20 @@ module Map::Addon
         liquidize do
           export as: :map_points do
             map_points, _map_options = effective_map_points_and_options
+            map_points = map_points.map { |map_point| Map::Extensions::Point.demongoize(map_point).to_liquid }
             map_points
           end
-          export :map_zoom_level
+          export as: :map_zoom_level do
+            zoom_setting == "designated_level" && set_zoom_level.present? ? set_zoom_level : SS.config.map.googlemaps_zoom_level
+          end
+          export as: :map_center do |context|
+            if center_setting == "designated_location" && set_center_position.present?
+              Map::Extensions::Loc.demongoize(*set_center_position.split(",").map(&:to_f)).to_liquid
+            else
+              center = Map.center(context.registers[:cur_site])
+              Map::Extensions::Loc.demongoize([ center.lat, center.lng ]).to_liquid
+            end
+          end
         end
       end
     end
@@ -40,6 +51,18 @@ module Map::Addon
         options[:zoom] = set_zoom_level
       end
       options
+    end
+
+    def center_setting_options
+      %w(auto designated_location).map do |v|
+        [ I18n.t("map.#{v}"), v ]
+      end
+    end
+
+    def zoom_setting_options
+      %w(auto designated_level).map do |v|
+        [ I18n.t("map.#{v}"), v ]
+      end
     end
 
     def save_geolocation

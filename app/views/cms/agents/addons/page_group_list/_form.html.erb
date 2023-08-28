@@ -1,7 +1,7 @@
 <dl class="see mod-cms-pagegrouplist">
   <dt><%= @model.t :condition_groups %><%= @model.tt :condition_groups %></dt>
   <dd>
-    <%= f.hidden_field "condition_group_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "condition_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -15,7 +15,7 @@
       <tbody>
         <% @item.condition_groups.each do |group| %>
         <tr data-id="<%= group.id %>">
-          <td><%= f.hidden_field "condition_group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= f.hidden_field "condition_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

@@ -47,6 +47,9 @@ end
 ## -------------------------------------
 puts "# layouts"
 
+CSS_PATHS = %w(/css/style.css).freeze
+JS_PATHS = %w(/js/common.js /js/heightLine.js).freeze
+
 def save_layout(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
@@ -62,8 +65,8 @@ def save_layout(data)
 end
 
 save_layout filename: "docs.layout.html", name: "記事ページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html news/recent.part.html
@@ -71,24 +74,24 @@ save_layout filename: "docs.layout.html", name: "記事ページ",
     pagetop.part.html foot.part.html
     )
 save_layout filename: "event-page.layout.html", name: "イベントページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html event/calendar.part.html purpose/birth/folder.html
     age/zero/folder.part.html sub-menu/banner.part.html pagetop.part.html foot.part.html
     )
 save_layout filename: "event.layout.html", name: "イベントカレンダー",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html event/calendar.part.html purpose/birth/folder.html
     age/zero/folder.part.html sub-menu/banner.part.html pagetop.part.html foot.part.html
     )
 save_layout filename: "faq-top.layout.html", name: "よくある質問：トップ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html faq/search/search.part.html faq/docs/recent.part.html
@@ -96,8 +99,8 @@ save_layout filename: "faq-top.layout.html", name: "よくある質問：トッ�
     pagetop.part.html foot.part.html
     )
 save_layout filename: "faq.layout.html", name: "よくある質問",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html faq/docs/recent.part.html
@@ -105,16 +108,16 @@ save_layout filename: "faq.layout.html", name: "よくある質問",
     pagetop.part.html foot.part.html
     )
 save_layout filename: "folder.layout.html", name: "フォルダーリスト",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html purpose/birth/folder.html age/zero/folder.part.html
     sub-menu/banner.part.html pagetop.part.html foot.part.html
     )
 save_layout filename: "general.layout.html", name: "汎用ページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html purpose/birth/folder.html
@@ -122,8 +125,8 @@ save_layout filename: "general.layout.html", name: "汎用ページ",
     foot.part.html
     )
 save_layout filename: "institution-page.layout.html", name: "施設情報：施設",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html institution/type/nursery/folder.part.html purpose/birth/folder.part.html
@@ -131,8 +134,8 @@ save_layout filename: "institution-page.layout.html", name: "施設情報：施�
     foot.part.html
     )
 save_layout filename: "institution.layout.html", name: "施設情報",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html institution/type/nursery/folder.part.html purpose/birth/folder.part.html
@@ -140,8 +143,8 @@ save_layout filename: "institution.layout.html", name: "施設情報",
     foot.part.html
     )
 save_layout filename: "page.layout.html", name: "固定ページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html sns.part.html pages.part.html
@@ -149,8 +152,8 @@ save_layout filename: "page.layout.html", name: "固定ページ",
     pagetop.part.html foot.part.html
     )
 save_layout filename: "pages.layout.html", name: "ページリスト",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     breadcrumbs.part.html category.part.html purpose/birth/folder.part.html
@@ -158,8 +161,8 @@ save_layout filename: "pages.layout.html", name: "ページリスト",
     foot.part.html
     )
 save_layout filename: "top.layout.html", name: "トップページ",
-  css_paths: %w(/css/style.css),
-  js_paths: %w(/js/common.js /js/flexibility.js /js/heightLine.js /js/selectivizr.js /js/html5shiv.js),
+  css_paths: CSS_PATHS,
+  js_paths: JS_PATHS,
   part_paths: %w(
     tool.part.html head.part.html navi.part.html
     slide/slide.part.html purpose/birth/folder.part age/zero/folder.part.html
@@ -387,10 +390,10 @@ save_node route: "cms/node", filename: "institution/type", name: "施設の種�
 save_node route: "cms/node", filename: "institution/use", name: "施設の用途",
   layout_id: layouts["institution"].id, sort: "order", order: 100
 
-center_point_1 = Map::Extensions::Point.mongoize(loc: [34.075593, 134.550614], zoom_level: 10)
-center_point_2 = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], zoom_level: 10)
-center_point_3 = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
-center_point_4 = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
+center_point_1 = Map::Extensions::Point.mongoize(loc: [134.550614, 34.075593], zoom_level: 10)
+center_point_2 = Map::Extensions::Point.mongoize(loc: [133.808902, 34.034417], zoom_level: 10)
+center_point_3 = Map::Extensions::Point.mongoize(loc: [134.352387, 33.609123], zoom_level: 10)
+center_point_4 = Map::Extensions::Point.mongoize(loc: [134.608579, 34.179472], zoom_level: 10)
 
 node = save_node route: "facility/location", filename: "institution/area/east",
   name: "東区", layout_id: layouts["institution"].id, order: 10, center_point: center_point_1
@@ -545,13 +548,9 @@ end
 
 ## -------------------------------------
 puts "# article"
-contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
 contact_group_id = contact_group.id rescue nil
-contact_email = contact_group_id ? "kikakuseisaku@example.jp" : nil
-contact_tel = contact_group_id ? "000-000-0000" : nil
-contact_fax = contact_group_id ? "000-000-0000" : nil
-contact_link_url = contact_group_id ? link_url : nil
-contact_link_name = contact_group_id ? link_url : nil
+contact = contact_group.contact_groups.first
 
 article1 = save_page route: "article/page", filename: "docs/page1.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id]
@@ -562,7 +561,7 @@ article2 = save_page route: "article/page", filename: "docs/page2.html", name: "
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy1.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
   contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000",
   contact_fax: "000-000-0000", contact_link_url: link_url, contact_link_name: link_url
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -571,8 +570,9 @@ article3.update
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy2.jpg", model: "article/page"
 article4 = save_page route: "article/page", filename: "docs/page4.html", name: "子育てサークルにさんかしませんか？",
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 article4.html = article4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article4.update
 
@@ -581,7 +581,7 @@ recurrence = { kind: "date", start_at: Time.zone.today, frequency: "daily", unti
 save_page route: "event/page", filename: "event/page1.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_recurrences: [ recurrence ],
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: link_url
@@ -589,7 +589,7 @@ save_page route: "event/page", filename: "event/page1.html", name: "イベント
 save_page route: "event/page", filename: "event/2.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_recurrences: [ recurrence ],
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: link_url
@@ -622,7 +622,7 @@ save_page route: "facility/image", filename: "institution/list/shirsagi/page4.ht
   image_alt: "写真1", image_comment: "写真です。"
 
 save_page route: "facility/map", filename: "institution/list/shirsagi/map.html", name: "地図",
-  layout_id: layouts["institution-page"].id, map_points: [ { loc: [34.074722, 134.5516] } ]
+  layout_id: layouts["institution-page"].id, map_points: [ { loc: [134.5516, 34.074722] } ]
 
 puts "# key visual"
 keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
@@ -688,9 +688,10 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 10
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
@@ -700,9 +701,10 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 20
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
@@ -711,9 +713,10 @@ file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy3.jpg", mode
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 30
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
@@ -723,9 +726,10 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 40
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
@@ -735,9 +739,10 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
-  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
-  contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name,
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
   order: 50
 page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page5.update

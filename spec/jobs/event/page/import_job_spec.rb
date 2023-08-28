@@ -3,7 +3,9 @@ require 'spec_helper'
 describe Event::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:group) do
-    name = 'シラサギ市/企画政策部/政策課'
+    cms_group.update!(name: "シラサギ市")
+
+    name = "シラサギ市/企画政策部/政策課"
     Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
   end
   let!(:layout) { create(:cms_layout, site: site, name: "イベントカレンダー") }
@@ -51,7 +53,7 @@ describe Event::Page::ImportJob, dbscope: :example do
           enumerable.each { |csv| f.write(csv) }
         end
 
-        job_class = described_class.bind(site_id: site, node_id: node, user_id: user)
+        job_class = described_class.bind(site_id: site.id, node_id: node.id, user_id: user.id)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start event_pages.csv\n")).to_stdout
       end
 

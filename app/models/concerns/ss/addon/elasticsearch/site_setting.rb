@@ -12,7 +12,7 @@ module SS::Addon::Elasticsearch::SiteSetting
     permit_params :elasticsearch_hosts, :elasticsearch_deny, :elasticsearch_indexes, :elasticsearch_outside
     permit_params elasticsearch_site_ids: []
 
-    after_save :deny_elasticsearch_paths, if: ->{ @db_changes["elasticsearch_deny"] }
+    after_save :deny_elasticsearch_paths, if: ->{ elasticsearch_deny_changed? || elasticsearch_deny_previously_changed? }
   end
 
   def menu_elasticsearch_visible?

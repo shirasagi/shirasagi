@@ -3,10 +3,10 @@
   <dd><span class="state"><%= @item.send :state %></span></dd>
 
   <dt><%= @item.t :started %></dt>
-  <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+  <dd class="started"><%= ss_time_tag @item.started %></dd>
 
   <dt><%= @item.t :closed %></dt>
-  <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+  <dd class="closed"><%= ss_time_tag @item.closed %></dd>
 </dl>
 
 <div class="logs">
@@ -27,9 +27,9 @@
           if (! closed) {
             closed = "";
           }
-          $("#task-form .state").html(data.state);
-          $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
-          $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .state").text(data.state);
+          $("#task-form .started").text(started.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .closed").text(closed.replace(/\..*/, "").replace("T", " "));
           $("#task-form .log").val(data.logs.join("\n"));
           if (data["state"] === "completed") {
             $("#task-form .reset-state").hide();

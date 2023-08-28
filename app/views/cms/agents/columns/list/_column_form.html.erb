@@ -9,7 +9,7 @@
     </li>
   <% end %>
 
-  <%= content_tag column.list_type, class: "list list-#{column.list_type} mt-0" do %>
+  <%= content_tag column.list_type, class: "list list-#{column.list_type} mt-0", data: { syntax_check: "list", syntax_check_name: column.name } do %>
     <% if lists.present? %>
       <% lists.each do |list| %>
         <% render_item.call(list) %>
@@ -26,29 +26,6 @@
   <% @buttons.unshift(button_tag(t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button')) %>
 
   <%= jquery do %>
-    Cms_Form.addSyntaxCheck("<%= id %>", {
-      resolve: "text",
-      type: "array",
-      name: "<%= column.name %>",
-      getContent: function () {
-        var contents = [];
-        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"]').each(function () {
-          contents.push($(this).val());
-        });
-        return contents;
-      },
-      setContent: function (content) {
-        var selector, ele;
-        selector = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"]');
-        $.each(content, function (idx, value) {
-          ele = selector[idx];
-          if (ele) {
-            $(ele).val(value);
-          }
-        });
-      },
-    });
-
     Cms_Column_List.render(<%== "##{id}".to_json %>);
   <% end %>
 <% end %>

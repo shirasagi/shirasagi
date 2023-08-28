@@ -1,5 +1,5 @@
 <% value ||= nil %>
 <% controller ||= false %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
-  <%= text_field_tag("#{f.object_name}[][in_wrap][date]", tryb { value.try(:date).strftime('%Y/%m/%d') }, column.form_options.merge(id: nil)) %>
+  <%= ss_date_field_tag("#{f.object_name}[][in_wrap][date]", value.try(:date), {}, column.form_options.merge(id: nil)) %>
 <% end %>

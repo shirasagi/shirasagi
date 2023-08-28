@@ -1,0 +1,6 @@
+<% return "" unless Cms::Site.allowed?(:read, @cur_user, site: @cur_site) %>
+
+<dl class="see mod-urgency-site_setting">
+  <dt><%= @model.t :related_urgency_site_ids %></dt>
+  <dd><%= br @item.related_urgency_sites.pluck(:host) %></dd>
+</dl>

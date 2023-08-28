@@ -6,10 +6,10 @@
   <dd><%= @item.send :code %></dd>
 
   <dt><%= @model.t :start_date %></dt>
-  <dd><%= tryb { @item.start_date.strftime("%Y/%m/%d") } %></dd>
+  <dd><%= ss_time_tag(@item.start_date, type: :date) %></dd>
 
   <dt><%= @model.t :close_date %></dt>
-  <dd><%= tryb { @item.close_date.strftime("%Y/%m/%d") } %></dd>
+  <dd><%= ss_time_tag(@item.close_date, type: :date) %></dd>
 
   <dd>
     <% if Gws::StaffRecord::Group.allowed?(:read, @cur_user, site: @cur_site) %>

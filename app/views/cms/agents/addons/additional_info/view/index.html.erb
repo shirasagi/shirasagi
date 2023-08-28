@@ -3,7 +3,7 @@
 <dl class="see additional-info">
   <% @item.additional_info.each do |info| %>
   <dt><%=br info[:field] %></dt>
-  <dd><%=br info[:value] %></dd>
+  <dd><%= auto_link br info[:value] %></dd>
   <% end %>
 </dl>
 <% end %>

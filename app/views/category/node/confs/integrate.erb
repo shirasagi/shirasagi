@@ -26,7 +26,7 @@
   <dl class="see">
     <dt><%= @model.t :partial_node %><%= @model.tt :integration_partial_node %></dt>
     <dd>
-      <%= hidden_field_tag "item[in_partial_id]", nil, class: "hidden-ids" %>
+      <%= hidden_field_tag "item[in_partial_id]", nil, id: nil, class: "hidden-ids" %>
       <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path(single: true), class: "btn ajax-box" %>
     </dd>
     <dd>
@@ -41,7 +41,7 @@
           <% item = Category::Node::Base.site(@cur_site).find(@item.in_partial_id) rescue nil %>
           <% if item %>
           <tr data-id="<%= item.id %>">
-            <td><%= f.hidden_field "item[in_partial_id]", value: item.id %> <%= item.name %></td>
+            <td><%= f.hidden_field "item[in_partial_id]", value: item.id, id: nil %> <%= item.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>

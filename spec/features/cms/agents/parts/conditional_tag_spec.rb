@@ -74,7 +74,7 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
 
       layout.html = html.join("\n")
       layout.save!
-      item.reload.save!
+      FileUtils.rm_f(item.path)
     end
 
     it do

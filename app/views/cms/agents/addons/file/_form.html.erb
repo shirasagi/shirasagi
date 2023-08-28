@@ -8,7 +8,7 @@
 
 <dl class="see">
   <dd class="wide">
-    <%= f.hidden_field "file_ids[]", value: "" %>
+    <%= f.hidden_field "file_ids[]", value: "", id: nil %>
 
     <span class="upload-menu-new">
       <% if @cur_node %>
@@ -75,5 +75,5 @@
     SS_AjaxFile.addFileResizing(<%== opts.to_json %>);
   <% end %>
 
-  new Cms_UploadFileOrder('file', '.file-order-btn');
+  new Cms_UploadFileOrder($el, 'file', '.file-order-btn');
 <% end %>

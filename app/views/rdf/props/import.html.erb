@@ -34,7 +34,7 @@ table.rdf-props {
         <td class="name"><%= "#{item.vocab.prefix}:#{item.name}" %></td>
         <td class="range"><%= item.range.try(:preferred_label) %></td>
         <td class="comments"><%= item.comments.try(:preferred_value) %></td>
-        <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
+        <td class="datetime"><%= ss_time_tag(item.updated, type: :date) %></td>
       </tr>
     <% end %>
     </tbody>

@@ -1,34 +1,35 @@
-<%= render template: "_search" %>
+<div class="main-box">
+  <%= render template: "_search" %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th><%= @model.t :name %></th>
-      <th class="original_url"><%= @model.t :original_url %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
-          <%= link_to t('ss.links.show'), { action: :show, id: item } %>
-          <%= link_to t('ss.links.edit'), { action: :edit, id: item } %>
-          <%= link_to t('ss.links.delete'), { action: :delete, id: item } %>
-        </nav>
-      </td>
-      <td><%= link_to item.name, { action: :show, id: item } %></td>
-      <td class="original_url"><%= Addressable::URI.unencode(item.original_url).truncate(60) %></td>
-      <% if item.original_updated.present? %>
-        <td class="original_updated"><%= item.original_updated.strftime("%Y/%m/%d %H:%M") %></td>
+  <table class="index">
+    <thead>
+      <tr>
+        <th class="checkbox"><input type="checkbox" /></th>
+        <th><%= @model.t :name %></th>
+        <th class="original_url"><%= @model.t :original_url %></th>
+        <th class="datetime"><%= @model.t :updated %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+          <nav class="tap-menu">
+            <%= link_to t('ss.links.show'), { action: :show, id: item } %>
+            <%= link_to t('ss.links.edit'), { action: :edit, id: item } %>
+            <%= link_to t('ss.links.delete'), { action: :delete, id: item } %>
+          </nav>
+        </td>
+        <td><%= link_to item.name, { action: :show, id: item } %></td>
+        <td class="original_url"><%= ss_truncate Addressable::URI.unencode(item.original_url), length: 60 %></td>
+        <% if item.original_updated.present? %>
+          <td class="original_updated"><%= ss_time_tag item.original_updated %></td>
+        <% end %>
+      </tr>
       <% end %>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
-<%= paginate @items if @items.try(:current_page) %>
-
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

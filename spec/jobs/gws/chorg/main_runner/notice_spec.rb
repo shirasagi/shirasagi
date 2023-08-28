@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::Chorg::MainRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
-  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
+  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group: site) }
   let(:job_opts) { {} }
 
   let!(:user1) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group.id]) }
@@ -10,17 +10,17 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   # groups
   let!(:group) { create :gws_group, name: "root" }
 
-  let!(:group1) { create :gws_group, name: "root/group1" }
-  let!(:group1_sub1) { create :gws_group, name: "root/group1/sub_group1" }
-  let!(:group1_sub2) { create :gws_group, name: "root/group1/sub_group2" }
+  let!(:group1) { create :gws_group, name: "root/group1", order: 10 }
+  let!(:group1_sub1) { create :gws_group, name: "root/group1/sub_group1", order: 110 }
+  let!(:group1_sub2) { create :gws_group, name: "root/group1/sub_group2", order: 120 }
 
-  let!(:group2) { create :gws_group, name: "root/group2" }
-  let!(:group2_sub1) { create :gws_group, name: "root/group2/sub_group1" }
-  let!(:group2_sub2) { create :gws_group, name: "root/group2/sub_group2" }
+  let!(:group2) { create :gws_group, name: "root/group2", order: 20 }
+  let!(:group2_sub1) { create :gws_group, name: "root/group2/sub_group1", order: 210 }
+  let!(:group2_sub2) { create :gws_group, name: "root/group2/sub_group2", order: 220 }
 
-  let!(:group3) { create :gws_group, name: "root/group3" }
-  let!(:group3_sub1) { create :gws_group, name: "root/group3/sub_group1" }
-  let!(:group3_sub2) { create :gws_group, name: "root/group3/sub_group2" }
+  let!(:group3) { create :gws_group, name: "root/group3", order: 30 }
+  let!(:group3_sub1) { create :gws_group, name: "root/group3/sub_group1", order: 310 }
+  let!(:group3_sub2) { create :gws_group, name: "root/group3/sub_group2", order: 320 }
 
   # folders
   let!(:folder) { create(:gws_notice_folder, cur_site: site, name: "root", member_group_ids: [group.id], group_ids: [group.id]) }
@@ -102,8 +102,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      job.perform_now(revision.name, job_opts)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -131,8 +131,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      job.perform_now(revision.name, job_opts)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -196,8 +196,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      job.perform_now(revision.name, job_opts)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -266,8 +266,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      job.perform_now(revision.name, job_opts)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -334,8 +334,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      job.perform_now(revision.name, job_opts)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -400,8 +400,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      job.perform_now(revision.name, job_opts)
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1

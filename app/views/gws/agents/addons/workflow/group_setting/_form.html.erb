@@ -6,4 +6,7 @@
 <dl class="see addon-gws-workflow-group-setting">
   <dt><%= @model.t :workflow_new_days %><%= @model.tt :workflow_new_days %></dt>
   <dd class="short"><%= f.number_field :workflow_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
+
+  <dt><%= @model.t :workflow_my_group %><%= @model.tt :workflow_my_group %></dt>
+  <dd><%= f.select :workflow_my_group, @item.workflow_my_group_options %></dd>
 </dl>

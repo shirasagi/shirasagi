@@ -23,7 +23,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: form_name
         choose I18n.t("gws.options.readable_setting_range.public")
-        click_on I18n.t("gws.apis.categories.index")
+        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
       end
       wait_for_cbox do
         expect(page).to have_content(cate.name)
@@ -38,8 +38,12 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
 
       click_on(I18n.t('gws/workflow.columns.index'))
 
-      click_on(I18n.t("ss.links.new"))
-      click_on(I18n.t("mongoid.models.gws/column/radio_button"))
+      within ".nav-menu" do
+        wait_event_to_fire("ss:dropdownOpened") { click_on(I18n.t("ss.links.new")) }
+      end
+      within ".gws-dropdown-menu" do
+        click_on(I18n.t("gws.columns.gws/radio_button"))
+      end
       within "form#item-form" do
         fill_in "item[name]", with: column_name
         fill_in "item[select_options]", with: column_options.join("\n")
@@ -53,7 +57,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       click_on form_name
       click_on I18n.t("gws/workflow.links.publish")
 
-      within "form" do
+      within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
 
@@ -80,8 +84,8 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "copy[name]", with: copy_name
-        select '有効', from: 'copy[anonymous_state]'
-        select '公開', from: 'copy[file_state]'
+        select I18n.t("ss.options.state.enabled"), from: 'copy[anonymous_state]'
+        select I18n.t("ss.options.state.public"), from: 'copy[file_state]'
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.copied"))
@@ -94,7 +98,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       click_on copy_name
       click_on I18n.t("gws/workflow.links.publish")
 
-      within "form" do
+      within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
 

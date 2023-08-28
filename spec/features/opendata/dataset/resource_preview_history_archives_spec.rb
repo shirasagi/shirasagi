@@ -61,15 +61,13 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
   describe "bulk delete" do
     it do
       visit opendata_dataset_history_preview_archives_path(site: site, cid: node)
-      first(".list-head input[type='checkbox']").click
-      page.accept_confirm do
-        within ".list-head-action" do
-          click_on I18n.t("ss.links.delete")
-        end
+      wait_event_to_fire("ss:checked-all-list-items") { first(".list-head input[type='checkbox']").click }
+      within ".list-head-action" do
+        click_on I18n.t("ss.links.delete")
       end
+      expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
-
-      wait_for_ajax
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end

@@ -40,7 +40,7 @@
     <% if moveable_folders.present? && %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
       <div class="dropdown dropdown-toggle gws-memo-dropdown move-menu">
         <button class="btn">
-          <%= t 'gws/memo/message.links.move' %> <i class="material-icons md-13">&#xE313;</i>
+          <%= t 'gws/memo/message.links.move' %> <i class="material-icons md-13">keyboard_arrow_down</i>
         </button>
         <ul class="dropdown-menu">
           <% moveable_folders.each do |item| %>
@@ -52,16 +52,16 @@
 
     <% case params[:folder] %>
     <% when 'INBOX.Sent', 'INBOX.Draft' %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <% when 'INBOX.Trash' %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <% else %>
       <button class="btn trash-all"><%= t 'gws/memo/message.links.trash' %></button>
     <% end %>
 
     <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">
-        <%= t 'gws/memo/message.links.sort' %><i class="material-icons md-13">&#xE313;</i>
+        <%= t 'gws/memo/message.links.sort' %><i class="material-icons md-13">keyboard_arrow_down</i>
       </button>
       <ul class="dropdown-menu">
         <% if params[:folder] == 'INBOX.Sent' %>
@@ -102,7 +102,7 @@
 
     <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">
-        <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">&#xE313;</i>
+        <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">keyboard_arrow_down</i>
       </button>
       <ul class="dropdown-menu">
         <% if params[:folder] != 'INBOX.Draft' %>

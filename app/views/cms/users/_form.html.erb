@@ -27,7 +27,7 @@
 
   <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
   <dd>
-    <%= f.password_field :in_password, style: "width: 200px" %>
+    <%= f.password_field :in_password, autocomplete: "new-password", style: "width: 200px" %>
     <%= button_tag t("ss.buttons.random_gen"), type: :button, id: "random-password", class: "btn" %>
     <span id="random-password-view"></span>
   </dd>
@@ -42,10 +42,10 @@
   <dd><%= f.select :type, @item.type_options %></dd>
 
   <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
-  <dd><%= f.text_field :account_start_date, class: "datetime js-datetime", value: tryb { @item.account_start_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :account_start_date %></dd>
 
   <dt><%= @model.t :account_expiration_date %><%= @model.tt :account_expiration_date %></dt>
-  <dd><%= f.text_field :account_expiration_date, class: "datetime js-datetime", value: tryb { @item.account_expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :account_expiration_date %></dd>
 
   <dt><%= @model.t :initial_password_warning %><%= @model.tt :initial_password_warning %></dt>
   <dd><%= f.select :initial_password_warning, @item.initial_password_warning_options %></dd>
@@ -74,7 +74,7 @@
 
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
-    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "group_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -88,7 +88,7 @@
       <tbody>
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

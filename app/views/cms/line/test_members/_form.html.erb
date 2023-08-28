@@ -4,4 +4,10 @@
 
   <dt><%= @model.t :oauth_id %><%= @model.tt :oauth_id %></dt>
   <dd><%= f.text_field :oauth_id %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order, min: 0 %></dd>
+
+  <dt><%= @model.t :default_checked %><%= @model.tt :default_checked %></dt>
+  <dd><%= f.select :default_checked, @item.default_checked_options %></dd>
 </dl>

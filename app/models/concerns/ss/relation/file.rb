@@ -8,10 +8,12 @@ module SS::Relation::File
   module ClassMethods
     def belongs_to_file(name, class_name: nil, presence: false, static_state: nil, resizing: nil)
       class_name ||= DEFAULT_FILE_CLASS_NAME
+      class_name = class_name.to_s
 
-      belongs_to name.to_sym, class_name: class_name.to_s
+      belongs_to name.to_sym, class_name: class_name
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
+
       permit_params "#{name}_id", "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
 
@@ -28,6 +30,9 @@ module SS::Relation::File
         Changes.save_relation_changes(self, name, class_name: class_name, default_resizing: resizing)
       end
       after_destroy { Changes.destroy_relation(self, name, send(name)) }
+      if respond_to?(:after_merge_branch)
+        after_merge_branch { Changes.transfer_owner_from_branch(self, name, send(name)) }
+      end
 
       expose_public_methods(name, static_state: static_state)
     end
@@ -83,7 +88,11 @@ module SS::Relation::File
       file_id = item.send("#{name}_id")
       return if file_id.blank?
 
-      item.send("#{name}=", SS::File.where(id: file_id).first)
+      file = SS::File.where(id: file_id).first
+      return if file.blank?
+
+      file = file.becomes_with_model rescue file
+      item.send("#{name}=", file)
     end
 
     def validate_relation(item, name, presence:)
@@ -105,6 +114,9 @@ module SS::Relation::File
       upload_file = item.send("in_#{name}")
       if item.changes["#{name}_id"].present? && (id_was = item.send("#{name}_id_was")).present?
         file_was = SS::File.where(id: id_was).first
+        if file_was
+          file_was = file_was.becomes_with_model rescue file_was
+        end
       end
 
       if upload_file
@@ -149,6 +161,17 @@ module SS::Relation::File
       item.send("#{name}=", nil)
     end
 
+    def transfer_owner_from_branch(item, name, file)
+      return if file.blank?
+
+      branch = item.in_branch
+      return if branch.blank? || !SS::File.file_owned?(file, SS::Model.container_of(branch))
+
+      owner_item = SS::Model.container_of(item)
+      file.update(owner_item: owner_item)
+      branch.send("#{name}=", nil)
+    end
+
     def destroy_relation(item, name, file)
       return if file.blank?
 
@@ -171,7 +194,7 @@ module SS::Relation::File
       new_file.site_id = owner_item.site_id if owner_item.respond_to?(:site_id)
       new_file.user_id = cur_user.id if cur_user
       new_file.model ||= begin
-        if class_name == DEFAULT_FILE_CLASS_NAME || class_name == "Cms::Line::File"
+        if [ DEFAULT_FILE_CLASS_NAME, "Cms::Line::File" ].include?(class_name)
           owner_item.class.name.underscore
         else
           default_model(class_name)
@@ -220,13 +243,13 @@ module SS::Relation::File
       return if is_branch && SS::File.file_owned?(file, owner_item.master)
 
       if !SS::File.file_owned?(file, owner_item)
-        attributes[:owner_item] = owner_item
-        attributes[:owner_item_id] = owner_item.id
-        attributes[:owner_item_type] = owner_item.class.name
+        attributes["owner_item"] = owner_item
+        attributes["owner_item_id"] = owner_item.id
+        attributes["owner_item_type"] = owner_item.class.name
       end
 
       item.send("#{name}_file_state").tap do |file_state|
-        attributes[:state] = file_state if file.state != file_state
+        attributes["state"] = file_state if file.state != file_state
       end
 
       if class_name == DEFAULT_FILE_CLASS_NAME
@@ -235,12 +258,12 @@ module SS::Relation::File
         expected_model = default_model(class_name)
       end
       if file.model != expected_model
-        attributes[:model] = expected_model
+        attributes["model"] = expected_model
       end
 
       file.update(attributes) if attributes.present?
 
-      if attributes[:model].present?
+      if attributes["model"].present?
         resizing = item.send("in_#{name}_resizing").presence || default_resizing
         if resizing
           file.shrink_image_to(resizing[0].to_i, resizing[1].to_i)

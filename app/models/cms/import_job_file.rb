@@ -4,20 +4,19 @@ class Cms::ImportJobFile
   include SS::SanitizerJobFile
   include SS::Reference::User
   include Cms::Reference::Site
+  include Cms::Reference::Node
 
   attr_accessor :name, :basename, :in_file, :import_logs
 
   seqid :id
   field :import_date, type: DateTime
-  belongs_to :node, class_name: "Cms::Node"
+  belongs_to :root_node, class_name: "Cms::Node"
   embeds_ids :files, class_name: "SS::File"
 
   permit_params :in_file, :name, :basename, :import_date
 
-  validates :in_file, presence: true
-
-  validate :validate_root_node, if: -> { !node }
-  validate :validate_in_file, if: -> { in_file }
+  validate :validate_root_node
+  validate :validate_in_file
 
   before_save :set_import_date
   before_save :save_root_node, if: -> { @root_node }
@@ -33,11 +32,7 @@ class Cms::ImportJobFile
   def import
     @import_logs = []
     files.each do |file|
-      if /^\.zip$/i.match?(::File.extname(file.filename))
-        import_from_zip(file)
-      else
-        import_from_file(file)
-      end
+      import_from_zip(file)
     end
   end
 
@@ -84,10 +79,11 @@ class Cms::ImportJobFile
       attribute = error.attribute
       message = error.message
 
-      if attribute == :filename
+      case attribute
+      when :filename
         @import_logs << "error: #{import_filename} #{message}"
         self.errors.add :base, "#{item.filename} #{message}"
-      elsif attribute == :name
+      when :name
         @import_logs << "error: #{import_filename} #{message}"
         self.errors.add :base, "#{import_filename} #{message}"
       else
@@ -98,17 +94,23 @@ class Cms::ImportJobFile
     end
   end
 
-  def import_from_zip(file, opts = {})
+  def import_from_zip(file)
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
-        next if entry.name.start_with?('__MACOSX')
+        filename = entry.name.force_encoding("utf-8").scrub
+        next if filename.blank?
 
-        fname = entry.name.force_encoding("utf-8").scrub.split(/\//)
-        fname.shift # remove root folder
-        fname = fname.join('/')
-        next if fname.blank?
+        virtual_path = "/$"
+        filename = ::File.expand_path(filename, virtual_path)
+        next unless filename.start_with?("/$/")
 
-        import_filename = "#{node.filename}/#{fname}"
+        filename = filename[3..-1]
+        filename = filename.delete_prefix("#{root_node.basename}/") # remove root folder
+        next if filename.blank?
+        next if filename.start_with?('__MACOSX')
+        next if filename.start_with?('.DS_Store')
+
+        import_filename = "#{root_node.filename}/#{filename}"
         import_filename = import_filename.sub(/\/$/, "")
 
         if entry.directory?
@@ -128,30 +130,19 @@ class Cms::ImportJobFile
     return errors.empty?
   end
 
-  def import_from_file(file, opts = {})
-    import_filename = "#{node.filename}/#{file.filename}"
-
-    if /^\.(html|htm)$/i.match?(::File.extname(import_filename))
-      if save_import_page(file, import_filename)
-        @import_logs << "import: #{import_filename}"
-      end
-    elsif upload_import_file(file, import_filename)
-      @import_logs << "import: #{import_filename}"
-    end
-
-    return errors.empty?
-  end
-
   def modify_relative_paths(html)
     html.gsub(/(href|src)="\/(.*?)"/) do
       attr = $1
       path = $2
-      "#{attr}=\"\/#{node.filename}/#{path}\""
+      "#{attr}=\"\/#{root_node.filename}/#{path}\""
     end
   end
 
   def perform_job
-    job = Cms::ImportFilesJob.bind(site_id: site.id)
+    job_bindings = { site_id: site.id }
+    job_bindings[:node_id] = node.id if node
+
+    job = Cms::ImportFilesJob.bind(job_bindings)
     job = job.set(wait_until: import_date) if import_date.present?
     job_class = sanitizer_job(job).perform_later
 
@@ -160,16 +151,25 @@ class Cms::ImportJobFile
 
   private
 
+  def presence_node_id
+    false
+  end
+
   def set_import_date
     self.import_date ||= Time.zone.now
   end
 
   def validate_root_node
+    errors.add :name, :blank if name.blank?
+    errors.add :basename, :blank if basename.blank?
+    return if errors.present?
+
     @root_node = Cms::Node::ImportNode.new
     @root_node.filename = basename
     @root_node.name = name
     @root_node.cur_site = cur_site
-    @root_node.group_ids = cur_user.group_ids if cur_user
+    @root_node.cur_node = cur_node if cur_node
+    @root_node.group_ids = cur_site.group_ids
     return if @root_node.valid?
 
     self.errors.add :base, I18n.t("errors.messages.root_node_save_error")
@@ -177,15 +177,18 @@ class Cms::ImportJobFile
   end
 
   def validate_in_file
+    if in_file.nil? || ::File.extname(in_file.original_filename) != ".zip"
+      errors.add :base, :invalid_zip
+      return
+    end
+
     @import_file = SS::File.new
     @import_file.in_file = in_file
     @import_file.site = cur_site
     @import_file.state = "closed"
     @import_file.name = name
     @import_file.model = "cms/import_file"
-
-    v = @import_file.valid?
-    return if v
+    return if @import_file.valid?
 
     SS::Model.copy_errors(@import_file, self)
   end
@@ -197,7 +200,7 @@ class Cms::ImportJobFile
 
   def save_root_node
     @root_node.save!
-    self.node = @root_node
+    self.root_node = @root_node
   end
 
   def destroy_files

@@ -30,7 +30,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         Timecop.freeze(now) do
           visit index_path
           click_on I18n.t("ss.links.new")
-          click_on I18n.t("gws.apis.categories.index")
+          wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
           wait_for_cbox do
             click_on category.name
           end
@@ -144,8 +144,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         it do
           visit index_path
           click_on item.name
-          click_on I18n.t("ss.links.delete")
-          within "form" do
+          within ".nav-menu" do
+            click_on I18n.t("ss.links.delete")
+          end
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
@@ -196,8 +198,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           visit index_path
           click_on I18n.t("ss.links.trash")
           click_on item.name
-          click_on I18n.t("ss.links.delete")
-          within "form" do
+          within ".nav-menu" do
+            click_on I18n.t("ss.links.delete")
+          end
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
@@ -223,7 +227,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           click_on I18n.t("ss.links.trash")
           click_on item.name
           click_on I18n.t("ss.links.restore")
-          within "form" do
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.restore")
           end
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.restored"))

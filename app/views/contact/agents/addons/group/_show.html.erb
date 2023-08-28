@@ -1,14 +1,56 @@
-<dl class="see">
-  <dt><%= @model.t :contact_group_name %></dt>
-  <dd class="contact-group-name"><%= @item.contact_group_name %></dd>
-  <dt><%= @model.t :contact_tel %></dt>
-  <dd class="contact-tel"><%= @item.contact_tel %></dd>
-  <dt><%= @model.t :contact_fax %></dt>
-  <dd class="contact-fax"><%= @item.contact_fax %></dd>
-  <dt><%= @model.t :contact_email %></dt>
-  <dd class="contact-email"><%= @item.contact_email %></dd>
-  <dt><%= @model.t :contact_link_url %></dt>
-  <dd class="contact-link-url"><%= @item.contact_link_url %></dd>
-  <dt><%= @model.t :contact_link_name %></dt>
-  <dd class="contact-link-name"><%= @item.contact_link_name %></dd>
-</dl>
+<%
+  return if @item.contact_groups.blank?
+
+  addon = local_assigns.fetch(:addon, {})
+  addon[:head] = (t("modules.addons.contact/group") + tt("contact/addon/group.main")).html_safe
+
+  if @cur_site
+    page_count_service = Contact::PageCountService.new(cur_site: @cur_site, cur_user: @cur_user)
+  end
+%>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <% if @cur_site %>
+      <th class="pages-used">
+        <%= t("contact.pages_used_label") %>
+        <%= tt "contact/page_count_service.page_count_notice", expire_in: SS::Duration.format(Contact::PageCountService.expires_in) %>
+      </th>
+    <% end %>
+    <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
+    <th class="name"><%= SS::Contact.t :name %></th>
+    <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+    <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
+    <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
+    <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+    <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
+    <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @item.contact_groups.each do |contact_group| %>
+    <tr class="list-item" data-id="<%= contact_group.id %>">
+      <% if @cur_site %>
+        <td class="pages-used">
+          <%= page_count_service.render(group_id: @item.id, contact_id: contact_group.id) %>
+        </td>
+      <% end %>
+      <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+      <td class="name"><%= contact_group.name %></td>
+      <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
+      <td class="contact-tel"><%= contact_group.contact_tel %></td>
+      <td class="contact-fax"><%= contact_group.contact_fax %></td>
+      <td class="contact-email"><%= contact_group.contact_email %></td>
+      <td class="contact-link-url"><%= contact_group.contact_link_url %></td>
+      <td class="contact-link-name"><%= contact_group.contact_link_name %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<% if @cur_site %>
+  <div style="margin-top: 10px;">
+    <%= link_to t("contact.links.unify_to_main"), contact_unify_path(group_id: @item.id), class: "btn" %>
+  </div>
+<% end %>

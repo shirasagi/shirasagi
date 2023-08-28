@@ -202,12 +202,7 @@ SS_Preview = (function () {
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
-    this.$datePicker.datetimepicker({
-      lang: "ja",
-      roundTime: "ceil",
-      step: 30,
-      closeOnDateSelect: true
-    });
+    new SS_DateTimePicker(this.$datePicker, "datetime");
 
     var self = this;
 
@@ -683,7 +678,7 @@ SS_Preview = (function () {
     var list = this.$el.find(".ss-preview-part-list");
     var options = list.html();
     $.each(this.parts, function(index, item) {
-      options += "<option value=\"" + item.id + "\">" + item.name + "</option>"
+      options += $("<option />", { value: item.id }).text(item.name).prop("outerHTML");
     });
 
     list.html(options).on('change', function() {
@@ -985,7 +980,7 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.dateForPreview = function() {
-    var date = this.$datePicker.val();
+    var date = SS_DateTimePicker.instance(this.$datePicker).valueForExchange();
     if (!date) {
       return;
     }
@@ -1445,7 +1440,7 @@ SS_Preview = (function () {
       var html = [];
       $(document).find(".ss-preview-column[data-column-order]").each(function () {
         var order = parseInt(this.dataset.columnOrder, 10);
-        html.push("<option value=\"" + order + "\">" + (order + 1) + "</option>");
+        html.push($("<option />", { value: order }).text((order + 1).toString()).prop("outerHTML"));
       });
 
       select.html(html.join(""));

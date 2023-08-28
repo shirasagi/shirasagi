@@ -1,16 +1,24 @@
-<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
-<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
-
+<%= javascript_include_tag "colorbox", defer: true %>
+<%= stylesheet_link_tag "colorbox", media: 'all' %>
 <%= render_facility_search_map "#map-canvas", markers: @markers, site: @cur_site, preview: @preview %>
-
 <%= render template: "facility/agents/addons/search_result/view/upper" %>
 <%= render template: "facility/agents/addons/search_result/view/map" %>
 
+<div class="hide" style="display: none;">
+  <div class="colorbox-dialog">
+    <%= render(partial: 'modal', locals: { search_path: './map.html' }) %>
+  </div>
+</div>
+
 <%= jquery do %>
-  $(".ajax-box").on("click", function () {
-    $.colorbox({
-      html: "<%=j render(partial: 'modal', locals: { search_path: './map.html' }) %>"
-    });
-    return false;
+var $dialog = $(".colorbox-dialog");
+$(".ajax-box").on("click", function () {
+  $.colorbox({
+    inline: true,
+    href: $dialog,
+    maxWidth: "80%",
+    maxHeight: "80%"
   });
+  return false;
+});
 <% end %>

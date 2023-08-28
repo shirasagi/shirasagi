@@ -1,0 +1,16 @@
+<% message.subject = @subject %>
+The following article has been approved.
+
+- Title
+  <%= @page.name %>
+
+<% if @page.workflow_user.present? %>
+- Applicant
+  <%= @page.workflow_user.name %>
+  <% if @page.workflow_agent %>
+  （Proxy: <%= @page.workflow_agent.name %>）
+  <% end %>
+<% end %>
+
+- Article URL
+  <%= @url %>

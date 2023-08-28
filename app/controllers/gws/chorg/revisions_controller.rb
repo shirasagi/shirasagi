@@ -6,7 +6,7 @@ class Gws::Chorg::RevisionsController < ApplicationController
   model Gws::Chorg::Revision
   append_view_path 'app/views/chorg/revisions'
 
-  def download
+  def download_changesets
     set_item
     raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
 

@@ -1,9 +1,10 @@
 class Gws::Column
-  include Gws::PluginRepository
+  include SS::PluginRepository
 
+  plugin_class Gws::Plugin
   plugin_type "column"
 
   def self.route_options
-    plugins.select { |name, path, enabled| enabled }.map { |name, path, enabled| [name, path] }
+    plugins.select { |plugin| plugin.enabled? }.map { |plugin| [plugin.i18n_name, plugin.path] }
   end
 end

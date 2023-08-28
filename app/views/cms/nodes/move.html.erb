@@ -1,0 +1,42 @@
+<%= jquery do %>
+new Cms_Move("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @source %>", <%= @link_check.present? %>);
+<% end %>
+
+<%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("cms.move_node.title") %></h2></header>
+
+    <div class="main-body">
+      <dl class="see">
+        <dt><%= t("cms.move_node.current_filename") %></dt>
+        <dd class="current-filename"><%= @filename %></dd>
+
+        <dt><%= t("cms.move_node.destination_filename") %><%= @model.tt :destination_filename %></dt>
+        <dd>
+          <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
+          <%= hidden_field_tag :filename, "", value: @filename %>
+          <%= hidden_field_tag :source, "", value: @source %>
+          <%= f.button t("cms.move_page.confirm"), name: :confirm, class: "confirm btn" %>
+        </dd>
+      </dl>
+
+      <dl class="see" style="display: none;">
+        <dt class="wide">
+          <%= t("cms.move_page.message", source: @source) %>
+          <% if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) && !SS.config.cms.replace_urls_after_move %>
+            <span style="float: right; padding-right: 25px;"><%= link_to t("cms.move_page.link_to_replace"), cms_search_contents_html_path %></span>
+          <% end %>
+        </dt>
+        <dl class="result" style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;"></dl>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.move"), class: "btn-primary", data: { disable_with: t("ss.buttons.moving") } %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
+  </footer>
+
+<% end %>

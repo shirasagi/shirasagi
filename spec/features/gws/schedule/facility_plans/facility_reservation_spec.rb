@@ -3,19 +3,29 @@ require 'spec_helper'
 describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:facility) { create :gws_facility_item }
+  let(:start_at) { Time.zone.now.change(day: 4, hour: 10, minute: 0, second: 0) }
+  let(:time) { start_at + 1.hour }
 
   describe "what facility_reservation is" do
-    before { login_gws_user }
+    before do
+      Timecop.travel(time)
+      login_gws_user
+    end
+
+    after { Timecop.return }
 
     context "without plan" do
       it do
         visit gws_schedule_facility_plans_path(site: site, facility: facility)
         click_on I18n.t("gws/schedule.links.add_plan")
         within "form#item-form" do
-          click_on I18n.t('gws/schedule.facility_reservation.index')
+          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
         wait_for_cbox do
-          expect(page).to have_css(".gws-schedule-search", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation.free")
+          expect(page).to have_no_css(".reservation.exist")
+          expect(page).to have_no_css(".reservation.registered")
         end
       end
     end
@@ -29,16 +39,18 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
-          click_on I18n.t('gws/schedule.facility_reservation.index')
+          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
         wait_for_cbox do
-          expect(page).to have_css(".gws-schedule-search", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation.free")
+          expect(page).to have_no_css(".reservation.exist")
+          expect(page).to have_no_css(".reservation.registered")
         end
       end
     end
 
     context "with multi-days plan" do
-      let(:start_at) { Time.zone.now.change(hour: 10, minute: 0, second: 0) }
       let(:end_at) { start_at + 3.days }
       let!(:item) do
         create(:gws_schedule_plan, facility_ids: [ facility.id ], start_at: start_at, end_at: end_at)
@@ -48,16 +60,18 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
-          click_on I18n.t('gws/schedule.facility_reservation.index')
+          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
         wait_for_cbox do
-          expect(page).to have_css(".gws-schedule-search", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation.free")
+          expect(page).to have_no_css(".reservation.exist")
+          expect(page).to have_no_css(".reservation.registered")
         end
       end
     end
 
     context "with multi-days and repeated plan" do
-      let(:start_at) { Time.zone.now.change(day: 4, hour: 10, minute: 0, second: 0) }
       let(:end_at) { start_at + 3.days }
       let(:repeat_start) { start_at.beginning_of_month }
       let(:repeat_end) { repeat_start + 12.months }
@@ -73,10 +87,13 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
-          click_on I18n.t('gws/schedule.facility_reservation.index')
+          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
         wait_for_cbox do
-          expect(page).to have_css(".gws-schedule-search", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
+          expect(page).to have_css(".reservation.free")
+          expect(page).to have_no_css(".reservation.exist")
+          expect(page).to have_css(".reservation.registered")
         end
       end
     end

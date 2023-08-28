@@ -228,7 +228,7 @@ describe SS::File, dbscope: :example do
     context "when js file is uploaded with application/octet-stream" do
       let(:filename) { "a.js" }
       let(:mime_type_map) { {} }
-      its(:content_type) { is_expected.to eq "application/javascript" }
+      its(:content_type) { is_expected.to eq "text/javascript" }
     end
 
     context "when jtd file is uploaded with application/octet-stream" do
@@ -662,10 +662,11 @@ describe SS::File, dbscope: :example do
     context "when rfc3986's sub-delims symbol is given to name" do
       let(:rfc3986_sub_delims) { %w(! $ & ' ( ) * + , ; =) }
       let(:filesystem_unsafe_on_windows) { %w(\\ / : * ? " < > |) }
+      let(:rails_escaped) { rfc3986_sub_delims.reject { |ch| CGI.escapeHTML(ch) == ch } }
 
       it do
         # sub delims are not escaped
-        subject.name = "a#{(rfc3986_sub_delims - filesystem_unsafe_on_windows).join}b.txt"
+        subject.name = "a#{(rfc3986_sub_delims - filesystem_unsafe_on_windows - rails_escaped).join}b.txt"
         expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.name}"
       end
     end

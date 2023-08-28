@@ -35,11 +35,11 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_users_roles
     invoke :import_ss_files
     invoke :import_cms_forms
-    invoke :import_cms_columns
     invoke :import_cms_loop_settings
     invoke :import_cms_layouts
     invoke :import_cms_body_layouts
     invoke :import_cms_nodes
+    invoke :import_cms_columns
     invoke :import_cms_parts
     invoke :import_cms_pages
     invoke :import_cms_page_searches
@@ -76,24 +76,31 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     Zip::File.open(@import_zip) do |entries|
       entries.each do |entry|
+        next if entry.directory?
+
         name = entry.name
         if entry.gp_flags & Zip::Entry::EFS
           name.force_encoding("UTF-8")
         else
           name = NKF.nkf('-w', name)
         end
+        name = name.tr('\\', '/')
 
         if name.start_with?('public/')
-          path = "#{@dst_site.path}/" + name.tr('\\', '/').sub(/^public\//, '')
+          root_dir = @dst_site.path
+          name = name.sub(/^public\//, '')
         else
-          path = "#{@import_dir}/" + name.tr('\\', '/')
+          root_dir = @import_dir
         end
 
-        if entry.directory?
-          FileUtils.mkdir_p(path)
-        else
-          File.binwrite(path, entry.get_input_stream.read)
+        path = ::File.expand_path(name, root_dir)
+        next unless path.start_with?("#{root_dir}/")
+
+        dirname = ::File.dirname(path)
+        unless ::Dir.exist?(dirname)
+          ::FileUtils.mkdir_p(dirname)
         end
+        ::File.binwrite(path, entry.get_input_stream.read)
       end
     end
   end
@@ -112,6 +119,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
   def init_mapping
     @cms_groups_map = {}
+    @cms_contact_groups_map = {}
     @cms_users_map = {}
     @cms_user_roles_map = {}
     @cms_roles_map = {}
@@ -151,6 +159,12 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     data['body_layout_id'] = @cms_body_layouts_map[data['body_layout_id']] if data['body_layout_id'].present?
     data['contact_group_id'] = @cms_groups_map[data['contact_group_id']] if data['contact_group_id'].present?
+
+    if data['contact_group_contact_id'].present?
+      old_id = data['contact_group_contact_id']["$oid"]
+      data['contact_group_contact_id'] = @cms_contact_groups_map[old_id]
+    end
+
     data['file_ids'] = convert_ids(@ss_files_map, data['file_ids']) if data['file_ids'].present?
 
     %w(thumb_id image_id file_id tsv_id icon_id).each do |name|
@@ -192,7 +206,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       end
 
       data.each { |k, v| item[k] = v }
-      yield(item) if block
+      yield(item, data) if block
 
       if save_document(item)
         map[id] = item.id
@@ -212,7 +226,66 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
   def import_cms_groups
     @task.log("- import cms_groups")
-    @cms_groups_map = import_documents "cms_groups", Cms::Group, %w(name)
+
+    name = "cms_groups"
+    model = Cms::Group
+    fields = %w(name)
+
+    # import_documents
+    read_json(name).each do |data|
+      id   = data.delete('_id')
+      data = convert_data(data)
+
+      cond = data.select { |k, v| fields.include?(k) }
+      item = model.find_or_initialize_by(cond)
+
+      data.each do |k, v|
+        next if k == "contact_groups"
+        item[k] = v
+      end
+
+      next if !save_document(item)
+      @cms_groups_map[id] = item.id
+
+      # after save (embedded save)
+      next if data['contact_groups'].blank?
+      data['contact_groups'].each do |dist|
+        dist.deep_stringify_keys!
+        old_id = dist["_id"]["$oid"]
+        contact_groups = item.contact_groups.to_a
+
+        # 属性が全て一致する連絡先
+        contact = contact_groups.find { |c| c.same_contact?(dist) }
+        # 識別名が同じ連絡先
+        contact ||= contact_groups.find { |item| item.name == dist["name"] }
+
+        if contact.nil?
+          # 連絡先がない為、作成を試みる
+          contact_email = dist["contact_email"].to_s.squish
+          main_contact = contact_groups.find { |c| c.main_state == "main" }
+
+          if contact_email.end_with?("@example.jp")
+            # ただし、メールアドレスが reset されているものについては、主の連絡先に置き換える
+            contact = main_contact if main_contact
+          else
+            main_state = main_contact ? nil : dist["main_state"]
+            contact = item.contact_groups.create(
+              name: dist["name"],
+              contact_group_name: dist["contact_group_name"],
+              contact_tel: dist["contact_tel"],
+              contact_fax: dist["contact_fax"],
+              contact_email: dist["contact_email"],
+              contact_link_url: dist["contact_link_url"],
+              contact_link_name: dist["contact_link_name"],
+              main_state: main_state)
+          end
+        end
+        if contact && contact.errors.blank?
+          @cms_contact_groups_map[old_id] = contact.id.to_s
+        end
+      end
+      data.delete("contact_groups")
+    end
   end
 
   def import_cms_users

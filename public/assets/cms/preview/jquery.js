@@ -1,17 +1,16 @@
 /*!
- * jQuery JavaScript Library v3.5.1
+ * jQuery JavaScript Library v3.6.1
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2020-05-04T22:49Z
+ * Date: 2022-08-26T17:52Z
  */
-
 ( function( global, factory ) {
 
 	"use strict";
@@ -24,7 +23,7 @@
 		// (such as Node.js), expose a factory as module.exports.
 		// This accentuates the need for the creation of a real `window`.
 		// e.g. var jQuery = require("jquery")(window);
-		// See ticket #14549 for more info.
+		// See ticket trac-14549 for more info.
 		module.exports = global.document ?
 			factory( global, true ) :
 			function( w ) {
@@ -77,12 +76,16 @@ var support = {};
 
 var isFunction = function isFunction( obj ) {
 
-      // Support: Chrome <=57, Firefox <=52
-      // In some browsers, typeof returns "function" for HTML <object> elements
-      // (i.e., `typeof document.createElement( "object" ) === "function"`).
-      // We don't want to classify *any* DOM node as a function.
-      return typeof obj === "function" && typeof obj.nodeType !== "number";
-  };
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		// Support: QtWeb <=3.8.5, WebKit <=534.34, wkhtmltopdf tool <=0.12.5
+		// Plus for old WebKit, typeof returns "function" for HTML collections
+		// (e.g., `typeof document.getElementsByTagName("div") === "function"`). (gh-4756)
+		return typeof obj === "function" && typeof obj.nodeType !== "number" &&
+			typeof obj.item !== "function";
+	};
 
 
 var isWindow = function isWindow( obj ) {
@@ -148,7 +151,7 @@ function toType( obj ) {
 
 
 var
-	version = "3.5.1",
+	version = "3.6.1",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -402,7 +405,7 @@ jQuery.extend( {
 			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
-					[ arr ] : arr
+						[ arr ] : arr
 				);
 			} else {
 				push.call( ret, arr );
@@ -497,9 +500,9 @@ if ( typeof Symbol === "function" ) {
 
 // Populate the class2type map
 jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
-function( _i, name ) {
-	class2type[ "[object " + name + "]" ] = name.toLowerCase();
-} );
+	function( _i, name ) {
+		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+	} );
 
 function isArrayLike( obj ) {
 
@@ -519,14 +522,14 @@ function isArrayLike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.3.5
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2020-03-14
+ * Date: 2021-02-16
  */
 ( function( window ) {
 var i,
@@ -1109,8 +1112,8 @@ support = Sizzle.support = {};
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
 isXML = Sizzle.isXML = function( elem ) {
-	var namespace = elem.namespaceURI,
-		docElem = ( elem.ownerDocument || elem ).documentElement;
+	var namespace = elem && elem.namespaceURI,
+		docElem = elem && ( elem.ownerDocument || elem ).documentElement;
 
 	// Support: IE <=8
 	// Assume HTML when documentElement doesn't yet exist, such as inside loading iframes
@@ -3025,9 +3028,9 @@ var rneedsContext = jQuery.expr.match.needsContext;
 
 function nodeName( elem, name ) {
 
-  return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+	return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 
-};
+}
 var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i );
 
 
@@ -3126,8 +3129,8 @@ jQuery.fn.extend( {
 var rootjQuery,
 
 	// A simple way to check for HTML strings
-	// Prioritize #id over <tag> to avoid XSS via location.hash (#9521)
-	// Strict HTML recognition (#11290: must start with <)
+	// Prioritize #id over <tag> to avoid XSS via location.hash (trac-9521)
+	// Strict HTML recognition (trac-11290: must start with <)
 	// Shortcut simple #id case for speed
 	rquickExpr = /^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/,
 
@@ -3998,8 +4001,8 @@ jQuery.extend( {
 			resolveContexts = Array( i ),
 			resolveValues = slice.call( arguments ),
 
-			// the master Deferred
-			master = jQuery.Deferred(),
+			// the primary Deferred
+			primary = jQuery.Deferred(),
 
 			// subordinate callback factory
 			updateFunc = function( i ) {
@@ -4007,30 +4010,30 @@ jQuery.extend( {
 					resolveContexts[ i ] = this;
 					resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
 					if ( !( --remaining ) ) {
-						master.resolveWith( resolveContexts, resolveValues );
+						primary.resolveWith( resolveContexts, resolveValues );
 					}
 				};
 			};
 
 		// Single- and empty arguments are adopted like Promise.resolve
 		if ( remaining <= 1 ) {
-			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject,
+			adoptValue( singleValue, primary.done( updateFunc( i ) ).resolve, primary.reject,
 				!remaining );
 
 			// Use .then() to unwrap secondary thenables (cf. gh-3000)
-			if ( master.state() === "pending" ||
+			if ( primary.state() === "pending" ||
 				isFunction( resolveValues[ i ] && resolveValues[ i ].then ) ) {
 
-				return master.then();
+				return primary.then();
 			}
 		}
 
 		// Multiple arguments are aggregated like Promise.all array elements
 		while ( i-- ) {
-			adoptValue( resolveValues[ i ], updateFunc( i ), master.reject );
+			adoptValue( resolveValues[ i ], updateFunc( i ), primary.reject );
 		}
 
-		return master.promise();
+		return primary.promise();
 	}
 } );
 
@@ -4084,7 +4087,7 @@ jQuery.extend( {
 	isReady: false,
 
 	// A counter to track how many items to wait for before
-	// the ready event fires. See #6781
+	// the ready event fires. See trac-6781
 	readyWait: 1,
 
 	// Handle when the DOM is ready
@@ -4181,8 +4184,8 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 			for ( ; i < len; i++ ) {
 				fn(
 					elems[ i ], key, raw ?
-					value :
-					value.call( elems[ i ], i, fn( elems[ i ], key ) )
+						value :
+						value.call( elems[ i ], i, fn( elems[ i ], key ) )
 				);
 			}
 		}
@@ -4212,7 +4215,7 @@ function fcamelCase( _all, letter ) {
 
 // Convert dashed to camelCase; used by the css and data modules
 // Support: IE <=9 - 11, Edge 12 - 15
-// Microsoft forgot to hump their vendor prefix (#9572)
+// Microsoft forgot to hump their vendor prefix (trac-9572)
 function camelCase( string ) {
 	return string.replace( rmsPrefix, "ms-" ).replace( rdashAlpha, fcamelCase );
 }
@@ -4248,7 +4251,7 @@ Data.prototype = {
 			value = {};
 
 			// We can accept data for non-element nodes in modern browsers,
-			// but we should not, see #8335.
+			// but we should not, see trac-8335.
 			// Always return an empty object.
 			if ( acceptData( owner ) ) {
 
@@ -4487,7 +4490,7 @@ jQuery.fn.extend( {
 					while ( i-- ) {
 
 						// Support: IE 11 only
-						// The attrs elements can be null (#14894)
+						// The attrs elements can be null (trac-14894)
 						if ( attrs[ i ] ) {
 							name = attrs[ i ].name;
 							if ( name.indexOf( "data-" ) === 0 ) {
@@ -4910,9 +4913,9 @@ var rscriptType = ( /^$|^module$|\/(?:java|ecma)script/i );
 		input = document.createElement( "input" );
 
 	// Support: Android 4.0 - 4.3 only
-	// Check state lost if the name is set (#11217)
+	// Check state lost if the name is set (trac-11217)
 	// Support: Windows Web Apps (WWA)
-	// `name` and `type` must use .setAttribute for WWA (#14901)
+	// `name` and `type` must use .setAttribute for WWA (trac-14901)
 	input.setAttribute( "type", "radio" );
 	input.setAttribute( "checked", "checked" );
 	input.setAttribute( "name", "t" );
@@ -4936,7 +4939,7 @@ var rscriptType = ( /^$|^module$|\/(?:java|ecma)script/i );
 } )();
 
 
-// We have to close these tags to support XHTML (#13200)
+// We have to close these tags to support XHTML (trac-13200)
 var wrapMap = {
 
 	// XHTML parsers do not magically insert elements in the
@@ -4962,7 +4965,7 @@ if ( !support.option ) {
 function getAll( context, tag ) {
 
 	// Support: IE <=9 - 11 only
-	// Use typeof to avoid zero-argument method invocation on host objects (#15151)
+	// Use typeof to avoid zero-argument method invocation on host objects (trac-15151)
 	var ret;
 
 	if ( typeof context.getElementsByTagName !== "undefined" ) {
@@ -5045,7 +5048,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 				// Remember the top-level container
 				tmp = fragment.firstChild;
 
-				// Ensure the created nodes are orphaned (#12392)
+				// Ensure the created nodes are orphaned (trac-12392)
 				tmp.textContent = "";
 			}
 		}
@@ -5090,10 +5093,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 }
 
 
-var
-	rkeyEvent = /^key/,
-	rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
-	rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
+var rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
 
 function returnTrue() {
 	return true;
@@ -5388,8 +5388,8 @@ jQuery.event = {
 			event = jQuery.event.fix( nativeEvent ),
 
 			handlers = (
-					dataPriv.get( this, "events" ) || Object.create( null )
-				)[ event.type ] || [],
+				dataPriv.get( this, "events" ) || Object.create( null )
+			)[ event.type ] || [],
 			special = jQuery.event.special[ event.type ] || {};
 
 		// Use the fix-ed jQuery.Event rather than the (read-only) native event
@@ -5469,15 +5469,15 @@ jQuery.event = {
 
 			for ( ; cur !== this; cur = cur.parentNode || this ) {
 
-				// Don't check non-elements (#13208)
-				// Don't process clicks on disabled elements (#6911, #8165, #11382, #11764)
+				// Don't check non-elements (trac-13208)
+				// Don't process clicks on disabled elements (trac-6911, trac-8165, trac-11382, trac-11764)
 				if ( cur.nodeType === 1 && !( event.type === "click" && cur.disabled === true ) ) {
 					matchedHandlers = [];
 					matchedSelectors = {};
 					for ( i = 0; i < delegateCount; i++ ) {
 						handleObj = handlers[ i ];
 
-						// Don't conflict with Object.prototype properties (#13203)
+						// Don't conflict with Object.prototype properties (trac-13203)
 						sel = handleObj.selector + " ";
 
 						if ( matchedSelectors[ sel ] === undefined ) {
@@ -5513,12 +5513,12 @@ jQuery.event = {
 			get: isFunction( hook ) ?
 				function() {
 					if ( this.originalEvent ) {
-							return hook( this.originalEvent );
+						return hook( this.originalEvent );
 					}
 				} :
 				function() {
 					if ( this.originalEvent ) {
-							return this.originalEvent[ name ];
+						return this.originalEvent[ name ];
 					}
 				},
 
@@ -5657,7 +5657,13 @@ function leverageNative( el, type, expectSync ) {
 						// Cancel the outer synthetic event
 						event.stopImmediatePropagation();
 						event.preventDefault();
-						return result.value;
+
+						// Support: Chrome 86+
+						// In Chrome, if an element having a focusout handler is blurred by
+						// clicking outside of it, it invokes the handler synchronously. If
+						// that handler calls `.remove()` on the element, the data is cleared,
+						// leaving `result` undefined. We need to guard against this.
+						return result && result.value;
 					}
 
 				// If this is an inner synthetic event for an event with a bubbling surrogate
@@ -5725,7 +5731,7 @@ jQuery.Event = function( src, props ) {
 
 		// Create target properties
 		// Support: Safari <=6 - 7 only
-		// Target should not be a text node (#504, #13143)
+		// Target should not be a text node (trac-504, trac-13143)
 		this.target = ( src.target && src.target.nodeType === 3 ) ?
 			src.target.parentNode :
 			src.target;
@@ -5822,34 +5828,7 @@ jQuery.each( {
 	targetTouches: true,
 	toElement: true,
 	touches: true,
-
-	which: function( event ) {
-		var button = event.button;
-
-		// Add which for key events
-		if ( event.which == null && rkeyEvent.test( event.type ) ) {
-			return event.charCode != null ? event.charCode : event.keyCode;
-		}
-
-		// Add which for click: 1 === left; 2 === middle; 3 === right
-		if ( !event.which && button !== undefined && rmouseEvent.test( event.type ) ) {
-			if ( button & 1 ) {
-				return 1;
-			}
-
-			if ( button & 2 ) {
-				return 3;
-			}
-
-			if ( button & 4 ) {
-				return 2;
-			}
-
-			return 0;
-		}
-
-		return event.which;
-	}
+	which: true
 }, jQuery.event.addProp );
 
 jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateType ) {
@@ -5873,6 +5852,12 @@ jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateTyp
 
 			// Return non-false to allow normal event-path propagation
 			return true;
+		},
+
+		// Suppress native focus or blur if we're currently inside
+		// a leveraged native-event stack
+		_default: function( event ) {
+			return dataPriv.get( event.target, type );
 		},
 
 		delegateType: delegateType
@@ -5971,7 +5956,8 @@ var
 
 	// checked="checked" or checked
 	rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
-	rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
+
+	rcleanScript = /^\s*<!\[CDATA\[|\]\]>\s*$/g;
 
 // Prefer a tbody over its parent table for containing new rows
 function manipulationTarget( elem, content ) {
@@ -6085,7 +6071,7 @@ function domManip( collection, args, callback, ignored ) {
 
 			// Use the original fragment for the last item
 			// instead of the first because it can end up
-			// being emptied incorrectly in certain situations (#8070).
+			// being emptied incorrectly in certain situations (trac-8070).
 			for ( ; i < l; i++ ) {
 				node = fragment;
 
@@ -6126,6 +6112,12 @@ function domManip( collection, args, callback, ignored ) {
 								}, doc );
 							}
 						} else {
+
+							// Unwrap a CDATA section containing script contents. This shouldn't be
+							// needed as in XML documents they're already not visible when
+							// inspecting element contents and in HTML documents they have no
+							// meaning but we're preserving that logic for backwards compatibility.
+							// This will be removed completely in 4.0. See gh-4904.
 							DOMEval( node.textContent.replace( rcleanScript, "" ), node, doc );
 						}
 					}
@@ -6408,9 +6400,12 @@ jQuery.each( {
 } );
 var rnumnonpx = new RegExp( "^(" + pnum + ")(?!px)[a-z%]+$", "i" );
 
+var rcustomProp = /^--/;
+
+
 var getStyles = function( elem ) {
 
-		// Support: IE <=11 only, Firefox <=30 (#15098, #14150)
+		// Support: IE <=11 only, Firefox <=30 (trac-15098, trac-14150)
 		// IE throws on elements created in popups
 		// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
 		var view = elem.ownerDocument.defaultView;
@@ -6444,6 +6439,15 @@ var swap = function( elem, options, callback ) {
 
 
 var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
+
+var whitespace = "[\\x20\\t\\r\\n\\f]";
+
+
+var rtrimCSS = new RegExp(
+	"^" + whitespace + "+|((?:^|[^\\\\])(?:\\\\.)*)" + whitespace + "+$",
+	"g"
+);
+
 
 
 
@@ -6510,7 +6514,7 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 	}
 
 	// Support: IE <=9 - 11 only
-	// Style of cloned element affects source element cloned (#8908)
+	// Style of cloned element affects source element cloned (trac-8908)
 	div.style.backgroundClip = "content-box";
 	div.cloneNode( true ).style.backgroundClip = "";
 	support.clearCloneStyle = div.style.backgroundClip === "content-box";
@@ -6542,6 +6546,10 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 		// set in CSS while `offset*` properties report correct values.
 		// Behavior in IE 9 is more subtle than in newer versions & it passes
 		// some versions of this test; make sure not to make it pass there!
+		//
+		// Support: Firefox 70+
+		// Only Firefox includes border widths
+		// in computed dimensions. (gh-4529)
 		reliableTrDimensions: function() {
 			var table, tr, trChild, trStyle;
 			if ( reliableTrDimensionsVal == null ) {
@@ -6549,9 +6557,22 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				tr = document.createElement( "tr" );
 				trChild = document.createElement( "div" );
 
-				table.style.cssText = "position:absolute;left:-11111px";
+				table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
+				tr.style.cssText = "border:1px solid";
+
+				// Support: Chrome 86+
+				// Height set through cssText does not get applied.
+				// Computed height then comes back as 0.
 				tr.style.height = "1px";
 				trChild.style.height = "9px";
+
+				// Support: Android 8 Chrome 86+
+				// In our bodyBackground.html iframe,
+				// display for all div elements is set to "inline",
+				// which causes a problem only in Android 8 Chrome 86.
+				// Ensuring the div is display: block
+				// gets around this issue.
+				trChild.style.display = "block";
 
 				documentElement
 					.appendChild( table )
@@ -6559,7 +6580,9 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 					.appendChild( trChild );
 
 				trStyle = window.getComputedStyle( tr );
-				reliableTrDimensionsVal = parseInt( trStyle.height ) > 3;
+				reliableTrDimensionsVal = ( parseInt( trStyle.height, 10 ) +
+					parseInt( trStyle.borderTopWidth, 10 ) +
+					parseInt( trStyle.borderBottomWidth, 10 ) ) === tr.offsetHeight;
 
 				documentElement.removeChild( table );
 			}
@@ -6571,6 +6594,7 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 
 function curCSS( elem, name, computed ) {
 	var width, minWidth, maxWidth, ret,
+		isCustomProp = rcustomProp.test( name ),
 
 		// Support: Firefox 51+
 		// Retrieving style before computed somehow
@@ -6581,10 +6605,21 @@ function curCSS( elem, name, computed ) {
 	computed = computed || getStyles( elem );
 
 	// getPropertyValue is needed for:
-	//   .css('filter') (IE 9 only, #12537)
-	//   .css('--customProperty) (#3144)
+	//   .css('filter') (IE 9 only, trac-12537)
+	//   .css('--customProperty) (gh-3144)
 	if ( computed ) {
 		ret = computed.getPropertyValue( name ) || computed[ name ];
+
+		// trim whitespace for custom property (issue gh-4926)
+		if ( isCustomProp ) {
+
+			// rtrim treats U+000D CARRIAGE RETURN and U+000C FORM FEED
+			// as whitespace while CSS does not, but this is not a problem
+			// because CSS preprocessing replaces them with U+000A LINE FEED
+			// (which *is* CSS whitespace)
+			// https://www.w3.org/TR/css-syntax-3/#input-preprocessing
+			ret = ret.replace( rtrimCSS, "$1" );
+		}
 
 		if ( ret === "" && !isAttached( elem ) ) {
 			ret = jQuery.style( elem, name );
@@ -6681,7 +6716,6 @@ var
 	// except "table", "table-cell", or "table-caption"
 	// See here for display values: https://developer.mozilla.org/en-US/docs/CSS/display
 	rdisplayswap = /^(none|table(?!-c[ea]).+)/,
-	rcustomProp = /^--/,
 	cssShow = { position: "absolute", visibility: "hidden", display: "block" },
 	cssNormalTransform = {
 		letterSpacing: "0",
@@ -6917,15 +6951,15 @@ jQuery.extend( {
 		if ( value !== undefined ) {
 			type = typeof value;
 
-			// Convert "+=" or "-=" to relative numbers (#7345)
+			// Convert "+=" or "-=" to relative numbers (trac-7345)
 			if ( type === "string" && ( ret = rcssNum.exec( value ) ) && ret[ 1 ] ) {
 				value = adjustCSS( elem, name, ret );
 
-				// Fixes bug #9237
+				// Fixes bug trac-9237
 				type = "number";
 			}
 
-			// Make sure that null and NaN values aren't set (#7116)
+			// Make sure that null and NaN values aren't set (trac-7116)
 			if ( value == null || value !== value ) {
 				return;
 			}
@@ -7023,10 +7057,10 @@ jQuery.each( [ "height", "width" ], function( _i, dimension ) {
 					// Running getBoundingClientRect on a disconnected node
 					// in IE throws an error.
 					( !elem.getClientRects().length || !elem.getBoundingClientRect().width ) ?
-						swap( elem, cssShow, function() {
-							return getWidthOrHeight( elem, dimension, extra );
-						} ) :
-						getWidthOrHeight( elem, dimension, extra );
+					swap( elem, cssShow, function() {
+						return getWidthOrHeight( elem, dimension, extra );
+					} ) :
+					getWidthOrHeight( elem, dimension, extra );
 			}
 		},
 
@@ -7085,7 +7119,7 @@ jQuery.cssHooks.marginLeft = addGetHookIf( support.reliableMarginLeft,
 					swap( elem, { marginLeft: 0 }, function() {
 						return elem.getBoundingClientRect().left;
 					} )
-				) + "px";
+			) + "px";
 		}
 	}
 );
@@ -7224,7 +7258,7 @@ Tween.propHooks = {
 			if ( jQuery.fx.step[ tween.prop ] ) {
 				jQuery.fx.step[ tween.prop ]( tween );
 			} else if ( tween.elem.nodeType === 1 && (
-					jQuery.cssHooks[ tween.prop ] ||
+				jQuery.cssHooks[ tween.prop ] ||
 					tween.elem.style[ finalPropName( tween.prop ) ] != null ) ) {
 				jQuery.style( tween.elem, tween.prop, tween.now + tween.unit );
 			} else {
@@ -7469,7 +7503,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 			anim.done( function() {
 
-			/* eslint-enable no-loop-func */
+				/* eslint-enable no-loop-func */
 
 				// The final step of a "hide" animation is actually hiding the element
 				if ( !hidden ) {
@@ -7549,7 +7583,7 @@ function Animation( elem, properties, options ) {
 				remaining = Math.max( 0, animation.startTime + animation.duration - currentTime ),
 
 				// Support: Android 2.3 only
-				// Archaic crash bug won't allow us to use `1 - ( 0.5 || 0 )` (#12497)
+				// Archaic crash bug won't allow us to use `1 - ( 0.5 || 0 )` (trac-12497)
 				temp = remaining / animation.duration || 0,
 				percent = 1 - temp,
 				index = 0,
@@ -7589,7 +7623,7 @@ function Animation( elem, properties, options ) {
 			tweens: [],
 			createTween: function( prop, end ) {
 				var tween = jQuery.Tween( elem, animation.opts, prop, end,
-						animation.opts.specialEasing[ prop ] || animation.opts.easing );
+					animation.opts.specialEasing[ prop ] || animation.opts.easing );
 				animation.tweens.push( tween );
 				return tween;
 			},
@@ -7762,7 +7796,8 @@ jQuery.fn.extend( {
 					anim.stop( true );
 				}
 			};
-			doAnimation.finish = doAnimation;
+
+		doAnimation.finish = doAnimation;
 
 		return empty || optall.queue === false ?
 			this.each( doAnimation ) :
@@ -7938,7 +7973,6 @@ jQuery.fx.speeds = {
 
 
 // Based off of the plugin by Clint Helfers, with permission.
-// https://web.archive.org/web/20100324014747/http://blindsignals.com/index.php/2009/07/jquery-delay/
 jQuery.fn.delay = function( time, type ) {
 	time = jQuery.fx ? jQuery.fx.speeds[ time ] || time : time;
 	type = type || "fx";
@@ -8163,8 +8197,7 @@ jQuery.extend( {
 				// Support: IE <=9 - 11 only
 				// elem.tabIndex doesn't always return the
 				// correct value when it hasn't been explicitly set
-				// https://web.archive.org/web/20141116233347/http://fluidproject.org/blog/2008/01/09/getting-setting-and-removing-tabindex-values-with-javascript/
-				// Use proper attribute retrieval(#12072)
+				// Use proper attribute retrieval (trac-12072)
 				var tabindex = jQuery.find.attr( elem, "tabindex" );
 
 				if ( tabindex ) {
@@ -8268,8 +8301,7 @@ function classesToArray( value ) {
 
 jQuery.fn.extend( {
 	addClass: function( value ) {
-		var classes, elem, cur, curValue, clazz, j, finalValue,
-			i = 0;
+		var classNames, cur, curValue, className, i, finalValue;
 
 		if ( isFunction( value ) ) {
 			return this.each( function( j ) {
@@ -8277,36 +8309,35 @@ jQuery.fn.extend( {
 			} );
 		}
 
-		classes = classesToArray( value );
+		classNames = classesToArray( value );
 
-		if ( classes.length ) {
-			while ( ( elem = this[ i++ ] ) ) {
-				curValue = getClass( elem );
-				cur = elem.nodeType === 1 && ( " " + stripAndCollapse( curValue ) + " " );
+		if ( classNames.length ) {
+			return this.each( function() {
+				curValue = getClass( this );
+				cur = this.nodeType === 1 && ( " " + stripAndCollapse( curValue ) + " " );
 
 				if ( cur ) {
-					j = 0;
-					while ( ( clazz = classes[ j++ ] ) ) {
-						if ( cur.indexOf( " " + clazz + " " ) < 0 ) {
-							cur += clazz + " ";
+					for ( i = 0; i < classNames.length; i++ ) {
+						className = classNames[ i ];
+						if ( cur.indexOf( " " + className + " " ) < 0 ) {
+							cur += className + " ";
 						}
 					}
 
 					// Only assign if different to avoid unneeded rendering.
 					finalValue = stripAndCollapse( cur );
 					if ( curValue !== finalValue ) {
-						elem.setAttribute( "class", finalValue );
+						this.setAttribute( "class", finalValue );
 					}
 				}
-			}
+			} );
 		}
 
 		return this;
 	},
 
 	removeClass: function( value ) {
-		var classes, elem, cur, curValue, clazz, j, finalValue,
-			i = 0;
+		var classNames, cur, curValue, className, i, finalValue;
 
 		if ( isFunction( value ) ) {
 			return this.each( function( j ) {
@@ -8318,44 +8349,41 @@ jQuery.fn.extend( {
 			return this.attr( "class", "" );
 		}
 
-		classes = classesToArray( value );
+		classNames = classesToArray( value );
 
-		if ( classes.length ) {
-			while ( ( elem = this[ i++ ] ) ) {
-				curValue = getClass( elem );
+		if ( classNames.length ) {
+			return this.each( function() {
+				curValue = getClass( this );
 
 				// This expression is here for better compressibility (see addClass)
-				cur = elem.nodeType === 1 && ( " " + stripAndCollapse( curValue ) + " " );
+				cur = this.nodeType === 1 && ( " " + stripAndCollapse( curValue ) + " " );
 
 				if ( cur ) {
-					j = 0;
-					while ( ( clazz = classes[ j++ ] ) ) {
+					for ( i = 0; i < classNames.length; i++ ) {
+						className = classNames[ i ];
 
 						// Remove *all* instances
-						while ( cur.indexOf( " " + clazz + " " ) > -1 ) {
-							cur = cur.replace( " " + clazz + " ", " " );
+						while ( cur.indexOf( " " + className + " " ) > -1 ) {
+							cur = cur.replace( " " + className + " ", " " );
 						}
 					}
 
 					// Only assign if different to avoid unneeded rendering.
 					finalValue = stripAndCollapse( cur );
 					if ( curValue !== finalValue ) {
-						elem.setAttribute( "class", finalValue );
+						this.setAttribute( "class", finalValue );
 					}
 				}
-			}
+			} );
 		}
 
 		return this;
 	},
 
 	toggleClass: function( value, stateVal ) {
-		var type = typeof value,
+		var classNames, className, i, self,
+			type = typeof value,
 			isValidValue = type === "string" || Array.isArray( value );
-
-		if ( typeof stateVal === "boolean" && isValidValue ) {
-			return stateVal ? this.addClass( value ) : this.removeClass( value );
-		}
 
 		if ( isFunction( value ) ) {
 			return this.each( function( i ) {
@@ -8366,17 +8394,20 @@ jQuery.fn.extend( {
 			} );
 		}
 
-		return this.each( function() {
-			var className, i, self, classNames;
+		if ( typeof stateVal === "boolean" && isValidValue ) {
+			return stateVal ? this.addClass( value ) : this.removeClass( value );
+		}
 
+		classNames = classesToArray( value );
+
+		return this.each( function() {
 			if ( isValidValue ) {
 
 				// Toggle individual class names
-				i = 0;
 				self = jQuery( this );
-				classNames = classesToArray( value );
 
-				while ( ( className = classNames[ i++ ] ) ) {
+				for ( i = 0; i < classNames.length; i++ ) {
+					className = classNames[ i ];
 
 					// Check each className given, space separated list
 					if ( self.hasClass( className ) ) {
@@ -8402,8 +8433,8 @@ jQuery.fn.extend( {
 				if ( this.setAttribute ) {
 					this.setAttribute( "class",
 						className || value === false ?
-						"" :
-						dataPriv.get( this, "__className__" ) || ""
+							"" :
+							dataPriv.get( this, "__className__" ) || ""
 					);
 				}
 			}
@@ -8418,7 +8449,7 @@ jQuery.fn.extend( {
 		while ( ( elem = this[ i++ ] ) ) {
 			if ( elem.nodeType === 1 &&
 				( " " + stripAndCollapse( getClass( elem ) ) + " " ).indexOf( className ) > -1 ) {
-					return true;
+				return true;
 			}
 		}
 
@@ -8510,7 +8541,7 @@ jQuery.extend( {
 					val :
 
 					// Support: IE <=10 - 11 only
-					// option.text throws exceptions (#14686, #14858)
+					// option.text throws exceptions (trac-14686, trac-14858)
 					// Strip and collapse whitespace
 					// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
 					stripAndCollapse( jQuery.text( elem ) );
@@ -8537,7 +8568,7 @@ jQuery.extend( {
 					option = options[ i ];
 
 					// Support: IE <=9 only
-					// IE8-9 doesn't update selected after form reset (#2551)
+					// IE8-9 doesn't update selected after form reset (trac-2551)
 					if ( ( option.selected || i === index ) &&
 
 							// Don't return options that are disabled or in a disabled optgroup
@@ -8680,8 +8711,8 @@ jQuery.extend( jQuery.event, {
 			return;
 		}
 
-		// Determine event propagation path in advance, per W3C events spec (#9951)
-		// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
+		// Determine event propagation path in advance, per W3C events spec (trac-9951)
+		// Bubble up to document, then to window; watch for a global ownerDocument var (trac-9724)
 		if ( !onlyHandlers && !special.noBubble && !isWindow( elem ) ) {
 
 			bubbleType = special.delegateType || type;
@@ -8708,9 +8739,7 @@ jQuery.extend( jQuery.event, {
 				special.bindType || type;
 
 			// jQuery handler
-			handle = (
-					dataPriv.get( cur, "events" ) || Object.create( null )
-				)[ event.type ] &&
+			handle = ( dataPriv.get( cur, "events" ) || Object.create( null ) )[ event.type ] &&
 				dataPriv.get( cur, "handle" );
 			if ( handle ) {
 				handle.apply( cur, data );
@@ -8735,7 +8764,7 @@ jQuery.extend( jQuery.event, {
 				acceptData( elem ) ) {
 
 				// Call a native DOM method on the target with the same name as the event.
-				// Don't do default actions on window, that's where global variables be (#6170)
+				// Don't do default actions on window, that's where global variables be (trac-6170)
 				if ( ontype && isFunction( elem[ type ] ) && !isWindow( elem ) ) {
 
 					// Don't re-trigger an onFOO event when we call its FOO() method
@@ -8857,7 +8886,7 @@ var rquery = ( /\?/ );
 
 // Cross-browser xml parsing
 jQuery.parseXML = function( data ) {
-	var xml;
+	var xml, parserErrorElem;
 	if ( !data || typeof data !== "string" ) {
 		return null;
 	}
@@ -8866,12 +8895,17 @@ jQuery.parseXML = function( data ) {
 	// IE throws on parseFromString with invalid input.
 	try {
 		xml = ( new window.DOMParser() ).parseFromString( data, "text/xml" );
-	} catch ( e ) {
-		xml = undefined;
-	}
+	} catch ( e ) {}
 
-	if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-		jQuery.error( "Invalid XML: " + data );
+	parserErrorElem = xml && xml.getElementsByTagName( "parsererror" )[ 0 ];
+	if ( !xml || parserErrorElem ) {
+		jQuery.error( "Invalid XML: " + (
+			parserErrorElem ?
+				jQuery.map( parserErrorElem.childNodes, function( el ) {
+					return el.textContent;
+				} ).join( "\n" ) :
+				data
+		) );
 	}
 	return xml;
 };
@@ -8972,16 +9006,14 @@ jQuery.fn.extend( {
 			// Can add propHook for "elements" to filter or add form elements
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
-		} )
-		.filter( function() {
+		} ).filter( function() {
 			var type = this.type;
 
 			// Use .is( ":disabled" ) so that fieldset[disabled] works
 			return this.name && !jQuery( this ).is( ":disabled" ) &&
 				rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
 				( this.checked || !rcheckableType.test( type ) );
-		} )
-		.map( function( _i, elem ) {
+		} ).map( function( _i, elem ) {
 			var val = jQuery( this ).val();
 
 			if ( val == null ) {
@@ -9006,7 +9038,7 @@ var
 	rantiCache = /([?&])_=[^&]*/,
 	rheaders = /^(.*?):[ \t]*([^\r\n]*)$/mg,
 
-	// #7653, #8125, #8152: local protocol detection
+	// trac-7653, trac-8125, trac-8152: local protocol detection
 	rlocalProtocol = /^(?:about|app|app-storage|.+-extension|file|res|widget):$/,
 	rnoContent = /^(?:GET|HEAD)$/,
 	rprotocol = /^\/\//,
@@ -9029,12 +9061,13 @@ var
 	 */
 	transports = {},
 
-	// Avoid comment-prolog char sequence (#10098); must appease lint and evade compression
+	// Avoid comment-prolog char sequence (trac-10098); must appease lint and evade compression
 	allTypes = "*/".concat( "*" ),
 
 	// Anchor tag for parsing the document origin
 	originAnchor = document.createElement( "a" );
-	originAnchor.href = location.href;
+
+originAnchor.href = location.href;
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
@@ -9099,7 +9132,7 @@ function inspectPrefiltersOrTransports( structure, options, originalOptions, jqX
 
 // A special extend for ajax options
 // that takes "flat" options (not to be deep extended)
-// Fixes #9887
+// Fixes trac-9887
 function ajaxExtend( target, src ) {
 	var key, deep,
 		flatOptions = jQuery.ajaxSettings.flatOptions || {};
@@ -9415,8 +9448,8 @@ jQuery.extend( {
 			// Context for global events is callbackContext if it is a DOM node or jQuery collection
 			globalEventContext = s.context &&
 				( callbackContext.nodeType || callbackContext.jquery ) ?
-					jQuery( callbackContext ) :
-					jQuery.event,
+				jQuery( callbackContext ) :
+				jQuery.event,
 
 			// Deferreds
 			deferred = jQuery.Deferred(),
@@ -9510,12 +9543,12 @@ jQuery.extend( {
 		deferred.promise( jqXHR );
 
 		// Add protocol if not provided (prefilters might expect it)
-		// Handle falsy url in the settings object (#10093: consistency with old signature)
+		// Handle falsy url in the settings object (trac-10093: consistency with old signature)
 		// We also use the url parameter if available
 		s.url = ( ( url || s.url || location.href ) + "" )
 			.replace( rprotocol, location.protocol + "//" );
 
-		// Alias method option to type as per ticket #12004
+		// Alias method option to type as per ticket trac-12004
 		s.type = options.method || options.type || s.method || s.type;
 
 		// Extract dataTypes list
@@ -9558,7 +9591,7 @@ jQuery.extend( {
 		}
 
 		// We can fire global events as of now if asked to
-		// Don't fire events if jQuery.event is undefined in an AMD-usage scenario (#15118)
+		// Don't fire events if jQuery.event is undefined in an AMD-usage scenario (trac-15118)
 		fireGlobals = jQuery.event && s.global;
 
 		// Watch for a new set of requests
@@ -9587,7 +9620,7 @@ jQuery.extend( {
 			if ( s.data && ( s.processData || typeof s.data === "string" ) ) {
 				cacheURL += ( rquery.test( cacheURL ) ? "&" : "?" ) + s.data;
 
-				// #9682: remove data so that it's not used in an eventual retry
+				// trac-9682: remove data so that it's not used in an eventual retry
 				delete s.data;
 			}
 
@@ -9728,8 +9761,10 @@ jQuery.extend( {
 				response = ajaxHandleResponses( s, jqXHR, responses );
 			}
 
-			// Use a noop converter for missing script
-			if ( !isSuccess && jQuery.inArray( "script", s.dataTypes ) > -1 ) {
+			// Use a noop converter for missing script but not if jsonp
+			if ( !isSuccess &&
+				jQuery.inArray( "script", s.dataTypes ) > -1 &&
+				jQuery.inArray( "json", s.dataTypes ) < 0 ) {
 				s.converters[ "text script" ] = function() {};
 			}
 
@@ -9858,7 +9893,7 @@ jQuery._evalUrl = function( url, options, doc ) {
 	return jQuery.ajax( {
 		url: url,
 
-		// Make this explicit, since user can override this through ajaxSetup (#11264)
+		// Make this explicit, since user can override this through ajaxSetup (trac-11264)
 		type: "GET",
 		dataType: "script",
 		cache: true,
@@ -9967,7 +10002,7 @@ var xhrSuccessStatus = {
 		0: 200,
 
 		// Support: IE <=9 only
-		// #1450: sometimes IE returns 1223 when it should be 204
+		// trac-1450: sometimes IE returns 1223 when it should be 204
 		1223: 204
 	},
 	xhrSupported = jQuery.ajaxSettings.xhr();
@@ -10039,7 +10074,7 @@ jQuery.ajaxTransport( function( options ) {
 								} else {
 									complete(
 
-										// File: protocol always yields status 0; see #8605, #14207
+										// File: protocol always yields status 0; see trac-8605, trac-14207
 										xhr.status,
 										xhr.statusText
 									);
@@ -10100,7 +10135,7 @@ jQuery.ajaxTransport( function( options ) {
 					xhr.send( options.hasContent && options.data || null );
 				} catch ( e ) {
 
-					// #14683: Only rethrow if this hasn't been notified as an error yet
+					// trac-14683: Only rethrow if this hasn't been notified as an error yet
 					if ( callback ) {
 						throw e;
 					}
@@ -10467,12 +10502,6 @@ jQuery.offset = {
 			options.using.call( elem, props );
 
 		} else {
-			if ( typeof props.top === "number" ) {
-				props.top += "px";
-			}
-			if ( typeof props.left === "number" ) {
-				props.left += "px";
-			}
 			curElem.css( props );
 		}
 	}
@@ -10641,8 +10670,11 @@ jQuery.each( [ "top", "left" ], function( _i, prop ) {
 
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
 jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
-	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name },
-		function( defaultExtra, funcName ) {
+	jQuery.each( {
+		padding: "inner" + name,
+		content: type,
+		"": "outer" + name
+	}, function( defaultExtra, funcName ) {
 
 		// Margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
@@ -10727,7 +10759,8 @@ jQuery.fn.extend( {
 	}
 } );
 
-jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
+jQuery.each(
+	( "blur focus focusin focusout resize scroll click dblclick " +
 	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
 	"change select submit keydown keypress keyup contextmenu" ).split( " " ),
 	function( _i, name ) {
@@ -10738,14 +10771,17 @@ jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
 				this.on( name, null, data, fn ) :
 				this.trigger( name );
 		};
-	} );
+	}
+);
 
 
 
 
 // Support: Android <=4.0 only
 // Make sure we trim BOM and NBSP
-var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+// Require that the "whitespace run" starts from a non-whitespace
+// to avoid O(N^2) behavior when the engine would try matching "\s+$" at each space position.
+var rtrim = /^[\s\uFEFF\xA0]+|([^\s\uFEFF\xA0])[\s\uFEFF\xA0]+$/g;
 
 // Bind a function to a context, optionally partially applying any
 // arguments.
@@ -10812,7 +10848,7 @@ jQuery.isNumeric = function( obj ) {
 jQuery.trim = function( text ) {
 	return text == null ?
 		"" :
-		( text + "" ).replace( rtrim, "" );
+		( text + "" ).replace( rtrim, "$1" );
 };
 
 
@@ -10860,8 +10896,8 @@ jQuery.noConflict = function( deep ) {
 };
 
 // Expose jQuery and $ identifiers, even in AMD
-// (#7102#comment:10, https://github.com/jquery/jquery/pull/557)
-// and CommonJS for browser emulators (#13566)
+// (trac-7102#comment:10, https://github.com/jquery/jquery/pull/557)
+// and CommonJS for browser emulators (trac-13566)
 if ( typeof noGlobal === "undefined" ) {
 	window.jQuery = window.$ = jQuery;
 }
@@ -10875,13 +10911,11 @@ return jQuery;
 // Only turn warnings off if not already overridden
 if ( typeof jQuery.migrateMute === "undefined" ) {
 	jQuery.migrateMute = true;
-}
-;
+};
 /*!
- * jQuery Migrate - v3.3.0 - 2020-05-05T01:57Z
+ * jQuery Migrate - v3.4.1 - 2023-02-23T15:31Z
  * Copyright OpenJS Foundation and other contributors
  */
-
 ( function( factory ) {
 	"use strict";
 
@@ -10904,7 +10938,7 @@ if ( typeof jQuery.migrateMute === "undefined" ) {
 } )( function( jQuery, window ) {
 "use strict";
 
-jQuery.migrateVersion = "3.3.0";
+jQuery.migrateVersion = "3.4.1";
 
 // Returns 0 if v1 == v2, -1 if v1 < v2, 1 if v1 > v2
 function compareVersions( v1, v2 ) {
@@ -10928,6 +10962,40 @@ function jQueryVersionSince( version ) {
 	return compareVersions( jQuery.fn.jquery, version ) >= 0;
 }
 
+// A map from disabled patch codes to `true`. This should really
+// be a `Set` but those are unsupported in IE.
+var disabledPatches = Object.create( null );
+
+// Don't apply patches for specified codes. Helpful for code bases
+// where some Migrate warnings have been addressed and it's desirable
+// to avoid needless patches or false positives.
+jQuery.migrateDisablePatches = function() {
+	var i;
+	for ( i = 0; i < arguments.length; i++ ) {
+		disabledPatches[ arguments[ i ] ] = true;
+	}
+};
+
+// Allow enabling patches disabled via `jQuery.migrateDisablePatches`.
+// Helpful if you want to disable a patch only for some code that won't
+// be updated soon to be able to focus on other warnings - and enable it
+// immediately after such a call:
+// ```js
+// jQuery.migrateDisablePatches( "workaroundA" );
+// elem.pluginViolatingWarningA( "pluginMethod" );
+// jQuery.migrateEnablePatches( "workaroundA" );
+// ```
+jQuery.migrateEnablePatches = function() {
+	var i;
+	for ( i = 0; i < arguments.length; i++ ) {
+		delete disabledPatches[ arguments[ i ] ];
+	}
+};
+
+jQuery.migrateIsPatchEnabled = function( patchCode ) {
+	return !disabledPatches[ patchCode ];
+};
+
 ( function() {
 
 	// Support: IE9 only
@@ -10937,9 +11005,10 @@ function jQueryVersionSince( version ) {
 		return;
 	}
 
-	// Need jQuery 3.0.0+ and no older Migrate loaded
-	if ( !jQuery || !jQueryVersionSince( "3.0.0" ) ) {
-		window.console.log( "JQMIGRATE: jQuery 3.0.0+ REQUIRED" );
+	// Need jQuery 3.x-4.x and no older Migrate loaded
+	if ( !jQuery || !jQueryVersionSince( "3.0.0" ) ||
+			jQueryVersionSince( "5.0.0" ) ) {
+		window.console.log( "JQMIGRATE: jQuery 3.x-4.x REQUIRED" );
 	}
 	if ( jQuery.migrateWarnings ) {
 		window.console.log( "JQMIGRATE: Migrate plugin loaded multiple times" );
@@ -10971,11 +11040,12 @@ jQuery.migrateReset = function() {
 	jQuery.migrateWarnings.length = 0;
 };
 
-function migrateWarn( msg ) {
+function migrateWarn( code, msg ) {
 	var console = window.console;
-	if ( !jQuery.migrateDeduplicateWarnings || !warnedAbout[ msg ] ) {
+	if ( jQuery.migrateIsPatchEnabled( code ) &&
+		( !jQuery.migrateDeduplicateWarnings || !warnedAbout[ msg ] ) ) {
 		warnedAbout[ msg ] = true;
-		jQuery.migrateWarnings.push( msg );
+		jQuery.migrateWarnings.push( msg + " [" + code + "]" );
 		if ( console && console.warn && !jQuery.migrateMute ) {
 			console.warn( "JQMIGRATE: " + msg );
 			if ( jQuery.migrateTrace && console.trace ) {
@@ -10985,32 +11055,62 @@ function migrateWarn( msg ) {
 	}
 }
 
-function migrateWarnProp( obj, prop, value, msg ) {
+function migrateWarnProp( obj, prop, value, code, msg ) {
 	Object.defineProperty( obj, prop, {
 		configurable: true,
 		enumerable: true,
 		get: function() {
-			migrateWarn( msg );
+			migrateWarn( code, msg );
 			return value;
 		},
 		set: function( newValue ) {
-			migrateWarn( msg );
+			migrateWarn( code, msg );
 			value = newValue;
 		}
 	} );
 }
 
-function migrateWarnFunc( obj, prop, newFunc, msg ) {
+function migrateWarnFuncInternal( obj, prop, newFunc, code, msg ) {
+	var finalFunc,
+		origFunc = obj[ prop ];
+
 	obj[ prop ] = function() {
-		migrateWarn( msg );
-		return newFunc.apply( this, arguments );
+
+		// If `msg` not provided, do not warn; more sophisticated warnings
+		// logic is most likely embedded in `newFunc`, in that case here
+		// we just care about the logic choosing the proper implementation
+		// based on whether the patch is disabled or not.
+		if ( msg ) {
+			migrateWarn( code, msg );
+		}
+
+		// Since patches can be disabled & enabled dynamically, we
+		// need to decide which implementation to run on each invocation.
+		finalFunc = jQuery.migrateIsPatchEnabled( code ) ?
+			newFunc :
+
+			// The function may not have existed originally so we need a fallback.
+			( origFunc || jQuery.noop );
+
+		return finalFunc.apply( this, arguments );
 	};
+}
+
+function migratePatchAndWarnFunc( obj, prop, newFunc, code, msg ) {
+	if ( !msg ) {
+		throw new Error( "No warning message provided" );
+	}
+	return migrateWarnFuncInternal( obj, prop, newFunc, code, msg );
+}
+
+function migratePatchFunc( obj, prop, newFunc, code ) {
+	return migrateWarnFuncInternal( obj, prop, newFunc, code );
 }
 
 if ( window.document.compatMode === "BackCompat" ) {
 
-	// JQuery has never supported or tested Quirks Mode
-	migrateWarn( "jQuery is not compatible with Quirks Mode" );
+	// jQuery has never supported or tested Quirks Mode
+	migrateWarn( "quirks", "jQuery is not compatible with Quirks Mode" );
 }
 
 var findProp,
@@ -11021,25 +11121,31 @@ var findProp,
 	rattrHashTest = /\[(\s*[-\w]+\s*)([~|^$*]?=)\s*([-\w#]*?#[-\w#]*)\s*\]/,
 	rattrHashGlob = /\[(\s*[-\w]+\s*)([~|^$*]?=)\s*([-\w#]*?#[-\w#]*)\s*\]/g,
 
-	// Support: Android <=4.0 only
-	// Make sure we trim BOM and NBSP
-	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+	// Require that the "whitespace run" starts from a non-whitespace
+	// to avoid O(N^2) behavior when the engine would try matching "\s+$" at each space position.
+	rtrim = /^[\s\uFEFF\xA0]+|([^\s\uFEFF\xA0])[\s\uFEFF\xA0]+$/g;
 
-jQuery.fn.init = function( arg1 ) {
+migratePatchFunc( jQuery.fn, "init", function( arg1 ) {
 	var args = Array.prototype.slice.call( arguments );
 
-	if ( typeof arg1 === "string" && arg1 === "#" ) {
+	if ( jQuery.migrateIsPatchEnabled( "selector-empty-id" ) &&
+		typeof arg1 === "string" && arg1 === "#" ) {
 
-		// JQuery( "#" ) is a bogus ID selector, but it returned an empty set before jQuery 3.0
-		migrateWarn( "jQuery( '#' ) is not a valid selector" );
+		// JQuery( "#" ) is a bogus ID selector, but it returned an empty set
+		// before jQuery 3.0
+		migrateWarn( "selector-empty-id", "jQuery( '#' ) is not a valid selector" );
 		args[ 0 ] = [];
 	}
 
 	return oldInit.apply( this, args );
-};
+}, "selector-empty-id" );
+
+// This is already done in Core but the above patch will lose this assignment
+// so we need to redo it. It doesn't matter whether the patch is enabled or not
+// as the method is always going to be a Migrate-created wrapper.
 jQuery.fn.init.prototype = jQuery.fn;
 
-jQuery.find = function( selector ) {
+migratePatchFunc( jQuery, "find", function( selector ) {
 	var args = Array.prototype.slice.call( arguments );
 
 	// Support: PhantomJS 1.x
@@ -11061,16 +11167,18 @@ jQuery.find = function( selector ) {
 			// Note that there may be false alarms if selector uses jQuery extensions
 			try {
 				window.document.querySelector( selector );
-				migrateWarn( "Attribute selector with '#' must be quoted: " + args[ 0 ] );
+				migrateWarn( "selector-hash",
+					"Attribute selector with '#' must be quoted: " + args[ 0 ] );
 				args[ 0 ] = selector;
 			} catch ( err2 ) {
-				migrateWarn( "Attribute selector with '#' was not fixed: " + args[ 0 ] );
+				migrateWarn( "selector-hash",
+					"Attribute selector with '#' was not fixed: " + args[ 0 ] );
 			}
 		}
 	}
 
 	return oldFind.apply( this, args );
-};
+}, "selector-hash" );
 
 // Copy properties attached to original jQuery.find method (e.g. .attr, .isXML)
 for ( findProp in oldFind ) {
@@ -11080,49 +11188,53 @@ for ( findProp in oldFind ) {
 }
 
 // The number of elements contained in the matched element set
-migrateWarnFunc( jQuery.fn, "size", function() {
+migratePatchAndWarnFunc( jQuery.fn, "size", function() {
 	return this.length;
-},
+}, "size",
 "jQuery.fn.size() is deprecated and removed; use the .length property" );
 
-migrateWarnFunc( jQuery, "parseJSON", function() {
+migratePatchAndWarnFunc( jQuery, "parseJSON", function() {
 	return JSON.parse.apply( null, arguments );
-},
+}, "parseJSON",
 "jQuery.parseJSON is deprecated; use JSON.parse" );
 
-migrateWarnFunc( jQuery, "holdReady", jQuery.holdReady,
-	"jQuery.holdReady is deprecated" );
+migratePatchAndWarnFunc( jQuery, "holdReady", jQuery.holdReady,
+	"holdReady", "jQuery.holdReady is deprecated" );
 
-migrateWarnFunc( jQuery, "unique", jQuery.uniqueSort,
-	"jQuery.unique is deprecated; use jQuery.uniqueSort" );
+migratePatchAndWarnFunc( jQuery, "unique", jQuery.uniqueSort,
+	"unique", "jQuery.unique is deprecated; use jQuery.uniqueSort" );
 
 // Now jQuery.expr.pseudos is the standard incantation
-migrateWarnProp( jQuery.expr, "filters", jQuery.expr.pseudos,
+migrateWarnProp( jQuery.expr, "filters", jQuery.expr.pseudos, "expr-pre-pseudos",
 	"jQuery.expr.filters is deprecated; use jQuery.expr.pseudos" );
-migrateWarnProp( jQuery.expr, ":", jQuery.expr.pseudos,
+migrateWarnProp( jQuery.expr, ":", jQuery.expr.pseudos, "expr-pre-pseudos",
 	"jQuery.expr[':'] is deprecated; use jQuery.expr.pseudos" );
 
 // Prior to jQuery 3.1.1 there were internal refs so we don't warn there
 if ( jQueryVersionSince( "3.1.1" ) ) {
-	migrateWarnFunc( jQuery, "trim", function( text ) {
+	migratePatchAndWarnFunc( jQuery, "trim", function( text ) {
 		return text == null ?
 			"" :
-			( text + "" ).replace( rtrim, "" );
-	},
+			( text + "" ).replace( rtrim, "$1" );
+	}, "trim",
 	"jQuery.trim is deprecated; use String.prototype.trim" );
 }
 
 // Prior to jQuery 3.2 there were internal refs so we don't warn there
 if ( jQueryVersionSince( "3.2.0" ) ) {
-	migrateWarnFunc( jQuery, "nodeName", function( elem, name ) {
+	migratePatchAndWarnFunc( jQuery, "nodeName", function( elem, name ) {
 		return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
-	},
+	}, "nodeName",
 	"jQuery.nodeName is deprecated" );
+
+	migratePatchAndWarnFunc( jQuery, "isArray", Array.isArray, "isArray",
+		"jQuery.isArray is deprecated; use Array.isArray"
+	);
 }
 
 if ( jQueryVersionSince( "3.3.0" ) ) {
 
-	migrateWarnFunc( jQuery, "isNumeric", function( obj ) {
+	migratePatchAndWarnFunc( jQuery, "isNumeric", function( obj ) {
 
 			// As of jQuery 3.0, isNumeric is limited to
 			// strings and numbers (primitives or objects)
@@ -11134,7 +11246,7 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 				// ...but misinterprets leading-number strings, e.g. hex literals ("0x...")
 				// subtraction forces infinities to NaN
 				!isNaN( obj - parseFloat( obj ) );
-		},
+		}, "isNumeric",
 		"jQuery.isNumeric() is deprecated"
 	);
 
@@ -11145,7 +11257,7 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 		class2type[ "[object " + name + "]" ] = name.toLowerCase();
 	} );
 
-	migrateWarnFunc( jQuery, "type", function( obj ) {
+	migratePatchAndWarnFunc( jQuery, "type", function( obj ) {
 		if ( obj == null ) {
 			return obj + "";
 		}
@@ -11154,47 +11266,66 @@ if ( jQueryVersionSince( "3.3.0" ) ) {
 		return typeof obj === "object" || typeof obj === "function" ?
 			class2type[ Object.prototype.toString.call( obj ) ] || "object" :
 			typeof obj;
-	},
+	}, "type",
 	"jQuery.type is deprecated" );
 
-	migrateWarnFunc( jQuery, "isFunction",
+	migratePatchAndWarnFunc( jQuery, "isFunction",
 		function( obj ) {
 			return typeof obj === "function";
-		},
+		}, "isFunction",
 		"jQuery.isFunction() is deprecated" );
 
-	migrateWarnFunc( jQuery, "isWindow",
+	migratePatchAndWarnFunc( jQuery, "isWindow",
 		function( obj ) {
 			return obj != null && obj === obj.window;
-		},
+		}, "isWindow",
 		"jQuery.isWindow() is deprecated"
-	);
-
-	migrateWarnFunc( jQuery, "isArray", Array.isArray,
-		"jQuery.isArray is deprecated; use Array.isArray"
 	);
 }
 
 // Support jQuery slim which excludes the ajax module
 if ( jQuery.ajax ) {
 
-var oldAjax = jQuery.ajax;
+var oldAjax = jQuery.ajax,
+	rjsonp = /(=)\?(?=&|$)|\?\?/;
 
-jQuery.ajax = function( ) {
+migratePatchFunc( jQuery, "ajax", function() {
 	var jQXHR = oldAjax.apply( this, arguments );
 
 	// Be sure we got a jQXHR (e.g., not sync)
 	if ( jQXHR.promise ) {
-		migrateWarnFunc( jQXHR, "success", jQXHR.done,
+		migratePatchAndWarnFunc( jQXHR, "success", jQXHR.done, "jqXHR-methods",
 			"jQXHR.success is deprecated and removed" );
-		migrateWarnFunc( jQXHR, "error", jQXHR.fail,
+		migratePatchAndWarnFunc( jQXHR, "error", jQXHR.fail, "jqXHR-methods",
 			"jQXHR.error is deprecated and removed" );
-		migrateWarnFunc( jQXHR, "complete", jQXHR.always,
+		migratePatchAndWarnFunc( jQXHR, "complete", jQXHR.always, "jqXHR-methods",
 			"jQXHR.complete is deprecated and removed" );
 	}
 
 	return jQXHR;
-};
+}, "jqXHR-methods" );
+
+// Only trigger the logic in jQuery <4 as the JSON-to-JSONP auto-promotion
+// behavior is gone in jQuery 4.0 and as it has security implications, we don't
+// want to restore the legacy behavior.
+if ( !jQueryVersionSince( "4.0.0" ) ) {
+
+	// Register this prefilter before the jQuery one. Otherwise, a promoted
+	// request is transformed into one with the script dataType and we can't
+	// catch it anymore.
+	jQuery.ajaxPrefilter( "+json", function( s ) {
+
+		// Warn if JSON-to-JSONP auto-promotion happens.
+		if ( s.jsonp !== false && ( rjsonp.test( s.url ) ||
+				typeof s.data === "string" &&
+				( s.contentType || "" )
+					.indexOf( "application/x-www-form-urlencoded" ) === 0 &&
+				rjsonp.test( s.data )
+		) ) {
+			migrateWarn( "jsonp-promotion", "JSON-to-JSONP auto-promotion is deprecated" );
+		}
+	} );
+}
 
 }
 
@@ -11202,27 +11333,43 @@ var oldRemoveAttr = jQuery.fn.removeAttr,
 	oldToggleClass = jQuery.fn.toggleClass,
 	rmatchNonSpace = /\S+/g;
 
-jQuery.fn.removeAttr = function( name ) {
-	var self = this;
+migratePatchFunc( jQuery.fn, "removeAttr", function( name ) {
+	var self = this,
+		patchNeeded = false;
 
 	jQuery.each( name.match( rmatchNonSpace ), function( _i, attr ) {
 		if ( jQuery.expr.match.bool.test( attr ) ) {
-			migrateWarn( "jQuery.fn.removeAttr no longer sets boolean properties: " + attr );
+
+			// Only warn if at least a single node had the property set to
+			// something else than `false`. Otherwise, this Migrate patch
+			// doesn't influence the behavior and there's no need to set or warn.
+			self.each( function() {
+				if ( jQuery( this ).prop( attr ) !== false ) {
+					patchNeeded = true;
+					return false;
+				}
+			} );
+		}
+
+		if ( patchNeeded ) {
+			migrateWarn( "removeAttr-bool",
+				"jQuery.fn.removeAttr no longer sets boolean properties: " + attr );
 			self.prop( attr, false );
 		}
 	} );
 
 	return oldRemoveAttr.apply( this, arguments );
-};
+}, "removeAttr-bool" );
 
-jQuery.fn.toggleClass = function( state ) {
+migratePatchFunc( jQuery.fn, "toggleClass", function( state ) {
 
 	// Only deprecating no-args or single boolean arg
 	if ( state !== undefined && typeof state !== "boolean" ) {
+
 		return oldToggleClass.apply( this, arguments );
 	}
 
-	migrateWarn( "jQuery.fn.toggleClass( boolean ) is deprecated" );
+	migrateWarn( "toggleClass-bool", "jQuery.fn.toggleClass( boolean ) is deprecated" );
 
 	// Toggle entire class name of each element
 	return this.each( function() {
@@ -11244,7 +11391,7 @@ jQuery.fn.toggleClass = function( state ) {
 			);
 		}
 	} );
-};
+}, "toggleClass-bool" );
 
 function camelCase( string ) {
 	return string.replace( /-([a-z])/g, function( _, letter ) {
@@ -11252,7 +11399,7 @@ function camelCase( string ) {
 	} );
 }
 
-var oldFnCss,
+var origFnCss, internalCssNumber,
 	internalSwapCall = false,
 	ralphaStart = /^[a-z]/,
 
@@ -11297,12 +11444,12 @@ if ( jQuery.swap ) {
 	} );
 }
 
-jQuery.swap = function( elem, options, callback, args ) {
+migratePatchFunc( jQuery, "swap", function( elem, options, callback, args ) {
 	var ret, name,
 		old = {};
 
 	if ( !internalSwapCall ) {
-		migrateWarn( "jQuery.swap() is undocumented and deprecated" );
+		migrateWarn( "swap", "jQuery.swap() is undocumented and deprecated" );
 	}
 
 	// Remember the old values, and insert the new ones
@@ -11319,22 +11466,71 @@ jQuery.swap = function( elem, options, callback, args ) {
 	}
 
 	return ret;
-};
+}, "swap" );
 
 if ( jQueryVersionSince( "3.4.0" ) && typeof Proxy !== "undefined" ) {
-
 	jQuery.cssProps = new Proxy( jQuery.cssProps || {}, {
 		set: function() {
-			migrateWarn( "JQMIGRATE: jQuery.cssProps is deprecated" );
+			migrateWarn( "cssProps", "jQuery.cssProps is deprecated" );
 			return Reflect.set.apply( this, arguments );
 		}
 	} );
 }
 
-// Create a dummy jQuery.cssNumber if missing. It won't be used by jQuery but
-// it will prevent code adding new keys to it unconditionally from crashing.
-if ( !jQuery.cssNumber ) {
-	jQuery.cssNumber = {};
+// In jQuery >=4 where jQuery.cssNumber is missing fill it with the latest 3.x version:
+// https://github.com/jquery/jquery/blob/3.6.0/src/css.js#L212-L233
+// This way, number values for the CSS properties below won't start triggering
+// Migrate warnings when jQuery gets updated to >=4.0.0 (gh-438).
+if ( jQueryVersionSince( "4.0.0" ) ) {
+
+	// We need to keep this as a local variable as we need it internally
+	// in a `jQuery.fn.css` patch and this usage shouldn't warn.
+	internalCssNumber = {
+		animationIterationCount: true,
+		columnCount: true,
+		fillOpacity: true,
+		flexGrow: true,
+		flexShrink: true,
+		fontWeight: true,
+		gridArea: true,
+		gridColumn: true,
+		gridColumnEnd: true,
+		gridColumnStart: true,
+		gridRow: true,
+		gridRowEnd: true,
+		gridRowStart: true,
+		lineHeight: true,
+		opacity: true,
+		order: true,
+		orphans: true,
+		widows: true,
+		zIndex: true,
+		zoom: true
+	};
+
+	if ( typeof Proxy !== "undefined" ) {
+		jQuery.cssNumber = new Proxy( internalCssNumber, {
+			get: function() {
+				migrateWarn( "css-number", "jQuery.cssNumber is deprecated" );
+				return Reflect.get.apply( this, arguments );
+			},
+			set: function() {
+				migrateWarn( "css-number", "jQuery.cssNumber is deprecated" );
+				return Reflect.set.apply( this, arguments );
+			}
+		} );
+	} else {
+
+		// Support: IE 9-11+
+		// IE doesn't support proxies, but we still want to restore the legacy
+		// jQuery.cssNumber there.
+		jQuery.cssNumber = internalCssNumber;
+	}
+} else {
+
+	// Make `internalCssNumber` defined for jQuery <4 as well as it's needed
+	// in the `jQuery.fn.css` patch below.
+	internalCssNumber = jQuery.cssNumber;
 }
 
 function isAutoPx( prop ) {
@@ -11346,50 +11542,66 @@ function isAutoPx( prop ) {
 		rautoPx.test( prop[ 0 ].toUpperCase() + prop.slice( 1 ) );
 }
 
-oldFnCss = jQuery.fn.css;
+origFnCss = jQuery.fn.css;
 
-jQuery.fn.css = function( name, value ) {
-	var origThis = this;
-	if ( typeof name !== "string" ) {
+migratePatchFunc( jQuery.fn, "css", function( name, value ) {
+	var camelName,
+		origThis = this;
+
+	if ( name && typeof name === "object" && !Array.isArray( name ) ) {
 		jQuery.each( name, function( n, v ) {
 			jQuery.fn.css.call( origThis, n, v );
 		} );
-	}
-	if ( typeof value === "number" && !isAutoPx( camelCase( name ) ) ) {
-		migrateWarn( "Use of number-typed values is deprecated in jQuery.fn.css" );
+		return this;
 	}
 
-	return oldFnCss.apply( this, arguments );
-};
+	if ( typeof value === "number" ) {
+		camelName = camelCase( name );
 
-var oldData = jQuery.data;
+		// Use `internalCssNumber` to avoid triggering our warnings in this
+		// internal check.
+		if ( !isAutoPx( camelName ) && !internalCssNumber[ camelName ] ) {
+			migrateWarn( "css-number",
+				"Number-typed values are deprecated for jQuery.fn.css( \"" +
+				name + "\", value )" );
+		}
+	}
 
-jQuery.data = function( elem, name, value ) {
+	return origFnCss.apply( this, arguments );
+}, "css-number" );
+
+var origData = jQuery.data;
+
+migratePatchFunc( jQuery, "data", function( elem, name, value ) {
 	var curData, sameKeys, key;
 
 	// Name can be an object, and each entry in the object is meant to be set as data
 	if ( name && typeof name === "object" && arguments.length === 2 ) {
-		curData = jQuery.hasData( elem ) && oldData.call( this, elem );
+
+		curData = jQuery.hasData( elem ) && origData.call( this, elem );
 		sameKeys = {};
 		for ( key in name ) {
 			if ( key !== camelCase( key ) ) {
-				migrateWarn( "jQuery.data() always sets/gets camelCased names: " + key );
+				migrateWarn( "data-camelCase",
+					"jQuery.data() always sets/gets camelCased names: " + key );
 				curData[ key ] = name[ key ];
 			} else {
 				sameKeys[ key ] = name[ key ];
 			}
 		}
 
-		oldData.call( this, elem, sameKeys );
+		origData.call( this, elem, sameKeys );
 
 		return name;
 	}
 
 	// If the name is transformed, look for the un-transformed name in the data object
 	if ( name && typeof name === "string" && name !== camelCase( name ) ) {
-		curData = jQuery.hasData( elem ) && oldData.call( this, elem );
+
+		curData = jQuery.hasData( elem ) && origData.call( this, elem );
 		if ( curData && name in curData ) {
-			migrateWarn( "jQuery.data() always sets/gets camelCased names: " + name );
+			migrateWarn( "data-camelCase",
+				"jQuery.data() always sets/gets camelCased names: " + name );
 			if ( arguments.length > 2 ) {
 				curData[ name ] = value;
 			}
@@ -11397,8 +11609,8 @@ jQuery.data = function( elem, name, value ) {
 		}
 	}
 
-	return oldData.apply( this, arguments );
-};
+	return origData.apply( this, arguments );
+}, "data-camelCase" );
 
 // Support jQuery slim which excludes the effects module
 if ( jQuery.fx ) {
@@ -11409,9 +11621,10 @@ var intervalValue, intervalMsg,
 		return pct;
 	};
 
-jQuery.Tween.prototype.run = function( ) {
+migratePatchFunc( jQuery.Tween.prototype, "run", function( ) {
 	if ( jQuery.easing[ this.easing ].length > 1 ) {
 		migrateWarn(
+			"easing-one-arg",
 			"'jQuery.easing." + this.easing.toString() + "' should use only one argument"
 		);
 
@@ -11419,9 +11632,9 @@ jQuery.Tween.prototype.run = function( ) {
 	}
 
 	oldTweenRun.apply( this, arguments );
-};
+}, "easing-one-arg" );
 
-intervalValue = jQuery.fx.interval || 13;
+intervalValue = jQuery.fx.interval;
 intervalMsg = "jQuery.fx.interval is deprecated";
 
 // Support: IE9, Android <=4.4
@@ -11433,12 +11646,17 @@ if ( window.requestAnimationFrame ) {
 		enumerable: true,
 		get: function() {
 			if ( !window.document.hidden ) {
-				migrateWarn( intervalMsg );
+				migrateWarn( "fx-interval", intervalMsg );
 			}
-			return intervalValue;
+
+			// Only fallback to the default if patch is enabled
+			if ( !jQuery.migrateIsPatchEnabled( "fx-interval" ) ) {
+				return intervalValue;
+			}
+			return intervalValue === undefined ? 13 : intervalValue;
 		},
 		set: function( newValue ) {
-			migrateWarn( intervalMsg );
+			migrateWarn( "fx-interval", intervalMsg );
 			intervalValue = newValue;
 		}
 	} );
@@ -11454,16 +11672,18 @@ jQuery.event.props = [];
 jQuery.event.fixHooks = {};
 
 migrateWarnProp( jQuery.event.props, "concat", jQuery.event.props.concat,
+	"event-old-patch",
 	"jQuery.event.props.concat() is deprecated and removed" );
 
-jQuery.event.fix = function( originalEvent ) {
+migratePatchFunc( jQuery.event, "fix", function( originalEvent ) {
 	var event,
 		type = originalEvent.type,
 		fixHook = this.fixHooks[ type ],
 		props = jQuery.event.props;
 
 	if ( props.length ) {
-		migrateWarn( "jQuery.event.props are deprecated and removed: " + props.join() );
+		migrateWarn( "event-old-patch",
+			"jQuery.event.props are deprecated and removed: " + props.join() );
 		while ( props.length ) {
 			jQuery.event.addProp( props.pop() );
 		}
@@ -11471,7 +11691,8 @@ jQuery.event.fix = function( originalEvent ) {
 
 	if ( fixHook && !fixHook._migrated_ ) {
 		fixHook._migrated_ = true;
-		migrateWarn( "jQuery.event.fixHooks are deprecated and removed: " + type );
+		migrateWarn( "event-old-patch",
+			"jQuery.event.fixHooks are deprecated and removed: " + type );
 		if ( ( props = fixHook.props ) && props.length ) {
 			while ( props.length ) {
 				jQuery.event.addProp( props.pop() );
@@ -11481,21 +11702,24 @@ jQuery.event.fix = function( originalEvent ) {
 
 	event = originalFix.call( this, originalEvent );
 
-	return fixHook && fixHook.filter ? fixHook.filter( event, originalEvent ) : event;
-};
+	return fixHook && fixHook.filter ?
+		fixHook.filter( event, originalEvent ) :
+		event;
+}, "event-old-patch" );
 
-jQuery.event.add = function( elem, types ) {
+migratePatchFunc( jQuery.event, "add", function( elem, types ) {
 
 	// This misses the multiple-types case but that seems awfully rare
 	if ( elem === window && types === "load" && window.document.readyState === "complete" ) {
-		migrateWarn( "jQuery(window).on('load'...) called after load event occurred" );
+		migrateWarn( "load-after-event",
+			"jQuery(window).on('load'...) called after load event occurred" );
 	}
 	return oldEventAdd.apply( this, arguments );
-};
+}, "load-after-event" );
 
 jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 
-	jQuery.fn[ name ] = function() {
+	migratePatchFunc( jQuery.fn, name, function() {
 		var args = Array.prototype.slice.call( arguments, 0 );
 
 		// If this is an ajax load() the first arg should be the string URL;
@@ -11506,7 +11730,8 @@ jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 			return oldLoad.apply( this, args );
 		}
 
-		migrateWarn( "jQuery.fn." + name + "() is deprecated" );
+		migrateWarn( "shorthand-removed-v3",
+			"jQuery.fn." + name + "() is deprecated" );
 
 		args.splice( 0, 0, name );
 		if ( arguments.length ) {
@@ -11519,7 +11744,7 @@ jQuery.each( [ "load", "unload", "error" ], function( _, name ) {
 		// See http://bugs.jquery.com/ticket/11820
 		this.triggerHandler.apply( this, args );
 		return this;
-	};
+	}, "shorthand-removed-v3" );
 
 } );
 
@@ -11529,12 +11754,13 @@ jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
 	function( _i, name ) {
 
 	// Handle event binding
-	jQuery.fn[ name ] = function( data, fn ) {
-		migrateWarn( "jQuery.fn." + name + "() event shorthand is deprecated" );
+	migratePatchAndWarnFunc( jQuery.fn, name, function( data, fn ) {
 		return arguments.length > 0 ?
 			this.on( name, null, data, fn ) :
 			this.trigger( name );
-	};
+		},
+		"shorthand-deprecated-v3",
+		"jQuery.fn." + name + "() event shorthand is deprecated" );
 } );
 
 // Trigger "ready" event only once, on document ready
@@ -11545,39 +11771,30 @@ jQuery( function() {
 jQuery.event.special.ready = {
 	setup: function() {
 		if ( this === window.document ) {
-			migrateWarn( "'ready' event is deprecated" );
+			migrateWarn( "ready-event", "'ready' event is deprecated" );
 		}
 	}
 };
 
-jQuery.fn.extend( {
-
-	bind: function( types, data, fn ) {
-		migrateWarn( "jQuery.fn.bind() is deprecated" );
-		return this.on( types, null, data, fn );
-	},
-	unbind: function( types, fn ) {
-		migrateWarn( "jQuery.fn.unbind() is deprecated" );
-		return this.off( types, null, fn );
-	},
-	delegate: function( selector, types, data, fn ) {
-		migrateWarn( "jQuery.fn.delegate() is deprecated" );
-		return this.on( types, selector, data, fn );
-	},
-	undelegate: function( selector, types, fn ) {
-		migrateWarn( "jQuery.fn.undelegate() is deprecated" );
-		return arguments.length === 1 ?
-			this.off( selector, "**" ) :
-			this.off( types, selector || "**", fn );
-	},
-	hover: function( fnOver, fnOut ) {
-		migrateWarn( "jQuery.fn.hover() is deprecated" );
-		return this.on( "mouseenter", fnOver ).on( "mouseleave", fnOut || fnOver );
-	}
-} );
+migratePatchAndWarnFunc( jQuery.fn, "bind", function( types, data, fn ) {
+	return this.on( types, null, data, fn );
+}, "pre-on-methods", "jQuery.fn.bind() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "unbind", function( types, fn ) {
+	return this.off( types, null, fn );
+}, "pre-on-methods", "jQuery.fn.unbind() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "delegate", function( selector, types, data, fn ) {
+	return this.on( types, selector, data, fn );
+}, "pre-on-methods", "jQuery.fn.delegate() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "undelegate", function( selector, types, fn ) {
+	return arguments.length === 1 ?
+		this.off( selector, "**" ) :
+		this.off( types, selector || "**", fn );
+}, "pre-on-methods", "jQuery.fn.undelegate() is deprecated" );
+migratePatchAndWarnFunc( jQuery.fn, "hover", function( fnOver, fnOut ) {
+	return this.on( "mouseenter", fnOver ).on( "mouseleave", fnOut || fnOver );
+}, "pre-on-methods", "jQuery.fn.hover() is deprecated" );
 
 var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi,
-	origHtmlPrefilter = jQuery.htmlPrefilter,
 	makeMarkup = function( html ) {
 		var doc = window.document.implementation.createHTMLDocument( "" );
 		doc.body.innerHTML = html;
@@ -11586,70 +11803,65 @@ var rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\
 	warnIfChanged = function( html ) {
 		var changed = html.replace( rxhtmlTag, "<$1></$2>" );
 		if ( changed !== html && makeMarkup( html ) !== makeMarkup( changed ) ) {
-			migrateWarn( "HTML tags must be properly nested and closed: " + html );
+			migrateWarn( "self-closed-tags",
+				"HTML tags must be properly nested and closed: " + html );
 		}
 	};
 
+/**
+ * Deprecated, please use `jQuery.migrateDisablePatches( "self-closed-tags" )` instead.
+ * @deprecated
+ */
 jQuery.UNSAFE_restoreLegacyHtmlPrefilter = function() {
-	jQuery.htmlPrefilter = function( html ) {
-		warnIfChanged( html );
-		return html.replace( rxhtmlTag, "<$1></$2>" );
-	};
+	jQuery.migrateEnablePatches( "self-closed-tags" );
 };
 
-jQuery.htmlPrefilter = function( html ) {
+migratePatchFunc( jQuery, "htmlPrefilter", function( html ) {
 	warnIfChanged( html );
-	return origHtmlPrefilter( html );
-};
+	return html.replace( rxhtmlTag, "<$1></$2>" );
+}, "self-closed-tags" );
 
-var oldOffset = jQuery.fn.offset;
+// This patch needs to be disabled by default as it re-introduces
+// security issues (CVE-2020-11022, CVE-2020-11023).
+jQuery.migrateDisablePatches( "self-closed-tags" );
 
-jQuery.fn.offset = function() {
-	var docElem,
-		elem = this[ 0 ],
-		bogus = { top: 0, left: 0 };
+var origOffset = jQuery.fn.offset;
 
-	if ( !elem || !elem.nodeType ) {
-		migrateWarn( "jQuery.fn.offset() requires a valid DOM element" );
-		return undefined;
+migratePatchFunc( jQuery.fn, "offset", function() {
+	var elem = this[ 0 ];
+
+	if ( elem && ( !elem.nodeType || !elem.getBoundingClientRect ) ) {
+		migrateWarn( "offset-valid-elem", "jQuery.fn.offset() requires a valid DOM element" );
+		return arguments.length ? this : undefined;
 	}
 
-	docElem = ( elem.ownerDocument || window.document ).documentElement;
-	if ( !jQuery.contains( docElem, elem ) ) {
-		migrateWarn( "jQuery.fn.offset() requires an element connected to a document" );
-		return bogus;
-	}
-
-	return oldOffset.apply( this, arguments );
-};
+	return origOffset.apply( this, arguments );
+}, "offset-valid-elem" );
 
 // Support jQuery slim which excludes the ajax module
 // The jQuery.param patch is about respecting `jQuery.ajaxSettings.traditional`
 // so it doesn't make sense for the slim build.
 if ( jQuery.ajax ) {
 
-var oldParam = jQuery.param;
+var origParam = jQuery.param;
 
-jQuery.param = function( data, traditional ) {
+migratePatchFunc( jQuery, "param", function( data, traditional ) {
 	var ajaxTraditional = jQuery.ajaxSettings && jQuery.ajaxSettings.traditional;
 
 	if ( traditional === undefined && ajaxTraditional ) {
 
-		migrateWarn( "jQuery.param() no longer uses jQuery.ajaxSettings.traditional" );
+		migrateWarn( "param-ajax-traditional",
+			"jQuery.param() no longer uses jQuery.ajaxSettings.traditional" );
 		traditional = ajaxTraditional;
 	}
 
-	return oldParam.call( this, data, traditional );
-};
+	return origParam.call( this, data, traditional );
+}, "param-ajax-traditional" );
 
 }
 
-var oldSelf = jQuery.fn.andSelf || jQuery.fn.addBack;
-
-jQuery.fn.andSelf = function() {
-	migrateWarn( "jQuery.fn.andSelf() is deprecated and removed, use jQuery.fn.addBack()" );
-	return oldSelf.apply( this, arguments );
-};
+migratePatchAndWarnFunc( jQuery.fn, "andSelf", jQuery.fn.addBack, "andSelf",
+	"jQuery.fn.andSelf() is deprecated and removed, use jQuery.fn.addBack()" );
 
 // Support jQuery slim which excludes the deferred module in jQuery 4.0+
 if ( jQuery.Deferred ) {
@@ -11666,14 +11878,12 @@ var oldDeferred = jQuery.Deferred,
 			jQuery.Callbacks( "memory" ) ]
 	];
 
-jQuery.Deferred = function( func ) {
+migratePatchFunc( jQuery, "Deferred", function( func ) {
 	var deferred = oldDeferred(),
 		promise = deferred.promise();
 
-	deferred.pipe = promise.pipe = function( /* fnDone, fnFail, fnProgress */ ) {
+	function newDeferredPipe( /* fnDone, fnFail, fnProgress */ ) {
 		var fns = arguments;
-
-		migrateWarn( "deferred.pipe() is deprecated" );
 
 		return jQuery.Deferred( function( newDefer ) {
 			jQuery.each( tuples, function( i, tuple ) {
@@ -11699,15 +11909,19 @@ jQuery.Deferred = function( func ) {
 			} );
 			fns = null;
 		} ).promise();
+	}
 
-	};
+	migratePatchAndWarnFunc( deferred, "pipe", newDeferredPipe, "deferred-pipe",
+		"deferred.pipe() is deprecated" );
+	migratePatchAndWarnFunc( promise, "pipe", newDeferredPipe, "deferred-pipe",
+		"deferred.pipe() is deprecated" );
 
 	if ( func ) {
 		func.call( deferred, deferred );
 	}
 
 	return deferred;
-};
+}, "deferred-pipe" );
 
 // Preserve handler of uncaught exceptions in promise chains
 jQuery.Deferred.exceptionHook = oldDeferred.exceptionHook;

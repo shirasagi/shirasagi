@@ -60,7 +60,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
         end
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.publish_save")
+          wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
         end
         wait_for_cbox do
           expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))

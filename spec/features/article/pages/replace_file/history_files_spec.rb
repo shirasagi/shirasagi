@@ -19,6 +19,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         # original file upload
+        wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
             wait_cbox_open do
@@ -41,6 +42,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         5.times.each do |index|
           page.execute_script("SS.clearNotice();")
+          wait_for_js_ready
 
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
@@ -50,10 +52,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            click_on I18n.t("ss.buttons.replace_file")
+            wait_cbox_open { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
+          wait_for_js_ready
           wait_for_cbox do
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
@@ -82,6 +85,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(Fs.cmp(history_file.path, before_csv)).to be true
 
         # show history files and restore
+        wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: "replaced")
           wait_cbox_open do
@@ -90,6 +94,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_cbox do
+          wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
           within "table.index tbody" do
@@ -122,6 +127,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         # original file upload
+        wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
             wait_cbox_open do
@@ -131,6 +137,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_cbox do
+          wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -143,6 +150,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.saved')
 
         3.times.each do |index|
+          wait_for_js_ready
           page.execute_script("SS.clearNotice();")
 
           # open replace file dialog
@@ -153,11 +161,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            click_on I18n.t("ss.buttons.replace_file")
+            wait_cbox_open { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
           wait_for_cbox do
+            wait_for_js_ready
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
@@ -174,6 +183,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         # show history files and destroy
         visit show_path
+        wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: "replaced")
           wait_cbox_open do
@@ -182,6 +192,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_cbox do
+          wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
           within "table.index tbody" do

@@ -19,12 +19,14 @@ class SS::Csv
     attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
-      yield draw_header
-      @criteria.each do |item|
-        item.cur_site = @cur_site if item.respond_to?(:cur_site=)
-        item.cur_user = @cur_user if item.respond_to?(:cur_user=)
-        item.cur_node = @cur_node if item.respond_to?(:cur_node=)
-        yield draw_data(item)
+      I18n.with_locale(I18n.default_locale) do
+        yield draw_header
+        @criteria.each do |item|
+          item.cur_site = @cur_site if item.respond_to?(:cur_site=)
+          item.cur_user = @cur_user if item.respond_to?(:cur_user=)
+          item.cur_node = @cur_node if item.respond_to?(:cur_node=)
+          yield draw_data(item)
+        end
       end
     end
 
@@ -112,7 +114,10 @@ class SS::Csv
       UTF8_BOM + _draw_header
     end
 
-    alias draw_data _draw_data
+    # public #draw_data is required
+    def draw_data(item)
+      _draw_data(item)
+    end
   end
 
   class DSLExporter
@@ -294,7 +299,8 @@ class SS::Csv
       if config[:callback]
         @dsl.context.instance_exec(row, item, head, value, &config[:callback])
       else
-        item.send("#{config[:key]}=", value)
+        setter = "#{config[:key]}="
+        item.send(setter, value) if item.respond_to?(setter)
       end
     end
 
@@ -323,7 +329,11 @@ class SS::Csv
       else
         ret = DSLImporter.new(options)
       end
-      ret.draw(&block) if block
+      if block
+        I18n.with_locale(I18n.default_locale) do
+          ret.draw(&block)
+        end
+      end
       ret
     end
 
@@ -444,6 +454,14 @@ class SS::Csv
         pos = io.pos
         bom = io.read(3)
         io.pos = pos if !utf8_bom?(bom)
+      end
+
+      if io.is_a?(StringIO) && io.pos > 0
+        # gem "csv" 内で StringIO#string を呼び出している箇所がある。
+        # StringIO#string は BOM 付きの文字列を返すので、うまく動作しない。
+        # そこで、BOM無しにしてやる
+        source = io.read
+        io = StringIO.new(source)
       end
 
       csv = CSV.new(io, headers: headers)

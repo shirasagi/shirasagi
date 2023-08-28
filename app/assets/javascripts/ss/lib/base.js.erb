@@ -20,19 +20,38 @@ this.SS = (function () {
 
   SS.siteName = null;
 
-  SS.timeFormatter = {
-    default: "YYYY/M/D HH:mm"
-  };
-
   SS.debug = false;
 
-  SS.confirm = {
-    delete: <%= I18n.t('ss.confirm.delete').to_json %>
-  };
-
-  SS.defaultTimeoutMillis = 2000;
+  SS.defaultTimeoutMillis = <%= SS.config.ss.dc_guard_timeout_millis %>;
 
   SS.KEY_ENTER = 13;
+  SS.DEFAULT_DATE_FORMAT = '%Y/%m/%d';
+  SS.DEFAULT_TIME_FORMAT = '%Y/%m/%d %H:%M';
+
+  SS.isReady = false;
+  var readyPromise = new Promise(function(resolve, _reject) {
+    // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
+    SS.readyTimeout = setTimeout(function() {
+      console.error("'application.js' wasn't loaded within 5 secs. please check your 'config/ss.yml'.");
+      resolve();
+    }, 5000);
+
+    SS.doneReady = function() {
+      if (SS.isReady) {
+        return;
+      }
+
+      SS.isReady = true;
+      if (SS.readyTimeout) {
+        clearTimeout(SS.readyTimeout);
+        SS.readyTimeout = null;
+      }
+
+      resolve();
+    }
+  });
+
+  SS.ready = readyPromise.then.bind(readyPromise);
 
   // $.isEmptyObject には IE11 で非互換がある。
   //
@@ -97,7 +116,7 @@ this.SS = (function () {
       return $(this).addClass("external");
     });
     this.renderAjaxBox();
-    this.renderDateTimePicker();
+    SS_DateTimePicker.render();
     this.renderFileUpload();
   };
 
@@ -234,7 +253,7 @@ this.SS = (function () {
       success: function () {
       },
       error: function (data, status) {
-        alert([ "== Error ==" ].concat(data.responseJSON).join("\n"));
+        alert([ "== Error(AjaxForm) ==" ].concat(data.responseJSON).join("\n"));
       }
     };
     elem.on("submit", selector, function (e) {
@@ -270,7 +289,7 @@ this.SS = (function () {
         success: function () {
         },
         error: function (data, status) {
-          return alert("== Error ==");
+          return alert("== Error(Ajax) ==");
         }
       };
       $.ajax($.extend(true, defaults, params));
@@ -290,7 +309,7 @@ this.SS = (function () {
 
     $(elem).on("click", selector, function (e) {
       var defaults, self;
-      if (!confirm(SS.confirm.delete)) {
+      if (!confirm(i18next.t('ss.confirm.delete'))) {
         return false;
       }
       self = $(this);
@@ -308,7 +327,7 @@ this.SS = (function () {
           }
         },
         error: function (data, status) {
-          alert([ "== Error ==" ].concat(data.responseJSON).join("\n"));
+          alert([ "== Error(AjaxDelete) ==" ].concat(data.responseJSON).join("\n"));
         }
       };
       $.ajax($.extend(true, defaults, params));
@@ -370,7 +389,7 @@ this.SS = (function () {
     });
     $(window).on("beforeunload", function () {
       if (SS.formChanged && !SS.disableConfirmUnloading) {
-        return <%= I18n.t('ss.confirm.unload').to_json %>;
+        return i18next.t('ss.confirm.unload');
       }
     });
     $("input[type=submit]").on("click", function () {
@@ -394,37 +413,46 @@ this.SS = (function () {
   };
 
   SS.fileCheck = function () {
-    return $('#item_files').on("change", function () {
-      var form, uri;
-      form = $(this).val();
-      if (!form) {
-        $(".js-uploader-alert-message").hide();
+    $('#item_files').on("change", function () {
+      var $uploaderAlertMessage = $(".js-uploader-alert-message");
+
+      var uploadedFile = $(this).val();
+      if (!uploadedFile) {
         return;
       }
-      uri = location.pathname.split("/");
-      return $.ajax({
+
+      $uploaderAlertMessage.html(SS.loading);
+      $uploaderAlertMessage.show();
+
+      $.ajax({
         type: "get",
-        url: uri.join("/"),
+        url: location.pathname,
         dataType: "json",
         data: {
           "do": "check",
-          item_files: form
+          item_files: uploadedFile
         },
         success: function (data) {
           if (data["message"]) {
-            $(".js-uploader-alert-message").html(data["message"]);
-            return $(".js-uploader-alert-message").show();
+            $uploaderAlertMessage.html(data["message"]);
+            $uploaderAlertMessage.show();
           } else {
-            return $(".js-uploader-alert-message").hide();
+            $uploaderAlertMessage.html('ok');
+            $uploaderAlertMessage.show();
           }
         },
         error: function (xhr, status) {
           var errors;
           try {
             errors = $.parseJSON(xhr.responseText);
-            return alert([ "== Error ==" ].concat(errors).join("\n"));
           } catch (_error) {
-            return alert([ "== Error ==" ].concat(xhr["statusText"]).join("\n"));
+            errors = xhr["statusText"]
+          }
+          var message = [ "== Error(FileCheck) ==" ].concat(errors).join("\n");
+          $uploaderAlertMessage.html(message);
+          $uploaderAlertMessage.show();
+          if (SS.env !== 'test') {
+            alert(message);
           }
         }
       });
@@ -480,77 +508,38 @@ this.SS = (function () {
 
   // datetimepicker
 
-  // 注意:
-  // datetimepicker にはバグがある。
-  // このコントールの次の要素が disabled の場合、コントロール内で Enter キーを押しても、入力した日時が確定しない。
-  //
-  // datetimepicker では、コントロール内で Enter キーを押すと次の要素にフォーカスを移動させる。
-  // フォーカスを移動させることでイベント "blur" が発生し、入力が確定 → onChangeDateTime イベント発生という順で処理が進む。
-  //
-  // しかし、次の要素が disabled の場合、フォーカスを移動させれず、イベント "blur" が発生しない。
-  // このため、入力が確定せず、onChangeDateTime イベントも発生しない。
-  //
-  // 問題となるソースコードは https://github.com/xdan/datetimepicker/blob/master/jquery.datetimepicker.js#L2591
-  // 要素セレクターに ":enabled" の条件がない。
-  //
-  // そこで、Enter キーが押されたら、イベント "blur" を発生させ、入力が確定 → onChangeDateTime イベント発生という順で処理が進むようにする。
-  // また、念の為 Enter キーでフォーカスを移動させないようにするため enterLikeTab を false にする。
-  SS.renderDateTimePicker = function (rooElement) {
-    $.datetimepicker.setLocale('ja');
-    $.each($(rooElement || document).find(".js-date"), function () {
-      var $this = $(this);
-      var opts = {
-        timepicker: false,
-        format: 'Y/m/d',
-        closeOnDateSelect: true,
-        scrollInput: false,
-        enterLikeTab: false
-      };
-      var data = $this.data();
-      if ("minDate" in data) {
-        opts.minDate = data.minDate;
-      }
-      if ("maxDate" in data) {
-        opts.maxDate = data.maxDate;
-      }
-      $this.attr('autocomplete', 'off')
-        .datetimepicker(opts)
-        .on("keydown", function(ev) {
-          var key = ev.which;
-          if (key === SS.KEY_ENTER) {
-            $this.trigger("blur.xdsoft")
-          }
-          return true;
-        });
+  SS.rubyToMomenFormatMap = [
+    [ "%Y", "YYYY" ],
+    [ "%y", "YY" ],
+    [ "%m", "MM" ],
+    [ "%1m", "M" ],
+    [ "%B", "MMMM" ],
+    [ "%b", "MMM" ],
+    [ "%d", "DD" ],
+    [ "%1d", "D" ],
+    [ "%H", "HH" ],
+    [ "%1H", "H" ],
+    [ "%I", "hh" ],
+    [ "%1I", "h" ],
+    [ "%P", "a" ],
+    [ "%p", "A" ],
+    [ "%M", "mm" ],
+    [ "%A", "dddd" ],
+    [ "%a", "ddd" ],
+  ];
+
+  SS.convertDateTimeFormat = function(format) {
+    $.each(SS.rubyToMomenFormatMap, function() {
+      var from = this[0];
+      var to = this[1];
+
+      from = new RegExp(from, "g");
+      format = format.replace(from, to);
     });
-    $.each($(rooElement || document).find(".js-datetime"), function () {
-      var $this = $(this);
-      var opts = {
-        roundTime: 'ceil',
-        step: 30,
-        enterLikeTab: false
-      };
-      var data = $this.data();
-      if ("minDate" in data) {
-        opts.minDate = data.minDate;
-      }
-      if ("maxDate" in data) {
-        opts.maxDate = data.maxDate;
-      }
-      if ("step" in data) {
-        opts.step = data.step;
-      }
-      $this.attr('autocomplete', 'off')
-        .datetimepicker(opts)
-        .on("keydown", function(ev) {
-          var key = ev.which;
-          if (key === SS.KEY_ENTER) {
-            $this.trigger("blur.xdsoft")
-          }
-          return true;
-        });
-    });
+    return format;
   };
+
+  SS.renderDateTimePicker = function (rooElement) { SS_DateTimePicker.render(rooElement) }
 
   // SS.formatTime("2019-07-09T14:33:38+0900") = "2019/7/9 14:33"
   // SS.formatTime("2019-07-09T14:33:38+0900", "default") = "2019/7/9 14:33"
@@ -560,14 +549,37 @@ this.SS = (function () {
   // SS.formatTime(new Date())
   // SS.formatTime(moment())
   SS.formatTime = function (time, format) {
-    if (!format) {
-      format = "default"
+    if (!time) {
+      return time;
     }
-    if (SS.timeFormatter[format]) {
-      format = SS.timeFormatter[format];
+    if ("i18next" in window) {
+      if (!format) {
+        format = "default"
+      }
+      format = i18next.t("time.formats." + format, format);
+      format = SS.convertDateTimeFormat(format);
+    } else {
+      format = SS.DEFAULT_TIME_FORMAT;
     }
 
     return moment(time).format(format);
+  };
+
+  SS.formatDate = function (date, format) {
+    if (!date) {
+      return date;
+    }
+    if ("i18next" in window) {
+      if (!format) {
+        format = "default"
+      }
+      format = i18next.t("date.formats." + format, format);
+      format = SS.convertDateTimeFormat(format);
+    } else {
+      format = SS.DEFAULT_DATE_FORMAT;
+    }
+
+    return moment(date).format(format);
   };
 
   SS.renderFileUploadInitialized = false;
@@ -681,11 +693,11 @@ this.SS = (function () {
         }, function (xhr, textStatus, errorThrown) {
           // error
           if (xhr.status === 413) {
-            alert([ "== Error ==" ].concat(<%= I18n.t('errors.messages.request_entity_too_large').to_json %>).join("\n"));
+            alert([ "== Error(FileUpload) ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
           } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert([ "== Error ==" ].concat(xhr.responseJSON).join("\n"));
+            alert([ "== Error(FileUpload) ==" ].concat(xhr.responseJSON).join("\n"));
           } else {
-            alert([ "== Error ==" ].concat(xhr.statusText).join("\n"));
+            alert([ "== Error(FileUpload) ==" ].concat(xhr.statusText).join("\n"));
           }
         }).then(function () {
           // complete
@@ -720,9 +732,11 @@ this.SS = (function () {
       var $form = $(ev.target);
       var timeout = $form.data("ss-timeout") || SS.defaultTimeoutMillis;
 
-      setTimeout(function () {
-        $form.trigger("ss:submitTimeout");
-      }, timeout);
+      if (timeout > -1) {
+        setTimeout(function () {
+          $form.trigger("ss:submitTimeout");
+        }, timeout);
+      }
     });
   };
 
@@ -738,9 +752,11 @@ this.SS = (function () {
     var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
 
     $.rails.disableFormElement($element);
-    setTimeout(function () {
-      $element.trigger("ss:clickTimeout");
-    }, timeout);
+    if (timeout > -1) {
+      setTimeout(function () {
+        $element.trigger("ss:clickTimeout");
+      }, timeout);
+    }
   };
 
   SS.onClickTimeout = function(ev) {

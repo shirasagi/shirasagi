@@ -15,7 +15,7 @@
         <td><%= item.email %></td>
         <td><%= item.email_type %></td>
         <td><%= item.entry_type %></td>
-        <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= ss_time_tag item.updated %></td>
       </tr>
       <% end %>
     </tbody>

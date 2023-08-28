@@ -13,6 +13,7 @@ ja:
     check_links_pages: ページ
     count_pages: ページ目
     command: コマンド
+    api_token: 連携用APIトークン
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
@@ -39,6 +40,8 @@ ja:
     line_facility_search_category: 施設カテゴリー
     line_message: メッセージ
     line_template: テンプレート
+    line_statistics: 統計情報
+    line_mail_handlers: メール連携
     line_deliver_log: 配信ログ
     line_deliver_condition: 配信条件
     line_deliver_category: 配信カテゴリー
@@ -70,7 +73,6 @@ ja:
     node_config: フォルダー設定
     notice: お知らせ
     page: 固定ページ
-    pagination: ページネーション
     page_search: ページ検索
     part: パーツ
     preview: プレビュー
@@ -98,6 +100,7 @@ ja:
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
     syntax_check: アクセシビリティチェック
+    url_scheme: URLスキーム設定
     backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
     sns_post_log: 投稿履歴
@@ -108,7 +111,6 @@ ja:
     word_dictionary: 単語置換辞書
     form_not_selected: 定型フォームが選択されていません
     default_form: 既定のフォーム
-    column_value_error_template: "%{name}の%{error}"
     draft_page: 下書きページ
     inplace_edit: 編集モード
     preview_date: プレビュー日時
@@ -159,7 +161,28 @@ ja:
       download_description: サイト内の全コンテンツを出力します。
       import_tab: 一括設定
       import_head: 全コンテンツ一括設定
-      import_description: サイト内の全コンテンツを一括して設定します。一括して設定できるのはフォルダーとページで、かつ設定可能な属性はタイトル、レイアウト、キーワード、概要、サマリー、カテゴリー、検索条件URL、並び順、表示件数、上部HTML、ループHTML、下部HTML、NEWマーク期間、管理グループです。
+      import_description_html: |-
+        <p class="my-1">サイト内の全コンテンツを一括して設定します。</p>
+
+        <p class="my-1">全コンテンツ一括設定では、フォルダーやページを一括して非公開にすることが可能ですが、フォルダーやページを一括して非公開にするとリンク切れが発生する可能性があります。
+        一括して非公開にした後は<a href="/.s%{site_id}/cms/check_links" target="_blank" rel="noopener">リンクチェック</a>を実行し、想定外のリンク切れが発生していないか確認するようにしてください。</p>
+
+        <p class="my-1">次の属性は一括設定の対象外で、これらは一括して設定することはできません。
+        <ul>
+          <li>ページID</li>
+          <li>フォルダーID</li>
+          <li>登録種別 (ページ属性等)</li>
+          <li>ファイル名</li>
+          <li>容量</li>
+          <li>記事URL</li>
+          <li>並び順（項目名）</li>
+          <li>並び順（方向）</li>
+          <li>ファイル</li>
+          <li>添付ファイルURL</li>
+          <li>作成日時</li>
+          <li>更新日時</li>
+          <li>静的ファイル容量</li>
+        </ul></p>
     roles:
       admin: 管理者
       user: 編集者
@@ -230,6 +253,11 @@ ja:
         broadcast:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
+      line_statistics:
+         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+      line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -250,6 +278,14 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      layouts:
+        index: レイアウトを選択する
+        search: レイアウトを検索
+        select: レイアウトを設定する
+      nodes_routes:
+        index: フォルダー属性を選択する
+        search: フォルダー属性を検索
+        select: フォルダー属性を設定する
       pages:
         index: ページを選択する
         search: ページを検索
@@ -296,6 +332,14 @@ ja:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
+      title: ページの移動
+      current_filename: 現在のファイル名
+      destination_filename: 移動先のファイル名
+      branch_page_error: このページは差し替えページの為、移動できません。
+    move_node:
+      title: フォルダーの移動
+      current_filename: 現在のフォルダー名
+      destination_filename: 移動先のフォルダー名
     copy_nodes:
       from: 複製元フォルダー
       to: 複製先
@@ -475,7 +519,16 @@ ja:
         1_year: 1年
         2_years: 2年
         3_years: 3年
-
+      list_origin:
+        deployment: 配備された階層に応じてリストを作成
+        content: アクセスされたページ/フォルダーに応じてリストを作成
+      clipboard_copy_target:
+        url: URL
+        css_selector: CSSセレクター
+      handle_state:
+        deliver: メッセージを保存し自動配信する
+        draft: メッセージを下書き保存する
+        disabled: 無効
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -522,7 +575,8 @@ ja:
       cms/form_search: 定型フォーム絞込
     parts:
       cms/free: HTML記述
-      cms/node: フォルダーリスト
+      cms/node: フォルダーリスト（旧）
+      cms/node2: フォルダーリスト
       cms/page: ページリスト
       cms/tabs: 新着タブ
       cms/crumb: パンくずリスト
@@ -531,6 +585,9 @@ ja:
       cms/monthly_nav: アーカイブナビ（月次）
       cms/site_search_history: サイト内検索(検索履歴)
       cms/history_list: 閲覧履歴
+      cms/site_search_keyword: サイト内検索(注目ワード)
+      cms/print: 印刷
+      cms/clipboard_copy: クリップボードへコピー
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -631,6 +688,8 @@ ja:
     unlock_other_cms_pages: 固定ページのロック解除（全て）
     release_other_cms_pages: 固定ページの公開（全て）
     release_private_cms_pages: 固定ページの公開（所有）
+    close_other_cms_pages: 固定ページの非公開（全て）
+    close_private_cms_pages: 固定ページの非公開（所有）
     approve_other_cms_pages: 固定ページの承認（全て）
     approve_private_cms_pages: 固定ページの承認（所有）
     reroute_other_cms_pages: 固定ページの承認経路変更（全て）
@@ -691,9 +750,15 @@ ja:
     use_private_cms_line_messages: LINEメッセージの利用（所有）
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
+    use_cms_all_contents: 全コンテンツの利用
+    use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
+    use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
+    use_other_cms_line_statistics: LINE統計情報の利用（全て）
+    use_private_cms_line_statistics: LINE統計情報の利用（所有）
 
   modules:
     cms: 標準機能
+    cms/line: LINE機能
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール
@@ -718,6 +783,7 @@ ja:
       cms/parent_crumb: パンくず
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
+      cms/site/node_setting: フォルダー設定
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
@@ -744,6 +810,9 @@ ja:
       cms/tag_setting: タグ設定
       cms/tag: タグ
       cms/layout_html: レイアウト
+      cms/layout_part: 使用中パーツ
+      cms/layout_search: レイアウト使用ページを検索する
+      cms/layout_search/btn: レイアウト使用ページを検索
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
@@ -781,6 +850,9 @@ ja:
       cms/line/richmenu/area: タップ領域
       cms/line/deliver_plan/repeat: 繰り返し
       cms/line/service/image_map: イメージマップ
+      cms/line/statistic/body: 統計情報
+      cms/line/statistic/info: 詳細情報
+      cms/clipboard_copy: クリップボードへコピー
 
   mongoid:
     models:
@@ -837,6 +909,7 @@ ja:
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
+      cms/api_token: 連携用APIトークン
     errors:
       models:
         cms/content:
@@ -907,6 +980,8 @@ ja:
         page_expiration_before: 公開期限
         page_expiration_mail_subject: 公開期限お知らせメール（件名）
         page_expiration_mail_upper_text: 公開期限お知らせメール（上部テキスト）
+      cms/addon/site/node_setting:
+        rss_recent_state: rss-recent.xml
       cms/model/member:
         name: 氏名
         email: メールアドレス
@@ -917,6 +992,7 @@ ja:
         oauth_type: OAuth Type
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
+        last_loggedin: 最終ログイン日時
       cms/editor_template:
         name: 名前
         description: 説明
@@ -990,16 +1066,22 @@ ja:
         conditions: 検索条件(URL)
         condition_forms: 検索条件(定型フォーム)
         condition_form_ids: 検索条件(定型フォーム)
+        sort: 並び順
+        limit: 表示件数
         loop_html: ループHTML
         upper_html: 上部HTML
         lower_html: 下部HTML
         new_days: NEWマーク期間
+        loop_setting_id: 定義済みループHTML
         loop_format: ループHTML形式
         loop_liquid: ループHTML
         no_items_display_state: ページ未検出時表示
         substitute_html: 代替HTML
-        sort_column_name: 並び順
-        sort_column_direction: 並び順(方向)
+        sort_column_name: 並び順（項目名）
+        sort_column_direction: 並び順（方向）
+      cms/addon/node_list:
+        node_routes: フォルダー属性
+        list_origin: 起点
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1065,6 +1147,7 @@ ja:
         name: 名前
         order: 並び順
       cms/addon/page_search:
+        search_layout_ids: レイアウト
         search_name: タイトル
         search_filename: ファイル名
         search_keyword: キーワード
@@ -1150,6 +1233,10 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         placeholder: プレースホルダー
+      cms/addon/site_search/keyword:
+        site_search_keywords: 注目ワード
+        upper_html: 上部HTML
+        lower_html: 下部HTML
       cms/form:
         name: 名前
         order: 並び順
@@ -1248,6 +1335,7 @@ ja:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
         file_id: ファイル
+        file_name: ファイル名
         file_label: リンクテキスト・代替テキスト
         image_html_type: 貼付方法
         text: 動画の内容説明
@@ -1309,6 +1397,7 @@ ja:
         state: ステータス
         source_id: 連携対象
         action: アクション
+        request_id: "X-Line-Request-Id"
         response_code: レスポンスコード
         response_body: レスポンスボディ
         messages: リクエストメッセージ
@@ -1330,6 +1419,7 @@ ja:
         name: タイトル
         body: JSON
         deliver_state: 配信ステータス
+        statistic_state: 統計情報
         completed: 配信日時
         test_completed: テスト配信日時
       cms/line/service/hook/base:
@@ -1369,11 +1459,22 @@ ja:
         name: タイトル
         order: 並び順
         state: ステータス
+      cms/line/mail_handler:
+        name: タイトル
+        filename: ファイル名
+        from_conditions: 送信者メールアドレス
+        to_conditions: 宛先メールアドレス
+        terminate_line: 終端文字列
+        order: 並び順
+        handle_state: ステータス
+        statistic_state: 統計情報
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
         name: 名前
         oauth_id: OAuth ID (ユーザーID)
+        order: 並び順
+        default_checked: 既定のテストメンバー
       cms/addon/line/deliver_condition/body: &line_deliver_condition
         year1: 年齢1
         year2: 年齢2
@@ -1431,6 +1532,7 @@ ja:
         height: 高さ
         area_size: タップ領域数
         chat_bar_text: メニューテキスト
+        selected: デフォルト表示
         state: ステータス
         areas: タップ領域
       cms/line/area:
@@ -1481,6 +1583,25 @@ ja:
         summary: メッセージ
         thumb_state: サムネイル画像
         json_body: JSON
+      cms/syntax_checker/main_setting:
+        syntax_check: アクセシビリティチェック
+      cms/syntax_checker/url_scheme_setting:
+        syntax_checker_url_scheme_attributes: 属性
+        syntax_checker_url_scheme_schemes: スキーム
+      cms/line/statistic:
+        name: 統計情報
+        message_id: メッセージ
+        condition_state: 設定
+        condition_label: 配信条件
+        overview_delivered: メッセージの送信数
+        overview_unique_impression: メッセージを開封した人数
+        overview_openrate: 開封率
+        overview_unique_click: URLをタップした人数
+        update_statistics: 統計情報の更新
+        null_label: 情報なし
+      cms/addon/clipboard_copy:
+        clipboard_copy_target: コピー対象
+        clipboard_copy_selector: CSSセレクター
 
   activemodel:
     attributes:
@@ -1517,7 +1638,7 @@ ja:
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
       not_found_parent_node: 移動先の親フォルダーが存在しません。
-      subnode_of_itself: 移動先のフォルダーパスに自身のパスが含まれています。
+      subnode_of_itself: 移動先のフォルダーに自身のフォルダーが含まれています。
       not_cms_page_in_root: 固定ページ以外をルートに移動することはできません。
       not_have_parent_read_permission: 移動先の親フォルダーの閲覧権限がありません。
       branch_page_can_not_move: 差し替え用ページは移動できません。
@@ -1563,7 +1684,7 @@ ja:
       cms_form_db_required_node: データの登録には記事フォルダーの設定が必要です。
       richmenu_target_taken: は既にリッチメニューグループ内に登録されています。
       syntax_check_server_error: アクセシビリティチェック中にサーバーエラーが発生しました。
-      invalid_url_scheme: 「http://」や 「https://」で始まるURLのみにしてください。
+      invalid_url_scheme: 「http://」や 「https://」などの安全なURLのみにしてください。
       internal_link_shouldnt_contain_domains: 内部リンクにはドメインを含めないようにしてください。
       internal_link_should_be_absolute_path: 内部リンクは "/" で始めてください。
       internal_link_shouldnt_be_preview_path: プレビュー用のパスを指定しないようにしてください。
@@ -1606,7 +1727,7 @@ ja:
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
           - 設定している代替テキストが妥当かどうか確認してください。
         invalid_url_scheme:
-          - 「http://」や 「https://」で始まるURLのみにしてください
+          - 「http://」や 「https://」などの安全なURLのみにしてください
           - "参照: 『安全なウェブサイトの作り方 5-(ii)』"
         internal_link_shouldnt_contain_domains:
           - 内部リンクにはドメインを含めないようにしてください。
@@ -1627,6 +1748,8 @@ ja:
       unable_to_delete_in_use_column_without_confirmation: 同意がないため削除できません。
       unable_to_delete_all_columns_if_form_is_in_use: 定型フォームが使用中のため一括削除することはできません。
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
+      both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
+      not_found_test_members: テストメンバーが選択されていません。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -1654,17 +1777,16 @@ ja:
         - 項目の内容を入力します。
     cms/import_job_file:
       in_file:
-        - 取り込むファイルを設定します。
-        - ルートフォルダーが含まれるZIPファイルもしくは単一のHTMLファイルを選択してください。
-        - フォルダー配下に 取り込みページ、フォルダー、アップロードファイル として展開されます。
+        - ZIPファイルを設定します。
+        - ZIPに含まれるファイルを 取り込みページ、フォルダー、アップロードファイル として展開します。
         - ファイル名は全て半角英数とする必要があります。
         - HTMLファイルはUTF-8でエンコードされている必要があります。
       title:
-        - トップへのフォルダー取り込みの場合、インポート前にフォルダーを作成し、内部にファイルを展開します。
-        - フォルダーのタイトルを設定します。
+        - 取り込み時にフォルダーを作成して内部にファイルを展開します。
+        - 作成するフォルダーのタイトルを設定します。
       basename:
-        - トップへのフォルダー取り込みの場合、インポート前にフォルダーを作成し、内部にファイルを展開します。
-        - フォルダー名を設定します。
+        - 取り込み時にフォルダーを作成して内部にファイルを展開します。
+        - 作成するフォルダー名を設定します。
       import_date:
         - インポートを実行する日時を設定できます。
 
@@ -1930,6 +2052,30 @@ ja:
         - タップ領域数を入力します。
       chat_bar_text:
         - トーク画面下部のメニューバーのテキストを入力します。
+      selected:
+        - トーク画面を開いた際に、メニューを最初から表示するか選択します。
+
+    cms/line/mail_handler:
+      name:
+        - タイトルを入力します。
+      filename:
+        - ファイル名を入力します。
+      from_conditions:
+        - 送信者メールアドレス（From）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの受信アドレスと一致した際にメール連携を実行します。
+      to_conditions:
+        - メール取込の宛先メールアドレス（To）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にメール連携を実行します。
+      terminate_line:
+        - メール本文の終端文字列を入力します。
+        - 本文内に終端文字列がある場合、それ以降の文章が削除されます。
+        - メールのシグネチャを削除する為に利用できます。
+      order:
+        - 並び順を入力します。
+      handle_state:
+        - ステータスを設定します。
+      statistic_state:
+        - 有効にするとメッセージ送信時に統計情報を保存します。
 
     cms/site:
       name:
@@ -1964,6 +2110,11 @@ ja:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの件名を入力します。
       page_expiration_mail_upper_text:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
+
+    cms/addon/site/node_setting:
+      rss_recent_state:
+        - 有効にすると、一覧フォルダーにて動的にrssを応答するURLが利用可能となります。
+        - 'URL: 一覧フォルダー名/rss-recent.xml'
     cms/model/part:
       route:
         - |-
@@ -2292,6 +2443,9 @@ ja:
       search_routes:
         - 検索したいページ属性を選択します。
         - いずれかのページ属性に該当するページが検索されます。
+      search_layout_ids:
+        - 検索したいレイアウトを選択します
+        - いずれかのレイアウトに該当するページが検索されます
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
@@ -2706,6 +2860,7 @@ ja:
         ファイルの内容が前回と同じ時はインポートを終了します。
         データの更新、同期のための削除も実行されません。
         速度向上や負荷低減のためにご利用ください。
+        ※定期実行時のみ有効な設定です。
       generate_on_import: |-
         インポートした際に記事ページを書き出します。
 
@@ -2797,10 +2952,17 @@ ja:
 
     cms/addon/content_quota:
       content_quota:
-        - フォルダーの合計容量の上限を入力します。
-        - 合計容量が超えた場合、警告が表示されます。
-        - 未設定である場合、警告は表示されません。
-        - 初期値は 未設定 です。
+        - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
+        - 初期値は「未設定」で、未設定である場合、警告は表示されません。
+        -
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。　
+        - 1. 容量制限が設定されている。
+        - 2. フォルダー設定のショートカットが「表示」に設定されている。
+        - 3. 自グループが管理権限の管理グループに設定されている。
+        -
+        - そして、警告のタイミングにも注意が必要です。
+        - シラサギでは、自グループが管理グループに設定されているフォルダーで、かつ、ショートカットが「表示」に設定されているフォルダーの容量制限バーが表示されます。
+        - 警告のタイミングは容量制限バーが表示されたタイミングとなります。ファイルがアップロードされたタイミングや記事ページを作成や更新したタイミングではない点に注意が必要です。
 
     cms/check_links/ignore_url:
       name:
@@ -2813,6 +2975,14 @@ ja:
         - 下部HTMLを入力します。
       placeholder:
         - プレースホルダーを入力します。
+
+    cms/addon/site_search/keyword:
+      site_search_keywords:
+        - 注目ワードを改行区切りで入力してください。
+      upper_html:
+        - 上部HTMLを入力します。
+      lower_html:
+        - 下部HTMLを入力します。
 
     cms/line/facility_search/category:
       name:
@@ -2857,16 +3027,23 @@ ja:
         - 検索結果ページのテキスト表示部分を Liquid 形式で記述します。
 
     cms/line/test_member:
-      name: 名前を入力します。
+      name:
+        - 名前を入力します。
       oauth_id:
         - メンバーの OAuth ID を入力します。
         - LINE Messaging API の ユーザーID と同じです。
+      order:
+        - 並び順を入力します。
+      default_checked:
+        - 有効にするとテスト配信画面にて、既定で選択された状態になります。
 
     cms/line/message:
       name:
        - タイトルを入力します。
       title:
        - タイトルを入力します。
+      statistic_state:
+        - 有効にするとメッセージ送信時に統計情報を保存します。
 
     cms/addon/line/message/deliver_condition:
       deliver_condition_state:
@@ -2928,6 +3105,39 @@ ja:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
 
+    cms/syntax_checker/main_setting:
+      syntax_check:
+        - アクセシビリティチェックの有効無効を設定します。
+
+    cms/syntax_checker/url_scheme_setting:
+      syntax_checker_url_scheme_attributes:
+        - チェック対象の属性を設定します。
+        - 既定値は "href, src" です。
+      syntax_checker_url_scheme_schemes:
+        - 使用を許可するスキームを設定します。
+        - 既定値は "http, https" です。
+        - 安全なウェブサイトの作り方では、http, https 以外のスキームにリンクを設定することは非推奨となっています。危険を承知の上、設定してください。
+
+    cms/addon/clipboard_copy:
+      clipboard_copy_target:
+        - コピー対象を選択してください。
+        -
+        - "URL: アクセスしているページの URL をクリップボードへコピーします。"
+        - "CSSセレクター: CSSセレクター欄に設定されている式にマッチした要素のテキストをクリップボードへコピーします。"
+      clipboard_copy_selector:
+        - コピー対象が "CSSセレクター" の場合にマッチさせる式を入力してください。
+        -
+        - "例: title"
+        - アクセスしているページのタイトルをクリップボードへコピーします。
+        -
+        - "例: #ss-page-name"
+        - id="ss-page-name" が設定されているHTML要素のテキストをクリップボードへコピーします。
+        - 通常、この設定は、ページタイトルをクリップボードへコピーすることができます。
+        -
+        - "例: .contact"
+        - class="contact" が設定されているHTML要素のテキストをクリップボードへコピーします。
+        - 通常、この設定は、お問い合わせ先をクリップボードへコピーすることができます。
+
   all_content:
     page_id: ページID
     node_id: フォルダーID
@@ -2941,14 +3151,14 @@ ja:
     description: 概要
     summary_html: サマリー
     conditions: 検索条件(URL)
-    sort: 並び順
+    sort: リスト並び順
     limit: 表示件数
     upper_html: 上部HTML
     loop_setting_id: 定義済みループHTML
-    loop_html: ループHTML
+    loop_html: ループHTML（SHIRASAGI形式）
     lower_html: 下部HTML
     new_days: NEWマーク期間
-    category_ids: カテゴリ
+    category_ids: カテゴリー
     files: 添付ファイル
     file_urls: 添付ファイルURL
     use_map: 地図のマーカー座標
@@ -2961,6 +3171,7 @@ ja:
     status: 公開状態
     file_size: 静的ファイル容量
     size: 容量
+    loop_liquid: ループHTML（Liquid形式）
 
   folder_size:
     name: タイトル
@@ -3000,3 +3211,6 @@ ja:
       cms/line/test_deliver_job: LINEテスト配信
       cms/line/deliver_reserved_job: LINE予約配信
       cms/line/apply_richmenu_job: LINEリッチメニュー登録
+      cms/group_import_job: グループインポート
+      cms/remove_improper_htmls_job: 不要HTML削除
+      cms/line/update_statistics_job: LINE統計情報更新

@@ -1,0 +1,11 @@
+<section id="population" class="sec-cmn-top-02 sec-cmn-top-02--population">
+  <header class="sec-cmn-top-02__header">
+  	<h2 class="sec-cmn-top-02__header-title">人口・世帯数</h2>
+  </header><!-- .sec-cmn-top-02__header -->
+
+    {% for page in pages %}
+      {{ page.html }}
+    <p class="date">※ {{ page.date | ss_date: "long" }}現在</p>
+    {% endfor %}
+
+  </section><!-- #population.sec-cmn-top-02.sec-cmn-top-02--population -->

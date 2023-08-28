@@ -15,10 +15,10 @@
     <dd class="count"><%= @item.current_count %> / <%= @item.total_count %></dd>
 
     <dt><%= @item.t :started %></dt>
-    <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+    <dd class="started"><%= ss_time_tag @item.started %></dd>
 
     <dt><%= @item.t :closed %></dt>
-    <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+    <dd class="closed"><%= ss_time_tag @item.closed %></dd>
   </dl>
 
   <div class="controller">

@@ -22,6 +22,11 @@
   </tr>
 
   <tr class="parent-row">
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= @item.label(:state) %></td>
+  </tr>
+
+  <tr class="parent-row">
     <td class="field"><%= @model.t :format %></td>
     <td class="input"><%= @item.send :format %></td>
   </tr>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja" class="ss-ajax-in-iframe">
+<html lang="<%= I18n.locale %>" class="ss-ajax-in-iframe">
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,10 +7,6 @@
 <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <%= stylesheet_link_tag "cms/preview/ajax_in_iframe", media: 'all' %>
-<!--[if lt IE 9]>
-<script src="/assets/js/html5.js"></script>
-<script src="/assets/js/selectivizr-min.js"></script>
-<![endif]-->
 <%= csrf_meta_tags %>
 </head>
 <body class="ss-ajax-in-iframe">

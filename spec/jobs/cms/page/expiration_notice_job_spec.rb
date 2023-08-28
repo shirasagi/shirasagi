@@ -24,7 +24,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
     let(:expiration_state) { "disabled" }
 
     it do
-      described_class.bind(site_id: site).perform_now
+      described_class.bind(site_id: site.id).perform_now
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -37,13 +37,22 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
   context "when page_expiration_state is enabled" do
     let(:expiration_state) { "enabled" }
     let(:group1) do
-      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create(
+        :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
+      )
     end
     let(:group2) do
-      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create(
+        :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
+      )
     end
     let(:group3) do
-      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create(
+        :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
+      )
     end
 
     context "with cms/page on root" do
@@ -62,7 +71,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -98,7 +107,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -134,7 +143,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)

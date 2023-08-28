@@ -6,9 +6,10 @@ class Ezine::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Cms::Lgwan::Page
 
   field :test_delivered, type: DateTime
-  field :completed, type: Boolean, default: false
+  field :completed, type: ::Mongoid::Boolean, default: false
   embeds_many :results, class_name: "Ezine::Result"
 
   store_in_repl_master

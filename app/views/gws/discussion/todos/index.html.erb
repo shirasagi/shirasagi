@@ -3,7 +3,10 @@
     tapMenu: @user.blank? || @user.id == @cur_user.id,
     restUrl: url_for(action: :index),
     eventSources: [{ url: "#{url_for(action: :events, format: :json)}?#{search_query}" }],
-    customButtons: { withTodo: false, withAbsence: false }
+    customButtons: { withTodo: false, withAbsence: false },
+    firstDay: @cur_site.schedule_first_day,
+    minTime: @cur_site.schedule_min_time,
+    maxTime: @cur_site.schedule_max_time
   }
   if @cur_site.schedule_drag_drop_denied?
     calendar_options[:eventStartEditable] = false
@@ -12,7 +15,9 @@
   init_options = params[:calendar] || {}
 %>
 <%= jquery do %>
-  Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  });
 <% end %>
 
 <section class="main-box gws-schedule-box">

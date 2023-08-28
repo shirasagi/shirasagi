@@ -1,5 +1,8 @@
 <nav class="event-date" aria-label="<%= t("event.calendar") %>"%>
-  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <h2 class="<%= event_h1_class @month %>">
+    <span class="calendar-year"><%= @year %><%= t_date('year') %></span>
+    <span class="calendar-month"><%= @month %><%= t_date('month') %></span>
+  </h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
     <div class="event-format">
       <span class="list">
@@ -17,7 +20,7 @@
   </ul>
 </nav>
 
-<div id="event-table">
+<div id="event-table" class="event-table">
   <table class="calendar">
     <caption><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></caption>
     <thead>
@@ -43,11 +46,11 @@
             <% end %>
 
             <% if events.blank? && @cur_node.substitute_html.present? %>
-              <dd class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></dd>
+              <div class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></div>
             <% end %>
 
             <% events.each do |event, categories| %>
-              <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+              <div class="page <%= event.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>" data-start-date="<%= tryb { event.event_dates.start_date(date).strftime("%Y/%m/%d") } %>" data-end-date="<%= tryb { event.event_dates.end_date(date).strftime("%Y/%m/%d") } %>">
                 <% if categories.present? %>
                   <% cate = categories.entries.sort_by{ |c| c.order }.first %>
                   <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>

@@ -17,10 +17,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#index' do
       visit gws_memo_messages_path(site)
-      wait_for_ajax
 
       within '.gws-memo-folder' do
-        expect(page).to have_css('.title', text: '受信トレイ')
+        expect(page).to have_css('.title', text: I18n.t("gws/memo/folder.inbox"))
       end
 
       # popup
@@ -63,17 +62,22 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
       wait_for_cbox do
         expect(page).to have_content(user2.name)
-        click_on user2.name
+        wait_cbox_close { click_on user2.name }
       end
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: user2.name)
+        end
         click_on I18n.t('ss.buttons.draft_save')
       end
-      wait_for_error Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
+      message = I18n.t('errors.messages.blank')
+      message = I18n.t("errors.format", attribute: Gws::Memo::Message.t(:subject), message: message)
+      wait_for_error message
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
@@ -82,7 +86,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#edit' do
@@ -91,7 +95,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         fill_in 'item[subject]', with: ''
         click_on I18n.t('ss.buttons.draft_save')
       end
-      wait_for_error Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
+      message = I18n.t('errors.messages.blank')
+      message = I18n.t("errors.format", attribute: Gws::Memo::Message.t(:subject), message: message)
+      wait_for_error message
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
@@ -100,7 +106,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#reply' do
@@ -112,7 +118,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#reply_all' do
@@ -124,7 +130,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#forward' do
@@ -147,11 +153,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: user2.name)
+        end
         accept_confirm do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#ref' do
@@ -174,27 +183,32 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: user2.name)
+        end
         fill_in 'item[text]', with: text
 
         accept_confirm do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
     end
 
     it '#send_mdn' do
       visit gws_memo_messages_path(site)
       click_link memo.name
+      wait_for_js_ready
       click_button I18n.t('webmail.buttons.send_mdn')
-      expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.send_mdn"))
+      wait_for_notice I18n.t("gws/memo/message.notice.send_mdn")
     end
 
     it '#ignore_mdn' do
       visit gws_memo_messages_path(site)
       click_link memo.name
+      wait_for_js_ready
       click_button I18n.t('webmail.buttons.ignore_mdn')
-      expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.ignore_mdn"))
+      wait_for_notice I18n.t("gws/memo/message.notice.ignore_mdn")
     end
 
     it '#print' do
@@ -204,34 +218,38 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#trash' do
       visit trash_gws_memo_message_path(site: site, folder: 'INBOX', id: memo.id)
-      expect(page).to have_content('ゴミ箱')
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
     end
 
     it '#trash_all' do
       visit gws_memo_messages_path(site)
       expect(page).to have_selector('li.list-item')
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        find('.trash-all').click
+        within ".list-head-action" do
+          find('.trash-all').click
+        end
       end
-      wait_for_ajax
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(page).to have_no_selector('li.list-item')
 
       click_link I18n.t('gws/memo/folder.inbox_trash')
       expect(page).to have_selector('li.list-item')
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        find('.destroy-all').click
+        within ".list-head-action" do
+          find('.destroy-all').click
+        end
       end
-      wait_for_ajax
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(page).to have_no_selector('li.list-item')
     end
 
     it '#delete' do
       visit delete_gws_memo_message_path(site: site, folder: 'INBOX.Trash', id: trash_memo.id)
-      within 'form' do
+      within 'form#item-form' do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq gws_memo_messages_path(site, folder: 'INBOX.Trash')
@@ -239,19 +257,26 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#set_seen_all and #unset_seen_all' do
       visit gws_memo_messages_path(site)
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        click_button "その他"
-        find('.set-seen-all').click
+        click_button I18n.t("gws/memo/message.links.etc")
+        within ".list-head-action .dropdown-menu.active" do
+          find('.set-seen-all').click
+        end
       end
       wait_for_ajax
       expect(page).to have_css(".list-item.seen")
       expect(page).to have_no_css(".list-item.unseen")
 
-      find('.list-head label.check input').set(true)
+      page.execute_script("SS.clearNotice();")
+      wait_for_js_ready
+
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        click_button "その他"
-        find('.unset-seen-all').click
+        click_button I18n.t("gws/memo/message.links.etc")
+        within ".list-head-action .dropdown-menu.active" do
+          find('.unset-seen-all').click
+        end
       end
       wait_for_ajax
       expect(page).to have_css(".list-item.unseen")
@@ -260,42 +285,44 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
     it '#set_star_all and #unset_star_all' do
       visit gws_memo_messages_path(site)
-      find('.list-head label.check input').set(true)
-      click_button "その他"
-      wait_for_ajax
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        click_link 'スターをつける'
+        click_button I18n.t("gws/memo/message.links.etc")
+        within ".list-head-action .dropdown-menu.active" do
+          click_link I18n.t("gws/memo/message.links.set_star")
+        end
       end
-      wait_for_ajax
       expect(page).to have_css(".icon.icon-star.on")
       expect(page).to have_no_css(".icon.icon-star.off")
 
-      find('.list-head label.check input').set(true)
-      click_button "その他"
-      wait_for_ajax
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        click_link 'スターをはずす'
+        click_button I18n.t("gws/memo/message.links.etc")
+        within ".list-head-action .dropdown-menu.active" do
+          click_link I18n.t("gws/memo/message.links.unset_star")
+        end
       end
-      wait_for_ajax
       expect(page).to have_css(".icon.icon-star.off")
       expect(page).to have_no_css(".icon.icon-star.on")
     end
 
     it '#move_all' do
       visit gws_memo_messages_path(site)
-      wait_for_ajax
-      expect(page).to have_content('受信トレイ')
-      expect(page).to have_content('ゴミ箱')
-      find('.list-head label.check input').set(true)
+
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox"))
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
-        click_button "移動する"
         within ".move-menu" do
-          click_link folder.name
+          click_button I18n.t("ss.links.move")
+          within ".dropdown-menu.active" do
+            click_link folder.name
+          end
         end
       end
-      wait_for_ajax
-      expect(page).to have_content('受信トレイ')
-      expect(page).to have_content('ゴミ箱')
+      wait_for_notice I18n.t("ss.notice.moved")
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox"))
+      expect(page).to have_content(I18n.t("gws/memo/folder.inbox_trash"))
     end
 
     it '#latest' do

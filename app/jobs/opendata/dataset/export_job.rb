@@ -61,27 +61,29 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   end
 
   def resources_to_csv(resources)
-    CSV.generate do |data|
-      headers = %w(
-        id name format license_id text order file_id source_url tsv_id
-        preview_graph_state preview_graph_types
-      ).map { |k| Opendata::Resource.t(k) }
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        headers = %w(
+          id name format license_id text order file_id source_url tsv_id
+          preview_graph_state preview_graph_types
+        ).map { |k| Opendata::Resource.t(k) }
 
-      data << headers
-      resources.each do |item|
-        line = []
-        line << item.id
-        line << item.name
-        line << item.format
-        line << item.license.try(:name)
-        line << item.text
-        line << item.order
-        line << item.filename
-        line << item.source_url
-        line << item.tsv.try(:filename)
-        line << (item.label :preview_graph_state)
-        line << item.preview_graph_types.map { |type| I18n.t("opendata.graph_types.#{type}") }.join("\n")
-        data << line
+        data << headers
+        resources.each do |item|
+          line = []
+          line << item.id
+          line << item.name
+          line << item.format
+          line << item.license.try(:name)
+          line << item.text
+          line << item.order
+          line << item.filename
+          line << item.source_url
+          line << item.tsv.try(:filename)
+          line << (item.label :preview_graph_state)
+          line << item.preview_graph_types.map { |type| I18n.t("opendata.graph_types.#{type}") }.join("\n")
+          data << line
+        end
       end
     end
   end

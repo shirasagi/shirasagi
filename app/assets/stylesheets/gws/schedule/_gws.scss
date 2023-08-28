@@ -154,21 +154,21 @@
   .sun {
     color: #e00;
   }
-  .label, .facility, .hour-wrap, .reservation {
+  .label, .member, .facility, .hour-wrap, .reservation {
     display: table-cell;
   }
   .label {
-    min-width: 146px;
+    width: 12rem;
     margin: 1px 0;
     padding: 5px 1px;
   }
-  .facility {
-    min-width: 160px;
+  .member, .facility {
+    min-width: 200px;
     margin: 1px 0;
     padding: 5px 1px;
   }
   .hour-wrap {
-    padding: 5px 2px;
+    padding: 5px 1px;
   }
   .reservation {
     min-width: 4.5em;
@@ -177,8 +177,8 @@
   }
   .hour {
     display: inline-block;
-    min-width: 2em;
-    padding: 1px 4px;
+    min-width: 1.9em;
+    padding: 1px 2px;
     border: $white 1px solid;
     border-radius: 3px;
     background-color: #d4d4d4;
@@ -239,6 +239,12 @@
     padding-left: 10px;
     color: $orange;
   }
+  .duplicate-register-message {
+    color: #e00;
+  }
+  .reservation-errors {
+    color: $orange;
+  }
 }
 #addon-gws-agents-addons-schedule-comments {
   .list-items {
@@ -250,9 +256,6 @@
 }
 
 // Form
-.gws-schedule-plan .dates-field {
-  display: none;
-}
 .gws-schedule-repeat-submit {
   padding: 20px;
   input {
@@ -377,13 +380,18 @@
   border: 0;
   border-radius: 0;
   font-size: 90%;
+  cursor: pointer;
   &:hover {
     color: $black;
   }
   .fc-content {
-    word-wrap: normal;
+    word-wrap: break-word;
     word-break: normal;
     white-space: normal;
+    .fc-date + .fc-title {
+      margin-left: 0;
+      padding-left: 4px;
+    }
     .fc-category {
       @include fc_event_prefix;
       background-color: $orange;
@@ -406,9 +414,6 @@
 }
 .fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
-}
-.fc-event-allday {
-  border-right: 2px solid #000;
 }
 .fc-time-grid-event .fc-resizer {
   display: none;
@@ -437,16 +442,18 @@
 }
 .fc-event-range {
   padding: 1px 2px;
-  border-color: #966;
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
   &:hover { color: #000; text-decoration: underline; }
   .fc-content {
-    @include ellipsis;
+    //@include ellipsis;
     .fc-title,.fc-facility {
-      display: inline;
+       display: inline;
     }
+  }
+  &.fc-resizable {
+    border-right: 2px solid #966;
   }
 }
 .fc-agenda-view .fc-day-grid .fc-event-point {
@@ -499,16 +506,27 @@
   &:hover { color: #000; }
 }
 
+.fc-event-work {
+  border-right: 0px;
+}
+
 // View: agendaDay
 .fc-agendaDay-view {
   .fc-time-grid-event {
     margin-right: 5px;
   }
   .fc-event {
-    .fc-title {
-      overflow: hidden;
-      text-overflow: ellipsis;
+    div.fc-title {
+      display: flex;
       white-space: nowrap;
+      .fc-event-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .fc-facility {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
     }
   }
 }
@@ -581,8 +599,12 @@
     border-bottom: 1px solid #d8d8d8;
   }
   .fc-timeline-event {
+    min-width: calc(1em + 5px);
     background: #2eb0f2;
     color: $black;
+    .fc-title {
+      max-height: 230px;
+    }
   }
 }
 // View: basicHour
@@ -610,6 +632,26 @@
   .fc-event {
     z-index: 0;
     border-left: 1px solid #555;
+  }
+}
+.fc-list-format {
+  .info {
+    a {
+      padding: 2px;
+      .fc-content {
+        .fc-title {
+          display: inline-block;
+        }
+        .fc-facility {
+          display: inline-block;
+          padding-left: 10px;
+        }
+      }
+    }
+    .summary {
+      margin-top: 2px;
+      padding: 2px;
+    }
   }
 }
 // Print View
@@ -827,7 +869,7 @@ dl.gws-schedule-repeat {
   }
 }
 
-.gws-schedule-todo-achievement-bar {
+.gws-achievement-bar {
   display: inline-block;
   width: 6em;
 }
@@ -872,11 +914,17 @@ dl.gws-schedule-repeat {
   }
 }
 
-#addon-gws-agents-addons-schedule-todo-comment_post {
+.gws-comment-post {
   .comment {
     margin: 5px 0;
     padding: 0 5px;
     border-bottom: $border-gray1;
+  }
+
+  .total {
+    padding: 10px;
+    border-radius: 3px;
+    background: #f2f2f2;
   }
 
   .row {
@@ -890,6 +938,14 @@ dl.gws-schedule-repeat {
   }
 
   .achievement-rate {
+    margin-right: 10px;
+  }
+
+  .worktime-minutes {
+    margin-right: 10px;
+  }
+
+  .overtime-minutes {
     margin-right: 10px;
   }
 

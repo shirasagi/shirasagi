@@ -25,6 +25,7 @@ module Article::Node
     include Cms::Addon::ImageResizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "article/page") }
 
@@ -39,6 +40,7 @@ module Article::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "article/form_export") }
   end
@@ -50,10 +52,12 @@ module Article::Node
     include Event::Addon::PageList
     include Article::Addon::MapSearch
     include Article::Addon::MapSearchResult
+    include Map::Addon::SearchSetting
     include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "article/map_search") }
 
@@ -75,6 +79,7 @@ module Article::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "article/search") }
 

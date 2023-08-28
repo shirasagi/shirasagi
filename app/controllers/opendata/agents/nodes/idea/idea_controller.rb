@@ -23,7 +23,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   public
 
   def pages
-    Opendata::Idea.site(@cur_site).and_public
+    Opendata::Idea.site(@cur_site).and_public(@cur_date)
   end
 
   def index

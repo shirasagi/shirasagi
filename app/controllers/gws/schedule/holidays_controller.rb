@@ -2,6 +2,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::CalendarFilter
+  include Gws::Schedule::CalendarFilter::Transition
 
   navi_view "gws/schedule/main/navi"
   menu_view "gws/schedule/holidays/menu"
@@ -20,11 +21,18 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def pre_params
-    { start_on: params[:start] || Time.zone.now.strftime('%Y/%m/%d') }
+    { start_on: params[:start] || I18n.l(Time.zone.today, format: :picker) }
   end
 
-  def redirection_view
-    'month'
+  def crud_redirect_url
+    path = params.dig(:calendar, :path)
+    if path.present?
+      uri = URI(path)
+      uri.query = { calendar: redirection_calendar_params }.to_param
+      uri.to_s
+    else
+      { action: :index }
+    end
   end
 
   def set_item
@@ -55,12 +63,21 @@ class Gws::Schedule::HolidaysController < ApplicationController
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s])
 
+    # 庶務事務機能の休日カレンダーをスケジュールに表示する（停止）
+    #@items = @model.site(@cur_site).and_system.
+    #  allow(:read, @cur_user, site: @cur_site).
+    #  search(params[:s])
+
     render json: @items.map { |m| m.calendar_format(editable: true) }.to_json
   end
 
   def download
     csv = @model.unscoped.site(@cur_site).to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_holidays_#{Time.zone.now.to_i}.csv"
+
+    # 庶務事務機能の休日カレンダーをスケジュールに表示する（停止）
+    #csv = @model.unscoped.site(@cur_site).and_system.to_csv
+    #send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_holidays_#{Time.zone.now.to_i}.csv"
   end
 
   def import

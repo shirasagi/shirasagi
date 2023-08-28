@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "history_cms_backups restore", type: :feature, dbscope: :example do
-
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:file1) { create :ss_file, user_id: cms_user.id }
@@ -76,8 +75,8 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_css('th', text: page_item.t(:file_ids))
       expect(page).to have_css('th', text: page_item.t(:index_name))
       expect(page).to have_no_css('th', text: page_item.t(:column_values))
-      expect(page).to have_css('th', text: column1.name)
-      expect(page).to have_css('th', text: column2.name)
+      expect(page).to have_css('td', text: column1.name)
+      expect(page).to have_css('td', text: column2.name)
 
       click_link I18n.t('history.restore')
       expect(current_path).to eq restore_path

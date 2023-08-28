@@ -48,8 +48,10 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       title = I18n.t('gws/attendance.formats.time_card_full_name', user_name: user1.name, month: month)
       click_on title
 
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
 
@@ -65,7 +67,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
 
       within ".list-head" do
-        first("input[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
 
         page.accept_confirm do
           click_on I18n.t("ss.buttons.delete")

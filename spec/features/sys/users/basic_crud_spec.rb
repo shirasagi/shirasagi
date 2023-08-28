@@ -99,7 +99,7 @@ describe "sys_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("ss.links.delete")
       page.accept_alert
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

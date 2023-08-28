@@ -56,19 +56,19 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
       html = Capybara.string(helper.render_node_list)
 
       expect(html.first("article.item-#{node2.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node2.url}\"]", text: node2.name)).to be_truthy
+      expect(html.first("a[href=\"#{node2.url}\"]", text: node2.index_name)).to be_truthy
 
       expect(html.first("article.item-#{node3.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node3.url}\"]", text: node3.name)).to be_truthy
+      expect(html.first("a[href=\"#{node3.url}\"]", text: node3.index_name)).to be_truthy
 
       expect(html.first("article.item-#{node4.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node4.url}\"]", text: node4.name)).to be_truthy
+      expect(html.first("a[href=\"#{node4.url}\"]", text: node4.index_name)).to be_truthy
 
       expect(html.first("article.item-#{node5.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node5.url}\"]", text: node5.name)).to be_truthy
+      expect(html.first("a[href=\"#{node5.url}\"]", text: node5.index_name)).to be_truthy
 
       expect(html.first("article.item-#{node6.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node6.url}\"]", text: node6.name)).to be_truthy
+      expect(html.first("a[href=\"#{node6.url}\"]", text: node6.index_name)).to be_truthy
     end
 
     it "with shirasagi loop template" do

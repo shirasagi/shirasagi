@@ -6,6 +6,7 @@ module SS::Model::User
   include SS::Password
   include SS::Reference::UserExpiration
   include SS::UserImportValidator
+  include SS::Addon::LocaleSetting
   include Ldap::Addon::User
 
   TYPE_SNS = "sns".freeze
@@ -82,7 +83,7 @@ module SS::Model::User
     validate :validate_uid
     validate :validate_account_expiration_date
 
-    after_save :save_group_history, if: -> { @db_changes['group_ids'] }
+    after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     default_scope -> {
@@ -101,9 +102,9 @@ module SS::Model::User
 
   module ClassMethods
     def flex_find(keyword)
-      if keyword =~ /^\d+$/
+      if keyword.numeric?
         cond = { id: keyword }
-      elsif keyword =~ /@/
+      elsif keyword.include?('@')
         cond = { email: keyword }
       else
         cond = { uid: keyword }
@@ -158,14 +159,15 @@ module SS::Model::User
       nil
     end
 
+    SEARCH_HANDLERS = %i[search_name search_title_ids search_occupation_ids search_keyword].freeze
+
     def search(params)
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_name(params)
-      criteria = criteria.search_title_ids(params)
-      criteria = criteria.search_occupation_ids(params)
-      criteria = criteria.search_keyword(params)
+      SEARCH_HANDLERS.each do |handler|
+        criteria = criteria.send(handler, params)
+      end
       criteria
     end
 
@@ -180,13 +182,13 @@ module SS::Model::User
       end
 
       if user_ids.blank?
-        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email)
+        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark)
       end
 
       # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
       base_criteria = all.dup
 
-      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email).selector
+      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark).selector
       base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
@@ -210,9 +212,7 @@ module SS::Model::User
     end
 
     def labels
-      %w(uid email organization_uid organization_id).collect do |key|
-        [key, t(key)]
-      end.to_h
+      %w(uid email organization_uid organization_id).index_with { |key| t(key) }
     end
   end
 
@@ -377,8 +377,8 @@ module SS::Model::User
   end
 
   def validate_uid
-    return if uid.blank?
-    errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
+    return if uid.blank? || /^[\w\-]+$/.match?(uid)
+    errors.add :uid, :invalid
   end
 
   def validate_cur_user
@@ -398,13 +398,13 @@ module SS::Model::User
   end
 
   def save_group_history
-    changes = @db_changes['group_ids']
+    group_ids_changes = changes['group_ids'].presence || previous_changes['group_ids']
     item = SS::UserGroupHistory.new(
       cur_site: @cur_site,
       user_id: id,
       group_ids: group_ids,
-      inc_group_ids: (changes[1].to_a - changes[0].to_a),
-      dec_group_ids: (changes[0].to_a - changes[1].to_a)
+      inc_group_ids: (group_ids_changes[1].to_a - group_ids_changes[0].to_a),
+      dec_group_ids: (group_ids_changes[0].to_a - group_ids_changes[1].to_a)
     )
     item.save
   end

@@ -7,7 +7,7 @@
 <% licenses = Opendata::License.in(site_id: @cur_node.try(:opendata_site_ids)).and_public.pluck(:name, :id) if opendata_assoced %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <% editor_id = "#{id}-html" %>
-  <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>
+  <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;", data: { syntax_check: "editor", syntax_check_name: column.name })) %>
   <%= html_editor "##{editor_id}", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
   <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
@@ -23,13 +23,6 @@
       Cms_Source_Cleaner.confirms.clean = <%== t("cms.confirm.source_clean").to_json %>;
       Cms_Source_Cleaner.render(<%== "##{id}-source-cleaner".to_json %>, <%== { editor: editor_id }.to_json %>);
     <% end %>
-
-    Cms_Form.addSyntaxCheck("<%= id %>", {
-      name: "<%= column.name %>",
-      resolve: "html",
-      getContent: function () { return Cms_Form.getEditorHtml("<%= editor_id %>"); },
-      setContent: function (content) { Cms_Form.setEditorHtml(content, { id: "<%= editor_id %>" }); },
-    });
 
     $(<%== "##{id}".to_json %>).on({
       "column:beforeMove": function() {
@@ -89,7 +82,7 @@
                   <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
                 <% end %>
                 <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
-                <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+                <span><%= t("sns.datetime") %>: <%= ss_time_tag(file.updated) %></span><br>
                 <% if file.user.present? %>
                   <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
                 <% end %>
@@ -156,6 +149,6 @@
       insertContent(unique_id, text);
     });
 
-    new Cms_UploadFileOrder('columsForm', '.column-file-order-btn');
+    new Cms_UploadFileOrder(<%== "##{id}".to_json %>, 'columsForm', '.column-file-order-btn');
   <% end %>
 <% end %>

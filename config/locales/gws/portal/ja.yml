@@ -25,6 +25,7 @@ ja:
       gws/portal/notice_setting: お知らせ設定
       gws/portal/monitor_setting: 照会・回答設定
       gws/portal/link_setting: リンク集設定
+      gws/portal/attendance_setting: 出退勤設定
 
   gws/portal:
     self_portal: 個人
@@ -113,6 +114,9 @@ ja:
       closed_portlet: このポートレットは閲覧できません。
       no_portals: ポータルが見つかりません。
 
+  gws/portal/ad:
+    autoplay_disabled: 自動再生しない
+
   gws_role:
     use_gws_portal_user_settings: 個人ポータルの利用
     use_gws_portal_group_settings: 部課ポータルの利用
@@ -160,6 +164,7 @@ ja:
       gws/addon/portal/portlet/todo:
         todo_state: 表示状態
       gws/addon/portal/portlet/bookmark:
+        bookmark_folder_id: フォルダー
         bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/board:
         board_severity: 重要度
@@ -172,6 +177,7 @@ ja:
       gws/addon/portal/portlet/circular:
         circular_category_ids: カテゴリー
         circular_article_state: 表示種別
+        circular_sort: 回覧板の並び
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: カテゴリー
         monitor_answerable_article: 表示範囲
@@ -192,6 +198,8 @@ ja:
         survey_answered_state: 回答・未回答
         survey_sort: 並び順
         survey_category_ids: カテゴリー
+      gws/addon/portal/portlet/attendance:
+        timecard_module: 打刻先のタイムカード
       gws/addon/portal/portlet/ad:
         ad_width: 横幅
         ad_speed: スライド時間
@@ -202,6 +210,7 @@ ja:
       gws/addon/portal/notice_setting:
         portal_notice_state: 表示・非表示
         portal_notice_browsed_state: 未読・既読
+        portal_notice_severity: 重要度
       gws/addon/portal/monitor_setting:
         portal_monitor_state: 表示・非表示
       gws/addon/portal/link_setting:
@@ -218,14 +227,28 @@ ja:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: ポートレット名を入力します。
+      #circular_article_state:
+      #  - <b>未読</b> - 未読のみをポータルに表示する。
+      #  - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
       circular_article_state:
-        - <b>未読</b> - 未読のみをポータルに表示する。
-        - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
+        - 表示する回覧板の状態を選択します。
+      circular_sort:
+        - 表示する回覧板の並びを選択します。
+      survey_answered_state:
+        - 表示するアンケートの状態を選択します。
+      survey_sort:
+        - 表示するアンケートの並びを選択します。
+      survey_category_ids:
+        - 分類ラベルを選択します。
+      limit:
+        - 表示件数を入力します。
     gws/addon/portal/notice_setting:
       portal_notice_state:
         - ポータルにお知らせを表示するか、しないかを選択します。
       portal_notice_browsed_state:
-        - ポータルにお知らせを表示するを選択した際に、未読のみを表示するか、未読と既読の両方を表示するかを選択します。
+        - ポータルにお知らせを表示するを選択した際に、どの状態のお知らせを表示するか選択します。
+      portal_notice_severity:
+        - ポータルにお知らせを表示するを選択した際に、どの重要度のお知らせを表示するか選択します。
     gws/addon/portal/monitor_setting:
       portal_monitor_state:
         - ポータルに照会・回答を表示するか、しないかを選択します。

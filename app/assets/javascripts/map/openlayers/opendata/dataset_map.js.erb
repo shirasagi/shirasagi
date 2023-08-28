@@ -62,7 +62,7 @@ this.Openlayers_Dataset_Map = (function () {
         Openlayers_Dataset_Map.setMarkers();
         return false;
       });
-      $(this).closest("li").find(".marker-image-form .marker-thumb").html($('<img src="' + Openlayers_Dataset_Map.map.markerIcon + '">'));
+      $(this).closest("li").find(".marker-image-form .marker-thumb").html($('<img />', { src: Openlayers_Dataset_Map.map.markerIcon }));
     });
 
     // deselect button

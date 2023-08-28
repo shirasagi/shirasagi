@@ -45,9 +45,9 @@
       <dt><%= @model.t :state %></dt>
       <dd class="state"><%= @task.state %></dd>
       <dt><%= @model.t :started %></dt>
-      <dd class="started"><%= tryb { @task.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+      <dd class="started"><%= ss_time_tag @task.started %></dd>
       <dt><%= @model.t :closed %></dt>
-      <dd class="closed"><%= tryb { @task.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+      <dd class="closed"><%= ss_time_tag @task.closed %></dd>
     </dl>
 
     <dl class="see">

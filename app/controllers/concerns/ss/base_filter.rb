@@ -34,18 +34,30 @@ module SS::BaseFilter
     @stylesheets || []
   end
 
-  def stylesheet(path)
+  def stylesheet(path, **options)
     @stylesheets ||= []
-    @stylesheets << path unless @stylesheets.include?(path)
+    unless @stylesheets.any? { |css_path, css_options| css_path == path }
+      if options.present?
+        @stylesheets << [ path, options ]
+      else
+        @stylesheets << path
+      end
+    end
   end
 
   def javascripts
     @javascripts || []
   end
 
-  def javascript(path)
+  def javascript(path, **options)
     @javascripts ||= []
-    @javascripts << path unless @javascripts.include?(path)
+    unless @javascripts.any? { |js_path, js_options| js_path == path }
+      if options.present?
+        @javascripts << [ path, options ]
+      else
+        @javascripts << path
+      end
+    end
   end
 
   private
@@ -59,9 +71,14 @@ module SS::BaseFilter
   end
 
   def set_ss_assets
-    SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
-    SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
-    stylesheet("/assets/css/colorbox/colorbox.css")
+    if SS.config.ss.stylesheets.present?
+      SS.config.ss.stylesheets.each { |m, options| options ? stylesheet(m, **options.symbolize_keys) : stylesheet(m) }
+    end
+    if SS.config.ss.javascripts.present?
+      SS.config.ss.javascripts.each { |m, options| options ? javascript(m, **options.symbolize_keys) : javascript(m) }
+    end
+    stylesheet("colorbox")
+    javascript("colorbox", defer: true)
   end
 
   def login_path_by_cookie
@@ -107,9 +124,9 @@ module SS::BaseFilter
     @cur_user, login_path, logout_path = get_user_by_access_token
     SS.current_user = @cur_user
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
     return false if !@cur_user
 
-    set_locale_and_timezone
     set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
 
     # persistent session to database by redirecting to self path
@@ -124,9 +141,9 @@ module SS::BaseFilter
     @cur_user, token = get_user_by_oauth2_token
     SS.current_user = @cur_user
     SS.current_token = token
+    SS.change_locale_and_timezone(SS.current_user)
     return false if !@cur_user
 
-    set_locale_and_timezone
     # no need to keep sessions with token auth
     request.session_options[:skip] = true
     return true
@@ -135,9 +152,9 @@ module SS::BaseFilter
   def login_by_session
     @cur_user = SS.current_user = get_user_by_session
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
     return false if !@cur_user
 
-    set_locale_and_timezone
     set_last_logged_in
     return true
   end
@@ -160,6 +177,8 @@ module SS::BaseFilter
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = SS.current_user = user
+    SS.change_locale_and_timezone(SS.current_user)
+    @cur_user.logged_in if @cur_user
   end
 
   def unset_user(opt = {})
@@ -167,6 +186,7 @@ module SS::BaseFilter
     redirect_to login_path_by_cookie if opt[:redirect]
     @cur_user = SS.current_user = nil
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
   end
 
   def check_api_user

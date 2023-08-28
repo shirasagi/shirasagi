@@ -17,7 +17,7 @@ ja:
       category/node: カテゴリーリスト
       category/page: ページリスト
     parts:
-      category/node: カテゴリーリスト
+      category/node: カテゴリーリスト（旧）
 
   mongoid:
     attributes:

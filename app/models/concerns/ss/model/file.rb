@@ -48,7 +48,7 @@ module SS::Model::File
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :mangle_filename
-    before_save :rename_file, if: ->{ @db_changes.present? }
+    before_save :rename_file, if: ->{ changes.present? || previous_changes.present? }
     before_save :save_file
     before_destroy :remove_file
 
@@ -428,6 +428,10 @@ module SS::Model::File
     end
     self.size = Fs.size(path)
 
+    if SS::SvgSanitizer.sanitize(self.path, content_type: self.content_type)
+      self.size = ::Fs.size(self.path)
+    end
+
     update_variants if respond_to?(:update_variants)
     sanitizer_save_file
   end
@@ -451,13 +455,13 @@ module SS::Model::File
 
   def remove_file
     Fs.rm_rf(path)
+    Fs.rm_rf("#{path}_thumb")
     remove_public_file
   end
 
   def rename_file
-    return unless @db_changes["filename"]
-    return unless @db_changes["filename"][0]
-
+    return if new_record?
+    return if !filename_changed? && !name_changed?
     remove_public_file if site
   end
 

@@ -18,11 +18,12 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
 
   def set_folders
     @folders ||= begin
-      if @cur_mode == 'manageable'
+      case @cur_mode
+      when 'manageable'
         @model.for_post_manager(@cur_site, @cur_user)
-      elsif @cur_mode == 'editable'
+      when 'editable'
         @model.for_post_editor(@cur_site, @cur_user)
-      elsif @cur_mode == 'readable'
+      when 'readable', 'calendar'
         @model.for_post_reader(@cur_site, @cur_user)
       else
         @model.none
@@ -45,7 +46,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
       conds = []
       # root folders
       if @root_folder.present?
-        conds << { name: /#{::Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
+        conds << { name: /^#{::Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
       else
         conds << { depth: 1 }
       end
@@ -59,7 +60,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
           full_name << '/'
           depth += 1
 
-          conds << { name: /#{::Regexp.escape(full_name)}/, depth: depth + 1 }
+          conds << { name: /^#{::Regexp.escape(full_name)}/, depth: depth + 1 }
         end
       end
 

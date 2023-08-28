@@ -3,9 +3,14 @@ class Cms::AllContentsController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  before_action :check_permission
   before_action :set_task, only: [:import]
 
   private
+
+  def check_permission
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :use_cms_all_contents)
+  end
 
   def set_crumbs
     @crumbs << [t("cms.all_contents"), cms_all_contents_path]
@@ -28,10 +33,13 @@ class Cms::AllContentsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
+        exporter = Cms::AllContent.new(site: @cur_site)
+        enumerable = exporter.enum_csv(encoding: "Shift_JIS")
+
+        filename = "all_contents_#{Time.zone.now.to_i}.csv"
+
         response.status = 200
-        send_enum Cms::AllContent.enum_csv(@cur_site),
-          type: 'text/csv; charset=Shift_JIS',
-          filename: "all_contents_#{Time.zone.now.to_i}.csv"
+        send_enum enumerable, type: enumerable.content_type, filename: filename
       end
     end
   end
@@ -50,7 +58,7 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
-    if !Cms::AllContent.valid_header?(file)
+    if !Cms::AllContentsImporter.valid_csv?(file)
       @errors = [ t("errors.messages.malformed_csv") ]
       render({ action: :import })
       return

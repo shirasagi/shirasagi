@@ -1,5 +1,5 @@
 <% message.subject = "開封済み：#{@item.subject}" %>
 次のユーザーに送信されたメッセージの開封確認です。
-<%= @item.imap.email_address %> : <%= @item.internal_date.strftime("%Y/%m/%d %H:%M")%>
+<%= @item.imap.email_address %> : <%= I18n.l(@item.internal_date, format: :picker) %>
 
-メッセージが開封されました。: <%= Time.zone.now.strftime("%Y/%m/%d %H:%M") %>
+メッセージが開封されました。: <%= I18n.l(Time.zone.now, format: :picker) %>

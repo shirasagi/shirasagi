@@ -7,6 +7,12 @@
   <dt><%= @model.t :circular_default_due_date %><%= @model.tt :circular_default_due_date %></dt>
   <dd class="short"><%= f.number_field :circular_default_due_date %> <span class="postfix"><%= t('datetime.prompts.day') %></span></dd>
 
+  <dt><%= @model.t :circular_article_state %><%= @model.tt :circular_article_state %></dt>
+  <dd><%= f.select :circular_article_state, @item.circular_article_state_options %></dd>
+
+  <dt><%= @model.t :circular_sort %><%= @model.tt :circular_sort %></dt>
+  <dd><%= f.select :circular_sort, @item.circular_sort_options %></dd>
+
   <dt><%= @model.t :circular_filesize_limit %><%= @model.tt :circular_filesize_limit %></dt>
   <dd class="short"><%= f.number_field :circular_filesize_limit %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::Chorg::MainRunner, dbscope: :example do
   let(:site) { Gws::Group.find_by(name: 'シラサギ市') rescue create(:gws_group, name: 'シラサギ市') }
-  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
+  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group: site) }
   let(:job_opts) { {} }
 
   context 'with user csv' do
@@ -26,7 +26,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       expect { Gws::User.find_by(uid: 'user4') }.to raise_error Mongoid::Errors::DocumentNotFound
 
       # execute
-      job = described_class.bind(site_id: site, task_id: task)
+      job = described_class.bind(site_id: site.id, task_id: task.id)
       expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded

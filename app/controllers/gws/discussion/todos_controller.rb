@@ -17,7 +17,7 @@ class Gws::Discussion::TodosController < ApplicationController
   # override Gws::BaseFilter#set_gws_assets
   def set_gws_assets
     super
-    javascript("gws/calendar")
+    javascript("gws/calendar", defer: true)
   end
 
   def set_forum
@@ -35,8 +35,14 @@ class Gws::Discussion::TodosController < ApplicationController
 
   def pre_params
     @skip_default_group = true
+
+    if params[:start].present?
+      start = params[:start].to_s.in_time_zone rescue nil
+    end
+    start ||= Time.zone.now.change(min: 0)
+
     {
-      start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      start_at: start, end_at: start, start_on: start.to_date, end_on: start.to_date,
       member_ids: params[:member_ids].presence || [@cur_user.id]
     }
   end

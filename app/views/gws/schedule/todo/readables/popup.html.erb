@@ -10,7 +10,7 @@ $('.popup-attributes .custom-group-name').on("click", function() {
 <div class="popup-title"><%= link_to @item.name, { action: :show } %></div>
 <div class="popup-date"><%= term(@item) %></div>
 
-<span class="ss-quota-bar gws-schedule-todo-achievement-bar">
+<span class="ss-quota-bar gws-achievement-bar">
   <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate || 0) %></div>
   <div class="usage " style="width: <%= @item.achievement_rate || 0 %>%"></div>
 </span>

@@ -55,8 +55,12 @@ class Ldap::SyncJob < Cms::ApplicationJob
     ss_group ||= Cms::Group.new
 
     ss_group.name = mk_group_name(ss_parent_group, ldap_group)
-    ss_group.contact_tel = ldap_group.contact_tel if ldap_group.contact_tel.present?
-    ss_group.contact_email = ldap_group.contact_email if ldap_group.contact_email.present?
+    if ldap_group.contact_tel.present? || ldap_group.contact_email.present?
+      contact = ss_group.contact_groups.where(main_state: "main").first
+      contact ||= ss_group.contact_groups.build(main_state: "main", name: ldap_group.name)
+      contact.contact_tel = ldap_group.contact_tel if ldap_group.contact_tel.present?
+      contact.contact_email = ldap_group.contact_email if ldap_group.contact_email.present?
+    end
     ss_group.ldap_dn = ldap_group.dn
     ss_group.ldap_import_id = @item.id
     if ss_group.save

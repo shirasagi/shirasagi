@@ -5,6 +5,7 @@ module SS::Model::Group
   include SS::Scope::ActivationDate
   include Ldap::Addon::Group
   include SS::Fields::DependantNaming
+  include SS::Liquidization
 
   attr_accessor :in_password
 
@@ -12,6 +13,8 @@ module SS::Model::Group
     store_in collection: "ss_groups"
     index({ name: 1 }, { unique: true })
     index({ domains: 1 }, { unique: true, sparse: true })
+
+    define_model_callbacks :chorg
 
     seqid :id
     field :name, type: String
@@ -47,6 +50,19 @@ module SS::Model::Group
       ]
       where("$and" => [{ "$or" => conditions }])
     }
+
+    liquidize do
+      export as: :to_s do
+        name
+      end
+      export :name
+      export :full_name
+      export :section_name
+      export :trailing_name
+      export :last_name do
+        name.split("/").last
+      end
+    end
   end
 
   module ClassMethods
@@ -121,8 +137,9 @@ module SS::Model::Group
 
   # Soft delete
   def disable
-    super
+    return false unless super
     descendants.each { |item| item.disable }
+    true
   end
 
   def depth
@@ -165,6 +182,10 @@ module SS::Model::Group
   end
 
   # Cast
+  def cms_group
+    is_a?(Cms::Group) ? self : Cms::Group.find(id)
+  end
+
   def gws_group
     is_a?(Gws::Group) ? self : Gws::Group.find(id)
   end

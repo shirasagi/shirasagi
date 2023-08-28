@@ -45,9 +45,10 @@ describe "cms/line/messages test_deliver", type: :feature, dbscope: :example, js
   let!(:member6) { create(:cms_line_member, name: "member6", subscribe_line_message: "active", state: "disabled") }
 
   # test members
-  let!(:test_member1) { create(:cms_line_test_member, name: "test1") }
-  let!(:test_member2) { create(:cms_line_test_member, name: "test2") }
-  let!(:test_member3) { create(:cms_line_test_member, name: "test3") }
+  let!(:test_member1) { create(:cms_line_test_member, name: "test1", default_checked: "enabled") }
+  let!(:test_member2) { create(:cms_line_test_member, name: "test2", default_checked: "enabled") }
+  let!(:test_member3) { create(:cms_line_test_member, name: "test3", default_checked: "disabled") }
+  let!(:test_member4) { create(:cms_line_test_member, name: "test4", default_checked: "disabled") }
 
   def add_template
     within "#addon-cms-agents-addons-line-message-body" do
@@ -68,7 +69,7 @@ describe "cms/line/messages test_deliver", type: :feature, dbscope: :example, js
 
   def check_deliver_members(selector)
     within selector do
-      first(".ajax-box", text: "確認する").click
+      wait_cbox_open { first(".ajax-box", text: "確認する").click }
     end
     wait_for_cbox do
       expect(page).to have_text(targets_count)
@@ -121,6 +122,14 @@ describe "cms/line/messages test_deliver", type: :feature, dbscope: :example, js
 
       within ".main-box" do
         expect(page).to have_css("header", text: I18n.t("cms.options.deliver_mode.test"))
+
+        expect(page).to have_checked_field(test_member1.name)
+        expect(page).to have_checked_field(test_member2.name)
+        expect(page).to have_no_checked_field(test_member3.name)
+        expect(page).to have_no_checked_field(test_member4.name)
+
+        first("label", text: test_member3.name).click
+        expect(page).to have_checked_field(test_member3.name)
       end
 
       capture_line_bot_client do |capture|

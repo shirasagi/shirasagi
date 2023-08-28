@@ -1,6 +1,6 @@
 <%= form_for :item, url: { action: :export }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
   <%= error_messages_for :item %>
-  <%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
+  <%= f.hidden_field "root_url", value: root_url, id: nil, class: "hidden-ids" %>
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
       <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
@@ -14,7 +14,7 @@
           </dd>
           <dt><%= t "webmail.mail" %></dt>
           <dd>
-            <%= f.hidden_field "mail_ids[]", value: "", class: "hidden-ids" %>
+            <%= f.hidden_field "mail_ids[]", value: "", id: nil, class: "hidden-ids" %>
             <%= link_to t("ss.links.select"), webmail_apis_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "ajax-box", "data-template" => "webmail-export-template" %>
           </dd>
           <dd>
@@ -56,7 +56,7 @@
         </dl>
       </div>
 
-      <footer class="send">
+      <footer class="send ss-sticky ss-sticky-bottom">
         <%= f.submit t("ss.export"), class: "btn btn-primary" %>
       </footer>
     </div>

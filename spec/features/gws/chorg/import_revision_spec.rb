@@ -84,9 +84,10 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.download_sample_csv")
 
       expect(page.response_headers['Content-Type']).to eq("text/csv")
-      header = CSV.parse(page.body.encode("UTF-8")).first
-
-      expect(header).to match_array I18n.t("chorg.import.changeset").values
+      I18n.with_locale(I18n.default_locale) do
+        header = CSV.parse(page.body.encode("UTF-8")).first
+        expect(header).to match_array(I18n.t("chorg.import.changeset").values.reject { |value| value.include?("%") })
+      end
     end
 
     it 'import "add" csv' do
@@ -95,7 +96,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "add_revision_template.csv").to_s
+        attach_file "item[in_revision_csv_file]", "#{Rails.root}/spec/fixtures/gws/chorg/add_revision_template.csv"
         click_button I18n.t('ss.buttons.save')
       end
 
@@ -126,7 +127,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "move_revision_template.csv").to_s
+        attach_file "item[in_revision_csv_file]", "#{Rails.root}/spec/fixtures/gws/chorg/move_revision_template.csv"
         click_button I18n.t('ss.buttons.save')
       end
 
@@ -165,7 +166,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "unify_revision_template.csv").to_s
+        attach_file "item[in_revision_csv_file]", "#{Rails.root}/spec/fixtures/gws/chorg/unify_revision_template.csv"
         click_button I18n.t('ss.buttons.save')
       end
 
@@ -213,7 +214,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "division_revision_template.csv").to_s
+        attach_file "item[in_revision_csv_file]", "#{Rails.root}/spec/fixtures/gws/chorg/division_revision_template.csv"
         click_button I18n.t('ss.buttons.save')
       end
 
@@ -254,7 +255,7 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "delete_revision_template.csv").to_s
+        attach_file "item[in_revision_csv_file]", "#{Rails.root}/spec/fixtures/gws/chorg/delete_revision_template.csv"
         click_button I18n.t('ss.buttons.save')
       end
 

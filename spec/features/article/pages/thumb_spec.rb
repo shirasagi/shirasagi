@@ -14,15 +14,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit" do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("ss.buttons.upload")
@@ -51,15 +45,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit file name" do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("ss.buttons.upload")
@@ -95,15 +83,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("sns.user_file")
@@ -145,15 +127,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        find('.dropdown-toggle').click
+        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
           wait_cbox_open do
             click_on I18n.t("cms.file")
@@ -193,15 +169,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit edit_path
 
-        addon = first("#addon-cms-agents-addons-thumb")
-        if addon.matches_css?(".body-closed")
-          wait_addon_open do
-            addon.find('.toggle-head').click
-          end
-        end
-
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
-          find('.dropdown-toggle').click
+          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
             wait_cbox_open do
               click_on I18n.t("cms.file")
@@ -239,13 +209,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
 
-        addon = first("#addon-cms-agents-addons-thumb")
-        if addon.matches_css?(".body-closed")
-          wait_addon_open do
-            addon.find('.toggle-head').click
-          end
-        end
-
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
           find('.btn-file-delete').click
         end
@@ -270,15 +234,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit edit_path
 
-        addon = first("#addon-cms-agents-addons-thumb")
-        if addon.matches_css?(".body-closed")
-          wait_addon_open do
-            addon.find('.toggle-head').click
-          end
-        end
-
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
-          find('.dropdown-toggle').click
+          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
             wait_cbox_open do
               click_on I18n.t("cms.file")
@@ -333,6 +291,62 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(attached_file.owner_item_id).to eq item.id
         expect(attached_file.user_id).to eq cms_user.id
       end
+    end
+  end
+
+  context "marge branch page with thumb" do
+    let(:workflow_comment) { unique_id }
+    let(:approve_comment1) { unique_id }
+
+    before { login_cms_user }
+
+    it do
+      visit article_page_path(site: site, cid: node, id: item)
+      expect do
+        within "#addon-workflow-agents-addons-branch" do
+          click_button I18n.t('workflow.create_branch')
+        end
+        within "#addon-workflow-agents-addons-branch" do
+          expect(page).to have_content(item.name)
+        end
+      end.to output.to_stdout
+      within "#addon-workflow-agents-addons-branch" do
+        click_on item.name
+      end
+
+      click_on I18n.t("ss.links.edit")
+      within "form#item-form" do
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
+        within "#addon-cms-agents-addons-thumb" do
+          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+          within ".dropdown-menu" do
+            wait_cbox_open do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+      end
+      wait_for_cbox do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        wait_cbox_close do
+          click_button I18n.t("ss.buttons.attach")
+        end
+      end
+      expect do
+        within "form#item-form" do
+          within "#addon-cms-agents-addons-thumb" do
+            expect(page).to have_css('span.humanized-name', text: 'keyvisual')
+          end
+          click_on I18n.t("ss.buttons.publish_save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+      end.to output.to_stdout
+
+      item.reload
+      expect(item.thumb).to be_present
+      expect(item.thumb.name).to eq "keyvisual.jpg"
+      expect(item.thumb.filename).to eq "keyvisual.jpg"
+      expect(item.thumb.owner_item).to eq item
     end
   end
 end

@@ -11,13 +11,20 @@ class Gws::Circular::AdminsController < ApplicationController
     @cur_tab = [I18n.t('gws/circular.tabs.admin'), { action: :index, category: '-' }]
   end
 
+  def set_search_params
+    @s = OpenStruct.new params[:s]
+    @s[:site] = @cur_site
+    @s[:category_id] = @category.id if @category.present?
+    @s[:sort] = @cur_site.circular_sort if @s[:sort].nil?
+  end
+
   def set_items
     @items ||= @model.site(@cur_site).
       topic.
       without_deleted.
       allow(:read, @cur_user, site: @cur_site).
-      search(params[:s]).
+      search(@s).
       page(params[:page]).per(50).
-      custom_order(params.dig(:s, :sort) || 'due_date')
+      custom_order(@s.sort || 'due_date')
   end
 end

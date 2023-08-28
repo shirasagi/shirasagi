@@ -31,8 +31,9 @@ module Cms::BaseFilter
   end
 
   def set_site
-    @ss_mode = :cms
     @cur_site = SS.current_site = Cms::Site.find params[:site]
+    @ss_mode = :cms
+    SS.reset_locale_and_timezone # cms and webmail are currently not supported.
 
     if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
       @ss_maintenance_mode = true
@@ -78,7 +79,7 @@ module Cms::BaseFilter
   def set_group
     names = @cur_site.groups.active.pluck(:name).map { |name| /^#{::Regexp.escape(name)}(\/|$)/ }
     cur_groups = @cur_user.groups.active.in(name: names)
-    @cur_group = cur_groups.first # select one group
+    @cur_group = SS.current_user_group = cur_groups.first # select one group
     raise "403" unless @cur_group
   end
 

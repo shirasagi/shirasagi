@@ -1,6 +1,7 @@
 class Gws::Memo::MessagesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  helper Gws::Memo::MessageHelper
 
   model Gws::Memo::Message
 
@@ -12,6 +13,8 @@ class Gws::Memo::MessagesController < ApplicationController
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_folders, only: [:index, :recent]
   before_action :set_cur_folder, only: [:index]
+
+  helper_method :move_to_prev_tag, :move_to_next_tag
 
   navi_view "gws/memo/messages/navi"
 
@@ -88,6 +91,34 @@ class Gws::Memo::MessagesController < ApplicationController
     end
   end
 
+  def move_to_prev_tag
+    prev_path = @prev_id ? url_for(action: :show, id: @prev_id) : "#"
+    css_classes = %w(prev)
+    unless @prev_id
+      css_classes << "inactive"
+    end
+
+    view_context.tag.div(class: css_classes) do
+      view_context.link_to(prev_path, title: t('gws/memo/message.links.prev')) do
+        view_context.tag.span("arrow_circle_left", class: "material-icons-outlined")
+      end
+    end
+  end
+
+  def move_to_next_tag
+    next_path = @next_id ? url_for(action: :show, id: @next_id) : "#"
+    css_classes = %w(next)
+    unless @next_id
+      css_classes << "inactive"
+    end
+
+    view_context.tag.div(class: css_classes) do
+      view_context.link_to(next_path, title: t('gws/memo/message.links.next')) do
+        view_context.tag.span("arrow_circle_right", class: "material-icons-outlined")
+      end
+    end
+  end
+
   public
 
   def index
@@ -97,6 +128,21 @@ class Gws::Memo::MessagesController < ApplicationController
       search(params[:s]).
       reorder(@sort_hash).
       page(params[:page]).per(50)
+
+    id_list = []
+    @items.each do |item|
+      id_list << item.id.to_s
+    end
+    gws_memo_id_list_session = session[:gws_memo_id_list]
+    gws_memo_id_list_session ||= {}
+    gws_memo_id_list_session['id_list'] = id_list
+    if params[:s]
+      gws_memo_id_list_session['search'] = params[:s].to_unsafe_h
+    else
+      gws_memo_id_list_session['search'] = nil
+    end
+    gws_memo_id_list_session['page'] = params[:page]
+    session[:gws_memo_id_list] = gws_memo_id_list_session
   end
 
   def recent
@@ -133,7 +179,31 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
-    render
+
+    # 念の為初期化する（本アクションで設定するメンバー変数一覧を明示的に示す意図もある）
+    @id_list = nil
+    @id_index = nil
+    @search = nil
+    @page = nil
+    @prev_id = nil
+    @next_id = nil
+    gws_memo_id_list_session = session[:gws_memo_id_list]
+    return if gws_memo_id_list_session.blank?
+
+    @id_list = gws_memo_id_list_session['id_list']
+    @search = gws_memo_id_list_session['search']
+    @page = gws_memo_id_list_session['page']
+    return if @id_list.blank?
+
+    @id_index = @id_list.index(@item.id.to_s)
+    return if @id_index.blank?
+
+    if @id_index > 0
+      @prev_id = @id_list[@id_index - 1]
+    end
+    if @id_index < @id_list.size
+      @next_id = @id_list[@id_index + 1]
+    end
   end
 
   def edit
@@ -188,40 +258,18 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def reply
-    @item = @model.new pre_params.merge(fix_params)
     item_reply = @model.site(@cur_site).find(params[:id])
-    @item.to_member_ids = [item_reply.user_id]
-    @item.subject = "Re: #{item_reply.subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+    @item = @model.new_reply(item_reply, cur_site: @cur_site, cur_user: @cur_user)
   end
 
   def reply_all
-    @item = @model.new pre_params.merge(fix_params)
     item_reply = @model.site(@cur_site).find(params[:id])
-
-    @item.to_member_ids = [item_reply.user_id] + item_reply.to_member_ids - [@cur_user.id]
-    @item.to_shared_address_group_ids = item_reply.to_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
-    @item.cc_member_ids = item_reply.cc_member_ids
-    @item.cc_shared_address_group_ids = item_reply.cc_shared_address_groups.readable(@cur_user, site: @cur_site).pluck(:id)
-    @item.subject = "Re: #{item_reply.subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_reply.text.to_s.gsub(/^/m, '> ')
+    @item = @model.new_reply(item_reply, cur_site: @cur_site, cur_user: @cur_user, respond_to: :all)
   end
 
   def forward
-    @item = @model.new pre_params.merge(fix_params)
     item_forward = @model.site(@cur_site).find(params[:id])
-    @item.subject = "Fwd: #{item_forward.display_subject}"
-
-    @item.new_memo
-    @item.text += "\n\n"
-    @item.text += item_forward.text.to_s.gsub(/^/m, '> ')
-    @item.ref_file_ids = item_forward.file_ids
+    @item = @model.new_forward(item_forward, cur_site: @cur_site, cur_user: @cur_user)
   end
 
   def ref
@@ -237,7 +285,7 @@ class Gws::Memo::MessagesController < ApplicationController
     item_mdn = @model.new fix_params
     item_mdn.in_to_members = [@item.user_id]
     item_mdn.subject = I18n.t("gws/memo/message.mdn.subject", subject: @item.subject)
-    date = Time.zone.now.strftime("%Y/%m/%d %H:%M")
+    date = I18n.l(Time.zone.now, format: :picker)
     item_mdn.text = I18n.t("gws/memo/message.mdn.confirmed", name: @cur_user.long_name, date: date)
     item_mdn.format = "text"
     item_mdn.state = "public"
@@ -301,6 +349,19 @@ class Gws::Memo::MessagesController < ApplicationController
       item.unset_seen(@cur_user).update
     end
     render_change_all
+  end
+
+  def set_seen_from_popup
+    @items = Gws::Memo::Message.unseens(@cur_user, @cur_site).to_a
+    @items.each do |item|
+      next unless item.readable?(@cur_user, site: @cur_site)
+      item.set_seen(@cur_user).update
+    end
+    flash[:notice] = I18n.t("ss.notice.set_seen")
+    respond_to do |format|
+      format.html { redirect_to(action: :index) }
+      format.json { head :no_content }
+    end
   end
 
   def set_star

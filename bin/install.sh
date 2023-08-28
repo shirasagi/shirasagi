@@ -1,15 +1,25 @@
+#!/usr/bin/env bash
+
 SS_HOSTNAME=${1:-"example.jp"}
 SS_USER=${2:-"$USER"}
 SS_DIR=/var/www/shirasagi
+ASDF_HOME=${HOME}/.asdf/shims
 
 PORT_COMPA=8001
 PORT_CHILD=8002
 PORT_OPEND=8003
 PORT_LPSPL=8004
 
-# selinux 
+# selinux
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
+
+sudo yum -y groupinstall "Development tools" --setopt=group_package_types=mandatory,default,optional
+sudo yum -y install scl-utils centos-release-scl
+sudo yum -y install \
+  devtoolset-11 \
+  openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
+  wget git ImageMagick ImageMagick-devel
 
 cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
 [mongodb-org-4.4]
@@ -21,42 +31,29 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 EOS
 
 sudo yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
-sudo systemctl start mongod.service
-sudo systemctl enable mongod.service
+sudo systemctl enable mongod.service --now
 
-sudo yum -y install scl-utils centos-release-scl
-sudo yum -y install \
-  devtoolset-10 \
-  openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
-  wget git ImageMagick ImageMagick-devel
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 
-# use devtoolset-10
-source /opt/rh/devtoolset-10/enable
-gcc --version
+cat << 'EOF' | sudo tee -a $HOME/.bashrc >> /dev/null
+. "${HOME}/.asdf/asdf.sh"
+. "${HOME}/.asdf/completions/asdf.bash"
+EOF
 
-for i in $(seq 1 3)
-do
-  \curl -sSL https://rvm.io/mpapis.asc | gpg --import - ; RET1=$?
-  \curl -sSL https://rvm.io/pkuczynski.asc | gpg --import - ; RET2=$?
-  if [ ${RET1} -eq 0 -a ${RET2} -eq 0 ]; then
-    break
-  fi
-  sleep 5s
-done
+source $HOME/.bashrc
 
-\curl -sSL https://get.rvm.io | bash -s stable
-if [ `whoami` = root ]; then
-  RVM_HOME=/usr/local/rvm
-else
-  RVM_HOME=$HOME/.rvm
-fi
-export PATH="$PATH:$RVM_HOME/bin"
-source $RVM_HOME/scripts/rvm
-rvm install 3.0.2 --disable-binary
-rvm use 3.0.2 --default
-bundle --version
+asdf plugin add ruby
+asdf install ruby 3.1.3
+asdf global ruby 3.1.3
 
 if [ ! `which ruby` ]; then exit 1; fi
+asdf plugin add nodejs
+asdf install nodejs 16.19.0
+asdf global nodejs 16.19.0 
+npm install -g yarn
+
+# use devtoolset-11
+source /opt/rh/devtoolset-11/enable
 
 git clone -b stable https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
@@ -188,16 +185,14 @@ EOF
 
 sudo yum -y --enablerepo=nginx install nginx
 #sudo nginx -t
-sudo systemctl start nginx.service
-sudo systemctl enable nginx.service
+sudo systemctl enable nginx.service --now
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/http.conf
 server_tokens off;
 server_name_in_redirect off;
-etag off;
+etag on;
 client_max_body_size 100m;
 client_body_buffer_size 256k;
-
 gzip on;
 gzip_http_version 1.0;
 gzip_comp_level 1;
@@ -218,7 +213,6 @@ gzip_types text/plain
            application/x-httpd-php;
 gzip_disable "MSIE [1-6]\\.";
 gzip_disable "Mozilla/4";
-
 proxy_headers_hash_bucket_size 128;
 proxy_headers_hash_max_size 1024;
 proxy_cache_path /var/cache/nginx/proxy_cache levels=1:2 keys_zone=my-key:8m max_size=50m inactive=120m;
@@ -297,7 +291,6 @@ sudo mkdir /etc/nginx/conf.d/server/
 cat <<EOF | sudo tee /etc/nginx/conf.d/server/shirasagi.conf
 include conf.d/common/drop.conf;
 error_page 404 /404.html;
-
 location @app {
     include conf.d/header.conf;
     if (\$request_filename ~ .*\\.(ico|gif|jpe?g|png|css|js)$) { access_log off; }
@@ -316,6 +309,14 @@ location /assets/ {
 location /private_files/ {
     internal;
     alias ${SS_DIR}/;
+}
+# download .svg files instead of showing inline in browser for protecting from xss
+location ~* \.svg$ {
+    expires 1h;
+    access_log off;
+    log_not_found off;
+    add_header Content-Disposition "attachment";
+    try_files \$uri @app;
 }
 EOF
 
@@ -346,8 +347,8 @@ bundle exec rake cms:generate_nodes
 bundle exec rake cms:generate_pages
 
 cat <<EOF | crontab -
-*/15 * * * * /bin/bash -l -c 'cd $SS_DIR && ${RVM_HOME}/wrappers/default/bundle exec rake cms:release_pages && ${RVM_HOME}/wrappers/default/bundle exec rake cms:generate_nodes' >/dev/null
-0 * * * * /bin/bash -l -c 'cd $SS_DIR && ${RVM_HOME}/wrappers/default/bundle exec rake cms:generate_pages' >/dev/null
+*/15 * * * * /bin/bash -l -c 'cd $SS_DIR && ${ASDF_HOME}/bundle exec rake cms:release_pages && ${ASDF_HOME}/bundle exec rake cms:generate_nodes' >/dev/null
+0 * * * * /bin/bash -l -c 'cd $SS_DIR && ${ASDF_HOME}/bundle exec rake cms:generate_pages' >/dev/null
 EOF
 
 # modify ImageMagick policy to work with simple captcha
@@ -367,13 +368,10 @@ cd /etc/ImageMagick && cat << EOF | sudo patch
  </policymap>
 EOF
 
-#### daemonize
-
 cat <<EOF | sudo tee /etc/systemd/system/shirasagi-unicorn.service
 [Unit]
 Description=Shirasagi Unicorn Server
 After=mongod.service
-
 [Service]
 User=${SS_USER}
 WorkingDirectory=${SS_DIR}
@@ -382,16 +380,13 @@ SyslogIdentifier=unicorn
 PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 Type=forking
 TimeoutSec=300
-
-ExecStart=${RVM_HOME}/wrappers/default/bundle exec unicorn_rails -c config/unicorn.rb -D
-ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
-ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
-
+ExecStart=/bin/bash -lc 'bundle exec unicorn_rails -c config/unicorn.rb -D'
+ExecStop=/usr/bin/kill -QUIT $MAINPID
+ExecReload=/usr/bin/kill -USR2 $MAINPID
 [Install]
 WantedBy=multi-user.target
 EOF
 sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
 sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
 sudo systemctl daemon-reload
-sudo systemctl enable shirasagi-unicorn.service
-sudo systemctl start shirasagi-unicorn.service
+sudo systemctl enable shirasagi-unicorn.service --now

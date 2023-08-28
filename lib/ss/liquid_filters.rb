@@ -106,7 +106,7 @@ module SS::LiquidFilters
   def ss_append(input, string)
     string = string.to_s
     if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)
-      InputIterator.new(input).map { |v| v.to_s + string }
+      Liquid::StandardFilters::InputIterator.new(input, context).map { |v| v.to_s + string }
     else
       input.to_s + string
     end
@@ -115,7 +115,7 @@ module SS::LiquidFilters
   def ss_prepend(input, string)
     string = string.to_s
     if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)
-      InputIterator.new(input).map { |v| string + v.to_s }
+      Liquid::StandardFilters::InputIterator.new(input, context).map { |v| string + v.to_s }
     else
       string + input.to_s
     end
@@ -148,6 +148,12 @@ module SS::LiquidFilters
     criteria = Cms::Page.public_list(site: node.site, node: node)
     criteria = criteria.limit(limit) if limit.present?
     criteria.to_a
+  end
+
+  def search_column_value(page, *args)
+    return nil if !page.respond_to?(:values)
+    return nil if !args.is_a?(Array)
+    page.values.to_a.find { |value| args.include?(value.name) }
   end
 
   def filter_by_column_value(pages, key_value)

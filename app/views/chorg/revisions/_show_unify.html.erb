@@ -1,5 +1,5 @@
-<dt class="chorg-revisions-<%= type %>"><%= t :"chorg.views.revisions/#{params[:action]}.#{type}" %></dt>
-<dd class="chorg-revisions-<%= type %>">
+<dt class="depth-2 chorg-revisions-<%= type %>"><%= t :"chorg.views.revisions/#{params[:action]}.#{type}" %></dt>
+<dd class="depth-2 chorg-revisions-<%= type %>">
   <%= link_to t("chorg.menus.revisions.unify"), { controller: :changesets, action: :new, rid: @item, type: "unify" }, class: :btn %>
   <table class="index">
     <thead>

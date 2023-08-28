@@ -4,8 +4,10 @@
 /.bundle
 /.project
 /.ruby-version
+/.tool-versions
 /.vscode
 
+/app/assets/builds
 /config/*.yml
 /config/after_initializers
 /config/commands
@@ -18,6 +20,7 @@
 /log
 /tmp
 /private
+/public/assets-dev
 /public/sites
 /sanitizer_input
 /sanitizer_output

@@ -3,14 +3,5 @@
 <% name = "#{f.object_name}[][in_wrap][value]" %>
 
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
-  <%= text_area_tag(name, value.try(:value), column.form_options.merge(id: nil)) %>
-
-  <%= jquery do %>
-    Cms_Form.addSyntaxCheck("<%= id %>", {
-      resolve: "text",
-      name: "<%= column.name %>",
-      getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
-      setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
-    });
-  <% end %>
+  <%= text_area_tag(name, value.try(:value), column.form_options.merge(id: nil, data: { syntax_check: "value", syntax_check_name: column.name })) %>
 <% end %>

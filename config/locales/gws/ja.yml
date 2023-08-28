@@ -9,6 +9,7 @@ ja:
     organization_addresses: 組織アドレス帳
     question_management: 質問管理
     default_contrast: 既定のコントラスト
+    include_webmail_role: ウェブメール権限を含む
     roles:
       admin: 管理者
       user: 一般ユーザー
@@ -56,6 +57,7 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
+        normal: 通常のお知らせ
       input_type:
         text_field: テキストボックス
         text_area: テキストエリア
@@ -163,10 +165,15 @@ ja:
       gws/system/logo_setting: ロゴ設定
       gws/system/log_setting: ログ設定
       gws/system/desktop_setting: デスクトップアプリ設定
+      gws/system/fiscal_year_setting: 年度設定
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
+      gws/user/duty_hour: 勤務時間
       gws/link: リンク
       gws/site_usage: 使用量
+      gws/user/affair_setting: 庶務事務
+      gws/group/affair_setting: 庶務事務
+      gws/user/staff_category: 職員区分
       gws/circular/browsing_authority: 閲覧権限
 
   mongoid:
@@ -323,6 +330,7 @@ ja:
       gws/addon/link/feature:
         links/name: 表示名
         links/url: URL
+        links/target: ターゲット
       gws/addon/system/file_setting:
         multibyte_filename_state: 日本語ファイル名
       gws/addon/system/group_setting:
@@ -346,6 +354,10 @@ ja:
         menu_reminder_state: リマインダーの表示
         menu_attendance_label: 出退勤の表示
         menu_attendance_state: 出退勤の表示
+        menu_affair_label: 庶務事務の表示
+        menu_affair_state: 庶務事務の表示
+        menu_daily_report_label: 日報の表示
+        menu_daily_report_state: 日報の表示
         menu_bookmark_label: お気に入りの表示
         menu_bookmark_state: お気に入りの表示
         menu_memo_label: メッセージの表示
@@ -358,6 +370,8 @@ ja:
         menu_qna_state: Ｑ＆Ａの表示
         menu_workflow_label: ワークフローの表示
         menu_workflow_state: ワークフローの表示
+        menu_workload_label: 業務見える化の表示
+        menu_workload_state: 業務見える化の表示
         menu_report_label: レポートの表示
         menu_report_state: レポートの表示
         menu_circular_label: 回覧板の表示
@@ -387,6 +401,8 @@ ja:
       gws/addon/system/notice_setting:
         notice_schedule_state: スケジュール
         notice_todo_state: ToDo
+        notice_affair_state: 庶務事務
+        notice_workload_state: 業務見える化
         notice_workflow_state: ワークフロー
         notice_circular_state: 回覧板
         notice_monitor_state: 照会・回答
@@ -423,6 +439,8 @@ ja:
       gws/addon/system/desktop_setting:
         desktop_mailstore: メールストア機能
         desktop_chat: チャット機能
+      gws/addon/system/fiscal_year_setting:
+        fiscal_year_changed_month: 年度替わり月
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_groups_hash: 購読グループ(ハッシュ)
@@ -467,6 +485,14 @@ ja:
         charge_tel: 担当電話
         charge_address: 担当住所
         divide_duties: 分掌事務
+      gws/addon/user/affair_setting:
+        staff_category: 職員区分
+        staff_address_uid: 宛名番号
+        gws_superior_group_ids: 上位グループ
+        gws_superior_user_ids: 上位ユーザー
+      gws/addon/group/affair_setting:
+        superior_group_ids: 上位グループ
+        superior_user_ids: 上位ユーザー
       gws/contrast:
         name: 名前
         order: 並び順
@@ -609,6 +635,14 @@ ja:
     gws/role:
       permission_level:
         - 権限レベルを設定します。
+    gws/addon/user/affair_setting:
+      staff_category: 職員区分を設定します。
+      staff_address_uid: 宛名番号を入力します。
+      gws_superior_group_ids: 上位グループを入力します。
+      gws_superior_user_ids: 上位ユーザーを入力します。
+    gws/addon/group/affair_setting:
+      superior_group_ids: 上位グループを入力します。
+      superior_user_ids: 上位ユーザーを入力します。
 
   activemodel:
     models:
@@ -628,3 +662,4 @@ ja:
       gws/user_title_import_job: 役職インポート
       gws/user_occupation_import_job: 職種インポート
       gws/cache_rebuild_job: キャッシュ更新
+      gws/aggregation/group_update_job: 集計グループ更新

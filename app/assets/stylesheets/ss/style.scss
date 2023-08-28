@@ -1,12 +1,11 @@
 /**
- *= require jquery.datetimepicker
+ *= require jquery-datetimepicker/build/jquery.datetimepicker.min.css
  *= require jquery.multi-select
  *= require jquery.minicolors
  *= require jquery-ui
- *= require fullcalendar
- *= require fullcalendar-scheduler/scheduler.min.css
- *= require mdi/material-icons
- *= require cropperjs/cropper.min.css
+ *= require fullcalendar/dist/fullcalendar.css
+ *= require fullcalendar-scheduler/dist/scheduler.css
+ *= require cropperjs/dist/cropper.css
  *= require bxslider
  *= require tippy.js/dist/tippy.css
  *= require tippy.js/themes/light.css
@@ -25,6 +24,8 @@
 @import "ss/login";
 @import "ss/addon";
 @import "ss/image_editor";
+@import "ss/pdfjs";
+@import "ss/sticky";
 @import "sys/ss";
 @import "sns/ss";
 @import "cms/ss";
@@ -33,8 +34,11 @@
 
 // modules
 @import "ads/ss";
+@import "contact/ss";
 @import "event/ss";
+@import "guide/ss";
 @import "history/ss";
+@import "inquiry/ss";
 @import "kana/ss";
 @import "ldap/ss";
 @import "workflow/ss";

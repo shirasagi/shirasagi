@@ -22,8 +22,8 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   end
 
   def get_params
-    return pre_params.merge(fix_params) if params[:s].blank?
-    params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(pre_params).merge(fix_params)
+    return fix_params if params[:s].blank?
+    params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(fix_params)
   end
 
   public
@@ -31,8 +31,8 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   def index
     @s = get_params
 
-    @time_search = Gws::Schedule::PlanSearch.new(@s)
-    @time_search.valid?
+    @time_search = Gws::Schedule::PlanSearch.new(pre_params.merge(@s))
+    return if @time_search.invalid?
 
     @items = @time_search.search
   end

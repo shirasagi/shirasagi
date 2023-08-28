@@ -113,6 +113,25 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
           expect(current_path).to eq content_path
         end
       end
+
+      describe "release_permission", js: true do
+        it do
+          visit edit_path
+          within "footer.send" do
+            expect(page).to have_xpath("//input[@value='#{I18n.t("ss.buttons.publish_save")}']")
+            expect(page).to have_xpath("//input[@value='#{I18n.t("ss.buttons.closed_save")}']")
+          end
+
+          role = cms_user.cms_roles[0]
+          role.update permissions: role.permissions.reject { |k, v| k =~ /^(release_|close_)/ }
+
+          visit edit_path
+          within "footer.send" do
+            expect(page).to have_no_xpath("//input[@value='#{I18n.t("ss.buttons.publish_save")}']")
+            expect(page).to have_no_xpath("//input[@value='#{I18n.t("ss.buttons.closed_save")}']")
+          end
+        end
+      end
     end
 
     context "with item having tsv" do

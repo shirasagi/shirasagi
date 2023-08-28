@@ -1,57 +1,126 @@
 <html>
+
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
+    <link href="/css/urgency.css" media="all" rel="stylesheet" />
   <script src="/js/common.js"></script>
-  <!--[if lt IE9]><script src="/js/selectivizr.js"></script><![endif]-->
+  <!--[if lt IE 9]>
+    <script src="/js/selectivizr.js"></script>
+    <script src="/js/html5shiv.js"></script>
+    <![endif]-->
+  {{ part "/analytics" }}
 </head>
-<body>
-<div id="page">
 
-</ part "/tool" />
-</ part "/head-top" />
-</ part "/navi" />
+<body class="body--index__urgency">
 
-<div id="wrap">
-  <div id="main">
-    </ part "announce" />
-    </ part "/key_visual/slide" />
-    <div class="wrap">
-      <div class="left">
-        </ part "/guide" />
-        </ part "/about" />
+  <div id="page">
+
+      <div class="accessibility">
+    <div class="accessibility-inner">
+      <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
+      <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
+      <div class="accessibility__translate translate-wrap">
+        <div class="translate-box">
+          {{ part "/translate" }}
       </div>
-      <div class="center">
-        </ part "/safety" />
-        </ part "/online" />
-        </ part "/propose" />
+              </div>
+      {{ part "/tool" }}
+      </div><!-- /.accessibility-inner -->
+  </div><!-- .accessibility -->
+
+   <header id="head">
+  <div class="head__utility-wrap">
+    <h1 class="siteinfo__logo">
+      <a href="/"><img src="/img/logo.png" alt="シラサギ市" title="シラサギ市 ポータルサイト" /></a>
+    </h1>
+    <p class="siteinfo__announce">現在、緊急災害表示で表示しています。</p>
+
+    <div class="head__utility">
+      <div class="head__utility-inner">
+        <div class="head-search">
+          <form id="site-search-history-part-371" action="/search/" accept-charset="UTF-8" method="get">
+            <div class="site-search-keyword">
+              <input type="text" title=サイト内検索 placeholder=サイト内検索 class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
+              <ul class="site-search-history" style="display: none;"></ul>
+            </div>
+            <button type="submit" id="search-button"><img src="/img/ic-search.svg" alt="検索" ></button>
+          </form>
+        </div>
+
+        <div class="head-inquiry">
+          <a href="/inquiry/">お問い合わせ</a>
+        </div>
+      </div><!-- .head__utility-inner -->
+
+       {{ part "/keyword" }}
+    </div><!-- /.head__utility -->
+  </div><!-- /.head__utility-wrap -->
+</header>
+
+    <section id="chat" class="chat">
+      <div class="chat--close">
+        <p>なんでも聞いてね！</p>
+        <img src="/img/ic-chat.png" alt="chatbot" />
       </div>
+      <div class="chat--open">
+        <header>
+          <h2>チャットボット</h2>
+          <span class="close-btn">
+            <img src="/img/chat-close.png" alt="閉じる" />
+          </span>
+        </header>
+        {{ part "bot" }}
+      </div>
+    </section>
+
+    <!-- コンテンツ -->
+    <div id="wrap">
+      <div class="wrap__inner">
+        <div id="content">
+          <!-- 緊急防災情報 -->
+          {{ part "/urgency/recent" }}
+
+
+          <div class="urgency-content">
+            <div class="urgency-content__left">
+              <!-- 防災情報 -->
+              {{ part "/kurashi/bosai/urgency-disaster-top-list" }}
+            </div><!-- .head-content__left -->
+            <div class="urgency-content__right">
+
+              <!-- サイド - 関連リンク -->
+              <section id="relation">
+                <div class="relation-inner">
+                    <span>
+                      <a href="＃" target="blank" rel="noopener">
+                      シラサギ市の天気
+                      </a>
+                    </span>
+                    <span>
+                      <a href="＃" target="blank" rel="noopener">
+                        防災情報提供センター
+                      </a>
+                    </span>
+                </div><!-- .relation__header -->
+              </section>
+            </div><!-- .head-content__right -->
+          </div><!-- .urgency-content -->
+
+          <p class="link-potal"><a href="/index2.html">通常のポータルに移動する</a></p><!-- .link-potal -->
+
+
+        </div><!-- #content -->
+      </div>
+      <!--.wrap__inner-->
     </div>
-  </div>
-  <div id="side">
-    </ part "/attention/recent" />
-    </ part "/recent-tabs" />
-  </div>
-</div>
-<div id="addition">
-  <div class="left">
-    </ part "/useful" />
-    </ part "/population" />
-  </div>
-  <div class="center">
-    </ part "/relations" />
-    </ part "/ranking" />
-  </div>
-  <div class="right">
-    </ part "/topics" />
-    </ part "/connect" />
-  </div>
-</div>
+    <!--#wrap-->
 
-</ part "/add" />
-</ part "/page-top" />
-</ part "/foot" />
+    <!-- フッター -->
+    {{ part "/foot" }}
 
-</div>
+  </div>
+  <!--<div id="mobileNavLayer"></div>-->
 </body>
+
 </html>

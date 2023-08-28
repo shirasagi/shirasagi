@@ -23,8 +23,12 @@ this.Event_Form = (function () {
     self.$el.on("change", ".event-recurrence-all-day-radio", function() {
       self.changeAllDay(this);
     });
+    self.$el.on("ss:changeDateTime", ".event-recurrence-date-start-on", function() {
+      self.setUntilOnIfUnset(this);
+    });
 
     self.resetIndex();
+    self.activeSynchronizer();
   };
 
   Event_Form.prototype.resetIndex = function() {
@@ -38,7 +42,28 @@ this.Event_Form = (function () {
 
       index += 1;
     });
-  }
+  };
+
+  Event_Form.prototype.activeSynchronizer = function() {
+    var self = this;
+
+    self.$el.find(".event-recurrence-date").each(function() {
+      if (this.ss && this.ss.synchronizer) {
+        return;
+      }
+
+      var $this = $(this);
+
+      var synchronizer = new SS_StartEndSynchronizer(
+        $this.find(".event-recurrence-date-start-on"),
+        $this.find(".event-recurrence-date-until-on"));
+
+      if (!this.ss) {
+        this.ss = {}
+      }
+      this.ss.synchronizer = synchronizer
+    });
+  };
 
   Event_Form.prototype.addRecurrence = function(buttonEl) {
     var self = this;
@@ -51,7 +76,8 @@ this.Event_Form = (function () {
     // $template.before($template.html());
     $button.closest(".event-recurrence").before($html);
     self.resetIndex();
-    SS.renderDateTimePicker($html);
+    SS_DateTimePicker.render($html);
+    self.activeSynchronizer();
   };
 
   Event_Form.prototype.deleteRecurrence = function(buttonEl) {
@@ -122,6 +148,21 @@ this.Event_Form = (function () {
     var $el = $(el);
     $el.closest(".event-recurrence").find('[name="item[event_recurrences][][in_all_day]"]').val($el.val());
   }
+
+  Event_Form.prototype.setUntilOnIfUnset = function(el) {
+    var $el = $(el);
+    var $untilOnEl = $el.closest(".event-recurrence-date").find(".event-recurrence-date-until-on");
+    if ($untilOnEl.val()) {
+      return;
+    }
+
+    var value = SS_DateTimePicker.momentValue(el);
+    if (!value) {
+      return;
+    }
+
+    SS_DateTimePicker.momentValue($untilOnEl, value);
+  };
 
   Event_ExcludeDatesForm = function(container, el, commitCallback) {
     this.container = container;

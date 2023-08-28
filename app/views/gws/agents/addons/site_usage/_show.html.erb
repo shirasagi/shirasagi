@@ -19,10 +19,10 @@
   <dd><span class="usage-user-count"><%= @item.usage_user_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
 
   <dt><%= @model.t :usage_calculated_at %></dt>
-  <dd><span class="usage-calculated-at"><%= @item.usage_calculated_at.try { |v| I18n.l(v) } || '-' %></span></dd>
+  <dd><span class="usage-calculated-at"><%= @item.usage_calculated_at.try { |v| ss_time_tag(v) } || '-' %></span></dd>
 </dl>
 
-<%= button_tag(t('service.buttons.reload'), name: "reload", type: "button", class: "btn btn-reload-usages", data: { href: gws_apis_reload_site_usages_path(site: @item, format: "json") }) %>
+<%= button_tag(t('ss.buttons.update'), name: "reload", type: "button", class: "btn btn-reload-usages", data: { href: gws_apis_reload_site_usages_path(site: @item, format: "json") }) %>
 
 <%= jquery do %>
   new SS_Usage("#<%= addon[:id] %>")

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="<%= I18n.locale %>">
 <head>
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,9 +11,9 @@
     window_name = @db.name
   end
   if window_name.present?
-    title = "#{window_name} | #{SS.config.ss.application_name}"
+    title = "#{window_name} | #{ss_application_name}"
   else
-    title = SS.config.ss.application_name
+    title = ss_application_name
   end
 %>
 <title><%= title %></title>
@@ -21,10 +21,6 @@
 <%= stylesheet_link_tag('cms/form_db', media: "all") %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <%= javascript_include_tag('cms/form_db', defer: true) %>
-<!--[if lt IE 9]>
-<script src="/assets/js/html5.js"></script>
-<script src="/assets/js/selectivizr-min.js"></script>
-<![endif]-->
 <%= csrf_meta_tags %>
 </head>
 <body>

@@ -1,14 +1,22 @@
-<%= jquery do %>
-  Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
+<%
+  calendar_options = {
     defaultView: 'timelineDay',
     header: { left: 'today prev next title reload', right: 'basicWeek timelineDay' },
+    firstDay: @cur_site.schedule_first_day,
     views: {
       timelineDay: {
-        minTime: '<%= @cur_site.facility_min_time %>',
-        maxTime: '<%= @cur_site.facility_max_time %>'
+        minTime: @cur_site.facility_min_time,
+        maxTime: @cur_site.facility_max_time
       }
     }
-  }, <%== (params[:calendar] || {}).to_json %>);
+  }
+  init_options = params[:calendar] || {}
+%>
+
+<%= jquery do %>
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  });
 <% end %>
 
 <%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters) ]] %>
@@ -29,20 +37,27 @@
     </div>
     <div class="calendar multiple facility" id="cal-<%= item.id %>"></div>
 
-    <%= jquery do %>
-    Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
-      tapMenu: <%= item.reservable?(@cur_user) %>,
-      defaultView: 'timelineDay',
-      header: { left: 'today prev next title reload', right: 'basicWeek timelineDay' },
-      views: {
-        timelineDay: {
-          minTime: '<%= @cur_site.facility_min_time %>',
-          maxTime: '<%= @cur_site.facility_max_time %>'
+    <%
+      calendar_options = {
+        tapMenu: item.reservable?(@cur_user),
+        defaultView: 'timelineDay',
+        header: { left: 'today prev next title reload', right: 'basicWeek timelineDay' },
+        restUrl: gws_schedule_facility_plans_path(facility: item.id),
+        eventSources: [{ url: "#{events_gws_schedule_facility_plans_path(facility: item.id, format: :json)}?#{search_query}" }],
+        firstDay: @cur_site.schedule_first_day,
+        views: {
+          timelineDay: {
+            minTime: @cur_site.facility_min_time,
+            maxTime: @cur_site.facility_max_time
+          }
         }
-      },
-      restUrl: '<%= gws_schedule_facility_plans_path(facility: item.id) %>',
-      eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path facility: item.id, format: :json %>?<%= search_query %>' }]
-    }, <%== (params[:calendar] || {}).to_json %>);
+      }
+      init_options = params[:calendar] || {}
+    %>
+    <%= jquery do %>
+      $(document).on("gws:calendarInitialized", function() {
+        Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+      });
     <% end %>
   <% end %>
 </section>

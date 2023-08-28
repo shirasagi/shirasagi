@@ -32,9 +32,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[start_at]", with: "2016/04/01 12:00"
-        fill_in "item[end_at]", with: "2016/04/01 13:00"
-        click_button I18n.t('gws/schedule.facility_reservation.index')
+        fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
+        fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
+        wait_cbox_open { click_button I18n.t('gws/schedule.facility_reservation.index') }
       end
       wait_for_cbox do
         click_on I18n.t('ss.buttons.close')
@@ -65,12 +65,14 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     it "#delete" do
       visit index_path
       first('span.fc-title', text: item.name).click
+      wait_for_ajax
       expect(current_path).to eq show_path
-      click_link I18n.t('ss.links.delete')
-      within "form" do
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      wait_for_ajax
       expect(current_path).to eq index_path
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
@@ -96,9 +98,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "name"
-          fill_in "item[start_at]", with: "2016/04/01 12:00"
-          fill_in "item[end_at]", with: "2016/04/01 13:00"
-          click_button I18n.t('gws/schedule.facility_reservation.index')
+          fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
+          fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
+          wait_cbox_open { click_button I18n.t('gws/schedule.facility_reservation.index') }
         end
         wait_for_cbox do
           click_on I18n.t('ss.buttons.close')
@@ -129,12 +131,14 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       it "#delete" do
         visit index_path
         first('span.fc-title', text: item.name).click
-        expect(current_path).to eq index_path
-        click_link I18n.t('ss.links.delete')
-        within "form" do
+        wait_for_ajax
+        expect(current_path).to eq show_path
+        within ".nav-menu" do
+          click_link I18n.t('ss.links.delete')
+        end
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.delete')
         end
-        wait_for_ajax
         expect(current_path).to eq index_path
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end

@@ -25,7 +25,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with site" do
       before do
-        perform_enqueued_jobs { described_class.bind(site_id: site).perform_later }
+        perform_enqueued_jobs { described_class.bind(site_id: site.id).perform_later }
       end
 
       it do
@@ -40,7 +40,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with group" do
       before do
-        perform_enqueued_jobs { described_class.bind(group_id: group).perform_later }
+        perform_enqueued_jobs { described_class.bind(group_id: group.id).perform_later }
       end
 
       it do
@@ -145,7 +145,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with site" do
       before do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
       end
 
       it do
@@ -159,7 +159,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with group" do
       before do
-        described_class.bind(group_id: group).perform_now
+        described_class.bind(group_id: group.id).perform_now
       end
 
       it do

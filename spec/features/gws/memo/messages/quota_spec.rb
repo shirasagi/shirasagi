@@ -30,12 +30,16 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within 'form#item-form' do
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open do
+            click_on I18n.t('gws.organization_addresses')
+          end
         end
       end
       wait_for_cbox do
         expect(page).to have_content(recipient.name)
-        click_on recipient.name
+        wait_cbox_close do
+          click_on recipient.name
+        end
       end
 
       within 'form#item-form' do
@@ -66,7 +70,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within 'form#item-form' do
         within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+          wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
       wait_for_cbox do

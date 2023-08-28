@@ -27,7 +27,7 @@
         </td>
         <% end %>
         <td class="name"><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
-        <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+        <td class="updated"><%= ss_time_tag(item.updated) %></td>
       </tr>
   <% end %>
   </tbody>

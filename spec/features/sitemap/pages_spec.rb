@@ -29,12 +29,18 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: "sample"
         select I18n.t('ss.options.state.show'), from: 'item[sitemap_page_state]'
         click_button I18n.t('sitemap.buttons.export_urls')
-        wait_for_ajax
+        expect(page).to have_css(".CodeMirror", text: article_page.url)
         click_button I18n.t('ss.buttons.publish_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
+
+      item = Sitemap::Page.all.first
+      expect(item.sitemap_urls).to include(node.url)
+      expect(item.sitemap_urls).not_to include(item.url)
+      expect(item.sitemap_urls).to include(article_node.url)
+      expect(item.sitemap_urls).to include(article_page.url)
     end
 
     it "#show" do
@@ -48,7 +54,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "modify"
         select I18n.t('ss.options.state.show'), from: 'item[sitemap_page_state]'
         click_button I18n.t('sitemap.buttons.export_urls')
-        wait_for_ajax
+        expect(page).to have_css(".CodeMirror", text: article_page.url)
         click_button I18n.t('ss.buttons.publish_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -70,7 +76,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t('ss.notice.moved')
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
@@ -78,7 +84,7 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t('ss.notice.moved')
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
 
     it "#copy" do
@@ -99,6 +105,34 @@ describe "sitemap_pages", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
+    end
+
+    it "workflow" do
+      visit edit_path
+      expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.withdraw")}']")
+      expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
+      expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+
+      item.update state: 'close'
+      visit edit_path
+      expect(page).to have_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
+      expect(page).to have_no_css(".branch_save")
+      expect(page).to have_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+
+      # not permitted
+      role = cms_user.cms_roles[0]
+      role.update permissions: role.permissions.reject { |k, v| k =~ /^(release_|close_)/ }
+
+      visit edit_path
+      expect(page).to have_no_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
+      expect(page).to have_no_css(".branch_save")
+      expect(page).to have_no_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
+
+      item.update state: 'public'
+      visit edit_path
+      expect(page).to have_no_css(".save[value='#{I18n.t("ss.buttons.draft_save")}']")
+      expect(page).to have_css(".branch_save")
+      expect(page).to have_no_css(".publish_save[value='#{I18n.t("ss.buttons.publish_save")}']")
     end
   end
 end

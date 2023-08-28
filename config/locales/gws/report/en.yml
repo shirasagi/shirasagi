@@ -1,0 +1,123 @@
+en:
+  gws/report:
+    links:
+      publish: Send
+      depublish: Cancel sending
+    confirm:
+      publish: Are you sure you want to send it?
+      depublish: Are you sure you want to cancel the sending?
+    notice:
+      published: Sent.
+      depublished: Sending canceled.
+    options:
+      file_state:
+        inbox: Received list
+        sent: Sent list
+        public: Sent
+        closed: Draft
+        readable: Browse view list
+        redirect: Redirect
+    apis:
+      files:
+        index: Select a report
+    labels:
+      user: Author
+      form: Report
+
+  gws_notification:
+    gws/report/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+  modules:
+    gws/report: Reports
+    addons:
+      gws/report/column_setting: Input settings
+      gws/report/custom_form: Input details
+      gws/report/category: Category
+      gws/report/group_setting: Reports
+
+  gws_role:
+    use_gws_report: Use of reports
+    read_other_gws_report_files:  View reports (all)
+    read_private_gws_report_files:  View reports (own)
+    edit_other_gws_report_files:  Edit reports (all)
+    edit_private_gws_report_files:  Edit reports (own)
+    delete_other_gws_report_files:  Delete reports (all)
+    delete_private_gws_report_files:  Delete reports (own)
+    trash_other_gws_report_files:  Manage report trash (all)
+    trash_private_gws_report_files:  Manage report trash (own)
+    read_other_gws_report_forms:  View templates (all)
+    read_private_gws_report_forms:  View templates (own)
+    edit_other_gws_report_forms:  Edit templates (all)
+    edit_private_gws_report_forms:  Edit templates (own)
+    delete_other_gws_report_forms:  Delete templates (all)
+    delete_private_gws_report_forms:  Delete templates (own)
+    read_other_gws_report_categories:  View categories (all)
+    read_private_gws_report_categories:  View categories (own)
+    edit_other_gws_report_categories:  Edit categories (all)
+    edit_private_gws_report_categories:  Edit categories (own)
+    delete_other_gws_report_categories:  Delete categories (all)
+    delete_private_gws_report_categories:  Delete categories (own)
+
+  mongoid:
+    models:
+      gws/report/form: Templates
+      gws/report/file: Reports
+      gws/report/category: Category
+    errors:
+      models:
+        gws/report/category:
+          too_deep: "The hierarchy is too deep and should be below %{max}."
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+    attributes:
+      gws/report/file:
+        name: Title
+      gws/report/form:
+        name: Title
+        order: Order
+        state: Publishing status
+        memo: Remarks
+      gws/report/category:
+        name: Category name
+      gws/addon/report/column_setting:
+        columns: Input settings
+      gws/addon/report/category:
+        category_ids: Category
+      gws/reference/report/form:
+        form_id: Templates
+      gws/addon/report/group_setting:
+        report_new_days: Display period for new items
+
+  tooltip:
+    gws/report/file:
+      name:
+        - Enter a title.
+
+    gws/report/form:
+      name:
+        - Enter a title.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      state:
+        - Select whether to publish the application form.
+      memo:
+        - Enter remarks.
+        - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+
+    gws/report/category:
+      name:
+        - Enter a category name.
+
+    gws/addon/report/group_setting:
+      report_new_days:
+        - Enter the display period for new items.
+
+  job:
+    models:
+      gws/report/notification_job: Report notifications
+      gws/report/trash_purge_job: Empty report trash

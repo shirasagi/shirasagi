@@ -255,14 +255,11 @@ this.Openlayers_Map = (function () {
 
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
-      iconSrc = this.markerIcon;
-      if (marker['image']) {
-        iconSrc = marker['image'];
-      }
+      iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
       style = this.createMarkerStyle(iconSrc);
 
       name = marker['name'];
-      text = marker['text'];
+      text = marker['html'] || marker['text'];
       pos = [marker['loc'][0], marker['loc'][1]];
 
       markerHtml = "";
@@ -286,6 +283,7 @@ this.Openlayers_Map = (function () {
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: marker['id'],
         markerHtml: markerHtml,
+        iconSrc: iconSrc,
         category: marker['category']
       });
       feature.setStyle(style);

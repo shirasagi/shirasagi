@@ -1,7 +1,9 @@
 ja:
   kana:
     dictionary: かな辞書
+    diagnostic: 診断
     build_success: 辞書の作成に成功しました。
+    dictionary_build_at: 辞書作成日時
     build_fail:
       no_mecab_indexer: MeCab 辞書ビルドプログラムがインストールされていません。
       no_mecab_dicdir: MeCab 辞書がインストールされていません。
@@ -11,6 +13,7 @@ ja:
       build_kana_dictionary: 辞書反映
     buttons:
       build_kana_dictionary: 反映
+      analyze: 解析
     views:
       dictionaries/build_confirmation:
         build_header: 辞書を反映してよろしいですか？
@@ -55,3 +58,6 @@ ja:
           Shirasagi, シラサギ
           shirasagi, シラサギ
         - 英大文字と小文字を区別するので、全部大文字、先頭だけ大文字、全部小文字の 3 つのパターンを登録します。
+      newer_source:
+        - 辞書ソースが更新されています。
+        - 「辞書反映」をクリックし、更新内容をサイトに適用してください。

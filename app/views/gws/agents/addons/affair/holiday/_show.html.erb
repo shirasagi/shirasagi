@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :holiday_calendar_ids %></dt>
+  <dd>
+    <% if @item.holiday_type_system? %>
+      <%= t("gws/affair.default_holiday_calendar") %>
+    <% else %>
+      <%= br @item.holiday_calendars.pluck(:name).join("\n") %>
+    <% end %>
+  </dd>
+</dl>

@@ -19,7 +19,9 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       #
       # Create
       #
-      click_link I18n.t('ss.links.new')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.new')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
@@ -58,7 +60,9 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       #
       # Update
       #
-      click_on I18n.t('ss.links.edit')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: item_name2
         fill_in "item[text]", with: item_text2
@@ -84,8 +88,10 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       #
       # Soft Delete
       #
-      click_on I18n.t('ss.links.delete')
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
 

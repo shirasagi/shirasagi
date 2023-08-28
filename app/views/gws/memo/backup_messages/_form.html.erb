@@ -1,5 +1,5 @@
 <%= error_messages_for :item %>
-<%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
+<%= f.hidden_field "root_url", value: root_url, id: nil, class: "hidden-ids" %>
 <div class="export-and-backup-msg-component">
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
@@ -22,7 +22,7 @@
 
           <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
           <dd>
-            <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>
+            <%= f.hidden_field "message_ids[]", value: "", id: nil, class: "hidden-ids" %>
             <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box", "data-template" => "backup-message-template" %>
           </dd>
           <dd>
@@ -65,7 +65,7 @@
           </dd>
         </dl>
       </div>
-      <footer class="send">
+      <footer class="send ss-sticky ss-sticky-bottom">
         <%= f.submit t("ss.#{action}"), { class: "btn btn-primary" } %>
       </footer>
     </div>

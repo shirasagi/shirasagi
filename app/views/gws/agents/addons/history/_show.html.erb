@@ -20,14 +20,14 @@
       <% @item.histories.each do |item| %>
       <tr>
         <td><%= item.mode_name %></td>
-        <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
+        <td><%= ss_time_tag item.created %></td>
         <td><%= gws_public_user_long_name(item.user_long_name) %></td>
         <% if @cur_site.user_profile_public?("tel") %>
           <td><%= item.user_tel %></td>
         <% end %>
         <td>
           <% if (names = item.updated_field_names).present? %>
-          <%= truncate names.join(', '), length: 30 %>
+          <%= ss_truncate names.join(', '), length: 30 %>
           <% end %>
         </td>
       </tr>

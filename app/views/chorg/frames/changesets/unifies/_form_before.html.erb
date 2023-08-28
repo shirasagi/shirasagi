@@ -1,0 +1,28 @@
+<dl class="see before_unify">
+  <dt><%= t "chorg.views.unify_changesets.name" %><%= tt "chorg.views.unify_changesets.before_name" %></dt>
+  <dd>
+    <%= f.hidden_field "sources[][id]", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("chorg.views.unify_changesets.select_group"), cms_apis_groups_path, class: "ajax-box" %>
+    <%= f.submit t("ss.buttons.reload"), name: "reload", class: "btn btn-reload hide", data: { disable_with: t("ss.buttons.reload") } %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.sources.present? %>
+        <% @item.sources.each do |source| %>
+          <tr data-id="<%= source["id"] %>">
+            <td><%= f.hidden_field "sources[][id]", value: source["id"], id: nil %> <%= source["name"] %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

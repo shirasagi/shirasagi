@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= "Version" %></dt>
+  <dd><%= MeCab::VERSION %></dd>
+
+  <% if dic_timestamp = @model.master_dic_timestamp(@cur_site.id) %>
+    <dt><%= t("kana.dictionary_build_at") %></dt>
+    <dd><%= ss_time_tag Time.zone.at(dic_timestamp) %></dd>
+  <% end %>
+</dl>
+
+<%= form_with scope: :item, url: url_for(action: :update), method: :put, id: "item-form" do |f| %>
+  <div style="display: grid; grid-template-columns: 1fr auto; gap: 5px;">
+    <%= f.text_field :text, value: @text, style: "width: 100%" %>
+    <%= f.submit t("kana.buttons.analyze"), class: 'btn', data: { disable_with: true } %>
+  </div>
+<% end %>
+
+<% if @result %>
+  <pre><%= @result %></pre>
+<% end %>

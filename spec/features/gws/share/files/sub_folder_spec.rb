@@ -27,7 +27,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         attach_file "item[in_files][]", file_path1
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within "form#item-form" do
         within "#selected-files" do
@@ -53,7 +55,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         attach_file "item[in_files][]", file_path2
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within "form#item-form" do
         within "#selected-files" do
@@ -78,7 +82,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         attach_file "item[in_files][]", file_path3
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within "form#item-form" do
         within "#selected-files" do

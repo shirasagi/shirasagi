@@ -25,7 +25,7 @@
 
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
-    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "group_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), sys_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -39,7 +39,7 @@
       <tbody>
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
@@ -51,7 +51,7 @@
 <dl class="see">
   <dt><%= @model.t :partner_site_ids %><%= @model.tt :partner_site_ids %></dt>
   <dd>
-    <%= f.hidden_field "partner_site_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "partner_site_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -65,7 +65,7 @@
       <tbody>
       <% @item.partner_sites.each do |site| %>
         <tr data-id="<%= site.id %>">
-          <td><%= f.hidden_field "partner_site_ids[]", value: site.id %> <%= site.name %></td>
+          <td><%= f.hidden_field "partner_site_ids[]", value: site.id, id: nil %> <%= site.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

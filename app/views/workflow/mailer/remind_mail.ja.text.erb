@@ -3,18 +3,18 @@
 承認作業を行ってください。
 
 - タイトル
-<%= @page.name %>
+  <%= @page.name %>
 
 <% if @page.workflow_user.present? %>
 - 申請者
-<%= @page.workflow_user.name %>
-<% if @page.workflow_agent %>
-（代理: <%= @page.workflow_agent.name %>）
-<% end %>
+  <%= @page.workflow_user.name %>
+  <% if @page.workflow_agent %>
+  （代理: <%= @page.workflow_agent.name %>）
+  <% end %>
 <% end %>
 
 - 申請者コメント
-<%= @page.workflow_comment %>
+  <%= @page.workflow_comment %>
 
 - 記事URL
-<%= URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>
+  <%= URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>

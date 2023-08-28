@@ -16,6 +16,24 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       saml.force_authn_state = "enabled"
       saml.save!
     end
+
+    # saml.sso_url = "#{site.url}/samling/samling.html"
+    # saml.slo_url = "#{site.url}/samling/samling.html"
+    # saml.save!
+
+    presence = user.user_presence(site)
+    presence.sync_available_state = "enabled"
+    presence.sync_unavailable_state = "enabled"
+    presence.save!
+
+    # SAML Mock Server(https) からシラサギ (http) へ post する際、Chrome v110 からセキュリティエラーが発生するようになった。
+    # セキュリティエラーを防ぐため、明示的にシラサギ URL を http://0.0.0.0 ではなく http://127.0.0.1 へ変更する
+    @save_app_host = Capybara.app_host
+    Capybara.app_host = "http://127.0.0.1:#{Capybara.current_session.server.port}"
+  end
+
+  after do
+    Capybara.app_host = @save_app_host
   end
 
   context "with saml" do
@@ -42,19 +60,25 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       # confirm a user has been logged-in
       expect(page).to have_css("nav.user .name", text: user.name)
       # confirm gws_portal is shown to user
-      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws', locale: user.lang))
+
+      presence = Gws::User.find(user.id).user_presence(site)
+      expect(presence.state).to eq "available"
 
       # do logout
       within "nav.user" do
         find("span.name").click
-        click_on I18n.t("ss.logout")
+        click_on I18n.t("ss.logout", locale: user.lang)
       end
 
       # confirm a login form has been shown
-      expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
+      expect(page).to have_css(".login-box", text: I18n.t("ss.login", locale: I18n.default_locale))
       expect(page).to have_css("li", text: name)
       # and confirm browser back to gws_login
       expect(current_path).to eq gws_login_path(site: site)
+
+      presence.reload
+      expect(presence.state).to eq "unavailable"
     end
   end
 end

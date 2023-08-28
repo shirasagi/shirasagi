@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    get :download, on: :collection
+    post :download, on: :collection
     get :import, on: :collection
     post :import, on: :collection
   end
@@ -36,7 +36,10 @@ Rails.application.routes.draw do
 
     resources :users, concerns: [:deletion, :lock_and_unlock]
     resources :notice, concerns: :deletion
-    resources :groups, concerns: [:deletion, :role]
+    resources :groups, concerns: [:deletion, :role] do
+      match :download_all, on: :collection, via: %i[get post]
+      match :import, on: :collection, via: %i[get post]
+    end
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
@@ -96,6 +99,7 @@ Rails.application.routes.draw do
       end
       resources :environments, concerns: :deletion
       resources :oauth2_applications, concerns: :deletion
+      resource :setting, only: [:show, :edit, :update]
     end
   end
 

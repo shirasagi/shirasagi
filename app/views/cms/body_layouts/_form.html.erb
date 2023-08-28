@@ -3,5 +3,5 @@
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :parts %><%= @model.tt :parts %></dt>
-  <dd><%= f.text_area :parts, value: @item.parts.join("\n"), style: "height: 100px;" %></dd>
+  <dd><%= f.ss_lines_field :parts, value: @item.parts.join("\n"), style: "height: 100px;" %></dd>
 </dl>

@@ -18,7 +18,7 @@
 <% @index_meta = proc do |item| %>
   <% user = item.user %>
   <% user.cur_site = @cur_site if user %>
-  <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="date"><%= I18n.l(item.date.to_date, format: :attendance_year_month) %></span>
   <span class="group"><% if user %><%= user.gws_default_group.try { |group| group.section_name } %><% end %></span>
   <span class="user"><% if user %><%= user.long_name.try { |long_name| gws_public_user_long_name(long_name) } %><% end %></span>

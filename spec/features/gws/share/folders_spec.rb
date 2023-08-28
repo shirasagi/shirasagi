@@ -14,7 +14,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit gws_share_folders_path(site: site)
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
         click_on I18n.t("ss.buttons.save")
@@ -43,7 +45,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_share_folders_path(site: site)
       click_on name
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name2
         click_on I18n.t("ss.buttons.save")
@@ -58,8 +62,10 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_share_folders_path(site: site)
       click_on name2
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -93,22 +99,28 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
     context 'basic crud' do
       it do
         visit gws_share_folders_path(site: site)
-        click_on I18n.t('ss.links.new')
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.new')
+        end
 
         #
         # Create
         #
         within 'form#item-form' do
           fill_in 'item[in_basename]', with: subfolder_name1
-          click_on I18n.t('gws/share.apis.folders.index')
+          wait_cbox_open do
+            click_on I18n.t('gws/share.apis.folders.index')
+          end
         end
 
         wait_for_cbox do
-          expect(page).to have_content(item.name)
-          click_on item.name
+          wait_cbox_close do
+            click_on item.name
+          end
         end
 
         within 'form#item-form' do
+          expect(page).to have_css(".ajax-selected", text: item.name)
           click_on I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
@@ -127,8 +139,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name1}"
-        click_on I18n.t('ss.links.edit')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.edit')
+        end
         within 'form#item-form' do
           fill_in 'item[in_basename]', with: subfolder_name2
           click_on I18n.t('ss.buttons.save')
@@ -143,9 +156,10 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name2}"
-        click_on I18n.t('ss.links.delete')
-
-        within 'form' do
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.delete')
+        end
+        within 'form#item-form' do
           click_on I18n.t('ss.buttons.delete')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -161,10 +175,11 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name1}"
-        click_on I18n.t('ss.links.move')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.move')
+        end
         within 'form#item-form' do
-          click_on I18n.t('gws/share.apis.folders.index')
+          wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
         end
         wait_for_cbox do
           expect(page).to have_content(item2.name)
@@ -186,10 +201,11 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         find("a.title[href=\"#{gws_share_folder_path(site, item)}\"]").click
-        click_on I18n.t('ss.links.move')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.move')
+        end
         within 'form#item-form' do
-          click_on I18n.t('gws/share.apis.folders.index')
+          wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
         end
         wait_for_cbox do
           expect(page).to have_content(item2.name)

@@ -14,60 +14,62 @@ module Gws::Addon::Import::Facility
 
     module ClassMethods
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| header_value_to_text(k) }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            add_category(line, item)
-            line << item.order
-            line << item.min_minutes_limit
-            line << item.max_minutes_limit
-            line << item.max_days_limit
-            line << datetime_to_text(item.reservation_start_date)
-            line << datetime_to_text(item.reservation_end_date)
-            line << datetime_to_text(item.activation_date)
-            line << datetime_to_text(item.expiration_date)
-            line << approval_check_state_datas_value_to_text(item.approval_check_state)
-            line << type_datas_value_to_text(item.text_type)
-            line << item.text
-            attrs = %i(
-              id
-              class_name
-              name
-              order
-              required
-              tooltips
-              prefix_label
-              postfix_label
-              input_type
-              min_decimal
-              max_decimal
-              initial_decimal
-              scale
-              minus_type
-              max_length
-              place_holder
-              additional_attr
-              select_options
-              upload_file_count
-            )
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| header_value_to_text(k) }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              add_category(line, item)
+              line << item.order
+              line << item.min_minutes_limit
+              line << item.max_minutes_limit
+              line << item.max_days_limit
+              line << datetime_to_text(item.reservation_start_date)
+              line << datetime_to_text(item.reservation_end_date)
+              line << datetime_to_text(item.activation_date)
+              line << datetime_to_text(item.expiration_date)
+              line << approval_check_state_datas_value_to_text(item.approval_check_state)
+              line << type_datas_value_to_text(item.text_type)
+              line << item.text
+              attrs = %i(
+                id
+                class_name
+                name
+                order
+                required
+                tooltips
+                prefix_label
+                postfix_label
+                input_type
+                min_decimal
+                max_decimal
+                initial_decimal
+                scale
+                minus_type
+                max_length
+                place_holder
+                additional_attr
+                select_options
+                upload_file_count
+              )
 
-            columns_max.times do |i|
-              attrs.each do |attr|
-                line << output_line(attr, item.columns[i])
+              columns_max.times do |i|
+                attrs.each do |attr|
+                  line << output_line(attr, item.columns[i])
+                end
               end
+              line << item.reservable_group_names.join("\n")
+              line << item.reservable_member_names.join("\n")
+              line << readable_setting_range_datas_value_to_text(item.readable_setting_range)
+              line << item.readable_group_names.join("\n")
+              line << item.readable_member_names.join("\n")
+              line << item.group_names.join("\n")
+              line << item.user_names.join("\n")
+              line << item.permission_level
+              data << line
             end
-            line << item.reservable_group_names.join("\n")
-            line << item.reservable_member_names.join("\n")
-            line << readable_setting_range_datas_value_to_text(item.readable_setting_range)
-            line << item.readable_group_names.join("\n")
-            line << item.readable_member_names.join("\n")
-            line << item.group_names.join("\n")
-            line << item.user_names.join("\n")
-            line << item.permission_level
-            data << line
           end
         end
       end
@@ -174,8 +176,10 @@ module Gws::Addon::Import::Facility
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       errors.blank?
     end

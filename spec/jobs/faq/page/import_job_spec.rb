@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Faq::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:group1) do
-    name = 'シラサギ市'
-    Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
+    cms_group.update!(name: "シラサギ市")
+    cms_group
   end
   let!(:group2) do
     name = 'シラサギ市/企画政策部/政策課'
     Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
   end
-  let!(:layout) { create(:cms_layout, site: site, name: "FAQ") }
+  let!(:layout) { create(:cms_layout, site: site, name: "FAQ", basename: 'faq') }
   let!(:category1) { create(:category_node_node, site: site, filename: "faq", name: "よくある質問") }
   let!(:category2) { create(:category_node_page, site: site, filename: "faq/c1", name: "くらし・手続き") }
   let!(:category3) { create(:category_node_page, site: site, filename: "faq/c2", name: "子育て・教育") }
@@ -29,7 +29,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
   describe ".perform_later" do
     context "with node1" do
       before do
-        job_class = described_class.bind(site_id: site, node_id: node1, user_id: user)
+        job_class = described_class.bind(site_id: site.id, node_id: node1.id, user_id: user.id)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
 
@@ -50,7 +50,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.description).to eq "概要"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
-        expect(Cms::PageExporter.category_name_tree(item)).to match_array ["よくある質問/くらし・手続き", "よくある質問/子育て・教育"]
+        expect(item.category_ids).to match_array [category2.id, category3.id]
         expect(item.event_name).to eq "イベントタイトル"
         event_dates = %w(2016/09/08 2016/09/09 2016/09/10 2016/09/14 2016/09/15 2016/09/16).map { |d| d.in_time_zone.to_date }
         expect(item.event_dates).to eq event_dates
@@ -78,7 +78,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
 
     context "with node2" do
       before do
-        job_class = described_class.bind(site_id: site, node_id: node2, user_id: user)
+        job_class = described_class.bind(site_id: site.id, node_id: node2.id, user_id: user.id)
         expect { job_class.perform_now(ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
 
@@ -100,7 +100,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(item.html).to eq "<p>可能です。</p>"
-        expect(Cms::PageExporter.category_name_tree(item)).to match_array ["よくある質問/子育て・教育"]
+        expect(item.category_ids).to match_array [ category3.id ]
         expect(item.event_name).to eq "イベントタイトル"
         event_dates = %w(2016/09/08 2016/09/09 2016/09/10 2016/09/14 2016/09/15 2016/09/16).map { |d| d.in_time_zone.to_date }
         expect(item.event_dates).to eq event_dates

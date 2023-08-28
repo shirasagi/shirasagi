@@ -1,0 +1,318 @@
+en:
+  chorg:
+    revision: Organizational change
+    changeset: Details of organizational change
+    entity_log:
+      headers:
+        - Category 1
+        - Category 2
+        - Title
+        - ID
+        - Operation
+        - Confirmation URL
+        - Administration URL
+    views:
+      revisions/edit: &revisions_edit
+        add: New
+        move: Move
+        unify: Merge
+        division: Split
+        delete: Retire
+        add_description: Group name
+        move_before: Transfer source
+        move_after: Transfer destination
+        unify_before: Merge source
+        unify_after: Merge destination
+        division_before: Split source
+        division_after: Split destination
+        delete_description: Group name
+      revisions/show:
+        <<: *revisions_edit
+      run/confirmation:
+        test:
+          header: Are you sure you want to do a test run?
+          run_button: Test run
+        main:
+          header: Are you sure you want to perform the changes?
+          run_button: Perform changes
+        run_options: Execution options
+      add_changesets: &group_props
+        name: Group name
+        order: Display order
+        contact_group_name: Group name in charge
+        contact_tel: Phone number
+        contact_fax: Fax number
+        contact_email: E-mail address
+        contact_link_url: Link URL
+        contact_link_name: Link name
+        ldap_dn: DN
+      move_changesets:
+        before_move: Transfer source
+        after_move: Transfer destination
+        select_group: Select a group to transfer
+        <<: *group_props
+      unify_changesets:
+        before_unify: Merge source
+        after_unify: Merge destination
+        select_group: Select a group to merge
+        <<: *group_props
+      division_changesets:
+        before_division: Split source
+        after_division:
+          zero: Split destination
+          one: Split destination %{count}
+          other: Split destination %{count}
+        select_group: Select a group to split
+        <<: *group_props
+      delete_changesets:
+        select_group: Select a group to retire
+        <<: *group_props
+      chorg/entity_log:
+        name: Name
+        id: ID
+        operation: Change
+        options:
+          operation:
+            creates: Create new
+            changes: Update
+            deletes: Delete
+        detail: Details
+        more: See more
+        close: Close
+    labels:
+      all_sites: All sites
+    menus:
+      revisions:
+        add: Add a new group
+        move: Add a group to move
+        unify: Add a group to merge
+        division: Add a group to split
+        delete: Add a group to retire
+        test_execute: Do test run
+        production_execute: Perform changes
+        execute_results: View execution results
+    messages:
+      job_started: Organizational change processing has started.
+      job_reserved: You have reserved an organizational change process.
+      test_run: Test run
+      import_revision_file_confirmation: Import organizational change operations from a CSV. \n If an operation has already been registered, it will be deleted. \n Are you sure you want to run the operation?
+      import_changesets_notice: Changed contents contained in the CSV are always appended; importing the CSV does not change existing changed contents in any way.
+    options:
+      changeset_type:
+        add: New
+        move: Move
+        unify: Merge
+        division: Split
+        delete: Retire
+      delete_method:
+        disable_if_possible: Disable and allow recovery later
+        always_delete: Always physically delete
+    buttons:
+      reset_after_move: Reset transfer-destination
+      reset_after_unify: Reset merge-destination
+      reset_after_division: Reset split-destination
+      save_and_import_changesets: Save and import changed content from CSV
+    confirm:
+      reset_after_move: Are you sure you want to reset transfer-destination?
+      reset_after_unify: Are you sure you want to reset merge-destination?
+      reset_after_division: Are you sure you want to reset split-destination?
+    import:
+      changeset:
+        id: ID
+        type: Operation
+        source: Operation source group name
+        destination: Operation destination group name
+        order: Display order
+        contact_tel: Phone number
+        contact_fax: Fax number
+        contact_email: E-mail address
+        contact_link_url: Link URL
+        contact_link_name: Link name
+        ldap_dn: DN
+        nth_destination_name: "Destination%{dest_seq}_Group Name"
+        nth_destination_order: "Destination%{dest_seq}_Display Order"
+        nth_destination_ldap_dn: "Destination%{dest_seq}_DN"
+        nth_destination_contact_main_state: "Destination%{dest_seq}_Contact%{contact_seq}_Main"
+        nth_destination_contact_name: "Destination%{dest_seq}_Contact%{contact_seq}_ID Name"
+        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
+        nth_destination_contact_contact_tel: "Destination%{dest_seq}_Contact%{contact_seq}_Phone Number"
+        nth_destination_contact_contact_fax: "Destination%{dest_seq}_Contact%{contact_seq}_Fax Number"
+        nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
+        nth_destination_contact_contact_link_url: "Destination%{dest_seq}_Contact%{contact_seq}_Link URL"
+        nth_destination_contact_contact_link_name: "Destination%{dest_seq}_Contact%{contact_seq}_Link Name"
+    errors:
+      template:
+        body_html: |-
+          The following contacts in the selected group cannot be found for transfers.<br>
+          The following contacts will be disconnected from the page when the organization change is executed, and the contact portion of the page where the following contacts are being used will be hidden.<br>
+          If you would like to merge your contacts into a single contact, please activate "Merge to Main" from the Edit screen.<br>
+          If you want to set each existing contact to a different contact, overwrite the existing contact.
+
+  modules:
+    chorg: Organizational change
+    addons:
+      chorg/entity_log: History of changes
+
+  cms_role:
+    edit_chorg_revisions: Manage organizational changes
+
+  job:
+    models:
+      chorg/test_runner: Organizational changes/Test run
+      chorg/main_runner: Organizational changes/Execute changes
+      chorg/changeset_import_job: Organizational changes/Changed content import
+
+  mongoid:
+    models:
+      chorg/changeset: Changed content
+      chorg/revision: Revision
+      chorg/run_params: Organization change execution options
+    errors:
+      models:
+        chorg/run_params:
+          job_mode_is_not_service: Job service execution mode is not a service and cannot be reserved. Please contact a system administrator.
+        chorg/changeset:
+          blank_contact_group_name: "'s contact has blank name."
+          duplicate_contact_group_name: "'s contact has duplicated name \"%{name}\"."
+    attributes:
+      chorg/model/revision:
+        name: Name
+        job_ids: Job
+        user_csv_file_id: User CSV files
+        revision_csv_file_id: Organizational change operation CSV
+        delete_method: How to delete
+      chorg/model/changeset:
+        type: Type
+        sources: Transfer source
+        destinations: Transfer destination
+      chorg/run_params:
+        add_newly_created_group_to_site: Add a newly created group to the site
+        forced_overwrite_html: |-
+          Force changes to contact information<br>
+          Normal organizational changes do not change the contact information for pages that are set to "Not Linked to Groups".<br>
+          But checking this option will change the contact information for pages that are set to "Do not work with groups".
+        reservation: Reservation for execution
+      chorg/revision:
+        content_csv_file_id: Content CSV files
+        target_site_ids: Target site
+
+  tooltip:
+    chorg/model/revision:
+      name:
+        - Enter the name for the organizational change.
+      user_csv_file_id:
+        - Select the user CSV file to perform user transfers after the organizational change is run.
+        - Set the group name and titles after the change in the user CSV.
+        -
+        - "If you do not select a file, the users will not be transferred after the organizational change is run and you will need to transfer the users manually."
+      revision_csv_file_id:
+        - "Select the CSV file for registering the organizational change operation (new, transfer, merge, split, retire)."
+        - "When registering from a CSV file, operations that have already been registered will be deleted."
+        - ""
+        - "You can download an example of an organizational change operation from \"Download Sample CSVs” on the Shirasagi local government sample site."
+        - Please edit the content and import it.
+      delete_method:
+        - Select how users and groups are deleted.
+        - If you select “Disable and allow recovery later”, users and groups remain disabled.
+        - Selecting “Always physically delete” permanently removes users and groups.
+    chorg/revision:
+      content_csv_file_id:
+        - "Select the content CSV files for parts, layouts, pages, and folders to be transferred after the organizational change is run."
+        - "Please set the post-change group name, etc. in the content CSV."
+      target_site_ids:
+        - Select the site to apply organizational changes to.
+        - Unless specified otherwise, all sites are eligible.
+    chorg/run_params:
+      reservation:
+        - You can reserve a time to run.
+    chorg:
+      views:
+        add_changesets:
+          name:
+            - Enter the name of the new group to add.
+          order:
+            - Enter the order in which groups are shown on the group screen.
+            - The lower the number, the higher the position.
+          contact_group_name:
+            - Enter the group name in charge of the new group.
+          contact_tel:
+            - Enter the phone number of the new group.
+          contact_fax:
+            - Enter the fax number of the new group.
+          contact_email:
+            - Enter the e-mail address of the new group.
+          contact_link_url:
+            - Enter the link URL of the new group.
+          contact_link_name:
+            - Enter the link name of the new group.
+          ldap_dn:
+            - If you are using LDAP, enter the identifier (DN) of the new group.
+        delete_changesets:
+          name:
+            - Select the group name that you want to retire.
+        division_changesets:
+          name:
+            - Enter the name of the split group.
+          order:
+            - Enter the order in which groups are shown on the group screen.
+            - The lower the number, the higher the position.
+          contact_group_name:
+            - Enter the name in charge of the split group.
+          contact_tel:
+            - Enter the phone number of the split group.
+          contact_fax:
+            - Enter the fax number of the split group.
+          contact_email:
+            - Enter the e-mail address of the split group.
+          contact_link_url:
+            - Enter the link URL of the split group.
+          contact_link_name:
+            - Enter the link name of the split group.
+          ldap_dn:
+            - If you are using LDAP, enter the identifier (DN) of the split group.
+          before_name:
+            - Select the group name of the split source.
+        move_changesets:
+          name:
+            - Enter the group name of the split destination.
+          order:
+            - Enter the order in which groups are shown on the group screen.
+            - The lower the number, the higher the position.
+          contact_group_name:
+            - Enter the group name in charge of the split destination.
+          contact_tel:
+            - Enter the phone number of the transfer destination group.
+          contact_fax:
+            - Enter the fax number of the transfer destination group.
+          contact_email:
+            - Enter the e-mail address of the transfer destination group.
+          contact_link_url:
+            - Enter the link URL of the transfer destination group.
+          contact_link_name:
+            - Enter the link name of the transfer destination group.
+          ldap_dn:
+            - If you are using LDAP, enter the identifier (DN) of the transfer destination group.
+          before_name:
+            - Select the group name of the transfer source.
+        unify_changesets:
+          name:
+            - Enter the group name of the merge destination.
+          order:
+            - Enter the order in which groups are shown on the group screen.
+            - The lower the number, the higher the position.
+          contact_group_name:
+            - Enter the group name in charge of the merge destination.
+          contact_tel:
+            - Enter the phone number of the merge destination group.
+          contact_fax:
+            - Enter the fax number of the merge destination group.
+          contact_email:
+            - Enter the e-mail address of the merge destination group.
+          contact_link_url:
+            - Enter the link URL of the merge destination group.
+          contact_link_name:
+            - Enter the link name of the merge destination group.
+          ldap_dn:
+            - If you are using LDAP, enter the identifier (DN) of the merge destination group.
+          before_name:
+            - Select the group name of the merge source.

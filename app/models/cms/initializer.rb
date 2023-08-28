@@ -13,12 +13,16 @@ module Cms
     Cms::Part.plugin "cms/history_list"
     Cms::Part.plugin "cms/free"
     Cms::Part.plugin "cms/node"
+    Cms::Part.plugin "cms/node2"
     Cms::Part.plugin "cms/page"
     Cms::Part.plugin "cms/tabs"
     Cms::Part.plugin "cms/crumb"
     Cms::Part.plugin "cms/sns_share"
     Cms::Part.plugin "cms/calendar_nav"
     Cms::Part.plugin "cms/monthly_nav"
+    Cms::Part.plugin "cms/site_search_keyword"
+    Cms::Part.plugin "cms/print"
+    Cms::Part.plugin "cms/clipboard_copy"
     Cms::Column.plugin 'cms/text_field'
     Cms::Column.plugin 'cms/date_field'
     Cms::Column.plugin 'cms/url_field2'
@@ -103,6 +107,8 @@ module Cms
     Cms::Role.permission :delete_private_cms_forms
     Cms::Role.permission :release_other_cms_pages
     Cms::Role.permission :release_private_cms_pages
+    Cms::Role.permission :close_other_cms_pages
+    Cms::Role.permission :close_private_cms_pages
     Cms::Role.permission :approve_other_cms_pages
     Cms::Role.permission :approve_private_cms_pages
     Cms::Role.permission :reroute_other_cms_pages
@@ -116,10 +122,15 @@ module Cms
     Cms::Role.permission :import_private_cms_nodes
     Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
-    Cms::Role.permission :use_other_cms_line_messages
-    Cms::Role.permission :use_private_cms_line_messages
-    Cms::Role.permission :use_cms_line_deliver_categories
-    Cms::Role.permission :use_cms_line_services
+    Cms::Role.permission :use_cms_all_contents
+    Cms::Role.permission :use_other_cms_line_messages, module_name: 'cms/line'
+    Cms::Role.permission :use_private_cms_line_messages, module_name: 'cms/line'
+    Cms::Role.permission :use_cms_line_deliver_categories, module_name: 'cms/line'
+    Cms::Role.permission :use_cms_line_services, module_name: 'cms/line'
+    Cms::Role.permission :use_other_cms_line_mail_handlers, module_name: 'cms/line'
+    Cms::Role.permission :use_private_cms_line_mail_handlers, module_name: 'cms/line'
+    Cms::Role.permission :use_other_cms_line_statistics, module_name: 'cms/line'
+    Cms::Role.permission :use_private_cms_line_statistics, module_name: 'cms/line'
 
     if SS.config.michecker && SS.config.michecker['disable'].blank?
       Cms::Role.permission :use_cms_michecker

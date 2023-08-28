@@ -15,6 +15,38 @@ module Gws::CrudFilter
     append_view_path "app/views/ss/crud"
   end
 
+  def set_item
+    if @model.respond_to?(:site)
+      @item = @model.site(@cur_site).find(params[:id])
+    else
+      @item = @model.find(params[:id])
+    end
+    @item.attributes = fix_params
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
+  def set_items
+    if @model.respond_to?(:site)
+      @items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    else
+      @items = @model.allow(:read, @cur_user, site: @cur_site)
+    end
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    if @model.respond_to?(:site)
+      @selected_items = @items = @model.in(id: ids).site(@cur_site)
+    else
+      @selected_items = @items = @model.in(id: ids)
+    end
+    raise "400" unless @items.present?
+  end
+
   public
 
   def index
@@ -44,11 +76,9 @@ module Gws::CrudFilter
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+    if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
+      redirect_to action: :lock
+      return
     end
     render
   end
@@ -79,6 +109,7 @@ module Gws::CrudFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.deleted = Time.zone.now
     render_destroy @item.save
   end
@@ -92,6 +123,7 @@ module Gws::CrudFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.deleted = nil
 
     render_opts = {}
@@ -128,11 +160,9 @@ module Gws::CrudFilter
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.attributes = fix_params
-        if item.is_a?(Gws::User)
-          if item.deletion_unlocked? && item.disabled?
-            item.destroy
-            next
-          end
+        if item.is_a?(Gws::User) && item.deletion_unlocked? && item.disabled?
+          item.destroy
+          next
         end
         next if item.disable
       else
@@ -155,6 +185,7 @@ module Gws::CrudFilter
       item.try(:cur_site=, @cur_site)
       item.try(:cur_user=, @cur_user)
       if item.allowed?(:delete, @cur_user, site: @cur_site)
+        item.record_timestamps = false
         item.deleted = Time.zone.now
         next if item.save
       else

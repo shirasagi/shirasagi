@@ -2,6 +2,8 @@ class Gws::Notice::EditablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  helper Gws::Notice::PlanHelper
+
   before_action :set_folders
   before_action :set_folder
   before_action :set_my_folder

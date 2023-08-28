@@ -9,7 +9,7 @@ var cboxLoad = function() {
       $("#cboxLoadedContent").html(data);
     },
     error: function (data, status) {
-      $("#cboxLoadedContent").html("== Error ==");
+      $("#cboxLoadedContent").text("== Error ==");
     }
   });
   return false;
@@ -80,7 +80,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
         <%= resources.map { |r| r[:resource].name }.join(", ") %>
       </td>
       <td class="updated">
-        <%= item.updated.strftime("%Y/%m/%d") %>
+        <%= ss_time_tag item.updated, type: :date %>
       </td>
     </tr>
   <% end %>

@@ -7,6 +7,7 @@ html {
   height: 100%;
   font-family: $font-base;
 }
+
 body {
   height: 100%;
   margin: 0 auto;
@@ -15,61 +16,88 @@ body {
   line-height: 1.5;
   color: $black1;
 }
-h1, h2, h3, h4, h5 {
+
+h1,
+h2,
+h3,
+h4,
+h5 {
   margin: 0;
   font-size: 100%;
   font-weight: normal;
 }
+
 a {
   color: $link;
+
   &:visited {
     color: $visited;
   }
-  &:hover, &:active {
+
+  &:hover,
+  &:active {
     color: $hover;
   }
 }
-rp, rt {
+
+rp,
+rt {
   background: #fff;
   color: $black1;
   font-size: $px12;
   font-weight: normal;
 }
+
 rp {
   margin: 0;
 }
+
 img {
   vertical-align: middle;
 }
 
 // -----------------------------------------------------------------------------
 //form
-select, input, textarea, button {
+select,
+input,
+textarea,
+button {
   font-size: 100%;
   font-family: $font-base;
 }
+
 select {
   padding: 4px 5px;
 }
-input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-input[type=email], input[type=number] {
+
+input[type=text],
+input[type=password],
+input[type=date],
+input[type=datetime],
+input[type=url],
+input[type=email],
+input[type=number] {
   width: 70%;
   min-height: 1.8em;
   margin: 0;
   padding: 3px 5px;
 }
+
 input[type=number] {
   width: 12em;
 }
+
 textarea {
   width: 70%;
   height: 6.5em;
   padding: 12px;
   line-height: 1.4;
 }
+
 .bulk-download input {
   margin: 20px 20px 10px;
 }
+
 // -----------------------------------------------------------------------------
 // layout
 #page {
@@ -84,22 +112,27 @@ textarea {
 #head {
   @include grd-black;
   border-bottom: 2px solid $beige;
+
   .wrap {
     @include clear;
     width: $page-width;
     margin: 0 auto;
     padding: 10px 10px 0;
   }
+
   .logo {
     float: left;
     margin-right: 40px;
   }
+
   .tab {
     float: left;
     margin-bottom: -2px;
+
     li {
       float: left;
       margin-right: 10px;
+
       a {
         display: block;
         padding: 8px 8px 8px 40px;
@@ -107,53 +140,69 @@ textarea {
         @include border-radius(5px 5px 0 0);
         color: $black1;
         text-decoration: none;
+
         &:hover {
           border-bottom: 2px solid #fff;
         }
       }
     }
+
     .dataset a {
       background: $beige url(../img/ic-data-wh.png) no-repeat 10px center;
+
       &:hover {
         background: $white url(../img/ic-data-bk.png) no-repeat 10px center;
       }
     }
+
     .app a {
       background: $beige url(../img/ic-app-wh.png) no-repeat 10px center;
+
       &:hover {
         background: $white url(../img/ic-app-bk.png) no-repeat 10px center;
       }
     }
+
     .idea a {
       background: $beige url(../img/ic-idea-wh.png) no-repeat 10px center;
+
       &:hover {
         background: $white url(../img/ic-idea-bk.png) no-repeat 10px center;
       }
     }
   }
+
   .login {
     float: right;
+
     a {
       margin-left: $item-margin;
       padding: 5px 0 5px 25px;
       background: url(../img/ic-login.png) no-repeat left center;
       color: $white;
-      &:hover {text-decoration: none;}
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 }
+
 .dataset #head .tab .dataset a {
   border-bottom: 2px solid #fff;
   background: $white url(../img/ic-data-bk.png) no-repeat 10px center;
 }
+
 .app #head .tab .app a {
   border-bottom: 2px solid #fff;
   background: $white url(../img/ic-app-bk.png) no-repeat 10px center;
 }
+
 .idea #head .tab .idea a {
   border-bottom: 2px solid #fff;
   background: $white url(../img/ic-idea-bk.png) no-repeat 10px center;
 }
+
 // -----------------------------------------------------------------------------
 // site-title
 #site-title {
@@ -161,26 +210,32 @@ textarea {
   width: $page-width;
   margin: 0 auto;
   padding: 0 10px;
+
   .logo {
     float: left;
     margin-top: 18px;
   }
+
   .menu {
     float: right;
     padding: $item-margin 0;
+
     .u-menu {
       @include clear;
       float: right;
       margin-bottom: $item-margin;
     }
+
     .search {
       float: left;
     }
+
     form {
       @include clear;
       padding: 3px 10px;
       border: 1px solid $beige;
       @include border-radius(3px);
+
       input[type=text] {
         float: left;
         width: auto;
@@ -188,34 +243,42 @@ textarea {
         padding: 0;
         border: 0;
       }
+
       #search-button {
         float: left;
       }
     }
+
     .inquiry {
       float: left;
       margin: 4px 0 0 $item-margin;
       padding-left: 20px;
       background: url(../img/ic-info.png) no-repeat left center;
     }
+
     .l-menu {
       @include clear;
       clear: both;
       float: right;
+
       li {
         float: left;
         margin-left: $item-margin;
         list-style: none;
+
         a {
           @include btn-black;
           padding-left: 35px;
         }
+
         .entry {
           background: $black1 url(../img/ic-upload.png) no-repeat 6px center;
         }
+
         .search {
           background: $black1 url(../img/ic-search-wh.png) no-repeat 6px center;
         }
+
         .group {
           background: $black1 url(../img/ic-group.png) no-repeat 6px center;
         }
@@ -223,25 +286,30 @@ textarea {
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // gnav
 #gnav {
   width: 100%;
+
   ul {
     @include clear;
     width: $page-width;
     margin: 0 auto;
     padding: 0 10px;
+
     li {
       float: left;
       width: 179px;
       border-left: 1px solid #fff;
       list-style: none;
+
       &:last-child {
         width: 178px;
         border-right: 1px solid #fff;
       }
     }
+
     a {
       display: block;
       padding: 10px 0;
@@ -252,33 +320,44 @@ textarea {
     }
   }
 }
+
 .dataset #gnav {
   border-bottom: $border-yellow;
   background: $sky;
-  ul li a:hover, ul li.current a {
+
+  ul li a:hover,
+  ul li.current a {
     background: #cef3ff;
   }
 }
+
 .app #gnav {
   border-bottom: $border-orange;
   background: $green;
-  ul li a:hover, ul li.current a {
+
+  ul li a:hover,
+  ul li.current a {
     background: #d9ffe6;
   }
 }
+
 .idea #gnav {
   border-bottom: $border-red;
   background: $yellow;
-  ul li a:hover, ul li.current a {
+
+  ul li a:hover,
+  ul li.current a {
     background: #fff0ca;
   }
 }
+
 // -----------------------------------------------------------------------------
 // keyvisual
 #portal-kv {
   position: relative;
   width: 100%;
   margin-bottom: $box-margin;
+
   &:after {
     content: "";
     position: absolute;
@@ -288,29 +367,37 @@ textarea {
     height: 10px;
     @include grd-gray;
   }
+
   @include grd-sky;
+
   .wrap {
     @include clear;
     width: $page-width;
     margin: 0 auto;
     padding: 0 10px;
   }
+
   h2 {
     float: left;
     margin-top: 55px;
   }
+
   nav {
     float: right;
     margin: $box-margin 0;
+
     li {
       width: 249px;
       margin-bottom: $item-margin;
+
       &:last-child {
         margin-bottom: 0;
       }
+
       a {
         text-decoration: none;
       }
+
       .title {
         display: block;
         padding: $item-margin $item-margin $item-margin 50px;
@@ -318,6 +405,7 @@ textarea {
         font-size: $px16;
         font-weight: bold;
       }
+
       .summary {
         display: block;
         padding: 3px 0;
@@ -325,52 +413,77 @@ textarea {
         text-align: center;
       }
     }
+
     .dataset {
       background: $sky;
+
       &:hover {
         background: #00686b;
-        .title {color: $white;}
+
+        .title {
+          color: $white;
+        }
       }
+
       .title {
         background: url(../img/ic-data-wh-l.png) no-repeat 13px center;
       }
+
       .summary {
         background: #00686b;
       }
     }
+
     .app {
       background: $green;
+
       &:hover {
         background: #68931d;
-        .title {color: $white;}
+
+        .title {
+          color: $white;
+        }
       }
+
       .title {
         background: url(../img/ic-app-wh-l.png) no-repeat 10px center;
       }
+
       .summary {
         background: #68931d;
       }
     }
+
     .idea {
       background: $yellow;
+
       &:hover {
         background: #c79d00;
-        .title {color: $white;}
+
+        .title {
+          color: $white;
+        }
       }
+
       .title {
         background: url(../img/ic-idea-wh-l.png) no-repeat 15px center;
       }
+
       .summary {
         background: #c79d00;
       }
     }
   }
 }
-#dataset-kv, #app-kv, #idea-kv {
+
+#dataset-kv,
+#app-kv,
+#idea-kv {
   position: relative;
   width: 100%;
   margin-bottom: $box-margin;
   @include grd-sky;
+
   &:after {
     content: "";
     position: absolute;
@@ -380,47 +493,59 @@ textarea {
     height: 10px;
     @include grd-gray;
   }
+
   .wrap {
     @include clear;
     width: $page-width;
     margin: 0 auto;
     padding: 0 10px;
   }
+
   nav {
     margin: 134px 0 $box-margin;
+
     ul {
       @include clear;
     }
+
     li {
       float: left;
       width: 249px;
       list-style: none;
+
       &:first-child {
         margin-right: $box-margin;
       }
+
       a {
         @include btn-black;
         display: block;
         padding-left: 35px;
       }
+
       .entry {
         background: $black1 url(../img/ic-upload.png) no-repeat 6px center;
       }
+
       .search {
         background: $black1 url(../img/ic-search-wh.png) no-repeat 6px center;
       }
     }
   }
 }
+
 #dataset-kv .wrap {
   background: url(../img/kv-data.png) no-repeat 660px center;
 }
+
 #app-kv .wrap {
   background: url(../img/kv-app.png) no-repeat 660px center;
 }
+
 #idea-kv .wrap {
   background: url(../img/kv-idea.png) no-repeat 660px center;
 }
+
 #body--dataset-index .dataset-count,
 #body--app-index .app-count,
 #body--idea-index .idea-count {
@@ -434,6 +559,7 @@ textarea {
   border: $border-gray2;
   background: $white;
   line-height: 6em;
+
   .count-label {
     display: inline-block;
     padding: 33px 10px;
@@ -441,6 +567,7 @@ textarea {
     line-height: 1em;
     font-size: $px18;
   }
+
   .count {
     display: inline-block;
     padding: 26px 10px 26px 90px;
@@ -448,21 +575,25 @@ textarea {
     line-height: 1em;
   }
 }
+
 #body--dataset-index .dataset-count {
   .count {
     background: url(../img/ic-data.png) no-repeat 45px .7em;
   }
 }
+
 #body--app-index .app-count {
   .count {
     background: url(../img/ic-app.png) no-repeat 45px .7em;
   }
 }
+
 #body--idea-index .idea-count {
   .count {
     background: url(../img/ic-idea.png) no-repeat 45px .7em;
   }
 }
+
 // -----------------------------------------------------------------------------
 // wrap main side
 #wrap {
@@ -472,34 +603,42 @@ textarea {
   margin: 0 auto $box-margin;
   padding: 0 10px;
 }
+
 #main {
   float: left;
   width: 803px;
 }
+
 .one #main {
   float: none;
   width: $page-width;
 }
+
 #side {
   float: right;
   width: 249px;
 }
+
 // -----------------------------------------------------------------------------
 // add
 #add {
   margin-bottom: $box-margin;
   padding: $item-margin;
   background: $gray1;
+
   h2 {
     margin-bottom: $item-margin;
     font-size: $px16;
   }
-  .banners {
+
+  .ss-image-box-item-list {
     text-align: center;
+
     a {
       display: block;
       margin-bottom: $item-margin;
     }
+
     span:last-child a {
       margin-bottom: 0;
     }
@@ -518,10 +657,12 @@ textarea {
     color: $visited;
     font-weight: bold;
   }
+
   .pagination {
     border-radius: 6px;
     text-align: left;
   }
+
   .tabs {
     li {
       display: inline-block;
@@ -532,9 +673,11 @@ textarea {
       background-color: $gray3;
       border-radius: 6px 6px 0 0;
       text-decoration: none;
+
       &.current {
         background-color: $sky;
       }
+
       a {
         display: block;
         text-decoration: none;
@@ -542,18 +685,23 @@ textarea {
       }
     }
   }
+
   tr {
     border-bottom: 1px solid #b3b3b3;
+
     &:first-child {
       border-top: 1px solid #b3b3b3;
     }
+
     td {
       min-width: 100px;
     }
   }
+
   .cells+div {
     padding: 10px;
   }
+
   #map-canvas {
     height: 350px !important;
   }
@@ -561,26 +709,32 @@ textarea {
 
 // -----------------------------------------------------------------------------
 // opendata-map
-.opendatamap a, .opendatagraph a, .settings a {
+.opendatamap a,
+.opendatagraph a,
+.settings a {
   @include btn-black;
   width: 100%;
   text-align: center;
   box-sizing: border-box;
   margin-bottom: 10px;
 }
+
 .body--dataset-map #wrap {
   width: 100%;
   min-width: 1080px;
   padding: 0;
 }
+
 .crumb {
   width: 1000px;
   margin: $item-margin auto;
 }
+
 .body--dataset-map #main {
   float: none;
   @include display-flex;
   width: 100%;
+
   .dataset-search {
     width: 300px;
     height: 600px;
@@ -589,32 +743,41 @@ textarea {
     border: 1px solid $gray2;
     border-right: 0;
     box-sizing: border-box;
+
     #ajax-search {
       @include btn-black;
       width: 100%;
       box-sizing: border-box;
     }
+
     .settings {
       margin-bottom: 20px;
     }
   }
+
   .selected-dataset {
     article {
       margin-bottom: 10px;
       border-bottom: 1px solid $gray2;
+
       header {
         position: relative;
         margin-bottom: 10px;
       }
+
       .dataset-no {
         display: block;
       }
-      .dataset-no, .dataset-name {
+
+      .dataset-no,
+      .dataset-name {
         font-weight: bold;
       }
+
       .dataset-name {
         box-sizing: border-box;
       }
+
       button {
         position: absolute;
         top: -3px;
@@ -622,14 +785,18 @@ textarea {
         border: 0;
         box-sizing: border-box;
       }
+
       label {
         @include display-flex;
       }
     }
+
     ul {
       list-style: none;
+
       li {
         margin-bottom: 12px;
+
         .images {
           @include display-flex;
           flex-wrap: wrap;
@@ -640,74 +807,92 @@ textarea {
           border: 1px solid #d0d0d0;
           display: flex;
           width: 260px;
+
           .image {
             padding: 2px;
           }
         }
+
         .marker-thumb {
           vertical-align: text-bottom;
+
           img {
             width: 12px;
           }
         }
       }
     }
+
     .deselect {
       padding: 1px 5px;
       border-radius: 6px;
       background: $green;
       color: $white;
+
       &:hover {
         opacity: .8;
       }
     }
   }
+
   .dataset-map {
     width: calc(100% - 300px);
   }
+
   #map-canvas {
     width: 100%;
     border: 1px solid $gray2;
     box-sizing: border-box;
   }
 }
+
 .body--dataset-map {
   #ajax-box {
     .submitters {
       text-align: center;
       margin: 20px 0 0;
     }
+
     .btn {
       @include btn-black;
       vertical-align: top;
       margin-bottom: 10px;
       border: 0;
     }
+
     .search-ui-form {
       margin: 10px;
     }
+
     table {
       width: 100%;
+
       tr {
         border-bottom: 1px solid #d5d5d5;
+
         &:last-child {
           margin-bottom: 30px;
         }
       }
     }
+
     .search-ui-select {
       margin-top: 20px;
     }
+
     .pagination {
       margin-top: 20px;
     }
   }
 }
+
 .search-ui-form .submitters {
   margin-top: $item-margin;
+
   .btn {
     text-decoration: none;
   }
+
   a.btn {
     text-decoration: none;
     padding: 4px;
@@ -716,41 +901,54 @@ textarea {
     color: black;
     background: #efefef;
     vertical-align: middle;
+
     &:hover {
       border: solid 1px black;
     }
   }
 }
-#ajax-box, .resource-content {
+
+#ajax-box,
+.resource-content {
   font-size: 87.5%;
+
   input[type="text"] {
     height: 1em;
     padding: 2px;
   }
+
   input {
     font-weight: $px14;
   }
+
   table {
     width: 100%;
   }
+
   thead {
     border-bottom: $border-gray2;
   }
+
   tr:hover {
     background: $gray1;
   }
+
   th {
     font-weight: normal;
     text-align: left;
     white-space: nowrap;
   }
-  th, td {
+
+  th,
+  td {
     padding: 5px 10px;
   }
+
   .checkbox {
     width: 20px;
   }
 }
+
 // -----------------------------------------------------------------------------
 // graph
 .body--graph {
@@ -759,6 +957,7 @@ textarea {
     margin: 0 auto;
     border: 1px solid #d5d5d5;
     @include display-flex;
+
     .dataset-search {
       border: none;
       border-right: 1px solid #d5d5d5;
@@ -769,31 +968,38 @@ textarea {
       padding: 10px;
       box-sizing: border-box;
     }
+
     .resource-graph {
       .first-notice {
         margin-top: 10px;
         margin-left: 10px;
       }
     }
+
     .graph-controller .chartjs-render-monitor {
       height: 300px !important;
     }
   }
 }
+
 .graph-warp {
   width: 740px;
   height: 400px;
 }
+
 .resource-graph {
   overflow-x: scroll;
   max-width: 740px;
   margin: 0 auto;
 }
+
 .graph-controller {
   text-align: right;
   margin: 10px;
+
   .graph-types {
     margin-bottom: 5px;
+
     button {
       margin: 0 0 0 5px;
     }
@@ -807,41 +1013,51 @@ textarea {
   margin: 0 auto;
   border-top: $border-gray2;
   text-align: center;
+
   nav {
     padding: 7px 0;
     background: $gray1;
   }
+
   #copyright {
     padding: 7px 0;
     @include grd-black;
     color: $white;
   }
 }
+
 // -----------------------------------------------------------------------------
 // crumbs
 .crumbs {
   margin: $item-margin 0;
+
   .separator {
     margin: 0 3px;
   }
 }
+
 // -----------------------------------------------------------------------------
 // page-list
-.pages, .opendata-search-groups {
+.pages,
+.opendata-search-groups {
   article {
     padding: 14px;
     border-bottom: $border-gray2;
+
     header {
       @include clear;
     }
+
     time {
       float: left;
       width: 20%;
     }
+
     h2 {
       float: left;
       width: 80%;
     }
+
     .point {
       margin-left: 7px;
       padding: 3px 5px 0 35px;
@@ -851,25 +1067,36 @@ textarea {
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // feed
 .feed {
   @include feed;
 }
+
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
-.categories, .estat-categories ,.areas, .tags, .formats, .licenses {
+.categories,
+.estat-categories,
+.areas,
+.tags,
+.formats,
+.licenses {
   clear: both;
+
   div {
     @include clear;
     margin-bottom: $box-margin;
+
     div {
       padding: 10px 10px 0;
     }
   }
+
   article {
     float: left;
     margin: 14px 7px 0;
+
     a {
       display: block;
       padding: 3px 10px;
@@ -878,74 +1105,96 @@ textarea {
       text-decoration: none;
     }
   }
+
   nav {
     clear: both;
     text-align: right;
+
     a {
       @include btn-black;
     }
   }
 }
+
 .categories article a {
   background: $sky;
+
   &:hover {
     background: #cef3ff;
   }
 }
+
 .estat-categories article a {
   background: $hpurple;
+
   &:hover {
     background: #f1dcfc;
   }
 }
+
 .areas article a {
   background: $hgreen;
+
   &:hover {
     background: #e9f7cb;
   }
 }
+
 .tags article a {
   background: $hblue;
+
   &:hover {
     background: #e4f5ff;
   }
 }
+
 .formats article a {
   background: $hred;
+
   &:hover {
     background: #ffe4e4;
   }
 }
+
 .licenses article a {
   background: $brown;
+
   &:hover {
     background: #f2e4cb;
   }
 }
+
 // -----------------------------------------------------------------------------
 // sns
 .cms-sns_share {
   @include clear;
   display: block;
+
   div {
     float: left;
     margin-right: $item-margin;
   }
+
   .fb-like {
     margin: 0 0 0 -15px;
   }
+
   .fb-share {
     margin-right: 5px;
     margin-top: -1px;
   }
 }
+
 // -----------------------------------------------------------------------------
 // count
-.dataset-count, .app-count, .idea-count {
+.dataset-count,
+.app-count,
+.idea-count {
   float: right;
   margin: $item-margin 0;
   padding-right: 10px;
   border: $border-gray2;
+
   .count-label {
     display: inline-block;
     margin-right: $item-margin;
@@ -953,80 +1202,75 @@ textarea {
     background: $gray2;
   }
 }
+
 // -----------------------------------------------------------------------------
 // search
-.opendata-search-datasets-form, .opendata-search-groups-form,
+.opendata-search-datasets-form,
+.opendata-search-groups-form,
 .opendata-search-apps-form,
 .opendata-search-ideas-form {
-  @include clear;
   clear: both;
   @include display-flex;
   @include flex-wrap(wrap);
+  gap: $item-margin;
   margin: $box-margin 0;
   padding: 12px;
   border: 2px solid $sky;
+
   dl {
     width: 249px;
-    margin-right: $item-margin;
-    &:nth-child(3n+1) {
-      margin-right: 0;
-    }
-    &.group {
-      margin-right: $item-margin;
-    }
-    dd {
-      margin-bottom: $item-margin;
-    }
+
     input {
       width: 237px;
     }
+
     select {
       width: 249px;
       height: 33px;
     }
-    input, select {
+
+    input,
+    select {
       border: 1px solid $gray2;
     }
   }
+
   .send input {
     float: right;
     margin-top: 20px;
     @include btn-black;
   }
 }
-.opendata-search-datasets-form {
-  display: block;
-  label {
-    input {
-      width: auto;
-    }
-    td {
-      text-align: left;
-    }
-  }
-}
-.opendata-search-datasets, .opendata-search-groups,
+
+.opendata-search-datasets,
+.opendata-search-groups,
 .opendata-search-apps,
 .opendata-search-ideas {
   clear: both;
+
   article {
     position: relative;
   }
+
   .categories {
     margin-top: 0;
   }
+
   .download {
     position: absolute;
     bottom: 20px;
     right: 15px;
   }
 }
+
 .opendata-search-datasets,
 .opendata-search-apps,
 .opendata-search-ideas {
   article {
     padding: 7px 14px 20px;
-    time, h2 {
+
+    time,
+    h2 {
       font-size: $px16;
     }
   }
@@ -1035,24 +1279,33 @@ textarea {
 .opendata-search-ideas-form {
   border: 2px solid $yellow;
 }
+
 .download-all {
   float: right;
   margin-right: 15px;
 }
-.download-all, .download a, .bulk-download input {
+
+.download-all,
+.download a,
+.bulk-download input {
   @include btn-black;
+
   &:hover {
     color: $white;
   }
 }
+
 // -----------------------------------------------------------------------------
 // categories
-div.categories, nav.categories {
+div.categories,
+nav.categories {
   margin-top: 15px;
   @include display-flex;
   @include flex-wrap(wrap);
   width: calc(100% - 187px);
-  span, a {
+
+  span,
+  a {
     display: block;
     margin: 7px 7px 0 0;
     padding: 3px 10px;
@@ -1060,122 +1313,161 @@ div.categories, nav.categories {
     color: $black1;
     text-decoration: none;
   }
+
   .estat-category {
     background: $hpurple;
+
     &:hover {
       background: #f1dcfc;
     }
   }
+
   .category {
     background: #ffcf38;
+
     &:hover {
       background: #ffe593;
     }
   }
+
   .area {
     background: $hgreen;
+
     &:hover {
       background: #e9f7cb;
     }
   }
+
   .tag {
     background: $hblue;
+
     &:hover {
       background: #e4f5ff;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // one
-.dataset .one, .app .one, .idea .one {
+.dataset .one,
+.app .one,
+.idea .one {
   header .id {
     float: right;
     padding: 1em 0 0;
+
     &:before {
       content: "ID:";
     }
   }
+
   h1.name {
     margin: $item-margin 0;
     color: #005c7b;
     font-size: $px32;
     font-weight: bold;
   }
+
   .point {
     float: right;
     width: 247px;
     padding: $item-margin 0;
     border: $border-gray2;
     text-align: center;
+
     .number {
       font-size: $px32;
     }
+
     .like a {
       @include btn-black;
     }
   }
+
   .download-all {
     float: none;
+
     a {
       color: $white;
       text-decoration: none;
     }
   }
+
   .categories {
     @include clear;
     float: left;
     width: 803px;
     margin-bottom: $item-margin;
   }
-  .text, div.idea {
+
+  .text,
+  div.idea {
     float: left;
     width: 780px;
     margin-bottom: $box-margin;
+
     h2 {
       font-size: $px18;
       font-weight: bold;
     }
   }
+
   .text {
     width: 100%;
   }
+
   .tabs {
     clear: both;
   }
+
   .names {
     clear: both;
     @include tab;
     margin-bottom: $box-margin;
     border-bottom: 2px solid $sky;
-    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
+
+    a:hover,
+    a.current,
+    a.dataset-current,
+    a.app_current,
+    a.idea-current {
       background: $sky;
       filter: none;
       color: $black1;
     }
   }
-  .resources, #tab-sample {
+
+  .resources,
+  #tab-sample {
     margin-bottom: $box-margin;
     border: 2px solid $sky;
+
     h1 {
       @include midashi-dataset;
       border-bottom: 0;
     }
-    .resource, .url-resource, .appfile {
+
+    .resource,
+    .url-resource,
+    .appfile {
       @include clear;
       @include display-flex;
       @include justify-content(space-between);
       @include flex-wrap(wrap);
       padding: 12px;
+
       &:not(:last-child) {
         border-bottom: $border-gray2;
         margin-bottom: 20px;
       }
+
       .info {
         @include display-flex;
         @include align-items(center);
         @include justify-content(space-between);
         @include flex-wrap(wrap);
         width: 40%;
+
         .name {
           display: block;
           width: 500px;
@@ -1183,200 +1475,272 @@ div.categories, nav.categories {
           float: none;
           margin-bottom: 10px;
         }
+
         .download-count {
           border-top: solid 1px #dfdfdf;
           padding: 8px 12px;
         }
+
         div[class^="name format-"] {
           background: url(../img/file-default.gif) no-repeat left center;
         }
+
         div.format-csv {
           background: url(../img/file-csv.png) no-repeat left center;
         }
-        div.format-xlsx, div.format-xls {
+
+        div.format-xlsx,
+        div.format-xls {
           background: url(../img/file-xls.png) no-repeat left center;
         }
-        div.format-doc, div.format-docx {
+
+        div.format-doc,
+        div.format-docx {
           background: url(../img/file-word.png) no-repeat left center;
         }
+
         div.format-txt {
           background: url(../img/file-txt.png) no-repeat left center;
         }
+
         div.format-rdf {
           background: url(../img/file-rdf.png) no-repeat left center;
         }
+
         div.format-xml {
           background: url(../img/file-txt.png) no-repeat left center;
         }
+
         div.format-zip {
           background: url(../img/file-zip.png) no-repeat left center;
         }
+
         div.format-html {
           background: url(../img/file-html.png) no-repeat left center;
         }
-        div.format-ppt, div.format-pptx {
+
+        div.format-ppt,
+        div.format-pptx {
           background: url(../img/file-ppt.png) no-repeat left center;
         }
+
         div.format-kml {
           background: url(../img/file-kml.png) no-repeat left center;
         }
+
         div.format-jpg {
           background: url(../img/file-jpg.png) no-repeat left center;
         }
+
         div.format-gif {
           background: url(../img/file-gif.png) no-repeat left center;
         }
+
         div.format-png {
           background: url(../img/file-png.png) no-repeat left center;
         }
+
         div.format-bmp {
           background: url(../img/file-bmp.png) no-repeat left center;
         }
+
         div.format-pdf {
           background: url(../img/file-pdf.gif) no-repeat left center;
         }
       }
+
       .icons {
         @include display-flex;
         @include align-items(center);
         @include flex-wrap(wrap);
         @include justify-content(flex-end);
         width: calc(60% - 10px);
-        span, div {
+
+        span,
+        div {
           margin-left: $item-margin;
+
           &:empty {
             display: none;
           }
         }
+
         span {
           margin: 2px 0;
         }
+
         div a {
           @include btn-black;
         }
       }
+
       .text {
         padding: 8px 17px;
         border-top: solid 1px #dfdfdf;
       }
     }
   }
-  #tab-app, #tab-idea, #tab-play, #tab-html, #tab-css, #tab-js, #tab-sample, #tab-dataset,
+
+  #tab-app,
+  #tab-idea,
+  #tab-play,
+  #tab-html,
+  #tab-css,
+  #tab-js,
+  #tab-sample,
+  #tab-dataset,
   #tab-comment {
     margin-bottom: $box-margin;
     border: 2px solid $green;
+
     h1 {
       @include midashi-app;
       border-bottom: 0;
     }
+
     .contribute-wrap {
       padding: 12px;
     }
+
     .contribute {
       @include btn-black;
     }
+
     table {
       width: 100%;
     }
+
     tr {
       border-top: $border-gray2;
     }
+
     td {
       padding: 12px;
     }
   }
-  #tab-sample, #tab-dataset {
+
+  #tab-sample,
+  #tab-dataset {
     border: 2px solid $sky;
+
     h1 {
       @include midashi-dataset;
       border-bottom: 0;
     }
   }
-  #tab-idea, #tab-comment {
+
+  #tab-idea,
+  #tab-comment {
     border: 2px solid $yellow;
+
     h1 {
       @include midashi-idea;
       border-bottom: 0;
     }
   }
+
   .fullscreen {
     padding: 12px 12px 0;
+
     a {
       @include btn-black;
     }
   }
+
   .frame {
     padding: 12px;
+
     iframe {
       width: 100%;
       min-height: 360px;
     }
   }
+
   .app-filename {
     margin-bottom: $item-margin;
     padding-bottom: 7px;
     border-bottom: $border-gray2;
     font-size: $px16;
   }
+
   .comments {
     .comment {
       padding: 12px;
       border-bottom: $border-gray2;
+
       .text {
         width: 100%;
         margin-bottom: $box-margin;
       }
+
       a {
         margin-right: $item-margin;
       }
     }
   }
+
   #idea-comments .invite {
     padding: 12px;
   }
+
   .opendata-add-comment-form {
     @include clear;
     padding: 12px;
     background: $gray2;
+
     dl {
       float: left;
     }
+
     dt {
       display: none;
     }
+
     textarea {
       width: 780px;
     }
+
     .comment-add {
       float: left;
       @include btn-black;
       margin: 40px;
     }
   }
-  .related_app, .related_dataset {
+
+  .related_app,
+  .related_dataset {
     @include clear;
+
     div {
       float: left;
     }
-    .app, .dataset {
+
+    .app,
+    .dataset {
       clear: both;
       width: 550px;
       padding: 12px;
     }
-    .app-executed, .dataset-downloaded {
+
+    .app-executed,
+    .dataset-downloaded {
       width: 150px;
       padding: 12px;
     }
-    .app-updated, .dataset-updated {
+
+    .app-updated,
+    .dataset-updated {
       width: 304px;
       padding: 12px;
     }
   }
+
   .author {
     @include clear;
     margin-bottom: $box-margin;
     padding: 3px 3px 0;
     border: $border-gray2;
+
     dt {
       clear: both;
       float: left;
@@ -1385,6 +1749,7 @@ div.categories, nav.categories {
       padding: 3px 10px;
       background: $sky;
     }
+
     dd {
       float: left;
       width: 808px;
@@ -1392,118 +1757,166 @@ div.categories, nav.categories {
       padding: 3px 0;
     }
   }
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     @include clear;
     margin-bottom: $box-margin;
+
     h1 {
       @include midashi-dataset;
     }
+
     article {
       padding: 7px 14px;
     }
+
     .group {
       margin-top: $item-margin;
     }
+
     dl {
       @include clear;
       float: left;
       margin-right: $item-margin;
-      dt, dd {
+
+      dt,
+      dd {
         float: left;
       }
     }
   }
 }
+
 .api {
   margin-bottom: $box-margin;
+
   a {
     @include btn-black;
   }
 }
+
 .dataset-favorite a {
   @include btn-black;
   margin-bottom: 10px;
   background: #383838 url(../img/favorite_star.png) no-repeat 8px center;
   background-size: 15px;
+
   &.registered {
     background: white url(../img/favorite_star_b.png) no-repeat 8px center;
     background-size: 15px;
     color: black;
   }
 }
+
 .app .one {
   h1.name {
     color: #025931;
   }
+
   .names {
     border-bottom: 2px solid $green;
-    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
+
+    a:hover,
+    a.current,
+    a.dataset-current,
+    a.app_current,
+    a.idea-current {
       background: $green;
     }
   }
+
   .author dt {
     background: $green;
   }
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     h1 {
       @include midashi-app;
     }
   }
 }
+
 .app-body .frm-app {
   width: 100%;
   height: 100%;
 }
+
 .idea .one {
   h1.name {
     color: #006f47;
   }
+
   .names {
     border-bottom: 2px solid $yellow;
-    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
+
+    a:hover,
+    a.current,
+    a.dataset-current,
+    a.app_current,
+    a.idea-current {
       background: $yellow;
     }
   }
+
   .author dt {
     background: $yellow;
   }
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     h1 {
       @include midashi-idea;
     }
   }
 }
+
 .body--dataset {
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     h2 {
       @include midashi-dataset;
     }
   }
 }
+
 .body--app {
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     h2 {
       @include midashi-app;
     }
   }
 }
+
 .body--idea {
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     h2 {
       @include midashi-idea;
     }
   }
 }
-.body--dataset, .body--app, .body--idea {
+
+.body--dataset,
+.body--app,
+.body--idea {
   .related-pages {
     ul {
       margin: 0 0 $box-margin 25px;
     }
+
     h2 {
       margin-bottom: $item-margin;
     }
   }
-  .related-pages, .contact {
+
+  .related-pages,
+  .contact {
     h2 {
       border-bottom: 0;
     }
@@ -1518,21 +1931,25 @@ div.categories, nav.categories {
 // about
 #about {
   margin-bottom: $box-margin;
+
   h2 {
     @include midashi;
     @include grd-blue;
     color: $white;
   }
+
   p {
     margin-top: $item-margin;
     padding: 0 10px;
   }
 }
+
 // -----------------------------------------------------------------------------
 // cms-tabs
 .cms-tabs {
   @include tabs;
 }
+
 :root .cms-tabs .names a:hover,
 :root .cms-tabs a.current {
   filter: none\0;
@@ -1540,36 +1957,48 @@ div.categories, nav.categories {
 
 // -----------------------------------------------------------------------------
 // portal-dataset
-#portal-dataset, #portal-app, #portal-idea {
+#portal-dataset,
+#portal-app,
+#portal-idea {
   margin-bottom: $box-margin;
+
   header h1 {
     @include midashi-dataset;
   }
+
   nav {
     @include feed;
   }
 }
+
 #portal-app header h1 {
   @include midashi-app;
 }
+
 #portal-idea header h1 {
   @include midashi-idea;
 }
+
 #portal-area header h1 {
   @include midashi-area;
 }
+
 #portal-area {
   margin-bottom: $box-margin;
+
   header {
     margin-bottom: $item-margin;
   }
+
   ul {
     @include display-flex;
     @include justify-content(space-between);
     @include flex-wrap(wrap);
     list-style: none;
+
     li {
       width: calc(20% - 10px);
+
       a {
         display: block;
         background: $hgreen;
@@ -1578,6 +2007,7 @@ div.categories, nav.categories {
         box-sizing: border-box;
         color: $black2;
         text-decoration: none;
+
         &:hover {
           background: #e9f7cb;
         }
@@ -1597,11 +2027,15 @@ div.categories, nav.categories {
     font-size: $px24;
     font-weight: bold;
   }
+
   .released {
     margin-bottom: $box-margin;
     text-align: right;
   }
-  .body, .inquiry-html, .inquiry-form {
+
+  .body,
+  .inquiry-html,
+  .inquiry-form {
     h1 {
       margin-bottom: $item-margin;
       @include midashi;
@@ -1610,47 +2044,62 @@ div.categories, nav.categories {
       font-size: $px18;
       font-weight: bold;
     }
+
     h2 {
       margin-bottom: $item-margin;
       @include midashi;
       border-bottom: 2px solid $blue;
     }
+
     h3 {
       margin-bottom: $item-margin;
       @include midashi;
       padding: 0 0 0 5px;
       border-left: 5px solid $blue;
     }
+
     h4 {
       margin-bottom: $item-margin;
       padding: 0 10px;
       color: $blue;
       font-weight: bold;
     }
+
     p {
       margin-bottom: $box-margin;
       padding: 0 10px;
     }
+
     table {
       margin-bottom: $box-margin;
+
       caption {
         padding: 0 10px;
         text-align: left;
       }
-      th, td {
+
+      th,
+      td {
         padding: 5px 10px;
         border: $border-gray2;
       }
+
       th {
         background: $gray3;
       }
     }
-    ul, ol {
+
+    ul,
+    ol {
       margin: 0 0 $box-margin 25px;
     }
   }
-  .related-pages, .map-page, .contact {
+
+  .related-pages,
+  .map-page,
+  .contact {
     margin-bottom: $box-margin;
+
     h1 {
       margin-bottom: $item-margin;
       @include midashi;
@@ -1660,11 +2109,16 @@ div.categories, nav.categories {
       font-weight: bold;
     }
   }
+
   .related-pages ul {
     margin: 0 0 $box-margin 25px;
   }
-  .related-pages, .map-page, .contact {
+
+  .related-pages,
+  .map-page,
+  .contact {
     margin-bottom: $box-margin;
+
     h2 {
       margin-bottom: $item-margin;
       @include midashi;
@@ -1674,26 +2128,38 @@ div.categories, nav.categories {
       font-weight: bold;
     }
   }
+
   .contact {
     @include clear;
-    dl {@include clear;}
-    dt, dd {
+
+    dl {
+      @include clear;
+    }
+
+    dt,
+    dd {
       float: left;
     }
-    .tel, .fax, .email {
+
+    .tel,
+    .fax,
+    .email {
       float: left;
       margin-right: $item-margin;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // inquiry event
-.inquiry-form, .body--event .see {
+.inquiry-form,
+.body--event .see {
   dl {
     clear: both;
     @include clear;
     margin-bottom: $item-margin;
   }
+
   dt {
     width: 200px;
     float: left;
@@ -1701,58 +2167,74 @@ div.categories, nav.categories {
     padding: 10px;
     background: $gray3;
   }
+
   dd {
     float: left;
     width: 569px;
     margin-top: 4px;
   }
+
   .send {
     text-align: center;
+
     input {
       @include btn-blue;
     }
   }
+
   .simple-captcha {
     margin: 0 0 $box-margin 234px;
   }
+
   #answer_captcha {
     width: 10%;
   }
 }
+
 :root .inquiry-form .send input,
 :root .body--event .see .send input {
   filter: none\0;
 }
+
 #ss-notice {
   margin-bottom: $box-margin;
   color: #e00;
 }
+
 #errorExplanation {
   margin: $box-margin 0;
-  p, ul {
+
+  p,
+  ul {
     color: #e00;
   }
+
   p {
     margin: $item-margin 0;
   }
+
   ul {
     margin: $item-margin 0 $item-margin 25px;
   }
 }
+
 .body--event {
   .body {
     clear: both;
   }
+
   .see {
     dt {
       clear: both;
       margin-bottom: $item-margin;
     }
+
     dd {
-      margin: 10px 0  $item-margin;
+      margin: 10px 0 $item-margin;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // calendar
 .event-date {
@@ -1762,74 +2244,289 @@ div.categories, nav.categories {
     border-bottom: 2px solid $orange;
     font-size: $px16;
   }
+
   h1.jan {
     background: url(../img/ic-january.png) no-repeat 10px bottom;
   }
+
   h1.feb {
     background: url(../img/ic-february.png) no-repeat left bottom;
   }
+
   h1.may {
     background: url(../img/ic-may.png) no-repeat left bottom;
   }
+
   h1.apr {
     background: url(../img/ic-april.png) no-repeat left bottom;
   }
+
   h1.mar {
     background: url(../img/ic-march.png) no-repeat left bottom;
   }
+
   h1.jun {
     background: url(../img/ic-june.png) no-repeat 10px bottom;
   }
+
   h1.jul {
     background: url(../img/ic-july.png) no-repeat left bottom;
   }
+
   h1.aug {
     background: url(../img/ic-august.png) no-repeat 5px bottom;
   }
+
   h1.sep {
     background: url(../img/ic-september.png) no-repeat 9px bottom;
   }
+
   h1.oct {
     background: url(../img/ic-october.png) no-repeat 10px bottom;
   }
+
   h1.nov {
     background: url(../img/ic-november.png) no-repeat 8px bottom;
   }
+
   h1.dec {
     background: url(../img/ic-december.png) no-repeat 10px bottom;
   }
-  > h2 {
+
+  >h2 {
     display: inline-block;
   }
+
   ul {
     float: right;
+
     .prev {
       @include inline-block;
       margin-right: 10px;
       padding: 0 15px;
       border-right: $border-gray2;
     }
+
     .next {
       @include inline-block;
       padding-right: 13px;
     }
   }
 }
+
+.event-format{
+  display: inline-block;
+
+  .list,
+  .table{
+
+    a{
+      margin: 7px;
+      padding: 7px 8px;
+      text-align: center;
+      // text-decoration: none;
+      // background-color: #bcbcbc;
+      border-radius: 10px;
+
+      &:hover{
+        // text-decoration: solid;
+      }
+
+    }
+
+    &.current{
+      a{
+        // background-color: #c7e3ff;
+      }
+
+    }
+  }
+}
+
+.event-ics-file{
+  margin: 7px;
+  padding: 7px 8px;
+  text-align: center;
+  // text-decoration: none;
+  // background-color: #faffc7;
+  // border-radius: 10px;
+
+  &:hover{
+    // text-decoration: solid;
+  }
+}
+
+#event-table {
+  margin-top: 13px;
+
+  @media only screen and (max-width: 768px) {
+    margin-bottom: 24px;
+    overflow-x: scroll;
+  }
+
+  .calendar {
+    width: 100%;
+    border: 1px solid #fff;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 20px;
+
+    @media only screen and (max-width: 768px) {
+      width: 1080px;
+    }
+
+    caption {
+      display: none;
+    }
+  }
+
+  th,
+  td {
+    width: 14%;
+    border-bottom: solid 1px #eaeee2;
+  }
+
+  th+th,
+  td {
+    border-left: 1px solid #eaeee2;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  thead tr:first-child th:first-child {
+    border-radius: 20px 0 0 0;
+  }
+
+  thead tr:first-child th:last-child {
+    border-radius: 0 20px 0 0;
+  }
+
+  tbody tr:last-child td:first-child {
+    border-radius: 0 0 0 20px;
+  }
+
+  tbody tr:last-child td:last-child {
+    border-radius: 0 0 20px 0;
+  }
+
+  th {
+    height: 36px;
+    min-height: 36px;
+    background: $white;
+    font-weight: normal;
+    vertical-align: middle;
+    font-size: $px12;
+
+    &:first-child {
+      background: #ffdeda;
+      border-bottom: 1px solid #fff;
+    }
+
+    &:last-child {
+      background: #e1f0ff;
+      border-bottom: 1px solid #fff;
+    }
+  }
+
+  td {
+    height: 100px;
+    min-height: 100px;
+    background: #fff;
+    font-weight: bold;
+    font-size: $px12;
+
+    vertical-align: top;
+  }
+
+  thead {
+    th {
+      .wday {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  td.holiday .date {
+
+    .daily,
+    .holiday {
+      display: inline-block;
+    }
+
+    .holiday {
+      border-bottom: none;
+      font-size: $px12;
+    }
+  }
+
+  .date {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    font-size: $px14;
+
+    .daily {
+      width: 2.125em;
+
+      a {
+        color: #535353;
+        text-decoration: none;
+      }
+    }
+
+    .page {
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .data,
+    .event {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .data {
+      display: none;
+    }
+
+    .event {
+      font-size: $px13;
+      font-weight: normal;
+
+      a {
+        color: #535353;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
 #event-list {
   clear: both;
   margin-bottom: 2em;
   border-top: $border-gray2;
+
   dl {
     margin: 0;
     padding: 6px 10px 3px;
     border-bottom: $border-gray2;
     zoom: 1;
+
     &:before {
       content: "\0020";
       display: block;
       height: 0;
       overflow: hidden;
     }
+
     &:after {
       content: "\0020";
       clear: both;
@@ -1837,29 +2534,37 @@ div.categories, nav.categories {
       height: 0;
       overflow: hidden;
     }
+
     .page {
       margin-bottom: 0;
       padding-bottom: 6px;
       border: 0;
+
       &:last-child {
         padding-bottom: 3px;
       }
     }
   }
+
   dl.sat {
     background: #e1ebf1;
     color: #039;
   }
-  dl.sun, dl.holiday {
+
+  dl.sun,
+  dl.holiday {
     background: #fee;
     color: #e00;
   }
+
   dt {
     float: left;
     width: 20%;
   }
+
   dd {
     margin-left: 20%;
+
     h2 {
       margin: 0;
       padding: 0;
@@ -1867,10 +2572,12 @@ div.categories, nav.categories {
       font-size: 100%;
       font-weight: normal;
     }
+
     div {
       @include float(left);
       min-width: 85px;
       margin-right: $item-margin;
+
       a {
         display: block;
         min-width: 85px;
@@ -1882,9 +2589,11 @@ div.categories, nav.categories {
       }
     }
   }
+
   .page {
     margin-bottom: 10px;
     border-bottom: $border-gray2;
+
     h2 {
       margin: 0;
       padding: 0;
@@ -1892,16 +2601,20 @@ div.categories, nav.categories {
       font-size: 100%;
       font-weight: normal;
     }
+
     p {
       margin-bottom: $item-margin;
     }
+
     .categories {
       @include clear;
       margin-bottom: 0;
       border: 0;
+
       li {
         padding-left: 0;
       }
+
       li a {
         display: block;
         @include float(left);
@@ -1911,6 +2624,7 @@ div.categories, nav.categories {
         background: $hblue;
         color: $black1;
         text-decoration: none;
+
         &:hover {
           background-color: $blue;
           color: $white;
@@ -1919,8 +2633,33 @@ div.categories, nav.categories {
     }
   }
 }
+
+#event-table {
+  .sat {
+    border-bottom: 1px solid #fff;
+    background: #e1f0ff;
+    color: #26499d;
+
+    .date .daily a {
+      color: #26499d;
+    }
+  }
+
+  .sun,
+  .holiday {
+    border-bottom: 1px solid #fff;
+    background: #ffdeda;
+    color: $red;
+
+    .date .daily a {
+      color: #ff4e4e;
+    }
+  }
+}
+
 .event .see {
   @include clear;
+
   dt {
     clear: both;
     @include float(left);
@@ -1930,6 +2669,7 @@ div.categories, nav.categories {
     @include border-radius(3px);
     background: $hblue;
   }
+
   dd {
     @include float(left);
     width: 528px;
@@ -1938,51 +2678,68 @@ div.categories, nav.categories {
     word-break: break-all;
   }
 }
+
 .event-calendar {
   margin-bottom: $box-margin;
+
   .title h2 {
     margin-bottom: 6px;
     padding: 5px $item-margin;
     @include grd-blue;
     color: $white;
   }
+
   .calendar-nav {
     text-align: center;
+
     li {
       display: inline-block;
       font-size: $px12;
     }
+
     .current {
       margin: 0 5px;
     }
   }
+
   .calendar {
     margin: 0 auto;
+
     caption {
       font-size: $px16;
     }
-    th, td {
+
+    th,
+    td {
       width: 40px;
       border: $border-gray2;
       text-align: center;
     }
+
     th {
       background: $hblue;
     }
+
     .unit {
       display: none;
     }
+
     td.sun {
       color: #e00;
     }
+
     td.sat {
       color: #03c;
     }
+
     .today {
       background: #ffeacc;
     }
-    td.prev-month, td.next-month {
+
+    td.prev-month,
+    td.next-month {
       color: $gray4;
+
       a {
         color: $gray4;
       }
@@ -1997,68 +2754,90 @@ div.categories, nav.categories {
 .dataset .opendata-tabs {
   @include tabs;
   clear: both;
+
   .names {
     border-bottom: 2px solid $sky;
-    a:hover, a.current {
+
+    a:hover,
+    a.current {
       background: $sky;
       filter: none;
       color: $black1;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
 .dataset {
-  .areas, .tags, .formats, .licenses, .categories, .estat-categories {
+
+  .areas,
+  .tags,
+  .formats,
+  .licenses,
+  .categories,
+  .estat-categories {
     h1 {
       @include midashi-dataset;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // page-name
 .dataset #page-name {
   @include midashi-dataset;
 }
+
 // -----------------------------------------------------------------------------
 // search-group
 #search-group {
   margin-bottom: $box-margin;
+
   h1 {
     @include midashi-beige;
     padding-left: 35px;
     background: $beige2 url(../img/ic-group-gr.png) no-repeat 10px center;
   }
+
   h2 a {
     display: block;
     padding: 7px $item-margin;
     border-bottom: $border-gray2;
+
     &:hover {
       background: $gray3;
     }
   }
+
   nav {
     text-align: right;
   }
+
   .more {
     margin-top: $item-margin;
     @include btn-black;
     text-align: right;
   }
 }
+
 // -----------------------------------------------------------------------------
 // dataset-attention
 #dataset-attention {
   margin-bottom: $box-margin;
+
   h1 {
     @include midashi-dataset;
   }
+
   li {
     list-style: none;
+
     a {
       display: block;
       padding: 7px $item-margin;
       border-bottom: $border-gray2;
+
       &:hover {
         background: $gray3;
       }
@@ -2072,105 +2851,141 @@ div.categories, nav.categories {
 // app-attention
 #app-attention {
   margin-bottom: $box-margin;
+
   h1 {
     @include midashi-app;
   }
+
   li {
     list-style: none;
+
     a {
       display: block;
       padding: 7px $item-margin;
       border-bottom: $border-gray2;
+
       &:hover {
         background: $gray3;
       }
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // opendata-tabs
 .app .opendata-tabs {
   @include tabs;
   clear: both;
+
   .names {
     border-bottom: 2px solid $green;
-    a:hover, a.current {
+
+    a:hover,
+    a.current {
       background: $green;
       filter: none;
       color: $black1;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
 .app {
-  .areas, .tags, .formats, .licenses {
+
+  .areas,
+  .tags,
+  .formats,
+  .licenses {
     h1 {
       @include midashi-app;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // page-name
 .app #page-name {
   @include midashi-app;
 }
+
 // -----------------------------------------------------------------------------
 // idea
 // -----------------------------------------------------------------------------
 // idea-attention
 #idea-attention {
   margin-bottom: $box-margin;
+
   h1 {
     @include midashi-idea;
   }
+
   li {
     list-style: none;
+
     a {
       display: block;
       padding: 7px $item-margin;
       border-bottom: $border-gray2;
+
       &:hover {
         background: $gray3;
       }
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // opendata-tabs
 .idea .opendata-tabs {
   @include tabs;
   clear: both;
+
   .names {
     border-bottom: 2px solid $yellow;
-    a:hover, a.current {
+
+    a:hover,
+    a.current {
       background: $yellow;
       filter: none;
       color: $black1;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
 .idea {
-  .areas, .tags, .formats, .licenses {
+
+  .areas,
+  .tags,
+  .formats,
+  .licenses {
     h1 {
       @include midashi-idea;
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 // page-name
 .idea #page-name {
   @include midashi-idea;
 }
+
 // -----------------------------------------------------------------------------
 // mypage
 // -----------------------------------------------------------------------------
 // mypage
 .body--mypage {
-  .Twitter, .facebook, .Yahoo, .Google, .github {
+
+  .Twitter,
+  .facebook,
+  .Yahoo,
+  .Google,
+  .github {
     list-style: none;
+
     a {
       display: block;
       width: 498px;
@@ -2179,62 +2994,80 @@ div.categories, nav.categories {
       border: $border-gray2;
       color: $black1;
       text-decoration: none;
+
       &:hover {
         background: $gray2;
       }
     }
   }
+
   .menu {
     float: left;
     margin-bottom: $item-margin;
+
     a {
       @include btn-blue;
       padding: 7px 12px;
       width: 180px;
     }
   }
+
   .tutorial-data {
     float: right;
     margin-bottom: $item-margin;
+
     a {
       @include btn-black;
     }
   }
+
   .index {
     clear: both;
     width: 100%;
     margin-bottom: $box-margin;
+
     thead {
       border-bottom: 2px solid $blue;
     }
+
     tr {
       border-bottom: $border-gray2;
     }
+
     th {
       font-weight: normal;
       text-align: left;
     }
-    th, td {
+
+    th,
+    td {
       padding: 10px;
     }
   }
+
   .see {
     width: 100%;
     margin-bottom: $box-margin;
     border-top: 2px solid $blue;
     border-bottom: 2px solid $blue;
+
     tr {
       border-bottom: $border-gray2;
     }
+
     td {
       padding: $item-margin;
-      input[type="text"], textarea {
+
+      input[type="text"],
+      textarea {
         width: 100%;
         @include box-sizing(border-box);
       }
+
       label {
         margin-right: $item-margin;
       }
+
       label.parent {
         display: block;
         margin-right: 0;
@@ -2242,25 +3075,30 @@ div.categories, nav.categories {
         padding-bottom: 7px;
         border-bottom: $border-gray2;
       }
+
       ul {
         margin-left: 15px;
       }
     }
+
     .field {
       width: 200px;
       background: $gray3;
       vertical-align: top;
     }
   }
+
   .ajax-selected {
     width: 100%;
     margin-top: $item-margin;
+
     th {
       padding: 0 $item-margin 7px;
       font-weight: normal;
       text-align: left;
     }
   }
+
   #item-form {
     .tooltip {
       position: relative;
@@ -2274,6 +3112,7 @@ div.categories, nav.categories {
       font-weight: bold;
       text-align: center;
       cursor: pointer;
+
       ul {
         position: absolute;
         bottom: 18px;
@@ -2288,6 +3127,7 @@ div.categories, nav.categories {
         font-weight: normal;
         text-align: left;
         list-style: none;
+
         &:before {
           content: "";
           position: absolute;
@@ -2299,6 +3139,7 @@ div.categories, nav.categories {
           border-left: 6px solid transparent;
           border-right: 6px solid transparent;
         }
+
         &:after {
           content: "";
           position: absolute;
@@ -2312,60 +3153,84 @@ div.categories, nav.categories {
         }
       }
     }
+
     .deletion-confirm {
       margin-bottom: $box-margin;
     }
+
     .send {
       text-align: center;
+
       input {
         @include btn-blue;
       }
     }
   }
+
   .account {
     margin-bottom: $box-margin;
     text-align: right;
+
     a {
       @include btn-black;
     }
   }
+
   #ajax-box {
     font-size: 87.5%;
+
     input[type="text"] {
       height: 1em;
       padding: 2px;
     }
+
     input {
       font-weight: $px14;
     }
+
     thead {
       border-bottom: $border-gray2;
     }
+
     tr:hover {
       background: $gray1;
     }
+
     th {
       font-weight: normal;
       text-align: left;
       white-space: nowrap;
     }
-    th, td {
+
+    th,
+    td {
       padding: 5px 10px;
     }
+
     .checkbox {
       width: 20px;
     }
   }
 }
+
 :root .body--mypage .menu a {
   filter: none\0;
 }
+
 :root .body--mypage #item-form .send input {
   filter: none\0;
 }
+
 .member-login-box {
-  .twitter, .facebook, .yahoojp, .yahoojp_v2, .google_oauth2, .github {
+
+  .twitter,
+  .facebook,
+  .yahoojp,
+  .yahoojp_v2,
+  .google_oauth2,
+  .github {
     list-style: none;
+
     a {
       display: block;
       width: 498px;
@@ -2374,47 +3239,60 @@ div.categories, nav.categories {
       border: $border-gray2;
       color: $black1;
       text-decoration: none;
+
       &:hover {
         background: $gray2;
       }
     }
   }
+
   .form-login {
     @include clear;
+
     dl {
       clear: both;
       @include clear;
       margin-bottom: $item-margin;
     }
-    dt, dd {
+
+    dt,
+    dd {
       float: left;
       margin-right: $item-margin;
     }
+
     dt {
       padding: 3px 5px;
     }
+
     dd input {
       width: 350px;
     }
+
     .send {
       clear: both;
       text-align: center;
+
       input {
         @include btn-blue;
       }
     }
   }
 }
+
 :root .member-login .send input {
   filter: none\0;
 }
+
 #mypage-tabs {
   @include tab;
   margin: $box-margin 0;
+
   a {
     position: relative;
     padding: 8px 10px 5px 40px;
   }
+
   .favorite:after {
     content: "";
     position: absolute;
@@ -2426,6 +3304,7 @@ div.categories, nav.categories {
     background: url(../img/favorite_star.png) no-repeat left center;
     background-size: 25px;
   }
+
   .dataset:after {
     content: "";
     position: absolute;
@@ -2436,6 +3315,7 @@ div.categories, nav.categories {
     height: 25px;
     background: url(../img/ic-data-wh.png) no-repeat left center;
   }
+
   .app:after {
     content: "";
     position: absolute;
@@ -2446,6 +3326,7 @@ div.categories, nav.categories {
     height: 25px;
     background: url(../img/ic-app-wh.png) no-repeat left center;
   }
+
   .idea:after {
     content: "";
     position: absolute;
@@ -2456,6 +3337,7 @@ div.categories, nav.categories {
     height: 25px;
     background: url(../img/ic-idea-wh.png) no-repeat left center;
   }
+
   .profile:after {
     content: "";
     position: absolute;
@@ -2467,22 +3349,26 @@ div.categories, nav.categories {
     background: url(../img/ic-login.png) no-repeat left center;
   }
 }
+
 :root #mypage-tabs a:hover,
 :root #mypage-tabs a.current {
   filter: none\0;
 }
+
 // -----------------------------------------------------------------------------
 // members
 .members {
   ul {
     @include clear;
   }
+
   li {
     float: left;
     width: 332px;
     margin: 0 $item-margin $item-margin;
     list-style: none;
     vertical-align: middle;
+
     img {
       width: 50px;
       height: 50px;
@@ -2492,10 +3378,12 @@ div.categories, nav.categories {
     }
   }
 }
+
 .member-tabs {
   @include tabs;
   clear: both;
 }
+
 :root .member-tabs .names a:hover,
 :root .member-tabs .names a.current {
   filter: none\0;
@@ -2508,6 +3396,7 @@ div.categories, nav.categories {
     padding: 2px;
     border: $border-gray2;
   }
+
   .name {
     float: left;
     width: 903px;
@@ -2516,17 +3405,22 @@ div.categories, nav.categories {
     font-weight: bold;
   }
 }
+
 .body--member .contents {
   clear: both;
+
   .datasets header h2 {
     @include midashi-dataset;
   }
+
   .apps header h2 {
     @include midashi-app;
   }
+
   .ideas header h2 {
     @include midashi-idea;
   }
+
   .datasets .pages header h2,
   .apps .pages header h2,
   .ideas .pages header h2 {
@@ -2536,6 +3430,7 @@ div.categories, nav.categories {
     font-size: $px14;
   }
 }
+
 // -----------------------------------------------------------------------------
 // sparql
 .opendata-sparql {
@@ -2544,18 +3439,24 @@ div.categories, nav.categories {
     margin-bottom: $box-margin;
     border-top: 2px solid $blue;
     border-bottom: 2px solid $blue;
+
     tr {
       border-bottom: $border-gray2;
     }
+
     td {
       padding: $item-margin;
-      input[type="text"], textarea {
+
+      input[type="text"],
+      textarea {
         width: 100%;
         @include box-sizing(border-box);
       }
+
       label {
         margin-right: $item-margin;
       }
+
       label.parent {
         display: block;
         margin-right: 0;
@@ -2564,6 +3465,7 @@ div.categories, nav.categories {
         border-bottom: $border-gray2;
       }
     }
+
     th {
       width: 200px;
       padding: $item-margin;
@@ -2571,42 +3473,51 @@ div.categories, nav.categories {
       vertical-align: middle;
     }
   }
+
   div {
     text-align: center;
+
     input {
       @include btn-blue;
     }
   }
 }
+
 :root .opendata-sparql div input {
   filter: none\0;
 }
+
 // -----------------------------------------------------------------------------
 //  pagination
 .pagination {
   margin: $box-margin 0;
   text-align: center;
+
   a {
     @include inline-block;
     padding: 4px 10px;
     background: $gray1;
     color: $black1;
     text-decoration: none;
+
     &:hover {
       background: $gray3;
     }
   }
+
   .current {
     @include inline-block;
     padding: 4px 10px;
     background: $gray3;
   }
 }
+
 // -----------------------------------------------------------------------------
 // block input style
 .ss-alignment-left {
   float: left;
 }
+
 .ss-alignment-right {
   float: right;
 }

@@ -1,5 +1,4 @@
-<% return "" if @cur_node.try(:opendata_site_ids).blank? %>
-<% return "" if @item.respond_to?(:master?) && !@item.master? %>
+<% return if @cur_node.try(:opendata_site_ids).blank? %>
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
@@ -12,7 +11,7 @@
 <dl class="see mod-cms-opendata-category category-form">
   <dt class="wide"><%= @model.t :opendata_category_ids %><%= @model.tt :opendata_category_ids %></dt>
   <dd class="wide">
-    <%= f.hidden_field 'opendata_category_ids[]', value: '' %>
+    <%= f.hidden_field 'opendata_category_ids[]', value: '', id: nil %>
     <% categories.each do |cate| %>
       <div class="parent">
         <%= label_tag do %>

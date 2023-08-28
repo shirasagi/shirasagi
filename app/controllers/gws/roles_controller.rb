@@ -29,9 +29,30 @@ class Gws::RolesController < ApplicationController
       page(params[:page]).per(50)
   end
 
-  def download
+  def download_all
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get? || request.head?
+      @item = SS::DownloadParam.new
+      render
+      return
+    end
+
+    @item = SS::DownloadParam.new params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
     csv = @model.unscoped.site(@cur_site).order_by(_id: 1).to_csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_roles_#{Time.zone.now.to_i}.csv"
+    case @item.encoding
+    when "Shift_JIS"
+      csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
+    when "UTF-8"
+      csv = SS::Csv::UTF8_BOM + csv
+    end
+
+    send_data csv, filename: "gws_roles_#{Time.zone.now.to_i}.csv"
   end
 
   def import

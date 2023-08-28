@@ -108,10 +108,10 @@
         resultNode.html(SS.loading);
       },
       success: function (res, status) {
-        resultNode.html("<%= t('ss.notice.saved') %>");
+        resultNode.text("<%= t('ss.notice.saved') %>");
       },
       error: function (xhr, status, error) {
-        resultNode.html(["== Error =="].concat(xhr.responseJSON).join("<br>"));
+        resultNode.text(["== Error =="].concat(xhr.responseJSON).join("<br>"));
       }
     });
 

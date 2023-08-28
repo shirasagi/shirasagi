@@ -1,0 +1,26 @@
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :show } ]] %>
+
+<section class="sheet">
+  <%= jquery do %>
+    Gws_Monitor_Topic.render();
+  <% end %>
+
+  <div class="gws-board gws-board-tree">
+    <%= render template: "_topic" %>
+
+    <% if @item.children.present? %>
+    <div class="comments">
+      <%= render partial: 'gws/monitor/comments/comment', collection: @item.children, locals: { parent: @item, recursion: true } %>
+    </div>
+    <% end %>
+
+    <% if params[:controller] =~ /admin/ || @item.attend_group_ids.include?(@cur_group.id) || @item.spec_config != 'my_group'%>
+      <%= render partial: 'gws/monitor/main/attend_groups' %>
+    <% end %>
+  </div>
+
+  <%= jquery do %>
+    var highlighter = new Gws_Elasticsearch_Highlighter();
+    highlighter.render();
+  <% end %>
+</section>

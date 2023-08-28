@@ -40,7 +40,9 @@
     <% if SS.config.michecker && SS.config.michecker['disable'].blank? && @cur_user.cms_role_permit_any?(@cur_site, :use_cms_michecker) %>
       <%= link_to t('cms.links.michecker'), { action: :michecker }, target: "_blank" rescue nil %>
     <% end %>
-    <%= link_to(t('cms.confirm.check_linked_url_list'), { action: :contains_urls, id: @item }, class: :contains_urls) rescue nil %>
+    <% if @item.try(:master?) %>
+      <%= link_to(t('cms.confirm.check_linked_url_list'), { action: :contains_urls, id: @item }, class: :contains_urls) rescue nil %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% end %>
 </nav>

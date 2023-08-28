@@ -14,6 +14,15 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       saml.force_authn_state = "enabled"
       saml.save!
     end
+
+    # SAML Mock Server(https) からシラサギ (http) へ post する際、Chrome v110 からセキュリティエラーが発生するようになった。
+    # セキュリティエラーを防ぐため、明示的にシラサギ URL を http://0.0.0.0 ではなく http://127.0.0.1 へ変更する
+    @save_app_host = Capybara.app_host
+    Capybara.app_host = "http://127.0.0.1:#{Capybara.current_session.server.port}"
+  end
+
+  after do
+    Capybara.app_host = @save_app_host
   end
 
   context "when email is given" do
@@ -36,14 +45,16 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       # Now back to SHIRASAGI
       #
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
 
-      # confirm a user has been logged-in
-      expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
-
-      # do logout
-      within "nav.user" do
-        find("span.name").click
-        click_on I18n.t("ss.logout")
+        # do logout
+        within "nav.user" do
+          find("span.name").click
+          # click_on I18n.t("ss.logout")
+          js_click find(:link_or_button, I18n.t("ss.logout"))
+        end
       end
 
       # confirm a login form has been shown
@@ -78,14 +89,17 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       # Now back to SHIRASAGI
       #
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
 
-      # confirm a user has been logged-in
-      expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
-
-      # do logout
-      within "nav.user" do
-        find("span.name").click
-        click_on I18n.t("ss.logout")
+        # do logout
+        within "nav.user" do
+          find("span.name").click
+          wait_for_js_ready
+          # click_on I18n.t("ss.logout")
+          js_click find(:link_or_button, I18n.t("ss.logout"))
+        end
       end
 
       # confirm a login form has been shown
@@ -206,11 +220,12 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       # Now back to SHIRASAGI
       #
-
-      # confirm a user has been logged-in
-      expect(page).to have_css("nav.user .name", text: sys_user.name)
-      # confirm gws_portal is shown to user
-      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+        # confirm a user has been logged-in
+        expect(page).to have_css("nav.user .name", text: sys_user.name)
+        # confirm gws_portal is shown to user
+        expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+      end
     end
   end
 end

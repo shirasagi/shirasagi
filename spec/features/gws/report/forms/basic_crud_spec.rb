@@ -17,14 +17,15 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       # create
       #
       visit gws_report_forms_path(site: site)
-      click_on I18n.t('ss.links.new')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.new')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[order]", with: order
         fill_in "item[memo]", with: memo
 
-        click_on I18n.t("gws.apis.categories.index")
+        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
       end
       wait_for_cbox do
         click_on category.name
@@ -45,8 +46,9 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       #
       visit gws_report_forms_path(site: site)
       click_on name
-      click_on I18n.t('ss.links.edit')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
@@ -64,8 +66,10 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       #
       visit gws_report_forms_path(site: site)
       click_on name2
-      click_on I18n.t('ss.links.delete')
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

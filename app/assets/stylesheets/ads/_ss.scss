@@ -1,19 +1,25 @@
 .ads-total {
-  overflow-x: auto;
   padding: 0 0 10px;
-  table {
+  overflow-x: auto;
+
+  table.index {
     caption {
       font-size: 120%;
       text-align: left;
     }
     th, td {
+      border: $border-gray5;
       white-space: nowrap;
+      @include mb { display: table-cell; }
     }
     thead th {
+      display: table-cell;
       text-align: center;
+      &:after { display: none; }
     }
     tbody td {
       text-align: right;
     }
   }
 }
+

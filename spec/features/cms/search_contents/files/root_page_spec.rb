@@ -60,9 +60,11 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
     describe "transfer to appropriate path after click on file" do
       it do
         visit cms_search_contents_files_path(site: site)
-        click_on item1.name
+        # click_on item1.name
+        js_click find(:link_or_button, item1.name)
 
         switch_to_window(windows.last)
+        wait_for_document_loading
         expect(current_path).to eq item1.private_show_path
         expect(current_path).to eq cms_page_path(site: site, id: item1)
       end

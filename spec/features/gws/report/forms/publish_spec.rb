@@ -13,7 +13,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         visit gws_report_forms_path(site: site)
         click_on form.name
         click_on I18n.t("gws/workflow.links.publish")
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.published'))
@@ -32,7 +32,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         form.state = "public"
         form.save!
 
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.published'))
@@ -54,7 +54,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         visit gws_report_forms_path(site: site)
         click_on form.name
         click_on I18n.t("gws/workflow.links.depublish")
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.depublished'))
@@ -73,7 +73,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         form.state = "closed"
         form.save!
 
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.depublished'))

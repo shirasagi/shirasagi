@@ -67,7 +67,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      click_link I18n.l(backup_item1.created)
+      click_link I18n.l(backup_item1.created, format: :picker)
       expect(current_path).not_to eq sns_login_path
 
       expect(page).not_to have_link(I18n.t("history.restore"))
@@ -82,7 +82,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      click_link I18n.l(backup_item2.created)
+      click_link I18n.l(backup_item2.created, format: :picker)
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")

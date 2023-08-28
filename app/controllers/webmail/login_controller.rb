@@ -44,6 +44,7 @@ class Webmail::LoginController < ApplicationController
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
     @cur_user = SS.current_user = @item
+    SS.change_locale_and_timezone(SS.current_user)
 
     render_login @item, email_or_uid, session: true, password: password, logout_path: webmail_logout_path
   end

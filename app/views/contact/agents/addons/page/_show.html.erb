@@ -1,4 +1,11 @@
-<% return if @item.contact_state == "hide" || !@item.contact_present? %>
+<%
+  return unless @item.show_contact?
+
+  contact_group = @item.contact_group
+  if contact_group.present? && @item.contact_group_contact_id.present?
+    contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
+  end
+%>
 
 <dl class="see mod-contact">
   <dt><%= @model.t :contact_state %></dt>
@@ -7,21 +14,86 @@
   <dt><%= @model.t :contact_group_id %></dt>
   <dd class="contact-group-id"><%= tryb { @item.contact_group.name } %></dd>
 
+  <dt><%= @model.t :contact_group_relation %></dt>
+  <dd>
+    <%=
+      relation = @item.label(:contact_group_relation)
+      if @item.contact_group_contact_id.present?
+        contact = @item.contact_group.try { |group| group.contact_groups.where(id: @item.contact_group_contact_id).first }
+      end
+      if relation.blank? && contact.present?
+        relation = t("contact.options.relation.related.title")
+      end
+      if relation.present? && @item.contact_group_relation != "unrelated" && contact.present?
+        relation = "#{relation} (#{contact.name})"
+      end
+      relation
+    %>
+  </dd>
+
   <dt><%= @model.t :contact_charge %></dt>
-  <dd class="contact-charge"><%= @item.contact_charge %></dd>
+  <dd class="contact-charge">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_group_name)
+      else
+        @item.contact_charge
+      end
+    %>
+  </dd>
 
   <dt><%= @model.t :contact_tel %></dt>
-  <dd class="contact-tel"><%= @item.contact_tel %></dd>
+  <dd class="contact-tel">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_tel)
+      else
+        @item.contact_tel
+      end
+    %>
+  </dd>
 
   <dt><%= @model.t :contact_fax %></dt>
-  <dd class="contact-fax"><%= @item.contact_fax %></dd>
+  <dd class="contact-fax">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_fax)
+      else
+        @item.contact_fax
+      end
+    %>
+  </dd>
 
   <dt><%= @model.t :contact_email %></dt>
-  <dd class="contact-email"><%= @item.contact_email %></dd>
+  <dd class="contact-email">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_email)
+      else
+        @item.contact_email
+      end
+    %>
+  </dd>
 
   <dt><%= @model.t :contact_link_url %></dt>
-  <dd class="contact-link-url"><%= @item.contact_link_url %></dd>
+  <dd class="contact-link-url">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_link_url)
+      else
+        @item.contact_link_url
+      end
+    %>
+  </dd>
 
   <dt><%= @model.t :contact_link_name %></dt>
-  <dd class="contact-link-name"><%= @item.contact_link_name %></dd>
+  <dd class="contact-link-name">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_link_name)
+      else
+        @item.contact_link_name
+      end
+    %>
+  </dd>
 </dl>

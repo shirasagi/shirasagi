@@ -7,7 +7,7 @@ module Opendata::Addon::RdfStore::Model
     field :rdf_error, type: String
 
     validate :validate_fuseki
-    after_save :save_rdf_graph, if: ->{ in_file.present? || format_change.present? }
+    after_save :save_rdf_graph, if: ->{ in_file.present? || format_changed? || format_previously_changed? }
     before_destroy :remove_rdf_graph
   end
 

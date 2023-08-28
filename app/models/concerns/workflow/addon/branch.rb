@@ -8,7 +8,7 @@ module Workflow::Addon
 
       define_model_callbacks :merge_branch
 
-      belongs_to :master, foreign_key: "master_id", class_name: self.to_s
+      belongs_to :master, class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
       permit_params :master_id
@@ -58,6 +58,10 @@ module Workflow::Addon
       if item.is_a?(Cms::Addon::EditLock)
         item.lock_owner_id = nil
         item.lock_until = nil
+      end
+
+      if item.is_a?(Workflow::Addon::Branch)
+        item.master_id = nil
       end
 
       if item.is_a?(Cms::Addon::TwitterPoster)

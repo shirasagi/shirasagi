@@ -16,7 +16,7 @@ describe "facility_item", type: :feature, dbscope: :example do
     context "when the all datas on csv is valid" do
       it "the datas are imported" do
 
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/facility/gws_items_1.csv"
           expect{ click_button I18n.t('ss.links.import') }.to change{ Gws::Facility::Item.count }.from(0).to(2)
         end
@@ -69,7 +69,7 @@ describe "facility_item", type: :feature, dbscope: :example do
 
     context "when some data on csv is invalid" do
       it "does not import the only data in CSVfile" do
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/facility/gws_items_2.csv"
           click_button I18n.t('ss.links.import')
         end
@@ -99,6 +99,9 @@ describe "facility_item", type: :feature, dbscope: :example do
         within "nav.nav-menu" do
           click_link I18n.t('ss.links.download')
         end
+        within "form#item-form" do
+          click_on I18n.t('ss.buttons.download')
+        end
         expect(status_code).to eq 200
         expect(page.response_headers['Content-Type']).to eq("text/csv")
 
@@ -107,10 +110,21 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(page.response_headers['Content-Disposition']).to eq disposition
       end
 
-      csv = CSV.parse(page.html.encode("UTF-8", "SJIS"), headers: true)
-      expect(csv.headers.include?(I18n.t("gws/facility/item.csv.id"))).to be_truthy
-      expect(csv.headers.include?(I18n.t("gws/facility/item.csv.name"))).to be_truthy
-      expect(csv.headers.include?(I18n.t("gws/facility/item.csv.category_id"))).to be_truthy
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(StringIO.new(page.html)) do |csv|
+          table = csv.read
+          required_headers = %w(id name category_id).map { |k| I18n.t("gws/facility/item.csv.#{k}") }
+          expect(table.headers).to include(*required_headers)
+        end
+      end
+
+      expect(Gws::History.all.count).to be > 1
+      Gws::History.all.reorder(created: -1).first.tap do |history|
+        expect(history.severity).to eq "info"
+        expect(history.controller).to eq "gws/facility/items"
+        expect(history.path).to eq download_all_gws_facility_items_path(site: site)
+        expect(history.action).to eq "download_all"
+      end
     end
   end
 end

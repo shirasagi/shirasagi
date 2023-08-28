@@ -30,7 +30,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("gws/workflow.columns.index")
 
       within "#menu" do
-        click_on I18n.t("ss.links.new")
+        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on I18n.t("gws.columns.gws/file_upload")
         end
@@ -66,8 +66,9 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       #
       # Edit
       #
-      click_on I18n.t("ss.links.edit")
-
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
@@ -90,8 +91,10 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       #
       # Delete
       #
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

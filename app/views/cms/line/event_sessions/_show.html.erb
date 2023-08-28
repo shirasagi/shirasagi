@@ -9,8 +9,8 @@
   <dd><%= @item.data %></dd>
 
   <dt><%= @model.t :locked_at %></dt>
-  <dd><%= tryb{ @item.locked_at.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= ss_time_tag @item.locked_at %></dd>
 
   <dt><%= @model.t :created %></dt>
-  <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dd><%= ss_time_tag @item.created %></dd>
 </dl>

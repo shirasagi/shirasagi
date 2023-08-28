@@ -22,11 +22,11 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
   let(:page1_error_label) { docs_page1.latest_check_links_report.created }
 
   def generate_nodes
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
+    Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
   end
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site).perform_now
+    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
   end
 
   def latest_report
@@ -92,6 +92,7 @@ describe "cms/check_links/nodes", type: :feature, dbscope: :example, js: true, r
         end
       end
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       within "div#main" do
         expect(page).to have_css("a", text: docs_page1.name)

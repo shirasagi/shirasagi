@@ -10,11 +10,11 @@ class Cms::Node::ImportController < ApplicationController
   private
 
   def fix_params
-    { cur_site: @cur_site, cur_user: @cur_user, node: @cur_node }
+    { cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node }
   end
 
   def set_task
-    @task = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id
+    @task = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
   end
 
   def task_name

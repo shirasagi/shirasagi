@@ -113,7 +113,7 @@ module Tasks
           end
 
           %i[
-            feed_all_memos feed_all_boards feed_all_faqs feed_all_qnas feed_all_circulars
+            feed_all_memos feed_all_boards feed_all_faqs feed_all_qnas feed_all_surveys feed_all_circulars
             feed_all_monitors feed_all_reports feed_all_workflows feed_all_files
           ].each do |method|
             ::Tasks::Gws::Es.send(method)
@@ -155,11 +155,11 @@ module Tasks
           end
 
           puts 'gws/board/topic and gws/board/post'
-          ::Tasks::Gws::Base.each_item(::Gws::Board::Topic.site(site).topic) do |topic|
+          ::Tasks::Gws::Base.each_item(::Gws::Board::Topic.site(site).topic.without_deleted) do |topic|
             puts "- #{topic.name}"
             job = ::Gws::Elasticsearch::Indexer::BoardTopicJob.bind(site_id: site)
             job.perform_now(action: 'index', id: topic.id.to_s)
-            ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
+            ::Tasks::Gws::Base.each_item(topic.descendants.without_deleted) do |post|
               puts "-- #{post.name}"
               job = ::Gws::Elasticsearch::Indexer::BoardPostJob.bind(site_id: site)
               job.perform_now(action: 'index', id: post.id.to_s)
@@ -181,11 +181,11 @@ module Tasks
           end
 
           puts 'gws/faq/topic and gws/faq/post'
-          ::Tasks::Gws::Base.each_item(::Gws::Faq::Topic.site(site).topic) do |topic|
+          ::Tasks::Gws::Base.each_item(::Gws::Faq::Topic.site(site).topic.without_deleted) do |topic|
             puts "- #{topic.name}"
             job = ::Gws::Elasticsearch::Indexer::FaqTopicJob.bind(site_id: site)
             job.perform_now(action: 'index', id: topic.id.to_s)
-            ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
+            ::Tasks::Gws::Base.each_item(topic.descendants.without_deleted) do |post|
               puts "-- #{post.name}"
               job = ::Gws::Elasticsearch::Indexer::FaqPostJob.bind(site_id: site)
               job.perform_now(action: 'index', id: post.id.to_s)
@@ -207,15 +207,36 @@ module Tasks
           end
 
           puts 'gws/qna/topic and gws/qna/post'
-          ::Tasks::Gws::Base.each_item(::Gws::Qna::Topic.site(site).topic) do |topic|
+          ::Tasks::Gws::Base.each_item(::Gws::Qna::Topic.site(site).topic.without_deleted) do |topic|
             puts "- #{topic.name}"
             job = ::Gws::Elasticsearch::Indexer::QnaTopicJob.bind(site_id: site)
             job.perform_now(action: 'index', id: topic.id.to_s)
-            ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
+            ::Tasks::Gws::Base.each_item(topic.descendants.without_deleted) do |post|
               puts "-- #{post.name}"
               job = ::Gws::Elasticsearch::Indexer::QnaPostJob.bind(site_id: site)
               job.perform_now(action: 'index', id: post.id.to_s)
             end
+          end
+        end
+      end
+
+      def feed_all_surveys
+        ::Tasks::Gws::Base.with_site(ENV['site']) do |site|
+          if !site.menu_elasticsearch_visible?
+            puts 'elasticsearch was not enabled'
+            break
+          end
+
+          if site.elasticsearch_client.nil?
+            puts 'elasticsearch was not configured'
+            break
+          end
+
+          puts 'gws/survey/form'
+          ::Tasks::Gws::Base.each_item(::Gws::Survey::Form.site(site)) do |form|
+            puts "- #{form.name}"
+            job = ::Gws::Elasticsearch::Indexer::SurveyFormJob.bind(site_id: site)
+            job.perform_now(action: 'index', id: form.id.to_s)
           end
         end
       end
@@ -233,11 +254,11 @@ module Tasks
           end
 
           puts 'gws/circular/post and gws/circular/comment'
-          ::Tasks::Gws::Base.each_item(::Gws::Circular::Post.site(site).topic) do |post|
+          ::Tasks::Gws::Base.each_item(::Gws::Circular::Post.site(site).topic.without_deleted) do |post|
             puts "- #{post.name}"
             job = ::Gws::Elasticsearch::Indexer::CircularPostJob.bind(site_id: site)
             job.perform_now(action: 'index', id: post.id.to_s)
-            ::Tasks::Gws::Base.each_item(post.comments) do |comment|
+            ::Tasks::Gws::Base.each_item(post.comments.without_deleted) do |comment|
               puts "-- #{comment.name}"
               job = ::Gws::Elasticsearch::Indexer::CircularCommentJob.bind(site_id: site)
               job.perform_now(action: 'index', id: comment.id.to_s)
@@ -258,12 +279,12 @@ module Tasks
             break
           end
 
-          puts 'gws/qna/topic and gws/qna/post'
-          ::Tasks::Gws::Base.each_item(::Gws::Monitor::Topic.site(site).topic) do |topic|
+          puts 'gws/monitor/topic and gws/monitor/post'
+          ::Tasks::Gws::Base.each_item(::Gws::Monitor::Topic.site(site).topic.without_deleted) do |topic|
             puts "- #{topic.name}"
             job = ::Gws::Elasticsearch::Indexer::MonitorTopicJob.bind(site_id: site)
             job.perform_now(action: 'index', id: topic.id.to_s)
-            ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
+            ::Tasks::Gws::Base.each_item(topic.descendants.without_deleted) do |post|
               puts "-- #{post.name}"
               job = ::Gws::Elasticsearch::Indexer::MonitorPostJob.bind(site_id: site)
               job.perform_now(action: 'index', id: post.id.to_s)
@@ -285,7 +306,7 @@ module Tasks
           end
 
           puts 'gws/report/file'
-          ::Tasks::Gws::Base.each_item(::Gws::Report::File.site(site)) do |file|
+          ::Tasks::Gws::Base.each_item(::Gws::Report::File.site(site).without_deleted) do |file|
             puts "- #{file.name}"
             job = ::Gws::Elasticsearch::Indexer::ReportFileJob.bind(site_id: site)
             job.perform_now(action: 'index', id: file.id.to_s)
@@ -306,9 +327,16 @@ module Tasks
           end
 
           puts 'gws/workflow/file'
-          ::Tasks::Gws::Base.each_item(::Gws::Workflow::File.site(site)) do |file|
+          ::Tasks::Gws::Base.each_item(::Gws::Workflow::File.site(site).without_deleted) do |file|
             puts "- #{file.name}"
             job = ::Gws::Elasticsearch::Indexer::WorkflowFileJob.bind(site_id: site)
+            job.perform_now(action: 'index', id: file.id.to_s)
+          end
+
+          puts 'gws/workflow/form'
+          ::Tasks::Gws::Base.each_item(::Gws::Workflow::Form.site(site)) do |file|
+            puts "- #{file.name}"
+            job = ::Gws::Elasticsearch::Indexer::WorkflowFormJob.bind(site_id: site)
             job.perform_now(action: 'index', id: file.id.to_s)
           end
         end
@@ -327,13 +355,34 @@ module Tasks
           end
 
           puts 'gws/share/file'
-          ::Tasks::Gws::Base.each_item(::Gws::Share::File.site(site)) do |file|
+          ::Tasks::Gws::Base.each_item(::Gws::Share::File.site(site).without_deleted) do |file|
             puts "- #{file.name}"
             job = ::Gws::Elasticsearch::Indexer::ShareFileJob.bind(site_id: site)
             job.perform_now(action: 'index', id: file.id.to_s)
           end
         end
       end
+
+      #def feed_all_workloads
+      #  ::Tasks::Gws::Base.with_site(ENV['site']) do |site|
+      #    if !site.menu_elasticsearch_visible?
+      #      puts 'elasticsearch was not enabled'
+      #      break
+      #    end
+      #
+      #    if site.elasticsearch_client.nil?
+      #      puts 'elasticsearch was not configured'
+      #      break
+      #    end
+      #
+      #    puts 'gws/workload/work'
+      #    ::Tasks::Gws::Base.each_item(::Gws::Workload::Work.site(site).without_deleted) do |work|
+      #      puts "- #{work.name}"
+      #      job = ::Gws::Elasticsearch::Indexer::WorkloadWorkJob.bind(site_id: site)
+      #      job.perform_now(action: 'index', id: work.id.to_s)
+      #    end
+      #  end
+      #end
 
       module Ingest
         module_function

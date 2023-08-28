@@ -1,0 +1,30 @@
+<%= render partial: 'gws/workload/main/base_navi' %>
+
+<div class="index gws-workload">
+  <%= render template: '_list_head' %>
+  <div style="padding: 10px;">
+    <table class="index overtime data-table">
+      <thead>
+        <tr>
+          <th class="name"><%= @group.try(:trailing_name) %></th>
+          <% @cur_site.fiscal_months.each do |m| %>
+            <th class="month"><%= "#{m}#{t("datetime.prompts.month")}" %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <td class="name"><%= link_to item.user.name, action: :show, id: item %></td>
+            <% @cur_site.fiscal_months.each do |m| %>
+              <td class="overtime"><%= item.send("month#{m}_hours_label") %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+

@@ -6,6 +6,8 @@ FactoryBot.define do
     type { SS::Model::User::TYPE_SNS }
     login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
     #group_ids [1]
+
+    lang { I18n.locale.to_s }
   end
 
   factory :ss_user2, class: SS::User do
@@ -14,6 +16,8 @@ FactoryBot.define do
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
     login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
 
   factory :ss_user3, class: SS::User do
@@ -22,6 +26,8 @@ FactoryBot.define do
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
     login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
 
   factory :ss_user4, class: SS::User do
@@ -30,5 +36,7 @@ FactoryBot.define do
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
     login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
 end

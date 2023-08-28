@@ -45,6 +45,8 @@ module SS::VariantProcessor
       variant = variants[variant_name]
       variant.create!
     end
+  rescue MiniMagick::Error => e
+    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   class VariantCollection

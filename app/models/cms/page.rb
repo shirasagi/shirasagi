@@ -8,6 +8,7 @@ class Cms::Page
   include Cms::Addon::LinePoster
   include Gravatar::Addon::Gravatar
   include Cms::Addon::Thumb
+  include Cms::Addon::RedirectLink
   include Cms::Addon::Body
   include Cms::Addon::BodyPart
   include Cms::Addon::File
@@ -24,6 +25,7 @@ class Cms::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
+  include Cms::Lgwan::Page
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -39,7 +41,7 @@ class Cms::Page
   # rss
   index({ released: 1, id: 1 })
 
-  after_save :new_size_input, if: ->{ @db_changes }
+  after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
 
   class << self
     def routes

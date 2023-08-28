@@ -12,6 +12,7 @@ module Gws::Circular::PostFilter
     before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen active recover]
     before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download_all]
     before_action :set_category
+    before_action :set_search_params
   end
 
   private
@@ -58,18 +59,18 @@ module Gws::Circular::PostFilter
   #   end
   # end
 
+  def set_search_params
+    @s = OpenStruct.new params[:s]
+    @s[:site] = @cur_site
+    @s[:user] = @cur_user
+    @s[:category_id] = @category.id if @category.present?
+    @s[:article_state] = @cur_site.circular_article_state if @s[:article_state].nil?
+    @s[:sort] = @cur_site.circular_sort if @s[:sort].nil?
+  end
+
   public
 
   def index
-    if @category.present?
-      params[:s] ||= {}
-      params[:s][:site] = @cur_site
-      params[:s][:category_id] = @category.id
-    end
-    if params.dig(:s, :article_state).present?
-      params[:s][:user] = @cur_user
-    end
-
     set_items
   end
 
@@ -113,21 +114,22 @@ module Gws::Circular::PostFilter
     raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
 
-    render_update @item.set_seen(@cur_user).save, notice: t("ss.notice.set_seen")
+    render_update @item.set_seen!(@cur_user), notice: t("ss.notice.set_seen")
   end
 
   def unset_seen
     raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
 
-    render_update @item.unset_seen(@cur_user).save, notice: t("ss.notice.unset_seen")
+    render_update @item.unset_seen!(@cur_user), notice: t("ss.notice.unset_seen")
   end
 
   def set_seen_all
     @items.each do |item|
       if item.unseen?(@cur_user)
         item.attributes = fix_params
-        item.set_seen(@cur_user).save
+        result = item.save
+        item.set_seen!(@cur_user) if result
       end
     end
     render_confirmed_all(true, notice: t("ss.notice.set_seen"))
@@ -137,7 +139,8 @@ module Gws::Circular::PostFilter
     @items.each do |item|
       if item.seen?(@cur_user)
         item.attributes = fix_params
-        item.unset_seen(@cur_user).save
+        result = item.save
+        item.unset_seen!(@cur_user) if result
       end
     end
     render_confirmed_all(true, notice: t("ss.notice.unset_seen"))

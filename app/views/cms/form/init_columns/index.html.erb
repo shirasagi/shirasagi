@@ -5,7 +5,7 @@
 <% end %>
 <% @index_meta = proc do |item| %>
   <% column = item.column %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="order"><%= item.order %></span>
   <span class="class"><%= column.class.model_name.human %></span>
   <span class="required"><%= column.label :required %></span>

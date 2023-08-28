@@ -288,18 +288,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 3
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: '' },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: '' }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
@@ -309,7 +301,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
-        ActionMailer::Base.deliveries.first.tap do |mail|
+        ActionMailer::Base.deliveries.find { |mail| mail.to.first == user1.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user1.email
           expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
@@ -318,7 +310,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(item.name)
           expect(mail.body.raw_source).to include(workflow_comment)
         end
-        ActionMailer::Base.deliveries.second.tap do |mail|
+        ActionMailer::Base.deliveries.find { |mail| mail.to.first == user2.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user2.email
           expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
@@ -344,19 +336,12 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment1, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers.count).to eq 3
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment1, file_ids: nil },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: '' }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
@@ -382,20 +367,13 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment1, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment2, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers.count).to eq 3
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment1, file_ids: nil },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment2, file_ids: nil }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
@@ -431,20 +409,13 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment1, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment2, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers.count).to eq 3
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment1, file_ids: nil },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment2, file_ids: nil }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
@@ -717,18 +688,10 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 3
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: '' },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: '' }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_PENDING, comment: ''
@@ -738,7 +701,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
-        ActionMailer::Base.deliveries.first.tap do |mail|
+        ActionMailer::Base.deliveries.find{ |mail| mail.to.first == user1.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user1.email
           expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
@@ -747,7 +710,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(item.name)
           expect(mail.body.raw_source).to include(workflow_comment)
         end
-        ActionMailer::Base.deliveries.second.tap do |mail|
+        ActionMailer::Base.deliveries.find{ |mail| mail.to.first == user2.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user2.email
           expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
@@ -773,19 +736,12 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment1, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers.count).to eq 3
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment1, file_ids: nil },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: '' }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_REQUEST, comment: ''
@@ -821,19 +777,12 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
-        item.workflow_approvers[0].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment1, file_ids: nil
-          }
-          expect(workflow_approver).to eq(expected)
-        end
-        item.workflow_approvers[1].tap do |workflow_approver|
-          expected = {
-            level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: ''
-          }
-          expect(workflow_approver).to eq(expected)
-        end
+        expect(item.workflow_approvers.count).to eq 3
+        expect(item.workflow_approvers[0, 2]).to include(
+          { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
+            comment: approve_comment1, file_ids: nil },
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: '' }
+        )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,

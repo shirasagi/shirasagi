@@ -13,6 +13,7 @@ class Opendata::Idea
   include Workflow::MemberPermission
   include Opendata::IdeaSearchable
   include Opendata::IdeaTemplateVariables
+  include Cms::Lgwan::Page
 
   set_permission_name "opendata_ideas"
 
@@ -81,7 +82,7 @@ class Opendata::Idea
     get_url(url, "/app/show.html")
   end
 
-  def contact_present?
+  def show_contact?
     return false if member_id.present?
     super
   end

@@ -11,7 +11,7 @@
     </h2>
     <nav class="meta">
       <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
-      <span class="datetime"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+      <span class="datetime"><%= ss_time_tag @item.updated %></span>
     </nav>
   </header>
 
@@ -35,21 +35,7 @@
   <% end %>
 
   <% if @item.links.present? %>
-    <div class="links">
-      <span class='heading <%= @cur_site.board_links_break == 'horizontal' ? 'd-block' : 'd-inline-block' %>'>
-        <%= I18n.t('modules.addons.gws/link') %>
-      </span>
-      <% (@item.links || []).each do |item| %>
-        <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
-          <i class="material-icons">&#xE157;</i>
-          <% if item[:url].present? %>
-            <%= link_to item[:name].presence || item[:url], item[:url] %>
-          <% elsif item[:name].present? %>
-            <%= item[:name] %>
-          <% end %>
-        </span>
-      <% end %>
-    </div>
+    <%= render "gws/board/main/links", links: @item.links %>
   <% end %>
 
   <% if @item.severity.present? %>

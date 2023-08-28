@@ -19,7 +19,14 @@ module SS::CapybaraSupport
   module_function
 
   def activate_driver(name, config)
-    activate_chrome(config)
+    case name
+    when 'firefox'
+      activate_firefox(config)
+    when 'chrome'
+      activate_chrome(config)
+    else
+      [ true, false ].sample ? activate_chrome(config) : activate_firefox(config)
+    end
   rescue LoadError
     deactivate_driver(config)
   end
@@ -36,20 +43,60 @@ module SS::CapybaraSupport
       options.add_argument('log-level=0')
       options.add_argument('lang=ja-JP')
       if headless != '0'
-        options.add_argument('headless')
+        options.add_argument('headless=new')
         options.add_argument('disable-gpu')
         if ENV.fetch('sandbox', '0') != '0' || ci?
           options.add_argument('no-sandbox')
         end
       end
+      options.add_option("goog:loggingPrefs", { browser: "ALL" })
 
-      caps = Selenium::WebDriver::Remote::Capabilities.chrome("goog:loggingPrefs" => { browser: "ALL" })
-
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, desired_capabilities: caps)
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
     end
     Capybara.javascript_driver = :chrome
 
     puts "[Capybara] with Google Chrome(headless: #{headless == '0' ? 'disabled' : 'enabled'})"
+    true
+  end
+
+  MIME_TYPES_FOR_DOWNLOAD = %w(
+    text/plain text/csv text/xml image/png image/jpeg image/gif application/pdf application/zip application/octet-stream
+  ).freeze
+
+  def activate_firefox(config)
+    require 'selenium-webdriver'
+    headless = ENV.fetch('headless', '1')
+    set_capybara_server
+    Capybara.register_driver :firefox do |app|
+      profile = Selenium::WebDriver::Firefox::Profile.new
+      # ダウンロード
+      profile['browser.download.dir'] = SS::DownloadHelpers.path
+      profile['browser.download.folderList'] = 2
+      profile['browser.download.manager.alertOnEXEOpen'] = false
+      profile['browser.download.manager.closeWhenDone'] = true
+      profile['browser.download.manager.focusWhenStarting'] = false
+      profile['browser.download.manager.showAlertOnComplete'] = false
+      profile['browser.download.manager.showWhenStarting'] = false
+      profile['browser.download.manager.useWindow'] = false
+      profile['browser.helperApps.alwaysAsk.force'] = false
+      profile['browser.helperApps.neverAsk.saveToDisk'] = MIME_TYPES_FOR_DOWNLOAD.join(",")
+      # 国際化
+      profile['intl.accept_languages'] = 'ja-JP'
+
+      options = Selenium::WebDriver::Options.firefox(profile: profile)
+      options.log_level = 'trace'
+      options.add_argument('--width=1280')
+      options.add_argument('--height=800')
+
+      if headless != '0'
+        options.add_argument('--headless')
+      end
+
+      Capybara::Selenium::Driver.new(app, browser: :firefox, options: options)
+    end
+    Capybara.javascript_driver = :firefox
+
+    puts "[Capybara] with Firefox(headless: #{headless == '0' ? 'disabled' : 'enabled'})"
     true
   end
 

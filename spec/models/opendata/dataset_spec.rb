@@ -30,7 +30,7 @@ describe Opendata::Dataset, dbscope: :example do
     its(:point_members_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point/members.html" }
     its(:dataset_apps_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/apps/show.html" }
     its(:dataset_ideas_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/ideas/show.html" }
-    its(:contact_present?) { is_expected.to be_falsey }
+    its(:show_contact?) { is_expected.to be_falsey }
   end
 
   describe ".sort_options" do

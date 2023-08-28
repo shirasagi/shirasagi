@@ -54,7 +54,9 @@ describe "sys_sites", type: :feature, dbscope: :example do
 
       visit sys_sites_path
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
@@ -137,7 +139,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
       visit sys_sites_path
 
       within ".list-head" do
-        first("[type='checkbox']").click
+        wait_event_to_fire("ss:checked-all-list-items") { first("[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end

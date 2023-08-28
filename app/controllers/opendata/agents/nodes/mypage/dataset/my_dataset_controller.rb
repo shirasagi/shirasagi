@@ -14,7 +14,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
 
   def dataset_node
     @dataset_node ||= begin
-      node = Opendata::Node::Dataset.site(@cur_site).and_public.first
+      node = Opendata::Node::Dataset.site(@cur_site).and_public(@cur_date).first
       node = Opendata::Node::Dataset.site(@cur_site).first if node.blank?
       node
     end

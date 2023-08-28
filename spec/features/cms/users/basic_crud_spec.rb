@@ -21,7 +21,7 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       #new
       visit new_path
-      click_on I18n.t("ss.apis.groups.index")
+      wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
       wait_for_cbox do
         click_on group.name
       end
@@ -70,7 +70,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t('ss.links.lock_user')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.lock_user_all'))
       expect(page).to have_no_content(item.name)
@@ -83,7 +83,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t('ss.links.unlock_user')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.unlock_user_all'))
       expect(page).to have_no_content(item.name)
@@ -96,7 +96,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      find('.list-head label.check input').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("ss.links.delete")
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
@@ -115,7 +115,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       login_cms_user
 
       visit new_path
-      click_on I18n.t("ss.apis.groups.index")
+      wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
       wait_for_cbox do
         click_on group.name
       end
@@ -413,7 +413,12 @@ describe "cms_users", type: :feature, dbscope: :example do
     let!(:test_user) { create(:cms_test_user, group: group, name: unique_id, account_expiration_date: account_expiration_date) }
 
     it do
-      login_user test_user
+      visit sns_login_path
+      within "form" do
+        fill_in "item[email]", with: test_user.email
+        fill_in "item[password]", with: test_user.in_password
+        click_button I18n.t("ss.login", locale: I18n.default_locale)
+      end
       expect(status_code).to eq 200
       expect(current_path).to eq sns_login_path
       expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))

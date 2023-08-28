@@ -12,7 +12,7 @@
       data-item_id="<%= item.item_id %>"
       data-name="<%= item.name %>"
       data-model="<%= item.model %>"
-      data-date="<%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %>">
+      data-date="<%= tryb { item.date.iso8601 } %>">
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
@@ -27,7 +27,7 @@
           <% if item.start_at.present? %>
             <span class="datetime"><%= term(item) rescue nil %></span>
           <% else %>
-            <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
+            <span class="datetime"><%= ss_time_tag item.date %></span>
           <% end %>
           <% item.notifications.each do |notification| %>
             <span class="datetime"><%= tryb { notification.interval_label } %></span>

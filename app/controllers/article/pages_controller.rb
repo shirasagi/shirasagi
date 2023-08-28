@@ -51,7 +51,7 @@ class Article::PagesController < ApplicationController
       criteria = criteria.exists(form_id: false)
     end
 
-    exporter = Cms::PageExporter.new(site: @cur_site, criteria: criteria)
+    exporter = Cms::PageExporter.new(mode: "article", site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
     filename = @model.to_s.tableize.tr("/", "_")

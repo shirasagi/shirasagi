@@ -55,7 +55,11 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.download")
         end
 
-        msg = Gws::Attendance::DownloadParam.t(:user_ids) + I18n.t("errors.messages.blank")
+        msg = I18n.t(
+          "errors.format",
+          attribute: Gws::Attendance::DownloadParam.t(:user_ids),
+          message: I18n.t("errors.messages.blank")
+        )
         expect(page).to have_css("#errorExplanation", text: msg)
       end
     end
@@ -72,7 +76,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
         wait_for_cbox do
           click_on user1.long_name
@@ -83,14 +87,16 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true)
-        expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][0]).to eq user1.uid
-        expect(csv[0][1]).to eq user1.name
-        expect(csv[0][2]).to eq this_month.to_date.iso8601
-        expect(csv[-1][0]).to eq user1.uid
-        expect(csv[-1][1]).to eq user1.name
-        expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq this_month.end_of_month.day
+          expect(csv[0][0]).to eq user1.uid
+          expect(csv[0][1]).to eq user1.name
+          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          expect(csv[-1][0]).to eq user1.uid
+          expect(csv[-1][1]).to eq user1.name
+          expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        end
       end
     end
 
@@ -109,27 +115,29 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
         wait_for_cbox do
           click_on user1.long_name
         end
         within "form#item-form" do
-          fill_in "item[from_date]", with: I18n.l(from_time.to_date, format: :picker)
-          fill_in "item[to_date]", with: I18n.l(to_time.to_date, format: :picker)
+          fill_in_date "item[from_date]", with: from_time
+          fill_in_date "item[to_date]", with: to_time
           click_on I18n.t("ss.buttons.download")
         end
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true)
-        expect(csv.length).to eq prev_month.end_of_month.day
-        expect(csv[0][0]).to eq user1.uid
-        expect(csv[0][1]).to eq user1.name
-        expect(csv[0][2]).to eq from_time.to_date.iso8601
-        expect(csv[-1][0]).to eq user1.uid
-        expect(csv[-1][1]).to eq user1.name
-        expect(csv[-1][2]).to eq to_time.to_date.iso8601
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq prev_month.end_of_month.day
+          expect(csv[0][0]).to eq user1.uid
+          expect(csv[0][1]).to eq user1.name
+          expect(csv[0][2]).to eq from_time.to_date.iso8601
+          expect(csv[-1][0]).to eq user1.uid
+          expect(csv[-1][1]).to eq user1.name
+          expect(csv[-1][2]).to eq to_time.to_date.iso8601
+        end
       end
     end
 
@@ -145,7 +153,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
         wait_for_cbox do
           click_on user2.long_name
@@ -157,14 +165,16 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true)
-        expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][0]).to eq user2.uid
-        expect(csv[0][1]).to eq user2.name
-        expect(csv[0][2]).to eq this_month.to_date.iso8601
-        expect(csv[-1][0]).to eq user2.uid
-        expect(csv[-1][1]).to eq user2.name
-        expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq this_month.end_of_month.day
+          expect(csv[0][0]).to eq user2.uid
+          expect(csv[0][1]).to eq user2.name
+          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          expect(csv[-1][0]).to eq user2.uid
+          expect(csv[-1][1]).to eq user2.name
+          expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        end
       end
     end
   end

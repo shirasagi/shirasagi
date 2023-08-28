@@ -50,12 +50,18 @@ class History::Log
 
   class << self
     def create_controller_log!(request, response, options)
-      return if request.get? || request.head?
-      return if response.code !~ /^3/
-      create_log!(request, response, options)
+      create_log!(request, response, options) if create_log?(request, response, options)
     end
 
-    def create_log!(request, response, options)
+    def create_log?(request, response, _options)
+      return true if !request.get? && !request.head? && response.code.start_with?("3")
+      return true if History::DOWNLOAD_MIME_TYPES.include?(response.media_type)
+      return true if response["Content-Disposition"].to_s.include?("attachment")
+
+      false
+    end
+
+    def create_log!(request, _response, options)
       item             = options[:item]
 
       log              = new
@@ -70,12 +76,13 @@ class History::Log
         log.user_id    = options[:cur_user].id
       end
       log.site_id      = options[:cur_site].id if options[:cur_site]
-      log.ref_coll     = item.collection_name if item
+      log.ref_coll     = item.collection_name if item.respond_to?(:collection_name)
       log.filename     = item.data[:filename] if item.try(:ref_coll) == "ss_files"
 
-      if options[:action] == "undo_delete"
+      case options[:action]
+      when "undo_delete"
         log.behavior = "restore"
-      elsif options[:action] == "destroy"
+      when "destroy"
         log.behavior = "delete"
       end
 

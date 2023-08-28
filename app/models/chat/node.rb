@@ -1,10 +1,11 @@
 class Chat::Node
   include Cms::Model::Node
-  include Cms::PluginRepository
+  include SS::PluginRepository
   include Cms::Addon::NodeSetting
   include Cms::Addon::EditorSetting
   include Cms::Addon::GroupPermission
   include Cms::Addon::ForMemberNode
+  include Cms::Lgwan::Node
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -23,6 +24,7 @@ class Chat::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "chat/bot") }
   end

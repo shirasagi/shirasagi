@@ -28,12 +28,12 @@
       <dd>
         <label for="<%= f.object_name %>_forced_overwrite">
           <%= f.check_box(:forced_overwrite) %>
-          <%= @model.t :forced_overwrite %>
+          <%= t "mongoid.attributes.chorg/run_params.forced_overwrite_html" %>
         </label>
       </dd>
       <% if params[:type] == 'main' || !Rails.env.production? %>
       <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
-      <dd><%= f.text_field :reservation, class: 'datetime js-datetime' %></dd>
+      <dd><%= f.ss_datetime_field :reservation %></dd>
       <% end %>
     </dl>
   </section>

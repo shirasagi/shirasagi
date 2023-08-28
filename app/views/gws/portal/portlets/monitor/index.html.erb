@@ -11,7 +11,7 @@
           <%= link_to item.name, gws_monitor_topic_path(category: '-', id: item), class: 'title' %>
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <div class="meta">
-            <span class="datetime"><%= Gws::Monitor::Topic.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
+            <span class="datetime"><%= Gws::Monitor::Topic.t(:due_date) %><%= ss_time_tag item.due_date %></span>
             <span class="answer-state"><%= item.answer_state_name(@cur_group) %></span>
             <span>
               <% item.categories.compact.each do |category| %>

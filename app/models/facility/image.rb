@@ -8,6 +8,7 @@ class Facility::Image
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Cms::Lgwan::Page
 
   default_scope ->{ where(route: "facility/image") }
 

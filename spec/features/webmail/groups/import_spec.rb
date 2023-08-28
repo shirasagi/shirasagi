@@ -16,10 +16,13 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       end
       click_on I18n.t('ss.links.download_template')
 
-      csv = CSV.parse(page.html.encode("UTF-8"), headers: true)
+      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv.force_encoding("UTF-8")
+      csv = CSV.parse(csv, headers: true)
       expect(csv).to have_at_least(1).items
-      expect(csv.headers).to have(Webmail::GroupExport::EXPORT_DEF.length).items
-      expect(csv.headers.include?(Webmail::GroupExport::EXPORT_DEF.sample[:label])).to be_truthy
+      expect(csv.headers.length).to be > 20
+      expect(csv.headers).to include(Webmail::Group.t(:name))
+      expect(csv.headers).to include("IMAP_" + Webmail::ImapSetting.t('name'))
     end
   end
 
@@ -35,11 +38,21 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       within ".nav-menu" do
         click_on I18n.t("ss.links.import")
       end
-      within "form" do
-        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
-        click_button I18n.t("ss.import")
+      perform_enqueued_jobs do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
+          click_button I18n.t("ss.import")
+        end
+        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).to include(/INFO -- : .* 6件のグループをインポートしました。/)
+        expect(log.state).to eq "completed"
+      end
 
       group0.reload
       expect(group0).to have(0).imap_settings
@@ -83,21 +96,25 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       within ".nav-menu" do
         click_on I18n.t("ss.links.import")
       end
-      within "form" do
-        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
-        click_button I18n.t("ss.import")
+      perform_enqueued_jobs do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
+          click_button I18n.t("ss.import")
+        end
+        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
 
       visit webmail_groups_path
       within ".nav-menu" do
         click_on I18n.t("ss.links.import")
       end
-      within "form" do
-        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-2.csv"
-        click_button I18n.t("ss.import")
+      perform_enqueued_jobs do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-2.csv"
+          click_button I18n.t("ss.import")
+        end
+        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
 
       group0.reload
       expect(group0).to have(0).imap_settings

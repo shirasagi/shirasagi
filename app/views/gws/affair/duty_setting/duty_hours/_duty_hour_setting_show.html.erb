@@ -1,0 +1,47 @@
+<dt><%= @model.t :affair_time %></dt>
+<% if @item.affair_time_wday? %>
+  <dd><%= t("gws/affair.links.set_by_week_days") %></dd>
+  <% (0..6).each do |wday| %>
+    <dt class="depth-2"><%= t("date.day_names")[wday] %></dt>
+    <dd class="depth-2">
+      <%
+        affair_start_at_hour = @item.send("affair_start_at_hour_#{wday}")
+        affair_start_at_minute = @item.send("affair_start_at_minute_#{wday}")
+        affair_end_at_hour = @item.send("affair_end_at_hour_#{wday}")
+        affair_end_at_minute = @item.send("affair_end_at_minute_#{wday}")
+
+        affair_break_start_at_hour = @item.send("affair_break_start_at_hour_#{wday}")
+        affair_break_start_at_minute = @item.send("affair_break_start_at_minute_#{wday}")
+        affair_break_end_at_hour = @item.send("affair_break_end_at_hour_#{wday}")
+        affair_break_end_at_minute = @item.send("affair_break_end_at_minute_#{wday}")
+      %>
+      <%= "#{affair_start_at_hour}:#{format("%02d", @item.affair_start_at_minute)}" %>
+      <%= t("ss.wave_dash") %>
+      <%= "#{affair_end_at_hour}:#{format("%02d", @item.affair_end_at_minute)}" %>
+      <%= "(" %>
+      <%= t("gws/affair.breaktime") %>
+      <%= "#{affair_break_start_at_hour}:#{format("%02d", @item.affair_break_start_at_minute)}" %>
+      <%= t("ss.wave_dash") %>
+      <%= "#{affair_break_start_at_hour}:#{format("%02d", @item.affair_break_start_at_minute)}" %>
+      <%= ")" %>
+    </dd>
+  <% end %>
+<% else %>
+  <dd>
+    <%= "#{@item.affair_start_at_hour}:#{format("%02d", @item.affair_start_at_minute)}" %>
+    <%= t("ss.wave_dash") %>
+    <%= "#{@item.affair_end_at_hour}:#{format("%02d", @item.affair_end_at_minute)}" %>
+    <%= "(" %>
+    <%= t("gws/affair.breaktime") %>
+    <%= "#{@item.affair_break_start_at_hour}:#{format("%02d", @item.affair_break_start_at_minute)}" %>
+    <%= t("ss.wave_dash") %>
+    <%= "#{@item.affair_break_end_at_hour}:#{format("%02d", @item.affair_break_end_at_minute)}" %>
+    <%= ")" %>
+  </dd>
+<% end %>
+
+<dt><%= @model.t :attendance_time_changed_minute %></dt>
+<dd><%= t("gws/attendance.hour", count: @item.attendance_time_changed_minute / 60) %></dd>
+
+<dt><%= @model.t :overtime_in_work %></dt>
+<dd><%= @item.label :overtime_in_work %></dd>

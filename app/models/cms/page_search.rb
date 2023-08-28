@@ -22,10 +22,12 @@ class Cms::PageSearch
     self.cur_site = site
     self.cur_user = user
 
-    CSV.generate do |data|
-      data << csv_headers.map { |k| t k }
-      search.each do |item|
-        data << csv_line(item)
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << csv_headers.map { |k| t k }
+        search.each do |item|
+          data << csv_line(item)
+        end
       end
     end
   end
@@ -38,8 +40,8 @@ class Cms::PageSearch
     line << item.name
     line << Cms::Layout.where(_id: item.layout_id).pluck(:name).first
     line << item.label(:state)
-    line << item.created.try(:strftime, "%Y/%m/%d %H:%M")
-    line << item.updated.try(:strftime, "%Y/%m/%d %H:%M")
+    line << I18n.l(item.created, format: :picker)
+    line << I18n.l(item.updated, format: :picker)
     line
   end
 

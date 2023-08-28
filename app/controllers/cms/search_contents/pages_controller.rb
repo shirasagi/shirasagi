@@ -12,6 +12,11 @@ class Cms::SearchContents::PagesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
+    @crumbs << [t("cms.search_contents_pages"), url_for(action: :index)]
+  end
+
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user }
   end
@@ -37,15 +42,15 @@ class Cms::SearchContents::PagesController < ApplicationController
   end
 
   def item_attributes
-    attr = @item.attributes.except(:site_id, :_id, :id, :order)
+    attr = @item.attributes.except("site_id", "_id", "id", "order")
     @item.fields.each do |n, f|
       v = @item.send(n)
       next unless v.present?
 
       if f.type == DateTime
-        attr[n.to_s] = v.strftime("%Y/%m/%d %H:%M")
+        attr[n.to_s] = I18n.l(v, format: :picker)
       elsif f.type == Date
-        attr[n.to_s] = v.strftime("%Y/%m/%d")
+        attr[n.to_s] = I18n.l(v.to_date, format: :picker)
       end
     end
     attr
@@ -55,8 +60,8 @@ class Cms::SearchContents::PagesController < ApplicationController
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @items = Cms::Page.in(id: ids)
-    raise "400" unless @items.present?
+    @selected_items = Cms::Page.in(id: ids).site(@cur_site)
+    raise "400" unless @selected_items.present?
   end
 
   public
@@ -74,20 +79,17 @@ class Cms::SearchContents::PagesController < ApplicationController
     end
   end
 
-  def destroy_all_pages
-    set_selected_items
+  def destroy_all
+    raise "400" if @selected_items.blank?
 
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
+    if params[:destroy_all]
+      render_confirmed_all(destroy_items, location: request.path)
+      return
     end
-    render_destroy_all(entries.size != @items.size, location: cms_page_search_contents_path)
+
+    respond_to do |format|
+      format.html { render "destroy_all" }
+      format.json { head json: errors }
+    end
   end
 end

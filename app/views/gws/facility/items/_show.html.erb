@@ -38,12 +38,12 @@
 
   <% if @item.activation_date.present? %>
   <dt><%= @model.t :activation_date %></dt>
-  <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= ss_time_tag @item.activation_date %></dd>
   <% end %>
 
   <% if @item.expiration_date.present? %>
   <dt><%= @model.t :expiration_date %></dt>
-  <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= ss_time_tag @item.expiration_date %></dd>
   <% end %>
 
   <dt><%= @model.t :approval_check_state %></dt>

@@ -13,19 +13,27 @@ module Gws::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name permissions permission_level)
+        headers = %w(id name permissions)
+        unless SS.config.ss.disable_permission_level
+          headers << 'permission_level'
+        end
+        headers
       end
 
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.localized_permissions.join("\n")
-            line << item.permission_level
-            data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              line << item.localized_permissions.join("\n")
+              unless SS.config.ss.disable_permission_level
+                line << item.permission_level
+              end
+              data << line
+            end
           end
         end
       end
@@ -36,8 +44,10 @@ module Gws::Addon::Import
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       return errors.empty?
     end

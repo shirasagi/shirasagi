@@ -12,7 +12,7 @@
 
   <dt><%= @model.t :sender_user_id %><%= @model.tt :sender_user_id %></dt>
   <dd>
-    <%= f.hidden_field 'sender_user_id', value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'sender_user_id', value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('ss.apis.users.index'), gws_apis_users_path(single: true), class: 'ajax-box' %>
   </dd>
   <dd>
@@ -51,7 +51,4 @@
 
   <dt><%= @model.t :editor_css_path %><%= @model.tt :editor_css_path %></dt>
   <dd><%= f.text_field :editor_css_path %></dd>
-
-  <dt><%= @model.t :syntax_check %><%= @model.tt :syntax_check %></dt>
-  <dd><%= f.select :syntax_check, @item.syntax_check_options, include_blank: true %></dd>
 </dl>

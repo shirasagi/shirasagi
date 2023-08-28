@@ -24,7 +24,7 @@
 
       <% options = Gws::User.new(cur_site: @cur_site).title_id_options %>
       <% if options.present? %>
-      <dt><%= @model.t :title_ids %></dt>
+      <dt><%= t("mongoid.models.gws/user_title") %></dt>
       <dd>
         <%= f.select :title_ids, options,
           { selected: params[:s].try(:[], :title_ids), include_blank: true },
@@ -67,7 +67,7 @@
           <span class="browsed">
           <% if seen_at %>
             <%= I18n.t('gws/board.options.browsed_state.read') %>
-              <time datetime="<%= seen_at.iso8601 %>"><%= I18n.l(seen_at) %></time>
+              <%= ss_time_tag seen_at %>
           <% else %>
             <%= I18n.t('gws/circular.post.unseen') %>
           <% end %>

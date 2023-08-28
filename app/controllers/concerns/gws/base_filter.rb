@@ -30,8 +30,8 @@ module Gws::BaseFilter
   end
 
   def set_gws_assets
-    SS.config.gws.stylesheets.each { |m| stylesheet(m) }
-    SS.config.gws.javascripts.each { |m| javascript(m) }
+    SS.config.gws.stylesheets.each { |path, options| options ? stylesheet(path, **options.symbolize_keys) : stylesheet(path) }
+    SS.config.gws.javascripts.each { |path, options| options ? javascript(path, **options.symbolize_keys) : javascript(path) }
   end
 
   def set_current_site
@@ -42,13 +42,15 @@ module Gws::BaseFilter
   end
 
   def set_current_group
-    @cur_group = @cur_user.gws_default_group
+    @cur_group = SS.current_user_group = @cur_user.gws_default_group
     raise "403" unless @cur_group
+
+    @cur_superior_users = @cur_user.gws_superior_users(@cur_site)
+    @cur_superior_groups = @cur_user.gws_superior_groups(@cur_site)
   end
 
   def set_account_menu
     @account_menu = []
-    @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
   end
 
   def set_gws_logged_in

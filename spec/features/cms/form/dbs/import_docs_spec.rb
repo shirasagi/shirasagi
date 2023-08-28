@@ -120,4 +120,30 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       expect(csv.to_s).to eq ::File.read(file)
     end
   end
+
+  context 'form_db with import_skip_same_file' do
+    let!(:form_db) do
+      create(:cms_form_db, cur_site: site, form_id: form.id, node_id: article_node.id,
+        import_skip_same_file: 1, import_url_hash: file_hash)
+    end
+    let!(:file_hash) { Digest::MD5.file(file).to_s }
+    let!(:in_file) { Fs::UploadedFile.create_from_file(file) }
+    let!(:task) { SS::Task.new }
+
+    before do
+      def task.log(msg)
+        # skip
+      end
+    end
+
+    it 'not manually (background) import' do
+      form_db.import_csv(file: in_file, task: task)
+      expect(form_db.pages.size).to eq 0
+    end
+
+    it 'manually import' do
+      form_db.import_csv(file: in_file, task: task, manually: 1)
+      expect(form_db.pages.size).to eq 2
+    end
+  end
 end

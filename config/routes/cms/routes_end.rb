@@ -78,13 +78,12 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
-    match "logout" => "login#logout", as: :logout, via: [:get]
+    get "logout" => "login#logout", as: :logout
     match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
@@ -98,7 +97,10 @@ Rails.application.routes.draw do
       post :lock_all, on: :collection
       post :unlock_all, on: :collection
     end
-    resources :groups, concerns: [:deletion, :role, :download, :import]
+    resources :groups, concerns: [:deletion, :role, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+      resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
+    end
     resources :members, concerns: [:deletion, :download] do
       get :verify, on: :member
       post :verify, on: :member
@@ -118,15 +120,21 @@ Rails.application.routes.draw do
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
+    resources :api_tokens, concerns: :deletion
     resources :command_settings, concerns: :deletion do
       post :run, on: :member
     end
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
-    resources :word_dictionaries, concerns: [:deletion, :template]
+    namespace 'syntax_checker' do
+      get "/" => redirect { |p, req| "#{req.path}/word_dictionaries" }, as: :main
+      resources :word_dictionaries, concerns: [:deletion, :template]
+      resource :setting, only: %i[show edit update]
+      resource :url_scheme, only: %i[show edit update]
+    end
 
     scope module: "form" do
-      resources :forms, concerns: [:deletion, :change_state] do
+      resources :forms, concerns: [:deletion, :download, :import, :change_state] do
         resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion]
 
@@ -205,6 +213,12 @@ Rails.application.routes.draw do
         resources :categories, concerns: :deletion, controller: "deliver_category/categories"
       end
 
+      # statistics
+      resources :statistics, concerns: [:deletion, :download]
+
+      # mail hanlders
+      resources :mail_handlers, concerns: :deletion
+
       # services
       namespace "richmenu" do
         resources :groups, concerns: :deletion do
@@ -253,13 +267,13 @@ Rails.application.routes.draw do
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
+    delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/files" => "search_contents/files#index"
     get "search_contents/sitemap" => "search_contents/sitemap#index"
     get "search_contents/sitemap/download_all(.:format)" => "search_contents/sitemap#download_all", as: "folder_csv_download"
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
-    delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
-    delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
+    delete "search_contents/:id" => "page_search_contents#destroy_all"
     resource :generate_lock
 
     namespace "check_links" do
@@ -277,6 +291,7 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
+      get "nodes/routes" => "nodes#routes"
       get "pages" => "pages#index"
       get "pages/children" => "pages/children#index"
       get "pages/categorized" => "pages/categorized#index"
@@ -286,6 +301,7 @@ Rails.application.routes.draw do
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
       get "sites" => "sites#index"
+      get "layouts" => "layouts#index"
       put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
@@ -384,8 +400,10 @@ Rails.application.routes.draw do
       end
 
       namespace "line" do
-        get "deliver_members/:model/:id" => "deliver_members#index", model: /message|deliver_condition|line_deliver/, as: :deliver_members
-        get "deliver_members/:model/:id/download" => "deliver_members#download", model: /message|deliver_condition|line_deliver/
+        get "deliver_members/:model/:id" => "deliver_members#index",
+          model: /message|deliver_condition|line_deliver/, as: :deliver_members
+        get "deliver_members/:model/:id/download" => "deliver_members#download",
+          model: /message|deliver_condition|line_deliver/
         get "temp_files/:id" => "temp_files#select", as: :select_temp_file
       end
 
@@ -433,6 +451,7 @@ Rails.application.routes.draw do
     resources :form_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
+    delete "search_contents/:id" => "page_search_contents#destroy_all"
     resources :line_hubs, only: [:index]
   end
 
@@ -440,24 +459,30 @@ Rails.application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    get "page/rss-recent.xml" => "public#rss_recent", cell: "nodes/page", format: "xml"
     get "group_page/(index.:format)" => "public#index", cell: "nodes/group_page"
     get "group_page/rss.xml" => "public#rss", cell: "nodes/group_page", format: "xml"
+    get "group_page/rss-recent.xml" => "public#rss_recent", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
-    get "import_node/rss.xml" => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
-    get "line_hub/line" => "public#index", cell: "nodes/line_hub"
-    post "line_hub/line" => "public#index", cell: "nodes/line_hub"
-    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
     get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
     get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
+    get "line_hub/(index.:format)" => "public#index", cell: "nodes/line_hub"
+    get "line_hub/line" => "public#line", cell: "nodes/line_hub"
+    post "line_hub/line" => "public#line", cell: "nodes/line_hub"
+    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
+    get "line_hub/mail/:filename" => "public#mail", cell: "nodes/line_hub"
+    post "line_hub/mail/:filename" => "public#mail", cell: "nodes/line_hub"
+    get "line_hub/dump_garbage/:id/:size" => "public#dump_garbage", cell: "nodes/line_hub"
   end
 
   part "cms" do
     get "free" => "public#index", cell: "parts/free"
     get "node" => "public#index", cell: "parts/node"
+    get "node2" => "public#index", cell: "parts/node2"
     get "page" => "public#index", cell: "parts/page"
     get "tabs" => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"
@@ -466,6 +491,9 @@ Rails.application.routes.draw do
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
     get "history_list" => "public#index", cell: "parts/history_list"
+    get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
+    get "print" => "public#index", cell: "parts/print"
+    get "clipboard_copy" => "public#index", cell: "parts/clipboard_copy"
   end
 
   page "cms" do

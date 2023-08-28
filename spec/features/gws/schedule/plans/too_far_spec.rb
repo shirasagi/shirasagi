@@ -21,8 +21,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         fill_in "item[name]", with: unique_id
-        fill_in "item[start_at]", with: I18n.l(start_at, format: :picker)
-        fill_in "item[end_at]", with: I18n.l(end_at, format: :picker)
+        fill_in_datetime "item[start_at]", with: start_at
+        fill_in_datetime "item[end_at]", with: end_at
         click_on I18n.t("ss.buttons.save")
       end
       err_msg = I18n.t('gws/schedule.errors.less_than_max_date', date: I18n.l(site.schedule_max_at, format: :long))
@@ -40,8 +40,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         fill_in "item[name]", with: unique_id
-        fill_in "item[start_at]", with: I18n.l(start_at, format: :picker)
-        fill_in "item[end_at]", with: I18n.l(end_at, format: :picker)
+        fill_in_datetime "item[start_at]", with: start_at
+        fill_in_datetime "item[end_at]", with: end_at
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

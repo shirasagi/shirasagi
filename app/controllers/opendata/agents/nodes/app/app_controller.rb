@@ -33,7 +33,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
     raise '404' if !@preview && !@app_idea.public?
 
     cond = { site_id: @cur_site.id, app_ids: @app_idea.id }
-    @ideas = Opendata::Idea.where(cond).and_public.order_by(:updated.asc)
+    @ideas = Opendata::Idea.where(cond).and_public(@cur_date).order_by(:updated.asc)
   end
 
   def set_file
@@ -47,7 +47,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   public
 
   def pages
-    Opendata::App.site(@cur_site).and_public
+    Opendata::App.site(@cur_site).and_public(@cur_date)
   end
 
   def index

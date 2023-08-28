@@ -11,7 +11,7 @@ module Gws::Portal::PortalFilter
   # override Gws::BaseFilter#set_gws_assets
   def set_gws_assets
     super
-    javascript("gws/calendar")
+    javascript("gws/calendar", defer: true)
   end
 
   def fix_params
@@ -57,7 +57,7 @@ module Gws::Portal::PortalFilter
         when 'read'
           @notices = @notices.and_read(@cur_user)
         when 'both'
-          @notices = @notices
+          # nothing to do
         else # unread
           @notices = @notices.and_unread(@cur_user)
         end
@@ -98,17 +98,27 @@ module Gws::Portal::PortalFilter
 
   def update_layout
     @items = @portal.portlets.to_a
+    id_item_map = @items.index_by { |item| item.id.to_s }
 
+    error_messages = []
     ActiveSupport::JSON.decode(params.require(:json)).each do |id, data|
-      item = @items.find { |c| c.id.to_s == id }
+      item = id_item_map[id]
       next unless item
 
       item.grid_data = data
       if !item.save
-        Rails.logger.warn(item.errors.full_messages.join("\n"))
+        Rails.logger.warn { item.errors.full_messages.join("\n") }
+        error_messages += item.errors.full_messages
       end
     end
 
-    render json: { message: t("ss.notice.saved") }.to_json
+    if error_messages.present?
+      render json: { message: error_messages.join("\n") }.to_json, status: :bad_request
+    else
+      render json: { message: t("ss.notice.saved") }.to_json
+    end
+  rescue => e
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    render json: { message: e.to_s }.to_json, status: :bad_request
   end
 end

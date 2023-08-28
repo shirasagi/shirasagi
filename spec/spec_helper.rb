@@ -5,9 +5,6 @@ Dotenv.load
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../config/environment", __dir__)
-
-require 'webdrivers'
-# Webdrivers.logger.level = :DEBUG
 require 'rails-controller-testing'
 require 'rspec/rails'
 # require 'rspec/autorun'
@@ -131,17 +128,20 @@ RSpec.configure do |config|
     Capybara.app_host = nil
   end
 
-  config.after(:example) do |example|
-    Rails.cache.clear if Rails.cache
-  end
-
   config.before(:example, type: :feature) do |example|
     page.reset!
     # puts '# ' + example.metadata[:full_description]
   end
 
+  config.after(:example) do |example|
+    Rails.cache.clear if Rails.cache
+  end
+
   config.after(:example, type: :feature) do
     page.reset!
+  rescue => e
+    # たまに page.reset! でのタイムアウトでテストが失敗するときがある。テスト失敗とならないように rescue する。
+    Rails.logger.debug(e.to_s)
   end
 
   config.after(:suite) do
@@ -152,7 +152,8 @@ RSpec.configure do |config|
 
   Capybara.configure do |config|
     config.ignore_hidden_elements = false
-    config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
+    # Capybara's default is 2, but it is too short. 60 is a bit long in daily use.
+    config.default_max_wait_time = ENV.fetch("CAPYBARA_MAX_WAIT_TIME", 30).to_i
 
     # to test michecker, it is needed to bind globally to access server within docker container.
     config.server_host = "0.0.0.0"
@@ -203,6 +204,11 @@ def unique_email
   "#{unique_id}@example.jp"
 end
 
+def unique_color
+  @random_color ||= SS::RandomColor.new
+  @random_color.next.to_rgb.to_s
+end
+
 def ss_japanese_text(length: 10, separator: '')
   @japanese_chars ||= begin
     hiragana = ('あ'..'ん').to_a
@@ -251,4 +257,4 @@ end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }

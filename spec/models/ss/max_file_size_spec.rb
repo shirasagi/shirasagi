@@ -2,8 +2,25 @@ require 'spec_helper'
 
 describe SS::MaxFileSize, type: :model, dbscope: :example do
   describe ".nginx_client_max_body_size" do
-    it do
-      expect(SS::MaxFileSize.nginx_client_max_body_size).to be_present
+    context "when nginx is deployed" do
+      it do
+        expect(SS::MaxFileSize.nginx_client_max_body_size).to be_present
+      end
+    end
+
+    context "when apache httpd is deployed" do
+      let(:stub_class) do
+        Class.new do
+          def spawn(*_args)
+            raise Errno::ENOENT, "nginx"
+          end
+        end
+      end
+
+      it do
+        mod = stub_class.new
+        expect(SS::MaxFileSize.nginx_client_max_body_size(mod: mod)).to be_present
+      end
     end
   end
 

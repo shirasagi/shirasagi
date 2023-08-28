@@ -6,8 +6,9 @@
       <% @item.reports.order(created: -1).limit(5).each do |report| %>
         <tr>
           <td>
-            <%= link_to report.created.strftime("%Y/%m/%d %H:%M") + " (#{number_to_human_size(report.size)})",
-              opendata_harvest_importer_report_path(importer_id: @item.id, id: report.id) %>
+            <%= link_to opendata_harvest_importer_report_path(importer_id: @item.id, id: report.id) do %>
+              <%= ss_time_tag report.created %><%= " (#{number_to_human_size(report.size)})" %>
+            <% end %>
           </td>
         </tr>
       <% end %>

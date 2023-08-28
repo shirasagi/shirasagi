@@ -23,6 +23,12 @@ module Cms::Addon::Form::Page
 
     validate :validate_column_links, on: :link
 
+    after_find do
+      if __selected_fields.nil? || __selected_fields.key?("column_values")
+        @_column_values_before_change = column_values.map(&:dup)
+      end
+    end
+
     before_validation :set_form_contains_urls
 
     around_save :cms_form_page_around_save_delegate
@@ -95,7 +101,7 @@ module Cms::Addon::Form::Page
           new_message = column_value.name + message
         else
           new_message = I18n.t(
-            "cms.column_value_error_template", name: column_value.name,
+            "errors.format2", name: column_value.name,
             error: column_value.errors.full_message(attribute, message))
         end
 
@@ -129,6 +135,9 @@ module Cms::Addon::Form::Page
   end
 
   def cms_form_page_merge_column_values
+    # 配列を [] でリセットするだけだと古い embeds が削除されないことがあるので明示的に delete する
+    self.column_values.each(&:delete)
+
     self.column_values = []
     copy_column_values(in_branch, merge_values: true)
   end
@@ -139,18 +148,7 @@ module Cms::Addon::Form::Page
 
   def column_values_was
     return [] if new_record?
-
-    docs = attribute_was("column_values")
-
-    if docs.present?
-      docs = docs.select(&:present?).map do |doc|
-        type = doc["_type"] || doc[:_type]
-        effective_klass = type.camelize.constantize rescue Cms::Column::Value::Base
-        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_klass.fields.keys.map(&:to_s)))
-      end
-    end
-
-    docs || []
+    @_column_values_before_change || []
   end
 
   def cms_form_page_delete_unlinked_files

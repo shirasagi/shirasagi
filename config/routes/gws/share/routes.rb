@@ -42,7 +42,7 @@ Rails.application.routes.draw do
       end
 
       resources :folders, concerns: [:deletion, :export] do
-        get :download_folder, on: :member
+        post :download_folder, on: :member
         match :move, on: :member, via: [:get, :post]
       end
 

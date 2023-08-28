@@ -1,0 +1,82 @@
+<div class="index">
+  <div class="list-head">
+    <div style="font-weight: normal;">
+      <%= t("contact.notices.group_page_notice_html", site: @cur_site.name) %>
+    </div>
+  </div>
+
+  <% prev_node_filename = nil %>
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <% node_filename = item.depth == 0 ? "" : ::File.dirname(item.filename) %>
+      <% if node_filename != prev_node_filename %>
+        <% node = find_node(node_filename) %>
+        <li class="list-section" data-node-filename="<%= node_filename %>" style="border-bottom: 1px solid #f2f2f2;">
+          <% if node %>
+            <% if node.allowed?(:read, @cur_user, site: @cur_site) %>
+              <%= link_to node.private_show_path, style: "display: inline-flex; align-items: center; gap: 5px;" do %>
+                <span class="material-icons-outlined">folder</span>
+                <%= node.name %>
+              <% end %>
+            <% else %>
+              <div style="display: inline-flex; align-items: center; gap: 5px;">
+                <span class="material-icons-outlined">folder</span>
+                <%= node.name %>
+              </div>
+            <% end %>
+          <% else %>
+            <div style="display: inline-flex; align-items: center; gap: 5px;">
+              <span class="material-icons-outlined">folder</span>
+              <%= node_filename %>
+            </div>
+          <% end %>
+        </li>
+        <% prev_node_filename = node_filename %>
+      <% end %>
+
+      <% item = @item_decorator.call(item) if @item_decorator %>
+      <li class="list-item" data-id="<%= item.try(:id) %>">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), item.private_show_path if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        </nav>
+
+        <label class="check">
+          <span class="material-icons-outlined">article</span>
+        </label>
+        <div class="info">
+          <%=
+            title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}"
+            link_to title, item.private_show_path, class: "title"
+          %>
+
+          <div class="meta">
+            <% if @index_meta %>
+              <% @index_meta.call item %>
+            <% else %>
+              <span class="id">#<%= item.id %></span>
+              <% if item.try(:updated) %>
+                <span class="datetime"><%= ss_time_tag item.updated %></span>
+              <% end %>
+              <% if item.try(:filename) %>
+                <% if params.dig(:s, :target) == 'descendant' %>
+                  <span class="filename"><%= item.filename %></span>
+                <% else %>
+                  <span class="filename"><%= File.basename item.filename %></span>
+                <% end %>
+              <% end %>
+              <% if item.try(:route) %>
+                <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+              <% end %>
+              <%= colored_state_label(item) %>
+              <% if item.try(:tags) %>
+                <span class="tags"><%= item.tags.join(",") %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

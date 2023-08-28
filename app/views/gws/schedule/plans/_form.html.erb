@@ -1,6 +1,5 @@
 <%= jquery do %>
-  Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
-  Gws_Schedule_Plan.renderAlldayForm();
+  Gws_Schedule_Plan.renderForm();
 <% end %>
 
 <%= hidden_field_tag 'calendar[path]', params.dig(:calendar, :path) %>
@@ -15,18 +14,18 @@
 
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>
-    <div class="datetimes-field">
-      <%= f.text_field :start_at, class: "datetime start", value: tryb { @item.start_at.strftime("%Y/%m/%d %H:%M") } %>
-      - <%= f.text_field :end_at, class: "datetime end", value: tryb { @item.end_at.strftime("%Y/%m/%d %H:%M") } %>
-    </div>
-    <div class="dates-field">
-      <%= f.text_field :start_on, class: "date start", value: tryb { @item.start_on.strftime("%Y/%m/%d") } %>
-      - <%= f.text_field :end_on, class: "date end", value: tryb { @item.end_on.strftime("%Y/%m/%d") } %>
-    </div>
-  </dd>
-  <dd>
-    <div class="date-options">
-      <label for="item_allday"><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
+    <div class="gws-schedule-start-end-combo">
+      <div class="datetimes-field">
+        <%= f.ss_datetime_field :start_at, { max_date: @cur_site.schedule_max_at }, { class: "start" } %>
+        - <%= f.ss_datetime_field :end_at, { max_date: @cur_site.schedule_max_at }, { class: "end" } %>
+      </div>
+      <div class="dates-field hide">
+        <%= f.ss_date_field :start_on, { max_date: @cur_site.schedule_max_at }, { class: "start" } %>
+        - <%= f.ss_date_field :end_on, { max_date: @cur_site.schedule_max_at }, { class: "end" } %>
+      </div>
+      <div class="date-options mt-3">
+        <label for="item_allday"><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
+      </div>
     </div>
   </dd>
 

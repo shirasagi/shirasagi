@@ -1,0 +1,92 @@
+<%
+  create_path = proc { |work| gws_workload_apis_comments_path(work_id: work) }
+  edit_path = proc { |work, comment| edit_gws_workload_apis_comment_path(work_id: work, id: comment, redirect_to: request.fullpath) }
+  delete_path = proc { |work, comment| delete_gws_workload_apis_comment_path(work_id: work, id: comment, redirect_to: request.fullpath) }
+
+  hours_options = Gws::Workload::WorkComment.new.in_worktime_hours_options
+  minutes_options = Gws::Workload::WorkComment.new.in_worktime_minutes_options
+
+  # 「自分が担当者でない業務にはコメントができない」という仕様
+  commentable = @item.member_ids.to_a.include?(@cur_user.id)
+%>
+<div class="gws-comment-post">
+<% if @item.comments.present? %>
+  <div class="comments">
+    <% if @item.achievement_rate > 0 || @item.worktime_minutes > 0 %>
+      <div class="comment total">
+        <div class="row user">
+          <%= @item.t :comments_total %>
+        </div>
+        <% if @item.achievement_rate > 0 %>
+          <div class="row achievement-rate">
+            <label><%= @item.t :achievement_rate %></label>:
+            <%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate) %>
+            <%= @item.tt :achievement_rate %>
+          </div>
+        <% end %>
+        <% if @item.worktime_minutes > 0 %>
+          <div class="row worktime-minutes">
+            <label><%= @item.t :worktime_minutes %></label>:
+            <%= @item.worktime_label %>
+            <%= @item.tt :worktime_minutes %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% @item.comments.each do |comment| %>
+      <div class="comment" id="comment-<%= comment.id %>">
+        <div class="row user">
+          <%= gws_public_user_long_name(comment.user_long_name) %>
+        </div>
+        <div class="row meta">
+          <% if comment.achievement_rate.present? %>
+            <span class="achievement-rate">
+              <label><%= Gws::Workload::WorkComment.t :achievement_rate %></label>:
+              <%= t("gws/schedule/todo.achievement_rate", count: comment.achievement_rate) %>
+            </span>
+          <% end %>
+          <% if comment.worktime_label %>
+            <span class="worktime-minutes">
+              <label><%= Gws::Workload::WorkComment.t :worktime_minutes %></label>:
+              <%= comment.worktime_label %>
+            </span>
+          <% end %>
+          <time class="commented-at" datetime="<%= comment.commented_at.utc.iso8601 %>"><%= I18n.l(comment.commented_at) %></time>
+        </div>
+        <div class="row text">
+          <%== comment.html %>
+        </div>
+        <% if commentable %>
+          <div class="row toolbar">
+            <%= link_to(t('ss.buttons.edit'), edit_path.call(@item, comment), class: 'btn ajax-box') %>
+            <%= link_to(t('ss.buttons.delete'), delete_path.call(@item, comment), class: 'btn ajax-box') %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if !@item.deleted? && commentable %>
+  <%= form_tag(create_path.call(@item), id: 'comment-form', method: :post) do %>
+    <div class="row">
+      <label for="item_achievement_rate"><%= Gws::Workload::WorkComment.t :achievement_rate %></label>:
+      <%= number_field_tag 'item[achievement_rate]' %>
+      <span class="achievement-rate-unit"><%= t("gws/schedule/todo.achievement_rate_unit") %></span>
+    </div>
+    <div class="row">
+      <label><%= Gws::Workload::WorkComment.t :worktime_minutes %></label>:
+      <%= select_tag 'item[in_worktime_hours]', options_for_select(hours_options) %>
+      <%= t("ss.time") %>
+      <%= select_tag 'item[in_worktime_minutes]', options_for_select(minutes_options) %>
+      <%= t("datetime.prompts.minute") %>
+    </div>
+    <div class="row"><%= text_area_tag 'item[text]' %></div>
+    <div class="row">
+      <%= hidden_field_tag('redirect_to', request.fullpath) %>
+      <%= submit_tag(I18n.t('gws/workload.buttons.comment'), class: :btn) %>
+    </div>
+  <% end %>
+<% end %>
+</div>

@@ -7,7 +7,8 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= @model.t(:updated) %>:<%= ss_time_tag item.updated %></span>
+  <span class="datetime"><%= @model.t(:created) %>:<%= ss_time_tag item.created %></span>
   <span class="state"><%= item.label(:state) %></span>
   <span class="order"><%= item.order %></span>
   <span class="categories">

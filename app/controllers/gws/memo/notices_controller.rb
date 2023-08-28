@@ -99,4 +99,23 @@ class Gws::Memo::NoticesController < ApplicationController
     }
     render json: resp.to_json
   end
+
+  def set_seen_all
+    ids = params[:ids]
+    if ids
+      ids = ids.map(&:to_i) rescue nil
+    end
+
+    @items = SS::Notification.unseens(@cur_user).to_a
+    @items = @items.select { |item| ids.include?(item.id) } if ids
+    @items.each do |item|
+      item.set_seen(@cur_user).update
+    end
+
+    flash[:notice] = I18n.t("ss.notice.set_seen")
+    respond_to do |format|
+      format.html { redirect_to(action: :index) }
+      format.json { head :no_content }
+    end
+  end
 end

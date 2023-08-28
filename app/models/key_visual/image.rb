@@ -6,6 +6,7 @@ class KeyVisual::Image
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Cms::Lgwan::Page
 
   set_permission_name "key_visual_images"
 

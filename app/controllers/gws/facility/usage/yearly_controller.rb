@@ -22,24 +22,26 @@ class Gws::Facility::Usage::YearlyController < ApplicationController
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
 
     enum = Enumerator.new do |y|
-      y << encode_sjis([@model.t(:name), I18n.t('gws/facility.usage.type'), *@months.map { |month| month[0] }].to_csv)
-      aggregate
-      @items.each do |item|
-        terms = []
-        terms << item.name
-        terms << I18n.t('gws/facility.usage.hours')
-        @months.each do |month|
-          terms << format_usage_hours(item, @target_time.year, month[1])
-        end
-        y << encode_sjis(terms.to_csv)
+      I18n.with_locale(I18n.default_locale) do
+        y << encode_sjis([@model.t(:name), I18n.t('gws/facility.usage.type'), *months.map { |month| month[0] }].to_csv)
+        aggregate
+        @items.each do |item|
+          terms = []
+          terms << item.name
+          terms << I18n.t('gws/facility.usage.hours')
+          months.each do |month|
+            terms << format_usage_hours(item, @target_time.year, month[1])
+          end
+          y << encode_sjis(terms.to_csv)
 
-        terms.clear
-        terms << item.name
-        terms << I18n.t('gws/facility.usage.times')
-        @months.each do |month|
-          terms << format_usage_count(item, @target_time.year, month[1])
+          terms.clear
+          terms << item.name
+          terms << I18n.t('gws/facility.usage.times')
+          months.each do |month|
+            terms << format_usage_count(item, @target_time.year, month[1])
+          end
+          y << encode_sjis(terms.to_csv)
         end
-        y << encode_sjis(terms.to_csv)
       end
     end
 

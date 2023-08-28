@@ -18,6 +18,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "facility/node") }
   end
@@ -38,6 +39,7 @@ module Facility::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     self.use_no_items_display = false
     self.use_substitute_html = false
@@ -66,10 +68,12 @@ module Facility::Node
         t_columns = (opts[:public] ? PUBLIC_COLUMNS : COLUMNS).map { |c| t(c) }
         additional_columns = criteria.map { |item| item.additional_info.map { |i| i[:field] } }.flatten.compact.uniq
 
-        CSV.generate do |data|
-          data << t_columns + additional_columns.map { |c| "#{self.t(:additional_info)}:#{c}" }
-          criteria.each do |item|
-            data << attributes_to_row(item, additional_columns, opts)
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << t_columns + additional_columns.map { |c| "#{self.t(:additional_info)}:#{c}" }
+            criteria.each do |item|
+              data << attributes_to_row(item, additional_columns, opts)
+            end
           end
         end
       end
@@ -115,6 +119,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "facility/search") }
 
@@ -132,6 +137,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "facility/category") }
 
@@ -148,6 +154,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "facility/service") }
 
@@ -166,6 +173,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "facility/location") }
 

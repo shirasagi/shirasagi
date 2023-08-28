@@ -37,7 +37,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
     it do
       visit cms_forms_path(site: site)
-      first(".list-head [type='checkbox']").click
+      wait_event_to_fire("ss:checked-all-list-items") { first(".list-head [type='checkbox']").click }
 
       within ".list-head-action" do
         click_on I18n.t("ss.links.delete")

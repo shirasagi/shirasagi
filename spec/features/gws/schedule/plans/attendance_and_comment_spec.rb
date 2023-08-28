@@ -17,7 +17,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit gws_schedule_plan_path(site: site, id: item)
 
       within "#addon-gws-agents-addons-schedule-attendance" do
-        first("span.attendances[data-member-id='#{user.id}'] input#item_attendances_#{user.id}_state_attendance").click
+        wait_cbox_open do
+          first("span.attendances[data-member-id='#{user.id}'] input#item_attendances_#{user.id}_state_attendance").click
+        end
       end
 
       wait_for_cbox do
@@ -102,7 +104,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.delete")
         end
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))

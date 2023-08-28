@@ -10,7 +10,7 @@ describe "cms/check_links/reports", type: :feature, dbscope: :example, js: true 
   let(:node_count) { "#{I18n.t("ss.node")}0#{I18n.t("ss.units.count")}" }
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site).perform_now
+    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
   end
 
   context "with auth" do

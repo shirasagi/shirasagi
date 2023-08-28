@@ -20,7 +20,7 @@ end
     <h2><%= comment.name %></h2>
     <nav class="meta">
       <span class="user"><%= gws_public_user_long_name(comment.contributor_name.presence || comment.user_long_name) %></span>
-      <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
+      <span class="datetime"><%= ss_time_tag comment.created %></span>
     </nav>
   </header>
 
@@ -43,21 +43,7 @@ end
     <% end %>
 
     <% if comment.links.present? %>
-      <div class="links">
-        <span class='heading <%= @cur_site.board_links_break == 'horizontal' ? 'd-block' : 'd-inline-block' %>'>
-          <%= I18n.t('modules.addons.gws/link') %>
-        </span>
-        <% (comment.links || []).each do |item| %>
-          <span class="link-item <%= @cur_site.board_links_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>">
-            <i class="material-icons">&#xE157;</i>
-            <% if item[:url].present? %>
-              <%= link_to item[:name].presence || item[:url], item[:url] %>
-            <% elsif item[:name].present? %>
-              <%= item[:name] %>
-            <% end %>
-          </span>
-        <% end %>
-      </div>
+      <%= render "gws/board/main/links", links: comment.links %>
     <% end %>
 
     <% if menu.present? %>

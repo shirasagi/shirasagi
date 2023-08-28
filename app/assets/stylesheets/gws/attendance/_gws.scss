@@ -24,6 +24,13 @@
     @include mb { margin: 0 10px 10px; }
   }
 
+  .attendance-box-container {
+    display: flex;
+    .attendance-box {
+      margin-right: 10px;
+    }
+  }
+
   .attendance-box-title {
     padding: 8px 10px;
     border-bottom: $border-gray1;
@@ -165,11 +172,15 @@
       text-align: center;
     }
 
+    th.leave, td.leave {
+      min-width: 6em;
+    }
+
     th.memo, td.memo {
       min-width: 6em;
     }
 
-    tr.holiday, tr.sunday {
+    tr.holiday, tr.sunday, tr.weekly-leave {
       td.date {
         color: #f00;
       }
@@ -181,9 +192,37 @@
       }
     }
 
+    td .time-wrap {
+      padding-left: 16px;
+    }
+
+    td.manageable-time-card {
+      .name-warp {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      .name {
+        padding-right: 2px;
+      }
+    }
+
     .focus {
       background-color: #f2a950;
     }
+
+    .overtime-diff.minus {
+      color: #f00;
+    }
+    .overtime-diff.plus {
+      color: #00f;
+    }
+    .overtime-diff.equal {
+      color: #28a745;
+    }
+  }
+  .total-working-time {
+    margin-top: 10px;
   }
 }
 
@@ -260,5 +299,15 @@
       color: #999;
       background-color: #ddd;
     }
+  }
+}
+
+.time-card-notices {
+  padding-left: 20px;
+  li {
+    list-style: disc;
+  }
+  .notice {
+    color: #f00;
   }
 }

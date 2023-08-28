@@ -1,13 +1,4 @@
 <% name = "#{f.object_name}[][in_wrap][file_label]" %>
 
-<%= jquery do %>
-Cms_Form.addSyntaxCheck("<%= id %>", {
-  resolve: "text",
-  name: "<%= column.name %>",
-  getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
-  setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
-});
-<% end %>
-
-<%= text_field_tag(name, value.try(:file_label), id: nil, "data-check-presence": t("cms.column_file_upload.image.file_label"), placeholder: t("cms.column_file_upload.image.file_label_place_holder")) %>
+<%= text_field_tag(name, value.try(:file_label), id: nil, placeholder: t("cms.column_file_upload.image.file_label_place_holder"), data: { syntax_check: "value", syntax_check_name: column.name, "check-presence": t("cms.column_file_upload.image.file_label") }) %>
 <%= select_tag("#{f.object_name}[][in_wrap][image_html_type]", options_for_select(column.image_html_type_options, value.try(:image_html_type)), style: "width: 10%;") %>

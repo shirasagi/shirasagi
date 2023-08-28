@@ -11,7 +11,9 @@ class Gws::UserCsv::Importer
 
   validates :in_file, presence: true
   validates :cur_site, presence: true
-  validate :validate_import
+  validate do
+    I18n.with_locale(I18n.default_locale) { validate_import }
+  end
 
   def initialize(*args, &block)
     super
@@ -19,19 +21,28 @@ class Gws::UserCsv::Importer
   end
 
   def import
+    I18n.with_locale(I18n.default_locale) { _import }
+  end
+
+  private
+
+  def _import
     return if invalid?
 
     @imported = 0
 
-    SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-      @row_index = i + 2
-      @row = row
+    create_importer
+    Rails.logger.tagged(::File.basename(in_file.original_filename)) do
+      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+        @row_index = i + 2
+        @row = row
 
-      item = build_item
-      next if item.blank?
+        item = build_item
+        next if item.blank?
 
-      save_item(item)
-      save_form_data(item)
+        save_item(item)
+        save_form_data(item)
+      end
     end
 
     errors.empty?
@@ -41,33 +52,24 @@ class Gws::UserCsv::Importer
     @row = nil
   end
 
-  private
-
   def validate_import
     if in_file.blank?
       errors.add(:in_file, :blank)
       return
     end
 
-    fname = in_file.original_filename
-    unless /^\.csv$/i.match?(::File.extname(fname))
+    extname = ::File.extname(in_file.original_filename)
+    if extname.blank? || extname.casecmp('.csv') != 0
       errors.add(:in_file, :invalid_file_type)
       return
     end
 
-    begin
-      SS::Csv.foreach_row(in_file, headers: true) do |row|
-        diff = Gws::UserCsv::Exporter.csv_basic_headers(webmail_support: @webmail_support) - row.headers
-        if diff.present?
-          errors.add :in_file, :invalid_file_type
-        end
-        break
-      end
-    rescue => e
-      errors.add(:in_file, :invalid_file_type)
+    required_headers = %i[id name uid email password groups].map { |key| Gws::User.t(key) }
+    unless SS::Csv.valid_csv?(in_file, headers: true, required_headers: required_headers)
+      errors.add :in_file, :invalid_file_type
       return
     end
-
+  ensure
     in_file.rewind
   end
 
@@ -84,28 +86,13 @@ class Gws::UserCsv::Importer
     item.cur_site = cur_site
     item.cur_user = cur_user
 
-    %w(
-      name kana uid organization_uid email tel tel_ext
-      account_start_date account_expiration_date session_lifetime remark ldap_dn
-    ).each do |k|
-      item[k] = row_value(k)
-    end
-
-    keys = %i[
-      set_password set_title set_occupation set_type set_initial_password_warning set_organization_id set_group_ids
-      set_main_group_ids set_switch_user_id set_gws_roles set_sys_roles
-    ]
-    keys += %i[set_webmail_roles] if webmail_support
-
-    keys.each do |m|
-      send(m, item)
-    end
+    @importer.import_row(@row, item)
 
     item
   end
 
   def find_item
-    id = row_value('id')
+    id = row_value(:id)
     if id.present?
       item = Gws::User.unscoped.site(cur_site).where(id: id).first
       if item.blank?
@@ -116,7 +103,7 @@ class Gws::UserCsv::Importer
       return [ item, false ]
     end
 
-    %w(uid email).each do |key|
+    %i[uid email].each do |key|
       val = row_value(key)
       next if val.blank?
 
@@ -127,141 +114,6 @@ class Gws::UserCsv::Importer
     end
 
     [ nil, false ]
-  end
-
-  def set_password(item)
-    password = row_value('password')
-    item.in_password = password if password.present?
-  end
-
-  def set_title(item)
-    value = row_value('title_ids')
-
-    if value.present?
-      title = Gws::UserTitle.site(cur_site).where(code: value).first
-
-      item.imported_gws_user_title_key = value
-      item.imported_gws_user_title = title
-    end
-
-    item.in_title_id = title ? title.id : ''
-  end
-
-  def set_occupation(item)
-    value = row_value('occupation_ids')
-
-    if value.present?
-      occupation = Gws::UserOccupation.site(cur_site).where(code: value).first
-
-      item.imported_gws_user_occupation_key = value
-      item.imported_gws_user_occupation = occupation
-    end
-
-    item.in_occupation_id = occupation ? occupation.id : ''
-  end
-
-  def set_type(item)
-    value = row_value('type')
-    type = item.type_options.find { |v, k| v == value } if value.present?
-    item.type = type ? type[1] : ''
-  end
-
-  def set_initial_password_warning(item)
-    initial_password_warning = row_value('initial_password_warning')
-    if initial_password_warning == I18n.t('ss.options.state.enabled')
-      item.initial_password_warning = 1
-    else
-      item.initial_password_warning = nil
-    end
-  end
-
-  def set_organization_id(item)
-    value = row_value('organization_id')
-    group = SS::Group.where(name: value).first if value.present?
-    item.organization_id = group ? group.id : nil
-  end
-
-  def set_group_ids(item)
-    item.group_ids = item.group_ids - rm_group_ids
-    value = row_value('groups')
-    if value.present?
-      item.group_ids += SS::Group.in(name: value.split(/\n/)).pluck(:id)
-    end
-
-    item.imported_group_keys = value.to_s.split(/\n/)
-    item.imported_groups = item.groups
-    item.imported_gws_group = cur_site
-    item.group_ids = item.group_ids.uniq.sort
-  end
-
-  def set_main_group_ids(item)
-    value = row_value('gws_main_group_ids')
-
-    if value.present?
-      group = SS::Group.in_group(cur_site).and(name: value).first
-      item.imported_gws_main_group_key = value
-      item.imported_gws_main_group = group
-    end
-
-    item.in_gws_main_group_id = group ? group.id : ''
-  end
-
-  def set_switch_user_id(item)
-    value = row_value('switch_user_id')
-    if value.present?
-      value = value.split(',', 2)
-      user = SS::User.where(id: value[0], name: value[1]).first
-    end
-    item.switch_user_id = user ? user.id : nil
-  end
-
-  def set_gws_roles(item)
-    value = row_value('gws_roles')
-    if value.present?
-      add_role_names = value.split(/\n/)
-      add_roles = Gws::Role.site(cur_site).in(name: add_role_names).to_a
-      add_role_ids = add_roles.pluck(:id)
-
-      item.imported_gws_role_keys = add_role_names
-      item.imported_gws_roles = add_roles
-    else
-      add_role_ids = []
-    end
-    site_role_ids = Gws::Role.site(cur_site).pluck(:id)
-    item.gws_role_ids = item.gws_role_ids - site_role_ids + add_role_ids
-  end
-
-  def set_webmail_roles(item)
-    value = row_value('webmail_roles').to_s
-    if value.present?
-      add_role_names = value.split(/\n/)
-      add_roles = Webmail::Role.in(name: add_role_names).to_a
-      add_role_ids = add_roles.pluck(:id)
-
-      item.imported_webmail_role_keys = add_role_names
-      item.imported_webmail_roles = add_roles
-    else
-      add_role_ids = []
-    end
-    item.webmail_role_ids = add_role_ids
-  end
-
-  def set_sys_roles(item)
-    value = row_value('sys_roles').to_s
-    general_role_ids = Sys::Role.and_general.pluck(:id)
-
-    if value.present?
-      add_role_names = value.split(/\n/)
-      add_roles = Sys::Role.in(name: add_role_names).to_a
-      add_role_ids = add_roles.pluck(:id)
-
-      item.imported_sys_role_keys = add_role_names
-      item.imported_sys_roles = add_roles
-    else
-      add_role_ids = []
-    end
-
-    item.sys_role_ids = item.sys_role_ids - general_role_ids + add_role_ids
   end
 
   def save_item(item)
@@ -300,7 +152,267 @@ class Gws::UserCsv::Importer
     form_data.save
   end
 
-  def rm_group_ids
-    @rm_group_ids ||= SS::Group.where(name: /\A#{Regexp.escape(cur_site.root.name)}/).pluck(:id)
+  def site_group_ids
+    @site_group_ids ||= Gws::Group.site(cur_site.root).pluck(:id)
+  end
+
+  def site_user_ids
+    @site_user_ids ||= Gws::User.site(cur_site).pluck(:id)
+  end
+
+  def site_role_ids
+    @site_role_ids ||= Gws::Role.site(cur_site).pluck(:id)
+  end
+
+  def general_role_ids
+    @general_role_ids ||= Sys::Role.and_general.pluck(:id)
+  end
+
+  def site_form
+    return @site_form if instance_variable_defined?(:@site_form)
+    @site_form ||= Gws::UserForm.find_for_site(cur_site)
+  end
+
+  delegate :to_array, :from_label, to: SS::Csv::CsvImporter
+
+  def create_importer
+    @importer ||= SS::Csv.draw(:import, context: self, model: Gws::User) do |importer|
+      define_importer_required(importer)
+      define_importer_basic1(importer)
+      define_importer_basic2(importer)
+      define_importer_basic3(importer)
+      define_importer_locale_setting(importer)
+      define_importer_ldap(importer)
+      define_importer_public_duty(importer)
+      define_importer_affair(importer)
+      define_importer_gws_role(importer)
+      define_importer_sys_role(importer)
+      define_importer_webmail_role(importer)
+      define_importer_readable(importer)
+    end.create
+  end
+
+  def define_importer_required(importer)
+    importer.simple_column :name
+    importer.simple_column :uid
+    importer.simple_column :email
+    importer.simple_column :password do |row, item, head, value|
+      item.in_password = value if value.present?
+    end
+    importer.simple_column :groups do |row, item, head, value|
+      item.group_ids = item.group_ids - site_group_ids
+      if value.present?
+        item.group_ids += Gws::Group.site(cur_site).in(name: value.split(/\n/)).pluck(:id)
+      end
+
+      item.imported_group_keys = value.to_s.split(/\n/)
+      item.imported_groups = item.groups
+      item.imported_gws_group = cur_site
+      item.group_ids = item.group_ids.uniq.sort
+    end
+  end
+
+  def define_importer_basic1(importer)
+    importer.simple_column :kana
+    importer.simple_column :organization_uid
+    importer.simple_column :organization_id do |row, item, head, value|
+      group = Gws::Group.site(cur_site).where(name: value).first if value.present?
+      item.organization_id = group ? group.id : nil
+    end
+    importer.simple_column :tel
+    importer.simple_column :tel_ext
+    importer.simple_column :title_ids do |row, item, head, value|
+      if value.present?
+        title = Gws::UserTitle.site(cur_site).where(code: value).first
+
+        item.imported_gws_user_title_key = value
+        item.imported_gws_user_title = title
+      end
+
+      item.in_title_id = title ? title.id : ''
+    end
+    importer.simple_column :occupation_ids do |row, item, head, value|
+      if value.present?
+        occupation = Gws::UserOccupation.site(cur_site).where(code: value).first
+
+        item.imported_gws_user_occupation_key = value
+        item.imported_gws_user_occupation = occupation
+      end
+
+      item.in_occupation_id = occupation ? occupation.id : ''
+    end
+    importer.simple_column :type do |row, item, head, value|
+      item.type = from_label(value, item.type_options).presence
+    end
+  end
+
+  def define_importer_basic2(importer)
+    importer.simple_column :account_start_date
+    importer.simple_column :account_expiration_date
+    importer.simple_column :initial_password_warning do |row, item, head, value|
+      if value == I18n.t('ss.options.state.enabled')
+        item.initial_password_warning = 1
+      else
+        item.initial_password_warning = nil
+      end
+    end
+    importer.simple_column :session_lifetime
+    importer.simple_column :restriction do |row, item, head, value|
+      item.restriction = from_label(value, item.restriction_options).presence
+    end
+    importer.simple_column :lock_state do |row, item, head, value|
+      item.lock_state = from_label(value, item.lock_state_options).presence
+    end
+    importer.simple_column :deletion_lock_state do |row, item, head, value|
+      item.deletion_lock_state = from_label(value, item.deletion_lock_state_options).presence
+    end
+  end
+
+  def define_importer_basic3(importer)
+    importer.simple_column :gws_main_group_ids do |row, item, head, value|
+      if value.present?
+        group = Gws::Group.site(cur_site).and(name: value).first
+        item.imported_gws_main_group_key = value
+        item.imported_gws_main_group = group
+      end
+
+      item.in_gws_main_group_id = group ? group.id : ''
+    end
+    importer.simple_column :gws_default_group_ids do |row, item, head, value|
+      if value.present?
+        group = Gws::Group.site(cur_site).and(name: value).first
+        # item.imported_gws_default_group_key = value
+        # item.imported_gws_default_group = group
+      end
+
+      item.in_gws_default_group_id = group ? group.id : ''
+    end
+    importer.simple_column :switch_user_id do |row, item, head, value|
+      if value.present?
+        value = value.split(',', 2)
+        user = Gws::User.site(cur_site).where(id: value[0], name: value[1]).first
+      end
+      item.switch_user_id = user ? user.id : nil
+    end
+    importer.simple_column :remark
+  end
+
+  def define_importer_locale_setting(importer)
+    importer.simple_column :lang do |row, item, head, value|
+      item.lang = from_label(value, item.lang_options).presence
+    end
+    importer.simple_column :timezone do |row, item, head, value|
+      item.timezone = from_label(value, item.timezone_options).presence
+    end
+  end
+
+  def define_importer_ldap(importer)
+    importer.simple_column :ldap_dn
+  end
+
+  def define_importer_public_duty(importer)
+    importer.simple_column :charge_name
+    importer.simple_column :charge_address
+    importer.simple_column :charge_tel
+    importer.simple_column :divide_duties
+  end
+
+  def define_importer_affair(importer)
+    importer.simple_column :staff_category do |row, item, head, value|
+      item.staff_category = from_label(value, item.staff_category_options).presence
+    end
+    importer.simple_column :staff_address_uid
+    importer.simple_column :gws_superior_group_ids do |row, item, head, value|
+      item.in_gws_superior_group_ids = Gws::Group.site(cur_site).in(name: to_array(value)).pluck(:id)
+    end
+    importer.simple_column :gws_superior_user_ids do |row, item, head, value|
+      if value.present?
+        user_ids = to_array(value).map { |term| term.split(",", 2).first.strip }
+        user_ids.select!(&:numeric?)
+        user_ids.map!(&:to_i)
+        users = Gws::User.site(cur_site).in(id: user_ids)
+      else
+        users = Gws::User.none
+      end
+
+      item.in_gws_superior_user_ids = users.pluck(:id)
+    end
+  end
+
+  def define_importer_gws_role(importer)
+    importer.simple_column :gws_roles do |row, item, head, value|
+      if value.present?
+        add_role_names = to_array(value)
+        add_roles = Gws::Role.site(cur_site).in(name: add_role_names)
+        add_role_ids = add_roles.pluck(:id)
+
+        item.imported_gws_role_keys = add_role_names
+        item.imported_gws_roles = add_roles
+      else
+        add_role_ids = []
+      end
+
+      item.gws_role_ids = item.gws_role_ids - site_role_ids + add_role_ids
+    end
+  end
+
+  def define_importer_sys_role(importer)
+    importer.simple_column :sys_roles do |row, item, head, value|
+      if value.present?
+        add_role_names = value.split(/\n/)
+        add_roles = Sys::Role.all.and_general.in(name: add_role_names).to_a
+        add_role_ids = add_roles.pluck(:id)
+
+        item.imported_sys_role_keys = add_role_names
+        item.imported_sys_roles = add_roles
+      else
+        add_role_ids = []
+      end
+
+      item.sys_role_ids = item.sys_role_ids - general_role_ids + add_role_ids
+    end
+  end
+
+  def define_importer_webmail_role(importer)
+    importer.simple_column :webmail_roles do |row, item, head, value|
+      if value.present?
+        add_role_names = value.split(/\n/)
+        add_roles = Webmail::Role.in(name: add_role_names)
+        add_role_ids = add_roles.pluck(:id)
+
+        item.imported_webmail_role_keys = add_role_names
+        item.imported_webmail_roles = add_roles
+      else
+        add_role_ids = []
+      end
+
+      item.webmail_role_ids = add_role_ids
+    end
+  end
+
+  def define_importer_readable(importer)
+    importer.simple_column :readable_setting_range do |row, item, head, value|
+      item.readable_setting_range = from_label(value, item.readable_setting_range_options)
+    end
+    importer.simple_column :readable_group_ids do |row, item, head, value|
+      if value.present?
+        groups = Gws::Group.site(cur_site).in(name: to_array(value))
+      else
+        groups = Gws::Group.none
+      end
+      item.readable_group_ids = item.readable_group_ids - site_group_ids + groups.pluck(:id)
+    end
+    importer.simple_column :readable_member_ids do |row, item, head, value|
+      if value.present?
+        user_ids = to_array(value).map { |term| term.split(",", 2).first }
+        user_ids.select!(&:numeric?)
+        user_ids.map!(&:to_i)
+
+        users = Gws::User.site(cur_site).in(id: user_ids)
+      else
+        users = Gws::User.none
+      end
+      item.readable_member_ids = item.readable_member_ids - site_user_ids + users.pluck(:id)
+    end
   end
 end

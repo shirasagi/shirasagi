@@ -189,6 +189,12 @@ production: &production
 
   default_released_type: "fixed"
 
+  parts:
+    cms/node:
+      disable: true
+    category/node:
+      disable: true
+
   # column name validation type
   #
   # restricted: restrict reserved characters.

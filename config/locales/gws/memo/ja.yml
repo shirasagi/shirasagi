@@ -25,6 +25,7 @@ ja:
       publish: 送信する
     buttons:
       seen: 送信者一覧
+      select_signature: 署名を選択
     confirm:
       publish: 送信してよろしいですか？
     notice:
@@ -41,10 +42,10 @@ ja:
     backup_messages: バックアップ
     import_messages: インポート
     restore_messages: 復元
-    restore_messages: 復元
     unsend: 送信先のメッセージも削除する（送信取り消し）
     export_filter: 対象
     backup_filter: 対象
+    forward_message_header: 転送メッセージ
     links:
       move: 移動する
       etc: その他
@@ -62,6 +63,8 @@ ja:
       print: 印刷
       unseens: 未読のみ
       seens: 既読含む
+      next: 次へ
+      prev: 前へ
     confirm:
       trash_all: ゴミ箱に移しますか？
       set_seen_all: 既読にしますか？
@@ -186,7 +189,7 @@ ja:
       gws/memo/folder: フォルダー
       gws/memo/filter: フィルター
       gws/memo/signature: 署名
-      gws/memo/template: 電話メモ
+      gws/memo/template: 定型文
       gws/memo/forward: メール転送
       gws/memo/group_setting: メッセージ設定
       gws/memo/list: リスト
@@ -292,7 +295,9 @@ ja:
       gws/memo/notice_user_setting:
         notice_schedule_user_setting: スケジュール
         notice_todo_user_setting: ToDo
+        notice_workload_user_setting: 業務見える化
         notice_presence_user_setting: 在席状況
+        notice_affair_user_setting: 庶務事務
         notice_workflow_user_setting: ワークフロー
         notice_circular_user_setting: 回覧板
         notice_monitor_user_setting: 照会・回答
@@ -305,6 +310,7 @@ ja:
         notice_announcement_user_setting: お知らせ
         notice_schedule_email_user_setting: スケジュール通知メール転送
         notice_todo_email_user_setting: ToDo通知メール転送
+        notice_workload_email_user_setting: 業務見える化通知メール転送
         notice_presence_email_user_setting: 在席状況通知メール転送
         notice_workflow_email_user_setting: ワークフロー通知メール転送
         notice_circular_email_user_setting: 回覧板通知メール転送

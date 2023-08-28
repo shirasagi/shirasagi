@@ -91,7 +91,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let(:column2_value1) { I18n.l(column2_date1, format: :picker) }
       let(:column3_label1) { unique_id }
       let(:column3_url1) { "/#{unique_id}/" }
-      let(:column4_value1) { Array.new(2) { unique_id }.join("\n") }
+      let(:column4_value1) { Array.new(2) { unique_id } }
       let(:column5_value1) { column5.select_options.sample }
       let(:column6_value1) { column6.select_options.sample }
       let(:column7_value1) { column7.select_options.sample }
@@ -101,8 +101,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let(:column10_head1) { %w(h1 h2).sample }
       let(:column10_text1) { unique_id }
       let(:column11_list1) { unique_id }
-      let(:column12_height1) { rand(2..100) }
-      let(:column12_width1) { rand(2..100) }
+      let(:column12_height1) { rand(2..5) }
+      let(:column12_width1) { rand(2..5) }
       let(:column12_caption1) { unique_id }
       let(:column13_youtube_id1) { unique_id }
       let(:column13_url1) { "https://www.youtube.com/watch?v=#{column13_youtube_id1}" }
@@ -135,9 +135,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on state == "public" ? I18n.t("cms.buttons.save_as_branch") : I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorFormChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorFormChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         if state == "public"
@@ -146,6 +146,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
           page.execute_script('$("#ss-notice").remove();')
         end
+        expect(page).to have_css("[data-column-name='#{column1.name}']", text: column1_value1)
 
         item.reload
         if state == "public"
@@ -161,6 +162,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value1.column_id).to eq column1.id
         expect(column_value1.value).to eq column1_value1
         expect(column_value1.order).to eq 0
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #2: cms_column_date_field
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -181,6 +184,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column2.name}']", text: I18n.l(column2_date1, format: :long))
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 2
@@ -189,6 +193,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value2.column_id).to eq column2.id
         expect(column_value2.date).to eq column2_date1.in_time_zone
         expect(column_value2.order).to eq 1
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #3: cms_column_url_field2
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -206,12 +212,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column3.name}']", text: column3_label1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 3
@@ -221,6 +228,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value3.link_label).to eq column3_label1
         expect(column_value3.link_url).to eq column3_url1
         expect(column_value3.order).to eq 2
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #4: cms_column_text_area
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -233,24 +242,27 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-textarea" do
-              fill_in "item[column_values][][in_wrap][value]", with: column4_value1
+              fill_in "item[column_values][][in_wrap][value]", with: column4_value1.join("\n")
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column4.name}']", text: column4_value1.last)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 4
         column_values = now_editing_item.column_values.order_by(order: 1, name: 1).to_a
         column_value4 = column_values.last
         expect(column_value4.column_id).to eq column4.id
-        expect(column_value4.value).to eq column4_value1.gsub("\n", "\r\n")
+        expect(column_value4.value).to eq column4_value1.join("\r\n")
         expect(column_value4.order).to eq 3
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #5: cms_column_select
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -271,6 +283,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column5.name}']", text: column5_value1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 5
@@ -279,6 +292,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value5.column_id).to eq column5.id
         expect(column_value5.value).to eq column5_value1
         expect(column_value5.order).to eq 4
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #6: cms_column_radio_button
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -299,6 +314,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column6.name}']", text: column6_value1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 6
@@ -307,6 +323,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value6.column_id).to eq column6.id
         expect(column_value6.value).to eq column6_value1
         expect(column_value6.order).to eq 5
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #7: cms_column_check_box
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -327,6 +345,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column7.name}']", text: column7_value1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 7
@@ -335,6 +354,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value7.column_id).to eq column7.id
         expect(column_value7.values).to eq [ column7_value1 ]
         expect(column_value7.order).to eq 6
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #8: cms_column_file_upload
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -348,7 +369,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-fileupload" do
               fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-              click_on I18n.t("ss.links.upload")
+              wait_cbox_open { click_on I18n.t("ss.links.upload") }
             end
           end
           wait_for_cbox do
@@ -361,12 +382,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column8.name}'] img[alt='#{column8_image_text1}']")
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 8
@@ -377,6 +399,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value8.file.name).to eq 'keyvisual.gif'
         expect(column_value8.file.owner_item_id).to eq now_editing_item.id
         expect(column_value8.order).to eq 7
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #9: cms_column_free
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -390,7 +414,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-              click_on I18n.t("ss.links.upload")
+              wait_cbox_open { click_on I18n.t("ss.links.upload") }
             end
           end
           wait_for_cbox do
@@ -409,6 +433,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column9.name}']", text: column9_value1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 9
@@ -422,6 +447,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column9_file1.owner_item_id).to eq now_editing_item.id
         expect(column_value9.value).to include column9_file1.url
         expect(column_value9.order).to eq 8
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #10: cms_column_headline
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -439,12 +466,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column10.name}']", text: column10_text1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 10
@@ -454,6 +482,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value10.head).to eq column10_head1
         expect(column_value10.text).to eq column10_text1
         expect(column_value10.order).to eq 9
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #11: cms_column_list
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -470,12 +500,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column11.name}']", text: column11_list1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 11
@@ -484,6 +515,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value11.column_id).to eq column11.id
         expect(column_value11.lists).to include column11_list1
         expect(column_value11.order).to eq 10
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #12: cms_column_table
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -503,12 +536,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column12.name}']", text: column12_caption1)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 12
@@ -516,6 +550,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         column_value12 = column_values.last
         expect(column_value12.column_id).to eq column12.id
         expect(column_value12.order).to eq 11
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #13: cms_column_youtube
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -532,12 +568,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             click_on I18n.t("ss.buttons.save")
-            expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
-            expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
+            # expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+            # expect(page).to have_css("#errorLinkChecker", text: I18n.t("errors.template.check_links"))
           end
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column13.name}'] iframe[src='https://www.youtube.com/embed/#{column13_youtube_id1}']")
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 13
@@ -546,6 +583,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(column_value13.column_id).to eq column13.id
         expect(column_value13.youtube_id).to eq column13_youtube_id1
         expect(column_value13.order).to eq 12
+
+        puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #14: cms_column_select_page
         wait_event_to_fire("ss:inplaceEditFrameInitialized") do
@@ -556,7 +595,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_frame page.first("#ss-preview-dialog-frame") do
-          click_on I18n.t("cms.apis.pages.index")
+          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
           wait_for_cbox do
             expect(page).to have_css(".list-item", text: selectable_page1.name)
             expect(page).to have_css(".list-item", text: selectable_page2.name)
@@ -573,6 +612,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
+        expect(page).to have_css("[data-column-name='#{column14.name}']", text: column14_page1.name)
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 14

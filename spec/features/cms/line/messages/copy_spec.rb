@@ -23,6 +23,12 @@ describe "cms/line/messages", type: :feature, dbscope: :example, js: true do
     Cms::Line::Message.site(site).where(name: copied_name).first
   end
 
+  before do
+    site.line_channel_secret = unique_id
+    site.line_channel_access_token = unique_id
+    site.save!
+  end
+
   context "copy" do
     before { login_cms_user }
 

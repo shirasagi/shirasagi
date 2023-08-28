@@ -179,34 +179,22 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
       expect(current_path).not_to eq sns_login_path
       start = Time.zone.now
       close = start.advance(days: 6)
-      start = start.strftime("%Y/%m/%d %H:%M")
-      close = close.strftime("%Y/%m/%d %H:%M")
 
-      # disable datetimepicker because I can't find the way to work with datetimepicker
-      page.execute_script("$('#item_search_released_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_released_close').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_close').datetimepicker('destroy');")
       within "form.search-pages" do
-        fill_in "item[search_released_start]", with: start
-        fill_in "item[search_released_close]", with: close
-        fill_in "item[search_updated_start]", with: ""
-        fill_in "item[search_updated_close]", with: ""
+        fill_in_datetime "item[search_released_start]", with: start
+        fill_in_datetime "item[search_released_close]", with: close
+        fill_in_datetime "item[search_updated_start]", with: ""
+        fill_in_datetime "item[search_updated_close]", with: ""
         click_button I18n.t('ss.buttons.search')
       end
       expect(page).to have_css(".search-count", text: I18n.t("cms.search_contents_count", count: 1))
       expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
-      # disable datetimepicker because I can't find the way to work with datetimepicker
-      page.execute_script("$('#item_search_released_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_released_close').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_start').datetimepicker('destroy');")
-      page.execute_script("$('#item_search_updated_close').datetimepicker('destroy');")
       within "form.search-pages" do
-        fill_in "item[search_released_start]", with: ""
-        fill_in "item[search_released_close]", with: ""
-        fill_in "item[search_updated_start]", with: start
-        fill_in "item[search_updated_close]", with: close
+        fill_in_datetime "item[search_released_start]", with: ""
+        fill_in_datetime "item[search_released_close]", with: ""
+        fill_in_datetime "item[search_updated_start]", with: start
+        fill_in_datetime "item[search_updated_close]", with: close
         click_button I18n.t('ss.buttons.search')
       end
       expect(page).to have_css(".search-count", text: "2 件の検索結果")
@@ -265,7 +253,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
 
   it "search with categories" do
     visit pages_index_path
-    click_on I18n.t("cms.apis.categories.index")
+    wait_cbox_open { click_on I18n.t("cms.apis.categories.index") }
     wait_for_cbox do
       click_on cate_name1
     end
@@ -277,7 +265,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
 
   it "search with opendata categories" do
     visit pages_index_path
-    click_on I18n.t("cms.apis.categories.index")
+    wait_cbox_open { click_on I18n.t("cms.apis.categories.index") }
     wait_for_cbox do
       click_on opendata_cate_name1
     end
@@ -289,7 +277,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
 
   it "search with groups" do
     visit pages_index_path
-    click_on I18n.t("ss.apis.groups.index")
+    wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
     wait_for_cbox do
       click_on cms_group.name
     end
@@ -305,7 +293,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
 
   it "search with user" do
     visit pages_index_path
-    click_on I18n.t("cms.apis.users.index")
+    wait_cbox_open { click_on I18n.t("cms.apis.users.index") }
     wait_for_cbox do
       click_on user.name
     end
@@ -317,7 +305,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
 
   it "search with nodes" do
     visit pages_index_path
-    click_on I18n.t("cms.apis.nodes.index")
+    wait_cbox_open { click_on I18n.t("cms.apis.nodes.index") }
     wait_for_cbox do
       click_on node_name
     end
@@ -331,7 +319,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
 
   it "search with routes" do
     visit pages_index_path
-    click_on I18n.t("cms.apis.pages_routes.index")
+    wait_cbox_open { click_on I18n.t("cms.apis.pages_routes.index") }
     page_route = I18n.t("modules.article") + "/" + I18n.t("mongoid.models.article/page")
     wait_for_cbox do
       click_on page_route

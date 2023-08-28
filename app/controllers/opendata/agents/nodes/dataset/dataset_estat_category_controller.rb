@@ -12,7 +12,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetEstatCategoryController < Applica
 
     @cur_node.name = @item.name
 
-    Opendata::Dataset.site(@cur_site).search(site: @cur_site, estat_category_id: @item.id).and_public
+    Opendata::Dataset.site(@cur_site).search(site: @cur_site, estat_category_id: @item.id).and_public(@cur_date)
   end
 
   def node_url

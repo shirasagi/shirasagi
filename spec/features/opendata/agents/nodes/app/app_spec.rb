@@ -4,7 +4,10 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
   def create_appfile(app, file, format)
     appfile = app.appfiles.new(text: "aaa", format: format)
     appfile.in_file = file
-    appfile.save
+    appfile.save!
+
+    ::FileUtils.rm_f(app.path)
+
     appfile
   end
 
@@ -24,9 +27,6 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
 
   let!(:area) { create :opendata_node_area, cur_site: cms_site, layout_id: layout.id }
   let!(:app) { create :opendata_app, cur_site: cms_site, cur_node: node, layout_id: layout.id, area_ids: [ area.id ] }
-  let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
-  let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
-  let!(:appfile) { create_appfile(app, file, "CSV") }
 
   let(:index_path) { "#{node.url}index.html" }
   let(:download_path) { "#{node.url}#{app.id}/zip" }
@@ -40,7 +40,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
 
   let(:file_index_path) { Rails.root.join("spec", "fixtures", "opendata", "index.html") }
   let(:file_index) { Fs::UploadedFile.create_from_file(file_index_path, basename: "spec") }
-  let(:appfile) { create_appfile(app, file_index, "HTML") }
+  let!(:appfile) { create_appfile(app, file_index, "HTML") }
   let(:full_path) { "/#{app.filename.sub('.html', '')}/full/index.html" }
   let(:app_index_path) { "/#{app.filename.sub('.html', '')}/file_index/index.html" }
   let(:text_path) { "/#{app.filename.sub('.html', '')}/file_text/index.html" }
@@ -84,6 +84,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       within "article.tab-released" do
         click_on app.name
       end
+      expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
       click_on I18n.t("opendata.search_datasets.bluk_download")
 
       wait_for_download
@@ -99,8 +100,33 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
   end
 
   it "#rss" do
-    visit rss_path
-    expect(current_path).to eq rss_path
+    layout.html = <<~HTML
+      <html>
+      <body>
+        <br><br><br>
+        <h1 id="ss-page-name">\#{page_name}</h1><br>
+        <div id="main" class="page">
+          {{ yield }}
+          <div class="list-footer">
+            <a href="#{rss_path}" download>RSS</a>
+          </div>
+        </div>
+      </body>
+      </html>
+    HTML
+    layout.save!
+
+    visit index_path
+    within ".list-footer" do
+      click_on "RSS"
+    end
+
+    wait_for_download
+    ::File.read(downloads.first).tap do |xml|
+      xmldoc = REXML::Document.new(xml)
+      items = REXML::XPath.match(xmldoc, "/rss/channel/item")
+      expect(items).to have(1).items
+    end
   end
 
   it "#show_ideas" do
@@ -158,6 +184,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       within "article.tab-released" do
         click_on app.name
       end
+      expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
       expect(page).to have_css(".count .number", text: "0")
       within "div.like" do
         click_on "いいね！"
@@ -179,6 +206,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
       within "article.tab-released" do
         click_on app.name
       end
+      expect(page).to have_css("#executed", text: "1 #{I18n.t("opendata.labels.time")}")
 
       within "nav.names" do
         click_link "関連アイデア"
@@ -193,7 +221,6 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
     before do
       node.show_point = 'hide'
       node.save!
-
 
       # https://jira.mongodb.org/browse/MONGOID-4544
       # app.touch

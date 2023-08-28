@@ -3,6 +3,7 @@ class Cms::Member
   include ::Member::ExpirableSecureId
   include ::Member::Addon::AdditionalAttributes
   include ::Member::Addon::LineAttributes
+  include ::Member::Addon::Bookmark
   include Ezine::Addon::Subscription
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
@@ -39,42 +40,51 @@ class Cms::Member
     end
 
     def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+      all.search_name(params).search_keyword(params).search_state(params)
+    end
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :email, :kana, :organization_name, :job, :tel, :postal_code, :addr
-      end
-      criteria
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :name, :email, :kana, :organization_name, :job, :tel, :postal_code, :addr
+    end
+
+    def search_state(params)
+      return all if params.blank? || params[:state].blank?
+      all.where(state: params[:state])
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << %w(
-          id state name email kana organization_name job tel
-          postal_code addr sex birthday updated created
-        ).map { |k| t(k) }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(
+            id state name email kana organization_name job tel
+            postal_code addr sex birthday last_loggedin updated created
+          ).map { |k| t(k) }
 
-        criteria.each do |item|
-          line = []
-          line << item.id
-          line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
-          line << item.name
-          line << item.email
-          line << item.kana
-          line << item.organization_name
-          line << item.job
-          line << item.tel
-          line << item.postal_code
-          line << item.addr
-          line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
-          line << item.birthday.try(:strftime, "%Y/%m/%d")
-          line << item.updated.strftime("%Y/%m/%d %H:%M")
-          line << item.created.strftime("%Y/%m/%d %H:%M")
-          data << line
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
+            line << item.name
+            line << item.email
+            line << item.kana
+            line << item.organization_name
+            line << item.job
+            line << item.tel
+            line << item.postal_code
+            line << item.addr
+            line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
+            line << item.birthday.try { |time| I18n.l(time.to_date, format: :picker) }
+            line << item.last_loggedin.try { |time| I18n.l(time, format: :picker) }
+            line << I18n.l(item.updated, format: :picker)
+            line << I18n.l(item.created, format: :picker)
+            data << line
+          end
         end
       end
     end

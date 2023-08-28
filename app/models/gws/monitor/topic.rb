@@ -148,20 +148,22 @@ class Gws::Monitor::Topic
   end
 
   def to_csv
-    CSV.generate do |data|
-      data << I18n.t('gws/monitor.csv')
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << I18n.t('gws/monitor.csv')
 
-      attend_groups.each do |group|
-        post = comment(group.id).last
-        data << [
-            id,
-            name,
-            answer_state_name(group),
-            group.name,
-            post.try(:contributor_name),
-            post.try(:text),
-            post.try(:updated) ? post.updated.strftime('%Y/%m/%d %H:%M') : ''
-        ]
+        attend_groups.each do |group|
+          post = comment(group.id).last
+          data << [
+              id,
+              name,
+              answer_state_name(group),
+              group.name,
+              post.try(:contributor_name),
+              post.try(:text),
+              post.try(:updated) ? I18n.l(post.updated, format: :picker) : ''
+          ]
+        end
       end
     end
   end
@@ -204,7 +206,7 @@ class Gws::Monitor::Topic
   def set_notice_at
     case notice_state
     when 'from_now'
-      self.notice_at = ::Time::EPOCH
+      self.notice_at = ::SS::EPOCH_TIME
     when *%w(1_day_from_released 2_days_from_released 3_days_from_released 4_days_from_released 5_days_from_released)
       term, = notice_state.split('_')
       self.notice_at = (released || created) + Integer(term).days

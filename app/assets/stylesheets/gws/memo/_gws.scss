@@ -1,12 +1,13 @@
 .gws-memo {
   .addon-head {
     padding: 1px 15px 15px;
-    .icon-star {
-      float: right;
-      margin: 12px 0 0;
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+
+    .d-flex {
+      @include display-flex;
+      @include align-items(center);
+    }
+    .ml-auto {
+      margin-left: auto;
     }
     .subject {
       display: block;
@@ -14,10 +15,13 @@
       font-size: 130%;
       line-height: 1.4;
     }
-    .from {
-      float: left;
+    .icon-star {
+      &.on    .material-icons { color: #f70; }
+      &.off   .material-icons { color: #ddd; }
+      &:hover .material-icons { opacity: .8; }
     }
     .date {
+      margin-left: auto;
       text-align: right;
     }
   }
@@ -53,8 +57,8 @@
     border: 1px solid #fd8;
     background-color: rgba(255, 255, 0, .2);
     background-color: #ffc;
-    text-decoration: none;
     text-align: center;
+    text-decoration: none;
     &:hover {
       border-color: #fb8;
       background-color: rgba(255, 255, 0, .35);
@@ -65,7 +69,7 @@
     min-height: 200px;
     border-top: 1px solid #e4e4e4;
     .body--html img[data-url] {
-      height: none;
+      height: unset;
     }
   }
   .attachments {
@@ -74,6 +78,53 @@
     .file {
       display: inline-block;
       margin: 0 10px 10px 0;
+    }
+  }
+  .move-tool-wrap {
+    @include display-flex;
+    position: relative;
+    z-index: 1;
+    @include align-items(center);
+    @include justify-content(flex-end);
+    padding: 15px;
+
+    .page-order {
+      @include display-flex;
+    }
+
+    .move-tool {
+      @include display-flex;
+      margin-left: 20px;
+      @include mb {
+        margin-left: 10px;
+      }
+    }
+
+    .prev, .next {
+      @include display-flex;
+      width: 20px;
+      height: 20px;
+
+      a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        color: $black;
+      }
+      &:not(.inactive):hover {
+        a {
+          color: #f25a38;
+        }
+      }
+      &.inactive {
+        a {
+          color: $gray2;
+          pointer-events: none;
+        }
+      }
+    }
+    .next {
+      margin-left: 10px;
     }
   }
 }
@@ -92,24 +143,23 @@
   div {
     &#content-navi.gws-content-navi,
     &.index.gws-memos-index {
-      float: none !important;
       width: 100% !important;
+      float: none !important;
     }
   }
 }
 .gws-memos {
   .list-item {
-    padding: 5px 8px;
     display: block;
+    padding: 5px 8px;
   }
   .list-item-head {
-    font-weight: bold;
     padding-bottom: 8px;
+    font-weight: bold;
     .head {
       @include display-flex;
-      -js-display: flex;
-      height: 20px;
       position: relative;
+      height: 20px;
       .field {
         display: inline-block;
         cursor: pointer;
@@ -136,16 +186,15 @@
   .info {
     @include truncate;
     @include display-flex;
-    -js-display: flex;
     @include mb {
-      clear: both;
       display: block;
+      clear: both;
     }
     .field {
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
       vertical-align: text-top;
+      white-space: nowrap;
       @include mb {
         display: inline-block;
       }
@@ -185,8 +234,8 @@ table.index.gws-memo-folder {
   position: relative;
   width: auto;
   min-width: 100%;
-  border-collapse: collapse;
   table-layout: fixed;
+  border-collapse: collapse;
   &:before {
     content: "";
     position: absolute;
@@ -202,8 +251,8 @@ table.index.gws-memo-folder {
     background: #f2f2f2 !important;
   }
   .unseen {
-    font-weight: bold;
     color: #f25a38;
+    font-weight: bold;
   }
 
   @for $i from 0 through 40 {
@@ -214,6 +263,7 @@ table.index.gws-memo-folder {
 }
 
 .gws-memo-search {
+  display: none;
   margin: 0 10px;
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
@@ -228,6 +278,15 @@ table.index.gws-memo-folder {
   label.flag {
     width: auto;
     padding: 0 15px;
+  }
+}
+
+.gws-memo-search-label {
+  padding: 10px 20px;
+  border-bottom: 1px solid #eee;
+  .gws-memo-search-label-reset {
+    width: 100%;
+    text-align: right;
   }
 }
 

@@ -14,14 +14,14 @@ module Cms::Addon::List
       cattr_accessor(:use_lower_html, instance_accessor: false) { true }
       cattr_accessor(:use_loop_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
-      cattr_accessor(:default_limit, instance_accessor: false) { 20 }
+      cattr_accessor(:default_limit, instance_accessor: false) { 100 }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
       cattr_accessor(:use_conditions, instance_accessor: false) { true }
       cattr_accessor(:use_condition_forms, instance_accessor: false) { false }
       attr_accessor :cur_date
 
-      field :conditions, type: SS::Extensions::Words
+      field :conditions, type: SS::Extensions::Lines
       field :condition_forms, type: Cms::Extensions::ConditionForms
       field :sort, type: String
       field :limit, type: Integer, default: -> { self.class.default_limit }
@@ -82,7 +82,7 @@ module Cms::Addon::List
 
     def limit
       value = self[:limit].to_i
-      (value < 1 || 1000 < value) ? 100 : value
+      (value < 1 || 1000 < value) ? self.class.default_limit : value
     end
 
     def new_days

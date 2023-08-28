@@ -58,14 +58,14 @@ describe "faq_pages", type: :feature, js: true do
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
 
     it "#copy" do
@@ -123,16 +123,20 @@ describe "faq_pages", type: :feature, js: true do
 
     it "permited and contains_urls" do
       visit edit_path2
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
 
     it "permited and not contains_urls" do
       visit edit_path
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
@@ -140,10 +144,13 @@ describe "faq_pages", type: :feature, js: true do
     it "not permited and contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
-                                  release_private_faq_pages release_other_faq_pages))
+                                  release_private_faq_pages release_other_faq_pages
+                                  close_private_faq_pages close_other_faq_pages))
       visit edit_path2
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -152,10 +159,13 @@ describe "faq_pages", type: :feature, js: true do
     it "not permited and not contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
-                                  release_private_faq_pages release_other_faq_pages))
+                                  release_private_faq_pages release_other_faq_pages
+                                  close_private_faq_pages close_other_faq_pages))
       visit edit_path
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_event_to_fire("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end

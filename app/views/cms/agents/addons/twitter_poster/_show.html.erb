@@ -23,7 +23,7 @@
         </thead>
         <% @item.twitter_posted.reverse.take(5).each do |posted| %>
           <tbody>
-            <td><%= tryb { posted[:posted_at].strftime("%Y/%m/%d %H:%M") } %></td>
+            <td><%= ss_time_tag(posted[:posted_at]) %></td>
             <td>
               <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
                 <%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>

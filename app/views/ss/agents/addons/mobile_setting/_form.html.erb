@@ -15,5 +15,5 @@
   <dd><%= f.text_field :mobile_location %></dd>
 
   <dt><%= @model.t :mobile_css %><%= @model.tt :mobile_css %></dt>
-  <dd><%= f.text_area :mobile_css, value: @item.mobile_css == @item.default_mobile_css ? nil : @item.mobile_css.join("\n") %></dd>
+  <dd><%= f.ss_lines_field :mobile_css, value: @item.mobile_css == @item.default_mobile_css ? nil : @item.mobile_css.join("\n") %></dd>
 </dl>

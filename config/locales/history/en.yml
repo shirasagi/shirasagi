@@ -1,0 +1,92 @@
+en:
+  history:
+    log: Operation history
+    user: User
+    target: Operation target
+    action: Action
+    backup: Backup
+    current_version: Current version
+    backup_version: Version at time of backup
+    current_state: Current state
+    before_state: State before changes
+    view_diff: View differences
+    compare_before_state: Compare to state before change
+    restore: Restore
+    confirm:
+      restore: Are you sure you want to restore it?
+    notice:
+      restore: If the system versions are different, it may not work properly.
+      restored: Restored.
+    buttons:
+      restore: Restore
+    options:
+      target:
+        restore: Restore
+        unrestore: Do not restore
+      action:
+        save: Save
+        replace_urls: Update with link tracking
+      duration:
+        all_save: Save all
+        all_delete: Delete all
+    behavior:
+      paste: Paste text
+      attachment: Attached file
+      restore: Restore
+      delete: Delete
+
+  cms_role:
+    read_history_trashes: Browse trash
+    edit_history_trashes: Restore trash
+    delete_history_trashes: Permanently delete trash
+
+  modules:
+    history: History
+    addons:
+      history/backup: Update history
+
+  activemodel:
+    models:
+      history/download_param: Download parameters
+      history/delete_param: Deletion parameters
+    attributes:
+      history/download_param:
+        encoding: Character code
+        save_term: Save term
+        user_ids: User
+      history/delete_param:
+        delete_term: Term
+
+  mongoid:
+    models:
+      history/log: Operation history
+      history/trash: Trash
+    attributes:
+      history/log:
+        session_id: Session ID
+        request_id: Request ID
+        created: Created
+        user_name: User
+        model_name: Model name
+        action: Action
+        path: URL
+        page_url: Page URL
+        behavior: Behavior
+        group: Group
+      history/model/data:
+        version: Version
+        ref_coll: Saved collection
+        ref_class: Saved class
+        data: Saved data
+        parent: Parent folder
+        children: Subordinate content
+        state: Status
+        action: Action
+
+  job:
+    models:
+      history/trash/trash_purge_job: Empty trash
+      history/history_log/purge_job: Delete operation history
+      history/backup/sweep_job: Clear update history
+      history/backup/restore_job: Restore update history
+      history/trash/restore_job: Restore trash

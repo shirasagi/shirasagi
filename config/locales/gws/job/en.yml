@@ -1,0 +1,13 @@
+en:
+  gws/job:
+    reservation: Run reservations
+
+  modules:
+    gws/job: Job
+
+  gws_role:
+    read_gws_job_logs: View job execution history
+
+  mongoid:
+    models:
+      gws/job/log: Execution history

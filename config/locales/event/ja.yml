@@ -128,6 +128,8 @@ ja:
     move_private_event_pages: ページの移動（所有）
     release_other_event_pages: ページの公開（全て）
     release_private_event_pages: ページの公開（所有）
+    close_other_event_pages: ページの非公開（全て）
+    close_private_event_pages: ページの非公開（所有）
     approve_other_event_pages: ページの承認（全て）
     approve_private_event_pages: ページの承認（所有）
     reroute_other_event_pages: ページの承認経路変更（全て）
@@ -142,6 +144,8 @@ ja:
       event/page: イベントページ
       event/search: イベント検索ページ
     errors:
+      messages:
+        blank_where_having_event_name: を入力してください（イベントタイトルが設定されている場合は必須です）。
       models:
         event/page:
           invalid_csv_or_ical: CSV形式のファイルまたはiCal形式のファイルを選択してください。

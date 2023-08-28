@@ -1,0 +1,181 @@
+en:
+  gws/circular:
+    setting: Settings for circulars
+    tabs:
+      post: Received circulars
+      admin: Created circulars
+      trash: Trash
+    links:
+      back_to_admin: Back to created circulars
+    confirm:
+      set_seen_all: Do you want to mark all selected items as read?
+      unset_seen_all: Do you want to return all selected items to unread?
+      download: Do you want to output all selected items to CSV?
+    post:
+      disabled: Deleted
+      seen: Read
+      unseen: Unread
+      set_seen: Mark as read
+      unset_seen: Mark as unread
+      seen_at: Date and time read
+      download: Output to CSV
+      member: Participants
+      type: Category
+      update_at: Change date and time
+      user: User
+      replay: Content of reply
+
+    csv:
+      - Circulation ID
+      - Title
+      - Reply ID
+      - Status
+      - Name of person to reply to
+      - Reply field
+      - Date and time of reply
+    seen_user_info:
+      title: Number of readers
+      format: ! '%{count}/%{total} people'
+      more: See details
+    options:
+      see_type:
+        normal: Regular circular
+        simple: Simple circular
+      article_state:
+        both: All
+        unseen: Unread
+      circular_delete_threshold:
+        - 6 months
+        - 1 year
+        - 1 year and 6 months
+        - 2 years
+        - 2 years and 6 months
+        - 3 years
+        - 3 years and 6 months
+      sort:
+        created_asc:  Posted (by date)
+        created_desc: Posted (from newest)
+        updated_asc:  Last updated (by date)
+        updated_desc: Last updated (from newest)
+        due_date_asc:  Circular deadline date and time (ascending order)
+        due_date_desc: Circular deadline date and time (descending order)
+      browsing_authority:
+        all: Viewable by all circular readers
+        author_or_commenter: Can be viewed by the circular creator and yourself only
+  modules:
+    gws/circular: Circular boards
+    addons:
+      gws/circular/group_setting: Circular boards
+      gws/circular/category: Category
+  gws_role:
+    use_gws_circular: Use of circulars
+    read_other_gws_circular_posts: View circulars (all)
+    read_private_gws_circular_posts: View circulars (own)
+    edit_other_gws_circular_posts: Edit circulars (all)
+    edit_private_gws_circular_posts: Edit circulars (own)
+    delete_other_gws_circular_posts: Remove circulars (all)
+    delete_private_gws_circular_posts: Remove circulars (own)
+    trash_other_gws_circular_posts: Manage circular board trash (all)
+    trash_private_gws_circular_posts: Manage circular board trash (own)
+    read_other_gws_circular_categories: View categories (all)
+    read_private_gws_circular_categories: View categories (own)
+    edit_other_gws_circular_categories: Edit categories (all)
+    edit_private_gws_circular_categories: Edit categories (own)
+    delete_other_gws_circular_categories: Delete categories (all)
+    delete_private_gws_circular_categories: Delete categories (own)
+
+  gws_notification:
+    gws/circular/post:
+      subject: ! '[Circular] “%{name}” has arrived.'
+      text: ! '%{text}'
+      mail_text: |
+        %{subject}
+        %{text}
+
+    gws/circular/post/remove:
+      subject: ! '[Circular] “%{name}” has been withdrawn.'
+      text: ""
+      mail_text: |
+        %{subject}
+
+  mongoid:
+    models:
+      gws/circular/post: Topic
+      gws/circular/category: Category
+
+    errors:
+      models:
+        gws/circular/post:
+          member_length: Set the number of participants at no more than %{max}.
+          file_size_limit: The size of the attachment (%{size}) has exceeded the maximum size (%{limit}).
+        gws/circular/category:
+          too_deep: The hierarchy is too deep and should be below %{max}.
+          not_found_parent: Parent category does not exist.
+          found_children: A child category exists.
+    attributes:
+      gws/circular/post:
+        name: Title
+        created: Date posted
+        updated: Last updated
+        due_date: Circulation deadline date and time
+        see_type: Format to mark as read
+        deleted: Deletion date and time
+        seen: Read
+      gws/circular/comment:
+        name: Title
+        text: Comments
+        browsing_authority: Publication range
+      gws/addon/circular/group_setting:
+        circular_default_due_date: Initial value for circulation deadline date
+        circular_article_state: Display type of circular boards
+        circular_sort: Order of circular boards
+        circular_max_member: Limit on number of people receiving circular
+        circular_filesize_limit: Attachment size limit
+        circular_delete_threshold: Period circulation can be restored
+        circular_files_break: File display order
+        circular_new_days: Display period for new items
+      gws/addon/circular/category:
+        category_ids: Category
+  tooltip:
+    gws/circular/post:
+      name:
+        - Enter a title.
+      due_date:
+        - Select the circulation deadline date and time.
+      see_type:
+        - Select the format for marking as read.
+        - "Normal circular: Marked as read when button is pressed"
+        - "Simple circular: Automatically marked as read when details are viewed"
+    gws/circular/comment:
+      name: Title
+      text: Comments
+      browsing_authority:
+        - Sets the range of published comments.
+    gws/addon/circular/group_setting:
+      circular_default_due_date:
+        - For the initial value of the circulation deadline date and time, enter a date within a few days of today.
+        - The initial value is 7 days.
+      circular_article_state:
+        - Select display type of circular boards.
+      circular_sort:
+        - Select order of circular boards.
+      circular_max_member:
+        - Enter the maximum number of participants.
+        - If unspecified, the number is not restricted.
+        - The initial value is unspecified.
+      circular_filesize_limit:
+        - Enter the maximum total capacity for files attached to the circular.
+        - If unspecified, the number is not restricted.
+        - The initial value is unspecified.
+      circular_delete_threshold:
+        - Enter the circular retention period.
+        - Circulars are automatically and permanently deleted after the retention period, which is calculated from the creation date.
+        - The initial value is 2 years.
+      circular_files_break:
+        - Select the display order of attachments.
+      circular_new_days:
+        - Enter the display period for new items.
+
+  job:
+    models:
+      gws/circular/trash_purge_job: Empty circular notice trash

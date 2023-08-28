@@ -17,14 +17,16 @@ class Ads::AccessLog
 
   class << self
     def to_csv
-      CSV.generate do |data|
-        data << %w(date link_url count).map { |k| t(k) }
-        criteria.each do |item|
-          line = []
-          line << item.date.strftime("%Y-%m-%d")
-          line << item.link_url
-          line << item.count
-          data << line
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(date link_url count).map { |k| t(k) }
+          criteria.each do |item|
+            line = []
+            line << I18n.l(item.date.to_date, format: :picker)
+            line << item.link_url
+            line << item.count
+            data << line
+          end
         end
       end
     end

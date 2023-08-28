@@ -1,0 +1,216 @@
+<%
+  def format_minute(minute)
+    (minute.to_i > 0) ? "#{minute / 60}:#{format("%02d", (minute % 60))}" : "--:--"
+  end
+%>
+
+<%
+  messages = @duty_calendar.notice_messages(@cur_user)
+  if messages.present?
+%>
+  <ul class="time-card-notices">
+    <% messages.each do |message| %>
+      <li><span class="notice"><%= message %></span></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% render_reason = proc do |history| %>
+  <% if history.present? && history.reason.present? %>
+    <div class="reason-tooltip">
+      <i class="material-icons md-13">&#xE0C9;</i>
+      <div class="reason">
+        <div><%= history.reason %></div>
+        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
+      </div>
+    </div>
+  <% else %>
+    <div class="reason-tooltip" style="visibility: hidden;">
+      <i class="material-icons md-13">&#xE0C9;</i>
+    </div>
+  <% end %>
+<% end %>
+
+<% render_time = proc do |date, record, field_name| %>
+  <% td_classes = %w(time) %>
+  <% td_classes << field_name %>
+  <% td_classes << (date.day >= 16 ? 'top' : nil) %>
+  <% mode = "edit" %>
+  <% mode = "punch" if record.try(:find_latest_history, field_name).blank? && Time.zone.now.beginning_of_day == date %>
+  <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>" data-mode="<%= mode %>">
+    <div class="time-wrap">
+      <%= format_time(date, record.try(field_name)) %>
+      <% render_reason.call(record.try(:find_latest_history, field_name)) %>
+    </div>
+  </td>
+<% end %>
+
+<% render_working_time = proc do |date, record| %>
+  <% td_classes = %w(working-time) %>
+  <% td_classes << (date.day >= 16 ? 'top' : nil) %>
+  <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>">
+    <div class="time-wrap">
+      <% time = record ? record.working_time : nil %>
+      <%= format_time(date, time) %>
+    </div>
+  </td>
+<% end %>
+
+<div class="time-card-wrap">
+  <table class="time-card">
+    <tbody>
+    <% date = @cur_month %>
+    <% while date <= @cur_month.end_of_month %>
+      <% offset = date.day >= 16 ? 'top' : '' %>
+      <% if date.day == 1 %>
+        <tr class="header">
+          <th colspan="<%= 4 + @break_times.size * 2 %>"><%= "#{t("gws/affair.timecard.in_work.title")} (#{@duty_calendar.name})" %></th>
+          <th class="overtime time" colspan="3"><%= t("gws/affair.timecard.in_over.title") %></th>
+          <th class="leave" rowspan="2"><%= t("gws/affair.timecard.in_leave.title") %></th>
+          <th class="memo" rowspan="2"><%= Gws::Attendance::Record.t(:memo) %></th>
+        </tr>
+        <tr class="header">
+          <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
+          <th class="time enter"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
+          <th class="time leave"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
+          <th class="working-time"><%= t("gws/affair.timecard.in_work.worktime") %></th>
+          <% @break_times.each do |i| %>
+            <th class="time <%= "break_enter#{i + 1}" %>"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time <%= "break_leave#{i + 1}" %>"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
+          <% end %>
+          <th class="overtime time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+          <th class="break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+          <th class="compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
+        <tr>
+    　<% end %>
+      <% if date.day == 16 %>
+        <tr class="header">
+          <th class="date"><%= Gws::Attendance::Record.t(:date) %></th>
+          <th class="time enter"><%= @cur_site.attendance_enter_label.presence || Gws::Attendance::Record.t(:enter) %></th>
+          <th class="time leave"><%= @cur_site.attendance_leave_label.presence || Gws::Attendance::Record.t(:leave) %></th>
+          <th class="time leave"><%= t("gws/affair.timecard.in_work.worktime") %></th>
+          <% @break_times.each do |i| %>
+            <th class="time <%= "break_enter#{i + 1}" %>"><%= @cur_site["attendance_break_enter#{i + 1}_label"].presence || t('gws/attendance.formats.break_enter', count: i + 1) %></th>
+            <th class="time <%= "break_leave#{i + 1}" %>"><%= @cur_site["attendance_break_leave#{i + 1}_label"].presence || t('gws/attendance.formats.break_leave', count: i + 1) %></th>
+          <% end %>
+          <th class="overtime time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+          <th class="break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+          <th class="compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
+          <th class="leave"><%= t("gws/affair.timecard.in_leave.title") %></th>
+          <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
+        </tr>
+      <% end %>
+      <% tr_css_classes = [ "day-#{date.day}" ] %>
+      <% tr_css_classes << (@cur_site.calc_attendance_date(Time.zone.now) == date ? 'current' : nil) %>
+      <% tr_css_classes << 'holiday' if holiday?(date) %>
+      <% tr_css_classes << 'weekly-leave' if weekly_leave_day?(date) %>
+      <% tr_css_classes << 'saturday' if date.wday == 6 %>
+      <% tr_css_classes << 'sunday' if date.wday == 0 %>
+      <% tr_css_classes << 'saturday' if date.wday == 6 %>
+      <%
+        duty_hour = @duty_calendar.effective_duty_hour(date)
+        affair_start = duty_hour.affair_start(date).strftime("%H:%M")
+        affair_end = duty_hour.affair_end(date).strftime("%H:%M")
+      %>
+      <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>" data-affair-start="<%= affair_start %>" data-affair-end="<%= affair_end %>">
+        <% record = @item.records.where(date: date).first %>
+        <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+        <% render_time.call(date, record, 'enter') %>
+        <% render_time.call(date, record, 'leave') %>
+        <% render_working_time.call(date, record) %>
+        <% @break_times.each do |i| %>
+          <% render_time.call(date, record, "break_enter#{i + 1}") %>
+          <% render_time.call(date, record, "break_leave#{i + 1}") %>
+        <% end %>
+
+        <%
+          overtime_minute = record.try(:overtime_minute).to_i
+
+          overtime_files = @overtime_files[date.to_date].to_a
+          day_results = overtime_files.map { |item| item.day_results }.flatten
+          editable_day_results = day_results.select { |day_result| !day_result.file.result_closed? }
+
+          break_time_minute = overtime_minute
+          if day_results.present?
+            overtime_result_minute = day_results.map { |day_result| (day_result.end_at.to_i - day_result.start_at.to_i) / 60 }.sum
+            overtime_result_minute -= day_results.map(&:break_time_minute).sum
+
+            break_time_minute = overtime_minute - overtime_result_minute
+          end
+        %>
+        <td class="overtime time">
+          <%= format_minute(overtime_minute.to_i) %>
+
+          <% if day_results.present? %>
+            <%= "(" %>
+            <% if editable_day_results.present? %>
+              <% file = day_results.first.file %>
+              <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: module_name) %>
+                <%= link_to "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
+              <% else %>
+                <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.order")}" %>
+              <% end %>
+            <% else %>
+              <%= "#{format_minute(overtime_result_minute)} #{t("gws/affair.timecard.label.confirmed")}" %>
+            <% end %>
+
+            <% overtime_diff = overtime_result_minute - overtime_minute %>
+            <% if overtime_diff > 0 %>
+              <%= " | " %>
+              <span class="overtime-diff minus">-<%= format_minute(overtime_diff) %></span>
+            <% end %>
+            <%= ")" %>
+          <% elsif overtime_files.present? %>
+            <%= "(" %>
+            <% file = overtime_files.first %>
+            <% if file.allowed?(:edit, @cur_user, site: @cur_site, permission_name: module_name) %>
+              <%= link_to "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}", edit_gws_affair_overtime_result_path(id: file.id, ref: request.fullpath), class: "ajax-box" %>
+            <% else %>
+              <%= "#{t("gws/affair.timecard.label.set_results")} #{t("gws/affair.timecard.label.order")}" %>
+            <% end %>
+            <%= ")" %>
+          <% end %>
+        </td>
+
+        <td class="time"><%= format_minute(break_time_minute) %></td>
+
+        <%
+          compensatory_minute_labels = []
+          if day_results.present?
+            day_results.each do |result|
+              if result.week_in_compensatory_minute > 0
+                compensatory_minute_labels << "#{t("gws/affair.in_week")}#{format_minute(result.week_in_compensatory_minute)}"
+              end
+              if result.week_out_compensatory_minute > 0
+                compensatory_minute_labels << "#{t("gws/affair.out_of_week")}#{format_minute(result.week_out_compensatory_minute)}"
+              end
+            end
+          end
+          compensatory_minute_labels << format_minute(0) if compensatory_minute_labels.blank?
+        %>
+        <td class="time"><%=br compensatory_minute_labels.join("\n") %></td>
+
+        <% day_leave_files = @leave_files[date.to_date].to_a %>
+        <td class="leave">
+          <% day_leave_files.each do |leave_file|%>
+            <div class="leave-file">
+              <%= leave_file.label :leave_type %>
+              <div class="leave-file-tooltip" data-href="<%= gws_affair_leave_apis_file_path(id: leave_file.id) %>">
+                <i class="material-icons md-13">&#xE0C9;</i>
+              </div>
+            </div>
+          <% end %>
+        </td>
+
+        <td class="memo <%= offset %>" data-day="<%= date.day %>" data-type="memo" data-mode="edit"><%= record ? record.memo : '' %></td>
+      </tr>
+      <% date += 1.day %>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="cell-toolbar">
+  <a href="#" class="punch" data-confirmation="<%= t('gws/attendance.confirm.punch') %>"><%= t('gws/attendance.links.punch') %></a>
+  <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
+</div>

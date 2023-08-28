@@ -26,11 +26,11 @@
         <dt><%= t("ss.file") %></dt>
         <dd><%= file_field_tag "item[in_file]" %></dd>
       </dl>
-      <p class="description"><%= t("cms.all_content.import_description") %></p>
+      <p class="description"><%= t("cms.all_content.import_description_html", site_id: @cur_site.id) %></p>
     <% end %>
   </div>
 
-  <footer class="send">
+  <footer class="send ss-sticky ss-sticky-bottom">
     <%= submit_tag t("ss.buttons.import"), name: 'import', class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
   </footer>
 <% end %>

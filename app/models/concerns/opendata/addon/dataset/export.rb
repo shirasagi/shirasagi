@@ -55,10 +55,12 @@ module Opendata::Addon
       end
 
       def to_csv
-        csv = CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            data << csv_line(item)
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              data << csv_line(item)
+            end
           end
         end
       end
@@ -84,7 +86,7 @@ module Opendata::Addon
           item.dataset_groups.pluck(:name).join("\n"),
 
           # released
-          item.released.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.released.try { |time| I18n.l(time, format: :picker) },
 
           # contact
           item.contact_state,

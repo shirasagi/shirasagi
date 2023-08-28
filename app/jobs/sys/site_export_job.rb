@@ -64,9 +64,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
   def compress
     FileUtils.rm(@output_zip) if File.exist?(@output_zip)
 
-    zip = Sys::SiteExport::Zip.new(@output_zip, exclude_public_files: @exclude_public_files)
-    zip.output_dir = @output_dir
-    zip.site_dir = @src_site.path
+    zip = Sys::SiteExport::Zip.new(
+      path: @output_zip, exclude_public_files: @exclude_public_files,
+      output_dir: @output_dir, site_dir: @src_site.path, task: @task
+    )
     zip.compress
   end
 

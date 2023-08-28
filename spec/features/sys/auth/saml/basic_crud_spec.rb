@@ -70,7 +70,9 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
     #
     visit sys_auth_samls_path
     click_on name
-    click_on I18n.t("ss.links.delete")
+    within ".nav-menu" do
+      click_on I18n.t("ss.links.delete")
+    end
     within "form" do
       click_on I18n.t("ss.buttons.delete")
     end

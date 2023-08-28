@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   end
 
   concern :topic_files do
-    get :all_topic_files, on: :member
+    post :all_topic_files, on: :member
   end
 
   gws 'monitor' do
@@ -35,27 +35,31 @@ Rails.application.routes.draw do
 
     scope(path: ':category', defaults: { category: '-' }) do
       resources :topics, concerns: [:state_change, :topic_comment, :topic_files],
-                except: [:new, :create, :edit, :update, :destroy]
+                except: [:new, :create, :edit, :update, :destroy] do
+                  get :print, on: :member
+                end
       resources :answers, concerns: [:state_change, :topic_comment, :topic_files],
-                except: [:new, :create, :edit, :update, :destroy]
+                except: [:new, :create, :edit, :update, :destroy] do
+                  get :print, on: :member
+                end
 
       resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment, :topic_files], except: [:destroy] do
         get :forward, on: :member
         match :publish, on: :member, via: %i[get post]
         post :close, on: :member
         post :open, on: :member
-        get :download, on: :member
-        get :file_download, on: :member
+        post :download, on: :member
+        post :file_download, on: :member
       end
 
       namespace "management" do
         get '/' => redirect { |p, req| "#{req.path}/admins" }, as: :main
 
         resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment], except: [:new, :create, :destroy] do
-          get :download, on: :member
+          post :download, on: :member
           post :close, on: :member
           post :open, on: :member
-          get :file_download, on: :member
+          post :file_download, on: :member
         end
         resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
           match :undo_delete, on: :member, via: %i[get post]

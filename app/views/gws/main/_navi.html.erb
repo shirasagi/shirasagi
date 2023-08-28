@@ -28,11 +28,23 @@
   <% end %>
 
   <% if @cur_site.menu_bookmark_visible? && Gws.module_usable?(:bookmark, @cur_site, @cur_user) %>
-    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
+    <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmark_main_path, class: "icon-bookmark" %></h2>
   <% end %>
 
   <% if @cur_site.menu_attendance_visible? && Gws.module_usable?(:attendance, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path, class: "icon-attendance" %></h2>
+  <% end %>
+
+  <% if @cur_site.menu_affair_visible? && Gws.module_usable?(:affair, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-affair" %></h2>
+  <% end %>
+
+  <% if @cur_site.menu_workload_visible? && Gws.module_usable?(:workload, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_workload_label || t('modules.gws/workload'), gws_workload_main_path, class: "icon-workload" %></h2>
+  <% end %>
+
+  <% if @cur_site.menu_daily_report_visible? && Gws.module_usable?(:daily_report, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_daily_report_label || t('modules.gws/daily_report'), gws_daily_report_main_path, class: "icon-daily-report" %></h2>
   <% end %>
 
   <% if @cur_site.menu_report_visible? && Gws.module_usable?(:report, @cur_site, @cur_user) %>
@@ -124,7 +136,7 @@
 
 <% if @cur_site.menu_links_visible? %>
   <% if @links.present? %>
-    <nav class="mod-navi">
+    <nav class="mod-navi gws-links">
       <h2><%= link_to @cur_site.menu_links_label || t('mongoid.models.gws/link'), gws_public_links_path %></h2>
       <% @links.each do |item| %>
         <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>

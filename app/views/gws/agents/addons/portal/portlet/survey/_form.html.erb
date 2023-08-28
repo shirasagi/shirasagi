@@ -1,13 +1,17 @@
+<%
+  @item.survey_answered_state ||= @cur_site.survey_answered_state
+  @item.survey_sort ||= @cur_site.survey_sort
+%>
 <dl class="see">
   <dt><%= @model.t :survey_answered_state %><%= @model.tt :survey_answered_state %></dt>
-  <dd><%= f.select :survey_answered_state, @item.survey_answered_state_options, include_blank: t("gws/board.options.browsed_state.both") %></dd>
+  <dd><%= f.select :survey_answered_state, @item.survey_answered_state_options %></dd>
 
   <dt><%= @model.t :survey_sort %><%= @model.tt :survey_sort %></dt>
-  <dd><%= f.select :survey_sort, @item.survey_sort_options, include_blank: true %></dd>
+  <dd><%= f.select :survey_sort, @item.survey_sort_options %></dd>
 
   <dt><%= @model.t :survey_category_ids %><%= @model.tt :survey_category_ids %></dt>
   <dd>
-    <%= f.hidden_field "survey_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "survey_category_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("gws.apis.categories.index"), gws_survey_apis_categories_path(single: true), class: "ajax-box" %>
   </dd>
   <dd>

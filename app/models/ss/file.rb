@@ -2,6 +2,7 @@ class SS::File
   include SS::Model::File
   include SS::Relation::FileHistory
   include SS::Liquidization
+  include Cms::Lgwan::File
 
   cattr_accessor(:models, instance_accessor: false) { [] }
 

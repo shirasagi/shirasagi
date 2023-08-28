@@ -1,6 +1,8 @@
 class Facility::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
 
+  helper Map::FacilityHelper
+
   append_view_path "app/views/facility/agents/addons/search_setting/view"
   append_view_path "app/views/facility/agents/addons/search_result/view"
 
@@ -16,13 +18,13 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     @q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}
     @q_location = @location_ids.present? ? { location_ids: @location_ids } : {}
 
-    @categories = Facility::Node::Category.site(@cur_site).and_public.in(id: @category_ids)
-    @services   = Facility::Node::Service.site(@cur_site).and_public.in(id: @service_ids)
-    @locations  = Facility::Node::Location.site(@cur_site).and_public.in(id: @location_ids)
+    @categories = Facility::Node::Category.site(@cur_site).and_public(@cur_date).in(id: @category_ids)
+    @services   = Facility::Node::Service.site(@cur_site).and_public(@cur_date).in(id: @service_ids)
+    @locations  = Facility::Node::Location.site(@cur_site).and_public(@cur_date).in(id: @location_ids)
   end
 
   def set_items
-    @items = Facility::Node::Page.site(@cur_site).and_public.
+    @items = Facility::Node::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       search(name: @keyword).
       in(@q_category).
@@ -32,14 +34,14 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   end
 
   def set_markers
-    @items = Facility::Node::Page.site(@cur_site).and_public.
+    @items = Facility::Node::Page.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       search(name: @keyword).
       in(@q_category).
       in(@q_service).
       in(@q_location).
       order_by(name: 1)
-    @markers = @items.pluck(:map_points).flatten
+    @markers = @items.pluck(:map_points).flatten.compact
   end
 
   def set_filter_items

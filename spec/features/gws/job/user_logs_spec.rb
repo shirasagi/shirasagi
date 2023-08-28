@@ -46,14 +46,14 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t(log1.class_name.underscore, scope: "job.models")
         expect(page).to have_content(I18n.t(log1.state, scope: "job.state"))
-        expect(page).to have_content(log1.started.strftime("%Y/%m/%d %H:%M"))
+        expect(page).to have_content(I18n.l(log1.started, format: :picker))
         expect(page).to have_content(log1.logs.first.strip)
 
         visit gws_job_user_logs_path(site: site)
         click_on I18n.t(log2.class_name.underscore, scope: "job.models")
         expect(page).to have_content(I18n.t(log2.state, scope: "job.state"))
-        expect(page).to have_content(log2.started.strftime("%Y/%m/%d %H:%M"))
-        expect(page).to have_content(log2.closed.strftime("%Y/%m/%d %H:%M"))
+        expect(page).to have_content(I18n.l(log2.started, format: :picker))
+        expect(page).to have_content(I18n.l(log2.closed, format: :picker))
         expect(page).to have_content(log2.logs.first.strip)
       end
     end
@@ -69,7 +69,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t(log3.class_name.underscore, scope: "job.models")
         expect(page).to have_content(I18n.t(log3.state, scope: "job.state"))
-        expect(page).to have_content(log3.started.strftime("%Y/%m/%d %H:%M"))
+        expect(page).to have_content(I18n.l(log3.started, format: :picker))
         expect(page).to have_content(log3.logs.first.strip)
       end
     end
@@ -84,30 +84,42 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
       visit gws_job_user_logs_path(site: site)
       click_on I18n.t("ss.links.download")
 
-      within "form" do
+      within "form#item-form" do
         select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
         click_on I18n.t("ss.buttons.download")
       end
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-      expect(csv.length).to eq 2
-      expect(csv.headers).to include(*%w(ClassName Started Closed State Args Logs))
-      csv[0].tap do |row|
-        expect(row["ClassName"]).to eq I18n.t(log1.class_name.underscore, scope: "job.models")
-        expect(row["Started"]).to eq log1.start_label
-        expect(row["Closed"]).to be_blank
-        expect(row["State"]).to eq I18n.t(log1.state, scope: "job.state")
-        expect(row["Args"]).to be_blank
-        expect(row["Logs"]).to be_present
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(downloads.first) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to eq 2
+          expect(csv_table.headers).to include(*%w(ClassName Started Closed State Args Logs))
+          csv_table[0].tap do |row|
+            expect(row["ClassName"]).to eq I18n.t(log1.class_name.underscore, scope: "job.models")
+            expect(row["Started"]).to eq log1.start_label
+            expect(row["Closed"]).to be_blank
+            expect(row["State"]).to eq I18n.t(log1.state, scope: "job.state")
+            expect(row["Args"]).to be_blank
+            expect(row["Logs"]).to be_present
+          end
+          csv_table[1].tap do |row|
+            expect(row["ClassName"]).to eq I18n.t(log2.class_name.underscore, scope: "job.models")
+            expect(row["Started"]).to eq log2.start_label
+            expect(row["Closed"]).to eq log2.closed_label
+            expect(row["State"]).to eq I18n.t(log2.state, scope: "job.state")
+            expect(row["Args"]).to be_blank
+            expect(row["Logs"]).to be_present
+          end
+        end
       end
-      csv[1].tap do |row|
-        expect(row["ClassName"]).to eq I18n.t(log2.class_name.underscore, scope: "job.models")
-        expect(row["Started"]).to eq log2.start_label
-        expect(row["Closed"]).to eq log2.closed_label
-        expect(row["State"]).to eq I18n.t(log2.state, scope: "job.state")
-        expect(row["Args"]).to be_blank
-        expect(row["Logs"]).to be_present
+
+      expect(Gws::History.all.count).to be > 1
+      Gws::History.all.reorder(created: -1).first.tap do |history|
+        expect(history.severity).to eq "info"
+        expect(history.controller).to eq "gws/job/user_logs"
+        expect(history.path).to eq download_all_gws_job_user_logs_path(site: site)
+        expect(history.action).to eq "download_all"
       end
     end
   end
@@ -116,9 +128,11 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
     it do
       login_user user1
       visit gws_job_user_logs_path(site: site)
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         select I18n.t("ss.options.duration.1_week"), from: "item[save_term]"
         click_on I18n.t("ss.buttons.delete")
       end

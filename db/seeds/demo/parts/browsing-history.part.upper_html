@@ -1,0 +1,3 @@
+<section class="history">
+<header class="history__header"><h2 class="history__header-title">閲覧履歴</h2></header>
+<ul class="history__list">

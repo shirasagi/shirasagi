@@ -21,12 +21,12 @@ Rails.application.routes.draw do
         put :move
         get :recent
         get :latest
+        post :set_seen_from_popup
       end
       member do
         get :trash
         put :set_star
         put :unset_star
-        get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
         get :reply_all
@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :notices, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
       get 'latest/(:filter)' => :latest, on: :collection, defaults: { filter: :all }
+      post :set_seen_all, on: :collection
     end
 
     resource :notice_user_settings, only: [:show, :edit, :update]

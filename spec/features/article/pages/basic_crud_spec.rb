@@ -55,19 +55,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it "#move" do
       visit move_path
-      within "form" do
+      within "form#item-form" do
         fill_in "destination", with: "docs/destination"
         click_on I18n.t("ss.buttons.move")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      within "form#item-form" do
+        expect(page).to have_css(".current-filename", text: "docs/destination.html")
+        expect(page).to have_css(".result", text: I18n.t("article.count"))
+      end
 
-      within "form" do
+      within "form#item-form" do
         fill_in "destination", with: "docs/sample"
         click_on I18n.t("ss.buttons.move")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      within "form#item-form" do
+        expect(page).to have_css(".current-filename", text: "docs/sample.html")
+        expect(page).to have_css(".result", text: I18n.t("article.count"))
+      end
     end
 
     it "#copy" do
@@ -129,7 +135,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         role.update(permissions: role_permissions.compact)
 
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
@@ -143,7 +149,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy_all & check contain_urls" do
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
@@ -154,7 +160,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy_all & unable to delete without check" do
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
 
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
@@ -195,7 +201,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "not permited and contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
-                                    release_private_article_pages release_other_article_pages))
+                                    release_private_article_pages release_other_article_pages
+                                    close_private_article_pages close_other_article_pages))
         visit edit_path2
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
@@ -207,7 +214,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "not permited and not contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
-                                    release_private_article_pages release_other_article_pages))
+                                    release_private_article_pages release_other_article_pages
+                                    close_private_article_pages close_other_article_pages))
         visit edit_path
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")

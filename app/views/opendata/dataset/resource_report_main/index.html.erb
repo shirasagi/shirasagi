@@ -60,6 +60,14 @@
   <% end %>
 </div>
 
+<% if request.path.start_with?(opendata_dataset_report_downloads_path) %>
+  <div class="main-box">
+    <div class="markdown-body">
+      <%= SS::Addon::Markdown.text_to_html(t("opendata.notice.download_report_notice_md")) %>
+    </div>
+  </div>
+<% end %>
+
 <% case @s.type %>
 <% when "month" %>
   <%= render template: "_monthly" %>

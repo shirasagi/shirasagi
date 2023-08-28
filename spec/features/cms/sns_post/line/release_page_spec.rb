@@ -13,7 +13,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
   let(:approve_comment) { "approve-#{unique_id}" }
   let(:line_text_message) { unique_id }
-  let(:release_date) { Time.zone.at(1.day.from_now.to_i) }
+  let(:release_date) { 1.day.from_now.beginning_of_minute }
 
   before do
     site.line_channel_secret = unique_id
@@ -39,7 +39,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
@@ -92,12 +92,12 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -157,7 +157,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
           first("#addon-cms-agents-addons-release_plan").click
 
@@ -275,7 +275,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -305,7 +305,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
@@ -357,7 +357,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -388,12 +388,12 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -443,7 +443,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              click_on I18n.t("ss.buttons.publish_save")
+              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
             wait_for_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -484,7 +484,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           ensure_addon_opened("#addon-cms-agents-addons-release_plan")
           within "#addon-cms-agents-addons-release_plan" do
-            fill_in 'item[release_date]', with: release_date.strftime("%Y/%m/%d %H:%M")
+            fill_in_datetime 'item[release_date]', with: release_date
           end
           first("#addon-cms-agents-addons-release_plan").click
 
@@ -502,7 +502,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            click_on I18n.t("workflow.search_approvers.index")
+            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           wait_for_cbox do

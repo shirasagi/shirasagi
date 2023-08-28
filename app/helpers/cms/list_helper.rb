@@ -3,7 +3,7 @@ module Cms::ListHelper
     ih = []
     ih << '<article class="item-#{class} #{current}">'
     ih << '  <header>'
-    ih << '     <h2><a href="#{url}">#{name}</a></h2>'
+    ih << '     <h2><a href="#{url}">#{index_name}</a></h2>'
     ih << '  </header>'
     ih << '</article>'
     ih.join("\n").freeze

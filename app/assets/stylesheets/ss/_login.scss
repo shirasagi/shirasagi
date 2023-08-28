@@ -33,6 +33,7 @@
   }
   header {
     h2 {
+      width: 300px;
       display: inline-block;
     }
     .version {
@@ -148,6 +149,7 @@
   }
 
   .ss-swiper-slide-item-image {
+    display: block;
     width: 100%;
   }
 

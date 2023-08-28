@@ -14,9 +14,6 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
 
 # Shirasagi
+Rails.application.config.assets.paths << Rails.root.join("app/assets/builds")
 Rails.application.config.assets.paths << Rails.root.join("public/assets/css")
 Rails.application.config.assets.paths << Rails.root.join("public/assets/js")
-Rails.application.config.assets.paths << Rails.root.join("public/assets/builds")
-Rails.application.config.assets.precompile << proc do |path, fn|
-  fn =~ /#{Rails.root}\/app/ && %w(.js .css).include?(::File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
-end

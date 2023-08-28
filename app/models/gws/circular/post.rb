@@ -27,27 +27,26 @@ class Gws::Circular::Post
   field :name, type: String
   field :due_date, type: DateTime
   field :state, type: String, default: 'public'
+  has_many :comments, class_name: 'Gws::Circular::Comment', dependent: :destroy, inverse_of: :post, order: { created: 1 }
 
   permit_params :name, :due_date, :deleted
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
   validates :due_date, presence: true
   validate :validate_attached_file_size
+
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
   after_save :send_notification
 
   alias reminder_date due_date
   alias reminder_user_ids member_ids
 
-  has_many :comments, class_name: 'Gws::Circular::Comment', dependent: :destroy, inverse_of: :post, order: { created: 1 }
-
-  # indexing to elasticsearch via companion object
-  around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
-  around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
-
   scope :topic, -> { exists post_id: false }
 
-  scope :and_public, -> {
+  scope :and_public, ->(_date = nil) {
     where(state: 'public')
   }
 
@@ -64,12 +63,15 @@ class Gws::Circular::Post
   }
 
   class << self
+    SEARCH_HANDLERS = %i[search_keyword search_category_id search_state search_article_state].freeze
+
     def search(params)
+      return all if params.blank?
+
       criteria = all
-      criteria = criteria.search_keyword(params)
-      criteria = criteria.search_category_id(params)
-      criteria = criteria.search_state(params)
-      criteria = criteria.search_article_state(params)
+      SEARCH_HANDLERS.each do |handler|
+        criteria = criteria.send(handler, params)
+      end
       criteria
     end
 
@@ -104,19 +106,21 @@ class Gws::Circular::Post
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << I18n.t('gws/circular.csv')
-        each do |item|
-          item.comments.each do |comment|
-            data << [
-              item.id,
-              item.name,
-              comment.id,
-              item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen'),
-              comment.user.long_name,
-              comment.text,
-              comment.updated.strftime('%Y/%m/%d %H:%M')
-            ]
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << I18n.t('gws/circular.csv')
+          each do |item|
+            item.comments.each do |comment|
+              data << [
+                item.id,
+                item.name,
+                comment.id,
+                item.seen?(comment.user) ? I18n.t('gws/circular.post.seen') : I18n.t('gws/circular.post.unseen'),
+                comment.user.try(:long_name),
+                comment.text,
+                I18n.l(comment.updated, format: :picker)
+              ]
+            end
           end
         end
       end
@@ -204,9 +208,9 @@ class Gws::Circular::Post
 
     if state == 'public'
       cur_member_ids = sorted_overall_members.pluck(:id)
-      prev_member_ids = sorted_overall_members_was.pluck(:id)
+      prev_member_ids = sorted_overall_members_previously_was.pluck(:id)
 
-      if state_was == 'draft'
+      if state_previously_was == 'draft'
         # just published
         added_member_ids = cur_member_ids
         removed_member_ids = []
@@ -216,10 +220,10 @@ class Gws::Circular::Post
       end
     end
 
-    if state == 'draft' && state_was == 'public'
+    if state == 'draft' && state_previously_was == 'public'
       # just depublished
       cur_member_ids = sorted_overall_members.pluck(:id)
-      prev_member_ids = sorted_overall_members_was.pluck(:id)
+      prev_member_ids = sorted_overall_members_previously_was.pluck(:id)
 
       added_member_ids = []
       removed_member_ids = (cur_member_ids + prev_member_ids).uniq

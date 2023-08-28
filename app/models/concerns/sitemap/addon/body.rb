@@ -161,8 +161,9 @@ module Sitemap::Addon
     end
 
     def rename_sitemap_xml
-      src = "#{site.path}/#{@db_changes['filename'][0]}"
-      dst = "#{site.path}/#{@db_changes['filename'][1]}"
+      filename_changes = changes['filename'].presence || previous_changes['filename']
+      src = "#{site.path}/#{filename_changes[0]}"
+      dst = "#{site.path}/#{filename_changes[1]}"
 
       src = src.sub(/\.[^\/]+$/, ".xml")
       dst = dst.sub(/\.[^\/]+$/, ".xml")

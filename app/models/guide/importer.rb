@@ -36,7 +36,15 @@ class Guide::Importer
 
   def edge_headers
     @edge_headers ||= begin
-      headers = @row.headers.map { |v| v.scan(/^(#{I18n.t("guide.transition")}(\d+))$/) }.flatten(1)
+      headers = @row.headers.flat_map { |v| v.scan(/^(#{I18n.t("guide.transition")}(\d+))$/) }
+      headers = headers.map { |v, idx| (idx.to_i > 0) ? [v, (idx.to_i - 1)] : nil }.compact
+      headers
+    end
+  end
+
+  def explanation_headers
+    @explanation_headers ||= begin
+      headers = @row.headers.flat_map { |v| v.scan(/^(#{I18n.t("guide.explanation")}(\d+))$/) }
       headers = headers.map { |v, idx| (idx.to_i > 0) ? [v, (idx.to_i - 1)] : nil }.compact
       headers
     end
