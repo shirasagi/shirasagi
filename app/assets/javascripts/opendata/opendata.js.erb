@@ -390,7 +390,7 @@ this.Opendata_SearchUI = (function () {
           url: $(this).attr("action"),
           success: function (data) {
             var $data = $("<div />").html(data);
-            $.colorbox.prep($data.contents());
+            colorbox.prep($data.contents());
           },
           error: function (_data, _status) {
             $div.html("== Error ==");
