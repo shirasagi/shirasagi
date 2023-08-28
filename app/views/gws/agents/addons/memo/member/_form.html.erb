@@ -20,7 +20,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
-      <table class="index to-ajax-selected sortable-index">
+      <table class="index ajax-selected sortable-index">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
           <% @item.sorted_to_members.each do |user| %>
@@ -61,7 +61,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
-      <table class="index cc-ajax-selected sortable-index">
+      <table class="index ajax-selected sortable-index">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
         <% @item.sorted_cc_members.each do |user| %>
@@ -99,7 +99,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
-      <table class="index bcc-ajax-selected sortable-index">
+      <table class="index ajax-selected sortable-index">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
         <% @item.sorted_bcc_members.each do |user| %>
