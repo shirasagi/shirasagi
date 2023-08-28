@@ -1,5 +1,10 @@
 <dl class="see">
-  <dt><%= @item.t :bookmark_model %> </dt>
+  <% if @model == Gws::Portal::UserPortlet %>
+    <dt><%= @model.t :bookmark_folder_id %></dt>
+    <dd><%= @item.bookmark_folder.try(:name) %></dd>
+  <% end %>
+
+  <dt><%= @item.t :bookmark_model %></dt>
   <dd><%= @item.label :bookmark_model %></dd>
 
   <dt><%= @model.t :limit %></dt>

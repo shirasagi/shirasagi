@@ -12,6 +12,7 @@
         <% @item.resources.order(name: 1).each do |rs| %>
         <tr>
           <td><%= link_to rs.name, opendata_dataset_resource_path(dataset_id: @item.id, id: rs.id) %>
+          <td><%= rs.label(:state) %></td>
           <td><%= rs.format.upcase %></td>
           <td>
             <% if rs.source_url.present? %>

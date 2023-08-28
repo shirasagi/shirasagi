@@ -15,7 +15,7 @@ describe "gws_sites", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
 
       click_on I18n.t("ss.buttons.edit")
-      within "form" do
+      within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[domains]", with: domain
 

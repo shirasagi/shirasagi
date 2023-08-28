@@ -57,6 +57,7 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
+        normal: 通常のお知らせ
       input_type:
         text_field: テキストボックス
         text_area: テキストエリア
@@ -355,6 +356,8 @@ ja:
         menu_attendance_state: 出退勤の表示
         menu_affair_label: 庶務事務の表示
         menu_affair_state: 庶務事務の表示
+        menu_daily_report_label: 日報の表示
+        menu_daily_report_state: 日報の表示
         menu_bookmark_label: お気に入りの表示
         menu_bookmark_state: お気に入りの表示
         menu_memo_label: メッセージの表示

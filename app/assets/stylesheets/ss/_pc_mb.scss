@@ -204,15 +204,17 @@ td {
     }
   }
   a { color: #f25a38 !important; }
-  .more-all {
-    display: inline-block;
-    width: 100%;
-    padding: 10px 0;
-    float: left;
-    background: #f2f2f2;
-    text-align: center;
-    &:hover {
-      background: #ebebeb;
+  .popup-notice-actions {
+    display: flex;
+    .more-all, .set-seen-all {
+      display: inline-block;
+      width: 100%;
+      padding: 10px 0;
+      background: #f2f2f2;
+      text-align: center;
+      &:hover {
+        background: #ebebeb;
+      }
     }
   }
 }
@@ -403,7 +405,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       display: none;
     }
   }
-  .cms, .gws, .sns, .webmail {
+  .cms, .gws, .sns, .webmail, .gws-search {
     @include clear;
     float: left;
     @include mb { float: none; }
@@ -485,6 +487,54 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
       @include mb {
         background-position: 10px center;
+      }
+    }
+  }
+  .gws-search {
+    padding: 10px 0px 0px 30px;
+    //width: 400px;
+    .input-group {
+      display: flex;
+      .input-group-append {
+        display: flex;
+      }
+    }
+    input.keyword {
+      width: 240px;
+    }
+    button {
+      width: 34px;
+      margin-left: 5px;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      &:hover {
+        color: #f25a38;
+      }
+    }
+    .dropdown-menu {
+      top: 100%;
+      min-width: 260px;
+      margin-top: 1px;
+      margin-left: 48px;
+      padding: 10px;
+      border: 1px solid #d0d0d0;
+      background: #fff;
+      label {
+        cursor: pointer;
+      }
+    }
+  }
+  @include mb {
+    .gws-search {
+      width: 100%;
+      padding: 15px 15px 15px 20px;
+      input.keyword {
+        width: calc(100% - 78px) !important;
+      }
+      .dropdown-menu {
+        margin-top: -14px;
+        margin-left: 0px;
       }
     }
   }
@@ -623,9 +673,34 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         right: 0;
         padding: 5px;
         @include mb { left: 0; }
-        input[type=text] {
-          width: 100%;
-          margin-top: 5px;
+        .bookmark-notice {
+          padding-bottom: 6px;
+          border-bottom: 1px solid #bebebe;
+        }
+        .name {
+          display: flex;
+          margin-top: 6px;
+          margin-bottom: 6px;
+          span {
+            width: 80px;
+            margin-top: 12px;
+          }
+          input[type=text] {
+            display: inline-block;
+            width: 240px;
+          }
+        }
+        .folder {
+          display: flex;
+          margin-bottom: 6px;
+          span {
+            width: 80px;
+            margin-top: 12px;
+          }
+          select {
+            display: inline-block;
+            width: 240px;
+          }
         }
         .btn {
           margin-top: 5px;
@@ -1521,7 +1596,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 #content-navi {
   @include box;
   position: relative;
-  width: 30%;
+  width: 24%;
   padding: 10px;
   float: left;
   .content-navi-title {
@@ -1543,7 +1618,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   }
 }
 #content-navi + .index, #content-navi ~ .content-main {
-  width: calc(100% - 30% - 10px);
+  width: calc(100% - 24% - 10px);
   float: right;
 }
 @include mb {

@@ -12,21 +12,17 @@
   month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
 
   status_options = %w(result_closed approve request draft).map { |k| [I18n.t("gws/affair.options.overtime_status.#{k}"), k] }
-
-  if @s[:year].blank? || @s[:month].blank?
-    @s[:year] = @s[:month] = ""
-  end
 %>
 
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get, autocomplete: :off } do |f| %>
     <% if params[:state] != "mine" %>
-      <%= f.select :capital_id, capital_options, include_blank: t("mongoid.models.gws/affair/capital") %>
-      <%= f.select :user_id, user_options, include_blank: t("mongoid.models.ss/user") %>
+      <%= f.select :capital_id, capital_options, { include_blank: t("mongoid.models.gws/affair/capital") }, { data: { controller: "ss--submit-on-change" } } %>
+      <%= f.select :user_id, user_options, { include_blank: t("mongoid.models.ss/user") }, { data: { controller: "ss--submit-on-change" } } %>
     <% end %>
-    <%= f.select :status, status_options, include_blank: "状態" %>
-    <%= f.select :year, year_options, include_blank: t("datetime.prompts.year") %>
-    <%= f.select :month, month_options, include_blank: t("datetime.prompts.month") %>
+    <%= f.select :status, status_options, { include_blank: "状態" }, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :year, year_options, { include_blank: t("datetime.prompts.year") }, { data: { controller: "ss--submit-on-change" } } %>
+    <%= f.select :month, month_options, { include_blank: t("datetime.prompts.month") }, { data: { controller: "ss--submit-on-change" } } %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 </div>

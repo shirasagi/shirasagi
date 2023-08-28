@@ -185,7 +185,7 @@ this.Syntax_Checker = (function () {
       if (!editor || !editor.document) {
         return false;
       }
-      return $(editor.document.$.body).is(":visible")
+      return $(editor.element.$).parent().is(":visible");
     }
 
     return false;

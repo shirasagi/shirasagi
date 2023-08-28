@@ -28,14 +28,15 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def close_associated_dataset
     Opendata::Dataset.site(self.site).node(@dataset_node).and_resource_associated_page(@cur_page).each do |dataset|
-      dataset.resources.and_associated_page(@cur_page).each do |resource|
+      dataset.resources.and_associated_page(@cur_page).and_public.each do |resource|
         if resource.assoc_method != 'auto'
           Rails.logger.info("#{resource.name}: auto association is disabled in #{dataset.name}")
           next
         end
 
-        resource.destroy
-        Rails.logger.info("#{resource.name}: resource is destroyed")
+        resource.state = 'closed'
+        resource.save!
+        Rails.logger.info("#{resource.name}: resource is closed")
       end
       dataset.save!
     end
@@ -45,7 +46,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     return if dataset.blank?
     # dataset is alread closed
     return if dataset.state == 'closed'
-    return if dataset.resources.present?
+    return if dataset.resources.and_public.present?
     # auto association is disabled
     if dataset.assoc_method != 'auto'
       Rails.logger.info("#{dataset.name}: auto association is disabled")
@@ -211,15 +212,16 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def destroy_all_resources_unassociated_with_page
     Opendata::Dataset.site(self.site).node(@dataset_node).and_resource_associated_page(@cur_page).each do |dataset|
-      dataset.resources.and_associated_page(@cur_page).each do |resource|
+      dataset.resources.and_associated_page(@cur_page).and_public.each do |resource|
         if resource.assoc_method != 'auto'
           Rails.logger.info("#{resource.name}: auto association is disabled in #{dataset.name}")
           next
         end
 
         unless resource_is_updated?(dataset, resource)
-          resource.destroy
-          Rails.logger.info("#{resource.name}: resource is destroyed")
+          resource.state = 'closed'
+          resource.save!
+          Rails.logger.info("#{resource.name}: resource is closed")
           next
         end
       end

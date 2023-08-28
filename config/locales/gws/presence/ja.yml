@@ -61,3 +61,7 @@ ja:
     gws/addon/presence/delegator_setting:
       presence_editable_title_ids:
         - 別の役職を設定することで、その役職に該当するユーザーの在席状況を更新できます。
+
+  job:
+    models:
+      gws/presence/reset_job: 在席管理初期化ジョブ

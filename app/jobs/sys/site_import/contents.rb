@@ -64,6 +64,7 @@ module Sys::SiteImport::Contents
       item[:search_category_ids] = convert_ids(@cms_nodes_map, item[:search_category_ids])
       item[:search_node_ids] = convert_ids(@cms_nodes_map, item[:search_node_ids])
       item[:search_group_ids] = convert_ids(@cms_groups_map, item[:search_group_ids])
+      item[:search_layout_ids] = convert_ids(@cms_layouts_map, item[:search_layout_ids])
       item[:search_user_ids] = convert_ids(@cms_users_map, item[:search_user_ids])
     end
   end

@@ -18,6 +18,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
     expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
     min = now.min
@@ -32,6 +33,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
     expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
     min = now.min

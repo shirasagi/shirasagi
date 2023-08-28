@@ -56,7 +56,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       click_on subject.name
       click_on I18n.t("gws/report.links.publish")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
@@ -124,7 +124,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       click_on subject.name
       click_on I18n.t("gws/report.links.depublish")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.depublished'))
@@ -177,7 +177,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       click_on subject.name
       click_on I18n.t("gws/report.links.publish")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
@@ -209,7 +209,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

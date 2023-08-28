@@ -1,6 +1,15 @@
 <nav class="nav-menu">
-  <%= link_to t("gws.links.back_to_portal"), gws_portal_path %>
-  <% if params[:action] !~ /index/ %>
+  <%
+    calendar_path = params.dig(:calendar, :path)
+    calendar_path += "?" + { calendar: redirection_calendar_params }.to_query if calendar_path
+  %>
+  <% if calendar_path %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), calendar_path %>
+  <% else %>
+    <%= link_to t("gws.links.back_to_portal"), gws_portal_path %>
+  <% end %>
+
+  <% if params[:action] !~ /index|calendar/ %>
     <%= link_to(t('ss.links.print'), action: :print, id: @item) %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>

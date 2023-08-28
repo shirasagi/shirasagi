@@ -7,6 +7,7 @@ require "#{Rails.root}/db/seeds/ss/users"
 @user = SS::User.where(name: "システム管理者").first
 @group = Cms::Group.find_by name: 'シラサギ市'
 @site.add_to_set group_ids: @group.id
+@site.reload
 
 # --------------------------------------
 # Seed

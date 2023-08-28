@@ -33,6 +33,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.from").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             expect(list_items[0]).to have_css(".info", text: mail3.subject)
             expect(list_items[1]).to have_css(".info", text: mail2.subject)
@@ -43,6 +44,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.from").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             # mails should be in reverse order
             expect(list_items[0]).to have_css(".info", text: mail1.subject)
@@ -53,6 +55,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.title").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             expect(list_items[0]).to have_css(".info", text: mail3.subject)
             expect(list_items[1]).to have_css(".info", text: mail2.subject)
@@ -63,6 +66,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.title").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             # mails should be in reverse order
             expect(list_items[0]).to have_css(".info", text: mail1.subject)
@@ -73,6 +77,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.datetime").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             expect(list_items[0]).to have_css(".info", text: mail2.subject)
             expect(list_items[1]).to have_css(".info", text: mail3.subject)
@@ -83,6 +88,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.datetime").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             # mails should be in reverse order
             expect(list_items[0]).to have_css(".info", text: mail1.subject)
@@ -94,11 +100,13 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.size").click
           end
+          wait_for_js_ready
           expect(page).to have_css(".list-item", text: mail1.subject)
 
           within ".list-item-head" do
             first(".field.size").click
           end
+          wait_for_js_ready
           expect(page).to have_css(".list-item", text: mail1.subject)
         end
       end
@@ -138,6 +146,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.from").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             expect(list_items[0]).to have_css(".info", text: mail3.subject)
             expect(list_items[1]).to have_css(".info", text: mail2.subject)
@@ -148,6 +157,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.from").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             # mails should be in reverse order
             expect(list_items[0]).to have_css(".info", text: mail1.subject)
@@ -158,6 +168,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.title").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             expect(list_items[0]).to have_css(".info", text: mail3.subject)
             expect(list_items[1]).to have_css(".info", text: mail2.subject)
@@ -168,6 +179,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.title").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             # mails should be in reverse order
             expect(list_items[0]).to have_css(".info", text: mail1.subject)
@@ -178,6 +190,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.datetime").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             expect(list_items[0]).to have_css(".info", text: mail2.subject)
             expect(list_items[1]).to have_css(".info", text: mail3.subject)
@@ -188,6 +201,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.datetime").click
           end
+          wait_for_js_ready
           find_all(".list-item").tap do |list_items|
             # mails should be in reverse order
             expect(list_items[0]).to have_css(".info", text: mail1.subject)
@@ -199,11 +213,13 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
           within ".list-item-head" do
             first(".field.size").click
           end
+          wait_for_js_ready
           expect(page).to have_css(".list-item", text: mail1.subject)
 
           within ".list-item-head" do
             first(".field.size").click
           end
+          wait_for_js_ready
           expect(page).to have_css(".list-item", text: mail1.subject)
         end
       end

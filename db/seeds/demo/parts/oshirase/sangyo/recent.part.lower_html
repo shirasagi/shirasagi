@@ -1,1 +1,7 @@
-<div class="feed"><a class="rss" href="/oshirase/sangyo/rss.xml">RSS</a><a class="more" href="/oshirase/sangyo/">新着情報一覧へ</a></div></section>
+</div><!-- .whats-new__list -->
+    <div class="common-feed whats-new__feed">
+      <a class="rss common-feed__rss whats-new__rss" href="/oshirase/sangyo/rss.xml">RSS</a>
+      <a class="more common-feed__more whats-new__more" href="/oshirase/sangyo/">もっと見る</a>
+    </div><!-- .common-feed.whats-new__feed -->
+  </div><!-- .whats-new__list-wrap -->
+</section><!-- #whats-new -->

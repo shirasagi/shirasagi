@@ -413,7 +413,12 @@ describe "cms_users", type: :feature, dbscope: :example do
     let!(:test_user) { create(:cms_test_user, group: group, name: unique_id, account_expiration_date: account_expiration_date) }
 
     it do
-      login_user test_user
+      visit sns_login_path
+      within "form" do
+        fill_in "item[email]", with: test_user.email
+        fill_in "item[password]", with: test_user.in_password
+        click_button I18n.t("ss.login", locale: I18n.default_locale)
+      end
       expect(status_code).to eq 200
       expect(current_path).to eq sns_login_path
       expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))

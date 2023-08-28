@@ -35,6 +35,9 @@ module SS
     end
 
     def enable_headless_chrome_download(driver)
+      return unless driver.is_a?(Capybara::Selenium::Driver)
+      return unless driver.options[:browser] == :chrome
+
       @enabled_chromes ||= {}
 
       bridge = driver.browser.send(:bridge)

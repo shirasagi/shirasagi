@@ -55,6 +55,7 @@ module Webmail::Imap
     end
 
     def offset
+      return if @page.nil? || @limit.nil?
       (@page - 1) * @limit
     end
 
@@ -96,15 +97,20 @@ module Webmail::Imap
     def all
       uids = imap.conn.uid_sort(@sort, @search, 'UTF-8')
       size = uids.size
-      uids = uids.slice(offset, @limit) || []
+      if @page && @limit
+        uids = uids.slice(offset, @limit) || []
+      end
 
-      items = {}
-      uids.each { |uid| items[uid] = nil }
+      items = uids.index_with { nil }
 
       uids = cache_all(uids, items) if uids.present? && SS.config.webmail.cache_mails
-      uids = imap_all(uids, items) if uids.present?
+      imap_all(uids, items) if uids.present?
 
-      Kaminari.paginate_array(items.values, total_count: size).page(@page).per(@limit)
+      if @page && @limit
+        Kaminari.paginate_array(items.values, total_count: size).page(@page).per(@limit)
+      else
+        items.values
+      end
     end
 
     def find(uid, *division)

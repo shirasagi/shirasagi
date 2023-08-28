@@ -1,0 +1,16 @@
+<% return if report.share_small_talk.blank? %>
+
+<td class="share-cell">
+  <div class="share-cell-in">
+    <div class="user-name"><%= gws_public_user_long_name(report.user.long_name) %></div>
+    <div class="report-value-wrap">
+      <div class="report-value">
+        <div class="report-name">【<%= @model.t(:small_talk) %>】</div>
+        <%= br report.small_talk %>
+      </div>
+    </div>
+    <% report.column_comments('small_talk').each do |comment| %>
+      <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+    <% end %>
+  </div>
+</td>

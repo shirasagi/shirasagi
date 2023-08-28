@@ -13,6 +13,7 @@ ja:
     check_links_pages: ページ
     count_pages: ページ目
     command: コマンド
+    api_token: 連携用APIトークン
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
@@ -39,6 +40,8 @@ ja:
     line_facility_search_category: 施設カテゴリー
     line_message: メッセージ
     line_template: テンプレート
+    line_statistics: 統計情報
+    line_mail_handlers: メール連携
     line_deliver_log: 配信ログ
     line_deliver_condition: 配信条件
     line_deliver_category: 配信カテゴリー
@@ -250,6 +253,11 @@ ja:
         broadcast:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
+      line_statistics:
+         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+      line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
@@ -270,6 +278,10 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      layouts:
+        index: レイアウトを選択する
+        search: レイアウトを検索
+        select: レイアウトを設定する
       nodes_routes:
         index: フォルダー属性を選択する
         search: フォルダー属性を検索
@@ -320,6 +332,14 @@ ja:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
+      title: ページの移動
+      current_filename: 現在のファイル名
+      destination_filename: 移動先のファイル名
+      branch_page_error: このページは差し替えページの為、移動できません。
+    move_node:
+      title: フォルダーの移動
+      current_filename: 現在のフォルダー名
+      destination_filename: 移動先のフォルダー名
     copy_nodes:
       from: 複製元フォルダー
       to: 複製先
@@ -505,7 +525,10 @@ ja:
       clipboard_copy_target:
         url: URL
         css_selector: CSSセレクター
-
+      handle_state:
+        deliver: メッセージを保存し自動配信する
+        draft: メッセージを下書き保存する
+        disabled: 無効
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -728,9 +751,14 @@ ja:
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
     use_cms_all_contents: 全コンテンツの利用
+    use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
+    use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
+    use_other_cms_line_statistics: LINE統計情報の利用（全て）
+    use_private_cms_line_statistics: LINE統計情報の利用（所有）
 
   modules:
     cms: 標準機能
+    cms/line: LINE機能
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール
@@ -755,6 +783,7 @@ ja:
       cms/parent_crumb: パンくず
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
+      cms/site/node_setting: フォルダー設定
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
@@ -782,6 +811,8 @@ ja:
       cms/tag: タグ
       cms/layout_html: レイアウト
       cms/layout_part: 使用中パーツ
+      cms/layout_search: レイアウト使用ページを検索する
+      cms/layout_search/btn: レイアウト使用ページを検索
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
@@ -819,6 +850,8 @@ ja:
       cms/line/richmenu/area: タップ領域
       cms/line/deliver_plan/repeat: 繰り返し
       cms/line/service/image_map: イメージマップ
+      cms/line/statistic/body: 統計情報
+      cms/line/statistic/info: 詳細情報
       cms/clipboard_copy: クリップボードへコピー
 
   mongoid:
@@ -876,6 +909,7 @@ ja:
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
+      cms/api_token: 連携用APIトークン
     errors:
       models:
         cms/content:
@@ -946,6 +980,8 @@ ja:
         page_expiration_before: 公開期限
         page_expiration_mail_subject: 公開期限お知らせメール（件名）
         page_expiration_mail_upper_text: 公開期限お知らせメール（上部テキスト）
+      cms/addon/site/node_setting:
+        rss_recent_state: rss-recent.xml
       cms/model/member:
         name: 氏名
         email: メールアドレス
@@ -1111,6 +1147,7 @@ ja:
         name: 名前
         order: 並び順
       cms/addon/page_search:
+        search_layout_ids: レイアウト
         search_name: タイトル
         search_filename: ファイル名
         search_keyword: キーワード
@@ -1298,6 +1335,7 @@ ja:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
         file_id: ファイル
+        file_name: ファイル名
         file_label: リンクテキスト・代替テキスト
         image_html_type: 貼付方法
         text: 動画の内容説明
@@ -1359,6 +1397,7 @@ ja:
         state: ステータス
         source_id: 連携対象
         action: アクション
+        request_id: "X-Line-Request-Id"
         response_code: レスポンスコード
         response_body: レスポンスボディ
         messages: リクエストメッセージ
@@ -1380,6 +1419,7 @@ ja:
         name: タイトル
         body: JSON
         deliver_state: 配信ステータス
+        statistic_state: 統計情報
         completed: 配信日時
         test_completed: テスト配信日時
       cms/line/service/hook/base:
@@ -1419,6 +1459,15 @@ ja:
         name: タイトル
         order: 並び順
         state: ステータス
+      cms/line/mail_handler:
+        name: タイトル
+        filename: ファイル名
+        from_conditions: 送信者メールアドレス
+        to_conditions: 宛先メールアドレス
+        terminate_line: 終端文字列
+        order: 並び順
+        handle_state: ステータス
+        statistic_state: 統計情報
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
@@ -1539,6 +1588,17 @@ ja:
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
+      cms/line/statistic:
+        name: 統計情報
+        message_id: メッセージ
+        condition_state: 設定
+        condition_label: 配信条件
+        overview_delivered: メッセージの送信数
+        overview_unique_impression: メッセージを開封した人数
+        overview_openrate: 開封率
+        overview_unique_click: URLをタップした人数
+        update_statistics: 統計情報の更新
+        null_label: 情報なし
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
@@ -1578,7 +1638,7 @@ ja:
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
       not_found_parent_node: 移動先の親フォルダーが存在しません。
-      subnode_of_itself: 移動先のフォルダーパスに自身のパスが含まれています。
+      subnode_of_itself: 移動先のフォルダーに自身のフォルダーが含まれています。
       not_cms_page_in_root: 固定ページ以外をルートに移動することはできません。
       not_have_parent_read_permission: 移動先の親フォルダーの閲覧権限がありません。
       branch_page_can_not_move: 差し替え用ページは移動できません。
@@ -1995,6 +2055,28 @@ ja:
       selected:
         - トーク画面を開いた際に、メニューを最初から表示するか選択します。
 
+    cms/line/mail_handler:
+      name:
+        - タイトルを入力します。
+      filename:
+        - ファイル名を入力します。
+      from_conditions:
+        - 送信者メールアドレス（From）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの受信アドレスと一致した際にメール連携を実行します。
+      to_conditions:
+        - メール取込の宛先メールアドレス（To）条件を設定します。
+        - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にメール連携を実行します。
+      terminate_line:
+        - メール本文の終端文字列を入力します。
+        - 本文内に終端文字列がある場合、それ以降の文章が削除されます。
+        - メールのシグネチャを削除する為に利用できます。
+      order:
+        - 並び順を入力します。
+      handle_state:
+        - ステータスを設定します。
+      statistic_state:
+        - 有効にするとメッセージ送信時に統計情報を保存します。
+
     cms/site:
       name:
         - サイト名を入力します。
@@ -2028,6 +2110,11 @@ ja:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの件名を入力します。
       page_expiration_mail_upper_text:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
+
+    cms/addon/site/node_setting:
+      rss_recent_state:
+        - 有効にすると、一覧フォルダーにて動的にrssを応答するURLが利用可能となります。
+        - 'URL: 一覧フォルダー名/rss-recent.xml'
     cms/model/part:
       route:
         - |-
@@ -2356,6 +2443,9 @@ ja:
       search_routes:
         - 検索したいページ属性を選択します。
         - いずれかのページ属性に該当するページが検索されます。
+      search_layout_ids:
+        - 検索したいレイアウトを選択します
+        - いずれかのレイアウトに該当するページが検索されます
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
@@ -2948,6 +3038,8 @@ ja:
        - タイトルを入力します。
       title:
        - タイトルを入力します。
+      statistic_state:
+        - 有効にするとメッセージ送信時に統計情報を保存します。
 
     cms/addon/line/message/deliver_condition:
       deliver_condition_state:
@@ -3117,3 +3209,4 @@ ja:
       cms/line/apply_richmenu_job: LINEリッチメニュー登録
       cms/group_import_job: グループインポート
       cms/remove_improper_htmls_job: 不要HTML削除
+      cms/line/update_statistics_job: LINE統計情報更新

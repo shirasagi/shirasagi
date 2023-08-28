@@ -12,6 +12,7 @@ module Gws::Circular::PostFilter
     before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen active recover]
     before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download_all]
     before_action :set_category
+    before_action :set_search_params
   end
 
   private
@@ -58,18 +59,18 @@ module Gws::Circular::PostFilter
   #   end
   # end
 
+  def set_search_params
+    @s = OpenStruct.new params[:s]
+    @s[:site] = @cur_site
+    @s[:user] = @cur_user
+    @s[:category_id] = @category.id if @category.present?
+    @s[:article_state] = @cur_site.circular_article_state if @s[:article_state].nil?
+    @s[:sort] = @cur_site.circular_sort if @s[:sort].nil?
+  end
+
   public
 
   def index
-    if @category.present?
-      params[:s] ||= {}
-      params[:s][:site] = @cur_site
-      params[:s][:category_id] = @category.id
-    end
-    if params.dig(:s, :article_state).present?
-      params[:s][:user] = @cur_user
-    end
-
     set_items
   end
 

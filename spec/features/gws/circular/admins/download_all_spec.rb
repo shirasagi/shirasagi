@@ -8,7 +8,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
   let!(:cate2) { create(:gws_circular_category) }
   let!(:post1) do
     create(
-      :gws_circular_post, due_date: now + 1.day, category_ids: [ cate1.id ], member_ids: [ gws_user.id, user1.id ],
+      :gws_circular_post, due_date: now + 3.days, category_ids: [ cate1.id ], member_ids: [ gws_user.id, user1.id ],
       state: "public"
     )
   end
@@ -24,7 +24,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
   let!(:post3) do
     create(
-      :gws_circular_post, due_date: now + 3.days, category_ids: [ cate1.id ], member_ids: [ gws_user.id, user1.id ],
+      :gws_circular_post, due_date: now + 1.day, category_ids: [ cate1.id ], member_ids: [ gws_user.id, user1.id ],
       state: "draft"
     )
   end

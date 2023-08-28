@@ -1,0 +1,41 @@
+<%= jquery do %>
+var bookmark = new Gws_Bookmark('.gws-bookmark', "<%= @bookmark_default_name %>")
+bookmark.renderUpdate();
+<% end %>
+<%
+  def folder_options
+    @bookmark_folders.map { |folder| [folder.trailing_name, folder.id] }
+  end
+%>
+<div class="gws-bookmark dropdown dropdown-toggle">
+  <span class="bookmark-icon">
+    <i class="material-icons active">star</i>
+  </span>
+  <%= form_for :bookmark, url: gws_bookmark_apis_update_item_path, html: { method: "POST", id: "bookmark-form" } do |f| %>
+    <%= f.hidden_field :url %>
+    <%= f.hidden_field :bookmark_model %>
+    <ul class="dropdown-menu <%= "active" if @new_bookmark %>">
+      <li>
+        <div class="bookmark-notice">
+          <% if @new_bookmark %>
+            <%= t("gws/bookmark.notice.save") %>
+          <% else %>
+            <%= t("gws/bookmark.notice.edit") %>
+          <% end %>
+        </div>
+      </li>
+      <li>
+        <div class="name">
+          <span><%= Gws::Bookmark::Item.t(:name) %></span>
+          <%= f.text_field :name, maxlength: "200", autocomplete: "off" %>
+        </div>
+        <div class="folder">
+          <span><%= Gws::Bookmark::Item.t(:folder_id) %></span>
+          <%= f.select :folder_id, folder_options %>
+        </div>
+        <%= f.button t("ss.buttons.save"), class: "btn update" %>
+        <%= f.button t("ss.buttons.delete"), class: "btn delete" %>
+      </li>
+    </ul>
+  <% end %>
+</div>

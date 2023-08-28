@@ -58,7 +58,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         end
 
         within "nav.user" do
-          first(".popup-notice-container a").click
+          wait_event_to_fire("ss:dropdownOpened") { first(".popup-notice-container a").click }
 
           within ".popup-notice-items .list-item.unseen" do
             click_on I18n.t("webmail.export.subject")
@@ -101,7 +101,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         end
 
         within "nav.user" do
-          first(".popup-notice-container a").click
+          wait_event_to_fire("ss:dropdownOpened") { first(".popup-notice-container a").click }
 
           within ".popup-notice-items .list-item.unseen" do
             click_on I18n.t("webmail.export.subject")
@@ -183,7 +183,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
       end
 
       within "nav.user" do
-        first(".popup-notice-container a").click
+        wait_event_to_fire("ss:dropdownOpened") { first(".popup-notice-container a").click }
 
         within ".popup-notice-items .list-item.unseen" do
           click_on I18n.t("webmail.export.subject")
@@ -226,7 +226,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
       end
 
       within "nav.user" do
-        first(".popup-notice-container a").click
+        wait_event_to_fire("ss:dropdownOpened") { first(".popup-notice-container a").click }
 
         within ".popup-notice-items .list-item.unseen" do
           click_on I18n.t("webmail.export.subject")
@@ -276,7 +276,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
       end
 
       within "nav.user" do
-        first(".popup-notice-container a").click
+        wait_event_to_fire("ss:dropdownOpened") { first(".popup-notice-container a").click }
 
         within ".popup-notice-items .list-item.unseen" do
           click_on I18n.t("webmail.export.subject")

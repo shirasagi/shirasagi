@@ -91,7 +91,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
       click_on name2
       click_on I18n.t('gws/schedule/todo.links.finish')
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -115,7 +115,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       select I18n.t("gws/schedule/todo.options.todo_state_filter.finished"), from: "s[todo_state]"
       click_on name2
       click_on I18n.t('gws/schedule/todo.links.revert')
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -223,7 +223,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within 'form' do
+      within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -249,7 +249,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end
-      within 'form' do
+      within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
@@ -400,7 +400,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       click_on I18n.t('gws/schedule.navi.trash')
       click_on todo.name
       click_on I18n.t("ss.links.restore")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))

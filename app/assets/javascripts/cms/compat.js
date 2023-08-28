@@ -4,16 +4,18 @@
 //= require_self
 
 (function () {
-  var setReady = function() {
-    if ("jQuery" in window) {
-      if (jQuery.isReady) {
-        SS.doneReady();
-        return;
-      }
+  var isDocumentReady = function() {
+    return document.readyState === "interactive" || document.readyState === "complete"
+  };
 
-      jQuery(function() {
-        SS.doneReady();
-      });
+  var isJQueryReady = function () {
+    return ("jQuery" in window) && jQuery.isReady;
+  };
+
+  var setReady = function() {
+    if (isDocumentReady() && isJQueryReady()) {
+      SS.doneReady();
+      return;
     }
 
     setTimeout(setReady, 11);

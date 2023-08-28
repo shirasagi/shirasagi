@@ -58,14 +58,14 @@ describe "event_pages", type: :feature, js: true do
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
 
     it "#copy" do

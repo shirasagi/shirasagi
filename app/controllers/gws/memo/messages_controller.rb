@@ -351,6 +351,19 @@ class Gws::Memo::MessagesController < ApplicationController
     render_change_all
   end
 
+  def set_seen_from_popup
+    @items = Gws::Memo::Message.unseens(@cur_user, @cur_site).to_a
+    @items.each do |item|
+      next unless item.readable?(@cur_user, site: @cur_site)
+      item.set_seen(@cur_user).update
+    end
+    flash[:notice] = I18n.t("ss.notice.set_seen")
+    respond_to do |format|
+      format.html { redirect_to(action: :index) }
+      format.json { head :no_content }
+    end
+  end
+
   def set_star
     render_change @item.set_star(@cur_user).save, params[:action], location: { action: params[:location] }
   end

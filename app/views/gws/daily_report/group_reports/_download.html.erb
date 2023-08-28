@@ -1,0 +1,21 @@
+<dl class="see">
+  <dt><%= t('ss.encoding') %></dt>
+  <dd>
+    <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+        <%= t("ss.options.csv_encoding.#{encoding}") %>
+      </label>
+    <% end %>
+  </dd>
+
+  <dt><%= t('modules.gws/daily_report') %></dt>
+  <dd>
+    <% %w(all shared).each do |target| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[export_target]", target, target == 'all', { id: nil } %>
+        <%= t("gws/daily_report.options.export_target.#{target}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

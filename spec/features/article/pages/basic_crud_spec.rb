@@ -61,7 +61,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
       within "form#item-form" do
-        expect(page).to have_css("h2", text: "docs/destination.html")
+        expect(page).to have_css(".current-filename", text: "docs/destination.html")
         expect(page).to have_css(".result", text: I18n.t("article.count"))
       end
 
@@ -71,7 +71,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
       within "form#item-form" do
-        expect(page).to have_css("h2", text: "docs/sample.html")
+        expect(page).to have_css(".current-filename", text: "docs/sample.html")
         expect(page).to have_css(".result", text: I18n.t("article.count"))
       end
     end
@@ -135,7 +135,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         role.update(permissions: role_permissions.compact)
 
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
@@ -149,7 +149,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy_all & check contain_urls" do
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
@@ -160,7 +160,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy_all & unable to delete without check" do
         visit index_path
-        find('.list-head input[type="checkbox"]').set(true)
+        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
 
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')

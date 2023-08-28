@@ -31,6 +31,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         page.first("#addon-cms-agents-addons-body .preview").click
 
         switch_to_window(windows.last)
+        wait_for_document_loading
 
         expect(page).to have_css("h2", text: "見出し2")
         expect(page).to have_css("p", text: "内容が入ります。")
@@ -61,6 +62,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         page.first("#addon-cms-agents-addons-body .preview").click
 
         switch_to_window(windows.last)
+        wait_for_document_loading
 
         expect(page).to have_css("h2", text: "見出し2")
         expect(page).to have_css("p", text: "内容が入ります。")
@@ -222,6 +224,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
         switch_to_window(windows.last)
+        wait_for_document_loading
 
         expect(page).to have_css("div", text: column1_value)
         expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
@@ -238,6 +241,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
 
         switch_to_window(windows.first)
+        wait_for_document_loading
 
         within "form#item-form" do
           click_on I18n.t('ss.buttons.draft_save')
@@ -251,6 +255,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
         switch_to_window(windows.last)
+        wait_for_document_loading
 
         expect(page).to have_css("div", text: column1_value)
         expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))

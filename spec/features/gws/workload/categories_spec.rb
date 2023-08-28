@@ -57,7 +57,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
 
     it "#delete" do
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_notice I18n.t('ss.notice.deleted')

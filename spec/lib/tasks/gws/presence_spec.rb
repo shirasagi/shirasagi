@@ -48,12 +48,12 @@ describe Tasks::Gws::Presence, dbscope: :example do
       user_presence5.reload
       user_presence6.reload
 
-      expect(user_presence1.state).to eq ""
-      expect(user_presence2.state).to eq ""
-      expect(user_presence3.state).to eq ""
-      expect(user_presence4.state).to eq ""
-      expect(user_presence5.state).to eq ""
-      expect(user_presence6.state).to eq ""
+      expect(user_presence1.state).to eq "unavailable"
+      expect(user_presence2.state).to eq "unavailable"
+      expect(user_presence3.state).to eq "leave"
+      expect(user_presence4.state).to eq "dayoff"
+      expect(user_presence5.state).to be_blank
+      expect(user_presence6.state).to eq "unavailable"
     end
 
     it "site1" do
@@ -67,11 +67,11 @@ describe Tasks::Gws::Presence, dbscope: :example do
       user_presence5.reload
       user_presence6.reload
 
-      expect(user_presence1.state).to eq ""
+      expect(user_presence1.state).to eq "unavailable"
       expect(user_presence2.state).to eq "unavailable"
-      expect(user_presence3.state).to eq ""
-      expect(user_presence4.state).to eq ""
-      expect(user_presence5.state).to eq ""
+      expect(user_presence3.state).to eq "leave"
+      expect(user_presence4.state).to eq "dayoff"
+      expect(user_presence5.state).to be_blank
       expect(user_presence6.state).to eq "available"
     end
   end

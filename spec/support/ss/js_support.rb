@@ -34,6 +34,8 @@ module SS
       end
     end
 
+    mattr_accessor :is_within_cbox
+
     module_function
 
     HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
@@ -221,6 +223,13 @@ module SS
       })(...arguments)
     SCRIPT
 
+    JS_SELECT_SCRIPT = <<~SCRIPT.freeze
+      (function(element, valueText) {
+        const optionIndex = Array.from(element.options).findIndex(option => option.text === valueText);
+        element.selectedIndex = optionIndex;
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -242,6 +251,8 @@ module SS
     def fill_in_code_mirror(locator, **options)
       with = options.delete(:with)
       options[:visible] = :all
+
+      wait_for_js_ready
 
       element = find(:fillable_field, locator, **options)
       page.execute_script("$(arguments[0]).data('editor').setValue(arguments[1])", element, with)
@@ -270,7 +281,15 @@ module SS
     def wait_for_cbox(&block)
       wait_for_js_ready
       have_css("#cboxClose", text: "close")
-      within("#cboxContent", &block) if block
+      if block
+        save = JsSupport.is_within_cbox
+        JsSupport.is_within_cbox = true
+        begin
+          within("#cboxContent", &block)
+        ensure
+          JsSupport.is_within_cbox = save
+        end
+      end
     end
 
     def colorbox_opened?
@@ -302,11 +321,17 @@ module SS
     end
 
     def wait_for_notice(text)
+      wait_for_js_ready
       expect(page).to have_css('#notice', text: text)
+      page.execute_script("SS.clearNotice();")
+      wait_for_js_ready
     end
 
     def wait_for_error(text)
+      wait_for_js_ready
       expect(page).to have_css('#errorExplanation', text: text)
+      page.execute_script("SS.clearNotice();")
+      wait_for_js_ready
     end
 
     def save_full_screenshot(**opts)
@@ -325,9 +350,16 @@ module SS
     end
 
     def capture_console_logs(session = nil)
-      session ||= page
-      session.driver.browser.logs.get(:browser).collect(&:message)
+      case Capybara.javascript_driver
+      when :firefox
+        # currently not supported on firefox
+        []
+      else
+        session ||= page
+        session.driver.browser.logs.get(:browser).collect(&:message)
+      end
     rescue => _e
+      []
     end
 
     def puts_console_logs
@@ -383,6 +415,7 @@ module SS
     def wait_cbox_open(&block)
       wait_for_js_ready
       wait_event_to_fire("cbox_complete", &block)
+      wait_for_js_ready
     end
 
     #
@@ -394,7 +427,11 @@ module SS
     #
     def wait_cbox_close(&block)
       wait_for_js_ready
+      save = JsSupport.is_within_cbox
+      JsSupport.is_within_cbox = true
       wait_event_to_fire("cbox_closed", &block)
+    ensure
+      JsSupport.is_within_cbox = save
     end
 
     #
@@ -453,8 +490,9 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
-      expect(result).to be_truthy
+      page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
+      #result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      #expect(result).to be_truthy
     end
 
     alias fill_in_date fill_in_datetime
@@ -495,6 +533,24 @@ module SS
       result
     end
 
+    # document.readyState が 'loading' になるのを待機する。
+    #
+    # switch_to_window や within_window で別ウインドウに切り替えた直後、document.readyState が 'uninitialized' となっている場合がある。
+    # この場合、window.addEventListener, window.setTimeout, document.addEventListener などを呼び出すとエラー "Document was unloaded"
+    # が発生する。
+    #
+    # JS コードで待機できれば良いのだが、setTimeout が使用できないので Ruby コードで待機する。
+    def wait_for_document_loading
+      Timeout.timeout(wait_timeout) do
+        loop do
+          ready_state = page.evaluate_script("document.readyState")
+          break if ready_state.present? && ready_state != 'uninitialized'
+
+          sleep 0.1
+        end
+      end
+    end
+
     def wait_for_js_ready(session = nil, &block)
       session ||= page
       unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
@@ -502,12 +558,64 @@ module SS
         raise "unable to be js ready"
       end
 
-      yield if block_given?
+      yield if block
     rescue Selenium::WebDriver::Error::JavascriptError
       puts_console_logs
       raise
     end
     alias wait_for_ajax wait_for_js_ready
+
+    def click_on(locator = nil, **options)
+      if JsSupport.is_within_cbox
+        click_on_cbox(locator, **options)
+      else
+        page.click_on(locator, **options)
+      end
+    end
+
+    def click_on_cbox(locator, **options)
+      case Capybara.javascript_driver
+      when :firefox
+        # firefox で colorbox 上の <a> をクリックすると、ElementNotInteractableError が発生する
+        # JS でクリックしてこのエラーを回避する
+        # see: https://github.com/teamcapybara/capybara/blob/3.38.0/lib/capybara/node/actions.rb#L25-L28
+        js_click find(:link_or_button, locator, **options)
+      else
+        page.click_on(locator, **options)
+      end
+    end
+
+    def js_click(element)
+      wait_for_js_ready
+      page.execute_script("arguments[0].click()", element)
+    end
+
+    def js_dispatch_generic_event(element, event_name)
+      wait_for_js_ready
+      page.execute_script("arguments[0].dispatchEvent(new Event(arguments[1]))", element, event_name)
+      wait_for_js_ready
+    end
+
+    def js_dispatch_focus_event(element, event_name)
+      wait_for_js_ready
+      page.execute_script("arguments[0].dispatchEvent(new FocusEvent(arguments[1]))", element, event_name)
+      wait_for_js_ready
+    end
+
+    def fill_in_address(locator, with:)
+      wait_for_js_ready
+      wait_event_to_fire("ss:addressCommitted") do
+        fill_in locator, with: with
+        js_dispatch_focus_event find(:fillable_field, locator), 'blur'
+      end
+    end
+
+    def js_select(value, from:, **options)
+      wait_for_js_ready
+      element = find(:select, from, **options)
+      page.execute_script(JS_SELECT_SCRIPT, element, value)
+      js_dispatch_generic_event(element, "change")
+    end
   end
 end
 

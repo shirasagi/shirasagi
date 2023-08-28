@@ -1,0 +1,25 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :filename %><%= @model.tt :filename %></dt>
+  <dd><%= f.text_field :filename %></dd>
+
+  <dt><%= @model.t :from_conditions %><%= @model.tt :from_conditions %></dt>
+  <dd><%= f.text_area :from_conditions %></dd>
+
+  <dt><%= @model.t :to_conditions %><%= @model.tt :to_conditions %></dt>
+  <dd><%= f.text_area :to_conditions %></dd>
+
+  <dt><%= @model.t :terminate_line %><%= @model.tt :terminate_line %></dt>
+  <dd><%= f.text_field :terminate_line %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :statistic_state %><%= @model.tt :statistic_state %></dt>
+  <dd><%= f.select :statistic_state, @item.statistic_state_options %></dd>
+
+  <dt><%= @model.t :handle_state %><%= @model.tt :handle_state %></dt>
+  <dd><%= f.select :handle_state, @item.handle_state_options %></dd>
+</dl>

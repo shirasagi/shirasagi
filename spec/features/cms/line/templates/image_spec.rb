@@ -42,6 +42,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_js_ready
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       # check talk-balloon
@@ -67,6 +68,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_js_ready
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       # delete talk-balloon

@@ -3,6 +3,12 @@ namespace :ss do
   # 5 0 * * * bundle exec rake ss:daily
   #
   task daily: :environment do
+    # 空ディレクトリの削除
+    %w(job_logs ss_files ss_tasks).each do |dir|
+      path = "#{Rails.root}/private/files/#{dir}"
+      system("find #{path} -type d -empty -delete") if ::Dir.exist?(path)
+    end
+
     # 一時ファイルの削除（エクスポート）
     ::Tasks::SS.invoke_task("ss:delete_download_files")
 
@@ -54,6 +60,9 @@ namespace :ss do
         ::Tasks::SS.invoke_task("opendata:report:generate_download", site.host)
         ::Tasks::SS.invoke_task("opendata:report:generate_access", site.host)
         ::Tasks::SS.invoke_task("opendata:report:generate_preview", site.host)
+
+        # LINE統計情報の更新
+        ::Tasks::SS.invoke_task("cms:line:update_statistics", site.host)
       end
 
       # 各種使用率の更新

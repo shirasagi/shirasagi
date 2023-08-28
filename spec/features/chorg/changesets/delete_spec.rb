@@ -52,7 +52,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("chorg.menus.revisions.delete")
       end
       within "form#item-form" do
-        within "#chorg-before" do
+        within "#chorg-before-basic" do
           wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
         end
       end
@@ -84,11 +84,11 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-delete" do
         click_on group1.name
       end
-      expect(page).to have_css("#chorg-before", text: group1.name)
+      expect(page).to have_css(".chorg-before", text: group1.name)
       # expect(page).to have_content(group1.name)
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        within "#chorg-before" do
+        within "#chorg-before-basic" do
           wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
         end
       end
@@ -120,7 +120,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-delete" do
         click_on group2.name
       end
-      expect(page).to have_css("#chorg-before", text: group2.name)
+      expect(page).to have_css(".chorg-before", text: group2.name)
       click_on I18n.t("ss.links.delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")

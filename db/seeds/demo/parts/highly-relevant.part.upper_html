@@ -1,0 +1,3 @@
+<section class="highly-relevant">
+<header class="highly-relevant__header"><h2 class="highly-relevant__header-title">このページと<br class="only-pc">関連性の高い<br class="only-pc">ページ</h2></header>
+<ul class="highly-relevant__list">

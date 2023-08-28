@@ -21,7 +21,7 @@
   <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <% if @crud_buttons %>
     <% @crud_buttons.call f %>
   <% else %>

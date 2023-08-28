@@ -63,15 +63,14 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
       it do
         # import leave_settings_member
         visit import_member_path
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/leave_settings_member.csv"
           page.accept_confirm do
             click_on I18n.t("ss.links.import")
           end
         end
-
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).to eq import_member_path
-        expect(page).to have_content I18n.t("ss.notice.saved")
 
         year1.reload
         year2.reload
@@ -87,15 +86,14 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
       it do
         # import leave_settings
         visit import_path
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/leave_settings.csv"
           page.accept_confirm do
             click_on I18n.t("ss.links.import")
           end
         end
-
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).to eq index_path
-        expect(page).to have_content I18n.t("ss.notice.saved")
 
         year1.reload
         year2.reload
@@ -112,15 +110,14 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
 
         # import leave_settings_member
         visit import_member_path
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/leave_settings_member.csv"
           page.accept_confirm do
             click_on I18n.t("ss.links.import")
           end
         end
-
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).to eq import_member_path
-        expect(page).to have_content I18n.t("ss.notice.saved")
 
         year1.reload
         year2.reload
@@ -134,15 +131,14 @@ describe "gws_affair_leave_settings", type: :feature, dbscope: :example, js: tru
 
         # import leave_settings2
         visit import_path
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/affair/leave_settings2.csv"
           page.accept_confirm do
             click_on I18n.t("ss.links.import")
           end
         end
-
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).to eq index_path
-        expect(page).to have_content I18n.t("ss.notice.saved")
 
         year1.reload
         year2.reload

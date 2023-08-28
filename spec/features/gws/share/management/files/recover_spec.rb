@@ -29,7 +29,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     click_on item.name
     click_on I18n.t("ss.links.restore")
 
-    within "form" do
+    within "form#item-form" do
       click_on I18n.t("ss.buttons.restore")
     end
 

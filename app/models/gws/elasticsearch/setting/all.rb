@@ -42,7 +42,7 @@ class Gws::Elasticsearch::Setting::All
     end
   end
 
-  def translate_category(es_type, cate_name)
+  def translate_category(es_type, cate_name, opts = {})
     setting = find_setting(es_type)
     if setting.present?
       setting.translate_category(es_type, cate_name)

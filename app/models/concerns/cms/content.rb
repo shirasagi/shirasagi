@@ -65,12 +65,12 @@ module Cms::Content
     def and_public_selector(date)
       date = date ? date.dup : Time.zone.now
       conditions = []
-      # 条件 state == "public" は何にも勝る。この条件を満足する時 release_date と close_date とを調べない。
-      # 逆説的に release_date と close_date とは、state != "public" の場合に公開になる条件を表す。
-      conditions << { state: "public" }
-      conditions << { release_date: { "$lte" => date }, close_date: { "$gt" => date } }
-      conditions << { release_date: nil, close_date: { "$gt" => date } }
-      conditions << { release_date: { "$lte" => date }, close_date: nil }
+      conditions << { state: "public", release_date: nil, close_date: nil }
+      conditions << { state: "public", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+      conditions << { state: "ready", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+      conditions << { state: "public", release_date: nil, close_date: { "$gt" => date } }
+      conditions << { state: "public", release_date: { "$lte" => date }, close_date: nil }
+      conditions << { state: "ready", release_date: { "$lte" => date }, close_date: nil }
       { "$and" => [{ "$or" => conditions }] }
     end
 

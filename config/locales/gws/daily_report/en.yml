@@ -1,0 +1,142 @@
+en:
+  gws/daily_report:
+    create_comment: Comment
+    create_daily_report: Create business daily report
+    daily_report_list: Business daily report list
+    date: Date
+    department: Department
+    edit_daily_report: Edit business daily report
+    individual: Individual
+    shared: Shared by department
+    shared_view: Shared view
+    wday: Day of the week
+    buttons:
+      save_and_categorize: Save and categorize
+    columns:
+      index: Manage category
+    confirm:
+      copy_year: Are you sure you want to create work category from the target year?
+    formats:
+      daily_report_full_name: '%{date}’s business daily report for %{user_name}'
+    forms:
+      more: See more
+    links:
+      publish: Publish
+      depublish: Make private
+      download_comment: Approval/circular comment CSV
+      download_attachment: Download attached file
+      copy_year: Create work category from the before year
+    notice:
+      no_files: "There are no attached files."
+      copy_year_started: The process of creating work category from the target year has started.
+    labels:
+      user: Author
+      form: Form
+    options:
+      export_target:
+        all: Export all
+        shared: Export shared by department
+
+  modules:
+    gws/daily_report: Business daily report
+    addons:
+      gws/daily_report/column_setting: Category settings
+      gws/daily_report/custom_form: Input details
+
+  gws_role:
+    use_gws_daily_report_reports: Use business daily report
+    edit_gws_daily_report_reports: Edit business daily report
+    manage_private_gws_daily_report_reports: Manage business daily report (own group)
+    manage_all_gws_daily_report_reports: Manage business daily report (all)
+    access_gws_daily_report_reports: Show limited access business daily report
+
+    read_other_gws_daily_report_forms: View application forms (all)
+    read_private_gws_daily_report_forms: View application forms (own)
+    edit_other_gws_daily_report_forms: Edit application forms (all)
+    edit_private_gws_daily_report_forms: Edit application forms (own)
+    delete_other_gws_daily_report_forms: Delete application forms (all)
+    delete_private_gws_daily_report_forms: Delete application forms (own)
+
+    read_other_gws_daily_report_comments: View comments (all)
+    read_private_gws_daily_report_comments: View comments (own)
+    edit_other_gws_daily_report_comments: Edit comments (all)
+    edit_private_gws_daily_report_comments: Edit comments (own)
+    delete_other_gws_daily_report_comments: Delete comments (all)
+    delete_private_gws_daily_report_comments: Delete comments (own)
+
+  mongoid:
+    models:
+      gws/daily_report/report: Business daily report
+      gws/daily_report/form: Work category
+      gws/daily_report/column: Input items
+      gws/daily_report/comment: Comment
+    attributes:
+      gws/daily_report/report:
+        name: Title
+        daily_report_date: Date
+        daily_report_group_id: Department
+        form_id: Form
+        daily_report_member_id: Approver
+      gws/daily_report/form:
+        name: Department
+        year: Year
+        order: Order
+        memo: Remarks
+        daily_report_group_id: Department
+        src_year: Source year
+        dest_year: Destination year
+      gws/addon/daily_report/column_setting:
+        columns: Category settings
+      gws/daily_report/column:
+        name: Item name
+        order: Order
+      gws/addon/daily_report/group_setting:
+        daily_report_new_days: Display period for new items
+      gws/addon/daily_report/custom_form:
+        limited_access: Limited access
+        small_talk: Small talk
+        share_small_talk: Shared by department
+        share_column_ids: Shared by department
+      gws/daily_report/comment:
+        body: Comment
+        report_key: Input items key
+        report_id: Business daily report
+        column_id: Input items
+
+  tooltip:
+    gws/daily_report/report:
+      daily_report_date:
+        - Enter a date.
+    gws/daily_report/form:
+      name:
+        - Enter a department.
+      year:
+        - Enter a year.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      memo:
+        - Enter remarks.
+        - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+      daily_report_group_id:
+        - Enter the department.
+      src_year:
+        - Enter the year from which to create.
+      dest_year:
+        - Enter the year to create.
+    gws/daily_report/column:
+      name:
+        - Enter an item.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+    gws/addon/daily_report/group_setting:
+      daily_report_new_days:
+        - Enter the display period for new items.
+    gws/daily_report/comment:
+      body:
+        - Enter a comment.
+
+  job:
+    models:
+      gws/daily_report/copy_year_job: Copy job for work category target year

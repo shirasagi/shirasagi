@@ -14,13 +14,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit" do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
         wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
@@ -51,13 +45,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit file name" do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
         wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
@@ -95,13 +83,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
         wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
@@ -145,13 +127,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-thumb")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
         wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
@@ -193,13 +169,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit edit_path
 
-        addon = first("#addon-cms-agents-addons-thumb")
-        if addon.matches_css?(".body-closed")
-          wait_addon_open do
-            addon.find('.toggle-head').click
-          end
-        end
-
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
           wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
@@ -239,13 +209,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
 
-        addon = first("#addon-cms-agents-addons-thumb")
-        if addon.matches_css?(".body-closed")
-          wait_addon_open do
-            addon.find('.toggle-head').click
-          end
-        end
-
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
           find('.btn-file-delete').click
         end
@@ -270,13 +234,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit edit_path
 
-        addon = first("#addon-cms-agents-addons-thumb")
-        if addon.matches_css?(".body-closed")
-          wait_addon_open do
-            addon.find('.toggle-head').click
-          end
-        end
-
+        ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
           wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do

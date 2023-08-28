@@ -108,7 +108,7 @@ module Cms::PublicFilter::Layout
       if previewable
         layout_info = {
           id: @cur_layout.id, name: @cur_layout.name, filename: @cur_layout.filename,
-          path: cms_layout_path(site: @cur_site, id: @cur_layout)
+          path: @cur_layout.private_show_path
         }
         data_attrs = layout_info.map { |k, v| "data-layout-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
         html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}))

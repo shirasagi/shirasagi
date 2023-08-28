@@ -1,4 +1,4 @@
-//= require sprintf
+//= require sprintf-js/dist/sprintf.min.js
 //= require gridster/jquery.gridster.min.js
 //= require gws/lib/category
 //= require gws/lib/tab
@@ -9,6 +9,7 @@
 //= require gws/lib/readable_setting
 //= require gws/lib/contrast
 //= require gws/lib/workload
+//= require gws/lib/search_form
 //= require gws/schedule/lib/plan
 //= require gws/schedule/lib/repeat_plan
 //= require gws/schedule/lib/integration

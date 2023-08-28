@@ -53,7 +53,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         visit gws_workflow_files_path(site: site, state: "all")
         click_on name
         click_on I18n.t("ss.links.copy")
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
 
@@ -109,7 +109,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
           visit gws_workflow_files_path(site: site, state: "all")
           click_on name
           click_on I18n.t("ss.links.copy")
-          within "form" do
+          within "form#item-form" do
             click_on I18n.t("ss.buttons.save")
           end
 

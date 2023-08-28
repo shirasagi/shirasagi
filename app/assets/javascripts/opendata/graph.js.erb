@@ -1,3 +1,7 @@
+//= require chart.js/dist/chart.js
+//= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js
+//= require ss/chartjs-colorschemes
+
 Opendata_Graph = function (canvas, controller) {
   this.$canvas = $(canvas);
   this.$container = $(canvas).parent("div");
@@ -53,7 +57,7 @@ Opendata_Graph.prototype.drawBar = function() {
   this.resizeContainer(this.datasetsMinWidth());
   this.chart = new Chart(this.$canvas, {
     type: 'bar',
-    plugins: [Chart.ColorSchemesPlugin],
+    plugins: [ChartColorSchemes],
     responsive: true,
     maintainAspectRatio: false,
     data: {
@@ -102,7 +106,7 @@ Opendata_Graph.prototype.drawLine = function() {
   this.resizeContainer(this.datasetsMinWidth());
   this.chart = new Chart(this.$canvas, {
     type: 'line',
-    plugins: [Chart.ColorSchemesPlugin],
+    plugins: [ChartColorSchemes],
     responsive: true,
     maintainAspectRatio: false,
     data: {
@@ -151,7 +155,7 @@ Opendata_Graph.prototype.drawPie = function() {
   this.resizeContainer(0);
   this.chart = new Chart(this.$canvas, {
     type: 'pie',
-    plugins: [Chart.ColorSchemesPlugin],
+    plugins: [ChartColorSchemes],
     responsive: true,
     maintainAspectRatio: false,
     data: {

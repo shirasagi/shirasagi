@@ -1,7 +1,10 @@
 <!-- <h2 class="gws-notice-post"><%= @item.name %></h2> -->
-
+<%
+  addons = @item.addons.select do |addon|
+    [Gws::Addon::Notice::Calendar, Gws::Addon::Notice::CommentPost].include?(addon.klass)
+  end
+%>
 <div class="addon-views">
-
   <%= render template: "_show" %>
-  <%= render template: "_addons_show", locals: { addons: @item.addons.select { |addon| [Gws::Addon::Notice::CommentPost].include?(addon.klass) } } %>
+  <%= render template: "_addons_show", locals: { addons: addons } %>
 </div>

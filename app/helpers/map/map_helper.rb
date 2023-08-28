@@ -144,25 +144,27 @@ module Map::MapHelper
     return "" unless map_enabled?(opts)
 
     markers = opts[:markers]
+    map_options = opts[:map] || {}
 
     s = []
     case default_map_api(opts)
     when 'openlayers'
       include_openlayers_api
       layers = effective_layers(opts)
-      s << 'var opts = {'
-      s << '  readonly: true,'
-      s << '  markers: ' + markers.to_json + ',' if markers.present?
-      s << '  layers: ' + layers.to_json + ','
-      s << '};'
+
+      map_options[:readonly] = true
+      map_options[:markers] = markers if markers.present?
+      map_options[:layers] = layers
+
+      s << 'var opts = ' + map_options.to_json + ';'
       s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
     else
       include_googlemaps_api(opts)
 
-      s << 'var opts = {'
-      s << '  markers: ' + (markers.try(:to_json) || '[]') + ','
-      s << '  markerCluster: true,' if opts[:markerCluster]
-      s << '};'
+      map_options[:markers] = markers if markers.present?
+      map_options[:markerCluster] = true if opts[:markerCluster]
+
+      s << 'var opts = ' + map_options.to_json + ';'
       s << 'Facility_Search.render("' + selector + '", opts);'
     end
 
@@ -180,7 +182,6 @@ module Map::MapHelper
     case default_map_api(opts)
     when 'openlayers'
       include_openlayers_api
-      controller.javascript "/assets/js/exif-js.js"
 
       # set default values
       map_options[:readonly] = true
@@ -195,7 +196,6 @@ module Map::MapHelper
       s << 'map.setExifLatLng("#item_in_image");'
     else
       include_googlemaps_api(opts)
-      controller.javascript "/assets/js/exif-js.js"
 
       s << "Googlemaps_Map.defaultCenter = [#{center.lat}, #{center.lng}];" if center
       s << "Googlemaps_Map.defaultZoom = #{SS.config.map.googlemaps_zoom_level};"
@@ -209,62 +209,15 @@ module Map::MapHelper
     jquery { s.join("\n").html_safe }
   end
 
-  def map_marker_address(item)
-    if item.respond_to?(:column_values)
-      item.column_values.each do |col|
-        next unless col.name.start_with?('所在地', '住所')
-        return col.value if col.value.present?
-      end
-    end
-    return item.try(:address) ? item.address.presence : nil
-  end
+  ## render image picker
 
-  def render_marker_info(item, point = nil)
-    categories = item.categories.order(depth: 1).entries
-    cate1 = categories.first
-    cate2 = categories.last
-
+  def render_marker_picker(opts = {})
     h = []
-    h << %(<div class="marker-info" data-id="#{item.id}" data-cate-id="#{cate1.try(:id)}">)
-    h << %(<p class="name">#{item.name}</p>)
-
-    if point && point[:name].present?
-      h << %(<p class="point-name">#{point[:name]}</p>)
-    end
-
-    h << %(<p class="form-name">#{cate2.name}</p>) if cate2
-
-    if address = map_marker_address(item)
-      h << %(<p class="address">#{address}</p>)
-    end
-
-    h << %(<p class="show"><a href="#{item.url}">#{I18n.t('ss.links.show')}</a></p>)
-    h << %(</div>)
-
-    h.join("\n")
-  end
-
-  def render_map_sidebar(item)
-    categories = item.categories.order(depth: 1).entries
-    cate1 = categories.first
-    cate2 = categories.last
-
-    h = []
-    h << %(<div class="column" data-id="#{item.id}" data-cate-id="#{cate1.try(:id)}">)
-    h << %(<p class="name"><a href="#{item.url}">#{item.name}</a></p>)
-    h << %(<p class="form-name">#{cate2.name}</p>) if cate2
-
-    if address = map_marker_address(item)
-      h << %(<p class="address">#{address}</p>)
-    end
-
-    if item.map_points.present?
-      h << %(<p><a href="#" class="click-marker">#{I18n.t("facility.sidebar.click_marker")}</a></p>)
-    else
-      h << %(<div class="no-marker">#{I18n.t("facility.sidebar.no_marker")}</div>)
+    h << %w(<div class="images" style="display: none;">)
+    map_marker_picker_images(opts).each do |url|
+      h << "<div class=\"image\">#{image_tag(url)}</div>"
     end
     h << %(</div>)
-
     h.join("\n")
   end
 
@@ -275,15 +228,5 @@ module Map::MapHelper
     else
       SS.config.map.dig("map_marker_images", "googlemaps", "picker")
     end
-  end
-
-  def render_marker_picker(opts = {})
-    h = []
-    h << %w(<div class="images" style="display: none;">)
-    map_marker_picker_images(opts).each do |url|
-      h << "<div class=\"image\">#{image_tag(url)}</div>"
-    end
-    h << %(</div>)
-    h.join("\n")
   end
 end
