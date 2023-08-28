@@ -349,7 +349,7 @@ common
 
           form {
             width: 260px;
-            height: 30px;
+            min-height: 30px;
             display: flex;
             justify-content: space-around;
             background-color: $white;
@@ -402,7 +402,7 @@ common
           a {
             display: block;
             width: 150px;
-            height: 30px;
+            min-height: 30px;
             margin-left: 10px;
             padding-top: 3px;
             color: $white;
@@ -483,7 +483,7 @@ common
 
     .cat-mainnavi__item {
       min-width: calc(1000px/6);
-      height: 65px;
+      min-height: 65px;
       padding-top: 13px;
       background-color: $lyblue;
       font-size: $px14;
@@ -738,7 +738,7 @@ common
 
   &--close {
     width: 100px;
-    height: 120px;
+    min-height: 120px;
     padding: 10px 5px;
     background: $blue;
     color: $white;
@@ -1932,22 +1932,22 @@ body#body--index {
             }
 
             &[href="/shinchaku/"],
-            &[href="/.s9/preview/shinchaku/"] {
+            &[href$="/preview/shinchaku/"] {
               background-color: #ebfc8a;
             }
 
             &[href="/oshirase/"],
-            &[href="/.s9/preview/oshirase/"]  {
+            &[href$="/preview/oshirase/"]  {
               background-color: #cae9ff;
             }
 
             &[href="/oshirase/event/"],
-            &[href="/.s9/preview/oshirase/event/"]  {
+            &[href$="/preview/oshirase/event/"]  {
               background-color: $yellow;
             }
 
             &[href="/shisei/jinji/"],
-            &[href="/.s9/preview/shisei/jinji/"]  {
+            &[href$="/preview/shisei/jinji/"]  {
               background-color: $orange;
             }
 
@@ -2406,7 +2406,7 @@ body#body--index {
     .pagetop {
       display: block;
       width: 100px;
-      height: 70px;
+      min-height: 70px;
       margin-left: 40px;
       padding: 10px 5px;
       background: $blue;
@@ -2943,9 +2943,29 @@ body.general {
       }
     }
 
+    article{
+      margin: 20px;
+      @include docs;
+    }
+
+    >.map-page{
+      order: 2;
+      margin: 0px 0px 30px;
+
+      header{
+        h2{
+          margin: 30px 0 12px;
+          padding: 8px 12px;
+          font-size: 15px;
+          font-weight: bold;
+          background-color: #ccf0ff;
+        }
+      }
+    }
+
     // 問い合わせ先
     >.contact {
-      order: 2;
+      order: 3;
       padding: 18px;
       border: 2px solid #004bb4;
       @include border-radius(10px);
@@ -3540,6 +3560,10 @@ body.general {
           padding: 0 20px;
           font-size: $px15;
           margin-left: 25%;
+
+          @include tb{
+            margin-left: 0;
+          }
 
           textarea{
             width: 100%;
@@ -6672,7 +6696,8 @@ body.category-middle-layer.body--kanko-info-blog{
 
   .photo-body,
   .photo-categories,
-  .photo-locations{
+  .photo-locations,
+  .map-page{
     padding: 0 20px;
     @include docs;
   }
@@ -7291,17 +7316,17 @@ body.docs__layout{
           }
 
           &[href="/oshirase/"],
-          &[href="/.s9/preview/oshirase/"]  {
+          &[href$="/preview/oshirase/"]  {
             background-color: #cae9ff;
           }
 
           &[href="/oshirase/event/"],
-          &[href="/.s9/preview/oshirase/event/"]  {
+          &[href$="/preview/oshirase/event/"]  {
             background-color: $yellow;
           }
 
           &[href="/shisei/jinji/"],
-          &[href="/.s9/preview/shisei/jinji/"] {
+          &[href$="/preview/shisei/jinji/"] {
             background-color: $orange;
           }
 

@@ -20,19 +20,7 @@ def save_chat_intent(data)
   item
 end
 
-node = save_node route: "chat/bot", filename: "chatbot", name: "チャットボット", layout_id: @layouts["general"].id,
-  first_text: '<p>どのような情報をお探しですか。</p>',
-  first_suggest: %w(戸籍について 子育てについて 税金について),
-  exception_text: '<p>回答が見つかりませんでした。キーワードを変えてご質問ください。</p>',
-  response_template: '<p>どのようなお問い合わせですか？<br />以下よりご選択ください。</p>',
-  question: '問題は解決しましたか？',
-  chat_success: '<p>ありがとうございます！また何かございましたらお気軽にご質問ください！</p>',
-  chat_retry: '<p>解決できず申し訳ございません。次はご満足いただけるように頑張ります。<br />
-お問い合わせが必要にな場合は<a href="/inquiry/" target="_blank" rel="noopener">問い合わせフォーム</a>よりご連絡ください。</p>',
-  set_location: '位置情報送信',
-  radius: 10
-
-save_part route: "chat/bot", filename: "bot.part.html", name: "チャットボット", chat_path: 'chatbot', mobile_view: "hide"
+node = Chat::Node::Bot.where(site_id: @site._id).find_by(filename: 'chatbot')
 
 save_chat_category node_id: node.id, name: 'くらし・手続き', order: 10
 save_chat_category node_id: node.id, name: '子育て・教育', order: 20
