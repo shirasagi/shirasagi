@@ -126,7 +126,6 @@ this.SS_SearchUI = (function () {
   SS_SearchUI.deselect = function (e) {
     var $item = $(this);
     var selector = $item.closest(".ajax-selected").data('on-deselect');
-
     if (selector) {
       selector($item);
     } else {
@@ -253,7 +252,6 @@ this.SS_SearchUI = (function () {
     if (!$bcAjaxSelected.length) {
       $bcAjaxSelected = self.anchorAjaxBox.parent().find("see.cc-bcc.bcc .ajax-selected");
     }
-
     $toAjaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
       toSelected.push($("#colorbox .items [data-id='" + id + "']"));
@@ -266,15 +264,12 @@ this.SS_SearchUI = (function () {
       var id = $(this).data("id");
       bcSelected.push($("#colorbox .items [data-id='" + id + "']"));
     });
-    //現在のテーブルのチェックされているデータを確認
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
       var tr =($("#colorbox .items [data-id='" + id + "']"));
-
-      for(slnum=0;slnum < toSelected.length;slnum++){ toSelected[slnum].find(".to-checkbox input[type=checkbox]").remove();};
-      for(slnum=0;slnum < ccSelected.length;slnum++){ ccSelected[slnum].find(".cc-checkbox input[type=checkbox]").remove();};
-      for(slnum=0;slnum < bcSelected.length;slnum++){ bcSelected[slnum].find(".bcc-checkbox input[type=checkbox]").remove();};
-
+      for(var i=0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
+      for(var i=0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
+      for(var i=0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
       tr.find(".checkbox input[type=checkbox]").remove();
       tr.find(".select-item,.select-single-item").each(function() {
         var $this = $(this);
@@ -284,14 +279,12 @@ this.SS_SearchUI = (function () {
         $this.replaceWith(disabledHtml);
       });
     });
-    //全体のテーブルでチェックされているデータを確認
     self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
       var id = $(this).data("id");
-      for(slnum=0;slnum < toSelected.length;slnum++){ toSelected[slnum].find(".to-checkbox input[type=checkbox]").remove();};
-      for(slnum=0;slnum < ccSelected.length;slnum++){ ccSelected[slnum].find(".cc-checkbox input[type=checkbox]").remove();};
-      for(slnum=0;slnum < bcSelected.length;slnum++){ bcSelected[slnum].find(".bcc-checkbox input[type=checkbox]").remove();};
+      for(var i=0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
+      for(var i=0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
+      for(var i=0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
     });
-
     $el.find("table.index").each(function() {
       SS_ListUI.render(this);
     });
