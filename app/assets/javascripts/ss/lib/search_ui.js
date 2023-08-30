@@ -70,7 +70,7 @@ this.SS_SearchUI = (function () {
   SS_SearchUI.defaultDeselector = function (item) {
     var table = $(item).closest(".ajax-selected");
     var tr = $(item).closest("tr");
-    
+
     tr.remove();
     if (table.find("tbody tr").size() === 0) {
       table.hide();
