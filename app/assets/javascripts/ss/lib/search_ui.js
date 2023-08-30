@@ -24,7 +24,6 @@ this.SS_SearchUI = (function () {
     var template, attr;
     if (templateEl) {
       template = templateEl.innerHTML;
-      console.dir(template,{depth :null});
       attr = {};
     } else {
       template = SS_SearchUI.defaultTemplate;
@@ -52,16 +51,16 @@ this.SS_SearchUI = (function () {
 
     var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
    if (selectTable=="to"){
-    var $ajaxSelected =self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected"); console.dir($ajaxSelected, {depth: null});
+    var $ajaxSelected =self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected"); 
     }
     else if (selectTable=="cc"){
-      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected"); console.dir($ajaxSelected, {depth: null});
+      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected"); 
     }
      else if (selectTable=="bcc"){
-      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected"); console.dir($ajaxSelected, {depth: null});
+      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected"); 
     }
     else{
-      var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected"); console.dir($ajaxSelected, {depth: null});
+      var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     }
 
     $ajaxSelected.find("tbody").prepend(tr);
@@ -71,6 +70,7 @@ this.SS_SearchUI = (function () {
   SS_SearchUI.defaultDeselector = function (item) {
     var table = $(item).closest(".ajax-selected");
     var tr = $(item).closest("tr");
+    
     tr.remove();
     if (table.find("tbody tr").size() === 0) {
       table.hide();
@@ -287,9 +287,9 @@ this.SS_SearchUI = (function () {
     //全体のテーブルでチェックされているデータを確認
     self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
       var id = $(this).data("id");
-      for(slnum=0;slnum < toSelected.length;slnum++){ toSelected[slnum].find(".to-checkbox input[type=checkbox]").remove();}; console.log("--------------modal all toSelected.length " + toSelected.length);
-      for(slnum=0;slnum < ccSelected.length;slnum++){ ccSelected[slnum].find(".cc-checkbox input[type=checkbox]").remove();}; console.log("--------------modal all ccSelected.length " + ccSelected.length);
-      for(slnum=0;slnum < bcSelected.length;slnum++){ bcSelected[slnum].find(".bcc-checkbox input[type=checkbox]").remove();}; console.log("--------------modal all bcSelected.length " + bcSelected.length);
+      for(slnum=0;slnum < toSelected.length;slnum++){ toSelected[slnum].find(".to-checkbox input[type=checkbox]").remove();};
+      for(slnum=0;slnum < ccSelected.length;slnum++){ ccSelected[slnum].find(".cc-checkbox input[type=checkbox]").remove();};
+      for(slnum=0;slnum < bcSelected.length;slnum++){ bcSelected[slnum].find(".bcc-checkbox input[type=checkbox]").remove();};
     });
 
     $el.find("table.index").each(function() {

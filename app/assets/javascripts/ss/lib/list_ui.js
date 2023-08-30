@@ -18,7 +18,6 @@ this.SS_ListUI = (function () {
       });
       $(this).trigger("ss:checked-all-list-items");
     });
-  /////////メッセージ機能用/////////////////////////////////////////////////////////////////////////////////////////////////////////
     $el.find(".message-list-head .checkbox-to-all input:checkbox").on("change", function () {
       var chk;
       chk = $(this).prop('checked');
@@ -46,7 +45,6 @@ this.SS_ListUI = (function () {
       });
       $(this).trigger("ss:checked-all-list-items");
     });
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     $el.find(".list-item").each(function () {
       var list;
       list = $(this);
