@@ -55,14 +55,14 @@ a {
   }
 }
 
-a[href="#"]:not(.ajax-box){
-  pointer-events: none;
-}
-.filters{
-  a[href="#"]{
-    pointer-events: auto;
-  }
-}
+// a[href="#"]:not(.ajax-box){
+//   pointer-events: none;
+// }
+// .filters{
+//   a[href="#"]{
+//     pointer-events: auto;
+//   }
+// }
 
 ul {
   list-style: none;

@@ -289,16 +289,6 @@ a:visited {
   color: #004098;
 }
 
-@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\0000358}}
-a[href="#"]:not(.ajax-box) {
-  pointer-events: none;
-}
-
-@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\0000362}}
-.filters a[href="#"] {
-  pointer-events: auto;
-}
-
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/n\/e\/w\/2\/_\/css\/style\.scss}line{font-family:\0000367}}
 ul {
   list-style: none;
