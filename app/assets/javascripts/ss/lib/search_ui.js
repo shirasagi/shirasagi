@@ -19,7 +19,7 @@ this.SS_SearchUI = (function () {
   SS_SearchUI.defaultSelector = function ($item) {
     var self = this;
 
-    var templateId = self.anchorAjaxBox.data("template"); 
+    var templateId = self.anchorAjaxBox.data("template");
     var templateEl = templateId ? document.getElementById(templateId) : null;
     var template, attr;
     if (templateEl) {
@@ -31,7 +31,6 @@ this.SS_SearchUI = (function () {
 
       var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
       if(selectTable=="to"){
-        
         attr = { name: "item[in_to_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
       }
       else if(selectTable=="cc"){
@@ -64,7 +63,7 @@ this.SS_SearchUI = (function () {
     else{
       var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected"); console.dir($ajaxSelected, {depth: null});
     }
-    
+
     $ajaxSelected.find("tbody").prepend(tr);
     $ajaxSelected.trigger("change");
   };
@@ -73,7 +72,6 @@ this.SS_SearchUI = (function () {
     var table = $(item).closest(".ajax-selected");
     var tr = $(item).closest("tr");
     tr.remove();
-    
     if (table.find("tbody tr").size() === 0) {
       table.hide();
     }
@@ -82,13 +80,11 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.select = function (item) {
     var selector = this.anchorAjaxBox.data('on-select');
-
     if (selector) {
       return selector(item);
     } else {
       return this.defaultSelector(item);
     }
-    
   };
 
   SS_SearchUI.selectItems = function ($el) {
@@ -96,7 +92,7 @@ this.SS_SearchUI = (function () {
       $el = $("#ajax-box");
     }
     var self = this;
-    $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () { 
+    $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () {
       selectTable="to";
       self.select($(this));
     });
@@ -105,7 +101,7 @@ this.SS_SearchUI = (function () {
     }
 
     $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
-      selectTable="cc"; 
+      selectTable="cc";
       self.select($(this));
     });
     if(selectTable=="cc"){
@@ -120,7 +116,7 @@ this.SS_SearchUI = (function () {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
     }
     if(selectTable==null){
-      $el.find(".items input:checkbox").filter(":checked").each(function () { 
+      $el.find(".items input:checkbox").filter(":checked").each(function () {
         self.select($(this));
       });
       self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
@@ -129,7 +125,7 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.deselect = function (e) {
     var $item = $(this);
-    var selector = $item.closest(".ajax-selected").data('on-deselect'); 
+    var selector = $item.closest(".ajax-selected").data('on-deselect');
 
     if (selector) {
       selector($item);
@@ -146,14 +142,14 @@ this.SS_SearchUI = (function () {
 
     if ($el.find(".items input:checkbox").filter(":checked").size() > 0) {
       return $el.find(".select-items").parent("div").show();
-    }
-    else {
+    } else {
       return $el.find(".select-items").parent("div").hide();
     }
   };
 
   SS_SearchUI.render = function () {
     var self = this;
+
     $(".ajax-selected").each(function () {
       $(this).on("click", "a.deselect", self.deselect);
       if ($(this).find("a.deselect").size() === 0) {
@@ -174,6 +170,7 @@ this.SS_SearchUI = (function () {
       SS_SearchUI.anchorAjaxBox = $.colorbox.element();
     }
   };
+
   SS_SearchUI.onColorBoxCleanedUp = function (ev) {
     SS_SearchUI.anchorAjaxBox = null;
     selectTable=null;
@@ -187,10 +184,12 @@ this.SS_SearchUI = (function () {
     var self = this;
     var colorbox = options.colorbox || $.colorbox;
     var $el = options.$el || $("#ajax-box");
+
     var isSameWindow = (window == $el[0].ownerDocument.defaultView);
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
         var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        $el.find("[type=submit]").after($div);
 
         $(this).ajaxSubmit({
           url: $(this).attr("action"),
@@ -208,8 +207,10 @@ this.SS_SearchUI = (function () {
     }
     $el.find(".pagination a").on("click", function (ev) {
       self.selectItems($el);
+
       if (isSameWindow) {
         $el.find(".pagination").html(SS.loading);
+
         $.ajax({
           url: $(this).attr("href"),
           type: "GET",
@@ -235,7 +236,7 @@ this.SS_SearchUI = (function () {
       self.selectItems($el);
       return $el.find("form.search").submit();
     });
-    
+
     var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     var $toAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
     var $ccAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
@@ -273,14 +274,14 @@ this.SS_SearchUI = (function () {
       for(slnum=0;slnum < toSelected.length;slnum++){ toSelected[slnum].find(".to-checkbox input[type=checkbox]").remove();};
       for(slnum=0;slnum < ccSelected.length;slnum++){ ccSelected[slnum].find(".cc-checkbox input[type=checkbox]").remove();};
       for(slnum=0;slnum < bcSelected.length;slnum++){ bcSelected[slnum].find(".bcc-checkbox input[type=checkbox]").remove();};
-      tr.find(".checkbox input[type=checkbox]").remove();
 
-      
+      tr.find(".checkbox input[type=checkbox]").remove();
       tr.find(".select-item,.select-single-item").each(function() {
         var $this = $(this);
         var html = $this.html();
+
         var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
-          $this.replaceWith(disabledHtml);
+        $this.replaceWith(disabledHtml);
       });
     });
     //全体のテーブルでチェックされているデータを確認
@@ -340,6 +341,7 @@ this.SS_SearchUI = (function () {
     });
     return self.toggleSelectButton($el);
   };
+
   return SS_SearchUI;
 
 })();
