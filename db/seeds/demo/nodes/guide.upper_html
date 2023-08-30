@@ -1,6 +1,0 @@
-<section class="mod-menu mod-menu--lifeevent">
-  <header class="mod-menu__header">
-            <h2 class="mod-menu__header-title">#{part_parent_name}</h2>
-  </header>
-  <nav class="mod-menu__list-wrap">
-    <ul class="mod-menu__list">

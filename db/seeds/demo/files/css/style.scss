@@ -55,6 +55,15 @@ a {
   }
 }
 
+// a[href="#"]:not(.ajax-box){
+//   pointer-events: none;
+// }
+// .filters{
+//   a[href="#"]{
+//     pointer-events: auto;
+//   }
+// }
+
 ul {
   list-style: none;
 }
@@ -188,6 +197,20 @@ common
 
       .translate-box {
         @include translate-box;
+
+        @include tb{
+          width: calc(8em + 8px);
+
+          select{
+            padding: 8px 17px 3px 7px;
+          }
+        }
+
+        &::before{
+          @include tb{
+            top: 34%;
+          }
+        }
       }
 
       .translate-box select::-ms-expand {
@@ -733,7 +756,8 @@ common
   z-index: 100;
 
   @include tb {
-    display: none;
+    bottom: 30px;
+    // display: none;
   }
 
   &--close {
@@ -966,7 +990,7 @@ common
   font-size: $px12;
 
   a{
-    font-size: $px12;
+    // font-size: $px12;
   }
 
   .separator{
@@ -1765,6 +1789,7 @@ body#body--index {
         background-color: $white;
         @include border-radius(25px);
         overflow: hidden;
+        width: 50%;
 
         @include tb {
           width: 100%;
@@ -2191,6 +2216,8 @@ body#body--index {
   margin-top: 45px;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 0;
 
   span {
     display: flex;
@@ -2805,6 +2832,7 @@ body.general {
                 }
 
                 .send {
+                  padding-left: 0;
                   text-align: center;
 
                   input[type="submit"] {
@@ -2946,6 +2974,9 @@ body.general {
     article{
       margin: 20px;
       @include docs;
+      video{
+        max-width: 100%;
+      }
     }
 
     >.map-page{
@@ -3357,6 +3388,7 @@ body.general {
 
         @include tb {
           padding-left: 0;
+          text-align: center;
         }
 
         input {
@@ -4386,7 +4418,7 @@ body.general {
         .guide__lists{
           h2{
             width: 100%;
-            padding: 10px 0;
+            padding: 10px 30px 10px 0;
             margin-bottom: 10px;
             font-size: $px18;
             border-bottom: 1px solid $main-blue;
@@ -4396,6 +4428,7 @@ body.general {
             -moz-transition: .3s;
             -o-transition: .3s;
             transition: .3s;
+
 
             &::after{
               content: "";
@@ -4459,6 +4492,39 @@ body.general {
               span{
                 margin-right: 5px;
               }
+            }
+          }
+        }
+
+        .your-answers{
+          margin: 30px 0;
+          padding: 8px 12px;
+          font-size: 15px;
+          font-weight: bold;
+          background-color: #ccf0ff;
+        }
+        ul {
+          li {
+            margin: 10px 0;
+
+            @include tb{
+              display: flex;
+              flex-direction: column;
+              align-items: baseline;
+            }
+            span.answer-state{
+              display: inline-block;
+              min-width: 80px;
+              padding: 5px 1em;
+              margin-right: 20px;
+              background-color: #ccf0ff;
+              border-radius: 5px;
+              text-align: center;
+            }
+            span.value {
+            }
+            span.answer-state.not-applicable {
+              background-color: #e8e8e8;
             }
           }
         }
@@ -4931,7 +4997,8 @@ body.general {
           @include tb {
             float: none;
             width: 100%;
-            height: 400px !important;
+            // height: 400px !important;
+            height: auto !important;
             margin-right: 0;
           }
         }
@@ -5360,6 +5427,11 @@ body#body--index {
           background-color: #abe2fb;
           border: 4px solid $white;
           @include border-radius(13px);
+
+
+          &[aria-pressed="true"]{
+            background-color: $ygreen;
+          }
 
           &:hover,
           &:focus{
@@ -5869,7 +5941,10 @@ body.category-top{
             width: 90%;
             height: 95%;
             margin: 5px auto;
-            padding-top: 30px;
+            // padding-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             font-size: $px13;
             font-weight: bold;
@@ -5892,6 +5967,18 @@ body.category-top{
   }
   .footer{
     margin-top: 80px;
+  }
+
+  &.body--guide{
+    .yield-wrap{
+
+      .category-nodes{
+
+        article{
+          min-height: 0px !important;
+        }
+      }
+    }
   }
 }
 
@@ -6018,6 +6105,10 @@ body.category-middle-layer{
               .body{
                 margin: 20px;
                 @include docs;
+
+                video{
+                  max-width: 100%;
+                }
               }
             }
 
@@ -6321,6 +6412,13 @@ body.category-middle-layer{
               }
             }
 
+            &.current{
+              .mod-menu__link{
+                background-color: rgba(0, 0, 0, 0.1);
+                pointer-events: none;
+              }
+            }
+
             &--kekkon{
               .mod-menu__icon{
                 @include submenu-ic(icon_kekkon#{'.png'});
@@ -6442,7 +6540,10 @@ body.category-middle-layer{
               width: 90%;
               height: 95%;
               margin: 5px auto;
-              padding-top: 30px;
+              // padding-top: 30px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
               font-size: $px13;
               font-weight: bold;
@@ -6683,6 +6784,9 @@ body.category-middle-layer.body--kanko-info-blog{
   .member-blog-pages{
     .blog {
       @include docs;
+      video{
+        max-width: 100%;
+      }
     }
   }
 
@@ -6691,6 +6795,9 @@ body.category-middle-layer.body--kanko-info-blog{
 
     .blog {
       @include docs;
+      video{
+        max-width: 100%;
+      }
     }
   }
 
@@ -6700,6 +6807,9 @@ body.category-middle-layer.body--kanko-info-blog{
   .map-page{
     padding: 0 20px;
     @include docs;
+    video{
+      max-width: 100%;
+    }
   }
 
   div.blog-left {
@@ -6843,8 +6953,7 @@ body.docs--list{
                 @include tb{
 
                   /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
-                  &:last-child,
-                  &:nth-last-child(2):nth-child(odd){
+                  &:last-child{
                     border-bottom: none;
                   }
                 }
@@ -6873,6 +6982,10 @@ body.docs--list{
                       padding-left: 0px;
                     }
                   }
+                }
+
+                video{
+                  max-width: 100%;
                 }
               }
             }
@@ -7096,6 +7209,13 @@ body.docs--list{
               }
             }
 
+            &.current{
+              .mod-menu__link{
+                background-color: rgba(0, 0, 0, 0.1);
+                pointer-events: none;
+              }
+            }
+
             &--kekkon{
               .mod-menu__icon{
                 @include submenu-ic(icon_kekkon#{'.png'});
@@ -7217,7 +7337,10 @@ body.docs--list{
               width: 90%;
               height: 95%;
               margin: 5px auto;
-              padding-top: 30px;
+              // padding-top: 30px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
 
               font-size: $px13;
               font-weight: bold;
@@ -7800,7 +7923,10 @@ body.docs__layout{
           width: 90%;
           height: 95%;
           margin: 5px auto;
-          padding-top: 30px;
+          // padding-top: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
           font-size: $px13;
           font-weight: bold;
@@ -8136,7 +8262,8 @@ body#body--map{
       @include tb{
         float: none;
         width: calc(100% - 70px);
-        height: 250px !important;
+        // height: 250px !important;
+        height: auto !important;
       }
 
       .column{
@@ -8194,16 +8321,21 @@ body#body--map{
             display: block;
             margin-right: 10px;
             padding: 5px 15px;
-            color: $text;
+            color: #4e4e4e;
             font-size: $px14;
             font-weight: bold;
             text-decoration: none;
             @include border-radius(16px);
-            background-color: $ygreen;
+            background-color: #ecf1f1;
 
             @include tb{
               font-size: $px12;
               margin-top: 10px;
+            }
+
+            &.clicked{
+              background-color: $ygreen;
+              color: $text;
             }
 
             &:hover {
@@ -8267,50 +8399,302 @@ body#body--map{
   }
 
   /* モーダルウィンドウ */
-  #colorbox{
+  // #colorbox{
 
-    form{
-      padding: 4px;
+  //   form{
+  //     padding: 4px;
 
-      legend{
-        font-weight: bold;
+  //     legend{
+  //       font-weight: bold;
 
-        div.keyword{
-          input{
-            width: 100%;
-            height: 25px;
-            @include border-radius(5px);
-          }
+  //       div.keyword{
+  //         input{
+  //           width: 100%;
+  //           height: 25px;
+  //           @include border-radius(5px);
+  //         }
+  //       }
+  //     }
+
+  //     div{
+  //       margin-left: 3px;
+  //       font-size: $px14;
+  //     }
+
+  //     footer.send{
+  //       // width: 60%;
+  //       margin: 30px auto;
+  //       display: flex;
+  //       flex-direction: column;
+
+  //       input{
+  //         margin-top: 10px;
+  //         padding: 10px 15px;
+  //         font-weight: bold;
+  //         font-size: 12px;
+  //         color: $white;
+  //         border: 1px solid $blue;
+  //         @include border-radius(20px);
+  //         background-color: $blue;
+
+  //           &:hover,
+  //           &:focus {
+  //           color: $text;
+  //           background-color: $white;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+}
+
+  /* 検索ページ /kanko/map/
+     検索結果ページ /kanko/map/map.html モーダルウィンドウ */
+#colorbox {
+  form {
+
+    fieldset.keyword {
+      padding-bottom: 60px;
+      display: flex;
+      overflow: hidden;
+
+      @include tb {
+        padding-bottom: 30px;
+      }
+
+      @include mb {
+        padding-bottom: 15px;
+      }
+
+      legend {
+        float: left;
+        width: 130px;
+        font-size: $px16;
+
+        @include tb {
+          width: 100px;
+          font-size: $px14;
+        }
+
+        @include mb {
+          width: 70px;
+          font-size: $px12;
         }
       }
 
-      div{
-        margin-left: 3px;
-        font-size: $px14;
-      }
-
-      footer.send{
-        // width: 60%;
-        margin: 30px auto;
+      div.keyword {
         display: flex;
-        flex-direction: column;
+        width: calc(100% - 130px);
 
-        input{
-          margin-top: 10px;
-          padding: 10px 15px;
-          font-weight: bold;
-          font-size: 12px;
-          color: $white;
-          border: 1px solid $blue;
-          @include border-radius(20px);
-          background-color: $blue;
+        @include tb {
+          width: calc(100% - 100px);
+        }
 
-            &:hover,
-            &:focus {
-            color: $text;
-            background-color: $white;
+        @include mb {
+          width: calc(100% - 70px);
+        }
+
+        input {
+          width: 100%;
+        }
+      }
+    }
+
+    fieldset{
+      padding: 54px 0;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      border-top: 1px dotted #808080;
+      // border-bottom: 1px dotted #808080;
+
+      @include tb {
+        padding: 20px 0;
+      }
+
+      @include mb {
+        padding: 10px 0;
+      }
+
+      legend,
+      h2 {
+        float: left;
+        width: 130px;
+        font-size: $px16;
+        line-height: 1.375;
+
+        @include tb {
+          width: 100px;
+          font-size: $px14;
+        }
+
+        @include mb {
+          width: 70px;
+          font-size: $px12;
+        }
+      }
+
+      div.category
+      {
+        width: calc(100% - 130px);
+        // padding: 54px 0;
+        display: flex;
+        flex-wrap: wrap;
+
+        @include tb {
+          width: calc(100% - 100px);
+        }
+
+        @include mb {
+          flex-direction: column;
+          width: calc(100% - 70px);
+        }
+
+        >div {
+          margin-right: 32px;
+          display: flex;
+          align-items: center;
+
+          @include mb {
+            margin-right: 0;
+            align-items: flex-start;
+          }
+
+          input {
+            @include mb {
+              margin-top: 6px;
+            }
+          }
+
+          label {
+            font-size: $px14;
+            line-height: 2.14;
+
+            @include tb {
+              font-size: $px12;
+            }
           }
         }
+      }
+    }
+
+    footer.send {
+      margin-top: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      @include tb {
+        margin-top: 30px;
+      }
+
+      @include mb {
+        flex-direction: column;
+      }
+
+
+      input {
+        padding: 20px 50px;
+        font-size: $px14;
+        font-weight: bold;
+        border-radius: 16px;
+        overflow: hidden;
+
+        @include tb {
+          padding: 15px 20px;
+          font-size: $px12;
+        }
+
+        @include mb {
+          width: 132px;
+          padding: 15px 5px;
+          font-size: $px10;
+        }
+      }
+
+      input[type="submit"] {
+        color: #fff;
+        background-color: $blue;
+        border: 1px solid $blue;
+        transition: .3s ease-in-out;
+
+        &:hover {
+          color: $blue;
+          background-color: #fff;
+          transition: .3s ease-in-out;
+        }
+      }
+
+      input.reset {
+        margin-left: 18px;
+        color: #000;
+        background-color: #e1e1e1;
+        border: 1px solid #e1e1e1;
+        transition: .3s ease-in-out;
+
+        @include mb {
+          margin-top: 10px;
+          margin-left: 0;
+        }
+
+        &:hover {
+          background-color: #fff;
+          border: 1px solid #000;
+          transition: .3s ease-in-out;
+        }
+      }
+    }
+  }
+
+  .link-btn {
+    display: none;
+  }
+}
+
+#colorbox {
+
+  // width: 80% !important;
+
+  // max-width: 80% !important;
+  form {
+    // width: 80%;
+
+    * {
+      // width: 80%;
+      max-width: 900px;
+
+      @include tb {
+        max-width: calc(100vw - 100px);
+      }
+    }
+
+    fieldset {
+      padding: 20px;
+
+      // flex-direction: column;
+      &.keyword {
+        padding: 20px;
+
+        input {
+          // width: 70%;
+          // height: 2em;
+        }
+      }
+
+      &.category {
+        padding: 20px;
+        // padding: 20px 0;
+
+        input {
+          // width: 70%;
+          // height: 2em;
+        }
+      }
+    }
+
+    footer {
+      &.send {
+        margin-top: 20px;
       }
     }
   }
@@ -8321,6 +8705,40 @@ body#body--map{
   #main{
     .yield-wrap{
       display: block;
+
+      h2{
+        margin: 30px 0 12px;
+        padding: 8px 12px;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: #ccf0ff;
+      }
+      article{
+        padding-bottom: 0px;
+
+        header{
+          display: flex;
+          align-items: baseline;
+          gap: 10px 20px;
+          padding: 10px 0;
+          border-bottom: 1px dashed #000;
+
+          @include tb{
+            display: block;
+          }
+
+          time{
+            font-size: $px13;;
+          }
+
+          h2{
+            margin: 0;
+            padding: 0;
+            font-weight: normal;
+            background-color: transparent;
+          }
+        }
+      }
     }
     dl.see{
 
@@ -8752,6 +9170,104 @@ body.body--garbage {
       }
     }
   }
+
+  // 「検索条件を変更する」モーダルウィンドウ
+  #colorbox {
+    #cboxLoadedContent {
+      form {
+        min-width: 250px;
+        padding: 10px;
+
+        // 「品目」「分別区分を選択」共通
+        .name,
+        .category {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          width: 100%;
+
+          @include tb {}
+
+          h2 {
+            width: 100%;
+            font-size: $px16;
+            font-weight: bold;
+            color: $darkblue;
+
+            @include tb {}
+
+            +* {
+              position: relative;
+              width: 100%;
+              border: 1px solid $darkblue;
+              border-radius: 6px;
+              height: 2em;
+              font-size: $px16;
+
+
+              @include tb {}
+
+              &:before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: 3px;
+                transform: translateY(-50%);
+                -webkit-transform: translateY(-50%);
+                -ms-transform: translateY(-50%);
+                width: 4px;
+                height: 4px;
+                background-color: #000;
+                border-top: 2px solid #000;
+                border-right: 2px solid #000;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+              }
+            }
+          }
+        }
+
+
+        // 「品目」
+        .name {}
+
+        // 「分別区分を選択」
+        .category {
+          margin-top: 20px;
+        }
+
+        .send {
+          margin-top: 40px;
+          display: flex;
+          justify-content: center;
+
+          input[type="submit"] {
+            min-width: 137px;
+            padding: 16px 22px;
+            border: 1px solid #09698e;
+            border-radius: 10px;
+            background: #09698e;
+            color: #fff;
+            font-size: 88%;
+            font-weight: bold;
+            text-decoration: none;
+            background: #09698e;
+            box-sizing: border-box;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+            cursor: pointer;
+
+            &:hover {
+              background: #fff;
+              color: #09698e;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 body.body--garbage-category{
@@ -9066,7 +9582,7 @@ body.body--calendar{
               font-size: $px10;
 
               a{
-                font-size: $px10;
+                // font-size: $px10;
               }
             }
 
@@ -9085,7 +9601,7 @@ body.body--calendar{
                   font-size: $px11;
                   div.daily {
                     a{
-                      font-size: $px11;
+                      // font-size: $px11;
                       color: $text;
                     }
                   }
@@ -9107,7 +9623,7 @@ body.body--calendar{
                     }
 
                     a{
-                      font-size: $px11;
+                      // font-size: $px11;
                       color: $text;
                     }
                   }
@@ -9452,6 +9968,8 @@ body.body--calendar{
         }
 
         .nodes{
+            margin-top: 20px;
+
           ul{
             display: flex;
 
@@ -9551,6 +10069,9 @@ body.body--calendar{
         }
 
         .calendar-nav{
+          h2{
+          display: none;
+          }
           ul{
             padding: 5px 20px;
             display: flex;
@@ -10128,6 +10649,9 @@ body.ezine__layout{
 
     article.body{
       @include docs;
+      video{
+        max-width: 100%;
+      }
       padding: 30px 20px;
 
       p{

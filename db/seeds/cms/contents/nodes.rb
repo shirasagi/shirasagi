@@ -377,7 +377,7 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
   service_ids: facility_services.values.map(&:id),
   st_form_ids: [@form.id, @form4.id], st_form_default_id: @form4.id
 
-save_node route: "key_visual/image", filename: "key-visual", name: "キービジュアル"
+save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
 
 ## guide
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",
