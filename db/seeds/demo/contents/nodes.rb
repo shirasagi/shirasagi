@@ -36,7 +36,7 @@ save_node route: "chat/bot", filename: "chatbot", name: "チャットボット",
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事",
-  page_layout_id: @layouts["pages"].id, shortcut: "show", sort: 'order',
+  page_layout_id: @layouts["pages"].id, shortcut: "show", sort: 'order', limit: 20,
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
@@ -67,7 +67,7 @@ save_node route: "article/page", filename: "population", name: "人口・世帯�
   st_form_default_id: @form7.id
 
 ## category
-save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order'
+save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
 save_node route: "category/node", filename: "kanko", name: "観光・文化・スポーツ", order: 40
 save_node route: "category/node", filename: "kenko", name: "健康・福祉", order: 30
 save_node route: "category/node", filename: "kosodate", name: "子育て・教育", order: 20

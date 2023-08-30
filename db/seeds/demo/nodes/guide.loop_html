@@ -1,1 +1,0 @@
-<li class="mod-menu__item mod-menu__item--#{class} #{current}"><a class="mod-menu__link" href="#{url}"><div class="mod-menu__icon"></div><div class="mod-menu__menu-name">#{index_name}</div></a></li>

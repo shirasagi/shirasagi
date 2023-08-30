@@ -215,7 +215,7 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "kosodate").
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "kurashi").
   update_all(layout_id: @layouts["category-top"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "guide").
-  update_all(layout_id: @layouts["category-middle"].id)
+  update_all(layout_id: @layouts["category-top"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "sangyo").
   update_all(layout_id: @layouts["category-top"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "shisei").
