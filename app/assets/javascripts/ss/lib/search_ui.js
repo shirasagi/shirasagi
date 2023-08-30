@@ -51,13 +51,13 @@ this.SS_SearchUI = (function () {
 
     var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
    if (selectTable=="to"){
-    var $ajaxSelected =self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected"); 
+    var $ajaxSelected =self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
     }
     else if (selectTable=="cc"){
-      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected"); 
+      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
     }
      else if (selectTable=="bcc"){
-      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected"); 
+      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
     }
     else{
       var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
