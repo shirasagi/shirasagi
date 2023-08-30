@@ -46,6 +46,7 @@ module Cms::FormHelper
       st_forms = @cur_node.st_forms rescue nil
       st_forms ||= Cms::Form.none
     end
+    st_forms = st_forms.site(@cur_site)
     st_forms = st_forms.and_public
     st_forms = st_forms.allow(:read, @cur_user, site: @cur_site)
     st_forms.order_by(update: 1)
