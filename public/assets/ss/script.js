@@ -56139,6 +56139,7 @@ SS_Workflow.prototype = {
 
     var uri = this.composeWorkflowUrl('pages');
     uri += "/" + updatetype + "_update";
+    var workflow_kind = $("#workflow_kind").prop("value");
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
@@ -56162,6 +56163,7 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: {
+        workflow_kind: workflow_kind,
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
         workflow_on_remand: workflow_on_remand,
@@ -62671,7 +62673,8 @@ this.Cms_Line_Deliver_Condition =  (function () {
 
   return Cms_Line_Deliver_Condition;
 })();
-Cms_UploadFileOrder = function (addonName, btnClass) {
+Cms_UploadFileOrder = function (el, addonName, btnClass) {
+  this.$el = $(el);
   this.addonName = addonName;
   this.btnClass = btnClass;
   this.render();
@@ -62679,19 +62682,31 @@ Cms_UploadFileOrder = function (addonName, btnClass) {
 
 Cms_UploadFileOrder.prototype.render = function () {
   var _this = this;
-  $(this.btnClass).on('click', function () {
+  _this.$el.on('click', _this.btnClass, function () {
+    this.disabled = true;
+
     var selectedVal = $(this).val();
     _this.changeFileOrder(selectedVal);
+
+    if (selectedVal === 'upload') {
+      SS.notice(i18next.t('ss.notice.ordered_by_file_upload_order'));
+    } else {
+      // name
+      SS.notice(i18next.t('ss.notice.ordered_by_file_name_order'));
+    }
+
+    this.disabled = false;
   });
 };
 
 Cms_UploadFileOrder.prototype.changeFileOrder = function (selectedVal) {
-  var $filesEl = $('.file-view').sort(function (a, b) {
+  var $filesEl = this.$el.find('.file-view').sort(function (a, b) {
     if (selectedVal === 'upload') {
       if (this.addonName === 'file') {
         a = $(a).attr('id').replace(/[^0-9]/g, '');
         b = $(b).attr('id').replace(/[^0-9]/g, '');
       } else {
+        // columsForm
         a = $(a).attr('data-file-id');
         b = $(b).attr('data-file-id');
       }
@@ -62707,9 +62722,10 @@ Cms_UploadFileOrder.prototype.changeFileOrder = function (selectedVal) {
 
 Cms_UploadFileOrder.prototype.appendOrderedFiles = function ($filesEl) {
   if (this.addonName === 'file') {
-    $('#selected-files').append($filesEl);
+    this.$el.find('#selected-files').append($filesEl);
   } else {
-    $('.column-value-files').append($filesEl);
+    // columsForm
+    this.$el.find('.column-value-files').append($filesEl);
   }
 };
 this.Cms_Image_Map_Area_Cropper = (function () {
