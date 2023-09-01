@@ -50,26 +50,28 @@ Installation (CentOS 7)
 
 ```
 $ su -
-# yum -y install wget git ImageMagick ImageMagick-devel devtoolset-10
+# yum -y install scl-utils centos-release-scl
+# yum -y install wget git ImageMagick ImageMagick-devel devtoolset-11
 ```
 
 ### MongoDB のインストール
 
 ```
-# vi /etc/yum.repos.d/mongodb-org-4.4.repo
+$ su -
+# vi /etc/yum.repos.d/mongodb-org-6.0.repo
 ```
 
 ```
-[mongodb-org-4.4]
+[mongodb-org-6.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.4/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/6.0/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
 ```
 
 ```
-# yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
+# yum install -y --enablerepo=mongodb-org-6.0 mongodb-org
 # systemctl start mongod
 # systemctl enable mongod
 ```
@@ -77,7 +79,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 ### asdfのインストール
 
 ```
-# git clone https://github.com/asdf-vm/asdf.git ~/.asdf 
+$ su -
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 # vi ~/.bashrc
 ---(追記)
 . $HOME/.asdf/asdf.sh
@@ -89,14 +92,15 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 ### Rubyのインストール
 ```
 # asdf plugin add ruby
-# asdf install ruby 3.1.3
-# asdf global ruby 3.1.3
+# source /opt/rh/devtoolset-11/enable
+# asdf install ruby 3.1.4
+# asdf global ruby 3.1.4
 ```
 ### Nodejs等のインストール
 ```
 # asdf plugin add nodejs
 # asdf install nodejs 16.19.0
-# asdf global nodejs 16.19.0 
+# asdf global nodejs 16.19.0
 # npm install -g yarn
 ```
 ### SHIRASAGI のインストール
@@ -114,6 +118,7 @@ $ cd /var/www/shirasagi
 $ cp -n config/samples/*.{yml,rb} config/
 $ source /opt/rh/devtoolset-10/enable
 $ bundle install --without development test
+# ./bin/deply
 ```
 
 Web サーバの起動
