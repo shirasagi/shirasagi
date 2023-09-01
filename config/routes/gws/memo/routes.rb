@@ -49,6 +49,8 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "shared_addresses" => "shared_addresses#index"
       get "personal_addresses" => "personal_addresses#index"
+      get "shared_multi_checkboxes" => "shared_multi_checkboxes#index"
+      get "personal_multi_checkboxes" => "personal_multi_checkboxes#index"
       get "messages" => "messages#index"
       get "categories" => "categories#index"
       get "folders/:mode" => "folders#index", as: 'folders'
