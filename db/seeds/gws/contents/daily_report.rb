@@ -134,7 +134,7 @@ end
   create_daily_report_report(
     cur_user: u('user4'), cur_form: @wf_forms[2], name: u('user4').name,
     daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
-    small_talk: "#{I18n.l(date, format: :short)}の雑談です。", share_column_ids: [@wf_form2_cols[0].id],
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
     share_column_ids: daily_report_share_column_ids(@wf_form2_cols, date),
     column_values: daily_report_column_values(@wf_form2_cols, date)
   )
