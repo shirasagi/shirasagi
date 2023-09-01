@@ -21,7 +21,7 @@ groups = @cur_user.root_groups.entries.map(&:gws_group)
           <% if groups.size > 1 %>
             <div class="address-group-label"><%= group.name %></div>
           <% end %>
-          <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: group), class: "ajax-box" %>
+          <%= link_to t("gws.organization_addresses"), gws_apis_multi_checkboxes_path(site: group), class: "ajax-box" %>
 
           <% if group.menu_shared_address_visible? %>
             <% if Gws::SharedAddress::Address.allowed?(:read, @cur_user.gws_user, site: group) %>

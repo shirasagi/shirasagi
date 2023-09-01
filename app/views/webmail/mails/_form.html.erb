@@ -26,7 +26,7 @@ dd.address-select{vertical-align: middle;max-width: 100%;height: 2.4em;margin: 5
   <%= hidden_field_tag :dedicated, "1", id: nil %>
 <% end %>
 
-<% render_address_form = proc do |field, addresses, css_class, cc_blank| %>
+<% render_address_form = proc do |field, addresses, css_class, cc_blank | %>
   <dl class="webmail-mail-form-address <%= css_class %>"<% if cc_blank %> style="display: none;"<% end %>>
     <dt><%= @model.t field %></dt>
     <dd><%= text_field_tag field, nil, "class" => "address autocomplete", "data-name" => "item[#{field}][]" %></dd>
@@ -43,11 +43,15 @@ dd.address-select{vertical-align: middle;max-width: 100%;height: 2.4em;margin: 5
         <% end %>
       </table>
     </dd>
-    <dd><%= render 'address_form', { f: f, field: field, cssName: css_class } %></dd>
   </dl>
 <% end %>
 
-<% render_address_form.call(:to, @item.to, "see to", false) %>
+<dl class="see all">
+  <dt></dt>
+  <dd><%= render 'address_form', { f: f, field: :to, cssName: "see to-cc-bcc" } %></dd>
+</dl>
+
+<% render_address_form.call(:to, @item.to, "see to", cc_blank=false) %>
 
 <% if cc_blank = @item.cc .blank? && @item.cc_text.blank? && @item.bcc.blank? && @item.bcc_text.blank? %>
   <a class="cc-bcc-label" href="#">[ <%= t 'webmail.links.show_cc_bcc' %> ]</a>
