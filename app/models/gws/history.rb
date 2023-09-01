@@ -178,7 +178,7 @@ class Gws::History
   end
 
   def model_name
-    self[:model_name] || (model.present? ? I18n.t("mongoid.models.#{model}") : nil)
+    self[:model_name] || (model.present? ? I18n.t("mongoid.models.#{model}", default: model) : nil)
   end
 
   def controller_name

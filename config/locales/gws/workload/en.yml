@@ -130,6 +130,7 @@ en:
       gws/workload/cycle: Cycle
       gws/workload/load: Load
       gws/workload/graph/user_setting: Graph users
+      gws/workload/overtime: Overtime
 
     errors:
       models:
