@@ -9,11 +9,11 @@ namespace :opendata do
     end
 
     task export: :environment do
-      Tasks::Opendata::Harvest.run(true, false)
+      Tasks::Opendata::Harvest.export
     end
 
     task import: :environment do
-      Tasks::Opendata::Harvest.run(false, true)
+      Tasks::Opendata::Harvest.import
     end
 
     namespace :exporter do
