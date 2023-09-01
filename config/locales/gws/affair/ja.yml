@@ -302,6 +302,7 @@ ja:
       gws/affair/duty_hour: 勤務時間
       gws/affair/holiday_calendar: 休日
       gws/affair/capital_year: 年度設定
+      gws/affair/overtime_file: 時間外申請
     attributes:
       gws/affair/capital:
         name: 原資区分名

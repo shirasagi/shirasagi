@@ -78,8 +78,8 @@ en:
       gws/staff_record/group: Affiliation
       gws/staff_record/user: Staff member
       gws/staff_record/seating: Seating chart
-      gws/staff_record/title_ids: Job title
-      gws/staff_record/occupation_ids: Occupation
+      gws/staff_record/user_title: Job title
+      gws/staff_record/user_occupation: Occupation
     attributes:
       gws/addon/staff_record/group_setting:
         staff_records_limit: Electronic staff records/No. of items displayed
