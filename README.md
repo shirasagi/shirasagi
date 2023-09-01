@@ -80,7 +80,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
 
 ```
 $ su -
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+# git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 # vi ~/.bashrc
 ---(追記)
 . $HOME/.asdf/asdf.sh
