@@ -100,6 +100,12 @@ Rails.application.routes.draw do
     end
     resources :address_groups, concerns: [:deletion]
 
+    get "multi_checkboxes" => "multi_checkboxes#index", as: "multi_checkboxes_main"
+    resources :multi_checkboxes, path: "multi_checkboxes/:group", concerns: [:deletion, :export] do
+      get :add, on: :collection
+      put :move, path: 'move/:group_id', group_id: /\d+/, on: :collection
+    end
+
     resource :account, only: [:show, :edit, :update], path: ':webmail_mode-:account/account',
       webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' } do
       post :test_connection, on: :member
@@ -140,6 +146,7 @@ Rails.application.routes.draw do
       get ":webmail_mode-:account/mails/imap_error" => "mails#imap_error",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :mails_imap_error, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
+      get "multi_checkboxes" => "multi_checkboxes#index"
     end
   end
 end

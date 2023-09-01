@@ -38,6 +38,7 @@ Rails.application.routes.draw do
 
     namespace "apis" do
       get "addresses" => "addresses#index"
+      get "multi_checkboxes" => "multi_checkboxes#index"
     end
   end
 end
