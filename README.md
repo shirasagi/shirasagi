@@ -1,48 +1,42 @@
-SHIRASAGI
-=========
+# SHIRASAGI
 
 SHIRASAGI is Contents Management System.
 
-Code Status
------------
+## Code Status
 
 [![Ruby](https://github.com/shirasagi/shirasagi/actions/workflows/ruby.yml/badge.svg)](https://github.com/shirasagi/shirasagi/actions/workflows/ruby.yml)
 [![Coverage Status](https://coveralls.io/repos/shirasagi/shirasagi/badge.png)](https://coveralls.io/r/shirasagi/shirasagi)
 [![Code Climate](https://api.codeclimate.com/v1/badges/e6274965ec75ce8fd605/test_coverage)](https://codeclimate.com/github/shirasagi/shirasagi/test_coverage)
 [![GitHub version](https://badge.fury.io/gh/shirasagi%2Fshirasagi.svg)](http://badge.fury.io/gh/shirasagi%2Fshirasagi)
 
-Documentation
--------------
+## Documentation
 
 - [公式サイト](http://ss-proj.org/)
-    - [オンラインデモ](https://www.ss-proj.org/download/demo.html)
-    - [ダウンロード](https://www.ss-proj.org/download/)
-    - [よくある質問記事](https://www.ss-proj.org/faq/docs/)
+  - [オンラインデモ](https://www.ss-proj.org/download/demo.html)
+  - [ダウンロード](https://www.ss-proj.org/download/)
+  - [よくある質問記事](https://www.ss-proj.org/faq/docs/)
 - [開発マニュアル](http://shirasagi.github.io/)
 
-Platform
---------
+## Platform
 
-- CentOS, Ubuntu
+- RHEL8 系, Ubuntu
 - Ruby 3.0 or 3.1
 - Ruby on Rails 6.1
-- MongoDB 4.4 or above
+- MongoDB 4.4 or 6.0
 - Unicorn
 
-Installation (Auto)
--------------------
+## Installation (Auto)
 
-- CentOS7の環境で実行してください。<br />
-- 一般ユーザーで実行する場合は、sudoが利用できることを確認してください。<br />
-- パラメーターの"example.jp"には、ブラウザでアクセスする際のドメイン名または、IPアドレスを指定してください。<br />
+- AlmaLinux8 の環境で実行してください。<br />
+- 一般ユーザーで実行する場合は、sudo が利用できることを確認してください。<br />
+- パラメーターの"example.jp"には、ブラウザでアクセスする際のドメイン名または、IP アドレスを指定してください。<br />
 
 ```
 $ su - user-which-executes-shirasagi-server
 $ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | bash -s example.jp
 ```
 
-Installation (CentOS 7)
------------------------
+## Installation (AlmaLinux)
 
 拡張機能（ふりがな、読み上げ、オープンデータ等）や詳細なインストール手順は[開発マニュアル](http://shirasagi.github.io/)をご確認ください。
 
@@ -50,8 +44,11 @@ Installation (CentOS 7)
 
 ```
 $ su -
-# yum -y install scl-utils centos-release-scl
-# yum -y install wget git ImageMagick ImageMagick-devel devtoolset-11
+# dnf -y install epel-release wget
+# dnf config-manager --disable epel
+# dnf --enablerepo=epel -y update epel-release
+# dnf -y groupinstall "Development tools"
+# dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel openssl3
 ```
 
 ### MongoDB のインストール
@@ -76,49 +73,97 @@ gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
 # systemctl enable mongod
 ```
 
-### asdfのインストール
+### asdf のインストール
+
+1.GitHub から asdf のクローン
 
 ```
 $ su -
-# git clone https://github.com/asdf-vm/asdf.git ~/.asdf
-# vi ~/.bashrc
----(追記)
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
----
-# source ~/.bashrc
+# git clone https://github.com/asdf-vm/asdf.git /usr/local/asdf
 ```
 
-### Rubyのインストール
+2.管理グループの設定 管理者権限がなくても asdf を利用できるように管理グループ asdf を作成し、/usr/local/asdf の操作権限を付与します。 その後、管理グループに一般ユーザー を追加します。
+
+例)ユーザが ssuser の場合
+
 ```
-# asdf plugin add ruby
-# source /opt/rh/devtoolset-11/enable
-# asdf install ruby 3.1.4
-# asdf global ruby 3.1.4
+$ su -
+# groupadd asdf
+# chgrp -R asdf /usr/local/asdf
+# chmod -R g+rwXs /usr/local/asdf
+# gpasswd -a ssuser asdf
 ```
-### Nodejs等のインストール
+
+3.環境変数の設定
+
 ```
-# asdf plugin add nodejs
-# asdf install nodejs 16.19.0
-# asdf global nodejs 16.19.0
-# npm install -g yarn
+$ su -
+# vi /etc/profile.d/asdf.sh
+export ASDF_DIR=/usr/local/asdf
+export ASDF_DATA_DIR=$ASDF_DIR
+
+ASDF_BIN="${ASDF_DIR}/bin"
+ASDF_USER_SHIMS="${ASDF_DATA_DIR}/shims"
+PATH="${ASDF_BIN}:${ASDF_USER_SHIMS}:${PATH}"
+
+. "${ASDF_DIR}/asdf.sh"
+. "${ASDF_DIR}/completions/asdf.bash"
 ```
+
+4.設定反映
+
+```
+# source /etc/profile.d/asdf.sh
+```
+
+### Ruby のインストール
+
+```
+$ asdf plugin add ruby
+$ asdf install ruby 3.1.4
+$ asdf global ruby 3.1.4
+```
+
+### Nodejs のインストール
+
+```
+$ asdf plugin add nodejs
+$ asdf install nodejs 20.5.0
+$ asdf global nodejs 20.5.0
+$ npm install -g yarn
+```
+
 ### SHIRASAGI のインストール
 
 SHIRASAGI のダウンロード (stable)
+
+インストールディレクトリの権限を一般ユーザーに変更します。
+
+例)ユーザが ssuser の場合
+
+```
+$ su -
+# mkdir -p /var/www
+# chown -R ssuser /var/www
+```
+
+GitHub からクローン
 
 ```
 $ git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
 ```
 
-設定ファイルの設置と gem のインストール
+> v1.4.0 でオープンデータプラグインは、SHIRASAGI にマージされました。 オープンデータに関する機能をご利用の場合も SHIRASAGI のソースコードをダウンロードしてください。
+
+```
+$ git clone -b stable https://github.com/shirasagi/shirasagi /var/www/shirasagi
+```
 
 ```
 $ cd /var/www/shirasagi
 $ cp -n config/samples/*.{yml,rb} config/
-$ source /opt/rh/devtoolset-10/enable
 $ bundle install --without development test
-# ./bin/deply
+$ ./bin/deply
 ```
 
 Web サーバの起動
@@ -154,7 +199,7 @@ $ bundle exec rake db:seed name=demo site=www
 
 http://localhost:3000/.mypage にアクセスするとログイン画面が表示されます。<br />
 サイト名のリンクをクリックすると、登録したデモデータを確認・編集することができます。<br />
-[ ユーザーID： admin , パスワード： pass ]
+[ ユーザー ID： admin , パスワード： pass ]
 
 #### 公開画面
 
