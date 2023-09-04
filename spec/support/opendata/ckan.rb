@@ -80,6 +80,7 @@ module SS::CkanSupport
         sleep 0.1
       end
     end
+    sleep 3
 
     SS::CkanSupport.docker_container = container
     SS::CkanSupport.docker_ckan_port = ckan_port
