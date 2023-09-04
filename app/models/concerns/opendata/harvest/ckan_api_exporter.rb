@@ -28,7 +28,6 @@ module Opendata::Harvest::CkanApiExporter
       next unless dataset
 
       dataset_relation = export_dataset(dataset, d_idx)
-      sleep 1
       next unless dataset_relation
 
       @dataset_relations[dataset_relation.rel_id] = dataset_relation
@@ -39,7 +38,6 @@ module Opendata::Harvest::CkanApiExporter
       resources_relations = []
       dataset.resources.each_with_index do |resource, r_idx|
         resources_relation = export_resource(resource, dataset_relation, exported_resources, d_idx, r_idx)
-        sleep 1
         next unless resources_relation
 
         @resource_relations[resources_relation.rel_id] = resources_relation
