@@ -275,10 +275,15 @@ module Opendata::Harvest::CkanApiExporter
     params
   end
 
+  def resource_url_param(resource)
+    return resource.file.filename if resource.source_url.blank?
+    resource.source_url.sub(/\?.*$/, "")
+  end
+
   def resource_create_params(resource)
     params = {
       name: resource.name,
-      url: (resource.source_url.presence || resource.file.filename),
+      url: resource_url_param(resource),
       description: resource.text,
       format: resource.format
     }
@@ -288,7 +293,7 @@ module Opendata::Harvest::CkanApiExporter
   def resource_update_params(resource)
     params = {
       name: resource.name,
-      url: (resource.source_url.presence || resource.file.filename),
+      url: resource_url_param(resource),
       description: resource.text,
       format: resource.format
     }
