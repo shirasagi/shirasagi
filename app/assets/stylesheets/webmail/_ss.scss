@@ -427,6 +427,11 @@ li.webmail-accounts {
 .webmail-mail-form-address {
   margin: 0;
   padding: 0 10px;
+  &.to {
+    margin-top: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #e4e4e4;
+  }
   &.cc-bcc {
     margin-top: 10px;
     padding-top: 15px;
