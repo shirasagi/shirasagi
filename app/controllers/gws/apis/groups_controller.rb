@@ -18,7 +18,7 @@ class Gws::Apis::GroupsController < ApplicationController
   def index
     @multi = params[:single].blank?
 
-    if search_params.blank?
+    if search_params.blank? && params[:format].blank?
       render Gws::Apis::GroupsComponent.new(cur_site: @cur_site, multi: @multi)
       return
     end
