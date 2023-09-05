@@ -3,15 +3,18 @@ import i18next from 'i18next'
 import { csrfToken } from "../../ss/tool"
 
 function formDataToStringifyJson(formData) {
-  return JSON.stringify(Object.fromEntries(formData));
+  const array = [];
+  for (const pair of formData.entries()) {
+    array.push(pair);
+  }
+
+  return JSON.stringify(array);
 }
 
 function stringifyJsonToFormData(stringifyJson) {
-  const data = JSON.parse(stringifyJson)
+  const array = JSON.parse(stringifyJson)
   const formData = new FormData();
-  for (const key in data) {
-    formData.append(key, data[key])
-  }
+  array.forEach((pair) => formData.append(pair[0], pair[1]));
 
   return formData;
 }
@@ -34,8 +37,7 @@ export default class extends Controller {
     window.addEventListener("beforeunload", this.#beforeUnloadHandler);
 
     const autoSaveData = localStorage.getItem(this.#key());
-    console.log("-------------------------------auteSaveData\n" + autoSaveData);
-    if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing" ))) {
+    if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing"))) {
       await this.#restoreForm(autoSaveData);
     }
 
@@ -76,11 +78,23 @@ export default class extends Controller {
   }
 
   #serializeFormData() {
+    Object.values(CKEDITOR.instances).forEach((editor) => {
+      if (!editor.checkDirty()) {
+        return;
+      }
+      if (editor.elementMode !== CKEDITOR.ELEMENT_MODE_REPLACE) {
+        return;
+      }
+
+      editor.updateElement();
+      editor.resetDirty();
+    });
+
     const formData = new FormData(this.element);
     // 余分なデータを削除
-    formData.delete("authenticity_token")
-    formData.delete("_method")
-    formData.delete("_updated")
+    formData.delete("authenticity_token");
+    formData.delete("_method");
+    formData.delete("_updated");
 
     localStorage.setItem(this.#key(), formDataToStringifyJson(formData))
     this.#lastAutoSaved = new Date().getTime();
@@ -88,6 +102,7 @@ export default class extends Controller {
 
   async #restoreForm(stringifyData) {
     const formData = stringifyJsonToFormData(stringifyData)
+
     this.element.disabled = true;
 
     const response = await fetch(this.resumeUrlValue, {
@@ -103,18 +118,39 @@ export default class extends Controller {
       return;
     }
 
-    // html 内には javascript が含まれており、javascript の動的実行はややこしいので jQuery を用いる。
-    const html_text = await response.text();
+    const html = await response.text();
 
-    var save_doc = document.implementation.createHTMLDocument();
-    save_doc.documentElement.innerHTML = html_text;
-
-    // 理想は item-form の内容の置換だが javascript のエラーが発生する。
-    // $(this.element).html($(html).find("#item-form").html());
-
-    // しかたなく body 全体を置換する（これはこれで問題がでそうだが）。
-    $(document).find("body").html($(save_doc).find("body").html());
+    this.#replaceItemForm(html);
 
     this.element.disabled = false;
+  }
+
+  #replaceItemForm(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    const itemForm = doc.querySelector("#item-form").children;
+console.log("replaceItemForm itemForm=" + itemForm);
+
+
+    this.element.replaceChildren(...itemForm);
+//    this.element.replaceWith(itemForm);
+//    $("#item-form").replaceWith(itemForm)
+    // execute pre-requisites.
+    SS_DateTimePicker.render();
+
+    // 定型フォームツールバーを再び利用できる（初期化できる）ように、グローバル変数をクリアする。
+    // see app/assets/javascripts/cms/lib/template_form.js
+    Cms_TemplateForm.instance = null;
+    Cms_TemplateForm.userId = null;
+    Cms_TemplateForm.target = null;
+    Cms_TemplateForm.confirms = {};
+    Cms_TemplateForm.paths = {};
+
+    // execute javascript within item-form
+    this.element.querySelectorAll("script").forEach((scriptElement) => {
+      const newScriptElement = document.createElement("script")
+      Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value))
+      newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML))
+      scriptElement.parentElement.replaceChild(newScriptElement, scriptElement)
+    })
   }
 }

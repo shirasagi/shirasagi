@@ -384,7 +384,7 @@ this.SS = (function () {
 
   SS.confirmUnloading = function () {
     SS.formChanged = undefined;
-    $("input[type=text],textarea,select").on("change", function () {
+    $(document).on("change", "input[type=text],textarea,select", function () {
       SS.formChanged = new Date().getTime();
     });
     $(window).on("beforeunload", function () {
@@ -392,7 +392,7 @@ this.SS = (function () {
         return i18next.t('ss.confirm.unload');
       }
     });
-    $("input[type=submit]").on("click", function () {
+    $(document).on("click", "input[type=submit]", function () {
       SS.formChanged = undefined;
       return true;
     });
