@@ -129,9 +129,9 @@ jobs:
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
           ANALYZE_COVERAGE: disabled
           CAPYBARA_MAX_WAIT_TIME: 30
-          # driver: chrome
+          driver: chrome
           # driver: firefox
-          driver: random
+          # driver: random
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
         with:
