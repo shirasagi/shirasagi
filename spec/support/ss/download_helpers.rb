@@ -1,6 +1,6 @@
 module SS
   module DownloadHelpers
-    TIMEOUT = 1
+    TIMEOUT = ENV.fetch("DOWNLOAD_MAX_WAIT_TIME", 1).to_i
 
     module_function
 
