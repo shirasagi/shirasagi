@@ -1,11 +1,6 @@
 <%= jquery do %>
   $('.sortable-index tbody').sortable();
 <% end %>
-<style>
-table.index td.to-checkbox{width:62px;padding-right:0}table.index td.cc-checkbox{width:62px;padding-right:0}table.index td.bcc-checkbox{width:62px;padding-right:0}
-table.index td.checkbox-to-all{width:62px;padding-right:0}table.index td.checkbox-cc-all{width:62px;padding-right:0}td.table.index checkbox-bcc-all{width:62px;padding-right:0}
-dd.address-select{vertical-align: middle;max-width: 100%;height: 2.4em;margin: 5px,0px;padding: 0px,10px;}
-</style>
 
 <%
 show_shared_addr = Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: @cur_site)
@@ -15,22 +10,16 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
 
 
 <div class="gws-addon-memo-member">
-<dl class="see all">
-    <dt></dt>
-    <dd>
-      <%= f.hidden_field "in_to_members[]", value: "", id: nil, class: "hidden-ids" %>
-      <%= link_to t("gws.organization_addresses"), gws_apis_multi_checkboxes_path(site: @cur_site), class: "ajax-box" %>
-      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_multi_checkboxes_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
-      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_multi_checkboxes_path, class: "ajax-box" if show_personal_addr %>
-    </dd>
-  </dl>
-  <dl class="see to">
+<dl class="see to">
     <dt><%= @model.t :to_member_ids %><%= @model.tt :to_member_ids %></dt>
     <dd>
+      <%= f.hidden_field "in_to_members[]", value: "", id: nil, class: "hidden-ids" %>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
+      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" if show_personal_addr %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
-    <dd>
       <table class="index ajax-selected sortable-index">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
@@ -65,7 +54,9 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
     <dt><%= @model.t :cc_member_ids %><%= @model.tt :cc_member_ids %></dt>
     <dd>
       <%= f.hidden_field "in_cc_members[]", value: "", id: nil, class: "hidden-ids" %>
-
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
+      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" if show_personal_addr %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
@@ -100,7 +91,9 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
     <dt><%= @model.t :bcc_member_ids %><%= @model.tt :bcc_member_ids %></dt>
     <dd>
       <%= f.hidden_field "in_bcc_members[]", value: "", id: nil, class: "hidden-ids" %>
-
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
+      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" if show_personal_addr %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>

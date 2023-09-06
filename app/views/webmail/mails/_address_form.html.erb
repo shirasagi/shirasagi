@@ -7,13 +7,12 @@ groups = @cur_user.root_groups.entries.map(&:gws_group)
 
 <dl class="see webmail-address-field">
   <dd class="wide">
-  <input type="hidden" name="item[in_<% cssName %>_members][]" value="" class="hidden-ids" autocomplete="off" />
     <div class="address-groups">
       <div class="address-group">
         <% if groups.size > 1 %>
           <div class="address-group-label"><%= t "webmail.personal" %></div>
         <% end %>
-        <%= link_to t("mongoid.models.webmail/address"), webmail_apis_multi_checkboxes_path, class: "ajax-box" %>
+        <%= link_to t("mongoid.models.webmail/address"), webmail_apis_addresses_path, class: "ajax-box" %>
       </div>
 
       <% groups.each do |group| %>
@@ -21,11 +20,11 @@ groups = @cur_user.root_groups.entries.map(&:gws_group)
           <% if groups.size > 1 %>
             <div class="address-group-label"><%= group.name %></div>
           <% end %>
-          <%= link_to t("gws.organization_addresses"), gws_apis_multi_checkboxes_path(site: group), class: "ajax-box" %>
+          <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: group), class: "ajax-box" %>
 
           <% if group.menu_shared_address_visible? %>
             <% if Gws::SharedAddress::Address.allowed?(:read, @cur_user.gws_user, site: group) %>
-              <%= link_to t("modules.gws/shared_address"), gws_shared_address_apis_multi_checkboxes_path(site: group), class: "ajax-box" %>
+              <%= link_to t("modules.gws/shared_address"), gws_shared_address_apis_addresses_path(site: group), class: "ajax-box" %>
             <% end %>
           <% end %>
         </div>

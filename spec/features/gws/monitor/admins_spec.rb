@@ -25,5 +25,16 @@ describe "gws_monitor_admins", type: :feature, dbscope: :example do
       visit new_gws_monitor_admin_path(site)
       expect(page).to have_content(I18n.t("ss.basic_info"))
     end
+
+    it "#copy" do
+      item1
+      visit gws_monitor_admins_path(site)
+      click_on item1.name
+      click_on I18n.t("ss.links.copy")
+
+      expect(status_code).to eq 200
+      expect(current_path).to eq copy_gws_monitor_admin_path(item1.id,site)
+      expect(page).to have_content(item1.name)
+    end
   end
 end

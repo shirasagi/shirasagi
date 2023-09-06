@@ -49,10 +49,6 @@ Rails.application.routes.draw do
       match :download_all, on: :collection, via: %i[get post]
       get :download_template, on: :collection
     end
-    resources :multi_checkboxes, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
-      match :download_all, on: :collection, via: %i[get post]
-      get :download_template, on: :collection
-    end
     resources :user_titles, concerns: [:deletion] do
       match :download_all, on: :collection, via: %i[get post]
       match :import, on: :collection, via: %i[get post]
@@ -87,7 +83,6 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "users" => "users#index"
-      get "multi_checkboxes" => "multi_checkboxes#index"
       get "user_titles" => "user_titles#index"
       get "user_occupations" => "user_occupations#index"
       get "facilities" => "facilities#index"
