@@ -191,8 +191,8 @@ this.SS_SearchUI = (function () {
     }
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
-      var tr =($("#colorbox .items [data-id='" + id + "']"));
-      tr.find(".checkbox input[type=checkbox]").remove();
+      var tr = $("#colorbox .items [data-id='" + id + "']");
+      tr.find("input[type=checkbox]").remove();
       tr.find(".select-item,.select-single-item").each(function() {
         var $this = $(this);
         var html = $this.html();
