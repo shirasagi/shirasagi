@@ -85,6 +85,19 @@ module Gws::Monitor::TopicFilter
     render template: "new"
   end
 
+  def copy
+    set_item
+    @item.id = nil
+    @item.created = nil
+    @item.user_id = nil
+    @item.user_uid = nil
+    @item.user_name = nil
+    @item.cur_user = @cur_user
+    @item.cur_site = @cur_site
+
+    render template: "new"
+  end
+
   # 受け取り済みにする
   def public
     @item.attributes = fix_params
