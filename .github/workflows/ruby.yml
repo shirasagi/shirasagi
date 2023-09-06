@@ -132,9 +132,10 @@ jobs:
           RUBYOPT: "-W:deprecated"
           logs_on_failure: 0
           CAPYBARA_MAX_WAIT_TIME: 30
-          # driver: chrome
+          DOWNLOAD_MAX_WAIT_TIME: 10
+          driver: chrome
           # driver: firefox
-          driver: random
+          # driver: random
           # RSPEC_LOCALE: en
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master

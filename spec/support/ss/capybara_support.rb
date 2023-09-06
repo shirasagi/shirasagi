@@ -22,10 +22,10 @@ module SS::CapybaraSupport
     case name
     when 'firefox'
       activate_firefox(config)
-    when 'chrome'
-      activate_chrome(config)
-    else
+    when 'random'
       [ true, false ].sample ? activate_chrome(config) : activate_firefox(config)
+    else # 'chrome'
+      activate_chrome(config)
     end
   rescue LoadError
     deactivate_driver(config)

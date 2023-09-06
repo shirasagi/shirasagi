@@ -85,42 +85,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(item.release_date).to be_blank
         expect(item.close_date).to be_blank
 
-        visit edit_article_page_path(site: site, cid: node, id: branch)
-        within "form#item-form" do
-          ensure_addon_opened('#addon-cms-agents-addons-release_plan')
-          within "#addon-cms-agents-addons-release_plan" do
-            fill_in_datetime "item[close_date]", with: close_date
-          end
-
-          click_on I18n.t("ss.buttons.draft_save")
-        end
-        wait_for_notice I18n.t("ss.notice.saved")
-        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-
-        branch.reload
-        expect(branch.state).to eq "closed"
-        expect(branch.release_date).to be_blank
-        expect(branch.close_date).to eq close_date
-
-        item.reload
-        expect(item.state).to eq "public"
-        expect(item.release_date).to be_blank
-        expect(item.close_date).to be_blank
-
-        expect do
+        Timecop.freeze(now) do
           visit edit_article_page_path(site: site, cid: node, id: branch)
           within "form#item-form" do
-            click_on I18n.t("ss.buttons.publish_save")
+            ensure_addon_opened('#addon-cms-agents-addons-release_plan')
+            within "#addon-cms-agents-addons-release_plan" do
+              fill_in_datetime "item[close_date]", with: close_date
+            end
+
+            click_on I18n.t("ss.buttons.draft_save")
           end
-          wait_for_notice I18n.t("ss.notice.saved")
-        end.to output.to_stdout
+        end
 
-        expect { branch.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-
-        item.reload
-        expect(item.state).to eq "closed"
-        expect(item.release_date).to be_blank
-        expect(item.close_date).to be_present
+        message = I18n.t("errors.messages.greater_than", count: I18n.l(now))
+        message = I18n.t("errors.format", attribute: Cms::Page.t(:close_date), message: message)
+        expect(page).to have_css("#errorExplanation", text: message)
       end
     end
 
@@ -150,39 +129,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t("ss.buttons.draft_save")
         end
-        wait_for_notice I18n.t("ss.notice.saved")
-        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        within ".mod-workflow-request" do
-          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
-          click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
-        end
-        wait_for_cbox do
-          find("tr[data-id='1,#{cms_user.id}'] input[type=checkbox]").click
-          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
-        end
-        within ".mod-workflow-request" do
-          fill_in "workflow[comment]", with: workflow_comment
-          click_on I18n.t("workflow.buttons.request")
-        end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
-
-        within ".mod-workflow-approve" do
-          fill_in "remand[comment]", with: approve_comment
-          click_on I18n.t("workflow.buttons.approve")
-        end
-
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
-        expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
-
-        expect { branch.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-
-        item.reload
-        expect(item.state).to eq "closed"
-        expect(item.release_date).to be_blank
-        expect(item.close_date).to be_present
+        message = I18n.t("errors.messages.greater_than", count: I18n.l(now))
+        message = I18n.t("errors.format", attribute: Cms::Page.t(:close_date), message: message)
+        expect(page).to have_css("#errorExplanation", text: message)
       end
     end
   end
