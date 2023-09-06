@@ -29,13 +29,13 @@ this.SS_SearchUI = (function () {
       template = SS_SearchUI.defaultTemplate;
 
       var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
-      if(selectTable=="to"){
+      if(selectTable === "to"){
         attr = { name: "item[in_to_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
       }
-      else if(selectTable=="cc"){
+      else if(selectTable === "cc"){
         attr = { name: "item[in_cc_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
       }
-      else if(selectTable=="bcc"){
+      else if(selectTable === "bcc"){
         attr = { name: "item[in_bcc_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
       }
       else{
@@ -50,13 +50,13 @@ this.SS_SearchUI = (function () {
     }
 
     var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
-   if (selectTable=="to"){
+   if (selectTable === "to"){
     var $ajaxSelected =self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
     }
-    else if (selectTable=="cc"){
+    else if (selectTable === "cc"){
       var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
     }
-     else if (selectTable=="bcc"){
+     else if (selectTable === "bcc"){
       var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
     }
     else{
@@ -93,29 +93,29 @@ this.SS_SearchUI = (function () {
     }
     var self = this;
     $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () {
-      selectTable="to";
+      selectTable = "to";
       self.select($(this));
     });
-    if(selectTable=="to"){
+    if(selectTable === "to"){
       self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
     }
 
     $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
-      selectTable="cc";
+      selectTable = "cc";
       self.select($(this));
     });
-    if(selectTable=="cc"){
+    if(selectTable === "cc"){
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
     }
 
     $el.find(".items .bcc-checkbox input:checkbox").filter(":checked").each(function () {
-      selectTable="bcc";
+      selectTable = "bcc";
       self.select($(this));
     });
-    if(selectTable=="bcc"){
+    if(selectTable === "bcc"){
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
     }
-    if(selectTable==null){
+    if(selectTable === null){
       $el.find(".items input:checkbox").filter(":checked").each(function () {
         self.select($(this));
       });
@@ -184,7 +184,7 @@ this.SS_SearchUI = (function () {
     var colorbox = options.colorbox || $.colorbox;
     var $el = options.$el || $("#ajax-box");
 
-    var isSameWindow = (window == $el[0].ownerDocument.defaultView);
+    var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
         var $div = $("<span />", { class: "loading" }).html(SS.loading);
@@ -267,9 +267,9 @@ this.SS_SearchUI = (function () {
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
       var tr =($("#colorbox .items [data-id='" + id + "']"));
-      for(var i=0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
-      for(var i=0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
-      for(var i=0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
+      for(var i = 0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
+      for(var i = 0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
+      for(var i = 0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
       tr.find(".checkbox input[type=checkbox]").remove();
       tr.find(".select-item,.select-single-item").each(function() {
         var $this = $(this);
@@ -281,9 +281,9 @@ this.SS_SearchUI = (function () {
     });
     self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
       var id = $(this).data("id");
-      for(var i=0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
-      for(var i=0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
-      for(var i=0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
+      for(var i = 0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
+      for(var i = 0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
+      for(var i = 0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
     });
     $el.find("table.index").each(function() {
       SS_ListUI.render(this);
