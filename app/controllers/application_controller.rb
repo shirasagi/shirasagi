@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
-  before_action :clear_secure_option_of_session_on_ie11
+  before_action :clear_secure_option_of_session
 
   class CloseableChunkedBody < Rack::Chunked::Body
     def initialize(*args)
@@ -203,13 +203,18 @@ class ApplicationController < ActionController::Base
   end
   helper_method :trusted_url!
 
-  def clear_secure_option_of_session_on_ie11
-    return unless browser.ie?("<= 11")
-
-    # IE11 利用時、CMS のページのプレビュー表示での印刷時に画像が表示されないという障害がある。
-    # その障害は Set-Cookie レスポンスの SameSite=Lax が原因。
-    # Set-Cookie レスポンスに SameSite=Lax がついていない場合、Firefox などの一部のブラウザの開発者ツールで警告が表示されるし、
-    # SameSite=Lax は付いておいた方がよいので、IE11 の場合だけ無効にする。
-    request.session_options[:same_site] = nil if request.session_options[:same_site].present?
+  def clear_secure_option_of_session
+    if browser.ie?("<= 11")
+      # IE11 利用時、CMS のページのプレビュー表示での印刷時に画像が表示されないという障害がある。
+      # その障害は Set-Cookie レスポンスの SameSite=Lax が原因。
+      # Set-Cookie レスポンスに SameSite=Lax がついていない場合、Firefox などの一部のブラウザの開発者ツールで警告が表示されるし、
+      # SameSite=Lax は付いておいた方がよいので、IE11 の場合だけ無効にする。
+      request.session_options[:same_site] = nil if request.session_options[:same_site].present?
+    end
+    if browser.ua.to_s.include?("Electron/")
+      # シラサギデスクトップアプリは SameSite属性 を削除しないとセッションが維持できない。
+      # なお session_options[:same_site] に nil を代入すると、SameSite属性が消える。（Laxが付与されるわけではない）
+      request.session_options[:same_site] = nil
+    end
   end
 end
