@@ -31,98 +31,132 @@ class Cms::ImportJobFile
 
   def import
     @import_logs = []
+    @import_pages = {}
+    @import_nodes = {}
+    @import_files = {}
+
     files.each do |file|
       import_from_zip(file)
     end
   end
 
-  def save_import_page(file, import_filename)
+  def save_import_node(filename)
+    item = Cms::Node::ImportNode.new
+    item.filename = filename
+    item.name = ::File.basename(filename)
+    item.cur_site = site
+    item.group_ids = user.group_ids
+
+    if item.save
+      @import_nodes[filename] = item
+      @import_logs << "import: #{filename}"
+      return item
+    else
+      set_errors(filename, item)
+      return nil
+    end
+  end
+
+  def save_import_page(filename, file)
     import_html = file.read.force_encoding("utf-8").scrub
     import_html = modify_relative_paths(import_html)
 
     item = Cms::ImportPage.new
-    item.filename = import_filename
-    item.name = ::File.basename(import_filename)
+    item.filename = filename
+    item.name = ::File.basename(filename)
     item.html = import_html
     item.cur_site = site
     item.group_ids = user.group_ids
-    item.save
 
-    set_errors(item, import_filename)
-    return item.errors.empty?
+    if item.save
+      @import_pages[filename] = item
+      @import_logs << "import: #{filename}"
+      return item
+    else
+      set_errors(filename, item)
+      return nil
+    end
   end
 
-  def save_import_node(file, import_filename)
-    item = Cms::Node::ImportNode.new
-    item.filename = import_filename
-    item.name = ::File.basename(import_filename)
-    item.cur_site = site
-    item.group_ids = user.group_ids
-    item.save
-
-    set_errors(item, import_filename)
-    return item.errors.empty?
-  end
-
-  def upload_import_file(file, import_filename)
-    import_path = "#{site.path}/#{import_filename}"
-
+  def upload_import_file(filename, file)
+    import_path = "#{site.path}/#{filename}"
     item = Uploader::File.new(path: import_path, binary: file.read, site: site)
-    item.save
 
-    set_errors(item, import_filename)
-    return item.errors.empty?
+    if item.save
+      @import_files[filename] = item
+      @import_logs << "import: #{filename}"
+      return item
+    else
+      set_errors(filename, item)
+      return nil
+    end
   end
 
-  def set_errors(item, import_filename)
+  def set_errors(filename, item)
     item.errors.each do |error|
       attribute = error.attribute
       message = error.message
 
       case attribute
       when :filename
-        @import_logs << "error: #{import_filename} #{message}"
+        @import_logs << "error: #{filename} #{message}"
         self.errors.add :base, "#{item.filename} #{message}"
       when :name
-        @import_logs << "error: #{import_filename} #{message}"
-        self.errors.add :base, "#{import_filename} #{message}"
+        @import_logs << "error: #{filename} #{message}"
+        self.errors.add :base, "#{filename} #{message}"
       else
         name = attribute == :base ? '' : item.class.t(attribute)
-        @import_logs << "error: #{import_filename} #{name}#{message}"
-        self.errors.add :base, "#{import_filename} #{name}#{message}"
+        @import_logs << "error: #{filename} #{name}#{message}"
+        self.errors.add :base, "#{filename} #{name}#{message}"
       end
     end
+  end
+
+  def entry_to_filename(entry)
+    filename = entry.name.force_encoding("utf-8").scrub
+    return if filename.blank?
+
+    virtual_path = "/$"
+    filename = ::File.expand_path(filename, virtual_path)
+    return if !filename.start_with?("/$/")
+    filename = filename[3..-1]
+
+    return if filename.blank?
+    return if filename.include?('__MACOSX')
+    return if filename.include?('.DS_Store')
+
+    filename
   end
 
   def import_from_zip(file)
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
-        filename = entry.name.force_encoding("utf-8").scrub
+        next if entry.directory?
+
+        filename = entry_to_filename(entry)
         next if filename.blank?
 
-        virtual_path = "/$"
-        filename = ::File.expand_path(filename, virtual_path)
-        next unless filename.start_with?("/$/")
+        # relative basedir
+        @basedir = filename.index("/") ? filename.split("/").first : root_node.filename
+        @basedir = ::File.join(root_node.filename, @basedir) if @basedir != root_node.filename
 
-        filename = filename[3..-1]
-        filename = filename.delete_prefix("#{root_node.basename}/") # remove root folder
-        next if filename.blank?
-        next if filename.start_with?('__MACOSX')
-        next if filename.start_with?('.DS_Store')
+        # prepend root node filename
+        filename = filename.delete_prefix("#{root_node.basename}/")
+        filename = ::File.join(root_node.filename, filename)
 
-        import_filename = "#{root_node.filename}/#{filename}"
-        import_filename = import_filename.sub(/\/$/, "")
-
-        if entry.directory?
-          if save_import_node(entry.get_input_stream, import_filename)
-            @import_logs << "import: #{import_filename}"
+        # import parent dirs
+        filename.split("/").inject do |filename, item|
+          if filename.start_with?("#{root_node.filename}/") && !@import_nodes[filename]
+            save_import_node(filename)
           end
-        elsif /^\.(html|htm)$/i.match?(::File.extname(import_filename))
-          if save_import_page(entry.get_input_stream, import_filename)
-            @import_logs << "import: #{import_filename}"
-          end
-        elsif upload_import_file(entry.get_input_stream, import_filename)
-          @import_logs << "import: #{import_filename}"
+          "#{filename}/#{item}"
+        end
+
+        # import page or files
+        if /^\.(html|htm)$/i.match?(::File.extname(filename))
+          save_import_page(filename, entry.get_input_stream)
+        else
+          upload_import_file(filename, entry.get_input_stream)
         end
       end
     end
@@ -134,7 +168,7 @@ class Cms::ImportJobFile
     html.gsub(/(href|src)="\/(.*?)"/) do
       attr = $1
       path = $2
-      "#{attr}=\"\/#{root_node.filename}/#{path}\""
+      "#{attr}=\"\/#{@basedir}/#{path}\""
     end
   end
 
