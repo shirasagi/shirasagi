@@ -1,6 +1,7 @@
 class Gws::Monitor::Topic
   include Gws::Referenceable
   include Gws::Monitor::Postable
+  include Gws::Monitor::Cloneable
   include Gws::Addon::Monitor::Group
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
@@ -20,7 +21,7 @@ class Gws::Monitor::Topic
   field :notice_state, type: String
   field :notice_at, type: DateTime
 
-  permit_params :notice_state
+  permit_params :notice_state, :in_clone_file
 
   before_validation :set_answer_state_hash
   before_validation :set_notice_at

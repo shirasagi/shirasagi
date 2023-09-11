@@ -87,14 +87,8 @@ module Gws::Monitor::TopicFilter
 
   def copy
     set_item
-    @item.id = nil
-    @item.created = nil
-    @item.user_id = nil
-    @item.user_uid = nil
-    @item.user_name = nil
-    @item.cur_user = @cur_user
-    @item.cur_site = @cur_site
-
+    @item = @item.new_clone
+    
     render template: "new"
   end
 
