@@ -14,23 +14,22 @@ PORT_LPSPL=8004
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
 
-sudo yum -y groupinstall "Development tools" --setopt=group_package_types=mandatory,default,optional
-sudo yum -y install scl-utils centos-release-scl
-sudo yum -y install \
-  devtoolset-11 \
-  openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
-  wget git ImageMagick ImageMagick-devel
+sudo dnf -y install epel-release wget
+sudo dnf config-manager --disable epel
+sudo dnf --enablerepo=epel -y update epale-release
+sudo dnf -y groupinstall "Development tools"
+sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel openssl3
 
-cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
-[mongodb-org-4.4]
+cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-6.0.repo
+[mongodb-org-6.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/4.4/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/6.0/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
+sudo dnf install -y --enablerepo=mongodb-org-6.0 mongodb-org
 sudo systemctl enable mongod.service --now
 
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf
@@ -43,17 +42,14 @@ EOF
 source $HOME/.bashrc
 
 asdf plugin add ruby
-asdf install ruby 3.1.3
-asdf global ruby 3.1.3
+asdf install ruby 3.1.4
+asdf global ruby 3.1.4
 
 if [ ! `which ruby` ]; then exit 1; fi
 asdf plugin add nodejs
-asdf install nodejs 16.19.0
-asdf global nodejs 16.19.0 
+asdf install nodejs 20.5.0
+asdf global nodejs 20.5.0 
 npm install -g yarn
-
-# use devtoolset-11
-source /opt/rh/devtoolset-11/enable
 
 git clone -b stable https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
@@ -69,7 +65,7 @@ do
   fi
   sleep 5s
 done
-
+bin/deploy
 # change secret
 sed -i "s/dbcae379.*$/`bundle exec rake secret`/" config/secrets.yml
 
@@ -88,7 +84,7 @@ sudo firewall-cmd --reload
 #### Furigana
 
 cd
-wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"
+wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE&confirm=t&uuid=585a8a12-a314-4ca2-b3e6-9df561267c5e&at=AKKF8vxZJ7Wpcz3usXa_4TL4-cUH:1682584842486"
 wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM"
 wget -O mecab-ruby-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7VUNlczBWVDZJbE0"
 wget https://raw.githubusercontent.com/shirasagi/shirasagi/stable/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
@@ -183,8 +179,9 @@ gpgcheck=0
 enabled=0
 EOF
 
-sudo yum -y --enablerepo=nginx install nginx
+sudo dnf -y --enablerepo=nginx install nginx
 #sudo nginx -t
+sudo mkdir -p /var/cache/nginx/proxy_cache
 sudo systemctl enable nginx.service --now
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/http.conf
@@ -341,7 +338,7 @@ bundle exec rake db:seed name=webmail
 bundle exec rake assets:precompile RAILS_ENV=production
 
 # use openlayers as default map
-echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongo ss > /dev/null
+echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongosh ss > /dev/null
 
 bundle exec rake cms:generate_nodes
 bundle exec rake cms:generate_pages
@@ -353,7 +350,7 @@ EOF
 
 # modify ImageMagick policy to work with simple captcha
 # see: https://github.com/diaspora/diaspora/issues/6828
-cd /etc/ImageMagick && cat << EOF | sudo patch
+cd /etc/ImageMagick-6 && cat << EOF | sudo patch
 --- policy.xml.orig     2016-12-08 13:50:47.344009000 +0900
 +++ policy.xml  2016-12-08 13:15:22.529009000 +0900
 @@ -67,6 +67,8 @@
