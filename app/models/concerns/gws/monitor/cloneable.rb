@@ -4,8 +4,6 @@ module Gws::Monitor::Cloneable
 
   def new_clone
     item = clone
-    Rails.logger.error "Monitor::TopicFilter -------------------------------- item #{item.inspect}"
-    Rails.logger.error "Monitor::TopicFilter -------------------------------- clone #{clone.inspect}"
     prefix = I18n.t("workflow.cloned_name_prefix")
     item.id = nil
     item.created = nil
