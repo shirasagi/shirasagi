@@ -140,7 +140,6 @@ group :development, :test do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rails', '2.11.3', require: false
-  gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', '~> 4.11', require: false
   gem 'simplecov', require: false
