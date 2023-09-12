@@ -11,7 +11,7 @@ module Gws::Addon
 
       before_save :clone_files, if: ->{ in_clone_file }
       before_save :save_files
-      around_save :update_file_owners
+      # around_save :update_file_owners
       after_destroy :destroy_files
 
       define_model_callbacks :save_files, :clone_files, :destroy_files
@@ -59,6 +59,12 @@ module Gws::Addon
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
+          if f.model == "ss/temp_file" || f.owner_item_id.blank?
+            # 所有されていないファイルのため複製を抑制することで効率化を図る
+            ids[f.id] = f.id
+            next
+          end
+
           attributes = Hash[f.attributes]
           attributes.slice!(*f.fields.keys)
 

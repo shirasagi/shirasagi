@@ -1,0 +1,33 @@
+<% addons = @addons || @item.try(:addons) || [] %>
+
+<%= form_with scope: :item, url: url_for(action: :copy), method: "post" do |f| %>
+  <%= error_messages_for :item %>
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <%
+      addon_options = {}
+      addon_options[:id] = "addon-basic"
+      addon_options[:head] = @addon_basic_name || t("ss.basic_info") if addons.size > 0
+    %>
+    <% buf = render template: "_form", locals: { f: f, addon: addon_options } %>
+    <% if buf.present? %>
+      <%= render "ss/crud/addon", addon: addon_options do %>
+        <%= buf %>
+      <% end %>
+    <% end %>
+
+    <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <% if @crud_buttons %>
+      <% @crud_buttons.call f %>
+    <% else %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <% end %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
