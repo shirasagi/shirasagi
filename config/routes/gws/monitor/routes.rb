@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
       resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment, :topic_files], except: [:destroy] do
         get :forward, on: :member
-        get :copy, on: :member
+        match :copy, on: :member, via: [:get, :post]
         match :publish, on: :member, via: %i[get post]
         post :close, on: :member
         post :open, on: :member

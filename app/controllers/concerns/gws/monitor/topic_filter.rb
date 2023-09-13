@@ -87,9 +87,25 @@ module Gws::Monitor::TopicFilter
 
   def copy
     set_item
-    @item = @item.new_clone
-    
-    render template: "new"
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get? || request.head?
+      @item.name = "[#{I18n.t("workflow.cloned_name_prefix")}] #{@item.name}".truncate(80)
+      return
+    end
+
+    @new_item = @item.new_clone
+    result = @new_item.save
+    if !result
+      SS::Model.copy_errors(@new_item, @item)
+    end
+
+    render_opts = {}
+    render_opts[:render] = { template: "copy" }
+    if result
+      render_opts[:location] = gws_monitor_admin_path(id: @new_item)
+    end
+    render_update result, render_opts
   end
 
   # 受け取り済みにする
