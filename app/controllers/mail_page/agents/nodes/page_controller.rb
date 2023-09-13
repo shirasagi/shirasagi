@@ -32,6 +32,10 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
     data = params.permit(:data)[:data]
     raise "404" if data.blank?
 
+    request.body.rewind
+    data = request.body.read
+    data = data.delete_prefix("data=")
+
     file = SS::MailHandler.write_eml(data, "mail_page")
     MailPage::ImportJob.bind(site_id: @cur_site.id).perform_now(file)
     head :ok

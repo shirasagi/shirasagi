@@ -70,6 +70,10 @@ class Cms::Agents::Nodes::LineHubController < ApplicationController
     data = params.permit(:data)[:data]
     raise "404" if data.blank?
 
+    request.body.rewind
+    data = request.body.read
+    data = data.delete_prefix("data=")
+
     item.handle_message(data)
     head :ok
   end
