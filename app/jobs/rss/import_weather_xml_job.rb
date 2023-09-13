@@ -77,6 +77,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       content = download_with_cache(page.rss_link)
       return page if content.nil?
+      content.force_encoding(Encoding::UTF_8)
 
       page.event_id = extract_event_id(content) rescue nil
       page.save!
