@@ -19,7 +19,7 @@ module MailPage::Addon
 
     def create_page_from_mail(mail)
       body = mail.text_part ? mail.text_part.decoded : mail.decoded
-      body = body.gsub(/\r\n/, "\n").squeeze("\n").strip
+      body = body.gsub(/\r\n/, "\n").strip
       body = body.sub(/#{terminate_line}.+$/m, "").strip if terminate_line.present?
 
       page = MailPage::Page.new

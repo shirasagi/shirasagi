@@ -7,9 +7,8 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
 
   let(:from_conditions) { %w(sample@example.jp) }
   let(:to_conditions) { %w(example.jp) }
-  let(:terminate_line) { "暴風警報が発表されました。" }
-
-  let(:decoded) { "【緊急メールサービス】\nシラサギ役場よりお知らせします。" }
+  let(:start_line) { "【緊急メールサービス】" }
+  let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
   let(:message) { Cms::Line::Message.site(site).last }
 
   context "public" do
@@ -28,9 +27,11 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
       context "deliver handler" do
         let!(:mail_handler) do
           create(:cms_line_mail_handler, handle_state: "deliver", deliver_condition_state: "broadcast",
-            from_conditions: from_conditions, to_conditions: to_conditions, terminate_line: terminate_line)
+            from_conditions: from_conditions, to_conditions: to_conditions,
+            subject_state: "include", start_line: start_line, terminate_line: terminate_line)
         end
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
+        let(:decoded) { "【UTF-8】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
 
         context "post utf-8 mail" do
           let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
@@ -52,6 +53,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
 
         context "post iso-2022-jp mail" do
           let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+          let(:decoded) { "【ISO-2022-JP】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
 
           it "#mail" do
             capture_line_bot_client do |capture|

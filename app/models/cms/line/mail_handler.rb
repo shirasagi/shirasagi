@@ -2,6 +2,7 @@ class Cms::Line::MailHandler
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
+  include Cms::Addon::Line::MailHandler
   include Cms::Addon::Line::Message::DeliverCondition
   include Cms::SitePermission
   include Cms::Addon::GroupPermission
@@ -14,13 +15,12 @@ class Cms::Line::MailHandler
   field :filename, type: String
   field :from_conditions, type: SS::Extensions::Lines
   field :to_conditions, type: SS::Extensions::Lines
-  field :terminate_line, type: String
   field :order, type: Integer, default: 0
   field :handle_state, type: String, default: "deliver"
   field :statistic_state, type: String, default: "disabled"
 
   permit_params :name, :filename, :from_conditions, :to_conditions,
-    :terminate_line, :order, :handle_state, :statistic_state
+    :order, :handle_state, :statistic_state
 
   validates :name, presence: true, length: { maximum: 40 }
   validates :filename, presence: true, uniqueness: { scope: :site_id }, length: { maximum: 200 }
@@ -56,9 +56,7 @@ class Cms::Line::MailHandler
     to = mail.to[0]
     to_domain = to.sub(/^.+@/, "")
 
-    body = mail.text_part ? mail.text_part.decoded : mail.decoded
-    body = body.gsub(/\r\n/, "\n").squeeze("\n").strip
-    body = body.sub(/#{terminate_line}.+$/m, "").strip if terminate_line.present?
+    body = extract_body(mail)
     subject = mail.subject
 
     # check from, to

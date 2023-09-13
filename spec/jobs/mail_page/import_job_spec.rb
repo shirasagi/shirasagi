@@ -108,7 +108,7 @@ describe MailPage::ImportJob, dbscope: :example do
 
         expect(page2.layout_id).to eq node2.layout_id
         expect(page2.group_ids).to eq node2.group_ids
-        expect(page2.name).to eq "緊急メールサービス ISO-2022-JP"
+        expect(page2.name).to eq "ISO-2022-JP"
         expect(page2.html.split("<br />")).to match_array decoded.split("\n")
         expect(page2.mail_page_original_mail).to \
           include("To: =?UTF-8?B?5LyK6Jek5oKg?= <sample@example.jp>", "From: =?UTF-8?B?5LyK6Jek5oKg?= <sample@example.jp>")
@@ -118,7 +118,7 @@ describe MailPage::ImportJob, dbscope: :example do
 
         expect(page3.layout_id).to eq node3.layout_id
         expect(page3.group_ids).to eq node3.group_ids
-        expect(page3.name).to eq "緊急メールサービス ISO-2022-JP"
+        expect(page3.name).to eq "ISO-2022-JP"
         expect(page3.html.split("<br />")).to match_array decoded.split("\n")
         expect(page3.mail_page_original_mail).to \
           include("To: =?UTF-8?B?5LyK6Jek5oKg?= <sample@example.jp>", "From: =?UTF-8?B?5LyK6Jek5oKg?= <sample@example.jp>")
