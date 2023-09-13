@@ -115,7 +115,10 @@ Rails.application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state]
+    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+    end
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
@@ -431,7 +434,10 @@ Rails.application.routes.draw do
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
     resources :nodes, concerns: [:deletion, :change_state]
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+    end
     resources :import_pages, concerns: [:deletion, :convert, :change_state]
     resources :import_nodes, concerns: [:deletion, :change_state]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }

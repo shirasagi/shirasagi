@@ -50,6 +50,8 @@ Rails.application.routes.draw do
       match :ical_refresh, on: :collection, via: %i[get post]
       get :state, on: :member
       put :change_state_all, on: :collection, path: ''
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
     end
     resources :searches, only: [:index]
   end
