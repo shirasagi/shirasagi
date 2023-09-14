@@ -221,6 +221,19 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_FOR_FORM_RESTORED = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        if (element.dataset.ssAutoSaveState) {
+          resolve(element.dataset.ssAutoSaveState === "restored");
+          return;
+        }
+
+        element.addEventListener("ss:restored", () => {
+          resolve(element.dataset.ssAutoSaveState === "restored");
+        }, { once: true });
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -508,6 +521,15 @@ module SS
       raise
     end
     alias wait_for_ajax wait_for_js_ready
+
+    def wait_for_form_restored(element = nil)
+      element ||= first("form#item-form")
+      result = page.evaluate_async_script(WAIT_FOR_FORM_RESTORED, element)
+      expect(result).to be_truthy
+
+      wait_for_js_ready
+      result
+    end
   end
 end
 

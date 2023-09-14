@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
-import { csrfToken } from "../../ss/tool"
+import {csrfToken, dispatchEvent} from "../../ss/tool"
 
 function formDataToStringifyJson(formData) {
   const array = [];
@@ -103,7 +103,7 @@ export default class extends Controller {
   async #restoreForm(stringifyData) {
     const formData = stringifyJsonToFormData(stringifyData)
 
-    this.element.disabled = true;
+    this.#disableForm();
 
     const response = await fetch(this.resumeUrlValue, {
       method: "POST",
@@ -114,7 +114,9 @@ export default class extends Controller {
     });
     if (!response.ok) {
       alert(i18next.t("ss.errors.failed_to_resume_editing"));
-      this.element.disabled = false;
+      this.#enableForm();
+      this.element.dataset.ssAutoSaveState = "failed";
+      dispatchEvent(this.element, "ss:restored");
       return;
     }
 
@@ -122,18 +124,39 @@ export default class extends Controller {
 
     this.#replaceItemForm(html);
 
+    window.requestAnimationFrame(() => {
+      this.#enableForm();
+      this.element.dataset.ssAutoSaveState = "restored";
+      dispatchEvent(this.element, "ss:restored");
+    });
+  }
+
+  #disableForm() {
+    this.element.disabled = true;
+    this.element.querySelectorAll("input[type='submit']").forEach((inputElement) => {
+      inputElement.disabled = true;
+    });
+    this.element.querySelectorAll("button[type='submit']").forEach((inputElement) => {
+      inputElement.disabled = true;
+    });
+  }
+
+  #enableForm() {
+    this.element.querySelectorAll("input[type='submit']").forEach((inputElement) => {
+      inputElement.disabled = false;
+    });
+    this.element.querySelectorAll("button[type='submit']").forEach((inputElement) => {
+      inputElement.disabled = false;
+    });
     this.element.disabled = false;
   }
 
   #replaceItemForm(html) {
     const doc = new DOMParser().parseFromString(html, "text/html");
     const itemForm = doc.querySelector("#item-form").children;
-console.log("replaceItemForm itemForm=" + itemForm);
-
 
     this.element.replaceChildren(...itemForm);
-//    this.element.replaceWith(itemForm);
-//    $("#item-form").replaceWith(itemForm)
+
     // execute pre-requisites.
     SS_DateTimePicker.render();
 
