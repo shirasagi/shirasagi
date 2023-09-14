@@ -28,6 +28,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{node.full_url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly" do
@@ -56,6 +58,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit sprintf("#{node.full_url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "daily" do
@@ -87,6 +91,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{list_node.full_url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly index type1" do
@@ -125,6 +131,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit sprintf("#{list_node.full_url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
   end
 
@@ -133,6 +141,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit table_node.full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "list" do
@@ -145,6 +155,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{table_node.full_url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly index type1" do
@@ -155,6 +167,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly index type2" do
@@ -165,6 +179,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly list" do
@@ -183,6 +199,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit sprintf("#{table_node.full_url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
   end
 
@@ -246,6 +264,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit table_only_node.full_url
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "list" do
@@ -256,6 +276,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{table_only_node.full_url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly index type1" do
@@ -266,6 +288,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly index type2" do
@@ -276,6 +300,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
 
     it "monthly list" do
@@ -293,6 +319,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit sprintf("#{table_only_node.full_url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+      expect(page).to have_css("td.#{Time.zone.today.strftime('%a').downcase}.today")
+      expect(page).to have_css("td.#{Time.zone.tomorrow.strftime('%a').downcase}.future")
     end
   end
 

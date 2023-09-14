@@ -24,7 +24,14 @@ module Event::EventHelper
 
   def event_td_class(date, cdate)
     cls = event_dl_class(date)
-    cls = "#{cls} today" if date == Time.zone.today
+    today = Time.zone.today
+    if date > today
+      cls = "#{cls} future"
+    elsif date < today
+      cls = "#{cls} past"
+    else
+      cls = "#{cls} today"
+    end
 
     first_date = date.to_date.beginning_of_month
     first_cdate = cdate.to_date.beginning_of_month
