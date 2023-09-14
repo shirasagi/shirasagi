@@ -37,7 +37,7 @@ describe "gws_monitor_admins", type: :feature, dbscope: :example do
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      
+
       expect(current_path).not_to eq copy_gws_monitor_admin_path(item1.id,site)
       expect(page).to have_content("copy_sample")
 
