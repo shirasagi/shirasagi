@@ -30,9 +30,9 @@
   <thead class="message-list-head">
   <tr>
     <% if @multi %>
-      <th class="checkbox-to-all">TO<input type="checkbox" /></th>
-      <th class="checkbox-cc-all">CC<input type="checkbox" /></th>
-      <th class="checkbox-bcc-all">BCC<input type="checkbox" /></th>
+     <th class="checkbox-to-all">TO<input type="checkbox" id="to_all" /></th>
+      <th class="checkbox-cc-all">CC<input type="checkbox" id="cc_all" /></th>
+      <th class="checkbox-bcc-all">BCC<input type="checkbox" id="bcc_all" /></th>
     <% end %>
     <th class="name"><%= Gws::User.t :name %></th>
     <th><%= "#{@model.t :name} (#{t('modules.gws/shared_address')})" %></th>
@@ -44,9 +44,9 @@
     <% if item.member %>
       <tr class="list-item" data-id="<%= item.member_id %>" data-name="<%= gws_public_user_long_name(item.member.long_name) %>" data-email="<%= item.email_address %>" data-address="<%= item.email %>">
         <% if @multi %>
-          <td class="to-checkbox"><input type="checkbox" name="ids[]" value="<%= item.member_id %>" /></td>
-          <td class="cc-checkbox"><input type="checkbox" name="ids[]" value="<%= item.member_id %>" /></td>
-          <td class="bcc-checkbox"><input type="checkbox" name="ids[]" value="<%= item.member_id %>" /></td>
+          <td class="to-checkbox"><input type="checkbox" id="to_ids<%= item.id %>" name="ids[]" value="<%= item.member_id %>" /></td>
+          <td class="cc-checkbox"><input type="checkbox" id="cc_ids<%= item.id %>" name="ids[]" value="<%= item.member_id %>" /></td>
+          <td class="bcc-checkbox"><input type="checkbox" id="bcc_ids<%= item.id %>" name="ids[]" value="<%= item.member_id %>" /></td>
         <% end %>
         <td><%= link_to gws_public_user_long_name(item.member.long_name), "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= item.name %></td>

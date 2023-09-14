@@ -16,10 +16,12 @@
 </div>
 
 <table class="index">
-  <thead class="list-head">
+  <thead class="message-list-head">
   <tr>
     <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox-to-all">TO<input type="checkbox" id="p_to_all" /></th>
+      <th class="checkbox-cc-all">CC<input type="checkbox" id="p_cc_all" /></th>
+      <th class="checkbox-bcc-all">BCC<input type="checkbox" id="p_bcc_all" /></th>
     <% end %>
     <th class="name"><%= Webmail::AddressGroup.t :name %></th>
     <th></th>
@@ -30,7 +32,9 @@
   <% @group_items.each do |item| %>
     <tr class="list-item" data-id="webmail_group:<%= item.id %>" data-name="<%= item.name %>" data-email="webmail_group:<%= item.id %>" data-address="group:<%= item.id %>">
       <% if @multi %>
-        <td class="checkbox"><input type="checkbox" name="ids[]" value="webmail_group:<%= item.id %>" /></td>
+        <td class="to-checkbox"><input type="checkbox" id="to_ids<%= item.id %>" name="ids[]" value="webmail_group:<%= item.id %>" /></td>
+        <td class="cc-checkbox"><input type="checkbox" id="cc_ids<%= item.id %>" name="ids[]" value="webmail_group:<%= item.id %>" /></td>
+        <td class="bcc-checkbox"><input type="checkbox" id="bcc_ids<%= item.id %>" name="ids[]" value="webmail_group:<%= item.id %>" /></td>
       <% end %>
       <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
       <td></td>
