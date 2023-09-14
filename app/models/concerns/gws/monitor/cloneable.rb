@@ -10,7 +10,6 @@ module Gws::Monitor::Cloneable
     item.user_id = nil
     item.user_uid = nil
     item.user_name = nil
-    item.name = "[#{prefix}] #{item.name}"
     item.state = "draft"
     item.cur_user = @cur_user
     item.cur_site = @cur_site

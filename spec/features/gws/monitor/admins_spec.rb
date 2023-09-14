@@ -30,11 +30,20 @@ describe "gws_monitor_admins", type: :feature, dbscope: :example do
       item1
       visit gws_monitor_admins_path(site)
       click_on item1.name
-      click_on I18n.t("ss.links.copy")
 
-      expect(status_code).to eq 200
-      expect(current_path).to eq copy_gws_monitor_admin_path(item1.id,site)
-      expect(page).to have_content(item1.name)
+      click_on I18n.t("ss.links.copy")
+      within "form#item-form" do
+        fill_in "item[name]", with: "copy_sample"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      
+      expect(current_path).not_to eq copy_gws_monitor_admin_path(item1.id,site)
+      expect(page).to have_content("copy_sample")
+
+      expect(Gws::Monitor::Topic.all.count).to eq 2
+      source_file = Gws::Monitor::Topic.all.find_by(id: 2)
+      expect(source_file.name).to eq "copy_sample"
     end
   end
 end

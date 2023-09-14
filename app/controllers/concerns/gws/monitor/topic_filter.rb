@@ -95,6 +95,8 @@ module Gws::Monitor::TopicFilter
     end
 
     @new_item = @item.new_clone
+    @new_item.attributes = get_params
+
     result = @new_item.save
     if !result
       SS::Model.copy_errors(@new_item, @item)
