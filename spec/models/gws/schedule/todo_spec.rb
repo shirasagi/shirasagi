@@ -574,6 +574,7 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
         expect(new_item.file_ids).not_to eq item.file_ids
         new_item.files.first.tap do |new_file|
           expect(new_file.id).not_to eq file1.id
+          expect(new_file.model).to eq "gws/schedule/todo"
           expect(new_file.name).to eq file1.name
           expect(new_file.filename).to eq file1.filename
           expect(new_file.content_type).to eq file1.content_type
@@ -622,6 +623,7 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
         expect(new_item.file_ids.length).to eq 1
         new_item.files.first.tap do |new_file|
           expect(new_file.id).to eq file2.id
+          expect(new_file.model).to eq "gws/schedule/todo"
           expect(new_file.owner_item_id).to eq new_item.id
           expect(new_file.owner_item_type).to eq new_item.class.name
         end
