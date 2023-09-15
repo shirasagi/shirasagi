@@ -6,6 +6,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
 
   before_action :set_facility
   before_action :set_download_url, only: :index
+  before_action :set_default_readable_setting, only: [:new]
 
   navi_view "gws/schedule/main/navi"
 
@@ -44,5 +45,20 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
       Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site, user: @cur_user),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
+  def set_default_readable_setting
+    main_facility = Gws::Facility::Item.find(@facility.id)
+    @default_readable_setting = proc do
+      @item.readable_setting_range = main_facility.readable_setting_range
+      @item.readable_group_ids = [ main_facility.readable_group_ids ]
+      @item.readable_member_ids = [ main_facility.readable_member_ids ]
+      @item.readable_custom_group_ids = []
+    end
   end
 end
