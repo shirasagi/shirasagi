@@ -9,4 +9,10 @@
   <% else %>
     <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
   <% end %>
+  <% if item.remark.present? %>
+    <div class="slide-remark">
+      <div class="title"><%= item.name %></div>
+      <div class="remark"><%=br item.remark %></div>
+    </div>
+  <% end %>
 </div>
