@@ -21,7 +21,7 @@ class Gws::Monitor::Topic
   field :notice_state, type: String
   field :notice_at, type: DateTime
 
-  permit_params :notice_state, :in_clone_file
+  permit_params :notice_state
 
   before_validation :set_answer_state_hash
   before_validation :set_notice_at
