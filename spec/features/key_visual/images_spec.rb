@@ -13,6 +13,8 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
     end
     let(:name) { "sample" }
     let(:name2) { "modify" }
+    let(:remark) { unique_id }
+    let(:remark2) { unique_id }
 
     before { login_cms_user }
 
@@ -26,7 +28,7 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[link_url]", with: "http://example.jp"
-        wait_for_cbox_opened { first(".btn-file-upload").click }
+        fill_in "item[remark]", with: remark
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file.name)
@@ -40,13 +42,17 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
       visit index_path
       click_on name
       expect(page).to have_css("#addon-basic", text: name)
+      expect(page).to have_css("#addon-basic", text: remark)
 
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[name]", with: name2
+        fill_in "item[remark]", with: remark2
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      expect(page).to have_css("#addon-basic", text: name2)
+      expect(page).to have_css("#addon-basic", text: remark2)
 
       visit index_path
       click_on name2

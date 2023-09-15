@@ -146,5 +146,49 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         expect(page).to have_css(".ss-swiper-slide-stop[aria-pressed='true']")
       end
     end
+
+    context "when display remark" do
+      let!(:part) { create :key_visual_part_swiper_slide, filename: "#{folder_path}/#{unique_id}" }
+
+      before do
+        item1.remark = unique_id
+        item1.display_remark = %w(remark)
+        item1.update
+
+        item2.remark = unique_id
+        item2.display_remark = %w(title)
+        item2.update
+      end
+
+      it do
+        visit node.full_url
+
+        # wait for slider initialization
+        expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
+        within ".swiper-slide-active[data-ss-page-id='#{item1.id}']" do
+          within ".slide-remark" do
+            expect(page).to have_no_css(".title", text: item1.name)
+            expect(page).to have_css(".remark", text: item1.remark)
+          end
+        end
+
+        wait_event_to_fire("transitionEnd") do
+          first(".swiper-pagination-bullet[aria-label='Go to slide 2']").click
+        end
+        within ".swiper-slide-active[data-ss-page-id='#{item2.id}']" do
+          within ".slide-remark" do
+            expect(page).to have_css(".title", text: item2.name)
+            expect(page).to have_no_css(".remark", text: item2.remark)
+          end
+        end
+
+        wait_event_to_fire("transitionEnd") do
+          first(".swiper-pagination-bullet[aria-label='Go to slide 3']").click
+        end
+        within ".swiper-slide-active[data-ss-page-id='#{item3.id}']" do
+          expect(page).to have_no_css(".slide-remark")
+        end
+      end
+    end
   end
 end

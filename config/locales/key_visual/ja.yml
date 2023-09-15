@@ -21,6 +21,9 @@ ja:
         bullets: 黒丸
         fraction: スライド番号（分数）
         progressbar: プログレスバー
+      display_remarks:
+        title: タイトル
+        remark: 説明テキスト
 
   modules:
     key_visual: キービジュアル
@@ -58,6 +61,8 @@ ja:
         link_url: リンクURL
         file_id: 画像
         in_file: 画像
+        remark: 説明テキスト
+        display_remarks: 表示
       key_visual/addon/swiper_setting:
         link_target: リンク表示
         kv_speed: スライド切替時間
@@ -79,6 +84,10 @@ ja:
         - キービジュアル画像のリンク先のURLを入力します。
       file_id:
         - キービジュアル画像に利用する画像を登録します。
+      remark:
+        - 説明テキストを入力します。
+      display_remarks:
+        - キービジュアルに追加表示する文言を選択します。
     key_visual/addon/page_list:
       link_target:
         - リンクの表示形式を設定します。
