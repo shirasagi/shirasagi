@@ -11,6 +11,7 @@ module Gws::Monitor::Cloneable
     item.user_uid = nil
     item.user_name = nil
     item.state = "draft"
+    item.answer_state_hash = {}
     item.cur_user = @cur_user
     item.cur_site = @cur_site
     item.in_clone_file = true
