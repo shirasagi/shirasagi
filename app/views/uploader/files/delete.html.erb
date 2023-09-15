@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <footer class="send">
+  <footer class="send ss-sticky ss-sticky-bottom">
     <%= f.submit t("ss.buttons.delete"), class: "delete btn-primary", data: { disable_with: t("ss.buttons.deleting") } %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
   </footer>

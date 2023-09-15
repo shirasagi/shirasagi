@@ -187,7 +187,8 @@ module Gws::Affair::WorkflowFilter
       next unless item.allowed?(:approve, @cur_user)
 
       save_level = item.workflow_current_level
-      item.approve_workflow_approver_state(@cur_user, {})
+      opts = {}
+      item.approve_workflow_approver_state(@cur_user, **opts)
 
       if item.finish_workflow?
         item.approved = Time.zone.now

@@ -9,6 +9,14 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :condition_state %></dt>
+  <dd><%= @item.label :condition_state %></dd>
+
+  <% if @item.condition_label.present? %>
+    <dt><%= @model.t :condition_label %></dt>
+    <dd><%=br @item.condition_label %></dd>
+  <% end %>
+
   <dt><%= @model.t :created %></dt>
   <dd><%=l @item.created %></dd>
 

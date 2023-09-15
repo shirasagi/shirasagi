@@ -62,7 +62,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-items", text: user1.name)
       expect(page).to have_css(".list-items", text: user2.name)
 
-      find('.list-head input[type="checkbox"]').set(true)
+      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')

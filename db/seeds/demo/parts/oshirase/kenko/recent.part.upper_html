@@ -1,1 +1,4 @@
-<section id="recent-oshirase"><header><h2>お知らせ</h2></header>
+<section id="whats-new" class="whats-new">
+  <header class="whats-new__header"><h2 class="whats-new__header-title">新着情報</h2></header>
+  <div class="whats-new__list-wrap">
+    <div class="whats-new__list">

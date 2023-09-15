@@ -152,21 +152,27 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.edit')
         within 'form#item-form' do
           within ".column-value-palette" do
-            click_on column1.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column1.name
+            end
           end
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value1
           end
 
           within ".column-value-palette" do
-            click_on column2.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column2.name
+            end
           end
           within ".column-value-cms-column-datefield" do
             fill_in "item[column_values][][in_wrap][date]", with: column2_value1
           end
 
           within ".column-value-palette" do
-            click_on column3.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column3.name
+            end
           end
           within ".column-value-cms-column-urlfield2" do
             fill_in "item[column_values][][in_wrap][link_label]", with: column3_label1
@@ -174,35 +180,45 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column4.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column4.name
+            end
           end
           within ".column-value-cms-column-textarea" do
             fill_in "item[column_values][][in_wrap][value]", with: column4_value1
           end
 
           within ".column-value-palette" do
-            click_on column5.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column5.name
+            end
           end
           within ".column-value-cms-column-select" do
             select column5_value1, from: "item[column_values][][in_wrap][value]"
           end
 
           within ".column-value-palette" do
-            click_on column6.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column6.name
+            end
           end
           within ".column-value-cms-column-radiobutton" do
             first(:field, type: "radio", with: column6_value1).click
           end
 
           within ".column-value-palette" do
-            click_on column7.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column7.name
+            end
           end
           within ".column-value-cms-column-checkbox" do
             first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value1).click
           end
 
           within ".column-value-palette" do
-            click_on column8.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column8.name
+            end
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
@@ -219,14 +235,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column9.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column9.name
+            end
           end
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
           end
 
           within ".column-value-palette" do
-            click_on column10.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column10.name
+            end
           end
           within ".column-value-cms-column-headline" do
             select column10_head1, from: "item[column_values][][in_wrap][head]"
@@ -234,14 +254,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column11.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column11.name
+            end
           end
           within ".column-value-cms-column-list" do
             fill_in "item[column_values][][in_wrap][lists][]", with: column11_list1
           end
 
           within ".column-value-palette" do
-            click_on column12.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column12.name
+            end
           end
           within ".column-value-cms-column-table" do
             find("input.height").set(column12_height1)
@@ -251,14 +275,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column13.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column13.name
+            end
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
           end
 
           within ".column-value-palette" do
-            click_on column14.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column14.name
+            end
           end
           wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
@@ -430,6 +458,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit article_pages_path(site: site, cid: node)
         click_on name
         click_on I18n.t('ss.links.edit')
+        wait_for_js_ready
         within 'form#item-form' do
           %w(
             textfield datefield urlfield2 textarea select radiobutton checkbox fileupload
@@ -491,21 +520,27 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 
           within ".column-value-palette" do
-            click_on column1.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column1.name
+            end
           end
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value1
           end
 
           within ".column-value-palette" do
-            click_on column2.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column2.name
+            end
           end
           within ".column-value-cms-column-datefield" do
             fill_in "item[column_values][][in_wrap][date]", with: column2_value1
           end
 
           within ".column-value-palette" do
-            click_on column3.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column3.name
+            end
           end
           within ".column-value-cms-column-urlfield2" do
             fill_in "item[column_values][][in_wrap][link_label]", with: column3_label1
@@ -513,35 +548,45 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column4.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column4.name
+            end
           end
           within ".column-value-cms-column-textarea" do
             fill_in "item[column_values][][in_wrap][value]", with: column4_value1
           end
 
           within ".column-value-palette" do
-            click_on column5.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column5.name
+            end
           end
           within ".column-value-cms-column-select" do
             select column5_value1, from: "item[column_values][][in_wrap][value]"
           end
 
           within ".column-value-palette" do
-            click_on column6.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column6.name
+            end
           end
           within ".column-value-cms-column-radiobutton" do
             first(:field, type: "radio", with: column6_value1).click
           end
 
           within ".column-value-palette" do
-            click_on column7.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column7.name
+            end
           end
           within ".column-value-cms-column-checkbox" do
             first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value1).click
           end
 
           within ".column-value-palette" do
-            click_on column8.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column8.name
+            end
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
@@ -562,7 +607,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column9.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column9.name
+            end
           end
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
@@ -584,7 +631,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column10.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column10.name
+            end
           end
           within ".column-value-cms-column-headline" do
             select column10_head1, from: "item[column_values][][in_wrap][head]"
@@ -592,14 +641,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column11.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column11.name
+            end
           end
           within ".column-value-cms-column-list" do
             fill_in "item[column_values][][in_wrap][lists][]", with: column11_list1
           end
 
           within ".column-value-palette" do
-            click_on column12.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column12.name
+            end
           end
           within ".column-value-cms-column-table" do
             find("input.height").set(column12_height1)
@@ -609,14 +662,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            click_on column13.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column13.name
+            end
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
           end
 
           within ".column-value-palette" do
-            click_on column14.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column14.name
+            end
           end
           wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
@@ -814,6 +871,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         visit article_pages_path(site: site, cid: node)
         click_on name
         click_on I18n.t('ss.links.edit')
+        wait_for_js_ready
         within 'form#item-form' do
           %w(
             textfield datefield urlfield2 textarea select radiobutton checkbox fileupload
@@ -825,6 +883,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               end
             end
             # wait animation finished
+            wait_for_js_ready
             expect(page).to have_no_css(".column-value-cms-column-#{f}")
           end
 
@@ -916,14 +975,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           within ".column-value-palette" do
-            click_on column1.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column1.name
+            end
           end
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value1
           end
 
           within ".column-value-palette" do
-            click_on column2.name
+            wait_event_to_fire("ss:columnAdded") do
+              click_on column2.name
+            end
           end
           within ".column-value-cms-column-datefield" do
             fill_in "item[column_values][][in_wrap][date]", with: column2_value1

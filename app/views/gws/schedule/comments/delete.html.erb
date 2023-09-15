@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
   <%= link_to(t("ss.buttons.cancel"), URI.parse(params[:redirect_to].to_s).path, class: 'btn-default') %>
 </footer>

@@ -20,15 +20,15 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
-        click_on memo.subject
+        wait_cbox_close { click_on memo.subject }
       end
       within "form#item-form" do
+        expect(page).to have_content(memo.subject)
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
         end
       end
-
-      expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_export"))
+      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
       within '#addon-basic' do
         expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
       end
@@ -39,14 +39,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      page.execute_script("SS.clearNotice();")
-
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
+        wait_for_js_ready
 
         within ".popup-notice-items .list-item.unseen" do
           click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
         end
+        wait_for_js_ready
       end
 
       within ".gws-memo-notices .body" do
@@ -55,6 +55,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
       end
+      wait_for_js_ready
 
       wait_for_download
 
@@ -285,12 +286,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_all"
+        wait_for_js_ready
+
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
         end
       end
 
-      expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_export"))
+      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
       within '#addon-basic' do
         expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
       end
@@ -301,12 +304,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      page.execute_script("SS.clearNotice();")
-
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
+        wait_for_js_ready
 
-        expect(page).to have_no_css('.popup-notice-items .list-item.unseen')
+        I18n.t("gws/memo/message.export_failed.subject", locale: I18n.default_locale).tap do |title|
+          expect(page).to have_css('.popup-notice-items .list-item.unseen', text: /#{::Regexp.escape(title)}/)
+          click_on title
+        end
+        wait_for_js_ready
+      end
+
+      within ".gws-memo-notices .body" do
+        message = I18n.t("gws/memo/message.export_failed.notify_message", locale: I18n.default_locale).split("\n").first
+        expect(page).to have_content(message)
       end
     end
   end
@@ -347,12 +358,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_all"
+        wait_for_js_ready
+
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
         end
       end
 
-      expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_export"))
+      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
       within '#addon-basic' do
         expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
       end
@@ -363,14 +376,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      page.execute_script("SS.clearNotice();")
-
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
+        wait_for_js_ready
 
         within ".popup-notice-items .list-item.unseen" do
           click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
         end
+        wait_for_js_ready
       end
 
       within ".gws-memo-notices .body" do
@@ -379,6 +392,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
       end
+      wait_for_js_ready
 
       wait_for_download
 
@@ -422,12 +436,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_all"
+        wait_for_js_ready
+
         perform_enqueued_jobs do
           click_on I18n.t("ss.export")
         end
       end
 
-      expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_export"))
+      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
       within '#addon-basic' do
         expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
       end
@@ -438,14 +454,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      page.execute_script("SS.clearNotice();")
-
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
+        wait_for_js_ready
 
         within ".popup-notice-items .list-item.unseen" do
           click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
         end
+        wait_for_js_ready
       end
 
       within ".gws-memo-notices .body" do
@@ -454,6 +470,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
       end
+      wait_for_js_ready
 
       wait_for_download
 
@@ -499,13 +516,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
-        click_on memo.subject
+        wait_cbox_close { click_on memo.subject }
       end
       within "form#item-form" do
+        expect(page).to have_content(memo.subject)
         click_on I18n.t("ss.export")
       end
 
-      expect(page).to have_css("#errorExplanation", text: I18n.t("job.notice.size_limit_exceeded"))
+      wait_for_error I18n.t("job.notice.size_limit_exceeded")
 
       # export again
       within "form#item-form" do
@@ -513,13 +531,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
-        click_on memo.subject
+        wait_cbox_close { click_on memo.subject }
       end
       within "form#item-form" do
+        expect(page).to have_content(memo.subject)
         click_on I18n.t("ss.export")
       end
 
-      expect(page).to have_css("#errorExplanation", text: I18n.t("job.notice.size_limit_exceeded"))
+      wait_for_error I18n.t("job.notice.size_limit_exceeded")
     end
   end
 end

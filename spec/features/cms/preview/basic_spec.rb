@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe "cms_preview", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  category_part_node = nil
 
   context "with article page" do
     let(:node) { create :article_node_page, cur_site: site }
@@ -42,16 +41,17 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let(:faq_part_search) { create(:faq_part_search, cur_site: site, cur_node: node_faq_search) }
     let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
     let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{node_root.url}"[1..-1]) }
-
-    before do
-      category_part_node = create(
+    let!(:category_part_node) do
+      create(
         :category_part_node,
         cur_site: site,
         cur_node: node_root,
         upper_html: '<nav id="category-list"><header><h2>#{parent.parent_name} > #{parent_name}</h2></header>',
         loop_html: '<article class="#{class} #{current}"><header><h3><a href="#{url}">#{name}</a></h3></header></article>',
         lower_html: '<footer>#{part_parent.parent_name} > #{part_parent_name} > #{part_name}</footer></nav>')
+    end
 
+    before do
       layout_html = ''
       layout_html << '<html><body>'
       layout_html << "<title>#{cms_site.name}</title>"
@@ -162,6 +162,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
       end
 
       within_window new_window do
+        wait_for_document_loading
         wait_for_js_ready
         expect(page).to have_css(".heading", text: "見出し2")
 

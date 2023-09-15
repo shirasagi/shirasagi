@@ -14,6 +14,7 @@ describe "michecker", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('cms.links.michecker')
 
       switch_to_window(windows.last)
+      wait_for_document_loading
       within ".michecker-head" do
         expect(page).to have_content(I18n.t("cms.cms/michecker.prepared"), wait: 60)
         click_on I18n.t('cms.cms/michecker.start')

@@ -1,15 +1,3 @@
 <div id="map-sidebar" style="height: 400px;">
-  <% @items.each do |item| %>
-    <div class="column" data-id="<%= item.id %>">
-      <p><%= link_to item.name, item.url %></p>
-      <% if item.try(:address) %>
-        <p><%= item.address %></p>
-      <% end %>
-      <% if @markers.find { |marker| marker[:id] == item.id }.present? %>
-        <%= link_to t("facility.sidebar.click_marker"), "#", class: "click-marker" %>
-      <% else %>
-        <div class="no-marker"><%= t("facility.sidebar.no_marker") %></div>
-      <% end %>
-    </div>
-  <% end %>
+  <%== render_sidebar %>
 </div>

@@ -15,7 +15,7 @@ class Opendata::Resource
   field :order, type: Integer, default: 0
   field :downloaded_count_cache, type: Hash
 
-  permit_params :name, :text, :format, :license_id, :source_url, :order
+  permit_params :state, :name, :text, :format, :license_id, :source_url, :order
 
   validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true

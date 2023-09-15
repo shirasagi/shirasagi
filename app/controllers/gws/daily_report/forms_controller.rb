@@ -20,9 +20,21 @@ class Gws::DailyReport::FormsController < ApplicationController
   public
 
   def index
+    @s ||= begin
+      s = OpenStruct.new params[:s]
+      s.year ||= @cur_site.fiscal_year
+      s
+    end
+    @years ||= begin
+      items = @model.unscoped.site(@cur_site).without_deleted
+      years = items.distinct(:year)
+      years << @cur_site.fiscal_year
+      (years.min..years.max).to_a.reverse
+    end
+    @groups = Gws::Group.site(@cur_site).active
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      search(params[:s]).
+      search(@s).
       order_by(year: -1, order: 1).
       page(params[:page]).per(50)
   end
@@ -30,7 +42,7 @@ class Gws::DailyReport::FormsController < ApplicationController
   def copy_year
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @src_year = params.dig(:item, :src_year) || @model.site(@cur_site).without_deleted.pluck(:year).max
+    @src_year = params.dig(:item, :src_year) || @model.site(@cur_site).without_deleted.distinct(:year).max
     @dest_year = params.dig(:item, :dest_year) || (@src_year + 1)
 
     if request.get? || request.head?

@@ -7,6 +7,7 @@ describe "webmail_account", type: :feature, dbscope: :example, imap: true, js: t
     it do
       visit webmail_account_path(account: 0)
       click_on I18n.t('ss.links.edit')
+      wait_for_js_ready
 
       within "form#item-form" do
         click_on I18n.t('webmail.buttons.test_connection')

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+root = File.dirname(__dir__)
+
+%w(job_logs ss_files ss_tasks).each do |dir|
+  path = "#{root}/private/files/#{dir}"
+  next unless ::Dir.exist?(path)
+
+  puts "#{path}"
+  system("find #{path} -type d -empty -delete")
+end

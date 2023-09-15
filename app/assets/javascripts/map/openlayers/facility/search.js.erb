@@ -4,6 +4,7 @@ this.Openlayers_Facility_Search = (function () {
 
   Openlayers_Facility_Search.render = function (selector, opts) {
     var canvas, map, overrided, slideSidebar;
+
     //define function
     if (opts == null) {
       opts = {};
@@ -13,13 +14,15 @@ this.Openlayers_Facility_Search = (function () {
       columnTop = column.offset().top;
       indexTop = column.closest("#map-sidebar").offset().top;
       scrolled = column.closest("#map-sidebar").scrollTop();
-      return column.closest("#map-sidebar").animate({
+      column.closest("#map-sidebar").animate({
         scrollTop: columnTop - indexTop + scrolled
       }, 'fast');
     };
+
     //setup map
     canvas = $(selector)[0];
     map = new Openlayers_Map(canvas, opts);
+
     //setup markers
     overrided = map.showPopup;
     map.showPopup = function (feature, coordinate) {
@@ -28,10 +31,13 @@ this.Openlayers_Facility_Search = (function () {
       $("#map-sidebar .column").removeClass("current");
       dataId = feature.get("markerId");
       column = $('#map-sidebar .column[data-id="' + dataId + '"]');
-      column.addClass("current");
-      return slideSidebar(column);
-      //setup sidebar
+      if (column.length) {
+        column.addClass("current");
+        slideSidebar(column);
+      }
     };
+
+    //setup sidebar
     $("#map-sidebar .column .click-marker").on("click", function () {
       var coordinate, dataId, marker;
       dataId = parseInt($(this).closest(".column").attr("data-id"));
@@ -53,7 +59,7 @@ this.Openlayers_Facility_Search = (function () {
       }
       dataIds = [];
       $(".filters a.clicked").each(function () {
-        return dataIds.push(parseInt($(this).attr("data-id")));
+        dataIds.push(parseInt($(this).attr("data-id")));
       });
       markers = map.getMarkers();
       $.each(markers, function () {
@@ -74,21 +80,23 @@ this.Openlayers_Facility_Search = (function () {
           style = map.createMarkerStyle(iconSrc);
           this.setStyle(style);
           column.show();
-          return
         } else {
           style = new ol.style.Style({});
           this.setStyle(style);
           column.hide();
-          return
         }
       });
+
+      var resultSize = $('#map-sidebar .column:visible').length;
+      $('.map-search-result .number').text(resultSize);
       return false;
     });
+
     //setup location filter
-    return $(".filters .focus").on("change", function () {
+    $(".filters .focus").on("change", function () {
       var select;
       select = $(this);
-      return select.find("option:selected").each(function () {
+      select.find("option:selected").each(function () {
         var loc, pos, zoomLevel;
         if ($(this).val() === "") {
           return false;
@@ -100,7 +108,19 @@ this.Openlayers_Facility_Search = (function () {
         if (zoomLevel) {
           map.setZoom(parseInt(zoomLevel));
         }
-        return select.val("");
+        select.val("");
+      });
+    });
+
+    //click selected category
+    $('.map-search-condition .category-settings').each(function() {
+      var settings = $(this).attr('data-category-settings');
+      if (!settings) return false;
+      $('.map-search-index .filters a').each(function() {
+        var $btn = $(this);
+        if (!settings.includes($btn.text())) {
+          $btn.click();
+        }
       });
     });
   };

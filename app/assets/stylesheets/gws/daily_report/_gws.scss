@@ -92,6 +92,11 @@ dl.see.mod-gws-daily-report-custom_form {
   }
   .table-wrap {
     overflow-x: scroll;
+    table.index {
+      th, td {
+        white-space: normal;
+      }
+    }
   }
   header {
     .search {

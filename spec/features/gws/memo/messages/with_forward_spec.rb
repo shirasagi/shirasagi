@@ -8,7 +8,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     end
     let(:subject) { "subject-#{unique_id}" }
     let(:texts) { Array.new(rand(2..3)) { "text-#{unique_id}" } }
-    let(:text) { texts.join("\r\n") }
     let(:forward_email1) { "#{unique_id}@example.jp" }
     let(:forward_email2) { "#{unique_id}@example.jp" }
     let(:forward_subject) { "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{gws_user.name}" }
@@ -32,6 +31,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       it do
         visit gws_memo_messages_path(site)
         click_on I18n.t('ss.links.new')
+        wait_for_js_ready
 
         within 'form#item-form' do
           click_on I18n.t("webmail.links.show_cc_bcc")
@@ -53,7 +53,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".index", text: recipient.name)
           end
           fill_in 'item[subject]', with: subject
-          fill_in 'item[text]', with: text
+          fill_in 'item[text]', with: texts.join("\n")
 
           click_on I18n.t('ss.buttons.draft_save')
         end
@@ -69,6 +69,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
         click_on subject
         click_on I18n.t("ss.links.edit")
+        wait_for_js_ready
         within 'form#item-form' do
           page.accept_confirm do
             click_on I18n.t("ss.buttons.send")
@@ -79,7 +80,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(Gws::Memo::Message.count).to eq 1
         message = Gws::Memo::Message.first
         expect(message.subject).to eq subject
-        expect(message.text).to eq text
+        expect(message.text).to eq texts.join("\r\n")
 
         # send forward mail
         expect(ActionMailer::Base.deliveries).to have(1).items
@@ -90,7 +91,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.subject).to eq forward_subject
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(subject)
-          expect(mail.body.raw_source).to include(text)
+          expect(mail.body.raw_source).to include(texts.join("\r\n"))
           url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}"
           url += "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}"
           expect(mail.body.raw_source).to include(url)

@@ -14,6 +14,8 @@ class Cms::Line::Statistic
   seqid :id
   field :name, type: String
   field :action, type: String
+  field :condition_state, type: String
+  field :condition_label, type: String
   field :request_id, type: String
   field :aggregation_unit, type: String
   field :statistics, type: Hash, default: {}
@@ -80,6 +82,10 @@ class Cms::Line::Statistic
     true
   end
 
+  def condition_state_options
+    I18n.t("cms.options.line_deliver_condition_state").map { |k, v| [v, k] }
+  end
+
   class << self
     def ss_short_uuid
       "ss_#{ShortUUID.shorten(SecureRandom.uuid)}"
@@ -92,6 +98,8 @@ class Cms::Line::Statistic
       item.message = message
       item.name = message.name
       item.action = message.deliver_action
+      item.condition_state = message.deliver_condition_state
+      item.condition_label = message.deliver_condition_label
       item.group_ids = message.group_ids
 
       if item.multicast?
@@ -106,6 +114,25 @@ class Cms::Line::Statistic
     def get_aggregation_units_by_month(site)
       res = site.line_client.get_aggregation_info
       (JSON.parse(res.body))['numOfCustomAggregationUnits'].to_i
+    end
+
+    def enum_csv(options = {})
+      criteria = all
+      drawer = SS::Csv.draw(:export, context: self) do |drawer|
+        drawer.column :message_id do
+          drawer.body { |item| item.name }
+        end
+        drawer.column :condition_state do
+          drawer.body { |item| item.label(:condition_state) }
+        end
+        drawer.column :condition_label
+        drawer.column :overview_delivered
+        drawer.column :overview_unique_impression
+        drawer.column :overview_openrate
+        drawer.column :created
+        drawer.column :updated
+      end
+      drawer.enum(criteria, options)
     end
 
     def search(params)

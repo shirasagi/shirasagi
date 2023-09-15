@@ -14,6 +14,8 @@ module Contact::Addon::Page
     belongs_to :contact_group_contact, class_name: "SS::Contact"
     field :contact_group_relation, type: String
 
+    before_validation :update_contacts
+
     validates :contact_state, inclusion: { in: %w(show hide), allow_blank: true }
     validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
     validates :contact_group_relation, inclusion: { in: %w(related unrelated), allow_blank: true }
@@ -80,10 +82,6 @@ module Contact::Addon::Page
     ].any? { |m| send(m).present? }
   end
 
-  def contact_link
-    contact_link_name || contact_link_url
-  end
-
   private
 
   CONTACT_ATTRIBUTES = %w[
@@ -104,7 +102,8 @@ module Contact::Addon::Page
     return unless contact_group
     return unless contact_group_contact_id
 
-    force_overwrite = Chorg.current_context.options.present? && Chorg.current_context.options['forced_overwrite']
+    chorg_options = Chorg.current_context.try(:options)
+    force_overwrite = chorg_options.present? && chorg_options['forced_overwrite']
     return if !force_overwrite && !contact_group_related?
 
     contact = contact_group.contact_groups.where(id: contact_group_contact_id).first

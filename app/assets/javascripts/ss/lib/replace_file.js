@@ -40,7 +40,7 @@ this.SS_ReplaceFile = (function () {
   };
 
   SS_ReplaceFile.showError = function(xhr, status, error) {
-    var fullMessages = [ "== Error ==" ];
+    var fullMessages = [ "== Error(ReplaceFile) ==" ];
     if (xhr.responseText) {
       fullMessages.push(xhr.responseText);
     }

@@ -4,6 +4,8 @@
 //= link application.css
 //= link colorbox.js
 //= link colorbox.css
+//= link jplayer.js
+//= link jplayer.css
 
 // ビルドするアセット一覧（アルファベット順）
 // 次のコマンドで、一覧を生成することができる
@@ -62,6 +64,7 @@
 //= link opendata/opendata.js
 //= link opendata/public.js
 //= link ss/chart.js
+//= link ss/chartjs-colorschemes.js
 //= link ss/debug.js
 //= link ss/script.js
 

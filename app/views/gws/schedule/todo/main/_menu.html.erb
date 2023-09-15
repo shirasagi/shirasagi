@@ -7,13 +7,13 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /new|create|lock|copy/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-    <%= link_to t('gws/schedule.links.back_to_calendar'), params.dig(:calendar, :path) if params.dig(:calendar, :path) %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), calendar_redirect_url if calendar_redirect_url %>
   <% elsif params[:action] =~ /edit|update|delete|move|finish|revert|disable/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) || @item.member?(@cur_user) || @item.readable?(@cur_user) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-    <%= link_to t('gws/schedule.links.back_to_calendar'), params.dig(:calendar, :path) if params.dig(:calendar, :path) %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), calendar_redirect_url if calendar_redirect_url %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
@@ -32,6 +32,6 @@
       <% end %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-    <%= link_to t('gws/schedule.links.back_to_calendar'), params.dig(:calendar, :path) if params.dig(:calendar, :path) %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), calendar_redirect_url if calendar_redirect_url %>
   <% end %>
 </nav>

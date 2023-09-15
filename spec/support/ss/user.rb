@@ -24,6 +24,7 @@ def login_user(user, pass: nil)
     set_value_to_hidden_input('input#ref', '/robots.txt')
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
+  expect(page).to have_no_css('.login-box [name="item[password]"]')
 
   # rubocop:disable Rails/I18nLocaleAssignment
   if user.lang.present?
@@ -35,7 +36,7 @@ end
 # set value to hidden input
 def set_value_to_hidden_input(selector, value)
   if page.driver.is_a?(Capybara::Selenium::Driver)
-    page.execute_script("return $('#{selector}').val('#{value}');")
+    page.execute_script("$('#{selector}').val('#{value}');")
   else
     first(selector, visible: false).set(value)
   end

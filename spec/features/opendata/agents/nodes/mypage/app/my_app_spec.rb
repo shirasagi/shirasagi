@@ -46,6 +46,11 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
   end
 
   describe "basic crud" do
+    let!(:node_search_dateset) { create_once :opendata_node_search_dataset }
+    21.times do |i|
+      let!(:"dataset#{i + 1}") { create :opendata_dataset, cur_node: node_dataset }
+    end
+
     it do
       visit "http://#{site.domain}#{index_path}"
       expect(current_path).to eq index_path
@@ -56,6 +61,15 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         fill_in "item[text]", with: "せつめい"
         fill_in "item[license]", with: "MIT"
         check category.name
+        click_link I18n.t("opendata.search_datasets.index")
+      end
+      wait_for_cbox do
+        click_link I18n.t('views.pagination.next')
+        wait_cbox_close do
+          click_link dataset1.name
+        end
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
       expect(current_path).to eq index_path
@@ -66,6 +80,8 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         expect(page).to have_content "あぷり"
         expect(page).to have_content "せつめい"
         expect(page).to have_content "MIT"
+        expect(page).to have_content dataset1.name
+        expect(page).to have_no_content dataset2.name
       end
 
       click_link I18n.t("ss.buttons.edit")
@@ -74,6 +90,16 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         fill_in "item[text]", with: "こうしん"
         fill_in "item[license]", with: "GPL"
         check category.name
+        click_link I18n.t("opendata.search_datasets.index")
+      end
+      wait_for_cbox do
+        fill_in "s[name]", with: dataset2.name
+        click_button I18n.t("opendata.search_datasets.search")
+        wait_cbox_close do
+          click_link dataset2.name
+        end
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
 
@@ -81,6 +107,8 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         expect(page).to have_content "あぷり2"
         expect(page).to have_content "こうしん"
         expect(page).to have_content "GPL"
+        expect(page).to have_content dataset1.name
+        expect(page).to have_content dataset2.name
       end
 
       click_link I18n.t('ss.buttons.delete')

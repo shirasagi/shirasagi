@@ -390,10 +390,10 @@ save_node route: "cms/node", filename: "institution/type", name: "施設の種�
 save_node route: "cms/node", filename: "institution/use", name: "施設の用途",
   layout_id: layouts["institution"].id, sort: "order", order: 100
 
-center_point_1 = Map::Extensions::Point.mongoize(loc: [34.075593, 134.550614], zoom_level: 10)
-center_point_2 = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], zoom_level: 10)
-center_point_3 = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
-center_point_4 = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
+center_point_1 = Map::Extensions::Point.mongoize(loc: [134.550614, 34.075593], zoom_level: 10)
+center_point_2 = Map::Extensions::Point.mongoize(loc: [133.808902, 34.034417], zoom_level: 10)
+center_point_3 = Map::Extensions::Point.mongoize(loc: [134.352387, 33.609123], zoom_level: 10)
+center_point_4 = Map::Extensions::Point.mongoize(loc: [134.608579, 34.179472], zoom_level: 10)
 
 node = save_node route: "facility/location", filename: "institution/area/east",
   name: "東区", layout_id: layouts["institution"].id, order: 10, center_point: center_point_1
@@ -561,7 +561,7 @@ article2 = save_page route: "article/page", filename: "docs/page2.html", name: "
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy1.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
   contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000",
   contact_fax: "000-000-0000", contact_link_url: link_url, contact_link_name: link_url
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -581,7 +581,7 @@ recurrence = { kind: "date", start_at: Time.zone.today, frequency: "daily", unti
 save_page route: "event/page", filename: "event/page1.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_recurrences: [ recurrence ],
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: link_url
@@ -589,7 +589,7 @@ save_page route: "event/page", filename: "event/page1.html", name: "イベント
 save_page route: "event/page", filename: "event/2.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_recurrences: [ recurrence ],
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: link_url
@@ -622,7 +622,7 @@ save_page route: "facility/image", filename: "institution/list/shirsagi/page4.ht
   image_alt: "写真1", image_comment: "写真です。"
 
 save_page route: "facility/map", filename: "institution/list/shirsagi/map.html", name: "地図",
-  layout_id: layouts["institution-page"].id, map_points: [ { loc: [34.074722, 134.5516] } ]
+  layout_id: layouts["institution-page"].id, map_points: [ { loc: [134.5516, 34.074722] } ]
 
 puts "# key visual"
 keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
@@ -688,7 +688,7 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
   contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
@@ -701,7 +701,7 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
   contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
@@ -713,7 +713,7 @@ file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy3.jpg", mode
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
   contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
@@ -726,7 +726,7 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
   contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
@@ -739,7 +739,7 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
   contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,

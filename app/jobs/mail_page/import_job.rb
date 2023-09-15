@@ -31,7 +31,5 @@ class MailPage::ImportJob < Cms::ApplicationJob
         put_log("switch layout")
       end
     end
-
-    Fs.rm_rf file
   end
 end

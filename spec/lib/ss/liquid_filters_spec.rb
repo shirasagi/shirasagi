@@ -266,6 +266,53 @@ describe SS::LiquidFilters, dbscope: :example do
     end
   end
 
+  describe "search_column_value" do
+    let(:source) do
+      templ = []
+      templ << '{% assign column1 = value | search_column_value: "column1" %}'
+      templ << '{% if column1 %}'
+      templ << '<p>{{ column1.value }}</p>'
+      templ << '{% endif %}'
+      templ.join("\n")
+    end
+
+    context "with blank" do
+      let(:value) { "" }
+      it do
+        is_expected.not_to include("column_value1")
+        is_expected.not_to include("column_value2")
+        is_expected.not_to include("column_value3")
+      end
+    end
+
+    context "with page1" do
+      let(:value) { page1 }
+      it do
+        is_expected.to include("column_value1")
+        is_expected.not_to include("column_value2")
+        is_expected.not_to include("column_value3")
+      end
+    end
+
+    context "with page2" do
+      let(:value) { page2 }
+      it do
+        is_expected.not_to include("column_value1")
+        is_expected.to include("column_value2")
+        is_expected.not_to include("column_value3")
+      end
+    end
+
+    context "with page3" do
+      let(:value) { page3 }
+      it do
+        is_expected.not_to include("column_value1")
+        is_expected.not_to include("column_value2")
+        is_expected.to include("column_value3")
+      end
+    end
+  end
+
   describe "public_list" do
     let(:source) do
       templ = []

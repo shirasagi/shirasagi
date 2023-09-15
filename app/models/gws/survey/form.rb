@@ -41,6 +41,13 @@ class Gws::Survey::Form
   validates :file_state, inclusion: { in: %w(closed public), allow_blank: true }
   validates :file_edit_state, inclusion: { in: %w(disabled enabled enabled_until_due_date), allow_blank: true }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
+  update_form do |form|
+    ::Gws::Elasticsearch::Indexer::SurveyFormJob.around_save(form) { true }
+  end
+
   scope :and_public, ->(date = Time.zone.now) {
     date = date.dup
     where("$and" => [

@@ -21,7 +21,7 @@ class Gws::Survey::FileEnumerator < Enumerator
       terms << Gws::User.t(:name)
       terms << Gws::User.t(:organization_uid)
     end
-    @cur_form.columns.each do |column|
+    columns.each do |column|
       terms << column.name
     end
     terms
@@ -29,15 +29,19 @@ class Gws::Survey::FileEnumerator < Enumerator
 
   private
 
+  def columns
+    @columns ||= @cur_form.columns.order_by(order: 1, name: 1).to_a
+  end
+
   def enum_record(yielder, item)
     terms = []
     if !@cur_form.anonymous?
-      terms << I18n.l(item.updated)
+      terms << I18n.l(item.updated, format: :csv)
       terms << item.user_name
       terms << (item.user.organization_uid.presence || item.user_uid)
     end
 
-    @cur_form.columns.order_by(order: 1, name: 1).each do |column|
+    columns.each do |column|
       column_value = item.column_values.where(column_id: column.id).first
       if column_value.blank?
         terms << nil

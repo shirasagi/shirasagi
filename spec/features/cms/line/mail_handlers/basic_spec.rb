@@ -5,6 +5,7 @@ describe "cms/line/mail_handlers", type: :feature, dbscope: :example, js: true d
   let(:item) { create :cms_line_mail_handler }
   let(:name) { unique_id }
   let(:filename) { unique_id }
+  let(:terminate_line) { unique_id }
 
   let(:index_path) { cms_line_mail_handlers_path site }
   let(:new_path) { new_cms_line_mail_handler_path site }
@@ -20,11 +21,13 @@ describe "cms/line/mail_handlers", type: :feature, dbscope: :example, js: true d
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[filename]", with: filename
+        fill_in "item[terminate_line]", with: terminate_line
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#addon-basic dd", text: name)
       expect(page).to have_css("#addon-basic dd", text: filename)
+      expect(page).to have_css("#addon-basic dd", text: terminate_line)
     end
 
     it "#show" do
@@ -38,11 +41,13 @@ describe "cms/line/mail_handlers", type: :feature, dbscope: :example, js: true d
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[filename]", with: filename
+        fill_in "item[terminate_line]", with: terminate_line
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#addon-basic dd", text: name)
       expect(page).to have_css("#addon-basic dd", text: filename)
+      expect(page).to have_css("#addon-basic dd", text: terminate_line)
     end
 
     it "#delete" do

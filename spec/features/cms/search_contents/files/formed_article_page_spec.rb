@@ -105,10 +105,12 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
       it do
         visit cms_search_contents_files_path(site: site)
         within first(".file-view") do
-          click_on item1.name
+          # click_on item1.name
+          js_click find(:link_or_button, item1.name)
         end
 
         switch_to_window(windows.last)
+        wait_for_document_loading
         expect(current_path).to eq item1.private_show_path
         expect(current_path).to eq article_page_path(site: site, cid: node, id: item1)
       end

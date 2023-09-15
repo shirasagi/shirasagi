@@ -36,7 +36,7 @@
   <% end %>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <% if !unable_to_delete_master_page && !delete_alert_enabled %>
     <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
   <% end %>
