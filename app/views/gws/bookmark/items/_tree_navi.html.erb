@@ -1,0 +1,13 @@
+<%= jquery do %>
+(new SS_TreeNavi('#content-navi .tree-navi')).render("<%= @tree_navi %>");
+<% end %>
+
+<h2 class="content-navi-title">
+  <%= t('mongoid.models.gws/bookmark/folder') %>
+</h2>
+
+<div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
+  <%= link_to t('gws/bookmark.all'), gws_bookmark_items_path(folder_id: '-') %>
+</div>
+
+<div class="tree-navi"></div>

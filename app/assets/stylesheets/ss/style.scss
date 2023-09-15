@@ -3,9 +3,9 @@
  *= require jquery.multi-select
  *= require jquery.minicolors
  *= require jquery-ui
- *= require fullcalendar
- *= require fullcalendar-scheduler/scheduler.min.css
- *= require cropperjs/cropper.min.css
+ *= require fullcalendar/dist/fullcalendar.css
+ *= require fullcalendar-scheduler/dist/scheduler.css
+ *= require cropperjs/dist/cropper.css
  *= require bxslider
  *= require tippy.js/dist/tippy.css
  *= require tippy.js/themes/light.css
@@ -24,6 +24,8 @@
 @import "ss/login";
 @import "ss/addon";
 @import "ss/image_editor";
+@import "ss/pdfjs";
+@import "ss/sticky";
 @import "sys/ss";
 @import "sns/ss";
 @import "cms/ss";

@@ -67,6 +67,7 @@ en:
       gws/elasticsearch/indexer/faq_post_job: FAQ indexer
       gws/elasticsearch/indexer/qna_topic_job: Q&A indexer
       gws/elasticsearch/indexer/qna_post_job: Q&A indexer
+      gws/elasticsearch/indexer/survey_form_job: Survey indexer
       gws/elasticsearch/indexer/circular_post_job: Circular notice indexer
       gws/elasticsearch/indexer/circular_comment_job: Circular notice indexer
       gws/elasticsearch/indexer/monitor_topic_job: Inquiry and response indexer
@@ -74,3 +75,4 @@ en:
       gws/elasticsearch/indexer/memo_message_job: Contact memo indexer
       gws/elasticsearch/indexer/report_file_job: Report indexer
       gws/elasticsearch/indexer/workflow_file_job: Workflow indexer
+      gws/elasticsearch/indexer/workflow_form_job: Workflow indexer

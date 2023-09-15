@@ -1,9 +1,12 @@
 ja:
   gws/bookmark:
+    all: 全てのブックマーク
     notice:
       save: お気に入りを保存しました
+      edit: お気に入りを編集
     options:
       bookmark_model:
+        external_link: 外部リンク
         other: その他
 
   modules:
@@ -11,18 +14,48 @@ ja:
 
   mongoid:
     models:
-      gws/bookmark: お気に入り
+      gws/bookmark/item: お気に入り
+      gws/bookmark/folder: フォルダー
+    errors:
+      models:
+        gws/bookmark/folder:
+          same_folder_exists: 移動先にフォルダーが既に存在します。
+          subfolder_of_itself: 移動先のフォルダーに自身のフォルダーが含まれています。
     attributes:
-      gws/bookmark:
-        name: タイトル
+      gws/bookmark/item:
+        name: 名前
+        order: 並び順
         url: URL
+        link_target: ターゲット
         bookmark_model: 機能
+        folder_id: フォルダー
+      gws/bookmark/folder:
+        name: フォルダー名
+        depth: 階層
+        order: 並び順
+        state: 状態
+        in_basename: フォルダー名
+        in_parent: 親フォルダー
 
   tooltip:
-    gws/bookmark:
+    gws/bookmark/item:
       name:
-        - タイトルを入力します。
+        - 名前を入力します。
+      order:
+        - 並び順を入力します。
       url:
         - URLを入力します。
+      link_target:
+        - リンクのターゲットを選択します。
       bookmark_model:
         - リンク先の機能を選択します。
+      folder_id:
+        - フォルダーを選択します。
+    gws/bookmark/folder:
+      name:
+        - フォルダー名を入力します。
+        - 'フォルダー名には次の文字は使えません: \ / : * ? " < > |'
+      order:
+        - 並び順を入力します。
+      in_parent:
+        - 親フォルダーを選択してください。

@@ -277,6 +277,7 @@ this.Googlemaps_Map = (function () {
       // marker exists
       // set manually options or do fit
       var manuallyAdjust = false;
+      var idleAdjuster = function() {};
 
       if (Googlemaps_Map.center) {
         var center = Googlemaps_Map.getCenter();
@@ -290,14 +291,14 @@ this.Googlemaps_Map = (function () {
       }
 
       if (!manuallyAdjust) {
-        google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function(){
+        idleAdjuster = function() {
           if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.getZoom()) {
             Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
           }
-          Googlemaps_Map.hideMarkers();
-        })
+        };
         Googlemaps_Map.map.fitBounds(bounds);
       }
+      google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", idleAdjuster);
     } else {
       // marker not exists
       // set manually or default options
@@ -305,20 +306,6 @@ this.Googlemaps_Map = (function () {
       Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
       Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
     }
-  };
-
-  Googlemaps_Map.hideMarkers = function() {
-    $('.map-search-condition .category-settings').each(function() {
-      var settings = $(this).attr('data-category-settings');
-      if (!settings) return false;
-
-      $('.map-search-index .filters a').each(function() {
-        var $btn = $(this);
-        if (!settings.includes($btn.text())) {
-          $btn.click();
-        }
-      });
-    })
   };
 
   Googlemaps_Map.validateZoom = function (zoom) {

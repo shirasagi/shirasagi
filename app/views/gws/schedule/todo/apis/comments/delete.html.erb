@@ -1,4 +1,4 @@
-<%= form_for :item, url: { action: :destroy }, html: { method: :delete, multipart: true } do |f| %>
+<%= form_for :item, url: { action: :destroy }, html: { method: :delete, id: "item-form", multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
 <%= hidden_field_tag('redirect_to', params[:redirect_to], id: nil) %>
@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
   <%= f.button t("ss.buttons.close"), class: 'btn-default', onclick: "$.colorbox.close(); return false;" %>
 </footer>

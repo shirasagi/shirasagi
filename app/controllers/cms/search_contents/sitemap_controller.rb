@@ -7,6 +7,7 @@ class Cms::SearchContents::SitemapController < ApplicationController
   private
 
   def set_crumbs
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
     @crumbs << [t("cms.search_contents_sitemap"), action: :index]
   end
 

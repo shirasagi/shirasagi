@@ -12,14 +12,14 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     export_gws_memo_messages
     @output_zip.close
+    Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
 
     if @exported_items == 0
-      create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.export_failed.empty_messages"))
+      create_notify_message(failed: true)
       return
     end
 
     create_notify_message
-    Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
   ensure
     @output_zip.close if @output_zip
   end

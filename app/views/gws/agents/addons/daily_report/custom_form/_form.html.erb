@@ -1,0 +1,69 @@
+<% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
+<% @cur_form ||= (@item.cur_form || @item.form) %>
+
+<dl class="see mod-gws-daily-report-custom_form">
+  <% if @model.allowed?(:access, @cur_user, site: @cur_site) || @item.user.blank? || @item.user_id == @cur_user.id %>
+    <dt><%= @model.t :limited_access %><%= @model.tt :limited_access %></dt>
+    <dd><%= f.text_area :limited_access %></dd>
+  <% end %>
+
+  <dt><%= @model.t :small_talk %><%= @model.tt :small_talk %></dt>
+  <dd><%= f.text_area :small_talk %></dd>
+  <div class="share-value">
+    <label>
+      <%= f.check_box(:share_small_talk, {}, 'true', '') %>
+      <%= @model.t(:share_small_talk) %>
+    </label>
+  </div>
+
+  <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
+    <%= render(column.column_form_partial_path, column: column, object_name: 'custom', value: @item.read_column_value(column)) %>
+    <div class="share-value">
+      <%= hidden_field_tag("#{f.object_name}[share_column_ids][]", nil, id: nil) %>
+      <label>
+        <%= check_box_tag("#{f.object_name}[share_column_ids][]", column.id, @item.share_column_ids.to_a.include?(column.id.to_s)) %>
+        <%= @model.t(:share_column_ids) %>
+      </label>
+    </div>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  <% if @cur_form.present? %>
+    $('#addon-gws-agents-addons-daily-report-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+  <% end %>
+
+  $('a.btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+
+    var $data = $item.closest('[data-id]');
+    var fileId = $data.data('id');
+    var humanizedName = $data.data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    var $element = $.colorbox.element();
+    $element.siblings('input.file-id').val(fileId);
+    $element.siblings('span.humanized-name').text(humanizedName);
+    $element.siblings(".sanitizer-status").replaceWith($data.find('.sanitizer-status'));
+    $element.siblings('.btn-file-delete').show();
+  });
+
+  $('a.btn-file-delete').on('click', function(e) {
+    var $this = $(this);
+    $this.siblings('input.file-id').val('');
+    $this.siblings('span.humanized-name').text('');
+    $this.siblings('.sanitizer-status').hide();
+    $this.hide();
+
+    e.preventDefault();
+    return false;
+  });
+
+  $('.share-value').each(function (){
+    $(this).prev('dd').prev('dt').append($(this));
+  });
+<% end %>

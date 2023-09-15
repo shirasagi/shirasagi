@@ -21,6 +21,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"

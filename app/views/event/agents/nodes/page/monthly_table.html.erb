@@ -50,7 +50,7 @@
             <% end %>
 
             <% events.each do |event, categories| %>
-              <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+              <div class="page <%= event.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>" data-start-date="<%= tryb { event.event_dates.start_date(date).strftime("%Y/%m/%d") } %>" data-end-date="<%= tryb { event.event_dates.end_date(date).strftime("%Y/%m/%d") } %>">
                 <% if categories.present? %>
                   <% cate = categories.entries.sort_by{ |c| c.order }.first %>
                   <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>

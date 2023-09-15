@@ -11,8 +11,8 @@
   <% else %>
     <%= link_to(t('ss.links.edit'), { action: :edit }, class: "edit ss-open-in-new-window") if @item.draft? && (@imap.draft_box == @mailbox) %>
     <% unless @item.draft? %>
-    <div class="dropdown webmail-dropdown dropdown-toggle">
-      <a><%= t 'webmail.links.reply' %> <i class="material-icons md-13">&#xE313;</i></a>
+    <div class="dropdown webmail-dropdown dropdown-toggle webmail-menu-reply">
+      <a href="#"><%= t 'webmail.links.reply' %> <i class="material-icons md-13">keyboard_arrow_down</i></a>
       <ul class="dropdown-menu webmail-dropdown-menu">
         <li><%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply ss-open-in-new-window' } %></li>
         <li><%= link_to t('webmail.links.reply_without_body'), { action: :reply, without_body: true }, { class: 'reply ss-open-in-new-window' } %></li>
@@ -31,8 +31,8 @@
       end if !@item.draft? && SS.config.gws.disable.blank?
     %>
     <% if groups && groups.size >= 2 %>
-      <div class="dropdown webmail-dropdown dropdown-toggle">
-        <a><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">&#xE313;</i></a>
+      <div class="dropdown webmail-dropdown dropdown-toggle webmail-menu-forward-to-gws-message">
+        <a href="#"><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">keyboard_arrow_down</i></a>
         <ul class="dropdown-menu webmail-dropdown-menu">
           <% groups.each do |group| %>
           <li><%= link_to group.name, new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode), class: "ss-open-in-new-window" %></li>
@@ -48,8 +48,8 @@
 
     <%= link_to t('ss.links.print'), { action: :print }, { class: 'print-preview-mail' } %>
 
-    <div class="dropdown webmail-dropdown dropdown-toggle">
-      <a><%= t 'webmail.links.etc' %> <i class="material-icons md-13">&#xE313;</i></a>
+    <div class="dropdown webmail-dropdown dropdown-toggle webmail-menu-etc">
+      <a href="#"><%= t 'webmail.links.etc' %> <i class="material-icons md-13">keyboard_arrow_down</i></a>
       <ul class="dropdown-menu webmail-dropdown-menu">
         <li><%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %></li>
         <li><%= link_to t('webmail.links.set_star'), { action: :set_star }, { class: 'update-mail set-star' } %></li>

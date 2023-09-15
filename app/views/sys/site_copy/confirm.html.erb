@@ -13,7 +13,7 @@
   <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t("ss.buttons.run"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.running") } %>
   <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>

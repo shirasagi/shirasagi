@@ -22,6 +22,7 @@ module SS::Addon
 
       # microsoft translator text api
       field :translate_microsoft_api_key, type: String
+      field :translate_microsoft_api_region, type: String
       field :translate_microsoft_api_request_count, type: Integer, default: 0
       field :translate_microsoft_api_request_word_count, type: Integer, default: 0
       field :translate_microsoft_api_request_metered_usage, type: Integer, default: 0
@@ -43,6 +44,7 @@ module SS::Addon
       permit_params :translate_mock_api_request_word_count
 
       permit_params :translate_microsoft_api_key
+      permit_params :translate_microsoft_api_region
       permit_params :translate_microsoft_api_request_count
       permit_params :translate_microsoft_api_request_word_count
       permit_params :translate_microsoft_api_request_metered_usage

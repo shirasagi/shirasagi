@@ -14,7 +14,8 @@ class Cms::SearchContents::FilesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("cms.file"), action: :index]
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
+    @crumbs << [t("cms.search_contents_files"), url_for(action: :index)]
   end
 
   def fix_params

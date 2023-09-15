@@ -326,16 +326,16 @@ ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event"
 
 ## facility
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: @layouts["one"].id
-center_point = Map::Extensions::Point.mongoize(loc: [34.075593, 134.550614], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [134.550614, 34.075593], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/higashii",
   name: "東区", order: 10, center_point: center_point
-center_point = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [133.808902, 34.034417], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/nishi",
   name: "西区", order: 20, center_point: center_point
-center_point = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [134.352387, 33.609123], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/minami",
   name: "南区", order: 30, center_point: center_point
-center_point = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
+center_point = Map::Extensions::Point.mongoize(loc: [134.608579, 34.179472], zoom_level: 10)
 save_node route: "facility/location", filename: "institution/chiki/kita",
   name: "北区", order: 40, center_point: center_point
 save_node route: "cms/node", filename: "institution/shurui", name: "施設の種類", layout_id: @layouts["one"].id

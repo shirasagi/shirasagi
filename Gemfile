@@ -40,7 +40,6 @@ gem 'diff-lcs'
 gem 'diffy'
 gem 'fast_blank'
 gem 'fastimage'
-gem 'fullcalendar.io-rails', '~> 2.6.0'
 gem 'geocoder'
 gem 'google-api-client'
 gem 'holiday_japan'
@@ -57,6 +56,7 @@ gem 'mini_magick'
 gem 'mongoid-geospatial'
 gem 'net-ldap'
 gem 'net-imap'
+gem 'net-pop'
 gem 'net-smtp'
 gem 'non-stupid-digest-assets'
 gem 'oj'
@@ -69,6 +69,7 @@ gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
+gem 'shortuuid'
 gem 'thinreports'
 gem 'ungarbled'
 gem 'view_component'
@@ -141,7 +142,7 @@ group :development, :test do
   gem 'rubocop-rails', '2.11.3', require: false
   gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
-  gem 'selenium-webdriver', require: false
+  gem 'selenium-webdriver', '~> 4.11', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
@@ -149,7 +150,6 @@ group :development, :test do
   gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
-  gem 'webdrivers', require: false
 end
 
 group :development do

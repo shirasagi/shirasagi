@@ -4,7 +4,7 @@ module Cms::NodeFilter::ListView
   include Cms::PublicFilter::Node
 
   included do
-    before_action :accept_cors_request, only: [:rss]
+
     before_action :prepend_current_view_path, only: [:generate]
     helper Cms::ListHelper
   end
@@ -95,6 +95,12 @@ module Cms::NodeFilter::ListView
     @items = @items.take(@cur_node.limit)
 
     render_rss @cur_node, @items
+  end
+
+  def rss_recent
+    @cur_site = Cms::Site.find(@cur_site.id)
+    raise "404" if @cur_site.rss_recent_disabled?
+    rss
   end
 
   def generate

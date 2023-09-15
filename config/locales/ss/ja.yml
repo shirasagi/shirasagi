@@ -65,6 +65,7 @@ ja:
     fiscal_year: 年度
     test_deliver: テスト配信
     target: 対象
+    unlimited: 制限無し
 
     views:
       login/login:
@@ -72,12 +73,15 @@ ja:
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
       index:
+        created: "作成日時：%{created}"
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
         approved: "承認日時：%{approved}"
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+        openrate: "開封率：%{openrate}"
+        expiration_date: "期限切れ日時：%{expiration_date}"
       oauth2/application:
         header:
           name: アプリケーション種別
@@ -98,6 +102,7 @@ ja:
       unseen: 未読一覧
       seen: 既読一覧
       trash: ゴミ箱
+      calendar: カレンダー
     links:
       add: 追加する
       cms: サイト管理
@@ -168,6 +173,8 @@ ja:
       approve: 承認する
       prev: 前へ
       next: 次へ
+      update: 更新する
+      open_in_new_tab: 別タブで開く
     buttons:
       save: 保存
       saving: 保存中
@@ -322,6 +329,9 @@ ja:
         - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
         - これを超える制限サイズを設定しても有効に機能しません。
         - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
+      updated: 更新しました。
+      ordered_by_file_name_order: 名前順で並び変えました。
+      ordered_by_file_upload_order: アップロード順で並び変えました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -970,6 +980,7 @@ ja:
         translate_mock_api_request_count: APIリクエスト数
         translate_mock_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_key: "サブスクリプション キー"
+        translate_microsoft_api_region: リージョン
         translate_microsoft_api_request_count: APIリクエスト数
         translate_microsoft_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_request_metered_usage: "x-metered-usage"
@@ -1024,7 +1035,12 @@ ja:
         timezone: タイムゾーン
       ss/addon/workflow_setting:
         workflow_my_group: 自所属の表示
-
+      ss/api_token:
+        name: 名前
+        jwt_id: JWT ID (jti)
+        expiration_date: 期限切れ日時
+        audience_id: 利用ユーザー
+        jwt: APIトークン
   tooltip:
     ss/model/site:
       upload_policy:

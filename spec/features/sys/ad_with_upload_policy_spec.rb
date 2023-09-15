@@ -19,19 +19,19 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       within "form#item-form" do
         fill_in "item[time]", with: rand(1..10)
         fill_in "item[width]", with: rand(1..100)
-        wait_cbox_open do
-          find('a.btn', text: I18n.t('ss.buttons.upload')).click
+        within "#addon-ss-agents-addons-link_file" do
+          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
         end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-      end
-      expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-      expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
+        click_on I18n.t("ss.buttons.save")
+        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
+        expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
-      wait_cbox_close do
-        find(".select").click
+        wait_cbox_close do
+          click_on 'keyvisual.jpg'
+        end
       end
       within '.column-thumb' do
         expect(page).to have_css('.name', text: SS::File.find_by(name: 'keyvisual.jpg').humanized_name)
@@ -76,15 +76,15 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       within "form#item-form" do
         fill_in "item[time]", with: rand(1..10)
         fill_in "item[width]", with: rand(1..100)
-        wait_cbox_open do
-          find('a.btn', text: I18n.t('ss.buttons.upload')).click
+        within "#addon-ss-agents-addons-link_file" do
+          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
         end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-      end
-      page.accept_alert do
+        page.accept_alert do
+          click_on I18n.t("ss.buttons.save")
+        end
         expect(page).to have_no_css('.file-view')
       end
       expect(SS::LinkFile.all.count).to eq 0

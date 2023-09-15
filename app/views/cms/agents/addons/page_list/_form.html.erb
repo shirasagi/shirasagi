@@ -2,29 +2,28 @@
 
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 <%= jquery do %>
-  if ($('#item_loop_html').length) {
-    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
-  }
-
-  <% if @model.use_liquid %>
   var $addon = $("<%= "##{addon[:id]}" %>");
-  var changeLoopFormat = function() {
-    var format = $addon.find("select[name='item[loop_format]']").val();
-    if (format === "liquid") {
-      $addon.find(".loop-format-shirasagi").addClass("hide");
-      $addon.find(".loop-format-liquid").removeClass("hide");
-      $("#addon-cms-agents-addons-child_list").addClass("hide");
-    } else {
-      $addon.find(".loop-format-shirasagi").removeClass("hide");
-      $addon.find(".loop-format-liquid").addClass("hide");
-      $("#addon-cms-agents-addons-child_list").removeClass("hide");
-    }
-  };
+  var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+  if ($loopFormatSelect.length) {
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
-  changeLoopFormat();
+    <% if @model.use_liquid %>
+    var changeLoopFormat = function() {
+      var format = $loopFormatSelect.val();
+      if (format === "liquid") {
+        $addon.find(".loop-format-shirasagi").addClass("hide");
+        $addon.find(".loop-format-liquid").removeClass("hide");
+      } else {
+        $addon.find(".loop-format-shirasagi").removeClass("hide");
+        $addon.find(".loop-format-liquid").addClass("hide");
+      }
+    };
 
-  $addon.find("select[name='item[loop_format]']").on("change", changeLoopFormat);
-  <% end %>
+    changeLoopFormat();
+
+    $loopFormatSelect.on("change", changeLoopFormat);
+    <% end %>
+  }
 
   <% if @model == Cms::Node::Archive %>
     var changeArchiveView = function() {

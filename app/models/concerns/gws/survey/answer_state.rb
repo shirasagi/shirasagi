@@ -11,7 +11,13 @@ module Gws::Survey::AnswerState
 
   module ClassMethods
     def answered_state_options
-      %w(unanswered answered).map { |m| [I18n.t("gws/survey.options.answered_state.#{m}"), m] }
+      %w(both unanswered answered).map { |m| [I18n.t("gws/survey.options.answered_state.#{m}"), m] }
+    end
+
+    def sort_options
+      %w(due_date_desc due_date_asc updated_desc updated_asc created_desc created_asc).map do |k|
+        [I18n.t("gws/survey.options.sort.#{k}"), k]
+      end
     end
   end
 
@@ -36,6 +42,10 @@ module Gws::Survey::AnswerState
 
   def answered_state_options
     self.class.answered_state_options
+  end
+
+  def sort_options
+    self.class.sort_options
   end
 
   def answered_users

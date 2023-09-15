@@ -46,7 +46,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
 
     it "#delete" do
       visit "#{index_path}/#{item.id}/delete"
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
@@ -69,7 +69,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
     before { visit import_path }
     context "when the all datas on csv is valid" do
       it "imported the datas" do
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/schedule/gws_holidays_1.csv"
           click_button I18n.t('ss.links.import')
         end
@@ -99,7 +99,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
 
     context "when some data on csv is invalid" do
       it "does not import the only data on CSVfile" do
-        within "form" do
+        within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/schedule/gws_holidays_2.csv"
           click_button I18n.t('ss.links.import')
         end

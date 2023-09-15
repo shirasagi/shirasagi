@@ -1,6 +1,6 @@
 <%= render partial: "menu" %>
 
-<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { method: :delete, multipart: true } do |f| %>
+<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { method: :delete, id: "item-form", multipart: true } do |f| %>
   <div class="member-my-group member-my-group-delete">
     <%= error_messages_for :item %>
 

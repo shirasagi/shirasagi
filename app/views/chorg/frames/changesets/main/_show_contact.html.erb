@@ -1,11 +1,15 @@
 <%
   index ||= 0
   destination = @item.destinations.present? ? @item.destinations[index] : nil
+
+  source_contacts = source_groups.map { |group| group.contact_groups.to_a }.flatten
+  unifies_to_main = nil
 %>
 
 <table class="index">
   <thead class="list-head">
   <tr>
+    <th></th>
     <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
     <th class="name"><%= SS::Contact.t :name %></th>
     <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
@@ -19,7 +23,21 @@
   <tbody class="items">
   <% if destination && destination[:contact_groups] %>
     <% destination[:contact_groups].each do |contact_group| %>
-      <tr class="list-item" data-id="<%= contact_group[:id] %>">
+      <%
+        unifies_to_main = contact_group if contact_group[:main_state] == "main" && contact_group[:unifies_to_main] == "enabled"
+      %>
+      <tr class="list-item" data-contact-id="<%= contact_group[:_id] %>">
+        <td>
+          <%=
+            source_contact_index = source_contacts.find_index { |contact| contact.id.to_s == contact_group[:_id].to_s || contact.name == contact_group[:name].to_s }
+            if source_contact_index
+              source_contact = source_contacts.delete_at(source_contact_index)
+            end
+            unless source_contact
+              "New"
+            end
+          %>
+        </td>
         <td class="contact-main-state"><%= contact_group[:main_state] == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
         <td class="name"><%= contact_group[:name] %></td>
         <td class="contact-group-name"><%= contact_group[:contact_group_name] %></td>
@@ -33,3 +51,33 @@
   <% end %>
   </tbody>
 </table>
+
+<% if unifies_to_main.present? %>
+  <div style="display: flex; align-items: center; gap: 5px; padding: 5px 0;">
+    <%= tag.span("check_box", class: "material-icons-outlined md-14", title: t("contact.options.main_state.main")) %>
+    <%= t("contact.links.unify_to_main") %>
+  </div>
+<% end %>
+
+<% if unifies_to_main.blank? %>
+  <%
+    # 分割の場合、他の destination で contact_group[:_id] が定義されていたら、エラー対象から除外する。
+    @item.destinations.each do |destination|
+      next if destination.blank? || destination[:contact_groups].blank?
+      destination[:contact_groups].each do |contact_group|
+        source_contacts.delete_if { |contact| contact.id.to_s == contact_group[:_id] || contact.name == contact_group[:name] }
+      end
+    end
+  %>
+  <% if source_contacts.present? %>
+    <div id="errorExplanation" class="errorExplanation" style="margin-top: 10px;">
+      <h2><%= t("errors.template.header", count: source_contacts.length) %></h2>
+      <p><%= t("chorg.errors.template.body_html") %></p>
+      <ul>
+        <% source_contacts.each do |source_contact| %>
+          <li><%= source_contact.name %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

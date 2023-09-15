@@ -34,13 +34,57 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
   def wait_ajax_html_loaded(points: "0", ideas: true, executed: "0")
     ret = yield
 
+    wait_for_js_ready
+
     if points
+      script = <<~SCRIPT
+        (function(resolve) {
+          if ("pointLoaded" in Opendata_Point && Opendata_Point.pointLoaded) {
+            resolve(true);
+            return;
+          }
+
+          document.addEventListener("opendata:pointLoaded", function() {
+            resolve(true);
+          }, { once: true });
+        })(...arguments)
+      SCRIPT
+      page.evaluate_async_script(script)
+
       expect(page).to have_css(".point .count .number", text: points)
     end
     if ideas
+      script = <<~SCRIPT
+        (function(resolve) {
+          if ("appIdeasLoaded" in Opendata_Point && Opendata_Point.appIdeasLoaded) {
+            resolve(true);
+            return;
+          }
+
+          document.addEventListener("opendata:appIdeasLoaded", function() {
+            resolve(true);
+          }, { once: true });
+        })(...arguments)
+      SCRIPT
+      page.evaluate_async_script(script)
+
       expect(page).to have_css(".app-ideas .detail .app-ideas")
     end
     if executed
+      script = <<~SCRIPT
+        (function(resolve) {
+          if ("executedLoaded" in Opendata_Point && Opendata_Point.executedLoaded) {
+            resolve(true);
+            return;
+          }
+
+          document.addEventListener("opendata:executedLoaded", function() {
+            resolve(true);
+          }, { once: true });
+        })(...arguments)
+      SCRIPT
+      page.evaluate_async_script(script)
+
       expect(page).to have_css("#executed", text: executed)
     end
 
@@ -197,7 +241,7 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
 
     context "with default options" do
       it do
-        wait_ajax_html_loaded do
+        wait_ajax_html_loaded(executed: "1") do
           visit app.full_url
         end
         expect(current_path).to eq app.url
@@ -258,7 +302,7 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
       end
 
       it do
-        wait_ajax_html_loaded do
+        wait_ajax_html_loaded(executed: "1") do
           visit app.full_url
         end
         expect(current_path).to eq app.url

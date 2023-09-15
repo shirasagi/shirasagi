@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe "gws_discussion_topics", type: :feature, dbscope: :example do
-  context "copy", js: true do
+describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
+  context "copy" do
     let!(:site) { gws_site }
     let!(:item) { create :gws_discussion_topic }
     let!(:copy_path) { copy_gws_discussion_forum_topic_path(mode: '-', site: site.id, forum_id: item.forum.id, id: item.id) }

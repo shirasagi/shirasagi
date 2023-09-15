@@ -15,7 +15,7 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
   <div class="attendance-box">
     <div class="attendance-box-main">
       <%= form_tag({ action: :index }, { method: "GET" }) do %>
-        <%= select_tag :group_id, options_for_select(group_options, selected: @group.id) %>
+        <%= select_tag :group_id, options_for_select(group_options, selected: @group.id), { data: { controller: "ss--submit-on-change" } } %>
         <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
         <%= link_to t("ss.buttons.reset"), { action: :index }, class: "btn" %>
       <% end %>

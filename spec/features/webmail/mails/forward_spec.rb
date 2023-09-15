@@ -33,6 +33,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         wait_for_js_ready
         new_window = window_opened_by { click_link I18n.t('webmail.links.forward') }
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"

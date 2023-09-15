@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe 'gws_presence_users', type: :feature, dbscope: :example do
-  context "basic crud", js: true do
+describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
+  context "basic crud" do
     let!(:site) { gws_site }
     let!(:index_path) { gws_presence_users_path site }
     let!(:presence_states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
@@ -18,11 +18,13 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
         expect(page).to have_css(".presence-state", text: presence_states["available"])
 
         find(".editicon.presence-plan").click
-        native_fill_in "presence_plan", with: "modified_plan\n"
+        fill_in "presence_plan", with: "modified_plan"
+        find(".editicon.presence-plan").click
         expect(page).to have_css("[data-name='presence_plan']", text: "modified_plan")
 
         find(".editicon.presence-memo").click
-        native_fill_in "presence_memo", with: "modified_memo\n"
+        fill_in "presence_memo", with: "modified_memo"
+        find(".editicon.presence-memo").click
         expect(page).to have_css("[data-name='presence_memo']", text: "modified_memo")
       end
 

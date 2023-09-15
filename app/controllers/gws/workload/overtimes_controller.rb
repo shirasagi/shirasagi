@@ -37,8 +37,11 @@ class Gws::Workload::OvertimesController < ApplicationController
     end
 
     super
-    @aggregation_groups = @aggregation_groups.class.new([])
-    @aggregation_groups << @aggregation_group if @aggregation_group
+    if @aggregation_group
+      @aggregation_groups = @aggregation_groups.class.new([@aggregation_group])
+    else
+      @aggregation_groups = @aggregation_groups.class.new([])
+    end
   end
 
   def set_items

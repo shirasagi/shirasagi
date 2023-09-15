@@ -58,7 +58,7 @@
     <% end %>
 
     <% pages.each do |page, categories| %>
-    <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+    <dd class="page <%= page.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>" data-start-date="<%= tryb { page.event_dates.start_date(date).strftime("%Y/%m/%d") } %>" data-end-date="<%= tryb { page.event_dates.end_date(date).strftime("%Y/%m/%d") } %>">
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <% if categories.present? %>
           <% cate = categories.entries.sort_by{ |c| c.order }.first %>

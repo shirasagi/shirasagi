@@ -63,7 +63,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
         click_link I18n.t('ss.links.delete')
       end
       wait_for_js_ready
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_js_ready
@@ -128,7 +128,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
         end
         wait_for_js_ready
 
-        within "form" do
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.delete')
         end
         wait_for_js_ready

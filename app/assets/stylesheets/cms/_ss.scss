@@ -74,11 +74,32 @@
   padding: 0 10px 10px;
   text-align: right;
 }
+i.calendar-month {
+  margin-top: -3px;
+}
 
 .list-item {
   .title.notice-severity-high {
     color: $pink;
     font-weight: bold;
+  }
+  .title.marked {
+    display: flex;
+    i.severity-high {
+      margin-top: 2px;
+      margin-right: 4px;
+      color: #333;
+    }
+    a.notice-severity-high {
+      color: $pink;
+      font-weight: bold;
+    }
+    .gws-board-flag-new {
+      margin-left: 8px;
+    }
+    .index-cleander-link {
+      margin-left: 6px;
+    }
   }
   .state {
     display: inline-block;

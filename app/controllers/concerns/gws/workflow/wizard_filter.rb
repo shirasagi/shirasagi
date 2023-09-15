@@ -79,8 +79,7 @@ module Gws::Workflow::WizardFilter
 
     level = Integer(params[:level])
 
-    workflow_approvers = @item.workflow_approvers
-    workflow_approvers = workflow_approvers.to_a.pluck(:level)
+    workflow_approvers = @item.workflow_approvers.select { |item| item[:level] == level }
     same_level_user_ids = workflow_approvers.to_a.pluck(:user_id)
 
     group_ids = @cur_site.descendants_and_self.active.in_group(@group).pluck(:id)

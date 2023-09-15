@@ -34,8 +34,10 @@ describe "cms_nodes", type: :feature, js: true do
         click_on I18n.t("ss.links.sp_preview")
       end
       switch_to_window(windows.last)
-      current_window.close
+      wait_for_document_loading
+      current_window.close if Capybara.javascript_driver == :chrome
       switch_to_window(windows.last)
+      wait_for_document_loading
 
       # edit
       visit edit_path

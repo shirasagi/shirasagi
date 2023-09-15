@@ -1,0 +1,16 @@
+<% return if !@item.term_enabled? %>
+
+<dl class="see mod-gws-notice-calendar">
+  <dt><%= @model.t :term %></dt>
+  <dd>
+    <%= term(@item) %>
+    <%= link_to gws_notice_calendars_path(calendar: redirection_calendar_params), { class: "index-cleander-link" } do %>
+      <i class="material-icons calendar-month md-18">calendar_month</i>
+    <% end %>
+  </dd>
+
+  <% if params["controller"] =~ /editable/ && @item.color.present? %>
+  <dt><%= @model.t :color %></dt>
+  <dd><%= content_tag :span, @item.name, style: "background-color: #{@item.color}; color: #{@item.text_color}" %></dd>
+  <% end %>
+</dl>

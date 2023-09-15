@@ -34,8 +34,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
             click_on I18n.t("ss.buttons.save")
           end
           expect(page).to have_css(css_class, text: message)
-          # wait for ajax
-          expect(page).to have_content(plan_name)
         end
       end
     end
@@ -58,7 +56,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       context "when end_at is over the facility limit" do
         let(:start_at) { end_at - 1.hour }
         let(:end_at) { now + facility.max_days_limit.days + 1.minute }
-        let(:css_class) { '#errorExplanation' }
+        let(:css_class) { '.reservation-error' }
         let(:message) { I18n.t("gws/schedule.errors.faciliy_day_lte", count: facility.max_days_limit) }
 
         it_behaves_like "a facility plan reservation"

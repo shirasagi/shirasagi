@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
@@ -78,7 +77,7 @@ Rails.application.routes.draw do
   node "faq" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
-
+    get "page/rss-recent.xml" => "public#rss_recent", cell: "nodes/page", format: "xml"
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
   end
 

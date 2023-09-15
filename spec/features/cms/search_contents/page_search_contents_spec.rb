@@ -52,7 +52,7 @@ describe "cms_page_search_contents", type: :feature, dbscope: :example, js: true
 
         wait_for_js_ready
         within ".list-head" do
-          find('input[type="checkbox"]').set(true)
+          wait_event_to_fire("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
           click_button I18n.t('ss.buttons.delete')
         end
         click_button I18n.t('ss.buttons.delete')

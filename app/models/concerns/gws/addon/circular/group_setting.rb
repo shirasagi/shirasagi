@@ -12,10 +12,13 @@ module Gws::Addon::Circular::GroupSetting
     field :circular_delete_threshold, type: Integer, default: 3
     field :circular_files_break, type: String, default: 'vertically'
     field :circular_new_days, type: Integer
+    field :circular_article_state, type: String, default: "both"
+    field :circular_sort, type: String, default: "due_date_asc"
 
     permit_params :circular_default_due_date, :circular_max_member,
       :circular_filesize_limit, :circular_delete_threshold,
-      :circular_files_break, :circular_new_days
+      :circular_files_break, :circular_new_days,
+      :circular_article_state, :circular_sort
 
     validates :circular_default_due_date, numericality: true
     validates :circular_delete_threshold, numericality: true
@@ -43,5 +46,13 @@ module Gws::Addon::Circular::GroupSetting
 
   def circular_new_days
     self[:circular_new_days].presence || 7
+  end
+
+  def circular_article_state_options
+    Gws::Circular::Post.new.article_state_options
+  end
+
+  def circular_sort_options
+    Gws::Circular::Post.new.sort_options
   end
 end

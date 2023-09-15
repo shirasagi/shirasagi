@@ -46,7 +46,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
       expect(current_path).to eq gws_memo_notices_path(site: site)
 
       visit delete_gws_memo_notice_path(site: site, id: item_old.id)
-      within 'form' do
+      within 'form#item-form' do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('li.list-item', count: 2)

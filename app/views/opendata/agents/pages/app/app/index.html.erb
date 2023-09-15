@@ -27,7 +27,10 @@
       },
       type: "GET",
       success: function(data) {
-        return $("#executed").html(data);
+        var $executed = $("#executed");
+        $executed.html(data);
+        Opendata_Point.executedLoaded = true;
+        $executed[0].dispatchEvent(new CustomEvent("opendata:executedLoaded", { bubbles: true, cancelable: true, composed: true }));
       }
     });
   <% end %>
@@ -37,7 +40,10 @@
     $.ajax({
       url: "<%= path_prefix %><%= @cur_page.app_ideas_url %>",
       success: function(data) {
-        return $(".app-ideas").html(data);
+        var $appIdeas = $(".app-ideas");
+        $appIdeas.html(data);
+        Opendata_Point.appIdeasLoaded = true;
+        $appIdeas[0].dispatchEvent(new CustomEvent("opendata:appIdeasLoaded", { bubbles: true, cancelable: true, composed: true }));
       }
     });
   <% end %>
