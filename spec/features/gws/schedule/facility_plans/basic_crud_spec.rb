@@ -4,23 +4,23 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:facility) { create :gws_facility_item }
-  let(:group_ids) { [ user.group_ids ] }
-  let(:member_ids) { [ user.id ] }
+  let(:group_ids) { [user.group_ids] }
+  let(:member_ids) { [user.id] }
   let(:public_facility) { create :gws_facility_item, readable_setting_range: 'public' }
-  let(:select_facility) { create :gws_facility_item, readable_setting_range: 'select', readable_group_ids: [ group_ids ], readable_member_ids: [ member_ids ] }
+  let(:select_facility) { create :gws_facility_item, readable_setting_range: 'select', readable_group_ids: [group_ids], readable_member_ids: [member_ids] }
   let(:private_facility) { create :gws_facility_item, readable_setting_range: 'private' }
 
   context "with auth" do
-    let!(:item) { create :gws_schedule_facility_plan, facility_ids: [ facility.id ] }
+    let!(:item) { create :gws_schedule_facility_plan, facility_ids: [facility.id] }
     let(:index_path) { gws_schedule_facility_plans_path site, facility }
     let(:new_path) { new_gws_schedule_facility_plan_path site, facility }
     let(:show_path) { gws_schedule_facility_plan_path site, facility, item }
     let(:edit_path) { edit_gws_schedule_facility_plan_path site, facility, item }
     let(:delete_path) { soft_delete_gws_schedule_facility_plan_path site, facility, item }
 
-    let!(:public_item) { create :gws_schedule_facility_plan, facility_ids: [ public_facility.id ] }
-    let!(:select_item) { create :gws_schedule_facility_plan, facility_ids: [ select_facility.id ] }
-    let!(:private_item) { create :gws_schedule_facility_plan, facility_ids: [ private_facility.id ] }
+    let!(:public_item) { create :gws_schedule_facility_plan, facility_ids: [public_facility.id] }
+    let!(:select_item) { create :gws_schedule_facility_plan, facility_ids: [select_facility.id] }
+    let!(:private_item) { create :gws_schedule_facility_plan, facility_ids: [private_facility.id] }
 
     let(:public_new_path) { new_gws_schedule_facility_plan_path site, public_facility }
     let(:select_new_path) { new_gws_schedule_facility_plan_path site, select_facility }
