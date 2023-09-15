@@ -29,7 +29,7 @@ module Gws::ReadableSettingHelper
     when 'public', "private"
       { setting_range: setting_range }
     when "select"
-      setting = { setting_range: "select" } #select
+      setting = { setting_range: "select" }
       setting[:group_ids] = setting_config["group_ids"].try do |ids|
         ids.map do |id|
           if id.numeric?

@@ -61,7 +61,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
-    
     it "#show" do
       visit show_path
       expect(page).to have_content(item.name)
@@ -160,7 +159,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     context "閲覧権限" do
-      
       it "public" do
         visit public_new_path
         within "form#item-form" do
