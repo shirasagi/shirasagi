@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :webmail_filter, class: Webmail::Filter do
-    cur_user { ss_user }
+    cur_user { webmail_imap }
 
+    host { cur_user.imap_settings[0][:imap_host] }
+    account { cur_user.imap_settings[0][:imap_account] }
     name { "name-#{unique_id}" }
     conjunction { %w(and or).sample }
     conditions do
