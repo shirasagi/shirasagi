@@ -42,7 +42,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item.unseen", text: item3.subject)
         end
         within ".list-head" do
-          find('label.check input').set(true)
+          wait_event_to_fire("ss:checked-all-list-items") { find('label.check input').set(true) }
           page.accept_confirm(I18n.t("gws/notice.confirm.set_seen")) do
             click_on I18n.t("gws/notice.links.set_seen")
           end
@@ -103,6 +103,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.links.more_all")
       end
+      wait_for_js_ready
 
       within ".gws-memo-notices" do
         within ".list-items" do
@@ -130,12 +131,14 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.set_seen")
 
       first(".gws-memo-notice.popup-notice-container").click
+      wait_for_js_ready
       within ".gws-memo-notice.popup-notice-container" do
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item.empty", text: I18n.t("gws/memo/message.notice.no_recents"))
         end
         click_on I18n.t("ss.links.more_all")
       end
+      wait_for_js_ready
 
       within ".gws-memo-notices" do
         within ".list-items" do

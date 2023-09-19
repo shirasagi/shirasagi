@@ -1,0 +1,101 @@
+<%
+  page_count_service = Contact::PageCountService.new(cur_site: @cur_site, cur_user: @cur_user)
+%>
+
+<%= form_with scope: :item, url: url_for(action: :update), method: :put, id: "item-form" do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "addon-main-contact", head: "統合してよろしいですか？" } do %>
+      <table class="index">
+        <thead class="list-head">
+        <tr>
+          <th class="pages-used">
+            <%= t("contact.pages_used_label") %>
+            <%= tt "contact/page_count_service.page_count_notice", expire_in: SS::Duration.format(Contact::PageCountService.expires_in) %>
+          </th>
+          <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
+          <th class="name"><%= SS::Contact.t :name %></th>
+          <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+          <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
+          <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
+          <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+          <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
+          <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
+        </tr>
+        </thead>
+        <tbody class="items">
+        <% group_item.contact_groups.where(id: @item.main_id).first.tap do |contact_group| %>
+          <tr class="list-item" data-id="<%= contact_group.id %>">
+            <td class="pages-used">
+              <%= f.hidden_field :main_id, value: contact_group.id, id: nil %>
+              <%= page_count_service.render(group_id: group_item.id, contact_id: contact_group.id) %>
+            </td>
+            <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+            <td class="name"><%= contact_group.name %></td>
+            <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
+            <td class="contact-tel"><%= contact_group.contact_tel %></td>
+            <td class="contact-fax"><%= contact_group.contact_fax %></td>
+            <td class="contact-email"><%= contact_group.contact_email %></td>
+            <td class="contact-link-url"><%= contact_group.contact_link_url %></td>
+            <td class="contact-link-name"><%= contact_group.contact_link_name %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+
+  <div style="display: flex; justify-content: center; margin-bottom: 10px; font-size: 400%;">
+    <span class="material-icons-outlined" style="display: block; font-size: 100%;">arrow_circle_up</span>
+  </div>
+
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "addon-other_contacts", head: nil } do %>
+      <table class="index">
+        <thead class="list-head">
+        <tr>
+          <th class="checkbox"></th>
+          <th class="pages-used">
+            <%= t("contact.pages_used_label") %>
+            <%= tt "contact/page_count_service.page_count_notice", expire_in: SS::Duration.format(Contact::PageCountService.expires_in) %>
+          </th>
+          <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
+          <th class="name"><%= SS::Contact.t :name %></th>
+          <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+          <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
+          <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
+          <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+          <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
+          <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
+        </tr>
+        </thead>
+        <tbody class="items">
+        <% group_item.contact_groups.ne(id: @item.main_id).each do |contact_group| %>
+          <tr class="list-item" data-id="<%= contact_group.id %>">
+            <td class="checkbox">
+              <%= check_box_tag "#{f.object_name}[sub_ids][]", contact_group.id, @item.sub_ids.include?(contact_group.id.to_s), id: nil %>
+            </td>
+            <td class="pages-used">
+              <%= page_count_service.render(group_id: group_item.id, contact_id: contact_group.id) %>
+            </td>
+            <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+            <td class="name"><%= contact_group.name %></td>
+            <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
+            <td class="contact-tel"><%= contact_group.contact_tel %></td>
+            <td class="contact-fax"><%= contact_group.contact_fax %></td>
+            <td class="contact-email"><%= contact_group.contact_email %></td>
+            <td class="contact-link-url"><%= contact_group.contact_link_url %></td>
+            <td class="contact-link-name"><%= contact_group.contact_link_name %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("contact.buttons.unify"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= link_to t("ss.buttons.cancel"), cms_group_path(id: group_item.id), class: 'btn-default', data: { controller: "ss--history-back" } %>
+  </footer>
+<% end %>

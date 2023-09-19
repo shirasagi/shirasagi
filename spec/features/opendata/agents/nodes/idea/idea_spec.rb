@@ -52,8 +52,35 @@ describe "opendata_agents_nodes_idea", type: :feature, dbscope: :example, js: tr
     end
 
     it "#rss" do
-      visit rss_path
-      expect(current_path).to eq rss_path
+      # visit rss_path
+      # expect(current_path).to eq rss_path
+      layout.html = <<~HTML
+        <html>
+        <body>
+          <br><br><br>
+          <h1 id="ss-page-name">\#{page_name}</h1><br>
+          <div id="main" class="page">
+            {{ yield }}
+            <div class="list-footer">
+              <a href="#{rss_path}" download>RSS</a>
+            </div>
+          </div>
+        </body>
+        </html>
+      HTML
+      layout.save!
+
+      visit index_path
+      within ".list-footer" do
+        click_on "RSS"
+      end
+
+      wait_for_download
+      ::File.read(downloads.first).tap do |xml|
+        xmldoc = REXML::Document.new(xml)
+        items = REXML::XPath.match(xmldoc, "/rss/channel/item")
+        expect(items).to have(1).items
+      end
     end
 
     it "#areas" do
@@ -119,8 +146,33 @@ describe "opendata_agents_nodes_idea", type: :feature, dbscope: :example, js: tr
     end
 
     it "#rss" do
-      visit rss_path
-      expect(current_path).to eq rss_path
+      layout.html = <<~HTML
+        <html>
+        <body>
+          <br><br><br>
+          <h1 id="ss-page-name">\#{page_name}</h1><br>
+          <div id="main" class="page">
+            {{ yield }}
+            <div class="list-footer">
+              <a href="#{rss_path}" download>RSS</a>
+            </div>
+          </div>
+        </body>
+        </html>
+      HTML
+      layout.save!
+
+      visit index_path
+      within ".list-footer" do
+        click_on "RSS"
+      end
+
+      wait_for_download
+      ::File.read(downloads.first).tap do |xml|
+        xmldoc = REXML::Document.new(xml)
+        items = REXML::XPath.match(xmldoc, "/rss/channel/item")
+        expect(items).to have(1).items
+      end
     end
 
     it "#areas" do

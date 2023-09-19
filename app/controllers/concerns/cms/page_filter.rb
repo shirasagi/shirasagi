@@ -95,24 +95,11 @@ module Cms::PageFilter
 
     @item.state = "ready" if @item.try(:release_date).present?
 
-    result = nil
-    if @item.try(:master_id).present?
-      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
-      rejected = -> { @item.errors.add :base, :other_task_is_running }
-      task.run_with(rejected: rejected) do
-        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
-        result = @item.save
-      end
-    else
-      result = @item.save
-    end
+    result = save_with_task(@item)
 
     location = nil
-    if result && @item.try(:branch?) && @item.state == "public"
+    if result && destroy_merged_branch(@item)
       location = { action: :index }
-      @item.file_ids = nil if @item.respond_to?(:file_ids)
-      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
-      @item.destroy
     end
 
     # If page is failed to update, page is going to show in edit mode with update errors
@@ -124,6 +111,28 @@ module Cms::PageFilter
     end
 
     render_update result, location: location
+  end
+
+  def save_with_task(item)
+    return item.save if item.try(:master_id).nil?
+
+    task = SS::Task.find_or_create_for_model(item.master, site: @cur_site)
+    rejected = -> { item.errors.add :base, :other_task_is_running }
+    task.run_with(rejected: rejected) do
+      task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+      item.save
+    end
+    item.errors.blank?
+  end
+
+  def destroy_merged_branch(item)
+    return false if !item.try(:branch?)
+    return false if item.state != "public"
+
+    item.file_ids = nil if item.respond_to?(:file_ids)
+    item.skip_history_trash = true if item.respond_to?(:skip_history_trash)
+    item.destroy
+    true
   end
 
   def save_as_branch
@@ -157,6 +166,35 @@ module Cms::PageFilter
     end
 
     render_update result, render_opts
+  end
+
+  def change_items_state
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
+    @items = []
+
+    role_action = :edit
+    if @model.include?(Cms::Addon::Release)
+      role_action = :release if @change_state == 'public'
+      role_action = :close if @change_state == 'closed'
+    end
+
+    entries.each do |item|
+      if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
+        item.state = @change_state if item.respond_to?(:state)
+
+        if save_with_task(item)
+          destroy_merged_branch(item)
+          next
+        end
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    entries.size != @items.size
   end
 
   public

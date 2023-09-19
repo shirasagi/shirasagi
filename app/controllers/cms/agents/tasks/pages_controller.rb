@@ -129,7 +129,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     if page.save
       if page.try(:branch?) && page.state == "public"
         page.skip_history_trash = true if page.respond_to?(:skip_history_trash)
-        page.delete
+        page.destroy
       end
     elsif @task
       @task.log "error: " + page.errors.full_messages.join(', ')

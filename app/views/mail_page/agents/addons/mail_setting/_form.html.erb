@@ -5,6 +5,9 @@
   <dt><%= @model.t :mail_page_to_conditions %><%= @model.tt :mail_page_to_conditions %></dt>
   <dd><%= f.ss_lines_field :mail_page_to_conditions %></dd>
 
+  <dt><%= @model.t :terminate_line %><%= @model.tt :terminate_line %></dt>
+  <dd><%= f.text_field :terminate_line %></dd>
+
   <dt><%= @model.t :arrival_days %><%= @model.tt :arrival_days %></dt>
   <dd class="short"><%= f.number_field :arrival_days, min: 1 %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
 </dl>

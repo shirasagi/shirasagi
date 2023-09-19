@@ -112,7 +112,8 @@ module Member::AjaxFileFilter
     raise "404" unless Fs.file?(@item.path)
 
     set_last_modified
-    ss_send_file @item, type: @item.content_type, filename: @item.filename, disposition: :inline
+    disposition = SS::MimeType.safe_for_inline?(@item.content_type) ? :inline : :attachment
+    ss_send_file @item, type: @item.content_type, filename: @item.filename, disposition: disposition
   end
 
   def thumb
@@ -122,7 +123,8 @@ module Member::AjaxFileFilter
     set_last_modified
 
     if (thumb = @item.try(:thumb)) && Fs.file?(thumb.path)
-      ss_send_file thumb, type: thumb.content_type, filename: thumb.filename, disposition: :inline
+      disposition = SS::MimeType.safe_for_inline?(thumb.content_type) ? :inline : :attachment
+      ss_send_file thumb, type: thumb.content_type, filename: thumb.filename, disposition: disposition
       return
     end
 

@@ -1,46 +1,135 @@
-$page-width: 1080px;
+$page-width: 1000px;
 
 // -----------------------------------------------------------------------------
 // font
-$px10: 72%;
-$px11: 79%;
-$px12: 86%;
-$px13: 93%;
-$px14: 100%;
-$px15: 108%;
-$px16: 115%;
-$px17: 122%;
-$px18: 129%;
-$px19: 136%;
-$px20: 143%;
-$px21: 150%;
-$px22: 158%;
-$px23: 165%;
-$px24: 172%;
-$px25: 179%;
-$px26: 186%;
-$px27: 193%;
-$px28: 200%;
-$px29: 208%;
-$px30: 215%;
-$px31: 222%;
-$px32: 229%;
+$px08:51%;
+$px09:57%;
+$px10:63%;
+$px11:69%;
+$px12:75%;
+$px13:82%;
+$px14:88%;
+$px15:94%;
+$px16:100%;
+$px17:107%;
+$px18:113%;
+$px19:119%;
+$px20:125%;
+$px21:132%;
+$px22:138%;
+$px23:144%;
+$px24:150%;
+$px25:157%;
+$px26:163%;
+$px27:169%;
+$px28:175%;
+$px29:182%;
+$px30:188%;
+$px31:194%;
+$px32:200%;
+$px33:207%;
+$px34:213%;
+$px35:219%;
+$px36:225%;
+$px37:232%;
+$px38:238%;
+$px39:244%;
+$px40:250%;
+$px41:257%;
+$px42:263%;
+$px43:269%;
+$px44:275%;
+$px45:282%;
+$px46:288%;
+$px47:294%;
+$px48:300%;
+$px49:307%;
+$px50:313%;
+$px51:319%;
+$px52:325%;
+$px53:332%;
+$px54:338%;
+$px55:344%;
+$px56:350%;
+$px57:357%;
+$px58:363%;
+$px59:369%;
+$px60:375%;
+$px61:382%;
+$px62:388%;
+$px63:394%;
+$px64:400%;
+$px65:407%;
+$px66:413%;
+$px67:419%;
+$px68:425%;
+$px69:432%;
+$px70:438%;
+$px71:444%;
+$px72:450%;
 
-$font-base: Meiryo, "メイリオ", Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
-$font-head: Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-base: a-otf-jun-pro,
+sans-serif,
+"Hiragino Kaku Gothic Pro",
+"ヒラギノ角ゴ Pro W3",
+'YuGothic',
+'Yu Gothic',
+'游ゴシック',
+'游ゴシック体',
+'Noto Sans Japanese',
+Meiryo,
+"メイリオ",
+Tahoma,
+Verdana,
+"MS PGothic",
+"ＭＳ　Ｐゴシック",
+sans-serif;
+$font-bold-w8: 'ヒラギノ角ゴ Std W8',
+'Hiragino Kaku Gothic Std',
+'YuGothic',
+'Yu Gothic',
+'游ゴシック',
+'游ゴシック体',
+'Noto Sans Japanese',
+Meiryo,
+"メイリオ",
+Tahoma,
+Verdana,
+"MS PGothic",
+"ＭＳ　Ｐゴシック",
+sans-serif;
+$font-min: "Hiragino Mincho ProN W3",
+"ヒラギノ明朝 ProN W3",
+"Hiragino Mincho ProN",
+"游明朝",
+YuMincho,
+"HG明朝E",
+"ＭＳ Ｐ明朝",
+"ＭＳ 明朝",
+serif;
 
 // -----------------------------------------------------------------------------
 // color
-$text: #666;
-$link: #06c;
-$hover: #d00000;
-$visited: #9000ff;
-$t-white: #fff;
-$orange: #f08300;
+$text: #231815;
+$bg:#e2edee;
+$link: #004098;
+$hover: #004098;
+$visited: #004098;
+$black: #000;
+$white: #fff;
+$orange: #ffdbbe;
+$yellow: #ffe969;
+$lygreen: #cae200;
+$ygreen: #edfc8a;
+$egreen: #c8e4cd;
 $red: #d90000;
-$blue: #007acd;
-$hblue: #cee;
+$blue: #0c53b7;
+$lyblue: #ace2fb;
+$gray: #efefef;
+$darkblue: #033377;
 $hgry: #ccc;
+$ivory: #ecebe3;
+$main-blue: #003bbc;
 $border-lblue: 1px solid #005797;
 $border-hblue: 1px solid #439bd5;
 $border-hgry: 1px solid #ccc;
@@ -51,80 +140,487 @@ $box-margin: 24px;
 $item-margin: 12px;
 $smart-margin: 10px;
 
+
 // -----------------------------------------------------------------------------
 // media query
-@mixin mb {
-  @media only screen and (max-width: 600px) { @content; }
-}
-// -----------------------------------------------------------------------------
-// mixin
-@mixin u-arrow {
-  display: inline-block;
-  padding-left: 17px;
-  background: url(../img/u-arrow.png) no-repeat left center;
-}
-@mixin r-arrow {
-  display: inline-block;
-  padding-left: 15px;
-  background: url(../img/r-arrow.png) no-repeat 2px 7px;
-}
-@mixin l-arrow {
-  display: inline-block;
-  padding-left: 15px;
-  background: url(../img/l-arrow.png) no-repeat 2px 7px;
-}
-@mixin r-arrow-s {
-  padding: 3px 0 3px 25px;
-  background: url(../img/r-arrow.png) no-repeat 12px 10px;
-}
-@mixin li {
-  padding-left: 15px;
-  background: url(../img/ic-li.png) no-repeat 2px 8px;
-}
-@mixin ic-doc {
-  padding: 3px 25px 3px 10px;
-  background: url(../img/ic-doc.png) no-repeat 97% center;
-}
-@mixin grd-blue {
-  background: $blue;
-  @include background-image(linear-gradient(top, #007acd, #0069cc));
-  @include filter-gradient(#007acd, #0069cc, vertical);
-  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDdBQ0QiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMwMDY5Q0MiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3NTIpIiAvPgo8L3N2Zz4=);
-}
-@mixin grd-org {
-  background: #f4d89a;
-  @include background-image(linear-gradient(top, #f4d89a, #f48b22));
-  @include filter-gradient(#f4d89a, #f48b22, vertical);
-  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4MDEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGNEQ4OUEiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNGNDhCMjIiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4MDEpIiAvPgo8L3N2Zz4=);
-}
-@mixin grd-red {
-  background: #e03300;
-  @include background-image(linear-gradient(top, #e03300, #c42c00));
-  @include filter-gradient(#e03300, #c42c00, vertical);
-  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3MDciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNFMDMzMDAiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNDNDJDMDAiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3MDcpIiAvPgo8L3N2Zz4=);
-}
-
-@mixin grd-gry {
-  background: #ccc;
-  @include background-image(linear-gradient(top, #ccc, #bbb));
-  @include filter-gradient(#ccc, #bbb, vertical);
-  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4MzIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNDQ0NDQ0MiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNCQkJCQkIiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4MzIpIiAvPgo8L3N2Zz4=);
-}
-@mixin btn-org {
-  padding: 6px 12px;
-  border: 1px solid $orange;
-  @include border-radius(5px);
-  @include grd-org;
-  &:hover {
-    background: #f48b22;
+@mixin pc {
+  @media only screen and (max-width: 1120px) {
+    @content;
   }
 }
-@mixin btn-gry {
-  padding: 6px 12px;
-  border: 1px solid #bbb;
-  @include border-radius(5px);
-  @include grd-gry;
+
+@mixin pc1 {
+  @media only screen and (min-width: 769px) {
+    @content;
+  }
+}
+
+@mixin tb {
+  @media only screen and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin tb1 {
+  @media only screen and (max-width: 588px) {
+    @content;
+  }
+}
+
+@mixin mb {
+  @media only screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin mb1 {
+  @media only screen and (max-width: 394px) {
+    @content;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// mixin
+
+/* 装飾 */
+@mixin r-arrow-bk5 {
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  top: 34%;
+  right: 6px;
+  border-left: 5px solid $black;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+@mixin r-arrow-gr5 {
+  position: relative;
+  content: "";
+  width: 0;
+  height: 0;
+  top: -2px;
+  right: -10px;
+  display: inline-block;
+  border-left: 9px solid $green;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+@mixin r-arrow-w4 {
+  position: static;
+  content: "";
+  display: inline-block;
+  border-left: 4px solid #fff;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  margin-left: 4px;
+}
+
+@mixin r-arrow-gr4 {
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  top: 24%;
+  right: -16px;
+  border-left: 5px solid $green;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+@mixin li {
+  padding-left: 15px;
+  background: url(../img/ic-li.svg) no-repeat 4px 10px;
+  background-size: 6px;
+}
+
+@mixin border-b-bk {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 1px;
+  bottom: -16px;
+  left: 0;
+  border-bottom: 1px dotted $black;
+}
+
+
+/* 装飾（ボタン） */
+
+@mixin btn-blue {
+  padding: 8px 50px;
+  font-size: $px14;
+  font-weight: bold;
+  text-decoration: none;
+  border: 1px solid #003bbc;
+  border-radius: 21px;
+  color: #fff;
+  background-color: #003bbc;
+  transition: .3s ease-in-out;
+
+  @include tb {
+    padding: 7px 42px;
+  }
+
+  @include mb {
+    padding: 7px 28px;
+  }
+
   &:hover {
-    background: #bbb;
+    color: #003bbc;
+    background-color: #fff;
+    transition: .3s ease-in-out;
+
+    @include tb {}
+  }
+}
+
+@mixin btn-lightblue {
+  padding: 8px 50px;
+  font-size: $px14;
+  font-weight: bold;
+  text-decoration: none;
+  border: 1px solid #ccf0ff;
+  border-radius: 21px;
+  color: #000;
+  background-color: #ccf0ff;
+  transition: .3s ease-in-out;
+
+  @include tb {
+    padding: 7px 42px;
+  }
+
+  @include mb {
+    padding: 7px 28px;
+  }
+
+  &:hover {
+    opacity: .7;
+    transition: .3s ease-in-out;
+
+    @include tb {}
+  }
+}
+
+@mixin btn-green {
+  padding: 16px 22px;
+  border: 1px solid $green;
+  border-radius: 10px;
+  background: $green;
+  color: $white;
+  font-size: $px14;
+  font-weight: bold;
+  text-decoration: none;
+  background: $green;
+  box-sizing: border-box;
+  transition: .3s ease-in-out;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: $white;
+    color: $green;
+  }
+}
+
+@mixin btn-gry {
+  padding: 16px 22px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #ccc;
+  color: $black;
+  font-size: $px14;
+  font-weight: bold;
+  text-decoration: none;
+
+  &:hover {
+    opacity: .75;
+  }
+}
+
+@mixin btn-darkblue {
+  padding: 16px 22px;
+  border: 1px solid $darkblue;
+  border-radius: 10px;
+  background: $darkblue;
+  color: $white;
+  font-size: $px14;
+  font-weight: bold;
+  text-decoration: none;
+  background: $darkblue;
+  box-sizing: border-box;
+  transition: .3s ease-in-out;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: $white;
+    color: $darkblue;
+  }
+}
+
+/* 画像 */
+
+@mixin svg-kana($color: 787878) {
+  background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B stroke-width: 12px; %7D .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 %7B fill: none; stroke-miterlimit: 10; %7D .cls-1, .cls-3, .cls-4, .cls-5, .cls-8 %7B stroke: %23#{$color}; %7D .cls-2, .cls-3 %7B stroke-width: 5px; %7D .cls-2, .cls-6, .cls-7 %7B stroke: %23fff; %7D .cls-4 %7B stroke-width: 8px; %7D .cls-5, .cls-6 %7B stroke-width: 7px; %7D .cls-7, .cls-8 %7B stroke-width: 9px; %7D %3C/style%3E%3C/defs%3E%3Cline class='cls-7' x1='100.06' y1='95.93' x2='7.71' y2='95.93'/%3E%3Cline class='cls-8' x1='21.96' y1='79.13' x2='21.96' y2='96.13'/%3E%3Cline class='cls-7' x1='77.67' y1='21.79' x2='14.53' y2='84.93'/%3E%3Cline class='cls-4' x1='72.21' y1='16.33' x2='9.07' y2='79.47'/%3E%3Cline class='cls-1' x1='85.44' y1='28.87' x2='22.3' y2='92.01'/%3E%3Cline class='cls-3' x1='76.65' y1='5.92' x2='97.13' y2='25.37'/%3E%3Cline class='cls-5' x1='9.81' y1='76.56' x2='9.81' y2='100.08'/%3E%3Cline class='cls-2' x1='73.46' y1='9.27' x2='93.94' y2='28.73'/%3E%3Cline class='cls-3' x1='70.06' y1='12.86' x2='90.54' y2='32.31'/%3E%3Cline class='cls-6' x1='16.82' y1='80.84' x2='16.82' y2='100.05'/%3E%3C/svg%3E") 50% 50% / 100% 100% no-repeat;
+}
+
+@mixin svg-voice($color: 787878) {
+  background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: none; stroke: %23787878; stroke-miterlimit: 10; stroke-width: 6px; %7D .cls-2 %7B fill: %23787878; %7D %3C/style%3E%3C/defs%3E%3Crect class='cls-2' x='-.45' y='28.38' width='28.68' height='46.23'/%3E%3Cpolygon class='cls-2' points='-.08 49.94 52.74 .62 52.74 99.26 -.08 49.94'/%3E%3Cpath class='cls-1' d='M65.02,22.91c2.36,2.32,11.49,11.84,12.45,26.98,1.16,18.37-10.61,30.44-12.45,32.26'/%3E%3Cpath class='cls-1' d='M82.19,11.77c3.18,3.66,14.48,17.55,14.53,38.3,.06,25.58-17.03,41.46-19.81,43.96'/%3E%3C/svg%3E") 50% 50% / 100% 100% no-repeat;
+}
+
+$PATH_IMG: "/img/";
+@mixin submenu-ic($url){
+  height: 40px;
+  background-size: auto 40px;
+  background-image: url($PATH_IMG + $url);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* 短縮 */
+@mixin border-radius($value: 0px) {
+  border-radius: $value;
+  -webkit-border-radius: $value;
+  -moz-border-radius: $value;
+}
+
+@mixin border-radius-tl($value: 0px) {
+  border-top-left-radius: $value;
+  -webkit-top-left-radius: $value;
+  -moz-border-radius-topleft: $value;
+}
+
+@mixin border-radius-tr($value: 0px) {
+  border-top-right-radius: $value;
+  -webkit-top-right-radius: $value;
+  -moz-border-radius-topright: $value;
+}
+
+@mixin border-radius-bl($value: 0px) {
+  border-bottom-left-radius: $value;
+  -webkit-border-bottom-left-radius: $value;
+  -moz-border-radius-bottomleft: $value;
+}
+
+@mixin border-radius-br($value: 0px) {
+  border-bottom-right-radius: $value;
+  -webkit-border-bottom-right-radius: $value;
+  -moz-border-radius-bottomright: $value;
+}
+
+// -----------------------------------------------------------------------------
+// アクセシビリティツール
+
+
+@mixin translate {
+  padding: 0 1em;
+}
+
+@mixin translate-box {
+  position: relative;
+  width: calc(5em + 30px);
+  height: 30px;
+  margin: 0 auto;
+  overflow: hidden;
+  line-height: 1;
+  text-align: center;
+  background: $white;
+  border: 1px solid #dedcdb;
+
+  @include tb {
+    width: calc(7em + 8px);
+    line-height: normal;
+  }
+
+  &:before {
+    position: absolute;
+    content: '';
+    top: 33%;
+    right: 6%;
+    width: 0;
+    height: 0;
+    padding: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 9px solid #666;
+    pointer-events: none;
+
+    @include tb {
+      top: 22%;
+    }
+  }
+
+  select {
+    width: 100%;
+    padding: 8px 17px 4px 9px;
+    color: #666666;
+    padding-right: 1em;
+    cursor: pointer;
+    text-indent: 0.01px;
+    text-overflow: ellipsis;
+    border: 0;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    background-image: none;
+    box-shadow: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: $px12;
+
+    @include tb {
+      padding: 3px 17px 3px 7px;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 記事レイアウト
+
+@mixin docs{
+  padding-bottom: 30px;
+  order: 1;
+
+  p {
+    margin-bottom: 20px;
+    font-size: $px14;
+
+    @include tb {
+      font-size: $px12;
+      line-height: 1.57;
+    }
+
+    strong {
+      // font-weight: normal;
+
+      @include tb {}
+    }
+
+    img {
+      max-width: 100%;
+      // margin: 40px 0;
+    }
+  }
+
+  h2 {
+    margin: 30px 0 12px;
+    padding: 8px 12px;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #ccf0ff;
+
+    @include tb {
+      // margin-top: 32px;
+      // padding: 6px 0 18px;
+      font-size: $px14;
+    }
+  }
+
+  h3 {
+    // margin-top: 20px;
+    margin-bottom: 12px;
+    padding: 0 8px;
+    font-size: $px14;
+    font-weight: bold;
+    border-left: 2px solid $main-blue;
+
+    @include tb {
+      // margin-top: 18px;
+      font-size: $px12;
+    }
+  }
+
+  h4 {
+    // margin-top: 20px; */
+    margin-bottom: 12px;
+    font-size: $px14;
+    font-weight: bold;
+    // color: #800000;
+    color: $main-blue;
+
+    @include tb {
+      // margin-top: 18px;
+      font-size: $px12;
+    }
+  }
+
+  ul,
+  ol {
+    margin-bottom: 20px;
+    padding-left: 1em;
+    font-size: 14px;
+
+    @include tb {
+      font-size: $px12;
+    }
+
+    li {}
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 24px;
+
+    @include tb {
+      font-size: $px14;
+    }
+
+    @include mb {
+      font-size: $px12;
+    }
+
+    caption {
+      padding: 0 10px;
+      color: $main-blue;
+      text-align: left;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    th {
+      padding: 3px 8px 0;
+      border: 1px solid $hgry;
+      background: $ivory;
+      text-align: left;
+    }
+
+    td {
+      padding: 3px 8px 0;
+      border: 1px solid $hgry;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    // margin: 40px 0;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  .genres{
+    ul{
+      padding: 20px 0;
+      list-style: none;
+      display: flex;
+      gap: 10px;
+
+      li{
+        a{
+          @include btn-gry;
+        }
+      }
+    }
   }
 }

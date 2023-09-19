@@ -29,6 +29,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         wait_for_js_ready
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"
@@ -57,6 +58,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         # forward
         new_window = window_opened_by { click_link I18n.t('webmail.links.forward_gws_message') }
         within_window new_window do
+          wait_for_document_loading
           wait_for_js_ready
           wait_cbox_open { first('.gws-addon-memo-member .ajax-box').click }
           wait_for_cbox do

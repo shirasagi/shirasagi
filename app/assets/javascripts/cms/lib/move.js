@@ -33,7 +33,7 @@ Cms_Move.prototype.render = function() {
         $result.find("input[name='layout_ids[]']").remove();
       },
       error: function (data, status) {
-        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        alert(["== Error(Move) =="].concat(data.responseJSON).join("\n"));
       }
     });
   }

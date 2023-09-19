@@ -41,6 +41,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           expect(page).to have_css(".current-filename", text: destination)
+          expect(page).to have_css(".cms-apis-contents-html-page", text: I18n.t("cms.apis.contents.result"))
         end
 
         # check branch page

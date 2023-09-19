@@ -19,3 +19,23 @@
   &.md-light { color: rgba(255, 255, 255, 1); }
   &.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 }
+
+.ss-list-item-overlay {
+  display: flex;
+  position: absolute;
+  padding: 5px;
+  overflow: auto;
+  background: rgba(220, 220, 220, .9);
+
+  .errorExplanation {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    h2 {
+      margin: 0;
+      padding: 8px;
+    }
+  }
+}

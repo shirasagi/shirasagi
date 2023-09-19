@@ -19,17 +19,16 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       Timecop.freeze(travel_at) do
         login_user(user638)
         visit new_path
-        wait_for_js_ready
 
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
           fill_in "item[overtime_name]", with: name
 
-          fill_in "item[start_at_date]", with: start_at.to_date
+          fill_in_date "item[start_at_date]", with: start_at.to_date
           select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[start_at_hour]'
           select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[start_at_minute]'
 
-          fill_in "item[end_at_date]", with: end_at.to_date
+          fill_in_date "item[end_at_date]", with: end_at.to_date
           select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[end_at_hour]'
           select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[end_at_minute]'
 
@@ -43,7 +42,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           end
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       Gws::Affair::OvertimeFile.find_by(overtime_name: name)
     end
@@ -59,30 +58,33 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
+        wait_for_js_ready
+
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
-          select minute, from: 'item[week_in_compensatory_minute]'
+          js_select minute, from: 'item[week_in_compensatory_minute]'
 
           find('[name="item[overtime_name]"]').click
           within "dd.week-in-compensatory" do
             find("a.open-compensatory").click
           end
+          wait_for_js_ready
 
           if start_at
-            fill_in "item[week_in_start_at_date]", with: start_at.to_date
+            fill_in_date "item[week_in_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_in_start_at_hour]'
             select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[week_in_start_at_minute]'
           end
 
           if end_at
-            fill_in "item[week_in_end_at_date]", with: end_at.to_date
+            fill_in_date "item[week_in_end_at_date]", with: end_at.to_date
             select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[week_in_end_at_hour]'
             select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[week_in_end_at_minute]'
           end
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -99,29 +101,34 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
+        wait_for_js_ready
+
         within "form#item-form" do
           select minute, from: 'item[week_out_compensatory_minute]'
 
           find('[name="item[overtime_name]"]').click
+          wait_for_js_ready
+
           within "dd.week-out-compensatory" do
             find("a.open-compensatory").click
           end
+          wait_for_js_ready
 
           if start_at
-            fill_in "item[week_out_start_at_date]", with: start_at.to_date
+            fill_in_date "item[week_out_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_out_start_at_hour]'
             select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[week_in_start_at_minute]'
           end
 
           if end_at
-            fill_in "item[week_out_end_at_date]", with: end_at.to_date
+            fill_in_date "item[week_out_end_at_date]", with: end_at.to_date
             select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[week_out_end_at_hour]'
             select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[week_out_end_at_minute]'
           end
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -135,32 +142,40 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
 
         click_on item.name
+        wait_for_js_ready
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
+        wait_for_js_ready
+
         within "form#item-form" do
           select minute, from: 'item[holiday_compensatory_minute]'
 
           find('[name="item[overtime_name]"]').click
+          wait_for_js_ready
+
           within "dd.holiday-compensatory" do
             find("a.open-compensatory").click
           end
+          wait_for_js_ready
 
           if start_at
-            fill_in "item[holiday_compensatory_start_at_date]", with: start_at.to_date
+            fill_in_date "item[holiday_compensatory_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[holiday_compensatory_start_at_hour]'
             select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[holiday_compensatory_start_at_minute]'
           end
 
           if end_at
-            fill_in "item[holiday_compensatory_end_at_date]", with: end_at.to_date
+            fill_in_date "item[holiday_compensatory_end_at_date]", with: end_at.to_date
             select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[holiday_compensatory_end_at_hour]'
             select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[holiday_compensatory_end_at_minute]'
           end
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -175,6 +190,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         visit index_path
 
         click_on item.name
+        wait_for_js_ready
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -191,6 +207,9 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_js_ready
+
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
         within "#addon-basic" do
           expect(page).to have_css("dd", text: I18n.t("gws/affair.options.status.request"))
         end
@@ -207,11 +226,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user545)
         visit index_path
         click_on item.name
+        wait_for_js_ready
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
+        wait_for_js_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
       end
       item.reload
@@ -225,17 +246,15 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user638)
         visit index_path
         click_on item.name
+        wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.set_results") }
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
-          within "#ajax-box" do
-            click_on I18n.t("ss.buttons.save")
-          end
+          click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -248,13 +267,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user545)
         visit index_path
         click_on item.name
+        wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          wait_for_js_ready
           page.accept_confirm do
             click_on I18n.t("gws/affair.links.close_results")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t("gws/affair.notice.close_results"))
+        wait_for_notice I18n.t("gws/affair.notice.close_results")
       end
       item.reload
       item
@@ -267,13 +286,17 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user545)
         visit index_path
         click_on item.name
+        wait_for_js_ready
 
         within "#addon-basic" do
           expect(page).to have_link(leave_file.name)
           click_on leave_file.name
+          wait_for_js_ready
+
           expect(page).to have_link(item.name)
           click_on item.name
         end
+        wait_for_js_ready
       end
       item
     end

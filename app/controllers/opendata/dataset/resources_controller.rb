@@ -58,7 +58,6 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     @item = @dataset.resources.new get_params
-    @item.status = params[:item][:state]
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
     render_create @item.save
   end
@@ -67,7 +66,6 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     @item.attributes = get_params
-    @item.status = params[:item][:state]
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
     result = @item.save
 

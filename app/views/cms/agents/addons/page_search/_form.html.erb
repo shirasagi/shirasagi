@@ -132,6 +132,32 @@ this.hideDateForm = function(self) {
 </dl>
 
 <dl class="see mod-cms-page-search">
+  <dt><%= @model.t :search_layout_ids %><%= @model.tt :search_layout_ids %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.layouts.index"), cms_apis_layouts_path , class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :search_layout_ids %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.search_layouts.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", item.id, id: nil%> <%= item.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_routes %><%= @model.tt :search_routes %></dt>
   <dd>
     <%= hidden_field_tag "#{f.object_name}[search_routes][]", nil, id: nil, class: "hidden-ids" %>

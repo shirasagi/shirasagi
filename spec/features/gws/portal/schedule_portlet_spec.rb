@@ -20,6 +20,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         within ".portlets .gws-schedule-box" do
           click_on I18n.t("gws/schedule.links.add_plan")
         end
+        wait_for_js_ready
         within ".nav-menu" do
           click_on I18n.t("ss.links.back_to_index")
         end
@@ -31,6 +32,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         within ".portlets .gws-schedule-box" do
           click_on I18n.t("gws/schedule.links.add_plan")
         end
+        wait_for_js_ready
         within "footer.send" do
           click_on I18n.t("ss.buttons.cancel")
         end
@@ -56,6 +58,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         within ".portlets .gws-schedule-box" do
           click_on I18n.t("gws/schedule.links.add_plan")
         end
+        wait_for_js_ready
         within ".nav-menu" do
           click_on I18n.t("ss.links.back_to_index")
         end
@@ -67,6 +70,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         within ".portlets .gws-schedule-box" do
           click_on I18n.t("gws/schedule.links.add_plan")
         end
+        wait_for_js_ready
         within "footer.send" do
           click_on I18n.t("ss.buttons.cancel")
         end
@@ -95,6 +99,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           within ".portlets .gws-schedule-box" do
             within "#calendar-controller" do
               click_on I18n.t("datetime.prompts.day").downcase
+              wait_for_js_ready
+
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")
@@ -117,6 +123,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           within ".portlets .gws-schedule-box" do
             within "#calendar-controller" do
               click_on I18n.t("datetime.prompts.day").downcase
+              wait_for_js_ready
+
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"12:00:00\"]")

@@ -456,7 +456,7 @@ describe History::Trash, type: :model, dbscope: :example do
     context "with cms/release and cms/release_plan" do
       let!(:released_type) { %w(fixed same_as_updated same_as_created same_as_first_released).sample }
       let!(:released) { Time.zone.now.change(usec: 0) }
-      let!(:release_date) { released - rand(3..5).hours }
+      let!(:release_date) { released + rand(1..2).hours }
       let!(:close_date) { release_date + rand(3..5).hours }
       let!(:item) do
         Timecop.freeze(released) do

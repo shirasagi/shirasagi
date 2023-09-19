@@ -7,7 +7,8 @@ module Inquiry::Addon
       field :kintone_app_activation, type: String
       field :kintone_app_api_token, type: String
       field :kintone_app_key, type: String
-      permit_params :kintone_app_activation, :kintone_app_api_token, :kintone_app_key
+      field :kintone_app_guest_space_id, type: String
+      permit_params :kintone_app_activation, :kintone_app_api_token, :kintone_app_key, :kintone_app_guest_space_id
 
       validates :kintone_app_api_token, presence: true, if: -> { kintone_app_enabled? }
       validates :kintone_app_key, presence: true, if: -> { kintone_app_enabled? }
@@ -28,9 +29,13 @@ module Inquiry::Addon
       set_cms_site(site.id)
       kintone_domain = @cms_site.kintone_domain
       basic_auth = credentials
-      ::Kintone::Api.new(kintone_domain, kintone_app_api_token) do |conn|
-        conn.basic_auth(basic_auth[kintone_domain].user, basic_auth[kintone_domain].password) if basic_auth
+      api = ::Kintone::Api.new(kintone_domain, kintone_app_api_token) do |conn|
+        if basic_auth && basic_auth[kintone_domain]
+          conn.basic_auth(basic_auth[kintone_domain].user, basic_auth[kintone_domain].password)
+        end
       end
+      api = api.guest(kintone_app_guest_space_id) if kintone_app_guest_space_id.present?
+      api
     end
 
     def set_cms_site(site_id)

@@ -15,6 +15,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
       within ".gws-schedule-box" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "#addon-basic" do
         expect(page).to have_css("[name=\"item[start_at]\"]")
       end
@@ -30,6 +31,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
       within ".gws-schedule-box" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "#addon-basic" do
         expect(page).to have_css("[name=\"item[start_at]\"]")
       end

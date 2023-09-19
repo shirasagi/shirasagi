@@ -130,6 +130,7 @@ ja:
       gws/workload/cycle: 頻度
       gws/workload/load: 業務負荷
       gws/workload/graph/user_setting: 集計ユーザー
+      gws/workload/overtime: 残業時間
 
     errors:
       models:

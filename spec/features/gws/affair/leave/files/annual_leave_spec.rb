@@ -23,11 +23,11 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         visit new_path
 
         within "form#item-form" do
-          fill_in "item[start_at_date]", with: start_at.to_date
+          fill_in_date "item[start_at_date]", with: start_at.to_date
           select I18n.t("gws/attendance.hour", count: start_at.hour), from: 'item[start_at_hour]'
           select I18n.t("gws/attendance.minute", count: start_at.min), from: 'item[start_at_minute]'
 
-          fill_in "item[end_at_date]", with: end_at.to_date
+          fill_in_date "item[end_at_date]", with: end_at.to_date
           select I18n.t("gws/attendance.hour", count: end_at.hour), from: 'item[end_at_hour]'
           select I18n.t("gws/attendance.minute", count: end_at.min), from: 'item[end_at_minute]'
 
@@ -35,6 +35,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
           click_on I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
     end
@@ -48,6 +49,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         visit index_path
 
         click_on item.name
+        wait_for_js_ready
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -64,6 +66,9 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_js_ready
+
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
         within "#addon-basic" do
           expect(page).to have_css("dd", text: I18n.t("gws/affair.options.status.request"))
         end
@@ -80,11 +85,13 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         login_user(user545)
         visit index_path
         click_on item.name
+        wait_for_js_ready
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
+        wait_for_js_ready
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
       end
       item.reload
@@ -114,11 +121,13 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select user638.groups.first.name, from: 'group_id'
           click_on I18n.t('ss.buttons.search')
         end
+        wait_for_js_ready
 
         within "table.index" do
           expect(page).to have_link user638.long_name
           click_on user638.long_name
         end
+        wait_for_js_ready
       end
 
       within ".gws-attendance" do
@@ -128,6 +137,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.month", count: 1), from: 'month'
           click_on I18n.t('ss.buttons.search')
         end
+        wait_for_js_ready
       end
 
       within "#annual-leave-setting" do

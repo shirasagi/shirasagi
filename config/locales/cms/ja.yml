@@ -13,6 +13,7 @@ ja:
     check_links_pages: ページ
     count_pages: ページ目
     command: コマンド
+    api_token: 連携用APIトークン
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
@@ -277,6 +278,10 @@ ja:
         index: フォルダーを選択する
         search: フォルダーを検索
         select: フォルダーを設定する
+      layouts:
+        index: レイアウトを選択する
+        search: レイアウトを検索
+        select: レイアウトを設定する
       nodes_routes:
         index: フォルダー属性を選択する
         search: フォルダー属性を検索
@@ -753,6 +758,7 @@ ja:
 
   modules:
     cms: 標準機能
+    cms/line: LINE機能
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール
@@ -777,6 +783,7 @@ ja:
       cms/parent_crumb: パンくず
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
+      cms/site/node_setting: フォルダー設定
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
@@ -804,6 +811,8 @@ ja:
       cms/tag: タグ
       cms/layout_html: レイアウト
       cms/layout_part: 使用中パーツ
+      cms/layout_search: レイアウト使用ページを検索する
+      cms/layout_search/btn: レイアウト使用ページを検索
       cms/for_member_node: 会員向け設定
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
@@ -900,6 +909,7 @@ ja:
       cms/michecker/result: miChecker結果
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
+      cms/api_token: 連携用APIトークン
     errors:
       models:
         cms/content:
@@ -970,6 +980,8 @@ ja:
         page_expiration_before: 公開期限
         page_expiration_mail_subject: 公開期限お知らせメール（件名）
         page_expiration_mail_upper_text: 公開期限お知らせメール（上部テキスト）
+      cms/addon/site/node_setting:
+        rss_recent_state: rss-recent.xml
       cms/model/member:
         name: 氏名
         email: メールアドレス
@@ -1135,6 +1147,7 @@ ja:
         name: 名前
         order: 並び順
       cms/addon/page_search:
+        search_layout_ids: レイアウト
         search_name: タイトル
         search_filename: ファイル名
         search_keyword: キーワード
@@ -1322,6 +1335,7 @@ ja:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
         file_id: ファイル
+        file_name: ファイル名
         file_label: リンクテキスト・代替テキスト
         image_html_type: 貼付方法
         text: 動画の内容説明
@@ -1450,6 +1464,7 @@ ja:
         filename: ファイル名
         from_conditions: 送信者メールアドレス
         to_conditions: 宛先メールアドレス
+        terminate_line: 終端文字列
         order: 並び順
         handle_state: ステータス
         statistic_state: 統計情報
@@ -1574,7 +1589,10 @@ ja:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
       cms/line/statistic:
+        name: 統計情報
         message_id: メッセージ
+        condition_state: 設定
+        condition_label: 配信条件
         overview_delivered: メッセージの送信数
         overview_unique_impression: メッセージを開封した人数
         overview_openrate: 開封率
@@ -2048,6 +2066,10 @@ ja:
       to_conditions:
         - メール取込の宛先メールアドレス（To）条件を設定します。
         - メールアドレスもしくはホスト名を設定し、取り込んだメールの送信アドレスと一致した際にメール連携を実行します。
+      terminate_line:
+        - メール本文の終端文字列を入力します。
+        - 本文内に終端文字列がある場合、それ以降の文章が削除されます。
+        - メールのシグネチャを削除する為に利用できます。
       order:
         - 並び順を入力します。
       handle_state:
@@ -2088,6 +2110,11 @@ ja:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの件名を入力します。
       page_expiration_mail_upper_text:
         - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
+
+    cms/addon/site/node_setting:
+      rss_recent_state:
+        - 有効にすると、一覧フォルダーにて動的にrssを応答するURLが利用可能となります。
+        - 'URL: 一覧フォルダー名/rss-recent.xml'
     cms/model/part:
       route:
         - |-
@@ -2416,6 +2443,9 @@ ja:
       search_routes:
         - 検索したいページ属性を選択します。
         - いずれかのページ属性に該当するページが検索されます。
+      search_layout_ids:
+        - 検索したいレイアウトを選択します
+        - いずれかのレイアウトに該当するページが検索されます
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
@@ -2672,6 +2702,8 @@ ja:
       html: |-
         定型フォームのHTMLを Liquid 形式で設定します。
         {{ values["項目名"] }}のように記述することで該当する項目の入力値を表示します。
+        項目名の一部の記号は _ で代用することが可能です。
+        {}\"'[]/
 
         使用例：
           &lt;dl>
@@ -2697,8 +2729,10 @@ ja:
         - 表示順を入力します。
         - 数字が小さいほど上位に表示されます。
     cms/column/base:
-      name:
-        - 入力項目名を入力します。
+      name: |-
+        入力項目名を入力します。
+        一部の記号の使用時、動作が制限されることがあります。
+        {}\"'[]/
       required:
         - 項目の入力が必須か任意かを選択します。
       order:

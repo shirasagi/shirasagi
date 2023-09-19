@@ -310,7 +310,7 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
     @form_columns[14].value_type.new(column: @form_columns[14], file_id: file_10_6.id, file_label: "写真5",
       image_html_type: "image"),
   ],
-  map_points: [{ "name" => "", "loc" => [35.7186823, 139.7741203], "text" => "" }],
+  map_points: [{ "name" => "", "loc" => [139.7741203, 35.7186823], "text" => "" }],
   group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page30.html", name: "ふれあいフェスティバル開催報告",

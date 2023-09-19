@@ -21,9 +21,10 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.disabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
       login_gws_user
@@ -49,9 +50,10 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "unavailable"
 
       login_gws_user
@@ -77,9 +79,10 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.disabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
       login_gws_user
@@ -105,9 +108,10 @@ describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit sns_logout_path
-      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".login-box")
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "unavailable"
 
       login_gws_user

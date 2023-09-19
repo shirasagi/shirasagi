@@ -6,9 +6,10 @@ module MailPage::Addon
     included do
       field :mail_page_from_conditions, type: SS::Extensions::Lines, default: ""
       field :mail_page_to_conditions, type: SS::Extensions::Lines, default: ""
+      field :terminate_line, type: String
       field :arrival_days, type: Integer, default: 2
 
-      permit_params :mail_page_from_conditions, :mail_page_to_conditions, :arrival_days
+      permit_params :mail_page_from_conditions, :mail_page_to_conditions, :terminate_line, :arrival_days
     end
 
     def arrival_days
@@ -18,6 +19,8 @@ module MailPage::Addon
 
     def create_page_from_mail(mail)
       body = mail.text_part ? mail.text_part.decoded : mail.decoded
+      body = body.gsub(/\r\n/, "\n").squeeze("\n").strip
+      body = body.sub(/#{terminate_line}.+$/m, "").strip if terminate_line.present?
 
       page = MailPage::Page.new
       page.site = self.site
@@ -27,7 +30,7 @@ module MailPage::Addon
       page.group_ids = self.group_ids
 
       page.name = mail.subject
-      page.html = body.gsub(/\r\n/, "\n").squeeze("\n").gsub(/\n+/, "<br />")
+      page.html = body.gsub(/\n+/, "<br />")
       page.mail_page_original_mail = mail.to_s
       page.arrival_start_date = Time.zone.now
       page.arrival_close_date = page.arrival_start_date.advance(days: arrival_days)

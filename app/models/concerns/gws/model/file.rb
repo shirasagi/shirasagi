@@ -312,6 +312,7 @@ module Gws::Model::File
 
   def remove_file
     Fs.rm_rf(path)
+    Fs.rm_rf("#{path}_thumb")
     Dir.glob(path + "_history[0-9]*").each { |file| Fs.rm_rf(file) } if Dir.glob(path + "_history[0-9]*").count > 0
     remove_public_file
   end

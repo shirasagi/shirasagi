@@ -1,4 +1,7 @@
-<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  show_unifies_to_main = local_assigns.fetch(:show_unifies_to_main, true)
+%>
 
 <% render_row = proc do |contact_group| %>
   <tr data-id="<%= contact_group.try(:id) || "new" %>">
@@ -11,6 +14,7 @@
         <%= radio_button_tag "dummy[#{addon[:id]}][][main_state]", "main", contact_group.try(:main_state) == "main", id: nil %>
         <%= t("contact.options.main_state.main") %>
       <% end %>
+      <%= hidden_field_tag "#{f.object_name}[destinations][][contact_groups][][unifies_to_main]", contact_group.try(:unifies_to_main), id: nil %>
     </td>
     <td class="name">
       <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][name]", contact_group.try(:name), id: nil, style: "width: 100%;" %>
@@ -79,7 +83,7 @@
         destination = @item.destinations.present? ? @item.destinations[index] : nil
         if destination && destination[:contact_groups]
           destination[:contact_groups].each do |contact_group|
-            contact_group = ::Mongoid::Factory.build(SS::Contact, contact_group)
+            contact_group = ::Mongoid::Factory.build(SS::Contact, contact_group.except(:unifies_to_main))
             next if contact_group.all_empty?
             render_row.call(contact_group)
           end
@@ -90,6 +94,14 @@
     <% render_row.call(nil) %>
     </tbody>
   </table>
+  <% if show_unifies_to_main %>
+    <div>
+      <label>
+        <%= check_box_tag "dummy[#{addon[:id]}][][unifies_to_main]", "enabled", false, id: nil, class: "unifies-to-main" %>
+        <%= t("contact.links.unify_to_main") %>
+      </label>
+    </div>
+  <% end %>
   <template id="new-contact-group-row">
     <% render_row.call(nil) %>
   </template>

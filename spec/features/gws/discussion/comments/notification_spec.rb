@@ -27,12 +27,14 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
     it do
       visit gws_discussion_main_path(site: site)
       click_on forum.name
+      wait_for_js_ready
       click_on I18n.t("gws/discussion.links.topic.reply")
+      wait_for_js_ready
       within "form.reply" do
         fill_in "item[text]", with: post_texts.join("\n")
         click_on I18n.t("ss.links.reply")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       topic.reload
       expect(topic.children.count).to eq 1

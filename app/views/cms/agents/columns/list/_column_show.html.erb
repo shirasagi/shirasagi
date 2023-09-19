@@ -1,5 +1,5 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
-  <%= content_tag column.list_type.to_sym do %>
+  <%= content_tag column.list_type.to_sym, class: "list list-#{column.list_type}" do %>
     <% value.lists.each do |list| %>
       <li>
         <%= list %>

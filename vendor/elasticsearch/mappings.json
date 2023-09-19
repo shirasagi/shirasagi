@@ -16,6 +16,7 @@
     "custom_group_ids": { "type": "integer" },
     "permission_level": { "type": "integer" },
     "member_ids": { "type": "integer" },
+    "member_group_ids": { "type": "integer" },
     "member_custom_group_ids": { "type": "integer" },
     "readable_member_ids": { "type": "integer" },
     "readable_group_ids": { "type": "integer" },

@@ -174,9 +174,7 @@ class Uploader::File
     return if ext != ".scss"
     return if ::File.basename(@path)[0] == "_"
 
-    opts = Rails.application.config.sass
-    load_paths = opts.load_paths[1..-1] || []
-    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
+    load_paths = Rails.application.config.assets.paths.dup
     load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
 
     sass = Sass::Engine.new(

@@ -52,6 +52,7 @@ module Article::Node
     include Event::Addon::PageList
     include Article::Addon::MapSearch
     include Article::Addon::MapSearchResult
+    include Map::Addon::SearchSetting
     include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission

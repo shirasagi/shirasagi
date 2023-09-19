@@ -42,7 +42,12 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
     status = "request" if @route && params[:request].present?
     status = "public"  if !@route && params[:publish_save].present?
 
-    @item.status = status
+    if status == 'request'
+      @item.status = status
+      @item.state = 'public'
+    else
+      @item.state = status
+    end
     @item.workflow = { member: @cur_member, route: @route, workflow_reset: true }
     if status == "request" && @dataset.status != "request"
       @deliver_mail = true

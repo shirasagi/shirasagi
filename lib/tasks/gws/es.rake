@@ -44,6 +44,10 @@ namespace :gws do
       ::Tasks::Gws::Es.feed_all_qnas
     end
 
+    task feed_all_surveys: :environment do
+      ::Tasks::Gws::Es.feed_all_surveys
+    end
+
     task feed_all_circulars: :environment do
       ::Tasks::Gws::Es.feed_all_circulars
     end

@@ -14,7 +14,7 @@ module Gws::Elasticsearch::Setting::Base
     model.allowed?(method, cur_user, site: cur_site)
   end
 
-  def translate_category(es_type, cate_name)
+  def translate_category(es_type, cate_name, opts = {})
     nil
   end
 
@@ -132,7 +132,12 @@ module Gws::Elasticsearch::Setting::Base
     filter_query[:bool] = {}
     filter_query[:bool][:minimum_should_match] = 1
     filter_query[:bool][:should] = []
-    filter_query[:bool][:should] << readable_filter
+
+    read_filter = readable_filter
+    if read_filter.present?
+      filter_query[:bool][:should] << read_filter
+    end
+
     manage_filter = manageable_filter
     if manage_filter.present?
       filter_query[:bool][:should] << manage_filter
@@ -141,7 +146,12 @@ module Gws::Elasticsearch::Setting::Base
     type_query = {}
     type_query[:bool] = {}
     type_query[:bool][:minimum_should_match] = 1
-    type_query[:bool][:should] = search_types.map { |type| { term: { collection_name: type } } }
+
+    if search_types.present?
+      type_query[:bool][:should] = search_types.map { |type| { term: { collection_name: type } } }
+    else
+      type_query[:bool][:should] = { term: { collection_name: "invalid_type" } }
+    end
 
     query = {}
     query[:bool] = {}

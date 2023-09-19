@@ -74,6 +74,8 @@ ja:
         column_values: 選択肢
       article/addon/map_search_result:
         map_html: 地図HTML
+        sidebar_loop_liquid: サイドバーループHTML
+        map_marker_liquid: マーカーHTML
       article/addon/search:
         search_node_id: 検索フォルダー
 
@@ -110,6 +112,19 @@ ja:
         #{sidebar} 地図と連動するサイドバーを表示します。
         #{canvas} 地図を表示します。
         #{filters} 種類を絞り込んで表示します。
+      sidebar_loop_liquid: |-
+        検索結果のサイドバー部分のループHTMLを記述することが可能です。
+        Liquid 形式で記述できます。
+
+        マーカーのポップアップを表示する場合、記入例を参考に以下のHTMLを記述してください。
+        &lt;div class="column" data-id="{{ page.id }}">
+          ...
+          &lt;p>&lt;a href="#" class="click-marker">地図上で確認\&lt;/a>&lt;/p>
+        &lt;/div>
+      map_marker_liquid: |-
+        検索結果の地図マーカーのポップアップHTMLを記述することが可能です。
+        Liquid 形式で記述できます。
+        記入例を参考にHTMLを記述してください。
     article/addon/search:
       search_node_id:
         - 検索先のフォルダーを設定します。

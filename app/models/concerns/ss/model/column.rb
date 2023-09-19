@@ -20,6 +20,7 @@ module SS::Model::Column
 
     validates :form_id, presence: true
     validates :name, presence: true, length: { maximum: 80 }
+    validates :name, format: { without: /[{}"'\[\]\/]/ }, if: ->{ SS.config.cms.column_name_type == 'restricted' }
     validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
     validates :prefix_label, length: { maximum: 80 }
