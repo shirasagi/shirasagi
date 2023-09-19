@@ -21,8 +21,6 @@ module Gws::Schedule::PlanFilter
   end
 
   def fix_params
-    @cur_user.readable_setting_range = 'public'
-    @cur_user.readable_group_ids = nil
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
