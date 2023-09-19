@@ -53,12 +53,11 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   end
 
   def set_default_readable_setting
-    main_facility = Gws::Facility::Item.find(@facility.id)
     @default_readable_setting = proc do
-      @item.readable_setting_range = main_facility.readable_setting_range
-      @item.readable_group_ids = [ main_facility.readable_group_ids ]
-      @item.readable_member_ids = [ main_facility.readable_member_ids ]
-      @item.readable_custom_group_ids = []
+      @item.readable_setting_range = @facility.readable_setting_range
+      @item.readable_group_ids = @facility.readable_group_ids
+      @item.readable_member_ids = @facility.readable_member_ids
+      @item.readable_custom_group_ids = @facility.readable_custom_group_ids
     end
   end
 end
