@@ -14,87 +14,95 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
 
   before { login_cms_user }
 
-  context "FAQページ" do
-    it "new" do
-      visit faq_new_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "sample"
-      end
-      within "#addon-cms-agents-addons-file" do
-        wait_cbox_open do
-          click_on I18n.t("ss.buttons.upload")
+  context "auto save" do
+    context "new" do
+      it do
+        visit faq_new_path
+        within "form#item-form" do
+          fill_in "item[name]", with: name
         end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
-          click_on I18n.t('ss.buttons.attach')
+        within "#addon-cms-agents-addons-file" do
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
-      end
-      click_on I18n.t("ss.links.back_to_index")
-
-      visit faq_index_path
-      page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
-        click_on I18n.t("ss.links.new")
-      end
-      wait_for_form_restored
-
-      within "form#item-form" do
-        within '#selected-files' do
-          expect(page).to have_css('.name', text: 'keyvisual.jpg')
+        wait_for_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
         end
-        click_on I18n.t('ss.buttons.publish_save')
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
+        click_on I18n.t("ss.links.back_to_index")
 
-      expect(page).to have_content("sample")
-      expect(page).to have_content('keyvisual')
-      expect(Faq::Page.count).to eq 1
-      Faq::Page.all.first do |plan|
-        expect(plan.name).to eq "sample"
+        visit faq_index_path
+        page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
+          click_on I18n.t("ss.links.new")
+        end
+        wait_for_form_restored
+
+        within "form#item-form" do
+          within '#selected-files' do
+            expect(page).to have_css('.name', text: 'keyvisual.jpg')
+          end
+          click_on I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        expect(page).to have_content(name)
+        expect(page).to have_content('keyvisual')
+        expect(Faq::Page.count).to eq 1
+        Faq::Page.all.first.tap do |faq_page|
+          expect(faq_page.name).to eq name
+          expect(faq_page.file_ids.length).to eq 1
+          expect(faq_page.files.first.name).to eq 'keyvisual.jpg'
+        end
       end
     end
 
-    it "edit" do
-      visit faq_edit_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "サンプルタイトル"
-      end
-      within "#addon-cms-agents-addons-file" do
-        wait_cbox_open do
-          click_on I18n.t("cms.file")
+    context "edit" do
+      it do
+        visit faq_edit_path
+        within "form#item-form" do
+          fill_in "item[name]", with: name
         end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
-          click_button I18n.t("ss.buttons.attach")
+        within "#addon-cms-agents-addons-file" do
+          wait_cbox_open do
+            click_on I18n.t("cms.file")
+          end
         end
-      end
-      click_on I18n.t("ss.links.back_to_show")
-      wait_for_js_ready
-      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-
-      visit faq_show_path
-      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-      page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
-        click_on I18n.t("ss.links.edit")
-      end
-      wait_for_form_restored
-
-      within "form#item-form" do
-        within '#selected-files' do
-          expect(page).to have_css('.name', text: 'keyvisual.jpg')
+        wait_for_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
         end
-        click_on I18n.t('ss.buttons.publish_save')
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
+        click_on I18n.t("ss.links.back_to_show")
+        wait_for_js_ready
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-      expect(page).to have_content("サンプルタイトル")
-      expect(page).to have_content('keyvisual')
-      expect(Faq::Page.count).to eq 1
-      Faq::Page.all.first do |plan|
-        expect(plan.name).to eq "サンプルタイトル"
+        visit faq_show_path
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
+          click_on I18n.t("ss.links.edit")
+        end
+        wait_for_form_restored
+
+        within "form#item-form" do
+          within '#selected-files' do
+            expect(page).to have_css('.name', text: 'keyvisual.jpg')
+          end
+          click_on I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        expect(page).to have_content(name)
+        expect(page).to have_content('keyvisual')
+        expect(Faq::Page.count).to eq 1
+        Faq::Page.all.first.tap do |faq_page|
+          expect(faq_page.name).to eq name
+          expect(faq_page.file_ids.length).to eq 1
+          expect(faq_page.files.first.name).to eq 'keyvisual.jpg'
+        end
       end
     end
   end
