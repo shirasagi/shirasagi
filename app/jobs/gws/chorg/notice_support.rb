@@ -195,7 +195,7 @@ module Gws::Chorg::NoticeSupport
   def initialize_folder(attributes = {})
     entity = Gws::Notice::Folder.new
     entity.cur_site = @cur_site
-    entity.cur_user = @cur_user
+    entity.cur_user = @cur_user.gws_user
     entity.readable_setting_range = "public"
 
     entity.notice_individual_body_size_limit = SS.config.gws.notice['default_notice_individual_body_size_limit']
