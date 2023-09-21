@@ -14,7 +14,7 @@ namespace :facility do
         next if site.blank?
 
         item.cur_site = site
-        item.save
+        item.without_record_timestamps { item.save }
       end
     end
   end
