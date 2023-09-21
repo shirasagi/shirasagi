@@ -29,7 +29,8 @@ class SS::Migration20190320000000
           file.content_type = "application/octet-stream"
         end
 
-        unless file.save
+        result = file.without_record_timestamps { file.save }
+        unless result
           STDERR.puts "ファイル #{file.name}(#{file.id};#{file.model}) でエラーが発生しました。"
           STDERR.puts file.errors.full_messages.join("\n")
         end

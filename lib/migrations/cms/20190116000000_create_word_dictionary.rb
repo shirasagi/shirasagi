@@ -14,7 +14,7 @@ class SS::Migration20190116000000
       next if item.persisted?
 
       item.body = body
-      item.save!
+      item.without_record_timestamps { item.save! }
     end
   end
 end
