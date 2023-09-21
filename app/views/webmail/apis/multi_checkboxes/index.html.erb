@@ -29,9 +29,9 @@
   <thead class="message-list-head">
     <tr>
       <% if @multi %>
-      <th class="checkbox-to-all">TO<input type="checkbox" /></th>
-      <th class="checkbox-cc-all">CC<input type="checkbox" /></th>
-      <th class="checkbox-bcc-all">BCC<input type="checkbox" /></th>
+      <th class="checkbox-to-all">TO<input type="checkbox" id="to_all"/></th>
+      <th class="checkbox-cc-all">CC<input type="checkbox"  id="cc_all"/></th>
+      <th class="checkbox-bcc-all">BCC<input type="checkbox"  id="bcc_all"/></th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
       <th><%= @model.t :email %></th>
@@ -41,9 +41,9 @@
     <% @items.each do |item| %>
       <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>" data-email="<%= item.email_address %>">
         <% if @multi %>
-        <td class="to-checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
-        <td class="cc-checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
-        <td class="bcc-checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
+        <td class="to-checkbox"><input type="checkbox" id="to_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" /></td>
+        <td class="cc-checkbox"><input type="checkbox" id="cc_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" /></td>
+        <td class="bcc-checkbox"><input type="checkbox" id="bcc_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" /></td>
         <% end %>
         <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= item.email %></td>
