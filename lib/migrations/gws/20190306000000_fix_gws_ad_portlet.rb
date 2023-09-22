@@ -28,7 +28,7 @@ class SS::Migration20190306000000
     if attrs.present?
       SS::File.in(id: attrs[:ad_file_ids]).each do |file|
         file.owner_item = portlet
-        file.save!
+        file.without_record_timestamps { file.save! }
       end
 
       portlet.set(attrs)

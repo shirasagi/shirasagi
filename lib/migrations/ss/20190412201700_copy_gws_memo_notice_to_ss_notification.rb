@@ -20,7 +20,7 @@ class SS::Migration20190412201700
       notice.user_id = item['user_id']
       notice.group_id = item['site_id']
       notice.url = item['url']
-      notice.save
+      notice.without_record_timestamps { notice.save }
     end
   end
 end

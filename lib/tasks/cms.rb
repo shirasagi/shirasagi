@@ -254,7 +254,7 @@ module Tasks
 
               item.send("#{attr}=", gsub_path(item.send(attr), site))
             end
-            item.save!
+            item.without_record_timestamps { item.save! }
 
             puts item.name
           end

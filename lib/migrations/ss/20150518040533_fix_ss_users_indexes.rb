@@ -46,7 +46,7 @@ class SS::Migration20150518040533
   def remove_uid(user)
     if user.has_attribute?(:uid)
       user.remove_attribute(:uid)
-      user.save!
+      user.without_record_timestamps { user.save! }
     end
   end
 end
