@@ -1,7 +1,7 @@
 <dl class="see mod-cms-import-body">
   <dd class="wide">
     <% if @item.send(:html).present?  %>
-    <%= code_editor "#mod-cms-body", height: "400px", readonly: true %>
+    <%= code_editor "#mod-cms-body", readonly: true %>
     <%= text_area_tag "mod-cms-body", @item.html, style: "height: 400px;" %>
     <% end %>
   </dd>
