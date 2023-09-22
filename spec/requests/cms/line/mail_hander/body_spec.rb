@@ -28,14 +28,14 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
       let!(:api_token) { create :cms_api_token }
       let!(:headers) do
         {
-          "CONTENT_TYPE" => "application/x-www-form-urlencoded",
+          "CONTENT_TYPE" => "multipart/form-data",
           SS::ApiToken::API_KEY_HEADER => api_token.to_jwt
         }
       end
 
       context "deliver handler" do
         context "post utf-8 mail" do
-          let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
           let(:decoded) { "【UTF-8】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
           let(:start_line) { "【緊急メールサービス】" }
           let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
@@ -45,7 +45,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
             mail_handler
             capture_line_bot_client do |capture|
               perform_enqueued_jobs do
-                post url, params: "data=#{data}", headers: headers
+                post url, params: { data: file }, headers: headers
                 expect(Cms::Line::Message.count).to eq 1
                 expect(message.name).to include("[#{mail_handler.name}]")
                 expect(message.templates.first.text).to eq decoded
@@ -58,7 +58,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         end
 
         context "post utf-8_2 mail" do
-          let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8_2.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8_2.eml") }
           let(:decoded) do
             [
               "【台風第７号の接近について】",
@@ -78,7 +78,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
             mail_handler
             capture_line_bot_client do |capture|
               perform_enqueued_jobs do
-                post url, params: "data=#{data}", headers: headers
+                post url, params: { data: file }, headers: headers
                 expect(Cms::Line::Message.count).to eq 1
                 expect(message.name).to include("[#{mail_handler.name}]")
                 expect(message.templates.first.text).to eq decoded
@@ -90,28 +90,28 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
           end
         end
 
-        #context "post iso-2022-jp mail" do
-        #  let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
-        #  let(:decoded) { "【ISO-2022-JP】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
-        #  let(:start_line) { "【緊急メールサービス】" }
-        #  let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
-        #  let(:subject_state) { "include" }
-        #
-        #  it "#mail" do
-        #    mail_handler
-        #    capture_line_bot_client do |capture|
-        #      perform_enqueued_jobs do
-        #        post url, params: "data=#{data}", headers: headers
-        #        expect(Cms::Line::Message.count).to eq 1
-        #        expect(message.name).to include("[#{mail_handler.name}]")
-        #        expect(message.templates.first.text).to eq decoded
-        #      end
-        #      expect(message.deliver_state).to eq "completed"
-        #      expect(capture.broadcast.count).to eq 1
-        #      expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
-        #    end
-        #  end
-        #end
+        context "post iso-2022-jp mail" do
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+          let(:decoded) { "【ISO-2022-JP】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
+          let(:start_line) { "【緊急メールサービス】" }
+          let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
+          let(:subject_state) { "include" }
+
+          it "#mail" do
+            mail_handler
+            capture_line_bot_client do |capture|
+              perform_enqueued_jobs do
+                post url, params: { data: file }, headers: headers
+                expect(Cms::Line::Message.count).to eq 1
+                expect(message.name).to include("[#{mail_handler.name}]")
+                expect(message.templates.first.text).to eq decoded
+              end
+              expect(message.deliver_state).to eq "completed"
+              expect(capture.broadcast.count).to eq 1
+              expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+            end
+          end
+        end
       end
     end
   end

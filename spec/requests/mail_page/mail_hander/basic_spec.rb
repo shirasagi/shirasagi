@@ -31,60 +31,60 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
 
     context "without api_token" do
       let!(:headers) do
-        { "CONTENT_TYPE" => "application/x-www-form-urlencoded" }
+        { "CONTENT_TYPE" => "multipart/form-data" }
       end
 
       context "post utf-8 mail" do
-        let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
 
         it "#mail" do
-          expect { post(url, params: "data=#{data}") }.to raise_error "404"
+          expect { post(url, params: { data: file }) }.to raise_error "404"
           expect(MailPage::Page.count).to eq 0
         end
       end
 
-      #context "post iso-2022-jp mail" do
-      #  let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
-      #
-      #  it "#mail" do
-      #    expect { post(url, params: "data=#{data}") }.to raise_error "404"
-      #    expect(MailPage::Page.count).to eq 0
-      #  end
-      #end
+      context "post iso-2022-jp mail" do
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+
+        it "#mail" do
+          expect { post(url, params: { data: file }) }.to raise_error "404"
+          expect(MailPage::Page.count).to eq 0
+        end
+      end
     end
 
     context "with api_token" do
       let!(:api_token) { create :cms_api_token }
       let!(:headers) do
         {
-          "CONTENT_TYPE" => "application/x-www-form-urlencoded",
+          "CONTENT_TYPE" => "multipart/form-data",
           SS::ApiToken::API_KEY_HEADER => api_token.to_jwt
         }
       end
 
       context "post utf-8 mail" do
-        let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
 
         it "#mail" do
           perform_enqueued_jobs do
-            post url, params: "data=#{data}", headers: headers
+            post url, params: { data: file }, headers: headers
             expect(MailPage::Page.count).to eq 1
             expect(page.html.gsub("<br />", "\n")).to eq decoded
           end
         end
       end
 
-      #context "post iso-2022-jp mail" do
-      #  let(:data) { Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
-      #
-      #  it "#mail" do
-      #    perform_enqueued_jobs do
-      #      post url, params: "data=#{data}", headers: headers
-      #      expect(MailPage::Page.count).to eq 1
-      #      expect(page.html.gsub("<br />", "\n")).to eq decoded
-      #    end
-      #  end
-      #end
+      context "post iso-2022-jp mail" do
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+
+        it "#mail" do
+          perform_enqueued_jobs do
+            post url, params: { data: file }, headers: headers
+            expect(MailPage::Page.count).to eq 1
+            expect(page.html.gsub("<br />", "\n")).to eq decoded
+          end
+        end
+      end
     end
   end
 end
