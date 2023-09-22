@@ -12,7 +12,7 @@ describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     context "multicast case" do
-      let(:item) { create :cms_line_multicast_statistic, message: message }
+      let!(:item) { create :cms_line_multicast_statistic, message: message }
 
       it "#show" do
         visit show_path
@@ -32,6 +32,21 @@ describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
         end
       end
 
+      it "#delete_all" do
+        visit index_path
+        expect(page).to have_css(".list-items", text: item.name)
+
+        find('.list-head input[type="checkbox"]').set(true)
+        within ".list-head-action" do
+          click_button I18n.t('ss.buttons.delete')
+        end
+
+        expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+        click_button I18n.t('ss.buttons.delete')
+
+        expect(page).to have_no_css(".list-items", text: item.name)
+      end
+
       it "#delete" do
         visit delete_path
         within "form" do
@@ -42,7 +57,7 @@ describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
     end
 
     context "exceeded units by month" do
-      let(:item) { create :cms_line_multicast_statistic, message: message, aggregation_units_by_month: 1000 }
+      let!(:item) { create :cms_line_multicast_statistic, message: message, aggregation_units_by_month: 1000 }
 
       it "#show" do
         visit show_path
