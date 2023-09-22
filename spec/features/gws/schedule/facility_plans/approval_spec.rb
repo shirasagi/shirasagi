@@ -13,7 +13,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
   context "with single facility" do
     let!(:item) { create :gws_schedule_facility_plan, facility_ids: [ facility1.id ] }
-    let(:comment_text) { "comment-#{unique_id}" }
+    let(:comment_text1) { "comment-#{unique_id}" }
 
     it do
       expect(item.current_approval_state).to eq "request"
@@ -30,7 +30,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_cbox do
         within "#ajax-box form#item-form" do
-          fill_in "comment[text]", with: comment_text
+          fill_in "comment[text]", with: comment_text1
           click_on I18n.t("ss.buttons.save")
         end
       end
@@ -50,14 +50,16 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         expect(comment.user_id).to eq user.id
         expect(comment.schedule_id).to eq item.id
         expect(comment.text_type).to eq "plain"
-        expect(comment.text).to eq comment_text
+        expect(comment.text).to eq comment_text1
       end
     end
   end
 
   context "with triple facilities" do
     let!(:item) { create :gws_schedule_facility_plan, facility_ids: [ facility1.id, facility2.id, facility3.id ] }
-    let(:comment_text) { "comment-#{unique_id}" }
+    let(:comment_text1) { "comment-#{unique_id}" }
+    let(:comment_text2) { "comment-#{unique_id}" }
+    let(:comment_text3) { "comment-#{unique_id}" }
 
     it do
       expect(item.current_approval_state).to eq "request"
@@ -78,11 +80,16 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_cbox do
         within "#ajax-box form#item-form" do
-          fill_in "comment[text]", with: comment_text
+          fill_in "comment[text]", with: comment_text1
           click_on I18n.t("ss.buttons.save")
         end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      page.execute_script("SS.clearNotice();")
+
+      within "#addon-gws-agents-addons-schedule-comments" do
+        expect(page).to have_css(".list-item", text: comment_text1)
+      end
 
       item.reload
       expect(item.current_approval_state).to eq "request"
@@ -96,11 +103,16 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_cbox do
         within "#ajax-box form#item-form" do
-          fill_in "comment[text]", with: comment_text
+          fill_in "comment[text]", with: comment_text2
           click_on I18n.t("ss.buttons.save")
         end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      page.execute_script("SS.clearNotice();")
+
+      within "#addon-gws-agents-addons-schedule-comments" do
+        expect(page).to have_content(comment_text2)
+      end
 
       item.reload
       expect(item.current_approval_state).to eq "request"
@@ -114,11 +126,16 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_cbox do
         within "#ajax-box form#item-form" do
-          fill_in "comment[text]", with: comment_text
+          fill_in "comment[text]", with: comment_text3
           click_on I18n.t("ss.buttons.save")
         end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      page.execute_script("SS.clearNotice();")
+
+      within "#addon-gws-agents-addons-schedule-comments" do
+        expect(page).to have_content(comment_text3)
+      end
 
       item.reload
       expect(item.current_approval_state).to eq "approve"

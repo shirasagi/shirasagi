@@ -1,0 +1,18 @@
+<div class="guide-lists">
+  <h2>#{name}</h2>
+  <div class="procedure-wrap">
+    <dl class="procedure item-#{id}">
+      <dt>リンク URL</dt>
+      <dd><a href="#{link_url}">#{link_url}</a></dd>
+      <dt>実施場所</dt>
+      <dd>#{procedure_location}</dd>
+      <dt>必要なもの</dt>
+      <dd>#{belongings}</dd>
+      <dt>対象者</dt>
+      <dd>#{procedure_applicant}</dd>
+      <dt>備考</dt>
+      <dd>#{remarks}</dd>
+    </dl>
+    <div class="close-btn"><span>×</span>閉じる</div>
+  </div>
+</div>

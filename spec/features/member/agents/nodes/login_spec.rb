@@ -41,6 +41,7 @@ describe 'members/agents/nodes/login', type: :feature, dbscope: :example, js: tr
 
         click_on I18n.t("ss.login")
       end
+      expect(page).to have_no_css(".form-login")
 
       visit site2_my_profile.full_url
       expect(page).to have_css(".form-login")

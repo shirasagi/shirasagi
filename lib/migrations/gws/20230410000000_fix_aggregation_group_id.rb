@@ -20,8 +20,7 @@ class SS::Migration20230410000000
     attr_array.each do |attr|
       item = model.new
       item.assign_attributes_safe(attr)
-      def item.set_updated; end
-      item.save
+      item.without_record_timestamps { item.save }
     end
   end
 end

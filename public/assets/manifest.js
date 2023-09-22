@@ -5,6 +5,8 @@
 
 
 
+
+
 // ビルドするアセット一覧（アルファベット順）
 // 次のコマンドで、一覧を生成することができる
 // find app/assets -name '*.js*' -o -name '*.css*' -o -name '*.scss*' | \
@@ -19,6 +21,7 @@
 //   sed -e 's#\.scss#.css#'
 
 // javascript
+
 
 
 

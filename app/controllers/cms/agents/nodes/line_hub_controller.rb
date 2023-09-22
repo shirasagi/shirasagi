@@ -56,6 +56,17 @@ class Cms::Agents::Nodes::LineHubController < ApplicationController
       return
     end
 
+    begin
+      Cms::ApiToken.authenticate(request, site: @cur_site) do |audience|
+        if !Cms::Line::Message.allowed?(:edit, audience, site: @cur_site)
+          raise "not allowed create line message!"
+        end
+      end
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      raise "404"
+    end
+
     data = params.permit(:data)[:data]
     raise "404" if data.blank?
 

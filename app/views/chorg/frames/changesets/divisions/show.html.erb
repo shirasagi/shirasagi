@@ -1,13 +1,43 @@
-<div class="addon-views">
+<%
+  source =  @item.sources.try(:first)
+  return unless source
+
+  group = Cms::Group.site(@cur_site).find(source["id"]) rescue nil
+  return unless group
+%>
+
+<div class="addon-views chorg-before">
   <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
     <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
     <%= t("chorg.views.division_changesets.before_division") %>
   </h2>
 
   <%=
-    { id: "chorg-before", class: "chorg-before" }.then do |addon_options|
+    { id: "chorg-before-basic", class: "chorg-before-basic", head: t("ss.basic_info"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
-        render "show_before", addon: addon_options
+        render "show_before_basic", addon: addon_options, group: group
+      end
+    end
+  %>
+
+  <%=
+    { id: "chorg-before-ldap", class: "chorg-before-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+      content = render "show_before_ldap", addon: addon_options, group: group
+      if content.present?
+        render "ss/crud/addon", addon: addon_options do
+          content
+        end
+      end
+    end
+  %>
+
+  <%=
+    { id: "chorg-before-contact", class: "chorg-before-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+      content = render "show_before_contact", addon: addon_options, group: group
+      if content.present?
+        render "ss/crud/addon", addon: addon_options do
+          content
+        end
       end
     end
   %>
@@ -18,28 +48,32 @@
 </div>
 
 <% 1.upto(SS.config.chorg.max_division) do |sequence| %>
-  <div class="addon-views">
+  <%
+    destination = @item.destinations.present? ? @item.destinations[sequence - 1] : nil
+    next if destination.blank? || destination[:name].blank?
+  %>
+  <div class="addon-views chorg-after">
     <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
       <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
       <%= t("chorg.views.division_changesets.after_division", count: sequence) %>
     </h2>
 
     <%=
-      { id: "chorg-basic#{sequence}", class: "chorg-basic", head: t("ss.basic_info") }.then do |addon_options|
+      { id: "chorg-after-basic#{sequence}", class: "chorg-after-basic", head: t("ss.basic_info") }.then do |addon_options|
         render "ss/crud/addon", addon: addon_options do
           render "chorg/frames/changesets/main/show_basic", addon: addon_options, index: sequence - 1
         end
       end
     %>
     <%=
-      { id: "chorg-ldap#{sequence}", class: "chorg-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+      { id: "chorg-after-ldap#{sequence}", class: "chorg-after-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
         render "ss/crud/addon", addon: addon_options do
           render "chorg/frames/changesets/main/show_ldap", addon: addon_options, index: sequence - 1
         end
       end
     %>
     <%=
-      { id: "chorg-contact#{sequence}", class: "chorg-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+      { id: "chorg-after-contact#{sequence}", class: "chorg-after-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
         render "ss/crud/addon", addon: addon_options, data: SS::StimulusHelper::Utils.convert_to_data_params("contact/addon/group") do
           render "chorg/frames/changesets/main/show_contact", addon: addon_options, index: sequence - 1
         end

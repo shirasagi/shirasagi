@@ -1,35 +1,32 @@
 class MailPage::Agents::Nodes::PageController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
+  include Cms::NodeFilter::ListView
 
-  before_action :accept_cors_request, only: [:rss]
   protect_from_forgery except: [:mail]
+
+  private
 
   def pages
     MailPage::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
-  def index
-    @items = pages.
-      order_by(@cur_node.sort_hash).
-      page(params[:page]).
-      per(@cur_node.limit)
-
-    render_with_pagination @items
-  end
-
-  def rss
-    @items = pages.
-      order_by(released: -1).
-      limit(@cur_node.limit)
-
-    render_rss @cur_node, @items
-  end
+  public
 
   def mail
-    if request.get?
+    if request.get? || request.head?
       head :ok
       return
+    end
+
+    begin
+      Cms::ApiToken.authenticate(request, site: @cur_site) do |audience|
+        if !MailPage::Page.allowed?(:edit, audience, site: @cur_site, node: @cur_node)
+          raise "not allowed create mail page!"
+        end
+      end
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      raise "404"
     end
 
     data = params.permit(:data)[:data]

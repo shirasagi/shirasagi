@@ -40,7 +40,7 @@ module Cms::FeedFilter
 
   def render_rss(node, items)
     rss = _render_rss(node, items)
-    render xml: rss.to_xml, content_type: "application/rss+xml"
+    render xml: rss.to_xml, content_type: "application/xml"
   end
 
   def sanitize(html_or_text)

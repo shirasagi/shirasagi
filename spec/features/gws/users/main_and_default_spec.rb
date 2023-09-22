@@ -35,18 +35,15 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit gws_users_path(site: site)
       click_on user.name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
-          wait_cbox_open do
-            click_on I18n.t("ss.apis.groups.index")
-          end
+          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       wait_for_cbox do
-        wait_cbox_close do
-          click_on group1.trailing_name
-        end
+        wait_cbox_close { click_on group1.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-main-group" do
@@ -69,11 +66,13 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit gws_users_path(site: site)
       click_on user.name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
           click_on I18n.t("ss.buttons.delete")
         end
+        wait_for_js_ready
 
         click_on I18n.t("ss.buttons.save")
       end
@@ -91,18 +90,15 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit gws_users_path(site: site)
       click_on user.name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
-          wait_cbox_open do
-            click_on I18n.t("ss.apis.groups.index")
-          end
+          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       wait_for_cbox do
-        wait_cbox_close do
-          click_on group3.trailing_name
-        end
+        wait_cbox_close { click_on group3.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-main-group" do
@@ -112,7 +108,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.save")
       end
       message = I18n.t("errors.format", attribute: Gws::User.t(:gws_main_group_ids), message: I18n.t("errors.messages.invalid"))
-      expect(page).to have_css("#errorExplanation li", text: message)
+      wait_for_error message
     end
   end
 
@@ -124,18 +120,15 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit gws_users_path(site: site)
       click_on user.name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
-          wait_cbox_open do
-            click_on I18n.t("ss.apis.groups.index")
-          end
+          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       wait_for_cbox do
-        wait_cbox_close do
-          click_on group2.trailing_name
-        end
+        wait_cbox_close { click_on group2.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-default-group" do
@@ -158,11 +151,13 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit gws_users_path(site: site)
       click_on user.name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
           click_on I18n.t("ss.buttons.delete")
         end
+        wait_for_js_ready
 
         click_on I18n.t("ss.buttons.save")
       end
@@ -180,18 +175,15 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit gws_users_path(site: site)
       click_on user.name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
-          wait_cbox_open do
-            click_on I18n.t("ss.apis.groups.index")
-          end
+          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       wait_for_cbox do
-        wait_cbox_close do
-          click_on group3.trailing_name
-        end
+        wait_cbox_close { click_on group3.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-default-group" do
@@ -202,7 +194,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       end
       message = I18n.t(
         "errors.format", attribute: Gws::User.t(:gws_default_group_ids), message: I18n.t("errors.messages.invalid"))
-      expect(page).to have_css("#errorExplanation li", text: message)
+      wait_for_error message
     end
   end
 end

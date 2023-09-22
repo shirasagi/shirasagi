@@ -28,4 +28,12 @@ module SS
     I18n.locale = I18n.default_locale
     Time.zone = Time.zone_default
   end
+
+  def normalize_str(str)
+    return if str.nil?
+    # remove non-printable characters such as null char(\x00)
+    str = str.gsub(/[^[:print:]]/i, '')
+    # normalize to NFKC
+    UNF::Normalizer.normalize(str, :nfkc).strip
+  end
 end

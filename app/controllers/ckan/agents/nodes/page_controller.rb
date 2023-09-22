@@ -20,6 +20,6 @@ class Ckan::Agents::Nodes::PageController < ApplicationController
       end
     end
 
-    render xml: rss.to_xml, content_type: "application/rss+xml"
+    render xml: rss.to_xml, content_type: "application/xml"
   end
 end

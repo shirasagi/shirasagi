@@ -1,20 +1,20 @@
-<div class="addon-views">
+<div class="addon-views chorg-after">
   <%=
-    { id: "chorg-basic", class: "chorg-basic", head: t("ss.basic_info") }.then do |addon_options|
+    { id: "chorg-after-basic", class: "chorg-after-basic", head: t("ss.basic_info") }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
         render "chorg/frames/changesets/main/show_basic", addon: addon_options
       end
     end
   %>
   <%=
-    { id: "chorg-ldap", class: "chorg-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
+    { id: "chorg-after-ldap", class: "chorg-after-ldap", head: t("modules.addons.ldap/group"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options do
         render "chorg/frames/changesets/main/show_ldap", addon: addon_options
       end
     end
   %>
   <%=
-    { id: "chorg-contact", class: "chorg-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
+    { id: "chorg-after-contact", class: "chorg-after-contact", head: t("modules.addons.contact/group"), toggle: true }.then do |addon_options|
       render "ss/crud/addon", addon: addon_options, data: SS::StimulusHelper::Utils.convert_to_data_params("contact/addon/group") do
         render "chorg/frames/changesets/main/show_contact", addon: addon_options
       end

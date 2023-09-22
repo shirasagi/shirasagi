@@ -19,7 +19,7 @@ module Cms::GeneratorFilter::Rss
     begin
       @exists = true
       response.body = render_node(node) || ''
-      response.content_type ||= "application/rss+xml"
+      response.content_type ||= "application/xml"
     rescue StandardError => e
       @exists = false
       return if e.to_s == "404"

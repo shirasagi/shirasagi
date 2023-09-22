@@ -33,11 +33,15 @@ describe "webmail_filters", type: :feature, dbscope: :example, imap: true, js: t
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        # apply filter
-        find(".apply-mailbox option[value='INBOX']").select_option
-        page.accept_confirm(I18n.t("webmail.confirm.apply_filter")) do
-          find(".apply-filter").click
+        within "#addon-webmail-agents-addons-apply_filter" do
+          within "form" do
+            select I18n.t("webmail.box.inbox"), from: "mailbox"
+            page.accept_confirm(I18n.t("webmail.confirm.apply_filter")) do
+              click_on I18n.t("webmail.links.apply")
+            end
+          end
         end
+        wait_for_notice I18n.t('webmail.notice.multiple.filtered', count: 0)
 
         # delete/destroy
         click_link I18n.t('ss.links.delete')

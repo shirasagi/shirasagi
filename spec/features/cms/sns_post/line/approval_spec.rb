@@ -43,8 +43,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               click_on I18n.t("ss.buttons.draft_save")
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-            expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -54,18 +54,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
-              click_on I18n.t("workflow.search_approvers.index")
-            end
+            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
-              click_on user1.long_name
-            end
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -121,10 +118,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
           expect(Cms::SnsPostLog::Line.count).to eq 0
@@ -133,18 +130,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
-              click_on I18n.t("workflow.search_approvers.index")
-            end
+            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
-              click_on user1.long_name
-            end
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -188,6 +182,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           # create branch
           login_cms_user
           visit show_path
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
           within "#addon-workflow-agents-addons-branch" do
             click_on I18n.t("workflow.create_branch")
             expect(page).to have_link item.name
@@ -214,8 +210,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
-
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
           expect(Cms::SnsPostLog::Line.count).to eq 0
@@ -224,18 +220,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
-              click_on I18n.t("workflow.search_approvers.index")
-            end
+            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
-              click_on user1.long_name
-            end
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -243,13 +236,14 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           # approve
           login_user user1
           visit show_path
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+          within "#addon-workflow-agents-addons-branch" do
+            expect(page).to have_link item.name
+            click_on item.name
+          end
 
           perform_enqueued_jobs do
-            within "#addon-workflow-agents-addons-branch" do
-              expect(page).to have_link item.name
-              click_on item.name
-            end
-
             within ".mod-workflow-approve" do
               expect(page).to have_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
               fill_in "remand[comment]", with: approve_comment
@@ -303,9 +297,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
+            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
           expect(Cms::SnsPostLog::Line.count).to eq 0
@@ -319,9 +314,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -382,6 +378,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
           expect(capture.broadcast.count).to eq 1
           expect(Cms::SnsPostLog::Line.count).to eq 1
@@ -395,9 +392,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -453,6 +451,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
           expect(capture.broadcast.count).to eq 2
           expect(Cms::SnsPostLog::Line.count).to eq 2
@@ -466,9 +465,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -507,11 +507,14 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           # 1. create branch
           login_cms_user
           visit show_path
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
           within "#addon-workflow-agents-addons-branch" do
             click_on I18n.t("workflow.create_branch")
             expect(page).to have_link item.name
             click_on item.name
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(page).to have_link I18n.t("ss.links.edit")
 
           # 1. edit
@@ -532,6 +535,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -546,9 +550,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -556,6 +561,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           # 1. approve
           login_user user1
           visit show_path
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           within "#addon-workflow-agents-addons-branch" do
             expect(page).to have_link item.name
             click_on item.name
@@ -596,6 +602,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             expect(page).to have_link item.name
             click_on item.name
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(page).to have_link I18n.t("ss.links.edit")
 
           # 2. edit (enable line_edit_auto_post)
@@ -617,6 +624,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           expect(capture.broadcast.count).to eq 1
           expect(Cms::SnsPostLog::Line.count).to eq 1
@@ -630,9 +638,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
@@ -640,6 +649,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           # approve
           login_user user1
           visit show_path
+
           within "#addon-workflow-agents-addons-branch" do
             expect(page).to have_link item.name
             click_on item.name
@@ -675,6 +685,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             expect(page).to have_link item.name
             click_on item.name
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(page).to have_link I18n.t("ss.links.edit")
 
           # 3. edit (disable line_edit_auto_post)
@@ -696,6 +707,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           end
+          expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
           expect(capture.broadcast.count).to eq 2
           expect(Cms::SnsPostLog::Line.count).to eq 2
@@ -709,9 +721,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           wait_for_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_cbox_close { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
+            expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))

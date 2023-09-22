@@ -74,7 +74,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
     context "zip file contain root directory" do
       let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
       let(:dir) { "site" }
-      let(:root) { "#{node.filename}/site" }
+      let(:root) { "#{node.filename}/#{dir}" }
 
       it_behaves_like "perform import from zip"
     end
@@ -82,9 +82,53 @@ describe Cms::ImportFilesJob, dbscope: :example do
     context "zip file not contain root directory" do
       let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
       let(:dir) { "site2" }
-      let(:root) { "#{node.filename}/site2" }
+      let(:root) { "#{node.filename}/#{dir}" }
 
       it_behaves_like "perform import from zip"
+    end
+
+    context "zip slip" do
+      let!(:zip_file) do
+        file = tmpfile(extname: ".zip")
+        Zip::File.open(file, Zip::File::CREATE) do |zip|
+          zip.mkdir("../../#{dir}")
+          zip.get_output_stream("../../#{dir}/index.html") do |f|
+            IO.copy_stream("#{Rails.root}/db/seeds/demo/pages/docs/tenkyo.html", f)
+          end
+
+          zip.mkdir("../../#{dir}/article")
+          zip.get_output_stream("../../#{dir}/article/page.html") do |f|
+            IO.copy_stream("#{Rails.root}/db/seeds/demo/pages/docs/tenkyo.html", f)
+          end
+
+          zip.mkdir("../../#{dir}/css")
+          zip.get_output_stream("../../#{dir}/css/style.scss") do |f|
+            IO.copy_stream("#{Rails.root}/db/seeds/demo/files/css/style.scss", f)
+          end
+
+          zip.mkdir("../../#{dir}/img")
+          zip.get_output_stream("../../#{dir}/img/logo.png") do |f|
+            IO.copy_stream("#{Rails.root}/spec/fixtures/ss/logo.png", f)
+          end
+        end
+        file
+      end
+      let(:in_file) { Rack::Test::UploadedFile.new(zip_file, nil, true) }
+      let(:dir) { "site3" }
+      let(:root) { "#{node.filename}/#{dir}" }
+
+      it do
+        expectation = expect { described_class.bind(job_binding).perform_now }
+        expectation.to output.to_stdout
+
+        log = Job::Log.first
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).not_to include(/INFO -- : .* error:/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+        expect(Cms::ImportPage.all.count).to eq 0
+        expect(Cms::Node::ImportNode.all.count).to eq 1
+      end
     end
   end
 end

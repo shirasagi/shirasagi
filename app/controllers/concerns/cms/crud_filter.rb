@@ -68,6 +68,7 @@ module Cms::CrudFilter
 
     entries.each do |item|
       if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
         item.state = @change_state if item.respond_to?(:state)
         next if item.save
       else
@@ -132,21 +133,6 @@ module Cms::CrudFilter
     render_destroy @item.destroy
   end
 
-  def change_state_all
-    raise "400" if @selected_items.blank?
-
-    @change_state = params[:state]
-    if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
-      return
-    end
-
-    respond_to do |format|
-      format.html { render "cms/crud/change_state_all" }
-      format.json { head json: errors }
-    end
-  end
-
   def destroy_all
     raise "400" if @selected_items.blank?
 
@@ -180,5 +166,20 @@ module Cms::CrudFilter
       @items << item
     end
     render_confirmed_all(entries.size != @items.size)
+  end
+
+  def change_state_all
+    raise "400" if @selected_items.blank?
+
+    @change_state = params[:state]
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: request.path)
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/crud/change_state_all" }
+      format.json { head json: errors }
+    end
   end
 end

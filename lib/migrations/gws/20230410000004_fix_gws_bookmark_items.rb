@@ -1,0 +1,21 @@
+class SS::Migration20230410000004
+  include SS::Migration::Base
+
+  def change
+    model = Gws::Bookmark::Item
+    all_ids = model.pluck(:id)
+    all_ids.each_slice(20) do |ids|
+      model.in(id: ids).each do |item|
+        user = item.user
+        site = item.site
+
+        next if item.folder
+        next if user.nil?
+        next if site.nil?
+
+        item.folder = user.bookmark_root_folder(site)
+        item.without_record_timestamps { item.save }
+      end
+    end
+  end
+end

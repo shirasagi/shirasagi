@@ -12,7 +12,7 @@ save_page route: "facility/image", filename: "institution/shisetsu/library/libra
 save_page route: "facility/image", filename: "institution/shisetsu/library/equipment.html", name: "設備",
   layout_id: @layouts["map"].id, image_id: facility_images["equipment.jpg"].id, order: 10
 save_page route: "facility/map", filename: "institution/shisetsu/library/map.html", name: "地図",
-  layout_id: @layouts["map"].id, map_points: [{ name: "シラサギ市立図書館", loc: [34.067035, 134.589971], text: "" }]
+  layout_id: @layouts["map"].id, map_points: [{ name: "シラサギ市立図書館", loc: [134.589971, 34.067035], text: "" }]
 
 file1 = save_ss_files "ss_files/article/img.png", filename: "img1.jpg", name: "img.jpg", model: "ss/temp_file"
 save_page route: "facility/notice", filename: "institution/shisetsu/library/page217.html", name: "シラサギ市立図書館の本の読み聞かせ",
@@ -59,8 +59,7 @@ save_page route: "facility/notice", filename: "institution/shisetsu/library/page
 
 puts "# ezine"
 save_page route: "ezine/page", filename: "ezine/page36.html", name: "シラサギ市メールマガジン", completed: true,
-  layout_id: @layouts["ezine"].id, html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
-  text: "シラサギ市メールマガジンを配信します。\r\n"
+  layout_id: @layouts["ezine"].id, text: "シラサギ市メールマガジンを配信します。\r\n"
 
 puts "# anpi-ezine"
 anpi_text = File.read("pages/anpi-ezine/anpi/anpi37.text.txt") rescue nil

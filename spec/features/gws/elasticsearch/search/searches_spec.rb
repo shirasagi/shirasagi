@@ -79,10 +79,16 @@ describe "gws_elasticsearch_search", type: :feature, dbscope: :example, js: true
       visit gws_elasticsearch_search_search_path(site: site.id, type: 'workflow', s: { keyword: 'String' })
       expect(page).to have_css('.list-item .title', text: name)
 
+      visit gws_elasticsearch_search_search_path(site: site.id, type: 'workflow_form', s: { keyword: 'String' })
+      expect(page).to have_css('.list-item .title', text: name)
+
       visit gws_elasticsearch_search_search_path(site: site.id, type: 'circular', s: { keyword: 'String' })
       expect(page).to have_css('.list-item .title', text: name)
 
       visit gws_elasticsearch_search_search_path(site: site.id, type: 'monitor', s: { keyword: 'String' })
+      expect(page).to have_css('.list-item .title', text: name)
+
+      visit gws_elasticsearch_search_search_path(site: site.id, type: 'survey', s: { keyword: 'String' })
       expect(page).to have_css('.list-item .title', text: name)
 
       visit gws_elasticsearch_search_search_path(site: site.id, type: 'share', s: { keyword: 'String' })

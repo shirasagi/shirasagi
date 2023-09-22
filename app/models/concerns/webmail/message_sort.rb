@@ -45,11 +45,11 @@ module Webmail::MessageSort
   def webmail_message_sort_icon(sort_hash, name)
     case sort_hash[name]
     when -1
-      '<i class="material-icons md-18">&#xE313;</i>'
+      '<i class="material-icons md-18">keyboard_arrow_down</i>'
     when 1
-      '<i class="material-icons md-18">&#xE316;</i>'
+      '<i class="material-icons md-18">keyboard_arrow_up</i>'
     else
-      '<i class="material-icons md-18" style="visibility: hidden;">&#xE313;</i>'
+      '<i class="material-icons md-18" style="visibility: hidden;">keyboard_arrow_down</i>'
     end
   end
 end

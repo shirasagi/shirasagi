@@ -76,24 +76,31 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     Zip::File.open(@import_zip) do |entries|
       entries.each do |entry|
+        next if entry.directory?
+
         name = entry.name
         if entry.gp_flags & Zip::Entry::EFS
           name.force_encoding("UTF-8")
         else
           name = NKF.nkf('-w', name)
         end
+        name = name.tr('\\', '/')
 
         if name.start_with?('public/')
-          path = "#{@dst_site.path}/" + name.tr('\\', '/').sub(/^public\//, '')
+          root_dir = @dst_site.path
+          name = name.sub(/^public\//, '')
         else
-          path = "#{@import_dir}/" + name.tr('\\', '/')
+          root_dir = @import_dir
         end
 
-        if entry.directory?
-          FileUtils.mkdir_p(path)
-        else
-          File.binwrite(path, entry.get_input_stream.read)
+        path = ::File.expand_path(name, root_dir)
+        next unless path.start_with?("#{root_dir}/")
+
+        dirname = ::File.dirname(path)
+        unless ::Dir.exist?(dirname)
+          ::FileUtils.mkdir_p(dirname)
         end
+        ::File.binwrite(path, entry.get_input_stream.read)
       end
     end
   end

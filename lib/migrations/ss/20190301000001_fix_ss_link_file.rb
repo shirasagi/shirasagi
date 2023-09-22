@@ -12,7 +12,7 @@ class SS::Migration20190301000001
             file.model = "ss/link_file"
             file.owner_item = setting
             file.state = "public"
-            file.save
+            file.without_record_timestamps { file.save }
           end
         end
       end

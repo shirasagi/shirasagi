@@ -770,7 +770,7 @@ this.Syntax_Checker = (function () {
       if (!editor || !editor.document) {
         return false;
       }
-      return $(editor.document.$.body).is(":visible")
+      return $(editor.element.$).parent().is(":visible");
     }
 
     return false;
@@ -2374,6 +2374,7 @@ SS_Workflow.prototype = {
 
     var uri = this.composeWorkflowUrl('pages');
     uri += "/" + updatetype + "_update";
+    var workflow_kind = $("#workflow_kind").prop("value");
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
@@ -2397,6 +2398,7 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: {
+        workflow_kind: workflow_kind,
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
         workflow_on_remand: workflow_on_remand,
@@ -2440,10 +2442,10 @@ SS_Workflow.prototype = {
       error: function(xhr, status) {
         try {
           var errors = $.parseJSON(xhr.responseText);
-          alert(["== Error =="].concat(errors).join("\n"));
+          alert(["== Error(Workflow) =="].concat(errors).join("\n"));
         }
         catch (ex) {
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+          alert(["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n"));
         }
         $this.prop("disabled", false);
         SS_Workflow.updateDisabled = false;
@@ -2488,9 +2490,9 @@ SS_Workflow.prototype = {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          msg = ["== Error =="].concat(errors).join("\n");
+          msg = ["== Error(Workflow) =="].concat(errors).join("\n");
         } catch (ex) {
-          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+          msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         alert(msg);
       },
@@ -2514,12 +2516,14 @@ SS_Workflow.prototype = {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          msg = ["== Error =="].concat(errors).join("\n");
+          msg = ["== Error(Workflow) =="].concat(errors).join("\n");
         } catch(ex) {
-          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+          msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         pThis.$el.find(".workflow-partial-section").html('<div class="error">' + msg + '</div>');
-        alert(msg);
+        if (SS.env !== 'test') {
+          alert(msg);
+        }
       }
     });
   },
@@ -2542,10 +2546,12 @@ SS_Workflow.prototype = {
           var errors = $.parseJSON(xhr.responseText);
           msg = errors.join("\n");
         } catch (ex) {
-          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+          msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         pThis.$el.find(".workflow-partial-section").html(msg);
-        alert(msg);
+        if (SS.env !== 'test') {
+          alert(msg);
+        }
       }
     });
   },
@@ -2585,7 +2591,7 @@ SS_Workflow.prototype = {
               var errors = $.parseJSON(xhr.responseText);
               alert(errors.join("\n"));
             } catch (ex) {
-              alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+              alert(["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n"));
             }
           }
         });
@@ -2604,7 +2610,7 @@ SS_Workflow.prototype = {
         pThis.renderFileHtml(data);
       },
       error: function (xhr, status, error) {
-        alert("== Error ==");
+        alert("== Error(Workflow) ==");
       }
     });
   },
@@ -2637,7 +2643,7 @@ SS_Workflow.prototype = {
           pThis.renderFileHtml(data);
         },
         error: function (xhr, status, error) {
-          alert("== Error ==");
+          alert("== Error(Workflow) ==");
         }
       });
     }
@@ -2657,7 +2663,7 @@ SS_WorkflowRerouteBox = function (el, options) {
         pThis.$el.closest("#cboxLoadedContent").html(data);
       },
       error: function (data, status) {
-        alert("== Error ==");
+        alert("== Error(Workflow) ==");
       }
     });
 
@@ -2668,7 +2674,7 @@ SS_WorkflowRerouteBox = function (el, options) {
     var url = $(this).attr("href");
     pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, xhr) {
       if (status === 'error') {
-        alert("== Error ==");
+        alert("== Error(Workflow) ==");
       }
     });
 
@@ -2954,13 +2960,13 @@ this.SS_Addon_TempFile = (function () {
           var files = JSON.parse(request.response);
           _this.select(files, _this.$selector);
         } else if (request.status === 413) {
-          alert(["== Error =="].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
+          alert(["== Error(TempFile) =="].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
         } else {
           try {
             var json = $.parseJSON(request.response);
-            alert(["== Error =="].concat(json).join("\n"));
+            alert(["== Error(TempFile) =="].concat(json).join("\n"));
           } catch (_error) {
-            alert(["== Error =="].concat(request.statusText).join("\n"));
+            alert(["== Error(TempFile) =="].concat(request.statusText).join("\n"));
           }
         }
         _this.dropEventTriggered = false;
@@ -3247,11 +3253,24 @@ this.SS_ListUI = (function () {
     }
 
     $el.find(".list-head input:checkbox").on("change", function () {
-      var chk;
-      chk = $(this).prop('checked');
+      var chk = $(this).prop('checked');
       $el.find('.list-item').each(function () {
-        $(this).toggleClass('checked', chk);
-        return $(this).find('input:checkbox').prop('checked', chk);
+        var $listItem = $(this);
+        var modified = false;
+        $listItem.find('input:checkbox').each(function() {
+          if (!this.disabled) {
+            this.checked = chk;
+            modified = true;
+          }
+        });
+
+        if (modified) {
+          if (chk) {
+            $listItem.addClass('checked', chk);
+          } else {
+            $listItem.removeClass('checked', chk);
+          }
+        }
       });
       $(this).trigger("ss:checked-all-list-items");
     });

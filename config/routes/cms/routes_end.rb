@@ -78,7 +78,6 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
@@ -100,6 +99,7 @@ Rails.application.routes.draw do
     end
     resources :groups, concerns: [:deletion, :role, :import] do
       match :download_all, on: :collection, via: %i[get post]
+      resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
     end
     resources :members, concerns: [:deletion, :download] do
       get :verify, on: :member
@@ -120,6 +120,7 @@ Rails.application.routes.draw do
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
+    resources :api_tokens, concerns: :deletion
     resources :command_settings, concerns: :deletion do
       post :run, on: :member
     end
@@ -213,7 +214,7 @@ Rails.application.routes.draw do
       end
 
       # statistics
-      resources :statistics, concerns: :deletion
+      resources :statistics, concerns: [:deletion, :download]
 
       # mail hanlders
       resources :mail_handlers, concerns: :deletion
@@ -300,6 +301,7 @@ Rails.application.routes.draw do
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
       get "sites" => "sites#index"
+      get "layouts" => "layouts#index"
       put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
@@ -457,10 +459,11 @@ Rails.application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    get "page/rss-recent.xml" => "public#rss_recent", cell: "nodes/page", format: "xml"
     get "group_page/(index.:format)" => "public#index", cell: "nodes/group_page"
     get "group_page/rss.xml" => "public#rss", cell: "nodes/group_page", format: "xml"
+    get "group_page/rss-recent.xml" => "public#rss_recent", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
-    get "import_node/rss.xml" => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"

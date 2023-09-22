@@ -83,6 +83,13 @@ this.Gws_Schedule_Plan = (function () {
       SS_DateTimePicker.momentValue(self.$datetimeEndEl, self.context.endAt);
     });
 
+    self.$el.find("[data-sync-with]").each(function() {
+      var $this = $(this);
+      self.$el.find("[name='" + $this.data("sync-with") + "']").on("ss:changeDateTime", function(ev) {
+        SS_DateTimePicker.momentValue($this, SS_DateTimePicker.momentValue(ev.target));
+      });
+    });
+
     self.$allday.on("change", function () {
       self.changeDateForm();
     });

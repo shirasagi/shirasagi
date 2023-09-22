@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_schedule_categories", type: :feature, dbscope: :example do
+describe "gws_schedule_categories", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:item) { create :gws_schedule_category }
   let(:index_path) { gws_schedule_categories_path site }
@@ -14,7 +14,6 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -25,14 +24,12 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example do
         fill_in "item[color]", with: "#000000" + "\n"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
