@@ -11,6 +11,8 @@ production: &production
   exclude_groups:
     - Group
     - People
+  admin_user: cn=admin,dc=example,dc=jp
+  admin_password: admin
 
 test:
   <<: *production
