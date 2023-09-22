@@ -15,7 +15,8 @@ class SS::Migration20221109000000
       main_contact.name = group.section_name
 
       group.contact_groups = [ main_contact ]
-      unless group.save
+      result = group.without_record_timestamps { group.save }
+      unless result
         puts group.errors.full_messages.join("\n")
       end
     end

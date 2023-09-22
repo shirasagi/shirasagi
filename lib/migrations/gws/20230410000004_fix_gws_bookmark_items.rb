@@ -14,7 +14,7 @@ class SS::Migration20230410000004
         next if site.nil?
 
         item.folder = user.bookmark_root_folder(site)
-        item.update
+        item.without_record_timestamps { item.save }
       end
     end
   end
