@@ -411,7 +411,8 @@ module SS::Model::User
   end
 
   def change_ldap_password
-    return true if self.type != TYPE_LDAP && self.ldap_dn.blank?
+    return true if SS.config.ldap.sync_password != "enable"
+    return true if self.ldap_dn.blank?
     return true if self.in_password.blank?
 
     username = self.ldap_dn
