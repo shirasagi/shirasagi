@@ -84,8 +84,8 @@ module SS::Model::User
     validate :validate_account_expiration_date
 
     after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
+    after_save :change_ldap_password
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
-    before_update :chenge_ldap_password
 
     default_scope -> {
       order_by uid: 1, email: 1
@@ -410,14 +410,18 @@ module SS::Model::User
     item.save
   end
 
-  def chenge_ldap_password
-    return true if self.type != TYPE_LDAP and self.ldap_dn.blank?
+  def change_ldap_password
+    return true if self.type != TYPE_LDAP && self.ldap_dn.blank?
     return true if self.in_password.blank?
+
     username = self.ldap_dn
     new_password = self.in_password
-    result = Ldap::Connection.change_password(username: username, new_password: new_password)
-    errors.add :base, I18n.t("ldap.errors.update_ldap_password")
-    return throw :abort unless result
-  end
 
+    result = Ldap::Connection.change_password(username: username, new_password: new_password)
+    unless result
+      Rails.logger.tagged(username) do
+        Rails.logger.warn { I18n.t("ldap.errors.update_ldap_password") }
+      end
+    end
+  end
 end

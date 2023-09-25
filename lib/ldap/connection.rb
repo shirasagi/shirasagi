@@ -34,28 +34,27 @@ class Ldap::Connection
       do_bind(ldap, :simple, username, password) ? true : false
     end
 
-    def change_password(host: SS.config.ldap.host, username: nil, password: nil, new_password: nil)
+    def change_password(host: SS.config.ldap.host, username: nil, new_password: nil)
       return false if host.blank?
       return false if username.blank?
       return false if new_password.blank?
 
       auth_method = SS.config.ldap.auth_method
-      admn_user = SS.config.ldap.admin_user
-      admn_pass = SS.config.ldap.admin_password
+      admin_user = SS.config.ldap.admin_user
+      admin_pass = SS.config.ldap.admin_password
 
       host, port = host.split(":", 2)
       config = { host: host }
       config[:port] = port.to_i if port.numeric?
-      config[:auth] = { method: auth_method.to_sym, username: admn_user, password: admn_pass }
+      config[:auth] = { method: auth_method.to_sym, username: admin_user, password: admin_pass }
 
       ldap = Net::LDAP.new(config)
-      unless do_bind(ldap, auth_method , admn_user, admn_pass)
+      unless do_bind(ldap, auth_method, admin_user, admin_pass)
         return false
       end
 
       opts = [[ :replace, :userPassword, new_password ]]
-      ldap.modify(:dn => username, :operations => opts)
-
+      ldap.modify(dn: username, operations: opts)
     end
 
     def split_dn(ldap_dn)

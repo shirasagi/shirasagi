@@ -46,6 +46,7 @@ en:
       has_multiple_root_groups: "Site: %{site} has multiple route groups set."
       connection_setting_not_found: LDAP connection information is not set.
       connection_refused: Unable to connect to LDAP server.
+      update_ldap_password: Unable to change password in LDAP.
 
   modules:
     ldap: LDAP
