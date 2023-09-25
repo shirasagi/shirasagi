@@ -1,13 +1,19 @@
 module Gws::Chorg::NoticeSupport
   extend ActiveSupport::Concern
+  include Chorg::PrimitiveRunner
 
-  def execute_before_gws_notice(changesets)
+  included do
+    set_callback :primitive_chorg, :before, :execute_before_gws_notice
+    set_callback :primitive_chorg, :after, :execute_after_gws_notice
+  end
+
+  def execute_before_gws_notice
+    return unless @cur_site.is_a?(Gws::Group)
     return if Gws::Notice::Folder.site(@cur_site).blank?
 
     task.log("== execute before (gws_notice) ==")
-
     @foldersets = []
-    changesets.each do |changeset|
+    @item.changesets.each do |changeset|
       case changeset.type
       when "add"
         destination = changeset.destinations.first
@@ -78,7 +84,7 @@ module Gws::Chorg::NoticeSupport
     end
   end
 
-  def execute_after_gws_notice(changesets)
+  def execute_after_gws_notice
     return if @foldersets.blank?
 
     task.log("== execute after (gws_notice) ==")
@@ -195,7 +201,7 @@ module Gws::Chorg::NoticeSupport
   def initialize_folder(attributes = {})
     entity = Gws::Notice::Folder.new
     entity.cur_site = @cur_site
-    entity.cur_user = @cur_user
+    entity.cur_user = @cur_user.gws_user
     entity.readable_setting_range = "public"
 
     entity.notice_individual_body_size_limit = SS.config.gws.notice['default_notice_individual_body_size_limit']
