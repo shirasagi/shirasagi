@@ -58,7 +58,7 @@ Rails.application.routes.draw do
 
   content "faq" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :command, :contains_urls, :tag, :michecker, :change_state] do
+    resources :pages, concerns: %i[deletion copy move lock download import command contains_urls tag michecker change_state] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
     end

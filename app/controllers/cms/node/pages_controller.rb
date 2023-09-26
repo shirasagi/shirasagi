@@ -9,7 +9,7 @@ class Cms::Node::PagesController < ApplicationController
 
   before_action :set_tree_navi, only: [:index]
   before_action(only: %i[new create edit update]) { @auto_save_enabled = true }
-  
+
   private
 
   def fix_params
