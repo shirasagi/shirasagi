@@ -85,7 +85,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         from: "shirasagi@" + @site.domain.sub(/:.*/, ""),
         to: @email,
         subject: "[#{@site.name}] Link Check: #{@errors.size} errors",
-        body: msg
+        body: msg,
+        message_id: Cms.generate_message_id(@site)
       ).deliver_now
     end
 
