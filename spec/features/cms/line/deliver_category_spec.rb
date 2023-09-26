@@ -5,6 +5,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
   let(:item) { create :cms_line_deliver_category_category, filename: unique_id }
   let(:name) { unique_id }
   let(:basename) { unique_id }
+  let(:category_html) { unique_id }
 
   let(:index_path) { cms_line_deliver_categories_path site }
   let(:new_path) { new_cms_line_deliver_category_path site }
@@ -24,10 +25,12 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[basename]", with: basename
+        fill_in_code_mirror "item[category_html]", with: category_html
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#addon-basic", text: name)
+      expect(page).to have_css("#addon-basic", text: category_html)
       expect(root_categories.size).to eq 1
       expect(root_categories.first.name).to eq name
       expect(root_categories.first.depth).to eq 1
@@ -45,10 +48,12 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in_code_mirror "item[category_html]", with: category_html
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_css("#addon-basic", text: "modify")
+      expect(page).to have_css("#addon-basic", text: category_html)
       expect(root_categories.size).to eq 1
       expect(root_categories.first.name).to eq "modify"
       expect(root_categories.first.depth).to eq 1

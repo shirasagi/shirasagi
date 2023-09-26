@@ -329,6 +329,7 @@ ja:
       michecker: miChecker で確認する
       download: フォルダ容量をCSVダウンロードする
       check_preview: プレビューで確認する
+      open_remark: 詳細を開く
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -1462,6 +1463,8 @@ ja:
       cms/line/deliver_category/base:
         type: 種別
         name: タイトル
+        category_html: 説明
+        remarks: 備考
         order: 並び順
         state: ステータス
       cms/line/mail_handler:
@@ -3097,19 +3100,21 @@ ja:
 
     cms/line/deliver_condition:
       name:
-       - タイトルを入力します。
+        - タイトルを入力します。
       order:
-       - 並び順を入力します。
-       - 数字が小さいほど上位に表示されます。
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
 
     cms/line/deliver_category/base:
       name:
-       - タイトルを入力します。
+        - タイトルを入力します。
+      category_html:
+        - 説明をを入力します。
       order:
-       - 並び順を入力します。
-       - 数字が小さいほど上位に表示されます。
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
       state:
-       - 公開、非公開を選択します。
+        - 公開、非公開を選択します。
 
     cms/line/deliver_plan:
       deliver_date:
