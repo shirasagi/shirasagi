@@ -1,6 +1,8 @@
 class Facility::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
 
+  helper Map::FacilityHelper
+
   append_view_path "app/views/facility/agents/addons/search_setting/view"
   append_view_path "app/views/facility/agents/addons/search_result/view"
 

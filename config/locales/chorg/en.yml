@@ -140,6 +140,13 @@ en:
         nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
         nth_destination_contact_contact_link_url: "Destination%{dest_seq}_Contact%{contact_seq}_Link URL"
         nth_destination_contact_contact_link_name: "Destination%{dest_seq}_Contact%{contact_seq}_Link Name"
+    errors:
+      template:
+        body_html: |-
+          The following contacts in the selected group cannot be found for transfers.<br>
+          The following contacts will be disconnected from the page when the organization change is executed, and the contact portion of the page where the following contacts are being used will be hidden.<br>
+          If you would like to merge your contacts into a single contact, please activate "Merge to Main" from the Edit screen.<br>
+          If you want to set each existing contact to a different contact, overwrite the existing contact.
 
   modules:
     chorg: Organizational change

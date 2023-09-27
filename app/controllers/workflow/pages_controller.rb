@@ -99,6 +99,7 @@ class Workflow::PagesController < ApplicationController
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
+    @item.workflow_kind = params[:workflow_kind]
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up].present? ? params[:workflow_pull_up] : 'disabled'
     @item.workflow_on_remand = params[:workflow_on_remand]
@@ -122,6 +123,7 @@ class Workflow::PagesController < ApplicationController
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
+    @item.workflow_kind = params[:workflow_kind]
     @item.workflow_comment = params[:workflow_comment]
     copy = @item.workflow_approvers.to_a
     copy.each do |approver|
@@ -166,7 +168,12 @@ class Workflow::PagesController < ApplicationController
     if @item.finish_workflow?
       @item.approved = Time.zone.now
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
-      @item.state = "public"
+      case @item.workflow_kind
+      when 'public', 'closed'
+        @item.state = @item.workflow_kind
+      else
+        @item.state = 'public'
+      end
       @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
 
       if @item.respond_to?(:release_date)

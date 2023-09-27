@@ -15,12 +15,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_notice_readables_path(site: site, folder_id: '-', category_id: '-')
       click_on item.name
+      wait_for_js_ready
       page.accept_confirm do
         click_on I18n.t("gws/notice.links.set_seen")
       end
-      within first("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.saved'))
-      end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.browsed?(gws_user)).to be_truthy
@@ -35,6 +34,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
       visit gws_notice_editables_path(site: site, folder_id: '-', category_id: '-')
       click_on item.name
+      wait_for_js_ready
       within "#addon-gws-agents-addons-notice-member" do
         expect(page).to have_content(I18n.t('gws/board.topic.browsed_user_info.format', count: 1, total: 1))
         click_on I18n.t('gws/board.topic.browsed_user_info.more')
@@ -59,12 +59,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
 
       click_on item.name
+      wait_for_js_ready
       page.accept_confirm do
         click_on I18n.t("gws/notice.links.unset_seen")
       end
-      within first("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.saved'))
-      end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.browsed?(gws_user)).to be_falsey

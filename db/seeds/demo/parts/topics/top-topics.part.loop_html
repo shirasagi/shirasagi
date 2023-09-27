@@ -1,0 +1,6 @@
+<li class="topics-list__item topics-list__item--#{class}">
+    <a href="#{url}">
+    <p class="thumb"><img src="#{thumb.src}" alt="#{index_name}" /></p>
+    <h3>#{index_name}</h3>
+      </a>
+  </li><!-- .topics-list__item -->

@@ -88,4 +88,19 @@ describe Cms::Member, dbscope: :example do
       expect(described_class.name_of(info)).to eq "address"
     end
   end
+
+  describe ".search_state" do
+    let!(:member) { create :cms_member, state: %w(disabled enabled temporary).sample }
+
+    it do
+      expect(described_class.search_state(nil).count).to eq 1
+      expect(described_class.search_state(state: nil).count).to eq 1
+      expect(described_class.search_state(state: "").count).to eq 1
+
+      expect(described_class.search_state(state: member.state).count).to eq 1
+
+      state = (%w(disabled enabled temporary) - [ member.state ]).sample
+      expect(described_class.search_state(state: state).count).to eq 0
+    end
+  end
 end

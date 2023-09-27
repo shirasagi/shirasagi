@@ -1,11 +1,19 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:stimulus] = true
+  page_count_service = Contact::PageCountService.new(cur_site: @cur_site, cur_user: @cur_user)
 %>
 <% render_row = proc do |contact_group| %>
   <tr data-id="<%= contact_group.try(:id) || "new" %>">
     <td class="operations">
-      <%= button_tag t("ss.buttons.delete"), type: "button", name: "delete", class: "btn btn-delete" %>
+      <%= button_tag t("ss.buttons.delete"), type: "button", name: "delete", class: "btn btn-delete", disabled: contact_group.present? %>
+    </td>
+    <td class="pages-used">
+      <%=
+        if contact_group
+          page_count_service.render(group_id: @item.id, contact_id: contact_group.id)
+        end
+      %>
     </td>
     <td class="contact-main-state">
       <label>
@@ -48,6 +56,10 @@
     <tr>
       <th class="operations">
         <%= button_tag t("ss.buttons.add"), type: "button", name: "add", class: "btn btn-add" %>
+      </th>
+      <th class="pages-used">
+        <%= t("contact.pages_used_label") %>
+        <%= tt "contact/page_count_service.page_count_notice", expire_in: SS::Duration.format(Contact::PageCountService.expires_in) %>
       </th>
       <th class="contact-main-state"><%= SS::Contact.t :main_state %><%= SS::Contact.tt :main_state %></th>
       <th class="name"><%= SS::Contact.t :name %><%= SS::Contact.tt :name %></th>

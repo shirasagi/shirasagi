@@ -66,11 +66,7 @@ class Cms::PreviewController < ApplicationController
     route = preview_item[:route]
 
     page = Cms::Page.site(@cur_site).find(id) rescue nil
-    page ||= begin
-      new_page = Cms::Page.new
-      new_page.becomes_with_route(route)
-      new_page
-    end
+    page ||= Cms::Page.new.becomes_with_route(route)
 
     node = Cms::Node.site(@cur_site).where(filename: path).first
 

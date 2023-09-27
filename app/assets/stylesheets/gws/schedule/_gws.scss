@@ -158,17 +158,17 @@
     display: table-cell;
   }
   .label {
-    min-width: 146px;
+    width: 12rem;
     margin: 1px 0;
     padding: 5px 1px;
   }
   .member, .facility {
-    min-width: 160px;
+    min-width: 200px;
     margin: 1px 0;
     padding: 5px 1px;
   }
   .hour-wrap {
-    padding: 5px 2px;
+    padding: 5px 1px;
   }
   .reservation {
     min-width: 4.5em;
@@ -177,8 +177,8 @@
   }
   .hour {
     display: inline-block;
-    min-width: 2em;
-    padding: 1px 4px;
+    min-width: 1.9em;
+    padding: 1px 2px;
     border: $white 1px solid;
     border-radius: 3px;
     background-color: #d4d4d4;
@@ -237,6 +237,12 @@
   }
   .reservation-valid.exist {
     padding-left: 10px;
+    color: $orange;
+  }
+  .duplicate-register-message {
+    color: #e00;
+  }
+  .reservation-errors {
     color: $orange;
   }
 }

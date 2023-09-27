@@ -67,6 +67,7 @@ ja:
       gws/elasticsearch/indexer/faq_post_job: FAQインデクサー
       gws/elasticsearch/indexer/qna_topic_job: Ｑ＆Ａインデクサー
       gws/elasticsearch/indexer/qna_post_job: Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/survey_form_job: アンケートインデクサー
       gws/elasticsearch/indexer/circular_post_job: 回覧板インデクサー
       gws/elasticsearch/indexer/circular_comment_job: 回覧板インデクサー
       gws/elasticsearch/indexer/monitor_topic_job: 照会・回答インデクサー
@@ -74,3 +75,4 @@ ja:
       gws/elasticsearch/indexer/memo_message_job: 連絡メモインデクサー
       gws/elasticsearch/indexer/report_file_job: レポートインデクサー
       gws/elasticsearch/indexer/workflow_file_job: ワークフローインデクサー
+      gws/elasticsearch/indexer/workflow_form_job: ワークフローインデクサー

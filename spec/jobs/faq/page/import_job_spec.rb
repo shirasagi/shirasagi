@@ -115,14 +115,14 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.contact_link_url).to eq "リンクURL"
         expect(item.contact_link_name).to eq "リンク名"
         expect(item.released_type).to eq "same_as_created"
-        expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/07 19:11"
-        expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/01 19:11"
-        expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/10/01 19:11"
+        expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq item.created.try(:strftime, "%Y/%m/%d %H:%M")
+        expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to be_nil
+        expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to be_nil
         #expect(item.groups.pluck(:name)).to match_array ["シラサギ市/企画政策部/政策課"]
         unless SS.config.ss.disable_permission_level
           expect(item.permission_level).to be 1
         end
-        expect(item.state).to eq "closed"
+        expect(item.state).to eq "public"
       end
     end
   end

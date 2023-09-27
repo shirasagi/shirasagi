@@ -22,6 +22,7 @@ module Workflow::Approver
     belongs_to :workflow_user, class_name: "Cms::User"
     belongs_to :workflow_agent, class_name: "Cms::User"
     field :workflow_state, type: String
+    field :workflow_kind, type: String
     field :workflow_comment, type: String
     field :workflow_pull_up, type: String
     field :workflow_on_remand, type: String
@@ -36,7 +37,7 @@ module Workflow::Approver
     field :workflow_reminder_sent_at, type: DateTime
     field :requested, type: DateTime
 
-    permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
+    permit_params :workflow_user_id, :workflow_state, :workflow_kind, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
@@ -103,11 +104,29 @@ module Workflow::Approver
     workflow_approvers.map { |h| h[:level] }.uniq.compact.sort
   end
 
+  def workflow_init_kind
+    return 'replace' if self.try(:branch?)
+
+    if self.respond_to?(:public?)
+      if public?
+        return 'closed'
+      else
+        return 'public'
+      end
+    end
+
+    nil
+  end
+
   def workflow_current_level
     workflow_levels.each do |level|
       return level unless workflow_completed_at?(level)
     end
     nil
+  end
+
+  def workflow_kind_options
+    %w(public closed replace).map { |v| [I18n.t("workflow.options.kind.#{v}"), v] }
   end
 
   def workflow_approvers_at(level)
@@ -442,8 +461,8 @@ module Workflow::Approver
     destroy_workflow_approver_files
 
     self.unset(
-      :workflow_user_id, :workflow_agent_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand,
-      :workflow_approvers, :workflow_required_counts, :workflow_approver_attachment_uses,
+      :workflow_user_id, :workflow_agent_id, :workflow_state, :workflow_kind, :workflow_comment, :workflow_pull_up,
+      :workflow_on_remand, :workflow_approvers, :workflow_required_counts, :workflow_approver_attachment_uses,
       :workflow_current_circulation_level, :workflow_circulations, :workflow_circulation_attachment_uses,
       :approved
     )

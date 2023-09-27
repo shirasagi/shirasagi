@@ -2,7 +2,16 @@
 <%= stylesheet_link_tag "colorbox", media: 'all' %>
 
 <div class="map-search-index">
-  <%= render_facility_search_map "#map-canvas", markers: @markers, markerCluster: true, site: @cur_site, preview: @preview %>
+  <%
+    opts = {
+      markers: @markers,
+      site: @cur_site,
+      preview: @preview,
+      map: @cur_node.map_options,
+      markerCluster: (@cur_node.map_cluster_enabled? ? true : false)
+    }
+  %>
+  <%= render_facility_search_map "#map-canvas", opts %>
   <%= render "upper" %>
 
   <%

@@ -1,3 +1,9 @@
+// jQuery's fast is 200ms
+export const ANIMATE_FAST = "0.2s"
+
+// jQuery's normal is 400ms
+export const ANIMATE_NORMAL = "0.4s"
+
 // jQuery's slow is 600ms
 export const ANIMATE_SLOW = "0.6s"
 

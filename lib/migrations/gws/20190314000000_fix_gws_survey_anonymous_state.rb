@@ -7,7 +7,7 @@ class SS::Migration20190314000000
     each_form_and_file do |form, file|
       if file.anonymous_state.blank?
         file.anonymous_state = form.anonymous_state
-        file.save!
+        file.without_record_timestamps { file.save! }
       end
     end
   end

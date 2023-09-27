@@ -12,6 +12,11 @@ class Cms::SearchContents::PagesController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("cms.search_contents"), cms_search_contents_pages_path]
+    @crumbs << [t("cms.search_contents_pages"), url_for(action: :index)]
+  end
+
   def fix_params
     { cur_site: @cur_site, cur_user: @cur_user }
   end

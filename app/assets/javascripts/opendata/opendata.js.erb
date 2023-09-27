@@ -43,28 +43,11 @@ this.Opendata = (function () {
 
   Opendata.render = function (box) {
     var anchorCallback;
-    if (box == null) {
-      box = null;
-    }
-    if (box) {
-      anchorCallback = function () {
-        return $("#cboxLoadedContent a").each(function () {
-          var elem;
-          elem = $(this);
-          elem.addClass("cboxElement");
-          if (!elem.attr("target") && !elem.data("target")) {
-            return elem.colorbox({
-              fixed: true,
-              width: "90%",
-              height: "90%",
-              onComplete: anchorCallback
-            });
-          }
-        });
-      };
-      $(box).find("a").each(function () {
+    anchorCallback = function () {
+      return $("#cboxLoadedContent .ajax-box:not(.cboxElement)").each(function () {
         var elem;
         elem = $(this);
+        elem.addClass("cboxElement");
         if (!elem.attr("target") && !elem.data("target")) {
           return elem.colorbox({
             fixed: true,
@@ -74,25 +57,16 @@ this.Opendata = (function () {
           });
         }
       });
-    }
-    //defaullt
-    box = $(document);
-    //eternal links
-    box.find("a[href^=http]").each(function () {
-      return $(this).addClass("external");
-    });
-    //ajax to (color)box
-    return box.find(".ajax-box").each(function () {
+    };
+    return $(box).find(".ajax-box:not(.cboxElement)").each(function () {
       var elem;
       elem = $(this);
-      if (elem.hasClass("cboxElement")) {
-        return true;
-      }
       if (!elem.attr("target") && !elem.data("target")) {
         return elem.colorbox({
           fixed: true,
           width: "90%",
-          height: "90%"
+          height: "90%",
+          onComplete: anchorCallback
         });
       }
     });
@@ -109,7 +83,7 @@ this.Opendata = (function () {
       dataType: "json",
       success: function () {
       },
-      error: function (data, status) {
+      error: function (data, _status) {
         return alert(["== Error =="].concat(data.responseJSON).join("\n"));
       }
     };
@@ -133,7 +107,7 @@ this.Opendata = (function () {
         },
         success: function () {
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error ==");
         }
       };
@@ -166,7 +140,7 @@ this.Opendata = (function () {
             return $(self.data("remove")).remove();
           }
         },
-        error: function (data, status) {
+        error: function (data, _status) {
           return alert(["== Error =="].concat(data.responseJSON).join("\n"));
         }
       };
@@ -198,7 +172,7 @@ this.Opendata_Tooltips = (function () {
   Opendata_Tooltips.render = function () {
     var ttips;
     ttips = $(".tooltip");
-    ttips.on("click", function (ev) {
+    ttips.on("click", function (_ev) {
       var css, cur, hgt, ofs, style;
       $(".tooltip ul").hide();
       cur = $(this);
@@ -234,7 +208,7 @@ this.Opendata_ListUI = (function () {
   function Opendata_ListUI() {
   }
 
-  Opendata_ListUI.render = function (list) {
+  Opendata_ListUI.render = function (_list) {
     $("table.od-modal tbody tr").each(function () {
       var tbody, tr;
       tr = $(this);
@@ -315,9 +289,9 @@ this.Opendata_ListUI = (function () {
       type: "post",
       url: location.pathname + "/" + id,
       data: "_method=delete",
-      success: function (msg) {
+      success: function (_msg) {
       },
-      error: function (msg, status) {
+      error: function (msg, _status) {
         return alert(["== Error =="].concat(msg["statusText"]).join("\n"));
       }
     });
@@ -331,6 +305,8 @@ this.Opendata_SearchUI = (function () {
   function Opendata_SearchUI() {
   }
 
+  Opendata_SearchUI.anchorAjaxBox;
+
   Opendata_SearchUI.select = function (item) {
     var a, input, tr;
     // create tr element and append to form
@@ -341,6 +317,17 @@ this.Opendata_SearchUI = (function () {
     tr.append($('<td>').append($(input)).append(item["name"]));
     tr.append($('<td>').append($(a)));
     $.colorbox.element().closest("dl").find(".ajax-selected tbody").prepend(tr);
+  };
+
+  Opendata_SearchUI.selectItems = function ($el) {
+    if (! $el) {
+      $el = $("#ajax-box");
+    }
+    var self = this;
+    $el.find(".items input:checkbox").filter(":checked").each(function () {
+      self.select($(this));
+    });
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
   };
 
   Opendata_SearchUI.deselect = function (e) {
@@ -357,31 +344,104 @@ this.Opendata_SearchUI = (function () {
   };
 
   Opendata_SearchUI.render = function () {
-    return $(".ajax-selected").each(function () {
-      $(this).find(".deselect").on("click", Opendata_SearchUI.deselect);
-      if ($(this).find(".deselect").size() === 0) {
-        return $(this).hide();
+    var self = this;
+
+    $(".ajax-selected").each(function () {
+      $(this).on("click", "a.deselect", self.deselect);
+      if ($(this).find("a.deselect").size() === 0) {
+        $(this).hide();
       }
     });
+
+    $(document)
+      .on("cbox_load", self.onColorBoxLoaded)
+      .on("cbox_cleanup", self.onColorBoxCleanedUp);
   };
 
-  Opendata_SearchUI.modal = function () {
-    $("#ajax-box form.search").on("submit", function (e) {
-      $(this).ajaxSubmit({
-        url: $(this).attr("action"),
-        success: function (data) {
-          return $("#cboxLoadedContent").html(data);
-        },
-        error: function (data, status) {
-          return alert("== Error ==");
-        }
+  Opendata_SearchUI.onColorBoxLoaded = function (_ev) {
+    if (!Opendata_SearchUI.anchorAjaxBox) {
+      // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
+      // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
+      // そこで、初回表示時の anchor を記憶しておく。
+      Opendata_SearchUI.anchorAjaxBox = $.colorbox.element();
+    }
+  };
+
+  Opendata_SearchUI.onColorBoxCleanedUp = function (_ev) {
+    Opendata_SearchUI.anchorAjaxBox = null;
+  };
+
+  Opendata_SearchUI.modal = function (options) {
+    if (!options) {
+      options = {};
+    }
+
+    var self = this;
+    var colorbox = options.colorbox || $.colorbox;
+    var $el = options.$el || $("#ajax-box");
+
+    var isSameWindow = (window == $el[0].ownerDocument.defaultView)
+    if (isSameWindow) {
+      $el.find("form.search").on("submit", function (ev) {
+        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        $el.find("[type=submit]").after($div);
+
+        $(this).ajaxSubmit({
+          url: $(this).attr("action"),
+          success: function (data) {
+            var $data = $("<div />").html(data);
+            colorbox.prep($data.contents());
+          },
+          error: function (_data, _status) {
+            $div.html("== Error ==");
+          }
+        });
+        ev.preventDefault();
+        return false;
       });
-      return e.preventDefault();
+    }
+    $el.find(".pagination a").on("click", function (ev) {
+      self.selectItems($el);
+
+      if (isSameWindow) {
+        $el.find(".pagination").html(SS.loading);
+
+        $.ajax({
+          url: $(this).attr("href"),
+          type: "GET",
+          success: function (data) {
+            $el.closest("#cboxLoadedContent").html(data);
+          },
+          error: function (_data, _status) {
+            $el.find(".pagination").html("== Error ==");
+          }
+        });
+
+        ev.preventDefault();
+        return false;
+      } else {
+        return true;
+      }
     });
-    $.colorbox.element().closest("dl").find(".ajax-selected tr[data-id]").each(function () {
-      var id;
-      id = $(this).attr("data-id");
-      return $("#ajax-box .items [data-id=" + id + "]").remove();
+    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    if (!$ajaxSelected.length) {
+      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    $ajaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      var tr = $("#colorbox .items [data-id='" + id + "']");
+      tr.find("input[type=checkbox]").remove();
+      if ($el.find(".pagination a").size()) {
+        tr.find(".select-item,.select-single-item").each(function() {
+          var $this = $(this);
+          var html = $this.html();
+
+          var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+          $this.replaceWith(disabledHtml);
+        });
+      } else {
+        tr.remove();
+      }
     });
     Opendata_ListUI.render("table.od-modal");
     $("#ajax-box a.select-item").on("click", function (e) {
@@ -394,7 +454,7 @@ this.Opendata_SearchUI = (function () {
       });
       $.colorbox.element().closest("dl").find(".ajax-selected").show();
       e.preventDefault();
-      return $.colorbox.close();
+      return colorbox.close();
     });
     $("#ajax-box .select-items").on("click", function (e) {
       $("#ajax-box .items input:checkbox").filter(":checked").each(function () {
@@ -411,9 +471,9 @@ this.Opendata_SearchUI = (function () {
       });
       $.colorbox.element().closest("dl").find(".ajax-selected").show();
       e.preventDefault();
-      return $.colorbox.close();
+      return colorbox.close();
     });
-    $("#ajax-box .od-modal").on("change", function (e) {
+    $("#ajax-box .od-modal").on("change", function (_e) {
       return Opendata_SearchUI.toggleSelectButton();
     });
     return Opendata_SearchUI.toggleSelectButton();
@@ -428,7 +488,7 @@ this.Opendata_HieraricalCheckbox = (function () {
   }
 
   Opendata_HieraricalCheckbox.render = function () {
-    return $("label.parent input[type='checkbox']").on("change", function (e) {
+    return $("label.parent input[type='checkbox']").on("change", function (_e) {
       var checked;
       checked = $(this).is(':checked');
       return $(this).closest('div.parent').find("input[type='checkbox']").prop('checked', checked);

@@ -67,9 +67,8 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq index_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -85,9 +84,8 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_member_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -108,9 +106,8 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_member_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -131,9 +128,8 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_group_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload
@@ -154,9 +150,8 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.import")
         end
       end
-
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq import_group_path
-      expect(page).to have_content I18n.t("ss.notice.saved")
 
       year1.reload
       year2.reload

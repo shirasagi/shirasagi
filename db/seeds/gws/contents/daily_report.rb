@@ -66,86 +66,84 @@ def create_daily_report_report(data)
   create_item(Gws::DailyReport::Report, data)
 end
 
-create_daily_report_report(
-  cur_user: u('user1'), cur_form: @wf_forms[0], name: u('user1').name,
-  daily_report_date: Time.zone.today,
-  column_values: [
-    @wf_form0_cols[0].serialize_value('その他業務'),
-    @wf_form0_cols[1].serialize_value('幹部会等'),
-    @wf_form0_cols[2].serialize_value('プロジェクト関連'),
-    @wf_form0_cols[3].serialize_value('議会'),
-    @wf_form0_cols[4].serialize_value(''),
-    @wf_form0_cols[5].serialize_value(''),
-    @wf_form0_cols[6].serialize_value('')
-  ]
-)
+def daily_report_column_value(column, date)
+  column.serialize_value("#{I18n.l(date, format: :short)}の#{column.name}の報告です。")
+end
 
-create_daily_report_report(
-  cur_user: u('user2'), cur_form: @wf_forms[2], name: u('user2').name,
-  daily_report_date: Time.zone.today,
-  column_values: [
-    @wf_form2_cols[0].serialize_value('その他業務'),
-    @wf_form2_cols[1].serialize_value(''),
-    @wf_form2_cols[2].serialize_value(''),
-    @wf_form2_cols[3].serialize_value(''),
-    @wf_form2_cols[4].serialize_value(''),
-    @wf_form2_cols[5].serialize_value(''),
-    @wf_form2_cols[6].serialize_value('')
-  ]
-)
+def daily_report_column_values(columns, date)
+  columns.collect do |column|
+    daily_report_column_value(column, date)
+  end
+end
 
-create_daily_report_report(
-  cur_user: u('user3'), cur_form: @wf_forms[1], name: u('user3').name,
-  daily_report_date: Time.zone.today,
-  column_values: [
-    @wf_form1_cols[0].serialize_value('その他業務'),
-    @wf_form1_cols[1].serialize_value('幹部会等'),
-    @wf_form1_cols[2].serialize_value(''),
-    @wf_form1_cols[3].serialize_value(''),
-    @wf_form1_cols[4].serialize_value(''),
-    @wf_form1_cols[5].serialize_value(''),
-    @wf_form1_cols[6].serialize_value('')
-  ]
-)
+def daily_report_share_column_ids(columns, date)
+  [columns[rand(columns.count)].id]
+end
 
-create_daily_report_report(
-  cur_user: u('user3'), cur_form: @wf_forms[3], name: u('user3').name,
-  daily_report_date: Time.zone.today,
-  column_values: [
-    @wf_form3_cols[0].serialize_value('その他業務'),
-    @wf_form3_cols[1].serialize_value('幹部会等'),
-    @wf_form3_cols[2].serialize_value(''),
-    @wf_form3_cols[3].serialize_value(''),
-    @wf_form3_cols[4].serialize_value(''),
-    @wf_form3_cols[5].serialize_value(''),
-    @wf_form3_cols[6].serialize_value('')
-  ]
-)
+(Time.zone.today.advance(months: -1)..Time.zone.today.advance(months: 1)).each do |date|
+  next if date.wday == 0 || date.wday == 6
 
-create_daily_report_report(
-  cur_user: u('user4'), cur_form: @wf_forms[2], name: u('user4').name,
-  daily_report_date: Time.zone.today, share_column_ids: [@wf_form2_cols[0].id],
-  column_values: [
-    @wf_form2_cols[0].serialize_value('その他業務'),
-    @wf_form2_cols[1].serialize_value(''),
-    @wf_form2_cols[2].serialize_value(''),
-    @wf_form2_cols[3].serialize_value('議会'),
-    @wf_form2_cols[4].serialize_value('人事・給与・共済'),
-    @wf_form2_cols[5].serialize_value(''),
-    @wf_form2_cols[6].serialize_value('')
-  ]
-)
+  create_daily_report_report(
+    cur_user: u('sys'), cur_form: @wf_forms[0], name: u('sys').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form0_cols, date),
+    column_values: daily_report_column_values(@wf_form0_cols, date)
+  )
 
-create_daily_report_report(
-  cur_user: u('user5'), cur_form: @wf_forms[1], name: u('user5').name,
-  daily_report_date: Time.zone.today,
-  column_values: [
-    @wf_form1_cols[0].serialize_value('その他業務'),
-    @wf_form1_cols[1].serialize_value(''),
-    @wf_form1_cols[2].serialize_value(''),
-    @wf_form1_cols[3].serialize_value(''),
-    @wf_form1_cols[4].serialize_value(''),
-    @wf_form1_cols[5].serialize_value(''),
-    @wf_form1_cols[6].serialize_value('')
-  ]
-)
+  create_daily_report_report(
+    cur_user: u('admin'), cur_form: @wf_forms[0], name: u('admin').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form0_cols, date),
+    column_values: daily_report_column_values(@wf_form0_cols, date)
+  )
+
+  create_daily_report_report(
+    cur_user: u('user1'), cur_form: @wf_forms[0], name: u('user1').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form0_cols, date),
+    column_values: daily_report_column_values(@wf_form0_cols, date)
+  )
+
+  create_daily_report_report(
+    cur_user: u('user2'), cur_form: @wf_forms[2], name: u('user2').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form2_cols, date),
+    column_values: daily_report_column_values(@wf_form2_cols, date)
+  )
+
+  create_daily_report_report(
+    cur_user: u('user3'), cur_form: @wf_forms[1], name: u('user3').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form1_cols, date),
+    column_values: daily_report_column_values(@wf_form1_cols, date)
+  )
+
+  create_daily_report_report(
+    cur_user: u('user3'), cur_form: @wf_forms[3], name: u('user3').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form3_cols, date),
+    column_values: daily_report_column_values(@wf_form3_cols, date)
+  )
+
+  create_daily_report_report(
+    cur_user: u('user4'), cur_form: @wf_forms[2], name: u('user4').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form2_cols, date),
+    column_values: daily_report_column_values(@wf_form2_cols, date)
+  )
+
+  create_daily_report_report(
+    cur_user: u('user5'), cur_form: @wf_forms[1], name: u('user5').name,
+    daily_report_date: date, limited_access: "#{I18n.l(date, format: :short)}の限定公開の報告です。",
+    small_talk: "#{I18n.l(date, format: :short)}の雑談です。",
+    share_column_ids: daily_report_share_column_ids(@wf_form1_cols, date),
+    column_values: daily_report_column_values(@wf_form1_cols, date)
+  )
+end

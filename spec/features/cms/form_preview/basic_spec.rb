@@ -33,13 +33,14 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
         new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
         within_window new_window do
+          wait_for_document_loading
           expect(page).to have_css("h2", text: "見出し2")
           expect(page).to have_css("p", text: "内容が入ります。")
           expect(page).to have_css("h3", text: "見出し3")
           expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
           expect(page).to have_css("header h2", text: "カテゴリー")
         end
-        new_window.close
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end
@@ -64,13 +65,14 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
         new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
         within_window new_window do
+          wait_for_document_loading
           expect(page).to have_css("h2", text: "見出し2")
           expect(page).to have_css("p", text: "内容が入ります。")
           expect(page).to have_css("h3", text: "見出し3")
           expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
           expect(page).to have_no_css("header h2", text: "カテゴリー")
         end
-        new_window.close
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end
@@ -229,6 +231,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
         new_window = window_opened_by { page.first("#addon-cms-agents-addons-form-page .preview").click }
         within_window new_window do
+          wait_for_document_loading
           expect(page).to have_css("div", text: column1_value)
           expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
           expect(page).to have_css("div", text: column3_value)
@@ -258,6 +261,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           page.first("#addon-cms-agents-addons-form-page .preview").click
         end
         within_window new_window do # new_window is re-used.
+          wait_for_document_loading
           expect(page).to have_css("div", text: column1_value)
           expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
           expect(page).to have_css("div", text: column3_value)
@@ -272,7 +276,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("div", text: column12_caption)
           expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
         end
-        new_window.close
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end

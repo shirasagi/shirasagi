@@ -7,7 +7,7 @@
 <div class="year-navi dropdown" style="display: inline-block;">
   <%= link_to({ action: :index, category: '-', client: '-' }, { class: 'btn dropdown-toggle', "data-id": @year_name }) do %>
     <%= @year_name || t('gws/workload.year') %>
-    <i class="material-icons md-13">&#xE313;</i>
+    <i class="material-icons md-13">keyboard_arrow_down</i>
   <% end %>
-  <div class="dropdown-menu dropdown-menu--white""></div>
+  <div class="dropdown-menu dropdown-menu--white"></div>
 </div>

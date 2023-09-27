@@ -194,6 +194,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       click_on name
       click_on I18n.t('ss.links.edit')
+      wait_for_js_ready
       within 'form#item-form' do
         within ".column-value-cms-column-textfield" do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value2
@@ -275,6 +276,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       visit article_pages_path(site: site, cid: node)
       click_on name
       click_on I18n.t('ss.links.delete')
+      wait_for_js_ready
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end

@@ -163,6 +163,9 @@
       }
       &-container {
         overflow: scroll;
+        table.dataTable {
+          margin: unset;
+        }
         th {
           min-width: 6rem;
         }

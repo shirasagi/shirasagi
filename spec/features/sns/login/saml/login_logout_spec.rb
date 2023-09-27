@@ -52,7 +52,8 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
         # do logout
         within "nav.user" do
           find("span.name").click
-          click_on I18n.t("ss.logout")
+          # click_on I18n.t("ss.logout")
+          js_click find(:link_or_button, I18n.t("ss.logout"))
         end
       end
 
@@ -95,7 +96,9 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
         # do logout
         within "nav.user" do
           find("span.name").click
-          click_on I18n.t("ss.logout")
+          wait_for_js_ready
+          # click_on I18n.t("ss.logout")
+          js_click find(:link_or_button, I18n.t("ss.logout"))
         end
       end
 

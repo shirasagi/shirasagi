@@ -19,7 +19,7 @@ class SS::Migration20160225000000
         permissions << name unless item.permissions.include?(name)
       end
       item.permissions = permissions
-      item.save! if item.changed?
+      item.without_record_timestamps { item.save! } if item.changed?
     end
   end
 
@@ -43,7 +43,7 @@ class SS::Migration20160225000000
         permissions << name unless item.permissions.include?(name)
       end
       item.permissions = permissions
-      item.save! if item.changed?
+      item.without_record_timestamps { item.save! } if item.changed?
     end
   end
 
@@ -63,7 +63,7 @@ class SS::Migration20160225000000
         permissions << name unless item.permissions.include?(name)
       end
       item.permissions = permissions
-      item.save! if item.changed?
+      item.without_record_timestamps { item.save! } if item.changed?
     end
   end
 end

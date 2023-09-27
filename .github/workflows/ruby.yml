@@ -68,7 +68,7 @@ jobs:
       - name: Install pre requisites
         run: |
           sudo apt-get update
-          sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev chromium-chromedriver mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+          sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -131,6 +131,11 @@ jobs:
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
           RUBYOPT: "-W:deprecated"
           logs_on_failure: 0
+          CAPYBARA_MAX_WAIT_TIME: 30
+          DOWNLOAD_MAX_WAIT_TIME: 10
+          driver: chrome
+          # driver: firefox
+          # driver: random
           # RSPEC_LOCALE: en
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master

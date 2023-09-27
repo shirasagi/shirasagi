@@ -1,0 +1,31 @@
+<article class="body">
+  <div class="hinanjo__contents">
+    <div class="hinanjo_info">
+      <table>
+        <tbody>
+          <tr>
+            <th>地域</th>
+            <td>{{ page.values["地域"] }}</td>
+          </tr>
+          <tr>
+            <th>所在地</th>
+            <td>
+              <div>
+                <span class="post-code">{{ page.values["郵便番号"] }}</span>
+                {{ page.values["住所"] }}
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <th>対応する災害</th>
+            {% for category in page.categories %}
+            <td>{{ category.name }}</td>
+            </span>
+            {% endfor %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</article>

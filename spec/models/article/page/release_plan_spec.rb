@@ -104,7 +104,7 @@ describe Article::Page, dbscope: :example do
           # just before close date
           expect(described_class.and_public(close_date - 1.second).count).to eq 1
           # at close date
-          expect(described_class.and_public(close_date).count).to eq 1
+          expect(described_class.and_public(close_date).count).to eq 0
 
           # PAST is unknown because release date is set to nil, so that page is detected as public
           expect(described_class.and_public(release_date - 1.second).count).to eq 1
@@ -160,12 +160,11 @@ describe Article::Page, dbscope: :example do
         expect(described_class.and_public(release_date).count).to eq 1
 
         # at close date
-        expect(described_class.and_public(close_date).count).to eq 1
+        expect(described_class.and_public(close_date).count).to eq 0
         Timecop.freeze(close_date) do
           # before page is closed
           subject.reload
-          expect(described_class.and_public.count).to eq 1
-          expect(described_class.and_public.first).to eq subject
+          expect(described_class.and_public.count).to eq 0
           expect(subject.public?).to be_truthy
 
           job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)

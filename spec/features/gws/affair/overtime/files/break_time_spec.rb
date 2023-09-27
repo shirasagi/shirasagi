@@ -22,11 +22,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
           fill_in "item[overtime_name]", with: name
 
-          fill_in "item[start_at_date]", with: start_at.to_date
+          fill_in_date "item[start_at_date]", with: start_at.to_date
           select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[start_at_hour]'
           select I18n.t('gws/attendance.minute', count: start_at.min), from: 'item[start_at_minute]'
 
-          fill_in "item[end_at_date]", with: end_at.to_date
+          fill_in_date "item[end_at_date]", with: end_at.to_date
           select I18n.t('gws/attendance.hour', count: end_at.hour), from: 'item[end_at_hour]'
           select I18n.t('gws/attendance.minute', count: end_at.min), from: 'item[end_at_minute]'
 
@@ -62,6 +62,9 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_js_ready
+
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
         within "#addon-basic" do
           expect(page).to have_css("dd", text: I18n.t("gws/affair.options.status.request"))
         end
@@ -78,11 +81,14 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user545)
         visit index_path
         click_on item.name
+        wait_for_js_ready
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
+        wait_for_js_ready
+
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
       end
       item.reload
@@ -96,17 +102,15 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user638)
         visit index_path
         click_on item.name
+        wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.set_results") }
         end
         wait_for_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
-          within "#ajax-box" do
-            click_on I18n.t("ss.buttons.save")
-          end
+          click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -119,8 +123,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user638)
         visit index_path
         click_on item.name
+        wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.edit_results") }
         end
         wait_for_cbox do
@@ -138,11 +142,9 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           select I18n.t('gws/attendance.minute', count: break_end.min),
             from: "item[in_results][#{item.id}][break1_end_at_minute]"
 
-          within "#ajax-box" do
-            click_on I18n.t("ss.buttons.save")
-          end
+          click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -155,8 +157,8 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user638)
         visit index_path
         click_on item.name
+        wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.edit_results") }
         end
         wait_for_cbox do
@@ -174,11 +176,9 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           select I18n.t('gws/attendance.minute', count: break_end.min),
             from: "item[in_results][#{item.id}][break2_end_at_minute]"
 
-          within "#ajax-box" do
-            click_on I18n.t("ss.buttons.save")
-          end
+          click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
       end
       item.reload
       item
@@ -191,13 +191,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         login_user(user545)
         visit index_path
         click_on item.name
+        wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
-          wait_for_js_ready
           page.accept_confirm do
             click_on I18n.t("gws/affair.links.close_results")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t("gws/affair.notice.close_results"))
+        wait_for_notice I18n.t("gws/affair.notice.close_results")
       end
       item.reload
       item
@@ -218,6 +218,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       login_user(user545)
       visit index_path
       click_on item1.name
+      wait_for_js_ready
       within "#addon-gws-agents-addons-affair-overtime_result" do
         expect(page).to have_css("table.overtime-results .item td:nth-child(1)", text: "5:00")
         expect(page).to have_css("table.overtime-results .item td:nth-child(2)", text: "2:00")
@@ -244,6 +245,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       login_user(user545)
       visit index_path
       click_on item2.name
+      wait_for_js_ready
       within "#addon-gws-agents-addons-affair-overtime_result" do
         expect(page).to have_css("table.overtime-results .item td:nth-child(1)", text: "4:30")
         expect(page).to have_css("table.overtime-results .item td:nth-child(2)", text: "2:00")
@@ -274,6 +276,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       login_user(user545)
       visit index_path
       click_on item3.name
+      wait_for_js_ready
       within "#addon-gws-agents-addons-affair-overtime_result" do
         expect(page).to have_css("table.overtime-results .item td:nth-child(1)", text: "4:00")
         expect(page).to have_css("table.overtime-results .item td:nth-child(2)", text: "3:25")

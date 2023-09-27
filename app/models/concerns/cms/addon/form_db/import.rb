@@ -195,7 +195,8 @@ module Cms::Addon::FormDb::Import
       recurrence = { kind: "date", start_at: event_range.first, frequency: "daily" }
       recurrence[:until_on] = event_range.last
       item.event_recurrences = [ recurrence ]
-      item.close_date = event_range.last + 1.month
+      close_date = event_range.last + 1.month
+      item.close_date = close_date if close_date > Time.zone.now
     else
       item.event_dates = []
       item.close_date = nil

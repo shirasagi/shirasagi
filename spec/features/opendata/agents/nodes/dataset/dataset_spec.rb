@@ -2,12 +2,13 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
-  let(:node_dataset) { create_once :opendata_node_dataset }
-  let(:node_area) { create :opendata_node_area }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
-  let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, area_ids: [ node_area.id ]) }
-  let!(:node_dataset_category) { create_once :opendata_node_dataset_category }
+  let(:layout) { create_cms_layout }
+  let(:area) { create :opendata_node_area, layout: layout, filename: "opendata_area_1" }
+  let(:node_dataset) { create :opendata_node_dataset, layout: layout }
+  let(:node_area) { create :opendata_node_area, layout: layout }
+  let!(:node_search_dataset) { create :opendata_node_search_dataset, layout: layout, filename: "dataset/search" }
+  let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, layout: layout, area_ids: [ node_area.id ]) }
+  let!(:node_dataset_category) { create :opendata_node_dataset_category, layout: layout }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let!(:license) { create(:opendata_license, cur_site: site) }
   let(:index_path) { "#{node_dataset.url}index.html" }
@@ -88,15 +89,38 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   end
 
   it "#rss" do
+    layout.html = <<~HTML
+      <html>
+      <body>
+        <br><br><br>
+        <h1 id="ss-page-name">\#{page_name}</h1><br>
+        <div id="main" class="page">
+          {{ yield }}
+          <div class="list-footer">
+            <a href="#{rss_path}" download>RSS</a>
+          </div>
+        </div>
+      </body>
+      </html>
+    HTML
+    layout.save!
+
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       visit rss_path
-      expect(current_path).to eq rss_path
-      expect(page).to have_xpath('//rss/channel/item')
-      expect(page).to have_xpath('//rss/channel/item/title')
-      expect(page).to have_xpath('//rss/channel/item/link')
-      # expect(page).to have_xpath('//rss/channel/item/pubDate')
-      # expect(page).to have_xpath('//rss/channel/item/dc:date')
+
+      visit index_path
+      within ".list-footer" do
+        click_on "RSS"
+      end
+
+      xmldoc = REXML::Document.new(page.html)
+      title = REXML::XPath.first(xmldoc, "/rss/channel/title/text()").to_s.strip
+      expect(title).to start_with(node_dataset.name)
+      link = REXML::XPath.first(xmldoc, "/rss/channel/link/text()").to_s.strip
+      expect(link).to end_with(node_dataset.url)
+      items = REXML::XPath.match(xmldoc, "/rss/channel/item")
+      expect(items).to have(1).items
     end
   end
 

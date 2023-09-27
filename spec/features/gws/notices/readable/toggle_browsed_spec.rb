@@ -29,8 +29,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
+        within ".tree-navi" do
+          expect(page).to have_css('.content-navi-refresh', text: "refresh")
+        end
 
         within ".list-items" do
           click_on item1.name
@@ -38,9 +39,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         page.accept_confirm do
           click_on I18n.t("gws/notice.links.set_seen")
         end
-        within first("#notice", visible: false) do
-          expect(page).to have_content(I18n.t('ss.notice.saved'))
-        end
+        wait_for_notice I18n.t('ss.notice.saved')
         within ".nav-menu" do
           click_on I18n.t("ss.links.back_to_index")
         end
@@ -51,8 +50,10 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
+        within ".tree-navi" do
+          expect(page).to have_css('.tree-item.is-current', text: folder.name)
+          expect(page).to have_css('.content-navi-refresh', text: "refresh")
+        end
       end
     end
 
@@ -70,8 +71,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
+        within ".tree-navi" do
+          expect(page).to have_css('.content-navi-refresh', text: "refresh")
+        end
 
         within ".list-items" do
           click_on item1.name
@@ -87,8 +89,10 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
+        within ".tree-navi" do
+          expect(page).to have_css('.tree-item.is-current', text: folder.name)
+          expect(page).to have_css('.content-navi-refresh', text: "refresh")
+        end
       end
 
       it "#index" do
@@ -99,8 +103,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
+        within ".tree-navi" do
+          expect(page).to have_css('.content-navi-refresh', text: "refresh")
+        end
 
         within ".list-items" do
           click_on item1.name
@@ -110,9 +115,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         page.accept_confirm do
           click_on I18n.t("gws/notice.links.unset_seen")
         end
-        within first("#notice", visible: false) do
-          expect(page).to have_content(I18n.t('ss.notice.saved'))
-        end
+        wait_for_notice I18n.t('ss.notice.saved')
         within ".nav-menu" do
           click_on I18n.t("ss.links.back_to_index")
         end
@@ -123,8 +126,10 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
+        within ".tree-navi" do
+          expect(page).to have_css('.tree-item.is-current', text: folder.name)
+          expect(page).to have_css('.content-navi-refresh', text: "refresh")
+        end
       end
     end
   end

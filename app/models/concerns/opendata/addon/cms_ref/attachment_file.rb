@@ -30,6 +30,7 @@ module Opendata::Addon::CmsRef::AttachmentFile
   end
 
   def update_resource_with_file!(page, file, license_id, text)
+    self.state = page.public? ? 'public' : 'closed'
     self.name = file.name.gsub(/\..*$/, '')
     self.license_id = license_id
     self.text = text

@@ -42,6 +42,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
         within ".list-head" do
           select I18n.t(log1.class_name.underscore, scope: "job.models"), from: "s[class_name]"
         end
+        wait_for_js_ready
 
         expect(page).to have_css(".list-item", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log2.class_name.underscore, scope: "job.models"))
@@ -50,6 +51,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
         within ".list-head" do
           select I18n.t(log3.class_name.underscore, scope: "job.models"), from: "s[class_name]"
         end
+        wait_for_js_ready
 
         expect(page).to have_no_css(".list-item", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log2.class_name.underscore, scope: "job.models"))
@@ -68,6 +70,8 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('gws.history.days.today')
         end
+        wait_for_js_ready
+
         within ".list-head" do
           expect(page).to have_no_css("option[value='#{log1.class_name}']")
           expect(page).to have_no_css("option[value='#{log2.class_name}']")
@@ -75,6 +79,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
           select I18n.t(log3.class_name.underscore, scope: "job.models"), from: "s[class_name]"
         end
+        wait_for_js_ready
 
         expect(page).to have_no_css(".list-item", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log2.class_name.underscore, scope: "job.models"))

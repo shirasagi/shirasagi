@@ -5,9 +5,6 @@ Dotenv.load
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../config/environment", __dir__)
-
-require 'webdrivers'
-# Webdrivers.logger.level = :DEBUG
 require 'rails-controller-testing'
 require 'rspec/rails'
 # require 'rspec/autorun'
@@ -155,7 +152,8 @@ RSpec.configure do |config|
 
   Capybara.configure do |config|
     config.ignore_hidden_elements = false
-    config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
+    # Capybara's default is 2, but it is too short. 60 is a bit long in daily use.
+    config.default_max_wait_time = ENV.fetch("CAPYBARA_MAX_WAIT_TIME", 30).to_i
 
     # to test michecker, it is needed to bind globally to access server within docker container.
     config.server_host = "0.0.0.0"

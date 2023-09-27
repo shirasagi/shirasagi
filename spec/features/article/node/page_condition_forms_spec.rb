@@ -138,9 +138,11 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
       visit cms_node_path(site: site, id: node)
       click_on I18n.t("ss.links.edit")
       within "#item-form" do
-        within "#addon-event-agents-addons-page_list" do
-          within first(".form-table tr[data-id]") do
-            click_on I18n.t("ss.buttons.delete")
+        wait_event_to_fire "change" do
+          within "#addon-event-agents-addons-page_list" do
+            within first(".form-table tr[data-id]") do
+              click_on I18n.t("ss.buttons.delete")
+            end
           end
         end
 

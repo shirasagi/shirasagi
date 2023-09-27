@@ -7,7 +7,7 @@ class SS::Migration20150916000000
     Cms::Notice.where(released: nil).each do |item|
       item.state  ||= "public"
       item.released = item.release_date || item.updated
-      item.save
+      item.without_record_timestamps { item.save }
     end
   end
 end

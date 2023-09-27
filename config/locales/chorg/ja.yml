@@ -140,6 +140,13 @@ ja:
         nth_destination_contact_contact_email: "操作先%{dest_seq}_連絡先%{contact_seq}_メールアドレス"
         nth_destination_contact_contact_link_url: "操作先%{dest_seq}_連絡先%{contact_seq}_リンクURL"
         nth_destination_contact_contact_link_name: "操作先%{dest_seq}_連絡先%{contact_seq}_リンク名"
+    errors:
+      template:
+        body_html: |-
+          選択されたグループ内の以下の連絡先の異動先が見つかりません。<br>
+          以下の連絡先は組織変更を実行するとページとの連携が外れ、以下の連絡先を使用中のページの連絡先部分が非表示となります。<br>
+          連絡先を単一に統合されたい場合は編集画面から「主へ統合」を有効にしてください。<br>
+          既存の連絡先をそれぞれ別の連絡先へ設定する場合は既存の連絡先に上書きしてください。
 
   modules:
     chorg: 組織変更

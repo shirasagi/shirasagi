@@ -3,29 +3,38 @@ require Rails.root.join("lib/migrations/contact/20221206000000_multi_contacts_on
 
 RSpec.describe SS::Migration20221206000000, dbscope: :example do
   let!(:site) { cms_site }
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:group1) { create :cms_group, name: "#{cms_group.name}/#{unique_id}", contact_groups: [] }
   let!(:page1) do
-    create(
-      :cms_page, contact_group: group1, contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
-      contact_fax: unique_tel, contact_email: unique_email, contact_link_url: "contact_link_url_#{unique_id}",
-      contact_link_name: unique_url)
+    Timecop.freeze(now) do
+      create(
+        :cms_page, contact_group: group1, contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
+        contact_fax: unique_tel, contact_email: unique_email, contact_link_url: "contact_link_url_#{unique_id}",
+        contact_link_name: unique_url)
+    end
   end
   let!(:page2) do
-    create(
-      :cms_page, contact_group: group1, contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
-      contact_fax: unique_tel, contact_email: unique_email, contact_link_url: "contact_link_url_#{unique_id}",
-      contact_link_name: unique_url)
+    Timecop.freeze(now) do
+      create(
+        :cms_page, contact_group: group1, contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
+        contact_fax: unique_tel, contact_email: unique_email, contact_link_url: "contact_link_url_#{unique_id}",
+        contact_link_name: unique_url)
+    end
   end
   let!(:page3) do
-    create(
-      :cms_page, contact_group: group1, contact_charge: nil, contact_tel: nil, contact_fax: nil, contact_email: nil,
-      contact_link_url: nil, contact_link_name: nil)
+    Timecop.freeze(now) do
+      create(
+        :cms_page, contact_group: group1, contact_charge: nil, contact_tel: nil, contact_fax: nil, contact_email: nil,
+        contact_link_url: nil, contact_link_name: nil)
+    end
   end
   let!(:page4) do
-    create(
-      :cms_page, contact_group_id: rand(900..999), contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
-      contact_fax: unique_tel, contact_email: unique_email, contact_link_url: "contact_link_url_#{unique_id}",
-      contact_link_name: unique_url)
+    Timecop.freeze(now) do
+      create(
+        :cms_page, contact_group_id: rand(900..999), contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
+        contact_fax: unique_tel, contact_email: unique_email, contact_link_url: "contact_link_url_#{unique_id}",
+        contact_link_name: unique_url)
+    end
   end
 
   before do
@@ -51,32 +60,44 @@ RSpec.describe SS::Migration20221206000000, dbscope: :example do
     end
 
     group1.contact_groups.first.tap do |contact|
-      page1.reload
-      expect(page1.contact_group_relation).to eq "related"
-      expect(page1.contact_group_contact_id).to eq contact.id
-      expect(page1.contact_charge).to eq contact.contact_group_name
-      expect(page1.contact_tel).to eq contact.contact_tel
-      expect(page1.contact_fax).to eq contact.contact_fax
-      expect(page1.contact_email).to eq contact.contact_email
-      expect(page1.contact_link_url).to eq contact.contact_link_url
-      expect(page1.contact_link_name).to eq contact.contact_link_name
+      Cms::Page.find(page1.id).tap do |page|
+        expect(page.contact_group_relation).to eq "related"
+        expect(page.contact_group_contact_id).to eq contact.id
+        expect(page.contact_charge).to eq contact.contact_group_name
+        expect(page.contact_tel).to eq contact.contact_tel
+        expect(page.contact_fax).to eq contact.contact_fax
+        expect(page.contact_email).to eq contact.contact_email
+        expect(page.contact_link_url).to eq contact.contact_link_url
+        expect(page.contact_link_name).to eq contact.contact_link_name
+        expect(page.created).to eq page1.created
+        expect(page.updated).to eq page1.updated
+      end
     end
     group1.contact_groups.second.tap do |contact|
-      page2.reload
-      expect(page2.contact_group_relation).to eq "related"
-      expect(page2.contact_group_contact_id).to eq contact.id
-      expect(page2.contact_charge).to eq contact.contact_group_name
-      expect(page2.contact_tel).to eq contact.contact_tel
-      expect(page2.contact_fax).to eq contact.contact_fax
-      expect(page2.contact_email).to eq contact.contact_email
-      expect(page2.contact_link_url).to eq contact.contact_link_url
-      expect(page2.contact_link_name).to eq contact.contact_link_name
+      Cms::Page.find(page2.id).tap do |page|
+        expect(page.contact_group_relation).to eq "related"
+        expect(page.contact_group_contact_id).to eq contact.id
+        expect(page.contact_charge).to eq contact.contact_group_name
+        expect(page.contact_tel).to eq contact.contact_tel
+        expect(page.contact_fax).to eq contact.contact_fax
+        expect(page.contact_email).to eq contact.contact_email
+        expect(page.contact_link_url).to eq contact.contact_link_url
+        expect(page.contact_link_name).to eq contact.contact_link_name
+        expect(page.created).to eq page2.created
+        expect(page.updated).to eq page2.updated
+      end
     end
 
-    page3.reload
-    expect(page3.contact_group_relation).to eq "unrelated"
+    Cms::Page.find(page3.id).tap do |page|
+      expect(page.contact_group_relation).to eq "unrelated"
+      expect(page.created).to eq page3.created
+      expect(page.updated).to eq page3.updated
+    end
 
-    page4.reload
-    expect(page4.contact_group_relation).to eq "unrelated"
+    Cms::Page.find(page4.id).tap do |page|
+      expect(page.contact_group_relation).to eq "unrelated"
+      expect(page.created).to eq page4.created
+      expect(page.updated).to eq page4.updated
+    end
   end
 end
