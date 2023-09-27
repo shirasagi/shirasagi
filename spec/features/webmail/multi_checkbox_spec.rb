@@ -42,21 +42,24 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             click_on I18n.t('ss.links.select')
           end
           within 'form#item-form' do
-            within '.see.to' do
+            take_full_page_screenshot("kojin_selected.png")
+            within '.webmail-mail-form-address.to' do
               expect(page).to have_content(address1.name)
             end
-            within '.see.cc-bcc.cc' do
+            within '.webmail-mail-form-address.cc-bcc.cc' do
               expect(page).to have_content(address1.name)
             end
-            within '.see.cc-bcc.bcc' do
+            within '.webmail-mail-form-address.cc-bcc.bcc' do
               expect(page).to have_content(address1.name)
             end
             fill_in 'item[subject]', with: subject
             fill_in 'item[text]', with: text
-            click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.send')
           end
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
+
+        visit gws_memo_messages_path(site: user.root_groups.first, folder: 'INBOX.Sent')
       end
 
       it '全選択' do
@@ -77,24 +80,24 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             click_on I18n.t('ss.links.select')
           end
           within 'form#item-form' do
-            within '.see.to' do
+            within '.webmail-mail-form-address.to' do
               expect(page).to have_content(address1.name)
               expect(page).to have_content(address2.name)
             end
-            within '.see.cc-bcc.cc' do
+            within '.webmail-mail-form-address.cc-bcc.cc' do
               expect(page).to have_content(address1.name)
               expect(page).to have_content(address2.name)
             end
-            within '.see.cc-bcc.bcc' do
+            within '.webmail-mail-form-address.cc-bcc.bcc' do
               expect(page).to have_content(address1.name)
               expect(page).to have_content(address2.name)
             end
             fill_in 'item[subject]', with: subject
             fill_in 'item[text]', with: text
-            click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.send')
           end
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
       end
     end
 
@@ -119,21 +122,21 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             click_on I18n.t('ss.links.select')
           end
           within 'form#item-form' do
-            within '.see.to' do
+            within '.webmail-mail-form-address.to' do
               expect(page).to have_content(user1.name)
             end
-            within '.see.cc-bcc.cc' do
+            within '.webmail-mail-form-address.cc-bcc.cc' do
               expect(page).to have_content(user1.name)
             end
-            within '.see.cc-bcc.bcc' do
+            within '.webmail-mail-form-address.cc-bcc.bcc' do
               expect(page).to have_content(user1.name)
             end
             fill_in 'item[subject]', with: subject
             fill_in 'item[text]', with: text
-            click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.send')
           end
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
       end
 
       it '全選択' do
@@ -154,24 +157,24 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             click_on I18n.t('ss.links.select')
           end
           within 'form#item-form' do
-            within '.see.to' do
+            within '.webmail-mail-form-address.to' do
               expect(page).to have_content(user1.name)
               expect(page).to have_content(user2.name)
             end
-            within '.see.cc-bcc.cc' do
+            within '.webmail-mail-form-address.cc-bcc.cc' do
               expect(page).to have_content(user1.name)
               expect(page).to have_content(user2.name)
             end
-            within '.see.cc-bcc.bcc' do
+            within '.webmail-mail-form-address.cc-bcc.bcc' do
               expect(page).to have_content(user1.name)
               expect(page).to have_content(user2.name)
             end
             fill_in 'item[subject]', with: subject
             fill_in 'item[text]', with: text
-            click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.send')
           end
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
       end
     end
 
@@ -205,21 +208,21 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             click_on I18n.t('ss.links.select')
           end
           within 'form#item-form' do
-            within '.see.to' do
+            within '.webmail-mail-form-address.to' do
               expect(page).to have_content(address1.name)
             end
-            within '.see.cc-bcc.cc' do
+            within '.webmail-mail-form-address.cc-bcc.cc' do
               expect(page).to have_content(address1.name)
             end
-            within '.see.cc-bcc.bcc' do
+            within '.webmail-mail-form-address.cc-bcc.bcc' do
               expect(page).to have_content(address1.name)
             end
             fill_in 'item[subject]', with: subject
             fill_in 'item[text]', with: text
-            click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.send')
           end
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
       end
 
       it '全選択' do
@@ -240,24 +243,24 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             click_on I18n.t('ss.links.select')
           end
           within 'form#item-form' do
-            within '.see.to' do
+            within '.webmail-mail-form-address.to' do
               expect(page).to have_content(address1.name)
               expect(page).to have_content(address2.name)
             end
-            within '.see.cc-bcc.cc' do
+            within '.webmail-mail-form-address.cc-bcc.cc' do
               expect(page).to have_content(address1.name)
               expect(page).to have_content(address2.name)
             end
-            within '.see.cc-bcc.bcc' do
+            within '.webmail-mail-form-address.cc-bcc.bcc' do
               expect(page).to have_content(address1.name)
               expect(page).to have_content(address2.name)
             end
             fill_in 'item[subject]', with: subject
             fill_in 'item[text]', with: text
-            click_on I18n.t('ss.buttons.draft_save')
+            click_on I18n.t('ss.buttons.send')
           end
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.sent')
       end
     end
   end

@@ -1,7 +1,7 @@
 <% h = Webmail::Address.user(@cur_user).to_autocomplete_hash %>
 <%= javascript_tag do %>
-  SS_SearchUI.select_shimoji = Webmail_Mail_Form_Address.select;
 
+  SS_SearchUI.select = Webmail_Mail_Form_Address.select;
   SS.ready(function() {
     SS_Form.disableEnterKey('#item_subject');
     Webmail_Mail_Form.render();
@@ -31,17 +31,17 @@ dd.address-select{vertical-align: middle;max-width: 100%;height: 2.4em;margin: 5
     <dt><%= @model.t field %></dt>
     <dd><%= text_field_tag field, nil, "class" => "address autocomplete", "data-name" => "item[#{field}][]" %></dd>
     <dd>
-      <table class="selected-address ajax-selected">
-        <input type="hidden" name="item[in_<%= field %>_members][]" value="">
-        <tbody>
-        <% addresses.each do |address| %>
-          <% next if address.strip.blank? %>
-              <tr><%= address %></tr>
-              <td><i class="material-icons md-18 md-inactive deselect">close</i><td>
-              <td><input type="hidden" name="item[in_<%= field %>_members][]" value=""></td>
-            </tbody>
-        <% end %>
-      </table>
+        <div class="selected-address">
+          <input type="hidden" name="item[<%= field %>][]" value="">
+          <% addresses.each do |address| %>
+            <% next if address.strip.blank? %>
+            <span>
+              <%= address %>
+              <i class="material-icons md-18 md-inactive deselect">close</i>
+              <input type="hidden" name="item[<%= field %>][]" value="<%= address %>">
+            </span>
+          <% end %>
+        </div>
     </dd>
   </dl>
 <% end %>
@@ -51,12 +51,12 @@ dd.address-select{vertical-align: middle;max-width: 100%;height: 2.4em;margin: 5
   <dd><%= render 'address_form', { f: f, field: :to, cssName: "see to-cc-bcc" } %></dd>
 </dl>
 
-<% render_address_form.call(:to, @item.to, "see to", cc_blank=false) %>
+<% render_address_form.call(:to, @item.to, "to", cc_blank=false) %>
 
 <% if cc_blank = @item.cc .blank? && @item.cc_text.blank? && @item.bcc.blank? && @item.bcc_text.blank? %>
   <a class="cc-bcc-label" href="#">[ <%= t 'webmail.links.show_cc_bcc' %> ]</a>
 <% end %>
 
-<% render_address_form.call(:cc, @item.cc, "see cc-bcc cc", cc_blank) %>
+<% render_address_form.call(:cc, @item.cc, "cc-bcc cc", cc_blank) %>
 
-<% render_address_form.call(:bcc, @item.bcc, "see cc-bcc bcc", cc_blank) %>
+<% render_address_form.call(:bcc, @item.bcc, "cc-bcc bcc", cc_blank) %>

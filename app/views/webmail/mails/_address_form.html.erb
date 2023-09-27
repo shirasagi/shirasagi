@@ -7,7 +7,6 @@ groups = @cur_user.root_groups.entries.map(&:gws_group)
 
 <dl class="see webmail-address-field">
   <dd class="wide">
-  <input type="hidden" name="item[in_<% cssName %>_members][]" value="" class="hidden-ids" autocomplete="off" />
     <div class="address-groups">
       <div class="address-group">
         <% if groups.size > 1 %>
