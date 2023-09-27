@@ -52,17 +52,18 @@ end
 def create_webmail_users
   return Webmail::UserSupport.data if Webmail::UserSupport.data.present?
 
-  g00 = SS::Group.create! name: "シラサギ市", order: 10
-  g10 = SS::Group.create! name: "シラサギ市/企画政策部", order: 20
-  g11 = SS::Group.create! name: "シラサギ市/企画政策部/政策課", order: 30
+  create_gws_users
+
+  g00 = SS::Group.find_by(name: "シラサギ市")
+  g10 = SS::Group.find_by(name: "シラサギ市/企画政策部")
+  g11 = SS::Group.find_by(name: "シラサギ市/企画政策部/政策課")
 
   admin_role = create(:webmail_role_admin, name: I18n.t('webmail.roles.admin'))
   user_role = create(:webmail_role_admin, name: I18n.t('webmail.roles.user'))
 
-  admin = Webmail::User.create! name: "webmail-admin", uid: "admin", email: "admin@example.jp", in_password: "pass",
-    group_ids: [g11.id], webmail_role_ids: [admin_role.id],
-    organization_id: g00.id, organization_uid: "org-admin",
-    deletion_lock_state: "locked"
+  gws_admin = Gws::User.find_by(email: "admin@example.jp")
+  admin = gws_admin.webmail_user
+  admin.update(webmail_role_ids: [admin_role.id])
 
   user = Webmail::User.create! name: "webmail-user", uid: "user", email: "user@example.jp", in_password: "pass",
     group_ids: [g11.id], webmail_role_ids: [user_role.id],
@@ -80,6 +81,10 @@ def create_webmail_users
 
     imap.imap_settings = webmail_imap_setting
     imap.save!
+
+    imap.gws_user.tap do |gws_user|
+      gws_user.update!(gws_role_ids: gws_admin.gws_role_ids)
+    end
 
     imap.in_password = imap.decrypted_password = SS.config.webmail.test_pass || 'pass'
   end
