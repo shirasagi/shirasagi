@@ -41,7 +41,7 @@ describe "cms/line/mail_handlers", type: :feature, dbscope: :example, js: true d
       expect(page).to have_css("#addon-basic dd", text: item.name)
       expect(page).to have_css("#addon-basic dd", text: item.filename)
       expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd",
-      text: I18n.t('cms.options.subject_state.disabled'))
+        text: I18n.t('cms.options.subject_state.disabled'))
     end
 
     it "#edit" do
