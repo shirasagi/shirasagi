@@ -29,7 +29,7 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
       raise "404"
     end
 
-    data = params.permit(:data)[:data]
+    data = params["data"].read rescue nil
     raise "404" if data.blank?
 
     file = SS::MailHandler.write_eml(data, "mail_page")

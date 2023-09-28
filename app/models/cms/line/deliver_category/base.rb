@@ -14,7 +14,8 @@ class Cms::Line::DeliverCategory::Base
   field :name
   field :filename
   field :order, type: Integer, default: 0
-  field :remarks, type: String
+  field :category_html, type: String
+  field :remarks, type: String #選択肢の説明？
   field :depth, type: Integer
   field :state, type: String, default: 'public'
 
@@ -22,7 +23,7 @@ class Cms::Line::DeliverCategory::Base
   has_many :children, class_name: "Cms::Line::DeliverCategory::Base", dependent: :destroy, inverse_of: :parent,
     order: { order: 1 }
 
-  permit_params :name, :filename, :basename, :type, :order, :state, :remarks
+  permit_params :name, :filename, :basename, :type, :order, :state, :category_html, :remarks
 
   before_validation :set_depth
   before_validation :set_filename
@@ -59,7 +60,7 @@ class Cms::Line::DeliverCategory::Base
     if @basename
       return errors.add :basename, :empty if @basename.blank?
       errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/
-      errors.add :basename, :invalid if @basename !~ /^([\w\-]+\/)*[\w\-]+$/
+      errors.add :basename, :invalid if @basename !~ /^[\w\-]+$/
     else
       return errors.add :filename, :empty if filename.blank?
       errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+$/

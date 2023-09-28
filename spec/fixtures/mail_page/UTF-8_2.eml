@@ -1,0 +1,117 @@
+Content-Type: multipart/alternative;
+ boundary="------------6IPioA05zOOEhH0vo9jILuJq"
+Message-ID: <d8e527a8-ce41-541e-eb45-c41c4399368a@web-tips.co.jp>
+Date: Wed, 13 Sep 2023 09:15:33 +0900
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.0
+Content-Language: en-US
+To: sample@example.jp
+From: =?UTF-8?B?5LyK6JekIOaCoA==?= <sample@example.jp>
+Subject: =?UTF-8?B?5Y+w6aKo56ys77yX5Y+344Gu5o6l6L+R44Gr44Gk44GE44Gm?=
+
+This is a multi-part message in MIME format.
+--------------6IPioA05zOOEhH0vo9jILuJq
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+≪シラサギ市メール配信≫
+
+台風第７号の接近に伴い、本日午後２時に警戒本部を設置しました。
+引き続き、気象情報にご注意ください。
+
+警戒本部
+TEL：000-000-0000
+
+【配信カテゴリ】
+・緊急情報
+
+変更及び解除をご希望の方は以下のメールアドレスに空メールをご送信ください
+kaijyo@example.jp
+
+--------------6IPioA05zOOEhH0vo9jILuJq
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    ≪シラサギ市メール配信≫<br>
+    <br>
+    台風第７号の接近に伴い、本日午後２時に警戒本部を設置しました。<br>
+    引き続き、気象情報にご注意ください。<br>
+    <br>
+    警戒本部<br>
+    TEL：000-000-0000<br>
+    <br>
+    【配信カテゴリ】<br>
+    ・緊急情報<br>
+    <br>
+    変更及び解除をご希望の方は以下のメールアドレスに空メールをご送信ください<br>
+    <a class="moz-txt-link-abbreviated" href="mailto:kaijyo@example.jp">kaijyo@example.jp</a><br>
+    <br>
+    <p>
+      <style>@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:-536870145 1107305727 0 0 415 0;}@font-face
+	{font-family:游明朝;
+	panose-1:2 2 4 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:-2147482905 717749503 18 0 131231 0;}@font-face
+	{font-family:"BIZ UDゴシック";
+	panose-1:2 11 6 4 2 2 2 2 2 4;
+	mso-font-alt:"Yu Gothic";
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-pitch:fixed;
+	mso-font-signature:-536870153 717745656 18 0 131073 0;}@font-face
+	{font-family:"\@BIZ UDゴシック";
+	mso-font-charset:128;
+	mso-generic-font-family:modern;
+	mso-font-pitch:fixed;
+	mso-font-signature:-536870153 717745656 18 0 131073 0;}@font-face
+	{font-family:"\@游明朝";
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:-2147482905 717749503 18 0 131231 0;}p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	margin:0mm;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	mso-pagination:none;
+	font-size:10.5pt;
+	mso-bidi-font-size:11.0pt;
+	font-family:"游明朝",serif;
+	mso-ascii-font-family:游明朝;
+	mso-ascii-theme-font:minor-latin;
+	mso-fareast-font-family:游明朝;
+	mso-fareast-theme-font:minor-fareast;
+	mso-hansi-font-family:游明朝;
+	mso-hansi-theme-font:minor-latin;
+	mso-bidi-font-family:"Times New Roman";
+	mso-bidi-theme-font:minor-bidi;
+	mso-font-kerning:1.0pt;}.MsoChpDefault
+	{mso-style-type:export-only;
+	mso-default-props:yes;
+	mso-bidi-font-size:11.0pt;
+	font-family:"游明朝",serif;
+	mso-bidi-font-family:"Times New Roman";
+	mso-bidi-theme-font:minor-bidi;
+	mso-ligatures:none;}div.WordSection1
+	{page:WordSection1;}</style></p>
+  </body>
+</html>
+
+--------------6IPioA05zOOEhH0vo9jILuJq--
