@@ -268,12 +268,13 @@ class SS::Csv
 
         column_values = import_form(heads.first) do
           chunk.slice_when { |lhs, rhs| lhs.first.second != rhs.first.second }.map do |columns|
-            _form_name = columns.first.first.shift
-            column_name = columns.first.first.join("/")
+            _columns = columns.deep_dup
+            _form_name = _columns.first.first.shift
+            column_name = _columns.first.first.join("/")
             column = @form.columns.where(name: column_name).first
             unless column
-              _value_name = columns.first.first.pop
-              column_name = columns.first.first.join("/")
+              _value_name = _columns.first.first.pop
+              column_name = _columns.first.first.join("/")
               column = @form.columns.where(name: column_name).first
             end
             next if column.blank?
