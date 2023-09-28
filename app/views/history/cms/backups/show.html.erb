@@ -1,12 +1,22 @@
 <div class="main-box">
+  <div><%= t("history.compare_backup_notice_html", latest_notice: @data[:updated].try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }) %></div>
   <table class="see index history-backup">
+    <tbody>
     <% @item.data.sort.each do |k, v| %>
-    <tr>
-      <th><%= k %></th>
-      <td class="<%= 'diff' if @data[k] != v %>">
-        <%= v.present? ? v.inspect : "" %>
-      </td>
-    </tr>
+      <%
+        if @item.ref_item
+          field_name = @item.ref_item.class.t(k)
+        else
+          field_name = k
+        end
+      %>
+      <tr data-id="<%= k %>">
+        <th><%= field_name %></th>
+        <td class="<%= 'diff' if @data[k] != v %>">
+          <%= v.present? ? v.inspect : "" %>
+        </td>
+      </tr>
     <% end %>
+    </tbody>
   </table>
 </div>

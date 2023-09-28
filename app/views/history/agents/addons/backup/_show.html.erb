@@ -1,46 +1,74 @@
 <%
   return render(plain: "") if @item.backups.size == 0
   source = ERB::Util.url_encode(request.path)
-  before = @item.before_backup || @item.backups.last
+  top_backups = @item.backups.limit(History.max_histories)
 %>
-<dl class="see mod-history-backup">
-  <% if before %>
-    <dd>
-      <%= link_to I18n.t('history.compare_before_state'), history_cms_change_path(source: source, id: before.id), class: 'btn' %>
-    </dd>
-  <% end %>
-  <% @item.backups.limit(10).each do |item| %>
-    <dd data-id="<%= item.id %>">
-      <%=
-        content = ss_time_tag item.created
-        if @item.allowed?(:edit, @cur_user, site: @cur_site)
-          content = link_to content, history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: item.id)
-        end
-        content
-      %>
+<dl class="see">
+  <table class="index history-backup-table">
+    <thead class="list-head">
+      <tr>
+        <th class="created"><%= @model.t :updated %></th>
+        <th class="name"><%= t("history.editor_name") %></th>
+        <th class="links"></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% top_backups.each do |backup| %>
+      <tr class="list-item" data-id="<%= backup.id %>">
+        <td class="created">
+          <%=
+            backup_data_updated = backup.data[:updated].try(:in_time_zone)
+            time_tag = ss_time_tag(backup_data_updated || backup.created)
 
-      <%=
-        if item.action == 'replace_urls'
-          id = t("history.options.action.#{item.action}")
-        else
-          if item.user_id
-            # ユーザーが作成した履歴
-            group = item.user ? Cms::Group.site(@cur_site).in(id: item.user.group_ids).first : nil
-            if group
-              id = "#{group.trailing_name} #{item.user_name || item.user.try(:name)}"
+            latest_backup = backup_data_updated && @item.updated == backup_data_updated
+            if latest_backup
+              t("history.this_is_latest_html", time: time_tag)
             else
-              id = item.user_name || item.user.try(:name)
+              time_tag
             end
-          elsif item.member_id
-            # メンバーが作成した履歴
-            id = "#{Cms::Member.model_name.human}: #{item.member_name}"
-          end
-        end
+          %>
+        </td>
+        <td class="name">
+          <%=
+            if backup.action == 'replace_urls'
+              id = t("history.options.action.#{backup.action}")
+            else
+              if backup.user_id
+                # ユーザーが作成した履歴
+                group = backup.user ? Cms::Group.site(@cur_site).in(id: backup.user.group_ids).first : nil
+                if group
+                  id = "#{group.trailing_name} #{backup.user_name || backup.user.try(:name)}"
+                else
+                  id = backup.user_name || backup.user.try(:name)
+                end
+              elsif backup.member_id
+                # メンバーが作成した履歴
+                id = "#{Cms::Member.model_name.human}: #{backup.member_name}"
+              end
+            end
 
-        if id
-          tag.span id, style: "margin-left: 0.5em;"
-        end
-      %>
-    </dd>
-  <% end %>
+            if id
+              tag.span id
+            end
+          %>
+        </td>
+        <td class="links">
+          <%= link_to t("ss.links.show"), history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: backup.id), class: "btn" %>
+          <%=
+            unless latest_backup
+              link_to(t('history.compare_backup_to_latest'), history_cms_change_path(source: source, id: backup.id), class: 'btn')
+            end
+          %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%=
+    if @item.backups.count > History.max_histories
+      t("history.n_out_of_m", n: History.max_histories, m: @item.backups.count)
+    else
+      t("history.n_out_of_m", n: @item.backups.count, m: @item.backups.count)
+    end
+  %>
 </dl>
