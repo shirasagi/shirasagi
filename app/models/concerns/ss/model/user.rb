@@ -417,12 +417,13 @@ module SS::Model::User
 
     username = self.ldap_dn
     new_password = self.in_password
-
-    result = Ldap::Connection.change_password(username: username, new_password: new_password)
-    unless result
-      Rails.logger.tagged(username) do
+    Rails.logger.tagged(username) do
+      result = Ldap::Connection.change_password(username: username, new_password: new_password)
+      unless result
         Rails.logger.warn { I18n.t("ldap.errors.update_ldap_password") }
       end
+    rescue => e
+      Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     end
   end
 end
