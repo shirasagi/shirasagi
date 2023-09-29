@@ -50,8 +50,8 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
 
   def history_summary
     h = []
-    h << "#{t("file_label")}: #{file_label}" if file_label.present?
-    h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}"
+    h << "#{t("date")}: #{I18n.l(date.to_date, format: :long)}" if date.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
     h.join(",")
   end
 
