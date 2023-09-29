@@ -90,11 +90,21 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.select = function (item) {
-    var selector = this.anchorAjaxBox.data('on-select');
+    var self = this;
+    var selector = self.anchorAjaxBox.data('on-select');
     if (selector) {
       return selector(item);
     } else {
-      return this.defaultSelector(item);
+      if (!selectTable) {
+        if (item.closest("[data-id]").find(".to-checkbox")[0]) {
+          selectTable = "to";
+        }
+      }
+      var result = this.defaultSelector(item);
+      if (selectTable === "to") {
+        self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+      }
+      return result;
     }
   };
 
@@ -281,15 +291,12 @@ this.SS_SearchUI = (function () {
       for (var i = 0; i < toSelected.length; i++) {
         toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
       }
-      ;
       for (var i = 0; i < ccSelected.length; i++) {
         ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
       }
-      ;
       for (var i = 0; i < bcSelected.length; i++) {
         bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
       }
-      ;
       tr.find(".checkbox input[type=checkbox]").remove();
       tr.find(".select-item,.select-single-item").each(function () {
         var $this = $(this);
@@ -304,15 +311,12 @@ this.SS_SearchUI = (function () {
       for (var i = 0; i < toSelected.length; i++) {
         toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
       }
-      ;
       for (var i = 0; i < ccSelected.length; i++) {
         ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
       }
-      ;
       for (var i = 0; i < bcSelected.length; i++) {
         bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
       }
-      ;
     });
     $el.find("table.index").each(function () {
       SS_ListUI.render(this);
