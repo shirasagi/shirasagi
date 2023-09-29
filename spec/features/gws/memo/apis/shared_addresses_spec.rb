@@ -46,16 +46,14 @@ describe Gws::Memo::Apis::SharedAddressesController, type: :feature, dbscope: :e
   end
 
   before do
-    @save = described_class::MAX_ITEMS_PER_PAGE
-    described_class.send(:remove_const, :MAX_ITEMS_PER_PAGE)
-    described_class.const_set(:MAX_ITEMS_PER_PAGE, 5)
+    @save = SS.max_items_per_page
+    SS.max_items_per_page = 5
 
     login_gws_user
   end
 
   after do
-    described_class.send(:remove_const, :MAX_ITEMS_PER_PAGE)
-    described_class.const_set(:MAX_ITEMS_PER_PAGE, @save)
+    SS.max_items_per_page = @save
   end
 
   describe "tab and pagination" do
@@ -63,7 +61,7 @@ describe Gws::Memo::Apis::SharedAddressesController, type: :feature, dbscope: :e
       visit gws_memo_messages_path(site: site, folder: "INBOX")
       click_on I18n.t("ss.links.new")
 
-      within "dl.to" do
+      within 'dl.see.all' do
         wait_cbox_open { click_on I18n.t("modules.gws/shared_address") }
       end
 

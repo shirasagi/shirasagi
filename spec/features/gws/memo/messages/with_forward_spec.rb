@@ -37,7 +37,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("webmail.links.show_cc_bcc")
 
           wait_cbox_open do
-            within target do
+            within 'dl.see.all' do
               click_on I18n.t('gws.organization_addresses')
             end
           end
@@ -45,11 +45,12 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
         wait_for_cbox do
           expect(page).to have_content(recipient.name)
-          wait_cbox_close { click_on recipient.name }
+          check "#{target}_ids#{recipient.id}"
+          wait_cbox_close { click_on I18n.t('ss.links.select') }
         end
 
         within 'form#item-form' do
-          within target do
+          within "dl.see.#{target}" do
             expect(page).to have_css(".index", text: recipient.name)
           end
           fill_in 'item[subject]', with: subject
@@ -96,7 +97,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           url += "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}"
           expect(mail.body.raw_source).to include(url)
 
-          if target != 'dl.see.bcc'
+          if target != 'bcc'
             expect(mail.body.raw_source).to include(recipient.name + "\r\n")
           end
           expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
@@ -105,17 +106,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     end
 
     context "when to is given" do
-      let(:target) { 'dl.see.to' }
+      let(:target) { 'to' }
       it_behaves_like "save as draft and send"
     end
 
     context "when cc is given" do
-      let(:target) { 'dl.see.cc' }
+      let(:target) { 'cc' }
       it_behaves_like "save as draft and send"
     end
 
     context "when bcc is given" do
-      let(:target) { 'dl.see.bcc' }
+      let(:target) { 'bcc' }
       it_behaves_like "save as draft and send"
     end
   end
