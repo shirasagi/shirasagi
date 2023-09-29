@@ -82,9 +82,12 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
     end
 
     context "clone" do
-      subject { create(:gws_schedule_plan).new_clone }
+      let!(:source) { create(:gws_schedule_plan) }
+      subject! { source.new_clone }
+
       it do
-        expect(subject.id.blank?).to be_truthy
+        expect(subject).to be_new_record
+        expect(subject.id).not_to eq source.id
         expect(subject.user_id.blank?).to be_truthy
         expect(subject.cur_user.present?).to be_truthy
         expect(subject.cur_site.present?).to be_truthy

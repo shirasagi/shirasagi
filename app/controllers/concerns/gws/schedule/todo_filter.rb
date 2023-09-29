@@ -264,6 +264,16 @@ module Gws::Schedule::TodoFilter
   def copy
     set_item
     @item = @item.new_clone
-    render template: "new"
+    if request.get? || request.head?
+      render template: "copy"
+      return
+    end
+
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    return render_update(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    result = @item.save
+    render_update result, location: url_for(action: :show, id: @item.id)
   end
 end
