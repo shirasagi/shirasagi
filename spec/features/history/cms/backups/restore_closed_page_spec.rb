@@ -67,7 +67,10 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      click_link I18n.l(backup_item1.created, format: :picker)
+      within "[data-id='#{backup_item1.id}']" do
+        expect(page).to have_content(I18n.l(backup_item1.data[:updated].in_time_zone, format: :picker))
+        click_on I18n.t("ss.links.show")
+      end
       expect(current_path).not_to eq sns_login_path
 
       expect(page).not_to have_link(I18n.t("history.restore"))
@@ -82,7 +85,10 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      click_link I18n.l(backup_item2.created, format: :picker)
+      within "[data-id='#{backup_item2.id}']" do
+        expect(page).to have_content(I18n.l(backup_item2.data[:updated].in_time_zone, format: :picker))
+        click_on I18n.t("ss.links.show")
+      end
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")
@@ -91,7 +97,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       click_button I18n.t("history.buttons.restore")
       expect(current_path).to eq show2_path
 
-      click_link "詳細を見る"
+      click_link I18n.t('ss.links.back')
       expect(current_path).to eq page2_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)
