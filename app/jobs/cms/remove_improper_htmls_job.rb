@@ -119,7 +119,8 @@ class Cms::RemoveImproperHtmlsJob < Cms::ApplicationJob
       from: "shirasagi@" + site.domain.sub(/:.*/, ""),
       to: @email,
       subject: "[#{site.name}] Remove Improper Htmls: #{@errors.size} errors",
-      body: body
+      body: body,
+      message_id: Cms.generate_message_id(site)
     ).deliver_now
   end
 end
