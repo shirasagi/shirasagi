@@ -2,7 +2,7 @@
   categories = []
   @search_node.st_parent_categories.each do |parent|
     categories << parent
-    categories += Category::Node::Base.site(@cur_site).
+    categories += Category::Node::Base.site(@cur_site).and_public(@cur_date).
       where(filename: /^#{::Regexp.escape(parent.filename)}\//).entries
   end
   category_options = categories.map { |c| [c.name, c.id] }
