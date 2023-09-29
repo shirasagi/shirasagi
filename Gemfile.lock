@@ -600,8 +600,6 @@ GEM
     rubocop-rspec (2.4.0)
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
-    ruby-debug-ide (0.7.3)
-      rake (>= 0.8.1)
     ruby-progressbar (1.13.0)
     ruby-saml (1.15.0)
       nokogiri (>= 1.13.10)
@@ -842,7 +840,6 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails (= 2.11.3)
   rubocop-rspec
-  ruby-debug-ide
   ruby-saml
   rubyzip (~> 2.3.0)
   sass
