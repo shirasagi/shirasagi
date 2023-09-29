@@ -659,16 +659,16 @@ this.Webmail_Mail_Form_Address = (function () {
     data = item.closest("[data-id]");
     dl = self.anchorAjaxBox.closest(".webmail-mail-form-address");
     check_all = self.anchorAjaxBox.closest(".addon-body");
-    if(selectTable === "to") {  field = $(check_all).find("#to")};
-    if(selectTable === "cc") { field = $(check_all).find("#cc") };
-    if(selectTable === "bcc") { field = $(check_all).find("#bcc")} ;
-    if(selectTable === ""){ field = $(dl).find(".autocomplete") };
+    if(selectTable === "to") {  field = $(check_all).find("#to"); }
+    if(selectTable === "cc") { field = $(check_all).find("#cc"); }
+    if(selectTable === "bcc") { field = $(check_all).find("#bcc"); }
+    if(selectTable === ""){ field = $(dl).find(".autocomplete"); }
     label = data.data("email");
     value = data.data("address");
-    if(selectTable === "to") { selected = check_all.find(".webmail-mail-form-address.to .selected-address") };
-    if(selectTable === "cc") { selected = check_all.find(".webmail-mail-form-address.cc-bcc.cc .selected-address") };
-    if(selectTable === "bcc") { selected = check_all.find(".webmail-mail-form-address.cc-bcc.bcc .selected-address") };
-    if(selectTable === "") { selected = dl.find(".selected-address") };
+    if(selectTable === "to") { selected = check_all.find(".webmail-mail-form-address.to .selected-address"); }
+    if(selectTable === "cc") { selected = check_all.find(".webmail-mail-form-address.cc-bcc.cc .selected-address"); }
+    if(selectTable === "bcc") { selected = check_all.find(".webmail-mail-form-address.cc-bcc.bcc .selected-address"); }
+    if(selectTable === "") { selected = dl.find(".selected-address"); }
     if (label === "") {
       return;
     }
@@ -680,7 +680,3 @@ this.Webmail_Mail_Form_Address = (function () {
   return Webmail_Mail_Form_Address;
 
 })();
-
-function convertToHTML(elem){
-  return jQuery('<div>').append(elem.clone(true)).html();
-}

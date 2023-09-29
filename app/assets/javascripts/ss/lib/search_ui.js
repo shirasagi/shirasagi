@@ -2,8 +2,8 @@ this.SS_SearchUI = (function () {
   function SS_SearchUI() {
   }
 
-  var selectTable=null;
-  let toSelected=[],ccSelected=[],bcSelected=[],inSelected=[];
+  var selectTable = null;
+  let toSelected = [], ccSelected = [], bcSelected = [], inSelected = [];
 
   SS_SearchUI.anchorAjaxBox;
 
@@ -29,17 +29,30 @@ this.SS_SearchUI = (function () {
       template = SS_SearchUI.defaultTemplate;
 
       var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
-      if(selectTable === "to"){
-        attr = { name: "item[in_to_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
-      }
-      else if(selectTable === "cc"){
-        attr = { name: "item[in_cc_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
-      }
-      else if(selectTable === "bcc"){
-        attr = { name: "item[in_bcc_members][]", type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
-      }
-      else{
-        attr = { name: $input.attr("name"), type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
+      if (selectTable === "to") {
+        attr = {
+          name: "item[in_to_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "cc") {
+        attr = {
+          name: "item[in_cc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "bcc") {
+        attr = {
+          name: "item[in_bcc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else {
+        attr = {
+          name: $input.attr("name"),
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
       }
     }
 
@@ -49,18 +62,16 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
-   if (selectTable === "to"){
-    var $ajaxSelected =self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
-    }
-    else if (selectTable === "cc"){
-      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
-    }
-     else if (selectTable === "bcc"){
-      var $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
-    }
-    else{
-      var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var $ajaxSelected;
+    if (selectTable === "to") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+    } else if (selectTable === "cc") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+    } else if (selectTable === "bcc") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+    } else {
+      $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     }
 
     $ajaxSelected.find("tbody").prepend(tr);
@@ -88,7 +99,7 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.selectItems = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
     var self = this;
@@ -96,7 +107,7 @@ this.SS_SearchUI = (function () {
       selectTable = "to";
       self.select($(this));
     });
-    if(selectTable === "to"){
+    if (selectTable === "to") {
       self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
     }
 
@@ -104,7 +115,7 @@ this.SS_SearchUI = (function () {
       selectTable = "cc";
       self.select($(this));
     });
-    if(selectTable === "cc"){
+    if (selectTable === "cc") {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
     }
 
@@ -112,10 +123,10 @@ this.SS_SearchUI = (function () {
       selectTable = "bcc";
       self.select($(this));
     });
-    if(selectTable === "bcc"){
+    if (selectTable === "bcc") {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
     }
-    if(selectTable === null){
+    if (selectTable === null) {
       $el.find(".items input:checkbox").filter(":checked").each(function () {
         self.select($(this));
       });
@@ -135,7 +146,7 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.toggleSelectButton = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
 
@@ -172,7 +183,7 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.onColorBoxCleanedUp = function (ev) {
     SS_SearchUI.anchorAjaxBox = null;
-    selectTable=null;
+    selectTable = null;
   };
 
   SS_SearchUI.modal = function (options) {
@@ -187,7 +198,7 @@ this.SS_SearchUI = (function () {
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
-        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        var $div = $("<span />", {class: "loading"}).html(SS.loading);
         $el.find("[type=submit]").after($div);
 
         $(this).ajaxSubmit({
@@ -266,26 +277,44 @@ this.SS_SearchUI = (function () {
     });
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
-      var tr =($("#colorbox .items [data-id='" + id + "']"));
-      for(var i = 0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
-      for(var i = 0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
-      for(var i = 0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
+      var tr = $("#colorbox .items [data-id='" + id + "']");
+      for (var i = 0; i < toSelected.length; i++) {
+        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+      }
+      ;
+      for (var i = 0; i < ccSelected.length; i++) {
+        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      }
+      ;
+      for (var i = 0; i < bcSelected.length; i++) {
+        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      }
+      ;
       tr.find(".checkbox input[type=checkbox]").remove();
-      tr.find(".select-item,.select-single-item").each(function() {
+      tr.find(".select-item,.select-single-item").each(function () {
         var $this = $(this);
         var html = $this.html();
 
-        var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+        var disabledHtml = $("<span />", {class: $this.prop("class"), style: 'color: #888'}).html(html);
         $this.replaceWith(disabledHtml);
       });
     });
     self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
       var id = $(this).data("id");
-      for(var i = 0;i < toSelected.length;i++){ toSelected[i].find(".to-checkbox input[type=checkbox]").remove();};
-      for(var i = 0;i < ccSelected.length;i++){ ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();};
-      for(var i = 0;i < bcSelected.length;i++){ bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();};
+      for (var i = 0; i < toSelected.length; i++) {
+        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+      }
+      ;
+      for (var i = 0; i < ccSelected.length; i++) {
+        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      }
+      ;
+      for (var i = 0; i < bcSelected.length; i++) {
+        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      }
+      ;
     });
-    $el.find("table.index").each(function() {
+    $el.find("table.index").each(function () {
       SS_ListUI.render(this);
     });
     $el.find("a.select-item").on("click", function (ev) {
