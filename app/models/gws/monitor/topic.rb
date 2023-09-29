@@ -1,6 +1,7 @@
 class Gws::Monitor::Topic
   include Gws::Referenceable
   include Gws::Monitor::Postable
+  include Gws::Monitor::Cloneable
   include Gws::Addon::Monitor::Group
   include Gws::Addon::Contributor
   include SS::Addon::Markdown

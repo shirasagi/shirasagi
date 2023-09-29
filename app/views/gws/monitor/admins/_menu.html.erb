@@ -16,7 +16,7 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|categories|forward|destroy_all/ %>
+  <% elsif params[:action] =~ /new|copy|create|lock|categories|forward|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move|publish/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -26,6 +26,7 @@
   <% else %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
       <% if @item.state == 'draft' %>
         <%= link_to t('gws/monitor.links.publish'), action: :publish %>
       <% end %>
