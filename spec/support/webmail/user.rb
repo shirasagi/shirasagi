@@ -33,10 +33,18 @@ end
 
 def login_webmail_admin
   login_user(webmail_admin)
+
+  # rubocop:disable Rails/I18nLocaleAssignment
+  I18n.locale = I18n.default_locale
+  # rubocop:enable Rails/I18nLocaleAssignment
 end
 
 def login_webmail_user
   login_user(webmail_user)
+
+  # rubocop:disable Rails/I18nLocaleAssignment
+  I18n.locale = I18n.default_locale
+  # rubocop:enable Rails/I18nLocaleAssignment
 end
 
 def webmail_imap
@@ -47,6 +55,10 @@ end
 def login_webmail_imap
   raise "not supported in imap: false" if SS::WebmailSupport.test_by.blank?
   login_user(webmail_imap)
+
+  # rubocop:disable Rails/I18nLocaleAssignment
+  I18n.locale = I18n.default_locale
+  # rubocop:enable Rails/I18nLocaleAssignment
 end
 
 def create_webmail_users
