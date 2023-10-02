@@ -3,7 +3,7 @@ this.SS_SearchUI = (function () {
   }
 
   var selectTable = null;
-  let toSelected = [], ccSelected = [], bcSelected = [], inSelected = [];
+  let toSelected = [], ccSelected = [], bcSelected = [];
 
   SS_SearchUI.anchorAjaxBox;
 
@@ -288,13 +288,14 @@ this.SS_SearchUI = (function () {
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
       var tr = $("#colorbox .items [data-id='" + id + "']");
-      for (var i = 0; i < toSelected.length; i++) {
+      var i;
+      for (i = 0; i < toSelected.length; i++) {
         toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
       }
-      for (var i = 0; i < ccSelected.length; i++) {
+      for (i = 0; i < ccSelected.length; i++) {
         ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
       }
-      for (var i = 0; i < bcSelected.length; i++) {
+      for (i = 0; i < bcSelected.length; i++) {
         bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
       }
       tr.find(".checkbox input[type=checkbox]").remove();
@@ -307,14 +308,14 @@ this.SS_SearchUI = (function () {
       });
     });
     self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      for (var i = 0; i < toSelected.length; i++) {
+      var i;
+      for (i = 0; i < toSelected.length; i++) {
         toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
       }
-      for (var i = 0; i < ccSelected.length; i++) {
+      for (i = 0; i < ccSelected.length; i++) {
         ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
       }
-      for (var i = 0; i < bcSelected.length; i++) {
+      for (i = 0; i < bcSelected.length; i++) {
         bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
       }
     });
