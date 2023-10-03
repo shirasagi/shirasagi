@@ -11,9 +11,19 @@ production: &production
   exclude_groups:
     - Group
     - People
+  # whether to synchronize LDAP password when changing SHIRASAGI password.
+  # * enable: synchronize LDAP password
+  # * disable: not to synchronize LDAP password
+  sync_password: disable
+  # be sure to set ldap admin user and password if you want to synchronize password with ldap.
+  #admin_user: cn=admin,dc=example,dc=jp
+  #admin_password: admin
 
 test:
   <<: *production
+  sync_password: enable
+  admin_user: cn=admin,dc=example,dc=jp
+  admin_password: admin
 
 development:
   <<: *production

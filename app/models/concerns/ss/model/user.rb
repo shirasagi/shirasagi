@@ -84,6 +84,7 @@ module SS::Model::User
     validate :validate_account_expiration_date
 
     after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
+    after_save :change_ldap_password
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     default_scope -> {
@@ -407,5 +408,22 @@ module SS::Model::User
       dec_group_ids: (group_ids_changes[0].to_a - group_ids_changes[1].to_a)
     )
     item.save
+  end
+
+  def change_ldap_password
+    return true if SS.config.ldap.sync_password != "enable"
+    return true if self.ldap_dn.blank?
+    return true if self.in_password.blank?
+
+    username = self.ldap_dn
+    new_password = self.in_password
+    Rails.logger.tagged(username) do
+      result = Ldap::Connection.change_password(username: username, new_password: new_password)
+      unless result
+        Rails.logger.warn { I18n.t("ldap.errors.update_ldap_password") }
+      end
+    rescue => e
+      Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    end
   end
 end
