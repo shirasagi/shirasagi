@@ -1,4 +1,4 @@
-class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
+class Gws::Memo::Apis::PersonalMultiCheckboxesController < ApplicationController
   include Gws::ApiFilter
 
   model Webmail::Address

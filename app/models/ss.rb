@@ -5,6 +5,8 @@ module SS
 
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
+  mattr_accessor(:max_items_per_page) { 50 }
+
   def change_locale_and_timezone(user)
     if user.nil?
       SS.reset_locale_and_timezone

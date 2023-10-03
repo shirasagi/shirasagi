@@ -20,7 +20,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.new')
 
         within 'form#item-form' do
-          within 'dl.see.to' do
+          within 'dl.see.all' do
             wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
           end
         end
@@ -67,7 +67,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.new')
 
         within 'form#item-form' do
-          within 'dl.see.to' do
+          within 'dl.see.all' do
             wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end

@@ -23,17 +23,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -41,7 +44,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_no_content(subject)
 
       if filter.action == "trash"
@@ -70,17 +73,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         select 'HTML'
         fill_in_ckeditor "item[html]", with: body
@@ -89,7 +95,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_no_content(subject)
 
       if filter.action == "trash"
@@ -119,17 +125,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -137,7 +146,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_no_content(subject)
 
       if filter.action == "trash"
@@ -167,17 +176,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -185,7 +197,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_no_content(subject)
 
       if filter.action == "trash"
@@ -215,17 +227,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -233,7 +248,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_no_content(subject)
 
       if filter.action == "trash"
@@ -263,17 +278,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -281,7 +299,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_no_content(subject)
 
       if filter.action == "trash"
@@ -311,17 +329,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -329,7 +350,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
       expect(page).to have_content(subject)
 
       if filter.action == "trash"
@@ -359,17 +380,20 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
 
-        within 'dl.see.to' do
+        within 'dl.see.all' do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
 
       wait_for_cbox do
         expect(page).to have_content(gws_user.name)
-        click_on gws_user.name
+        wait_cbox_close { click_on gws_user.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: gws_user.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: body
 
@@ -377,7 +401,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.send")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+      wait_for_notice I18n.t("ss.notice.sent")
 
       visit gws_memo_messages_path(site)
       expect(page).to have_content(subject)

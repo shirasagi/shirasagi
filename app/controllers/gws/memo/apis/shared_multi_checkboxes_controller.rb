@@ -1,10 +1,10 @@
-class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
+class Gws::Memo::Apis::SharedMultiCheckboxesController < ApplicationController
   include Gws::ApiFilter
 
-  model Webmail::Address
+  model Gws::SharedAddress::Address
 
   before_action :set_fragment
-  before_action :set_webmail_address_group
+  before_action :set_group
   before_action :set_multi
   before_action :set_inherit_params
 
@@ -14,12 +14,12 @@ class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
     @fragment = params[:fragment].to_s
   end
 
-  def set_webmail_address_group
+  def set_group
     if params[:s].present? && params[:s][:group].present?
-      @address_group = Webmail::AddressGroup.user(@cur_user).find(params[:s][:group]) rescue nil
+      @address_group = Gws::SharedAddress::Group.find(params[:s][:group]) rescue nil
     end
 
-    @groups = Webmail::AddressGroup.user(@cur_user)
+    @groups = Gws::SharedAddress::Group.site(@cur_site).readable(@cur_user, site: @cur_site)
   end
 
   def set_multi
@@ -33,16 +33,15 @@ class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
   public
 
   def index
-    raise "403" unless @cur_user.gws_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses)
-
     s_params = params[:s] || {}
     s_params[:address_group_id] = @address_group.id if @address_group.present?
 
     s_group_params = params[:s_group] || {}
 
-    @items = @model.
-      user(@cur_user).
+    @items = @model.site(@cur_site).
       and_has_member.
+      readable(@cur_user, site: @cur_site).
+      without_deleted.
       search(s_params).
       page(params[:page]).
       per(SS.max_items_per_page)

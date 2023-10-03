@@ -1,20 +1,16 @@
-class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
-  include Gws::ApiFilter
+class Webmail::Apis::MultiCheckboxesController < ApplicationController
+  include Sns::BaseFilter
+  include SS::AjaxFilter
 
   model Webmail::Address
 
-  before_action :set_fragment
-  before_action :set_webmail_address_group
+  before_action :set_group
   before_action :set_multi
   before_action :set_inherit_params
 
   private
 
-  def set_fragment
-    @fragment = params[:fragment].to_s
-  end
-
-  def set_webmail_address_group
+  def set_group
     if params[:s].present? && params[:s][:group].present?
       @address_group = Webmail::AddressGroup.user(@cur_user).find(params[:s][:group]) rescue nil
     end
@@ -33,20 +29,14 @@ class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
   public
 
   def index
-    raise "403" unless @cur_user.gws_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses)
-
     s_params = params[:s] || {}
     s_params[:address_group_id] = @address_group.id if @address_group.present?
 
-    s_group_params = params[:s_group] || {}
-
     @items = @model.
       user(@cur_user).
-      and_has_member.
+      and_has_email.
       search(s_params).
       page(params[:page]).
-      per(SS.max_items_per_page)
-
-    @group_items = @groups.search(s_group_params).page(params[:group_page]).per(SS.max_items_per_page)
+      per(50)
   end
 end

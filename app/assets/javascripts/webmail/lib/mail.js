@@ -641,18 +641,38 @@ this.Webmail_Mail_Form_Address = (function () {
   function Webmail_Mail_Form_Address() {
   }
 
+  var selectTable=null;
+
   Webmail_Mail_Form_Address.select = function (item) {
-    var data, dl, field, label, selected, self, span, value;
     self = this;
+    var item_html = jQuery('<div>').append(item.clone(true)).html()
+    var data, dl, field, label, selected, self, span, value, check_all;
+    if(item_html.indexOf("to_ids") > 0){
+      selectTable="to";
+    }
+    if(item_html.indexOf("cc_ids") > 0){
+      selectTable="cc";
+    }
+    if(item_html.indexOf("bcc_ids") > 0){
+      selectTable="bcc";
+    }
     data = item.closest("[data-id]");
     dl = self.anchorAjaxBox.closest(".webmail-mail-form-address");
-    field = $(dl).find(".autocomplete");
+    check_all = self.anchorAjaxBox.closest(".addon-body");
+    if(selectTable === "to") {  field = $(check_all).find("#to"); }
+    if(selectTable === "cc") { field = $(check_all).find("#cc"); }
+    if(selectTable === "bcc") { field = $(check_all).find("#bcc"); }
+    if(selectTable === ""){ field = $(dl).find(".autocomplete"); }
     label = data.data("email");
     value = data.data("address");
-    selected = dl.find(".selected-address");
+    if(selectTable === "to") { selected = check_all.find(".webmail-mail-form-address.to .selected-address"); }
+    if(selectTable === "cc") { selected = check_all.find(".webmail-mail-form-address.cc-bcc.cc .selected-address"); }
+    if(selectTable === "bcc") { selected = check_all.find(".webmail-mail-form-address.cc-bcc.bcc .selected-address"); }
+    if(selectTable === "") { selected = dl.find(".selected-address"); }
     if (label === "") {
       return;
     }
+    selectTable=null
     span = Webmail_Address_Autocomplete.createSelectedElement(field.attr("data-name"), value, label);
     return selected.append(span);
   };
@@ -660,4 +680,3 @@ this.Webmail_Mail_Form_Address = (function () {
   return Webmail_Mail_Form_Address;
 
 })();
-

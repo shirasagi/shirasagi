@@ -2,6 +2,9 @@ this.SS_SearchUI = (function () {
   function SS_SearchUI() {
   }
 
+  var selectTable = null;
+  let toSelected = [], ccSelected = [], bcSelected = [];
+
   SS_SearchUI.anchorAjaxBox;
 
   SS_SearchUI.defaultTemplate = " \
@@ -26,7 +29,31 @@ this.SS_SearchUI = (function () {
       template = SS_SearchUI.defaultTemplate;
 
       var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
-      attr = { name: $input.attr("name"), type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
+      if (selectTable === "to") {
+        attr = {
+          name: "item[in_to_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "cc") {
+        attr = {
+          name: "item[in_cc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "bcc") {
+        attr = {
+          name: "item[in_bcc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else {
+        attr = {
+          name: $input.attr("name"),
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      }
     }
 
     var $data = $item.closest("[data-id]");
@@ -35,9 +62,18 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
+    var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var $ajaxSelected;
+    if (selectTable === "to") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+    } else if (selectTable === "cc") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+    } else if (selectTable === "bcc") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+    } else {
+      $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    }
 
-    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     $ajaxSelected.find("tbody").prepend(tr);
     $ajaxSelected.trigger("change");
   };
@@ -54,23 +90,58 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.select = function (item) {
-    var selector = this.anchorAjaxBox.data('on-select');
+    var self = this;
+    var selector = self.anchorAjaxBox.data('on-select');
     if (selector) {
       return selector(item);
     } else {
-      return this.defaultSelector(item);
+      if (!selectTable) {
+        if (item.closest("[data-id]").find(".to-checkbox")[0]) {
+          selectTable = "to";
+        }
+      }
+      var result = this.defaultSelector(item);
+      if (selectTable === "to") {
+        self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+      }
+      return result;
     }
   };
 
   SS_SearchUI.selectItems = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
     var self = this;
-    $el.find(".items input:checkbox").filter(":checked").each(function () {
+    $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "to";
       self.select($(this));
     });
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+    if (selectTable === "to") {
+      self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+    }
+
+    $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "cc";
+      self.select($(this));
+    });
+    if (selectTable === "cc") {
+      self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
+    }
+
+    $el.find(".items .bcc-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "bcc";
+      self.select($(this));
+    });
+    if (selectTable === "bcc") {
+      self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
+    }
+    if (selectTable === null) {
+      $el.find(".items input:checkbox").filter(":checked").each(function () {
+        self.select($(this));
+      });
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+    }
   };
 
   SS_SearchUI.deselect = function (e) {
@@ -85,7 +156,7 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.toggleSelectButton = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
 
@@ -122,6 +193,7 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.onColorBoxCleanedUp = function (ev) {
     SS_SearchUI.anchorAjaxBox = null;
+    selectTable = null;
   };
 
   SS_SearchUI.modal = function (options) {
@@ -136,7 +208,7 @@ this.SS_SearchUI = (function () {
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
-        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        var $div = $("<span />", {class: "loading"}).html(SS.loading);
         $el.find("[type=submit]").after($div);
 
         $(this).ajaxSubmit({
@@ -186,22 +258,68 @@ this.SS_SearchUI = (function () {
     });
 
     var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    var $toAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+    var $ccAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+    var $bcAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
     if (!$ajaxSelected.length) {
       $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
     }
+    if (!$toAjaxSelected.length) {
+      $toAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    if (!$ccAjaxSelected.length) {
+      $ccAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    if (!$bcAjaxSelected.length) {
+      $bcAjaxSelected = self.anchorAjaxBox.parent().find("see.cc-bcc.bcc .ajax-selected");
+    }
+    $toAjaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      toSelected.push($("#colorbox .items [data-id='" + id + "']"));
+    });
+    $ccAjaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      ccSelected.push($("#colorbox .items [data-id='" + id + "']"));
+    });
+    $bcAjaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      bcSelected.push($("#colorbox .items [data-id='" + id + "']"));
+    });
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
       var tr = $("#colorbox .items [data-id='" + id + "']");
-      tr.find("input[type=checkbox]").remove();
-      tr.find(".select-item,.select-single-item").each(function() {
+      var i;
+      for (i = 0; i < toSelected.length; i++) {
+        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < ccSelected.length; i++) {
+        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < bcSelected.length; i++) {
+        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      }
+      tr.find(".checkbox input[type=checkbox]").remove();
+      tr.find(".select-item,.select-single-item").each(function () {
         var $this = $(this);
         var html = $this.html();
 
-        var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+        var disabledHtml = $("<span />", {class: $this.prop("class"), style: 'color: #888'}).html(html);
         $this.replaceWith(disabledHtml);
       });
     });
-    $el.find("table.index").each(function() {
+    self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
+      var i;
+      for (i = 0; i < toSelected.length; i++) {
+        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < ccSelected.length; i++) {
+        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < bcSelected.length; i++) {
+        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      }
+    });
+    $el.find("table.index").each(function () {
       SS_ListUI.render(this);
     });
     $el.find("a.select-item").on("click", function (ev) {
@@ -254,4 +372,3 @@ this.SS_SearchUI = (function () {
   return SS_SearchUI;
 
 })();
-
