@@ -3,7 +3,7 @@
     <tr>
       <th></th>
       <th colspan="2"><%= I18n.t('history.before_state') %></th>
-      <th colspan="2"><%= I18n.t('history.current_state') %></th>
+      <th colspan="2"><%= t('history.current_state_html', latest_notice: @data[:updated].try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }) %></th>
     </tr>
     <% diff = @item.data.merge(@data).sort %>
     <% diff.each do |k, v| %>

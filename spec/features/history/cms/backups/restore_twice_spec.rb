@@ -44,10 +44,13 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       it do
         visit page_path
-        click_link I18n.l(backup_item.created, format: :picker)
+        within "[data-id='#{backup_item.id}']" do
+          expect(page).to have_content(I18n.l(backup_item.data[:updated].in_time_zone, format: :picker))
+          click_on I18n.t("ss.links.show")
+        end
 
-        click_link I18n.t("history.restore")
-        click_button I18n.t("history.buttons.restore")
+        click_on I18n.t("history.restore")
+        click_on I18n.t("history.buttons.restore")
 
         expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
       end
@@ -67,10 +70,13 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       it do
         visit page_path
-        click_link I18n.l(backup_item.created, format: :picker)
+        within "[data-id='#{backup_item.id}']" do
+          expect(page).to have_content(I18n.l(backup_item.data[:updated].in_time_zone, format: :picker))
+          click_on I18n.t("ss.links.show")
+        end
 
-        click_link I18n.t("history.restore")
-        click_button I18n.t("history.buttons.restore")
+        click_on I18n.t("history.restore")
+        click_on I18n.t("history.buttons.restore")
 
         expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
       end

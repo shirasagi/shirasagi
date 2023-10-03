@@ -54,7 +54,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       visit show_path
       expect(current_path).not_to eq sns_login_path
 
-      click_link I18n.t("ss.links.show")
+      click_link I18n.t("ss.links.back")
       expect(current_path).to eq page_path
     end
 
@@ -68,7 +68,9 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_no_css('div.file-view', text: file2.name)
       expect(page).to have_no_css('div.file-view', text: file3.name)
 
-      click_link I18n.t('history.compare_before_state')
+      within "[data-id='#{backup_item.id}']" do
+        click_link I18n.t('history.compare_backup_to_latest')
+      end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css('th', text: page_item.t(:name))
       expect(page).to have_css('th', text: page_item.t(:state))
@@ -98,7 +100,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
         expect(task.state).to eq "completed"
       end
 
-      click_link I18n.t('ss.links.show')
+      click_link I18n.t('ss.links.back')
       expect(current_path).to eq page_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)
