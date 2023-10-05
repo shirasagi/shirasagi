@@ -19,7 +19,14 @@
       <tr data-id="<%= k %>">
         <th><%= field_name %></th>
         <td class="<%= 'diff' if @data[k] != v %>">
-          <%= v.present? ? v.inspect : "" %>
+          <%=
+            case v
+            when Time, DateTime
+              v.in_time_zone.iso8601
+            else
+              v.present? ? v.inspect : ""
+            end
+          %>
         </td>
       </tr>
     <% end %>
