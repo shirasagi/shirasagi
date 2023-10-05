@@ -1,24 +1,44 @@
 <div class="main-box">
   <div>
     <%=
-      current_notice = (@item.data[:updated] || @item.created).try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }
-      latest_notice = @data[:updated].try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }
-      t("history.compare_backup_notice_html", current_notice: current_notice, latest_notice: latest_notice)
+      current_notice = (item.data[:updated] || item.created).try do |updated|
+        time_tag = ss_time_tag(updated, format: :picker)
+        if ref_item && ref_item.updated == updated
+          "(#{t("history.this_is_latest_html", time: time_tag)})".html_safe
+        else
+          "(#{time_tag})".html_safe
+        end
+      end
+      t("history.current_backup_notice_html", version: current_notice)
+    %>
+
+    <%=
+      if compare_to_item
+        latest_notice = (compare_to_item.data[:updated] || compare_to_item.created).try do |updated|
+          time_tag = ss_time_tag(updated, format: :picker)
+          if ref_item && ref_item.updated == updated
+            t("history.this_is_latest_html", time: time_tag)
+          else
+            "(#{time_tag})".html_safe
+          end
+        end
+        t("history.compare_to_backup_notice_html", version: latest_notice)
+      end
     %>
   </div>
   <table class="see index history-backup">
     <tbody>
-    <% @item.data.sort.each do |k, v| %>
+    <% item.data.sort.each do |k, v| %>
       <%
-        if @item.ref_item
-          field_name = @item.ref_item.class.t(k)
+        if ref_item
+          field_name = ref_item.class.t(k)
         else
           field_name = k
         end
       %>
       <tr data-id="<%= k %>">
         <th><%= field_name %></th>
-        <td class="<%= 'diff' if @data[k] != v %>">
+        <td class="<%= 'diff' if compare_to_item && compare_to_item.data[k] != v %>">
           <%=
             case v
             when Time, DateTime

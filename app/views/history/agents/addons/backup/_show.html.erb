@@ -1,7 +1,7 @@
 <%
   return render(plain: "") if @item.backups.size == 0
   source = ERB::Util.url_encode(request.path)
-  top_backups = @item.backups.limit(History.max_histories)
+  top_backups = @item.backups.limit(History.max_histories).to_a
 %>
 <dl class="see">
   <table class="index history-backup-table">
@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-    <% top_backups.each do |backup| %>
+    <% top_backups.each_with_index do |backup, index| %>
       <tr class="list-item" data-id="<%= backup.id %>">
         <td class="created">
           <%=
@@ -53,7 +53,7 @@
           %>
         </td>
         <td class="links">
-          <%= link_to t("ss.links.show"), history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: backup.id), class: "btn" %>
+          <%= link_to t("ss.links.show"), history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: backup.id, compare_to: top_backups[index + 1].try(:id)), class: "btn" %>
           <%=
             unless latest_backup
               link_to(t('history.compare_backup_to_latest'), history_cms_change_path(source: source, id: backup.id), class: 'btn')

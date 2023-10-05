@@ -11,9 +11,10 @@ ja:
     current_state_html: 選択した履歴%{current_notice}
     view_diff: 差分を見る
     compare_backup_to_latest: 最新版との比較
-    compare_backup_notice_html: |-
-      <p>選択した履歴%{current_notice}の内容を表示しています。</p>
-      <p>最新版%{latest_notice}と比較して変更がある項目については、背景の色を変えて表示しています。</p>
+    current_backup_notice_html: |-
+      <p>選択した履歴%{version}の内容を表示しています。</p>
+    compare_to_backup_notice_html: |-
+      <p>直前の履歴%{version}と比較して変更がある項目については、背景の色を変えて表示しています。</p>
     this_is_latest_html: |-
       最新版 (%{time})
     editor_name: 操作ユーザー名
