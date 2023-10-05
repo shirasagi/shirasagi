@@ -7,8 +7,8 @@ en:
     backup: Backup
     current_version: Latest version
     backup_version: Version at time of backup
-    current_state_html: Latest %{latest_notice} state
-    before_state: State before changes
+    latest_state_html: Latest %{latest_notice}
+    current_state_html: Selected %{latest_notice}
     view_diff: View differences
     compare_backup_to_latest: Compare to the latest
     compare_backup_notice_html: |-

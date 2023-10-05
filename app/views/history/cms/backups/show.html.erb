@@ -1,5 +1,11 @@
 <div class="main-box">
-  <div><%= t("history.compare_backup_notice_html", latest_notice: @data[:updated].try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }) %></div>
+  <div>
+    <%=
+      current_notice = (@item.data[:updated] || @item.created).try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }
+      latest_notice = @data[:updated].try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }
+      t("history.compare_backup_notice_html", current_notice: current_notice, latest_notice: latest_notice)
+    %>
+  </div>
   <table class="see index history-backup">
     <tbody>
     <% @item.data.sort.each do |k, v| %>

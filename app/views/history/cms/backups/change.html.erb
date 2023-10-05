@@ -2,8 +2,18 @@
   <table class="see index history-backup">
     <tr>
       <th></th>
-      <th colspan="2"><%= I18n.t('history.before_state') %></th>
-      <th colspan="2"><%= t('history.current_state_html', latest_notice: @data[:updated].try { |updated| "(#{ss_time_tag(updated, format: :picker)})".html_safe }) %></th>
+      <th colspan="2">
+        <%=
+          current_notice = (@item.data[:updated] || @item.created).try { |time| "(#{ss_time_tag(time.in_time_zone, format: :picker)})".html_safe }
+          t('history.current_state_html', current_notice: current_notice)
+        %>
+      </th>
+      <th colspan="2">
+        <%=
+          latest_notice = @data[:updated].try { |time| "(#{ss_time_tag(time.in_time_zone, format: :picker)})".html_safe }
+          t('history.latest_state_html', latest_notice: latest_notice)
+        %>
+      </th>
     </tr>
     <% diff = @item.data.merge(@data).sort %>
     <% diff.each do |k, v| %>
