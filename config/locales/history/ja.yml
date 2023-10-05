@@ -7,10 +7,11 @@ ja:
     backup: バックアップ
     current_version: 現在のバージョン
     backup_version: バックアップ時のバージョン
-    latest_state_html: 最新版%{latest_notice}
+    compare_to_state_html: 比較した履歴%{version}
     current_state_html: 選択した履歴%{current_notice}
     view_diff: 差分を見る
     compare_backup_to_latest: 最新版との比較
+    compare_backup_to_previsous: 直前との比較
     current_backup_notice_html: |-
       <p>選択した履歴%{version}の内容を表示しています。</p>
     compare_to_backup_notice_html: |-

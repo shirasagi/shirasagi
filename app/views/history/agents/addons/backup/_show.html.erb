@@ -55,10 +55,18 @@
         <td class="links">
           <%= link_to t("ss.links.show"), history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: backup.id, compare_to: top_backups[index + 1].try(:id)), class: "btn" %>
           <%=
+            if top_backups[index + 1]
+              link_to(t('history.compare_backup_to_previsous'), history_cms_change_path(source: source, id: backup.id, compare_to: top_backups[index + 1].id), class: 'btn')
+            end
+          %>
+          <!--
+          <%=
+            # 隠し機能として以前の機能を残しておく
             unless latest_backup
               link_to(t('history.compare_backup_to_latest'), history_cms_change_path(source: source, id: backup.id), class: 'btn')
             end
           %>
+          -->
         </td>
       </tr>
     <% end %>

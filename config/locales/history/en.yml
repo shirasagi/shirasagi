@@ -7,10 +7,11 @@ en:
     backup: Backup
     current_version: Latest version
     backup_version: Version at time of backup
-    latest_state_html: Latest %{latest_notice}
+    compare_to_state_html: Compare to %{version}
     current_state_html: Selected %{latest_notice}
     view_diff: View differences
     compare_backup_to_latest: Compare to the latest
+    compare_backup_to_previsous: Compare to the previous
     current_backup_notice_html: |-
       <p>Showing the selected version %{version} の内容を表示しています。</p>
     compare_to_backup_notice_html: |-

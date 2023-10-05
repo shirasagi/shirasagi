@@ -1,29 +1,46 @@
-<% data = item.get %>
 <div class="main-box">
   <table class="see index history-backup">
     <tr>
       <th></th>
       <th colspan="2">
         <%=
-          current_notice = (item.data[:updated] || item.created).try { |time| "(#{ss_time_tag(time.in_time_zone, format: :picker)})".html_safe }
+          current_notice = (item.data[:updated] || item.created).try do |updated|
+            time_tag = ss_time_tag(updated, format: :picker)
+            if ref_item && ref_item.updated == updated
+              "(#{t("history.this_is_latest_html", time: time_tag)})".html_safe
+            else
+              "(#{time_tag})".html_safe
+            end
+          end
           t('history.current_state_html', current_notice: current_notice)
         %>
       </th>
       <th colspan="2">
         <%=
-          latest_notice = data[:updated].try { |time| "(#{ss_time_tag(time.in_time_zone, format: :picker)})".html_safe }
-          t('history.latest_state_html', latest_notice: latest_notice)
+          version = (compare_to_item.data[:updated] || compare_to_item.created).try do |updated|
+            time_tag = ss_time_tag(updated, format: :picker)
+            if ref_item && ref_item.updated == updated
+              "(#{t("history.this_is_latest_html", time: time_tag)})".html_safe
+            else
+              "(#{time_tag})".html_safe
+            end
+          end
+          t('history.compare_to_state_html', version: version)
         %>
       </th>
     </tr>
-    <% diff = @item.data.merge(data).sort %>
-    <% diff.each do |k, v| %>
+    <%
+      keys = item.data.keys | compare_to_item.data.keys
+      keys.sort!
+      item_model = item.model
+    %>
+    <% keys.each do |k| %>
       <%
-        item = History::Cms::Diff.init(@item.model, k, @item.data[k], data[k])
-        next if item.ignore_field?
-        next if !item.diff_exists?
+        diff = History::Cms::Diff.init(item_model, k, item.data[k], compare_to_item.data[k])
+        next if diff.ignore_field?
+        next if !diff.diff_exists?
       %>
-      <%= item.diff_html %>
+      <%= diff.diff_html %>
     <% end %>
   </table>
 </div>
