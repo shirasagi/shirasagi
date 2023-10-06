@@ -7,12 +7,15 @@ en:
     backup: Backup
     current_version: Latest version
     backup_version: Version at time of backup
-    current_state_html: Latest %{latest_notice} state
-    before_state: State before changes
+    compare_to_state_html: Compare to %{version}
+    current_state_html: Selected %{latest_notice}
     view_diff: View differences
     compare_backup_to_latest: Compare to the latest
-    compare_backup_notice_html: |-
-      <p>Settings that have changed compared to the latest version %{latest_notice} are indicated with a different background color.</p>
+    compare_backup_to_previsous: Compare to the previous
+    current_backup_notice_html: |-
+      <p>Showing the selected version %{version} の内容を表示しています。</p>
+    compare_to_backup_notice_html: |-
+      <p>Settings that have changed compared to the previous history %{version} are indicated with a different background color.</p>
     this_is_latest_html: |-
       Latest (%{time})
     editor_name: Editor name

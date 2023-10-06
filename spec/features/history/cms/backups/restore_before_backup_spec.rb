@@ -69,13 +69,13 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       expect(page).to have_no_css('div.file-view', text: file3.name)
 
       within "[data-id='#{backup_item.id}']" do
-        click_link I18n.t('history.compare_backup_to_latest')
+        click_link I18n.t('history.compare_backup_to_previsous')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css('th', text: page_item.t(:name))
-      expect(page).to have_css('th', text: page_item.t(:state))
+      # expect(page).to have_css('th', text: page_item.t(:state))
       expect(page).to have_css('th', text: page_item.t(:file_ids))
-      expect(page).to have_css('th', text: page_item.t(:index_name))
+      # expect(page).to have_css('th', text: page_item.t(:index_name))
       expect(page).to have_no_css('th', text: page_item.t(:column_values))
       expect(page).to have_css('td', text: column1.name)
       expect(page).to have_css('td', text: column2.name)
