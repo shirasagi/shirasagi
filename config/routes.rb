@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     match "login"  => "login#login", as: :login, via: [:get, :post]
     match "remote_login" => "login#remote_login", as: :remote_login, via: [:get, :post]
     get   "redirect" => "login#redirect", as: :redirect
+    get   "login_image" => "login_image#index", as: :login_image
     resources :public_notices, only: [:index, :show] do
       get :frame_content, on: :member
     end
