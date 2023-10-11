@@ -195,6 +195,22 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       # no histories are created for url resources
       expect(Opendata::ResourceDownloadHistory.count).to eq 2
 
+      # Copy resource1 url
+      wait_ajax_html_loaded do
+        visit page_dataset.full_url
+      end
+
+      now = Time.zone.now.beginning_of_minute
+      Timecop.freeze(now) do
+        within ".resource[data-uuid='#{@rs1.uuid}']" do
+          click_on I18n.t("opendata.links.copy_url")
+        end
+      end
+
+      wait_for_download
+      # no histories are created for copy
+      expect(Opendata::ResourceDownloadHistory.count).to eq 2
+
       # Download count is not increased because page renders with cached count
       wait_ajax_html_loaded do
         visit page_dataset.full_url
