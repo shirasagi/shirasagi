@@ -50,6 +50,10 @@ production: &production
   # Upper limit of mail size(byte) on importing mails. 0 is unlimited
   import_mail_size_limit: 0
 
+  # mail edit screen width
+  # default is 50% of browser's inner width
+  mail_edit_screen_width: "{\"ratio\":0.5}"
+
   history:
     save_days: 90
     severity: info
