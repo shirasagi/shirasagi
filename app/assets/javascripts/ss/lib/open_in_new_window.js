@@ -43,7 +43,30 @@ SS_OpenInNewWindow.openInNewWindow = function(el) {
   }
 
   var target = el.dataset["target"] || el.getAttribute("target") || SS_OpenInNewWindow.defaultTarget;
-  var width = el.dataset["width"] || SS_OpenInNewWindow.defaultWidth();
+  // var width = el.dataset["width"] || SS_OpenInNewWindow.defaultWidth();
+  var width;
+  if ("width" in el.dataset) {
+    try {
+      width = JSON.parse(el.dataset["width"]);
+      if (typeof width === "object") {
+        if ("pixel" in width) {
+          width = width.pixel;
+        } else if ("ratio" in width) {
+          width = Math.floor(window.innerWidth * width.ratio);
+        } else if ("screenRatio" in width) {
+          width = Math.floor(window.screen.availWidth * width.screenRatio);
+        } else {
+          width = undefined;
+        }
+      }
+    } catch (_error) {
+      width = undefined;
+    }
+    console.log(width);
+  }
+  if (!width) {
+    width = SS_OpenInNewWindow.defaultWidth();
+  }
   var height = el.dataset["height"] || SS_OpenInNewWindow.defaultHeight();
 
   window.open(href, target, 'resizable=yes,scrollbars=yes,width=' + width + ',height=' + height);
