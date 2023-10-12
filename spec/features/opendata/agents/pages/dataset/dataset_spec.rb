@@ -203,7 +203,9 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       now = Time.zone.now.beginning_of_minute
       Timecop.freeze(now) do
         within ".resource[data-uuid='#{@rs1.uuid}']" do
-          click_on I18n.t("opendata.links.copy_url")
+          page.accept_alert I18n.t("ss.notice.clipboard_copied") do
+            click_on I18n.t("opendata.links.copy_url")
+          end
         end
       end
 
