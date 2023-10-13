@@ -2,6 +2,9 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see mod-article-map-search-result">
+  <dt><%= @model.t :search_map_points_exists %><%= @model.tt :search_map_points_exists %></dt>
+  <dd><%= f.select :search_map_points_exists, @item.search_map_points_exists_options %></dd>
+
   <dt><%= @model.t :map_html %><%= @model.tt :map_html %></dt>
   <dd>
     <%= f.text_area :map_html, style: "height: 200px", class: "html" %>
@@ -28,6 +31,17 @@
   <dd>
     <%= f.text_area :map_marker_liquid, style: "height: 200px", class: "html" %>
     <% if example = @item.form_example_map_marker_liquid %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :result_loop_liquid %><%= @model.tt :result_loop_liquid %></dt>
+  <dd>
+    <%= f.text_area :result_loop_liquid, style: "height: 200px", class: "html" %>
+    <% if example = @item.form_example_result_loop_liquid %>
       <div class="form-example">
         <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
         <div class="form-example-body example-layout-html"><%= example %></div>

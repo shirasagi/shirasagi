@@ -4,11 +4,24 @@ module Article::Addon
     extend SS::Addon
 
     included do
+      field :search_map_points_exists, type: String, default: "enabled"
       field :map_html, type: String
       field :sidebar_loop_liquid, type: String
       field :map_marker_liquid, type: String
+      field :result_loop_liquid, type: String
+      permit_params :search_map_points_exists, :map_html, :sidebar_loop_liquid,
+        :result_loop_liquid, :map_marker_liquid, :map_cluster_state
+    end
 
-      permit_params :map_html, :sidebar_loop_liquid, :map_marker_liquid, :map_cluster_state
+    def search_map_points_exists_options
+      [
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"]
+      ]
+    end
+
+    def search_map_points_exists?
+      search_map_points_exists == "enabled"
     end
 
     def default_map_html
@@ -34,6 +47,18 @@ module Article::Addon
       HTML
     end
 
+    def default_result_loop_liquid
+      <<~HTML
+        {% for page in pages %}
+        <article class="column">
+          <header>
+            <h2 class="name"><a href="{{ page.url }}">{{ page.name }}</a></h2>
+          </header>
+        </article>
+        {% endfor %}
+      HTML
+    end
+
     def default_map_marker_liquid
       <<~HTML
         <div class="marker-info" data-id="{{ page.id }}">
@@ -49,6 +74,10 @@ module Article::Addon
 
     def form_example_sidebar_loop_liquid
       default_sidebar_loop_liquid
+    end
+
+    def form_example_result_loop_liquid
+      default_result_loop_liquid
     end
 
     def form_example_map_marker_liquid

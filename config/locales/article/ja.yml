@@ -73,9 +73,11 @@ ja:
         column_name: 項目名
         column_values: 選択肢
       article/addon/map_search_result:
+        search_map_points_exists: マーカーがある項目のみ
         map_html: 地図HTML
         sidebar_loop_liquid: サイドバーループHTML
         map_marker_liquid: マーカーHTML
+        result_loop_liquid: 一覧ループHTML
       article/addon/search:
         search_node_id: 検索フォルダー
 
@@ -106,6 +108,8 @@ ja:
         検索フォームで使用する項目名と選択肢を設定します。
         選択肢は改行区切りで入力します。
     article/addon/map_search_result:
+      search_map_points_exists: |-
+        有効になっている場合、マーカーがある項目のみが検索結果に表示されます。
       map_html: |-
         検索結果の地図部分のHTMLを記述することが可能です。
         以下のテンプレートが使用できます。
@@ -123,6 +127,10 @@ ja:
         &lt;/div>
       map_marker_liquid: |-
         検索結果の地図マーカーのポップアップHTMLを記述することが可能です。
+        Liquid 形式で記述できます。
+        記入例を参考にHTMLを記述してください。
+      result_loop_liquid: |-
+        検索結果の一覧表示のループHTMLを記述することが可能です。
         Liquid 形式で記述できます。
         記入例を参考にHTMLを記述してください。
     article/addon/search:

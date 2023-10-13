@@ -22,11 +22,15 @@ class Article::Agents::Nodes::MapSearchController < ApplicationController
   end
 
   def set_items
-    @items = pages.
-      search(name: @keyword).
+    @items = pages
+    if @cur_node.search_map_points_exists?
+      @items = @items.where(:map_points.exists => true, :map_points.ne => [])
+    end
+    @items = @items.search(name: @keyword).
       order_by(@cur_node.sort_hash)
 
     @items = @items.select { |item| search_columns(item) }
+    @items_count = @items.count
   end
 
   def search_columns(item)

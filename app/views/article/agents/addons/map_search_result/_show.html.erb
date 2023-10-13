@@ -2,6 +2,9 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
 
 <dl class="see">
+  <dt><%= @model.t :search_map_points_exists %></dt>
+  <dd><%= @item.label :search_map_points_exists %></dd>
+
   <dt><%= @model.t :map_html%></dt>
   <dd><%= text_area_tag "item[map_html]", @item.map_html, style: "height: 200px", class: "html" %></dd>
 
@@ -10,4 +13,7 @@
 
   <dt><%= @model.t :map_marker_liquid %></dt>
   <dd><%= text_area_tag "item[map_marker_liquid]", @item.map_marker_liquid, style: "height: 200px", class: "html" %></dd>
+
+  <dt><%= @model.t :result_loop_liquid %></dt>
+  <dd><%= text_area_tag "item[result_loop_liquid]", @item.result_loop_liquid, style: "height: 200px", class: "html" %></dd>
 </dl>
