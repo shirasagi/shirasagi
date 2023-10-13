@@ -17,7 +17,6 @@ this.SS_SearchUI = (function () {
     </tr>";
 
   SS_SearchUI.defaultSelector = function ($item, $prevSelected) {
-    console.log({ "$prevSelected": $prevSelected });
     var self = this;
 
     var templateId = self.anchorAjaxBox.data("template");
