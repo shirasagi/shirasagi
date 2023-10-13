@@ -2,7 +2,7 @@
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to(t('ss.links.new'), { action: :new }, class: "new ss-open-in-new-window") if @model.allowed?(:edit, @cur_user) %>
+    <%= link_to(t('ss.links.new'), url_for(action: :new), class: "new ss-open-in-new-window", data: { width: SS.config.webmail.mail_edit_screen_width }) if @model.allowed?(:edit, @cur_user) %>
   <% elsif params[:action] =~ /new|create|reply|forward/ %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
