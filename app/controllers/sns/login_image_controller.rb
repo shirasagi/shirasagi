@@ -6,8 +6,6 @@ class Sns::LoginImageController < ApplicationController
 
   layout "ss/login"
 
-  public
-
   def index
     @hide_ss_layout_header = true
   end
