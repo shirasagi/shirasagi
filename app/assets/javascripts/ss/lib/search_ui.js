@@ -129,6 +129,7 @@ this.SS_SearchUI = (function () {
       self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
     }
 
+    $prevSelected = undefined;
     $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
       selectTable = "cc";
       // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
@@ -138,6 +139,7 @@ this.SS_SearchUI = (function () {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
     }
 
+    $prevSelected = undefined;
     $el.find(".items .bcc-checkbox input:checkbox").filter(":checked").each(function () {
       selectTable = "bcc";
       // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
@@ -147,6 +149,7 @@ this.SS_SearchUI = (function () {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
     }
     if (selectTable === null) {
+      $prevSelected = undefined;
       $el.find(".items input:checkbox").filter(":checked").each(function () {
         // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
         $prevSelected = self.select($(this), $prevSelected);
