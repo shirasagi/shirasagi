@@ -16,7 +16,7 @@ this.SS_SearchUI = (function () {
       <td><a class=\"deselect btn\" href=\"#\"><%= label.delete %></a></td> \
     </tr>";
 
-  SS_SearchUI.defaultSelector = function ($item) {
+  SS_SearchUI.defaultSelector = function ($item, $prevSelected) {
     var self = this;
 
     var templateId = self.anchorAjaxBox.data("template");
@@ -63,6 +63,7 @@ this.SS_SearchUI = (function () {
     }
 
     var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var $tr = $(tr);
     var $ajaxSelected;
     if (selectTable === "to") {
       $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
@@ -74,8 +75,13 @@ this.SS_SearchUI = (function () {
       $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
     }
 
-    $ajaxSelected.find("tbody").prepend(tr);
+    if ($prevSelected) {
+      $prevSelected.after($tr);
+    } else {
+      $ajaxSelected.find("tbody").prepend($tr);
+    }
     $ajaxSelected.trigger("change");
+    return $tr;
   };
 
   SS_SearchUI.defaultDeselector = function (item) {
@@ -89,7 +95,7 @@ this.SS_SearchUI = (function () {
     table.trigger("change");
   };
 
-  SS_SearchUI.select = function (item) {
+  SS_SearchUI.select = function (item, prevSelected) {
     var self = this;
     var selector = self.anchorAjaxBox.data('on-select');
     if (selector) {
@@ -100,7 +106,7 @@ this.SS_SearchUI = (function () {
           selectTable = "to";
         }
       }
-      var result = this.defaultSelector(item);
+      var result = this.defaultSelector(item, prevSelected);
       if (selectTable === "to") {
         self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
       }
@@ -113,32 +119,40 @@ this.SS_SearchUI = (function () {
       $el = $("#ajax-box");
     }
     var self = this;
+    var $prevSelected = undefined;
     $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () {
       selectTable = "to";
-      self.select($(this));
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
     });
     if (selectTable === "to") {
       self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
     }
 
+    $prevSelected = undefined;
     $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
       selectTable = "cc";
-      self.select($(this));
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
     });
     if (selectTable === "cc") {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
     }
 
+    $prevSelected = undefined;
     $el.find(".items .bcc-checkbox input:checkbox").filter(":checked").each(function () {
       selectTable = "bcc";
-      self.select($(this));
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
     });
     if (selectTable === "bcc") {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
     }
     if (selectTable === null) {
+      $prevSelected = undefined;
       $el.find(".items input:checkbox").filter(":checked").each(function () {
-        self.select($(this));
+        // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+        $prevSelected = self.select($(this), $prevSelected);
       });
       self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
     }
