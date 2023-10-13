@@ -60,7 +60,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(page).to have_content(user1.long_name)
         find("tr[data-id=\"1,#{user1.id}\"] input[type=checkbox]").click
         find("tr[data-id=\"1,#{user2.id}\"] input[type=checkbox]").click
-        click_on I18n.t("workflow.search_approvers.select")
+        wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
       end
       within ".mod-workflow-request" do
         fill_in "workflow[comment]", with: workflow_comment
@@ -79,7 +79,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(SS::Notification.count).to eq 2
-      notice1 = SS::Notification.all.reorder(created: -1).first
+      notice1 = SS::Notification.all.where(member_ids: user1.id).reorder(created: -1).first
       expect(notice1.group_id).to eq site.id
       expect(notice1.member_ids).to eq [ user1.id ]
       expect(notice1.user_id).to eq gws_user.id
@@ -94,7 +94,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(notice1.reply_module).to be_blank
       expect(notice1.reply_model).to be_blank
       expect(notice1.reply_item_id).to be_blank
-      SS::Notification.all.reorder(created: -1).second.tap do |notice|
+      SS::Notification.all.where(member_ids: user2.id).reorder(created: -1).first.tap do |notice|
         expect(notice.group_id).to eq site.id
         expect(notice.member_ids).to eq [ user2.id ]
         expect(notice.user_id).to eq gws_user.id
