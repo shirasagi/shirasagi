@@ -63,8 +63,8 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     if page.try(:master_id).present?
       page.master = id_page_map[page.master_id]
     end
-    if page.try(:thumb_id).present?
-      page.thumb = id_file_map[page.thumb_id] if id_file_map.key?(page.thumb_id)
+    if page.try(:thumb_id).present? && id_file_map.key?(page.thumb_id)
+      page.thumb = id_file_map[page.thumb_id]
     end
     if page.try(:contact_group_id).present?
       page.contact_group = id_group_map[page.contact_group_id]
