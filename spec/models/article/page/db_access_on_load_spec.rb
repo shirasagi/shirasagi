@@ -71,6 +71,7 @@ describe Article::Page, dbscope: :example do
     raw_bson = Cms::Page.find(page.id).attributes.to_bson.to_s
     attributes = Hash.from_bson(BSON::ByteBuffer.new(raw_bson))
 
+    # ロード時にデータベースアクセスが発生しないことを確認する。
     @subscriber.reset_counter
     Mongoid::Factory.from_db(Cms::Page, attributes)
     expect(@subscriber.db_access_count).to eq 0
