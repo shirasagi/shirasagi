@@ -3902,6 +3902,7 @@ table.check-links-erros {
 }
 .emoji-picker {
   position: absolute;
+  z-index: 100;
   max-width: 480px;
   max-height: 300px;
   overflow-y: scroll;
