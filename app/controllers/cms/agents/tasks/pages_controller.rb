@@ -47,6 +47,79 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     end
   end
 
+  def warmup_page(page)
+    if page.site_id.present?
+      page.site = id_site_map[page.site_id]
+    end
+    if page.layout_id.present?
+      page.layout = id_layout_map[page.layout_id]
+    end
+    if page.try(:user_id).present?
+      page.user = id_user_map[page.user_id]
+    end
+    if page.try(:form_id).present?
+      page.form = id_form_map[page.form_id]
+    end
+    if page.try(:master_id).present?
+      page.master = id_page_map[page.master_id]
+    end
+    if page.try(:thumb_id).present?
+      page.thumb = id_file_map[page.thumb_id] if id_file_map.key?(page.thumb_id)
+    end
+    if page.try(:contact_group_id).present?
+      page.contact_group = id_group_map[page.contact_group_id]
+    end
+    if page.try(:contact_group_id).present?
+      page.contact_group = id_group_map[page.contact_group_id]
+    end
+    if page.try(:column_values).present?
+      page.column_values.each do |column_value|
+        column_value.column = id_column_map[column_value.column_id.to_s]
+      end
+    end
+  end
+
+  def id_site_map
+    @id_site_map ||= Cms::Site.all.to_a.index_by(&:id)
+  end
+
+  def id_layout_map
+    @id_layout_map ||= Cms::Layout.all.site(@site).to_a.index_by(&:id)
+  end
+
+  def id_group_map
+    @id_group_map ||= Cms::Group.all.site(@site).to_a.index_by(&:id)
+  end
+
+  def id_user_map
+    @id_user_map ||= Cms::User.all.site(@site).to_a.index_by(&:id)
+  end
+
+  def id_form_map
+    @id_form_map ||= Cms::Form.all.site(@site).to_a.index_by(&:id)
+  end
+
+  def id_column_map
+    @id_column_map ||= Cms::Column::Base.all.site(@site).to_a.index_by { |column| column.id.to_s }
+  end
+
+  def id_page_map
+    @id_page_map ||= begin
+      criteria = Cms::Page.all.site(@site)
+      criteria.only(:_id, :site_id, :layout_id, :name, :filename, :depth, :redirect_link).to_a.index_by(&:id)
+    end
+  end
+
+  def id_file_map
+    @id_file_map ||= begin
+      id_page_map
+
+      criteria = SS::File.all.in(owner_item_id: @id_page_map.keys)
+      criteria = criteria.only(:_id, :name, :filename, :content_type, :site, :owner_item_type, :owner_item_id)
+      criteria.to_a.index_by(&:id)
+    end
+  end
+
   public
 
   def generate
@@ -62,6 +135,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
         next unless page
 
         @task.performance.collect_page(page) do
+          warmup_page(page)
           result = page.generate_file(release: false, task: @task)
 
           @task.log page.url if result
