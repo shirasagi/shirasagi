@@ -75,6 +75,9 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     if page.try(:column_values).present?
       page.column_values.each do |column_value|
         column_value.column = id_column_map[column_value.column_id.to_s]
+        if column_value.try(:file_id).present?
+          column_value.file = id_file_map[column_value.file_id]
+        end
       end
     end
   end
