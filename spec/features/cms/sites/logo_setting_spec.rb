@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_sites", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "cms_sites", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:logo_application_name) { unique_id }
 
