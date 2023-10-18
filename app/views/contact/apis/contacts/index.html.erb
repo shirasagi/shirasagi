@@ -51,7 +51,7 @@
         <%= tag.tr data: data do %>
           <% if @multi %>
             <td class="checkbox">
-              <input type="checkbox" name="ids[]" value="<%= group.id %>:<%= contact.id %>" />
+              <input type="checkbox" name="ids[]" value="<%= group.id %>:<%= contact.try(:id) %>" />
             </td>
           <% end %>
           <td class="group-name" style="white-space: normal">
