@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Group, type: :model, dbscope: :example, tmpdir: true do
+describe Gws::Group, type: :model, dbscope: :example do
   describe "#sender_address" do
     subject { gws_site }
     let(:sender_name) { unique_id }
