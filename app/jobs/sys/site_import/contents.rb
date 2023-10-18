@@ -42,10 +42,15 @@ module Sys::SiteImport::Contents
               @ss_files_map[file_id]
             end
             if column_value.value.present?
+              value = old_value = column_value.value
               @ss_files_url.each do |src, dst|
                 src_path = /#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
-                column_value.value = column_value.value.gsub(src_path, dst)
+
+                next unless old_value.match?(src_path)
+
+                value = value.gsub(src_path, dst)
               end
+              column_value.value = value if value != old_value
             end
           end
           column_value
