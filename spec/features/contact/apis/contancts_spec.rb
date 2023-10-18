@@ -4,7 +4,7 @@ describe Contact::Apis::ContactsController, type: :feature, dbscope: :example, j
   let!(:site) { cms_site }
   let!(:group0) { cms_group }
   let!(:group1) do
-    contact_groups = 20.times.map do |idx|
+    contact_groups = Array.new(20) do |idx|
       {
         name: "name-#{idx}", contact_group_name: "group_name-#{idx}",
         contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
@@ -15,7 +15,7 @@ describe Contact::Apis::ContactsController, type: :feature, dbscope: :example, j
     create(:contact_group, name: "#{group0.name}/#{unique_id}", contact_groups: contact_groups, order: 1)
   end
   let!(:group2) do
-    contact_groups = 20.times.map do |idx|
+    contact_groups = Array.new(20) do |idx|
       {
         name: "name-#{idx}", contact_group_name: "group_name-#{idx}",
         contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
@@ -26,7 +26,7 @@ describe Contact::Apis::ContactsController, type: :feature, dbscope: :example, j
     create(:contact_group, name: "#{group0.name}/#{unique_id}", contact_groups: contact_groups, order: 2)
   end
   let!(:group3) do
-    contact_groups = 20.times.map do |idx|
+    contact_groups = Array.new(20) do |idx|
       {
         name: "name-#{idx}", contact_group_name: "group_name-#{idx}",
         contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
@@ -34,7 +34,7 @@ describe Contact::Apis::ContactsController, type: :feature, dbscope: :example, j
         main_state: ((idx == 0) ? "main" : nil)
       }
     end
-    create(:contact_group, name: "#{group0.name}/#{unique_id}", contact_groups: contact_groups, order: 2)
+    create(:contact_group, name: "#{group0.name}/#{unique_id}", contact_groups: contact_groups, order: 3)
   end
 
   let!(:index_path) { contact_apis_contacts_path site }
