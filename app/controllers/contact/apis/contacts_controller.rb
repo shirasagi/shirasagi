@@ -44,7 +44,9 @@ class Contact::Apis::ContactsController < ApplicationController
     private
 
     def offset
-      @offset ||= page * limit
+      @offset ||= begin
+        (page > 0) ? (page - 1) * limit : 0
+      end
     end
 
     def stage_default_selector
