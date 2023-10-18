@@ -136,10 +136,11 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def copy_column_settings
     super
 
+    return if self.html_tag.present? && self.html_additional_attr.present?
     return if column.blank?
 
-    self.html_tag = column.html_tag
-    self.html_additional_attr = column.html_additional_attr
+    self.html_tag ||= column.html_tag
+    self.html_additional_attr ||= column.html_additional_attr
   end
 
   def file_icon
