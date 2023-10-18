@@ -8,7 +8,7 @@
     <dt><%= @model.t("menu_#{type}_state") %><%= @model.tt("menu_#{type}_state") %></dt>
     <dd>
       <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
-      <%= f.text_field("menu_#{type}_label", placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
+      <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
     </dd>
   </dl>
 <% end %>
