@@ -80,7 +80,9 @@
         <% when :syntax_check %>
           <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
         <% when :link_check %>
-          <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+          <% if !SS::Lgwan.enabled? || SS::Lgwan.web? %>
+            <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+          <% end %>
         <% when :form_check %>
           <%= button_tag t("cms.form_check"), { type: :button, class: "btn form-check" } %>
         <% when :source_cleaner %>
