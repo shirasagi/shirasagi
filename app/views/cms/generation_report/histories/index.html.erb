@@ -1,0 +1,24 @@
+<div class="main-box">
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= @model.t :content %></th>
+      <th><%= @model.t :db %></th>
+      <th><%= @model.t :view %></th>
+      <th><%= @model.t :elapsed %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |history| %>
+      <tr data-id=<%= history.id %>>
+        <td><%= link_to item_title(history), url_for(action: :show, id: history) %></td>
+        <td><%= format_elapsed(history.db) %></td>
+        <td><%= format_elapsed(history.view) %></td>
+        <td><%= format_elapsed(history.elapsed) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

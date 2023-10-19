@@ -1,0 +1,80 @@
+<dl class="see">
+  <dt><%= @model.t :content %></dt>
+  <dd>
+    <%=
+      content = @item.content
+      if content && content.allowed?(:read, @cur_user, site: @cur_site) && content.respond_to?(:private_show_path)
+        link_to item_title(@item), content.private_show_path
+      else
+        item_title(@item)
+      end
+    %>
+  </dd>
+
+  <dt><%= @model.t :db %></dt>
+  <dd><%= format_elapsed(@item.db) %></dd>
+
+  <dt><%= @model.t :view %></dt>
+  <dd><%= format_elapsed(@item.view) %></dd>
+
+  <dt><%= @model.t :elapsed %></dt>
+  <dd><%= format_elapsed(@item.elapsed) %></dd>
+  <dd class="wide">各処理時間は、自身の処理時間＋子の合計を示しています。</dd>
+
+  <dt><%= @model.t :parent %></dt>
+  <dd>
+    <%=
+      parent_history = @item.parent
+      if parent_history
+        link_to item_title(parent_history), url_for(action: :show, id: parent_history)
+      end
+    %>
+  </dd>
+
+  <dt class="wide"><%= @model.t :children %></dt>
+  <dd class="wide">
+    <% if @item.children.present? %>
+      <%
+        total_db = 0
+        total_view = 0
+        total_elapsed = 0
+      %>
+      <table class="index">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th><%= @model.t :content %></th>
+          <th><%= @model.t :db %></th>
+          <th><%= @model.t :view %></th>
+          <th><%= @model.t :elapsed %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @item.children.each_with_index do |child_history, index| %>
+          <tr data-id=<%= child_history.id %>>
+            <td><%= index + 1 %></td>
+            <td><%= link_to item_title(child_history), url_for(action: :show, id: child_history) %></td>
+            <td><%= format_elapsed(child_history.db) %></td>
+            <td><%= format_elapsed(child_history.view) %></td>
+            <td><%= format_elapsed(child_history.elapsed) %></td>
+          </tr>
+          <%
+            total_db += child_history.db if child_history.db
+            total_view += child_history.view if child_history.view
+            total_elapsed += child_history.elapsed if child_history.elapsed
+          %>
+        <% end %>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td style="background: #f2f2f2; color: #999;"></td>
+          <td style="background: #f2f2f2; color: #999;">Total</td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(total_db) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(total_view) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(total_elapsed) %></td>
+        </tr>
+        </tfoot>
+      </table>
+    <% end %>
+  </dd>
+</dl>

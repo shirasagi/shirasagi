@@ -258,7 +258,7 @@ Rails.application.routes.draw do
     post "generate_pages/segment/:segment" => "generate_pages#run"
     namespace "generation_report", path: "generation_report:task" do
       resources :titles, only: %i[index new create destroy], concerns: :deletion
-      resources :histories, path: "titles/:title/histories", only: %i[index]
+      resources :histories, path: "titles/:title/histories", only: %i[index show]
     end
     get "import" => "import#import"
     post "import" => "import#import"
