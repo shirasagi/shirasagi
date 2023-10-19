@@ -1,0 +1,14 @@
+<%= form_with scope: :item, url: url_for(action: :destroy), method: :delete, id: "item-form", multipart: true do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.confirm.delete") } do %>
+      <%= render template: "_delete" %>
+    <% end %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
+    <%= link_to t("ss.buttons.cancel"), url_for(action: :index), class: 'btn-default' %>
+  </footer>
+<% end %>

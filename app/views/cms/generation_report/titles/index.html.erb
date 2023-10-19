@@ -1,0 +1,11 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), cms_generation_report_histories_path(title: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), url_for(action: :delete, id: item) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+  <%= link_to title, cms_generation_report_histories_path(title: item), class: "title" %>
+<% end %>
+
+<%= render template: "cms/crud/index", locals: local_assigns %>

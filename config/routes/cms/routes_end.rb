@@ -256,6 +256,10 @@ Rails.application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
     post "generate_pages/segment/:segment" => "generate_pages#run"
+    namespace "generation_report", path: "generation_report:task" do
+      resources :titles, only: %i[index new create destroy], concerns: :deletion
+      resources :histories, path: "titles/:title/histories", only: %i[index]
+    end
     get "import" => "import#import"
     post "import" => "import#import"
     get "import/download_logs" => "import#download_logs"
