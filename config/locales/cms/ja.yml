@@ -916,6 +916,9 @@ ja:
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
       cms/api_token: 連携用APIトークン
+      cms/generation_report/title: 書き出し性能レポート
+      cms/generation_report/history: 書き出し性能履歴
+      cms/generation_report/aggregation: 書き出し性能履歴の集計結果
     errors:
       models:
         cms/content:
@@ -1613,6 +1616,40 @@ ja:
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
+      cms/generation_report/title:
+        name: タイトル
+        memo: メモ
+        task: タスク
+        started: 開始日時
+        closed: 終了日時
+      cms/generation_report/history:
+        task: タスク
+        title: 書き出し性能レポート
+        history_type: 履歴種別
+        content: コンテンツ
+        content_id: コンテンツ
+        content_type: コンテンツ種別
+        db: DB処理時間
+        view: ビュー処理時間
+        elapsed: 全処理時間
+        parent: 親書き出し性能履歴
+        parent_id: 親書き出し性能履歴
+        children: 子書き出し性能履歴
+        child_ids: 子書き出し性能履歴
+      cms/generation_report/aggregation:
+        task: タスク
+        title: 書き出し性能レポート
+        history_type: 履歴種別
+        content: コンテンツ
+        content_id: コンテンツ
+        content_type: コンテンツ種別
+        count: 回数
+        total_db: 総DB処理時間
+        total_view: 総ビュー処理時間
+        total_elapsed: 総全処理時間
+        average_db: 平均DB処理時間
+        average_view: 平均ビュー処理時間
+        average_elapsed: 平均全処理時間
 
   activemodel:
     attributes:
@@ -3234,3 +3271,4 @@ ja:
       cms/group_import_job: グループインポート
       cms/remove_improper_htmls_job: 不要HTML削除
       cms/line/update_statistics_job: LINE統計情報更新
+      cms/generation_report_create_job: 書き出し性能レポートの作成
