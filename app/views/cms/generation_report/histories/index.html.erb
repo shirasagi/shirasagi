@@ -1,3 +1,12 @@
+<div class="cms-tabs">
+  <%= link_to(cms_generation_report_histories_path, class: "current") do %>
+    <span class="tab-name"><%= t("mongoid.models.cms/generation_report/history") %></span>
+  <% end %>
+  <%= link_to(cms_generation_report_aggregations_path) do %>
+    <span class="tab-name"><%= t("mongoid.models.cms/generation_report/aggregation") %></span>
+  <% end %>
+</div>
+
 <div class="main-box">
   <table class="index">
     <thead>
