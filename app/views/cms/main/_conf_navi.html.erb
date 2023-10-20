@@ -83,6 +83,9 @@
   <% if Cms::ApiToken.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("cms.api_token"), cms_api_tokens_path %></h3>
   <% end %>
+  <% if Cms::GenerationReport::Title.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("mongoid.models.cms/generation_report/title"), cms_generation_report_main_path %></h3>
+  <% end %>
   <% if Cms::Command.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("cms.command"), cms_command_settings_path %></h3>
   <% end %>

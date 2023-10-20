@@ -2,7 +2,7 @@ class Cms::GenerationReport::HistoriesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  navi_view "cms/main/navi"
+  navi_view "cms/generation_report/main/navi"
 
   model Cms::GenerationReport::History
 

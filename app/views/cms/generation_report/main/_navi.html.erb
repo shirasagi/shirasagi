@@ -1,0 +1,10 @@
+<% if Cms::GenerationReport::Title.allowed?(:read, @cur_user, site: @cur_site) %>
+  <nav class="mod-navi">
+    <h2><%= t("mongoid.models.cms/generation_report/title") %></h2>
+
+    <h3><%= link_to t("cms.generate_node"), cms_generation_report_nodes_path %></h3>
+    <h3><%= link_to t("cms.generate_page"), cms_generation_report_pages_path %></h3>
+  </nav>
+<% end %>
+
+<%= render partial: "cms/main/conf_navi" %>

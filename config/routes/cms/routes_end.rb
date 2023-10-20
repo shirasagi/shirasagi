@@ -256,7 +256,12 @@ Rails.application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
     post "generate_pages/segment/:segment" => "generate_pages#run"
-    namespace "generation_report", path: "generation_report:task" do
+    namespace "generation_report", path: "generation_report" do
+      get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
+      resources :nodes, only: %i[index]
+      resources :pages, only: %i[index]
+    end
+    namespace "generation_report", path: "generation_report/:type/:task" do
       resources :titles, only: %i[index new create destroy], concerns: :deletion
       resources :histories, path: "titles/:title/histories", only: %i[index show]
       resources :aggregations, path: "titles/:title/aggregations", only: %i[index]
