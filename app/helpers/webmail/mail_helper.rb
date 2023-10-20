@@ -97,6 +97,29 @@ module Webmail::MailHelper
     link_to_webmail_account_config_path(options)
   end
 
+  def link_to_new_window(name = nil, options = nil, html_options = nil, &block)
+    html_options ||= {}
+    if html_options[:class]
+      css_classes = Array(html_options[:class])
+      css_classes.map! { |css_class| css_class.split }
+      css_classes.flatten!
+      css_classes.map!(&:strip)
+      unless css_classes.include?("ss-open-in-new-window")
+        css_classes << "ss-open-in-new-window"
+      end
+      html_options[:class] = css_classes
+    else
+      html_options[:class] = "ss-open-in-new-window"
+    end
+
+    html_options[:data] ||= {}
+    unless html_options[:data][:width]
+      html_options[:data][:width] = SS.config.webmail.mail_edit_screen_width
+    end
+
+    link_to(name, options, html_options, &block)
+  end
+
   def email_addresses_to_link(text)
     # ref. # https://github.com/tenderlove/rails_autolink/blob/v1.1.6/lib/rails_autolink/helpers.rb#L81-L82
     #
