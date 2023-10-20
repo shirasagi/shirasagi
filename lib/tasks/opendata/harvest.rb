@@ -57,8 +57,8 @@ module Tasks
         module_function
 
         def with_exporter(site, id)
-          if name.blank?
-            puts "Please input exporter: exporter=[1]" or exit if id.blank?
+          if id.blank?
+            puts "Please input exporter: exporter=[1]"
             return
           end
 
