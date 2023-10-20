@@ -101,7 +101,7 @@ module Webmail::MailHelper
     html_options ||= {}
     if html_options[:class]
       css_classes = Array(html_options[:class])
-      css_classes.map! { |css_class| css_class.split(' ') }
+      css_classes.map! { |css_class| css_class.split }
       css_classes.flatten!
       css_classes.map!(&:strip)
       unless css_classes.include?("ss-open-in-new-window")
