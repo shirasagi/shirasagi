@@ -32,7 +32,7 @@ module SS::CkanSupport
   end
 
   def docker_ckan_api_key
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJBQVNLX19lQUMwQ3dxV0VjNXZKcW9hQy1zbWt1dExaU0NORWotMzlYZVZBIiwiaWF0IjoxNjg5ODM1ODMyfQ.rWZGXCfSVDN9jISBcJ8qlyVq_bMKKPOokKdUOe65LJ4"
+    @docker_ckan_api_key ||= SS.config.opendata.dig("harvest", "docker_ckan_api_key")
   end
 
   def init

@@ -247,10 +247,6 @@ def with_env(hash)
   ret
 end
 
-def ci?
-  ENV["CI"] == "true"
-end
-
 # ref.
 #   https://www.relishapp.com/rspec/rspec-expectations/v/2-5/docs/built-in-matchers/be-within-matcher
 #   http://qiita.com/kozy4324/items/9a6530736be7e92954bc
