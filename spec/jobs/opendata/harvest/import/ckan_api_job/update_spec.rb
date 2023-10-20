@@ -49,11 +49,13 @@ describe Opendata::Harvest::ImportJob, dbscope: :example, tmpdir: true, ckan: tr
     dataset.reload
   end
 
+  # rubocop:disable Security/Open
   def expect_same_file(file1, file2)
     str1 = URI.open(file1).read
     str2 = URI.open(file2).read
     expect(str1).to eq str2
   end
+  # rubocop:enable Security/Open
 
   before do
     create_resource(dataset1, file_path1)
