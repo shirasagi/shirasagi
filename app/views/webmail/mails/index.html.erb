@@ -72,20 +72,14 @@
     <% @items.each do |item| %>
     <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %> mail-draggable" data-uid="<%= item.uid %>">
       <nav class="tap-menu">
-        <%= link_to t('ss.links.show'), action: :show, id: item.uid %>
-        <%= link_to t('ss.links.edit'), { action: :edit, id: item.uid },
-          { class: 'ss-open-in-new-window' } if item.draft? %>
-        <%= link_to t('webmail.links.reply'), { action: :reply, id: item.uid },
-          { class: 'ss-open-in-new-window' } unless item.draft? %>
-        <%= link_to t('webmail.links.reply_without_body'), { action: :reply, id: item.uid, without_body: true },
-          { class: 'ss-open-in-new-window' } unless item.draft? %>
-        <%= link_to t('webmail.links.reply_all'), { action: :reply_all, id: item.uid },
-          { class: 'ss-open-in-new-window' } unless item.draft? %>
-        <%= link_to t('webmail.links.reply_all_without_body'), { action: :reply_all, id: item.uid, without_body: true },
-          { class: 'ss-open-in-new-window' } unless item.draft? %>
-        <%= link_to t('webmail.links.forward'), { action: :forward, id: item.uid },
-          { class: 'ss-open-in-new-window' } unless item.draft? %>
-        <%= link_to t('ss.links.delete'), action: :delete, id: item.uid %>
+        <%= link_to t('ss.links.show'), url_for(action: :show, id: item.uid) %>
+        <%= link_to_new_window t('ss.links.edit'), url_for(action: :edit, id: item.uid) if item.draft? %>
+        <%= link_to_new_window t('webmail.links.reply'), url_for(action: :reply, id: item.uid) unless item.draft? %>
+        <%= link_to_new_window t('webmail.links.reply_without_body'), url_for(action: :reply, id: item.uid, without_body: true) unless item.draft? %>
+        <%= link_to_new_window t('webmail.links.reply_all'), url_for(action: :reply_all, id: item.uid) unless item.draft? %>
+        <%= link_to_new_window t('webmail.links.reply_all_without_body'), url_for(action: :reply_all, id: item.uid, without_body: true) unless item.draft? %>
+        <%= link_to_new_window t('webmail.links.forward'), url_for(action: :forward, id: item.uid) unless item.draft? %>
+        <%= link_to t('ss.links.delete'), url_for(action: :delete, id: item.uid) %>
       </nav>
 
       <label class="check">

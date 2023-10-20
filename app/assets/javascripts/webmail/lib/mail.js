@@ -539,11 +539,12 @@ this.Webmail_Mail_Address = (function () {
         menu.remove();
         return true;
       }
-      addr.find('.address-name').prepend('<i class="material-icons md-14">&#xE7FD;</i>');
-      menu.append('<li class="dropdown-menu-item disabled">' + email + '</li>');
-      menu.append('<li><a href="#" class="addr-send ss-open-in-new-window">' + lang.send + '</a></li>');
-      menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>');
-      menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>');
+      addr.find('.address-name').prepend($('<i/>', { class: "material-icons md-14" }).text('person'));
+      menu.append($('<li/>', { class: "dropdown-menu-item disabled" }).text(email));
+      var $sendAnchor = $('<a/>', { href: "#", class: "addr-send ss-open-in-new-window" }).attr("data-width", opts['new_window_width']).text(lang.send);
+      menu.append($('<li/>').append($sendAnchor));
+      menu.append($('<li/>').append($('<a/>', { href: "#", class: "addr-entry" }).text(lang.entry)));
+      menu.append($('<li/>').append($('<a/>', { href: "#", class: "addr-copy" }).text(lang.copy)));
       $(this).find('.addr-send').each(function () {
         var href = urls.send + "?" + $.param({
           item: {
