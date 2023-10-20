@@ -263,8 +263,12 @@ Rails.application.routes.draw do
     end
     namespace "generation_report", path: "generation_report/:type/:task" do
       resources :titles, only: %i[index new create destroy], concerns: :deletion
-      resources :histories, path: "titles/:title/histories", only: %i[index show]
-      resources :aggregations, path: "titles/:title/aggregations", only: %i[index]
+      resources :histories, path: "titles/:title/histories", only: %i[index show] do
+        match :download_all, on: :collection, via: %i[get post]
+      end
+      resources :aggregations, path: "titles/:title/aggregations", only: %i[index] do
+        match :download_all, on: :collection, via: %i[get post]
+      end
     end
     get "import" => "import#import"
     post "import" => "import#import"

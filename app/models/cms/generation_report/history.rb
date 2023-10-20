@@ -29,6 +29,21 @@ module Cms::GenerationReport::History
       return all if params.blank? || params[:keyword].blank?
       all.keyword_in params[:keyword], :content_name, :content_filename
     end
+
+    def enum_csv(options)
+      drawer = SS::Csv.draw(:export, context: self) do |drawer|
+        drawer.column :history_type
+        drawer.column :content_id
+        drawer.column :content_type
+        drawer.column :content_name
+        drawer.column :content_filename
+        drawer.column :db
+        drawer.column :view
+        drawer.column :elapsed
+      end
+
+      drawer.enum(self.all, options)
+    end
   end
 
   mattr_accessor :class_map, instance_accessor: false, default: {}

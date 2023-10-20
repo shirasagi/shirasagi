@@ -1627,8 +1627,10 @@ ja:
         title: 書き出し性能レポート
         history_type: 履歴種別
         content: コンテンツ
-        content_id: コンテンツ
-        content_type: コンテンツ種別
+        content_id: コンテンツID
+        content_type: コンテンツタイトル
+        content_name: コンテンツ種別
+        content_filename: コンテンツファイル名
         db: DB処理時間
         view: ビュー処理時間
         elapsed: 全処理時間
@@ -1641,8 +1643,10 @@ ja:
         title: 書き出し性能レポート
         history_type: 履歴種別
         content: コンテンツ
-        content_id: コンテンツ
+        content_id: コンテンツID
         content_type: コンテンツ種別
+        content_name: コンテンツ種別
+        content_filename: コンテンツファイル名
         count: 回数
         total_db: 総DB処理時間
         total_view: 総ビュー処理時間
