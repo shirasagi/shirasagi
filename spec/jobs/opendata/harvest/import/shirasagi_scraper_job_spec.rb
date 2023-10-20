@@ -12,7 +12,10 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by", name: "表示（CC BY）") }
 
   context "with empty datasets" do
-    let!(:importer) { create(:opendata_harvest_importer, cur_node: node, source_url: "https://source.example.jp", api_type: "shirasagi_scraper") }
+    let!(:importer) do
+      create(:opendata_harvest_importer, cur_node: node, source_url: "https://source.example.jp",
+        api_type: "shirasagi_scraper")
+    end
 
     let(:search_html) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/empty_search.html") }
     describe "#perform" do
@@ -34,7 +37,10 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   end
 
   context "with datasets html" do
-    let!(:importer) { create(:opendata_harvest_importer, cur_node: node, source_url: "https://source.example.jp", api_type: "shirasagi_scraper") }
+    let!(:importer) do
+      create(:opendata_harvest_importer, cur_node: node, source_url: "https://source.example.jp",
+        api_type: "shirasagi_scraper")
+    end
 
     let(:search1_html) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/search1.html") }
     let(:search2_html) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/search2.html") }
@@ -97,7 +103,10 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   end
 
   context "with datasets" do
-    let!(:importer) { create(:opendata_harvest_importer, cur_node: node, source_url: "http://#{site.domain}", api_type: "shirasagi_scraper") }
+    let!(:importer) do
+      create(:opendata_harvest_importer, cur_node: node, source_url: "http://#{site.domain}",
+        api_type: "shirasagi_scraper")
+    end
 
     let(:search1_url) { ::File.join(node_search.full_url, "index.p1.html") }
     let(:search2_url) { ::File.join(node_search.full_url, "index.p2.html") }
@@ -156,21 +165,31 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
         visit search2_url
         @search2_html = "<div>" + page.html + "</div>"
 
-        stub_request(:get, search1_url).to_return(body: @search1_html, status: 200, headers: { 'Content-Type' => 'text/html' })
-        stub_request(:get, search2_url).to_return(body: @search2_html, status: 200, headers: { 'Content-Type' => 'text/html' })
-        stub_request(:get, @dataset1.full_url).to_return(body: @dataset1_html, status: 200, headers: { 'Content-Type' => 'text/html' })
-        stub_request(:get, @dataset2.full_url).to_return(body: @dataset2_html, status: 200, headers: { 'Content-Type' => 'text/html' })
-        stub_request(:get, @dataset3.full_url).to_return(body: @dataset3_html, status: 200, headers: { 'Content-Type' => 'text/html' })
-        stub_request(:get, @dataset4.full_url).to_return(body: @dataset4_html, status: 200, headers: { 'Content-Type' => 'text/html' })
-        stub_request(:get, @dataset5.full_url).to_return(body: @dataset5_html, status: 200, headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, search1_url).to_return(body: @search1_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, search2_url).to_return(body: @search2_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, @dataset1.full_url).to_return(body: @dataset1_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, @dataset2.full_url).to_return(body: @dataset2_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, @dataset3.full_url).to_return(body: @dataset3_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, @dataset4.full_url).to_return(body: @dataset4_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
+        stub_request(:get, @dataset5.full_url).to_return(body: @dataset5_html, status: 200,
+          headers: { 'Content-Type' => 'text/html' })
 
         file1_url = ::File.join(site.full_url, @dataset1.resources[0].file.url)
         file2_url = ::File.join(site.full_url, @dataset5.resources[0].file.url)
         file3_url = ::File.join(site.full_url, @dataset5.resources[1].file.url)
 
-        stub_request(:get, file1_url).to_return(body: ::File.read(sample_txt), status: 200, headers: { 'Content-Type' => 'text/csv' })
-        stub_request(:get, file2_url).to_return(body: ::File.read(sample_csv), status: 200, headers: { 'Content-Type' => 'text/csv' })
-        stub_request(:get, file3_url).to_return(body: ::File.read(sample2_xlsx), status: 200, headers: { 'Content-Type' => 'application/octet-stream' })
+        stub_request(:get, file1_url).to_return(body: ::File.read(sample_txt), status: 200,
+          headers: { 'Content-Type' => 'text/csv' })
+        stub_request(:get, file2_url).to_return(body: ::File.read(sample_csv), status: 200,
+          headers: { 'Content-Type' => 'text/csv' })
+        stub_request(:get, file3_url).to_return(body: ::File.read(sample2_xlsx), status: 200,
+          headers: { 'Content-Type' => 'application/octet-stream' })
 
         Opendata::Dataset.destroy_all
 
