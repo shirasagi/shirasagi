@@ -148,7 +148,7 @@ module Opendata::Harvest::CkanApiImporter
     end
 
     last_modified = attributes["last_modified"]
-    last_modified = DateTime.parse(last_modified).in_time_zone.change(sec: 0) rescue nil
+    last_modified = DateTime.parse(last_modified).in_time_zone rescue nil
     if last_modified.present? && resource.harvest_last_modified.present? && resource.harvest_last_modified.to_i == last_modified.to_i
       put_log("-- resource : same last_modified #{resource.name}")
       return resource

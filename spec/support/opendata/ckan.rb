@@ -75,8 +75,7 @@ module SS::CkanSupport
     container.start
     Timeout.timeout(60) do
       loop do
-        break if container.logs(stdout: true).include?("Starting nginx nginx")
-
+        break if container.logs(stdout: true).include?("launch succeeded")
         sleep 0.1
       end
     end
