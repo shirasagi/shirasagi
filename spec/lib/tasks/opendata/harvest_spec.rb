@@ -5,13 +5,25 @@ describe Tasks::Opendata::Harvest, dbscope: :example do
     let!(:site) { cms_site }
     let!(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
 
-    let!(:exporter1) { create :opendata_harvest_exporter, cur_node: node, state: "disabled" }
-    let!(:exporter2) { create :opendata_harvest_exporter, cur_node: node, state: "disabled" }
-    let!(:exporter3) { create :opendata_harvest_exporter, cur_node: node, state: "disabled" }
+    let!(:exporter1) do
+      create(:opendata_harvest_exporter, cur_node: node, url: "https://#{unique_id}.example.jp/", state: "disabled")
+    end
+    let!(:exporter2) do
+      create(:opendata_harvest_exporter, cur_node: node, url: "https://#{unique_id}.example.jp/", state: "disabled")
+    end
+    let!(:exporter3) do
+      create(:opendata_harvest_exporter, cur_node: node, url: "https://#{unique_id}.example.jp/", state: "disabled")
+    end
 
-    let!(:importer1) { create :opendata_harvest_importer, cur_node: node, state: "disabled" }
-    let!(:importer2) { create :opendata_harvest_importer, cur_node: node, state: "disabled" }
-    let!(:importer3) { create :opendata_harvest_importer, cur_node: node, state: "disabled" }
+    let!(:importer1) do
+      create(:opendata_harvest_importer, cur_node: node, source_url: "https://#{unique_id}.example.jp/", state: "disabled")
+    end
+    let!(:importer2) do
+      create(:opendata_harvest_importer, cur_node: node, source_url: "https://#{unique_id}.example.jp/", state: "disabled")
+    end
+    let!(:importer3) do
+      create(:opendata_harvest_importer, cur_node: node, source_url: "https://#{unique_id}.example.jp/", state: "disabled")
+    end
 
     before do
       @save = {}
