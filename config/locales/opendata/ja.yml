@@ -29,7 +29,7 @@ ja:
       sync: 同期する
       copy_url: URLをコピー
       harvest_import_datasets: データセットをインポートする
-      harvest_destroy_datasets: 関連するデータセットを削除する
+      harvest_purge_datasets: 関連するデータセットを削除する
       dataset_map_search_datasets: データセットを探す
       deleted: 削除済み
       add_favorite: マイリストに登録する
@@ -757,6 +757,7 @@ ja:
         api_type: API
         api_key: APIキー
         order: 並び順
+        state: ステータス
       opendata/harvest/exporter/group_setting:
         name: 名前
         ckan_id: "CKAN ID"
@@ -1068,6 +1069,9 @@ ja:
         - APIキーを設定します。
       order:
         - 並び順を設定します。
+      state:
+        - ステータスを設定します。
+        - 無効に設定すると定期実行の際に無視されます。
     opendata/part/dataset:
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
@@ -1130,12 +1134,12 @@ ja:
       opendata/csv2rdf_converter/job: RDF変換ジョブ
       opendata/facility/assoc_job: 施設CSV取り込みジョブ
       opendata/cms_integration/assoc_job: 記事連携設定ジョブ
-      opendata/harvest/harvest_datasets_job: ハーベストジョブ
-      opendata/harvest/import_datasets_job: ハーベストインポートジョブ
-      opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
-      opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
       opendata/notify_dataset_plan_job: データセット更新通知ジョブ
       opendata/dataset/export_job: データセットエクスポートジョブ
       opendata/dataset/import_job: データセットインポートジョブ
       opendata/resource_download_history_update_job: リソースダウンロード履歴更新ジョブ
       opendata/resource_preview_history_update_job: リソースプレビュー履歴更新ジョブ
+      opendata/harvest/run_job: ハーベスト/実行ジョブ
+      opendata/harvest/export_job: ハーベスト/エクスポートジョブ
+      opendata/harvest/import_job: ハーベスト/インポートジョブ
+      opendata/harvest/purge_job: ハーベスト/データセット削除ジョブ

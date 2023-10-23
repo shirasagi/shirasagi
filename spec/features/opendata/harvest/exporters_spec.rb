@@ -9,6 +9,7 @@ describe "opendata_harvest_exporter", type: :feature, dbscope: :example, js: tru
   let(:show_path) { opendata_harvest_exporter_path site.id, node, item }
   let(:edit_path) { edit_opendata_harvest_exporter_path site.id, node, item }
   let(:delete_path) { delete_opendata_harvest_exporter_path site.id, node, item }
+  let(:export_path) { export_opendata_harvest_exporter_path site.id, node, item }
 
   context "basic crud" do
     before { login_cms_user }
@@ -50,6 +51,15 @@ describe "opendata_harvest_exporter", type: :feature, dbscope: :example, js: tru
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+    end
+
+    it "#export" do
+      visit export_path
+      page.accept_confirm do
+        click_on I18n.t("ss.buttons.run")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_export'))
+      expect(enqueued_jobs.size).to eq 1
     end
   end
 end
