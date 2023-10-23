@@ -27,7 +27,7 @@ module Cms::GenerationReport::History
 
     def search_keyword(params = nil)
       return all if params.blank? || params[:keyword].blank?
-      all.keyword_in params[:keyword], :content_name, :content_filename
+      all.keyword_in params[:keyword], :history_type, :content_name, :content_filename
     end
 
     def enum_csv(options)

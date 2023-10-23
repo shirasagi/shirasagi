@@ -8,6 +8,12 @@
 </div>
 
 <div class="main-box">
+  <% @s ||= OpenStruct.new(params[:s]) %>
+  <%= form_with scope: :s, url: url_for(action: :index), method: :get, html: { class: "index-search", style: "border: 0;" } do |f| %>
+    <%= f.text_field :keyword, id: nil %>
+    <%= f.submit t("ss.buttons.search"), class: "btn" %>
+  <% end %>
+
   <table class="index">
     <thead>
     <tr>
