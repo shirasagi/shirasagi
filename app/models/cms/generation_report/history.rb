@@ -13,6 +13,12 @@ module Cms::GenerationReport::History
     field :db, type: Float
     field :view, type: Float
     field :elapsed, type: Float
+    field :total_db, type: Float
+    field :total_view, type: Float
+    field :total_elapsed, type: Float
+    field :sub_total_db, type: Float
+    field :sub_total_view, type: Float
+    field :sub_total_elapsed, type: Float
   end
 
   module ClassMethods
@@ -40,6 +46,12 @@ module Cms::GenerationReport::History
         drawer.column :db
         drawer.column :view
         drawer.column :elapsed
+        drawer.column :sub_total_db
+        drawer.column :sub_total_view
+        drawer.column :sub_total_elapsed
+        drawer.column :total_db
+        drawer.column :total_view
+        drawer.column :total_elapsed
       end
 
       drawer.enum(self.all, options)

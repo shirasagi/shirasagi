@@ -11,12 +11,24 @@ module Cms::GenerationReport::Aggregation
     field :content_name, type: String
     field :content_filename, type: String
     field :count, type: Integer
+    field :db, type: Float
+    field :view, type: Float
+    field :elapsed, type: Float
     field :total_db, type: Float
     field :total_view, type: Float
     field :total_elapsed, type: Float
+    field :sub_total_db, type: Float
+    field :sub_total_view, type: Float
+    field :sub_total_elapsed, type: Float
     field :average_db, type: Float
     field :average_view, type: Float
     field :average_elapsed, type: Float
+    field :average_total_db, type: Float
+    field :average_total_view, type: Float
+    field :average_total_elapsed, type: Float
+    field :average_sub_total_db, type: Float
+    field :average_sub_total_view, type: Float
+    field :average_sub_total_elapsed, type: Float
   end
 
   module ClassMethods
@@ -42,12 +54,24 @@ module Cms::GenerationReport::Aggregation
         drawer.column :content_name
         drawer.column :content_filename
         drawer.column :count
+        drawer.column :db
+        drawer.column :view
+        drawer.column :elapsed
+        drawer.column :sub_total_db
+        drawer.column :sub_total_view
+        drawer.column :sub_total_elapsed
         drawer.column :total_db
         drawer.column :total_view
         drawer.column :total_elapsed
         drawer.column :average_db
         drawer.column :average_view
         drawer.column :average_elapsed
+        drawer.column :average_sub_total_db
+        drawer.column :average_sub_total_view
+        drawer.column :average_sub_total_elapsed
+        drawer.column :average_total_db
+        drawer.column :average_total_view
+        drawer.column :average_total_elapsed
       end
 
       drawer.enum(self.all, options)

@@ -27,9 +27,24 @@
     <% @items.each do |history| %>
       <tr data-id=<%= history.id %>>
         <td><%= link_to item_title(history), url_for(action: :show, id: history) %></td>
-        <td><%= format_elapsed(history.db) %></td>
-        <td><%= format_elapsed(history.view) %></td>
-        <td><%= format_elapsed(history.elapsed) %></td>
+        <td>
+          <%= format_elapsed(history.total_db) %>
+          <% if history.child_ids.present? %>
+            <br>(<%= format_elapsed(history.db) %> + <%= format_elapsed(history.sub_total_db) %>)
+          <% end %>
+        </td>
+        <td>
+          <%= format_elapsed(history.total_view) %>
+          <% if history.child_ids.present? %>
+            <br>(<%= format_elapsed(history.view) %> + <%= format_elapsed(history.sub_total_view) %>)
+          <% end %>
+        </td>
+        <td>
+          <%= format_elapsed(history.total_elapsed) %>
+          <% if history.child_ids.present? %>
+            <br>(<%= format_elapsed(history.elapsed) %> + <%= format_elapsed(history.sub_total_elapsed) %>)
+          <% end %>
+        </td>
       </tr>
     <% end %>
     </tbody>

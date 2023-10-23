@@ -100,7 +100,8 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     history = Cms::GenerationReport::History[title].new(
       cur_site: site, site: site, task: task, title: title, history_type: performance_info["type"],
       content: content, content_name: performance_info["name"], content_filename: performance_info["filename"],
-      db: performance_info["db"], view: performance_info["view"], elapsed: performance_info["elapsed"])
+      db: performance_info["db"], view: performance_info["view"], elapsed: performance_info["elapsed"],
+      total_db: performance_info["db"], total_view: performance_info["view"], total_elapsed: performance_info["elapsed"])
     history.save!
 
     pending_histories = pending_relation.delete(performance_info.slice("type", "id"))
@@ -108,7 +109,17 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       pending_histories.each do |pending_history|
         pending_history.update(parent: history)
       end
-      history.update(child_ids: pending_histories.map(&:id))
+
+      history.child_ids = pending_histories.map(&:id)
+      sub_total_db, sub_total_view, sub_total_elapsed = sub_total(history.child_ids)
+
+      history.sub_total_db = sub_total_db
+      history.sub_total_view = sub_total_view
+      history.sub_total_elapsed = sub_total_elapsed
+      history.db -= sub_total_db if sub_total_db
+      history.view -= sub_total_view if sub_total_view
+      history.elapsed -= sub_total_elapsed if sub_total_elapsed
+      history.save!
     end
 
     scope = performance_info["scopes"].try(:last)
@@ -130,14 +141,24 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
           content_name: "$content_name",
           content_filename: "$content_filename",
         },
-        count: { "$sum" => 1 }, total_db: { "$sum" => "$db" }, total_view: { "$sum" => "$view" }, total_elapsed: { "$sum" => "$elapsed" }
+        count: { "$sum" => 1 },
+        db: { "$sum" => "$db" }, view: { "$sum" => "$view" }, elapsed: { "$sum" => "$elapsed" },
+        total_db: { "$sum" => "$total_db" }, total_view: { "$sum" => "$total_view" }, total_elapsed: { "$sum" => "$total_elapsed" },
+        sub_total_db: { "$sum" => "$sub_total_db" }, sub_total_view: { "$sum" => "$sub_total_view" },
+        sub_total_elapsed: { "$sum" => "$sub_total_elapsed" }
       }
     }
     stages << {
       "$addFields" => {
-        average_db: { "$divide" => [ "$total_db", "$count" ] },
-        average_view: { "$divide" => [ "$total_view", "$count" ] },
-        average_elapsed: { "$divide" => [ "$total_elapsed", "$count" ] },
+        average_db: { "$divide" => [ "$db", "$count" ] },
+        average_view: { "$divide" => [ "$view", "$count" ] },
+        average_elapsed: { "$divide" => [ "$elapsed", "$count" ] },
+        average_total_db: { "$divide" => [ "$total_db", "$count" ] },
+        average_total_view: { "$divide" => [ "$total_view", "$count" ] },
+        average_total_elapsed: { "$divide" => [ "$total_elapsed", "$count" ] },
+        average_sub_total_db: { "$divide" => [ "$sub_total_db", "$count" ] },
+        average_sub_total_view: { "$divide" => [ "$sub_total_view", "$count" ] },
+        average_sub_total_elapsed: { "$divide" => [ "$sub_total_elapsed", "$count" ] }
       }
     }
 
@@ -150,10 +171,33 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
         cur_site: site, site: site, task: task, title: title, history_type: result["_id"]["history_type"],
         content_id: result["_id"]["content_id"], content_type: result["_id"]["content_type"],
         content_name: result["_id"]["content_name"], content_filename: result["_id"]["content_filename"], count: result["count"],
+        db: result["db"], view: result["view"], elapsed: result["elapsed"],
         total_db: result["total_db"], total_view: result["total_view"], total_elapsed: result["total_elapsed"],
-        average_db: result["average_db"], average_view: result["average_view"], average_elapsed: result["average_elapsed"]
+        sub_total_db: result["sub_total_db"], sub_total_view: result["sub_total_view"],
+        sub_total_elapsed: result["sub_total_elapsed"],
+        average_db: result["average_db"], average_view: result["average_view"], average_elapsed: result["average_elapsed"],
+        average_total_db: result["average_total_db"], average_total_view: result["average_total_view"],
+        average_total_elapsed: result["average_total_elapsed"],
+        average_sub_total_db: result["average_sub_total_db"], average_sub_total_view: result["average_sub_total_view"],
+        average_sub_total_elapsed: result["average_sub_total_elapsed"]
       )
       aggregation.save!
     end
+  end
+
+  def sub_total(history_ids)
+    sub_total_db = 0
+    sub_total_view = 0
+    sub_total_elapsed = 0
+
+    criteria = Cms::GenerationReport::History[title].all
+    criteria = criteria.in(id: history_ids)
+    criteria.pluck(:total_db, :total_view, :total_elapsed).each do |total_db, total_view, total_elapsed|
+      sub_total_db += total_db if total_db
+      sub_total_view += total_view if total_view
+      sub_total_elapsed += total_elapsed if total_elapsed
+    end
+
+    [ sub_total_db, sub_total_view, sub_total_elapsed ]
   end
 end

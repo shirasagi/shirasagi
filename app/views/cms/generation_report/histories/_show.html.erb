@@ -12,14 +12,28 @@
   </dd>
 
   <dt><%= @model.t :db %></dt>
-  <dd><%= format_elapsed(@item.db) %></dd>
+  <dd>
+    <%= format_elapsed(@item.total_db) %>
+    <% if @item.child_ids.present? %>
+      (<%= format_elapsed(@item.db) %> + <%= format_elapsed(@item.sub_total_db) %>)
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :view %></dt>
-  <dd><%= format_elapsed(@item.view) %></dd>
+  <dd>
+    <%= format_elapsed(@item.total_view) %>
+    <% if @item.child_ids.present? %>
+      (<%= format_elapsed(@item.view) %> + <%= format_elapsed(@item.sub_total_view) %>)
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :elapsed %></dt>
-  <dd><%= format_elapsed(@item.elapsed) %></dd>
-  <dd class="wide">各処理時間は、自身の処理時間＋子の合計を示しています。</dd>
+  <dd>
+    <%= format_elapsed(@item.total_elapsed) %>
+    <% if @item.child_ids.present? %>
+      (<%= format_elapsed(@item.elapsed) %> + <%= format_elapsed(@item.sub_total_elapsed) %>)
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :parent %></dt>
   <dd>
@@ -34,11 +48,6 @@
   <dt class="wide"><%= @model.t :children %></dt>
   <dd class="wide">
     <% if @item.children.present? %>
-      <%
-        total_db = 0
-        total_view = 0
-        total_elapsed = 0
-      %>
       <table class="index">
         <thead>
         <tr>
@@ -54,24 +63,19 @@
           <tr data-id=<%= child_history.id %>>
             <td><%= index + 1 %></td>
             <td><%= link_to item_title(child_history), url_for(action: :show, id: child_history) %></td>
-            <td><%= format_elapsed(child_history.db) %></td>
-            <td><%= format_elapsed(child_history.view) %></td>
-            <td><%= format_elapsed(child_history.elapsed) %></td>
+            <td><%= format_elapsed(child_history.total_db) %></td>
+            <td><%= format_elapsed(child_history.total_view) %></td>
+            <td><%= format_elapsed(child_history.total_elapsed) %></td>
           </tr>
-          <%
-            total_db += child_history.db if child_history.db
-            total_view += child_history.view if child_history.view
-            total_elapsed += child_history.elapsed if child_history.elapsed
-          %>
         <% end %>
         </tbody>
         <tfoot>
         <tr>
           <td style="background: #f2f2f2; color: #999;"></td>
           <td style="background: #f2f2f2; color: #999;">Total</td>
-          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(total_db) %></td>
-          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(total_view) %></td>
-          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(total_elapsed) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_db) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_view) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_elapsed) %></td>
         </tr>
         </tfoot>
       </table>
