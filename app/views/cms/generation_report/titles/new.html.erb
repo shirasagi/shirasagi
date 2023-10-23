@@ -5,7 +5,6 @@
     <%
       addon_options = {}
       addon_options[:id] = "addon-basic"
-      #addon_options[:head] = @addon_basic_name || t("ss.basic_info") if addons.size > 0
     %>
     <% buf = render template: "_new", locals: { f: f, addon: addon_options } %>
     <% if buf.present? %>

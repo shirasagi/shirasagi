@@ -262,6 +262,7 @@ ja:
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
+      generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -929,6 +930,8 @@ ja:
           attributes:
             url:
               youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
+        cms/generation_report/title:
+          latest_report_is_already_existed: 最新の書き出し性能レポートがすでに存在します。
     attributes:
       cms/content:
         released_type: 公開日時種別

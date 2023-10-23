@@ -99,6 +99,22 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
+        Cms::GenerationReportCreateJob.bind(site_id: site.id, task_id: task.id).perform_now
+
+        expect(Job::Log.count).to eq 2
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Cms::GenerationReport::Title.all.count).to eq 1
+        title = Cms::GenerationReport::Title.all.first
+
+        expect(Cms::GenerationReport::History[title].all.count).to eq 5
+        expect(Cms::GenerationReport::Aggregation[title].all.count).to eq 1
+      end
     end
   end
 

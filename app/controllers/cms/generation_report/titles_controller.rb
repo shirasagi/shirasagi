@@ -37,7 +37,8 @@ class Cms::GenerationReport::TitlesController < ApplicationController
 
   def new
     if latest_title.present?
-      redirect_to url_for(action: :index), notice: "最新の書き出し性能レポートがすでに存在します。"
+      notice = t("mongoid.errors.models.cms/generation_report/title.latest_report_is_already_existed")
+      redirect_to url_for(action: :index), notice: notice
       return
     end
 
@@ -46,13 +47,14 @@ class Cms::GenerationReport::TitlesController < ApplicationController
 
   def create
     if latest_title.present?
-      redirect_to url_for(action: :index), notice: "最新の書き出し性能レポートがすでに存在します。"
+      notice = t("mongoid.errors.models.cms/generation_report/title.latest_report_is_already_existed")
+      redirect_to url_for(action: :index), notice: notice
       return
     end
 
     job_class = Cms::GenerationReportCreateJob.bind(site_id: @cur_site.id, user_id: @cur_user.id, task_id: task.id)
     job_class.perform_later
 
-    redirect_to url_for(action: :index), notice: "書き出し性能レポート作成ジョブを実行しました。"
+    redirect_to url_for(action: :index), notice: t("cms.notices.generation_report_jos_is_started")
   end
 end
