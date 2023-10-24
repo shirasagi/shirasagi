@@ -11,20 +11,22 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       return
     end
 
-    title
     Rails.logger.tagged(::File.basename(task.perf_log_file_path)) do
-      Zlib::GzipReader.open(task.perf_log_file_path) do |gz|
-        gz.each_line do |line|
-          line.strip!
-          performance_info = JSON.parse(line)
-          import_performance_info(performance_info)
-        end
+      reader.each_line do |line|
+        line.strip!
+        performance_info = JSON.parse(line)
+        import_performance_info(performance_info)
       end
 
       aggregate_histories
     rescue => e
       Rails.logger.error { e.to_s }
       raise
+    end
+  ensure
+    if @reader
+      @reader.close rescue nil
+      @reader = nil
     end
   end
 
@@ -38,6 +40,14 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       when "cms:generate_nodes"
         :node
       end
+    end
+  end
+
+  def reader
+    @reader ||= begin
+      reader = Zlib::GzipReader.open(task.perf_log_file_path)
+      @header_line = reader.readline
+      reader
     end
   end
 
@@ -66,12 +76,23 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
   end
 
   def create_title!
-    title_name = "Performance Report at #{I18n.l(task.started, format: :long)}"
-    if generation_type
-      title_name = "Pages Generation #{title_name}"
-    else
-      title_name = "Nodes Generation #{title_name}"
+    reader
+
+    if @header_line
+      header = JSON.parse(@header_line)
+      if header["type"] == "header"
+        title_name = header["name"]
+      end
     end
+    unless title_name
+      title_name = task.started ? "Performance Report at #{I18n.l(task.started, format: :long)}" : ""
+      if generation_type
+        title_name = "Pages Generation #{title_name}".strip
+      else
+        title_name = "Nodes Generation #{title_name}".strip
+      end
+    end
+
     title = Cms::GenerationReport::Title.new(
       cur_site: site, name: title_name, task: task, sha256_hash: Cms::GenerationReport.sha256_hash(task.perf_log_file_path))
     title.save!
