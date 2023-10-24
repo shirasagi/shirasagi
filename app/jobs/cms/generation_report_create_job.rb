@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cms::GenerationReportCreateJob < Cms::ApplicationJob
   include Job::SS::Binding::Task
 
@@ -77,24 +79,7 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
   end
 
   def import_performance_info(performance_info)
-    case performance_info["type"]
-    when "header"
-      # ignore
-    when "part"
-      content = id_part_map[performance_info["id"]]
-    when "page"
-      content = id_page_map[performance_info["id"]]
-    when "node"
-      content = id_node_map[performance_info["id"]]
-    when "layout"
-      content = id_layout_map[performance_info["id"]]
-    when "site"
-      if performance_info["id"] == site.id
-        content = site
-      end
-    else
-      Rails.logger.debug { "#{performance_info["type"]}: unknown type" }
-    end
+    content = find_content(performance_info)
     return unless content
 
     history = Cms::GenerationReport::History[title].new(
@@ -130,37 +115,32 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     end
   end
 
+  def find_content(performance_info)
+    case performance_info["type"]
+    when "header"
+      # ignore
+    when "part"
+      content = id_part_map[performance_info["id"]]
+    when "page"
+      content = id_page_map[performance_info["id"]]
+    when "node"
+      content = id_node_map[performance_info["id"]]
+    when "layout"
+      content = id_layout_map[performance_info["id"]]
+    when "site"
+      if performance_info["id"] == site.id
+        content = site
+      end
+    else
+      Rails.logger.debug { "#{performance_info["type"]}: unknown type" }
+    end
+    content
+  end
+
   def aggregate_histories
     stages = []
-    stages << {
-      "$group" => {
-        _id: {
-          history_type: "$history_type",
-          content_id: "$content_id",
-          content_type: "$content_type",
-          content_name: "$content_name",
-          content_filename: "$content_filename",
-        },
-        count: { "$sum" => 1 },
-        db: { "$sum" => "$db" }, view: { "$sum" => "$view" }, elapsed: { "$sum" => "$elapsed" },
-        total_db: { "$sum" => "$total_db" }, total_view: { "$sum" => "$total_view" }, total_elapsed: { "$sum" => "$total_elapsed" },
-        sub_total_db: { "$sum" => "$sub_total_db" }, sub_total_view: { "$sum" => "$sub_total_view" },
-        sub_total_elapsed: { "$sum" => "$sub_total_elapsed" }
-      }
-    }
-    stages << {
-      "$addFields" => {
-        average_db: { "$divide" => [ "$db", "$count" ] },
-        average_view: { "$divide" => [ "$view", "$count" ] },
-        average_elapsed: { "$divide" => [ "$elapsed", "$count" ] },
-        average_total_db: { "$divide" => [ "$total_db", "$count" ] },
-        average_total_view: { "$divide" => [ "$total_view", "$count" ] },
-        average_total_elapsed: { "$divide" => [ "$total_elapsed", "$count" ] },
-        average_sub_total_db: { "$divide" => [ "$sub_total_db", "$count" ] },
-        average_sub_total_view: { "$divide" => [ "$sub_total_view", "$count" ] },
-        average_sub_total_elapsed: { "$divide" => [ "$sub_total_elapsed", "$count" ] }
-      }
-    }
+    stages << AGGREGATE_HISTORIES_GROUP_STAGE
+    stages << AGGREGATE_HISTORIES_ADD_FIELDS_STAGE
 
     results = Cms::GenerationReport::History[title].collection.aggregate(stages)
     results.to_a.each do |result|
@@ -184,6 +164,42 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       aggregation.save!
     end
   end
+
+  AGGREGATE_HISTORIES_GROUP_STAGE = {
+    "$group" => {
+      _id: {
+        history_type: "$history_type",
+        content_id: "$content_id",
+        content_type: "$content_type",
+        content_name: "$content_name",
+        content_filename: "$content_filename",
+      }.freeze,
+      count: { "$sum" => 1 }.freeze,
+      db: { "$sum" => "$db" }.freeze,
+      view: { "$sum" => "$view" }.freeze,
+      elapsed: { "$sum" => "$elapsed" }.freeze,
+      total_db: { "$sum" => "$total_db" }.freeze,
+      total_view: { "$sum" => "$total_view" }.freeze,
+      total_elapsed: { "$sum" => "$total_elapsed" }.freeze,
+      sub_total_db: { "$sum" => "$sub_total_db" }.freeze,
+      sub_total_view: { "$sum" => "$sub_total_view" }.freeze,
+      sub_total_elapsed: { "$sum" => "$sub_total_elapsed" }.freeze
+    }
+  }.freeze
+
+  AGGREGATE_HISTORIES_ADD_FIELDS_STAGE = {
+    "$addFields" => {
+      average_db: { "$divide" => [ "$db", "$count" ].freeze }.freeze,
+      average_view: { "$divide" => [ "$view", "$count" ].freeze }.freeze,
+      average_elapsed: { "$divide" => [ "$elapsed", "$count" ].freeze }.freeze,
+      average_total_db: { "$divide" => [ "$total_db", "$count" ].freeze }.freeze,
+      average_total_view: { "$divide" => [ "$total_view", "$count" ].freeze }.freeze,
+      average_total_elapsed: { "$divide" => [ "$total_elapsed", "$count" ].freeze }.freeze,
+      average_sub_total_db: { "$divide" => [ "$sub_total_db", "$count" ].freeze }.freeze,
+      average_sub_total_view: { "$divide" => [ "$sub_total_view", "$count" ].freeze }.freeze,
+      average_sub_total_elapsed: { "$divide" => [ "$sub_total_elapsed", "$count" ].freeze }.freeze
+    }
+  }.freeze
 
   def sub_total(history_ids)
     sub_total_db = 0
