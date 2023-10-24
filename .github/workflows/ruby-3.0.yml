@@ -63,6 +63,10 @@ jobs:
           fi
           echo $container_id
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
+      - name: Prepare Ckan
+        run: |
+          docker pull ghcr.io/shirasagi/ckan:latest
+          docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
       - name: Install pre requisites
         run: |
           sudo apt-get update

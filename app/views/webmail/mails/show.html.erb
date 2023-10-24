@@ -1,17 +1,22 @@
-<% addons = @item ? @item.class.addons : [] %>
+<%
+  addons = @item ? @item.class.addons : []
 
-<%= jquery do %>
-  Webmail_Mail_Address.render({
+  render_opts = {
     lang: {
-      send: "<%= t('webmail.links.address.send') %>",
-      entry: "<%= t('webmail.links.address.entry') %>",
-      copy: "<%= t('webmail.links.address.copy') %>"
+      send: t('webmail.links.address.send'),
+      entry: t('webmail.links.address.entry'),
+      copy: t('webmail.links.address.copy')
     },
     urls: {
-      send: "<%= new_webmail_mail_path %>",
-      add: "<%= add_webmail_addresses_path(group: "-") %>"
-    }
-  });
+      send: new_webmail_mail_path,
+      add: add_webmail_addresses_path(group: "-")
+    },
+    new_window_width: SS.config.webmail.mail_edit_screen_width
+  }
+%>
+
+<%= jquery do %>
+  Webmail_Mail_Address.render(<%== render_opts.to_json %>);
   Webmail_Mail_List.renderListStars();
 <% end %>
 

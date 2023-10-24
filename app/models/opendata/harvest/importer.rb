@@ -68,6 +68,10 @@ class Opendata::Harvest::Importer
     end
   end
 
+  def enabled?
+    state == "enabled"
+  end
+
   def basicauth_state_options
     state_options
   end

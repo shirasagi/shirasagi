@@ -133,49 +133,57 @@ describe Article::Page, dbscope: :example do
     describe "consistency of `#public?` and `.and_public`" do
       it do
         # just before release date
+        subject.reload
         expect(described_class.and_public(release_date - 1.second).count).to eq 0
         Timecop.freeze(release_date - 1.second) do
-          subject.reload
           expect(described_class.and_public.count).to eq 0
           expect(subject.public?).to be_falsey
         end
 
-        # at release date
-        expect(described_class.and_public(release_date).count).to eq 1
+        # before page is released
+        subject.reload
+        expect(described_class.and_public(release_date).count).to eq 1 # プレビューモードでは閲覧できる
         Timecop.freeze(release_date) do
-          # before page is released
-          subject.reload
-          expect(described_class.and_public.count).to eq 1
+          expect(described_class.and_public.count).to eq 0 # 通常モードでは閲覧できない
           expect(subject.public?).to be_falsey
+        end
 
+        # release page
+        Timecop.freeze(release_date) do
           job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
           expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+        end
 
-          # after page was released
-          subject.reload
+        # after page was released
+        subject.reload
+        expect(described_class.and_public(release_date).count).to eq 1
+        Timecop.freeze(release_date) do
           expect(described_class.and_public.count).to eq 1
           expect(described_class.and_public.first).to eq subject
           expect(subject.public?).to be_truthy
         end
-        expect(described_class.and_public(release_date).count).to eq 1
 
-        # at close date
+        # before page is closed
+        subject.reload
         expect(described_class.and_public(close_date).count).to eq 0
         Timecop.freeze(close_date) do
-          # before page is closed
-          subject.reload
           expect(described_class.and_public.count).to eq 0
           expect(subject.public?).to be_truthy
+        end
 
+        # close page
+        Timecop.freeze(close_date) do
           job = Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id)
           expect { job.perform_now }.to output(include(subject.full_url + "\n")).to_stdout
+        end
 
-          # after page was closed
-          subject.reload
+        # after page was closed
+        subject.reload
+        expect(described_class.and_public(close_date).count).to eq 0
+        Timecop.freeze(close_date) do
           expect(described_class.and_public.count).to eq 0
           expect(subject.public?).to be_falsey
         end
-        expect(described_class.and_public(close_date).count).to eq 0
       end
     end
   end
@@ -202,9 +210,12 @@ describe Article::Page, dbscope: :example do
       expect(described_class.and_public(release_date - 1.second).count).to eq expected
       expect(expected).to eq 0
 
-      # at release date
+      # at release date: プレビューモードでは閲覧でき、通常モードでは閲覧できないので件数が異なる
       expected = Timecop.freeze(release_date) { described_class.and_public.count }
-      expect(described_class.and_public(release_date).count).to eq expected
+      actual = described_class.and_public(release_date).count
+      expect(actual).not_to eq expected
+      expect(expected).to eq 0
+      expect(actual).to eq 1
 
       # at release date after release page job is completed
       Timecop.freeze(release_date) do

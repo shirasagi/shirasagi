@@ -63,14 +63,20 @@ module Cms::Content
     end
 
     def and_public_selector(date)
+      # dateがnilかどうかでプレビューかどうかを判定している。が、悪手かも。
+      in_preview = !date.nil?
       date = date ? date.dup : Time.zone.now
       conditions = []
       conditions << { state: "public", release_date: nil, close_date: nil }
       conditions << { state: "public", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
-      conditions << { state: "ready", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
       conditions << { state: "public", release_date: nil, close_date: { "$gt" => date } }
       conditions << { state: "public", release_date: { "$lte" => date }, close_date: nil }
-      conditions << { state: "ready", release_date: { "$lte" => date }, close_date: nil }
+      if in_preview
+        # previewの場合、readyのページにアクセスできるので条件に含めてもOK。
+        # しかし、previewでない場合、readyのページにはアクセスできないので、条件から除外する。
+        conditions << { state: "ready", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+        conditions << { state: "ready", release_date: { "$lte" => date }, close_date: nil }
+      end
       { "$and" => [{ "$or" => conditions }] }
     end
 

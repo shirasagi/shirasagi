@@ -286,10 +286,12 @@ en:
       imported: Imported.
       approved: Approved.
       started_import: Importing started.
+      started_export: Exporting started.
       started_upload: Upload started.
       started_deliver: Delivery started.
       started_test_deliver: Test delivery started.
       started_apply: Applying process started.
+      started_purge: Purge process started.
       sent: Sent.
       posted: Posted.
       initialized: Initialized.

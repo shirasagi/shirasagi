@@ -47,6 +47,7 @@ class Opendata::Harvest::ShirasagiScraper
     doc = doc.css(".dataset-tabs").first.parent
 
     dataset["url"] = dataset_url
+    dataset["uuid"] = doc.css('.author .api-uuid').text.to_s.strip
     dataset["name"] = doc.css('header h1.name').text.to_s.strip
     dataset["text"] = doc.css('.text').first.text.to_s.strip
     dataset["categories"] = doc.css("nav.categories .category").map { |node| node.text.to_s.strip }
@@ -62,6 +63,7 @@ class Opendata::Harvest::ShirasagiScraper
       dataset["license_title"] ||= doc.css('.license img').first.attributes["alt"].value
 
       resource = {}
+      resource["uuid"] = node.attr("data-uuid").to_s.strip
       resource["name"] = node.css(".info .name").text.to_s.strip
       resource["text"] = node.css(".info .text").text.to_s.strip
 

@@ -36,12 +36,10 @@ module Opendata::Harvest::CkanApiExportInitializer
 
         put_log "#{idx}-#{r_idx} : resource_delete #{resource_id}"
         package.resource_delete(resource_id, api_key)
-        sleep 1
       end
 
       put_log "#{idx} : dataset_purge #{name} #{id}"
       package.dataset_purge(id, api_key)
-      sleep 1
     end
 
     self.dataset_relations.destroy_all

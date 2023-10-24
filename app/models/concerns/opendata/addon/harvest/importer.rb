@@ -9,6 +9,11 @@ module Opendata::Addon::Harvest
     EXTERNAL_RESOUCE_FORMAT = %w(html htm).freeze
 
     def import
+      if !enabled?
+        put_log("not enabled #{source_url}")
+        return
+      end
+
       if api_type == "ckan"
         import_from_ckan_api
       elsif api_type == "shirasagi_api"
@@ -18,7 +23,7 @@ module Opendata::Addon::Harvest
       end
     end
 
-    def destroy_imported_datasets
+    def purge
       dataset_ids = ::Opendata::Dataset.site(site).node(node).where("$or" => [
           { harvest_api_type: api_type, harvest_host: source_host },
           { harvest_importer_id: id }
