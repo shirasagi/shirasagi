@@ -149,6 +149,8 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     attributes["contact_tel"] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
     attributes["contact_fax"] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)
     attributes["contact_email"] = @cur_page.contact_email if @cur_page.respond_to?(:contact_email)
+    attributes["contact_postal_code"] = @cur_page.contact_postal_code if @cur_page.respond_to?(:contact_postal_code)
+    attributes["contact_address"] = @cur_page.contact_address if @cur_page.respond_to?(:contact_address)
     attributes["contact_link_url"] = @cur_page.contact_link_url if @cur_page.respond_to?(:contact_link_url)
     attributes["contact_link_name"] = @cur_page.contact_link_name if @cur_page.respond_to?(:contact_link_name)
 

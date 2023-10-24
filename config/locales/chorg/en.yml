@@ -43,6 +43,8 @@ en:
         contact_tel: Phone number
         contact_fax: Fax number
         contact_email: E-mail address
+        contact_postal_code: Postal code
+        contact_address: Address
         contact_link_url: Link URL
         contact_link_name: Link name
         ldap_dn: DN
@@ -126,6 +128,8 @@ en:
         contact_tel: Phone number
         contact_fax: Fax number
         contact_email: E-mail address
+        contact_postal_code: Postal code
+        contact_address: Address
         contact_link_url: Link URL
         contact_link_name: Link name
         ldap_dn: DN
@@ -138,6 +142,8 @@ en:
         nth_destination_contact_contact_tel: "Destination%{dest_seq}_Contact%{contact_seq}_Phone Number"
         nth_destination_contact_contact_fax: "Destination%{dest_seq}_Contact%{contact_seq}_Fax Number"
         nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
+        nth_destination_contact_contact_postal_code: "Destination%{dest_seq}_Contact%{contact_seq}_Postal Code"
+        nth_destination_contact_contact_address: "Destination%{dest_seq}_Contact%{contact_seq}_Address"
         nth_destination_contact_contact_link_url: "Destination%{dest_seq}_Contact%{contact_seq}_Link URL"
         nth_destination_contact_contact_link_name: "Destination%{dest_seq}_Contact%{contact_seq}_Link Name"
     errors:
@@ -241,6 +247,10 @@ en:
             - Enter the fax number of the new group.
           contact_email:
             - Enter the e-mail address of the new group.
+          contact_postal_code:
+            - Enter the postal code of the new group.
+          contact_address:
+            - Enter the address of the new group.
           contact_link_url:
             - Enter the link URL of the new group.
           contact_link_name:
@@ -264,6 +274,10 @@ en:
             - Enter the fax number of the split group.
           contact_email:
             - Enter the e-mail address of the split group.
+          contact_postal_code:
+            - Enter the postal code of the split group.
+          contact_address:
+            - Enter the address of the split group.
           contact_link_url:
             - Enter the link URL of the split group.
           contact_link_name:
@@ -286,6 +300,10 @@ en:
             - Enter the fax number of the transfer destination group.
           contact_email:
             - Enter the e-mail address of the transfer destination group.
+          contact_postal_code:
+            - Enter the postal code of the transfer destination group.
+          contact_address:
+            - Enter the address of the transfer destination group.
           contact_link_url:
             - Enter the link URL of the transfer destination group.
           contact_link_name:
@@ -308,6 +326,10 @@ en:
             - Enter the fax number of the merge destination group.
           contact_email:
             - Enter the e-mail address of the merge destination group.
+          contact_postal_code:
+            - Enter the postal code of the merge destination group.
+          contact_address:
+            - Enter the address of the merge destination group.
           contact_link_url:
             - Enter the link URL of the merge destination group.
           contact_link_name:

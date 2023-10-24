@@ -191,6 +191,8 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.contact_tel = value(row, item, :contact_tel)
     item.contact_fax = value(row, item, :contact_fax)
     item.contact_email = value(row, item, :contact_email)
+    item.contact_postal_code = value(row, item, :contact_postal_code)
+    item.contact_address = value(row, item, :contact_address)
     item.contact_link_url = value(row, item, :contact_link_url)
     item.contact_link_name = value(row, item, :contact_link_name)
 

@@ -562,7 +562,8 @@ file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy1.jpg", model
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
   map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
-  contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000",
+  contact_charge: "担当者", contact_email: "admin@example.jp", contact_postal_code: "0000000",
+  contact_address: "大鷺県シラサギ市小鷺町1丁目1番地1号", contact_tel: "000-000-0000",
   contact_fax: "000-000-0000", contact_link_url: link_url, contact_link_name: link_url
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
@@ -572,7 +573,9 @@ article4 = save_page route: "article/page", filename: "docs/page4.html", name: "
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name
 article4.html = article4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article4.update
 
@@ -691,7 +694,9 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   order: 10
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
@@ -704,7 +709,9 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   order: 20
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
@@ -716,7 +723,9 @@ page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name:
   map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   order: 30
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
@@ -729,7 +738,9 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   order: 40
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
@@ -742,7 +753,9 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   map_points: [ { name: "徳島駅", loc: [134.5516, 34.074722], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
   contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   order: 50
 page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page5.update

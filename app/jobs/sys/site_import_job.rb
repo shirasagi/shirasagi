@@ -275,6 +275,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
               contact_tel: dist["contact_tel"],
               contact_fax: dist["contact_fax"],
               contact_email: dist["contact_email"],
+              contact_postal_code: dist["contact_postal_code"],
+              contact_address: dist["contact_address"],
               contact_link_url: dist["contact_link_url"],
               contact_link_name: dist["contact_link_name"],
               main_state: main_state)

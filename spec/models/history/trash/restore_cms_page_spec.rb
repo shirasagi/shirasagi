@@ -250,6 +250,8 @@ describe History::Trash, type: :model, dbscope: :example do
       let(:contact_tel) { "contact_tel-#{unique_id}" }
       let(:contact_fax) { "contact_fax-#{unique_id}" }
       let(:contact_email) { unique_email }
+      let(:contact_postal_code) { "contact_postal_code-#{unique_id}" }
+      let(:contact_address) { "contact_address-#{unique_id}" }
       let(:contact_link_url) { "/#{unique_id}/" }
       let(:contact_link_name) { "contact_link_name-#{unique_id}" }
       let!(:item) do
@@ -257,6 +259,7 @@ describe History::Trash, type: :model, dbscope: :example do
           :cms_page, cur_user: user, cur_site: site,
           contact_state: contact_state, contact_group_id: contact_group.id, contact_charge: contact_charge,
           contact_tel: contact_tel, contact_fax: contact_fax, contact_email: contact_email,
+          contact_postal_code: contact_postal_code, contact_address: contact_address,
           contact_link_url: contact_link_url, contact_link_name: contact_link_name
         )
       end
@@ -270,6 +273,8 @@ describe History::Trash, type: :model, dbscope: :example do
         expect(item.contact_tel).to eq contact_tel
         expect(item.contact_fax).to eq contact_fax
         expect(item.contact_email).to eq contact_email
+        expect(item.contact_postal_code).to eq contact_postal_code
+        expect(item.contact_address).to eq contact_address
         expect(item.contact_link_url).to eq contact_link_url
         expect(item.contact_link_name).to eq contact_link_name
       end

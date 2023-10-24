@@ -39,6 +39,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       article_page.contact_tel = contact.contact_tel
       article_page.contact_fax = contact.contact_fax
       article_page.contact_email = contact.contact_email
+      article_page.contact_postal_code = contact.contact_postal_code
+      article_page.contact_address = contact.contact_address
       article_page.contact_link_url = contact.contact_link_url
       article_page.contact_link_name = contact.contact_link_name
     end
@@ -117,6 +119,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.contact_tel).to eq article_page.contact_tel
         expect(dataset.contact_fax).to eq article_page.contact_fax
         expect(dataset.contact_email).to eq article_page.contact_email
+        expect(dataset.contact_postal_code).to eq article_page.contact_postal_code
+        expect(dataset.contact_address).to eq article_page.contact_address
         expect(dataset.contact_link_url).to eq article_page.contact_link_url
         expect(dataset.contact_link_name).to eq article_page.contact_link_name
       end

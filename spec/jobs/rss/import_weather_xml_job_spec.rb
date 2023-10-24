@@ -470,7 +470,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       let(:trigger1) { create(:jmaxml_trigger_quake_intensity_flash) }
       let(:trigger2) { create(:jmaxml_trigger_quake_info) }
 
-      let(:article_node) { create(:article_node_page) }
+      let(:article_node) { create(:article_node_page, group_ids: [ cms_group.id ]) }
       let(:category_node) { create(:category_node_page) }
       let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node.id, category_ids: [ category_node.id ]) }
 

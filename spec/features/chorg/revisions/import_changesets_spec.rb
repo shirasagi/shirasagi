@@ -46,6 +46,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample1@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link1"
           end
@@ -67,6 +69,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample2@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link2"
           end
@@ -111,6 +115,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample1@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link1"
           end
@@ -134,6 +140,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample2@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link2"
           end
@@ -187,6 +195,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample1@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link1"
           end
@@ -213,6 +223,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample2@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link2"
           end
@@ -236,6 +248,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample3@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link3"
           end
@@ -281,6 +295,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample1@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link1"
           end
@@ -298,6 +314,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample2@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link2"
           end
@@ -315,6 +333,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample3@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link3"
           end
@@ -338,6 +358,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample4@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link4"
           end
@@ -361,6 +383,8 @@ describe "chorg_import_revision", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:contact_tel]).to eq "000-0000-0000"
             expect(contact_group[:contact_fax]).to eq "000-0000-0000"
             expect(contact_group[:contact_email]).to eq "sample4@example.jp"
+            expect(contact_group[:contact_postal_code]).to eq "0000000"
+            expect(contact_group[:contact_address]).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
             expect(contact_group[:contact_link_url]).to eq "http://www.ss-proj.org/"
             expect(contact_group[:contact_link_name]).to eq "link4"
           end

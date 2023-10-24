@@ -103,6 +103,8 @@ class Chorg::GroupUpdater
       contact["contact_tel"] = hash["contact_tel"] if hash.key?("contact_tel")
       contact["contact_fax"] = hash["contact_fax"] if hash.key?("contact_fax")
       contact["contact_email"] = hash["contact_email"] if hash.key?("contact_email")
+      contact["contact_postal_code"] = hash["contact_postal_code"] if hash.key?("contact_postal_code")
+      contact["contact_address"] = hash["contact_address"] if hash.key?("contact_address")
       contact["contact_link_url"] = hash["contact_link_url"] if hash.key?("contact_link_url")
       contact["contact_link_name"] = hash["contact_link_name"] if hash.key?("contact_link_name")
       contact["main_state"] = hash["main_state"] if hash.key?("main_state")

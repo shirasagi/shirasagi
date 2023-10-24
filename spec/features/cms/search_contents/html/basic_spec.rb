@@ -130,6 +130,8 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     let(:contact_tel) { unique_tel }
     let(:contact_fax) { unique_tel }
     let(:contact_email) { unique_email }
+    let(:contact_postal_code) { unique_id }
+    let(:contact_address) { unique_id }
     let(:contact_link_url) { unique_url }
     let(:contact_link_name) { "contact_link_name-#{unique_id}" }
 
@@ -243,6 +245,86 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
         within "form.index-search" do
           fill_in "keyword", with: contact_email
+          click_button I18n.t('ss.buttons.search')
+        end
+        wait_for_ajax
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_no_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css(".result table a", text: page5.name)
+      end
+    end
+
+    context "with contact_postal_code" do
+      it do
+        visit html_index_path
+        within "form.index-search" do
+          fill_in "keyword", with: page5.contact_postal_code
+          click_button I18n.t('ss.buttons.search')
+        end
+        wait_for_ajax
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_no_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css(".result table a", text: page5.name)
+
+        page.accept_confirm(I18n.t('cms.apis.contents.confirm_message')) do
+          within "form.index-search" do
+            fill_in "keyword", with: page5.contact_postal_code
+            fill_in "replacement", with: contact_postal_code
+            click_button I18n.t("ss.buttons.replace_all")
+          end
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        page.execute_script("SS.clearNotice();")
+
+        page5.reload
+        expect(page5.contact_postal_code).to eq contact_postal_code
+
+        within "form.index-search" do
+          fill_in "keyword", with: contact_postal_code
+          click_button I18n.t('ss.buttons.search')
+        end
+        wait_for_ajax
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_no_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css(".result table a", text: page5.name)
+      end
+    end
+
+    context "with contact_address" do
+      it do
+        visit html_index_path
+        within "form.index-search" do
+          fill_in "keyword", with: page5.contact_address
+          click_button I18n.t('ss.buttons.search')
+        end
+        wait_for_ajax
+        expect(page).to have_no_css(".result table a", text: "[TEST]top")
+        expect(page).to have_no_css(".result table a", text: "[TEST]child")
+        expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+        expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+        expect(page).to have_css(".result table a", text: page5.name)
+
+        page.accept_confirm(I18n.t('cms.apis.contents.confirm_message')) do
+          within "form.index-search" do
+            fill_in "keyword", with: page5.contact_address
+            fill_in "replacement", with: contact_address
+            click_button I18n.t("ss.buttons.replace_all")
+          end
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        page.execute_script("SS.clearNotice();")
+
+        page5.reload
+        expect(page5.contact_address).to eq contact_address
+
+        within "form.index-search" do
+          fill_in "keyword", with: contact_address
           click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax

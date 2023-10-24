@@ -31,6 +31,7 @@ class Cms::Group
       all.keyword_in(
         params[:keyword], :name, "contact_groups.name", "contact_groups.contact_group_name",
         "contact_groups.contact_tel", "contact_groups.contact_fax", "contact_groups.contact_email",
+        "contact_groups.contact_postal_code", "contact_groups.contact_address",
         "contact_groups.contact_link_url", "contact_groups.contact_link_name")
     end
   end

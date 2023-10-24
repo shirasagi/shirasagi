@@ -277,6 +277,14 @@ module Cms::PageImportBase
       next unless item.respond_to?(:contact_email=)
       import_contact_attribute(row, item, value, :contact_email)
     end
+    importer.simple_column :contact_postal_code do |row, item, head, value|
+      next unless item.respond_to?(:contact_postal_code=)
+      import_contact_attribute(row, item, value, :contact_postal_code)
+    end
+    importer.simple_column :contact_address do |row, item, head, value|
+      next unless item.respond_to?(:contact_address=)
+      import_contact_attribute(row, item, value, :contact_address)
+    end
     importer.simple_column :contact_link_url do |row, item, head, value|
       next unless item.respond_to?(:contact_link_url=)
       import_contact_attribute(row, item, value, :contact_link_url)

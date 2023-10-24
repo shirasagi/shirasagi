@@ -13,7 +13,7 @@ module Chorg::Model::Changeset
 
   CONTACT_GROUP_ATTRIBUTES = %i[
     _id id main_state unifies_to_main name contact_group_name contact_tel contact_fax contact_email
-    contact_link_url contact_link_name].freeze
+    contact_postal_code contact_address contact_link_url contact_link_name].freeze
   MAIN_CONTACT_GROUP_ATTRIBUTES = (CONTACT_GROUP_ATTRIBUTES - %i[_id id unifies_to_main]).freeze
 
   included do

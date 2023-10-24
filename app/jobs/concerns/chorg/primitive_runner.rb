@@ -217,6 +217,8 @@ module Chorg::PrimitiveRunner
             page.contact_tel = triple[1].contact_tel
             page.contact_fax = triple[1].contact_fax
             page.contact_email = triple[1].contact_email
+            page.contact_postal_code = triple[1].contact_postal_code
+            page.contact_address = triple[1].contact_address
             page.contact_link_url = triple[1].contact_link_url
             page.contact_link_name = triple[1].contact_link_name
 
@@ -246,6 +248,8 @@ module Chorg::PrimitiveRunner
         page.contact_tel = destination_main_contact.contact_tel
         page.contact_fax = destination_main_contact.contact_fax
         page.contact_email = destination_main_contact.contact_email
+        page.contact_postal_code = destination_main_contact.contact_postal_code
+        page.contact_address = destination_main_contact.contact_address
         page.contact_link_url = destination_main_contact.contact_link_url
         page.contact_link_name = destination_main_contact.contact_link_name
 

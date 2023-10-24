@@ -30,10 +30,10 @@
     text-align: center;
   }
 
-  .name, .contact-group-name, .contact-tel, .contact-fax, .contact-email, .contact-link-name {
+  .name, .contact-group-name, .contact-tel, .contact-fax, .contact-email, .contact-postal-code, .contact-link-name {
     min-width: 15em;
   }
-  .contact-link-url {
+  .contact-address, .contact-link-url {
     min-width: 30em;
   }
   .contact-main-state {

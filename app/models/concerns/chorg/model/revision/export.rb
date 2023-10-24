@@ -23,7 +23,7 @@ module Chorg::Model::Revision
         CSV.generate do |data|
           data << %w(
             id type source destination order
-            contact_tel contact_fax contact_email contact_link_url contact_link_name
+            contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url contact_link_name
             ldap_dn
           ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
 
@@ -61,7 +61,7 @@ module Chorg::Model::Revision
         CSV.generate do |data|
           data << %w(
             id type source destination order
-            contact_tel contact_fax contact_email contact_link_url contact_link_name
+            contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url contact_link_name
             ldap_dn
           ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
           SS.config.chorg.changeset_sample_csv.each { |line| data << line }
@@ -81,6 +81,8 @@ module Chorg::Model::Revision
       line << destination["contact_tel"]
       line << destination["contact_fax"]
       line << destination["contact_email"]
+      line << destination["contact_postal_code"]
+      line << destination["contact_address"]
       line << destination["contact_link_url"]
       line << destination["contact_link_name"]
       line << destination["ldap_dn"]
@@ -104,6 +106,8 @@ module Chorg::Model::Revision
         "contact_tel" => line[I18n.t("chorg.import.changeset.contact_tel")].to_s.strip,
         "contact_fax" => line[I18n.t("chorg.import.changeset.contact_fax")].to_s.strip,
         "contact_email" => line[I18n.t("chorg.import.changeset.contact_email")].to_s.strip,
+        "contact_postal_code" => line[I18n.t("chorg.import.changeset.contact_postal_code")].to_s.strip,
+        "contact_address" => line[I18n.t("chorg.import.changeset.contact_address")].to_s.strip,
         "contact_link_url" => line[I18n.t("chorg.import.changeset.contact_link_url")].to_s.strip,
         "contact_link_name" => line[I18n.t("chorg.import.changeset.contact_link_name")].to_s.strip,
         "ldap_dn" => line[I18n.t("chorg.import.changeset.ldap_dn")].to_s.strip

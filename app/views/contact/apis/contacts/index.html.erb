@@ -28,6 +28,8 @@
         <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
         <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
         <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
+        <th class="contact-postal-code"><%= SS::Contact.t :contact_postal_code %></th>
+        <th class="contact-address"><%= SS::Contact.t :contact_address %></th>
         <th class="contact-link-url"><%= SS::Contact.t :contact_link_url %></th>
         <th class="contact-link-name"><%= SS::Contact.t :contact_link_name %></th>
       </tr>
@@ -43,6 +45,7 @@
             data.merge!(
               contact_id: contact.id.to_s, contact_name: contact.name, contact_group_name: contact.contact_group_name,
               contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
+              contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
               contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
             )
           end
@@ -75,6 +78,8 @@
           <td class="contact-tel"><%= contact.try(:contact_tel) %></td>
           <td class="contact-fax"><%= contact.try(:contact_fax) %></td>
           <td class="contact-email"><%= contact.try(:contact_email) %></td>
+          <td class="contact-postal-code"><%= contact.try(:contact_postal_code) %></td>
+          <td class="contact-address"><%= contact.try(:contact_address) %></td>
           <td class="contact-link-url"><%= contact.try(:contact_link_url) %></td>
           <td class="contact-link-name"><%= contact.try(:contact_link_name) %></td>
         <% end %>

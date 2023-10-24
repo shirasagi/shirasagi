@@ -75,6 +75,28 @@
     %>
   </dd>
 
+  <dt><%= @model.t :contact_postal_code %></dt>
+  <dd class="contact-postal-code">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_postal_code)
+      else
+        @item.contact_postal_code
+      end
+    %>
+  </dd>
+
+  <dt><%= @model.t :contact_address %></dt>
+  <dd class="contact-address">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_address)
+      else
+        @item.contact_address
+      end
+    %>
+  </dd>
+
   <dt><%= @model.t :contact_link_url %></dt>
   <dd class="contact-link-url">
     <%=

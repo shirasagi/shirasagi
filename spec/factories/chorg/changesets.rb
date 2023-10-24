@@ -15,6 +15,8 @@ FactoryBot.define do
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}/",
               contact_link_name: "link-#{unique_id}",
             }.with_indifferent_access
@@ -45,6 +47,8 @@ FactoryBot.define do
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}/",
               contact_link_name: "link-#{unique_id}",
             }.with_indifferent_access
@@ -76,6 +80,8 @@ FactoryBot.define do
               contact_tel: contact.contact_tel,
               contact_fax: contact.contact_fax,
               contact_email: contact.contact_email,
+              contact_postal_code: contact.contact_postal_code,
+              contact_address: contact.contact_address,
               contact_link_url: contact.contact_link_url,
               contact_link_name: contact.contact_link_name,
             }.with_indifferent_access
@@ -103,6 +109,8 @@ FactoryBot.define do
             contact_tel: unique_tel,
             contact_fax: unique_tel,
             contact_email: unique_email,
+            contact_postal_code: unique_id,
+            contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}/",
             contact_link_name: "link-#{unique_id}",
           }.with_indifferent_access
@@ -163,6 +171,8 @@ FactoryBot.define do
               name: contact_group.name,
               contact_group_name: contact_group.contact_group_name,
               contact_email: contact_group.contact_email,
+              contact_postal_code: contact_group.contact_postal_code,
+              contact_address: contact_group.contact_address,
               contact_tel: contact_group.contact_tel,
               contact_fax: contact_group.contact_fax,
               contact_link_url: contact_group.contact_link_url,
