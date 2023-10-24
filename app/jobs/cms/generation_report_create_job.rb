@@ -122,9 +122,18 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       history.sub_total_db = sub_total_db
       history.sub_total_view = sub_total_view
       history.sub_total_elapsed = sub_total_elapsed
-      history.db -= sub_total_db if sub_total_db
-      history.view -= sub_total_view if sub_total_view
-      history.elapsed -= sub_total_elapsed if sub_total_elapsed
+      if sub_total_db && sub_total_db > 0
+        history.db ||= 0
+        history.db -= sub_total_db
+      end
+      if sub_total_view && sub_total_view > 0
+        history.view ||= 0
+        history.view -= sub_total_view
+      end
+      if sub_total_elapsed && sub_total_elapsed > 0
+        history.elapsed ||= 0
+        history.elapsed -= sub_total_elapsed
+      end
       history.save!
     end
 
