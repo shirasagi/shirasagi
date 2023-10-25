@@ -82,8 +82,10 @@ module Chorg::Substitutor
     end
 
     def overwrite_fields
-      %w(contact_charge contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url
-        contact_link_name)
+      %w(
+        contact_charge contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url
+        contact_link_name
+      )
     end
 
     def string_array?(array_value)

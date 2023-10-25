@@ -26,10 +26,6 @@ module Contact::Addon::Group
     if respond_to? :before_chorg
       before_chorg :update_chorg_attributes
     end
-
-    def contact_link
-      contact_link_name || contact_link_url
-    end
   end
 
   private
