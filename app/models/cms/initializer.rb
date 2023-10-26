@@ -150,6 +150,7 @@ module Cms
     Cms::Role.permission :read_other_cms_check_links_errors
     Cms::Role.permission :read_private_cms_check_links_errors
     Cms::Role.permission :edit_cms_check_links_ignore_urls
+    Cms::Role.permission :edit_cms_ignore_syntax_check
 
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File
