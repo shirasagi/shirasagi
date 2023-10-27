@@ -13,7 +13,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     page1.reload
 
     role = cms_role
-    role.permissions = role.permissions - %w(edit_cms_ignore_alert)
+    role.permissions = role.permissions - %w(edit_cms_ignore_alert edit_cms_ignore_syntax_check)
     role.save!
 
     login_cms_user
@@ -51,6 +51,28 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       within "#cboxLoadedContent" do
         expect(page).to have_css("li", text: I18n.t('ss.confirm.contains_url_expect'))
+        expect(page).to have_no_css('.save')
+      end
+    end
+  end
+
+  context "with syntax check error" do
+    let(:html) { "<h6>#{unique_id}</h6>" }
+
+    it do
+      visit article_pages_path(site: site, cid: node)
+      click_on page1.name
+      click_on I18n.t("ss.buttons.edit")
+
+      within "form#item-form" do
+        fill_in_ckeditor "item[html]", with: html
+
+        click_on I18n.t("ss.buttons.withdraw")
+      end
+
+      within "#cboxLoadedContent" do
+        expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
+        expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
         expect(page).to have_no_css('.save')
       end
     end
