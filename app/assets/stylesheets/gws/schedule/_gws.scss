@@ -82,8 +82,16 @@
   header {
     @include clear;
     line-height: 1.4;
+    .approval-check {
+      margin-left: 6px;
+      padding: 1px 5px;
+      color: #fff;
+      background-color: #84e;
+      border-radius: 4px;
+      font-weight: normal;
+    }
     .add-plan {
-      margin-left: 8px;
+      margin-left: 6px;
       padding: 2px 5px;
       border-radius: 4px;
       background-color: #f40;
@@ -792,8 +800,15 @@
     color: #444;
     &:hover { color: $orange; }
   }
+  .approval-check {
+    margin-left: 6px;
+    padding: 1px 5px;
+    color: #fff;
+    background-color: #84e;
+    border-radius: 4px;
+  }
   .add-plan {
-    margin-left: 8px;
+    margin-left: 6px;
     padding: 1px 5px;
     border-radius: 4px;
     background-color: #f40;

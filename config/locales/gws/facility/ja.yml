@@ -3,6 +3,8 @@ ja:
     facility: 設備
     category: カテゴリー
     manage_columns: 追加入力を管理する
+    views:
+      required_approval: 要承認
     prompts:
       minutes: 分
       days: 日先まで

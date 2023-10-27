@@ -17,6 +17,7 @@
 
   <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) %>
     <h3><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path %></h3>
+    <h3><%= link_to t('gws/schedule.navi.approve_facility_plan'), gws_schedule_facility_approval_plans_path %></h3>
   <% end %>
   <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/schedule.tabs.search'), gws_schedule_search_path %></h3>

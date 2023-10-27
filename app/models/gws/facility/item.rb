@@ -85,6 +85,10 @@ class Gws::Facility::Item
     %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
+  def approval_check?
+    approval_check_state == "enabled"
+  end
+
   private
 
   def validate_minutes_limit
