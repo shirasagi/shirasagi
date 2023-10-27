@@ -40,6 +40,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(section).to have_text(contact_group.contact_tel)
       expect(section).to have_text(contact_group.contact_fax)
       expect(section).to have_text(contact_group.contact_email)
+      expect(section).to have_text(contact_group.contact_postal_code)
+      expect(section).to have_text(contact_group.contact_address)
       expect(section).to have_text(contact_group.contact_link_url)
       expect(section).to have_text(contact_group.contact_link_name)
     end

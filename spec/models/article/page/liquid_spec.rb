@@ -204,6 +204,7 @@ describe Article::Page, dbscope: :example do
           create(
             :article_page, cur_node: node, contact_state: "show", contact_charge: unique_id,
             contact_tel: "0000", contact_fax: "9999", contact_email: "#{unique_id}@example.jp",
+            contact_postal_code: "0000000", contact_address: unique_id,
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id,
             contact_group: group1
           )
@@ -216,6 +217,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.contact_tel).to eq page.contact_tel
           expect(subject.contact_fax).to eq page.contact_fax
           expect(subject.contact_email).to eq page.contact_email
+          expect(subject.contact_postal_code).to eq page.contact_postal_code
+          expect(subject.contact_address).to eq page.contact_address
           expect(subject.contact_link_url).to eq page.contact_link_url
           expect(subject.contact_link_name).to eq page.contact_link_name
           subject.contact_group.to_liquid.tap do |contact_group|

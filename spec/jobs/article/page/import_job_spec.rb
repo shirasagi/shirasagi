@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Article::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
+  let!(:group1) { create :cms_group, name: "#{cms_group.name}/g1" }
 
   describe ".valid_csv?" do
     context "with csv file" do
@@ -88,7 +89,8 @@ describe Article::Page::ImportJob, dbscope: :example do
         let!(:source_page) do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
-            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100)
+            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
+            contact_group: group1
           )
         end
 
@@ -108,7 +110,8 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            keywords: [ unique_id ], description: unique_id, summary_html: unique_id
+            keywords: [ unique_id ], description: unique_id, summary_html: unique_id,
+            contact_group: group1
           )
         end
 
@@ -126,7 +129,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            html: unique_id
+            html: unique_id, contact_group: group1
           )
         end
 
@@ -142,7 +145,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            category_ids: [ category_node.id ]
+            category_ids: [ category_node.id ], contact_group: group1
           )
         end
 
@@ -218,7 +221,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            related_page_ids: [ related_page.id ], related_page_sort: related_page_sort
+            related_page_ids: [ related_page.id ], related_page_sort: related_page_sort, contact_group: group1
           )
         end
 
@@ -235,7 +238,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            parent_crumb_urls: [ unique_id, unique_id ]
+            parent_crumb_urls: [ unique_id, unique_id ], contact_group: group1
           )
         end
 
@@ -253,6 +256,7 @@ describe Article::Page::ImportJob, dbscope: :example do
             {
               main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
               contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
             }
           ])
@@ -263,6 +267,7 @@ describe Article::Page::ImportJob, dbscope: :example do
             contact_state: contact_state, contact_group: cms_group, contact_group_contact_id: cms_group.contact_groups.first.id,
             contact_group_relation: contact_group_relation, contact_charge: unique_id, contact_tel: unique_id,
             contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
+            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
           )
         end
@@ -280,6 +285,8 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_tel).to eq source_page.contact_tel
               expect(page.contact_fax).to eq source_page.contact_fax
               expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_postal_code).to eq source_page.contact_postal_code
+              expect(page.contact_address).to eq source_page.contact_address
               expect(page.contact_link_url).to eq source_page.contact_link_url
               expect(page.contact_link_name).to eq source_page.contact_link_name
             end
@@ -300,6 +307,8 @@ describe Article::Page::ImportJob, dbscope: :example do
                 expect(page.contact_tel).to eq contact.contact_tel
                 expect(page.contact_fax).to eq contact.contact_fax
                 expect(page.contact_email).to eq contact.contact_email
+                expect(page.contact_postal_code).to eq contact.contact_postal_code
+                expect(page.contact_address).to eq contact.contact_address
                 expect(page.contact_link_url).to eq contact.contact_link_url
                 expect(page.contact_link_name).to eq contact.contact_link_name
               end
@@ -320,6 +329,8 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_tel).to eq source_page.contact_tel
               expect(page.contact_fax).to eq source_page.contact_fax
               expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_postal_code).to eq source_page.contact_postal_code
+              expect(page.contact_address).to eq source_page.contact_address
               expect(page.contact_link_url).to eq source_page.contact_link_url
               expect(page.contact_link_name).to eq source_page.contact_link_name
             end
@@ -351,7 +362,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            group_ids: cms_user.group_ids, permission_level: rand(1..3)
+            group_ids: cms_user.group_ids, permission_level: rand(1..3), contact_group: group1
           )
         end
 
@@ -370,7 +381,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            state: %w(public ready closed).sample
+            state: %w(public ready closed).sample, contact_group: group1
           )
         end
 

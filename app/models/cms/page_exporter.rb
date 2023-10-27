@@ -356,6 +356,8 @@ class Cms::PageExporter
     drawer.column :contact_tel
     drawer.column :contact_fax
     drawer.column :contact_email
+    drawer.column :contact_postal_code
+    drawer.column :contact_address
     drawer.column :contact_link_url
     drawer.column :contact_link_name
   end

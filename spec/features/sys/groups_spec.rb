@@ -141,6 +141,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/A/"
         expect(g.contact_link_name).to eq "A"
       end
@@ -154,6 +156,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/"
         expect(g.contact_link_name).to eq "B"
       end
@@ -167,6 +171,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/C/"
         expect(g.contact_link_name).to eq "C"
       end
@@ -180,6 +186,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/C/D/"
         expect(g.contact_link_name).to eq "D"
       end
@@ -193,6 +201,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/"
         expect(g.contact_link_name).to eq "E"
       end
@@ -206,6 +216,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/F/"
         expect(g.contact_link_name).to eq "F"
       end
@@ -219,6 +231,8 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/G/"
         expect(g.contact_link_name).to eq "G"
       end

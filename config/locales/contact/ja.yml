@@ -5,8 +5,10 @@ ja:
     tel: 電話番号
     fax: ファックス番号
     email: メールアドレス
+    address: 住所
     link_url: リンクURL
     link_name: リンク名
+    postal_code: "〒%{code}"
     pages_used_label: ページ数
     pages_used:
       zero: なし
@@ -22,6 +24,7 @@ ja:
       tel: 電話
       fax: Fax
       email: E-Mail
+      address: 住所
       link_url: リンクURL
       link_name: リンク名
       inquiry_form: お問い合わせフォーム
@@ -75,6 +78,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
         contact_group_name: 担当部署
@@ -86,6 +91,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
       contact/addon/page:
@@ -96,6 +103,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
         main_state: 主
@@ -114,6 +123,10 @@ ja:
         - 連絡先に表示する部署のファックス番号を記入します。
       contact_email:
         - 連絡先に表示する部署または担当者のメールアドレスを記入します。
+      contact_postal_code:
+        - 連絡先に表示する部署または担当者の郵便番号を記入します。
+      contact_address:
+        - 連絡先に表示する部署または担当者の住所を記入します。
       contact_link_url:
         - 連絡先に表示する部署のリンクURLを記入します。
       contact_link_name:
@@ -134,6 +147,12 @@ ja:
         - ページ作成時に連絡先として自動で挿入されます。
       contact_email:
         - グループのメールアドレスを記入します。
+        - ページ作成時に連絡先として自動で挿入されます。
+      contact_postal_code:
+        - グループの郵便番号を記入します。
+        - ページ作成時に連絡先として自動で挿入されます。
+      contact_address:
+        - グループの住所を記入します。
         - ページ作成時に連絡先として自動で挿入されます。
       contact_link_url:
         - グループのリンクURLを記入します。

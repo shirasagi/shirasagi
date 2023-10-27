@@ -38,6 +38,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
     let!(:root_group) do
       tel   = "000-000-0000"
       email = "sys@example.jp"
+      postal_code = '0000000'
+      address = '大鷺県シラサギ市小鷺町1丁目1番地1号'
       link_url = "/"
       link_name = "http://demo.ss-proj.org/"
       g1 = create(
@@ -45,7 +47,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         contact_groups: [
           {
             main_state: 'main', name: unique_id,
-            contact_tel: tel, contact_fax: tel, contact_email: email, contact_link_url: link_url, contact_link_name: link_name
+            contact_tel: tel, contact_fax: tel, contact_email: email, contact_postal_code: postal_code,
+            contact_address: address, contact_link_url: link_url, contact_link_name: link_name
           }
         ]
       )
@@ -86,6 +89,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/"
         expect(g.contact_link_name).to eq "B"
       end
@@ -98,6 +103,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/C/"
         expect(g.contact_link_name).to eq "C"
       end
@@ -110,6 +117,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/C/D/"
         expect(g.contact_link_name).to eq "D"
       end
@@ -122,6 +131,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/"
         expect(g.contact_link_name).to eq "E"
       end
@@ -134,6 +145,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/F/"
         expect(g.contact_link_name).to eq "F"
       end
@@ -146,6 +159,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "0000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/G/"
         expect(g.contact_link_name).to eq "G"
       end
@@ -213,6 +228,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
       let(:contact_tel1) { unique_tel }
       let(:contact_fax1) { unique_tel }
       let(:contact_email1) { unique_email }
+      let(:contact_postal_code1) { unique_id }
+      let(:contact_address1) { unique_id }
       let(:contact_link_url1) { "/#{unique_id}/" }
       let(:contact_link_name1) { unique_id }
       let(:contact_name2) { unique_id }
@@ -220,6 +237,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
       let(:contact_tel2) { unique_tel }
       let(:contact_fax2) { unique_tel }
       let(:contact_email2) { unique_email }
+      let(:contact_postal_code2) { unique_id }
+      let(:contact_address2) { unique_id }
       let(:contact_link_url2) { "/#{unique_id}/" }
       let(:contact_link_name2) { unique_id }
 
@@ -238,6 +257,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(item.contact_tel).to be_blank
         expect(item.contact_fax).to be_blank
         expect(item.contact_email).to be_blank
+        expect(item.contact_postal_code).to be_blank
+        expect(item.contact_address).to be_blank
         expect(item.contact_link_url).to be_blank
         expect(item.contact_link_name).to be_blank
 
@@ -253,6 +274,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
               fill_in "item[contact_groups][][contact_tel]", with: contact_tel1
               fill_in "item[contact_groups][][contact_fax]", with: contact_fax1
               fill_in "item[contact_groups][][contact_email]", with: contact_email1
+              fill_in "item[contact_groups][][contact_postal_code]", with: contact_postal_code1
+              fill_in "item[contact_groups][][contact_address]", with: contact_address1
               fill_in "item[contact_groups][][contact_link_url]", with: contact_link_url1
               fill_in "item[contact_groups][][contact_link_name]", with: contact_link_name1
             end
@@ -270,6 +293,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           expect(contact_group.contact_group_name).to eq contact_group_name1
           expect(contact_group.contact_tel).to eq contact_tel1
           expect(contact_group.contact_email).to eq contact_email1
+          expect(contact_group.contact_postal_code).to eq contact_postal_code1
+          expect(contact_group.contact_address).to eq contact_address1
           expect(contact_group.contact_link_url).to eq contact_link_url1
           expect(contact_group.contact_link_name).to eq contact_link_name1
           expect(contact_group.main_state).to be_blank
@@ -278,6 +303,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(item.contact_tel).to be_blank
         expect(item.contact_fax).to be_blank
         expect(item.contact_email).to be_blank
+        expect(item.contact_postal_code).to be_blank
+        expect(item.contact_address).to be_blank
         expect(item.contact_link_url).to be_blank
         expect(item.contact_link_name).to be_blank
 
@@ -303,6 +330,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           expect(contact_group.contact_tel).to eq contact_tel1
           expect(contact_group.contact_fax).to eq contact_fax1
           expect(contact_group.contact_email).to eq contact_email1
+          expect(contact_group.contact_postal_code).to eq contact_postal_code1
+          expect(contact_group.contact_address).to eq contact_address1
           expect(contact_group.contact_link_url).to eq contact_link_url1
           expect(contact_group.contact_link_name).to eq contact_link_name1
           expect(contact_group.main_state).to eq "main"
@@ -311,6 +340,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(item.contact_tel).to eq contact_tel1
         expect(item.contact_fax).to eq contact_fax1
         expect(item.contact_email).to eq contact_email1
+        expect(item.contact_postal_code).to eq contact_postal_code1
+        expect(item.contact_address).to eq contact_address1
         expect(item.contact_link_url).to eq contact_link_url1
         expect(item.contact_link_name).to eq contact_link_name1
 
@@ -324,6 +355,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
               fill_in "item[contact_groups][][contact_tel]", with: contact_tel2
               fill_in "item[contact_groups][][contact_fax]", with: contact_fax2
               fill_in "item[contact_groups][][contact_email]", with: contact_email2
+              fill_in "item[contact_groups][][contact_postal_code]", with: contact_postal_code2
+              fill_in "item[contact_groups][][contact_address]", with: contact_address2
               fill_in "item[contact_groups][][contact_link_url]", with: contact_link_url2
               fill_in "item[contact_groups][][contact_link_name]", with: contact_link_name2
             end
@@ -342,6 +375,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           expect(contact_group.contact_tel).to eq contact_tel1
           expect(contact_group.contact_fax).to eq contact_fax1
           expect(contact_group.contact_email).to eq contact_email1
+          expect(contact_group.contact_postal_code).to eq contact_postal_code1
+          expect(contact_group.contact_address).to eq contact_address1
           expect(contact_group.contact_link_url).to eq contact_link_url1
           expect(contact_group.contact_link_name).to eq contact_link_name1
           expect(contact_group.main_state).to eq "main"
@@ -352,6 +387,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           expect(contact_group.contact_tel).to eq contact_tel2
           expect(contact_group.contact_fax).to eq contact_fax2
           expect(contact_group.contact_email).to eq contact_email2
+          expect(contact_group.contact_postal_code).to eq contact_postal_code2
+          expect(contact_group.contact_address).to eq contact_address2
           expect(contact_group.contact_link_url).to eq contact_link_url2
           expect(contact_group.contact_link_name).to eq contact_link_name2
           expect(contact_group.main_state).to be_blank
@@ -360,6 +397,8 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         expect(item.contact_tel).to eq contact_tel1
         expect(item.contact_fax).to eq contact_fax1
         expect(item.contact_email).to eq contact_email1
+        expect(item.contact_postal_code).to eq contact_postal_code1
+        expect(item.contact_address).to eq contact_address1
         expect(item.contact_link_url).to eq contact_link_url1
         expect(item.contact_link_name).to eq contact_link_name1
       end
@@ -372,15 +411,18 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
           contact_groups: [
             {
               main_state: "main", name: unique_id, contact_group_name: unique_id, contact_tel: unique_tel,
-              contact_fax: unique_tel, contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+              contact_fax: unique_tel, contact_email: unique_email, contact_postal_code: unique_id,
+              contact_address: unique_id, contact_link_url: unique_url, contact_link_name: unique_id
             },
             {
               main_state: nil, name: unique_id, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
-              contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+              contact_email: unique_email, contact_postal_code: unique_id,
+              contact_address: unique_id, contact_link_url: unique_url, contact_link_name: unique_id
             },
             {
               main_state: nil, name: unique_id, contact_group_name: unique_id, contact_tel: unique_tel, contact_fax: unique_tel,
-              contact_email: unique_email, contact_link_url: unique_url, contact_link_name: unique_id
+              contact_email: unique_email, contact_postal_code: unique_id,
+              contact_address: unique_id, contact_link_url: unique_url, contact_link_name: unique_id
             }
           ]
         )
@@ -471,6 +513,20 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
 
         within ".index-search" do
           fill_in "s[keyword]", with: main_contact.contact_email.split("@", 2).first
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_postal_code
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".index tbody tr", count: 1)
+        expect(page).to have_css(".index tbody tr", text: group.name)
+
+        within ".index-search" do
+          fill_in "s[keyword]", with: main_contact.contact_address
           click_on I18n.t("ss.buttons.search")
         end
         expect(page).to have_css(".index tbody tr", count: 1)

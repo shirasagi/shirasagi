@@ -10,11 +10,13 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         {
           main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         },
         {
           main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         }
       ]
@@ -123,6 +125,8 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
+              expect(contact_group[:contact_postal_code]).to eq source_contact_group.contact_postal_code
+              expect(contact_group[:contact_address]).to eq source_contact_group.contact_address
               expect(contact_group[:contact_link_url]).to eq source_contact_group.contact_link_url
               expect(contact_group[:contact_link_name]).to eq source_contact_group.contact_link_name
             end
@@ -142,6 +146,8 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
+              expect(contact_group[:contact_postal_code]).to eq source_contact_group.contact_postal_code
+              expect(contact_group[:contact_address]).to eq source_contact_group.contact_address
               expect(contact_group[:contact_link_url]).to eq source_contact_group.contact_link_url
               expect(contact_group[:contact_link_name]).to eq source_contact_group.contact_link_name
             end
@@ -190,6 +196,8 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
+              expect(contact_group[:contact_postal_code]).to eq source_contact_group.contact_postal_code
+              expect(contact_group[:contact_address]).to eq source_contact_group.contact_address
               expect(contact_group[:contact_link_url]).to eq source_contact_group.contact_link_url
               expect(contact_group[:contact_link_name]).to eq source_contact_group.contact_link_name
             end
@@ -209,6 +217,8 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
+              expect(contact_group[:contact_postal_code]).to eq source_contact_group.contact_postal_code
+              expect(contact_group[:contact_address]).to eq source_contact_group.contact_address
               expect(contact_group[:contact_link_url]).to eq source_contact_group.contact_link_url
               expect(contact_group[:contact_link_name]).to eq source_contact_group.contact_link_name
             end

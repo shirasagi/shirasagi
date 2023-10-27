@@ -37,6 +37,8 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(contact_group.contact_tel).to eq contact0["contact_tel"]
             expect(contact_group.contact_fax).to eq contact0["contact_fax"]
             expect(contact_group.contact_email).to eq contact0["contact_email"]
+            expect(contact_group.contact_postal_code).to eq contact0["contact_postal_code"]
+            expect(contact_group.contact_address).to eq contact0["contact_address"]
             expect(contact_group.contact_link_url).to eq contact0["contact_link_url"]
             expect(contact_group.contact_link_name).to eq contact0["contact_link_name"]
           end
@@ -130,6 +132,8 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(contact_group.contact_tel).to eq contact0["contact_tel"]
             expect(contact_group.contact_fax).to eq contact0["contact_fax"]
             expect(contact_group.contact_email).to eq contact0["contact_email"]
+            expect(contact_group.contact_postal_code).to eq contact0["contact_postal_code"]
+            expect(contact_group.contact_address).to eq contact0["contact_address"]
             expect(contact_group.contact_link_url).to eq contact0["contact_link_url"]
             expect(contact_group.contact_link_name).to eq contact0["contact_link_name"]
           end
@@ -144,6 +148,8 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(contact_group.contact_tel).to eq contact1["contact_tel"]
             expect(contact_group.contact_fax).to eq contact1["contact_fax"]
             expect(contact_group.contact_email).to eq contact1["contact_email"]
+            expect(contact_group.contact_postal_code).to eq contact1["contact_postal_code"]
+            expect(contact_group.contact_address).to eq contact1["contact_address"]
             expect(contact_group.contact_link_url).to eq contact1["contact_link_url"]
             expect(contact_group.contact_link_name).to eq contact1["contact_link_name"]
           end

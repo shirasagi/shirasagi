@@ -42,9 +42,12 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
     describe "POST /pages.json" do
       it do
-        params = { 'authenticity_token' => @auth_token,
-                   'item[name]' => '記事タイトル',
-                   'item[basename]' => "filename#{rand(0xffffffff).to_s(36)}" }
+        params = {
+          'authenticity_token' => @auth_token,
+          'item[name]' => '記事タイトル',
+          'item[basename]' => "filename#{rand(0xffffffff).to_s(36)}",
+          'item[contact_group_id]' => group.id
+        }
         post index_path, params: params
         expect(response.status).to eq 201
         page = JSON.parse(response.body)
@@ -170,6 +173,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           contact_tel: 'test1_contact_tel',
           contact_fax: 'test1_contact_fax',
           contact_email: 'test1_contact_email',
+          contact_postal_code: 'test1_contact_postal_code',
+          contact_address: 'test1_contact_address',
           contact_link_url: 'test1_contact_link_url',
           contact_link_name: 'test1_contact_link_name',
           released: released,
@@ -217,6 +222,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             expect(row[Cms::Page.t(:contact_tel)]).to eq "test1_contact_tel"
             expect(row[Cms::Page.t(:contact_fax)]).to eq "test1_contact_fax"
             expect(row[Cms::Page.t(:contact_email)]).to eq "test1_contact_email"
+            expect(row[Cms::Page.t(:contact_postal_code)]).to eq "test1_contact_postal_code"
+            expect(row[Cms::Page.t(:contact_address)]).to eq "test1_contact_address"
             expect(row[Cms::Page.t(:contact_link_url)]).to eq "test1_contact_link_url"
             expect(row[Cms::Page.t(:contact_link_name)]).to eq "test1_contact_link_name"
             expect(row[Cms::Page.t(:released)]).to eq released.strftime("%Y/%m/%d %H:%M")

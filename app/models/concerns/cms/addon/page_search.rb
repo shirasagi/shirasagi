@@ -153,7 +153,7 @@ module Cms::Addon
 
     KEYWORD_FIELDS = [
       :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel,
-      :contact_fax, :contact_email, :contact_link_url, :contact_link_name
+      :contact_fax, :contact_email, :contact_postal_code, :contact_address, :contact_link_url, :contact_link_name
     ].freeze
 
     COLUMN_VALUES_FIELDS = [

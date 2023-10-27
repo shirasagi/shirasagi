@@ -2853,9 +2853,9 @@ ja:
         - 種類を選択します。
 
     cms/column/select_page:
-      node_ids:
-        - 記事フォルダーを設定します。
-        - 設定した記事フォルダー配下のページを選択可能です。
+       node_ids:
+         - 記事フォルダーを設定します。
+         - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/form_db/import:
       import_url: |-
@@ -2881,7 +2881,6 @@ ja:
         ※定期実行時のみ有効な設定です。
       generate_on_import: |-
         インポートした際に記事ページを書き出します。
-
     cms/addon/node_twitter_post_setting:
       node_twitter_auto_post:
         - 有効に設定すると公開時にTwitter投稿をおこないます。

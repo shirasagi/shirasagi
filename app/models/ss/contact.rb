@@ -8,6 +8,8 @@ class SS::Contact
   field :contact_tel, type: String
   field :contact_fax, type: String
   field :contact_email, type: String
+  field :contact_postal_code, type: String
+  field :contact_address, type: String
   field :contact_link_url, type: String
   field :contact_link_name, type: String
   field :main_state, type: String
@@ -16,15 +18,18 @@ class SS::Contact
   validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
   validates :main_state, inclusion: { in: %w(main), allow_blank: true }
 
-  permit_params :name, :contact_group_name, :contact_tel, :contact_fax, :contact_email
-  permit_params :contact_link_url, :contact_link_name, :main_state
+  permit_params :name, :contact_group_name, :contact_tel, :contact_fax, :contact_email, :contact_postal_code
+  permit_params :contact_address, :contact_link_url, :contact_link_name, :main_state
 
   def same_contact?(dist)
     dist.deep_stringify_keys!
     return false if dist.blank?
     return false if all_empty?
 
-    %w(contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name).each do |key|
+    %w(
+      contact_group_name contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url
+      contact_link_name
+    ).each do |key|
       src_value = send(key).to_s.squish
       dist_value = dist[key].to_s.squish
       return false if src_value != dist_value
@@ -38,6 +43,8 @@ class SS::Contact
     return false if contact_tel.present?
     return false if contact_fax.present?
     return false if contact_email.present?
+    return false if contact_postal_code.present?
+    return false if contact_address.present?
     return false if contact_link_url.present?
     return false if contact_link_name.present?
     true

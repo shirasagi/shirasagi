@@ -40,6 +40,8 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_delete.contact_tel).to eq source_page.contact_tel
           expect(page_after_delete.contact_fax).to eq source_page.contact_fax
           expect(page_after_delete.contact_email).to eq source_page.contact_email
+          expect(page_after_delete.contact_postal_code).to eq source_page.contact_postal_code
+          expect(page_after_delete.contact_address).to eq source_page.contact_address
           expect(page_after_delete.contact_link_url).to eq source_page.contact_link_url
           expect(page_after_delete.contact_link_name).to eq source_page.contact_link_name
         end
@@ -87,6 +89,8 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_delete.contact_tel).to eq source_page.contact_tel
           expect(page_after_delete.contact_fax).to eq source_page.contact_fax
           expect(page_after_delete.contact_email).to eq source_page.contact_email
+          expect(page_after_delete.contact_postal_code).to eq source_page.contact_postal_code
+          expect(page_after_delete.contact_address).to eq source_page.contact_address
           expect(page_after_delete.contact_link_url).to eq source_page.contact_link_url
           expect(page_after_delete.contact_link_name).to eq source_page.contact_link_name
         end

@@ -12,6 +12,7 @@ class Jmaxml::Action::PublishPage < Jmaxml::Action::Base
     end
     page.state = publish_state
     page.category_ids = category_ids
+    page.contact_group = page.cur_node.groups.first
     page.save!
   end
 end

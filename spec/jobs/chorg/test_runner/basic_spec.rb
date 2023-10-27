@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Chorg::TestRunner, dbscope: :example do
+describe Chorg::TestRunner, dbscope: :example, fragile: true do
   let(:root_group) { create(:revision_root_group) }
   let(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
@@ -68,6 +68,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.group_ids).to eq [ group.id ]
         expect(page.contact_group_id).to eq group.id
         expect(page.contact_email).to eq group.contact_email
+        expect(page.contact_postal_code).to eq group.contact_postal_code
+        expect(page.contact_address).to eq group.contact_address
         expect(page.contact_tel).to eq group.contact_tel
         expect(page.contact_fax).to eq group.contact_fax
         expect(page.contact_link_url).to eq group.contact_link_url
@@ -127,6 +129,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.group_ids).to eq [ group1.id ]
         expect(page.contact_group_id).to eq group1.id
         expect(page.contact_email).to eq group1.contact_email
+        expect(page.contact_postal_code).to eq group1.contact_postal_code
+        expect(page.contact_address).to eq group1.contact_address
         expect(page.contact_tel).to eq group1.contact_tel
         expect(page.contact_fax).to eq group1.contact_fax
         expect(page.contact_link_url).to eq group1.contact_link_url

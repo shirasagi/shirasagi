@@ -43,6 +43,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
         ldap_dn: DN
@@ -126,6 +128,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
         ldap_dn: DN
@@ -138,6 +142,8 @@ ja:
         nth_destination_contact_contact_tel: "操作先%{dest_seq}_連絡先%{contact_seq}_電話番号"
         nth_destination_contact_contact_fax: "操作先%{dest_seq}_連絡先%{contact_seq}_ファックス番号"
         nth_destination_contact_contact_email: "操作先%{dest_seq}_連絡先%{contact_seq}_メールアドレス"
+        nth_destination_contact_contact_postal_code: "操作先%{dest_seq}_連絡先%{contact_seq}_郵便番号"
+        nth_destination_contact_contact_address: "操作先%{dest_seq}_連絡先%{contact_seq}_住所"
         nth_destination_contact_contact_link_url: "操作先%{dest_seq}_連絡先%{contact_seq}_リンクURL"
         nth_destination_contact_contact_link_name: "操作先%{dest_seq}_連絡先%{contact_seq}_リンク名"
     errors:
@@ -241,6 +247,10 @@ ja:
             - 新設するグループのファックス番号を入力します。
           contact_email:
             - 新設するグループのメールアドレスを入力します。
+          contact_postal_code:
+            - 新設するグループの郵便番号を入力します。
+          contact_address:
+            - 新設するグループの住所を入力します。
           contact_link_url:
             - 新設するグループのリンクURLを入力します。
           contact_link_name:
@@ -264,6 +274,10 @@ ja:
             - 分割後のグループのファックス番号を入力します。
           contact_email:
             - 分割後のグループのメールアドレスを入力します。
+          contact_postal_code:
+            - 分割後のグループの郵便番号を入力します。
+          contact_address:
+            - 分割後のグループの住所を入力します。
           contact_link_url:
             - 分割後のグループのリンクURLを入力します。
           contact_link_name:
@@ -286,6 +300,10 @@ ja:
             - 移動先グループのファックス番号を入力します。
           contact_email:
             - 移動先グループのメールアドレスを入力します。
+          contact_postal_code:
+            - 移動先グループの郵便番号を入力します。
+          contact_address:
+            - 移動先グループの住所を入力します。
           contact_link_url:
             - 移動先グループのリンクURLを入力します。
           contact_link_name:
@@ -308,6 +326,10 @@ ja:
             - 統合先グループのファックス番号を入力します。
           contact_email:
             - 統合先グループのメールアドレスを入力します。
+          contact_postal_code:
+            - 統合先グループの郵便番号を入力します。
+          contact_address:
+            - 統合先グループの住所を入力します。
           contact_link_url:
             - 統合先グループのリンクURLを入力します。
           contact_link_name:
