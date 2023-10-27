@@ -179,12 +179,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       context "when a file uploaded by other user is attached" do
+        let(:name) { unique_id }
         let(:file_name) { "#{unique_id}.jpg" }
         let!(:file) do
           # cms/file is created by cms_user
           tmp_ss_file(
             Cms::File,
-            site: site, user: cms_user, model: "cms/file", basename: file_name,
+            site: site, user: cms_user, model: "cms/file", name: name, basename: file_name,
             contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg",
             group_ids: cms_user.group_ids
           )
@@ -204,7 +205,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           wait_for_cbox do
             wait_cbox_close do
-              click_on file_name
+              click_on name
             end
           end
 
@@ -233,7 +234,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
             click_on I18n.t("ss.buttons.publish_save")
           end
-          click_on I18n.t("ss.buttons.ignore_alert")
           wait_for_notice I18n.t('ss.notice.saved')
 
           item.reload
@@ -241,9 +241,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           file.reload
           attached_file = item.files.first
-          # copy is attacched
+          # copy is attached
           expect(attached_file.id).not_to eq file.id
-          expect(attached_file.name).to eq file_name
+          expect(attached_file.name).to eq name
           expect(attached_file.filename).to eq file.filename
           expect(attached_file.size).to eq file.size
           expect(attached_file.content_type).to eq file.content_type

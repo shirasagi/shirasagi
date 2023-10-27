@@ -72,6 +72,12 @@ module Cms::SyntaxChecker
       end
     end
 
+    if !context.errors.empty? && !cur_user.cms_role_permit_any?(cur_site, "edit_cms_ignore_syntax_check")
+      context.errors << {
+        msg: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check')
+      }
+    end
+
     context
   end
 

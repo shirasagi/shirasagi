@@ -215,6 +215,7 @@ ja:
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
+      disallow_edit_ignore_syntax_check: アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -760,6 +761,7 @@ ja:
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
     use_private_cms_line_statistics: LINE統計情報の利用（所有）
+    edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
 
   modules:
     cms: 標準機能
