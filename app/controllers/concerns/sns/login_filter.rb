@@ -70,8 +70,8 @@ module Sns::LoginFilter
     back_to = params[:back_to].to_s
     return default_logged_in_path if back_to.blank?
 
-    @request_url ||= URI.parse(request.url)
-    back_to_url = URI.join(@request_url, back_to) rescue nil
+    @request_url ||= ::Addressable::URI.parse(request.url)
+    back_to_url = ::Addressable::URI.join(@request_url, back_to) rescue nil
     return default_logged_in_path if back_to_url.blank?
 
     back_to_url = normalize_url(back_to_url)
@@ -99,8 +99,8 @@ module Sns::LoginFilter
       return
     end
 
-    @request_url = URI.parse(request.url)
-    @url = URI.join(@request_url, ref) rescue nil
+    @request_url = ::Addressable::URI.parse(request.url)
+    @url = ::Addressable::URI.join(@request_url, ref) rescue nil
     if @url.blank?
       redirect_to back_to_url
       return

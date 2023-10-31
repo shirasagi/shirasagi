@@ -230,5 +230,25 @@ describe "sns_login", type: :feature, dbscope: :example do
         expect(page).to have_link("https://www.google.com/", href: "https://www.google.com/")
       end
     end
+
+    context "with japanese in url's path" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      it do
+        visit sns_redirect_path(ref: "https://sns.example.jp/fs/日本語.pdf")
+        expect(status_code).to eq 200
+        expect(current_path).to eq sns_redirect_path
+        expect(page).to have_link("https://sns.example.jp/fs/日本語.pdf", href: "https://sns.example.jp/fs/日本語.pdf")
+      end
+    end
   end
 end
