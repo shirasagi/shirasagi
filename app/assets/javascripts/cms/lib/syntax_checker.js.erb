@@ -469,7 +469,7 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == "<%= I18n.t('cms.confirm.disallow_edit_ignore_syntax_check') %>") {
+    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == <%= I18n.t('cms.confirm.disallow_edit_ignore_syntax_check').to_json %>) {
       Syntax_Checker.reset();
     }
 
