@@ -23,7 +23,7 @@
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
           date = source['released']
-          url = Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
+          url = ::Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
           if source['title'].present?
             title = source['title']
             date = source['timestamp']

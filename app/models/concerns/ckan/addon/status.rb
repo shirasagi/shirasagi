@@ -29,7 +29,7 @@ module Ckan::Addon
     end
 
     def send_request
-      uri = URI.parse ckan_url + '/api/3/action/' + action_name
+      uri = ::Addressable::URI.parse ckan_url + '/api/3/action/' + action_name
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true if uri.scheme == 'https'
       req = Net::HTTP::Get.new(uri.path)

@@ -5,7 +5,7 @@
   <% else %>
     <%
       if params[:ref].present? && Sys::TrustedUrlValidator.myself_url?(params[:ref].to_s)
-        back_url = ::Addressable::URI.parse(params[:ref].to_s).path
+        back_url = ::Addressable::URI.parse(params[:ref].to_s).request_uri
       else
         back_url = url_for(action: :index)
       end

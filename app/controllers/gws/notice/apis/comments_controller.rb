@@ -37,12 +37,12 @@ class Gws::Notice::Apis::CommentsController < ApplicationController
     result = @item.save
     if result
       respond_to do |format|
-        format.html { redirect_to URI.parse(params[:redirect_to].to_s).path, notice: t('ss.notice.saved') }
+        format.html { redirect_to ::Addressable::URI.parse(params[:redirect_to].to_s).request_uri, notice: t('ss.notice.saved') }
         format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
       end
     else
       respond_to do |format|
-        format.html { redirect_to URI.parse(params[:redirect_to].to_s).path, notice: @item.errors.full_messages.join("\n") }
+        format.html { redirect_to ::Addressable::URI.parse(params[:redirect_to].to_s).request_uri, notice: @item.errors.full_messages.join("\n") }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
       end
     end

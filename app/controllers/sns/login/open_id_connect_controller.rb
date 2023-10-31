@@ -28,12 +28,12 @@ class Sns::Login::OpenIdConnectController < ApplicationController
 
   def state
     @state ||= begin
-      @request_url ||= URI.parse(request.url)
+      @request_url ||= ::Addressable::URI.parse(request.url)
 
       # "ref" is a path to redirect after user is successfully logged in
       ref = params[:ref].try { |ref| ref.to_s }
       if ref.present?
-        ref = URI.join(@request_url, ref) rescue nil
+        ref = ::Addressable::URI.join(@request_url, ref) rescue nil
       end
       ref = normalize_url(ref) if ref.present?
       if ref.present?
@@ -44,7 +44,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       # "login_path" is a path to redirect after user is logged out
       login_path = params[:login_path].try { |path| path.to_s }
       if login_path.present?
-        login_path = URI.join(@request_url, login_path) rescue nil
+        login_path = ::Addressable::URI.join(@request_url, login_path) rescue nil
       end
       login_path = normalize_url(login_path) if login_path.present?
       if login_path.present?
@@ -154,7 +154,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     # mock methods for test
     #
     def implicit
-      redirect_uri = URI.parse(params[:redirect_uri].to_s)
+      redirect_uri = ::Addressable::URI.parse(params[:redirect_uri].to_s)
       claims = {
         # required claims
         iss: @item.issuer,
@@ -179,7 +179,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     cattr_accessor :last_nonce
 
     def authorization_code
-      redirect_uri = URI.parse(params[:redirect_uri].to_s)
+      redirect_uri = ::Addressable::URI.parse(params[:redirect_uri].to_s)
       self.class.last_nonce = params[:nonce]
       resp = {
         code: SecureRandom.hex(24),

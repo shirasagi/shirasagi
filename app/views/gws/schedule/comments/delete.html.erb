@@ -14,6 +14,6 @@
 
 <footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
-  <%= link_to(t("ss.buttons.cancel"), URI.parse(params[:redirect_to].to_s).path, class: 'btn-default') %>
+  <%= link_to(t("ss.buttons.cancel"), ::Addressable::URI.parse(params[:redirect_to].to_s).request_uri, class: 'btn-default') %>
 </footer>
 <% end %>

@@ -6,7 +6,7 @@ class UrlValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if value.blank?
 
-    uri = ::URI.parse(value)
+    uri = ::Addressable::URI.parse(value)
 
     allowed_schemes = options[:scheme].try { |scheme| Array[scheme].flatten.map(&:to_s) } || ALLOWED_SCHEMES
     if !allowed_schemes.include?(uri.scheme)
