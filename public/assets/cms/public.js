@@ -25924,8 +25924,14 @@ this.SS_Clipboard = (function () {
   function SS_Clipboard() {
   }
 
+  SS_Clipboard.successAlertMessage = 'コピーしました。';
+
+  SS_Clipboard.failedAlertMessage = 'コピーできませんでした。クリップボードがサポートされていません。';
+
+  SS_Clipboard.copyButtonLabel = 'コピー';
+
   SS_Clipboard.copy = function (text, opts) {
-    var copy, e, rett, style;
+    var copy, e, message, rett, style;
     if (opts == null) {
       opts = {};
     }
@@ -25939,13 +25945,21 @@ this.SS_Clipboard = (function () {
         rett = document.execCommand('copy');
         copy.remove();
         if (opts["success_alert"]) {
-          alert(i18next.t("ss.notice.clipboard_copied"));
+          message = SS_Clipboard.successAlertMessage;
+          if ("i18next" in window) {
+            message = i18next.t("ss.notice.clipboard_copied");
+          }
+          alert(message);
         }
         return true;
       } catch (_error) {
         e = _error;
         console.warn(e);
-        alert(i18next.t("ss.notice.clipboard_copy_failed"));
+        message = SS_Clipboard.failedAlertMessage;
+        if ("i18next" in window) {
+          message = i18next.t("ss.notice.clipboard_copy_failed");
+        }
+        alert(message);
         return false;
       }
     }
@@ -25958,7 +25972,10 @@ this.SS_Clipboard = (function () {
       if (!text) {
         return true;
       }
-      label = i18next.t("ss.buttons.copy");
+      label = SS_Clipboard.copyButtonLabel;
+      if ("i18next" in window) {
+        label = i18next.t("ss.buttons.copy");
+      }
       return $(this).append("<a href='#' class='clipboard-copy-button' data-text='" + text + "'>" + label + "</a>");
     });
     return $('.clipboard-copy-button').on("click", function () {
@@ -27374,6 +27391,9 @@ this.SS_SearchUI = (function () {
   function SS_SearchUI() {
   }
 
+  var selectTable = null;
+  let toSelected = [], ccSelected = [], bcSelected = [];
+
   SS_SearchUI.anchorAjaxBox;
 
   SS_SearchUI.defaultTemplate = " \
@@ -27385,7 +27405,7 @@ this.SS_SearchUI = (function () {
       <td><a class=\"deselect btn\" href=\"#\"><%= label.delete %></a></td> \
     </tr>";
 
-  SS_SearchUI.defaultSelector = function ($item) {
+  SS_SearchUI.defaultSelector = function ($item, $prevSelected) {
     var self = this;
 
     var templateId = self.anchorAjaxBox.data("template");
@@ -27398,7 +27418,31 @@ this.SS_SearchUI = (function () {
       template = SS_SearchUI.defaultTemplate;
 
       var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
-      attr = { name: $input.attr("name"), type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
+      if (selectTable === "to") {
+        attr = {
+          name: "item[in_to_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "cc") {
+        attr = {
+          name: "item[in_cc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "bcc") {
+        attr = {
+          name: "item[in_bcc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else {
+        attr = {
+          name: $input.attr("name"),
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      }
     }
 
     var $data = $item.closest("[data-id]");
@@ -27407,11 +27451,26 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
+    var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var $tr = $(tr);
+    var $ajaxSelected;
+    if (selectTable === "to") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+    } else if (selectTable === "cc") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+    } else if (selectTable === "bcc") {
+      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+    } else {
+      $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    }
 
-    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
-    $ajaxSelected.find("tbody").prepend(tr);
+    if ($prevSelected) {
+      $prevSelected.after($tr);
+    } else {
+      $ajaxSelected.find("tbody").prepend($tr);
+    }
     $ajaxSelected.trigger("change");
+    return $tr;
   };
 
   SS_SearchUI.defaultDeselector = function (item) {
@@ -27425,24 +27484,67 @@ this.SS_SearchUI = (function () {
     table.trigger("change");
   };
 
-  SS_SearchUI.select = function (item) {
-    var selector = this.anchorAjaxBox.data('on-select');
+  SS_SearchUI.select = function (item, prevSelected) {
+    var self = this;
+    var selector = self.anchorAjaxBox.data('on-select');
     if (selector) {
       return selector(item);
     } else {
-      return this.defaultSelector(item);
+      if (!selectTable) {
+        if (item.closest("[data-id]").find(".to-checkbox")[0]) {
+          selectTable = "to";
+        }
+      }
+      var result = this.defaultSelector(item, prevSelected);
+      if (selectTable === "to") {
+        self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+      }
+      return result;
     }
   };
 
   SS_SearchUI.selectItems = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
     var self = this;
-    $el.find(".items input:checkbox").filter(":checked").each(function () {
-      self.select($(this));
+    var $prevSelected = undefined;
+    $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "to";
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
     });
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+    if (selectTable === "to") {
+      self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+    }
+
+    $prevSelected = undefined;
+    $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "cc";
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
+    });
+    if (selectTable === "cc") {
+      self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
+    }
+
+    $prevSelected = undefined;
+    $el.find(".items .bcc-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "bcc";
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
+    });
+    if (selectTable === "bcc") {
+      self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
+    }
+    if (selectTable === null) {
+      $prevSelected = undefined;
+      $el.find(".items input:checkbox").filter(":checked").each(function () {
+        // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+        $prevSelected = self.select($(this), $prevSelected);
+      });
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+    }
   };
 
   SS_SearchUI.deselect = function (e) {
@@ -27457,7 +27559,7 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.toggleSelectButton = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
 
@@ -27494,6 +27596,7 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.onColorBoxCleanedUp = function (ev) {
     SS_SearchUI.anchorAjaxBox = null;
+    selectTable = null;
   };
 
   SS_SearchUI.modal = function (options) {
@@ -27508,7 +27611,7 @@ this.SS_SearchUI = (function () {
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
-        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        var $div = $("<span />", {class: "loading"}).html(SS.loading);
         $el.find("[type=submit]").after($div);
 
         $(this).ajaxSubmit({
@@ -27558,22 +27661,68 @@ this.SS_SearchUI = (function () {
     });
 
     var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    var $toAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+    var $ccAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+    var $bcAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
     if (!$ajaxSelected.length) {
       $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
     }
+    if (!$toAjaxSelected.length) {
+      $toAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    if (!$ccAjaxSelected.length) {
+      $ccAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+    }
+    if (!$bcAjaxSelected.length) {
+      $bcAjaxSelected = self.anchorAjaxBox.parent().find("see.cc-bcc.bcc .ajax-selected");
+    }
+    $toAjaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      toSelected.push($("#colorbox .items [data-id='" + id + "']"));
+    });
+    $ccAjaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      ccSelected.push($("#colorbox .items [data-id='" + id + "']"));
+    });
+    $bcAjaxSelected.find("tr[data-id]").each(function () {
+      var id = $(this).data("id");
+      bcSelected.push($("#colorbox .items [data-id='" + id + "']"));
+    });
     $ajaxSelected.find("tr[data-id]").each(function () {
       var id = $(this).data("id");
       var tr = $("#colorbox .items [data-id='" + id + "']");
-      tr.find("input[type=checkbox]").remove();
-      tr.find(".select-item,.select-single-item").each(function() {
+      var i;
+      for (i = 0; i < toSelected.length; i++) {
+        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < ccSelected.length; i++) {
+        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < bcSelected.length; i++) {
+        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      }
+      tr.find(".checkbox input[type=checkbox]").remove();
+      tr.find(".select-item,.select-single-item").each(function () {
         var $this = $(this);
         var html = $this.html();
 
-        var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
+        var disabledHtml = $("<span />", {class: $this.prop("class"), style: 'color: #888'}).html(html);
         $this.replaceWith(disabledHtml);
       });
     });
-    $el.find("table.index").each(function() {
+    self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
+      var i;
+      for (i = 0; i < toSelected.length; i++) {
+        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < ccSelected.length; i++) {
+        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      }
+      for (i = 0; i < bcSelected.length; i++) {
+        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      }
+    });
+    $el.find("table.index").each(function () {
       SS_ListUI.render(this);
     });
     $el.find("a.select-item").on("click", function (ev) {
@@ -27626,7 +27775,6 @@ this.SS_SearchUI = (function () {
   return SS_SearchUI;
 
 })();
-
 this.SS_AjaxFile = (function () {
   function SS_AjaxFile(el, options) {
     this.$el = $(el || "#ajax-file-box");
