@@ -148,6 +148,46 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
         end
       end
     end
+
+    context '名称クリック' do
+      it do
+        visit index_path
+        wait_for_js_ready
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("webmail.links.show_cc_bcc")
+            within 'dl.see.all' do
+              wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+            end
+          end
+          wait_for_cbox do
+            wait_cbox_close { click_on address1.name }
+          end
+          within 'form#item-form' do
+            within '.webmail-mail-form-address.to' do
+              expect(page).to have_content(address1.name)
+            end
+            fill_in 'item[subject]', with: item_subject
+            fill_in 'item[text]', with: item_texts.join("\n")
+            click_on I18n.t('ss.buttons.send')
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.sent')
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.subject).to eq item_subject
+          expect(mail.from.first).to eq user.email
+          mail.to.map(&:to_s).tap do |addresses|
+            expect(addresses).to have(1).items
+            expect(addresses).to include(address1.email)
+          end
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+        end
+      end
+    end
   end
 
   context "組織アドレス" do
@@ -268,6 +308,46 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           mail.bcc.map(&:to_s).tap do |addresses|
             expect(addresses).to have_at_least(3).items
             expect(addresses).to include(user1.email, user2.email, user3.email)
+          end
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+        end
+      end
+    end
+
+    context '名称クリック' do
+      it do
+        visit index_path
+        wait_for_js_ready
+        new_window = window_opened_by { click_on I18n.t('ss.links.new') }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("webmail.links.show_cc_bcc")
+            within 'dl.see.all' do
+              wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
+            end
+          end
+          wait_for_cbox do
+            wait_cbox_close { click_on user1.name }
+          end
+          within 'form#item-form' do
+            within '.webmail-mail-form-address.to' do
+              expect(page).to have_content(user1.name)
+            end
+            fill_in 'item[subject]', with: item_subject
+            fill_in 'item[text]', with: item_texts.join("\n")
+            click_on I18n.t('ss.buttons.send')
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.sent')
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.subject).to eq item_subject
+          expect(mail.from.first).to eq user.email
+          mail.to.map(&:to_s).tap do |addresses|
+            expect(addresses).to have(1).items
+            expect(addresses).to include(user1.email)
           end
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
@@ -403,6 +483,46 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           mail.bcc.map(&:to_s).tap do |addresses|
             expect(addresses).to have(3).items
             expect(addresses).to include(address1.email, address2.email, address3.email)
+          end
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+        end
+      end
+    end
+
+    context '名称クリック' do
+      it do
+        visit index_path
+        wait_for_js_ready
+        new_window = window_opened_by { click_on I18n.t("ss.links.new") }
+        within_window new_window do
+          within "form#item-form" do
+            click_on I18n.t("webmail.links.show_cc_bcc")
+            within 'dl.see.all' do
+              wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+            end
+          end
+          wait_for_cbox do
+            wait_cbox_close { click_on address1.name }
+          end
+          within 'form#item-form' do
+            within '.webmail-mail-form-address.to' do
+              expect(page).to have_content(address1.name)
+            end
+            fill_in 'item[subject]', with: item_subject
+            fill_in 'item[text]', with: item_texts.join("\n")
+            click_on I18n.t('ss.buttons.send')
+          end
+        end
+        wait_for_notice I18n.t('ss.notice.sent')
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.subject).to eq item_subject
+          expect(mail.from.first).to eq user.email
+          mail.to.map(&:to_s).tap do |addresses|
+            expect(addresses).to have(1).items
+            expect(addresses).to include(address1.email)
           end
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
