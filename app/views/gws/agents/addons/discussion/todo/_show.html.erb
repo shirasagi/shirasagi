@@ -4,7 +4,7 @@
   discussion_forum = @item.discussion_forum
   return if discussion_forum.blank?
   return if !discussion_forum.public?
-  return if !discussion_forum.member?(@cur_user)
+  return if !discussion_forum.member_user?(@cur_user)
 %>
 
 <dl class="see">

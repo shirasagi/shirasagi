@@ -1,9 +1,9 @@
 <% parent = params[:controller].split('/').last %>
 <% @item_menu_proc = proc do |item| %>
-  <% if item.member?(@cur_user) %>
+  <% if item.member_user?(@cur_user) %>
     <%= link_to t('gws/board.links.comment'), new_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item), class: 'btn' %>
   <% end %>
-  <% if item.see_type_normal? && item.member?(@cur_user) %>
+  <% if item.see_type_normal? && item.member_user?(@cur_user) %>
     <% if item.seen?(@cur_user) %>
       <%= link_to item.see_action_label(@cur_user), unset_seen_gws_circular_post_path(category: @category || '-'), method: :post, class: "btn gws-btn-pushed" %>
     <% else %>

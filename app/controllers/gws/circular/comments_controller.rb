@@ -84,12 +84,12 @@ class Gws::Circular::CommentsController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member?(@cur_user)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member_user?(@cur_user)
   end
 
   def create
     @item = @model.new get_params
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member?(@cur_user)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member_user?(@cur_user)
 
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site

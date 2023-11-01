@@ -105,7 +105,7 @@ class Gws::Notice::EditablesController < ApplicationController
   end
 
   def new
-    if !@folder.member?(@cur_user)
+    if !@folder.member_user?(@cur_user)
       redirect_to({ action: :index }, { notice: t('gws/notice.notice.not_a_member_in_this_folder') })
       return
     end
@@ -114,7 +114,7 @@ class Gws::Notice::EditablesController < ApplicationController
   end
 
   def create
-    if !params[:copy] && !@folder.member?(@cur_user)
+    if !params[:copy] && !@folder.member_user?(@cur_user)
       redirect_to({ action: :index }, { notice: t('gws/notice.notice.not_a_member_in_this_folder') })
       return
     end

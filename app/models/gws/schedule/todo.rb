@@ -68,7 +68,7 @@ class Gws::Schedule::Todo
     result = super
     return result if result.empty?
 
-    if result[:editable] || member?(user)
+    if result[:editable] || member_user?(user)
       result[:title] = name
       result[:readable] = true
     end

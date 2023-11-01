@@ -24,7 +24,7 @@ class Gws::Discussion::TodosController < ApplicationController
     raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
 
-    raise "404" unless @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member?(@cur_user)
+    raise "404" unless @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member_user?(@cur_user)
   end
 
   def set_crumbs

@@ -49,7 +49,7 @@ class Gws::Board::TopicsController < ApplicationController
 
       return true if @item.allowed?(:read, @cur_user, site: @cur_site)
       return true if @item.readable?(@cur_user, site: @cur_site)
-      return true if @item.member?(@cur_user)
+      return true if @item.member_user?(@cur_user)
 
       false
     end

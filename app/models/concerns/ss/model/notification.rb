@@ -65,7 +65,7 @@ module SS::Model::Notification
     send_date ? I18n.l(send_date, format: :picker) : ''
   end
 
-  def member?(user)
+  def member_user?(user)
     member_ids.include?(user.id)
   end
 
@@ -84,7 +84,7 @@ module SS::Model::Notification
   def readable?(user, opts = {})
     # return false if self.group_id != opts[:group].id
     return false if deleted?(user)
-    member?(user)
+    member_user?(user)
   end
 
   def destroy_from_member(user)

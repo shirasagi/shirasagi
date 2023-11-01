@@ -247,7 +247,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @items = []
 
     entries.each do |item|
-      if @cur_user.id == item.user_id || item.member?(@cur_user)
+      if @cur_user.id == item.user_id || item.member_user?(@cur_user)
         next if item.destroy_from_folder(@cur_user, @cur_folder)
       else
         item.errors.add :base, :auth_error

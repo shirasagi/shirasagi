@@ -72,7 +72,7 @@ class Gws::Schedule::Plan
 
   def allowed?(action, user, opts = {})
     return true if allowed_for_managers?(action, user, opts)
-    member?(user) || custom_group_member?(user) if action =~ /edit|delete/
+    member_user?(user) || custom_group_member?(user) if action =~ /edit|delete/
     false
   end
 
@@ -89,7 +89,7 @@ class Gws::Schedule::Plan
 
   def readable?(user, opts = {})
     return true if allowed?(:read, user, opts)
-    return true if member?(user)
+    return true if member_user?(user)
     return true if approval_member?(user)
     super
   end

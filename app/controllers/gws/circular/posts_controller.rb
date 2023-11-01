@@ -25,7 +25,7 @@ class Gws::Circular::PostsController < ApplicationController
   end
 
   def check_member
-    return if @item.member?(@cur_user)
+    return if @item.member_user?(@cur_user)
 
     if @item.allowed?(:read, @cur_user, site: @cur_site)
       redirect_to gws_circular_admin_path(id: @item)

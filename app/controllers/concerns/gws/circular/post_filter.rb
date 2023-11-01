@@ -112,14 +112,14 @@ module Gws::Circular::PostFilter
 
   def set_seen
     raise '404' if !@item.public? || !@item.active?
-    raise '403' unless @item.member?(@cur_user)
+    raise '403' unless @item.member_user?(@cur_user)
 
     render_update @item.set_seen!(@cur_user), notice: t("ss.notice.set_seen")
   end
 
   def unset_seen
     raise '404' if !@item.public? || !@item.active?
-    raise '403' unless @item.member?(@cur_user)
+    raise '403' unless @item.member_user?(@cur_user)
 
     render_update @item.unset_seen!(@cur_user), notice: t("ss.notice.unset_seen")
   end

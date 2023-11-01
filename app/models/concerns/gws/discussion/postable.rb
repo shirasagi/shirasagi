@@ -145,9 +145,9 @@ module Gws::Discussion::Postable
     post
   end
 
-  def member?(*args)
+  def member_user?(*args)
     if forum.present? && forum_id != id
-      forum.member?(*args)
+      forum.member_user?(*args)
     end
 
     super
@@ -159,10 +159,10 @@ module Gws::Discussion::Postable
 
     if forum.present? && forum_id != id
       return true if forum.allowed?(:read, user, site: @cur_site || self.site)
-      return true if forum.member?(user)
+      return true if forum.member_user?(user)
     else
       return true if self.allowed?(:read, user, site: @cur_site || self.site)
-      return true if self.member?(user)
+      return true if self.member_user?(user)
     end
 
     false

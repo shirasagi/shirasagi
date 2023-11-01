@@ -122,7 +122,7 @@ class Gws::Report::FilesController < ApplicationController
 
   def show
     showable = @item.readable?(@cur_user, site: @cur_site)
-    showable ||= @item.member?(@cur_user)
+    showable ||= @item.member_user?(@cur_user)
     showable ||= @item.allowed?(:read, @cur_user, site: @cur_site)
     raise '403' unless showable
     render

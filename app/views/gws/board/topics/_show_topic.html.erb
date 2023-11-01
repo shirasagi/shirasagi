@@ -46,7 +46,7 @@
     </div>
   <% end %>
 
-  <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user)) %>
+  <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member_user?(@cur_user)) %>
     <div class="menu">
       <%= link_to t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" %>
     </div>

@@ -26,7 +26,7 @@ module Gws::GroupPermission
     user = user.gws_user
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
-    return true if custom_groups.any? { |m| m.member?(user) }
+    return true if custom_groups.any? { |m| m.member_user?(user) }
 
     false
   end
