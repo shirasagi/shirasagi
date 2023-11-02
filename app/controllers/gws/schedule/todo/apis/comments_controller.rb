@@ -66,12 +66,12 @@ class Gws::Schedule::Todo::Apis::CommentsController < ApplicationController
       @cur_todo.update(achievement_rate: @item.achievement_rate) if @item.achievement_rate.present?
 
       respond_to do |format|
-        format.html { redirect_to ::Addressable::URI.parse(params[:redirect_to].to_s).request_uri, notice: t('ss.notice.saved') }
+        format.html { redirect_to SS.path_and_query(params[:redirect_to]), notice: t('ss.notice.saved') }
         format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
       end
     else
       respond_to do |format|
-        format.html { redirect_to ::Addressable::URI.parse(params[:redirect_to].to_s).request_uri, notice: @item.errors.full_messages.join("\n") }
+        format.html { redirect_to SS.path_and_query(params[:redirect_to]), notice: @item.errors.full_messages.join("\n") }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
       end
     end
