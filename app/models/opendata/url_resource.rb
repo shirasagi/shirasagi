@@ -47,7 +47,7 @@ class Opendata::UrlResource
     puts self.original_url
 
     last_modified = Timeout.timeout(time_out) do
-      url = ::Addressable::URI.parse(self.original_url) rescue nil
+      url = ::URI.parse(self.original_url) rescue nil
       break nil if url.blank?
 
       url.open(proxy: true) { |url_file| url_file.last_modified }
@@ -109,7 +109,7 @@ class Opendata::UrlResource
 
   def validate_original_url
     begin
-      uri = ::Addressable::URI.parse(original_url)
+      uri = ::URI.parse(original_url)
     rescue => e
       errors.add :original_url, :invalid
       return
