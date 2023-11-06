@@ -143,5 +143,34 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end
     end
+
+    describe "#print" do
+      context "with calendar view" do
+        it do
+          visit index_path
+          expect(page).to have_css("#calendar", text: item.name)
+
+          click_on I18n.t("ss.buttons.print")
+          within ".print-preview .gws-schedule-box.sheet" do
+            expect(page).to have_css("#calendar", text: item.name)
+          end
+        end
+      end
+
+      context "with list view" do
+        it do
+          visit index_path
+          expect(page).to have_css("#calendar", text: item.name)
+
+          click_on I18n.t("gws/schedule.calendar.buttonText.listMonth")
+          expect(page).to have_css("#calendar", text: item.name)
+
+          click_on I18n.t("ss.buttons.print")
+          within ".print-preview .gws-schedule-box.sheet" do
+            expect(page).to have_css("#calendar", text: item.name)
+          end
+        end
+      end
+    end
   end
 end
