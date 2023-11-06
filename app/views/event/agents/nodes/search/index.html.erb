@@ -1,17 +1,17 @@
-<%= form_for(:item, url: "#{@cur_node.url}", method: "get", html: { class: 'event-search' }) do %>
+<%= form_for(:item, url: @cur_node.url, method: "get", html: { class: 'event-search' }) do %>
   <fieldset class="keyword">
     <legend><%= t("event.keyword") %></legend>
-    <%= text_field_tag :search_keyword, @keyword %>
+    <%= text_field_tag :search_keyword, @keyword, class: "keyword" %>
   </fieldset>
 
   <fieldset class="categories">
     <legend><%= t("event.category.setting") %></legend>
     <% @categories.each do |cate| %>
-      <label for=<%= "q_category_ids_#{cate.id}" %>>
+      <%= label_tag("q_category_ids_#{cate.id}", class: "category") do %>
         <%= check_box_tag 'category_ids[]', cate.id, @category_ids.include?(cate.id) ? {checked: true} : nil,
           { id: "q_category_ids_#{cate.id}", class: "prop"} %>
         <%= cate.name %>
-      </label>
+      <% end %>
     <% end %>
   </fieldset>
 
@@ -25,12 +25,12 @@
 
   <fieldset class="event-facility">
     <legend><%= t("event.facility.setting") %></legend>
-    <%= text_field_tag :facility_name, @facility_name %>
+    <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true %>
   </fieldset>
 
   <footer class="send">
     <%= submit_tag t('event.submit.search'), name: nil %>
-    <%= link_to t("event.submit.reset"), @cur_node.url, class: 'btn' %>
+    <%= submit_tag t('event.submit.reset'), name: nil, type: :reset, class: :search_clear %>
   </footer>
 <% end %>
 
