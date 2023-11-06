@@ -272,6 +272,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
             contact = item.contact_groups.create(
               name: dist["name"],
               contact_group_name: dist["contact_group_name"],
+              contact_charge: dist["contact_charge"],
               contact_tel: dist["contact_tel"],
               contact_fax: dist["contact_fax"],
               contact_email: dist["contact_email"],

@@ -3,7 +3,9 @@ class SS::Migration20221109000000
 
   depends_on "20220928000000"
 
-  CONTACT_ATTRIBUTES = %i[contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name].freeze
+  CONTACT_ATTRIBUTES = %i[
+    contact_group_name contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
+  ].freeze
 
   def change
     each_group do |group|

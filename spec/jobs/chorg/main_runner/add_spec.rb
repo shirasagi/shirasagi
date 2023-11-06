@@ -34,6 +34,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(contact_group.main_state).to eq contact0["main_state"]
             expect(contact_group.name).to eq contact0["name"]
             expect(contact_group.contact_group_name).to eq contact0["contact_group_name"]
+            expect(contact_group.contact_charge).to eq contact0["contact_charge"]
             expect(contact_group.contact_tel).to eq contact0["contact_tel"]
             expect(contact_group.contact_fax).to eq contact0["contact_fax"]
             expect(contact_group.contact_email).to eq contact0["contact_email"]
@@ -127,6 +128,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(contact_group.main_state).to eq contact0["main_state"]
             expect(contact_group.name).to eq "main"
             expect(contact_group.contact_group_name).to eq contact0["contact_group_name"]
+            expect(contact_group.contact_charge).to eq contact0["contact_charge"]
             expect(contact_group.contact_tel).to eq contact0["contact_tel"]
             expect(contact_group.contact_fax).to eq contact0["contact_fax"]
             expect(contact_group.contact_email).to eq contact0["contact_email"]
@@ -141,6 +143,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(contact_group.main_state).to be_blank
             expect(contact_group.name).to eq "#{group.trailing_name}-1"
             expect(contact_group.contact_group_name).to eq contact1["contact_group_name"]
+            expect(contact_group.contact_charge).to eq contact1["contact_charge"]
             expect(contact_group.contact_tel).to eq contact1["contact_tel"]
             expect(contact_group.contact_fax).to eq contact1["contact_fax"]
             expect(contact_group.contact_email).to eq contact1["contact_email"]

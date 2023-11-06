@@ -12,9 +12,9 @@
 <%
   if @cur_page.contact_group_related?
     # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
-    group_name = contact ? contact.contact_group_name.presence : @cur_page.contact_charge.presence
+    group_name = contact ? contact.contact_group_name.presence : @cur_page.contact_group_name.presence
   else
-    group_name = @cur_page.contact_charge.presence
+    group_name = @cur_page.contact_group_name.presence
   end
   if group_name.blank? && contact_group
     group_name = contact_group.contact_group_name.presence || contact_group.section_name
@@ -27,12 +27,12 @@
 <%
   if @cur_page.contact_group_related?
     # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
-    contact_charge = contact ? contact.contact_group_name : @cur_page.contact_charge
+    contact_charge = contact ? contact.contact_charge : @cur_page.contact_charge
   else
     contact_charge = @cur_page.contact_charge
   end
 
-  if contact_charge.present?
+  if contact_charge.present? && (group_name.blank? || group_name != contact_charge)
     contact_parts << content_tag(:p, contact_charge, class: "charge")
   end
 %>
@@ -94,13 +94,13 @@
     else
       # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
       contact_link = @cur_page.contact_link_name.presence
-      contact_link ||= @cur_page.contact_charge.presence
+      contact_link ||= @cur_page.contact_group_name.presence
       contact_link_url = @cur_page.contact_link_url
     end
     contact_link ||= contact_group.try(:section_name).presence
   else
     contact_link = @cur_page.contact_link_name.presence
-    contact_link ||= @cur_page.contact_charge.presence
+    contact_link ||= @cur_page.contact_group_name.presence
     contact_link ||= contact_group.try(:section_name).presence
     contact_link_url = @cur_page.contact_link_url
   end

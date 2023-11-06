@@ -8,13 +8,15 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       :contact_group, name: "#{group0.name}/#{unique_id}",
       contact_groups: [
         {
-          name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
           main_state: "main"
         },
         {
-          name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         }
@@ -63,7 +65,8 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       expect(article_page.contact_group_contact_id).to eq sub_contact.id
       expect(article_page.contact_group_relation).to eq "related"
       # 強制的に連携が切れた際に備え、ページに複製を保持しているはず
-      expect(article_page.contact_charge).to eq sub_contact.contact_group_name
+      expect(article_page.contact_group_name).to eq sub_contact.contact_group_name
+      expect(article_page.contact_charge).to eq sub_contact.contact_charge
       expect(article_page.contact_tel).to eq sub_contact.contact_tel
       expect(article_page.contact_fax).to eq sub_contact.contact_fax
       expect(article_page.contact_email).to eq sub_contact.contact_email
@@ -76,7 +79,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       within "#main.page" do
         within ".contact" do
           expect(page).to have_css(".group", text: sub_contact.contact_group_name)
-          expect(page).to have_css(".charge", text: sub_contact.contact_group_name)
+          expect(page).to have_css(".charge", text: sub_contact.contact_charge)
           expect(page).to have_css(".tel", text: sub_contact.contact_tel)
           expect(page).to have_css(".fax", text: sub_contact.contact_fax)
           expect(page).to have_css(".email", text: sub_contact.contact_email)
@@ -96,7 +99,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       within "#main.page" do
         within ".contact" do
           # ページに保持している複製を用いて、連絡先がレンダリングされれているはず
-          expect(page).to have_css(".group", text: article_page.contact_charge)
+          expect(page).to have_css(".group", text: article_page.contact_group_name)
           expect(page).to have_css(".charge", text: article_page.contact_charge)
           expect(page).to have_css(".tel", text: article_page.contact_tel)
           expect(page).to have_css(".fax", text: article_page.contact_fax)

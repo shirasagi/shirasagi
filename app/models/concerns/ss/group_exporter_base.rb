@@ -39,7 +39,7 @@ module SS::GroupExporterBase
   end
 
   CONTACT_GROUP_ATTRIBUTES = %i[
-    main_state name contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name
+    main_state name contact_group_name contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
   ].freeze
 
   def draw_contact(drawer)

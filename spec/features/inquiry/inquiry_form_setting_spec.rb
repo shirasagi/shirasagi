@@ -7,6 +7,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       {
         name: "main",
         contact_group_name: "contact_group_name-#{unique_id}",
+        contact_charge: "contact_charge-#{unique_id}",
         contact_tel: unique_tel,
         contact_fax: unique_tel,
         contact_email: unique_email,
@@ -17,6 +18,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       {
         name: "alt",
         contact_group_name: "contact_group_name-#{unique_id}",
+        contact_charge: "contact_charge-#{unique_id}",
         contact_tel: unique_tel,
         contact_fax: unique_tel,
         contact_email: unique_email,

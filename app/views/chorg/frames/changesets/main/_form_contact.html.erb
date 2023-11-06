@@ -25,6 +25,9 @@
       <% end %>
       <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_group_name]", contact_group.try(:contact_group_name), id: nil, style: "width: 100%;" %>
     </td>
+    <td class="contact-charge">
+      <%= text_field_tag "#{f.object_name}[destinations][][contact_groups][][contact_charge]", contact_group.try(:contact_charge), id: nil, style: "width: 100%;" %>
+    </td>
     <td class="contact-tel">
       <%= tag.input type: "tel", name: "#{f.object_name}[destinations][][contact_groups][][contact_tel]", value: contact_group.try(:contact_tel), id: nil, style: "width: 100%;" %>
     </td>
@@ -53,6 +56,7 @@
       <th class="contact-main-state"><%= SS::Contact.t :main_state %><%= SS::Contact.tt :main_state %></th>
       <th class="name"><%= SS::Contact.t :name %><%= SS::Contact.tt :name %></th>
       <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %><%= SS::Contact.tt :contact_group_name %></th>
+      <th class="contact-charge"><%= SS::Contact.t :contact_charge %><%= SS::Contact.tt :contact_charge %></th>
       <th class="contact-tel"><%= SS::Contact.t :contact_tel %><%= SS::Contact.tt :contact_tel %></th>
       <th class="contact-fax"><%= SS::Contact.t :contact_fax %><%= SS::Contact.tt :contact_fax %></th>
       <th class="contact-email"><%= SS::Contact.t :contact_email %><%= SS::Contact.tt :contact_email %></th>

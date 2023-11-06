@@ -6,7 +6,7 @@ module Cms::ApiFilter::Contents
   ].freeze
 
   CONTACT_FIELDS = [
-    :contact_charge, :contact_tel, :contact_fax, :contact_email, :contact_link_url, :contact_link_name
+    :contact_group_name, :contact_charge, :contact_tel, :contact_fax, :contact_email, :contact_link_url, :contact_link_name
   ].freeze
 
   COLUMN_VALUES_FIELDS = [

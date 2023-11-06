@@ -14,7 +14,7 @@ class Contact::Apis::ContactsController < ApplicationController
 
     FIELDS_TO_SEARCH = %w(
       name
-      ncontact_groups.contact_group_name ncontact_groups.contact_tel ncontact_groups.contact_falx
+      ncontact_groups.contact_group_name ncontact_groups.contact_charge ncontact_groups.contact_tel ncontact_groups.contact_fax
       ncontact_groups.contact_email ncontact_groups.contact_link_url ncontact_groups.contact_link_name
     ).freeze
 
