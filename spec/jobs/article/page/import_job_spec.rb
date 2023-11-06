@@ -254,7 +254,8 @@ describe Article::Page::ImportJob, dbscope: :example do
         let!(:source_page) do
           cms_group.update(contact_groups: [
             {
-              main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+              main_state: "main", name: "name-#{unique_id}",
+              contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
               contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
               contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -265,8 +266,8 @@ describe Article::Page::ImportJob, dbscope: :example do
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
             contact_state: contact_state, contact_group: cms_group, contact_group_contact_id: cms_group.contact_groups.first.id,
-            contact_group_relation: contact_group_relation, contact_charge: unique_id, contact_tel: unique_id,
-            contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
+            contact_group_relation: contact_group_relation, contact_group_name: unique_id, contact_charge: unique_id,
+            contact_tel: unique_id, contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
           )
@@ -281,6 +282,7 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_group_id).to eq source_page.contact_group_id
               expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
               expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_group_name).to eq source_page.contact_group_name
               expect(page.contact_charge).to eq source_page.contact_charge
               expect(page.contact_tel).to eq source_page.contact_tel
               expect(page.contact_fax).to eq source_page.contact_fax
@@ -303,7 +305,8 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
               expect(page.contact_group_relation).to eq contact_group_relation
               cms_group.contact_groups.first.tap do |contact|
-                expect(page.contact_charge).to eq contact.contact_group_name
+                expect(page.contact_group_name).to eq contact.contact_group_name
+                expect(page.contact_charge).to eq contact.contact_charge
                 expect(page.contact_tel).to eq contact.contact_tel
                 expect(page.contact_fax).to eq contact.contact_fax
                 expect(page.contact_email).to eq contact.contact_email
@@ -325,6 +328,7 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_group_id).to eq source_page.contact_group_id
               expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
               expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_group_name).to eq source_page.contact_group_name
               expect(page.contact_charge).to eq source_page.contact_charge
               expect(page.contact_tel).to eq source_page.contact_tel
               expect(page.contact_fax).to eq source_page.contact_fax

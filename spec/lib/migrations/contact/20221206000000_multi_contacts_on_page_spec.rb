@@ -8,35 +8,38 @@ RSpec.describe SS::Migration20221206000000, dbscope: :example do
   let!(:page1) do
     Timecop.freeze(now) do
       create(
-        :cms_page, contact_group: group1, contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
-        contact_fax: unique_tel, contact_email: unique_email, contact_postal_code: unique_id,
-        contact_address: "address-#{unique_id}", contact_link_url: "contact_link_url_#{unique_id}",
-        contact_link_name: unique_url)
+        :cms_page, contact_group: group1,
+        contact_group_name: "contact_group_name_#{unique_id}", contact_charge: "contact_charge_#{unique_id}",
+        contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+        contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+        contact_link_url: "contact_link_url_#{unique_id}", contact_link_name: unique_url)
     end
   end
   let!(:page2) do
     Timecop.freeze(now) do
       create(
-        :cms_page, contact_group: group1, contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
-        contact_fax: unique_tel, contact_email: unique_email, contact_postal_code: unique_id,
-        contact_address: "address-#{unique_id}", contact_link_url: "contact_link_url_#{unique_id}",
-        contact_link_name: unique_url)
+        :cms_page, contact_group: group1,
+        contact_group_name: "contact_group_name_#{unique_id}", contact_charge: "contact_charge_#{unique_id}",
+        contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+        contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+        contact_link_url: "contact_link_url_#{unique_id}", contact_link_name: unique_url)
     end
   end
   let!(:page3) do
     Timecop.freeze(now) do
       create(
-        :cms_page, contact_group: group1, contact_charge: nil, contact_tel: nil, contact_fax: nil, contact_email: nil,
-        contact_postal_code: nil, contact_address: nil, contact_link_url: nil, contact_link_name: nil)
+        :cms_page, contact_group: group1, contact_group_name: nil, contact_charge: nil, contact_tel: nil, contact_fax: nil,
+        contact_email: nil, contact_postal_code: nil, contact_address: nil, contact_link_url: nil, contact_link_name: nil)
     end
   end
   let!(:page4) do
     Timecop.freeze(now) do
       create(
-        :cms_page, contact_group_id: rand(900..999), contact_charge: "contact_charge_#{unique_id}", contact_tel: unique_tel,
-        contact_fax: unique_tel, contact_email: unique_email, contact_postal_code: unique_id,
-        contact_address: "address-#{unique_id}", contact_link_url: "contact_link_url_#{unique_id}",
-        contact_link_name: unique_url)
+        :cms_page, contact_group_id: rand(900..999),
+        contact_group_name: "contact_group_name_#{unique_id}", contact_charge: "contact_charge_#{unique_id}",
+        contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+        contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+        contact_link_url: "contact_link_url_#{unique_id}", contact_link_name: unique_url)
     end
   end
 
@@ -66,7 +69,8 @@ RSpec.describe SS::Migration20221206000000, dbscope: :example do
       Cms::Page.find(page1.id).tap do |page|
         expect(page.contact_group_relation).to eq "related"
         expect(page.contact_group_contact_id).to eq contact.id
-        expect(page.contact_charge).to eq contact.contact_group_name
+        expect(page.contact_group_name).to eq contact.contact_group_name
+        expect(page.contact_charge).to eq contact.contact_charge
         expect(page.contact_tel).to eq contact.contact_tel
         expect(page.contact_fax).to eq contact.contact_fax
         expect(page.contact_email).to eq contact.contact_email
@@ -82,7 +86,8 @@ RSpec.describe SS::Migration20221206000000, dbscope: :example do
       Cms::Page.find(page2.id).tap do |page|
         expect(page.contact_group_relation).to eq "related"
         expect(page.contact_group_contact_id).to eq contact.id
-        expect(page.contact_charge).to eq contact.contact_group_name
+        expect(page.contact_group_name).to eq contact.contact_group_name
+        expect(page.contact_charge).to eq contact.contact_charge
         expect(page.contact_tel).to eq contact.contact_tel
         expect(page.contact_fax).to eq contact.contact_fax
         expect(page.contact_email).to eq contact.contact_email

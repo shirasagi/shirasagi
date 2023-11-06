@@ -82,8 +82,8 @@ module SS::GroupImportBase
   end
 
   CONTACT_ATTRIBUTES = %i[
-    main_state name contact_group_name contact_tel contact_fax contact_email contact_postal_code contact_address
-    contact_link_url contact_link_name
+    main_state name contact_group_name contact_charge contact_tel contact_fax contact_email
+    contact_postal_code contact_address contact_link_url contact_link_name
   ].freeze
 
   def define_importer_contact(importer)

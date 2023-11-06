@@ -131,6 +131,7 @@ describe Opendata::Dataset, dbscope: :example do
         member_id: 1,
         dataset_group_ids: [1],
         contact_state: "hide",
+        contact_group_name: "test name",
         contact_charge: "test charge",
         contact_tel: "0000-00-00000",
         contact_fax: "0000-00-00001",

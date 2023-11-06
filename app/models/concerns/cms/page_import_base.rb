@@ -261,9 +261,13 @@ module Cms::PageImportBase
       contact_group_relation = from_label(value, item.contact_group_relation_options)
       item.contact_group_relation = contact_group_relation.presence
     end
+    importer.simple_column :contact_group_name do |row, item, head, value|
+      next unless item.respond_to?(:contact_group_name=)
+      import_contact_attribute(row, item, value, :contact_group_name, :contact_group_name)
+    end
     importer.simple_column :contact_charge do |row, item, head, value|
       next unless item.respond_to?(:contact_charge=)
-      import_contact_attribute(row, item, value, :contact_charge, :contact_group_name)
+      import_contact_attribute(row, item, value, :contact_charge, :contact_charge)
     end
     importer.simple_column :contact_tel do |row, item, head, value|
       next unless item.respond_to?(:contact_tel=)

@@ -9,10 +9,10 @@ class SS::Migration20221206000000
       next if group.blank? # maybe group has been deleted
 
       contact = group.contact_groups.where(
-        contact_group_name: page.contact_charge, contact_tel: page.contact_tel, contact_fax: page.contact_fax,
-        contact_email: page.contact_email, contact_postal_code: page.contact_postal_code,
-        contact_address: page.contact_address, contact_link_url: page.contact_link_url,
-        contact_link_name: page.contact_link_name
+        contact_group_name: page.contact_group_name, contact_charge: page.contact_charge,
+        contact_tel: page.contact_tel, contact_fax: page.contact_fax, contact_email: page.contact_email,
+        contact_postal_code: page.contact_postal_code, contact_address: page.contact_address,
+        contact_link_url: page.contact_link_url, contact_link_name: page.contact_link_name
       ).first
 
       if contact.present?
@@ -22,10 +22,10 @@ class SS::Migration20221206000000
 
       contact = group.contact_groups.create(
         name: "#{group.section_name} #{group.contact_groups.count + 1}",
-        contact_group_name: page.contact_charge, contact_tel: page.contact_tel, contact_fax: page.contact_fax,
-        contact_email: page.contact_email, contact_postal_code: page.contact_postal_code,
-        contact_address: page.contact_address, contact_link_url: page.contact_link_url,
-        contact_link_name: page.contact_link_name)
+        contact_group_name: page.contact_group_name, contact_charge: page.contact_charge,
+        contact_tel: page.contact_tel, contact_fax: page.contact_fax, contact_email: page.contact_email,
+        contact_postal_code: page.contact_postal_code, contact_address: page.contact_address,
+        contact_link_url: page.contact_link_url, contact_link_name: page.contact_link_name)
       page.set(contact_group_relation: "related", contact_group_contact_id: contact.id)
     end
   end
@@ -41,8 +41,8 @@ class SS::Migration20221206000000
   end
 
   PAGE_CONTACT_ATTRIBUTES = %i[
-    contact_charge contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url
-    contact_link_name
+    contact_group_name contact_charge contact_tel contact_fax contact_email contact_postal_code contact_address
+    contact_link_url contact_link_name
   ].freeze
 
   def each_page(&block)

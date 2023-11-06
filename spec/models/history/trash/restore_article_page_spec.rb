@@ -424,6 +424,7 @@ describe History::Trash, type: :model, dbscope: :example do
     context "with contact/page" do
       let!(:contact_state) { %w(show hide).sample }
       let!(:contact_group) { create :cms_group, name: "#{cms_site.groups.first.name}/#{unique_id}" }
+      let(:contact_group_name) { "contact_group_name-#{unique_id}" }
       let(:contact_charge) { "contact_charge-#{unique_id}" }
       let(:contact_tel) { "contact_tel-#{unique_id}" }
       let(:contact_fax) { "contact_fax-#{unique_id}" }
@@ -435,7 +436,8 @@ describe History::Trash, type: :model, dbscope: :example do
       let!(:item) do
         create(
           :article_page, cur_user: user, cur_site: site, cur_node: node,
-          contact_state: contact_state, contact_group_id: contact_group.id, contact_charge: contact_charge,
+          contact_state: contact_state, contact_group_id: contact_group.id,
+          contact_group_name: contact_group_name, contact_charge: contact_charge,
           contact_tel: contact_tel, contact_fax: contact_fax, contact_email: contact_email,
           contact_postal_code: contact_postal_code, contact_address: contact_address,
           contact_link_url: contact_link_url, contact_link_name: contact_link_name
@@ -447,6 +449,7 @@ describe History::Trash, type: :model, dbscope: :example do
 
         expect(item.contact_state).to eq contact_state
         expect(item.contact_group_id).to eq contact_group.id
+        expect(item.contact_group_name).to eq contact_group_name
         expect(item.contact_charge).to eq contact_charge
         expect(item.contact_tel).to eq contact_tel
         expect(item.contact_fax).to eq contact_fax

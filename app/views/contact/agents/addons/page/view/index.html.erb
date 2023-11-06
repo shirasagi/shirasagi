@@ -12,15 +12,28 @@
 <%
   if @cur_page.contact_group_related?
     # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
-    group_name = contact ? contact.contact_group_name.presence : @cur_page.contact_charge.presence
+    group_name = contact ? contact.contact_group_name.presence : @cur_page.contact_group_name.presence
   else
-    group_name = @cur_page.contact_charge.presence
+    group_name = @cur_page.contact_group_name.presence
   end
   if group_name.blank? && contact_group
     group_name = contact_group.contact_group_name.presence || contact_group.section_name
   end
   if group_name
     contact_parts << content_tag(:p, group_name, class: "group")
+  end
+%>
+
+<%
+  if @cur_page.contact_group_related?
+    # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
+    contact_charge = contact ? contact.contact_charge : @cur_page.contact_charge
+  else
+    contact_charge = @cur_page.contact_charge
+  end
+
+  if contact_charge.present? && (group_name.blank? || group_name != contact_charge)
+    contact_parts << content_tag(:p, contact_charge, class: "charge")
   end
 %>
 
@@ -34,17 +47,17 @@
     contact_address = @cur_page.contact_address
   end
 
-  if contact_postal_code.present?
-    hyphenize_postal_code = proc do |code|
-      if code =~ /^\d{4}/
-        code.insert(3, "-")
-      else
-        code
+  if contact_postal_code.present? && contact_postal_code =~ /^\d{4}/
+    contact_postal_code.insert(3, "-")
+  end
+  if contact_postal_code.present? || contact_address.present?
+    contact_parts << content_tag(:p, class: "address-group") do
+      if contact_postal_code.present?
+        @output_buffer << content_tag(:span, t("contact.postal_code", code: contact_postal_code), class: "postal-code")
       end
-    end
-    contact_parts << content_tag(:dl, class: "address-group") do
-      @output_buffer << content_tag(:span, t("contact.postal_code", code: hyphenize_postal_code.call(contact_postal_code)), class: "postal-code")
-      @output_buffer << content_tag(:span, contact_address, class: "address")
+      if contact_address.present?
+        @output_buffer << content_tag(:span, contact_address, class: "address")
+      end
     end
   end
 %>
@@ -106,13 +119,13 @@
     else
       # 連絡先連携が有効なのに連絡先連携が切れている場合（contact が nil の場合）、ページに保持した複製を用いる
       contact_link = @cur_page.contact_link_name.presence
-      contact_link ||= @cur_page.contact_charge.presence
+      contact_link ||= @cur_page.contact_group_name.presence
       contact_link_url = @cur_page.contact_link_url
     end
     contact_link ||= contact_group.try(:section_name).presence
   else
     contact_link = @cur_page.contact_link_name.presence
-    contact_link ||= @cur_page.contact_charge.presence
+    contact_link ||= @cur_page.contact_group_name.presence
     contact_link ||= contact_group.try(:section_name).presence
     contact_link_url = @cur_page.contact_link_url
   end
