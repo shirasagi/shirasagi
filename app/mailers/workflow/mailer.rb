@@ -107,6 +107,6 @@ class Workflow::Mailer < ApplicationMailer
   end
 
   def make_full_url(url)
-    URI.join(@site.mypage_full_url, url).to_s
+    ::Addressable::URI.join(@site.mypage_full_url, url).to_s
   end
 end

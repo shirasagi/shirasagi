@@ -87,13 +87,13 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   def validate_link_url
     return if link_url.blank?
-    Addressable::URI.parse(link_url)
+    ::Addressable::URI.parse(link_url)
   rescue
     errors.add :link_url, :invalid
   end
 
   def set_link_item
-    u = Addressable::URI.parse(link_url) rescue nil
+    u = ::Addressable::URI.parse(link_url) rescue nil
     site = _parent.site || _parent.instance_variable_get(:@cur_site)
 
     if link_url.blank? || u.nil? || site.nil?

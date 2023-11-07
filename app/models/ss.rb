@@ -38,4 +38,9 @@ module SS
     # normalize to NFKC
     UNF::Normalizer.normalize(str, :nfkc).strip
   end
+
+  def path_and_query(url)
+    return if url.blank?
+    ::Addressable::URI.parse(url).request_uri
+  end
 end

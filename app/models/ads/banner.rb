@@ -28,7 +28,7 @@ class Ads::Banner
   default_scope ->{ where(route: "ads/banner") }
 
   def url
-    uri = URI.parse(super)
+    uri = ::Addressable::URI.parse(super)
     uri.query = { redirect: link_url }.to_param
     uri.to_s
   end

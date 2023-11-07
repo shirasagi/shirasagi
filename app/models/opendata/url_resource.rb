@@ -109,7 +109,7 @@ class Opendata::UrlResource
 
   def validate_original_url
     begin
-      uri = URI.parse(original_url)
+      uri = ::URI.parse(original_url)
     rescue => e
       errors.add :original_url, :invalid
       return

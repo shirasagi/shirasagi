@@ -3,7 +3,7 @@ class Member::Agents::Parts::PhotoSlideController < ApplicationController
 
   def render_other_site_items
     begin
-      uri = ::URI.parse(@cur_part.node_url)
+      uri = ::Addressable::URI.parse(@cur_part.node_url)
       site = Cms::Site.find_by_domain(uri.host, uri.path)
       site ||= Cms::Site.find_by_domain("#{uri.host}:#{uri.port}", uri.path)
       filename = uri.path.sub(site.url, "").sub(/\/$/, "")

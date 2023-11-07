@@ -106,7 +106,7 @@ class SS::OAuth2::TokenRequest::JWTBearer
       return
     end
 
-    aud = Addressable::URI.parse(aud.to_s) rescue nil
+    aud = ::Addressable::URI.parse(aud.to_s) rescue nil
     if aud.blank? || !aud.absolute?
       respond_error :bad_request, "invalid_aud", "malformed aud"
       return

@@ -150,7 +150,7 @@ class Inquiry::Answer
 
   def source_full_url
     if source_url.present?
-      uri = URI.parse(site.full_url)
+      uri = ::Addressable::URI.parse(site.full_url)
       uri.path = source_url
       uri.to_s
     end
@@ -162,7 +162,7 @@ class Inquiry::Answer
 
   def inquiry_page_full_url
     if inquiry_page_url.present?
-      uri = URI.parse(site.full_url)
+      uri = ::Addressable::URI.parse(site.full_url)
       uri.path = inquiry_page_url
       uri.to_s
     end

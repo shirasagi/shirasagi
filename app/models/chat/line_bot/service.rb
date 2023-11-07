@@ -288,7 +288,7 @@ class Chat::LineBot::Service
 
   def site_search(event)
     site_search_node = Cms::Node::SiteSearch.site(@cur_site).first
-    uri = URI.parse(site_search_node.url)
+    uri = ::Addressable::URI.parse(site_search_node.url)
     uri.query = {s: {keyword: event.message["text"]}}.to_query
     url = uri.try(:to_s)
     template = {

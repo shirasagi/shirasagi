@@ -38,14 +38,14 @@ class Sns::Login::SamlController < ApplicationController
   public
 
   def init
-    @request_url ||= URI.parse(request.url)
+    @request_url ||= ::Addressable::URI.parse(request.url)
 
     request = OneLogin::RubySaml::Authrequest.new
 
     # "ref" is a path to redirect after user is successfully logged in
     ref = params[:ref].try { |ref| ref.to_s }
     if ref.present?
-      ref = URI.join(@request_url, ref) rescue nil
+      ref = ::Addressable::URI.join(@request_url, ref) rescue nil
     end
     ref = normalize_url(ref) if ref.present?
     if ref.present?
@@ -56,7 +56,7 @@ class Sns::Login::SamlController < ApplicationController
     # "login_path" is a path to redirect after user is logged out
     login_path = params[:login_path].try { |path| path.to_s }
     if login_path.present?
-      login_path = URI.join(@request_url, login_path) rescue nil
+      login_path = ::Addressable::URI.join(@request_url, login_path) rescue nil
     end
     login_path = normalize_url(login_path) if login_path.present?
     if login_path.present?

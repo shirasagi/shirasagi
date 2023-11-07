@@ -60,7 +60,7 @@ module SS::ExceptionFilter
   end
 
   def render_job_size_limit(error)
-    referer_uri = URI.parse(request.referer)
+    referer_uri = ::Addressable::URI.parse(request.referer)
     begin
       if @item.present?
         @item.errors.add(:base, error.to_s)

@@ -54,8 +54,8 @@ module Member::Node
     private
 
     def make_full_url(path)
-      site_root_url = URI.parse(site.full_root_url)
-      URI.join(site_root_url, path) rescue nil
+      site_root_url = ::Addressable::URI.parse(site.full_root_url)
+      ::Addressable::URI.join(site_root_url, path) rescue nil
     end
 
     def trusted?(full_url)

@@ -27,7 +27,7 @@ class Cms::SyntaxChecker::UrlSchemeChecker
   private
 
   def invalid_scheme?(shemes_to_allow, url_like)
-    url = Addressable::URI.parse(url_like) rescue nil
+    url = ::Addressable::URI.parse(url_like) rescue nil
     return false if !url
 
     scheme = url.scheme

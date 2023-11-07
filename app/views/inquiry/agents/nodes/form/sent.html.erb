@@ -11,5 +11,5 @@
 <%= sanitize(@cur_node.inquiry_sent_html) %>
 </div>
 <% if params[:ref].present? %>
-  <div class="back-to-ref"><%= link_to I18n.t("inquiry.links.back_to_page"), URI.parse(params[:ref].to_s).path %></div>
+  <div class="back-to-ref"><%= link_to I18n.t("inquiry.links.back_to_page"), ::Addressable::URI.parse(params[:ref].to_s).request_uri %></div>
 <% end %>

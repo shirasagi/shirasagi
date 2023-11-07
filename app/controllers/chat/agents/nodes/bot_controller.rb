@@ -37,7 +37,7 @@ class Chat::Agents::Nodes::BotController < ApplicationController
     elsif params[:text].present?
       @site_search_node = Cms::Node::SiteSearch.site(@cur_site).and_public(@cur_date).first
       if @site_search_node.present?
-        uri = URI.parse(@site_search_node.url)
+        uri = ::Addressable::URI.parse(@site_search_node.url)
         uri.query = { s: { keyword: params[:text] } }.to_query
       end
       if @intents.present?
