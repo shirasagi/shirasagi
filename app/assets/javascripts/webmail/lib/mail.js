@@ -646,8 +646,9 @@ this.Webmail_Mail_Form_Address = (function () {
 
   Webmail_Mail_Form_Address.select = function (item) {
     self = this;
-    var item_html = jQuery('<div>').append(item.clone(true)).html()
+    var item_html = jQuery('<div>').append(item.clone(true)).html();
     var data, dl, field, label, selected, self, span, value, check_all;
+    selectTable = null;
     if(item_html.indexOf("to_ids") > 0){
       selectTable="to";
     }
@@ -656,6 +657,9 @@ this.Webmail_Mail_Form_Address = (function () {
     }
     if(item_html.indexOf("bcc_ids") > 0){
       selectTable="bcc";
+    }
+    if (!selectTable) {
+      selectTable = "to";
     }
     data = item.closest("[data-id]");
     dl = self.anchorAjaxBox.closest(".webmail-mail-form-address");
