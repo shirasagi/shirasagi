@@ -237,7 +237,7 @@ en:
             - The lower the number, the higher the position.
           contact_group_name:
             - Enter the display group name in public view of the new group.
-          contact_chage:
+          contact_charge:
             - Enter the group name in charge of the new group.
           contact_tel:
             - Enter the phone number of the new group.
