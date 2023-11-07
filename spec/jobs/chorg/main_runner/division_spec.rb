@@ -288,7 +288,8 @@ describe Chorg::MainRunner, dbscope: :example do
           {
             _id: main_contact.id.to_s, main_state: "main", name: main_contact.name,
             contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax,
+            contact_email: main_contact.contact_email,
             contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
             contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name,
           }.with_indifferent_access
@@ -541,7 +542,8 @@ describe Chorg::MainRunner, dbscope: :example do
           {
             _id: main_contact.id.to_s, main_state: "main", name: main_contact.name,
             contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax,
+            contact_email: main_contact.contact_email,
             contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
             contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name,
           }.with_indifferent_access

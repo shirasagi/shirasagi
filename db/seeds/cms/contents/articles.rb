@@ -190,7 +190,8 @@ save_page route: "article/page", filename: "docs/page19.html", name: "自動交�
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
