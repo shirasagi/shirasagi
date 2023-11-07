@@ -14,7 +14,7 @@
 %>
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
-    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json.to_json %>);
+    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
   });
 <% end %>
 
