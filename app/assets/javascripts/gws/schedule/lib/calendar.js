@@ -26,6 +26,9 @@ SS.ready(function() {
         opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
       }
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       $(selector).fullCalendar(params);
       this.renderInitialize(selector, init);
       this.overrideAddLink(selector);
