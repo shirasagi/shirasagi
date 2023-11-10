@@ -47,10 +47,11 @@
     contact_address = @cur_page.contact_address
   end
 
-  if contact_postal_code.present? && contact_postal_code =~ /^\d{4}/
-    contact_postal_code.insert(3, "-")
-  end
-  if contact_postal_code.present? || contact_address.present?
+  if contact_address.present?
+    if contact_postal_code.present? && contact_postal_code =~ /^\d{4}/
+      contact_postal_code.insert(3, "-")
+    end
+
     contact_parts << content_tag(:p, class: "address-group") do
       if contact_postal_code.present?
         @output_buffer << content_tag(:span, t("contact.postal_code", code: contact_postal_code), class: "postal-code")
