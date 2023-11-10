@@ -120,6 +120,9 @@ module Cms::ListHelper
     if @cur_page
       assigns["page"] = @cur_page
     end
+    if @origin
+      assigns["origin"] = @origin
+    end
 
     template.render(assigns).html_safe
   end

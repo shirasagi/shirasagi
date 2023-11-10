@@ -15,6 +15,7 @@ class Cms::Agents::Parts::Node2Controller < ApplicationController
     end
 
     if origin_content
+      @origin = origin_content
       cond = { filename: /^#{::Regexp.escape(origin_content.filename)}\//, depth: origin_content.depth + 1 }
     else
       cond = { depth: 1 }
