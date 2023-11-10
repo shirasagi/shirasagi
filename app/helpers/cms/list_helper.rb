@@ -117,6 +117,9 @@ module Cms::ListHelper
     if @cur_node
       assigns["node"] = @cur_node
     end
+    if @cur_page
+      assigns["page"] = @cur_page
+    end
 
     template.render(assigns).html_safe
   end

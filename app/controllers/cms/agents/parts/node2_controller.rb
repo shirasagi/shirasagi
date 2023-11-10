@@ -11,7 +11,7 @@ class Cms::Agents::Parts::Node2Controller < ApplicationController
         origin_content = @cur_node.parent
       end
     else # "deployment"
-      origin_content = @cur_node = @cur_part.parent
+      origin_content = @cur_part.parent
     end
 
     if origin_content
