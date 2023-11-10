@@ -7,17 +7,16 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   before_action :set_params
 
   def index
-    @categories = []
     @items = []
+    @categories = Category::Node::Base.public_list(site: @cur_site, date: @cur_date).order_by(order: 1)
     st_category_ids = @cur_node.parent.try(:st_category_ids)
     if st_category_ids.present?
-      @categories = Cms::Node.site(@cur_site).in(id: st_category_ids).sort(order: 1)
+      @categories = @categories.in(id: st_category_ids)
     end
-    @event_pages = Cms::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date).
+    @event_pages = Cms::Page.public_list(site: @cur_site, ate: @cur_date).
       where('event_dates.0' => { "$exists" => true })
     facility_ids = @event_pages.pluck(:facility_id, :facility_ids).flatten.compact
-    @facilities = Facility::Node::Page.site(@cur_site).
-      and_public(@cur_date).
+    @facilities = Facility::Node::Page.public_list(site: @cur_site, date: @cur_date).
       in(id: facility_ids).
       order_by(order: 1, kana: 1, name: 1).
       to_a
@@ -41,7 +40,9 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     @close_date = Date.parse(@close_date) if @close_date.present?
     @facility_id = safe_params[:facility_id].presence
     if @facility_id.present?
-      @facility_ids = Facility::Node::Page.site(@cur_site).where(id: @facility_id).and_public.pluck(:id)
+      @facility_ids = Facility::Node::Page.public_list(site: @cur_site, date: @cur_date).
+        where(id: @facility_id).
+        pluck(:id)
     end
   end
 

@@ -335,6 +335,3 @@ ja:
     event/addon/calendar:
       event_display:
         - イベントカレンダーの表示形式を指定します。
-    event/node/page:
-      st_categories:
-        - フォルダー下、イベント検索で使用するカテゴリーを設定します。
