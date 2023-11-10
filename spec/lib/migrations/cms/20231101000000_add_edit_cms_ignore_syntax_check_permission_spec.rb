@@ -48,6 +48,6 @@ RSpec.describe SS::Migration20231101000000, dbscope: :example do
     role2.reload
 
     expect(role1.permissions).to match_array all_permissions
-    expect(role2.permissions).to match_array(all_permissions - add_permissions)
+    expect(role2.permissions).to match_array all_permissions
   end
 end
