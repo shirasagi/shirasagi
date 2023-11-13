@@ -113,29 +113,7 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
 
     pending_histories = pending_relation.delete(relation_key(performance_info))
     if pending_histories.present?
-      pending_histories.each do |pending_history|
-        pending_history.update(parent: history)
-      end
-
-      history.child_ids = pending_histories.map(&:id)
-      sub_total_db, sub_total_view, sub_total_elapsed = sub_total(history.child_ids)
-
-      history.sub_total_db = sub_total_db
-      history.sub_total_view = sub_total_view
-      history.sub_total_elapsed = sub_total_elapsed
-      if sub_total_db && sub_total_db > 0
-        history.db ||= 0
-        history.db -= sub_total_db
-      end
-      if sub_total_view && sub_total_view > 0
-        history.view ||= 0
-        history.view -= sub_total_view
-      end
-      if sub_total_elapsed && sub_total_elapsed > 0
-        history.elapsed ||= 0
-        history.elapsed -= sub_total_elapsed
-      end
-      history.save!
+      build_relations!(history, performance_info, pending_histories)
     end
 
     scope = performance_info["scopes"].try(:last)
@@ -171,6 +149,32 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       Rails.logger.debug { "#{performance_info["type"]}: unknown type" }
     end
     content
+  end
+
+  def build_relations!(history, _performance_info, pending_histories)
+    pending_histories.each do |pending_history|
+      pending_history.update(parent: history)
+    end
+
+    history.child_ids = pending_histories.map(&:id)
+    sub_total_db, sub_total_view, sub_total_elapsed = sub_total(history.child_ids)
+
+    history.sub_total_db = sub_total_db
+    history.sub_total_view = sub_total_view
+    history.sub_total_elapsed = sub_total_elapsed
+    if sub_total_db && sub_total_db > 0
+      history.db ||= 0
+      history.db -= sub_total_db
+    end
+    if sub_total_view && sub_total_view > 0
+      history.view ||= 0
+      history.view -= sub_total_view
+    end
+    if sub_total_elapsed && sub_total_elapsed > 0
+      history.elapsed ||= 0
+      history.elapsed -= sub_total_elapsed
+    end
+    history.save!
   end
 
   def aggregate_histories
