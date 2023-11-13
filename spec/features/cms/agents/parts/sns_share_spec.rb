@@ -44,7 +44,11 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       expect(page).to have_css('.hatena')
       expect(page).to have_css('.line')
       expect(find('div.fb-like div.fb-like')['data-href']).to eq node.full_url[0..-2]
-      expect(find('div.twitter a')['data-url']).to eq node.full_url[0..-2]
+      within "div.twitter" do
+        query = { url: node.full_url[0..-2], text: "#{node.name} -  #{site1.name}\r\n" }
+        link = "https://twitter.com/share?#{query.to_query}"
+        expect(page).to have_link(I18n.t("cms.sns_share.tweet"), href: link)
+      end
     end
   end
 end

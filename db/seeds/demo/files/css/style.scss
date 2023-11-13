@@ -2632,6 +2632,10 @@ body.general {
               height: 20px;
               font-size: 0;
 
+              &.twitter {
+                font-size: 100%;
+              }
+
               @include tb {
                 height: 30px;
               }
@@ -2646,6 +2650,24 @@ body.general {
               &:not(.fb-like) {
                 margin-right: 15px;
               }
+            }
+
+            .twitter-share-link {
+              display: inline-flex;
+              align-items: center;
+              gap: 3px;
+              height: 20px;
+              padding: 3px;
+              border: 1px solid #000;
+              border-radius: 3px;
+              color: #fff;
+              background: #000;
+              text-decoration: none;
+            }
+
+            .twitter-brand-logo {
+              width: 14px;
+              height: 14px;
             }
           }
 

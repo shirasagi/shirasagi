@@ -31,10 +31,14 @@ url = File.join(@cur_site.full_url, @cur_main_path)
 
   <% elsif service == "twitter" %>
     <div class="site twitter">
-      <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url %>"><%= t "cms.sns_share.tweet" %></a>
-      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-      if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-      fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      <%
+        tweet_text = @window_name || (@cur_page || @cur_node).try(:name)
+        tweet_text = "#{tweet_text}\r\n" if tweet_text
+      %>
+      <%= link_to "https://twitter.com/share?#{ { url: request.url, text: tweet_text }.to_query }", class: "twitter-share-link", target: "_blank", rel: "noopener" do %>
+        <%= image_tag "/assets/img/x-logo_white.png", alt: t("cms.sns_share.twitter"), class: "twitter-brand-logo" %>
+        <%= tag.span t("cms.sns_share.tweet"), class: "twitter-share-action" %>
+      <% end %>
     </div>
 
   <% elsif service == "hatena" %>
