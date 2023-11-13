@@ -11,6 +11,9 @@
     %>
   </dd>
 
+  <dt><%= @model.t :page_no %></dt>
+  <dd><%= @item.page_no %></dd>
+
   <dt><%= @model.t :db %></dt>
   <dd>
     <%= format_elapsed(@item.total_db) %>
@@ -53,6 +56,7 @@
         <tr>
           <th>#</th>
           <th><%= @model.t :content %></th>
+          <th><%= @model.t :page_no %></th>
           <th><%= @model.t :db %></th>
           <th><%= @model.t :view %></th>
           <th><%= @model.t :elapsed %></th>
@@ -63,6 +67,7 @@
           <tr data-id=<%= child_history.id %>>
             <td><%= index + 1 %></td>
             <td><%= link_to item_title(child_history), url_for(action: :show, id: child_history) %></td>
+            <td><%= child_history.page_no %></td>
             <td><%= format_elapsed(child_history.total_db) %></td>
             <td><%= format_elapsed(child_history.total_view) %></td>
             <td><%= format_elapsed(child_history.total_elapsed) %></td>
@@ -73,6 +78,7 @@
         <tr>
           <td style="background: #f2f2f2; color: #999;"></td>
           <td style="background: #f2f2f2; color: #999;">Total</td>
+          <td style="background: #f2f2f2; color: #999;"></td>
           <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_db) %></td>
           <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_view) %></td>
           <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_elapsed) %></td>

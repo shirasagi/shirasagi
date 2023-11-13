@@ -108,9 +108,10 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       content: content, content_name: performance_info["name"], content_filename: performance_info["filename"],
       db: performance_info["db"], view: performance_info["view"], elapsed: performance_info["elapsed"],
       total_db: performance_info["db"], total_view: performance_info["view"], total_elapsed: performance_info["elapsed"])
+    history.page_no = performance_info["page"] if performance_info["page"]
     history.save!
 
-    pending_histories = pending_relation.delete(performance_info.slice("type", "id"))
+    pending_histories = pending_relation.delete(relation_key(performance_info))
     if pending_histories.present?
       pending_histories.each do |pending_history|
         pending_history.update(parent: history)
@@ -139,10 +140,15 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
 
     scope = performance_info["scopes"].try(:last)
     if scope.present?
-      scope = scope.slice("type", "id")
+      scope = relation_key(scope)
       pending_relation[scope] ||= []
       pending_relation[scope] << history
     end
+  end
+
+  def relation_key(performance_info)
+    # performance_info.slice("type", "id", "page")
+    %w(type id page).map { |key| performance_info[key] }.join(":")
   end
 
   def find_content(performance_info)

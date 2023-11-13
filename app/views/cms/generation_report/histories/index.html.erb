@@ -18,6 +18,7 @@
     <thead>
     <tr>
       <th><%= @model.t :content %></th>
+      <th><%= @model.t :page_no %></th>
       <th><%= @model.t :db %></th>
       <th><%= @model.t :view %></th>
       <th><%= @model.t :elapsed %></th>
@@ -27,6 +28,7 @@
     <% @items.each do |history| %>
       <tr data-id=<%= history.id %>>
         <td><%= link_to item_title(history), url_for(action: :show, id: history) %></td>
+        <td><%= history.page_no %></td>
         <td>
           <%= format_elapsed(history.total_db) %>
           <% if history.child_ids.present? %>

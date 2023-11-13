@@ -10,6 +10,7 @@ module Cms::GenerationReport::History
     belongs_to :content, polymorphic: true
     field :content_name, type: String
     field :content_filename, type: String
+    field :page_no, type: Integer
     field :db, type: Float
     field :view, type: Float
     field :elapsed, type: Float

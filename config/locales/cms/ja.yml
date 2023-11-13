@@ -1634,6 +1634,7 @@ ja:
         content_type: コンテンツタイトル
         content_name: コンテンツ種別
         content_filename: コンテンツファイル名
+        page_no: ページ番号
         db: DB処理時間
         view: ビュー処理時間
         elapsed: 全処理時間
