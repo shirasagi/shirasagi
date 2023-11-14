@@ -51,4 +51,56 @@ describe "cms_agents_parts_sns_share", type: :feature, dbscope: :example do
       end
     end
   end
+
+  context "ajax_view is enabled", js: true do
+    let(:site) { cms_site }
+    let(:layout) { create_cms_layout part }
+    let(:part) { create :cms_part_sns_share, cur_site: site, ajax_view: "enabled" }
+
+    context "with node" do
+      let(:node) { create :cms_node, cur_site: site, layout: layout }
+
+      it do
+        visit node.full_url
+        expect(page).to have_css(".cms-sns_share")
+        expect(page).to have_css(".fb-like")
+        expect(page).to have_css(".fb-share")
+        expect(page).to have_css(".twitter")
+        expect(page).to have_css(".hatena")
+        expect(page).to have_css(".line")
+  
+        within "div.twitter" do
+          # AJAX が有効になっている場合、@window_name を取得できないので text にはページかフォルダーの名前のみがセットされている
+          query = { url: node.full_url, text: "#{node.name}\r\n" }
+          link = "https://twitter.com/share?#{query.to_query}"
+          expect(page).to have_link(I18n.t("cms.sns_share.tweet"), href: link)
+        end
+      end
+    end
+
+    context "with page" do
+      let(:article) { create :cms_page, cur_site: site, layout: layout }
+
+      before do
+        ::FileUtils.rm_f(article.path)
+      end
+
+      it do
+        visit article.full_url
+        expect(page).to have_css(".cms-sns_share")
+        expect(page).to have_css(".fb-like")
+        expect(page).to have_css(".fb-share")
+        expect(page).to have_css(".twitter")
+        expect(page).to have_css(".hatena")
+        expect(page).to have_css(".line")
+
+        within "div.twitter" do
+          # AJAX が有効になっている場合、@window_name を取得できないので text にはページかフォルダーの名前のみがセットされている
+          query = { url: article.full_url, text: "#{article.name}\r\n" }
+          link = "https://twitter.com/share?#{query.to_query}"
+          expect(page).to have_link(I18n.t("cms.sns_share.tweet"), href: link)
+        end
+      end
+    end
+  end
 end
