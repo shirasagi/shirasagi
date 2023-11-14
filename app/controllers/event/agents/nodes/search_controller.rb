@@ -13,7 +13,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     if st_category_ids.present?
       @categories = @categories.in(id: st_category_ids)
     end
-    @event_pages = Cms::Page.public_list(site: @cur_site, ate: @cur_date).
+    @event_pages = Cms::Page.public_list(site: @cur_site, date: @cur_date).
       where('event_dates.0' => { "$exists" => true })
     facility_ids = @event_pages.pluck(:facility_id, :facility_ids).flatten.compact
     @facilities = Facility::Node::Page.public_list(site: @cur_site, date: @cur_date).
