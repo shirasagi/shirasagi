@@ -9,6 +9,7 @@ module Garbage::ListHelper
     ih << "  <thead>"
     ih << "    <tr>"
     ih << "      <th>#{t('garbage.item')}</th>"
+    ih << "      <th>#{t('garbage.kana')}</th>"
     ih << "      <th>#{t('garbage.category.name')}</th>"
     ih << "      <th>#{t('garbage.remark')}</th>"
     ih << "    </tr>"
@@ -20,6 +21,7 @@ module Garbage::ListHelper
       name = item.index_name.presence || item.name
       ih << "<tr>"
       ih << "  <td>#{link_to(name, item.url)}</td>"
+      ih << "  <td>#{item.kana}</td>"
       ih << "  <td>#{br(item.categories.map(&:name).join("\n"))}</td>"
       ih << "  <td>#{item.remark}</td>"
       ih << "</tr>"
