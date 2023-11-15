@@ -2,7 +2,8 @@ module Contact::Addon::Group
   extend ActiveSupport::Concern
   extend SS::Addon
 
-  MAX_CONTACT_COUNT = 20
+  # CSVインポート時の都合上、連絡先数の上限がある方が良い
+  MAX_CONTACT_COUNT = 200
 
   included do
     embeds_many :contact_groups, class_name: "SS::Contact", cascade_callbacks: true, validate: false
