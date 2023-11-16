@@ -15,6 +15,14 @@ module SS::CkanSupport
     "shirasagi/ckan"
   end
 
+  def docker_container_borrowed
+    @docker_borrowed
+  end
+
+  def docker_container_borrowed=(borrowed)
+    @docker_borrowed = borrowed
+  end
+
   def docker_container
     @docker_container
   end
@@ -59,7 +67,24 @@ module SS::CkanSupport
 
   def before_example
     container = SS::CkanSupport.docker_container
-    return if container.present?
+    return if container.present? # already running
+
+    ENV["CKAN_CONTAINER_ID"].try do |container_id|
+      if container_id.present?
+        container = Docker::Container.get(container_id) rescue nil
+      end
+      if container
+        SS::CkanSupport.docker_container_borrowed = true
+        SS::CkanSupport.docker_container = container
+        ckan_port = container.info["HostConfig"]["PortBindings"]["80/tcp"][0]["HostPort"].to_i
+        SS::CkanSupport.docker_ckan_port = ckan_port
+
+        puts "use container '#{container.id[0, 12]}' as '#{docker_image_id}' listening on #{ckan_port}"
+      end
+    end
+
+    container = SS::CkanSupport.docker_container
+    return if container.present? # already running
 
     image_id = docker_image_id
     ckan_port = 8080
@@ -81,6 +106,7 @@ module SS::CkanSupport
     end
     sleep 3
 
+    SS::CkanSupport.docker_container_borrowed = false
     SS::CkanSupport.docker_container = container
     SS::CkanSupport.docker_ckan_port = ckan_port
 
@@ -92,9 +118,11 @@ module SS::CkanSupport
     return if container.blank?
 
     SS::CkanSupport.docker_container = nil
-    container.stop
-    container.delete(force: true)
-    puts "container '#{container.id[0, 12]}' is deleted"
+    unless SS::CkanSupport.docker_container_borrowed
+      container.stop
+      container.delete(force: true)
+      puts "container '#{container.id[0, 12]}' is deleted"
+    end
   end
 
   module EventHandler
