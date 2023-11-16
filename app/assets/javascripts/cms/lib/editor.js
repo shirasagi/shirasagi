@@ -126,7 +126,7 @@ this.Cms_Editor_CKEditor = (function () {
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
     CKEDITOR.on('instanceReady', function (ev) {
       ev.editor.on("change", function () {
-        SS.formChanged = true;
+        SS.formChanged = new Date().getTime();
       });
       ev.editor.on("beforeCommandExec", function(event) {
         // Show the paste dialog for the paste buttons and right-click paste

@@ -275,6 +275,7 @@ en:
       target_to_public: Check what to make public
       target_to_closed: Check what to make closed
       approve: Are you sure you want to approve it?
+      resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
@@ -345,6 +346,7 @@ en:
       import:
         blank_file: A file must be entered.
         invalid_file_type: Invalid file format.
+      failed_to_resume_editing: Failed to resume editing.
     apis:
       groups:
         index: Select a group

@@ -1,6 +1,15 @@
-<% addons = @addons || @item.try(:addons) || [] %>
+<%
+  addons = @addons || @item.try(:addons) || []
 
-<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  html_option = { id: "item-form", method: :put, multipart: true, autocomplete: :off }
+
+  if @auto_save_enabled && (url_for(action: :resume_edit) rescue nil)
+    # 自動保存が有効 & resume アクションが定義位されている場合
+    html_option[:data] = { controller: "ss--auto-save", "ss--auto-save-user-id-value" => @cur_user.id, "ss--auto-save-resume-url-value" => url_for(action: :resume_edit) }
+  end
+%>
+
+<%= form_for :item, url: { action: :update }, html: html_option do |f| %>
 <%= error_messages_for :item %>
 
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
