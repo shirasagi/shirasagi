@@ -21,6 +21,19 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       ]
     )
   end
+  let!(:other_group) do
+    create(
+      :contact_group, name: unique_id,
+      contact_groups: [
+        {
+          name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+          contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+          main_state: "main"
+        }
+      ]
+    )
+  end
   let!(:main_contact) { group.contact_groups.where(main_state: "main").first }
   let!(:sub_contact) { group.contact_groups.ne(main_state: "main").first }
   let!(:node) { create :article_node_page, cur_site: site }
@@ -53,6 +66,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".name", text: sub_contact.name)
         expect(page).to have_css(".pages-used", text: I18n.t("contact.pages_used.zero"))
       end
+      expect(page).to have_no_content(other_group.name)
 
       within "[data-id='#{main_contact.id}']" do
         click_on "2"
