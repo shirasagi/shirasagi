@@ -162,7 +162,7 @@ module Cms::PageFilter
       render_opts[:location] = url_for(action: :show, id: copy)
       render_opts[:notice] = I18n.t("workflow.notice.created_branch_page")
     elsif copy && copy.errors.present?
-      @item.errors.messages[:base] += copy.errors.full_messages
+      SS::Model.copy_errors(copy, @item)
     end
 
     render_update result, render_opts

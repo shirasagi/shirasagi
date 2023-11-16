@@ -3,11 +3,15 @@
   addon[:display_body] = "hide"
   css_class = Array(addon[:class])
   addon[:class] = css_class + %w(hide)
+
+  branch = @item.branches.first
 %>
 
-<% if @item.branches.present? %>
+<%#
+  # 差し替えページにバリデーションえらがある場合、@item.branches.present? => true, @item.branches.first.persited? => false となるケースがある。
+  #%>
+<% if branch.present? && branch.persisted? %>
   <% html = capture do %>
-    <% branch = @item.branches.first %>
     <section class="main-box">
       <header><h2><%= t("workflow.confirm.would_you_edit_branch") %></h2></header>
       <%= br t("workflow.dialogue.edit_branch_html", show_path: url_for(action: :show, id: branch)) %>
