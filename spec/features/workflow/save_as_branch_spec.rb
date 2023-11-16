@@ -163,6 +163,37 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "with creating branch page has validation errors" do
+      before { login_user user1 }
+
+      it do
+        now = Time.zone.now.change(sec: 0)
+        Timecop.freeze(I18n.l(now)) do
+          visit edit_public_item_path
+          # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
+          wait_ckeditor_ready("item[html]")
+
+          expect(page).to have_no_css(".save")
+          expect(page).to have_css(".branch_save[value='#{I18n.t("cms.buttons.save_as_branch")}']")
+          expect(page).to have_no_css(".publish_save")
+
+          within "#item-form" do
+            fill_in "item[name]", with: unique_id
+            fill_in_ckeditor "item[html]", with: unique_id
+
+            ensure_addon_opened("#addon-cms-agents-addons-release_plan")
+            within "#addon-cms-agents-addons-release_plan" do
+              # set past date/time to cause validation error to "公開終了日時(予約)"
+              fill_in_datetime 'item[close_date]', with: 1.day.ago.change(sec: 0)
+            end
+
+            click_on I18n.t('cms.buttons.save_as_branch')
+          end
+          wait_for_error I18n.t('errors.messages.greater_than', count: I18n.l(now))
+        end
+      end
+    end
   end
 
   context "with cms/page" do
