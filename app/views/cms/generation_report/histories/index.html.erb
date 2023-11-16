@@ -1,0 +1,56 @@
+<div class="cms-tabs">
+  <%= link_to(cms_generation_report_histories_path, class: "current") do %>
+    <span class="tab-name"><%= t("mongoid.models.cms/generation_report/history") %></span>
+  <% end %>
+  <%= link_to(cms_generation_report_aggregations_path) do %>
+    <span class="tab-name"><%= t("mongoid.models.cms/generation_report/aggregation") %></span>
+  <% end %>
+</div>
+
+<div class="main-box">
+  <% @s ||= OpenStruct.new(params[:s]) %>
+  <%= form_with scope: :s, url: url_for(action: :index), method: :get, html: { class: "index-search", style: "border: 0;" } do |f| %>
+    <%= f.text_field :keyword, id: nil %>
+    <%= f.submit t("ss.buttons.search"), class: "btn" %>
+  <% end %>
+
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= @model.t :content %></th>
+      <th><%= @model.t :page_no %></th>
+      <th><%= @model.t :db %></th>
+      <th><%= @model.t :view %></th>
+      <th><%= @model.t :elapsed %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |history| %>
+      <tr data-id=<%= history.id %>>
+        <td><%= link_to item_title(history), url_for(action: :show, id: history) %></td>
+        <td><%= history.page_no %></td>
+        <td>
+          <%= format_elapsed(history.total_db) %>
+          <% if history.child_ids.present? %>
+            <br>(<%= format_elapsed(history.db) %> + <%= format_elapsed(history.sub_total_db) %>)
+          <% end %>
+        </td>
+        <td>
+          <%= format_elapsed(history.total_view) %>
+          <% if history.child_ids.present? %>
+            <br>(<%= format_elapsed(history.view) %> + <%= format_elapsed(history.sub_total_view) %>)
+          <% end %>
+        </td>
+        <td>
+          <%= format_elapsed(history.total_elapsed) %>
+          <% if history.child_ids.present? %>
+            <br>(<%= format_elapsed(history.elapsed) %> + <%= format_elapsed(history.sub_total_elapsed) %>)
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

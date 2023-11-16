@@ -259,6 +259,20 @@ Rails.application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
     post "generate_pages/segment/:segment" => "generate_pages#run"
+    namespace "generation_report", path: "generation_report" do
+      get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
+      resources :nodes, only: %i[index]
+      resources :pages, only: %i[index]
+    end
+    namespace "generation_report", path: "generation_report/:type/:task" do
+      resources :titles, only: %i[index new create destroy], concerns: :deletion
+      resources :histories, path: "titles/:title/histories", only: %i[index show] do
+        match :download_all, on: :collection, via: %i[get post]
+      end
+      resources :aggregations, path: "titles/:title/aggregations", only: %i[index] do
+        match :download_all, on: :collection, via: %i[get post]
+      end
+    end
     get "import" => "import#import"
     post "import" => "import#import"
     get "import/download_logs" => "import#download_logs"

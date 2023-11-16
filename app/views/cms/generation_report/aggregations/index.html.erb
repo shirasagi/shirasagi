@@ -1,0 +1,54 @@
+<div class="cms-tabs">
+  <%= link_to(cms_generation_report_histories_path) do %>
+    <span class="tab-name"><%= t("mongoid.models.cms/generation_report/history") %></span>
+  <% end %>
+  <%= link_to(cms_generation_report_aggregations_path, class: "current") do %>
+    <span class="tab-name"><%= t("mongoid.models.cms/generation_report/aggregation") %></span>
+  <% end %>
+</div>
+
+<div class="main-box">
+  <% @s ||= OpenStruct.new(params[:s]) %>
+  <%= form_with scope: :s, url: url_for(action: :index), method: :get, html: { class: "index-search", style: "border: 0;" } do |f| %>
+    <%= f.text_field :keyword, id: nil %>
+    <%= f.submit t("ss.buttons.search"), class: "btn" %>
+  <% end %>
+
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= @model.t :content %></th>
+      <th><%= @model.t :count %></th>
+      <th><%= @model.t :total_db %></th>
+      <th><%= @model.t :total_view %></th>
+      <th><%= @model.t :total_elapsed %></th>
+      <th><%= @model.t :average_db %></th>
+      <th><%= @model.t :average_view %></th>
+      <th><%= @model.t :average_elapsed %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |aggregation| %>
+      <tr data-id=<%= aggregation.id %>>
+        <td><%=
+          content = aggregation.content
+          if content && content.allowed?(:read, @cur_user, site: @cur_site) && content.respond_to?(:private_show_path)
+            link_to item_title(aggregation), content.private_show_path
+          else
+            item_title(aggregation)
+          end
+        %></td>
+        <td><%= aggregation.count %></td>
+        <td><%= format_elapsed(aggregation.db) %></td>
+        <td><%= format_elapsed(aggregation.view) %></td>
+        <td><%= format_elapsed(aggregation.elapsed) %></td>
+        <td><%= format_elapsed(aggregation.average_db) %></td>
+        <td><%= format_elapsed(aggregation.average_view) %></td>
+        <td><%= format_elapsed(aggregation.average_elapsed) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

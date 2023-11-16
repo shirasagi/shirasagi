@@ -263,6 +263,7 @@ ja:
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
+      generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
     apis:
       categories:
         index: カテゴリーを選択する
@@ -918,6 +919,9 @@ ja:
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
       cms/api_token: 連携用APIトークン
+      cms/generation_report/title: 書き出し性能レポート
+      cms/generation_report/history: 書き出し性能履歴
+      cms/generation_report/aggregation: 書き出し性能履歴の集計結果
     errors:
       models:
         cms/content:
@@ -928,6 +932,8 @@ ja:
           attributes:
             url:
               youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
+        cms/generation_report/title:
+          latest_report_is_already_existed: 最新の書き出し性能レポートがすでに存在します。
     attributes:
       cms/content:
         released_type: 公開日時種別
@@ -1615,6 +1621,63 @@ ja:
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
+      cms/generation_report/title:
+        name: タイトル
+        memo: メモ
+        task: タスク
+        started: 開始日時
+        closed: 終了日時
+      cms/generation_report/history:
+        task: タスク
+        title: 書き出し性能レポート
+        history_type: 履歴種別
+        content: コンテンツ
+        content_id: コンテンツID
+        content_type: コンテンツタイトル
+        content_name: コンテンツ種別
+        content_filename: コンテンツファイル名
+        page_no: ページ番号
+        db: DB処理時間
+        view: ビュー処理時間
+        elapsed: 全処理時間
+        total_db: 合計DB処理時間
+        total_view: 合計ビュー処理時間
+        total_elapsed: 合計全処理時間
+        sub_total_db: 子合計DB処理時間
+        sub_total_view: 子合計ビュー処理時間
+        sub_total_elapsed: 子合計全処理時間
+        parent: 親書き出し性能履歴
+        parent_id: 親書き出し性能履歴
+        children: 子書き出し性能履歴
+        child_ids: 子書き出し性能履歴
+      cms/generation_report/aggregation:
+        task: タスク
+        title: 書き出し性能レポート
+        history_type: 履歴種別
+        content: コンテンツ
+        content_id: コンテンツID
+        content_type: コンテンツ種別
+        content_name: コンテンツ種別
+        content_filename: コンテンツファイル名
+        count: 回数
+        db: 総DB処理時間
+        view: 総ビュー処理時間
+        elapsed: 総全処理時間
+        total_db: 総合計DB処理時間
+        total_view: 総合計ビュー処理時間
+        total_elapsed: 総合計全処理時間
+        sub_total_db: 総子合計DB処理時間
+        sub_total_view: 総子合計ビュー処理時間
+        sub_total_elapsed: 総子合計全処理時間
+        average_db: 平均DB処理時間
+        average_view: 平均ビュー処理時間
+        average_elapsed: 平均全処理時間
+        average_total_db: 平均合計DB処理時間
+        average_total_view: 平均合計ビュー処理時間
+        average_total_elapsed: 平均合計全処理時間
+        average_sub_total__db: 平均子合計DB処理時間
+        average_sub_total_view: 平均子合計ビュー処理時間
+        average_sub_total_elapsed: 平均子合計全処理時間
 
   activemodel:
     attributes:
@@ -3235,3 +3298,4 @@ ja:
       cms/group_import_job: グループインポート
       cms/remove_improper_htmls_job: 不要HTML削除
       cms/line/update_statistics_job: LINE統計情報更新
+      cms/generation_report_create_job: 書き出し性能レポートの作成

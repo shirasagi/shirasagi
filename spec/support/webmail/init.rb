@@ -158,7 +158,7 @@ module SS::WebmailSupport
 
     status = container.json["State"]["Status"]
     if status != "running"
-      print "staring container .. "
+      print "starting container \"#{SS::WebmailSupport.docker_conf_container_id}\" .. "
       container.start
       sleep(5)
       puts "done"

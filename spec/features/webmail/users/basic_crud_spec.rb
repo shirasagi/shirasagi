@@ -16,6 +16,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
     it do
       visit webmail_users_path
       click_on I18n.t("ss.links.new")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
@@ -26,7 +27,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       Webmail::User.all.find_by(uid: uid).tap do |item|
         expect(item.name).to eq name
@@ -38,6 +39,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       visit webmail_users_path
       click_on name
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[uid]", with: uid2
         fill_in "item[email]", with: email2
@@ -45,7 +47,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('#item_email_errors', text: '')
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect { Webmail::User.all.find_by(uid: uid) }.to raise_error(Mongoid::Errors::DocumentNotFound)
       Webmail::User.all.find_by(uid: uid2).tap do |item|
@@ -61,7 +63,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect { Webmail::User.all.find_by(uid: uid) }.to raise_error(Mongoid::Errors::DocumentNotFound)
       Webmail::User.all.find_by(uid: uid2).tap do |item|
@@ -73,6 +75,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
 
       visit webmail_users_path
       click_on I18n.t("ss.links.new")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
@@ -83,7 +86,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       Webmail::User.all.find_by(uid: uid).tap do |item|
         expect(item.name).to eq name
@@ -97,10 +100,10 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
 
       visit edit_webmail_user_path(id: Webmail::User.all.find_by(uid: uid2).id)
       within "form#item-form" do
-        fill_in "item[account_expiration_date]", with: nil
+        fill_in_datetime "item[account_expiration_date]", with: nil
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       Webmail::User.all.find_by(uid: uid).tap do |item|
         expect(item.active?).to be_truthy
@@ -112,11 +115,11 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       visit webmail_users_path
       find("input[value='#{Webmail::User.all.find_by(uid: uid).id}']").check
       within '.list-head' do
-        page.accept_confirm do
+        page.accept_confirm(I18n.t("ss.confirm.delete")) do
           click_button I18n.t('ss.links.delete')
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       Webmail::User.all.find_by(uid: uid).tap do |item|
         expect(item.active?).to be_falsey
@@ -129,20 +132,21 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect { Webmail::User.all.active.find(webmail_user.id) }.to raise_error Mongoid::Errors::DocumentNotFound
 
       visit delete_path
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect { Webmail::User.all.find(webmail_user.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end
 
     it "delete_all disabled user" do
       visit webmail_users_path
       click_on I18n.t("ss.links.new")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
@@ -153,6 +157,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit webmail_users_path
       click_on name
@@ -160,7 +165,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       within ".index-search" do
         select I18n.t('ss.options.state.disabled'), from: 's[state]'
@@ -169,9 +174,10 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-items", count: 1)
 
       wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
-      click_button I18n.t("ss.links.delete")
-      page.accept_alert
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      page.accept_alert(I18n.t("ss.confirm.delete")) do
+        click_button I18n.t("ss.links.delete")
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect { Webmail::User.all.find_by(uid: uid) }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
