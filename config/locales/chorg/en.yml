@@ -208,7 +208,9 @@ en:
         - Enter the name for the organizational change.
       user_csv_file_id:
         - Select the user CSV file to perform user transfers after the organizational change is run.
-        - Set the group name and titles after the change in the user CSV.
+        -
+        - Open the CSV downloaded from "Site Settings - Users - Downloads" in Excel, etc., and set the group name, user title, etc. after the organizational change is run.
+        - Select the user CSV thus modified for the user CSV file.
         -
         - "If you do not select a file, the users will not be transferred after the organizational change is run and you will need to transfer the users manually."
       revision_csv_file_id:
@@ -224,7 +226,10 @@ en:
     chorg/revision:
       content_csv_file_id:
         - "Select the content CSV files for parts, layouts, pages, and folders to be transferred after the organizational change is run."
-        - "Please set the post-change group name, etc. in the content CSV."
+        -
+        - Open the CSV file downloaded from "All Contents - List Output" in Excel, etc., and set the group name, etc. after the organizational change is run.
+        - Select the All Contents CSV that you have modified in this way for the contents CSV file.
+        - Note that the menu "All contents" will not be displayed if the permission "Use all contents" is not granted. If you cannot find the menu "All contents", please consult your administrator.
       target_site_ids:
         - Select the site to apply organizational changes to.
         - Unless specified otherwise, all sites are eligible.
