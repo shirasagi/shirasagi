@@ -4,15 +4,15 @@
 <div class="columns">
   <fieldset class="column name">
     <legend><%= @item.class.t :name %><span class="required"><%= t("ss.required_field") %></span></legend>
-    <dd><%= f.text_field :name %><%= remarks :name %></dd>
+    <div><%= f.text_field :name %><%= remarks :name %></div>
   </fieldset>
 
   <fieldset class="column email">
     <legend><%= @item.class.t :email %><span class="required"><%= t("ss.required_field") %></span></legend>
-    <dd><%= f.text_field :email %><%= remarks :email %></dd>
+    <div><%= f.text_field :email %><%= remarks :email %></div>
 
     <legend><%= @item.class.t :email_again %><span class="required"><%= t("ss.required_field") %></span></legend>
-    <dd><%= f.text_field :email_again %><%= remarks :email_again %></dd>
+    <div><%= f.text_field :email_again %><%= remarks :email_again %></div>
   </fieldset>
 
   <fieldset class="column kana">
@@ -22,7 +22,7 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd><%= f.text_field :kana %><%= remarks :kana %></dd>
+    <div><%= f.text_field :kana %><%= remarks :kana %></div>
   </fieldset>
 
   <fieldset class="column organization-name">
@@ -32,7 +32,7 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd><%= f.text_field :organization_name %><%= remarks :organization_name %></dd>
+    <div><%= f.text_field :organization_name %><%= remarks :organization_name %></div>
   </fieldset>
 
   <fieldset class="column job">
@@ -42,7 +42,7 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd><%= f.text_field :job %><%= remarks :job %></dd>
+    <div><%= f.text_field :job %><%= remarks :job %></div>
   </fieldset>
 
   <fieldset class="column tel">
@@ -52,7 +52,7 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd><%= f.text_field :tel %><%= remarks :tel %></dd>
+    <div><%= f.text_field :tel %><%= remarks :tel %></div>
   </fieldset>
 
   <fieldset class="column postal-code">
@@ -62,12 +62,12 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd>
+    <div>
       <%= f.text_field :postal_code %>
       <%= f.button t('member.buttons.address_search'), name: 'postal-code-search', type: :button %>
       <span class="postal-code-search-error"></span>
       <%= remarks :postal_code %>
-    </dd>
+    </div>
   </fieldset>
 
   <fieldset class="column addr">
@@ -77,7 +77,7 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd><%= f.text_field :addr %><%= remarks :addr %></dd>
+    <div><%= f.text_field :addr %><%= remarks :addr %></div>
   </fieldset>
 
   <fieldset class="column sex">
@@ -87,14 +87,14 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd>
+    <div>
       <% @item.sex_options.each do |text, val| %>
         <%= label_tag("item_sex_#{val}", class: val) do %>
         <%= f.radio_button :sex, val %><%= text %>
         <% end %>
       <% end %>
       <%= remarks :sex %>
-    </dd>
+    </div>
   </fieldset>
 
   <fieldset class="column birthday">
@@ -104,7 +104,7 @@
       <span class="required"><%= t("ss.required_field") %></span>
       <% end %>
     </legend>
-    <dd>
+    <div>
       <%= f.fields_for :in_birth do |birth_f| %>
         <% era, year, month, day = @item.parse_in_birth %>
         <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
@@ -116,7 +116,7 @@
         <%= t("datetime.prompts.day") %>
       <% end %>
       <%= remarks :birthday %>
-    </dd>
+    </div>
   </fieldset>
 </div>
 
