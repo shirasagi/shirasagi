@@ -40,13 +40,13 @@
     </td>
     <td class="contact-email">
       <%= email_field_tag "#{f.object_name}[contact_groups][][contact_email]", contact_group.try(:contact_email), id: nil, style: "width: 100%;" %>
-    </th>
+    </td>
     <td class="contact-postal-code">
       <%= text_field_tag "#{f.object_name}[contact_groups][][contact_postal_code]", contact_group.try(:contact_postal_code), id: nil, style: "width: 100%;" %>
-    </th>
+    </td>
     <td class="contact-address">
       <%= text_field_tag "#{f.object_name}[contact_groups][][contact_address]", contact_group.try(:contact_address), id: nil, style: "width: 100%;" %>
-    </th>
+    </td>
     <td class="contact-link-url">
       <%= text_field_tag "#{f.object_name}[contact_groups][][contact_link_url]", contact_group.try(:contact_link_url), id: nil, style: "width: 100%;" %>
     </td>
