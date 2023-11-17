@@ -1,0 +1,70 @@
+<%
+  def transform_category(categories, indent = 0)
+    indent_chars = t('opendata.labels.category_prefixes')
+    ret = []
+    categories.each do |m|
+      next if m.blank?
+      ret << ["#{"　　" * indent}#{indent_chars[indent]} #{m.name}", m.id]
+      children = m.children.and_public.sort(order: 1)
+      cc = children.count
+      if cc > 0
+        ret += transform_category(children, indent + 1)
+      end
+    end
+    ret
+  end
+
+  areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).pluck(:name, :id)
+  categories = transform_category(@cur_categories)
+  estat_categories = transform_category(@cur_estat_categories)
+  @s = OpenStruct.new params[:s]
+%>
+
+<div class="search-form">
+  <%= form_for :s, url: "", html: { method: :get } do |f| %>
+    <span>
+      <%= select_tag "s[category_ids][]", options_for_select(categories, @s.dig("category_ids", 0)), include_blank: Opendata::Dataset.t(:category_ids) %>
+    </span>
+    <span>
+      <%= select_tag "s[estat_category_ids][]", options_for_select(estat_categories, @s.dig("estat_category_ids", 0)), include_blank: Opendata::Dataset.t(:estat_category_ids) %>
+    </span>
+    <span>
+      <%= select_tag "s[area_ids][]", options_for_select(areas, @s.dig("area_ids", 0)), include_blank: Opendata::Dataset.t(:area_ids) %>
+    </span>
+    <span>
+      <%= f.text_field :keyword, style: "width: 120px;" %>
+    </span>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+    <%= link_to t("ss.buttons.reset"),  opendata_metadata_importer_report_path, class: "btn" %>
+
+    <span style="margin-left: 10px;"><%= @items.count %><%= t("ss.units.count") %></span>
+  <% end %>
+</div>
+
+<table class="see index opendata-metadata-report">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th><%= Opendata::Dataset.t(:name) %></th>
+      <th><%= Opendata::Dataset.t(:category_ids) %></th>
+      <th><%= Opendata::Dataset.t(:estat_category_ids) %></th>
+      <th><%= Opendata::Dataset.t(:area_ids) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each_with_index do |dataset, idx| %>
+      <tr data-id="<% dataset.id %>">
+        <td><%= dataset.order + 1 %></td>
+        <td>
+          <%= link_to dataset.name, { action: :dataset, dataset_id: dataset.id } %>
+        </td>
+
+        <td class="category"><%=br dataset.categories.pluck(:name) %></td>
+        <td class="estat-category"><%=br dataset.estat_categories.pluck(:name) %></td>
+        <td class="area"><%=br dataset.areas.pluck(:name) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

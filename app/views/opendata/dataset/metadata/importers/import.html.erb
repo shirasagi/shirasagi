@@ -1,0 +1,19 @@
+<%= form_for :item, url: { action: :import }, html: { method: :put } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("opendata.dataset") %><%= t("ss.import") %></h2></header>
+
+    <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <dl class="see">
+        <dt><%= t("job.main") %></dt>
+        <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank", rel: "noopener" %></dd>
+      </dl>
+    <% end %>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.run"), class: :save, data: { confirm: t("ss.tasks.confirm_start"), disable_with: t("ss.buttons.running") } %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

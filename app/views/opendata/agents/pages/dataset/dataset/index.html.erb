@@ -1,3 +1,8 @@
+<% if @cur_page.metadata_dataset_id.present? %>
+  <%= html = render partial: 'metadata' %>
+  <% return html %>
+<% end %>
+
 <%= stylesheet_link_tag "colorbox", media: 'all' %>
 <%= javascript_include_tag "colorbox", defer: true %>
 <%

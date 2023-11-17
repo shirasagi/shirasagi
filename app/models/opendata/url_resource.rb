@@ -4,6 +4,7 @@ class Opendata::UrlResource
   include Opendata::Resource::Previewable
   include Opendata::Addon::UrlRdfStore
   include Opendata::Addon::Harvest::Resource
+  include Opendata::Addon::Metadata::Resource
 
   field :original_url, type: String
   field :original_updated, type: DateTime
