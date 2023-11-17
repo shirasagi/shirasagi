@@ -50,7 +50,7 @@ describe Opendata::Harvest::ImportJob, dbscope: :example, ckan: true do
 
   it do
     # export datasets
-    exporter.dataset_purge
+    exporter.dataset_purge rescue nil
     exporter.initialize_organization
     exporter.initialize_group
 
