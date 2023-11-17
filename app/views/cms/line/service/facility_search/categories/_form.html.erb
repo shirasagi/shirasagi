@@ -5,7 +5,7 @@
   <dt><%= @model.t :image_id %><%= @model.tt :image_id %></dt>
   <dd>
     <% if @item.image %>
-      <div style="padding: 5px 0px 10px 0px;">
+      <div style="padding: 5px 0 10px 0;">
         <label>
           <%= @item.image.name %>
           <%= f.check_box :rm_image %><%= t "ss.buttons.delete" %>
