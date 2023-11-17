@@ -76,7 +76,9 @@ jobs:
           if [ $? -ne 0 ]; then
             exit $?
           fi
+          sleep 10
           echo $container_id
+          docker container logs $container_id
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Install pre requisites
         run: |
