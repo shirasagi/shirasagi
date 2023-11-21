@@ -58,17 +58,17 @@
     </tr>
     <% end %>
 
-    <% @item.approval_facilities.each do |item| %>
+    <% @item.approval_facilities.each do |facility| %>
     <tr>
-      <td><%= item.name %></td>
+      <td><%= facility.name %></td>
       <td>
-        <% approval = @item.approval_member(@cur_user, facility_id: item.id) %>
-        <% if item.user_ids.include?(@cur_user.id) %>
+        <% approval = @item.approval_member(@cur_user, facility_id: facility.id) %>
+        <% if facility.user_ids.include?(@cur_user.id) %>
           <%= content_tag 'span', class: 'approvals',
-                          data: { schedule_id: @item.id.to_s, member_id: @cur_user.id, facility_id: item.id, init_value: approval.approval_state || '' } do %>
+                          data: { schedule_id: @item.id.to_s, member_id: @cur_user.id, facility_id: facility.id, init_value: approval.approval_state || '' } do %>
             <% %w(unknown approve deny).each do |value| %>
               <label class="mr-1">
-                <%= radio_button_tag("item[approvals][facility-#{item.id}][state]", value, approval.approval_state == value, class: 'approval') %>
+                <%= radio_button_tag("item[approvals][facility-#{facility.id}][state]", value, approval.approval_state == value, class: 'approval') %>
                 <%= I18n.t("gws/schedule.options.approval_state.#{value}") %>
               </label>
             <% end %>
