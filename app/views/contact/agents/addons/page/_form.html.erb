@@ -6,7 +6,8 @@
   if params[:action] =~ /new/ && @cur_group
     @cur_group.cms_group.tap do |group|
       @item.contact_group = group
-      @item.contact_charge = group.contact_group_name
+      @item.contact_group_name = group.contact_group_name
+      @item.contact_charge = group.contact_charge
       @item.contact_tel = group.contact_tel
       @item.contact_fax = group.contact_fax
       @item.contact_email = group.contact_email
@@ -19,7 +20,8 @@
       contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
     end
 
-    @item.contact_charge = contact.try(:contact_group_name)
+    @item.contact_group_name = contact.try(:contact_group_name)
+    @item.contact_charge = contact.try(:contact_charge)
     @item.contact_tel = contact.try(:contact_tel)
     @item.contact_fax = contact.try(:contact_fax)
     @item.contact_email = contact.try(:contact_email)
@@ -79,6 +81,9 @@
       <div class="description hide" style="margin-top: 10px;"></div>
     <% end %>
   </dd>
+
+  <dt><%= @model.t :contact_group_name %><%= @model.tt :contact_group_name %></dt>
+  <dd><%= f.text_field :contact_group_name %></dd>
 
   <dt><%= @model.t :contact_charge %><%= @model.tt :contact_charge %></dt>
   <dd><%= f.text_field :contact_charge %></dd>

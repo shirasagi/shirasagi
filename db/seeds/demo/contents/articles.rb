@@ -25,26 +25,29 @@ end
 save_page route: "article/page", filename: "docs/page1.html", name: "インフルエンザによる学級閉鎖状況",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax, contact_email: @contact.contact_email,
+  contact_link_url: @contact.contact_link_url, contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page2.html", name: "コンビニ納付のお知らせ",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["attention"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page3.html", name: "平成26年第1回シラサギ市議会定例会を開催します",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page4.html", name: "放射性物質・震災関連情報",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 file_page5_1 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
@@ -102,27 +105,31 @@ save_page route: "article/page", filename: "docs/page5.html", name: "市内の�
   ],
   category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page6.html", name: "還付金詐欺と思われる不審な電話にご注意ください",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page7.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page8.html", name: "冬の感染症に備えましょう",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page9.html", name: "広報SHIRASAGI3月号を掲載",
@@ -133,61 +140,71 @@ save_page route: "article/page", filename: "docs/page9.html", name: "広報SHIRA
                  @categories["shisei/soshiki/kikaku"].id,
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page10.html", name: "インフルエンザ流行警報がでています",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page11.html", name: "転出届", gravatar_screen_name: "サイト管理者",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page12.html", name: "転入届",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page13.html", name: "世帯または世帯主を変更するとき",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page14.html", name: "証明書発行窓口",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page15.html", name: "住民票記載事項証明書様式",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page16.html", name: "住所変更の証明書について",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page17.html", name: "住民票コードとは",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page18.html", name: "住民票コードの変更",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page19.html", name: "自動交付機・コンビニ交付サービスについて",
@@ -198,25 +215,29 @@ save_page route: "article/page", filename: "docs/page19.html", name: "自動交�
                  @categories["shisei/soshiki/kikaku"].id,
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届", layout_id: @layouts["pages"].id,
   category_ids: [@categories["attention"].id, @categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page20.html", name: "犬・猫を譲り受けたい方",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page21.html", name: "平成26年度住宅補助金の募集について掲載しました。",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page22.html", name: "休日臨時窓口を開設します。",
@@ -227,13 +248,15 @@ save_page route: "article/page", filename: "oshirase/kurashi/page22.html", name:
                  @categories["shisei/soshiki/kikaku"].id,
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page23.html", name: "身体障害者手帳の認定基準が変更",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page24.html", name: "平成26年4月より国民健康保険税率が改正されます",
@@ -242,19 +265,22 @@ save_page route: "article/page", filename: "oshirase/kurashi/page24.html", name:
                  @categories["oshirase/kurashi"].id,
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "urgency/page25.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
   layout_id: @layouts["oshirase"].id, category_ids: [@categories["urgency"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "urgency/page26.html", name: "黒鷺県沖で発生した地震による津波被害について。",
   layout_id: @layouts["more"].id, category_ids: [@categories["urgency"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -288,7 +314,8 @@ save_page route: "article/page", filename: "docs/page27.html", name: "ふれあ�
   ],
   file_ids: [file_1.id, file_2.id, file_3.id, file_4.id, file_5.id, file_6.id], html: html.join("\n"),
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id, @g_koho.id]
 recurrence = { kind: "date", start_at: Time.zone.today, frequency: "daily", until_on: Time.zone.today + 20 }
@@ -468,7 +495,8 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
   event_recurrences: [ recurrence ],
   event_deadline: Time.zone.now.advance(days: 1).change(hour: 11),
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name,
   map_points: [
@@ -483,7 +511,8 @@ save_page route: "article/page", filename: "docs/page34.html", name: "会計年�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["shisei/jinji"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -493,7 +522,8 @@ save_page route: "article/page", filename: "docs/page35.html", name: "第27回�
   category_ids: [@categories["oshirase/event"].id],
   event_recurrences: [ recurrence ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -501,7 +531,8 @@ save_page route: "article/page", filename: "docs/page36.html", name: "令和４�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["shisei/jinji"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -520,7 +551,8 @@ save_page route: "article/page", filename: "docs/page37.html", name: "SHIRASAGI�
   ],
   category_ids: [@categories["topics"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -528,7 +560,8 @@ save_page route: "article/page", filename: "docs/page38.html", name: "SHIRASAGI�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["topics"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -536,7 +569,8 @@ save_page route: "article/page", filename: "docs/page39.html", name: "SHIRASAGI�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["topics"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -559,7 +593,8 @@ save_page route: "article/page", filename: "docs/page40.html", name: "今月の�
     @categories["kohoshi"].id, @categories["kohoshi/kongetsukoho"].id
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -567,7 +602,8 @@ save_page route: "article/page", filename: "docs/page41.html", name: "春の交�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["kurashi/anzen"].id, @categories["kurashi/anzen/bohan"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -578,7 +614,8 @@ save_page route: "article/page", filename: "docs/page42.html", name: "シラサ�
     @categories["kurashi/bosai/keikaku"].id, @categories["kurashi/bosai/kunren"].id
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -586,7 +623,8 @@ save_page route: "article/page", filename: "docs/page43.html", name: "Web版ハ�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["kurashi"].id, @categories["kurashi/bosai"].id, @categories["kurashi/bosai/jyoho"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -594,7 +632,8 @@ save_page route: "article/page", filename: "docs/page44.html", name: "【募集�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["kurashi"].id, @categories["kurashi/bosai"].id, @categories["kurashi/bosai/keikaku"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -605,7 +644,8 @@ save_page route: "article/page", filename: "docs/page45.html", name: "「シラ�
   event_name: 'シラサギ市　秋の収穫祭り',
   event_recurrences: [ recurrence ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -613,7 +653,8 @@ save_page route: "article/page", filename: "docs/page46.html", name: "婚姻届�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -621,7 +662,8 @@ save_page route: "article/page", filename: "docs/page47.html", name: "離婚届�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -629,7 +671,8 @@ save_page route: "article/page", filename: "docs/page48.html", name: "シラサ�
   layout_id: @layouts["pages"].id, form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -648,7 +691,8 @@ save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "�
     }
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -667,7 +711,8 @@ save_page route: "article/page", filename: "hinanjo-docs/page50.html", name: "�
     }
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -686,7 +731,8 @@ save_page route: "article/page", filename: "hinanjo-docs/page51.html", name: "�
     }
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -698,7 +744,8 @@ save_page route: "article/page", filename: "population/page52.html", name: "2022
     @form_columns7[3].value_type.new(column: @form_columns7[3], value: "9999")
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
@@ -710,7 +757,8 @@ save_page route: "article/page", filename: "population/page53.html", name: "2022
     @form_columns7[3].value_type.new(column: @form_columns7[3], value: "1111")
   ],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_charge: @contact.contact_group_name, contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 

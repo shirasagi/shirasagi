@@ -35,7 +35,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     contact_group.contact_groups.first.tap do |contact|
       article_page.contact_group_contact_id = contact.id
       article_page.contact_group_relation = "related"
-      article_page.contact_charge = contact.contact_group_name
+      article_page.contact_group_name = contact.contact_group_name
+      article_page.contact_charge = contact.contact_charge
       article_page.contact_tel = contact.contact_tel
       article_page.contact_fax = contact.contact_fax
       article_page.contact_email = contact.contact_email
@@ -113,6 +114,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.contact_group_id).to eq contact_group.id
         expect(dataset.contact_group_contact_id).to eq contact_group.contact_groups.first.id
         expect(dataset.contact_group_relation).to eq article_page.contact_group_relation
+        expect(dataset.contact_group_name).to eq article_page.contact_group_name
         expect(dataset.contact_charge).to eq article_page.contact_charge
         expect(dataset.contact_tel).to eq article_page.contact_tel
         expect(dataset.contact_fax).to eq article_page.contact_fax

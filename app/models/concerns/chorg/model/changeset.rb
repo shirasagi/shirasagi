@@ -12,7 +12,7 @@ module Chorg::Model::Changeset
   TYPE_ORDER = TYPES.each_with_index.to_h.freeze
 
   CONTACT_GROUP_ATTRIBUTES = %i[
-    _id id main_state unifies_to_main name contact_group_name contact_tel contact_fax contact_email
+    _id id main_state unifies_to_main name contact_group_name contact_charge contact_tel contact_fax contact_email
     contact_link_url contact_link_name].freeze
   MAIN_CONTACT_GROUP_ATTRIBUTES = (CONTACT_GROUP_ATTRIBUTES - %i[_id id unifies_to_main]).freeze
 

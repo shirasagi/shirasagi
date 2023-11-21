@@ -352,6 +352,7 @@ class Cms::PageExporter
       end
     end
     drawer.column :contact_group_relation, type: :label
+    drawer.column :contact_group_name
     drawer.column :contact_charge
     drawer.column :contact_tel
     drawer.column :contact_fax

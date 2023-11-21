@@ -2,7 +2,7 @@ class Chorg::ChangesetImportJob < Cms::ApplicationJob
   include Cms::CsvImportBase
 
   MAX_DESTINATION_COUNT = 20
-  MAX_CONTACT_COUNT = 20
+  MAX_CONTACT_COUNT = Contact::Addon::Group::MAX_CONTACT_COUNT
 
   self.required_headers = proc do
     [

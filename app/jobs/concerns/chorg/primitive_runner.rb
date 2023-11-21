@@ -213,7 +213,8 @@ module Chorg::PrimitiveRunner
           criteria.in(id: ids).to_a.each do |page|
             page.contact_group = triple[0]
             page.contact_group_contact = triple[1]
-            page.contact_charge = triple[1].contact_group_name
+            page.contact_group_name = triple[1].contact_group_name
+            page.contact_charge = triple[1].contact_charge
             page.contact_tel = triple[1].contact_tel
             page.contact_fax = triple[1].contact_fax
             page.contact_email = triple[1].contact_email
@@ -242,7 +243,8 @@ module Chorg::PrimitiveRunner
       criteria.in(id: ids).to_a.each do |page|
         page.contact_group = destination_group
         page.contact_group_contact = destination_main_contact
-        page.contact_charge = destination_main_contact.contact_group_name
+        page.contact_group_name = destination_main_contact.contact_group_name
+        page.contact_charge = destination_main_contact.contact_charge
         page.contact_tel = destination_main_contact.contact_tel
         page.contact_fax = destination_main_contact.contact_fax
         page.contact_email = destination_main_contact.contact_email

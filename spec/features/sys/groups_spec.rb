@@ -138,6 +138,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to eq "enabled"
         expect(g.ldap_dn).to eq "cn=Manager,dc=city,dc=shirasagi,dc=jp"
         expect(g.contact_group_name).to eq "部署A"
+        expect(g.contact_charge).to eq "係A"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
@@ -151,6 +152,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署B"
+        expect(g.contact_charge).to eq "係B"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
@@ -164,6 +166,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署C"
+        expect(g.contact_charge).to eq "係C"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
@@ -177,6 +180,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署D"
+        expect(g.contact_charge).to eq "係D"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
@@ -190,6 +194,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署E"
+        expect(g.contact_charge).to eq "係E"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
@@ -203,6 +208,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署F"
+        expect(g.contact_charge).to eq "係F"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
@@ -216,6 +222,7 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署G"
+        expect(g.contact_charge).to eq "係G"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"

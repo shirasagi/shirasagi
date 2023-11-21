@@ -15,6 +15,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_ldap_dn) { "dc=#{new_name},dc=city,dc=example,dc=jp" }
     let(:new_contact_name1) { unique_id }
     let(:new_contact_group_name1) { unique_id }
+    let(:new_contact_charge1) { unique_id }
     let(:new_contact_tel1) { unique_tel }
     let(:new_contact_fax1) { unique_tel }
     let(:new_contact_email1) { unique_email }
@@ -22,6 +23,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_contact_link_name1) { unique_id }
     let(:new_contact_name2) { unique_id }
     let(:new_contact_group_name2) { unique_id }
+    let(:new_contact_charge2) { unique_id }
     let(:new_contact_tel2) { unique_tel }
     let(:new_contact_fax2) { unique_tel }
     let(:new_contact_email2) { unique_email }
@@ -50,6 +52,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             first('[name="dummy[chorg-after-contact][][main_state]"]').click
             fill_in "item[destinations][][contact_groups][][name]", with: new_contact_name1
             fill_in "item[destinations][][contact_groups][][contact_group_name]", with: new_contact_group_name1
+            fill_in "item[destinations][][contact_groups][][contact_charge]", with: new_contact_charge1
             fill_in "item[destinations][][contact_groups][][contact_tel]", with: new_contact_tel1
             fill_in "item[destinations][][contact_groups][][contact_fax]", with: new_contact_fax1
             fill_in "item[destinations][][contact_groups][][contact_email]", with: new_contact_email1
@@ -60,6 +63,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
           within all("tr[data-id='new']")[1] do
             fill_in "item[destinations][][contact_groups][][name]", with: new_contact_name2
             fill_in "item[destinations][][contact_groups][][contact_group_name]", with: new_contact_group_name2
+            fill_in "item[destinations][][contact_groups][][contact_charge]", with: new_contact_charge2
             fill_in "item[destinations][][contact_groups][][contact_tel]", with: new_contact_tel2
             fill_in "item[destinations][][contact_groups][][contact_fax]", with: new_contact_fax2
             fill_in "item[destinations][][contact_groups][][contact_email]", with: new_contact_email2
@@ -87,6 +91,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:main_state]).to eq "main"
             expect(contact_group[:name]).to eq new_contact_name1
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name1
+            expect(contact_group[:contact_charge]).to eq new_contact_charge1
             expect(contact_group[:contact_tel]).to eq new_contact_tel1
             expect(contact_group[:contact_fax]).to eq new_contact_fax1
             expect(contact_group[:contact_email]).to eq new_contact_email1
@@ -97,6 +102,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:main_state]).to be_blank
             expect(contact_group[:name]).to eq new_contact_name2
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name2
+            expect(contact_group[:contact_charge]).to eq new_contact_charge2
             expect(contact_group[:contact_tel]).to eq new_contact_tel2
             expect(contact_group[:contact_fax]).to eq new_contact_fax2
             expect(contact_group[:contact_email]).to eq new_contact_email2
@@ -144,6 +150,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:main_state]).to be_blank
             expect(contact_group[:name]).to eq new_contact_name2
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name2
+            expect(contact_group[:contact_charge]).to eq new_contact_charge2
             expect(contact_group[:contact_tel]).to eq new_contact_tel2
             expect(contact_group[:contact_fax]).to eq new_contact_fax2
             expect(contact_group[:contact_email]).to eq new_contact_email2

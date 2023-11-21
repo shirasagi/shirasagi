@@ -202,7 +202,7 @@ describe Article::Page, dbscope: :example do
         let!(:group1) { create :cms_group, name: "#{cms_group.name}/#{unique_id}" }
         let!(:page) do
           create(
-            :article_page, cur_node: node, contact_state: "show", contact_charge: unique_id,
+            :article_page, cur_node: node, contact_state: "show", contact_group_name: unique_id, contact_charge: unique_id,
             contact_tel: "0000", contact_fax: "9999", contact_email: "#{unique_id}@example.jp",
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id,
             contact_group: group1
@@ -212,6 +212,7 @@ describe Article::Page, dbscope: :example do
         it do
           # Contact::Addon::Page
           expect(subject.contact_state).to eq page.contact_state
+          expect(subject.contact_group_name).to eq page.contact_group_name
           expect(subject.contact_charge).to eq page.contact_charge
           expect(subject.contact_tel).to eq page.contact_tel
           expect(subject.contact_fax).to eq page.contact_fax

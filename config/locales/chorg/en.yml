@@ -39,7 +39,8 @@ en:
       add_changesets: &group_props
         name: Group name
         order: Display order
-        contact_group_name: Group name in charge
+        contact_group_name: Display group name in public view
+        contact_charge: Group name in charge
         contact_tel: Phone number
         contact_fax: Fax number
         contact_email: E-mail address
@@ -134,7 +135,8 @@ en:
         nth_destination_ldap_dn: "Destination%{dest_seq}_DN"
         nth_destination_contact_main_state: "Destination%{dest_seq}_Contact%{contact_seq}_Main"
         nth_destination_contact_name: "Destination%{dest_seq}_Contact%{contact_seq}_ID Name"
-        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
+        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Display Group Name"
+        nth_destination_contact_contact_charge: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
         nth_destination_contact_contact_tel: "Destination%{dest_seq}_Contact%{contact_seq}_Phone Number"
         nth_destination_contact_contact_fax: "Destination%{dest_seq}_Contact%{contact_seq}_Fax Number"
         nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
@@ -234,6 +236,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the new group.
+          contact_charge:
             - Enter the group name in charge of the new group.
           contact_tel:
             - Enter the phone number of the new group.
@@ -257,6 +261,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the split group.
+          contact_charge:
             - Enter the name in charge of the split group.
           contact_tel:
             - Enter the phone number of the split group.
@@ -279,6 +285,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the split destination.
+          contact_charge:
             - Enter the group name in charge of the split destination.
           contact_tel:
             - Enter the phone number of the transfer destination group.
@@ -301,6 +309,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the merge destination.
+          contact_charge:
             - Enter the group name in charge of the merge destination.
           contact_tel:
             - Enter the phone number of the merge destination group.

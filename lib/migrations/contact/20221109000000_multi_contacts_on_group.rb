@@ -3,13 +3,15 @@ class SS::Migration20221109000000
 
   depends_on "20220928000000"
 
-  CONTACT_ATTRIBUTES = %i[contact_group_name contact_tel contact_fax contact_email contact_link_url contact_link_name].freeze
+  CONTACT_ATTRIBUTES = %i[
+    contact_group_name contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
+  ].freeze
 
   def change
     each_group do |group|
       main_contact = SS::Contact.new
       CONTACT_ATTRIBUTES.each do |attr|
-        main_contact.send("#{attr}=", group.send(attr))
+        main_contact.send("#{attr}=", trim(group.send(attr)))
       end
       main_contact.main_state = "main"
       main_contact.name = group.section_name
@@ -23,6 +25,11 @@ class SS::Migration20221109000000
   end
 
   private
+
+  def trim(text)
+    return text if text.blank?
+    text.strip.presence
+  end
 
   def each_group
     all_group_ids = Cms::Group.all.pluck(:id)

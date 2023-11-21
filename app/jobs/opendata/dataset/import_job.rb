@@ -187,6 +187,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     # contact
     item.contact_state = value(row, item, :contact_state)
     item.contact_group_id = Cms::Group.site(site).where(name: value(row, item, :contact_group_id)).first.try(:id)
+    item.contact_group_name = value(row, item, :contact_group_name)
     item.contact_charge = value(row, item, :contact_charge)
     item.contact_tel = value(row, item, :contact_tel)
     item.contact_fax = value(row, item, :contact_fax)

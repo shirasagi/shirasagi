@@ -437,18 +437,21 @@ save_page route: "cms/page", filename: "tutorial-idea.html", name: "アイデア
 page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id,
   map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([134.589982, 34.067022])}]),
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
+  contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。",
   layout_id: layouts["portal-general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
+  contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。",
   layout_id: layouts["portal-general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
+  contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
 recurrence = { kind: "date", start_at: Time.zone.today + 7, frequency: "daily", until_on: Time.zone.today + 18 }
 event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
   layout_id: layouts["portal-event"].id,
