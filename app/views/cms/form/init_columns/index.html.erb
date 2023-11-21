@@ -7,8 +7,10 @@
   <% column = item.column %>
   <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="order"><%= item.order %></span>
-  <span class="class"><%= column.class.model_name.human %></span>
-  <span class="required"><%= column.label :required %></span>
+  <% if column.present? %>
+    <span class="class"><%= column.class.model_name.human %></span>
+    <span class="required"><%= column.label :required %></span>
+  <% end %>
 <% end %>
 
 <%= render template: 'cms/crud/index' %>
