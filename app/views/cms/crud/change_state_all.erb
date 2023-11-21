@@ -1,7 +1,7 @@
 <%= form_with url: request.url, method: :put do |f| %>
   <%= hidden_field_tag "change_state_all", true %>
   <%= hidden_field_tag "state", @change_state %>
-  <div class="addon-views"></div>
+  <div class="addon-views">
     <div class="addon-view" id="addon-basic">
       <div class="addon-head">
         <h2><%= t("ss.confirm.target_to_#{@change_state}") %></h2>

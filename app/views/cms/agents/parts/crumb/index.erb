@@ -7,13 +7,13 @@
         html << "<span class=\"separator\">&rsaquo;</span>".html_safe if idx > 0
         size == idx + 1 ? link = h(item[0]) : link = link_to(*item, itemprop: "item")
         html << [
-        "<span class=\"page\" itemprop=\"itemListElement\" itemscope itemtype=\"http://schema.org/ListItem\">",
+        "<span class=\"page\" itemprop=\"itemListElement\" itemscope itemtype=\"https://schema.org/ListItem\">",
         "<span itemprop=\"name\">#{link}</span>",
         "<meta itemprop=\"position\" content=\"#{idx + 1}\"></span>"
         ].join.html_safe
       end
     %>
-    <div class="crumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <div class="crumb" itemscope itemtype="https://schema.org/BreadcrumbList">
       <%== html.join %>
     </div>
   <% end %>

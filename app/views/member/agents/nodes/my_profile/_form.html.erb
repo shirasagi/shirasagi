@@ -12,10 +12,10 @@
     <%= @model.t :name %>
     <%= required_label %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :name %>
     <%= remarks :name %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column email">
@@ -23,10 +23,10 @@
     <%= @model.t :email %>
     <%= required_label %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :email %>
     <%= remarks :email %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column kana">
@@ -36,10 +36,10 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :kana %>
     <%= remarks :kana %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column organization-name">
@@ -49,10 +49,10 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :organization_name %>
     <%= remarks :organization_name %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column job">
@@ -62,10 +62,10 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :job %>
     <%= remarks :job %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column tel">
@@ -75,10 +75,10 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :tel %>
     <%= remarks :tel %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column postal-code">
@@ -88,12 +88,12 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :postal_code %>
     <%= f.button t('member.buttons.address_search'), name: 'postal-code-search', type: :button %>
     <span class="postal-code-search-error"></span>
     <%= remarks :postal_code %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column addr">
@@ -103,10 +103,10 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.text_field :addr %>
     <%= remarks :addr %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column sex">
@@ -116,14 +116,14 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <% @item.sex_options.each do |text, val| %>
       <%= label_tag("item_sex_#{val}", class: val) do %>
         <%= f.radio_button :sex, val %><%= text %>
       <% end %>
     <% end %>
     <%= remarks :sex %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column birthday">
@@ -133,7 +133,7 @@
     <%= required_label %>
     <% end %>
   </legend>
-  <dd>
+  <div>
     <%= f.fields_for :in_birth do |birth_f| %>
       <% era, year, month, day = @item.parse_in_birth %>
       <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
@@ -145,7 +145,7 @@
       <%= t("datetime.prompts.day") %>
     <% end %>
     <%= remarks :birthday %>
-  </dd>
+  </div>
 </fieldset>
 
 <%= render template: '_mail_category_form', locals: { f: f } %>

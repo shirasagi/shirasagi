@@ -7,8 +7,8 @@
           <%= link_to todo.name, gws_discussion_forum_todo_path(id: todo.id), class: "title" %><br />
           <div class="meta">
             <span class="ss-quota-bar gws-achievement-bar">
-              <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: todo.achievement_rate || 0) %></div>
-              <div class="usage " style="width: <%= todo.achievement_rate || 0 %>%"></div>
+              <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: todo.achievement_rate || 0) %></span>
+              <span class="usage " style="width: <%= todo.achievement_rate || 0 %>%"></span>
             </span>
             <span class="term"><%= term(todo) %></span>
           </div>

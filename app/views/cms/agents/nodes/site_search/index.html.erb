@@ -69,7 +69,9 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <dl class="site-search-keyword">
       <dt><%= f.label(:keyword, t("cms.search_contents")) %></dt>
       <dd><%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %></dd>
-      <ul class="site-search-history" style="display: none;"></ul>
+      <dd>
+        <ul class="site-search-history" style="display: none;"></ul>
+      </dd>
     </dl>
 
     <div class="send">

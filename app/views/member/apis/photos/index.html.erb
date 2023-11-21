@@ -14,7 +14,7 @@
       <a class="thumb select-item" href="#"><%= image_tag item.image.thumb_url, alt: item.name %></a>
       <label style="display: flex; align-items: center;">
         <input type="checkbox" />
-        <div class="name"><%= item.name %></div>
+        <span class="name"><%= item.name %></span>
       </label>
       <div class="action delete" style="display: none;">
         <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{item.id}'); return false;" %>

@@ -24,8 +24,8 @@
 
           <div class="meta">
             <span class="ss-quota-bar gws-achievement-bar">
-              <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
-              <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
+              <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></span>
+              <span class="usage " style="width: <%= item.achievement_rate || 0 %>%"></span>
             </span>
             <span class="member_group"><%= gws_public_user_long_name(item.member_group.try(:trailing_name)) %></span>
             <span class="members"><%= truncate(gws_public_user_long_names(item.sorted_overall_members.limit(3).map(&:long_name)).join(", ")) %></span>
