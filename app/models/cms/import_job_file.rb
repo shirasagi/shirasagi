@@ -36,7 +36,23 @@ class Cms::ImportJobFile
     @import_files = {}
 
     files.each do |file|
-      import_from_zip(file)
+      Rails.logger.tagged("#{file.filename}(#{file.id})") do
+        # フォルダーインポートで原因不明のエラーが発生することがある。現在、解決の糸口が見えない。
+        # file は private/ 配下に実体が格納されている。private/ 配下は NFS でマウントされたリモートサーバーの場合がある。
+        # 直接 private/ 配下のファイルにアクセスするとネットワーク IO が発生する可能性があるが、
+        # 少しでも不確定要素を減らすために、ローカルファイルシステムへコピーし、ローカルファイルを開くようにする。
+        # フォルダーインポートが将来安定すれば、以下のコピー処理は削除可
+        tmp_file = ::Tempfile.create("zip", "#{Rails.root}/tmp")
+        Retriable.retriable { ::FileUtils.cp(file.path, tmp_file.path) }
+
+        Zip::File.open(tmp_file.path) do |archive|
+          import_from_zip(archive)
+        end
+      ensure
+        if tmp_file
+          ::FileUtils.rm_f(tmp_file.path) rescue nil
+        end
+      end
     end
   end
 
@@ -128,40 +144,38 @@ class Cms::ImportJobFile
     filename
   end
 
-  def import_from_zip(file)
-    Zip::File.open(file.path) do |archive|
-      archive.each do |entry|
-        next if entry.directory?
+  def import_from_zip(zip_archive)
+    zip_archive.each do |entry|
+      next if entry.directory?
 
-        filename = entry_to_filename(entry)
-        next if filename.blank?
+      filename = entry_to_filename(entry)
+      next if filename.blank?
 
-        # relative basedir
-        @basedir = filename.index("/") ? filename.split("/").first : root_node.filename
-        @basedir = ::File.join(root_node.filename, @basedir) if @basedir != root_node.filename
+      # relative basedir
+      @basedir = filename.index("/") ? filename.split("/").first : root_node.filename
+      @basedir = ::File.join(root_node.filename, @basedir) if @basedir != root_node.filename
 
-        # prepend root node filename
-        filename = filename.delete_prefix("#{root_node.basename}/")
-        filename = ::File.join(root_node.filename, filename)
+      # prepend root node filename
+      filename = filename.delete_prefix("#{root_node.basename}/")
+      filename = ::File.join(root_node.filename, filename)
 
-        # import parent dirs
-        filename.split("/").inject do |filename, item|
-          if filename.start_with?("#{root_node.filename}/") && !@import_nodes[filename]
-            save_import_node(filename)
-          end
-          "#{filename}/#{item}"
+      # import parent dirs
+      filename.split("/").inject do |filename, item|
+        if filename.start_with?("#{root_node.filename}/") && !@import_nodes[filename]
+          save_import_node(filename)
         end
+        "#{filename}/#{item}"
+      end
 
-        # import page or files
-        if /^\.(html|htm)$/i.match?(::File.extname(filename))
-          save_import_page(filename, entry.get_input_stream)
-        else
-          upload_import_file(filename, entry.get_input_stream)
-        end
+      # import page or files
+      if /^\.(html|htm)$/i.match?(::File.extname(filename))
+        save_import_page(filename, entry.get_input_stream)
+      else
+        upload_import_file(filename, entry.get_input_stream)
       end
     end
 
-    return errors.empty?
+    errors.empty?
   end
 
   def modify_relative_paths(html)
