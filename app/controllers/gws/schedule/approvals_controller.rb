@@ -16,14 +16,16 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   def set_target_user
     set_cur_schedule
 
-    @target_user = @cur_schedule.members.where(id: params[:user_id]).first
-    @target_user ||= begin
-      member_ids = @cur_schedule.member_custom_groups.pluck(:member_ids).flatten
-      Gws::User.in(id: member_ids).where(id: params[:user_id]).first
-    end
+    target_user = Gws::User.site(@cur_site).active.where(id: params[:user_id]).first
+    raise '404' unless target_user
 
-    raise '404' unless @target_user
+    visible = false
+    visible = true if @cur_schedule.member?(target_user)
+    visible = true if !visible && @cur_schedule.readable?(target_user, site: @cur_site)
+    visible = true if !visible && @cur_schedule.allowed?(:read, target_user, site: @cur_site)
+    raise '404' unless visible
 
+    @target_user = target_user
     @target_user.cur_site = @cur_site
   end
 
