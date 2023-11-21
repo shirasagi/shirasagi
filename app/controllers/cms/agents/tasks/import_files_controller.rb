@@ -26,6 +26,7 @@ class Cms::Agents::Tasks::ImportFilesController < ApplicationController
       item.import_logs.each { |log| @task.log(log) }
     rescue => e
       SS.log_error(e, recursive: true)
+      raise
     end
   end
 end
