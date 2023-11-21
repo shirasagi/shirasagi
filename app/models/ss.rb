@@ -43,4 +43,15 @@ module SS
     return if url.blank?
     ::Addressable::URI.parse(url).request_uri
   end
+
+  def log_error(error, logger: nil, severity: ::Logger::ERROR, recursive: false)
+    logger ||= Rails.logger
+    logger.add(severity) { "#{error.class} (#{error.message}):\n  #{error.backtrace.join("\n  ")}" }
+    return unless recursive
+    return unless error.cause
+
+    logger.tagged(error.to_s) do
+      log_error(error.cause, logger: logger, severity: severity, recursive: true)
+    end
+  end
 end
