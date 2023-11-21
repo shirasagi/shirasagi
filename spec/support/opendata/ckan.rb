@@ -73,12 +73,12 @@ module SS::CkanSupport
       }
     )
     container.start
-    Timeout.timeout(60) do
-      loop do
-        break if container.logs(stdout: true).include?("launch succeeded")
-        sleep 0.1
-      end
-    end
+    #Timeout.timeout(60) do
+    #  loop do
+    #    break if container.logs(stdout: true).include?("Starting supervisor: supervisord.")
+    #    sleep 0.1
+    #  end
+    #end
     sleep 3
 
     SS::CkanSupport.docker_container = container
