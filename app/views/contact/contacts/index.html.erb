@@ -42,6 +42,7 @@
       <th class="contact-main-state"><%= SS::Contact.t :main_state %></th>
       <th class="name"><%= SS::Contact.t :name %></th>
       <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+      <th class="contact-charge"><%= SS::Contact.t :contact_charge %></th>
       <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
       <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
       <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
@@ -71,6 +72,7 @@
         <td class="contact-main-state"><%= item.contact.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
         <td class="name"><%= item.contact.name %></td>
         <td class="contact-group-name"><%= item.contact.contact_group_name %></td>
+        <td class="contact-charge"><%= item.contact.contact_charge %></td>
         <td class="contact-tel"><%= item.contact.contact_tel %></td>
         <td class="contact-fax"><%= item.contact.contact_fax %></td>
         <td class="contact-email"><%= item.contact.contact_email %></td>

@@ -169,6 +169,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           event_recurrences: [{ kind: "date", start_at: "2016/07/06", frequency: "daily", until_on: "2016/07/06" }],
           contact_state: 'show',
           contact_group: group.id,
+          contact_group_name: 'test1_contact_name',
           contact_charge: 'test1_contact_charge',
           contact_tel: 'test1_contact_tel',
           contact_fax: 'test1_contact_fax',
@@ -218,6 +219,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             expect(row["#{Cms::Page.t(:event_recurrences)}_1_終了日"]).to eq "2016/07/06"
             expect(row[Cms::Page.t(:contact_state)]).to eq I18n.t("ss.options.state.show")
             expect(row[Cms::Page.t(:contact_group)]).to eq group.name
+            expect(row[Cms::Page.t(:contact_group_name)]).to eq "test1_contact_name"
             expect(row[Cms::Page.t(:contact_charge)]).to eq "test1_contact_charge"
             expect(row[Cms::Page.t(:contact_tel)]).to eq "test1_contact_tel"
             expect(row[Cms::Page.t(:contact_fax)]).to eq "test1_contact_fax"

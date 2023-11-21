@@ -58,7 +58,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.parent_crumb_urls).to match_array ["/faq/kurashi/"]
         expect(item.label(:contact_state)).to eq "表示"
         expect(item.contact_group.try(:name)).to eq "シラサギ市"
-        expect(item.contact_charge).to eq "担当"
+        expect(item.contact_group_name).to eq "担当部署"
+        expect(item.contact_charge).to eq "担当係"
         expect(item.contact_tel).to eq "電話番号"
         expect(item.contact_fax).to eq "ファックス番号"
         expect(item.contact_email).to eq "メールアドレス"
@@ -110,7 +111,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.parent_crumb_urls).to match_array ["/faq/kurashi/"]
         expect(item.label(:contact_state)).to eq "表示"
         #expect(item.contact_group.try(:name)).to eq "シラサギ市"
-        expect(item.contact_charge).to eq "担当"
+        expect(item.contact_group_name).to eq "担当部署"
+        expect(item.contact_charge).to eq "担当係"
         expect(item.contact_tel).to eq "電話番号"
         expect(item.contact_fax).to eq "ファックス番号"
         expect(item.contact_email).to eq "メールアドレス"

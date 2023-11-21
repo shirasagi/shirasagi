@@ -36,6 +36,7 @@ describe Chorg::MainRunner, dbscope: :example do
           main_source_contact = source_group.contact_groups.where(main_state: "main").first
           expect(page_after_delete.contact_group_contact_id).to eq main_source_contact.id
           expect(page_after_delete.contact_group_relation).to eq "related"
+          expect(page_after_delete.contact_group_name).to eq source_page.contact_group_name
           expect(page_after_delete.contact_charge).to eq source_page.contact_charge
           expect(page_after_delete.contact_tel).to eq source_page.contact_tel
           expect(page_after_delete.contact_fax).to eq source_page.contact_fax
@@ -85,6 +86,7 @@ describe Chorg::MainRunner, dbscope: :example do
           main_source_contact = source_group.contact_groups.where(main_state: "main").first
           expect(page_after_delete.contact_group_contact_id).to eq main_source_contact.id
           expect(page_after_delete.contact_group_relation).to eq "related"
+          expect(page_after_delete.contact_group_name).to eq source_page.contact_group_name
           expect(page_after_delete.contact_charge).to eq source_page.contact_charge
           expect(page_after_delete.contact_tel).to eq source_page.contact_tel
           expect(page_after_delete.contact_fax).to eq source_page.contact_fax

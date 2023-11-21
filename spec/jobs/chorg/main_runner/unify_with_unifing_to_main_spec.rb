@@ -12,13 +12,15 @@ describe Chorg::MainRunner, dbscope: :example do
         :cms_group, name: "#{root_group.name}/#{unique_id}", order: 10,
         contact_groups: [
           {
-            main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+            main_state: "main", name: "name-#{unique_id}",
+            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
             contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
           },
           {
-            main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+            main_state: nil, name: "name-#{unique_id}",
+            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
             contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -31,13 +33,15 @@ describe Chorg::MainRunner, dbscope: :example do
         :cms_group, name: "#{root_group.name}/#{unique_id}", order: 20,
         contact_groups: [
           {
-            main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+            main_state: "main", name: "name-#{unique_id}",
+            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
             contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
           },
           {
-            main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+            main_state: nil, name: "name-#{unique_id}",
+            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
             contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -53,8 +57,8 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node,
         contact_group_id: source_group1.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-        contact_charge: main_contact.contact_group_name, contact_tel: main_contact.contact_tel,
-        contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+        contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+        contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
         contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
         contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
     end
@@ -64,8 +68,8 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node,
         contact_group_id: source_group1.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-        contact_charge: sub_contact.contact_group_name, contact_tel: sub_contact.contact_tel,
-        contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+        contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+        contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
         contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
         contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
     end
@@ -75,8 +79,8 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node,
         contact_group_id: source_group1.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-        contact_charge: main_contact.contact_group_name, contact_tel: main_contact.contact_tel,
-        contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+        contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+        contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
         contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
         contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
     end
@@ -86,15 +90,16 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node,
         contact_group_id: source_group1.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-        contact_charge: sub_contact.contact_group_name, contact_tel: sub_contact.contact_tel,
-        contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+        contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+        contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
         contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
         contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
     end
     let(:destination_contact) do
       {
         main_state: "main", name: "main", unifies_to_main: "enabled",
-        contact_group_name: "name-#{unique_id}", contact_tel: unique_tel, contact_fax: unique_tel,
+        contact_group_name: "name-#{unique_id}", contact_charge: "charge-#{unique_id}",
+        contact_tel: unique_tel, contact_fax: unique_tel,
         contact_email: unique_email, contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
         contact_link_url: "/#{unique_id}/", contact_link_name: "link-#{unique_id}",
       }.with_indifferent_access
@@ -127,6 +132,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(group.order).to eq destination[:order].to_i
         expect(group.ldap_dn).to eq destination[:ldap_dn]
         expect(group.contact_group_name).to eq destination_contact[:contact_group_name]
+        expect(group.contact_charge).to eq destination_contact[:contact_charge]
         expect(group.contact_tel).to eq destination_contact[:contact_tel]
         expect(group.contact_fax).to eq destination_contact[:contact_fax]
         expect(group.contact_email).to eq destination_contact[:contact_email]
@@ -140,6 +146,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(new_contact.main_state).to eq destination_contact[:main_state]
           expect(new_contact.name).to eq destination_contact[:name]
           expect(new_contact.contact_group_name).to eq destination_contact[:contact_group_name]
+          expect(new_contact.contact_charge).to eq destination_contact[:contact_charge]
           expect(new_contact.contact_tel).to eq destination_contact[:contact_tel]
           expect(new_contact.contact_fax).to eq destination_contact[:contact_fax]
           expect(new_contact.contact_email).to eq destination_contact[:contact_email]
@@ -158,7 +165,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_group_id).to eq source_group1.id
         expect(page.contact_group_contact_id).to eq new_contact.id
         expect(page.contact_group_relation).to eq "related"
-        expect(page.contact_charge).to eq new_contact.contact_group_name
+        expect(page.contact_group_name).to eq new_contact.contact_group_name
+        expect(page.contact_charge).to eq new_contact.contact_charge
         expect(page.contact_tel).to eq new_contact.contact_tel
         expect(page.contact_fax).to eq new_contact.contact_fax
         expect(page.contact_email).to eq new_contact.contact_email
@@ -171,7 +179,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_group_id).to eq source_group1.id
         expect(page.contact_group_contact_id).to eq new_contact.id
         expect(page.contact_group_relation).to eq "related"
-        expect(page.contact_charge).to eq new_contact.contact_group_name
+        expect(page.contact_group_name).to eq new_contact.contact_group_name
+        expect(page.contact_charge).to eq new_contact.contact_charge
         expect(page.contact_tel).to eq new_contact.contact_tel
         expect(page.contact_fax).to eq new_contact.contact_fax
         expect(page.contact_email).to eq new_contact.contact_email
@@ -193,7 +202,8 @@ describe Chorg::MainRunner, dbscope: :example do
       contact = source_group1.contact_groups.first
       {
         _id: contact.id.to_s, main_state: "main", name: "main", unifies_to_main: "enabled",
-        contact_group_name: "name-#{unique_id}", contact_tel: unique_tel, contact_fax: unique_tel,
+        contact_group_name: "name-#{unique_id}", contact_charge: "charge-#{unique_id}",
+        contact_tel: unique_tel, contact_fax: unique_tel,
         contact_email: unique_email, contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
         contact_link_url: "/#{unique_id}/", contact_link_name: "link-#{unique_id}",
       }.with_indifferent_access
@@ -218,8 +228,8 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group1.id, source_group2.id ],
         contact_group_id: source_group1.id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-        contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel,
-        contact_fax: contact.contact_fax, contact_email: contact.contact_email,
+        contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+        contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
         contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
         contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
     end
@@ -229,7 +239,7 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group1.id, source_group2.id ],
         contact_group_id: source_group1.id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-        contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel,
+        contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge, contact_tel: contact.contact_tel,
         contact_fax: contact.contact_fax, contact_email: contact.contact_email,
         contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
         contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
@@ -240,7 +250,7 @@ describe Chorg::MainRunner, dbscope: :example do
       create(
         :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group1.id, source_group2.id ],
         contact_group_id: source_group1.id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-        contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel,
+        contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge, contact_tel: contact.contact_tel,
         contact_fax: contact.contact_fax, contact_email: contact.contact_email,
         contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
         contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
@@ -263,6 +273,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(group.order).to eq destination[:order].to_i
         expect(group.ldap_dn).to eq destination[:ldap_dn]
         expect(group.contact_group_name).to eq destination_contact[:contact_group_name]
+        expect(group.contact_charge).to eq destination_contact[:contact_charge]
         expect(group.contact_tel).to eq destination_contact[:contact_tel]
         expect(group.contact_fax).to eq destination_contact[:contact_fax]
         expect(group.contact_email).to eq destination_contact[:contact_email]
@@ -276,6 +287,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(new_contact.main_state).to eq destination_contact[:main_state]
           expect(new_contact.name).to eq destination_contact[:name]
           expect(new_contact.contact_group_name).to eq destination_contact[:contact_group_name]
+          expect(new_contact.contact_charge).to eq destination_contact[:contact_charge]
           expect(new_contact.contact_tel).to eq destination_contact[:contact_tel]
           expect(new_contact.contact_fax).to eq destination_contact[:contact_fax]
           expect(new_contact.contact_email).to eq destination_contact[:contact_email]
@@ -295,7 +307,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_group_id).to eq destination_group.id
         expect(page.contact_group_contact_id).to eq new_contact.id
         expect(page.contact_group_relation).to eq "related"
-        expect(page.contact_charge).to eq new_contact.contact_group_name
+        expect(page.contact_group_name).to eq new_contact.contact_group_name
+        expect(page.contact_charge).to eq new_contact.contact_charge
         expect(page.contact_tel).to eq new_contact.contact_tel
         expect(page.contact_fax).to eq new_contact.contact_fax
         expect(page.contact_email).to eq new_contact.contact_email
@@ -308,7 +321,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_group_id).to eq destination_group.id
         expect(page.contact_group_contact_id).to eq new_contact.id
         expect(page.contact_group_relation).to eq "related"
-        expect(page.contact_charge).to eq new_contact.contact_group_name
+        expect(page.contact_group_name).to eq new_contact.contact_group_name
+        expect(page.contact_charge).to eq new_contact.contact_charge
         expect(page.contact_tel).to eq new_contact.contact_tel
         expect(page.contact_fax).to eq new_contact.contact_fax
         expect(page.contact_email).to eq new_contact.contact_email
@@ -321,7 +335,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_group_id).to eq destination_group.id
         expect(page.contact_group_contact_id).to eq new_contact.id
         expect(page.contact_group_relation).to eq "related"
-        expect(page.contact_charge).to eq new_contact.contact_group_name
+        expect(page.contact_group_name).to eq new_contact.contact_group_name
+        expect(page.contact_charge).to eq new_contact.contact_charge
         expect(page.contact_tel).to eq new_contact.contact_tel
         expect(page.contact_fax).to eq new_contact.contact_fax
         expect(page.contact_email).to eq new_contact.contact_email

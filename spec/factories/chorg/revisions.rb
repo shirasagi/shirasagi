@@ -15,6 +15,7 @@ FactoryBot.define do
           main_state: "main",
           name: "main",
           contact_group_name: name.split("/", 2).last,
+          contact_charge: "charge-#{unique_id}",
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: "#{unique_id}@example.jp",
@@ -41,7 +42,8 @@ FactoryBot.define do
     contact_group_id { group.id }
     contact_group_contact_id { group.contact_groups.where(main_state: "main").first.try(:id) }
     contact_group_relation { group.contact_groups.where(main_state: "main").first ? "related" : nil }
-    contact_charge { group.contact_groups.where(main_state: "main").first.try(:contact_group_name) }
+    contact_group_name { group.contact_groups.where(main_state: "main").first.try(:contact_group_name) }
+    contact_charge { group.contact_groups.where(main_state: "main").first.try(:contact_charge) }
     contact_tel { group.contact_groups.where(main_state: "main").first.try(:contact_tel) }
     contact_fax { group.contact_groups.where(main_state: "main").first.try(:contact_fax) }
     contact_email { group.contact_groups.where(main_state: "main").first.try(:contact_email) }

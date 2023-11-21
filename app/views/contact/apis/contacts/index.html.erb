@@ -25,6 +25,7 @@
         <th class="main-state"><%= SS::Contact.t :main_state %></th>
         <th class="contact-name"><%= SS::Contact.t :name %></th>
         <th class="contact-group-name"><%= SS::Contact.t :contact_group_name %></th>
+        <th class="contact-charge"><%= SS::Contact.t :contact_charge %></th>
         <th class="contact-tel"><%= SS::Contact.t :contact_tel %></th>
         <th class="contact-fax"><%= SS::Contact.t :contact_fax %></th>
         <th class="contact-email"><%= SS::Contact.t :contact_email %></th>
@@ -43,7 +44,8 @@
           data = { id: contact ? "#{group.id}:#{contact.id}" : group.id.to_s, group_id: group.id, section_name: group.section_name }
           if contact
             data.merge!(
-              contact_id: contact.id.to_s, contact_name: contact.name, contact_group_name: contact.contact_group_name,
+              contact_id: contact.id.to_s, contact_name: contact.name,
+              contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
               contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
               contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
               contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name
@@ -74,6 +76,9 @@
           </td>
           <td class="contact-group-name" style="white-space: normal">
             <%= ss_truncate contact.try(:contact_group_name), length: max_name_len %>
+          </td>
+          <td class="contact-charge" style="white-space: normal">
+            <%= ss_truncate contact.try(:contact_charge), length: max_name_len %>
           </td>
           <td class="contact-tel"><%= contact.try(:contact_tel) %></td>
           <td class="contact-fax"><%= contact.try(:contact_fax) %></td>

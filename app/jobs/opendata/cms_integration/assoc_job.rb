@@ -145,6 +145,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     attributes["contact_group_id"] = contact_group.try(:id)
     attributes["contact_group_contact_id"] = contact.try(:id)
     attributes["contact_group_relation"] = @cur_page.contact_group_relation if @cur_page.respond_to?(:contact_group_relation)
+    attributes["contact_group_name"] = @cur_page.contact_group_name if @cur_page.respond_to?(:contact_group_name)
     attributes["contact_charge"] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
     attributes["contact_tel"] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
     attributes["contact_fax"] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)
