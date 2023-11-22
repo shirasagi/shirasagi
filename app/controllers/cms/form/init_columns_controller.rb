@@ -57,8 +57,8 @@ class Cms::Form::InitColumnsController < ApplicationController
   end
 
   def set_column
-    column_id = params[:column_id].presence || params.dig(:item, :column_id) || @item.column.id
-    @column = @cur_form.columns.find(column_id)
+    column_id = params[:column_id].presence || params.dig(:item, :column_id) || @item.column.try(:id)
+    @column = @cur_form.columns.where(id: column_id).first_or_initialize
   end
 
   public
@@ -98,6 +98,7 @@ class Cms::Form::InitColumnsController < ApplicationController
   end
 
   def update
+    set_column
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)

@@ -8,6 +8,7 @@
   <% else %>
     <% form.init_columns.order_by(order: 1, id: 1).each do |init_column| %>
       <% column = init_column.column %>
+      <% next unless column %>
       <%= render column.column_form_partial_path, f: g, column: column, value: '', controller: true %>
     <% end %>
   <% end %>
