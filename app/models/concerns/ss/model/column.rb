@@ -6,6 +6,7 @@ module SS::Model::Column
   included do
     attr_accessor :cur_form
 
+    has_many :init_columns, class_name: 'Cms::InitColumn', dependent: :destroy, inverse_of: :column
     belongs_to :form, polymorphic: true
     field :name, type: String
     field :order, type: Integer

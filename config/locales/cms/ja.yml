@@ -1271,6 +1271,7 @@ ja:
       cms/init_column:
         name: 名前
         order: 並び順
+        column_id: 入力項目
       cms/column/base:
         route: 属性
         name: 名前

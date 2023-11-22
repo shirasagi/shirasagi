@@ -6,9 +6,9 @@ module SS::Model::InitColumn
   included do
     attr_accessor :cur_form
 
-    belongs_to :form, polymorphic: true
+    belongs_to :form, polymorphic: true, inverse_of: :init_columns
     field :order, type: Integer
-    belongs_to :column, class_name: 'Cms::Column::Base', polymorphic: true
+    belongs_to :column, class_name: 'Cms::Column::Base', polymorphic: true, inverse_of: :init_columns
 
     permit_params :order, :column_id
 
