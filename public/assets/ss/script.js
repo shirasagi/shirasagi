@@ -38512,21 +38512,21 @@ this.SS = (function () {
     return save;
   };
 
-  SS.formChanged = false;
+  SS.formChanged = undefined;
   SS.disableConfirmUnloading = false;
 
   SS.confirmUnloading = function () {
-    SS.formChanged = false;
-    $("input[type=text],textarea,select").on("change", function () {
-      SS.formChanged = true;
+    SS.formChanged = undefined;
+    $(document).on("change", "input[type=text],textarea,select", function () {
+      SS.formChanged = new Date().getTime();
     });
     $(window).on("beforeunload", function () {
       if (SS.formChanged && !SS.disableConfirmUnloading) {
         return i18next.t('ss.confirm.unload');
       }
     });
-    $("input[type=submit]").on("click", function () {
-      SS.formChanged = false;
+    $(document).on("click", "input[type=submit]", function () {
+      SS.formChanged = undefined;
       return true;
     });
   };
@@ -58248,7 +58248,6 @@ SS_OpenInNewWindow.openInNewWindow = function(el) {
     } catch (_error) {
       width = undefined;
     }
-    console.log(width);
   }
   if (!width) {
     width = SS_OpenInNewWindow.defaultWidth();
@@ -59043,7 +59042,7 @@ this.Cms_Editor_CKEditor = (function () {
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
     CKEDITOR.on('instanceReady', function (ev) {
       ev.editor.on("change", function () {
-        SS.formChanged = true;
+        SS.formChanged = new Date().getTime();
       });
       ev.editor.on("beforeCommandExec", function(event) {
         // Show the paste dialog for the paste buttons and right-click paste
@@ -60141,6 +60140,10 @@ this.Syntax_Checker = (function () {
 
     if (Syntax_Checker.afterCheck) {
       Syntax_Checker.afterCheck();
+    }
+
+    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
+      Syntax_Checker.reset();
     }
 
     Syntax_Checker.resultBox.showResult(checks, Syntax_Checker.errors);
@@ -67779,8 +67782,9 @@ this.Webmail_Mail_Form_Address = (function () {
 
   Webmail_Mail_Form_Address.select = function (item) {
     self = this;
-    var item_html = jQuery('<div>').append(item.clone(true)).html()
+    var item_html = jQuery('<div>').append(item.clone(true)).html();
     var data, dl, field, label, selected, self, span, value, check_all;
+    selectTable = null;
     if(item_html.indexOf("to_ids") > 0){
       selectTable="to";
     }
@@ -67789,6 +67793,9 @@ this.Webmail_Mail_Form_Address = (function () {
     }
     if(item_html.indexOf("bcc_ids") > 0){
       selectTable="bcc";
+    }
+    if (!selectTable) {
+      selectTable = "to";
     }
     data = item.closest("[data-id]");
     dl = self.anchorAjaxBox.closest(".webmail-mail-form-address");

@@ -24645,21 +24645,21 @@ this.SS = (function () {
     return save;
   };
 
-  SS.formChanged = false;
+  SS.formChanged = undefined;
   SS.disableConfirmUnloading = false;
 
   SS.confirmUnloading = function () {
-    SS.formChanged = false;
-    $("input[type=text],textarea,select").on("change", function () {
-      SS.formChanged = true;
+    SS.formChanged = undefined;
+    $(document).on("change", "input[type=text],textarea,select", function () {
+      SS.formChanged = new Date().getTime();
     });
     $(window).on("beforeunload", function () {
       if (SS.formChanged && !SS.disableConfirmUnloading) {
         return i18next.t('ss.confirm.unload');
       }
     });
-    $("input[type=submit]").on("click", function () {
-      SS.formChanged = false;
+    $(document).on("click", "input[type=submit]", function () {
+      SS.formChanged = undefined;
       return true;
     });
   };
@@ -28371,7 +28371,7 @@ this.Cms_Editor_CKEditor = (function () {
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
     CKEDITOR.on('instanceReady', function (ev) {
       ev.editor.on("change", function () {
-        SS.formChanged = true;
+        SS.formChanged = new Date().getTime();
       });
       ev.editor.on("beforeCommandExec", function(event) {
         // Show the paste dialog for the paste buttons and right-click paste

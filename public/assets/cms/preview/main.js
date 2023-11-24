@@ -1063,6 +1063,10 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
+    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
+      Syntax_Checker.reset();
+    }
+
     Syntax_Checker.resultBox.showResult(checks, Syntax_Checker.errors);
   }
 

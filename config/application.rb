@@ -23,7 +23,7 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.18.1" }
+  mattr_reader(:version) { "1.18.2" }
 
   def self.config
     @_ss_config ||= SS::Config.setup

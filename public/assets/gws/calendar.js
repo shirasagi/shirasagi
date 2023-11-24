@@ -28863,6 +28863,9 @@ SS.ready(function() {
         opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
       }
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       $(selector).fullCalendar(params);
       this.renderInitialize(selector, init);
       this.overrideAddLink(selector);
@@ -29771,6 +29774,9 @@ SS.ready(function() {
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.contentParams(selector, opts));
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       // To render gridster and/or other frames first, all fullCalendar initializations is delayed.
       // And a calendar is individually rendered from top to bottom.
       setTimeout(function () {
@@ -29897,6 +29903,9 @@ SS.ready(function() {
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.controllerParams(selector, opts));
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       $(selector).fullCalendar(params);
       Gws_Schedule_Calendar.renderInitialize(selector, init);
       Gws_Schedule_Calendar.overrideAddLink(selector);
