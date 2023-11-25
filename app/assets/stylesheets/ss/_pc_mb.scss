@@ -1424,7 +1424,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // main
 #main:not(.print-preview) {
   width: 100%;
-  margin: 0 0 40px -100%;
+  margin: 0 0 0 -100%;
   float: right;
   @include mb {
     margin: 0 0 100px;

@@ -164,6 +164,11 @@
     bottom: 10px;
   }
 
+  .ss-swiper-slide-button-prev:hover,
+  .ss-swiper-slide-button-next:hover {
+      opacity: .85;
+  }
+
   .ss-swiper-slide-pagination {
     position: unset;
 
