@@ -67,8 +67,8 @@ jobs:
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Prepare Ckan
         run: |
-          docker pull ghcr.io/shirasagi/ckan:latest
-          docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
+          docker pull ghcr.io/itowtips/shirasagi/ckan2:latest
+          docker tag ghcr.io/itowtips/shirasagi/ckan2:latest shirasagi/ckan:latest
       - name: Launch Ckan
         id: ckan
         run: |
