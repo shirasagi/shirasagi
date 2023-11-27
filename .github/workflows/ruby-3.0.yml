@@ -65,8 +65,17 @@ jobs:
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Prepare Ckan
         run: |
-          docker pull ghcr.io/shirasagi/ckan:latest
-          docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
+          docker pull ghcr.io/itowtips/shirasagi/ckan2:latest
+          docker tag ghcr.io/itowtips/shirasagi/ckan2:latest shirasagi/ckan:latest
+      - name: Launch Ckan
+        id: ckan
+        run: |
+          container_id=$(docker run -d --name ckan -p 8080:80 shirasagi/ckan)
+          if [ $? -ne 0 ]; then
+            exit $?
+          fi
+          echo $container_id
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Install pre requisites
         run: |
           sudo apt-get update
@@ -131,6 +140,7 @@ jobs:
           allow_open_jtalk: 1
           LDAP_TEST: enable
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
+          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
           ANALYZE_COVERAGE: disabled
           CAPYBARA_MAX_WAIT_TIME: 30
           DOWNLOAD_MAX_WAIT_TIME: 10
