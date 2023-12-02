@@ -3,34 +3,24 @@ class Sys::SiteExport::Zip
 
   attr_accessor :path, :output_dir, :site_dir, :exclude_public_files, :task
 
-  # zip にコミットせずに延々とファイルを追加していくと、際限なくメモリーを消費してしまう。
-  # 適度にコミットすることでメモリー消費を抑える。
-  #
-  # zip に 100 ファイル以上 追加したら、zip をコミット
-  THRESHOLD_COUNT = 100
-  # zip に 100 MB以上 追加したら、zip をコミット
-  THRESHOLD_BYTES = 100 * 1_024 * 1_024
-
   def compress
     task_log "-- archive \"#{@output_dir}/\" and \"#{@site_dir}\" to \"#{@path}\""
 
-    Zip::File.open(@path, Zip::File::CREATE) do |zip|
-      added_count = 0
-      added_bytes = 0
+    entry_set = Set.new
+    comment = "shirasagi #{SS.version} site export data created at #{Time.zone.now.iso8601}"
+    SS::Zip::Writer.create(@path, comment: comment) do |zip|
       each_file do |src_file, dest_file|
-        if File.directory?(src_file)
-          zip.mkdir(dest_file)
-        else
-          zip.add(::Fs.zip_safe_path(dest_file), src_file)
-          added_count += 1
-          added_bytes += ::File.size(src_file)
+        next unless ::File.file?(src_file)
 
-          if added_count > THRESHOLD_COUNT || added_bytes > THRESHOLD_BYTES
-            zip.commit
-            added_count = 0
-            added_bytes = 0
-          end
+        name = ::Fs.zip_safe_path(dest_file)
+        if entry_set.include?(name)
+          task_log "Entry #{dest_file} already exists"
         end
+
+        zip.add_file(name) do |output|
+          ::IO.copy_stream(src_file, output)
+        end
+        entry_set.add(name)
       end
     end
   end
@@ -40,6 +30,8 @@ class Sys::SiteExport::Zip
   def task_log(msg)
     if @task
       @task.log msg
+    else
+      Rails.logger.info(msg)
     end
   end
 

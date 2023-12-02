@@ -8,7 +8,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     @src_site = Cms::Site.find(@task.source_site_id)
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
-    @output_zip = "#{@output_dir}.zip"
+    @output_zip = "#{@output_dir}.ssr"
 
     exclude_models = opts[:exclude].to_s.split(",")
     @exclude_cms_pages = exclude_models.include?("cms_pages")
