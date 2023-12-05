@@ -89,7 +89,7 @@ class Gws::Notice::Folder
   end
 
   def for_post_editor?(site, user)
-    member?(user) || for_post_reader?(site, user)
+    member_user?(user) || for_post_reader?(site, user)
   end
 
   def for_post_reader?(site, user)

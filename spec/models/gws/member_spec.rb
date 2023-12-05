@@ -43,10 +43,10 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.class.member(user4)).to be_present
 
       # check methods
-      expect(item.member?(user1)).to be_truthy
-      expect(item.member?(user2)).to be_falsey
-      expect(item.member?(user3)).to be_truthy
-      expect(item.member?(user4)).to be_truthy
+      expect(item.member_user?(user1)).to be_truthy
+      expect(item.member_user?(user2)).to be_falsey
+      expect(item.member_user?(user3)).to be_truthy
+      expect(item.member_user?(user4)).to be_truthy
 
       expect(item.sorted_members.count).to eq 3
       expect(item.sorted_members.pluck(:id)).to include(user1.id, user3.id, user4.id)
@@ -92,10 +92,10 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.class.member(user4)).to be_present
 
       # check methods
-      expect(item.member?(user1)).to be_falsey
-      expect(item.member?(user2)).to be_truthy
-      expect(item.member?(user3)).to be_truthy
-      expect(item.member?(user4)).to be_truthy
+      expect(item.member_user?(user1)).to be_falsey
+      expect(item.member_user?(user2)).to be_truthy
+      expect(item.member_user?(user3)).to be_truthy
+      expect(item.member_user?(user4)).to be_truthy
       expect(item.sorted_members).to be_blank
 
       expect(item.overall_members.count).to eq 3
@@ -138,10 +138,10 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.class.member(user4)).to be_present
 
       # check methods
-      expect(item.member?(user1)).to be_truthy
-      expect(item.member?(user2)).to be_truthy
-      expect(item.member?(user3)).to be_falsey
-      expect(item.member?(user4)).to be_truthy
+      expect(item.member_user?(user1)).to be_truthy
+      expect(item.member_user?(user2)).to be_truthy
+      expect(item.member_user?(user3)).to be_falsey
+      expect(item.member_user?(user4)).to be_truthy
       expect(item.sorted_members).to be_blank
 
       expect(item.overall_members.count).to eq 3
@@ -184,10 +184,10 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.class.member(user4)).to be_present
 
       # check methods
-      expect(item.member?(user1)).to be_truthy
-      expect(item.member?(user2)).to be_truthy
-      expect(item.member?(user3)).to be_falsey
-      expect(item.member?(user4)).to be_truthy
+      expect(item.member_user?(user1)).to be_truthy
+      expect(item.member_user?(user2)).to be_truthy
+      expect(item.member_user?(user3)).to be_falsey
+      expect(item.member_user?(user4)).to be_truthy
       expect(item.sorted_members).to be_blank
 
       expect(item.overall_members.count).to eq 3

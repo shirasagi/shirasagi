@@ -14,7 +14,7 @@
           <div class="meta">
             <span class="datetime"><%= Gws::Circular::Post.t(:due_date) %>: <%= tryb { I18n.l(item.due_date.to_date) } %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') %>
-              <% if item.member?(@cur_user) %>
+              <% if item.member_user?(@cur_user) %>
               <% end %>
             </span>
             <span>

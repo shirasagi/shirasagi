@@ -18,7 +18,7 @@ module Gws::Workload::WorkFilter
 
   def finish
     @item.attributes = fix_params
-    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member_user?(@cur_user)
     @item.errors.clear
     return if request.get? || request.head?
 
@@ -31,7 +31,7 @@ module Gws::Workload::WorkFilter
 
   def revert
     @item.attributes = fix_params
-    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member_user?(@cur_user)
     @item.errors.clear
     return if request.get? || request.head?
 
@@ -98,7 +98,7 @@ module Gws::Workload::WorkFilter
   end
 
   def item_readable?
-    @item.member?(@cur_user) || @item.readable?(@cur_user, site: @cur_site) || @item.allowed?(:read, @cur_user, site: @cur_site)
+    @item.member_user?(@cur_user) || @item.readable?(@cur_user, site: @cur_site) || @item.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   def load_options

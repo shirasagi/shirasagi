@@ -34,7 +34,7 @@ class Gws::Workload::Apis::CommentsController < ApplicationController
   def create
     @item = @model.new get_params
     @item.text_type ||= 'plain'
-    if !@cur_work.member?(@cur_user) && !@cur_work.allowed?(:edit, @cur_user, site: @cur_site)
+    if !@cur_work.member_user?(@cur_user) && !@cur_work.allowed?(:edit, @cur_user, site: @cur_site)
       raise "403"
     end
     @cur_work.errors.clear
