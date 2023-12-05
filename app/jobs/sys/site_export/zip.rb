@@ -78,8 +78,8 @@ class Sys::SiteExport::Zip
         end
       end
     end
-
-    task_log "-- #{completed_count.to_s(:delimited)} / #{all_file_count.to_s(:delimited)}"
+  ensure
+    task_log "-- finished #{completed_count.to_s(:delimited)} / #{all_file_count.to_s(:delimited)}"
   end
 
   def site_fs_path

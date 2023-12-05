@@ -18,9 +18,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     FileUtils.mkdir_p(@output_dir)
 
     @task.log("=== Site Export ===")
+    @task.log("Started at: #{I18n.l(Time.zone.now, format: :picker)}")
     @task.log("Site name: #{@src_site.name}")
     @task.log("Temporary directory: #{@output_dir}")
-    @task.log("Outout file: #{@output_zip}")
+    @task.log("Output file: #{@output_zip}")
 
     @ss_file_ids = []
 
@@ -56,7 +57,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :compress
 
     FileUtils.rm_rf(@output_dir)
-    @task.log("Completed.")
+    @task.log("Completed at #{I18n.l(Time.zone.now, format: :picker)}.")
   end
 
   private
@@ -72,7 +73,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def invoke(method)
-    @task.log("- " + method.to_s.sub('_', ' '))
+    @task.log("- #{method.to_s.sub('_', ' ')} at #{I18n.l(Time.zone.now, format: :picker)}")
     send(method)
   end
 
