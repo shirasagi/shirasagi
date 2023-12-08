@@ -381,21 +381,21 @@ this.SS = (function () {
 
   SS.formChanged = undefined;
   SS.disableConfirmUnloading = false;
+  $(window).on("beforeunload", function () {
+    if (SS.formChanged && !SS.disableConfirmUnloading) {
+      return i18next.t('ss.confirm.unload');
+    }
+  });
 
   SS.confirmUnloading = function () {
-    SS.formChanged = undefined;
-    $(document).on("change", "input[type=text],textarea,select", function () {
-      SS.formChanged = new Date().getTime();
-    });
-    $(window).on("beforeunload", function () {
-      if (SS.formChanged && !SS.disableConfirmUnloading) {
-        return i18next.t('ss.confirm.unload');
+    $("#item-form").each(function() {
+      if (this.dataset.controller && !this.dataset.controller.contains("ss--confirm-unloading")) {
+        this.dataset.controller = this.dataset.controller + ",ss--confirm-unloading"
+      } else {
+        this.dataset.controller = "ss--confirm-unloading"
       }
     });
-    $(document).on("click", "input[type=submit]", function () {
-      SS.formChanged = undefined;
-      return true;
-    });
+    SS.formChanged = undefined;
   };
 
   SS.randomPassword = function (length) {
