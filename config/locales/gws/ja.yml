@@ -107,6 +107,9 @@ ja:
       webmail_user_import: グループウェアの設定に加えて、ウェブメール権限を設定することができます。
     errors:
       allowed_domains_only_root: はルートグループにのみ設定できます。
+      plan_search:
+        max_users: ユーザーは%{count}件まで検索できます。
+        max_facilities: 設備は%{count}件まで検索できます。
 
   date:
     formats:

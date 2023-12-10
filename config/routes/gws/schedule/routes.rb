@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     get 'facilities/print' => 'facilities#print'
     get 'search' => redirect { |p, req| "#{req.path}/users" }, as: :search
     get 'search/users' => 'search/users#index', as: :search_users
-    get 'search/times' => 'search/times#index', as: :search_times
+    match 'search/times' => 'search/times#index', via: %i[get post], as: :search_times
     match 'search/reservations' => 'search/reservations#index', via: %i[get post], as: :search_reservations
     get 'csv' => 'csv#index', as: :csv
     post 'csv/import' => 'csv#import', as: :import_csv
