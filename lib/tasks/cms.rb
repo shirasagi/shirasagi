@@ -94,6 +94,11 @@ module Tasks
           )
           job.perform(exclude: ENV['exclude'])
         end
+      rescue => e
+        msg = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+        puts(msg)
+        Rails.logger.error(msg)
+        raise
       end
 
       def import_site
@@ -110,6 +115,11 @@ module Tasks
           )
           job.perform
         end
+      rescue => e
+        msg = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+        puts(msg)
+        Rails.logger.error(msg)
+        raise
       end
 
       def reload_site_usage
