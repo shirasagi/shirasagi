@@ -102,7 +102,7 @@ class Gws::Survey::EditablesController < ApplicationController
   end
 
   def publish
-    if @item.public?
+    if @item.state == "public"
       redirect_to({ action: :show }, { notice: t('ss.notice.published') })
       return
     end
@@ -115,7 +115,7 @@ class Gws::Survey::EditablesController < ApplicationController
   end
 
   def depublish
-    if @item.closed?
+    if @item.state != "public"
       redirect_to({ action: :show }, { notice: t('ss.notice.depublished') })
       return
     end
