@@ -180,6 +180,12 @@ production: &production
     default_notice_individual_file_size_limit: 10_485_760
     default_notice_total_file_size_limit: 31_457_280
 
+  schedule:
+    search_users:
+      max_users: 20
+    search_times:
+      max_facilities: 20
+
   # Default state and style label in user presence
   presence:
     state:

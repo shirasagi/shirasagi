@@ -107,6 +107,9 @@ en:
       webmail_user_import: "In addition to groupware settings, you can set webmail permissions."
     errors:
       allowed_domains_only_root: can only be set to root groups.
+      plan_search:
+        max_users: You can search up to %{count} users.
+        max_facilities: You can search up to %{count} facilities.
 
   date:
     formats:
