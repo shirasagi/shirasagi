@@ -189,7 +189,7 @@ module Cms::Addon::List
 
     def sort_by_column_name(pages)
       pages = pages.entries.sort_by do |a|
-        a ? a.column_values.entries.find { |cv| cv.name == sort_column_name }.try(:export_csv_cell) : nil
+        a ? a.column_values.entries.find { |cv| cv.name == sort_column_name }.try(:export_csv_cell).to_s : ''
       end
       sort_column_direction == "desc" ? pages.reverse : pages
     end
