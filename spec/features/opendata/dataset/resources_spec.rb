@@ -209,5 +209,83 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
         end
       end
     end
+
+    context "with report" do
+      let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+      let(:resource_tsv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
+      let(:resource_dest_file_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-3.csv" }
+      let(:now) { Time.zone.at(Time.zone.now.to_i) }
+      let(:resource_id) { dataset.resources.distinct(:id).sample }
+      let(:edit_path) { edit_opendata_dataset_resource_path site, node, dataset.id, resource_id }
+      let(:report) do
+        create(
+          :opendata_resource_download_report, cur_site: site, dataset_id: dataset.id,
+          resource_id: resource_id, resource_filename: File.basename(resource_file_path), day1_count: 1
+        )
+      end
+      let(:history1) do
+        create(
+          :opendata_resource_download_history, downloaded: now, dataset_id: dataset.id,
+          resource_id: resource_id, resource_filename: File.basename(resource_file_path)
+        )
+      end
+      let(:history2) do
+        create(
+          :opendata_resource_download_history, downloaded: now, dataset_id: dataset.id,
+          resource_id: resource_id, resource_filename: File.basename(resource_dest_file_path)
+        )
+      end
+
+      describe "new and edit" do
+        it do
+          visit new_path
+          within "form#item-form" do
+            fill_in "item[name]", with: unique_id
+            select license.name, from: "item_license_id"
+            attach_file "item[in_tsv]", resource_tsv_path
+            attach_file "item[in_file]", resource_file_path
+            click_button I18n.t('ss.buttons.save')
+          end
+          expect(status_code).to eq 200
+
+          dataset.reload
+          item = dataset.resources.first
+          show_path = opendata_dataset_resource_path site, node, dataset, item
+          expect(current_path).to eq show_path
+          # acquire that tsv file is not saved.
+          expect(item.tsv).to be_nil
+
+          report.reload
+          history1.reload
+          Timecop.freeze(now) do
+            expect(item.downloaded_count).to eq 2
+          end
+
+          visit edit_path
+          within "form#item-form" do
+            fill_in "item[name]", with: unique_id
+            select license.name, from: "item_license_id"
+            attach_file "item[in_tsv]", resource_file_path
+            attach_file "item[in_file]", resource_dest_file_path
+            click_button I18n.t('ss.buttons.save')
+          end
+          expect(status_code).to eq 200
+
+          dataset.reload
+          item = dataset.resources.first
+          show_path = opendata_dataset_resource_path site, node, dataset, item
+          expect(current_path).to eq show_path
+          # acquire that tsv file is not saved.
+          expect(item.tsv).to be_nil
+
+          report.reload
+          history1.reload
+          history2.reload
+          Timecop.freeze(now + Opendata::Resource::DOWNLOAD_CACHE_LIFETIME + 1.minute) do
+            expect(item.downloaded_count).to eq 3
+          end
+        end
+      end
+    end
   end
 end
