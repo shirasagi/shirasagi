@@ -28,27 +28,32 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
       set_agent(node_class)
 
-      pages = nil
+      #pages = nil
+      #
+      #if @agent.controller.class.method_defined?(:index)
+      #  begin
+      #    @cur_site = site
+      #    @cur_node = node
+      #    pages = call_node_index
+      #  ensure
+      #    @cur_site = save_site
+      #    @cur_node = save_node
+      #  end
+      #end
+      #
+      #if pages.nil?
+      #  if node.class.method_defined?(:condition_hash)
+      #    pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
+      #  else
+      #    pages = Cms::Page.site(site).and_public(@cur_date).node(node)
+      #  end
+      #end
 
-      if @agent.controller.class.method_defined?(:index)
-        begin
-          @cur_site = site
-          @cur_node = node
-          pages = call_node_index
-        ensure
-          @cur_site = save_site
-          @cur_node = save_node
-        end
+      if node.class.method_defined?(:condition_hash)
+        pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
+      else
+        pages = Cms::Page.site(site).and_public(@cur_date).node(node)
       end
-
-      if pages.nil?
-        if node.class.method_defined?(:condition_hash)
-          pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
-        else
-          pages = Cms::Page.site(site).and_public(@cur_date).node(node)
-        end
-      end
-
       pages = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
       tab[:pages] = pages.to_a
       tab[:rss]   = "#{node.url}rss.xml" if @agent.controller.class.method_defined?(:rss)
@@ -65,19 +70,19 @@ class Cms::Agents::Parts::TabsController < ApplicationController
     @agent.controller.extend(SS::ImplicitRenderFilter)
   end
 
-  def call_node_index
-    pages = nil
-
-    begin
-      @agent.invoke :index
-      pages = @agent.instance_variable_get(:@items)
-      pages = nil if pages && !pages.respond_to?(:current_page)
-      pages = nil if pages && !pages.klass.include?(Cms::Model::Page)
-    rescue => e
-      logger.error $ERROR_INFO
-      logger.error $ERROR_INFO.backtrace.join("\n")
-    end
-
-    pages
-  end
+  #def call_node_index
+  #  pages = nil
+  #
+  #  begin
+  #    @agent.invoke :index
+  #    pages = @agent.instance_variable_get(:@items)
+  #    pages = nil if pages && !pages.respond_to?(:current_page)
+  #    pages = nil if pages && !pages.klass.include?(Cms::Model::Page)
+  #  rescue => e
+  #    logger.error $ERROR_INFO
+  #    logger.error $ERROR_INFO.backtrace.join("\n")
+  #  end
+  #
+  #  pages
+  #end
 end
