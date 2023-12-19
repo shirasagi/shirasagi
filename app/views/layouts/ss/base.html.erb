@@ -8,7 +8,9 @@
   if @ss_rescue
     window_name = "#{@ss_rescue[:status]} #{::Rack::Utils::HTTP_STATUS_CODES[@ss_rescue[:status]]}"
   else
-    window_name = @item.try(:name) || @crumbs.last.try(:first)
+    window_name = yield(:title) if content_for?(:title)
+    window_name ||= @item.try(:name).presence
+    window_name ||= @crumbs.last.try(:first)
   end
   if window_name.present?
     title = "#{window_name} | #{ss_application_name}"
