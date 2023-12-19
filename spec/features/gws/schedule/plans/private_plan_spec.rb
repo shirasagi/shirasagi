@@ -30,6 +30,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "#addon-basic" do
         expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
       end
+      expect(page.title).not_to include(private_plan.name)
+      expect(page.title).to include(I18n.t("gws/schedule.private_plan"))
     end
   end
 end
