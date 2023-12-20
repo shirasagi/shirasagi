@@ -24,6 +24,11 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       @reader.close rescue nil
       @reader = nil
     end
+    if @tmp_file
+      @tmp_file.close rescue nil
+      ::FileUtils.rm_f(@tmp_file.path) rescue nil
+      @tmp_file = nil
+    end
   end
 
   private
@@ -43,12 +48,24 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     end
   end
 
+  def tmp_file
+    @tmp_file ||= begin
+      tmp = ::Tempfile.create("json", "#{Rails.root}/tmp")
+      Retriable.retriable { ::FileUtils.cp(generation_task.perf_log_file_path, tmp.path) }
+      tmp
+    end
+  end
+
   def reader
     @reader ||= begin
-      reader = Zlib::GzipReader.open(generation_task.perf_log_file_path)
+      reader = Zlib::GzipReader.open(tmp_file.path)
       @header_line = reader.readline
       reader
     end
+  end
+
+  def digest
+    Cms::GenerationReport.sha256_hash(tmp_file.path)
   end
 
   def title
@@ -94,7 +111,7 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     end
 
     title = Cms::GenerationReport::Title.new(
-      cur_site: site, name: title_name, task: generation_task, sha256_hash: Cms::GenerationReport.sha256_hash(generation_task.perf_log_file_path))
+      cur_site: site, name: title_name, task: generation_task, sha256_hash: digest)
     title.save!
     title
   end
