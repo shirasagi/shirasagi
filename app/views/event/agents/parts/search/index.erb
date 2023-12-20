@@ -1,3 +1,16 @@
+<%= jquery do %>
+
+  $(".search_clear").on("click", function () {
+    $(".keyword").val("");
+    $(".prop").prop("checked", false);
+    $(".start").val("");
+    $(".close").val("");
+    $(".facility").val("");
+    return false;
+  });
+
+<% end %>
+
 <%= form_for(:item, url: @cur_part.search_url, method: "get", html: { class: 'event-search' }) do %>
   <fieldset class="keyword">
     <legend><%= t("event.keyword") %></legend>
@@ -25,7 +38,7 @@
 
   <fieldset class="event-facility">
     <legend><%= t("event.facility.setting") %></legend>
-    <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true %>
+    <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true, class: 'facility' %>
   </fieldset>
 
   <footer class="send">
