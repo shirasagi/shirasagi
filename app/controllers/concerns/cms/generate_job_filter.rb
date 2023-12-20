@@ -27,12 +27,18 @@ module Cms::GenerateJobFilter
       return
     end
 
-    opts = {
-      name: task_name,
-      site_id: @cur_site.id
-    }
-    opts[:node_id] = @cur_node.id if @cur_node
-    opts[:segment] = @segment if @segment
-    @item = Cms::Task.find_or_create_by(opts)
+    criteria = Cms::Task.all
+    criteria = criteria.where(name: task_name, site_id: @cur_site.id)
+    if @cur_node
+      criteria = criteria.where(node_id: @cur_node.id)
+    else
+      criteria = criteria.where(node_id: nil)
+    end
+    if @segment
+      criteria = criteria.where(segment: @segment)
+    else
+      criteria = criteria.where(segment: nil)
+    end
+    @item = criteria.reorder(id: 1).first_or_create
   end
 end
