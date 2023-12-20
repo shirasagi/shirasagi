@@ -53,15 +53,16 @@ module Job::LogsFilter
         _id: "$class_name",
         count: { "$sum" => 1 }
       } }
-      pipes << { "$sort" => { "count" => -1, "_id" => 1 } }
 
       data = @model.collection.aggregate(pipes)
-      data.map do |d|
+      options = data.map do |d|
         id = d["_id"]
         count = d["count"]
         humanized_id = I18n.t("job.models.#{id.underscore}", default: id)
         [ "#{humanized_id} (#{count.to_s(:delimited)})", id ]
       end
+      options.sort!
+      options
     end
   end
 
