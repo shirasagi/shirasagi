@@ -101,7 +101,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       end
 
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
-        Cms::GenerationReportCreateJob.bind(site_id: site.id, task_id: task.id).perform_now
+        Cms::GenerationReportCreateJob.bind(site_id: site.id).perform_now(task.id)
 
         expect(Job::Log.count).to eq 2
         Job::Log.all.each do |log|

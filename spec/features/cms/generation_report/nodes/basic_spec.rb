@@ -37,7 +37,7 @@ describe Cms::GenerationReport::NodesController, type: :feature, dbscope: :examp
         expect(enqueued_jobs.length).to eq 1
         enqueued_jobs.first.tap do |enqueued_job|
           expect(enqueued_job[:job]).to eq Cms::GenerationReportCreateJob
-          expect(enqueued_job[:args]).to be_blank
+          expect(enqueued_job[:args]).to eq [ task.id ]
         end
       end
     end
