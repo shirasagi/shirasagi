@@ -40,7 +40,7 @@ module Cms::ContentLiquid
         current = current.sub(/#{::Regexp.escape(SS.config.translate.location)}\/[^\/]*/, '') if site.translate_enabled?
         next false if current.delete("/").blank?
         next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-        next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+        next true if current =~ /^#{::Regexp.escape(url.delete_suffix('/'))}(\/|\?|$)/
 
         false
       end
