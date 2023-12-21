@@ -15,7 +15,7 @@ class Cms::PublicHelper::Paginator < Kaminari::Helpers::Paginator
     @cur_path ||= begin
       path = @template.instance_variable_get(:@cur_path)
       path = path.sub(/\.p\d+\.html$/, ".html")
-      path = path.sub(/\/(index.html)?$/, "")
+      path = path.sub(/\/(index.html)?$/, "/")
       path
     end
   end
@@ -41,7 +41,7 @@ class Cms::PublicHelper::Paginator < Kaminari::Helpers::Paginator
         if path.end_with?(".html")
           path = path.sub(/(\.p\d+)?\.html$/, ".p#{page}.html")
         else
-          path += "/index.p#{page}.html"
+          path += "index.p#{page}.html"
         end
       end
 
