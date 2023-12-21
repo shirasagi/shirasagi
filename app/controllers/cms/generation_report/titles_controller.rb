@@ -6,20 +6,32 @@ class Cms::GenerationReport::TitlesController < ApplicationController
 
   model Cms::GenerationReport::Title
 
-  helper_method :task
+  helper_method :latest_task
 
   private
-
-  def task
-    @task ||= Cms::Task.site(@cur_site).find(params[:task])
-  end
 
   def set_items
     @items ||= begin
       items = @model.site(@cur_site)
-      items = items.where(task_id: task.id)
+      items = items.where(generation_type: params[:type])
       items = items.allow(:read, @cur_user, site: @cur_site)
       items.order(created: -1)
+    end
+  end
+
+  def latest_task
+    @latest_task ||= begin
+      criteria = Cms::Task.all
+      criteria = criteria.site(@cur_site)
+      case params[:type].to_s
+      when "pages"
+        task_name = Cms::Page::GenerateJob.task_name
+      else
+        task_name = Cms::Node::GenerateJob.task_name
+      end
+      criteria = criteria.where(name: task_name, node_id: nil)
+      criteria = criteria.reorder(updated: -1)
+      criteria.first
     end
   end
 
@@ -27,8 +39,8 @@ class Cms::GenerationReport::TitlesController < ApplicationController
     @latest_title ||= begin
       criteria = Cms::GenerationReport::Title.all
       criteria = criteria.site(@cur_site)
-      criteria = criteria.where(task_id: task.id)
-      criteria = criteria.where(sha256_hash: Cms::GenerationReport.sha256_hash(task.perf_log_file_path))
+      criteria = criteria.where(generation_type: params[:type])
+      criteria = criteria.where(sha256_hash: Cms::GenerationReport.sha256_hash(latest_task.perf_log_file_path))
       criteria.first
     end
   end
@@ -36,6 +48,11 @@ class Cms::GenerationReport::TitlesController < ApplicationController
   public
 
   def new
+    if latest_task.blank? || !::File.exist?(latest_task.perf_log_file_path) || ::File.size(latest_task.perf_log_file_path).zero?
+      notice = t("mongoid.errors.models.cms/generation_report/title.generate_#{params[:type]}_is_not_done")
+      redirect_to url_for(action: :index), notice: notice
+      return
+    end
     if latest_title.present?
       notice = t("mongoid.errors.models.cms/generation_report/title.latest_report_is_already_existed")
       redirect_to url_for(action: :index), notice: notice
@@ -46,6 +63,11 @@ class Cms::GenerationReport::TitlesController < ApplicationController
   end
 
   def create
+    if latest_task.blank? || !::File.exist?(latest_task.perf_log_file_path) || ::File.size(latest_task.perf_log_file_path).zero?
+      notice = t("mongoid.errors.models.cms/generation_report/title.generate_#{params[:type]}_is_not_done")
+      redirect_to url_for(action: :index), notice: notice
+      return
+    end
     if latest_title.present?
       notice = t("mongoid.errors.models.cms/generation_report/title.latest_report_is_already_existed")
       redirect_to url_for(action: :index), notice: notice
@@ -53,7 +75,7 @@ class Cms::GenerationReport::TitlesController < ApplicationController
     end
 
     job_class = Cms::GenerationReportCreateJob.bind(site_id: @cur_site.id, user_id: @cur_user.id)
-    job_class.perform_later(task.id)
+    job_class.perform_later(latest_task.id)
 
     redirect_to url_for(action: :index), notice: t("cms.notices.generation_report_jos_is_started")
   end

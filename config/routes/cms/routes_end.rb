@@ -260,11 +260,11 @@ Rails.application.routes.draw do
     get "generate_pages/download_logs" => "generate_pages#download_logs"
     post "generate_pages/segment/:segment" => "generate_pages#run"
     namespace "generation_report", path: "generation_report" do
-      get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
-      resources :nodes, only: %i[index]
-      resources :pages, only: %i[index]
+      get "/" => redirect { |p, req| "#{req.path}/nodes/titles" }, as: :main
+      get "/nodes" => redirect { |p, req| "#{req.path}/titles" }, as: :nodes
+      get "/pages" => redirect { |p, req| "#{req.path}/titles" }, as: :pages
     end
-    namespace "generation_report", path: "generation_report/:type/:task" do
+    namespace "generation_report", path: "generation_report/:type" do
       resources :titles, only: %i[index new create destroy], concerns: :deletion
       resources :histories, path: "titles/:title/histories", only: %i[index show] do
         match :download_all, on: :collection, via: %i[get post]

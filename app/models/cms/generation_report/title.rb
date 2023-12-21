@@ -11,6 +11,8 @@ class Cms::GenerationReport::Title
   belongs_to :task, polymorphic: true
   field :sha256_hash, type: String
 
+  field :generation_type, type: String
+
   after_destroy :destroy_all_histories
   after_destroy :destroy_all_aggregations
 
