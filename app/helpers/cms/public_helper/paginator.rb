@@ -41,7 +41,7 @@ class Cms::PublicHelper::Paginator < Kaminari::Helpers::Paginator
         if path.end_with?(".html")
           path = path.sub(/(\.p\d+)?\.html$/, ".p#{page}.html")
         else
-          path += "index.p#{page}.html"
+          path = path.delete_suffix('/') + "/index.p#{page}.html"
         end
       end
 
