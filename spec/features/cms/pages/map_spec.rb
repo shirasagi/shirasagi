@@ -3,12 +3,14 @@ require 'spec_helper'
 describe "cms/pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:item) { create :cms_page, cur_site: site, basename: unique_id }
+  let(:map_api_key) { ENV["GOOGLE_MAPS_API_KEY"] }
   let(:map_center_lng) { rand(12_700..14_500) / 100.0 }
   let(:map_center_lat) { rand(2_700..4_500) / 100.0 }
 
   before do
     site.map_api = map_api
     site.map_api_layer = map_api_layer
+    site.map_api_key = map_api_key
     site.map_center = { "lat" => map_center_lat, "lng" => map_center_lng }
     site.map_max_number_of_markers = 3
     site.save!
