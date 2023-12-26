@@ -5,6 +5,9 @@
   <%= link_to cms_all_contents_import_path, class: 'current' do %>
     <span class="tab-name"><%= t("cms.all_content.import_tab") %></span>
   <% end %>
+  <%= link_to cms_all_contents_sampling_path do %>
+    <span class="tab-name"><%= t("cms.all_content.sampling_tab") %></span>
+  <% end %>
 </div>
 
 <%= form_tag({ action: :import }, { method: :post, multipart: true }) do %>

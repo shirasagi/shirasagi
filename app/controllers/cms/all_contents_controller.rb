@@ -78,4 +78,19 @@ class Cms::AllContentsController < ApplicationController
     job.perform_later(temp_file.id)
     redirect_to({ action: :import }, { notice: t('ss.notice.started_import') })
   end
+
+  def sampling_all
+    respond_to do |format|
+      format.html
+      format.csv do
+        exporter = Cms::AllContentSampling.new(site: @cur_site)
+        enumerable = exporter.enum_csv(encoding: "UTF-8")
+
+        filename = "all_contents_sampling_#{Time.zone.now.to_i}.csv"
+
+        response.status = 200
+        send_enum enumerable, type: enumerable.content_type, filename: filename
+      end
+    end
+  end
 end
