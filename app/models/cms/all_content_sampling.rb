@@ -21,8 +21,8 @@ class Cms::AllContentSampling < Cms::PageExporter
   end
 
   def each_page(&block)
-    public_pages = Cms::Page.all.site(site).and_public.only(:_id, :route, :layout_id).to_a
-    grouped_pages = public_pages.group_by { |page| [ page.route, page.layout_id ] }
+    public_pages = Cms::Page.all.site(site).and_public.only(:_id, :route, :layout_id, :form_id).to_a
+    grouped_pages = public_pages.group_by { |page| [ page.route, page.layout_id, page.try(:form_id) ] }
     all_sample_pages = []
     grouped_pages.keys.each do |key|
       all_sample_pages += grouped_pages[key].sample(SAMPLE_COUNT)
