@@ -183,6 +183,14 @@ ja:
           <li>更新日時</li>
           <li>静的ファイル容量</li>
         </ul></p>
+      sampling_tab: 無作為抽出
+      sampling_head: 全コンテンツ無作為抽出
+      sampling_description_html: |-
+        <ul style="margin: 0; padding: 0 2em;">
+          <li style="list-style-type: disc;">サイト内の全フォルダー・全ページから無作為に抽出し、CSVを出力します。</li>
+          <li style="list-style-type: disc;">(フォルダー種別・レイアウト)でグルーピングの後、それぞれのグループの中から最大10件を無作為に抽出します。ページは、(ページ種別・レイアウト・定型フォーム)でグルーピングの後、それぞれのグループの中から最大10件を無作為に抽出します。</li>
+          <li style="list-style-type: disc;">つまり本CSVを利用することで効率よく網羅的にサイト構築結果を確認することができます。</li>
+        </ul>
     roles:
       admin: 管理者
       user: 編集者

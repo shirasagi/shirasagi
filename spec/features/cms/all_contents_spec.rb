@@ -93,4 +93,51 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
       end
     end
   end
+
+  describe "sampling_all" do
+    let(:layout) { create(:cms_layout, cur_site: site) }
+    let(:cate) { create(:category_node_node, cur_site: site) }
+    let!(:node) do
+      create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
+    end
+    let!(:item) do
+      create(
+        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
+        group_ids: [ cms_group.id ]
+      )
+    end
+
+    it do
+      visit cms_all_contents_path(site: site)
+      click_on I18n.t("cms.all_content.sampling_tab")
+      click_on I18n.t("ss.buttons.download")
+
+      expect(page.response_headers["Cache-Control"]).to include "no-store"
+      expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
+      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv.force_encoding("UTF-8")
+      csv = csv[1..-1]
+      SS::Csv.open(StringIO.new(csv)) do |csv|
+        table = csv.read
+
+        expect(table.length).to eq 3
+        expect(table.headers).to include(*%w(page_id node_id route).map { |v| I18n.t("all_content.#{v}") })
+        table[0].tap do |row|
+          expect(row[I18n.t("all_content.page_id")]).to be_present
+          expect(row[I18n.t("all_content.node_id")]).to be_blank
+          expect(row[I18n.t("all_content.route")]).to be_present
+        end
+        table[1].tap do |row|
+          expect(row[I18n.t("all_content.page_id")]).to be_blank
+          expect(row[I18n.t("all_content.node_id")]).to be_present
+          expect(row[I18n.t("all_content.route")]).to be_present
+        end
+        table[2].tap do |row|
+          expect(row[I18n.t("all_content.page_id")]).to be_blank
+          expect(row[I18n.t("all_content.node_id")]).to be_present
+          expect(row[I18n.t("all_content.route")]).to be_present
+        end
+      end
+    end
+  end
 end

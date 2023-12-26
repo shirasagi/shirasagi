@@ -281,6 +281,7 @@ Rails.application.routes.draw do
     get "all_contents(.:format)" => redirect { |p, req| "#{req.path}/download_all" }, as: "all_contents"
     get "all_contents/download_all(.:format)" => "all_contents#download_all", as: "all_contents_download"
     match "all_contents/import(.:format)" => "all_contents#import", via: [:get, :post], as: "all_contents_import"
+    get "all_contents/sampling_all(.:format)" => "all_contents#sampling_all", as: "all_contents_sampling"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
