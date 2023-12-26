@@ -37,6 +37,9 @@ class Fs::FilesController < ApplicationController
   def cur_user
     @cur_user ||= begin
       user, _login_path, _logout_path = get_user_by_access_token
+      unless user
+        user, _token = get_user_by_oauth2_token
+      end
       user ||= get_user_by_session
       SS.current_user = user
       SS.change_locale_and_timezone(SS.current_user)
