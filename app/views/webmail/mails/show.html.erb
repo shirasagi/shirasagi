@@ -116,8 +116,8 @@
         <span><%= t("webmail.notice.requested_mdn") %></span>
       </span>
       <span class="action">
-        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index) %>
-        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index) %>
+        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox.try(:original_name).presence || params[:mailbox]) %>
+        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox.try(:original_name).presence || params[:mailbox]) %>
       </span>
     </div>
     <% end %>
