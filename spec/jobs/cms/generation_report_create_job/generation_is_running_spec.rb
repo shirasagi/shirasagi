@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Node::GenerateJob, dbscope: :example do
+describe Cms::GenerationReportCreateJob, dbscope: :example do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout }
   let(:node)   { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
@@ -11,16 +11,14 @@ describe Cms::Node::GenerateJob, dbscope: :example do
     Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
   end
 
-  describe "#perform without node" do
+  describe "#perform when taks 'cms:generate_node' is running" do
     before do
-      described_class.bind(site_id: site.id).perform_now
-    end
+      Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
 
-    it do
       expect(File.exist?("#{node.path}/index.html")).to be_truthy
 
       expect(Cms::Task.count).to eq 2
-      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
+      task = Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
         expect(task.state).to eq 'completed'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
@@ -45,6 +43,12 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
+      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
+        task.update(state: 'running')
+      end
+    end
+
+    it do
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
         Cms::GenerationReportCreateJob.bind(site_id: site.id).perform_now(task.id)
 
@@ -134,81 +138,6 @@ describe Cms::Node::GenerateJob, dbscope: :example do
           expect(aggregations[0].sub_total_view).to be >= 0
           expect(aggregations[0].sub_total_elapsed).to be >= 0
         end
-      end
-    end
-  end
-
-  describe "#perform with node" do
-    before do
-      described_class.bind(site_id: site.id, node_id: node.id).perform_now
-    end
-
-    it do
-      expect(File.exist?("#{node.path}/index.html")).to be_truthy
-
-      expect(Cms::Task.count).to eq 2
-      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
-        expect(task.state).to eq 'ready'
-      end
-      Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
-        expect(task.state).to eq 'completed'
-        expect(task.started).not_to be_nil
-        expect(task.closed).not_to be_nil
-        expect(task.total_count).to eq 0
-        expect(task.current_count).to eq 0
-        expect(task.logs).to include(include("#{node.url}index.html"))
-        expect(task.node_id).to eq node.id
-      end
-
-      expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
-        expect(log.logs).to include(/INFO -- : .* Started Job/)
-        expect(log.logs).to include(/INFO -- : .* Completed Job/)
-      end
-    end
-  end
-
-  describe "#perform with generate_lock" do
-    before do
-      @save_config = SS.config.cms.generate_lock
-      SS.config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
-      site.set(generate_lock_until: Time.zone.now + 1.hour)
-
-      described_class.bind(site_id: site.id).perform_now
-    end
-
-    after do
-      SS.config.replace_value_at(:cms, 'generate_lock', @save_config)
-    end
-
-    it do
-      expect(File.exist?("#{node.path}/index.html")).to be_falsey
-
-      expect(Cms::Task.count).to eq 2
-      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
-        expect(task.state).to eq 'completed'
-        expect(task.started).not_to be_nil
-        expect(task.closed).not_to be_nil
-        expect(task.total_count).to eq 0
-        expect(task.current_count).to eq 0
-        expect(task.logs).not_to include(include("#{node.url}index.html"))
-        expect(task.node_id).to be_nil
-        # logs are saved in a file
-        expect(::File.exist?(task.log_file_path)).to be_truthy
-        # and there are no `logs` field
-        expect(task[:logs]).to be_nil
-        # performance logs are saved
-        expect(::File.exist?(task.perf_log_file_path)).to be_truthy
-      end
-      Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
-        expect(task.state).to eq 'ready'
-      end
-
-      expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
-        expect(log.logs).to include(/INFO -- : .* Started Job/)
-        expect(log.logs).to include(include(I18n.t('mongoid.attributes.ss/addon/generate_lock.generate_locked')))
-        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
   end

@@ -52,8 +52,8 @@ class Cms::GenerationReport::TitlesController < ApplicationController
       return
     end
 
-    job_class = Cms::GenerationReportCreateJob.bind(site_id: @cur_site.id, user_id: @cur_user.id, task_id: task.id)
-    job_class.perform_later
+    job_class = Cms::GenerationReportCreateJob.bind(site_id: @cur_site.id, user_id: @cur_user.id)
+    job_class.perform_later(task.id)
 
     redirect_to url_for(action: :index), notice: t("cms.notices.generation_report_jos_is_started")
   end
