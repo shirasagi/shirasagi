@@ -12,7 +12,6 @@ class Cms::PreviewController < ApplicationController
 
   helper_method :head_for, :foot_for, :inplace_editable?
 
-
   IGNORE_HEADER_KEY_SET = begin
     # 304 not modified が返ってきても困るので、304 を応答する恐れのあるヘッダーを子コントローラーへ渡さないようにする
     keys = %w(
