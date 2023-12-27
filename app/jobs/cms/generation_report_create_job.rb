@@ -41,9 +41,9 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     @generation_type ||= begin
       case generation_task.name
       when "cms:generate_pages"
-        :page
+        :pages
       when "cms:generate_nodes"
-        :node
+        :nodes
       end
     end
   end
@@ -102,16 +102,17 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       end
     end
     unless title_name
-      title_name = generation_task.started ? "Performance Report at #{I18n.l(generation_task.started, format: :long)}" : ""
-      if generation_type
-        title_name = "Pages Generation #{title_name}".strip
-      else
-        title_name = "Nodes Generation #{title_name}".strip
+      title_name = generation_task.started ? "performance log at #{generation_task.started.iso8601}" : "performance log"
+      case generation_type
+      when :pages
+        title_name = "generate page #{title_name}".strip
+      when :nodes
+        title_name = "generate node #{title_name}".strip
       end
     end
 
     title = Cms::GenerationReport::Title.new(
-      cur_site: site, name: title_name, task: generation_task, sha256_hash: digest)
+      cur_site: site, name: title_name, task: generation_task, sha256_hash: digest, generation_type: generation_type)
     title.save!
     title
   end

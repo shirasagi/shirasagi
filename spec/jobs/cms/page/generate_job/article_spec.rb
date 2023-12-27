@@ -111,6 +111,11 @@ describe Cms::Page::GenerateJob, dbscope: :example do
 
         expect(Cms::GenerationReport::Title.all.count).to eq 1
         title = Cms::GenerationReport::Title.all.first
+        expect(title.site_id).to eq site.id
+        expect(title.name).to include("generate page performance log")
+        expect(title.task_id).to eq task.id
+        expect(title.sha256_hash).to be_present
+        expect(title.generation_type).to eq "pages"
 
         expect(Cms::GenerationReport::History[title].all.count).to eq 5
         expect(Cms::GenerationReport::Aggregation[title].all.count).to eq 1

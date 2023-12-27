@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :example do
+describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :example do
   let!(:site) { cms_site }
 
   before { login_cms_user }
@@ -8,7 +8,9 @@ describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :examp
   context "without task 'cms:generate_pages'" do
     it do
       visit cms_generation_report_pages_path(site: site)
-      expect(page).to have_content("ページ書き出しが一度も実行されていません。")
+      click_on I18n.t("ss.links.new")
+      notice = I18n.t("mongoid.errors.models.cms/generation_report/title.generate_pages_is_not_done")
+      expect(page).to have_css("#notice", text: notice)
     end
   end
 
@@ -40,7 +42,7 @@ describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :examp
     end
 
     context "with title" do
-      let!(:title) { create :cms_generation_report_title, cur_site: site, task: task }
+      let!(:title) { create :cms_generation_report_title, cur_site: site, task: task, generation_type: "pages" }
       let!(:content) { create :article_node_page, cur_site: site }
       let(:history_type1) { "page" }
       let(:history1_db) { rand }
