@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import {dispatchEvent} from "../../ss/tool";
 
 function isInputText(el) {
   return el.tagName === "INPUT" && el.type === "text";

@@ -389,10 +389,14 @@ this.SS = (function () {
 
   SS.confirmUnloading = function () {
     $("#item-form").each(function() {
-      if (this.dataset.controller && !this.dataset.controller.contains("ss--confirm-unloading")) {
-        this.dataset.controller = this.dataset.controller + ",ss--confirm-unloading"
+      if (this.dataset.controller) {
+        if (this.dataset.controller.contains("ss--confirm-unloading")) {
+          return;
+        } else {
+          this.dataset.controller = this.dataset.controller + ",ss--confirm-unloading";
+        }
       } else {
-        this.dataset.controller = "ss--confirm-unloading"
+        this.dataset.controller = "ss--confirm-unloading";
       }
     });
     SS.formChanged = undefined;
