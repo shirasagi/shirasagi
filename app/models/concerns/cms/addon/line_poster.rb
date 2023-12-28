@@ -136,9 +136,12 @@ module Cms::Addon
           log.messages = messages
 
           res = site.line_client.broadcast(messages)
-          log.response_code = res.code
-          log.response_body = res.body
-          raise "#{res.code} #{res.body}" if res.code != "200"
+          res_code = res.code
+          res_body = res.body.force_encoding("utf-8")
+
+          log.response_code = res_code
+          log.response_body = res_body
+          raise "#{res_code} #{res_body}" if res_code !~ /^2\d\d$/
 
           self.add_to_set(line_posted: posted_at)
           self.unset(:line_edit_auto_post, :line_post_error) #編集時に投稿をリセット

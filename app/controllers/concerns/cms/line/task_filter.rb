@@ -39,12 +39,14 @@ module Cms::Line::TaskFilter
 
         @task.log("broadcast to members")
         res = @site.line_client.broadcast(item.line_messages)
+        res_code = res.code
+        res_body = res.body.force_encoding("utf-8")
 
         log.messages = item.line_messages
-        log.response_code = res.code
-        log.response_body = res.body
+        log.response_code = res_code
+        log.response_body = res_body
         log.request_id = res["X-Line-Request-Id"]
-        raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+        raise "#{res_code} #{res_body}" if res_code !~ /^2\d\d$/
         log.state = "success"
 
         update_statistic(item, request_id: log.request_id)
@@ -75,12 +77,14 @@ module Cms::Line::TaskFilter
 
           payload = multicast_payload(item)
           res = @site.line_client.multicast(user_ids, item.line_messages, payload: payload)
+          res_code = res.code
+          res_body = res.body.force_encoding("utf-8")
 
           log.messages = item.line_messages
-          log.response_code = res.code
-          log.response_body = res.body
+          log.response_code = res_code
+          log.response_body = res_body
           log.request_id = res["X-Line-Request-Id"]
-          raise "#{res.code} #{res.body}" if res.code !~ /^2\d\d$/
+          raise "#{res_code} #{res_body}" if res_code !~ /^2\d\d$/
           log.state = "success"
 
           update_statistic(item, member_count: user_ids.size)
