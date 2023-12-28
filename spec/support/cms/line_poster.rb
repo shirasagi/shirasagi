@@ -1,19 +1,29 @@
-def capture_line_bot_client
+def capture_line_bot_client(options = {})
+
   capture = OpenStruct.new
+
+  broadcast_response = proc do |capture|
+    OpenStruct.new(code: "200", body: "{}")
+  end
+  multicast_response = proc do |capture|
+    OpenStruct.new(code: "200", body: "{}")
+  end
+  broadcast_response = options[:broadcast_response] if options[:broadcast_response]
+  multicast_response = options[:multicast_response] if options[:multicast_response]
 
   # deliver
   capture.broadcast = OpenStruct.new(count: 0)
   allow_any_instance_of(Line::Bot::Client).to receive(:broadcast) do |*args|
     capture.broadcast.count += 1
     capture.broadcast.messages = args[1]
-    OpenStruct.new(code: "200", body: "{}")
+    broadcast_response.call(capture)
   end
   capture.multicast = OpenStruct.new(count: 0)
   allow_any_instance_of(Line::Bot::Client).to receive(:multicast) do |*args|
     capture.multicast.count += 1
     capture.multicast.user_ids = args[1]
     capture.multicast.messages = args[2]
-    OpenStruct.new(code: "200", body: "{}")
+    multicast_response.call(capture)
   end
 
   # statistics
