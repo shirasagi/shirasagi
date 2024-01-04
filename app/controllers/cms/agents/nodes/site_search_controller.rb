@@ -72,6 +72,10 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
       @s.index = [indexes].flatten.join(",")
     end
 
+    if params.dig(:s, :type).blank? && @cur_node.site_search_type.present?
+      @s.type = @cur_node.site_search_type
+    end
+
     @s.field_name = %w(text_index content title)
     @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
     @result = @s.search

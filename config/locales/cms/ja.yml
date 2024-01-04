@@ -599,9 +599,9 @@ ja:
         disabled: 本文に含めない
         include: 本文に含める
       site_search_type:
-        all: 全て
         page: ウェブページ
         file: 添付ファイル
+        all: 全て
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP

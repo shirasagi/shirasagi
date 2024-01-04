@@ -1,3 +1,7 @@
 <dl class="see">
-  <dd class="wide"><%=br @item.ordered_st_article_nodes.pluck(:name) %></dd>
+  <dt><%= t("cms.node_config") %></dt>
+  <dd><%=br @item.ordered_st_article_nodes.pluck(:name) %></dd>
+
+  <dt><%= @model.t :site_search_type %></dt>
+  <dd><%= @item.label(:site_search_type) %></dd>
 </dl>

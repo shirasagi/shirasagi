@@ -26,4 +26,7 @@
       </tbody>
     </table>
   </dd>
+
+  <dt><%= @model.t :site_search_type %><%= @model.tt :site_search_type %></dt>
+  <dd><%= f.select :site_search_type, @item.site_search_type_options %></dd>
 </dl>
