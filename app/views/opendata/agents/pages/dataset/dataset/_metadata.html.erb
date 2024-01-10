@@ -125,76 +125,75 @@ SS.renderClipboardCopy();
         <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
       </div>
       <% if rs.text.present? %>
-        <div class="text">
+        <div class="info__text">
           <%= auto_link paragraph(sanitize(rs.text)) %>
-        </div>
-      <% end %>
-      <% if rs.respond_to?(:downloaded_count) %>
-        <div class="download-count">
-          <span class="label"><%= rs.t :downloaded_count %></span>
-          <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
-        </div>
-      <% end %>
-      <% if rs.metadata_file_released.present? %>
-        <div class="released">
-          <span class="label"><%= rs.t :metadata_file_released %></span>
-          <span class="value"><%= tryb { I18n.l(rs.metadata_file_released.to_date, format: :long) } %></span>
-        </div>
-      <% end %>
-      <% if rs.metadata_file_updated.present? %>
-        <div class="updated">
-          <span class="label"><%= rs.t :metadata_file_updated %></span>
-          <span class="count"><%= tryb { I18n.l(rs.metadata_file_updated.to_date, format: :long) } %></span>
-        </div>
-      <% end %>
-      <% if rs.metadata_file_follow_standards.present? %>
-        <div class="metadata">
-          <span class="label"><%= rs.t :metadata_file_follow_standards %></span>
-          <span class="count"><%= rs.metadata_file_follow_standards %></span>
         </div>
       <% end %>
     </div>
 
-    <div class="icons">
-      <% license = rs.license %>
-      <% if license.present? %>
-        <span class="license">
-          <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-          <% if license.related_url.present? %>
-            <%= link_to(label, license.related_url, target: "_blank", rel: [ "noopener", @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil ]) %>
-          <% else %>
-            <%= label %>
+    <div class="info-detail">
+      <dl class="info-list">
+        <% if rs.respond_to?(:downloaded_count) %>
+          <div class="download-count">
+            <span class="label"><%= rs.t :downloaded_count %></span>
+            <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
+          </div>
+          <dt class="info-list__title"><%= rs.t :downloaded_count %></dt>
+          <dd class="info-list__content"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
+        <% end %>
+        <% if rs.metadata_file_released.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_released %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_released.to_date, format: :long) } %></dd>
+        <% end %>
+        <% if rs.metadata_file_updated.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_updated %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_updated.to_date, format: :long) } %></dd>
+        <% end %>
+        <% if rs.metadata_file_follow_standards.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_follow_standards %></dt>
+          <dd class="info-list__content"><%= rs.metadata_file_follow_standards %></dd>
+        <% end %>
+      </dl>
+      <div class="info-detail__access">
+        <div class="icons">
+          <% license = rs.license %>
+          <% if license.present? %>
+            <span class="license">
+              <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+              <% if license.related_url.present? %>
+                <%= link_to(label, license.related_url, target: "_blank", rel: [ "noopener", @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil ]) %>
+              <% else %>
+                <%= label %>
+              <% end %>
+            </span>
           <% end %>
-        </span>
-      <% end %>
-
-      <% if rs.metadata_file_access_url.present? %>
-        <div class="external-wrap">
-          <%= link_to('掲載ページはこちら', metadata_file_access_url, class: "external", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+          <% if rs.metadata_file_access_url.present? %>
+            <div class="content-wrap">
+              <%= link_to('掲載ページはこちら', rs.metadata_file_access_url, class: "content cboxElement noicon", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% end %>
+          <% if rs.metadata_file_download_url.present? %>
+            <div class="download-wrap">
+              <%= link_to(rs.metadata_file_download_url, class: "download noicon", "data-url": rs.metadata_file_download_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) do %>
+                <small>市町村ページから</small>ダウンロード
+              <% end %>
+            </div>
+          <% end %>
+          <% if rs.rdf_iri.present? %>
+            <div class="sparql">
+              <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% end %>
         </div>
-      <% end %>
-      <% if rs.metadata_file_download_url.present? %>
-        <div class="download-wrap">
-          <%= link_to(I18n.t("opendata.labels.downloaded"), rs.metadata_file_download_url, class: "download", "data-url": rs.metadata_file_download_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        <div class="info-detail__link">
+          <% if rs.metadata_file_terms_of_service.present? %>
+            <p><%= rs.t :metadata_file_terms_of_service %>：<%= auto_link sanitize(rs.metadata_file_terms_of_service) %></p>
+          <% end %>
+          <% if rs.metadata_file_related_document.present? %>
+            <p><%= rs.t :metadata_file_related_document %>：<%= link_to(rs.metadata_file_related_document, rs.metadata_file_related_document) rescue rs.metadata_file_related_document %></p>
+          <% end %>
         </div>
-      <% end %>
-      <% if rs.rdf_iri.present? %>
-        <div class="sparql">
-          <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-        </div>
-      <% end %>
-      <% if rs.metadata_file_terms_of_service.present? %>
-        <div class="metadata">
-          <span class="label"><%= rs.t :metadata_file_terms_of_service %></span>
-          <span class="count"><%= auto_link paragraph(sanitize(rs.metadata_file_terms_of_service)) %></span>
-        </div>
-      <% end %>
-      <% if rs.metadata_file_related_document.present? %>
-        <div class="metadata">
-          <span class="label"><%= rs.t :metadata_file_related_document %></span>
-          <span class="count"><%= link_to(rs.metadata_file_related_document, rs.metadata_file_related_document) rescue rs.metadata_file_related_document %></span>
-        </div>
-      <% end %>
+      </div>
     </div>
   </div>
 <% end %>
@@ -248,8 +247,10 @@ SS.renderClipboardCopy();
 </div>
 
 <div class="dataset-tabs tabs">
-  <article class="tab">
-    <header><h2>データセット情報</h2></header>
+  <nav class="names">
+    <a class="name current" href="#">データセット情報</a>
+  </nav>
+  <article class="view">
     <div class="pages">
       <div class="info-wrap">
         <%
@@ -290,7 +291,7 @@ SS.renderClipboardCopy();
 
           <% if @cur_page.metadata_dataset_url.present? %>
             <dt><%= @cur_page.t(:metadata_dataset_url) %></dt>
-            <dd><%= link_to(@cur_page.metadata_dataset_url, @cur_page.metadata_dataset_url) rescue @cur_page.metadata_dataset_url %></dd>
+            <dd><%= link_to(@cur_page.metadata_dataset_url, @cur_page.metadata_dataset_url, target: '_blank') rescue @cur_page.metadata_dataset_url %></dd>
           <% end %>
 
           <% if @cur_page.metadata_dataset_update_frequency.present? %>
@@ -305,7 +306,7 @@ SS.renderClipboardCopy();
 
           <% if @cur_page.metadata_dataset_related_document.present? %>
             <dt><%= @cur_page.t(:metadata_dataset_related_document) %></dt>
-            <dd><%= link_to(@cur_page.metadata_dataset_related_document, @cur_page.metadata_dataset_related_document) rescue @cur_page.metadata_dataset_related_document %></dd>
+            <dd><%= link_to(@cur_page.metadata_dataset_related_document, @cur_page.metadata_dataset_related_document, target: '_blank') rescue @cur_page.metadata_dataset_related_document %></dd>
           <% end %>
 
           <% if @cur_page.metadata_dataset_target_period.present? %>
@@ -328,19 +329,17 @@ SS.renderClipboardCopy();
 <% if @cur_page.metadata_dataset_contact_name.present? %>
   <footer class="contact">
     <h2><%= t("contact.view.title") %></h2>
-    <p><%= @cur_page.metadata_dataset_contact_name %></p>
+    <p class="group"><%= @cur_page.metadata_dataset_contact_name %></p>
     <% if @cur_page.metadata_dataset_contact_tel.present? %>
-      <dl class="tel">
+      <dl class="tel" style="margin-right: 0;">
         <dt><%= t("contact.view.tel") %>:</dt>
         <dd><%= link_to(@cur_page.metadata_dataset_contact_tel, "tel:#{@cur_page.metadata_dataset_contact_tel.delete("-")}") %></dd>
       </dl>
     <% end %>
     <% if @cur_page.metadata_dataset_contact_ext.present? %>
-      <dl class="ext">
-        (
-        <dt>内線:</dt>
-        <dd><%= @cur_page.metadata_dataset_contact_ext %></dd>
-        )
+      <dl class="extension tel">
+        <dt>（内線:</dt>
+        <dd><%= @cur_page.metadata_dataset_contact_ext %></dd>）
       </dl>
     <% end %>
     <% if @cur_page.metadata_dataset_contact_email.present? %>
@@ -350,13 +349,13 @@ SS.renderClipboardCopy();
       </dl>
     <% end %>
     <% if @cur_page.metadata_dataset_contact_form_url.present? %>
-      <dl class="link">
+      <dl class="url">
         <dt>フォームURL:</dt>
         <dd><%= link_to(@cur_page.metadata_dataset_contact_form_url, @cur_page.metadata_dataset_contact_form_url) %></dd>
       </dl>
     <% end %>
     <% if @cur_page.metadata_dataset_contact_remark.present? %>
-      <dl class="remark">
+      <dl class="remarks">
         <dt>備考:</dt>
         <dd><%= @cur_page.metadata_dataset_contact_remark %></dd>
       </dl>
@@ -365,5 +364,13 @@ SS.renderClipboardCopy();
 <% end %>
 
 <% if @cur_page.metadata_dataset_keyword.present? %>
-  <p><%= @cur_page.t(:metadata_dataset_keyword) %> | <%= @cur_page.metadata_dataset_keyword.join('、') %></p>
+  <div class="key-word">
+    <dl><%= @cur_page.t(:metadata_dataset_keyword) %></dl>
+    <dd>
+      <% @cur_page.metadata_dataset_keyword.each_with_index do |keyword, i| %>
+        <%= "、" if i > 0 %>
+        <%= link_to(keyword, @search_path.call("s[keyword]" => keyword)) %>
+      <% end %>
+    </dd>
+  </div>
 <% end %>

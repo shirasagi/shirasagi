@@ -34,6 +34,13 @@ module Opendata::Addon::Metadata::Dataset
     field :metadata_dataset_contact_remark, type: String
     field :metadata_dataset_remark, type: String
 
+    permit_params :metadata_dataset_id, :metadata_japanese_local_goverment_code, :metadata_local_goverment_name,
+      :metadata_dataset_keyword, :metadata_dataset_released, :metadata_dataset_updated, :metadata_dataset_url,
+      :metadata_dataset_update_frequency, :metadata_dataset_follow_standards, :metadata_dataset_related_document,
+      :metadata_dataset_target_period, :metadata_dataset_contact_name, :metadata_dataset_contact_email,
+      :metadata_dataset_contact_tel, :metadata_dataset_contact_ext, :metadata_dataset_contact_form_url,
+      :metadata_dataset_contact_remark, :metadata_dataset_remark
+
     before_validation :set_uuid
     before_validation :set_metadata_text_index, if: -> { metadata_imported.present? }
 
