@@ -3,7 +3,7 @@ module Opendata::Addon::Metadata::License
   extend ActiveSupport::Concern
 
   included do
-    field :metadata_uid, type: String, default: nil
+    field :metadata_uid, type: SS::Extensions::Lines
     permit_params :metadata_uid
   end
 end

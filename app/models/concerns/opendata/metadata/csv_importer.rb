@@ -82,7 +82,7 @@ module Opendata::Metadata::CsvImporter
               imported_dataset_ids << dataset.id
 
               license_id = csv_row['ファイル_ライセンス'].to_s.presence || csv_row['ライセンス'].to_s
-              license = get_license_from_name(license_id)
+              license = get_license_from_metadata_uid(license_id)
               put_log("could not found license #{license_id}") if license.nil?
 
               imported_resource_ids = []
@@ -91,11 +91,11 @@ module Opendata::Metadata::CsvImporter
                 begin
                   @report_resource = @report_dataset.new_resource
 
-                  resource = dataset.url_resources.select { |r| r.source_url == url }.first
+                  resource = dataset.resources.select { |r| r.source_url == url }.first
 
                   if resource.nil?
-                    resource = Opendata::UrlResource.new
-                    dataset.url_resources << resource
+                    resource = Opendata::Resource.new
+                    dataset.resources << resource
                   end
 
                   filename = csv_row['ファイル_タイトル'].to_s + ::File.extname(url.to_s)
@@ -151,7 +151,7 @@ module Opendata::Metadata::CsvImporter
               end
 
               # destroy unimported resources
-              dataset.url_resources.each do |resource|
+              dataset.resources.each do |resource|
                 next if imported_resource_ids.include?(resource.id)
                 put_log("-- resource : destroy #{resource.name}")
                 resource.destroy

@@ -945,7 +945,7 @@ ja:
       opendata/addon/metadata/importer_notice:
         notice_user_ids: 通知ユーザー
       opendata/addon/metadata/license:
-        metadata_uid: メタデータライセンス名
+        metadata_uid: メタデータライセンスID
       opendata/addon/metadata/dataset:
         metadata_dataset_id: ID
         metadata_japanese_local_goverment_code: 全国地方公共団体コード
