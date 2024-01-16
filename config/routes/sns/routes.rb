@@ -40,6 +40,10 @@ Rails.application.routes.draw do
       get :latest, on: :collection
       post :set_seen_all, on: :collection
     end
+
+    namespace :frames do
+      resource :user_navigation, only: %i[show]
+    end
   end
 
   namespace "sns", path: ".u:user", user: /\d+/ do

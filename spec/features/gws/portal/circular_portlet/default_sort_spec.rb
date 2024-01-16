@@ -88,13 +88,12 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
           expect(all(".list-item")[3].text).to include(post4.name)
           expect(all(".list-item")[4].text).to include(post5.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-boards" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index.gws-boards" do
@@ -151,13 +150,12 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
           expect(all(".list-item")[3].text).to include(post9.name)
           expect(all(".list-item")[4].text).to include(post8.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-boards" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index.gws-boards" do

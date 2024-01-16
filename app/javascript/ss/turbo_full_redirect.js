@@ -34,9 +34,14 @@ export default class TurboFullRedirect {
     }
 
     ev.preventDefault()
-    response.json().then((json) => {
-      if (json.status && REDIRECT_STATUS_CODES.includes(json.status) && json.location) {
-        location.href = json.location
+    response.clone().json().then((json) => {
+      if (json.status && REDIRECT_STATUS_CODES.includes(json.status)) {
+        if (json.location) {
+          location.href = json.location
+        }
+        if (json.reload) {
+          location.reload()
+        }
       }
     })
   }

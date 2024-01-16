@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_login", type: :feature, dbscope: :example do
+describe "sns_login", type: :feature, dbscope: :example, js: true do
   it "invalid login" do
     visit sns_login_path
     within "form" do
@@ -22,9 +22,14 @@ describe "sns_login", type: :feature, dbscope: :example do
         end
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
 
-        find('#head .logout').click
         expect(current_path).to eq sns_login_path
       end
     end
@@ -40,16 +45,23 @@ describe "sns_login", type: :feature, dbscope: :example do
 
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
-
-        find('#head .logout').click
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
         expect(current_path).to eq sns_login_path
       end
     end
 
     context "when internal url is given at `ref` parameter" do
+      let(:capybara_server) { Capybara.current_session.server }
+      let(:ref) { sns_cur_user_profile_url(host: "#{capybara_server.host}:#{capybara_server.port}") }
+
       it do
-        visit sns_login_path(ref: sns_cur_user_profile_url)
+        visit sns_login_path(ref: ref)
         within "form" do
           fill_in "item[email]", with: sys_user.email
           fill_in "item[password]", with: "pass"
@@ -58,9 +70,13 @@ describe "sns_login", type: :feature, dbscope: :example do
 
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
-
-        find('#head .logout').click
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
         expect(current_path).to eq sns_login_path
       end
     end
@@ -87,9 +103,13 @@ describe "sns_login", type: :feature, dbscope: :example do
 
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
-
-        find('#head .logout').click
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
         expect(current_path).to eq sns_login_path
       end
     end
@@ -137,8 +157,31 @@ describe "sns_login", type: :feature, dbscope: :example do
       end
 
       context "with cms_group domains" do
+        let(:domain) { 'www.example.com' }
+        let(:rack_proxy_app) do
+          domain_bind = domain
+          Class.new do
+            cattr_accessor :domain
+            self.domain = domain_bind
+
+            def initialize(app)
+              @app = app
+            end
+
+            def call(env)
+              env["HTTP_X_FORWARDED_HOST"] = self.class.domain
+              @app.call(env)
+            end
+          end
+        end
+
         before do
-          cms_group.set(domains: ['www.example.com'])
+          cms_group.set(domains: [domain])
+          Sns::LoginController.middleware_stack.use rack_proxy_app
+        end
+
+        after do
+          Sns::LoginController.middleware_stack.delete rack_proxy_app
         end
 
         it "valid login" do
@@ -180,7 +223,6 @@ describe "sns_login", type: :feature, dbscope: :example do
     # bookmark support
     it "valid login" do
       visit sns_login_path(email: user.email)
-      expect(status_code).to eq 200
       expect(find("#item_email").value).to eq(user.email)
       within "form" do
         fill_in "item[password]", with: user.in_password
@@ -191,22 +233,10 @@ describe "sns_login", type: :feature, dbscope: :example do
     end
   end
 
-  context 'loggedin status' do
-    it do
-      visit sns_login_status_path
-      expect(status_code).to eq 403
-
-      login_sys_user
-      visit sns_login_status_path
-      expect(status_code).to eq 200
-    end
-  end
-
   describe "#redirect" do
     context "with internal path" do
       it do
         visit sns_redirect_path(ref: cms_main_path(site: cms_site))
-        expect(status_code).to eq 200
         expect(current_path).to eq sns_login_path
       end
     end
@@ -225,7 +255,6 @@ describe "sns_login", type: :feature, dbscope: :example do
 
       it do
         visit sns_redirect_path(ref: "https://www.google.com/")
-        expect(status_code).to eq 200
         expect(current_path).to eq sns_redirect_path
         expect(page).to have_link("https://www.google.com/", href: "https://www.google.com/")
       end
@@ -245,7 +274,6 @@ describe "sns_login", type: :feature, dbscope: :example do
 
       it do
         visit sns_redirect_path(ref: "https://sns.example.jp/fs/日本語.pdf")
-        expect(status_code).to eq 200
         expect(current_path).to eq sns_redirect_path
         expect(page).to have_link("https://sns.example.jp/fs/日本語.pdf", href: "https://sns.example.jp/fs/日本語.pdf")
       end

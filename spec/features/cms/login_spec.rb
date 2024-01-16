@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_login", type: :feature, dbscope: :example do
+describe "cms_login", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:login_path) { cms_login_path(site: site) }
@@ -61,9 +61,12 @@ describe "cms_login", type: :feature, dbscope: :example do
         click_button I18n.t("ss.login")
       end
       expect(current_path).to eq main_path
-      expect(find('#head .logout')[:href]).to eq logout_path
+      within ".user-navigation" do
+        wait_event_to_fire("turbo:frame-load") { click_on cms_user.name }
+        expect(page).to have_link(I18n.t("ss.logout"), href: logout_path)
+        click_on I18n.t("ss.logout")
+      end
 
-      find('#head .logout').click
       expect(current_path).to eq login_path
 
       visit main_path
@@ -79,19 +82,24 @@ describe "cms_login", type: :feature, dbscope: :example do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      wait_for_js_ready
 
       expect(current_path).to eq cms_layouts_path(site: site)
     end
   end
 
   context "when internal url is given at `ref` parameter" do
+    let(:capybara_server) { Capybara.current_session.server }
+    let(:ref) { cms_layouts_url(host: "#{capybara_server.host}:#{capybara_server.port}", site: site) }
+
     it do
-      visit cms_login_path(site: site, ref: cms_layouts_url(site: site))
+      visit cms_login_path(site: site, ref: ref)
       within "form" do
         fill_in "item[email]", with: user.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      wait_for_js_ready
 
       expect(current_path).to eq cms_layouts_path(site: site)
     end

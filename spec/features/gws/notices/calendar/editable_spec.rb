@@ -33,8 +33,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         first(".index-cleander-link").click
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
       within "#content-navi" do
         expect(page).to have_link(folder.name)
       end

@@ -18,10 +18,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       within "#content-navi" do
         expect(page).to have_link(folder.name)
       end
@@ -30,6 +26,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         within ".operations" do
           click_on I18n.t('ss.buttons.print')
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
       within "#main.print-preview" do
         within ".gws-schedule-box" do

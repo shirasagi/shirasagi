@@ -17,13 +17,18 @@ module Gws::BaseFilter
     before_action :set_current_site
     before_action :set_gws_logged_in, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
-    before_action :set_account_menu, if: ->{ @cur_user }
     before_action :set_crumbs
     after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"
   end
 
   private
+
+  # override SS::BaseFilter#logout_path
+  def logout_path
+    # グループウェア利用時、常に /.g?/logout がログアウトのパスとなるようにする
+    @logout_path = gws_logout_path(site: @cur_site)
+  end
 
   def validate_gws
     raise '404' if SS.config.gws.disable.present?
@@ -36,7 +41,7 @@ module Gws::BaseFilter
 
   def set_current_site
     @ss_mode = :gws
-    @cur_site = SS.current_site = Gws::Group.find params[:site]
+    @cur_site = SS.current_site = Gws::Group.find(params[:site])
     @cur_user.cur_site = @cur_site if @cur_user
     @crumbs << [@cur_site.name, gws_portal_path]
   end
@@ -47,10 +52,6 @@ module Gws::BaseFilter
 
     @cur_superior_users = @cur_user.gws_superior_users(@cur_site)
     @cur_superior_groups = @cur_user.gws_superior_groups(@cur_site)
-  end
-
-  def set_account_menu
-    @account_menu = []
   end
 
   def set_gws_logged_in

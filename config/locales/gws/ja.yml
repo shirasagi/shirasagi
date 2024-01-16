@@ -105,6 +105,7 @@ ja:
         ダウンロードの準備ができましたらメッセージでお知らせします。
       contrast_changed: 'コントラストを「%{name}」に変更しました。'
       webmail_user_import: グループウェアの設定に加えて、ウェブメール権限を設定することができます。
+      default_group_changed: 既定のグループを変更しました。
     errors:
       allowed_domains_only_root: はルートグループにのみ設定できます。
       plan_search:

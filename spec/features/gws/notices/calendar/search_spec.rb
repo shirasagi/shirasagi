@@ -28,9 +28,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
       within "#content-navi" do
         expect(page).to have_link(folder.name)
       end
@@ -45,9 +42,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in "s[keyword]", with: item1.name
         click_on I18n.t('ss.buttons.search')
       end
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
       within "#content-navi" do
         expect(page).to have_link(folder.name)
       end

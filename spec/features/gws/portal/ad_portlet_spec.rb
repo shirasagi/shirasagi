@@ -82,9 +82,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
       visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_css('.portlets .portlet-model-ad')
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
   end
 
@@ -105,7 +102,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { portlet.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       expect { save_file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -133,7 +130,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       portlet.reload
       expect(portlet.ad_files.count).to eq 0

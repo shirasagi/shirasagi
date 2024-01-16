@@ -31,7 +31,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       item = Gws::Schedule::Todo.without_deleted.first
@@ -59,7 +59,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: text2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.text).to eq text2
@@ -83,7 +83,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.todo_state).to eq "finished"
@@ -113,7 +113,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       item.reload
@@ -140,7 +140,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: comment_text
         click_on I18n.t('gws/schedule.buttons.comment')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq achievement_rate
@@ -175,7 +175,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: comment_text2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq achievement_rate2
@@ -206,7 +206,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(comment_text2)
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.achievement_rate).to eq 0
@@ -234,7 +234,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 1
@@ -245,9 +245,6 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         expect(message.url).to eq ""
         expect(message.member_ids).to include(user1.id, user2.id)
       end
-
-      # wait for ajax to stabilize spec
-      expect(page).to have_no_css(".fc-loading", text: I18n.t("gws/schedule.loading"))
     end
   end
 end

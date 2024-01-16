@@ -1,9 +1,9 @@
 <%= jquery do %>
-var bookmark = new Gws_Bookmark('.gws-bookmark', "<%= @bookmark_default_name %>")
+var bookmark = new Gws_Bookmark('.gws-bookmark-head', "<%= @bookmark_default_name %>")
 bookmark.renderCreate();
 <% end %>
 <% @bookmark = ::Gws::Bookmark::Item.new(@bookmark_default) %>
-<div class="gws-bookmark dropdown dropdown-toggle">
+<div class="gws-bookmark-head dropdown dropdown-toggle">
   <span class="bookmark-icon">
     <i class="material-icons inactive">star_border</i>
   </span>

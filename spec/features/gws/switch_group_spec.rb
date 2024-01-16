@@ -34,25 +34,29 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
         # click_on user.name
         Gws::User.find(gws_user.id).tap do |user|
           user.cur_site = site
-          expect(page).to have_css("h2", text: "#{user.gws_default_group.trailing_name} #{user.name}")
-          find("span.name").click
+          expect(page).to have_css(".user-navigation-user-id", text: "#{user.gws_default_group.trailing_name} #{user.name}")
+          wait_event_to_fire("turbo:frame-load") { click_on user.name }
         end
 
         within "#user-main-dropdown" do
-          click_on I18n.t("gws.links.switch_group")
+          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
         end
 
-        within "#gws-group-switch-menu" do
+        within "#gws-group-switch-form" do
           expect(page).to have_css(".gws-group-switch-name", text: group1.section_name)
           expect(page).to have_css(".gws-group-switch-name", text: group2.section_name)
           expect(page).to have_css(".gws-group-switch-name", text: group3.section_name)
 
-          click_on group2.section_name
+          # click_on group2.section_name
+          within "#gws-group-switch-menu-#{group2.id}" do
+            find(".gws-group-switch-name").click
+          end
         end
       end
+      wait_for_notice I18n.t("gws.notice.default_group_changed")
 
       within "nav.user" do
-        expect(page).to have_css("h2", text: "#{group2.trailing_name} #{gws_user.name}")
+        expect(page).to have_css(".user-navigation-user-id", text: "#{group2.trailing_name} #{gws_user.name}")
       end
       Gws::User.find(gws_user.id).tap do |user|
         user.cur_site = site
@@ -90,17 +94,20 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
 
       visit new_gws_schedule_plan_path(site: site)
       within "nav.user" do
-        # click_on user.name
-        find("span.name").click
+        wait_event_to_fire("turbo:frame-load") { click_on gws_user.name }
 
         within "#user-main-dropdown" do
-          click_on I18n.t("gws.links.switch_group")
+          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
         end
 
-        within "#gws-group-switch-menu" do
-          click_on group2.section_name
+        within "#gws-group-switch-form" do
+          # click_on group2.section_name
+          within "#gws-group-switch-menu-#{group2.id}" do
+            find(".gws-group-switch-name").click
+          end
         end
       end
+      wait_for_notice I18n.t("gws.notice.default_group_changed")
 
       within "#item-form" do
         # 閲覧権限と管理権限の初期値として、「グループ（既定）」が設定されていることを確認する

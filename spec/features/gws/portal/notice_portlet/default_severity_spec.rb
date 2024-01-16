@@ -71,14 +71,12 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: item11.name)
           expect(page).to have_css(".list-item", text: item12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
       end
 
       within ".portlets .gws-notices" do
         click_on I18n.t("ss.links.more")
       end
+      # wait for ajax completion
       wait_for_js_ready
       within ".index.gws-notices" do
         expect(page).to have_css(".list-item", text: item1.name)
@@ -94,8 +92,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: item11.name)
         expect(page).to have_css(".list-item", text: item12.name)
       end
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
   end
 
@@ -148,14 +144,12 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(".list-item", text: item11.name)
           expect(page).to have_no_css(".list-item", text: item12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
       end
 
       within ".portlets .gws-notices" do
         click_on I18n.t("ss.links.more")
       end
+      # wait for ajax completion
       wait_for_js_ready
       within ".index.gws-notices" do
         expect(page).to have_css(".list-item", text: item1.name)
@@ -171,8 +165,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".list-item", text: item11.name)
         expect(page).to have_no_css(".list-item", text: item12.name)
       end
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
   end
 
@@ -225,14 +217,12 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: item11.name)
           expect(page).to have_css(".list-item", text: item12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
       end
 
       within ".portlets .gws-notices" do
         click_on I18n.t("ss.links.more")
       end
+      # wait for ajax completion
       wait_for_js_ready
       within ".index.gws-notices" do
         expect(page).to have_no_css(".list-item", text: item1.name)
@@ -248,8 +238,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: item11.name)
         expect(page).to have_css(".list-item", text: item12.name)
       end
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
   end
 end

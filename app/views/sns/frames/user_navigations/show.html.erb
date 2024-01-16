@@ -1,0 +1,47 @@
+<% return unless cur_user %>
+
+<ul class="user-navigation-dropdown-menu-item-list">
+  <% if ss_mode == :gws %>
+    <%= render "group_switch", local_assigns %>
+  <% end %>
+
+  <% if ss_mode == :gws %>
+    <li class="user-navigation-dropdown-menu-item"><%= link_to t("sns.profile"), gws_user_profile_path(site: gws_site), class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <% else %>
+    <li class="user-navigation-dropdown-menu-item"><%= link_to t("sns.profile"), sns_cur_user_profile_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <% end %>
+
+  <% if ss_mode == :gws %>
+    <li class="user-navigation-dropdown-menu-item"><%= link_to t("job.task_manager"), gws_job_user_main_path(site: gws_site), class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <% else %>
+    <li class="user-navigation-dropdown-menu-item"><%= link_to t("job.task_manager"), job_sns_logs_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <% end %>
+
+  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+
+  <li class="user-navigation-dropdown-menu-item">
+    <div class="text-zoom">
+      <label><%= t('ss.text_zoom') %></label>
+      <div class="text-zoom-button-set">
+        <button type="button" class="btn zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></button>
+        <button type="button" class="btn zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></button>
+        <button type="button" class="btn zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></button>
+      </div>
+    </div>
+  </li>
+  <% if ss_mode == :gws && gws_site.menu_contrast_visible? %>
+    <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+    <li class="user-navigation-dropdown-menu-item">
+      <%= link_to gws_frames_user_navigation_contrast_path(site: gws_site), class: "user-navigation-dropdown-menu-link" do %>
+        <%= gws_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
+        <span class="caret material-icons-outlined">keyboard_arrow_right</span>
+      <% end %>
+    </li>
+  <% end %>
+  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t('ss.logout'), logout_path, class: "logout user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+</ul>
+
+<%= jquery do %>
+  SS_TextZoom.render();
+<% end %>

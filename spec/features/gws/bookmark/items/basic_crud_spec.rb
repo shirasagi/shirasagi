@@ -21,10 +21,6 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
     it "#index" do
       visit index_path
 
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       expect(current_path).not_to eq sns_login_path
       expect(folder.name).to eq ::Gws::Bookmark::Folder.default_root_name
 
@@ -36,10 +32,6 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
     it "#new" do
       visit index_path
 
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         fill_in 'item[name]', with: name
@@ -49,7 +41,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
         fill_in 'item[order]', with: order
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-basic" do
         expect(page).to have_css("dd", text: name)
@@ -77,7 +69,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
         fill_in 'item[url]', with: url
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-basic" do
         expect(page).to have_css("dd", text: name)
@@ -91,11 +83,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 end
