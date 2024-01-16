@@ -2526,17 +2526,19 @@ div.index {
       @include mb { font-size: $px14; }
     }
     &.seen {
-      a.title:link {
+      a.title {
         color: #d00;
       }
-      a.title:visited, .from a {
-        color: #200;
+      .from a {
+        color: #444;
       }
     }
     &.unseen {
-      .title, .from a {
+      .title {
         color: #f00;
-        font-weight: bold;
+      }
+      .from a {
+        color: #444;
       }
     }
     .title--disabled {
