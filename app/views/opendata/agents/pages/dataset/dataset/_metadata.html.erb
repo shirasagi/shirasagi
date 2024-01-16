@@ -134,10 +134,6 @@ SS.renderClipboardCopy();
     <div class="info-detail">
       <dl class="info-list">
         <% if rs.respond_to?(:downloaded_count) %>
-          <div class="download-count">
-            <span class="label"><%= rs.t :downloaded_count %></span>
-            <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
-          </div>
           <dt class="info-list__title"><%= rs.t :downloaded_count %></dt>
           <dd class="info-list__content"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
         <% end %>
