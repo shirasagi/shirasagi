@@ -3367,6 +3367,9 @@ form .CodeMirror {
   @include background(linear-gradient(top, #ddd, #eee));
   line-height: 20px;
 
+  span {
+    display: block;
+  }
   .label {
     position: absolute;
     width: 100%;
