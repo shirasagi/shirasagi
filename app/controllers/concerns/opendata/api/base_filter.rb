@@ -1,7 +1,39 @@
-module Opendata::Api
+module Opendata::Api::BaseFilter
+  extend ActiveSupport::Concern
+
+  private
+
+  def fix_params
+    { cur_site: @cur_site }
+  end
+
+  def permit_fields
+    @model.permitted_fields
+  end
+
+  def get_params
+    params.permit(permit_fields).merge(fix_params)
+  rescue
+    {}
+  end
+
   def check_num(num, messages)
-    num = Integer(num) rescue -1
-    messages << "Must be a natural number" if num < 0
+    if num
+      if integer?(num)
+        if num.to_i < 0
+          messages << "Must be a natural number"
+        end
+      else
+        messages << "Invalid integer"
+      end
+    end
+  end
+
+  def integer?(s)
+    i = Integer(s)
+    check = true
+  rescue
+    check = false
   end
 
   def convert_packages(datasets)

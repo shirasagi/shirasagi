@@ -1,6 +1,5 @@
 module Opendata::Api::PackageShowFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   private
 
