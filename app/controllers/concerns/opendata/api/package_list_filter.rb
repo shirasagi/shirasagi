@@ -5,7 +5,6 @@ module Opendata::Api::PackageListFilter
   private
 
   def package_list_check(limit, offset)
-
     limit_messages = []
     offset_messages = []
 
@@ -37,16 +36,12 @@ module Opendata::Api::PackageListFilter
       render json: {help: help, success: false, error: error} and return
     end
 
-    datasets = Opendata::Dataset.site(@cur_site).and_public.order_by(name: 1)
+    datasets = Opendata::Dataset.site(@cur_site).and_public
     datasets = datasets.skip(offset) if limit && offset
     datasets = datasets.limit(limit) if limit
+    result = datasets.pluck(:uuid)
 
-    package_list = []
-    datasets.each do |dataset|
-      package_list << dataset[:uuid]
-    end
-
-    res = {help: help, success: true, result: package_list}
+    res = { help: help, success: true, result: result }
     render json: res
   end
 end
