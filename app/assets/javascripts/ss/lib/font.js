@@ -5,18 +5,28 @@ this.SS_Font = (function () {
   SS_Font.size = null; //%
 
   SS_Font.render = function () {
-    var vr;
     this.size = parseInt(Cookies.get("ss-font")) || 100;
     if (this.size !== 100) {
       this.set(this.size);
     }
-    vr = $("#ss-medium");
-    vr.html('<a href="#" onclick="return SS_Font.set(100)">' + vr.html() + '</a>');
-    vr = $("#ss-small");
-    vr.html('<a href="#" onclick="return SS_Font.set(false)">' + vr.html() + '</a>');
-    vr = $("#ss-large");
-    return vr.html('<a href="#" onclick="return SS_Font.set(true)">' + vr.html() + '</a>');
+
+    SS_Font.embed($("#ss-medium"), function() { return SS_Font.set(100); });
+    SS_Font.embed($("#ss-small"), function() { return SS_Font.set(false); });
+    SS_Font.embed($("#ss-large"), function() { return SS_Font.set(true); });
   };
+
+  SS_Font.embed = function($elements, callback) {
+    $elements.each(function() {
+      var $el = $(this);
+      SS.justOnce(this, "font", function() {
+        var $anchor = $("<a/>", { href: "#" });
+        $anchor.on("click", callback);
+        $anchor.html($el.html());
+
+        $el.replaceWith($anchor);
+      });
+    });
+  }
 
   SS_Font.set = function (size) {
     if (size === true) {
