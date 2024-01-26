@@ -8,7 +8,7 @@ module Opendata::Addon::Metadata
 
     def import(opts = {})
       import_from_csv
-      # notice_metadata_import if opts[:notice].present?
+      notice_metadata_import if opts[:notice].present?
     end
 
     def destroy_imported_datasets
@@ -114,7 +114,9 @@ module Opendata::Addon::Metadata
     end
 
     def notice_metadata_import
-      Opendata::Mailer.notice_metadata_import_mail(self).deliver_now
+      return if self.try(:notice_users).blank?
+
+      Opendata::Mailer.notice_metadata_import_mail(self, @report).deliver_now
     end
   end
 end

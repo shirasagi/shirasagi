@@ -14,6 +14,10 @@ module Opendata::Metadata::CsvImporter
     @report.save!
 
     imported_dataset_ids = []
+    updated_dataset_ids = []
+    skipped_dataset_ids = []
+    error_dataset_names = []
+    notice_body = []
 
     begin
       Tempfile.create('import_csv') do |tempfile|
@@ -74,8 +78,16 @@ module Opendata::Metadata::CsvImporter
               dataset.metadata_source_url = dataset.metadata_dataset_url
               dataset.state = "public"
 
-              put_log("- dataset : #{dataset.new_record? ? "create" : "update"} #{dataset.name}")
-              dataset.save!
+              if dataset.updated_changed?
+                put_log("- dataset : #{dataset.new_record? ? "create" : "update"} #{dataset.name}")
+                # notice_body << "#{idx + 2}行目 #{dataset.name} : #{dataset.new_record? ? "作成" : "更新"}"
+                updated_dataset_ids << dataset.id
+                dataset.save!
+              else
+                put_log("- dataset : skip #{dataset.name}")
+                # notice_body << "#{idx + 2}行目 #{dataset.name} : --"
+                skipped_dataset_ids << dataset.id
+              end
 
               @report_dataset.set_reports(dataset, attributes, source_url, idx)
 
@@ -133,9 +145,14 @@ module Opendata::Metadata::CsvImporter
                   resource.metadata_file_related_document = csv_row['ファイル_関連ドキュメント']
                   resource.metadata_file_follow_standards = csv_row['ファイル_準拠する標準']
 
-                  put_log("-- resource : #{resource.new_record? ? "create" : "update"} #{resource.name}")
-
-                  resource.save!
+                  if resource.original_updated_changed?
+                    put_log("-- resource : #{resource.new_record? ? "create" : "update"} #{resource.name}")
+                    # notice_body << "#{idx + 2}行目 #{resource.name} : #{resource.new_record? ? "作成" : "更新"}"
+                    resource.save!
+                  else
+                    put_log("-- resource : skip #{resource.name}")
+                    # notice_body << "#{idx + 2}行目 #{resource.name} : --"
+                  end
 
                   imported_resource_ids << resource.id
 
@@ -143,6 +160,8 @@ module Opendata::Metadata::CsvImporter
                 rescue => e
                   message = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
                   put_log(message)
+                  notice_body << "#{idx + 2}行目 #{resource.name} : #{e.message}"
+                  error_dataset_names << dataset.name
 
                   @report_resource.add_error(message)
                 ensure
@@ -164,6 +183,8 @@ module Opendata::Metadata::CsvImporter
             rescue => e
               message = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
               put_log(message)
+              notice_body << "#{idx + 2}行目 #{dataset.name} : #{e.message}"
+              error_dataset_names << dataset.name
 
               @report_dataset.add_error(message)
             ensure
@@ -188,6 +209,26 @@ module Opendata::Metadata::CsvImporter
 
       put_log("- dataset : destroy #{dataset.name}")
       dataset.destroy
+    end
+
+    body = []
+    if error_dataset_names.present?
+      @report.notice_subject = "#{site.name} #{name}【エラー通知】"
+      body << "取り込み時にエラーが発生しました。"
+      body << "下記のエラーを確認し、修正してください。"
+      body << notice_body.join("\n")
+      @report.notice_body = body.join("\n")
+    else
+      @report.notice_subject = "#{site.name} #{name}【更新通知】"
+      body << "#{I18n.l(@report.created, format: :long)}に、CSVの取り込みを実施しました。"
+      if updated_dataset_ids.present?
+        body << "#{updated_dataset_ids.count}件のデータセットを更新しました。"
+      end
+      if skipped_dataset_ids.present?
+        body << "#{skipped_dataset_ids.count}件のデータセットは更新しませんでした。"
+      end
+      # body << notice_body.join("\n")
+      @report.notice_body = body.join("\n")
     end
 
     @report.save!

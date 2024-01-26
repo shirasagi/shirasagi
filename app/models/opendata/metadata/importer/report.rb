@@ -10,6 +10,9 @@ class Opendata::Metadata::Importer
     belongs_to :importer, class_name: 'Opendata::Metadata::Importer'
     has_many :datasets, class_name: 'Opendata::Metadata::Importer::ReportDataset', dependent: :destroy, inverse_of: :report
 
+    field :notice_subject, type: String
+    field :notice_body, type: String
+
     default_scope ->{ order_by created: -1 }
 
     def name
