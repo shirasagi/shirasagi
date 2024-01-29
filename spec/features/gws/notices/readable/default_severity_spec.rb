@@ -15,6 +15,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
     context "default all" do
       it "#index" do
         visit index_path
+        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
 
@@ -32,6 +33,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
+        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
         expect(page).to have_no_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
 
@@ -61,6 +63,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
+        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_no_css(".list-item", text: item2.name)
 

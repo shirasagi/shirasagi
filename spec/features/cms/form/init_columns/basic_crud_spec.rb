@@ -14,9 +14,10 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      wait_for_js_ready
-      click_on I18n.t('ss.links.new')
-      click_on column.name
+      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      within ".cms-dropdown-menu" do
+        click_on column.name
+      end
 
       within 'form#item-form' do
         fill_in 'item[order]', with: 1
@@ -66,9 +67,10 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
     it do
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      wait_for_js_ready
-      click_on I18n.t('ss.links.new')
-      click_on column.name
+      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      within ".cms-dropdown-menu" do
+        click_on column.name
+      end
 
       within 'form#item-form' do
         fill_in 'item[order]', with: 1
@@ -91,9 +93,10 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
     it do
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      wait_for_js_ready
-      click_on I18n.t('ss.links.new')
-      click_on column.name
+      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      within ".cms-dropdown-menu" do
+        click_on column.name
+      end
 
       within 'form#item-form' do
         fill_in 'item[order]', with: 1

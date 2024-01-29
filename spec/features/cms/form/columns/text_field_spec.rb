@@ -14,9 +14,10 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_for_js_ready
-      click_on I18n.t('ss.links.new')
-      click_on I18n.t('cms.columns.cms/text_field')
+      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      within ".cms-dropdown-menu" do
+        click_on I18n.t('cms.columns.cms/text_field')
+      end
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
@@ -70,9 +71,10 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_for_js_ready
-      click_on I18n.t('ss.links.new')
-      click_on I18n.t('cms.columns.cms/text_field')
+      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      within ".cms-dropdown-menu" do
+        click_on I18n.t('cms.columns.cms/text_field')
+      end
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
@@ -126,9 +128,10 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_for_js_ready
-      click_on I18n.t('ss.links.new')
-      click_on I18n.t('cms.columns.cms/text_field')
+      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      within ".cms-dropdown-menu" do
+        click_on I18n.t('cms.columns.cms/text_field')
+      end
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
