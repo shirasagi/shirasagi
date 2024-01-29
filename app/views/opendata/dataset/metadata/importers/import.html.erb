@@ -4,6 +4,16 @@
   <section class="main-box">
     <header><h2><%= t("opendata.dataset") %><%= t("ss.import") %></h2></header>
 
+    <dl class="see">
+      <dt><%= t('mongoid.models.ss/notification') %></dt>
+      <dd>
+        <label>
+          <%= check_box_tag "#{f.object_name}[notice]", true, params.dig(:item, :notice) %>
+          <%= t('opendata.notice_metadata_import') %>
+        </label>
+      </dd>
+    </dl>
+
     <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
       <dl class="see">
         <dt><%= t("job.main") %></dt>

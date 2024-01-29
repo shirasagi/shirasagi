@@ -14,6 +14,7 @@ ja:
     harvest: ハーベスト
     poster: 投稿
     metadata: メタデータ
+    notice_metadata_import: 取込処理結果をメールで通知する
     ckan:
       group: CKANグループ
       organization: CKAN組織

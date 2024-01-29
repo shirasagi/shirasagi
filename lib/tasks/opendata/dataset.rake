@@ -104,7 +104,7 @@ namespace :opendata do
       ::Tasks::Cms.each_sites do |site|
         ::Opendata::Metadata::ImportDatasetsJob.bind(site_id: site.id).perform_now(
           importer_id: ENV['importer'],
-          notice: true
+          notice: ENV['notice']
         )
       end
     end

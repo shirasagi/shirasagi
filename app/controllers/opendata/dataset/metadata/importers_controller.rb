@@ -25,14 +25,16 @@ class Opendata::Dataset::Metadata::ImportersController < ApplicationController
   def import
     return if request.get? || request.head?
 
-    Opendata::Metadata::ImportDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(importer_id: @item.id)
+    Opendata::Metadata::ImportDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).
+      perform_later(importer_id: @item.id, notice: params.dig(:item, :notice))
     flash.now[:notice] = I18n.t("opendata.errors.messages.import_started")
   end
 
   def destroy_datasets
     return if request.get? || request.head?
 
-    Opendata::Metadata::DestroyDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(@item.id)
+    Opendata::Metadata::DestroyDatasetsJob.bind(site_id: @cur_site, node_id: @cur_node).
+      perform_later(@item.id)
     flash.now[:notice] = I18n.t("opendata.errors.messages.destroy_started")
   end
 end
