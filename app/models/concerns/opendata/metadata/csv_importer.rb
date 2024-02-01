@@ -212,11 +212,16 @@ module Opendata::Metadata::CsvImporter
     end
 
     body = []
+    url = ::File.join(
+      site.mypage_full_url,
+      Rails.application.routes.url_helpers.opendata_metadata_importer_path(site: site.id, cid: node.id, id: id)
+    )
     if error_dataset_names.present?
       @report.notice_subject = "#{site.name} #{name}【エラー通知】"
       body << "取り込み時にエラーが発生しました。"
       body << "下記のエラーを確認し、修正してください。"
       body << notice_body.join("\n")
+      body << url
       @report.notice_body = body.join("\n")
     else
       @report.notice_subject = "#{site.name} #{name}【更新通知】"
@@ -228,6 +233,7 @@ module Opendata::Metadata::CsvImporter
         body << "#{skipped_dataset_ids.count}件のデータセットは更新しませんでした。"
       end
       # body << notice_body.join("\n")
+      body << url
       @report.notice_body = body.join("\n")
     end
 
