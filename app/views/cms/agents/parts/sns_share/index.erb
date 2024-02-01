@@ -19,12 +19,7 @@ url = File.join(@cur_site.full_url, @cur_main_path)
 <% end %>
 
 <% @cur_part.sort_sns_share_services.each do |service| %>
-  <% if service == "fb_like" %>
-    <div class="site fb fb-like">
-      <div class="fb-like" data-href="<%= url %>" data-layout="button_count" data-action="like"></div>
-    </div>
-
-  <% elsif service == "fb_share" %>
+  <% if service == "fb_share" %>
     <div class="site fb fb-share">
       <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count"></div>
     </div>
