@@ -30,7 +30,11 @@ module Opendata::Metadata::CsvImporter
           put_log('[Import] start')
           SS::Csv.foreach_row(tempfile.path, headers: true) do |csv_row, idx|
             begin
-              put_log("- #{idx + 1} #{csv_row['データ名称']}")
+              name = csv_row['データセット_タイトル'].presence || csv_row['データ名称']
+
+              next if name.blank?
+
+              put_log("- #{idx + 1} #{name}")
 
               @report_dataset = @report.new_dataset
 
@@ -45,7 +49,7 @@ module Opendata::Metadata::CsvImporter
               def dataset.set_updated; end
 
               dataset.layout = node.page_layout || node.layout
-              dataset.name = csv_row['データセット_タイトル'].presence || csv_row['データ名称']
+              dataset.name = name
               dataset.text = csv_row['データセット_概要'].presence || csv_row['データ概要']
               dataset.group_ids = group_ids
 
@@ -190,9 +194,9 @@ module Opendata::Metadata::CsvImporter
               notice_body << "#{idx + 2}行目 #{dataset.name} : #{e.message}"
               error_dataset_names << dataset.name
 
-              @report_dataset.add_error(message)
+              @report_dataset.add_error(message) if @report_dataset.present?
             ensure
-              @report_dataset.save!
+              @report_dataset.save! if @report_dataset.present?
             end
           end
           put_log('[Import] finished')
@@ -204,7 +208,7 @@ module Opendata::Metadata::CsvImporter
 
     # destroy unimported datasets
     dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
-      "metadata_host" => source_host
+      "metadata_importer_id" => id
     ).pluck(:id)
     dataset_ids -= imported_dataset_ids
     dataset_ids.each do |id|
