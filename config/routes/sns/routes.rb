@@ -42,7 +42,9 @@ Rails.application.routes.draw do
     end
 
     namespace :frames do
-      resource :user_navigation, only: %i[show]
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+      end
     end
   end
 

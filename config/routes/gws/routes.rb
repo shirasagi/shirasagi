@@ -108,6 +108,7 @@ Rails.application.routes.draw do
         get :detail, on: :member
       end
       namespace :user_navigation do
+        resource :menu, only: %i[show]
         resource :group, only: %i[show update]
         resource :contrast, only: %i[show update]
       end

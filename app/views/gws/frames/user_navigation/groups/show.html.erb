@@ -10,7 +10,7 @@
 
   <ul class="user-navigation-dropdown-menu-item-list">
     <li class="user-navigation-dropdown-menu-item gws-group-switch-menu-header">
-      <%= link_to sns_frames_user_navigation_path(ss_mode: :gws, site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
+      <%= link_to gws_frames_user_navigation_menu_path(ss_mode: :gws, site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
         <span class="material-icons-outlined">keyboard_arrow_left</span>
         <%= t("gws.links.switch_group") %>
       <% end %>

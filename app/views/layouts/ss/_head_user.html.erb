@@ -26,7 +26,19 @@
     </button>
 
     <div class="dropdown-menu user-navigation-dropdown-menu" id="user-main-dropdown">
-      <turbo-frame id="user-navigation-frame" src="<%= sns_frames_user_navigation_path(ss_mode: @ss_mode, site: @cur_site) %>" loading="lazy">
+      <%
+        case @ss_mode
+        when :cms
+          path = cms_frames_user_navigation_menu_path(site: @cur_site)
+        when :gws
+          path = gws_frames_user_navigation_menu_path(site: @cur_site)
+        when :webmail
+          path = webmail_frames_user_navigation_menu_path
+        else
+          path = sns_frames_user_navigation_menu_path
+        end
+      %>
+      <turbo-frame id="user-navigation-frame" src="<%= path %>" loading="lazy">
         <%= loading %>
       </turbo-frame>
     </div>

@@ -1,0 +1,23 @@
+<ul class="user-navigation-dropdown-menu-item-list">
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t("sns.profile"), sns_cur_user_profile_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t("job.task_manager"), job_sns_logs_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+
+  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+
+  <li class="user-navigation-dropdown-menu-item">
+    <div class="text-zoom">
+      <label><%= t('ss.text_zoom') %></label>
+      <div class="text-zoom-button-set">
+        <button type="button" class="btn zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></button>
+        <button type="button" class="btn zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></button>
+        <button type="button" class="btn zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></button>
+      </div>
+    </div>
+  </li>
+  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t('ss.logout'), logout_path, class: "logout user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+</ul>
+
+<%= jquery do %>
+  SS_TextZoom.render();
+<% end %>
