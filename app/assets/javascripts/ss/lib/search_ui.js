@@ -181,19 +181,31 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.render = function () {
-    var self = this;
+  SS_SearchUI.onceRendered = false;
 
-    $(".ajax-selected").each(function () {
-      $(this).on("click", "a.deselect", self.deselect);
-      if ($(this).find("a.deselect").size() === 0) {
-        $(this).hide();
-      }
-    });
+  SS_SearchUI.renderOnce = function() {
+    if (SS_SearchUI.onceRendered) {
+      return;
+    }
 
     $(document)
-      .on("cbox_load", self.onColorBoxLoaded)
-      .on("cbox_cleanup", self.onColorBoxCleanedUp);
+      .on("cbox_load", SS_SearchUI.onColorBoxLoaded)
+      .on("cbox_cleanup", SS_SearchUI.onColorBoxCleanedUp);
+    SS_SearchUI.onceRendered = true;
+  };
+
+  SS_SearchUI.render = function (box) {
+    SS_SearchUI.renderOnce();
+
+    $(box || document).find(".ajax-selected").each(function () {
+      var $this = $(this);
+      SS.justOnce(this, "searchUI", function() {
+        $this.on("click", "a.deselect", SS_SearchUI.deselect);
+        if ($this.find("a.deselect").size() === 0) {
+          $this.hide();
+        }
+      });
+    });
   };
 
   SS_SearchUI.onColorBoxLoaded = function (ev) {

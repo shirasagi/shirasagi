@@ -100,6 +100,28 @@ this.SS = (function () {
   SS.load = function () {
   };
 
+  SS.justOnce = function(element, key, callback, alreadyInitializedCallback) {
+    if (!element.ss) {
+      element.ss = {};
+    }
+
+    var ret = element.ss[key];
+    if (ret) {
+      if (alreadyInitializedCallback) {
+        alreadyInitializedCallback(ret);
+      }
+      return ret;
+    }
+
+    ret = callback();
+    if (!ret) {
+      ret = true;
+    }
+
+    element.ss[key] = ret;
+    return ret;
+  };
+
   SS.render = function (box) {
     if (box == null) {
       box = null;
