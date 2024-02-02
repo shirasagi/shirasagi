@@ -55,18 +55,6 @@ $(".categories a[data-class=other]").on("click", function () {
   return false;
 });
 
-//preview
-$("a.content").colorbox({
-  fixed: true,
-  width: "90%",
-  height: "90%",
-  onComplete: function () {
-    if (window.colorbox_onComplete) {
-      window.colorbox_onComplete();
-    }
-  }
-});
-
 SS.renderClipboardCopy();
 
 <% end %>
@@ -165,7 +153,7 @@ SS.renderClipboardCopy();
           <% end %>
           <% if rs.metadata_file_access_url.present? %>
             <div class="content-wrap">
-              <%= link_to('掲載ページはこちら', rs.metadata_file_access_url, class: "content cboxElement noicon", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+              <%= link_to('掲載ページはこちら', rs.metadata_file_access_url, class: "content noicon", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
             </div>
           <% end %>
           <% if rs.metadata_file_download_url.present? %>

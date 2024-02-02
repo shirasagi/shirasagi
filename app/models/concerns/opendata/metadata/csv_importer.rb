@@ -13,6 +13,9 @@ module Opendata::Metadata::CsvImporter
     @report = Opendata::Metadata::Importer::Report.new(cur_site: site, importer: self)
     @report.save!
 
+    opts = {}
+    opts[:http_basic_authentication] = [basicauth_username, basicauth_password] if basicauth_enabled?
+
     imported_dataset_ids = []
     updated_dataset_ids = []
     skipped_dataset_ids = []
@@ -21,7 +24,7 @@ module Opendata::Metadata::CsvImporter
 
     begin
       Tempfile.create('import_csv') do |tempfile|
-        URI.parse(source_url).open do |res|
+        ::URI.open(source_url, opts) do |res|
           IO.copy_stream(res, tempfile.path)
           put_log('[Download] ' + tempfile.size.to_s(:delimited) + ' bytes')
           put_log('[Import] start')
@@ -115,19 +118,20 @@ module Opendata::Metadata::CsvImporter
                   format = ::File.extname(url.to_s).delete(".").sub(/\?.*$/, "").downcase if format.blank?
                   format = "html" if format.blank?
 
-                  # resource.source_url = url
+                  resource.source_url = url
                   resource.name = csv_row['ファイル_タイトル'].presence || filename
                   resource.text = csv_row['ファイル_説明']
-                  # resource.filename = filename
+                  resource.filename = filename
                   resource.format = format
                   resource.license = license
-                  resource.original_url = url
-                  resource.original_updated = Time.zone.parse(csv_row['ファイル_最終更新日']) rescue dataset.updated
-                  resource.crawl_update = 'auto'
+                  # resource.original_url = url
+                  # resource.original_updated = Time.zone.parse(csv_row['ファイル_最終更新日']) rescue dataset.updated
+                  # resource.crawl_update = 'auto'
 
                   def resource.set_updated; end
 
-                  resource.updated = resource.original_updated
+                  resource.updated = Time.zone.parse(csv_row['ファイル_最終更新日']) rescue dataset.updated
+                  # resource.updated = resource.original_updated
                   resource.created = Time.zone.parse(csv_row['ファイル_公開日']) rescue dataset.created
 
                   resource.metadata_importer = self
@@ -145,7 +149,7 @@ module Opendata::Metadata::CsvImporter
                   resource.metadata_file_related_document = csv_row['ファイル_関連ドキュメント']
                   resource.metadata_file_follow_standards = csv_row['ファイル_準拠する標準']
 
-                  if resource.original_updated_changed?
+                  if resource.updated_changed?
                     put_log("-- resource : #{resource.new_record? ? "create" : "update"} #{resource.name}")
                     # notice_body << "#{idx + 2}行目 #{resource.name} : #{resource.new_record? ? "作成" : "更新"}"
                     resource.save!

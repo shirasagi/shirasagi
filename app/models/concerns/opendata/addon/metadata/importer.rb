@@ -38,7 +38,7 @@ module Opendata::Addon::Metadata
       @_license_from_metadata_uid ||= {}
       return @_license_from_metadata_uid[uid] if @_license_from_metadata_uid[uid]
 
-      @_license_from_metadata_uid[uid] = ::Opendata::License.site(site).in(metadata_uid: /#{::Regexp.escape(uid)}/).first
+      @_license_from_metadata_uid[uid] = ::Opendata::License.site(site).in(metadata_uid: uid).first
       @_license_from_metadata_uid[uid]
     end
 
