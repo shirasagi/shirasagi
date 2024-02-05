@@ -45,6 +45,7 @@ module Opendata::Addon::Metadata::Dataset
     before_validation :set_metadata_text_index, if: -> { metadata_imported.present? }
 
     validates :uuid, presence: true
+    validate :validate_metadata_dataset
   end
 
   def reset_metadata_attributes
@@ -103,5 +104,19 @@ module Opendata::Addon::Metadata::Dataset
     texts += resources.pluck(:metadata_text_index)
 
     self.metadata_text_index = texts.uniq.join(" ")
+  end
+
+  private
+
+  def validate_metadata_dataset
+    return if metadata_importer_id.blank?
+    return if metadata_dataset_id.blank?
+    return if self.class.
+      where(metadata_importer_id: metadata_importer_id, name: name).
+      ne(metadata_dataset_id: metadata_dataset_id).
+      exists(metadata_dataset_id: true).
+      blank?
+
+    errors.add :name, :duplicate
   end
 end

@@ -54,7 +54,7 @@
   <tbody>
     <% @items.each_with_index do |dataset, idx| %>
       <tr data-id="<% dataset.id %>">
-        <td><%= dataset.order + 1 %></td>
+        <td><%= dataset.order + 1 rescue nil %></td>
         <td>
           <%= link_to dataset.name, { action: :dataset, dataset_id: dataset.id } %>
         </td>

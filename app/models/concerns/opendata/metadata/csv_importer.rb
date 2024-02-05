@@ -20,6 +20,7 @@ module Opendata::Metadata::CsvImporter
     updated_dataset_ids = []
     skipped_dataset_ids = []
     error_dataset_names = []
+    imported_resource_ids = []
     notice_body = []
 
     begin
@@ -30,7 +31,7 @@ module Opendata::Metadata::CsvImporter
           put_log('[Import] start')
           SS::Csv.foreach_row(tempfile.path, headers: true) do |csv_row, idx|
             begin
-              name = csv_row['データセット_タイトル'].presence || csv_row['データ名称']
+              name = (csv_row['データセット_タイトル'].presence || csv_row['データ名称']).to_s.gsub(/\R|\s|\u00A0|　/, '')
 
               next if name.blank?
 
@@ -40,8 +41,16 @@ module Opendata::Metadata::CsvImporter
 
               attributes = JSON.parse(csv_row.to_h.to_json)
 
-              metadata_dataset_id = csv_row['データセット_ID'].presence || csv_row['NO']
-              dataset = ::Opendata::Dataset.node(node).where(metadata_dataset_id: metadata_dataset_id).first
+              metadata_dataset_id = (csv_row['データセット_ID'].presence || csv_row['NO']).to_s.gsub(/\R|\s|\u00A0|　/, '')
+              if metadata_dataset_id.present?
+                dataset = ::Opendata::Dataset.node(node).
+                  where(metadata_importer_id: id, metadata_dataset_id: metadata_dataset_id).
+                  first
+              else
+                dataset = ::Opendata::Dataset.node(node).
+                  where(metadata_importer_id: id, name: name).
+                  first
+              end
               dataset ||= ::Opendata::Dataset.new
 
               dataset.cur_site = site
@@ -88,12 +97,12 @@ module Opendata::Metadata::CsvImporter
               if dataset.updated_changed?
                 put_log("- dataset : #{dataset.new_record? ? "create" : "update"} #{dataset.name}")
                 # notice_body << "#{idx + 2}行目 #{dataset.name} : #{dataset.new_record? ? "作成" : "更新"}"
-                updated_dataset_ids << dataset.id
                 dataset.save!
-              else
+                updated_dataset_ids << dataset.id if !updated_dataset_ids.include?(dataset.id)
+              elsif !updated_dataset_ids.include?(dataset.id)
                 put_log("- dataset : skip #{dataset.name}")
                 # notice_body << "#{idx + 2}行目 #{dataset.name} : --"
-                skipped_dataset_ids << dataset.id
+                skipped_dataset_ids << dataset.id if !skipped_dataset_ids.include?(dataset.id)
               end
 
               @report_dataset.set_reports(dataset, attributes, source_url, idx)
@@ -104,7 +113,6 @@ module Opendata::Metadata::CsvImporter
               license = get_license_from_metadata_uid(license_id)
               put_log("could not found license #{license_id}") if license.nil?
 
-              imported_resource_ids = []
               url = csv_row['ファイル_ダウンロードURL']
               if url.present?
                 begin
@@ -177,13 +185,6 @@ module Opendata::Metadata::CsvImporter
                 end
               end
 
-              # destroy unimported resources
-              dataset.resources.each do |resource|
-                next if imported_resource_ids.include?(resource.id)
-                put_log("-- resource : destroy #{resource.name}")
-                resource.destroy
-              end
-
               dataset.metadata_imported ||= Time.zone.now
               set_relation_ids(dataset)
 
@@ -210,13 +211,21 @@ module Opendata::Metadata::CsvImporter
     dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
       "metadata_importer_id" => id
     ).pluck(:id)
-    dataset_ids -= imported_dataset_ids
+    # dataset_ids -= imported_dataset_ids
     dataset_ids.each do |id|
       dataset = ::Opendata::Dataset.find(id) rescue nil
       next unless dataset
 
-      put_log("- dataset : destroy #{dataset.name}")
-      dataset.destroy
+      if imported_dataset_ids.include?(id)
+        dataset.resources.each do |resource|
+          next if imported_resource_ids.include?(resource.id)
+          put_log("-- resource : destroy #{resource.name}")
+          resource.destroy
+        end
+      else
+        put_log("- dataset : destroy #{dataset.name}")
+        dataset.destroy
+      end
     end
 
     body = []
