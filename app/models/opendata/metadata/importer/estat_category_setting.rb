@@ -108,7 +108,7 @@ class Opendata::Metadata::Importer
 
       items = []
       id_given_items = {}
-      SS::Csv.foreach_row(in_file, headers: true).each_with_index do |row, idx|
+      SS::Csv.foreach_row(in_file, headers: true) do |row, idx|
         id = row[t(:id).to_s].to_s.strip
         order = row[t(:order).to_s].to_s.strip
         category_name = row[t(:category_name).to_s].to_s.strip
