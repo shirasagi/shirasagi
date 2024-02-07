@@ -4,6 +4,7 @@ ja:
     node: ゴミ品目
     search: ゴミ品目検索
     item: 品目
+    kana: ふりがな
     remark: 出し方・ワンポイント
     category:
       name: 分別区分
@@ -47,7 +48,6 @@ ja:
     addons:
       garbage/body: ゴミ品目
       garbage/additional_info: 追加情報
-      garbage/category: ゴミの分別区分
       garbage/category_setting: ゴミの分別区分
       garbage/k5374/center: 5374連携：センター
       garbage/k5374/description: 5374連携：スタイル設定
@@ -132,6 +132,8 @@ ja:
           #{remark} 出し方・ワンポイントが表示されます。
 
     garbage/node/page:
+      category_ids:
+        - 分別区分を選択します。
       kana:
         - ふりがなを入力します。
       remark:

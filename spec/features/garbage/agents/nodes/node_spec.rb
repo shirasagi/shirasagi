@@ -32,6 +32,7 @@ describe "garbage_agents_nodes_node", type: :feature, dbscope: :example, js: tru
       filename: "search/list/item1",
       layout: layout,
       category_ids: [category1.id],
+      kana: "kana1",
       remark: "remark1"
     )
   end
@@ -42,6 +43,7 @@ describe "garbage_agents_nodes_node", type: :feature, dbscope: :example, js: tru
       filename: "search/list/item2",
       layout: layout,
       category_ids: [category2.id],
+      kana: "kana2",
       remark: "remark2"
     )
   end
@@ -52,6 +54,7 @@ describe "garbage_agents_nodes_node", type: :feature, dbscope: :example, js: tru
       filename: "search/list/item3",
       layout: layout,
       category_ids: [category3.id],
+      kana: "kana3",
       remark: "remark3"
     )
   end
@@ -66,14 +69,17 @@ describe "garbage_agents_nodes_node", type: :feature, dbscope: :example, js: tru
 
       expect(page).to have_css("table.columns td a", text: item1.name)
       expect(page).to have_css("table.columns td", text: category1.name)
+      expect(page).to have_css("table.columns td", text: item1.kana)
       expect(page).to have_css("table.columns td", text: item1.remark)
 
       expect(page).to have_css("table.columns td a", text: item2.name)
       expect(page).to have_css("table.columns td", text: category2.name)
+      expect(page).to have_css("table.columns td", text: item2.kana)
       expect(page).to have_css("table.columns td", text: item2.remark)
 
       expect(page).to have_css("table.columns td a", text: item3.name)
       expect(page).to have_css("table.columns td", text: category3.name)
+      expect(page).to have_css("table.columns td", text: item3.kana)
       expect(page).to have_css("table.columns td", text: item3.remark)
     end
   end
