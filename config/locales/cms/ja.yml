@@ -545,7 +545,6 @@ ja:
         disabled: 本文に含めない
         include: 本文に含める
     sns_share:
-      fb_like: Facebook いいね！
       fb_share: Facebook シェア
       fb_lang: ja_JP
       twitter: Twitter
