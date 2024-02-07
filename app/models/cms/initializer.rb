@@ -123,6 +123,8 @@ module Cms
     Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
     Cms::Role.permission :use_cms_all_contents
+    Cms::Role.permission :use_cms_page_twitter_posts
+    Cms::Role.permission :use_cms_page_line_posts
     Cms::Role.permission :use_other_cms_line_messages, module_name: 'cms/line'
     Cms::Role.permission :use_private_cms_line_messages, module_name: 'cms/line'
     Cms::Role.permission :use_cms_line_deliver_categories, module_name: 'cms/line'

@@ -6,6 +6,9 @@
 %>
 
 <dl class="see mod-ss-node-auto-post-setting">
+  <dt><%= @model.t :node_twitter_poster_state %><%= @model.tt :node_twitter_poster_state %></dt>
+  <dd><%= f.select :node_twitter_poster_state, @item.node_twitter_poster_state_options %></dd>
+
   <dt><%= @model.t :node_twitter_auto_post %><%= @model.tt :node_twitter_auto_post %></dt>
   <dd><%= f.select :node_twitter_auto_post, @item.node_twitter_auto_post_options, include_blank: true %></dd>
 

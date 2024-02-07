@@ -6,7 +6,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
   let(:node) { create :cms_node_page }
   let(:item) { create :cms_page, cur_node: node, state: "closed" }
 
-  let(:edit_path) { edit_cms_page_path site.id, node, item }
+  let(:edit_path) { edit_node_page_path site.id, node, item }
   let(:index_path) { cms_sns_post_logs_path site.id }
 
   let(:line_text_message) { unique_id }
@@ -15,12 +15,14 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
     before do
       site.line_channel_secret = unique_id
       site.line_channel_access_token = unique_id
+      site.line_poster_state = "enabled"
 
       site.twitter_username = unique_id
       site.twitter_consumer_key = unique_id
       site.twitter_consumer_secret = unique_id
       site.twitter_access_token = unique_id
       site.twitter_access_token_secret = unique_id
+      site.twitter_poster_state = "enabled"
       site.save!
 
       login_cms_user
