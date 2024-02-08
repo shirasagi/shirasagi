@@ -11,6 +11,16 @@
   <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
   <dd><%= f.text_area :remark %></dd>
 
+  <dt><%= @model.t :display_remarks %><%= @model.tt :display_remarks %></dt>
+  <dd>
+    <% t("key_visual.options.display_remarks").each do |k, v| %>
+      <label>
+        <%= check_box_tag "#{f.object_name}[display_remarks][]", k, @item.display_remarks.include?(k.to_s) %>
+        <%= v %>
+      </label>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 </dl>

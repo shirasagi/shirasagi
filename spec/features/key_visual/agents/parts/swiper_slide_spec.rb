@@ -145,14 +145,16 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
       end
     end
 
-    context "when remark given" do
+    context "when display remark" do
       let!(:part) { create :key_visual_part_swiper_slide, filename: "#{folder_path}/#{unique_id}" }
 
       before do
         item1.remark = unique_id
+        item1.display_remark = %w(remark)
         item1.update
 
         item2.remark = unique_id
+        item2.display_remark = %w(title)
         item2.update
       end
 
@@ -163,7 +165,7 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
         within ".swiper-slide-active[data-ss-page-id='#{item1.id}']" do
           within ".slide-remark" do
-            expect(page).to have_css(".title", text: item1.name)
+            expect(page).to have_no_css(".title", text: item1.name)
             expect(page).to have_css(".remark", text: item1.remark)
           end
         end
@@ -174,7 +176,7 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         within ".swiper-slide-active[data-ss-page-id='#{item2.id}']" do
           within ".slide-remark" do
             expect(page).to have_css(".title", text: item2.name)
-            expect(page).to have_css(".remark", text: item2.remark)
+            expect(page).to have_no_css(".remark", text: item2.remark)
           end
         end
 
