@@ -18,6 +18,9 @@ ja:
         none: なし
         disc: ディスク
         number: スライド番号
+        bullets: 黒丸
+        fraction: スライド番号（分数）
+        progressbar: プログレスバー
 
   modules:
     key_visual: キービジュアル
@@ -65,6 +68,7 @@ ja:
         kv_pagination_style: ページネーション
         kv_thumbnail: サムネイル画像
         kv_thumbnail_count: サムネイル数
+        kv_scrollbar: スクロールバー
 
   tooltip:
     key_visual/image:
@@ -108,3 +112,5 @@ ja:
         - サムネイル画像を表示するかどうを選択します。
       kv_thumbnail_count:
         - サムネイル画像を表示する場合、一画面に表示するサムネイル数を設定します。既定値は 4 です。
+      kv_scrollbar:
+        - スクロールバーを表示するかどうを選択します。

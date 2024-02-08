@@ -32,15 +32,17 @@ module KeyVisual::Addon::SwiperSetting
     field :kv_pagination_style, type: String
     field :kv_thumbnail, type: String
     field :kv_thumbnail_count, type: Integer
+    field :kv_scrollbar, type: String
 
     permit_params :link_target, :kv_speed, :kv_space, :kv_autoplay, :kv_pause, :kv_navigation, :kv_pagination_style
-    permit_params :kv_thumbnail, :kv_thumbnail_count
+    permit_params :kv_thumbnail, :kv_thumbnail_count, :kv_scrollbar
 
     validates :link_target, inclusion: { in: %w(_blank), allow_blank: true }
     validates :kv_autoplay, inclusion: { in: %w(disabled enabled started), allow_blank: true }
     validates :kv_navigation, inclusion: { in: %w(hide show), allow_blank: true }
-    validates :kv_pagination_style, inclusion: { in: %w(none disc number), allow_blank: true }
+    validates :kv_pagination_style, inclusion: { in: %w(none disc number bullets fraction progressbar), allow_blank: true }
     validates :kv_thumbnail, inclusion: { in: %w(hide show), allow_blank: true }
+    validates :kv_scrollbar, inclusion: { in: %w(hide show), allow_blank: true }
   end
 
   def link_target_options
@@ -63,7 +65,13 @@ module KeyVisual::Addon::SwiperSetting
   end
 
   def kv_pagination_style_options
-    %w(none disc number).map do |v|
+    %w(none bullets fraction progressbar number).map do |v|
+      [ I18n.t("key_visual.options.pagination_style.#{v}"), v ]
+    end
+  end
+
+  def kv_pagination_style_private_options
+    %w(disc).map do |v|
       [ I18n.t("key_visual.options.pagination_style.#{v}"), v ]
     end
   end
@@ -74,15 +82,62 @@ module KeyVisual::Addon::SwiperSetting
     end
   end
 
-  def js_option
-    option = {
-      speed: kv_speed || DEFAULT_KV_SPEED, space: kv_space, autoplay: kv_autoplay, pause: kv_pause || DEFAULT_KV_PAUSE,
-      navigation: kv_navigation, pagination_style: kv_pagination_style,
-      thumbnail: kv_thumbnail, thumbnail_count: kv_thumbnail_count || DEFAULT_KV_THUMBNAIL_COUNT
-    }
-    if Rails.env.test?
-      option[:test] = true
+  def kv_scrollbar_options
+    %w(hide show).map do |v|
+      [ I18n.t("ss.options.state.#{v}"), v ]
     end
-    option
+  end
+
+  def kv_pagination_enabled?
+    kv_pagination_style.present? && %w(disc bullets fraction progressbar number).include?(kv_pagination_style)
+  end
+
+  def js_option
+    swiper_params = { speed: kv_speed.presence || KeyVisual::Addon::SwiperSetting::DEFAULT_KV_SPEED }
+    if kv_space.present?
+      swiper_params["spaceBetween"] = kv_space.presence
+    end
+
+    if kv_navigation == "show"
+      swiper_params[:navigation] = {
+        enabled: true, "nextEl" => ".ss-swiper-slide-button-next", "prevEl" => ".ss-swiper-slide-button-prev"
+      }
+    end
+    if kv_pagination_enabled?
+      pagination_params = { enabled: true, clickable: true, el: ".ss-swiper-slide-pagination" }
+      case kv_pagination_style
+      when "disc"
+        # 過去との互換性
+        pagination_params[:type] = "bullets"
+      # when "number"
+      #   pagination_params[:type] = "custom"
+      else
+        pagination_params[:type] = kv_pagination_style
+      end
+      swiper_params[:pagination] = pagination_params
+    end
+    if kv_thumbnail == "show"
+      swiper_params[:thumbs] = { swiper: ".ss-swiper-slide-thumbnail" }
+    end
+    if kv_autoplay == "enabled" || kv_autoplay == "started"
+      swiper_params[:autoplay] = {
+        delay: kv_pause.presence || KeyVisual::Addon::SwiperSetting::DEFAULT_KV_PAUSE,
+        "disableOnInteraction" => false
+      }
+    end
+    if kv_scrollbar == "show"
+      swiper_params[:scrollbar] = { enabled: true }
+    end
+
+    swiper_params[:a11y] = {
+      enabled: true,
+      "firstSlideMessage" => I18n.t("ss.swiper_slide.first_slide_message"),
+      "lastSlideMessage" => I18n.t("ss.swiper_slide.last_slide_message"),
+      "prevSlideMessage" => I18n.t("ss.swiper_slide.prev_slide_message"),
+      "nextSlideMessage" => I18n.t("ss.swiper_slide.next_slide_message"),
+      "paginationBulletMessage" => I18n.t("ss.swiper_slide.pagination_bullet_message")
+    }
+
+    swiper_params
   end
 end

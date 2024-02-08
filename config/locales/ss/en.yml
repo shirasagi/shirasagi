@@ -576,6 +576,13 @@ en:
         head: Page cannot be found
         body: "The page you are looking for cannot be found.<br>It may be temporarily unavailable, or the URL may have been changed or deleted."
 
+    swiper_slide:
+      first_slide_message: "This is the first slide"
+      last_slide_message: "This is the last slide"
+      prev_slide_message: "Previous slide"
+      next_slide_message: "Next slide"
+      pagination_bullet_message: "Go to slide {{index}}"
+
   modules:
     addons:
       ss/body: Body
