@@ -1,0 +1,34 @@
+<ul class="user-navigation-dropdown-menu-item-list">
+  <%= render "group_switch", local_assigns %>
+
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t("sns.profile"), gws_user_profile_path(site: @cur_site), class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t("job.task_manager"), gws_job_user_main_path(site: @cur_site), class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+
+  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+
+  <li class="user-navigation-dropdown-menu-item">
+    <div class="text-zoom">
+      <label><%= t('ss.text_zoom') %></label>
+      <div class="text-zoom-button-set">
+        <button type="button" class="btn zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></button>
+        <button type="button" class="btn zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></button>
+        <button type="button" class="btn zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></button>
+      </div>
+    </div>
+  </li>
+  <% if @cur_site.menu_contrast_visible? %>
+    <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+    <li class="user-navigation-dropdown-menu-item">
+      <%= link_to gws_frames_user_navigation_contrast_path(site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
+        <%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
+        <span class="caret material-icons-outlined">keyboard_arrow_right</span>
+      <% end %>
+    </li>
+  <% end %>
+  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+  <li class="user-navigation-dropdown-menu-item"><%= link_to t('ss.logout'), logout_path, class: "logout user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+</ul>
+
+<%= jquery do %>
+  SS_TextZoom.render();
+<% end %>

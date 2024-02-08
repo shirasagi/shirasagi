@@ -14,84 +14,33 @@
     <%= render "layouts/ss/head_user_base_notice", local_assigns %>
   <% end %>
 
-  <div class="dropdown dropdown-toggle" data-ref="#user-main-dropdown">
-    <h2>
-      <% if @cur_group %>
-        <span class="group"><%= @cur_group.trailing_name %></span>
-      <% end %>
-      <span class="name"><%= @cur_user.name %></span>
-    </h2>
-    <ul class="dropdown-menu" id="user-main-dropdown">
-      <% if @ss_mode == :gws %>
-        <%= render "layouts/ss/head_user_dropdown_group_switch", local_assigns %>
-      <% end %>
-      <% @account_menu.to_a.each do |link_params| %>
-        <li><%= link_to *link_params %></li>
-      <% end %>
-
-      <% if @ss_mode == :gws %>
-        <li><%= link_to t("sns.profile"), gws_user_profile_path %></li>
-      <% else %>
-        <li><%= link_to t("sns.profile"), sns_cur_user_profile_path %></li>
-      <% end %>
-
-      <% if @ss_mode == :gws %>
-        <li><%= link_to t("job.task_manager"), gws_job_user_main_path %></li>
-      <% else %>
-        <li><%= link_to t("job.task_manager"), job_sns_logs_path %></li>
-      <% end %>
-
-      <li>
-        <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
-          <label><%= t('ss.text_zoom') %></label>
-          <span class="wrap">
-              <span class="zoom-btn zoom-out"><%= t('ss.options.text_zoom.zoom_out') %></span><span class="zoom-btn zoom-reset"><%= t('ss.options.text_zoom.reset') %></span><span class="zoom-btn zoom-in"><%= t('ss.options.text_zoom.zoom_in') %></span>
-            </span>
-        </div>
-      </li>
-      <% if @ss_mode == :gws && @cur_site.menu_contrast_visible? %>
-        <li>
-          <div class="gws-contrast cascade-menu" data-ref="#user-contrast-menu">
-            <label><%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %></label>
-            <span class="caret"><i class="material-icons">&#xE315;</i></span>
-          </div>
-        </li>
-      <% end %>
-      <li><%= link_to t('ss.logout'), (@logout_path || sns_logout_path), class: 'logout' %></li>
-    </ul>
-    <% if @ss_mode == :gws && @cur_site.menu_contrast_visible? %>
-      <ul id="user-contrast-menu" class="dropdown-menu cascade-sub-menu">
-        <li class="user-contrast-menu-header">
-          <a href="#user-main-dropdown" class="cascade-back">
-            <i class="material-icons caret">&#xE314;</i><%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
-          </a>
-        </li>
-        <li>
-          <div class="gws-contrast-loading">
-            <%= ApplicationController.helpers.loading %>
-          </div>
-        </li>
-      </ul>
-      <%= jquery do %>
-        var contrast = new Gws_Contrast({
-          siteId: <%== @cur_site.id.to_json %>,
-          url: <%== gws_apis_contrasts_path(format: 'json').to_json %>,
-          defaultContrast: <%== t('gws.default_contrast').to_json %>,
-          notice: <%== t('gws.notice.contrast_changed', name: ':name').to_json %>,
-          loadError: <%== t('mongoid.errors.models.gws/contrast.load_error').to_json %>,
-          noContrasts: <%== t('mongoid.errors.models.gws/contrast.no_contrasts').to_json %>
-        });
-
-        <% if cookies["gws-contrast-#{@cur_site.id}"].present? %>
-          <% contrast = Gws::Contrast.site(@cur_site).and_public.find(cookies["gws-contrast-#{@cur_site.id}"]) rescue nil %>
-          <% if contrast.present? %>
-            contrast.changeContrast(<%== contrast.text_color.to_json %>, <%== contrast.color.to_json %>);
-          <% end %>
+  <div class="dropdown dropdown-toggle user-navigation" data-ref="#user-main-dropdown">
+    <button type="button" class="user-navigation-dropdown-toggle">
+      <div class="user-navigation-user-id">
+        <% if @cur_group %>
+          <span class="group-name" title="<%= @cur_group.trailing_name %>"><%= @cur_group.trailing_name %></span>
         <% end %>
-      <% end %>
-    <% end %>
-    <% if @group_switch_cascade_html %>
-      <%= @group_switch_cascade_html %>
-    <% end %>
+        <span class="user-name" title="<%= @cur_user.name %>"><%= @cur_user.name %></span>
+      </div>
+      <div class="material-icons-outlined">expand_more</div>
+    </button>
+
+    <div class="dropdown-menu user-navigation-dropdown-menu" id="user-main-dropdown">
+      <%
+        case @ss_mode
+        when :cms
+          path = cms_frames_user_navigation_menu_path(site: @cur_site)
+        when :gws
+          path = gws_frames_user_navigation_menu_path(site: @cur_site)
+        when :webmail
+          path = webmail_frames_user_navigation_menu_path
+        else
+          path = sns_frames_user_navigation_menu_path
+        end
+      %>
+      <turbo-frame id="user-navigation-frame" src="<%= path %>" loading="lazy">
+        <%= loading %>
+      </turbo-frame>
+    </div>
   </div>
 </nav> <!-- .user -->

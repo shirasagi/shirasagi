@@ -1,0 +1,16 @@
+<%
+  current_active_group = @cur_group || @cur_user.gws_default_group
+  alternative_groups = @cur_user.groups.in_group(@cur_site)
+  if current_active_group
+    alternative_groups = alternative_groups.ne(id: current_active_group.id)
+  end
+  return if alternative_groups.blank?
+%>
+
+<li class="user-navigation-dropdown-menu-item">
+  <%= link_to gws_frames_user_navigation_group_path(site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
+    <%= t("gws.links.switch_group") %>
+    <span class="caret material-icons-outlined">keyboard_arrow_right</span>
+  <% end %>
+</li>
+<li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>

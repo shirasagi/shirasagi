@@ -87,6 +87,12 @@ Rails.application.routes.draw do
     match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
+
+    namespace :frames do
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+      end
+    end
   end
 
   namespace "cms", path: ".s:site/cms" do

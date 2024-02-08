@@ -1,0 +1,35 @@
+<%
+  current_active_group = @cur_group || @cur_user.gws_default_group
+  alternative_groups = @cur_user.groups.in_group(@cur_site)
+  if current_active_group
+    alternative_groups = alternative_groups.ne(id: current_active_group.id)
+  end
+%>
+<%= form_with scope: :item, url: gws_frames_user_navigation_group_path, method: :put, id: "gws-group-switch-form" do |f| %>
+  <%= error_messages_for :item, header_message: false %>
+
+  <ul class="user-navigation-dropdown-menu-item-list">
+    <li class="user-navigation-dropdown-menu-item gws-group-switch-menu-header">
+      <%= link_to gws_frames_user_navigation_menu_path(ss_mode: :gws, site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
+        <span class="material-icons-outlined">keyboard_arrow_left</span>
+        <%= t("gws.links.switch_group") %>
+      <% end %>
+    </li>
+    <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+
+    <li class="user-navigation-dropdown-menu-item">
+      <label class="gws-group-switch-item">
+        <input type="radio" name="item[group_id]" value="<%= @cur_user.gws_default_group.id %>" checked>
+        <span class="gws-group-switch-name"><%= @cur_user.gws_default_group.section_name %></span>
+      </label>
+    </li>
+    <% alternative_groups.reorder(order: 1, name: 1).each do |group| %>
+      <li id="gws-group-switch-menu-<%= group.id %>" class="user-navigation-dropdown-menu-item">
+        <label class="gws-group-switch-item" data-id="<%= group.id %>">
+          <input type="radio" name="item[group_id]" value="<%= group.id %>" data-controller="ss--submit-on-change">
+          <span class="gws-group-switch-name"><%= group.section_name %></span>
+        </label>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

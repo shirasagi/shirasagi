@@ -117,13 +117,12 @@ describe "gws_portal_survey", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(".list-item", text: item11.name)
           expect(page).to have_no_css(".list-item", text: item12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-survey" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index" do
@@ -185,13 +184,12 @@ describe "gws_portal_survey", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: item11.name)
           expect(page).to have_no_css(".list-item", text: item12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-survey" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index" do
@@ -253,13 +251,12 @@ describe "gws_portal_survey", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(".list-item", text: item11.name)
           expect(page).to have_no_css(".list-item", text: item12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-survey" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index" do

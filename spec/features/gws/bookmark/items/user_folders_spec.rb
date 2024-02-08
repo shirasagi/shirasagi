@@ -31,11 +31,6 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       within "#content-navi" do
         expect(page).to have_selector(".is-open a.item-name", count: 2)
         expect(page).to have_link folder1.trailing_name
@@ -50,8 +45,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
         click_on folder2.trailing_name
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
 
       within ".index .list-items" do
         expect(page).to have_selector(".list-item", count: 1)
@@ -65,11 +59,6 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       within "#content-navi" do
         expect(page).to have_selector(".is-open a.item-name", count: 2)
         expect(page).to have_link folder3.trailing_name
@@ -84,8 +73,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
         click_on folder4.trailing_name
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
 
       within ".index .list-items" do
         expect(page).to have_selector(".list-item", count: 1)
@@ -99,11 +87,6 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       within "#content-navi" do
         expect(page).to have_selector(".is-open a.item-name", count: 2)
         expect(page).to have_link folder5.trailing_name
@@ -118,8 +101,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
         click_on folder6.trailing_name
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
 
       within ".index .list-items" do
         expect(page).to have_selector(".list-item", count: 1)

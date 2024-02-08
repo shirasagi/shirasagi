@@ -148,5 +148,11 @@ Rails.application.routes.draw do
       get "addresses" => "addresses#index"
       get "multi_checkboxes" => "multi_checkboxes#index"
     end
+
+    namespace :frames do
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+      end
+    end
   end
 end

@@ -4,6 +4,7 @@
  */
 @import "ss/init";
 @import "board/gws";
+@import "bookmark/gws";
 @import "facility/gws";
 @import "schedule/gws";
 @import "circular/gws";
@@ -190,4 +191,58 @@ a.gws-category-label:hover {
   margin: 15px 0 0;
   padding-top: 20px;
   border-top: 1px solid #eee;
+}
+
+// Locale switch
+.gws-locale-switch {
+  color: $white;
+  a {
+    color: $white;
+    &:hover {
+      color: $white;
+    }
+  }
+}
+
+.user-navigation {
+  // Group Switch
+  .gws-group-switch-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 10px;
+
+    &:hover {
+      background-color: #eee;
+      cursor: pointer;
+    }
+  }
+
+  // グループ名は最大2行
+  .gws-group-switch-name {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  // Contrast
+  .gws-contrast-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 10px;
+
+    &:hover {
+      background-color: #eee;
+      cursor: pointer;
+    }
+  }
+
+  .gws-contrast-name {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
 }

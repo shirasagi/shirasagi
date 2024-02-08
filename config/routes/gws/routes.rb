@@ -96,14 +96,22 @@ Rails.application.routes.draw do
       post "reminders/restore" => "reminders#restore", as: :restore_reminder
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
-      get "contrasts" => "contrasts#index"
       get "desktop_settings" => "desktop_settings#index"
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
-      post "default_group" => "default_groups#update"
       get "cke_config" => "cke_config#index"
 
       resources :files, concerns: [:deletion, :file_api]
+    end
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+        resource :group, only: %i[show update]
+        resource :contrast, only: %i[show update]
+      end
     end
   end
 

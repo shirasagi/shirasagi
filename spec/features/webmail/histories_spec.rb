@@ -9,10 +9,12 @@ describe "webmail_histories", type: :feature, dbscope: :example do
       # Read
       #
       visit webmail_histories_path
-      expect(page).to have_content(webmail_admin.name)
+      expect(page).to have_css(".list-item", text: webmail_admin.name)
 
-      click_on webmail_admin.name
-      expect(page).to have_content(webmail_admin.name)
+      within ".list-items" do
+        click_on webmail_admin.name
+      end
+      expect(page).to have_css("#addon-basic", text: webmail_admin.name)
 
       #
       # Download

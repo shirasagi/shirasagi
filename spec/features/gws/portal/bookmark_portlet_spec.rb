@@ -44,9 +44,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       # visit portal agein
       visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_css('.portlets .portlet-model-bookmark', text: I18n.t('gws/portal.portlets.bookmark.name'))
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
   end
 
@@ -87,9 +84,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
       end
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
 
     it do
@@ -129,9 +123,6 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_no_css(".list-item", text: item2.name)
       end
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
     end
   end
 end

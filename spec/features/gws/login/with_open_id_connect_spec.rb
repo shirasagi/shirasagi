@@ -32,7 +32,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       click_on auth.name
 
       # confirm a user has been logged-in
-      expect(page).to have_css("nav.user .name", text: user.name)
+      expect(page).to have_css("nav.user .user-name", text: user.name)
       # confirm gws_portal is shown to user
       expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws', locale: user.lang))
 
@@ -40,8 +40,8 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       expect(presence.state).to eq "available"
 
       # do logout
-      within "nav.user" do
-        find("span.name").click
+      within ".user-navigation" do
+        wait_event_to_fire("turbo:frame-load") { click_on user.name }
         click_on I18n.t("ss.logout", locale: user.lang)
       end
 

@@ -105,14 +105,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit sns_mypage_path
-        first('.dropdown-toggle').click
-        click_link I18n.t('ss.logout')
+        within ".user-navigation" do
+          wait_event_to_fire("turbo:frame-load") { click_on cms_user.name }
+          within "#user-main-dropdown" do
+            click_link I18n.t('ss.logout')
+          end
+        end
 
         visit cms_preview_path(site: site, path: item.preview_path)
         within "form" do
           fill_in "item[email]", with: Cms::User.first.email
           fill_in "item[password]", with: "pass"
-          click_button I18n.t('ss.login')
+          click_on I18n.t('ss.login')
         end
 
         within "#ss-preview" do

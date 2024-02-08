@@ -1,0 +1,33 @@
+<%= form_with scope: :item, url: gws_frames_user_navigation_contrast_path, method: :put, id: "gws-group-switch-form" do |f| %>
+  <%= error_messages_for :item, header_message: false %>
+  <div id="user-contrast-menu">
+    <ul class="user-navigation-dropdown-menu-item-list">
+      <li class="user-navigation-dropdown-menu-item user-contrast-menu-header">
+        <%= link_to gws_frames_user_navigation_menu_path(ss_mode: :gws, site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
+          <span class="material-icons-outlined">keyboard_arrow_left</span>
+          <%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
+        <% end %>
+      </li>
+      <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+
+      <% if @items.blank? %>
+        <li class="user-navigation-dropdown-menu-item"><%= t('mongoid.errors.models.gws/contrast.no_contrasts') %></li>
+      <% else %>
+        <li class="user-navigation-dropdown-menu-item">
+          <label class="gws-contrast-item" data-id="default">
+            <%= radio_button_tag "item[contrast_id]", "default", current_contrast.blank?, id: nil, data: { controller: "ss--submit-on-change" } %>
+            <span class="gws-contrast-name"><%= t('gws.default_contrast') %></span>
+          </label>
+        </li>
+        <% @items.each do |item| %>
+          <li class="user-navigation-dropdown-menu-item">
+            <label class="gws-contrast-item" data-id="<%= item.id %>" data-color="<%= item.color %>" data-text-color="<%= item.text_color %>">
+              <%= radio_button_tag "item[contrast_id]", item.id, current_contrast && current_contrast.id == item.id, id: nil, data: { controller: "ss--submit-on-change" } %>
+              <span class="gws-contrast-name"><%= item.name %></span>
+            </label>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

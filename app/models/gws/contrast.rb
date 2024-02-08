@@ -42,5 +42,38 @@ class Gws::Contrast
       return all if params.blank? || params[:keyword].blank?
       all.keyword_in params[:keyword], :name
     end
+
+    def restore_from_cookie(cookies, site)
+      cookie_key = "gws-contrast-#{site.id}"
+      return unless cookies[cookie_key].present?
+
+      contrast_setting = JSON.parse(cookies[cookie_key]) rescue nil
+      return unless contrast_setting
+
+      contrast = Gws::Contrast.new(
+        id: contrast_setting["id"],
+        text_color: contrast_setting["text_color"],
+        color: contrast_setting["color"]
+      )
+
+      return if SS::Color.parse(contrast.text_color).blank? || SS::Color.parse(contrast.color).blank?
+
+      contrast
+    end
+
+    def save_in_cookie(cookies, site, contrast)
+      cookie_key = "gws-contrast-#{site.id}"
+      contrast_setting = {
+        id: contrast.id,
+        text_color: contrast.text_color,
+        color: contrast.color
+      }
+      cookies[cookie_key] = contrast_setting.to_json
+    end
+
+    def remove_from_cookie(cookies, site)
+      cookie_key = "gws-contrast-#{site.id}"
+      cookies.delete(cookie_key)
+    end
   end
 end

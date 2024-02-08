@@ -1,0 +1,16 @@
+<%
+  return if @ss_mode != :gws || !@cur_site || !@cur_site.menu_contrast_visible?
+
+  contrast = Gws::Contrast.restore_from_cookie(cookies, @cur_site)
+  return unless contrast
+%>
+<style id="gws-contrast-style">
+  body * {
+    color: <%= contrast.text_color %> !important;
+    border-color: <%= contrast.text_color %> !important;
+    background: <%= contrast.color %> !important;
+  }
+  body *:after {
+    background: <%= contrast.color %> !important;
+  }
+</style>
