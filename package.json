@@ -33,7 +33,7 @@
     "promise-polyfill": "^8.3.0",
     "smooth-dnd": "^0.12.1",
     "sprintf-js": "^1.1.2",
-    "swiper": "4.5.1",
+    "swiper": "11.0.6",
     "tippy.js": "5.2.1"
   },
   "scripts": {
