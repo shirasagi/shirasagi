@@ -9,8 +9,8 @@
 <%= javascript_include_tag "cms/compat" %>
 <%= javascript_include_tag "cms/public" %>
 <%= javascript_include_tag "jplayer" %>
-<% controller.stylesheets.each do |path| %>
-  <%= stylesheet_link_tag path, media: "all" %>
+<% controller.stylesheets.each do |path, options| %>
+  <%= stylesheet_link_tag path, options.key?(:media) ? options : options.merge(media: "all") %>
 <% end %>
 <% controller.javascripts.each do |path, options| %>
   <%= javascript_include_tag path, options || {} %>

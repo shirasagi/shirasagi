@@ -27,18 +27,30 @@ module Service::BaseFilter
     @stylesheets || []
   end
 
-  def stylesheet(path)
+  def stylesheet(path, **options)
     @stylesheets ||= []
-    @stylesheets << path unless @stylesheets.include?(path)
+    return if @stylesheets.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.present?
+      @stylesheets << [ path, options ]
+    else
+      @stylesheets << path
+    end
   end
 
   def javascripts
     @javascripts || []
   end
 
-  def javascript(path)
+  def javascript(path, **options)
     @javascripts ||= []
-    @javascripts << path unless @javascripts.include?(path)
+    return if @javascripts.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.present?
+      @javascripts << [ path, options ]
+    else
+      @javascripts << path
+    end
   end
 
   private
