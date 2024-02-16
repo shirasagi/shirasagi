@@ -4,6 +4,18 @@
   <dt><%= @model.t :event_display %><%= @model.tt :event_display %></dt>
   <dd><%= f.select :event_display, @item.event_display_options %></dd>
 
+  <dt><%= @model.t :event_display_tabs %><%= @model.tt :event_display_tabs %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[event_display_tabs][]", '', id: nil %>
+    <% @item.event_display_options.each do |v, k| %>
+      <% checked = (k.to_s == @item.event_display || @item.event_display_tabs.include?(k.to_s)) %>
+      <label>
+        <%= check_box_tag "#{f.object_name}[event_display_tabs][]", k, checked %>
+        <%= v %>
+      </label>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.ss_lines_field :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
