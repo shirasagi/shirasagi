@@ -21,7 +21,10 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
   describe "#perform" do
     context "generate all" do
-      let(:node) { create :event_node_page, cur_site: cms_site, layout_id: layout.id, event_display: "list" }
+      let(:node) do
+        create :event_node_page, cur_site: cms_site, layout_id: layout.id,
+          event_display: "list", event_display_tabs: %w(list table)
+      end
 
       before do
         described_class.bind(site_id: site.id).perform_now
@@ -69,7 +72,10 @@ describe Cms::Node::GenerateJob, dbscope: :example do
     end
 
     context "generate node with list_only" do
-      let(:node) { create :event_node_page, cur_site: cms_site, layout_id: layout.id, event_display: "list_only" }
+      let(:node) do
+        create :event_node_page, cur_site: cms_site, layout_id: layout.id,
+          event_display: "list", event_display_tabs: %w(list)
+      end
 
       before do
         described_class.bind(site_id: site, node_id: node).perform_now
