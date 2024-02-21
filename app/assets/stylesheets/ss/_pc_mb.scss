@@ -2507,8 +2507,21 @@ table.index {
       }
     }
   }
-  .toggle {
+  tr.toggle {
     cursor: pointer;
+  }
+  td.expandable {
+    padding: 6px 9px;
+    a.toggle {
+      display: inline-block;
+      width: 14px;
+      height: 11px;
+      background-image: url(/assets/img/tree-close.png);
+      background-repeat: no-repeat;
+      &.opened {
+        background-image: url(/assets/img/tree-open.png);
+      }
+    }
   }
   @include mb {
     thead {
