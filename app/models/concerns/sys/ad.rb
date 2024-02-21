@@ -23,8 +23,19 @@ module Sys::Ad
   end
 
   def ad_options
-    options = { autoplay: "started", speed: DEFAULT_SLIDE_SPEED, navigation: "show", pagination_style: "disc" }
-    options[:pause] = time && time > 0 ? time * 1000 : DEFAULT_SLIDE_PAUSE
+    options = {
+      speed: DEFAULT_SLIDE_SPEED, navigation: true, pagination: true, "pagination-clickable" => true
+    }
+    options["autoplay-delay"] = time && time > 0 ? time * 1000 : DEFAULT_SLIDE_PAUSE
+    options["autoplay-disable-on-interaction"] = false
+
+    # a11y
+    options["a11y-first-slide-message"] = I18n.t("ss.swiper_slide.first_slide_message")
+    options["a11y-last-slide-message"] = I18n.t("ss.swiper_slide.last_slide_message")
+    options["a11y-prev-slide-message"] = I18n.t("ss.swiper_slide.prev_slide_message")
+    options["a11y-next-slide-message"] = I18n.t("ss.swiper_slide.next_slide_message")
+    options["a11y-pagination-bullet-message"] = I18n.t("ss.swiper_slide.pagination_bullet_message")
+
     options
   end
 
