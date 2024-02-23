@@ -14,12 +14,12 @@ PORT_LPSPL=8004
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
 
-sudo yum -y groupinstall "Development tools" --setopt=group_package_types=mandatory,default,optional
-sudo yum -y install scl-utils centos-release-scl
-sudo yum -y install \
-  devtoolset-11 \
-  openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
-  wget git ImageMagick ImageMagick-devel
+sudo dnf -y update
+sudo dnf -y groupinstall "Development tools" --setopt=group_package_types=mandatory,default,optional
+sudo dnf -y install epel-release
+sudo dnf config-manager --disable epel
+sudo dnf --enablerepo=epel -y update epel-release
+sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel wget
 
 cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
 [mongodb-org-4.4]
@@ -30,12 +30,12 @@ enabled=0
 gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 EOS
 
-sudo yum install -y --enablerepo=mongodb-org-4.4 mongodb-org
+sudo dnf install -y --enablerepo=mongodb-org-4.4 mongodb-org
 sudo systemctl enable mongod.service --now
 
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf
 
-cat << 'EOF' | sudo tee -a $HOME/.bashrc >> /dev/null
+cat <<'EOF' | sudo tee -a $HOME/.bashrc >>/dev/null
 . "${HOME}/.asdf/asdf.sh"
 . "${HOME}/.asdf/completions/asdf.bash"
 EOF
@@ -46,14 +46,11 @@ asdf plugin add ruby
 asdf install ruby 3.1.3
 asdf global ruby 3.1.3
 
-if [ ! `which ruby` ]; then exit 1; fi
+if [ ! $(which ruby) ]; then exit 1; fi
 asdf plugin add nodejs
-asdf install nodejs 16.19.0
-asdf global nodejs 16.19.0 
+asdf install nodejs 20.5.0
+asdf global nodejs 20.5.0
 npm install -g yarn
-
-# use devtoolset-11
-source /opt/rh/devtoolset-11/enable
 
 git clone -b stable https://github.com/shirasagi/shirasagi
 sudo mkdir -p /var/www
@@ -61,20 +58,19 @@ sudo mv shirasagi $SS_DIR
 
 cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
-for i in $(seq 1 5)
-do
-  bundle install --without development test --path vendor/bundle
-  if [ $? -eq 0 ]; then
-    break
-  fi
-  sleep 5s
+for i in $(seq 1 5); do
+	bundle install --without development test --path vendor/bundle
+	if [ $? -eq 0 ]; then
+		break
+	fi
+	sleep 5s
 done
 
 # change secret
-sed -i "s/dbcae379.*$/`bundle exec rake secret`/" config/secrets.yml
+sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
 
 # enable recommendation
-sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml > config/recommend.yml
+sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
 
 sudo firewall-cmd --add-port=http/tcp --permanent
 #sudo firewall-cmd --add-port=https/tcp --permanent
@@ -93,7 +89,6 @@ wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=d
 wget -O mecab-ruby-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7VUNlczBWVDZJbE0"
 wget https://raw.githubusercontent.com/shirasagi/shirasagi/stable/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
 
-
 cd
 tar xvzf mecab-0.996.tar.gz
 cd mecab-0.996
@@ -106,7 +101,7 @@ sudo make install
 cd
 tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz
 cd mecab-ipadic-2.7.0-20070801
-patch -p1 < ../mecab-ipadic-2.7.0-20070801.patch
+patch -p1 <../mecab-ipadic-2.7.0-20070801.patch
 ./configure --with-charset=UTF-8
 make
 sudo make install
@@ -128,10 +123,16 @@ sudo ldconfig
 #### Voice
 
 cd
+wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz
+
+#### Voice
+
+cd
 wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
-  http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz \
-  http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz \
-  http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
+	wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
+	http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz \
+	http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz \
+	http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
 
 cd
 tar xvzf hts_engine_API-1.08.tar.gz
@@ -175,7 +176,7 @@ sudo ldconfig
 
 #### Nginx
 
-cat << EOF | sudo tee /etc/yum.repos.d/nginx.repo
+cat <<EOF | sudo tee /etc/yum.repos.d/nginx.repo
 [nginx]
 name=nginx repo
 baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/
@@ -183,9 +184,10 @@ gpgcheck=0
 enabled=0
 EOF
 
-sudo yum -y --enablerepo=nginx install nginx
+sudo dnf -y --enablerepo=nginx install nginx
 #sudo nginx -t
 sudo systemctl enable nginx.service --now
+sudo mkdir -p /var/cache/nginx/proxy_cache
 
 cat <<EOF | sudo tee /etc/nginx/conf.d/http.conf
 server_tokens off;
@@ -323,6 +325,7 @@ EOF
 sudo systemctl restart nginx.service
 
 cd $SS_DIR
+bin/deploy
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
 bundle exec rake ss:migrate
@@ -341,19 +344,19 @@ bundle exec rake db:seed name=webmail
 bundle exec rake assets:precompile RAILS_ENV=production
 
 # use openlayers as default map
-echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongo ss > /dev/null
+echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongo ss >/dev/null
 
 bundle exec rake cms:generate_nodes
 bundle exec rake cms:generate_pages
 
-cat <<EOF | crontab -
+cat <<EOF | crontab
 */15 * * * * /bin/bash -l -c 'cd $SS_DIR && ${ASDF_HOME}/bundle exec rake cms:release_pages && ${ASDF_HOME}/bundle exec rake cms:generate_nodes' >/dev/null
 0 * * * * /bin/bash -l -c 'cd $SS_DIR && ${ASDF_HOME}/bundle exec rake cms:generate_pages' >/dev/null
 EOF
 
 # modify ImageMagick policy to work with simple captcha
 # see: https://github.com/diaspora/diaspora/issues/6828
-cd /etc/ImageMagick && cat << EOF | sudo patch
+cd /etc/ImageMagick && cat <<EOF | sudo patch
 --- policy.xml.orig     2016-12-08 13:50:47.344009000 +0900
 +++ policy.xml  2016-12-08 13:15:22.529009000 +0900
 @@ -67,6 +67,8 @@
