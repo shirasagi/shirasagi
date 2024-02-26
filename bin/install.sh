@@ -14,12 +14,12 @@ PORT_LPSPL=8004
 sudo sed -i "s/\(^SELINUX=\).*/\1disabled/" /etc/selinux/config
 sudo setenforce 0
 
-sudo dnf -y update
+sudo dnf -y upgrade almalinux-release
 sudo dnf -y groupinstall "Development tools" --setopt=group_package_types=mandatory,default,optional
 sudo dnf -y install epel-release
 sudo dnf config-manager --disable epel
 sudo dnf --enablerepo=epel -y update epel-release
-sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel wget
+sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel git wget
 
 cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
 [mongodb-org-4.4]
@@ -43,8 +43,8 @@ EOF
 source $HOME/.bashrc
 
 asdf plugin add ruby
-asdf install ruby 3.1.3
-asdf global ruby 3.1.3
+asdf install ruby 3.1.4
+asdf global ruby 3.1.4
 
 if [ ! $(which ruby) ]; then exit 1; fi
 asdf plugin add nodejs
@@ -71,6 +71,8 @@ sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
 
 # enable recommendation
 sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
+
+sudo systemctl enable firewalld.service --now
 
 sudo firewall-cmd --add-port=http/tcp --permanent
 #sudo firewall-cmd --add-port=https/tcp --permanent
@@ -113,17 +115,12 @@ tar xvzf mecab-ruby-0.996.tar.gz
 cd mecab-ruby-0.996
 ruby extconf.rb
 make
-sudo make install
+make install
 #cd
 #sudo mv mecab-ruby-0.996 /usr/local/src
 
 echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf
 sudo ldconfig
-
-#### Voice
-
-cd
-wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz
 
 #### Voice
 
@@ -320,6 +317,12 @@ location ~* \.svg$ {
     add_header Content-Disposition "attachment";
     try_files \$uri @app;
 }
+# download .htm/html files instead of showing inline in browser for protecting from xss.
+# for only belonging to fs directories.
+location ~* /fs/.*\.(htm|html)$ {
+    add_header Content-Disposition "attachment";
+    try_files \$uri @app;
+}
 EOF
 
 sudo systemctl restart nginx.service
@@ -350,8 +353,8 @@ bundle exec rake cms:generate_nodes
 bundle exec rake cms:generate_pages
 
 cat <<EOF | crontab
-*/15 * * * * /bin/bash -l -c 'cd $SS_DIR && ${ASDF_HOME}/bundle exec rake cms:release_pages && ${ASDF_HOME}/bundle exec rake cms:generate_nodes' >/dev/null
-0 * * * * /bin/bash -l -c 'cd $SS_DIR && ${ASDF_HOME}/bundle exec rake cms:generate_pages' >/dev/null
+*/15 * * * * /bin/bash -l -c 'cd ${SS_DIR}; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_release_nodes_lock bundle exec rake cms:release_nodes; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_release_pages_lock bundle exec rake cms:release_pages; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_generate_nodes_lock bundle exec rake cms:generate_nodes' >/dev/null
+0 * * * * /bin/bash -l -c 'cd ${SS_DIR}; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_generate_pages_lock bundle exec rake cms:generate_pages' >/dev/null
 EOF
 
 # modify ImageMagick policy to work with simple captcha
