@@ -18,6 +18,9 @@ this.SS_ListUI = (function () {
           if (!this.disabled) {
             this.checked = chk;
             modified = true;
+
+            //$(this).trigger("change");
+            this.dispatchEvent(new Event("change"));
           }
         });
 

@@ -10,7 +10,9 @@
   <thead class="list-head">
   <tr>
     <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox">
+        <input type="checkbox" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" />
+      </th>
     <% end %>
     <th class="name"><%= t("mongoid.attributes.cms/model/node.route") %></th>
   </tr>
@@ -20,7 +22,7 @@
     <tr data-id="<%= path %>" class="list-item">
       <% if @multi %>
         <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= path %>" />
+          <input type="checkbox" name="ids[]" value="<%= path %>" data-controller="ss--set-aria-label" data-name="<%= name %>" />
         </td>
       <% end %>
       <td class="name"><%= link_to name, "#", class: @multi ? "select-item" : "select-single-item" %></td>

@@ -15,19 +15,21 @@
   <thead class="list-head">
   <tr>
     <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox">
+        <input type="checkbox" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" />
+      </th>
     <% end %>
     <th class="name"><%= @model.t :name %></th>
   </tr>
   </thead>
   <tbody class="items">
   <% @items.each do |item| %>
-    <% depth = @search_params ? "" : %( data-depth=#{item.depth}) %>
+    <% depth = @search_params ? "" : %(data-depth=#{item.depth}) %>
     <% name = @search_params ? item.name : item.trailing_name %>
-    <tr data-id="<%= item.group_id %>" class="list-item"<%= depth %>>
+    <tr data-id="<%= item.group_id %>" class="list-item" <%= depth %>>
       <% if @multi %>
         <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= item.group_id %>" />
+          <input type="checkbox" name="ids[]" value="<%= item.group_id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
         </td>
       <% end %>
       <td class="expandable">

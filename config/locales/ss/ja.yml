@@ -249,6 +249,8 @@ ja:
       next: 次
     controls:
       close_modal: モーダルウィンドウを閉じる
+      open_checkbox: "%{name}のチェックボックスにチェックする"
+      close_checkbox: "%{name}のチェックボックスを外す"
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？

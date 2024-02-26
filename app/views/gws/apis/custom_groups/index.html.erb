@@ -15,7 +15,9 @@
   <thead class="list-head">
     <tr>
       <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox">
+        <input type="checkbox" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" />
+      </th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
     </tr>
@@ -27,7 +29,7 @@
       <tr data-id="<%= item.id %>" class="list-item" <%= depth %>>
         <% if @multi %>
         <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
         </td>
         <% end %>
         <td class="expandable">

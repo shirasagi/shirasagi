@@ -20,7 +20,9 @@
   <thead class="list-head">
     <tr>
       <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox">
+        <input type="checkbox" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" />
+      </th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
       <% if @free_times.present? %>
@@ -52,7 +54,7 @@
         <% if @multi %>
           <td class="checkbox">
             <% unless overall_exist == 'exist' %>
-              <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+              <input type="checkbox" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
             <% end %>
           </td>
         <% end %>

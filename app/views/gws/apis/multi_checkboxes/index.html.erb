@@ -57,9 +57,9 @@
   <thead class="message-list-head">
     <tr>
       <% if @multi %>
-        <th class="checkbox-to-all">TO<input type="checkbox" id="to_all" /></th>
-      <th class="checkbox-cc-all">CC<input type="checkbox" id="cc_all" /></th>
-      <th class="checkbox-bcc-all">BCC<input type="checkbox" id="bcc_all" /></th>
+      <th class="checkbox-to-all">TO<input type="checkbox" id="to_all" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" /></th>
+      <th class="checkbox-cc-all">CC<input type="checkbox" id="cc_all" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" /></th>
+      <th class="checkbox-bcc-all">BCC<input type="checkbox" id="bcc_all" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" /></th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
       <th><%= @model.t :group_ids %></th>
@@ -73,13 +73,13 @@
       <%= content_tag("tr", class: "list-item", data: data) do %>
         <% if @multi %>
           <td class="to-checkbox">
-            <input type="checkbox" id="to_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" />
+            <input type="checkbox" id="to_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
           </td>
           <td class="cc-checkbox">
-            <input type="checkbox" id="cc_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" />
+            <input type="checkbox" id="cc_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
           </td>
           <td class="bcc-checkbox">
-            <input type="checkbox" id="bcc_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" />
+            <input type="checkbox" id="bcc_ids<%= item.id %>" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
           </td>
         <% end %>
         <td><%= link_to gws_public_user_long_name(item.long_name), "#", class: @multi ? "select-item" : "select-single-item" %></td>
