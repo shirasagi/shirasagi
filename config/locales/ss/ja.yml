@@ -247,6 +247,8 @@ ja:
       update: 更新
       prev: 前
       next: 次
+    controls:
+      close_modal: モーダルウィンドウを閉じる
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
