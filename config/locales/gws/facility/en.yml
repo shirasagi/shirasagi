@@ -3,6 +3,8 @@ en:
     facility: Facilities
     category: Category
     manage_columns: Manage additional inputs
+    views:
+      required_approval: Required approval
     prompts:
       minutes: Minute
       days: Days in advance

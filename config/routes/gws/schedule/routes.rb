@@ -43,6 +43,10 @@ Rails.application.routes.draw do
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export]
+    resources :facility_approval_plans, path: 'facilities/approval_plans' do
+      match :soft_delete, on: :member, via: [:get, :post]
+      post :soft_delete_all, on: :collection
+    end
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end
