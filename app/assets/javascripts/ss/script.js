@@ -139,6 +139,23 @@ SS.ready(function () {
     });
   }
   // navi
+  var toggleNavi = function(e) {
+    var state;
+    $("#navi").toggle();
+    $("#navi-closed").toggle();
+    $(window).trigger('resize');
+
+    state = $("#navi").is(':visible') ? "open" : "close";
+    Cookies.set("ss-navi", state, { expires: 7, path: '/' });
+    return false;
+  };
+  $("#open-navi,#close-navi").on("click", toggleNavi);
+
+  var state = Cookies.get("ss-navi");
+  if (state == "close") {
+    $("#close-navi").trigger("click");
+  }
+  // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
     var matchedElement = null, hrefLength = 0;
