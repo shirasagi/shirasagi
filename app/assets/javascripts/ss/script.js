@@ -139,6 +139,39 @@ SS.ready(function () {
     });
   }
   // navi
+  var toggleNavi = function() {
+    return $("#toggle-navi").hasClass("opened") ? closeNavi() : openNavi();
+  };
+  var openNavi = function() {
+    $("#navi").css("margin-left", "-200px");
+    $("#navi").show();
+    $("#navi").animate({"margin-left":"0px"}, 200, function(){
+      $(window).trigger('resize');
+    });
+    $("#toggle-navi").addClass("opened");
+    $("#toggle-navi").removeClass("closed");
+    $("#toggle-navi").text(i18next.t("ss.buttons.close"));
+    $("#toggle-navi").attr("aria-label", i18next.t("ss.controls.close_navi"));
+
+    Cookies.set("ss-navi", "opened", { expires: 7, path: '/' });
+    return false;
+  };
+  var closeNavi = function() {
+    $("#navi").animate({"margin-left":"-200px"}, 200, function(){
+      $(this).hide();
+      $(this).css("margin-left", "0px");
+      $(window).trigger('resize');
+    });
+    $("#toggle-navi").addClass("closed");
+    $("#toggle-navi").removeClass("opened");
+    $("#toggle-navi").text(i18next.t("ss.buttons.open"));
+    $("#toggle-navi").attr("aria-label", i18next.t("ss.controls.open_navi"));
+
+    Cookies.set("ss-navi", "closed", { expires: 7, path: '/' });
+    return false;
+  };
+  $("#toggle-navi").on("click", toggleNavi);
+  // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
     var matchedElement = null, hrefLength = 0;

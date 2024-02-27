@@ -139,6 +139,7 @@ ja:
       mobile: 携帯
       view_site: 公開画面を見る
       open: 開く
+      close: 閉じる
       change: 変更する
       more: もっと見る
       more_all: 全て見る
@@ -227,6 +228,7 @@ ja:
       change: 変更
       initialize: 初期化
       restore: 元に戻す
+      open: 開く
       close: 閉じる
       csv: CSV
       ignore_alerts_and_save: 警告を無視して保存する
@@ -248,6 +250,8 @@ ja:
       prev: 前
       next: 次
     controls:
+      open_navi: サイドメニューを開く
+      close_navi: サイドメニューを閉じる
       close_modal: モーダルウィンドウを閉じる
       open_checkbox: チェックボックスにチェックする
       close_checkbox: チェックボックスを外す

@@ -25,17 +25,6 @@ body {
 #page {
   position: relative;
   min-height: 100%;
-  &:not(.print-preview):after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 210px;
-    border-right: $border-gray4;
-    background: $white;
-    @include mb { display: none; }
-  }
 }
 h1, h2, h3, h4, h5, p {
   margin: 0;
@@ -641,19 +630,35 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // -------------------------------------------------------------------------------------------------
 // nav
 #navi {
-  position: relative;
   z-index: 1;
-  width: 210px;
-  margin-bottom: 20px;
-  float: left;
+  min-width: 211px;
   background: $white;
+  border-right: 1px solid #dcdcdc;
+  border-bottom: 1px solid #dcdcdc;
+  padding-bottom: 120px;
   @include mb {
     display: none;
     z-index: 200;
     width: 100%;
-    margin-bottom: 0;
-    float: none;
     border: 0;
+  }
+}
+.side-navi-toggle {
+  position: fixed;
+  z-index: 10;
+  bottom: 40px;
+  left: 24px;
+  #toggle-navi {
+    display: block;
+    background-color: #ebebeb;
+    padding: 14px;
+    color: black;
+    text-decoration: none;
+    border: solid 2px;
+    border-radius: 3px;
+  }
+  @media only screen and (max-width: 768px) {
+    display: none;
   }
 }
 
@@ -1216,17 +1221,23 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // main
 #main:not(.print-preview) {
   width: 100%;
-  margin: 0 0 40px -100%;
-  float: right;
+  padding-bottom: 40px;
   @include mb {
     margin: 0 0 100px;
     float: none;
   }
   .wrap {
-    margin: 0 10px 0 220px;
+    margin: 0 10px 0 10px;
     @include mb {
       margin: 10px 0;
     }
+  }
+}
+#main-wrap {
+  display: flex;
+  min-height: 100vh;
+  @media only screen and (max-width: 768px) {
+    display: block;
   }
 }
 
@@ -1247,8 +1258,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // breadcrumb
 .breadcrumb {
   @include clear;
-  margin: 0 0 10px;
-  padding-left: 220px;
+  margin: 0 0 10px -42px;
   border-bottom: $border-gray4;
   background: $gray5;
   list-style: none;
@@ -1292,7 +1302,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   @include clear;
   margin: 0 0 1px;
   padding: 10px;
-  padding-left: 220px;
   background: #f99;
   a {
     color: $black;
@@ -1365,9 +1374,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         background-color: #ccc;
       }
     }
-  }
-  .nav-menu {
-    margin-left: 230px;
   }
 }
 @include mb {

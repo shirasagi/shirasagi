@@ -320,4 +320,8 @@ module ApplicationHelper
 
     text_area(object_name, method, options)
   end
+
+  def main_navi_closed?
+    cookies["ss-navi"] == "closed"
+  end
 end
