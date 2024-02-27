@@ -20,13 +20,13 @@
 <div class="dropdown-container">
   <table class="index custom_groups">
     <tbody>
-    <tr data-depth="0" class="toggle">
+    <tr data-depth="0" data-name="<%= @cur_site.name %>" class="toggle">
       <td class="expandable">
         <%= link_to @cur_site.name, "#", class: "select-group", data: { id: "" } %>
       </td>
     </tr>
     <% @custom_groups.each do |item| %>
-      <tr data-depth="<%= item.depth + 1 %>" class="toggle">
+      <tr data-depth="<%= item.depth + 1 %>" data-name="<%= item.trailing_name %>" class="toggle">
         <td class="expandable">
           <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
         </td>

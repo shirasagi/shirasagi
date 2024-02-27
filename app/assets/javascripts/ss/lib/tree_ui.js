@@ -14,13 +14,19 @@ this.SS_TreeUI = (function () {
   SS_TreeUI.open = function (el) {
     el.addClass("opened");
     el.removeClass("closed");
-    el.attr("aria-expanded", "true");
+
+    $(el).each(function(){
+      this.dispatchEvent(new Event("change"));
+    });
   };
 
   SS_TreeUI.close = function (el) {
     el.removeClass("opened");
     el.addClass("closed");
-    el.attr("aria-expanded", "false");
+
+    $(el).each(function(){
+      this.dispatchEvent(new Event("change"));
+    });
   };
 
   SS_TreeUI.openSelectedGroupsTree = function (current_tr) {
@@ -55,7 +61,6 @@ this.SS_TreeUI = (function () {
     var expand_group = opts["expand_group"];
 
     self.tree.find("tbody tr").each(function () {
-      $(this).uniqueId();
       root.push(parseInt($(this).attr("data-depth")));
     });
     root = Math.min.apply(null, root);
@@ -64,10 +69,16 @@ this.SS_TreeUI = (function () {
       return;
     }
     self.tree.find("tbody tr").each(function () {
-      var d, depth, i, j, ref, ref1, td;
+      var d, depth, i, j, ref, ref1, td, name, $toggle;
       td = $(this).find(".expandable");
       depth = parseInt($(this).attr("data-depth"));
-      td.prepend('<a class="toggle closed" href="#"></a>');
+      name = $(this).attr("data-name");
+      $toggle = $('<a class="toggle closed" href="#" data-controller="ss--set-aria-label"></a>')
+      if (name) {
+        $toggle.attr("data-name", name);
+      }
+
+      td.prepend($toggle);
       if (depth !== root) {
         if (!expand_all) {
           $(this).hide();
@@ -83,25 +94,7 @@ this.SS_TreeUI = (function () {
       }
     });
     self.tree.find(".toggle").on("mousedown mouseup", function (e) {
-      e.stopPropagation();
       return false;
-    });
-
-    // aria
-    self.tree.find("a.toggle").each(function () {
-      var ids = [];
-      tr = $(this).closest("tr");
-      depth = parseInt(tr.attr("data-depth"));
-      tr.nextAll("tr").each(function () {
-        var d, i, id;
-        d = parseInt($(this).attr("data-depth"));
-        id = $(this).attr("id");
-        i = $(this).find(".toggle:first");
-        if (depth < d) {
-          ids.push(id)
-        }
-      });
-      $(this).attr("aria-controls", ids.join(" "));
     });
 
     self.tree.find(".toggle").on("click", function (e) {
@@ -125,7 +118,6 @@ this.SS_TreeUI = (function () {
           SS_TreeUI.close(i);
         }
       });
-      e.stopPropagation();
       return false;
     });
     if (opts.descendants_check) {

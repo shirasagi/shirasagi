@@ -249,8 +249,14 @@ ja:
       next: 次
     controls:
       close_modal: モーダルウィンドウを閉じる
-      open_checkbox: "%{name}のチェックボックスにチェックする"
-      close_checkbox: "%{name}のチェックボックスを外す"
+      open_checkbox: チェックボックスにチェックする
+      close_checkbox: チェックボックスを外す
+      open_checkbox_of: "%{name}のチェックボックスにチェックする"
+      close_checkbox_of: "%{name}のチェックボックスを外す"
+      open_toggle: 展開する
+      close_toggle: 閉じる
+      open_toggle_of: "%{name}を展開する"
+      close_toggle_of: "%{name}を閉じる"
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？

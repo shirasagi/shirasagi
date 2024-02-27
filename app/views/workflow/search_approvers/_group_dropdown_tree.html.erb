@@ -23,7 +23,7 @@
     <table class="index groups">
       <tbody>
       <% @groups.each do |item| %>
-        <tr data-depth="<%= item.depth %>" class="toggle">
+        <tr data-depth="<%= item.depth %>" data-name="<%= item.trailing_name %>" class="toggle">
           <td class="expandable">
             <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
           </td>
