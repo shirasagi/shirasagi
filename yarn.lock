@@ -761,10 +761,10 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-crypto-js@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.2.0.tgz#abe124867e49d2695e20fea091728276a9f761c0"
-  integrity sha512-J6LOZ2Iha4akgCwqTrZsCLdA5y/kJ1MxRoGzs/xtIfFSaLSs1gENHznVjYEzWZfunzt9yiViXq8bO1RyT1euhg==
+crypto-js@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 css-functions-list@^3.1.0:
   version "3.1.0"
