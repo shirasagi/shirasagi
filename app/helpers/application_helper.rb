@@ -126,8 +126,8 @@ module ApplicationHelper
     list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
 
     h = []
-    h << %(<div class="tooltip">#{symbol})
-    h << %(<ul class="tooltip-content">)
+    h << %(<div class="tooltip" aria-hidden="true">#{symbol})
+    h << %(<ul class="tooltip-content" aria-hidden="true">)
     h << list
     h << %(</ul>)
     h << %(</div>)
