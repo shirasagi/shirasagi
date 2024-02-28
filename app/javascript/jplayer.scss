@@ -6,12 +6,12 @@
     top: 0;
     right: 0;
     .ss-jp-close {
-      float: left;
       display: inline;
+      float: left;
       border: 0;
-      cursor: pointer;
       background: transparent;
       color: #767676;
+      cursor: pointer;
       &:focus {
         color: #0173e3;
       }
