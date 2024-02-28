@@ -1,0 +1,13 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <div class="list-head-action-destroy">
+      <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
+    </div>
+  </div>
+
+  <div class="list-head-search">
+    <%= render template: '_search' %>
+  </div>
+</div>

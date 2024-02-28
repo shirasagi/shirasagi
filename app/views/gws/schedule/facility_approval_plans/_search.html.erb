@@ -1,0 +1,6 @@
+<% @s = OpenStruct.new params[:s] %>
+<%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
+  <%= f.select :approval_state, @model.new.approval_state_options, {}, { data: { controller: "ss--submit-on-change" } } %>
+  <%= f.text_field :keyword, style: "width: 300px;" %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>

@@ -13,6 +13,7 @@ en:
       category: Type settings
       todo: To-do list
       trash: Trash
+      approve_facility_plan: approval of facility plans
     tabs:
       personal: Personal
       personal_list: Plan list
