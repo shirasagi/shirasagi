@@ -631,7 +631,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // nav
 #navi {
   z-index: 1;
-  min-width: 211px;
+  width: 211px;
   background: $white;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
@@ -644,7 +644,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 }
 #navi-closed {
   z-index: 1;
-  min-width: 53px;
+  width: 54px;
   min-height: 600px;
   background: $white;
   border-right: 1px solid #dcdcdc;
@@ -689,9 +689,12 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     }
     &#open-navi {
       top: 62px;
-      left: 38px;
+      left: 36px;
       transform: rotate(45deg) translateY(-3px);
     }
+  }
+  @media only screen and (max-width: 768px) {
+    display: none;
   }
 }
 
@@ -1269,6 +1272,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 #main-wrap {
   display: flex;
   min-height: 120vh;
+  @media only screen and (max-width: 768px) {
+    display: block;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------

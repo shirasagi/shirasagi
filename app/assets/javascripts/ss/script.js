@@ -141,11 +141,17 @@ SS.ready(function () {
   // navi
   var toggleNavi = function(e) {
     var state;
-    $("#navi").toggle();
-    $("#navi-closed").toggle();
+    if ($("#navi").is(':visible')) {
+      $("#navi").hide();
+      $("#navi-closed").show();
+      state = "close";
+    } else {
+      $("#navi").show();
+      $("#navi-closed").hide();
+      state = "open";
+    }
     $(window).trigger('resize');
 
-    state = $("#navi").is(':visible') ? "open" : "close";
     Cookies.set("ss-navi", state, { expires: 7, path: '/' });
     return false;
   };
