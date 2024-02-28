@@ -631,7 +631,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // nav
 #navi {
   z-index: 1;
-  width: 211px;
+  min-width: 211px;
   background: $white;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
@@ -644,7 +644,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 }
 #navi-closed {
   z-index: 1;
-  width: 54px;
+  min-width: 54px;
   min-height: 600px;
   background: $white;
   border-right: 1px solid #dcdcdc;
