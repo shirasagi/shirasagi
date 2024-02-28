@@ -37,5 +37,6 @@ export default class extends Controller {
     const key2 = name ? "_of" : "";
     const label = i18next.t("ss.controls." + key1 + "_toggle" + key2, { name: name });
     element.setAttribute("aria-label", label);
+    element.setAttribute("aria-expanded", element.classList.contains("opened"));
   }
 }
