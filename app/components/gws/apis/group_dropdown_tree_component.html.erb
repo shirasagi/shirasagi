@@ -5,13 +5,13 @@
   <div class="dropdown-container">
     <table class="index groups">
       <tbody>
-      <tr data-depth="0" class="toggle">
+      <tr data-depth="0" data-name="<%= site_root.name %>" class="toggle">
         <td class="expandable">
           <%= link_to site_root.name, "#", class: "select-group", data: { id: site_root.id } %>
         </td>
       </tr>
       <% groups.each do |item| %>
-        <tr data-depth="<%= item.depth - cur_site.depth + 1 %>" class="toggle">
+        <tr data-depth="<%= item.depth - cur_site.depth + 1 %>" data-name="<%= item.trailing_name %>" class="toggle">
           <td class="expandable">
             <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
           </td>

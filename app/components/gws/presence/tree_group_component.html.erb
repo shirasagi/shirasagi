@@ -2,14 +2,14 @@
   <div class="tree-groups">
     <table class="index groups">
       <tbody class="items">
-      <tr data-depth="0">
+      <tr data-depth="0" data-name="<%= t("ss.all") %>">
         <td>
           <button class="btn expand-all" type="button"><%= t('gws/presence.operations.expand_all') %></button>
           <button class="btn collapse-all" type="button"><%= t('gws/presence.operations.collapse_all') %></button>
         </td>
       </tr>
       <% groups.each do |item| %>
-        <%= tag.tr class: "list-item", data: { id: item.id, depth: item.depth } do %>
+        <%= tag.tr class: "list-item", data: { id: item.id, depth: item.depth, name: item.trailing_name } do %>
           <td class="expandable"><%= link_to item.trailing_name, gws_presence_group_users_path(site: cur_site, group: item.id) %></td>
         <% end %>
       <% end %>

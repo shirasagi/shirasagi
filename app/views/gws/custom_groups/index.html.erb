@@ -19,7 +19,7 @@ SS_TreeUI.render(".index.groups");
       <% @items.each do |item| %>
       <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
       <% name    = @search_params ? item.name : item.trailing_name %>
-      <tr<%= depth %>>
+      <tr<%= depth %> data-name="<%= name %>">
         <nav class="tap-menu">
           <%= link_to t('ss.links.show'), action: :show, id: item %>
           <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>

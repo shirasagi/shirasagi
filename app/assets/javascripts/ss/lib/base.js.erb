@@ -142,6 +142,13 @@ this.SS = (function () {
     this.renderFileUpload();
   };
 
+  SS.moveUpCboxClose = function () {
+    if ($("#cboxClose").length && $("#cboxLoadedContent").length) {
+      $("#cboxLoadedContent").before($("#cboxClose"));
+      $("#cboxClose").attr("aria-label", i18next.t("ss.controls.close_modal"));
+    }
+  };
+
   SS.renderNotInBox = function () {
     return SS_Login.render();
   };
@@ -149,25 +156,26 @@ this.SS = (function () {
   SS.renderInBox = function (box) {
     var anchorCallback;
     anchorCallback = function () {
-      return $("#cboxLoadedContent .ajax-box:not(.cboxElement)").each(function () {
+      $("#cboxLoadedContent .ajax-box:not(.cboxElement)").each(function () {
         var elem;
         elem = $(this);
         elem.addClass("cboxElement");
         if (!elem.attr("target") && !elem.data("target")) {
-          return elem.colorbox({
+          elem.colorbox({
             fixed: true,
             width: "90%",
             height: "90%",
             onComplete: anchorCallback
           });
         }
+        SS.moveUpCboxClose();
       });
     };
-    return $(box).find(".ajax-box:not(.cboxElement)").each(function () {
+    $(box).find(".ajax-box:not(.cboxElement)").each(function () {
       var elem;
       elem = $(this);
       if (!elem.attr("target") && !elem.data("target")) {
-        return elem.colorbox({
+        elem.colorbox({
           fixed: true,
           width: "90%",
           height: "90%",
@@ -518,6 +526,9 @@ this.SS = (function () {
         height: "90%",
         onOpen: function () {
           $("#cboxContent").data('on-select', null);
+        },
+        onComplete: function () {
+          SS.moveUpCboxClose();
         }
       };
     }

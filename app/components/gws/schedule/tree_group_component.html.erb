@@ -9,7 +9,7 @@
 
     <table class="index groups">
       <tbody>
-      <tr data-depth="0" data-id="<%= cur_site.id %>">
+      <tr data-depth="0" data-id="<%= cur_site.id %>" data-name="<%= cur_site.name %>">
         <td class="expandable">
           <% if cur_site.users.size > 0 %>
             <%= link_to cur_site.name, gws_schedule_group_plans_path(site: cur_site, group: cur_site.id) %>
@@ -20,7 +20,7 @@
       </tr>
 
       <% groups.each do |group| %>
-        <tr data-depth="<%= group.depth - cur_site.depth + 1 %>" data-id="<%= group.id %>">
+        <tr data-depth="<%= group.depth - cur_site.depth + 1 %>" data-id="<%= group.id %>" data-name="<%= group.trailing_name %>">
           <td class="expandable">
             <% if group.users.size > 0 %>
               <%= link_to group.trailing_name, gws_schedule_group_plans_path(site: cur_site, group: group.id) %>

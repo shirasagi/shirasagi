@@ -36,36 +36,41 @@
 
 <div id="wrap">
   <div class="wrap">
-    <div id="navi">
-      <div class="wrap">
-        <% if @ss_mode == :cms %>
-        <nav class="site-navi">
-          <h2><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", rel: "noopener" %></h2>
-          <h2><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", rel: "noopener" %></h2>
-        </nav>
-        <% end %>
-
-        <% if @ss_rescue %>
-          <% if @ss_mode == :cms %>
-            <%= render partial: "cms/main/navi" %>
-          <% elsif @ss_mode == :gws %>
-            <%= render partial: "gws/main/navi" %>
-          <% elsif @ss_mode == :webmail %>
-            <%= render partial: "webmail/main/navi" %>
-          <% else %>
-            <%= render partial: "sns/main/navi" %>
-          <% end %>
-        <% else %>
-          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
-          <%= render partial: "navi" %>
-          <% elsif controller.navi_view_file %>
-          <%= render partial: controller.navi_view_file %>
-          <% end %>
-        <% end %>
+    <div id="main-wrap">
+      <div id="navi-closed" style="display: none;">
+        <%= link_to t("ss.buttons.open"), "", class: "toggle-navi", id: "open-navi", "aria-label": t("ss.controls.open_navi") %>
       </div>
-    </div>
+      <div id="navi">
+        <%= link_to t("ss.buttons.close"), "", class: "toggle-navi", id: "close-navi", "aria-label": t("ss.controls.close_navi") %>
+        <div class="wrap">
+          <% if @ss_mode == :cms %>
+          <nav class="site-navi">
+            <h2><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", rel: "noopener" %></h2>
+            <h2><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", rel: "noopener" %></h2>
+          </nav>
+          <% end %>
 
-    <article id="main">
+          <% if @ss_rescue %>
+            <% if @ss_mode == :cms %>
+              <%= render partial: "cms/main/navi" %>
+            <% elsif @ss_mode == :gws %>
+              <%= render partial: "gws/main/navi" %>
+            <% elsif @ss_mode == :webmail %>
+              <%= render partial: "webmail/main/navi" %>
+            <% else %>
+              <%= render partial: "sns/main/navi" %>
+            <% end %>
+          <% else %>
+            <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+            <%= render partial: "navi" %>
+            <% elsif controller.navi_view_file %>
+            <%= render partial: controller.navi_view_file %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <article id="main">
       <%= render "layouts/ss/password_warn" %>
       <% if !@ss_maintenance_mode %>
         <ol class="breadcrumb" id="crumbs">
@@ -108,17 +113,17 @@
 
         <%= yield %>
       </div>
-    <!-- /#main --></article>
-
-  <!-- /.wrap --></div>
-<!-- /#wrap --></div>
+      </article>
+    </div>
+  </div>
+</div>
 
 <footer id="foot">
   <div id="ss-pc" style="display: none">PC View</div>
   <div id="ss-mb" style="display: none">Mobile View</div>
-<!-- /#foot --></footer>
+</footer>
 
-<!-- /#page --></div>
+</div>
 
 <%= javascript_tag do %>
   SS.env = <%== Rails.env.to_json %>;

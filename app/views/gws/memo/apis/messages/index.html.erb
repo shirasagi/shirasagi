@@ -29,7 +29,9 @@
   <thead class="list-head">
     <tr>
       <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox">
+        <input type="checkbox" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" />
+      </th>
       <% end %>
       <th class="from">
         <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
@@ -52,7 +54,9 @@
         data-send_date="<%= item.display_send_date %>"
         data-display_size="<%= item.display_size %>">
         <% if @multi %>
-        <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>" />
+        </td>
         <% end %>
         <td>
           <i class="material-icons md-15" <%== item.attachments? ? '' : 'style="visibility: hidden;"' %>>&#xE226;</i>

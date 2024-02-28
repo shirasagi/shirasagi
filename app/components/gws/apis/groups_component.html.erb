@@ -10,7 +10,9 @@
   <table class="index groups">
     <thead class="list-head">
     <tr>
-      <th class="checkbox only-multi"><input type="checkbox"/></th>
+      <th class="checkbox only-multi">
+        <input type="checkbox" data-controller="ss--set-aria-label" data-name="<%= t("ss.all") %>" />
+      </th>
       <th class="name"><%= Gws::Group.t :name %></th>
     </tr>
     </thead>
@@ -18,7 +20,7 @@
     <% groups.each do |item| %>
       <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>" data-depth="<%= item.depth %>">
         <td class="checkbox only-multi">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>"/>
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" data-controller="ss--set-aria-label" data-name="<%= item.name %>"/>
         </td>
         <td class="expandable">
           <%= link_to item.trailing_name, "#", class: "select-item only-multi" %>

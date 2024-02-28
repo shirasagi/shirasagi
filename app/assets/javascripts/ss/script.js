@@ -138,6 +138,29 @@ SS.ready(function () {
     });
   }
   // navi
+  var toggleNavi = function(e) {
+    var state;
+    if ($("#navi").is(':visible')) {
+      $("#navi").hide();
+      $("#navi-closed").show();
+      state = "close";
+    } else {
+      $("#navi").show();
+      $("#navi-closed").hide();
+      state = "open";
+    }
+    $(window).trigger('resize');
+
+    Cookies.set("ss-navi", state, { expires: 7, path: '/' });
+    return false;
+  };
+  $("#open-navi,#close-navi").on("click", toggleNavi);
+
+  var state = Cookies.get("ss-navi");
+  if (state == "close") {
+    $("#close-navi").trigger("click");
+  }
+  // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
     var matchedElement = null, hrefLength = 0;

@@ -19,7 +19,7 @@ SS_TreeUI.render(".index.groups", { descendants_check: true });
       <% @items.each do |item| %>
       <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
       <% name    = @search_params ? item.name : item.trailing_name %>
-      <tr<%= depth %>>
+      <tr<%= depth %> data-name="<%= name %>">
         <td class="expandable">
           <% portal = item.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
           <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
