@@ -13,7 +13,7 @@
     title
   %>
 </title>
-<%= safe_join controller.stylesheets.map { |path, options| stylesheet_link_tag(path, options || { media: "all" }) }, "\n" %>
+<%= safe_join controller.stylesheets.map { |path, options| stylesheet_link_tag(path, stylesheet_link_options(options)) }, "\n" %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <%= csrf_meta_tags %>
 </head>

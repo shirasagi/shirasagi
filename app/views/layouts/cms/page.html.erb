@@ -10,7 +10,7 @@
 <%= javascript_include_tag "cms/public" %>
 <%= javascript_include_tag "jplayer" %>
 <% controller.stylesheets.each do |path, options| %>
-  <%= stylesheet_link_tag path, options.key?(:media) ? options : options.merge(media: "all") %>
+  <%= stylesheet_link_tag path, stylesheet_link_options(options) %>
 <% end %>
 <% controller.javascripts.each do |path, options| %>
   <%= javascript_include_tag path, options || {} %>

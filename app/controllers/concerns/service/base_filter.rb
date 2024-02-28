@@ -64,9 +64,13 @@ module Service::BaseFilter
   end
 
   def set_ss_assets
-    SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
-    SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
-    stylesheet("/assets/css/colorbox/colorbox.css")
+    if SS.config.ss.stylesheets.present?
+      SS.config.ss.stylesheets.each { |path, options| options ? stylesheet(path, **options.symbolize_keys) : stylesheet(path) }
+    end
+    if SS.config.ss.javascripts.present?
+      SS.config.ss.javascripts.each { |path, options| options ? javascript(path, **options.symbolize_keys) : javascript(path) }
+    end
+    stylesheet("/colorbox.css")
   end
 
   def logged_in?
