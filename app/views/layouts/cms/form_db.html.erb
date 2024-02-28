@@ -17,7 +17,7 @@
   end
 %>
 <title><%= title %></title>
-<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= safe_join controller.stylesheets.map { |path, options| stylesheet_link_tag(path, stylesheet_link_options(options)) }, "\n" %>
 <%= stylesheet_link_tag('cms/form_db', media: "all") %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <%= javascript_include_tag('cms/form_db', defer: true) %>

@@ -4,6 +4,8 @@
 //= link application.css
 //= link colorbox.js
 //= link colorbox.css
+//= link swiper.js
+//= link swiper.css
 //= link jplayer.js
 //= link jplayer.css
 

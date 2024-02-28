@@ -581,6 +581,13 @@ ja:
         head: お探しのページは見つかりません
         body: お探しのページは見つかりませんでした。<br>一時的にアクセスできない状態になっているか、URLが変更・削除されたのかもしれません。
 
+    swiper_slide:
+      first_slide_message: "最初のスライド"
+      last_slide_message: "最後のスライド"
+      prev_slide_message: "前のスライド"
+      next_slide_message: "次のスライド"
+      pagination_bullet_message: "{{index}}番目のスライドへ移動"
+
   modules:
     addons:
       ss/body: 本文

@@ -24,16 +24,16 @@ module SS::AgentFilter
     controller.stylesheets
   end
 
-  def stylesheet(path)
-    controller.stylesheet(path)
+  def stylesheet(path, **options)
+    controller.stylesheet(path, **options)
   end
 
   def javascripts
     controller.javascripts
   end
 
-  def javascript(path)
-    controller.javascript(path)
+  def javascript(path, **options)
+    controller.javascript(path, **options)
   end
 
   def opengraph(key, *values)

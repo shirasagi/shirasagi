@@ -1,44 +1,39 @@
+<%
+  controller.stylesheet "swiper", media: "all"
+  controller.javascript "swiper", defer: true
+%>
+
 <div class="ss-swiper-slide" style="width: <%= width %>px;">
-  <div class="swiper-container ss-swiper-slide-container ss-swiper-slide-main">
-    <div class="swiper-wrapper ss-swiper-slide-wrapper">
-      <% files.each do |file| %>
-        <div class="swiper-slide ss-swiper-slide-item" data-ss-file-id="<%= file.id %>">
-          <%
-            if file.try(:image)
-              inner_html = file.image.then do |image|
-                if image.sanitizer_state == 'wait'
-                  tag.div(class: "ss-swiper-slide-item-image") { tag.div(sanitizer_status(image), class: "mx-2 my-2") }
-                else
-                  image_tag(image.url, width: width, alt: file.humanized_name, class: "ss-swiper-slide-item-image")
-                end
-              end
-            elsif file.try(:image?)
-              if file.sanitizer_state == 'wait'
-                inner_html = tag.div(class: "ss-swiper-slide-item-image") { tag.div(sanitizer_status(file), class: "mx-2 my-2") }
+  <%
+    slide_options.merge!(class: "swiper-container ss-swiper-slide-container ss-swiper-slide-main")
+  %>
+  <%= tag.swiper_container **slide_options do %>
+    <% files.each do |file| %>
+      <swiper-slide class="swiper-slide ss-swiper-slide-item" data-ss-file-id="<%= file.id %>">
+        <%
+          if file.try(:image)
+            inner_html = file.image.then do |image|
+              if image.sanitizer_state == 'wait'
+                tag.div(class: "ss-swiper-slide-item-image") { tag.div(sanitizer_status(image), class: "mx-2 my-2") }
               else
-                inner_html = image_tag(file.url, width: width, alt: file.humanized_name, class: "ss-swiper-slide-item-image")
+                image_tag(image.url, width: width, alt: file.humanized_name, class: "ss-swiper-slide-item-image", loading: "lazy")
               end
             end
-          %>
+          elsif file.try(:image?)
+            if file.sanitizer_state == 'wait'
+              inner_html = tag.div(class: "ss-swiper-slide-item-image") { tag.div(sanitizer_status(file), class: "mx-2 my-2") }
+            else
+              inner_html = image_tag(file.url, width: width, alt: file.humanized_name, class: "ss-swiper-slide-item-image", loading: "lazy")
+            end
+          end
+        %>
 
-          <% if file.link_url.present? %>
-            <%= link_to inner_html, sns_redirect_path(ref: file.link_url, back_to: request.url), class: "ss-swiper-slide-item-link", target: "_blank", rel: "noopener" %>
-          <% else %>
-            <%= inner_html %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-    <div class="swiper-button-next ss-swiper-slide-button-next hide"></div>
-    <div class="swiper-button-prev ss-swiper-slide-button-prev hide"></div>
-    <div class="ss-swiper-slide-controller hide">
-      <button type="button" class="ss-swiper-slide-play" aria-pressed="true"><%= t('key_visual.controls.start') %></button>
-      <button type="button" class="ss-swiper-slide-stop" aria-pressed="false"><%= t('key_visual.controls.stop') %></button>
-    </div>
-  </div>
-  <div class="swiper-pagination ss-swiper-slide-pagination hide"></div>
+        <% if file.link_url.present? %>
+          <%= link_to inner_html, sns_redirect_path(ref: file.link_url, back_to: request.url), class: "ss-swiper-slide-item-link", target: "_blank", rel: "noopener" %>
+        <% else %>
+          <%= inner_html %>
+        <% end %>
+      </swiper-slide>
+    <% end %>
+  <% end %>
 </div>
-
-<%= jquery do %>
-  var slide = new KeyVisual_SwiperSlide(<%== slide_selector.to_json %>, <%== slide_options.to_json %>);
-<% end %>

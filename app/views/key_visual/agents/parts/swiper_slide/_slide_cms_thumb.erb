@@ -1,8 +1,8 @@
 <% file = item.thumb %>
 <% return unless file %>
 
-<div class="swiper-slide ss-swiper-slide-item" data-ss-page-id="<%= item.id %>">
+<swiper-slide class="ss-swiper-slide-item" data-ss-page-id="<%= item.id %>" lazy="true">
   <%= link_to item.url, class: "ss-swiper-slide-item-link", target: @cur_part.link_target, rel: @cur_part.link_target.present? ? "noopener" : nil do %>
-    <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+    <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image", loading: "lazy" %>
   <% end %>
-</div>
+</swiper-slide>

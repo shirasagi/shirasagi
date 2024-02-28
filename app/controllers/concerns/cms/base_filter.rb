@@ -26,12 +26,16 @@ module Cms::BaseFilter
   end
 
   def set_cms_assets
-    SS.config.cms.stylesheets.each { |m| stylesheet(m) } if SS.config.cms.stylesheets.present?
-    SS.config.cms.javascripts.each { |m| javascript(m) } if SS.config.cms.javascripts.present?
+    if SS.config.cms.stylesheets.present?
+      SS.config.cms.stylesheets.each { |path, options| options ? stylesheet(path, **options.symbolize_keys) : stylesheet(path) }
+    end
+    if SS.config.cms.javascripts.present?
+      SS.config.cms.javascripts.each { |path, options| options ? javascript(path, **options.symbolize_keys) : javascript(path) }
+    end
   end
 
   def set_site
-    @cur_site = SS.current_site = Cms::Site.find params[:site]
+    @cur_site = SS.current_site = Cms::Site.find(params[:site])
     @ss_mode = :cms
     SS.reset_locale_and_timezone # cms and webmail are currently not supported.
 
