@@ -13,6 +13,7 @@ ja:
       category: 種別設定
       todo: ToDo一覧
       trash: ゴミ箱
+      approve_facility_plan: 設備予約の承認
     tabs:
       personal: 個人
       personal_list: 予定リスト
