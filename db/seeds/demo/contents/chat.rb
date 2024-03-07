@@ -23,6 +23,7 @@ installer = Class.new do
     item
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def call
     puts "# chat"
 
@@ -106,10 +107,13 @@ installer = Class.new do
       category_ids: [chat_categories['くらし・手続き'].id],
       link: Addressable::URI.join(@site.full_url, '/kurashi/zeikin/kotei/').to_s
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end
 
+# rubocop:disable Naming/ConstantName
 if @site
   installer.new(site: @site).call
 else
   Chat::DbInstaller = installer
 end
+# rubocop:enable Naming/ConstantName
