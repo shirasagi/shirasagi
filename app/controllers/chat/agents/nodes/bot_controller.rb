@@ -1,5 +1,5 @@
 class Chat::Agents::Nodes::BotController < ApplicationController
-  include Cms::PartFilter::View
+  include Cms::NodeFilter::View
 
   protect_from_forgery except: [:line]
   after_action :create_chat_history
