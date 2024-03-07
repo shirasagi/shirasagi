@@ -14,6 +14,7 @@ module.exports = {
   entry: {
     application: "./app/javascript/application.js",
     colorbox: "./app/javascript/colorbox.js",
+    swiper: "./app/javascript/swiper.js",
     jplayer: "./app/javascript/jplayer.js",
   },
   externals: [

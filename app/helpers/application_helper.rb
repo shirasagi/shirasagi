@@ -320,4 +320,10 @@ module ApplicationHelper
 
     text_area(object_name, method, options)
   end
+
+  def stylesheet_link_options(options)
+    return { media: "all" } if options.blank?
+    return options if options.key?(:media)
+    options.merge(media: "all")
+  end
 end

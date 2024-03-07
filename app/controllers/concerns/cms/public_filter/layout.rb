@@ -312,18 +312,30 @@ module Cms::PublicFilter::Layout
     @stylesheets || []
   end
 
-  def stylesheet(path)
+  def stylesheet(path, **options)
     @stylesheets ||= []
-    @stylesheets << path unless @stylesheets.include?(path)
+    return if @stylesheets.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.blank?
+      @stylesheets << path
+    else
+      @stylesheets << [ path, options ]
+    end
   end
 
   def javascripts
     @javascripts || []
   end
 
-  def javascript(path)
+  def javascript(path, **options)
     @javascripts ||= []
-    @javascripts << path unless @javascripts.include?(path)
+    return if @javascripts.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.blank?
+      @javascripts << path
+    else
+      @javascripts << [ path, options ]
+    end
   end
 
   def javascript_configs

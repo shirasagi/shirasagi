@@ -1,61 +1,74 @@
+<% if @cur_part.ajax_view == "enabled" %>
+  <%= stylesheet_link_tag "swiper", media: 'all' %>
+  <%= javascript_include_tag "swiper", defer: true %>
+<% end %>
+
 <% wrap_id = "key_visual-swiper_slide-#{@cur_part.id}" %>
 
 <div class="ss-swiper-slide" id="<%= wrap_id %>">
   <%= sanitize(@cur_part.upper_html) if @cur_part.upper_html.present? %>
 
-  <div class="swiper-container ss-swiper-slide-container ss-swiper-slide-main">
-    <div class="swiper-wrapper ss-swiper-slide-wrapper">
+  <%
+    swiper_params = {
+      class: "swiper-container ss-swiper-slide-container ss-swiper-slide-main", init: false
+    }
+  %>
+  <%= tag.swiper_container **swiper_params do %>
+    <% @items.each do |item| %>
+      <%=
+        case item
+        when KeyVisual::Image
+          render "key_visual/agents/parts/swiper_slide/slide_keyvisual_image", item: item
+        when Member::Photo
+          render "key_visual/agents/parts/swiper_slide/slide_member_photo", item: item
+        when Cms::Addon::Thumb
+          render "key_visual/agents/parts/swiper_slide/slide_cms_thumb", item: item
+        end
+      %>
+    <% end %>
+    <% swiper_auxiliary = capture do %>
+      <% if @cur_part.kv_navigation == "show" %>
+        <div class="swiper-button-next ss-swiper-slide-button-next"></div>
+        <div class="swiper-button-prev ss-swiper-slide-button-prev"></div>
+      <% end %>
+      <% if @cur_part.kv_pagination_enabled? %>
+        <div class="swiper-pagination ss-swiper-slide-pagination ss-swiper-slide-pagination-<%= @cur_part.kv_pagination_style %>"></div>
+      <% end %>
+    <% end %>
+    <% if swiper_auxiliary && swiper_auxiliary.strip.present? %>
+      <div slot="container-end">
+        <%= swiper_auxiliary %>
+      </div>
+    <% end %>
+  <% end %>
+  <% if @cur_part.kv_thumbnail == "show" %>
+    <swiper-container class="ss-swiper-slide-container ss-swiper-slide-thumbnail" loop="true" slides-per-view="<%= @cur_part.kv_thumbnail_count || KeyVisual::Addon::SwiperSetting::DEFAULT_KV_THUMBNAIL_COUNT %>" free-mode="true" watch-slides-visibility="true" watch-slides-progress="true">
       <% @items.each do |item| %>
         <%=
           case item
           when KeyVisual::Image
-            render "key_visual/agents/parts/swiper_slide/slide_keyvisual_image", item: item
+            render "key_visual/agents/parts/swiper_slide/thumbnail_keyvisual_image", item: item
           when Member::Photo
-            render "key_visual/agents/parts/swiper_slide/slide_member_photo", item: item
+            render "key_visual/agents/parts/swiper_slide/thumbnail_member_photo", item: item
           when Cms::Addon::Thumb
-            render "key_visual/agents/parts/swiper_slide/slide_cms_thumb", item: item
+            render "key_visual/agents/parts/swiper_slide/thumbnail_cms_thumb", item: item
           end
         %>
       <% end %>
-    </div>
-    <% if @cur_part.kv_navigation == "show" %>
-      <div class="swiper-button-next ss-swiper-slide-button-next"></div>
-      <div class="swiper-button-prev ss-swiper-slide-button-prev"></div>
-    <% end %>
-    <% if @cur_part.kv_pagination_style == "disc" || @cur_part.kv_pagination_style == "number" %>
-      <div class="swiper-pagination ss-swiper-slide-pagination"></div>
-    <% end %>
+    </swiper-container>
+  <% end %>
 
-    <% if @cur_part.kv_autoplay == "enabled" || @cur_part.kv_autoplay == "started" %>
-      <div class="ss-swiper-slide-controller">
-        <button type="button" class="ss-swiper-slide-play" aria-pressed="<%= @cur_part.kv_autoplay == "started" ? "true" : "false" %>"><%= t('key_visual.controls.start') %></button>
-        <button type="button" class="ss-swiper-slide-stop" aria-pressed="<%= @cur_part.kv_autoplay == "started" ? "false" : "true" %>"><%= t('key_visual.controls.stop') %></button>
-      </div>
-    <% end %>
-  </div>
-  <% if @cur_part.kv_thumbnail == "show" %>
-    <div thumbsSlider="" class="swiper-container ss-swiper-slide-container ss-swiper-slide-thumbnail">
-      <div class="swiper-wrapper ss-swiper-slide-wrapper">
-        <% @items.each do |item| %>
-          <%=
-            case item
-            when KeyVisual::Image
-              render "key_visual/agents/parts/swiper_slide/thumbnail_keyvisual_image", item: item
-            when Member::Photo
-              render "key_visual/agents/parts/swiper_slide/thumbnail_member_photo", item: item
-            when Cms::Addon::Thumb
-              render "key_visual/agents/parts/swiper_slide/thumbnail_cms_thumb", item: item
-            end
-          %>
-        <% end %>
-      </div>
+  <% if @cur_part.kv_autoplay == "enabled" || @cur_part.kv_autoplay == "started" %>
+    <div class="ss-swiper-slide-controller">
+      <button type="button" class="ss-swiper-slide-play" aria-pressed="<%= @cur_part.kv_autoplay == "started" ? "true" : "false" %>"><%= t('key_visual.controls.start') %></button>
+      <button type="button" class="ss-swiper-slide-stop" aria-pressed="<%= @cur_part.kv_autoplay == "started" ? "false" : "true" %>"><%= t('key_visual.controls.stop') %></button>
     </div>
   <% end %>
 
   <%= sanitize(@cur_part.lower_html) if @cur_part.lower_html.present? %>
 </div>
 
+
 <%= jquery do %>
-  var slide = new KeyVisual_SwiperSlide("#<%= wrap_id %>", <%== @cur_part.js_option.to_json %>);
-  KeyVisual_SwiperSlide.instances["#<%= wrap_id %>"] = slide;
+  var slide = new ss.KeyVisual_SwiperSlide("#<%= wrap_id %>", <%== @cur_part.js_option.to_json %>);
 <% end %>

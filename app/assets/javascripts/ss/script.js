@@ -111,7 +111,6 @@
 //= require cms/lib/michecker
 //= require cms/lib/condition_forms
 //= require ss/lib/usage
-//= require key_visual/lib/swiper_slide
 //= require cms/preview/jquery-ui
 //= require datatables.net/js/jquery.dataTables.js
 
