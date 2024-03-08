@@ -43,6 +43,7 @@ en:
       long_month: ! '%a %Y'
       picker: ! '%Y/%m/%d'
       m_d_a: "%a, %1m/%1d"
+      m_d: "%{1m}/%{1d}"
       d_a: "%a, %1d"
       csv: ! '%Y/%m/%d'
     month_names:

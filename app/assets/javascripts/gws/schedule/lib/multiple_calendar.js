@@ -133,8 +133,52 @@ SS.ready(function() {
           if (view.name === 'basicHour') {
             return BasicHourView.eventRender(event, element, view);
           }
+
+          // wip-aria
+          var $ariaContent = $('<div class="aria-content" style="display: none;"></div>');
+          var $ariaA = $('<a href="#" class="key-focusable key-clickable"></a>').text(name);
+          $ariaContent.attr("data-date", event["data-date"]);
+          $ariaContent.attr("data-datetime", event["data-datetime"]);
+          $ariaContent.append($ariaA);
+          element.append($ariaContent);
         },
         eventAfterAllRender: function (_view) {
+          // wip-aria
+          var $el = $(_view.el);
+          $el.attr("aria-label", "カレンダー");
+          $el.attr("tabindex", "0");
+          $el.find(".fc-body .fc-bg .fc-widget-content[data-date]").each(function(){
+            var date = $(this).attr("data-date");
+            var $wrap = $('<div class="aria-warp visually-hidden"></div>');
+            var ymd = date.split("-");
+            var dateLocale = i18next.t("date.formats.m_d", { "1m":  parseInt(ymd[1]), "1d": parseInt(ymd[2]) })
+
+            $(this).attr("tabindex", "0");
+            $(this).attr("aria-label", dateLocale)
+            $(this).addClass("key-focusable");
+
+            $wrap.append('<a href="#" class="key-focusable key-clickable" style="display: block;">予定を作成</a>');
+
+            window.$el = $el;
+            $el.find('.aria-content[data-date="' + date + '"]').each(function(){
+              $wrap.append(this);
+              $(this).show();
+            });
+            $el.find('.aria-content[data-datetime="' + date + '"]').each(function(){
+              $wrap.append(this);
+              $(this).show();
+            });
+            $(this).append($wrap);
+          });
+          $el.find(".key-focusable").on("focus", function(){
+            console.log(this);
+          });
+          $el.find(".key-clickable").on("click", function(){
+            var text = $(this).attr("aria-label") ? $(this).attr("aria-label") : $(this).text();
+            alert(text);
+            return false;
+          });
+
           $(window).trigger('resize');
         }
       };

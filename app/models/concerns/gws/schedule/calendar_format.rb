@@ -20,6 +20,9 @@ module Gws::Schedule::CalendarFormat
       end
     end
 
+    data["data-date"] = start_at.strftime("%Y-%m-%d")
+    data["data-datetime"] = start_at.strftime("%Y-%m-%dT%H:%M:%S")
+
     #data[:termLabel] = Gws::Schedule::PlansController.helpers.term(self)
     data[:startDateLabel] = date_label(start_at)
     data[:startTimeLabel] = time_label(start_at)
