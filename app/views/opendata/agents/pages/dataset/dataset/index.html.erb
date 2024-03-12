@@ -1,4 +1,4 @@
-<% if @cur_page.metadata_dataset_id.present? %>
+<% if @cur_page.metadata_importer_id.present? || @cur_page.metadata_dataset_id.present? %>
   <%= html = render partial: 'metadata' %>
   <% return html %>
 <% end %>

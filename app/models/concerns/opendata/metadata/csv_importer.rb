@@ -42,15 +42,9 @@ module Opendata::Metadata::CsvImporter
               attributes = JSON.parse(csv_row.to_h.to_json)
 
               metadata_dataset_id = (csv_row['データセット_ID'].presence || csv_row['NO']).to_s.gsub(/\R|\s|\u00A0|　/, '')
-              if metadata_dataset_id.present?
-                dataset = ::Opendata::Dataset.node(node).
-                  where(metadata_importer_id: id, metadata_dataset_id: metadata_dataset_id).
-                  first
-              else
-                dataset = ::Opendata::Dataset.node(node).
-                  where(metadata_importer_id: id, name: name).
-                  first
-              end
+              dataset = ::Opendata::Dataset.node(node).
+                where(metadata_importer_id: id, metadata_dataset_id: metadata_dataset_id).
+                first
               dataset ||= ::Opendata::Dataset.new
 
               dataset.cur_site = site
@@ -207,27 +201,6 @@ module Opendata::Metadata::CsvImporter
       put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
-    # destroy unimported datasets
-    dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
-      "metadata_importer_id" => id
-    ).pluck(:id)
-    # dataset_ids -= imported_dataset_ids
-    dataset_ids.each do |id|
-      dataset = ::Opendata::Dataset.find(id) rescue nil
-      next unless dataset
-
-      if imported_dataset_ids.include?(id)
-        dataset.resources.each do |resource|
-          next if imported_resource_ids.include?(resource.id)
-          put_log("-- resource : destroy #{resource.name}")
-          resource.destroy
-        end
-      else
-        put_log("- dataset : destroy #{dataset.name}")
-        dataset.destroy
-      end
-    end
-
     body = []
     url = ::File.join(
       site.mypage_full_url,
@@ -241,6 +214,27 @@ module Opendata::Metadata::CsvImporter
       body << url
       @report.notice_body = body.join("\n")
     else
+      # destroy unimported datasets
+      dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
+        "metadata_importer_id" => id
+      ).pluck(:id)
+      # dataset_ids -= imported_dataset_ids
+      dataset_ids.each do |id|
+        dataset = ::Opendata::Dataset.find(id) rescue nil
+        next unless dataset
+
+        if imported_dataset_ids.include?(id)
+          dataset.resources.each do |resource|
+            next if imported_resource_ids.include?(resource.id)
+            put_log("-- resource : destroy #{resource.name}")
+            resource.destroy
+          end
+        else
+          put_log("- dataset : destroy #{dataset.name}")
+          dataset.destroy
+        end
+      end
+
       @report.notice_subject = "#{site.name} #{name}【更新通知】"
       body << "#{I18n.l(@report.created, format: :long)}に、CSVの取り込みを実施しました。"
       if updated_dataset_ids.present?

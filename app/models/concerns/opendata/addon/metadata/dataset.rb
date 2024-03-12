@@ -114,13 +114,8 @@ module Opendata::Addon::Metadata::Dataset
 
   def validate_metadata_dataset
     return if metadata_importer_id.blank?
-    return if metadata_dataset_id.blank?
-    return if self.class.
-      where(metadata_importer_id: metadata_importer_id, name: name).
-      ne(metadata_dataset_id: metadata_dataset_id).
-      exists(metadata_dataset_id: true).
-      blank?
+    return if metadata_dataset_id.present?
 
-    errors.add :name, :duplicate
+    errors.add :metadata_dataset_id, :blank
   end
 end

@@ -948,7 +948,7 @@ ja:
       opendata/addon/metadata/license:
         metadata_uid: メタデータライセンスID
       opendata/addon/metadata/dataset:
-        metadata_dataset_id: ID
+        metadata_dataset_id: データセットID
         metadata_japanese_local_goverment_code: 全国地方公共団体コード
         metadata_local_goverment_name: 地方公共団体名
         metadata_dataset_keyword: キーワード
