@@ -87,7 +87,7 @@ gem 'omniauth-line'
 gem 'omniauth-rails_csrf_protection'
 
 # SNS
-gem 'twitter'
+gem 'x'
 
 # SAML
 gem 'ruby-saml'

@@ -862,10 +862,10 @@ en:
         twitter_card: Card format
         twitter_username: User name
         twitter_default_image_url: Default image URL
-        twitter_consumer_key: Consumer key
-        twitter_consumer_secret: Consumer secret
-        twitter_access_token: Access token
-        twitter_access_token_secret: Token secret
+        twitter_consumer_key: X API Key
+        twitter_consumer_secret: X API Key Secret
+        twitter_access_token: X Access token
+        twitter_access_token_secret: X Access Token secret
       ss/addon/line_setting:
         line_poster_state: Posting to line
         line_channel_secret: Channel secret
@@ -1355,17 +1355,17 @@ en:
         - If the page does not contain an image, the URL will be set to “twitter:image”.
         - If the page contains an image, the URL you set here is not used.
       twitter_consumer_key:
-        - Set the consumer key (API key, Consumer Key, API Key).
-        - Required for automatic posting on Twitter.
+        - Set the X API key.
+        - Required for automatic posting on X.
       twitter_consumer_secret:
-        - Set the consumer secret (API secret, Consumer Secret, API Secret).
-        - Required for automatic posting on Twitter.
+        - Set the X API Key Secret.
+        - Required for automatic posting on X.
       twitter_access_token:
-        - Set the access token.
-        - Required for automatic posting on Twitter.
+        - Set the X Access Token.
+        - Required for automatic posting on X.
       twitter_access_token_secret:
-        - Set the access token secret.
-        - Required for automatic posting on Twitter.
+        - Set the X Access Token Secret.
+        - Required for automatic posting on X.
     ss/addon/line_setting:
       line_poster_state:
         - If enabled, LINE linkage will appear when editing pages.
