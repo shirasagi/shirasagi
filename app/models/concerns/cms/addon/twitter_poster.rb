@@ -68,12 +68,13 @@ module Cms::Addon
     end
 
     def connect_twitter
-      Twitter::REST::Client.new do |config|
-        config.consumer_key        = self.site.twitter_consumer_key
-        config.consumer_secret     = self.site.twitter_consumer_secret
-        config.access_token        = self.site.twitter_access_token
-        config.access_token_secret = self.site.twitter_access_token_secret
-      end
+      credentials = {
+        api_key: self.site.twitter_consumer_key,
+        api_key_secret: self.site.twitter_consumer_secret,
+        access_token: self.site.twitter_access_token,
+        access_token_secret: self.site.twitter_access_token_secret,
+      }
+      X::Client.new(**credentials)
     end
 
     def post_to_twitter(execute: :inline)
@@ -109,55 +110,32 @@ module Cms::Addon
 
     def execute_post_to_twitter
       Cms::SnsPostLog::Twitter.create_with(self) do |log|
-        begin
-          posted_at = Time.zone.now
-          log.created = posted_at
+        posted_at = Time.zone.now
+        log.created = posted_at
 
-          message = "#{name}｜#{full_url}?_=#{posted_at.to_i}"
-          client = connect_twitter
-          media_files = tweet_media_files
+        message = "#{name}｜#{full_url}?_=#{posted_at.to_i}"
+        client = connect_twitter
+        tweet = client.post("tweets", { text: message }.to_json)
+        twitter_id = tweet.dig("data", "id")
 
-          if media_files.present?
-            # 画像の添付があれば update_with_media を用いて投稿
-            log.action = "update_with_media"
-            log.message = message
-            log.media_files = media_files.map(&:path)
-            tweet = client.update_with_media(message, media_files)
-          else
-            # 画像の添付がなければ update を用いて投稿
-            log.action = "update"
-            log.message = message
-            tweet = client.update(message)
-          end
-          twitter_id = tweet.id
-          user_screen_id = client.user.screen_name
-          log.response_tweet = tweet.to_h.to_json
+        user_data = client.get("users/me")
+        user_screen_id = user_data.dig("data", "username")
+        log.response_tweet = tweet.to_h.to_json
 
-          self.add_to_set(
-            twitter_posted: {
-              twitter_post_id: twitter_id.to_s,
-              twitter_user_id: user_screen_id,
-              posted_at: posted_at
-            }
-          )
-          self.unset(:twitter_edit_auto_post, :twitter_post_error) #編集時に投稿をリセット
-          log.state = "success"
-        rescue => e
-          Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-          log.error = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
-          self.set(twitter_post_error: "#{e.class} (#{e.message})")
-        end
+        self.add_to_set(
+          twitter_posted: {
+            twitter_post_id: twitter_id.to_s,
+            twitter_user_id: user_screen_id,
+            posted_at: posted_at
+          }
+        )
+        self.unset(:twitter_edit_auto_post, :twitter_post_error) #編集時に投稿をリセット
+        log.state = "success"
+      rescue => e
+        Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        log.error = "post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+        self.set(twitter_post_error: "#{e.class} (#{e.message})")
       end
-    end
-
-    def tweet_media_files
-      media_files = []
-      if twitter_post_format == "thumb_and_page" && thumb
-        media_files << thumb
-      elsif twitter_post_format == "files_and_page"
-        media_files = attached_files.select(&:image?).take(TWITTER_MAX_MEDIA_COUNT)
-      end
-      media_files.map { |file| ::File.new(file.path) }
     end
   end
 end
