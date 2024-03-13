@@ -33,8 +33,6 @@ module Opendata::Metadata::CsvImporter
             begin
               name = (csv_row['データセット_タイトル'].presence || csv_row['データ名称']).to_s.gsub(/\R|\s|\u00A0|　/, '')
 
-              next if name.blank?
-
               put_log("- #{idx + 1} #{name}")
 
               @report_dataset = @report.new_dataset
