@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Jmaxml::Action::SwitchUrgency, dbscope: :example do
   let(:site) { cms_site }
+  let(:user) { cms_user }
 
   describe 'basic attributes' do
     let!(:layout1) { create_cms_layout }
@@ -25,6 +26,18 @@ describe Jmaxml::Action::SwitchUrgency, dbscope: :example do
 
       index_page.reload
       expect(index_page.layout_id).to eq layout2.id
+    end
+
+    it do
+      index_page.acquire_lock(user: user, force: true)
+      index_page.reload
+      expect(index_page.locked?).to be true
+
+      subject.execute(page, context)
+
+      index_page.reload
+      expect(index_page.layout_id).to eq layout2.id
+      expect(index_page.locked?).to be false
     end
   end
 end
