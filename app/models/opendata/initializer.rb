@@ -112,6 +112,7 @@ module Opendata
     Cms::Role.permission :read_opendata_reports
     Cms::Role.permission :read_opendata_histories
 
+    SS::File.model "opendata/member", Opendata::MemberFile
     SS::File.model "opendata/dataset", SS::File, permit: %i(role)
     SS::File.model "opendata/resource", SS::File, permit: %i(role)
     SS::File.model "opendata/url_resource", SS::File, permit: %i(role)

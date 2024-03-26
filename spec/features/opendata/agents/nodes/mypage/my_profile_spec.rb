@@ -59,4 +59,48 @@ describe "opendata_agents_nodes_my_profile", type: :feature, dbscope: :example d
     expect(status_code).to eq 200
     expect(current_path).to eq login_url.path
   end
+
+  it "#index" do
+    expect(Opendata::MemberFile.count).to eq 0
+
+    visit index_url
+    expect(current_path).to eq index_url.path
+    expect(status_code).to eq 200
+
+    within "table.see" do
+      expect(page).to have_content(member.name)
+      expect(page).to have_content(member.email)
+    end
+
+    # upload icon
+    within "nav.menu" do
+      click_link 'プロフィールの編集'
+    end
+    expect(status_code).to eq 200
+
+    within "form#item-form" do
+      attach_file "item[in_icon]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+      click_button I18n.t('ss.buttons.save')
+    end
+
+    expect(Opendata::MemberFile.count).to eq 1
+    file = Opendata::MemberFile.first
+    within ".parent-row.icon" do
+      expect(page).to have_css "img[src=\"#{file.url}\"]"
+    end
+    visit file.url
+    expect(status_code).to eq 200
+
+    # delete icon
+    visit index_url
+    within "nav.menu" do
+      click_link 'プロフィールの編集'
+    end
+    expect(status_code).to eq 200
+    within "form#item-form" do
+      check "item[rm_icon]"
+      click_button I18n.t('ss.buttons.save')
+    end
+    expect(Opendata::MemberFile.count).to eq 0
+  end
 end
