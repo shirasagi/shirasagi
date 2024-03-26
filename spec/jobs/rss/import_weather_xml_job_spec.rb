@@ -329,7 +329,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(page.parent.id).to eq article_node.id
         expect(page.layout).to eq article_page_layout
         expect(page.name).to eq '奈良県気象警報・注意報'
-        expect(page.state).to eq action1.publish_state
+        expect(page.state).to eq "closed"
         expect(page.category_ids).to eq [ category_node.id ]
         expect(page.html).to include('<div class="jmaxml forecast">')
         expect(page.html).to include('<time datetime="2011-09-03T12:00:00+09:00">2011年9月3日 12時00分</time>')
@@ -470,13 +470,16 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       let(:trigger1) { create(:jmaxml_trigger_quake_intensity_flash) }
       let(:trigger2) { create(:jmaxml_trigger_quake_info) }
 
-      let(:article_node) { create(:article_node_page, group_ids: [ cms_group.id ]) }
       let(:category_node) { create(:category_node_page) }
-      let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node.id, category_ids: [ category_node.id ]) }
+      let(:article_node1) { create(:article_node_page, group_ids: [ cms_group.id ]) }
+      let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node1.id, category_ids: [ category_node.id ], publish_state: "draft") }
+
+      let(:article_node2) { create(:article_node_page, group_ids: [ cms_group.id ]) }
+      let(:action2) { create(:jmaxml_action_publish_page, publish_to_id: article_node2.id, category_ids: [ category_node.id ], publish_state: "public") }
 
       let(:group1) { create(:cms_group, name: "#{cms_group.name}/#{unique_id}") }
       let(:user1) { create(:cms_test_user, group_ids: [ group1.id ]) }
-      let(:action2) { create(:jmaxml_action_send_mail, recipient_user_ids: [ user1.id ]) }
+      let(:action3) { create(:jmaxml_action_send_mail, recipient_user_ids: [ user1.id ]) }
 
       before do
         stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
@@ -496,9 +499,9 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         trigger2.save!
 
         node.filters.new(name: unique_id, state: 'enabled', trigger_ids: [ trigger1.id.to_s ],
-          action_ids: [ action1.id.to_s, action2.id.to_s ])
+          action_ids: [ action1.id.to_s, action2.id.to_s, action3.id.to_s ])
         node.filters.new(name: unique_id, state: 'enabled', trigger_ids: [ trigger2.id.to_s ],
-          action_ids: [ action1.id.to_s, action2.id.to_s ])
+          action_ids: [ action1.id.to_s, action2.id.to_s, action3.id.to_s ])
         node.save!
       end
 
@@ -540,10 +543,25 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(task.closed).to be_present
         end
 
-        expect(Article::Page.count).to eq 1
-        Article::Page.first.tap do |page|
+        expect(Article::Page.count).to eq 2
+        Article::Page.where(filename: /^#{article_node1.filename}\//, depth: 2).first.tap do |page|
           expect(page.name).to eq '震度速報'
-          expect(page.state).to eq action1.publish_state
+          expect(page.state).to eq "closed"
+          expect(page.category_ids).to eq [ category_node.id ]
+          expect(page.html).to include('<div class="jmaxml quake">')
+          expect(page.html).to include('<time datetime="2011-03-11T14:48:10+09:00">2011年3月11日 14時48分</time>')
+          expect(page.html).to include('<span class="publishing-office">気象庁発表</span>')
+          expect(page.html).to include('2011年3月11日 14時46分ごろ地震がありました。')
+          expect(page.html).to include('<dt>岩手県沿岸南部</dt><dd>震度６弱</dd>')
+          expect(page.html).to include('<dt>岩手県内陸南部</dt><dd>震度６弱</dd>')
+          expect(page.html).to include('<dt>岩手県沿岸北部</dt><dd>震度５強</dd>')
+          expect(page.html).to include('<dt>岩手県内陸北部</dt><dd>震度５強</dd>')
+          expect(page.html).to include('<p>今後の情報に注意してください。</p>')
+        end
+
+        Article::Page.where(filename: /^#{article_node2.filename}\//, depth: 2).first.tap do |page|
+          expect(page.name).to eq '震度速報'
+          expect(page.state).to eq "public"
           expect(page.category_ids).to eq [ category_node.id ]
           expect(page.html).to include('<div class="jmaxml quake">')
           expect(page.html).to include('<time datetime="2011-03-11T14:48:10+09:00">2011年3月11日 14時48分</time>')
@@ -559,7 +577,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail).not_to be_nil
-          expect(mail.from).to eq [ action2.sender_email ]
+          expect(mail.from).to eq [ action3.sender_email ]
           expect(mail.to.first.to_s).to eq user1.email
           expect(mail.subject).to eq '震度速報'
           expect(mail.body.raw_source).to include('2011年3月11日 14時48分　気象庁発表')
@@ -568,7 +586,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail.body.raw_source).to include('岩手県内陸南部：震度６弱')
           expect(mail.body.raw_source).to include('岩手県沿岸北部：震度５強')
           expect(mail.body.raw_source).to include('岩手県内陸北部：震度５強')
-          expect(mail.body.raw_source).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
+          expect(mail.body.raw_source).to end_with("\r\n#{action3.signature_text.gsub("\n", "\r\n")}\r\n")
         end
       end
     end
