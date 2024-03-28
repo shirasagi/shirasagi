@@ -52,6 +52,9 @@ en:
       force_authn_state:
         enabled: Require
         disabled: Do not require
+      authn_context:
+        password_protected_transport: "User name and Password"
+        windows: "Integrated Windows Authentication"
     links:
       new_from_metadata: Import metadata
       new_from_discovery: Create from Discovery
@@ -146,6 +149,7 @@ en:
         identifier: Identifier
         metadata: Metadata
         force_authn_state: Reauthentication
+        authn_context: Authentication method
       sys/addon/open_id_connect_setting:
         client_id: Client ID
         client_secret: Client Secret
@@ -299,6 +303,10 @@ en:
         - Select whether to require reauthentication.
         - If “Require” is selected, IdP always authenticates the user.
         - If “Do not require” is selected, IdP responds with identity information from the session if it exists, and authenticates the user if a session does not exist.
+      authn_context:
+        - Select Authentication method of IdP
+        - "User name and Password: Authenticate with username and password. This is the default authentication method."
+        - "Integrated Windows Authentication: Use Integrated Windows Authentication. The IdP side must support this authentication method."
 
     sys/notice:
       name:
