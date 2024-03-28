@@ -11,14 +11,14 @@ end
 %>
 <article class="sitemap-body">
   <% @cur_page.sitemap_list.each do |node| %>
-    <<%= hx = "h" + (node[:depth] + 1).to_s %> class="<%= page_class node[:url] %>">
+    <<%= hx = "h" + (node[:depth] + 1).to_s %> class="<%= page_class node[:path] %>">
       <%= link_to node[:name], node[:url] %>
     </<%= hx %>>
 
     <% if node[:pages] %>
-    <ul class="<%= node_class node[:url] %>">
+    <ul class="<%= node_class node[:path] %>">
       <% node[:pages].each_with_index do |page, idx| %>
-        <% classes = [page_class(page[:url])] %>
+        <% classes = [page_class(page[:path])] %>
         <% classes << "last-child" if idx == node[:pages].size - 1 %>
         <li class="<%= classes.join(' ') %>"><%= link_to page[:name], page[:url] %></li>
       <% end %>
