@@ -1,4 +1,10 @@
 <dl class="see mod-sys-samle-setting">
   <dt><%= @model.t :metadata %><%= @model.tt :metadata %></dt>
   <dd><%= f.file_field :in_metadata %></dd>
+
+  <dt><%= @model.t :force_authn_state %><%= @model.tt :force_authn_state %></dt>
+  <dd><%= f.select :force_authn_state, @item.force_authn_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :authn_context %><%= @model.tt :authn_context %></dt>
+  <dd><%= f.select :authn_context, @item.authn_context_options, include_blank: true %></dd>
 </dl>
