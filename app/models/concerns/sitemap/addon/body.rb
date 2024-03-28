@@ -96,9 +96,10 @@ module Sitemap::Addon
 
         if item = model.site(site).and_public.filename(url).first
           url = item.url
-          data = { url: url, name: name.presence || item.name, depth: depth }
+          path = "#{item.site.url}#{item.filename}"
+          data = { url: url, path: path, name: name.presence || item.name, depth: depth }
         else
-          data = { url: url, name: name.presence || url, depth: depth }
+          data = { url: url, path: url, name: name.presence || url, depth: depth }
         end
 
         if data[:depth] < sitemap_depth
