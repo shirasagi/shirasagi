@@ -115,10 +115,10 @@ class Gws::Schedule::ApprovalsController < ApplicationController
       post_comment
 
       @cur_schedule = @cur_schedule.class.find(@cur_schedule.id) # nocache
-      @cur_schedule.update_approval_state
+      @cur_schedule.update_approval_state(@cur_user)
       if @cur_schedule.approval_state == 'approve'
         send_approval_approve_mail
-      elsif params.dig(:item, :approval_state) == 'deny'
+      elsif @cur_schedule.approval_state == 'deny'
         send_approval_deny_mail
       end
     end

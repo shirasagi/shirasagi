@@ -56,8 +56,11 @@ module Gws::Addon::Schedule::Approval
     approvals.where(cond).order_by(created: 1).first || approvals.new(cond)
   end
 
-  def update_approval_state
-    set(approval_state: current_approval_state)
+  def update_approval_state(user)
+    self.cur_site = site
+    self.approval_state = current_approval_state
+    #self.user_ids += [user.id] if approval_state == "deny"
+    update
   end
 
   def current_approval_state
@@ -69,5 +72,20 @@ module Gws::Addon::Schedule::Approval
 
     return 'request' if approvals.size < approval_member_ids.size + approval_facilities.size
     status
+  end
+
+  module ClassMethods
+    #def exclude_denied_plans(user)
+    #  criteria = self.criteria
+    #  return criteria.ne(approval_state: "deny") if user.nil?
+    #
+    #  cond = []
+    #  cond << { approval_state: { "$ne" => "deny" }  }
+    #  cond << { "$and" => [
+    #    { approval_state: "deny" },
+    #    { user_ids: { "$in" => [user.id] } }
+    #  ]}
+    #  criteria.where("$or" => cond)
+    #end
   end
 end

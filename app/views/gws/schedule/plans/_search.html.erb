@@ -49,10 +49,16 @@
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
 
-<% category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options %>
+<%
+  category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options
+  approval_options = %w(request approve deny).map do |v|
+    [ I18n.t("gws/schedule.views.#{v}"), v ]
+  end
+%>
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <%= f.select :category_id, category_options, include_blank: @model.t(:category_id) if category_options.present? %>
+  <%= f.select :approval, approval_options, include_blank: t("gws/schedule.views.approval_state") %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 <% end %>
