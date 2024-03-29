@@ -51,22 +51,20 @@ en:
   modules:
     ldap: LDAP
     addons:
-      ldap/user: LDAP
-      ldap/group: LDAP
+      ss/ldap/user: LDAP
+      ss/ldap/group: LDAP
 
   mongoid:
     models:
-      ldap/addon/group: Group
-      ldap/addon/user: User
-      ldap/import: Import
+      cms/ldap/import: Import
     attributes:
-      ldap/addon/group:
+      ss/addon/ldap/group:
         ldap_host: Host
         ldap_dn: DN
         ldap_auth_method: Authentication method
-      ldap/addon/user:
+      ss/addon/ldap/user:
         ldap_dn: DN
-      ldap/import:
+      cms/ldap/import:
         group_count: Number of groups
         user_count: Number of users
         ldap: LDAP import results
@@ -80,14 +78,14 @@ en:
       index: Syncing results
 
   tooltip:
-    ldap/addon/group:
+    ss/addon/ldap/group:
       ldap_dn:
       - Enter the DN (identifier) of the group if you are using LDAP.
-    ldap/addon/user:
+    ss/addon/ldap/user:
       ldap_dn:
       - Enter the user's DN (identifier) if you are using LDAP.
 
   job:
     models:
-      ldap/import_job: LDAP import
-      ldap/sync_job: LDAP synchronization
+      cms/ldap/import_job: LDAP import
+      cms/ldap/sync_job: LDAP synchronization

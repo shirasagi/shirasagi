@@ -7,7 +7,7 @@ module SS::Model::User
   include SS::Reference::UserExpiration
   include SS::UserImportValidator
   include SS::Addon::LocaleSetting
-  include Ldap::Addon::User
+  include SS::Addon::Ldap::User
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze

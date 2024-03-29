@@ -51,22 +51,20 @@ ja:
   modules:
     ldap: LDAP
     addons:
-      ldap/user: LDAP
-      ldap/group: LDAP
+      ss/ldap/user: LDAP
+      ss/ldap/group: LDAP
 
   mongoid:
     models:
-      ldap/addon/group: グループ
-      ldap/addon/user: ユーザー
-      ldap/import: インポート
+      cms/ldap/import: インポート
     attributes:
-      ldap/addon/group:
+      ss/addon/ldap/group:
         ldap_host: ホスト
         ldap_dn: DN
         ldap_auth_method: 認証方法
-      ldap/addon/user:
+      ss/addon/ldap/user:
         ldap_dn: DN
-      ldap/import:
+      cms/ldap/import:
         group_count: グループ数
         user_count: ユーザ数
         ldap: LDAPインポート結果
@@ -80,14 +78,14 @@ ja:
       index: 同期結果
 
   tooltip:
-    ldap/addon/group:
+    ss/addon/ldap/group:
       ldap_dn:
       - LDAPを利用している場合にグループのDN（識別子）を入力します。
-    ldap/addon/user:
+    ss/addon/ldap/user:
       ldap_dn:
       - LDAPを利用している場合にユーザーのDN（識別子）を入力します。
 
   job:
     models:
-      ldap/import_job: LDAPインポート
-      ldap/sync_job: LDAP同期
+      cms/ldap/import_job: LDAPインポート
+      cms/ldap/sync_job: LDAP同期

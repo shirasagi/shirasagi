@@ -312,6 +312,21 @@ Rails.application.routes.draw do
       resources :ignore_urls, concerns: :deletion
     end
 
+    namespace 'ldap' do
+      get "server" => "servers#main", as: "server_main"
+      resource :server, only: [:show], path: "server/:dn" do
+        get :group
+        get :user
+      end
+      resources :imports, concerns: :deletion, only: [:index, :show, :destroy] do
+        get :import_confirmation, on: :collection
+        post :import, on: :collection
+        get :sync_confirmation, on: :member
+        post :sync, on: :member
+      end
+      resources :result, only: [:index]
+    end
+
     namespace "apis" do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
