@@ -7,6 +7,7 @@ module Gws::Schedule::PlanFilter
     model Gws::Schedule::Plan
     before_action :check_schedule_visible
     before_action :set_file_addon_state
+    before_action :set_approvals
     before_action :set_items
   end
 
@@ -49,7 +50,7 @@ module Gws::Schedule::PlanFilter
       Gws::Schedule::Plan.site(@cur_site).without_deleted.
         member(@cur_user).
         #and([{ '$or' => or_conds }]).
-        search(params[:s])
+        search(@search_plan)
     end
   end
 
@@ -80,6 +81,13 @@ module Gws::Schedule::PlanFilter
 
   def set_file_addon_state
     @file_addon_state = 'hide' if @cur_site.schedule_attachment_denied?
+  end
+
+  def set_approvals
+    @search_plan = params[:s] || {}
+    if params[:action] == "index" || params[:action] == "events"
+      @search_plan[:approvals] = %w(request approve)
+    end
   end
 
   def send_approval_mail
