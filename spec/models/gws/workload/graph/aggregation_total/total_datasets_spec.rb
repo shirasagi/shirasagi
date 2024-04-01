@@ -56,11 +56,11 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
     end
 
     it "total_datasets" do
-      expect(item1.year_months).to eq [{ "year" => 2023, "month" => 4 }]
-      expect(item2.year_months).to eq [{ "year" => 2023, "month" => 5 }]
+      expect(item1.year_months).to eq [{ "year" => year, "month" => 4 }]
+      expect(item2.year_months).to eq [{ "year" => year, "month" => 5 }]
       expect(item3.year_months).to eq [
-        { "year" => 2023, "month" => 4 }, { "year" => 2023, "month" => 5 }, { "year" => 2023, "month" => 6 }]
-      expect(item4.year_months).to eq [{ "year" => 2022, "month" => 4 }]
+        { "year" => year, "month" => 4 }, { "year" => year, "month" => 5 }, { "year" => year, "month" => 6 }]
+      expect(item4.year_months).to eq [{ "year" => year - 1, "month" => 4 }]
 
       aggregation = described_class.new(site, year, group, users)
       aggregation.set_base_items
