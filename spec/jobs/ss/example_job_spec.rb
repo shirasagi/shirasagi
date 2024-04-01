@@ -84,7 +84,7 @@ describe SS::ExampleJob, dbscope: :example do
   describe ".perform_now" do
     context "with no bindings and no parameters" do
       before do
-        described_class.perform_now
+        ss_perform_now described_class
       end
 
       it do
@@ -97,7 +97,7 @@ describe SS::ExampleJob, dbscope: :example do
 
     context "with site" do
       before do
-        described_class.bind(site_id: site).perform_now
+        ss_perform_now described_class.bind(site_id: site)
       end
 
       it do
@@ -111,7 +111,7 @@ describe SS::ExampleJob, dbscope: :example do
 
     context "with group" do
       before do
-        described_class.bind(group_id: group).perform_now
+        ss_perform_now described_class.bind(group_id: group)
       end
 
       it do
@@ -125,7 +125,7 @@ describe SS::ExampleJob, dbscope: :example do
 
     context "with user" do
       before do
-        described_class.bind(user_id: user).perform_now
+        ss_perform_now described_class.bind(user_id: user)
       end
 
       it do
@@ -139,7 +139,7 @@ describe SS::ExampleJob, dbscope: :example do
 
     context "with parameters" do
       before do
-        described_class.perform_now("world")
+        ss_perform_now described_class, "world"
       end
 
       it do

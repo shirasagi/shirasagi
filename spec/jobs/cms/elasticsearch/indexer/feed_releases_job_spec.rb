@@ -42,7 +42,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
 
       expect(Job::Log.all.count).to eq 2
       Job::Log.all.each do |log|
@@ -80,7 +80,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
       ::Cms::Elasticsearch.refresh_index(site: site)
 
@@ -129,7 +129,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
       ::Cms::Elasticsearch.refresh_index(site: site)
 
@@ -206,7 +206,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
 
       expect(Job::Log.all.count).to eq 2
       Job::Log.all.each do |log|
@@ -244,7 +244,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
       ::Cms::Elasticsearch.refresh_index(site: site)
 
@@ -303,7 +303,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
       ::Cms::Elasticsearch.refresh_index(site: site)
 

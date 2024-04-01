@@ -14,7 +14,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
     csv_data = Cms::AllContent.new(site: site, criteria: criteria).enum_csv(encoding: "UTF-8").to_a.join
     ss_file = tmp_ss_file(contents: csv_data)
     expect do
-      described_class.bind(site_id: site.id, user_id: user.id).perform_now(ss_file.id)
+      ss_perform_now(described_class.bind(site_id: site.id, user_id: user.id), ss_file.id)
     end.to output.to_stdout
   end
 

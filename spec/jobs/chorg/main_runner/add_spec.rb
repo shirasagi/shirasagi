@@ -13,7 +13,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context "with all available attributes" do
       it do
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -63,7 +63,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -107,7 +107,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
