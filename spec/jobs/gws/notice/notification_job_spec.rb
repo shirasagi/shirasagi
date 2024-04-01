@@ -222,4 +222,63 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       expect(ActionMailer::Base.deliveries.length).to eq 0
     end
   end
+
+  context 'set sendmail_domains' do
+    let!(:notice) do
+      create(
+        :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
+        readable_setting_range: 'select', readable_member_ids: [recipient1.id],
+        readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
+        state: 'public'
+      )
+    end
+    before do
+      site.sendmail_domains = domains
+      site.update!
+    end
+
+    context "allowed domains" do
+      let!(:domains) { %w(example.jp) }
+
+      it do
+        notice.reload
+        expect(notice.notification_noticed).to be_nil
+
+        described_class.bind(site_id: site.id).perform_now
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        notice.reload
+        expect(notice.notification_noticed).to eq now
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+      end
+    end
+
+    context "disallowed domains" do
+      let!(:domains) { %w(example.com) }
+
+      it do
+        notice.reload
+        expect(notice.notification_noticed).to be_nil
+
+        described_class.bind(site_id: site.id).perform_now
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        notice.reload
+        expect(notice.notification_noticed).to eq now
+
+        expect(ActionMailer::Base.deliveries.length).to eq 0
+      end
+    end
+  end
 end

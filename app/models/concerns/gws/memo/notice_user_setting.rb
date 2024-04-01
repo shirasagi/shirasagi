@@ -18,6 +18,7 @@ module Gws::Memo::NoticeUserSetting
     field :send_notice_mail_addresses, type: SS::Extensions::Words
     permit_params :send_notice_mail_addresses
     validates :send_notice_mail_addresses, emails: true, length: { maximum: MAX_MAIL_COUNT, message: :too_large }
+    validate :validate_allowed_mail_addresses
   end
 
   def notice_user_setting_options
@@ -49,6 +50,16 @@ module Gws::Memo::NoticeUserSetting
   end
 
   private
+
+  def validate_allowed_mail_addresses
+    return if cur_site.nil?
+    return if send_notice_mail_addresses.blank?
+    return if errors.present?
+
+    if !send_notice_mail_addresses.all? { |v| cur_site.email_domain_allowed?(v) }
+      self.errors.add :send_notice_mail_addresses, :disallowed_domains
+    end
+  end
 
   def model_convert_to_i18n_key(model)
     Gws::Addon::System::NoticeSetting::MODEL_FUNCTION_MAP[model.model_name.i18n_key.to_s]
