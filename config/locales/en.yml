@@ -218,6 +218,7 @@ en:
       password_include_email: contains email address.
       password_include_name: contains your name.
       password_include_kana: contains your reading.
+      disallowed_domains: includes disallowed domains
     template:
       body: Please check the following items.
       header:
