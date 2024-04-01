@@ -11,7 +11,7 @@ describe Cms::GenerationReportCreateJob, dbscope: :example do
     Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
   end
 
-  describe "#perform when taks 'cms:generate_node' is running" do
+  describe "#perform when task 'cms:generate_node' is running" do
     before do
       ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id)
 
