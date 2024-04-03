@@ -3,6 +3,9 @@ ja:
     server: サーバー情報
     import: インポート
     result: 同期結果
+    setting: 設定
+    server_setting: サーバー設定
+    import_setting: インポート設定
     links:
       ldap: LDAP
       sync: 同期する
@@ -34,6 +37,10 @@ ja:
           user: ユーザ
           name: 名前
           email: email
+    options:
+      auth_method:
+        simple: ユーザーDNとパスワードによる認証
+        anonymous: 匿名アクセス可（認証なし）
     messages:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。
@@ -47,6 +54,8 @@ ja:
       connection_setting_not_found: LDAP 接続情報が設定されていません。
       connection_refused: LDAP サーバーへ接続できません。
       update_ldap_password: LDAPのパスワード変更が出来ませんでした。
+    import_auth_method_remarks_html: |-
+      認証方法に「ユーザーDNとパスワードによる認証」を選択した場合、以下のユーザーDNとパスワードを設定してください。
 
   modules:
     ldap: LDAP
@@ -57,6 +66,7 @@ ja:
   mongoid:
     models:
       cms/ldap/import: インポート
+      cms/ldap/sync_task: インポート設定
     attributes:
       ss/addon/ldap/group:
         ldap_host: ホスト
@@ -68,6 +78,15 @@ ja:
         group_count: グループ数
         user_count: ユーザ数
         ldap: LDAPインポート結果
+      ss/ldap/site_setting:
+        ldap_url: LDAP Server
+        ldap_openssl_verify_mode: OpenSSL証明書チェック方法
+      cms/ldap/import_setting:
+        ldap_base_dn: ベースDN
+        ldap_auth_method: 認証方法
+        ldap_user_dn: ユーザDN
+        ldap_user_password: パスワード
+        ldap_exclude_groups: 除外グループ
 
   views:
     ldap/server:

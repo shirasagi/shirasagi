@@ -313,6 +313,8 @@ Rails.application.routes.draw do
     end
 
     namespace 'ldap' do
+      get '/' => redirect { |p, req| "#{req.path}/setting" }, as: :main
+      resource :setting, only: %i[show edit update]
       get "server" => "servers#main", as: "server_main"
       resource :server, only: [:show], path: "server/:dn" do
         get :group

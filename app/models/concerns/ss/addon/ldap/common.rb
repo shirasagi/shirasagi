@@ -1,13 +1,4 @@
 module SS::Addon::Ldap::Common
-  def validate_ldap_dn
-    if ldap_dn.present?
-      require 'net/ldap/dn'
-      Net::LDAP::DN.new(ldap_dn).to_a
-    end
-  rescue
-    errors.add :ldap_dn, :invalid
-  end
-
   def normalize_or_remove_ldap_dn
     if ldap_dn.blank?
       remove_attribute(:ldap_dn)

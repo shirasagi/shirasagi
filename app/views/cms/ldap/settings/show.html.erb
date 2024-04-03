@@ -1,0 +1,13 @@
+<div class="addon-views">
+  <% %i[server import].each do |view| %>
+    <%=
+      addon_options = {}
+      addon_options[:id] = "addon-#{view}"
+      addon_options[:head] = t("ldap.#{view}_setting")
+      buf = render "show_#{view}", addon: addon_options
+      render "ss/crud/addon", addon: addon_options do
+        buf
+      end
+    %>
+  <% end %>
+</div>

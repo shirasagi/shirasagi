@@ -7,7 +7,7 @@ module SS::Addon::Ldap::Group
     field :ldap_dn, type: String
     field :ldap_import_id, type: Integer
     permit_params :ldap_dn
-    validate :validate_ldap_dn
+    validates :ldap_dn, ldap_dn: true
     before_save :normalize_or_remove_ldap_dn
   end
 end

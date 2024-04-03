@@ -3,6 +3,9 @@ en:
     server: Server information
     import: Import
     result: Syncing results
+    setting: Setting
+    server_setting: Server Setting
+    import_setting: Import Setting
     links:
       ldap: LDAP
       sync: Synchronize
@@ -34,6 +37,10 @@ en:
           user: User
           name: Name
           email: E-mail
+    options:
+      auth_method:
+        simple: User DN and Password
+        anonymous: Anonymous (skip auth)
     messages:
       no_groups: The group cannot be found.
       no_users: The user cannot be found.
@@ -47,6 +54,8 @@ en:
       connection_setting_not_found: LDAP connection information is not set.
       connection_refused: Unable to connect to LDAP server.
       update_ldap_password: Unable to change password in LDAP.
+    import_auth_method_remarks_html: |-
+      If you select "User DN and Password" as the authentication method, please set the following user DN and password.
 
   modules:
     ldap: LDAP
@@ -57,6 +66,7 @@ en:
   mongoid:
     models:
       cms/ldap/import: Import
+      cms/ldap/sync_task: Import Setting
     attributes:
       ss/addon/ldap/group:
         ldap_host: Host
@@ -68,6 +78,15 @@ en:
         group_count: Number of groups
         user_count: Number of users
         ldap: LDAP import results
+      ss/ldap/site_setting:
+        ldap_url: LDAP server
+        ldap_openssl_verify_mode: OpenSSL certificate check method
+      cms/ldap/import_setting:
+        ldap_base_dn: Base DN
+        ldap_auth_method: Authentication method
+        ldap_user_dn: User DN
+        ldap_user_password: Password
+        ldap_exclude_groups: Exclude groups
 
   views:
     ldap/server:

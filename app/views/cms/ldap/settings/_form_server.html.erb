@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :ldap_url %><%= @model.tt :ldap_url %></dt>
+  <dd><%= f.url_field :ldap_url, placeholder: "ldaps://example.jp/" %></dd>
+
+  <dt><%= @model.t :ldap_openssl_verify_mode %><%= @model.tt :ldap_openssl_verify_mode %></dt>
+  <dd><%= f.select :ldap_openssl_verify_mode, @cur_site.ldap_openssl_verify_mode_options, include_blank: true %></dd>
+</dl>
