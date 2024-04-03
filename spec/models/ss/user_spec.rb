@@ -71,7 +71,7 @@ describe SS::User, dbscope: :example do
       end
     end
 
-    context "when invalid type is givin" do
+    context "when invalid type is given" do
       r = rand(0x100000000).to_s(36)
       let(:entity) do
         {

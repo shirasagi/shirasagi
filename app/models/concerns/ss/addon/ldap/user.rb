@@ -12,8 +12,7 @@ module SS::Addon::Ldap::User
   end
 
   def ldap_authenticate(password)
-    return false unless login_roles.include?(SS::User::LOGIN_ROLE_LDAP)
-    return false if ldap_dn.blank?
+    return false if !type_ldap? || ldap_dn.blank?
     Ldap::Connection.authenticate(username: ldap_dn, password: password)
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

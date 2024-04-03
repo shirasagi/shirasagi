@@ -4,7 +4,6 @@ FactoryBot.define do
     email { "sys@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
     deletion_lock_state { "locked" }
     #sys_role_ids
 
@@ -16,7 +15,6 @@ FactoryBot.define do
     email { "user#{unique_id}@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
     #sys_role_ids
 
     lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }

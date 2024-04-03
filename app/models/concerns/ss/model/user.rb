@@ -11,9 +11,7 @@ module SS::Model::User
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
-
-  LOGIN_ROLE_DBPASSWD = "dbpasswd".freeze
-  LOGIN_ROLE_LDAP = "ldap".freeze
+  TYPES = [ TYPE_SNS, TYPE_LDAP ].freeze
 
   included do
     attr_accessor :cur_site, :cur_user
@@ -38,7 +36,6 @@ module SS::Model::User
     field :tel, type: String
     field :tel_ext, type: String
     field :type, type: String
-    field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]
     field :last_loggedin, type: DateTime
     field :account_start_date, type: DateTime
     field :account_expiration_date, type: DateTime
@@ -62,7 +59,7 @@ module SS::Model::User
 
     embeds_ids :groups, class_name: "SS::Group"
 
-    permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
+    permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :remark, group_ids: []
     permit_params :account_start_date, :account_expiration_date, :session_lifetime
     permit_params :restriction, :lock_state, :deletion_lock_state
     permit_params :organization_id, :organization_uid, :switch_user_id
@@ -74,12 +71,12 @@ module SS::Model::User
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
     validates :email, presence: true, if: ->{ uid.blank? && organization_uid.blank? }
+    validates :type, inclusion: { in: TYPES, allow_blank: true }
     validates :last_loggedin, datetime: true
     validates :account_start_date, datetime: true
     validates :account_expiration_date, datetime: true
     validates :organization_id, presence: true, if: ->{ organization_uid.present? }
     validates :organization_uid, uniqueness: { scope: :organization_id }, if: ->{ organization_uid.present? }
-    validate :validate_type
     validate :validate_uid
     validate :validate_account_expiration_date
 
@@ -209,7 +206,7 @@ module SS::Model::User
     end
 
     def type_options
-      [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
+      TYPES.map { |type| [ I18n.t("ss.options.user_type.#{type}"), type ] }
     end
 
     def labels
@@ -241,6 +238,14 @@ module SS::Model::User
 
   def type_options
     self.class.type_options
+  end
+
+  def type_sns?
+    !type_ldap?
+  end
+
+  def type_ldap?
+    self.type == TYPE_LDAP
   end
 
   def enabled?
@@ -368,13 +373,8 @@ module SS::Model::User
   private
 
   def dbpasswd_authenticate(in_passwd)
-    return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
-    return false if password.blank?
+    return false if !type_sns? || password.blank?
     password == SS::Crypto.crypt(in_passwd)
-  end
-
-  def validate_type
-    errors.add :type, :invalid unless type.blank? || type == TYPE_SNS || type == TYPE_LDAP
   end
 
   def validate_uid

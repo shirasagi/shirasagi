@@ -9,7 +9,6 @@ FactoryBot.define do
     group_ids { group.present? ? [group.id] : nil }
     cms_role_ids { role.present? ? [role.id] : nil }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
 
     trait :cms_user_fixed_name do
       name { "cms_user" }
@@ -37,7 +36,6 @@ FactoryBot.define do
 
     trait :cms_user_ldap do
       type { SS::Model::User::TYPE_LDAP }
-      login_roles { [SS::User::LOGIN_ROLE_DBPASSWD, SS::User::LOGIN_ROLE_LDAP] }
       ldap_dn { "cn=#{name},dc=example,dc=jp" }
     end
 

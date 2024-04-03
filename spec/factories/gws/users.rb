@@ -13,7 +13,6 @@ FactoryBot.define do
     email { "#{uid}@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
 
     lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end

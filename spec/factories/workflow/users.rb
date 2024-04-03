@@ -9,7 +9,6 @@ FactoryBot.define do
     group_ids { group.present? ? [group.id] : nil }
     cms_role_ids { role.present? ? [role.id] : nil }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
 
     trait :workflow_user_fixed_name do
       name { "workflow_user" }
