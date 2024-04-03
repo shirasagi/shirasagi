@@ -40,6 +40,9 @@ namespace :ss do
       # history_logの削除
       ::Tasks::SS.invoke_task("history:history_log:purge")
 
+      # translate_access_logの削除
+      ::Tasks::SS.invoke_task("translate:access_log:purge")
+
       # 期限の切れた公開ページのお知らせ
       ::Tasks::SS.invoke_task("cms:expiration_notices")
 

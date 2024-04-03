@@ -11,8 +11,17 @@ module Translate::PublicFilter
     return if !@cur_site.translate_enabled?
     return if @cur_main_path !~ /^#{@cur_site.translate_location}\/.+?\//
 
+    deny_message = nil
     if browser.bot?
-      Rails.logger.info("translate denied due to a bot access: #{request.user_agent}")
+      deny_message = "bot access: #{request.user_agent}"
+    end
+    if @cur_site.translate_deny_no_refererr? && request.referer.blank?
+      deny_message = "no referer access"
+    end
+    Translate::AccessLog.create_log!(@cur_site, request, deny_message)
+
+    if deny_message.present?
+      Rails.logger.info("translate denied due to a #{deny_message}")
       return
     end
 

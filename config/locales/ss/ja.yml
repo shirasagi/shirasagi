@@ -999,6 +999,8 @@ ja:
         translate_google_api_request_word_count: APIリクエスト文字数
         translate_api_request_word_limit: 文字数上限
         translate_api_limit_exceeded_html: 制限超過時の表示HTML
+        translate_referer_restriction: リファラーによる制限
+        translate_access_log_threshold: 履歴保持期間
       ss/addon/source_cleaner/site_setting:
         source_cleaner_unwrap_tag_state: 不要なタグの削除
         source_cleaner_remove_tag_state: 空のタグの削除
