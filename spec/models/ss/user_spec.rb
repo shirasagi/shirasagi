@@ -20,6 +20,11 @@ describe SS::User, dbscope: :example do
       it do
         expect { subject.save! }.to raise_error Mongoid::Errors::Validations
       end
+
+      it do
+        expect(subject.valid?).to be_falsey
+        expect(subject.errors[:name]).to include(I18n.t("errors.messages.blank"))
+      end
     end
 
     context "when uid and email is missing" do
@@ -35,6 +40,11 @@ describe SS::User, dbscope: :example do
 
       it do
         expect { subject.save! }.to raise_error Mongoid::Errors::Validations
+      end
+
+      it do
+        expect(subject.valid?).to be_falsey
+        expect(subject.errors[:email]).to include(I18n.t("errors.messages.blank"))
       end
     end
 
@@ -53,21 +63,53 @@ describe SS::User, dbscope: :example do
       it do
         expect { subject.save! }.to raise_error Mongoid::Errors::Validations
       end
+
+      it do
+        expect(subject.valid?).to be_falsey
+        expect(subject.errors[:uid]).to include(I18n.t("errors.messages.invalid"))
+      end
     end
 
     context "when password is missing" do
-      r = rand(0x100000000).to_s(36)
-      let(:entity) do
-        {
-          name: "u#{r}",
-          email: "u#{r}@example.jp",
-          group_ids: [ group.id ]
-        }
-      end
-      subject { model.new(entity) }
+      context "when user type is 'sns'" do
+        r = rand(0x100000000).to_s(36)
+        let(:entity) do
+          {
+            name: "u#{r}",
+            email: "u#{r}@example.jp",
+            type: "sns",
+            group_ids: [ group.id ]
+          }
+        end
+        subject { model.new(entity) }
 
-      it do
-        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
+        it do
+          expect { subject.save! }.to raise_error Mongoid::Errors::Validations
+        end
+
+        it do
+          expect(subject.valid?).to be_falsey
+          expect(subject.errors[:password]).to include(I18n.t("errors.messages.blank"))
+        end
+      end
+
+      # LDAPユーザーの場合、パスワードを省略可能
+      context "when user type is 'ldap'" do
+        r = rand(0x100000000).to_s(36)
+        let(:entity) do
+          {
+            name: "u#{r}",
+            email: "u#{r}@example.jp",
+            type: "ldap",
+            group_ids: [ group.id ],
+            ldap_dn: "cn=u#{r},dc=example,dc=jp"
+          }
+        end
+        subject { model.new(entity) }
+
+        it do
+          expect { subject.save! }.not_to raise_error Mongoid::Errors::Validations
+        end
       end
     end
 
@@ -86,6 +128,11 @@ describe SS::User, dbscope: :example do
 
       it do
         expect { subject.save! }.to raise_error Mongoid::Errors::Validations
+      end
+
+      it do
+        expect(subject.valid?).to be_falsey
+        expect(subject.errors[:type]).to include(I18n.t("errors.messages.inclusion"))
       end
     end
 
@@ -150,6 +197,8 @@ describe SS::User, dbscope: :example do
 
       it do
         expect { subject.save! }.not_to raise_error
+        # LDAPユーザーの場合、パスワードを省略可能
+        expect(subject.password).to be_blank
       end
     end
   end
