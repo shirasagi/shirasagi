@@ -50,7 +50,6 @@ ja:
       sync_success: "同期に成功しました。グループ数: %{group_count}、ユーザー数: %{user_count}"
       group_moved: "%{user_name} がグループ「%{group_name}」へ移動しました。"
     errors:
-      has_multiple_root_groups: "サイト: %{site} は複数のルートグループが設定されています。"
       connection_setting_not_found: LDAP 接続情報が設定されていません。
       connection_refused: LDAP サーバーへ接続できません。
       update_ldap_password: LDAPのパスワード変更が出来ませんでした。

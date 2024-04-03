@@ -139,7 +139,9 @@ module SS::Model::User
       return nil if users.size != 1
 
       user = users.first
-      return user if user.send(:dbpasswd_authenticate, password)
+      auth_methods.each do |method|
+        return user if user.send(method, password, site: site)
+      end
       nil
     end
 
@@ -372,7 +374,7 @@ module SS::Model::User
 
   private
 
-  def dbpasswd_authenticate(in_passwd)
+  def dbpasswd_authenticate(in_passwd, **_options)
     return false if !type_sns? || password.blank?
     password == SS::Crypto.crypt(in_passwd)
   end

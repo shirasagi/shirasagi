@@ -12,26 +12,22 @@ class Cms::Ldap::ServersController < ApplicationController
   end
 
   def set_exclude_groups
-    @exclude_groups = SS.config.ldap.exclude_groups || []
+    @exclude_groups = @cur_site.ldap_exclude_groups || []
   end
 
   def connect
     Ldap::Connection.connect(
-      base_dn: @cur_site.root_group.ldap_dn,
-      username: @cur_user.ldap_dn,
-      password: session[:user]["password"]
+      url: @cur_site.ldap_url,
+      base_dn: @cur_site.ldap_base_dn,
+      auth_method: @cur_site.ldap_auth_method,
+      username: @cur_site.ldap_user_dn,
+      password: @cur_site.ldap_user_password ? SS::Crypto.decrypt(@cur_site.ldap_user_password) : nil
     )
   end
 
   public
 
   def show
-    if @cur_site.root_groups.length > 1
-      @errors = [ t("ldap.errors.has_multiple_root_groups", site: @cur_site.name) ]
-      render "show"
-      return
-    end
-
     connection = connect
     if connection.blank?
       @errors = [ t("ldap.errors.connection_setting_not_found") ]
@@ -65,7 +61,7 @@ class Cms::Ldap::ServersController < ApplicationController
     raise "404" if dn.blank?
 
     connection = connect
-    @entity = Ldap::Group.find(connection, dn)
+    @entity = ::Ldap::Group.find(connection, dn)
 
     raise "404" if @entity.blank?
     render "entity"
@@ -76,7 +72,7 @@ class Cms::Ldap::ServersController < ApplicationController
     raise "404" if dn.blank?
 
     connection = connect
-    @entity = Ldap::User.find(connection, dn)
+    @entity = ::Ldap::User.find(connection, dn)
 
     raise "404" if @entity.blank?
     render "entity"

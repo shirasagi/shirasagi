@@ -4,13 +4,16 @@ class Ldap::Connection
   private_class_method :new
 
   class << self
-    def connect(host: SS.config.ldap.host, base_dn: nil, auth_method: SS.config.ldap.auth_method, username: nil, password: nil)
-      return nil if host.blank?
+    def connect(url:, base_dn: nil, auth_method: :anonymous, username: nil, password: nil)
+      return nil if url.blank?
       return nil if auth_method.blank?
 
-      host, port = host.split(":", 2)
-      config = { host: host }
-      config[:port] = port.to_i if port.numeric?
+      url = Addressable::URI.parse(url)
+      host = url.host
+      port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
+
+      config = { host: host, port: port }
+      config[:encryption] = :simple_tls if url.scheme == 'ldaps'
       config[:base] = base_dn if base_dn.present?
       config[:auth] = { method: auth_method.to_sym, username: username, password: password }
 
@@ -20,32 +23,37 @@ class Ldap::Connection
       new(config)
     end
 
-    def authenticate(host: SS.config.ldap.host, username: nil, password: nil)
-      return false if host.blank?
+    def authenticate(url:, username: nil, password: nil)
+      return false if url.blank?
       return false if username.blank?
       return false if password.blank?
 
-      host, port = host.split(":", 2)
-      config = { host: host }
-      config[:port] = port.to_i if port.numeric?
-      config[:base] = username
+      url = Addressable::URI.parse(url)
+      host = url.host
+      port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
+
+      config = { host: host, port: port }
+      config[:encryption] = :simple_tls if url.scheme == 'ldaps'
 
       ldap = Net::LDAP.new(config)
       do_bind(ldap, :simple, username, password) ? true : false
     end
 
-    def change_password(host: SS.config.ldap.host, username: nil, new_password: nil)
-      return false if host.blank?
+    def change_password(username: nil, new_password: nil)
       return false if username.blank?
       return false if new_password.blank?
 
+      url = SS.config.ldap.url
       auth_method = SS.config.ldap.auth_method
       admin_user = SS.config.ldap.admin_user
       admin_pass = SS.config.ldap.admin_password
 
-      host, port = host.split(":", 2)
-      config = { host: host }
-      config[:port] = port.to_i if port.numeric?
+      url = Addressable::URI.parse(url)
+      host = url.host
+      port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
+
+      config = { host: host, port: port }
+      config[:encryption] = :simple_tls if url.scheme == 'ldaps'
       config[:auth] = { method: auth_method.to_sym, username: admin_user, password: admin_pass }
 
       ldap = Net::LDAP.new(config)

@@ -2,14 +2,14 @@ class Cms::Ldap::ImportJob < Cms::ApplicationJob
 
   attr_accessor :exclude_groups
 
-  def perform(site_id, user_id, password)
-    @site = SS::Site.find(site_id)
-    @user = SS::User.find(user_id)
+  def perform
     @group_count = 0
     @user_count = 0
-    @exclude_groups ||= SS.config.ldap.exclude_groups
+    @exclude_groups ||= site.ldap_exclude_groups
 
-    connection = Ldap::Connection.connect(base_dn: @site.root_group.ldap_dn, username: @user.ldap_dn, password: password)
+    connection = Ldap::Connection.connect(
+      url: site.ldap_url, base_dn: site.ldap_base_dn, auth_method: site.ldap_auth_method,
+      username: site.ldap_user_dn, password: site.ldap_user_password ? SS::Crypto.decrypt(site.ldap_user_password) : nil)
     if connection.blank?
       raise I18n.t("ldap.errors.connection_setting_not_found")
     end
@@ -23,7 +23,7 @@ class Cms::Ldap::ImportJob < Cms::ApplicationJob
     ldap_array = convert_groups(parent_dn, groups)
     Cms::Ldap::Import.create!(
       {
-        site_id: @site.id,
+        site_id: site.id,
         group_count: @group_count,
         user_count: @user_count,
         ldap: ldap_array

@@ -4,7 +4,13 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
   describe "#perform" do
     context "when no ldap connection is set" do
       it "should raise errors" do
-        described_class.perform_now(cms_site.id, cms_user.id, "pass")
+        Cms::Site.find(cms_site.id).tap do |site|
+          site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+          site.ldap_auth_method = "simple"
+          site.save!
+        end
+
+        described_class.bind(site_id: cms_site.id, user_id: cms_user.id).perform_now
 
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
@@ -30,18 +36,15 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
                group_ids: [group.id], cms_role_ids: [role.id])
       end
 
-      around(:each) do |example|
-        save_auth_method = SS.config.ldap.auth_method
-        SS.config.replace_value_at(:ldap, :auth_method, "anonymous")
-        example.run
-        SS.config.replace_value_at(:ldap, :auth_method, save_auth_method)
+      before do
+        site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+        site.ldap_auth_method = "anonymous"
+        site.save!
       end
 
-      import = nil
       it "should not raise errors" do
-        expect { import = described_class.perform_now(site.id, user.id, "pass") }.not_to raise_error
-      end
-      it "should return non-nil" do
+        import = nil
+        expect { import = described_class.bind(site_id: site.id, user_id: user.id).perform_now }.not_to raise_error
         expect(import).not_to be_nil
       end
     end

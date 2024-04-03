@@ -45,6 +45,15 @@ describe "ldap_server", type: :feature, dbscope: :example do
     let(:group_path) { group_cms_ldap_server_path(site: site.id, dn: group_dn) }
     let(:user_path) { user_cms_ldap_server_path(site: site.id, dn: user_dn) }
 
+    before do
+      site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+      site.ldap_base_dn = "dc=example,dc=jp"
+      site.ldap_auth_method = "simple"
+      site.ldap_user_dn = "cn=admin,dc=example,dc=jp"
+      site.ldap_user_password = SS::Crypto.encrypt("admin")
+      site.save!
+    end
+
     context "with auth" do
       it "#index" do
         login_user(user)
@@ -79,6 +88,13 @@ describe "ldap_server", type: :feature, dbscope: :example do
   context "with non-ldap site", ldap: true do
     let(:site) { cms_site }
     let(:index_path) { cms_ldap_server_main_path site.id }
+
+    before do
+      site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+      site.ldap_base_dn = "dc=example,dc=jp"
+      site.ldap_auth_method = "simple"
+      site.save!
+    end
 
     context "with auth" do
       it "#index" do

@@ -50,7 +50,6 @@ en:
       sync_success: "Synchronization successful. Number of groups: %{group_count}, Number of users: %{user_count}"
       group_moved: ! '%{user_name} has been moved to the group “%{group_name}”.'
     errors:
-      has_multiple_root_groups: "Site: %{site} has multiple route groups set."
       connection_setting_not_found: LDAP connection information is not set.
       connection_refused: Unable to connect to LDAP server.
       update_ldap_password: Unable to change password in LDAP.

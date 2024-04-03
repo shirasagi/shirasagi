@@ -33,8 +33,7 @@ class Cms::Ldap::ImportsController < ApplicationController
   end
 
   def import
-    Cms::Ldap::ImportJob.bind(site_id: @cur_site, user_id: @cur_user).
-      perform_later(@cur_site.id, @cur_user.id, session[:user]["password"])
+    Cms::Ldap::ImportJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later
     respond_to do |format|
       format.html { redirect_to({ action: :index }, { notice: t("ldap.messages.import_started") }) }
       format.json { head :no_content }

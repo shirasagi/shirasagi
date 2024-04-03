@@ -44,5 +44,10 @@ FactoryBot.define do
     end
     factory :cms_test_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email]
     factory :cms_ldap_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email, :cms_user_ldap]
+    factory :cms_ldap_user2, traits: [:cms_user_uid, :cms_user_email] do
+      name { "user2" }
+      type { SS::Model::User::TYPE_LDAP }
+      ldap_dn { "uid=user2, ou=002001管理課, ou=002危機管理部, dc=example, dc=jp" }
+    end
   end
 end

@@ -19,11 +19,10 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
     let(:index_path) { cms_ldap_imports_path site.id }
     let(:import_confirmation_path) { import_confirmation_cms_ldap_imports_path site.id }
 
-    around(:each) do |example|
-      save_auth_method = SS.config.ldap.auth_method
-      SS.config.replace_value_at(:ldap, :auth_method, "anonymous")
-      example.run
-      SS.config.replace_value_at(:ldap, :auth_method, save_auth_method)
+    before do
+      site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+      site.ldap_auth_method = "anonymous"
+      site.save!
     end
 
     context "with auth" do
@@ -88,6 +87,12 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
     let(:site) { cms_site }
     let(:index_path) { cms_ldap_imports_path site.id }
     let(:import_confirmation_path) { import_confirmation_cms_ldap_imports_path site.id }
+
+    before do
+      site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+      site.ldap_auth_method = "simple"
+      site.save!
+    end
 
     context "with auth" do
       around do |example|
