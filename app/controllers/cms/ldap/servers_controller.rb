@@ -16,7 +16,7 @@ class Cms::Ldap::ServersController < ApplicationController
   end
 
   def connect
-    if @cur_site.ldap_use_state_sys?
+    if @cur_site.ldap_use_state_system?
       url = Sys::Auth::Setting.instance.ldap_url
     else
       url = @cur_site.ldap_url

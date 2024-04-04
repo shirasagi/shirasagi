@@ -7,7 +7,7 @@ class Cms::Ldap::ImportJob < Cms::ApplicationJob
     @user_count = 0
     @exclude_groups ||= site.ldap_exclude_groups
 
-    if site.ldap_use_state_sys?
+    if site.ldap_use_state_system?
       url = Sys::Auth::Setting.instance.ldap_url
     else
       url = site.ldap_url

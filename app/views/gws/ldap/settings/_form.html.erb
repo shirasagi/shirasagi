@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :ldap_use_state %><%= @model.tt :ldap_use_state %></dt>
+  <dd><%= f.select :ldap_use_state, @item.ldap_use_state_options %></dd>
+
+  <dt><%= @model.t :ldap_url %><%= @model.tt :ldap_url %></dt>
+  <dd><%= f.url_field :ldap_url, placeholder: "ldaps://example.jp/" %></dd>
+
+  <dt><%= @model.t :ldap_openssl_verify_mode %><%= @model.tt :ldap_openssl_verify_mode %></dt>
+  <dd><%= f.select :ldap_openssl_verify_mode, @item.ldap_openssl_verify_mode_options, include_blank: true %></dd>
+</dl>

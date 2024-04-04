@@ -35,6 +35,7 @@ class Gws::Group
   include Gws::Addon::History
   include Gws::Addon::Import::Group
   include Gws::Addon::SiteUsage
+  include SS::Ldap::SiteSetting
 
   set_permission_name "gws_groups", :edit
 

@@ -15,10 +15,13 @@ module SS::Addon::Ldap::User
     return false if !type_ldap? || ldap_dn.blank?
 
     site = options[:site]
-    if site.nil? || site.ldap_use_state_sys?
-      ldap_setting = Sys::Auth::Setting.instance
-    else
+    organization = options[:organization]
+    if site.try(:ldap_use_state_individual?)
       ldap_setting = site
+    elsif organization.try(:ldap_use_state_individual?)
+      ldap_setting = organization
+    else
+      ldap_setting = Sys::Auth::Setting.instance
     end
     return false if ldap_setting.nil? || ldap_setting.ldap_url.blank?
 

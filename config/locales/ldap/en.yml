@@ -42,8 +42,8 @@ en:
         simple: User DN and Password
         anonymous: Anonymous (skip auth)
       use_state:
-        use_sys: System settings
-        use_cms: Use the following individual settings
+        system: System settings
+        individual: Use the following individual settings
     messages:
       no_groups: The group cannot be found.
       no_users: The user cannot be found.
@@ -58,13 +58,22 @@ en:
       update_ldap_password: Unable to change password in LDAP.
     import_auth_method_remarks_html: |-
       If you select "User DN and Password" as the authentication method, please set the following user DN and password.
-    cms_login_notice_html: "To log in as an LDAP user using individual settings, log in from the login screen for the site: <a href=\"%{cms_login_path}\">%{cms_login_url}</a>"
+    cms_login_notice_html: |-
+      To log in as an LDAP user using individual settings, log in from the login screen for the site: <a href="%{cms_login_path}">%{cms_login_url}</a>
+    gws_login_notice_html: |-
+      To log in as an LDAP user using individual settings, log in from the login screen for the group ware: <a href="%{gws_login_path}">%{gws_login_url}</a>
 
   modules:
     ldap: LDAP
     addons:
       ss/ldap/user: LDAP
       ss/ldap/group: LDAP
+
+  activemodel:
+    attributes:
+      ss/ldap/login_diagnostic:
+        dn: DN
+        password: Password
 
   mongoid:
     models:

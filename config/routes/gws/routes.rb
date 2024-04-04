@@ -83,6 +83,11 @@ Rails.application.routes.draw do
       resources :user_form_columns, concerns: :deletion, path: '/columns'
     end
     resources :contrasts, concerns: [:deletion]
+    namespace "ldap" do
+      get '/' => redirect { |p, req| "#{req.path}/setting" }, as: :main
+      resource :setting, only: %i[show edit update]
+      resource :diagnostic, only: %i[show update]
+    end
 
     namespace "apis" do
       get "groups" => "groups#index"

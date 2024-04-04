@@ -1,0 +1,11 @@
+<dl class="see">
+  <dt><%= @model.human_attribute_name :dn %>
+  <dd><%= f.text_field :dn, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.human_attribute_name :password %>
+  <dd><%= f.password_field :password %></dd>
+
+  <% if @result %>
+    <dd><%= @result %></dd>
+  <% end %>
+</dl>
