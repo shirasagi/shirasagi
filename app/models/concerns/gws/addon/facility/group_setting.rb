@@ -10,6 +10,10 @@ module Gws::Addon::Facility::GroupSetting
 
     permit_params :facility_min_hour, :facility_max_hour
 
+    validates :facility_min_hour, numericality:
+      { only_integer: true, greater_than_or_equal_to: 0, less_than_than_or_equal_to: 24, allow_blank: true }
+    validates :facility_max_hour, numericality:
+      { only_integer: true, greater_than_or_equal_to: 0, less_than_than_or_equal_to: 24, allow_blank: true }
     validate :validate_facility_hours, if: ->{ facility_min_hour.present? && facility_max_hour.present? }
   end
 
