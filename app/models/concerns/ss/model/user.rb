@@ -155,7 +155,9 @@ module SS::Model::User
       return nil if users.size != 1
 
       user = users.first
-      return user if user.send(:dbpasswd_authenticate, password)
+      auth_methods.each do |method|
+        return user if user.send(method, password, organization: organization)
+      end
       nil
     end
 

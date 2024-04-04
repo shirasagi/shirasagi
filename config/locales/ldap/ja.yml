@@ -41,6 +41,9 @@ ja:
       auth_method:
         simple: ユーザーDNとパスワードによる認証
         anonymous: 匿名アクセス可（認証なし）
+      use_state:
+        use_sys: システム設定にしたがう
+        use_cms: 以下の個別設定を使用する
     messages:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。
@@ -55,6 +58,7 @@ ja:
       update_ldap_password: LDAPのパスワード変更が出来ませんでした。
     import_auth_method_remarks_html: |-
       認証方法に「ユーザーDNとパスワードによる認証」を選択した場合、以下のユーザーDNとパスワードを設定してください。
+    cms_login_notice_html: "個別設定を用いてLDAPユーザーでログインするには、サイト用のログイン画面<a href=\"%{cms_login_path}\">%{cms_login_url}</a>からログインしてください。"
 
   modules:
     ldap: LDAP
@@ -78,6 +82,7 @@ ja:
         user_count: ユーザ数
         ldap: LDAPインポート結果
       ss/ldap/site_setting:
+        ldap_use_state: 設定
         ldap_url: LDAP Server
         ldap_openssl_verify_mode: OpenSSL証明書チェック方法
       cms/ldap/import_setting:

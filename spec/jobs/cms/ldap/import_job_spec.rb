@@ -5,6 +5,7 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
     context "when no ldap connection is set" do
       it "should raise errors" do
         Cms::Site.find(cms_site.id).tap do |site|
+          site.ldap_use_state = "individual"
           site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
           site.ldap_auth_method = "simple"
           site.save!
@@ -37,6 +38,7 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
       end
 
       before do
+        site.ldap_use_state = "individual"
         site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
         site.ldap_auth_method = "anonymous"
         site.save!

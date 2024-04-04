@@ -16,8 +16,15 @@ class Cms::Ldap::ServersController < ApplicationController
   end
 
   def connect
+    if @cur_site.ldap_use_state_sys?
+      url = Sys::Auth::Setting.instance.ldap_url
+    else
+      url = @cur_site.ldap_url
+    end
+    return if url.blank?
+
     Ldap::Connection.connect(
-      url: @cur_site.ldap_url,
+      url: url,
       base_dn: @cur_site.ldap_base_dn,
       auth_method: @cur_site.ldap_auth_method,
       username: @cur_site.ldap_user_dn,

@@ -14,9 +14,11 @@ module SS::Addon::Ldap::User
   def ldap_authenticate(password, **options)
     return false if !type_ldap? || ldap_dn.blank?
 
-    ldap_setting = options[:site]
-    if ldap_setting.nil?
+    site = options[:site]
+    if site.nil? || site.ldap_use_state_sys?
       ldap_setting = Sys::Auth::Setting.instance
+    else
+      ldap_setting = site
     end
     return false if ldap_setting.nil? || ldap_setting.ldap_url.blank?
 

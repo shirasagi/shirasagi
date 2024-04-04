@@ -5,11 +5,13 @@
   <dt><%= @model.t :ldap_auth_method %></dt>
   <dd><%= @item.label :ldap_auth_method %></dd>
 
-  <dt class="depth-2"><%= @model.t :ldap_user_dn %></dt>
-  <dd class="depth-2"><%= @item.ldap_user_dn %></dd>
+  <% if @item.ldap_auth_method == "simple" %>
+    <dt class="depth-2"><%= @model.t :ldap_user_dn %></dt>
+    <dd class="depth-2"><%= @item.ldap_user_dn %></dd>
 
-  <dt class="depth-2"><%= @model.t :ldap_user_password %></dt>
-  <dd class="depth-2"><%= @item.ldap_user_password.present? ? "*" * 8 : "" %></dd>
+    <dt class="depth-2"><%= @model.t :ldap_user_password %></dt>
+    <dd class="depth-2"><%= @item.ldap_user_password.present? ? "*" * 8 : "" %></dd>
+  <% end %>
 
   <dt><%= @model.t :ldap_exclude_groups %></dt>
   <dd><%= @item.ldap_exclude_groups.join(", ") %></dd>

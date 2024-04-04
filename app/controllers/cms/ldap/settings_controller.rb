@@ -23,7 +23,10 @@ class Cms::Ldap::SettingsController < ApplicationController
   end
 
   def permit_fields
-    %i[ldap_url ldap_openssl_verify_mode ldap_base_dn ldap_auth_method ldap_user_dn in_ldap_user_password ldap_exclude_groups]
+    %i[
+      ldap_use_state ldap_url ldap_openssl_verify_mode ldap_base_dn ldap_auth_method
+      ldap_user_dn in_ldap_user_password ldap_exclude_groups
+    ]
   end
 
   public

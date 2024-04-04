@@ -41,6 +41,9 @@ en:
       auth_method:
         simple: User DN and Password
         anonymous: Anonymous (skip auth)
+      use_state:
+        use_sys: System settings
+        use_cms: Use the following individual settings
     messages:
       no_groups: The group cannot be found.
       no_users: The user cannot be found.
@@ -55,6 +58,7 @@ en:
       update_ldap_password: Unable to change password in LDAP.
     import_auth_method_remarks_html: |-
       If you select "User DN and Password" as the authentication method, please set the following user DN and password.
+    cms_login_notice_html: "To log in as an LDAP user using individual settings, log in from the login screen for the site: <a href=\"%{cms_login_path}\">%{cms_login_url}</a>"
 
   modules:
     ldap: LDAP
@@ -78,6 +82,7 @@ en:
         user_count: Number of users
         ldap: LDAP import results
       ss/ldap/site_setting:
+        ldap_use_state: Setting
         ldap_url: LDAP server
         ldap_openssl_verify_mode: OpenSSL certificate check method
       cms/ldap/import_setting:

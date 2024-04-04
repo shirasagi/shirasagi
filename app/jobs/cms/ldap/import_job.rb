@@ -7,8 +7,14 @@ class Cms::Ldap::ImportJob < Cms::ApplicationJob
     @user_count = 0
     @exclude_groups ||= site.ldap_exclude_groups
 
+    if site.ldap_use_state_sys?
+      url = Sys::Auth::Setting.instance.ldap_url
+    else
+      url = site.ldap_url
+    end
+
     connection = Ldap::Connection.connect(
-      url: site.ldap_url, base_dn: site.ldap_base_dn, auth_method: site.ldap_auth_method,
+      url: url, base_dn: site.ldap_base_dn, auth_method: site.ldap_auth_method,
       username: site.ldap_user_dn, password: site.ldap_user_password ? SS::Crypto.decrypt(site.ldap_user_password) : nil)
     if connection.blank?
       raise I18n.t("ldap.errors.connection_setting_not_found")

@@ -1,4 +1,7 @@
 <dl class="see">
+  <dt><%= @model.t :ldap_use_state %><%= @model.tt :ldap_use_state %></dt>
+  <dd><%= f.select :ldap_use_state, @item.ldap_use_state_options %></dd>
+
   <dt><%= @model.t :ldap_url %><%= @model.tt :ldap_url %></dt>
   <dd><%= f.url_field :ldap_url, placeholder: "ldaps://example.jp/" %></dd>
 
