@@ -4,8 +4,8 @@ ja:
     import: インポート
     result: 同期結果
     setting: 設定
-    server_setting: サーバー設定
-    import_setting: インポート設定
+    server_setting: LDAPサーバー設定
+    import_setting: LDAPインポート設定
     links:
       ldap: LDAP
       sync: 同期する

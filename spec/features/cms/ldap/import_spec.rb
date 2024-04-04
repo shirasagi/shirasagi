@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
+  around do |example|
+    save = ::Ldap.sync_password
+    ::Ldap.sync_password = "enable"
+    example.run
+  ensure
+    ::Ldap.sync_password = save
+  end
+
   context "with ldap site" do
     let(:group) do
       create(:cms_group, name: unique_id, ldap_dn: "dc=example,dc=jp")
@@ -20,6 +28,7 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
     let(:import_confirmation_path) { import_confirmation_cms_ldap_imports_path site.id }
 
     before do
+      site.ldap_use_state = "individual"
       site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       site.ldap_auth_method = "anonymous"
       site.save!
@@ -89,6 +98,7 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
     let(:import_confirmation_path) { import_confirmation_cms_ldap_imports_path site.id }
 
     before do
+      site.ldap_use_state = "individual"
       site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       site.ldap_auth_method = "simple"
       site.save!

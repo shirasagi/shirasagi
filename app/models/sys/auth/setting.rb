@@ -1,6 +1,7 @@
 class Sys::Auth::Setting
   include SS::Document
   include Sys::Permission
+  include SS::Ldap::SiteSetting
 
   DEFAULT_KEY = "user".freeze
   DEFAULT_PASSWORD = "guest".freeze
@@ -16,6 +17,16 @@ class Sys::Auth::Setting
   permit_params :form_auth, :form_key, :in_form_password
 
   before_validation :update_form_password
+
+  class << self
+    class Current < ActiveSupport::CurrentAttributes
+      attribute :item
+    end
+
+    def instance
+      Current.item ||= Sys::Auth::Setting.first_or_create
+    end
+  end
 
   def form_auth_options
     [

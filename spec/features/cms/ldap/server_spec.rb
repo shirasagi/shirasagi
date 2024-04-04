@@ -34,7 +34,7 @@ describe "ldap_server", type: :feature, dbscope: :example do
       create(:cms_role_admin, name: "ldap_user_role_#{unique_id}", site_id: site.id)
     end
     let(:user) do
-      create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "admin",
+      create(:cms_ldap_user, name: unique_id, email: "#{unique_id}@example.jp", organization: group,
              ldap_dn: "cn=admin,dc=example,dc=jp",
              group_ids: [group.id], cms_role_ids: [role.id])
     end
@@ -46,6 +46,7 @@ describe "ldap_server", type: :feature, dbscope: :example do
     let(:user_path) { user_cms_ldap_server_path(site: site.id, dn: user_dn) }
 
     before do
+      site.ldap_use_state = "individual"
       site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       site.ldap_base_dn = "dc=example,dc=jp"
       site.ldap_auth_method = "simple"
@@ -56,28 +57,28 @@ describe "ldap_server", type: :feature, dbscope: :example do
 
     context "with auth" do
       it "#index" do
-        login_user(user)
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#index with dn" do
-        login_user(user)
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
         visit index2_path
         expect(status_code).to eq 200
         expect(current_path).to eq index2_path
       end
 
       it "#group" do
-        login_user(user)
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
         visit group_path
         expect(status_code).to eq 200
         expect(current_path).to eq group_path
       end
 
       it "#user" do
-        login_user(user)
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
         visit user_path
         expect(status_code).to eq 200
         expect(current_path).to eq user_path
@@ -90,6 +91,7 @@ describe "ldap_server", type: :feature, dbscope: :example do
     let(:index_path) { cms_ldap_server_main_path site.id }
 
     before do
+      site.ldap_use_state = "individual"
       site.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       site.ldap_base_dn = "dc=example,dc=jp"
       site.ldap_auth_method = "simple"

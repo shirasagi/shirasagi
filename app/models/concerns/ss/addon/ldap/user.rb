@@ -14,10 +14,13 @@ module SS::Addon::Ldap::User
   def ldap_authenticate(password, **options)
     return false if !type_ldap? || ldap_dn.blank?
 
-    site = options[:site]
-    return false if site.nil? || site.ldap_url.blank?
+    ldap_setting = options[:site]
+    if ldap_setting.nil?
+      ldap_setting = Sys::Auth::Setting.instance
+    end
+    return false if ldap_setting.nil? || ldap_setting.ldap_url.blank?
 
-    Ldap::Connection.authenticate(url: site.ldap_url, username: ldap_dn, password: password)
+    Ldap::Connection.authenticate(url: ldap_setting.ldap_url, username: self.ldap_dn, password: password)
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     false

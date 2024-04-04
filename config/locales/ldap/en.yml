@@ -4,8 +4,8 @@ en:
     import: Import
     result: Syncing results
     setting: Setting
-    server_setting: Server Setting
-    import_setting: Import Setting
+    server_setting: LDAP Server Setting
+    import_setting: LDAP Import Setting
     links:
       ldap: LDAP
       sync: Synchronize

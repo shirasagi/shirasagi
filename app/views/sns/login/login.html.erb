@@ -15,7 +15,7 @@
       <div class="version">ver. <%= tryb{SS.version} %></div>
     </header>
 
-    <% setting = Sys::Auth::Setting.first_or_create %>
+    <% setting = Sys::Auth::Setting.instance %>
     <% if setting.form_auth_available?(params) %>
       <% form_key = setting.form_key.presence || Sys::Auth::Setting::DEFAULT_KEY %>
       <%= form_tag action: params[:action] do |f| %>
