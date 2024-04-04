@@ -1,0 +1,60 @@
+<%= jquery do %>
+SS_Clipboard.renderCopy();
+<% end %>
+
+<dl class="see" style="padding: 0px 6px;">
+  <dt><%= @item.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <% if @item.kana.present? %>
+    <dt><%= @item.t :kana %></dt>
+    <dd><%= @item.kana %></dd>
+  <% end %>
+
+  <% if @item.organization_uid.present? %>
+    <dt><%= @item.t :organization_uid %></dt>
+    <dd><%= @item.organization_uid %></dd>
+  <% end %>
+
+  <% if @item.email.present? %>
+    <dt><%= @item.t :email %></dt>
+    <dd><span class="email js-clipboard-copy"><%= mail_to @item.email %></span></dd>
+  <% end %>
+
+  <% if @item.tel.present? %>
+    <dt><%= @item.t :tel %></dt>
+    <dd><%= @item.tel %></dd>
+  <% end %>
+
+  <% if @item.tel_ext.present? %>
+    <dt><%= @item.t :tel_ext %></dt>
+    <dd><%= @item.tel_ext %></dd>
+  <% end %>
+
+  <% title = @item.title(@cur_site) %>
+  <% if title %>
+    <dt><%= @item.t :title_ids %></dt>
+    <dd><%= title.name_with_code %></dd>
+  <% end %>
+
+  <% occupation = @item.occupation(@cur_site) %>
+  <% if occupation %>
+    <dt><%= @item.t :in_occupation_id %></dt>
+    <dd><%= occupation.name_with_code %></dd>
+  <% end %>
+
+  <% main_group = @item.gws_main_group(@cur_site) %>
+  <dt><%= @item.t :group_ids %></dt>
+  <dd>
+    <% @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.each do |c| %>
+      <% if main_group && main_group.id == c.id %>
+        <strong><b><%= c.name %></b></strong><br />
+      <% else %>
+        <%= c.name %><br />
+      <% end %>
+    <% end %>
+  </dd>
+</dl>
+<footer class="send">
+  <%= button_tag t("ss.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+</footer>
