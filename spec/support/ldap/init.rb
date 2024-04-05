@@ -118,7 +118,7 @@ module SS::LdapSupport
     SS::LdapSupport.docker_ldap_port = ldap_port
     SS::LdapSupport.docker_ldaps_port = ldaps_port
 
-    SS.config.replace_value_at(:ldap, :url, "ldap://localhost:#{ldap_port}/")
+    ::Ldap.url = "ldap://localhost:#{ldap_port}/"
 
     puts "image '#{image_id}' successfully launched as container '#{container.id[0, 12]}' listening on #{ldap_port}"
   end

@@ -141,6 +141,10 @@ Rails.application.routes.draw do
       resource :setting, only: %i[show edit update]
       resource :url_scheme, only: %i[show edit update]
     end
+    resource :user_profile, only: [:show, :edit, :update] do
+      get :edit_password, on: :member
+      post :edit_password, on: :member, action: :update_password
+    end
 
     scope module: "form" do
       resources :forms, concerns: [:deletion, :download, :import, :change_state] do

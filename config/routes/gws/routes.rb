@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
     resource :user_profile, only: [:show, :edit, :update] do
       get :edit_password, on: :member
-      post :update_password, on: :member
+      post :edit_password, on: :member, action: :update_password
     end
     resource :user_locale_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do

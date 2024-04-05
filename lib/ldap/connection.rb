@@ -43,10 +43,10 @@ class Ldap::Connection
       return false if username.blank?
       return false if new_password.blank?
 
-      url = SS.config.ldap.url
-      auth_method = SS.config.ldap.auth_method
-      admin_user = SS.config.ldap.admin_user
-      admin_pass = SS.config.ldap.admin_password
+      url = ::Ldap.url
+      auth_method = ::Ldap.auth_method
+      admin_user = ::Ldap.admin_user
+      admin_pass = ::Ldap.admin_password
 
       url = Addressable::URI.parse(url)
       host = url.host

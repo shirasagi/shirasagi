@@ -624,6 +624,10 @@ en:
       ss/locale_setting: Locale settings
 
   activemodel:
+    errors:
+      models:
+        ss/password_update_service:
+          ldap_password_modify_error: "Failed to modify password over LDAP"
     attributes:
       ss/download_param:
         encoding: Character encoding

@@ -101,7 +101,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
           build(
             :gws_user, id: nil, kana: unique_id, organization_uid: unique_id, organization_id: site.id,
             tel: unique_tel, tel_ext: unique_id, title_ids: [ title1.id, other_site_title1.id ],
-            occupation_ids: [ occupation1.id, other_site_occupation1.id ], type: %w(sns ldap).sample,
+            occupation_ids: [ occupation1.id, other_site_occupation1.id ], type: Gws::User::TYPE_SNS,
             group_ids: [ group1.id, other_site_group1.id ])
         end
 
@@ -125,7 +125,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
           create(
             :gws_user, kana: unique_id, organization_uid: unique_id, organization_id: site.id,
             tel: unique_tel, tel_ext: unique_id, title_ids: [ title1.id, other_site_title1.id ],
-            occupation_ids: [ occupation1.id, other_site_occupation1.id ], type: %w(sns ldap).sample,
+            occupation_ids: [ occupation1.id, other_site_occupation1.id ], type: Gws::User::TYPE_SNS,
             group_ids: [ group1.id, other_site_group1.id ])
         end
         let!(:group2) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
@@ -137,7 +137,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
           user.tel_ext = unique_id
           user.title_ids = [ title2.id ]
           user.occupation_ids = [ occupation2.id ]
-          user.type = %w(sns ldap).sample
+          user.type = Gws::User::TYPE_SNS
           user
         end
 
@@ -277,13 +277,15 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
 
       context 'with new user' do
         let(:source_user) do
-          build(:gws_user, id: nil, ldap_dn: ldap_dn)
+          build(:gws_user, id: nil, type: Gws::User::TYPE_LDAP, ldap_dn: ldap_dn)
         end
 
         it do
           Gws::User.unscoped.find_by(uid: source_user.uid).tap do |user|
             expect(user).to be_persisted
+            expect(user.type).to eq Gws::User::TYPE_LDAP
             expect(user.ldap_dn).to eq ldap_dn
+            expect(user.password).to be_blank
           end
         end
       end

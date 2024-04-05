@@ -16,7 +16,7 @@ production: &production
 test:
   <<: *production
   url: "ldap://localhost/"
-  sync_password: enable
+  sync_password: disable
   auth_method: simple
   admin_user: cn=admin,dc=example,dc=jp
   admin_password: admin

@@ -12,7 +12,7 @@ module SS::Password
 
     permit_params :in_password, :password, :initial_password_warning
 
-    before_validation :encrypt_password, if: ->{ in_password.present? }
+    before_validation :encrypt_password, if: ->{ type_sns? && in_password.present? }
     validate :validate_password, if: -> { in_password.present? }
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
     before_save :reset_initial_password_warning, if: -> { self_edit.present? && self_edit }

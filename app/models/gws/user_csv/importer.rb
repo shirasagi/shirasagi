@@ -64,7 +64,7 @@ class Gws::UserCsv::Importer
       return
     end
 
-    required_headers = %i[id name uid email password groups].map { |key| Gws::User.t(key) }
+    required_headers = %i[id name uid email groups].map { |key| Gws::User.t(key) }
     unless SS::Csv.valid_csv?(in_file, headers: true, required_headers: required_headers)
       errors.add :in_file, :invalid_file_type
       return

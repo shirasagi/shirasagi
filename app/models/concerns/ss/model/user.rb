@@ -415,9 +415,12 @@ module SS::Model::User
   end
 
   def change_ldap_password
-    return true if SS.config.ldap.sync_password != "enable"
-    return true if self.ldap_dn.blank?
     return true if self.in_password.blank?
+    return true if self.ldap_dn.blank?
+    if ::Ldap.sync_password != "enable"
+      Rails.logger.info { "LDAPパスワード同期が無効のためLDAPパスワードを変更しません。" }
+      return true
+    end
 
     username = self.ldap_dn
     new_password = self.in_password

@@ -629,6 +629,10 @@ ja:
       ss/locale_setting: 言語設定
 
   activemodel:
+    errors:
+      models:
+        ss/password_update_service:
+          ldap_password_modify_error: "LDAPパスワードの変更に失敗しました。"
     attributes:
       ss/download_param:
         encoding: 文字コード

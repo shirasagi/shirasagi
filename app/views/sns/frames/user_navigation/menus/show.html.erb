@@ -1,5 +1,13 @@
 <ul class="user-navigation-dropdown-menu-item-list">
-  <li class="user-navigation-dropdown-menu-item"><%= link_to t("sns.profile"), sns_cur_user_profile_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <li class="user-navigation-dropdown-menu-item">
+    <%=
+      if @ss_mode == :cms
+        link_to t("sns.profile"), cms_user_profile_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false }
+      else
+        link_to t("sns.profile"), sns_cur_user_profile_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false }
+      end
+    %>
+  </li>
   <li class="user-navigation-dropdown-menu-item"><%= link_to t("job.task_manager"), job_sns_logs_path, class: "user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
 
   <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
