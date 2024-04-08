@@ -1,7 +1,5 @@
-class SS::Migration20230612000000
+class SS::Migration20240408000000
   include SS::Migration::Base
-
-  depends_on "20230410000000"
 
   def change
     targets = %w(

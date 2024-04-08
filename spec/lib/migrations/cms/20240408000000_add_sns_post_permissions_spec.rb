@@ -1,7 +1,7 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/cms/20230612000000_add_sns_post_permissions.rb")
+require Rails.root.join("lib/migrations/cms/20240408000000_add_sns_post_permissions.rb")
 
-RSpec.describe SS::Migration20230612000000, dbscope: :example do
+RSpec.describe SS::Migration20240408000000, dbscope: :example do
   let(:site) { cms_site }
   let(:site2) { create :cms_site_unique, group_ids: site.group_ids }
   let(:site3) { create :cms_site_unique, group_ids: site.group_ids }
