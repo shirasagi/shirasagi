@@ -25,7 +25,6 @@ module Gws::Addon::Schedule::Approval
   end
 
   def reset_approvals
-    @reset_approvals = true
     self.approval_state = approval_present? ? 'request' : nil
     self.approvals = []
   end
@@ -47,29 +46,42 @@ module Gws::Addon::Schedule::Approval
     approval_member_ids.include?(user.id) || facility_approver_ids.include?(user.id)
   end
 
-  def approval_member(user, opts = {})
-    if opts[:facility_id].present?
-      cond = { facility_id: opts[:facility_id] }
-    else
-      cond = { user_id: user.id, facility_id: nil }
-    end
+  def approval_member(user)
+    cond = { user_id: user.id, facility_id: nil }
     approvals.where(cond).order_by(created: 1).first || approvals.new(cond)
+  end
+
+  def approval_facility_member(facility)
+    cond = { facility_id: facility.id }
+    approvals.where(cond).order_by(updated: -1).first || approvals.new(cond)
   end
 
   def update_approval_state(user)
     self.cur_site = site
+    self.cur_user = user
     self.approval_state = current_approval_state
     #self.user_ids += [user.id] if approval_state == "deny"
     update
   end
 
   def current_approval_state
+    if approval_facilities.blank?
+      # 通常のスケジュール承認：全てのユーザーの承認状態
+      items = approvals
+    else
+      # 設備予約の承認：設備毎にて一番新しい承認状態
+      items = {}
+      approvals.order_by(updated: -1).each do |item|
+        items[item.facility_id] ||= item
+      end
+      items = items.values
+    end
+
     status = 'approve'
-    approvals.each do |item|
+    items.each do |item|
       return 'deny' if item.approval_state == 'deny'
       status = 'request' if item.approval_state != 'approve'
     end
-
     return 'request' if approvals.size < approval_member_ids.size + approval_facilities.size
     status
   end

@@ -33,6 +33,7 @@
     <tr>
       <th><%= Gws::User.t(:name) %></th>
       <th style="width: 50%"><%= @model.t(:approvals) %></th>
+      <th><%= @model.t(:approvals) %></th>
     </tr>
   </thead>
   <tbody>
@@ -55,6 +56,11 @@
           <%= approval.label(:approval_state) %>
         <% end %>
       </td>
+      <td>
+        <% if approval.approval_state == "approve" %>
+          <%=  gws_public_user_long_name(approval.user.long_name) %>
+        <% end %>
+      </td>
     </tr>
     <% end %>
 
@@ -62,7 +68,7 @@
     <tr>
       <td><%= facility.name %></td>
       <td>
-        <% approval = @item.approval_member(@cur_user, facility_id: facility.id) %>
+        <% approval = @item.approval_facility_member(facility) %>
         <% if facility.user_ids.include?(@cur_user.id) %>
           <%= content_tag 'span', class: 'approvals',
                           data: { schedule_id: @item.id.to_s, member_id: @cur_user.id, facility_id: facility.id, init_value: approval.approval_state || '' } do %>
@@ -75,6 +81,11 @@
           <% end %>
         <% else %>
           <%= approval.label(:approval_state) %>
+        <% end %>
+      </td>
+      <td>
+        <% if approval.approval_state == "approve" %>
+          <%= gws_public_user_long_name(approval.user.long_name) %>
         <% end %>
       </td>
     </tr>
