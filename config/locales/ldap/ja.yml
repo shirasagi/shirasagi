@@ -69,6 +69,10 @@ ja:
       ss/ldap/user: LDAP
       ss/ldap/group: LDAP
 
+  errors:
+    messages:
+      unable_to_modify_ldap_users_password: "LDAPユーザーの場合、シラサギ上から他者のパスワードを変更することはできません。パスワードを変更するには、本人がプロフィール画面からパスワードを変更するか、LDAPの管理者に問い合わせてください。"
+
   activemodel:
     attributes:
       ss/ldap/login_diagnostic:

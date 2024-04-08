@@ -279,6 +279,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
         let(:source_user) do
           build(:gws_user, id: nil, type: Gws::User::TYPE_LDAP, ldap_dn: ldap_dn)
         end
+        let(:password) { nil }
 
         it do
           Gws::User.unscoped.find_by(uid: source_user.uid).tap do |user|
