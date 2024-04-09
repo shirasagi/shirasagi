@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SS::SsoToken, dbscope: :example do
+describe SS::SSOToken, dbscope: :example do
   describe "#available?" do
     let(:now) { Time.zone.now.beginning_of_hour }
     subject do

@@ -559,6 +559,7 @@ en:
       user_type:
         sns: SNS user
         ldap: LDAP user
+        sso: SSO user
 
     tasks:
       started: Started.

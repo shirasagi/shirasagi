@@ -564,6 +564,7 @@ ja:
       user_type:
         sns: SNSユーザー
         ldap: LDAPユーザー
+        sso: SSOユーザー
 
     tasks:
       started: 開始しました。

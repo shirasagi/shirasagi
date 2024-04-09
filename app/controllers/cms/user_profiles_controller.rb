@@ -43,12 +43,16 @@ class Cms::UserProfilesController < ApplicationController
   end
 
   def edit_password
+    raise "404" if @sns_user.type_sso?
+
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user, self_edit: true, site: @cur_site)
     render
   end
 
   def update_password
+    raise "404" if @sns_user.type_sso?
+
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user, self_edit: true, site: @cur_site)
     @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)

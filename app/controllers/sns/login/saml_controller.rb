@@ -68,7 +68,7 @@ class Sns::Login::SamlController < ApplicationController
     end
     login_path = login_path.to_s if login_path.present?
 
-    sso_token = SS::SsoToken.create_token!(ref: ref, login_path: login_path)
+    sso_token = SS::SSOToken.create_token!(ref: ref, login_path: login_path)
     redirect_to(request.create(settings, RelayState: sso_token.token, ForceAuthn: "true"))
   end
 
@@ -76,7 +76,7 @@ class Sns::Login::SamlController < ApplicationController
     state = params[:RelayState]
     raise "404" if state.blank?
 
-    sso_token = SS::SsoToken.where(token: state).first
+    sso_token = SS::SSOToken.where(token: state).first
     raise "404" if sso_token.blank?
 
     sso_token.destroy

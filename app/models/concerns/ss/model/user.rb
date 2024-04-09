@@ -8,10 +8,12 @@ module SS::Model::User
   include SS::UserImportValidator
   include SS::Addon::LocaleSetting
   include SS::Addon::Ldap::User
+  include SS::Addon::SSO::User
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
-  TYPES = [ TYPE_SNS, TYPE_LDAP ].freeze
+  TYPE_SSO = "sso".freeze
+  TYPES = [ TYPE_SNS, TYPE_LDAP, TYPE_SSO ].freeze
 
   included do
     attr_accessor :cur_site, :cur_user
@@ -244,11 +246,15 @@ module SS::Model::User
   end
 
   def type_sns?
-    !type_ldap?
+    self.type == TYPE_SNS || self.type.blank?
   end
 
   def type_ldap?
     self.type == TYPE_LDAP
+  end
+
+  def type_sso?
+    self.type == TYPE_SSO
   end
 
   def enabled?

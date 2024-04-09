@@ -52,7 +52,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       end
       login_path = login_path.to_s if login_path.present?
 
-      sso_token = SS::SsoToken.create_token!(ref: ref, login_path: login_path)
+      sso_token = SS::SSOToken.create_token!(ref: ref, login_path: login_path)
       sso_token.token
     end
   end
@@ -64,7 +64,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       raise "403"
     end
 
-    sso_token = SS::SsoToken.where(token: core_resp[:state]).first
+    sso_token = SS::SSOToken.where(token: core_resp[:state]).first
     auth_resp = core_resp.merge(
       cur_item: @item,
       redirect_uri: @item.redirect_uri(request.protocol, request.host_with_port),
@@ -95,7 +95,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       return
     end
 
-    sso_token = SS::SsoToken.where(token: core_resp[:state]).first
+    sso_token = SS::SSOToken.where(token: core_resp[:state]).first
     auth_resp = core_resp.merge(
       cur_item: @item,
       sso_token: sso_token,
