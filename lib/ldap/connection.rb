@@ -4,7 +4,8 @@ class Ldap::Connection
   private_class_method :new
 
   class << self
-    def connect(url:, base_dn: nil, auth_method: :anonymous, username: nil, password: nil)
+    # rubocop:disable Metrics/ParameterLists
+    def connect(url:, openssl_verify_mode: nil, base_dn: nil, auth_method: :anonymous, username: nil, password: nil)
       return nil if url.blank?
       return nil if auth_method.blank?
 
@@ -13,7 +14,13 @@ class Ldap::Connection
       port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
 
       config = { host: host, port: port }
-      config[:encryption] = :simple_tls if url.scheme == 'ldaps'
+      if url.scheme == 'ldaps'
+        config[:encryption] = { method: :simple_tls }
+        if openssl_verify_mode == "none"
+          # 証明書の検証を無効化
+          config[:encryption][:tls_options] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+        end
+      end
       config[:base] = base_dn if base_dn.present?
       config[:auth] = { method: auth_method.to_sym, username: username, password: password }
 
@@ -22,8 +29,9 @@ class Ldap::Connection
 
       new(config)
     end
+    # rubocop:enable Metrics/ParameterLists
 
-    def authenticate(url:, username: nil, password: nil)
+    def authenticate(url:, openssl_verify_mode: nil, username: nil, password: nil)
       return false if url.blank?
       return false if username.blank?
       return false if password.blank?
@@ -33,7 +41,13 @@ class Ldap::Connection
       port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
 
       config = { host: host, port: port }
-      config[:encryption] = :simple_tls if url.scheme == 'ldaps'
+      if url.scheme == 'ldaps'
+        config[:encryption] = { method: :simple_tls }
+        if openssl_verify_mode == "none"
+          # 証明書の検証を無効化
+          config[:encryption][:tls_options] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+        end
+      end
 
       ldap = Net::LDAP.new(config)
       do_bind(ldap, :simple, username, password) ? true : false
@@ -44,6 +58,7 @@ class Ldap::Connection
       return false if new_password.blank?
 
       url = ::Ldap.url
+      openssl_verify_mode = ::Ldap.openssl_verify_mode
       auth_method = ::Ldap.auth_method
       admin_user = ::Ldap.admin_user
       admin_pass = ::Ldap.admin_password
@@ -53,7 +68,13 @@ class Ldap::Connection
       port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
 
       config = { host: host, port: port }
-      config[:encryption] = :simple_tls if url.scheme == 'ldaps'
+      if url.scheme == 'ldaps'
+        config[:encryption] = { method: :simple_tls }
+        if openssl_verify_mode == "none"
+          # 証明書の検証を無効化
+          config[:encryption][:tls_options] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+        end
+      end
       config[:auth] = { method: auth_method.to_sym, username: admin_user, password: admin_pass }
 
       ldap = Net::LDAP.new(config)
@@ -115,15 +136,15 @@ class Ldap::Connection
   end
 
   def groups
-    search(Ldap::Group::DEFAULT_FILTER).map do |e|
+    search(Ldap::Group::DEFAULT_FILTER).filter_map do |e|
       Ldap::Group.create(self, e)
-    end.compact
+    end
   end
 
   def users
-    search(Ldap::User::DEFAULT_FILTER).map do |e|
+    search(Ldap::User::DEFAULT_FILTER).filter_map do |e|
       Ldap::User.create(self, e)
-    end.compact
+    end
   end
 
   def find(ldap_dn, klass)

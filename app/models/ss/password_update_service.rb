@@ -97,17 +97,26 @@ class SS::PasswordUpdateService
 
   def ldap_open(&block)
     if site.try(:ldap_use_state_individual?)
-      url = site.ldap_url
+      ldap_setting = site
     elsif organization.try(:ldap_use_state_individual?)
-      url = organization.ldap_url
+      ldap_setting = organization
     else
-      url = Sys::Auth::Setting.instance.ldap_url
+      ldap_setting = Sys::Auth::Setting.instance
     end
-    return if url.blank?
+    return if ldap_setting.blank?
 
-    url = Addressable::URI.parse(url)
+    url = Addressable::URI.parse(ldap_setting.ldap_url)
     host = url.host
     port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
+    config = { host: host, port: port }
+    if url.scheme == 'ldaps'
+      config[:encryption] = { method: :simple_tls }
+      if ldap_setting.ldap_openssl_verify_mode == "none"
+        # 証明書の検証を無効化
+        config[:encryption][:tls_options] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+      end
+    end
+
     Net::LDAP.open(host: host, port: port, &block)
   end
 end

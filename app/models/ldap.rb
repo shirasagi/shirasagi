@@ -1,5 +1,5 @@
 module Ldap
-  mattr_accessor :url, :sync_password, :auth_method, :admin_user, :admin_password
+  mattr_accessor :url, :openssl_verify_mode, :sync_password, :auth_method, :admin_user, :admin_password
 
   self.url = begin
     url = SS.config.ldap.url
@@ -10,6 +10,7 @@ module Ldap
     url.freeze
   end
 
+  self.openssl_verify_mode = SS.config.ldap.openssl_verify_mode.try(:freeze)
   self.sync_password = SS.config.ldap.sync_password.try(:freeze)
   self.auth_method = SS.config.ldap.auth_method.try(:to_sym)
   self.admin_user = SS.config.ldap.admin_user.try(:freeze)

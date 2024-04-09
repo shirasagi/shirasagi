@@ -29,7 +29,9 @@ module SS::Addon::Ldap::User
     end
     return false if ldap_setting.nil? || ldap_setting.ldap_url.blank?
 
-    Ldap::Connection.authenticate(url: ldap_setting.ldap_url, username: self.ldap_dn, password: password)
+    Ldap::Connection.authenticate(
+      url: ldap_setting.ldap_url, openssl_verify_mode: ldap_setting.ldap_openssl_verify_mode,
+      username: self.ldap_dn, password: password)
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     false

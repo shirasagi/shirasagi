@@ -17,14 +17,15 @@ class Cms::Ldap::ServersController < ApplicationController
 
   def connect
     if @cur_site.ldap_use_state_system?
-      url = Sys::Auth::Setting.instance.ldap_url
+      ldap_setting = Sys::Auth::Setting.instance
     else
-      url = @cur_site.ldap_url
+      ldap_setting = @cur_site
     end
-    return if url.blank?
+    return if ldap_setting.blank?
 
     Ldap::Connection.connect(
-      url: url,
+      url: ldap_setting.ldap_url,
+      openssl_verify_mode: ldap_setting.ldap_openssl_verify_mode,
       base_dn: @cur_site.ldap_base_dn,
       auth_method: @cur_site.ldap_auth_method,
       username: @cur_site.ldap_user_dn,

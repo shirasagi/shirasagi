@@ -18,13 +18,22 @@ class Gws::Ldap::DiagnosticsController < ApplicationController
     @item = @model.new
   end
 
-  def ldap_url
-    if @cur_site.ldap_use_state_system?
-      url = Sys::Auth::Setting.instance.ldap_url
-    else
-      url = @cur_site.ldap_url
+  def ldap_setting
+    @ldap_setting ||= begin
+      if @cur_site.ldap_use_state_system?
+        Sys::Auth::Setting.instance
+      else
+        @cur_site
+      end
     end
-    url
+  end
+
+  def ldap_url
+    ldap_setting.ldap_url
+  end
+
+  def ldap_openssl_verify_mode
+    ldap_setting.ldap_openssl_verify_mode
   end
 
   public
@@ -50,7 +59,8 @@ class Gws::Ldap::DiagnosticsController < ApplicationController
       return
     end
 
-    result = ::Ldap::Connection.authenticate(url: ldap_url, username: @item.dn, password: @item.password)
+    result = ::Ldap::Connection.authenticate(
+      url: ldap_url, openssl_verify_mode: ldap_openssl_verify_mode, username: @item.dn, password: @item.password)
     if result
       @result = "success"
     else
