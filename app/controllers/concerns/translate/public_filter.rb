@@ -18,7 +18,11 @@ module Translate::PublicFilter
     if @cur_site.translate_deny_no_refererr? && request.referer.blank?
       deny_message = "no referer access"
     end
-    Translate::AccessLog.create_log!(@cur_site, request, deny_message)
+    Translate::AccessLog.create_log!(@cur_site, request) do |item|
+      item.path = request_path
+      item.remote_addr = remote_addr
+      item.deny_message = deny_message
+    end
 
     if deny_message.present?
       Rails.logger.info("translate denied due to a #{deny_message}")

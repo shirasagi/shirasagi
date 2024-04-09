@@ -24,14 +24,14 @@ class Translate::AccessLog
   end
 
   class << self
-    def create_log!(site, request, deny_message)
+    def create_log!(site, request)
       item = self.new
       item.cur_site = site
       item.path = request.path
       item.user_agent = request.user_agent
       item.remote_addr = request.remote_addr
       item.referer = request.referer
-      item.deny_message = deny_message
+      yield item if block_given?
       item.save!
       item
     end
