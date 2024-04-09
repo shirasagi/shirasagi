@@ -89,7 +89,7 @@ module Event::IcalHelper
     if categories
       names = categories.and_public.map { |cate| cate.name }
       if names.present?
-        event.categories = ::Icalendar::Values::Array.new(names, ::Icalendar::Values::Text, {}, { delimiter: "," })
+        event.categories = ::Icalendar::Values::Helpers::Array.new(names, ::Icalendar::Values::Text, {}, { delimiter: "," })
       end
     end
   end
