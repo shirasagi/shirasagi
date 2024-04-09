@@ -77,103 +77,105 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   it do
-    Timecop.freeze(user638_enter) do
+    Timecop.travel(user638_enter) do
       login_user(user638)
       visit gws_affair_attendance_main_path(site)
       punch_enter(user638_enter)
     end
 
-    Timecop.freeze(user545_enter) do
+    Timecop.travel(user545_enter) do
       login_user(user545)
       visit gws_affair_attendance_main_path(site)
       punch_enter(user545_enter)
     end
 
-    Timecop.freeze(user638_leave) do
+    Timecop.travel(user638_leave) do
       login_user(user638)
       visit gws_affair_attendance_main_path(site)
       punch_leave(user638_leave)
     end
 
-    Timecop.freeze(user545_leave) do
+    Timecop.travel(user545_leave) do
       login_user(user545)
       visit gws_affair_attendance_main_path(site)
       punch_leave(user545_leave)
     end
 
-    login_user(user638)
-    visit index_path
-    # change group
-    within "form" do
-      select user638_group.name, from: 'group_id'
-      click_on I18n.t("ss.buttons.search")
-    end
-    wait_for_js_ready
-
-    within ".attendance-box.daily" do
-      expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.today, user638_group))
-
-      # change year month
-      select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
-      wait_for_js_ready
-      expect(page).to have_css(".attendance-box-title",
-        text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user638_group))
-
-      # change day
-      select I18n.t("gws/attendance.day", count: 30), from: 'day'
-      wait_for_js_ready
-      expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user638_group))
-
-      within ".time-card" do
-        expect(page).to have_css(".time.enter", text: "8:30")
-        expect(page).to have_css(".time.leave", text: "17:00")
-        expect(page).to have_css(".time.working-time", text: "7:45")
+    Timecop.travel(user545_leave) do
+      login_user(user638)
+      visit index_path
+      # change group
+      within "form" do
+        select user638_group.name, from: 'group_id'
+        click_on I18n.t("ss.buttons.search")
       end
-    end
-
-    login_user(user545)
-    visit index_path
-    # change group
-    within "form" do
-      select user638_group.name, from: 'group_id'
-      click_on I18n.t("ss.buttons.search")
-    end
-    wait_for_js_ready
-
-    within ".attendance-box.daily" do
-      expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.today, user638_group))
-
-      # change year month
-      select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
       wait_for_js_ready
-      expect(page).to have_css(".attendance-box-title",
-        text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user638_group))
 
-      # change day
-      select I18n.t("gws/attendance.day", count: 30), from: 'day'
-      wait_for_js_ready
-      expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user638_group))
+      within ".attendance-box.daily" do
+        expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.today, user638_group))
 
-      within ".time-card" do
-        expect(page).to have_css(".time.enter", text: "8:30")
-        expect(page).to have_css(".time.leave", text: "17:00")
-        expect(page).to have_css(".time.working-time", text: "7:45")
+        # change year month
+        select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
+        wait_for_js_ready
+        expect(page).to have_css(".attendance-box-title",
+          text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user638_group))
+
+        # change day
+        select I18n.t("gws/attendance.day", count: 30), from: 'day'
+        wait_for_js_ready
+        expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user638_group))
+
+        within ".time-card" do
+          expect(page).to have_css(".time.enter", text: "8:30")
+          expect(page).to have_css(".time.leave", text: "17:00")
+          expect(page).to have_css(".time.working-time", text: "7:45")
+        end
       end
-    end
 
-    # change group
-    within "form" do
-      select user545_group.name, from: 'group_id'
-      click_on I18n.t("ss.buttons.search")
-    end
-    wait_for_js_ready
+      login_user(user545)
+      visit index_path
+      # change group
+      within "form" do
+        select user638_group.name, from: 'group_id'
+        click_on I18n.t("ss.buttons.search")
+      end
+      wait_for_js_ready
 
-    within ".attendance-box.daily" do
-      expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user545_group))
-      within ".time-card" do
-        expect(page).to have_css(".time.enter", text: "8:12")
-        expect(page).to have_css(".time.leave", text: "20:32")
-        expect(page).to have_css(".time.working-time", text: "7:45")
+      within ".attendance-box.daily" do
+        expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.today, user638_group))
+
+        # change year month
+        select I18n.l(Time.zone.parse("2020/8/1").to_date, format: :attendance_year_month), from: 'year_month'
+        wait_for_js_ready
+        expect(page).to have_css(".attendance-box-title",
+          text: time_card_title(Time.zone.parse("2020/8/#{Time.zone.today.day}"), user638_group))
+
+        # change day
+        select I18n.t("gws/attendance.day", count: 30), from: 'day'
+        wait_for_js_ready
+        expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user638_group))
+
+        within ".time-card" do
+          expect(page).to have_css(".time.enter", text: "8:30")
+          expect(page).to have_css(".time.leave", text: "17:00")
+          expect(page).to have_css(".time.working-time", text: "7:45")
+        end
+      end
+
+      # change group
+      within "form" do
+        select user545_group.name, from: 'group_id'
+        click_on I18n.t("ss.buttons.search")
+      end
+      wait_for_js_ready
+
+      within ".attendance-box.daily" do
+        expect(page).to have_css(".attendance-box-title", text: time_card_title(Time.zone.parse("2020/8/30"), user545_group))
+        within ".time-card" do
+          expect(page).to have_css(".time.enter", text: "8:12")
+          expect(page).to have_css(".time.leave", text: "20:32")
+          expect(page).to have_css(".time.working-time", text: "7:45")
+        end
       end
     end
   end
