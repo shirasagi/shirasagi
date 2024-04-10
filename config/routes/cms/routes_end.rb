@@ -193,6 +193,10 @@ Rails.application.routes.draw do
       get "/" => redirect { |p, req| "#{req.path}/text_caches" }, as: :main
       resources :text_caches, concerns: :deletion
       resources :langs, concerns: [:deletion, :download, :import]
+      resources :access_logs, only: [:index, :show] do
+        get :download, on: :collection
+        post :download, on: :collection
+      end
       resource :site_setting
     end
 

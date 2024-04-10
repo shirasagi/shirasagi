@@ -23,7 +23,7 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
+      expect { ss_perform_now described_class.bind(bindings) }.to change { Rss::Page.count }.from(0).to(5)
       expect(Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first).not_to be_nil
     end
   end
@@ -37,7 +37,7 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
+      expect { ss_perform_now described_class.bind(bindings) }.to change { Rss::Page.count }.from(0).to(5)
       expect(Rss::Page.where(rss_link: "http://example.jp/rss/1.html").first).not_to be_nil
     end
   end
@@ -51,7 +51,7 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
+      expect { ss_perform_now described_class.bind(bindings) }.to change { Rss::Page.count }.from(0).to(5)
       expect(Rss::Page.where(rss_link: "http://example.jp/atom/1.html").first).not_to be_nil
     end
   end
@@ -100,7 +100,7 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(3)
+      expect { ss_perform_now described_class.bind(bindings) }.to change { Rss::Page.count }.from(0).to(3)
       expect(History::Trash.all.count).to eq 0
     end
   end
@@ -114,10 +114,10 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
-      described_class.bind(bindings).perform_now
+      ss_perform_now described_class.bind(bindings)
       expect(Rss::Page.count).to eq 5
 
-      described_class.bind(bindings).perform_now
+      ss_perform_now described_class.bind(bindings)
       # expected count is 5.
       expect(Rss::Page.count).to eq 5
 
@@ -161,11 +161,11 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
     it do
-      described_class.bind(bindings).perform_now
+      ss_perform_now described_class.bind(bindings)
       expect(Rss::Page.count).to eq 5
       expect(History::Trash.all.count).to eq 0
 
-      described_class.bind(bindings).perform_now
+      ss_perform_now described_class.bind(bindings)
       # expected count is 3, 1 added, 3 deleted, 1 updated.
       expect(Rss::Page.count).to eq 3
       expect(History::Trash.all.count).to eq 0
@@ -205,13 +205,13 @@ describe Rss::ImportJob, dbscope: :example do
     let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
 
     it do
-      described_class.bind(bindings).perform_now
+      ss_perform_now described_class.bind(bindings)
       expect(Rss::Page.count).to eq 5
       expect(History::Trash.all.count).to eq 0
 
       # http.options real_path: "/sample-rdf-3.xml"
 
-      described_class.bind(bindings).perform_now
+      ss_perform_now described_class.bind(bindings)
       # expected count is 3, 2 deleted.
       expect(Rss::Page.count).to eq 3
       expect(History::Trash.all.count).to eq 0

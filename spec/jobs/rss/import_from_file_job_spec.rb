@@ -9,7 +9,7 @@ describe Rss::ImportFromFileJob, dbscope: :example do
     let(:model) { Rss::Page }
 
     it do
-      expect { described_class.bind(site_id: site, node_id: node).perform_now(file.id) }.to change { model.count }.from(0).to(5)
+      expect { ss_perform_now(described_class.bind(site_id: site, node_id: node), file.id) }.to change { model.count }.from(0).to(5)
       item = model.where(rss_link: 'http://example.jp/rss/1.html').first
       expect(item).not_to be_nil
       expect(item.name).to eq '記事1'

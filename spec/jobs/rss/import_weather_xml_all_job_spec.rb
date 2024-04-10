@@ -41,7 +41,7 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.perform_now }.to change { model.count }.from(0).to(4)
+      expect { ss_perform_now described_class }.to change { model.count }.from(0).to(4)
 
       item1 = model.site(site1).node(node1).where(rss_link: 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').first
       expect(item1).not_to be_nil
@@ -113,7 +113,7 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.perform_now }.to change { model.count }.from(0).to(4)
+      expect { ss_perform_now described_class }.to change { model.count }.from(0).to(4)
 
       item1 = model.site(site1).node(node1).where(rss_link: 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').first
       expect(item1).not_to be_nil
@@ -179,7 +179,7 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.perform_now }.to change { model.count }.from(0).to(4)
+      expect { ss_perform_now described_class }.to change { model.count }.from(0).to(4)
 
       item1 = model.site(site1).node(node1).where(rss_link: 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').first
       expect(item1).not_to be_nil

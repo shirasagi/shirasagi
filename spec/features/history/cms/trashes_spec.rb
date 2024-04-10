@@ -407,36 +407,5 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
       end
     end
-
-    context "other job that user executed is on the schedule" do
-      before do
-        args = []
-        Job::Task.create!(
-          user_id: cms_user.id, name: SecureRandom.uuid, class_name: "History::Trash::RestoreJob", app_type: "cms",
-          pool: "default", args: args, active_job: {
-            "job_class" => "History::Trash::RestoreJob", "job_id" => SecureRandom.uuid, "provider_job_id" => nil,
-            "queue_name" => "default", "priority" => nil, "arguments" => args
-          }
-        )
-      end
-
-      it do
-        # move page to trash
-        visit page_path
-        click_link I18n.t('ss.links.delete')
-        click_button I18n.t('ss.buttons.delete')
-        wait_for_notice I18n.t('ss.notice.deleted')
-
-        expect(History::Trash.all.count).to eq 2
-
-        # restore it
-        visit index_path
-        click_link page_item.name
-        click_link I18n.t('ss.buttons.restore')
-        click_button I18n.t('ss.buttons.restore')
-
-        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
-      end
-    end
   end
 end

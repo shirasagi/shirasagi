@@ -20,7 +20,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "generates voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         file.reload
         expect(file.exists?).to be_truthy
@@ -50,7 +50,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -74,7 +74,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -98,7 +98,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -123,7 +123,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -149,7 +149,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "generates voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         file.reload
         expect(file.page_identity).not_to be_nil
