@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
-  let!(:path) { gws_schedule_search_times_path site }
   let!(:facility) { create(:gws_facility_item) }
   let!(:facility2) { create(:gws_facility_item) }
   let!(:facility3) { create(:gws_facility_item) }
   let!(:count) { 2 }
 
-  context "with auth", js: true do
+  context "with auth" do
+    let!(:path) { gws_schedule_search_times_path site }
+
     before { login_gws_user }
 
     it "#index" do
@@ -32,7 +33,9 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: tru
     end
   end
 
-  context "with auth", js: true do
+  context "with auth" do
+    let!(:path) { gws_schedule_search_times_path site }
+
     before do
       login_gws_user
       @save_config = SS.config.gws.schedule
@@ -59,6 +62,40 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: tru
         expect(page).to have_text(I18n.t('gws.errors.plan_search.max_facilities', count: count))
       end
       expect(page).to have_selector('.gws-schedule-search-facilities tbody tr', count: count)
+    end
+  end
+
+  context "invalid max_hour, min_hour" do
+    before { login_gws_user }
+
+    context "case1" do
+      let!(:path) do
+        gws_schedule_search_times_path(site,
+          s: { min_hour: -99_999_999_999_999_999_999, max_hour: 99_999_999_999_999_999_999 })
+      end
+
+      it "#index" do
+        visit path
+        within "form.search" do
+          expect(page).to have_selector('[name="s[min_hour]"] [selected][value="8"]')
+          expect(page).to have_selector('[name="s[max_hour]"] [selected][value="22"]')
+        end
+      end
+    end
+
+    context "case2" do
+      let!(:path) do
+        gws_schedule_search_times_path(site,
+          s: { min_hour: 99_999_999_999_999_999_999, max_hour: -99_999_999_999_999_999_999 })
+      end
+
+      it "#index" do
+        visit path
+        within "form.search" do
+          expect(page).to have_selector('[name="s[min_hour]"] [selected][value="8"]')
+          expect(page).to have_selector('[name="s[max_hour]"] [selected][value="22"]')
+        end
+      end
     end
   end
 end

@@ -52,6 +52,9 @@ ja:
       force_authn_state:
         enabled: 要求する
         disabled: 要求しない
+      authn_context:
+        password_protected_transport: "ユーザー名とパスワード"
+        windows: "統合Windows認証"
     links:
       new_from_metadata: メタデータ インポート
       new_from_discovery: Discovery から作成
@@ -146,6 +149,7 @@ ja:
         identifier: Identifier
         metadata: メタデータ
         force_authn_state: 再認証
+        authn_context: 認証方法
       sys/addon/open_id_connect_setting:
         client_id: Client ID
         client_secret: Client Secret
@@ -299,6 +303,10 @@ ja:
         - 再認証を要求するかどうかを選択します。
         - 「要求する」を選択した場合、IdP はユーザーを常に認証します。
         - 「要求しない」を選択した場合、IdP はセッションが存在する場合はセッションからの ID 情報を応答し、セッションが存在しない場合はユーザーを認証します。
+      authn_context:
+        - IdP側の認証方法を選択します。
+        - "ユーザー名とパスワード: ユーザー名とパスワードとで認証します。既定の認証法です。"
+        - "統合Windows認証: 統合Windows認証を用いて認証します。IdP側がこの認証方式に対応している必要があります。"
 
     sys/notice:
       name:

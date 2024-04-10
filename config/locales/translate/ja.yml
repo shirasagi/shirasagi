@@ -4,13 +4,15 @@ ja:
     text_cache: 翻訳テキスト
     site_setting: 設定
     lang: 言語
+    access_log: アクセス履歴
     update_state: ステータス
     ignore_character: '0123456789-'
     views:
       show_original: 原文を表示
       select_lang: 言語を選択
       api: API
-      api_request_word_limit: APIリクエスト文字数制限
+      api_request_word_limit: 文字数制限
+      api_access_restriction: アクセス履歴と制限
     labels:
       translate_tool: 言語翻訳
 
@@ -18,6 +20,9 @@ ja:
       update_state:
         auto: 自動登録
         manually: 手動登録
+      referer_restriction:
+        disabled: 制限無し
+        enabled: リファラーがない場合はアクセス不可
 
     notice:
       not_set_api: "翻訳APIが設定されていません。"
@@ -60,6 +65,21 @@ ja:
         google_translation_code: "Google API"
         accept_languages: "Accept-Language"
         in_file: ファイル
+      translate/access_log:
+        name: 名称
+        path: パス
+        remote_addr: IPアドレス
+        user_agent: ユーザーエージェント
+        referer: リファラー
+        deny_message: アクセス制限
+
+  activemodel:
+    models:
+      translate/download_param: ダウンロードパラメーター
+    attributes:
+      translate/download_param:
+        encoding: 文字コード
+        save_term: 保存期間
 
   tooltip:
     ss/addon/translate/site_setting:
@@ -76,6 +96,11 @@ ja:
         - 翻訳時にAPIリクエスト文字数が設定した上限を超える場合、翻訳を停止してエラーを表示します。
       translate_api_limit_exceeded_html:
         - リクエスト文字数超過時に表示するHTMLを設定します。
+      translate_referer_restriction:
+        - リファラーによる制限を設定します。
+      translate_access_log_threshold:
+        - アクセス履歴の保存期間を設定します。
+
     translate/text_cache:
       original_text:
         - 翻訳前テキストを入力します。
@@ -98,3 +123,7 @@ ja:
         - Google Translation APIの言語コードを入力します。
       accept_languages:
         - Accept-Language の言語コードを入力します。
+
+  job:
+    models:
+      translate/access_log/purge_job: 自動翻訳アクセス履歴削除

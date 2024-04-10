@@ -9,6 +9,10 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
   context "with only public key" do
     # this is expected metadata
     let(:metadata_file) { "#{Rails.root}/spec/fixtures/sys/auth/metadata-1.xml" }
+    let(:force_authn_state) { %w(disabled enabled).sample }
+    let(:force_authn_state_label) { I18n.t("sys.options.force_authn_state.#{force_authn_state}") }
+    let(:authn_context) { Sys::Auth::Saml::AUTHN_CONTEXT_MAP.keys.sample }
+    let(:authn_context_label) { I18n.t("sys.options.authn_context.#{authn_context}") }
 
     it do
       visit sys_auth_samls_path
@@ -18,6 +22,8 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         fill_in "item[filename]", with: filename
         attach_file "item[in_metadata]", metadata_file
+        select force_authn_state_label, from: "item[force_authn_state]"
+        select authn_context_label, from: "item[authn_context]"
 
         click_on I18n.t("ss.buttons.save")
       end
@@ -30,6 +36,8 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
         expect(item.entity_id).not_to be_nil
         expect(item.sso_url).not_to be_nil
         expect(SS::Crypto.decrypt(item.x509_cert)).not_to be_nil
+        expect(item.force_authn_state).to eq force_authn_state
+        expect(item.authn_context).to eq authn_context
       end
     end
   end
