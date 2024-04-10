@@ -11,7 +11,7 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
           site.save!
         end
 
-        ss_perform_now described_class, cms_site.id, cms_user.id
+        ss_perform_now described_class.bind(site_id: cms_site.id, user_id: cms_user.id)
 
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
@@ -46,7 +46,7 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
 
       it "should not raise errors" do
         import = nil
-        expect { import = ss_perform_now(described_class, site.id, user.id) }.not_to raise_error
+        expect { import = ss_perform_now(described_class.bind(site_id: site.id, user_id: user.id)) }.not_to raise_error
         expect(import).not_to be_nil
       end
     end
