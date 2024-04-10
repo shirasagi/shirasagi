@@ -14,6 +14,7 @@
       <h2><%= @forum.name %></h2>
     <% end %>
     <h3><%= link_to t('gws/discussion.navi.topic.portal'), gws_discussion_forum_topics_path(forum_id: @forum.id) %></h3>
+    <h3><%= link_to t('gws/discussion.navi.bookmark.readable'), gws_discussion_forum_bookmarks_path(forum_id: @forum.id) %></h3>
     <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_schedule_todos) %>
       <h3><%= link_to t('gws/discussion.navi.todo.readable'), gws_discussion_forum_todos_path(forum_id: @forum.id) %></h3>
     <% end %>

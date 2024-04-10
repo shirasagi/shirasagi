@@ -25,6 +25,8 @@ en:
         reply: Post a comment
       todo:
         index: See the to-do list
+      bookmark:
+        index: See the bookmark list
       member:
         index: Participant list
     main_topic:
@@ -47,6 +49,8 @@ en:
       no_topics: There are no threads.
       no_recents: No new threads.
       no_todos: Not registered
+      bookmarks: Favorited comments will be displayed below.
+      no_bookmarks: Not registered.
     notify_message:
       topic:
         subject: 'A “%{topic_name}” thread has been created in [Electronic Conference Room] %{forum_name}.'
@@ -124,6 +128,7 @@ en:
         discussion_unseen_interval: Interval for new confirmations
         discussion_recent_limit: Number of new items displayed
         discussion_todo_limit: Number of to-do tasks displayed
+        discussion_bookmark_limit: Number of bookmarks displayed
         discussion_comment_limit: Comment limit
 
   gws_role:
@@ -191,6 +196,8 @@ en:
         - Set the number of new list items displayed.
       discussion_todo_limit:
         - Set the number of to-do tasks displayed.
+      discussion_bookmark_limit:
+        - Set the number of bookmarks displayed.
       discussion_comment_limit:
         - Set a limit on comments for a single thread.
 

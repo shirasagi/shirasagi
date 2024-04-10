@@ -3,6 +3,7 @@ ja:
     admin: 管理
     topics: スレッド
     members: 参加者
+    bookmarks: 気になるコメント
     navi:
       forum:
         readable: 会議室一覧
@@ -11,6 +12,8 @@ ja:
         readable: スレッド一覧
       todo:
         readable: ToDo一覧
+      bookmark:
+        readable: 気になるコメント一覧
     links:
       forum:
         back_to_index: 会議室一覧へ戻る
@@ -25,6 +28,8 @@ ja:
         reply: コメントを投稿する
       todo:
         index: ToDo一覧を見る
+      bookmark:
+        index: 気になるコメント一覧を見る
       member:
         index: 参加者一覧
     main_topic:
@@ -47,6 +52,8 @@ ja:
       no_topics: スレッドはありません。
       no_recents: 新着はありません。
       no_todos: 登録されていません
+      bookmarks: 会議室ポータルでお気に入りしたコメントが以下に表示されます。
+      no_bookmarks: 登録されていません。
     notify_message:
       topic:
         subject: '[電子会議室] %{forum_name} に「%{topic_name}」スレッドが作成されました。'
@@ -124,6 +131,7 @@ ja:
         discussion_unseen_interval: 新着確認の間隔
         discussion_recent_limit: 新着表示件数
         discussion_todo_limit: ToDo表示件数
+        discussion_bookmark_limit: 気になるコメント表示件数
         discussion_comment_limit: コメントの上限
 
   gws_role:
@@ -191,6 +199,8 @@ ja:
         - 新着一覧の表示件数を設定します。
       discussion_todo_limit:
         - ToDoの表示件数を設定します。
+      discussion_bookmark_limit:
+        - 気になるコメントの表示件数を設定します。
       discussion_comment_limit:
         - １スレッドに対するコメントの上限を設定します。
 
