@@ -540,7 +540,7 @@ GEM
     rdf-xsd (3.3.0)
       rdf (~> 3.3)
       rexml (~> 3.2)
-    rdoc (6.3.3)
+    rdoc (6.3.4.1)
     regexp_parser (2.9.0)
     representable (3.2.0)
       declarative (< 0.1.0)
