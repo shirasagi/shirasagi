@@ -57,7 +57,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example do
       it do
         expect(Webmail::History.all.count).to eq 3
         Timecop.freeze(now) do
-          described_class.perform_now
+          ss_perform_now described_class
         end
         expect(Webmail::History.all.count).to eq 2
 
@@ -105,7 +105,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example do
       it do
         expect(Webmail::History.all.count).to eq 8
         Timecop.freeze(now) do
-          described_class.perform_now
+          ss_perform_now described_class
         end
         expect(Webmail::History.all.count).to eq 1
 

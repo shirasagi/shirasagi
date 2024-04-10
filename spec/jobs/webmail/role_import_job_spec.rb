@@ -19,7 +19,7 @@ describe Webmail::RoleImportJob, dbscope: :example do
       temp_file.save!
 
       job = Webmail::RoleImportJob.bind(user_id: ss_user)
-      job.perform_now(temp_file.id)
+      ss_perform_now(job, temp_file.id)
 
       Job::Log.first.tap do |log|
         expect(log.attributes["logs"]).to be_empty

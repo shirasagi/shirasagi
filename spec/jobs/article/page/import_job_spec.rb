@@ -40,7 +40,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -75,7 +75,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: dest_node.id, user_id: cms_user.id)
-        expect { job.perform_now(csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -410,7 +410,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -439,7 +439,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -497,7 +497,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do

@@ -4,7 +4,7 @@ describe Ldap::ImportJob, dbscope: :example, ldap: true do
   describe "#perform" do
     context "when no ldap connection is set" do
       it "should raise errors" do
-        described_class.perform_now(cms_site.id, cms_user.id, "pass")
+        ss_perform_now described_class, cms_site.id, cms_user.id, "pass"
 
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
@@ -39,7 +39,7 @@ describe Ldap::ImportJob, dbscope: :example, ldap: true do
 
       import = nil
       it "should not raise errors" do
-        expect { import = described_class.perform_now(site.id, user.id, "pass") }.not_to raise_error
+        expect { import = ss_perform_now(described_class, site.id, user.id, "pass") }.not_to raise_error
       end
       it "should return non-nil" do
         expect(import).not_to be_nil

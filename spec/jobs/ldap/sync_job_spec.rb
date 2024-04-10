@@ -7,7 +7,7 @@ describe Ldap::SyncJob, dbscope: :example do
 
   describe "#perform" do
     it do
-      expect { @job = subject.perform_now(group.id, item.id) }.not_to raise_error
+      expect { @job = ss_perform_now(subject, group.id, item.id) }.not_to raise_error
       expect(@job.results).not_to be_nil
 
       expect(Job::Log.count).to eq 1

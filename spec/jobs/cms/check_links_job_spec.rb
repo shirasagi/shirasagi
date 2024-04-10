@@ -33,7 +33,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
   before do
     #Capybara.app_host = site_url
-    described_class.bind(site_id: site.id).perform_now
+    ss_perform_now described_class.bind(site_id: site.id)
   end
 
   context ".perform_now" do

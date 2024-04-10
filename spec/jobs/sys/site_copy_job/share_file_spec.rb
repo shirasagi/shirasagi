@@ -22,7 +22,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
     describe "without options" do
       before do
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -41,7 +41,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         puts "file.size=#{file.size}, #{::File.size(file.path)}"
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 

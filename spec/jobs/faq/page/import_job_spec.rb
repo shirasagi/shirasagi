@@ -30,7 +30,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
     context "with node1" do
       before do
         job_class = described_class.bind(site_id: site.id, node_id: node1.id, user_id: user.id)
-        expect { job_class.perform_now(ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
+        expect { ss_perform_now(job_class, ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
 
       it do
@@ -82,7 +82,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
     context "with node2" do
       before do
         job_class = described_class.bind(site_id: site.id, node_id: node2.id, user_id: user.id)
-        expect { job_class.perform_now(ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
+        expect { ss_perform_now(job_class, ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
 
       it do
