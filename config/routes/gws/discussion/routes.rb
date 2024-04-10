@@ -48,6 +48,7 @@ Rails.application.routes.draw do
           end
         end
         resources :todos, concerns: [:plans, :todos, :copy]
+        resources :bookmarks, only: [:index, :destroy], concerns: [:deletion]
       end
     end
 
@@ -61,6 +62,7 @@ Rails.application.routes.draw do
         resources :comments, controller: "/gws/schedule/todo/apis/comments",
                   concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
       end
+      post "bookmark/:forum_id/:id" => "bookmark#index", id: /\d+/, as: :bookmark
     end
   end
 end

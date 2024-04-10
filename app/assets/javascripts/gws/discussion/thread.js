@@ -77,6 +77,26 @@ this.Gws_Discussion_Thread = (function () {
       $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor);
       return $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor);
     });
+
+    // bookmark
+    $(".bookmark-comment").on("click", function () {
+      var $warp = $(this);
+      var url = $warp.data("url");
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          $warp.html(data);
+        },
+        error: function (xhr, status, error) {
+          alert(xhr.responseJSON.join("\n"));
+        },
+      });
+      return false;
+    });
   };
 
   return Gws_Discussion_Thread;

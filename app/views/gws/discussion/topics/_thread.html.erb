@@ -2,13 +2,16 @@
   <div class="addon-head">
     <h2><%= link_to topic.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %></h2>
   </div>
-  <div class="addon-body">
+  <div class="addon-body" id="comment-<%= topic.id %>">
     <header>
       <div class="contributor">
         <span class="no"><%= "1." %></span>
         <%= gws_public_user_long_name(topic.contributor_name) %>
       </div>
       <div class="datetime updated">
+        <div class="bookmark-comment" data-url="<%= gws_discussion_apis_bookmark_path(forum_id: @forum, id: topic) %>">
+          <%= render_bookmark_icon(topic) %>
+        </div>
         <%= ss_time_tag topic.updated %>
       </div>
     </header>
@@ -47,6 +50,9 @@
           <%= gws_public_user_long_name(comment.contributor_name) %>
         </div>
         <div class="datetime updated">
+          <div class="bookmark-comment" data-url="<%= gws_discussion_apis_bookmark_path(forum_id: @forum, id: comment) %>">
+            <%= render_bookmark_icon(comment) %>
+          </div>
           <%= ss_time_tag comment.updated %>
         </div>
       </header>

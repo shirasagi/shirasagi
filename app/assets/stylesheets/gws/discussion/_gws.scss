@@ -16,6 +16,14 @@
     }
     .datetime {
       float: right;
+      display: flex;
+      .bookmark-comment {
+        margin-right: 4px;
+        cursor: pointer;
+      }
+      time {
+        padding-top: 2px;
+      }
     }
   }
   .addon-body .updated {

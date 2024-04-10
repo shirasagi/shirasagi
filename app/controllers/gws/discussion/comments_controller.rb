@@ -1,10 +1,10 @@
 class Gws::Discussion::CommentsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Discussion::BaseFilter
 
   model Gws::Discussion::Post
 
-  before_action :set_forum
   before_action :set_topic
   before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :copy]

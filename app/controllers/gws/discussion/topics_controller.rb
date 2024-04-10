@@ -1,11 +1,11 @@
 class Gws::Discussion::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Discussion::BaseFilter
 
   helper Gws::Schedule::PlanHelper
   model Gws::Discussion::Topic
 
-  before_action :set_forum
   before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :comments, :reply, :copy]
 
@@ -25,19 +25,6 @@ class Gws::Discussion::TopicsController < ApplicationController
   def pre_params
     #@skip_default_group = true
     super
-  end
-
-  def set_forum
-    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
-    @forum = Gws::Discussion::Forum.find(params[:forum_id])
-
-    if @forum.state == "closed"
-      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
-    else
-      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member?(@cur_user)
-    end
-
-    raise "403" unless permitted
   end
 
   def set_items
@@ -61,6 +48,8 @@ class Gws::Discussion::TopicsController < ApplicationController
       where(:descendants_updated.gt => (Time.zone.now - @cur_site.discussion_new_days.day)).
       reorder(descendants_updated: -1).
       limit(@cur_site.discussion_recent_limit)
+
+    @bookmarks = @bookmarker.bookmarks.values.take(@cur_site.discussion_bookmark_limit)
   end
 
   public

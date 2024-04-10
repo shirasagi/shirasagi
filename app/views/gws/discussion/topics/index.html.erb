@@ -46,6 +46,8 @@
 </div>
 
 <div class="gws-discussion-navi">
+  <%= render "bookmarks", head: t("gws/discussion.bookmarks"), css_class: %w(gws-discussion-navi-list bookmarks) %>
+
   <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_schedule_todos) %>
     <%= render "todo", head: t("gws/schedule.tabs.my_todo"), css_class: %w(gws-discussion-navi-list my-todo), todos: @todos %>
     <%= render "todo", head: t("gws/schedule.tabs.manageable_todo"), css_class: %w(gws-discussion-navi-list manageable-todo), todos: @manageable_todos %>
