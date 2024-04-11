@@ -26,6 +26,7 @@ module SS::Addon
 
       validates :multibyte_filename_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
       validates :file_fs_access_restriction_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+      validates :file_fs_access_restriction_allowed_ip_addresses, ip_address: true
     end
 
     def set_file_resizing
