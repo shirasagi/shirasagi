@@ -66,6 +66,7 @@ en:
     test_deliver: Test deliver
     target: Target
     unlimited: Unlimited
+    mfa: Multi Factor Authentication
 
     views:
       login/login:
@@ -564,6 +565,10 @@ en:
       user_type:
         sns: SNS user
         ldap: LDAP user
+      mfa_use:
+        always: Use
+        untrusted: Use when the access source is untrusted
+        none: Not use
 
     tasks:
       started: Started.
@@ -1056,6 +1061,9 @@ en:
         expiration_date: Expiration datetime
         audience_id: Audience user
         jwt: API token
+      ss/mfa/site_setting:
+        mfa_use_state: Use of MFA
+        mfa_trusted_ip_addresses: Trusted source
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1537,6 +1545,12 @@ en:
         - Select language
       timezone:
         - Select Timezone
+
+    ss/mfa/site_setting:
+      mfa_trusted_ip_addresses:
+        - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of MFA.
+        - To set multiple IP addresses, separate them with a new line.
+        - "You can also set network addresses such as \"192.168.10.0/24\" or \"192.168.10.0/255.255.255.0\"."
 
   job:
     models:

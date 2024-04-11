@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :mfa_use_state %><%= @model.tt :mfa_use_state %></dt>
+  <dd><%= f.select :mfa_use_state, @item.mfa_use_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :mfa_trusted_ip_addresses %><%= @model.tt :mfa_trusted_ip_addresses %></dt>
+  <dd><%= f.ss_lines_field :mfa_trusted_ip_addresses %></dd>
+</dl>

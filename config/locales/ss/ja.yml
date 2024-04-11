@@ -66,6 +66,7 @@ ja:
     test_deliver: テスト配信
     target: 対象
     unlimited: 制限無し
+    mfa: 多要素認証
 
     views:
       login/login:
@@ -564,6 +565,10 @@ ja:
       user_type:
         sns: SNSユーザー
         ldap: LDAPユーザー
+      mfa_use:
+        always: 使用する
+        untrusted: アクセス元が信頼できない場合に使用する
+        none: 使用しない
 
     tasks:
       started: 開始しました。
@@ -1056,6 +1061,9 @@ ja:
         expiration_date: 期限切れ日時
         audience_id: 利用ユーザー
         jwt: APIトークン
+      ss/mfa/site_setting:
+        mfa_use_state: 多要素認証の使用
+        mfa_trusted_ip_addresses: 信頼できるアクセス元
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1537,6 +1545,12 @@ ja:
         - 言語を選択してください。
       timezone:
         - タイムゾーンを選択してください。
+
+    ss/mfa/site_setting:
+      mfa_trusted_ip_addresses:
+        - 信頼できるアクセス元としてIPアドレスを設定します。多要素認証の使用に「アクセス元が信頼できない場合に使用する」を選択した場合にアクセス元が信頼できるかどうかの判定に使用します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
 
   job:
     models:
