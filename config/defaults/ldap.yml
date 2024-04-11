@@ -1,27 +1,23 @@
 production: &production
   # specify ldap server and port.
-  host: "localhost:389"
-  # specify ldap authentication method.
-  # you can specify:
-  # * simple: simple user and password authentication.
-  # * anonymous: use anonymous access. this method does not use user and password.
-  auth_method: simple
-  # specify exlucdes groups when importing from ldap server,
-  # this is case sensitive.
-  exclude_groups:
-    - Group
-    - People
+  url: "ldap://localhost/"
   # whether to synchronize LDAP password when changing SHIRASAGI password.
   # * enable: synchronize LDAP password
   # * disable: not to synchronize LDAP password
   sync_password: disable
+  # you can specify:
+  # * simple: simple user and password authentication.
+  # * anonymous: use anonymous access. this method does not use user and password.
+  auth_method: simple
   # be sure to set ldap admin user and password if you want to synchronize password with ldap.
   #admin_user: cn=admin,dc=example,dc=jp
   #admin_password: admin
 
 test:
   <<: *production
-  sync_password: enable
+  url: "ldap://localhost/"
+  sync_password: disable
+  auth_method: simple
   admin_user: cn=admin,dc=example,dc=jp
   admin_password: admin
 

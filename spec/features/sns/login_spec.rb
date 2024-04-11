@@ -205,6 +205,12 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     let(:password) { "pass" }
     subject { create(:cms_ldap_user, ldap_dn: user_dn, group: group) }
 
+    before do
+      auth_setting = Sys::Auth::Setting.first_or_create
+      auth_setting.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+      auth_setting.save!
+    end
+
     it "valid login" do
       visit sns_login_path
       within "form" do

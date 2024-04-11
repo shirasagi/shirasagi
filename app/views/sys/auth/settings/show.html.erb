@@ -1,0 +1,21 @@
+<div class="addon-views">
+  <%=
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+    addon_options[:head] = t("ss.basic_info")
+    buf = render "show_basic", addon: addon_options
+    render "ss/crud/addon", addon: addon_options do
+      buf
+    end
+  %>
+
+  <%=
+    addon_options = {}
+    addon_options[:id] = "addon-ldap"
+    addon_options[:head] = t("ldap.server_setting")
+    buf = render "show_ldap", addon: addon_options
+    render "ss/crud/addon", addon: addon_options do
+      buf
+    end
+  %>
+</div>

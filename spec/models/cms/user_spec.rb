@@ -20,7 +20,7 @@ describe Cms::User do
     end
 
     context "when ldap user is given" do
-      subject { attributes_for(:cms_user_base, :cms_user_rand_name, :cms_user_uid, :cms_user_ldap, group: group1) }
+      subject { attributes_for(:cms_ldap_user, email: nil, group: group1) }
       it "save and find successfully" do
         expect { model.new(subject).save! }.not_to raise_error
         expect(model.where(uid: subject[:uid]).first).not_to be_nil

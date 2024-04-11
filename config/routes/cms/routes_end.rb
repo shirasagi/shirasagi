@@ -141,6 +141,10 @@ Rails.application.routes.draw do
       resource :setting, only: %i[show edit update]
       resource :url_scheme, only: %i[show edit update]
     end
+    resource :user_profile, only: [:show, :edit, :update] do
+      get :edit_password, on: :member
+      post :edit_password, on: :member, action: :update_password
+    end
 
     scope module: "form" do
       resources :forms, concerns: [:deletion, :download, :import, :change_state] do
@@ -314,6 +318,23 @@ Rails.application.routes.draw do
         end
       end
       resources :ignore_urls, concerns: :deletion
+    end
+
+    namespace 'ldap' do
+      get '/' => redirect { |p, req| "#{req.path}/setting" }, as: :main
+      resource :setting, only: %i[show edit update]
+      get "server" => "servers#main", as: "server_main"
+      resource :server, only: [:show], path: "server/:dn" do
+        get :group
+        get :user
+      end
+      resources :imports, concerns: :deletion, only: [:index, :show, :destroy] do
+        get :import_confirmation, on: :collection
+        post :import, on: :collection
+        get :sync_confirmation, on: :member
+        post :sync, on: :member
+      end
+      resources :result, only: [:index]
     end
 
     namespace "apis" do

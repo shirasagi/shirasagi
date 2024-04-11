@@ -3,7 +3,7 @@ module SS::Model::Group
   extend SS::Translation
   include SS::Document
   include SS::Scope::ActivationDate
-  include Ldap::Addon::Group
+  include SS::Addon::Ldap::Group
   include SS::Fields::DependantNaming
   include SS::Liquidization
 

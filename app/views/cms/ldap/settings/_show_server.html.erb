@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @model.t :ldap_use_state %></dt>
+  <dd><%= @item.label(:ldap_use_state) || t("ldap.options.use_state.use_sys") %></dd>
+
+  <% if @item.ldap_use_state_individual? %>
+    <dt><%= @model.t :ldap_url %></dt>
+    <dd><%= @item.ldap_url %></dd>
+
+    <dt><%= @model.t :ldap_openssl_verify_mode %></dt>
+    <dd><%= @item.label(:ldap_openssl_verify_mode) %></dd>
+
+    <%
+      scheme = @cur_site.mypage_scheme.presence || (@cur_site.https == "enabled" ? "https" : "http")
+      domain = @cur_site.mypage_domain.presence || @cur_site.domain
+      path = cms_login_path(site: @cur_site)
+      url = cms_login_url(protocol: scheme, host: domain, site: @cur_site)
+    %>
+    <dd class="wide"><%= t("ldap.cms_login_notice_html", cms_login_path: path, cms_login_url: url) %></dd>
+  <% end %>
+</dl>

@@ -31,6 +31,8 @@ class Cms::Site
   include SS::Addon::MaintenanceMode
   include Cms::SyntaxChecker::MainSetting
   include Cms::SyntaxChecker::UrlSchemeSetting
+  include SS::Ldap::SiteSetting
+  include Cms::Ldap::ImportSetting
 
   set_permission_name "cms_sites", :edit
 end

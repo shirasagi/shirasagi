@@ -561,6 +561,9 @@ ja:
       link_target:
         _self: 同じタブで開く
         _blank: 新しいタブで開く
+      user_type:
+        sns: SNSユーザー
+        ldap: LDAPユーザー
 
     tasks:
       started: 開始しました。
@@ -626,6 +629,10 @@ ja:
       ss/locale_setting: 言語設定
 
   activemodel:
+    errors:
+      models:
+        ss/password_update_service:
+          ldap_password_modify_error: "LDAPパスワードの変更に失敗しました。"
     attributes:
       ss/download_param:
         encoding: 文字コード
@@ -728,8 +735,6 @@ ja:
         webmail_roles: WEBMAILロール
         webmail_role_ids: WEBMAILロール
         type: ユーザータイプ
-        sns: SNSユーザー
-        ldap: LDAPユーザー
         account_start_date: 有効期限（開始）
         account_expiration_date: 有効期限（終了）
         initial_password_warning: 初期パスワード警告
@@ -741,7 +746,6 @@ ja:
         organization_id: 所属組織
         organization_uid: 職員番号
         switch_user_id: 切り替えユーザー
-        login_roles: ログイン種別
         last_loggedin: 最終ログイン日時
       ss/model/user_title:
         code: 役職コード

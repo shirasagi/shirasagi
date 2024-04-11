@@ -16,8 +16,8 @@ def ss_site
   ss_site
 end
 
-def login_user(user, pass: nil)
-  visit sns_login_path
+def login_user(user, pass: nil, login_path: nil)
+  visit login_path.presence || sns_login_path
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
     fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"

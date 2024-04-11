@@ -4,7 +4,6 @@ FactoryBot.define do
     email { "ss@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
     #group_ids [1]
 
     lang { I18n.locale.to_s }
@@ -15,7 +14,6 @@ FactoryBot.define do
     email { "user2@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
 
     lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
@@ -25,7 +23,6 @@ FactoryBot.define do
     email { "user3@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
 
     lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
@@ -35,7 +32,16 @@ FactoryBot.define do
     email { "user4@example.jp" }
     in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [ SS::Model::User::LOGIN_ROLE_DBPASSWD ] }
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
+  end
+
+  factory :ss_ldap_user2, class: SS::User do
+    name { "user2" }
+    uid { "user2" }
+    email { "user2@example.jp" }
+    type { SS::Model::User::TYPE_LDAP }
+    ldap_dn { "uid=user2, ou=002001管理課, ou=002危機管理部, dc=example, dc=jp" }
 
     lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end

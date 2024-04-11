@@ -3,6 +3,9 @@ ja:
     server: サーバー情報
     import: インポート
     result: 同期結果
+    setting: 設定
+    server_setting: LDAPサーバー設定
+    import_setting: LDAPインポート設定
     links:
       ldap: LDAP
       sync: 同期する
@@ -34,6 +37,13 @@ ja:
           user: ユーザ
           name: 名前
           email: email
+    options:
+      auth_method:
+        simple: ユーザーDNとパスワードによる認証
+        anonymous: 匿名アクセス可（認証なし）
+      use_state:
+        system: システム設定にしたがう
+        individual: 以下の個別設定を使用する
     messages:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。
@@ -43,33 +53,57 @@ ja:
       sync_success: "同期に成功しました。グループ数: %{group_count}、ユーザー数: %{user_count}"
       group_moved: "%{user_name} がグループ「%{group_name}」へ移動しました。"
     errors:
-      has_multiple_root_groups: "サイト: %{site} は複数のルートグループが設定されています。"
       connection_setting_not_found: LDAP 接続情報が設定されていません。
       connection_refused: LDAP サーバーへ接続できません。
       update_ldap_password: LDAPのパスワード変更が出来ませんでした。
+    import_auth_method_remarks_html: |-
+      認証方法に「ユーザーDNとパスワードによる認証」を選択した場合、以下のユーザーDNとパスワードを設定してください。
+    cms_login_notice_html: |-
+      個別設定を用いてLDAPユーザーでログインするには、サイト用のログイン画面<a href="%{cms_login_path}">%{cms_login_url}</a>からログインしてください。
+    gws_login_notice_html: |-
+      個別設定を用いてLDAPユーザーでログインするには、グループウェア用のログイン画面<a href="%{gws_login_path}">%{gws_login_url}</a>からログインしてください。
 
   modules:
     ldap: LDAP
     addons:
-      ldap/user: LDAP
-      ldap/group: LDAP
+      ss/ldap/user: LDAP
+      ss/ldap/group: LDAP
+
+  errors:
+    messages:
+      unable_to_modify_ldap_users_password: "LDAPユーザーの場合、シラサギ上から他者のパスワードを変更することはできません。パスワードを変更するには、本人がプロフィール画面からパスワードを変更するか、LDAPの管理者に問い合わせてください。"
+
+  activemodel:
+    attributes:
+      ss/ldap/login_diagnostic:
+        dn: DN
+        password: パスワード
 
   mongoid:
     models:
-      ldap/addon/group: グループ
-      ldap/addon/user: ユーザー
-      ldap/import: インポート
+      cms/ldap/import: インポート
+      cms/ldap/sync_task: インポート設定
     attributes:
-      ldap/addon/group:
+      ss/addon/ldap/group:
         ldap_host: ホスト
         ldap_dn: DN
         ldap_auth_method: 認証方法
-      ldap/addon/user:
+      ss/addon/ldap/user:
         ldap_dn: DN
-      ldap/import:
+      cms/ldap/import:
         group_count: グループ数
         user_count: ユーザ数
         ldap: LDAPインポート結果
+      ss/ldap/site_setting:
+        ldap_use_state: 設定
+        ldap_url: LDAP Server
+        ldap_openssl_verify_mode: OpenSSL証明書チェック方法
+      cms/ldap/import_setting:
+        ldap_base_dn: ベースDN
+        ldap_auth_method: 認証方法
+        ldap_user_dn: ユーザDN
+        ldap_user_password: パスワード
+        ldap_exclude_groups: 除外グループ
 
   views:
     ldap/server:
@@ -80,14 +114,14 @@ ja:
       index: 同期結果
 
   tooltip:
-    ldap/addon/group:
+    ss/addon/ldap/group:
       ldap_dn:
       - LDAPを利用している場合にグループのDN（識別子）を入力します。
-    ldap/addon/user:
+    ss/addon/ldap/user:
       ldap_dn:
       - LDAPを利用している場合にユーザーのDN（識別子）を入力します。
 
   job:
     models:
-      ldap/import_job: LDAPインポート
-      ldap/sync_job: LDAP同期
+      cms/ldap/import_job: LDAPインポート
+      cms/ldap/sync_job: LDAP同期

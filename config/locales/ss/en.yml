@@ -556,6 +556,9 @@ en:
       link_target:
         _self: Same tab
         _blank: New tab
+      user_type:
+        sns: SNS user
+        ldap: LDAP user
 
     tasks:
       started: Started.
@@ -621,6 +624,10 @@ en:
       ss/locale_setting: Locale settings
 
   activemodel:
+    errors:
+      models:
+        ss/password_update_service:
+          ldap_password_modify_error: "Failed to modify password over LDAP"
     attributes:
       ss/download_param:
         encoding: Character encoding
@@ -723,8 +730,6 @@ en:
         webmail_roles: WEBMAIL role
         webmail_role_ids: WEBMAIL role
         type: User type
-        sns: SNS user
-        ldap: LDAP user
         account_start_date: Validity period (start)
         account_expiration_date: Validity period (end)
         initial_password_warning: Initial password warning
@@ -736,7 +741,6 @@ en:
         organization_id: Affiliation
         organization_uid: Staff number
         switch_user_id: Switch user
-        login_roles: Login type
         last_loggedin: Last login date and time
       ss/model/user_title:
         code: Job title code

@@ -3,6 +3,9 @@ en:
     server: Server information
     import: Import
     result: Syncing results
+    setting: Setting
+    server_setting: LDAP Server Setting
+    import_setting: LDAP Import Setting
     links:
       ldap: LDAP
       sync: Synchronize
@@ -34,6 +37,13 @@ en:
           user: User
           name: Name
           email: E-mail
+    options:
+      auth_method:
+        simple: User DN and Password
+        anonymous: Anonymous (skip auth)
+      use_state:
+        system: System settings
+        individual: Use the following individual settings
     messages:
       no_groups: The group cannot be found.
       no_users: The user cannot be found.
@@ -43,33 +53,57 @@ en:
       sync_success: "Synchronization successful. Number of groups: %{group_count}, Number of users: %{user_count}"
       group_moved: ! '%{user_name} has been moved to the group “%{group_name}”.'
     errors:
-      has_multiple_root_groups: "Site: %{site} has multiple route groups set."
       connection_setting_not_found: LDAP connection information is not set.
       connection_refused: Unable to connect to LDAP server.
       update_ldap_password: Unable to change password in LDAP.
+    import_auth_method_remarks_html: |-
+      If you select "User DN and Password" as the authentication method, please set the following user DN and password.
+    cms_login_notice_html: |-
+      To log in as an LDAP user using individual settings, log in from the login screen for the site: <a href="%{cms_login_path}">%{cms_login_url}</a>
+    gws_login_notice_html: |-
+      To log in as an LDAP user using individual settings, log in from the login screen for the group ware: <a href="%{gws_login_path}">%{gws_login_url}</a>
 
   modules:
     ldap: LDAP
     addons:
-      ldap/user: LDAP
-      ldap/group: LDAP
+      ss/ldap/user: LDAP
+      ss/ldap/group: LDAP
+
+  errors:
+    messages:
+      unable_to_modify_ldap_users_password: "For LDAP users, it is not possible to change the passwords of others from within Syraseaghi. To change your password, you must change it in person from your profile screen or contact your LDAP administrator."
+
+  activemodel:
+    attributes:
+      ss/ldap/login_diagnostic:
+        dn: DN
+        password: Password
 
   mongoid:
     models:
-      ldap/addon/group: Group
-      ldap/addon/user: User
-      ldap/import: Import
+      cms/ldap/import: Import
+      cms/ldap/sync_task: Import Setting
     attributes:
-      ldap/addon/group:
+      ss/addon/ldap/group:
         ldap_host: Host
         ldap_dn: DN
         ldap_auth_method: Authentication method
-      ldap/addon/user:
+      ss/addon/ldap/user:
         ldap_dn: DN
-      ldap/import:
+      cms/ldap/import:
         group_count: Number of groups
         user_count: Number of users
         ldap: LDAP import results
+      ss/ldap/site_setting:
+        ldap_use_state: Setting
+        ldap_url: LDAP server
+        ldap_openssl_verify_mode: OpenSSL certificate check method
+      cms/ldap/import_setting:
+        ldap_base_dn: Base DN
+        ldap_auth_method: Authentication method
+        ldap_user_dn: User DN
+        ldap_user_password: Password
+        ldap_exclude_groups: Exclude groups
 
   views:
     ldap/server:
@@ -80,14 +114,14 @@ en:
       index: Syncing results
 
   tooltip:
-    ldap/addon/group:
+    ss/addon/ldap/group:
       ldap_dn:
       - Enter the DN (identifier) of the group if you are using LDAP.
-    ldap/addon/user:
+    ss/addon/ldap/user:
       ldap_dn:
       - Enter the user's DN (identifier) if you are using LDAP.
 
   job:
     models:
-      ldap/import_job: LDAP import
-      ldap/sync_job: LDAP synchronization
+      cms/ldap/import_job: LDAP import
+      cms/ldap/sync_job: LDAP synchronization

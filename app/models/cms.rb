@@ -35,6 +35,7 @@ module Cms
     ::Cms::ImportJobFile
     ::Cms::InitColumn
     ::Cms::Layout
+    ::Cms::Ldap::Import
     ::Cms::LoopSetting
     ::Cms::MaxFileSize
     ::Cms::Member
@@ -65,7 +66,6 @@ module Cms
     ::Jmaxml::WaterLevelStation
     ::Job::Log
     ::Kana::Dictionary
-    ::Ldap::Import
     ::Member::ActivityLog
     ::Member::Group
     ::Opendata::AppPoint
