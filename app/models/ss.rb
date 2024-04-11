@@ -54,4 +54,9 @@ module SS
       log_error(error.cause, logger: logger, severity: severity, recursive: true)
     end
   end
+
+  def remote_addr(request = nil)
+    request ||= Rails.application.current_request
+    request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
+  end
 end

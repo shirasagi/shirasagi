@@ -95,7 +95,7 @@ module SS::Addon
       end
 
       def match?(request)
-        remote_addr = request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
+        remote_addr = SS.remote_addr(request)
         result = @ip_addresses.any? { |addr| addr.include?(remote_addr) }
         Rails.logger.warn { "remote address '#{remote_addr}' is not allowed" } unless result
         result
