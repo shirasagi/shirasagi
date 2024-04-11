@@ -92,6 +92,10 @@ en:
         service:
           name: Service
           text: Creates an OAuth 2.0 Service-Application to enable server to server authentication.
+      line:
+        test_deliver:
+          - The text is delivered to the test members.
+          - Click the Deliver button to start the test delivery process.
     navi:
       readable: Browse list
       editable: Management list
@@ -275,6 +279,7 @@ en:
       target_to_public: Check what to make public
       target_to_closed: Check what to make closed
       approve: Are you sure you want to approve it?
+      test_deliver: Are you sure you want to start test delivery
       resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
     notice:
       saved: Saved.
@@ -988,6 +993,7 @@ en:
         translate_mock_api_request_count: No. of API requests
         translate_mock_api_request_word_count: API request character count
         translate_microsoft_api_key: Subscription key
+        translate_microsoft_api_region: Region
         translate_microsoft_api_request_count: No. of API requests
         translate_microsoft_api_request_word_count: API request character count
         translate_microsoft_api_request_metered_usage: x-metered-usage
@@ -997,6 +1003,8 @@ en:
         translate_google_api_request_word_count: API request character count
         translate_api_request_word_limit: Character limit
         translate_api_limit_exceeded_html: Display HTML when limit is exceeded
+        translate_referer_restriction: Restriction by referrer
+        translate_access_log_threshold: History keeping period
       ss/addon/source_cleaner/site_setting:
         source_cleaner_unwrap_tag_state: Remove unnecessary tags
         source_cleaner_remove_tag_state: Remove empty tags
