@@ -86,7 +86,6 @@ GEM
       racc
     browser (5.3.1)
     bson (4.15.0)
-    buftok (0.3.0)
     builder (3.2.4)
     bxslider-rails (4.2.5.1)
     byebug (11.1.3)
@@ -126,7 +125,6 @@ GEM
     docker-api (2.2.0)
       excon (>= 0.47.0)
       multi_json
-    domain_name (0.6.20240107)
     dotenv (3.1.0)
     dotenv-rails (3.1.0)
       dotenv (= 3.1.0)
@@ -145,7 +143,6 @@ GEM
     elasticsearch-transport (7.17.10)
       faraday (>= 1, < 3)
       multi_json
-    equalizer (0.0.11)
     erubi (1.12.0)
     excon (0.110.0)
     execjs (2.9.1)
@@ -182,9 +179,6 @@ GEM
     fast_blank (1.0.1)
     fastimage (2.3.0)
     ffi (1.16.3)
-    ffi-compiler (1.0.1)
-      ffi (>= 1.0.0)
-      rake
     formatador (1.1.0)
     fuubar (2.5.1)
       rspec-core (~> 3.0)
@@ -250,14 +244,6 @@ GEM
     hashie (5.0.0)
     holiday_japan (1.4.4)
     htmlentities (4.3.4)
-    http (5.1.1)
-      addressable (~> 2.8)
-      http-cookie (~> 1.0)
-      http-form_data (~> 2.2)
-      llhttp-ffi (~> 0.4.0)
-    http-cookie (1.0.5)
-      domain_name (~> 0.5)
-    http-form_data (2.3.0)
     http_accept_language (2.1.1)
     httpauth (0.2.1)
     httpclient (2.8.3)
@@ -319,9 +305,6 @@ GEM
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    llhttp-ffi (0.4.0)
-      ffi-compiler (~> 1.0)
-      rake (~> 13.0)
     logger (1.6.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
@@ -334,8 +317,6 @@ GEM
     marcel (1.0.4)
     marked-rails (9.1.2.0)
     matrix (0.4.2)
-    memoizable (0.4.2)
-      thread_safe (~> 0.3, >= 0.3.1)
     method_source (1.0.0)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
@@ -373,7 +354,6 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.4.0)
-    naught (1.1.0)
     nenv (0.3.0)
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
@@ -642,7 +622,6 @@ GEM
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
-    simple_oauth (0.3.1)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -689,24 +668,12 @@ GEM
       prawn-disable_word_break (>= 2.3.1)
       rexml
     thor (1.3.1)
-    thread_safe (0.3.6)
     tilt (2.3.0)
     timecop (0.9.8)
     timeout (0.4.1)
     trailblazer-option (0.1.2)
     ttfunk (1.8.0)
       bigdecimal (~> 3.1)
-    twitter (8.0.1)
-      addressable (~> 2.3)
-      buftok (~> 0.3.0)
-      equalizer (~> 0.0.11)
-      http (~> 5.1)
-      http-form_data (~> 2.3)
-      llhttp-ffi (~> 0.4.0)
-      memoizable (~> 0.4.0)
-      multipart-post (~> 2.0)
-      naught (~> 1.0)
-      simple_oauth (~> 0.3.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
@@ -741,6 +708,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    x (0.14.1)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     ya_kansuji (0.2.0)
@@ -867,7 +835,6 @@ DEPENDENCIES
   test-queue
   thinreports
   timecop
-  twitter
   uglifier
   unf
   ungarbled
@@ -876,6 +843,7 @@ DEPENDENCIES
   view_component
   wareki
   webmock
+  x
   yard
 
 BUNDLED WITH

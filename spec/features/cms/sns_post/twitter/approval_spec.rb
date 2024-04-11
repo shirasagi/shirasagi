@@ -11,6 +11,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
   let(:show_path) { article_page_path site.id, node, item }
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
+  let(:tweet_id) { rand(100) }
+  let(:username) { "user-#{unique_id}" }
+
   let(:approve_comment) { "approve-#{unique_id}" }
   let(:line_text_message) { unique_id }
 
@@ -26,7 +29,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
   context "approve and publish" do
     context "post none" do
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           # edit
           login_cms_user
           visit edit_path
@@ -49,12 +52,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
           expect(Cms::SnsPostLog::Twitter.count).to eq 0
 
           # send request
@@ -99,12 +100,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
           expect(Cms::SnsPostLog::Twitter.count).to eq 0
         end
       end
@@ -112,7 +111,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
     context "post page" do
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           # edit
           login_cms_user
           visit edit_path
@@ -135,12 +134,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
           expect(Cms::SnsPostLog::Twitter.count).to eq 0
 
           # send request
@@ -185,20 +182,18 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 1
           expect(capture.update.tweet).to include(item.name)
           expect(capture.update.tweet).to include(item.full_url)
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
         end
       end
 
       # with branch page
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           # create branch
           login_cms_user
           visit show_path
@@ -230,12 +225,10 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
           expect(Cms::SnsPostLog::Twitter.count).to eq 0
 
           # send request
@@ -284,13 +277,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 1
           expect(capture.update.tweet).to include(item.name)
           expect(capture.update.tweet).to include(item.full_url)
-          expect(capture.update_with_media.count).to eq 0
-          expect(capture.update_with_media.tweet).to eq nil
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
         end
       end
@@ -300,7 +291,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
   context "enable edit auto post" do
     context "post page" do
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           # 1. edit
           login_cms_user
           visit edit_path
@@ -323,7 +314,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 0
           expect(Cms::SnsPostLog::Twitter.count).to eq 0
@@ -366,7 +357,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 1
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -398,7 +389,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 1
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -441,7 +432,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 2
           expect(Cms::SnsPostLog::Twitter.count).to eq 2
@@ -473,7 +464,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 2
           expect(Cms::SnsPostLog::Twitter.count).to eq 2
@@ -516,7 +507,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 2
           expect(Cms::SnsPostLog::Twitter.count).to eq 2
@@ -525,7 +516,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
       # with branch page
       it "#edit" do
-        capture_twitter_rest_client do |capture|
+        capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           # 1. create branch
           login_cms_user
           visit show_path
@@ -556,7 +547,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 0
           expect(Cms::SnsPostLog::Twitter.count).to eq 0
@@ -603,7 +594,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 1
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -638,7 +629,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 1
           expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -685,7 +676,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 2
           expect(Cms::SnsPostLog::Twitter.count).to eq 2
@@ -720,7 +711,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_no_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_no_css("td", text: "https://twitter.com/")
           end
           expect(capture.update.count).to eq 2
           expect(Cms::SnsPostLog::Twitter.count).to eq 2
@@ -767,7 +758,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-cms-agents-addons-twitter_poster" do
-            expect(page).to have_css("td", text: "https://twitter.com/user_screen_id/status/twitter_id")
+            expect(page).to have_css("td", text: "https://twitter.com/#{username}/status/#{tweet_id}")
           end
           expect(capture.update.count).to eq 2
           expect(Cms::SnsPostLog::Twitter.count).to eq 2
