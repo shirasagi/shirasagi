@@ -34,7 +34,9 @@ Rails.application.routes.draw do
     resource :password_policy, only: [:show, :edit, :update]
     resource :ad, only: [:show, :edit, :update]
 
-    resources :users, concerns: [:deletion, :lock_and_unlock]
+    resources :users, concerns: [:deletion, :lock_and_unlock] do
+      post :reset_mfa_otp, on: :member
+    end
     resources :notice, concerns: :deletion
     resources :groups, concerns: [:deletion, :role] do
       match :download_all, on: :collection, via: %i[get post]

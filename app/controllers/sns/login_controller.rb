@@ -41,14 +41,29 @@ class Sns::LoginController < ApplicationController
         SS::User.authenticate(email_or_uid, password) rescue nil
       end
     end
-    @item = nil if @item && (@item.disabled? || @item.locked?)
-    @item = @item.try_switch_user || @item if @item
+    if @item.blank? || @item.disabled? || @item.locked?
+      render_login nil, email_or_uid, session: true, password: password
+      return
+    end
+    if Sys::Auth::Setting.instance.mfa_use?(request)
+      session[:authenticated_in_1st_step] = {
+        user_id: @item.id,
+        password: password,
+        ref: params[:ref].to_s,
+        authenticated_at: Time.zone.now.to_i
+      }
+      redirect_to sns_mfa_login_path
+      return
+    end
+
+    @item = @item.try_switch_user || @item
 
     render_login @item, email_or_uid, session: true, password: password
   end
 
   def remote_login
     raise "404" unless SS::config.sns.remote_login
+    raise "404" if Sys::Auth::Setting.instance.mfa_use?
 
     login
     render :login if response.body.blank?

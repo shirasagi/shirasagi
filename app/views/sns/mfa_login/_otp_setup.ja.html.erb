@@ -1,0 +1,80 @@
+<div class="addon-views otp-setup">
+  <div id="otp-setup-notice" class="addon-view otp-setup-notice">
+    <div class="addon-body">
+    <span class="application-name"><%= ss_application_name %></span>へログインするには認証アプリを設定し、認証アプリが生成した6桁の数字を入力する必要があります。
+      以下の手順にしたがい、認証アプリを設定し、認証アプリが生成した6桁の数字を入力してください。
+    </div>
+  </div>
+
+  <%= error_messages_for :item %>
+
+  <div id="otp-setup-step1" class="addon-view otp-setup-step1">
+    <div class="addon-head">
+      <h2>
+        <span class="step_no">手順1</span>
+        <span class="title">認証アプリのインストール</span>
+      </h2>
+    </div>
+    <div class="addon-body">
+      普段ご利用のスマートフォンやタブレットにGoogle AuthenticatorやMicrosoft Authenticatorをインストールしてください。
+      <span class="application-name"><%= ss_application_name %></span>では他の認証アプリもサポートしています。詳しくはシステム管理者へ問い合わせてください。
+    </div>
+  </div>
+
+  <div id="otp-setup-step2" class="addon-view otp-setup-step2">
+    <div class="addon-head">
+      <h2>
+        <span class="step_no">手順2</span>
+        <span class="title">認証アプリのインストール</span>
+      </h2>
+    </div>
+    <div class="addon-body">
+      <div class="otp-setup-qrcode-wrapper">
+        <%= image_tag otp_qr_code, class: "otp-setup-qrcode", alt: "認証アプリ登録用QRコード" %>
+      </div>
+      <ol class="otp-setup-registration-instruction">
+        <li>インストールした認証アプリを起動します。</li>
+        <li>アプリの "+" アイコンをタップします。</li>
+        <li>右に表示されているQRコードを、スマートフォンやタブレットのカメラで読み取ります。</li>
+      </ol>
+
+      <details class="otp-setup-registration-without-qrcode">
+        <summary class="otp-setup-registration-without-qrcode-title">QRコードを読み取れない場合</summary>
+        <div class="otp-setup-registration-without-qrcode-body">
+          ご利用の認証アプリの説明書にしたがって、次のセットアップ・キー（秘密キー）をご利用の認証アプリに手動で登録してください。<br>
+
+          セットアップ・キー（秘密キー）: <code><%= otp_secret %></code> <%= button_tag(t("ss.buttons.copy"), type: "button", class: "btn clipboard-copy-button", data: { text: otp_secret }) %>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div id="otp-setup-step3" class="addon-view otp-setup-step3">
+    <div class="addon-head">
+      <h2>
+        <span class="step_no">手順3</span>
+        <span class="title">確認コードの入力</span>
+      </h2>
+    </div>
+    <div class="addon-body">
+      <%= form_with scope: :item, url: url_for(action: :otp_setup), method: :post, id: "item-form" do %>
+        <%= hidden_field_tag "ref", ref, id: nil %>
+        <%= hidden_field_tag "item[otp_secret]", otp_secret, id: nil %>
+
+        <label class="otp-setup-verification-code-box">
+          <span>認証アプリに表示されている6桁の数値を入力してください。</span>
+          <%= text_field_tag "item[code]", "", autocomplete: "one-time-code", inputmode: "numeric", placeholder: "000000" %>
+        </label>
+
+        <footer>
+          <%= submit_tag t("ss.login"), name: :otp_setup, class: "btn-primary" %>
+          <%= link_to t("ss.links.back"), sns_login_path, class: "btn-default" %>
+        </footer>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>

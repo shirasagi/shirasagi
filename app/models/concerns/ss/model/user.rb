@@ -8,6 +8,7 @@ module SS::Model::User
   include SS::UserImportValidator
   include SS::Addon::LocaleSetting
   include SS::Addon::Ldap::User
+  include SS::Addon::MFA::UserSetting
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze

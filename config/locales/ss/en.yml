@@ -67,6 +67,9 @@ en:
     target: Target
     unlimited: Unlimited
     mfa: Multi Factor Authentication
+    mfa_otp: One Time Password
+    mfa_otp_enabled_at: "Enabled at %{time}"
+    mfa_otp_not_enabled_yet: "Not enabled yet"
 
     views:
       login/login:
@@ -248,6 +251,7 @@ en:
       update: Update
       prev: Previous
       next: Next
+      reset_mfa_otp: Reset OTP
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
@@ -282,6 +286,7 @@ en:
       approve: Are you sure you want to approve it?
       test_deliver: Are you sure you want to start test delivery
       resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
+      reset_mfa_otp: Are you sure you want ot reset OTP?
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
@@ -335,6 +340,7 @@ en:
       updated: Updated.
       ordered_by_file_name_order: Ordered by name.
       ordered_by_file_upload_order: Ordered by upload order.
+      reset_mfa_otp: Reset OTP
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.
@@ -632,6 +638,7 @@ en:
       ss/oauth2/gws_permission: Groupware permissions
       ss/oauth2/webmail_permission: Mail permissions
       ss/locale_setting: Locale settings
+      ss/mfa/user_setting: MFA settings
 
   activemodel:
     errors:
@@ -1064,6 +1071,9 @@ en:
       ss/mfa/site_setting:
         mfa_use_state: Use of MFA
         mfa_trusted_ip_addresses: Trusted source
+      ss/addon/mfa/user_setting:
+        mfa_otp_secret: OTP secret
+        mfa_otp_enabled_at: OTP enabled at
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1547,6 +1557,14 @@ en:
         - Select Timezone
 
     ss/mfa/site_setting:
+      mfa_use_state:
+        - Select whether to use multi-factor authentication.
+        -
+        - "・Not use: Do not use multi-factor authentication."
+        - "・Use: Use multi-factor authentication."
+        - "・Use when the access source is untrusted: Use multi-factor authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
+        -
+        - Multi-factor authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use multi-factor authentication when using an external authentication server, please configure the external authentication server to use multi-factor authentication.
       mfa_trusted_ip_addresses:
         - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of MFA.
         - To set multiple IP addresses, separate them with a new line.

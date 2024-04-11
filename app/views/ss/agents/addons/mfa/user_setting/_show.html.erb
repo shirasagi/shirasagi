@@ -1,0 +1,17 @@
+<% return if Sys::Auth::Setting.instance.mfa_use_none? %>
+
+<dl class="see">
+  <dt><%= t "ss.mfa_otp" %></dt>
+  <dd>
+    <%=
+      if @item.mfa_otp_secret.present?
+        t("ss.mfa_otp_enabled_at", time: ss_time_tag(@item.mfa_otp_enabled_at)).html_safe
+      else
+        t("ss.mfa_otp_not_enabled_yet")
+      end
+    %>
+  </dd>
+  <% if @item.mfa_otp_secret.present? && @item.allowed?(:edit, @cur_user) %>
+    <dd><%= ss_button_to t("ss.buttons.reset_mfa_otp"), url_for(action: :reset_mfa_otp), name: :reset_mfa_otp, class: "btn", confirm: t('ss.confirm.reset_mfa_otp') %></dd>
+  <% end %>
+</dl>
