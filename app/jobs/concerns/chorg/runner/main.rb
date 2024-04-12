@@ -7,12 +7,20 @@ module Chorg::Runner::Main
     if entity.valid?
       put_log("save : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity, target_site(entity))
-      entity.save
+      if entity.respond_to?(:without_record_timestamps)
+        entity.without_record_timestamps { entity.save }
+      else
+        entity.save
+      end
       true
     elsif exclude_validation_model?(entity)
       put_log("save (skip validate) : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity, target_site(entity))
-      entity.save!(validate: false)
+      if entity.respond_to?(:without_record_timestamps)
+        entity.without_record_timestamps { entity.save!(validate: false) }
+      else
+        entity.save!(validate: false)
+      end
       true
     else
       put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
@@ -108,7 +116,7 @@ module Chorg::Runner::Main
     # result = user.import
 
     task.log("==コンテンツインポート==")
-    Cms::AllContentsImportJob.bind(site_id: site, user_id: user).perform_now(@item.content_csv_file_id)
+    Cms::AllContentsImportJob.bind(site_id: site, user_id: user).perform_now(@item.content_csv_file_id, keep_timestamp: true)
   end
 
   def import_user_csv_gws

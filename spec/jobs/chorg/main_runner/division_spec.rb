@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [ root_group.id ]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
@@ -82,25 +83,33 @@ describe Chorg::MainRunner, dbscope: :example do
         # source_group の主連絡先
         main_contact = source_group.contact_groups.where(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-          contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        Timecop.freeze(now - 2.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+            contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+            contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+            contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
       let!(:article_page2) do
         # source_group のサブ連絡先
         sub_contact = source_group.contact_groups.ne(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-          contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-          contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
-          contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
-          contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
-          contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+        Timecop.freeze(now - 3.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+            contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
+            contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+            contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+            contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
+            contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
@@ -172,6 +181,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq contact_after_division.contact_address
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
         Cms::Page.find(article_page2.id).tap do |page_after_division|
           expect(page_after_division.group_ids).to eq [ group_after_division1.id, group_after_division2.id ]
@@ -186,6 +196,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq contact_after_division.contact_address
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page2.updated.in_time_zone
         end
 
         user.reload
@@ -330,25 +341,33 @@ describe Chorg::MainRunner, dbscope: :example do
         # group1 の主連絡先
         main_contact = group1.contact_groups.where(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
-          contact_group_id: group1.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        Timecop.freeze(now - 2.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
+            contact_group_id: group1.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+            contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+            contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
       let!(:article_page2) do
         # group1 のサブ連絡先
         sub_contact = group1.contact_groups.ne(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
-          contact_group_id: group1.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-          contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
-          contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
-          contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
-          contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+        Timecop.freeze(now - 3.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
+            contact_group_id: group1.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
+            contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+            contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+            contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
+            contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
@@ -419,6 +438,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq contact_after_division.contact_address
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
         Cms::Page.find(article_page2.id).tap do |page_after_division|
           expect(page_after_division.group_ids).to eq [ group_after_division1.id, group_after_division2.id ]
@@ -433,6 +453,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq contact_after_division.contact_address
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page2.updated.in_time_zone
         end
 
         user.reload
@@ -584,37 +605,49 @@ describe Chorg::MainRunner, dbscope: :example do
         # group1 の主連絡先
         main_contact = group1.contact_groups.where(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
-          contact_group_id: group1.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        Timecop.freeze(now - 2.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
+            contact_group_id: group1.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+            contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+            contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
       let!(:article_page2) do
         # group1 のサブ連絡先
         sub_contact = group1.contact_groups.ne(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
-          contact_group_id: group1.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-          contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
-          contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
-          contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
-          contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+        Timecop.freeze(now - 3.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ group1.id ],
+            contact_group_id: group1.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
+            contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+            contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+            contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
+            contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
       let!(:article_page3) do
         # group2 の主連絡先
         main_contact = group2.contact_groups.where(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ group2.id ],
-          contact_group_id: group2.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        Timecop.freeze(now - 4.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ group2.id ],
+            contact_group_id: group2.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+            contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+            contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
@@ -691,6 +724,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq contact_after_division.contact_address
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
         Cms::Page.find(article_page2.id).tap do |page_after_division|
           expect(page_after_division.group_ids).to eq [ group_after_division1.id, group_after_division2.id ]
@@ -705,6 +739,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq contact_after_division.contact_address
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page2.updated.in_time_zone
         end
         Cms::Page.find(article_page3.id).tap do |page_after_division|
           # 組織変更を実行すると group2 の連絡先が全て削除され、新しい連絡先に置き換わるので、ページの連携が切れてしまう。
@@ -721,6 +756,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_address).to eq article_page3.contact_address
           expect(page_after_division.contact_link_url).to eq article_page3.contact_link_url
           expect(page_after_division.contact_link_name).to eq article_page3.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq article_page3.updated.in_time_zone
         end
 
         user.reload
