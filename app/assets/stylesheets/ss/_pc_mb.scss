@@ -2125,6 +2125,91 @@ footer.send {
   font-weight: bold;
 }
 
+.gws-schedule-box{
+  position: relative;
+}
+@include init.mb {
+  .calendar-wrap{
+    overflow-x: scroll;
+    overflow-y: hidden;
+    #calendar-controller{
+      .fc-body{
+        display: none;
+      }
+      .fc-toolbar{
+        position: absolute;
+      }
+    }
+    .fc-view-container{
+      .fc-timelineDay-view{
+        overflow: unset !important;
+        .fc-head{
+          .fc-scrollpane-inner{
+            min-height:auto;
+          }
+          .fc-widget-header{
+            background-color: #eee;
+          }
+          .fc-widget-header{
+            display: inline-block;
+            width: 80px;
+            box-sizing: border-box;
+            border-right: 0;
+            &:last-of-type{
+              border-right: 1px;
+            }
+          }
+        }
+        .fc-body{
+          .fc-widget-content{
+            min-width: 80px;
+          }
+        }
+        .fc table {
+          width: auto;
+        }
+        .calendar-multiple-header{
+          border-width: 0 1px;
+        }
+        .fc-time-area .fc-slats td{
+          // border-right-width: 1px;
+          // border-width: 1px;
+          &:last-of-type{
+            border-right: 1px;
+          }
+        }
+
+        .fc-slats{
+          tr{
+            display: flex;
+            height: 100%;
+            .fc-widget-content{
+              display: block;
+              width: 80px;
+              min-height: 39px;
+              box-sizing: border-box;
+            }
+          }
+          td{
+            border-width: 1px 0 1px 1px;
+
+            &:last-child{
+              border-width: 1px 1px 1px 1px;
+            }
+          }
+        }
+
+        .fc-time-area{
+          border-right: 0;
+        }
+      }
+    }
+    .calendar-multiple-header{
+      position: absolute;
+    }
+  }
+}
+
 // -------------------------------------------------------------------------------------------------
 // button
 

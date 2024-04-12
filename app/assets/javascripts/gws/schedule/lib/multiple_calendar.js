@@ -152,6 +152,28 @@ SS.ready(function() {
               $('.fc .fc-event-user-attendance-absence').addClass('hide');
             }
           }
+
+          // スマートフォンの表示対応
+          $(window).resize(function() {
+            if (window.matchMedia('(max-width: 768px)').matches) {
+              var calendarWidth = $('.gws-schedule-box').width();
+              var toolbarHeight = $('#calendar-controller>.fc-toolbar').outerHeight();
+
+              $('#calendar-controller>.fc-view-container').css('padding-top', toolbarHeight);
+              $('.fc-toolbar').css('width', calendarWidth);
+              $('.calendar-multiple-header').css('width', calendarWidth);
+
+              $(".calendar-multiple-header").each(function(i, elem) {
+                var multipleHeaderHeight = $(this).outerHeight();
+                $(this).next('.fc-unthemed').css('padding-top', multipleHeaderHeight);
+              });
+            } else {
+              $('#calendar-controller>.fc-view-container').css('padding-top', '');
+              $('.fc-toolbar').css('width', '');
+              $('.calendar-multiple-header').css('width', '');
+              $('.calendar-multiple-header+.fc-unthemed').css('padding-top','');
+            }
+          });
           $(window).trigger('resize');
         }
       };
