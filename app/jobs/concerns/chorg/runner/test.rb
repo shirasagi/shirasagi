@@ -16,15 +16,15 @@ module Chorg::Runner::Test
     end
 
     if entity.valid?
-      put_log("save : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity, target_site(entity))
+      put_log("saved : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity, target_site(entity), new_record: entity.new_record?)
       true
     elsif exclude_validation_model?(entity)
-      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity, target_site(entity))
+      put_log("saved (skip validate) : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity, target_site(entity), new_record: entity.new_record?)
       true
     else
-      put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
+      put_error("saving failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
       task.store_entity_errors(entity, target_site(entity))
       false
     end

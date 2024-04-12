@@ -82,6 +82,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
           contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
         ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
     end
@@ -97,6 +98,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
           contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
         ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
     end
@@ -104,13 +106,16 @@ describe Chorg::MainRunner, dbscope: :example do
     # 無関係なノードとページ
     let!(:irrelevant_node) do
       Timecop.freeze(now - 3.weeks) do
-        create(:article_node_page, cur_site: site)
+        node = create(:article_node_page, cur_site: site)
+        expect(node.backups.count).to eq 1
+        Cms::Node.find(node.id)
       end
     end
     let!(:irrelevant_page1) do
       Timecop.freeze(now - 2.weeks) do
         page = create(:article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ])
         ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
     end
@@ -119,13 +124,16 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:other_site) { create(:cms_site_unique, group_ids: cms_site.group_ids) }
     let!(:other_site_node) do
       Timecop.freeze(now - 3.weeks) do
-        create(:article_node_page, cur_site: other_site)
+        node = create(:article_node_page, cur_site: other_site)
+        expect(node.backups.count).to eq 1
+        Cms::Node.find(node.id)
       end
     end
     let!(:other_site_page1) do
       Timecop.freeze(now - 2.weeks) do
         page = create(:article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids)
         ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
     end
@@ -147,15 +155,19 @@ describe Chorg::MainRunner, dbscope: :example do
           # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
           Cms::Node.find(irrelevant_node.id).tap do |node|
             expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+            expect(node.backups.count).to eq 1
           end
           Cms::Page.find(irrelevant_page1.id).tap do |page|
             expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+            expect(page.backups.count).to eq 1
           end
           Cms::Node.find(other_site_node.id).tap do |node|
             expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+            expect(node.backups.count).to eq 1
           end
           Cms::Page.find(other_site_page1.id).tap do |page|
             expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
+            expect(page.backups.count).to eq 1
           end
 
           # check group
@@ -218,6 +230,25 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_link_url).to eq destination_contact1["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq destination_contact1["contact_link_name"]
             expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
+
+            backups = page_after_move.backups.to_a
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["group_ids"]).to eq [ source_group.id ]
+              expect(backup.data["contact_group_id"]).to eq source_group.id
+              expect(backup.data["contact_group_contact_id"]).to eq main_source_contact.id
+              expect(backup.data["contact_group_name"]).to eq destination_contact1["contact_group_name"]
+              expect(backup.data["updated"].in_time_zone).to eq page_after_move.updated.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["group_ids"]).to eq article_page1.group_ids
+              expect(backup.data["contact_group_id"]).to eq article_page1.contact_group_id
+              expect(backup.data["contact_group_contact_id"]).to eq article_page1.contact_group_contact_id
+              expect(backup.data["contact_group_name"]).to eq article_page1.contact_group_name
+              expect(backup.data["updated"].in_time_zone).to eq article_page1.updated.in_time_zone
+            end
           end
           Cms::Page.find(article_page2.id).tap do |page_after_move|
             expect(page_after_move.group_ids).to eq [ source_group.id ]
@@ -235,11 +266,30 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_link_url).to eq destination_contact2["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq destination_contact2["contact_link_name"]
             expect(page_after_move.updated.in_time_zone).to eq article_page2.updated.in_time_zone
+
+            backups = page_after_move.backups.to_a
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["group_ids"]).to eq [ source_group.id ]
+              expect(backup.data["contact_group_id"]).to eq source_group.id
+              expect(backup.data["contact_group_contact_id"]).to eq sub_source_contact.id
+              expect(backup.data["contact_group_name"]).to eq destination_contact2["contact_group_name"]
+              expect(backup.data["updated"].in_time_zone).to eq page_after_move.updated.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["group_ids"]).to eq article_page2.group_ids
+              expect(backup.data["contact_group_id"]).to eq article_page2.contact_group_id
+              expect(backup.data["contact_group_contact_id"]).to eq article_page2.contact_group_contact_id
+              expect(backup.data["contact_group_name"]).to eq article_page2.contact_group_name
+              expect(backup.data["updated"].in_time_zone).to eq article_page2.updated.in_time_zone
+            end
           end
 
           task.reload
           expect(task.state).to eq 'completed'
-          expect(task.entity_logs.count).to eq 4
+          expect(task.entity_logs.count).to eq 3
           task.entity_logs[0].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Group'
             expect(entity_log['class']).to eq 'Cms::Group'
@@ -247,12 +297,6 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(entity_log['changes']).to include('name')
           end
           task.entity_logs[1].tap do |entity_log|
-            expect(entity_log['model']).to eq 'Cms::Node'
-            expect(entity_log['class']).to eq 'Article::Node::Page'
-            expect(entity_log['id']).to eq article_node.id.to_s
-            expect(entity_log['changes']).to include('conditions')
-          end
-          task.entity_logs[2].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Page'
             expect(entity_log['class']).to eq 'Article::Page'
             expect(entity_log['id']).to eq article_page1.id.to_s
@@ -261,7 +305,7 @@ describe Chorg::MainRunner, dbscope: :example do
               'contact_link_url', 'contact_link_name'
             )
           end
-          task.entity_logs[3].tap do |entity_log|
+          task.entity_logs[2].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Page'
             expect(entity_log['class']).to eq 'Article::Page'
             expect(entity_log['id']).to eq article_page2.id.to_s
@@ -356,7 +400,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
           task.reload
           expect(task.state).to eq 'completed'
-          expect(task.entity_logs.count).to eq 4
+          expect(task.entity_logs.count).to eq 2
           task.entity_logs[0].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Group'
             expect(entity_log['class']).to eq 'Cms::Group'
@@ -364,18 +408,6 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(entity_log['changes']).to include('name')
           end
           task.entity_logs[1].tap do |entity_log|
-            expect(entity_log['model']).to eq 'Cms::Node'
-            expect(entity_log['class']).to eq 'Article::Node::Page'
-            expect(entity_log['id']).to eq article_node.id.to_s
-            expect(entity_log['changes']).to include('conditions')
-          end
-          task.entity_logs[2].tap do |entity_log|
-            expect(entity_log['model']).to eq 'Cms::Page'
-            expect(entity_log['class']).to eq 'Article::Page'
-            expect(entity_log['id']).to eq article_page1.id.to_s
-            expect(entity_log['changes']).to be_present
-          end
-          task.entity_logs[3].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Page'
             expect(entity_log['class']).to eq 'Article::Page'
             expect(entity_log['id']).to eq article_page2.id.to_s
@@ -453,29 +485,11 @@ describe Chorg::MainRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 1
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['id']).to eq source_group.id.to_s
           expect(entity_log['changes']).to include("name")
-        end
-        task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq article_node.id.to_s
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page1.id.to_s
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[3].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page2.id.to_s
-          expect(entity_log['changes']).to be_present
         end
       end
     end
@@ -555,7 +569,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 3
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -566,12 +580,6 @@ describe Chorg::MainRunner, dbscope: :example do
           )
         end
         task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq '1'
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page1.id.to_s
@@ -580,7 +588,7 @@ describe Chorg::MainRunner, dbscope: :example do
             'contact_link_url', 'contact_link_name'
           )
         end
-        task.entity_logs[3].tap do |entity_log|
+        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page2.id.to_s
@@ -703,7 +711,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 1
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -712,24 +720,6 @@ describe Chorg::MainRunner, dbscope: :example do
             'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_postal_code', 'contact_address',
             'contact_link_url', 'contact_link_name'
           )
-        end
-        task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq '1'
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page1.id.to_s
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[3].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page2.id.to_s
-          expect(entity_log['changes']).to be_present
         end
       end
     end
@@ -793,7 +783,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 3
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -801,18 +791,12 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(entity_log['changes']).to include('name')
         end
         task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq '1'
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page1.id.to_s
           expect(entity_log['changes']).to be_present
         end
-        task.entity_logs[3].tap do |entity_log|
+        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page2.id.to_s

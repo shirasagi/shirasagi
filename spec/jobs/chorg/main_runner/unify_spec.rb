@@ -271,7 +271,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 9
+        expect(task.entity_logs.count).to eq 8
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -291,36 +291,30 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(entity_log['changes']).to include('group_ids')
         end
         task.entity_logs[3].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq article_node.id.to_s
-          expect(entity_log['changes']).to include("conditions")
-        end
-        task.entity_logs[4].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page1.id.to_s
           expect(entity_log['changes']).to include("group_ids")
         end
-        task.entity_logs[5].tap do |entity_log|
+        task.entity_logs[4].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page2.id.to_s
           expect(entity_log['changes']).to include("group_ids")
         end
-        task.entity_logs[6].tap do |entity_log|
+        task.entity_logs[5].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page3.id.to_s
           expect(entity_log['changes']).to include("group_ids")
         end
-        task.entity_logs[7].tap do |entity_log|
+        task.entity_logs[6].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page4.id.to_s
           expect(entity_log['changes']).to include("group_ids")
         end
-        task.entity_logs[8].tap do |entity_log|
+        task.entity_logs[7].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
           expect(entity_log['id']).to eq source_group2.id.to_s
@@ -513,7 +507,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 10
+        expect(task.entity_logs.count).to eq 9
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -537,12 +531,6 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(entity_log['class']).to eq 'Cms::User'
           expect(entity_log['id']).to eq user2.id.to_s
           expect(entity_log['changes']).to include('group_ids')
-        end
-        task.entity_logs[4].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq article_node.id.to_s
-          expect(entity_log['changes']).to include("conditions")
         end
         task.entity_logs[-2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
