@@ -33,8 +33,8 @@ module Chorg::Runner::Main
       false
     end
   rescue ScriptError, StandardError => e
-    Rails.logger.fatal("got error while saving #{entity.class}(id = #{entity.id})")
-    raise
+    Rails.logger.warn { "got error while saving #{entity.class}(id = #{entity.id})" }
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
   end
 
   def delete_entity(entity)
