@@ -22,12 +22,12 @@ module Sns::LoginFilter
     SS.config.sns.logged_in_page
   end
 
-  def render_login(user, email_or_uid, opts = {})
+  def render_login(user, email_or_uid, **opts)
     alert = opts.delete(:alert).presence || t("sns.errors.invalid_login")
 
     if user
       opts[:session] ||= true
-      set_user user, opts
+      set_user user, **opts
 
       respond_to do |format|
         format.html { redirect(true) }
@@ -80,7 +80,68 @@ module Sns::LoginFilter
     back_to_url.to_s
   end
 
+  def login_path
+    sns_login_path
+  end
+
+  def logout_path
+    sns_logout_path
+  end
+
+  def mfa_login_path
+    sns_mfa_login_path
+  end
+
   public
+
+  def login
+    if !request.post?
+      # retrieve parameters from get parameter. this is bookmark support.
+      @item = self.user_class.new email: params[:email]
+      return render(template: :login)
+    end
+
+    safe_params     = get_params
+    email_or_uid    = safe_params[:email].presence || safe_params[:uid]
+    password        = safe_params[:password]
+    encryption_type = safe_params[:encryption_type]
+
+    if encryption_type.present?
+      password = SS::Crypto.decrypt(password, type: encryption_type) rescue nil
+    end
+
+    @item = begin
+      if @cur_organization
+        self.user_class.organization_authenticate(@cur_organization, email_or_uid, password) rescue nil
+      elsif @cur_site
+        self.user_class.site_authenticate(@cur_site, email_or_uid, password) rescue nil
+      else
+        self.user_class.authenticate(email_or_uid, password) rescue nil
+      end
+    end
+    if @item.blank? || @item.disabled? || @item.locked?
+      render_login(
+        nil, email_or_uid, session: true, password: password, login_path: login_path, logout_path: logout_path)
+      return
+    end
+    if Sys::Auth::Setting.instance.mfa_use?(request)
+      session[:authenticated_in_1st_step] = {
+        user_id: @item.id,
+        password: password,
+        ref: params[:ref].to_s,
+        login_path: login_path,
+        logout_path: logout_path,
+        authenticated_at: Time.zone.now.to_i
+      }
+      redirect_to mfa_login_path
+      return
+    end
+
+    @item = @item.try_switch_user || @item
+
+    render_login(
+      @item, email_or_uid, session: true, password: password, login_path: login_path, logout_path: logout_path)
+  end
 
   def logout
     put_history_log

@@ -693,6 +693,7 @@ ja:
           disallow_datetime_by_system: の日時はシステムにより許可されていません。より短い日時を入力してください。
       messages:
         not_selected: を選択してください。
+        mfa_otp_code_verification_is_failed: 入力された確認コードが正しくありません。認証アプリに表示されている6桁の数値をよく確認の上、もう一度入力してください。
     attributes:
       ss/document:
         id: id

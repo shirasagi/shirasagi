@@ -18,49 +18,6 @@ class Sns::LoginController < ApplicationController
 
   public
 
-  def login
-    if !request.post?
-      # retrieve parameters from get parameter. this is bookmark support.
-      @item = SS::User.new email: params[:email]
-      return render(template: :login)
-    end
-
-    safe_params     = get_params
-    email_or_uid    = safe_params[:email].presence || safe_params[:uid]
-    password        = safe_params[:password]
-    encryption_type = safe_params[:encryption_type]
-
-    if encryption_type.present?
-      password = SS::Crypto.decrypt(password, type: encryption_type) rescue nil
-    end
-
-    @item = begin
-      if @cur_organization
-        SS::User.organization_authenticate(@cur_organization, email_or_uid, password) rescue nil
-      else
-        SS::User.authenticate(email_or_uid, password) rescue nil
-      end
-    end
-    if @item.blank? || @item.disabled? || @item.locked?
-      render_login nil, email_or_uid, session: true, password: password
-      return
-    end
-    if Sys::Auth::Setting.instance.mfa_use?(request)
-      session[:authenticated_in_1st_step] = {
-        user_id: @item.id,
-        password: password,
-        ref: params[:ref].to_s,
-        authenticated_at: Time.zone.now.to_i
-      }
-      redirect_to sns_mfa_login_path
-      return
-    end
-
-    @item = @item.try_switch_user || @item
-
-    render_login @item, email_or_uid, session: true, password: password
-  end
-
   def remote_login
     raise "404" unless SS::config.sns.remote_login
     raise "404" if Sys::Auth::Setting.instance.mfa_use?

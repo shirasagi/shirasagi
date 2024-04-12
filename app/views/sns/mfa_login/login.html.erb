@@ -1,7 +1,7 @@
 <div class="login-wrap">
   <% if @item.mfa_otp_secret.present? %>
-    <%= render "otp_login", local_assigns %>
+    <%= render template: "_otp_login", locals: local_assigns %>
   <% else %>
-    <%= render "otp_setup", local_assigns %>
+    <%= render template: "_otp_setup", locals: local_assigns %>
   <% end %>
 </div>

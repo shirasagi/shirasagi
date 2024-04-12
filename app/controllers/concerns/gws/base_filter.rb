@@ -3,8 +3,7 @@ module Gws::BaseFilter
   include SS::BaseFilter
 
   included do
-    cattr_accessor(:user_class) { Gws::User }
-
+    self.user_class = Gws::User
     self.log_class = Gws::History
 
     helper Gws::LayoutHelper

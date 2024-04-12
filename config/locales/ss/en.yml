@@ -693,6 +693,7 @@ en:
           disallow_datetime_by_system: Date and time are not allowed by the system. Please enter a shorter date and time.
       messages:
         not_selected: Must be selected.
+        mfa_otp_code_verification_is_failed: The confirmation code entered is incorrect. Please carefully check the 6-digit number displayed on the authentication application and enter it again.
     attributes:
       ss/document:
         id: id
