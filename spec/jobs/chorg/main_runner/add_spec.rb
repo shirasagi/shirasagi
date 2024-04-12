@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
@@ -9,6 +10,35 @@ describe Chorg::MainRunner, dbscope: :example do
   context "with add" do
     let!(:revision) { create(:revision, site_id: site.id) }
     let!(:changeset) { create(:add_changeset, revision_id: revision.id) }
+
+    # 無関係なノードとページ
+    let!(:irrelevant_node) do
+      Timecop.freeze(now - 3.weeks) do
+        create(:article_node_page, cur_site: site)
+      end
+    end
+    let!(:irrelevant_page1) do
+      Timecop.freeze(now - 2.weeks) do
+        page = create(:article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ])
+        ::FileUtils.rm_f(page.path)
+        Cms::Page.find(page.id)
+      end
+    end
+
+    # 他サイトのノードとページ
+    let!(:other_site) { create(:cms_site_unique, group_ids: cms_site.group_ids) }
+    let!(:other_site_node) do
+      Timecop.freeze(now - 3.weeks) do
+        create(:article_node_page, cur_site: other_site)
+      end
+    end
+    let!(:other_site_page1) do
+      Timecop.freeze(now - 2.weeks) do
+        page = create(:article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids)
+        ::FileUtils.rm_f(page.path)
+        Cms::Page.find(page.id)
+      end
+    end
 
     context "with all available attributes" do
       it do
@@ -50,6 +80,20 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
         expect(task.entity_logs[1]['id']).to eq site.id.to_s
         expect(task.entity_logs[1]['changes']).to include('group_ids')
+
+        # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+        Cms::Node.find(irrelevant_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+        end
+        Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+        end
+        Cms::Node.find(other_site_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+        end
+        Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
+        end
       end
     end
 

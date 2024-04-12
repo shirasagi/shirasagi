@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
@@ -15,7 +16,10 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:revision) { create(:revision, site_id: site.id) }
       let!(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [ source_group1, source_group2 ]) }
       let!(:source_page) do
-        create(:revision_page, cur_site: site, group: source_group1, group_ids: [ source_group1.id, source_group2.id ])
+        Timecop.freeze(now - 2.weeks) do
+          page = create(:revision_page, cur_site: site, group: source_group1, group_ids: [ source_group1.id, source_group2.id ])
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
@@ -64,6 +68,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_unify.contact_email).to eq group_after_unify.contact_email
           expect(page_after_unify.contact_link_url).to eq group_after_unify.contact_link_url
           expect(page_after_unify.contact_link_name).to eq group_after_unify.contact_link_name
+          expect(page_after_unify.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         user1.reload
@@ -114,9 +119,9 @@ describe Chorg::MainRunner, dbscope: :example do
           :unify_changeset, revision_id: revision.id, sources: [ source_group1, source_group2 ], destination: destination_group
         )
       end
-      let!(:source_page1) { create(:revision_page, cur_site: site, group: source_group1) }
-      let!(:source_page2) { create(:revision_page, cur_site: site, group: source_group2) }
-      let!(:source_page3) { create(:revision_page, cur_site: site, group: destination_group) }
+      let!(:source_page1) { Timecop.freeze(now - 2.weeks) { create(:revision_page, cur_site: site, group: source_group1) } }
+      let!(:source_page2) { Timecop.freeze(now - 3.weeks) { create(:revision_page, cur_site: site, group: source_group2) } }
+      let!(:source_page3) { Timecop.freeze(now - 4.weeks) { create(:revision_page, cur_site: site, group: destination_group) } }
 
       it do
         # execute
@@ -183,6 +188,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_unify.contact_email).to eq contact_after_unify.contact_email
           expect(page_after_unify.contact_link_url).to eq contact_after_unify.contact_link_url
           expect(page_after_unify.contact_link_name).to eq contact_after_unify.contact_link_name
+          expect(page_after_unify.updated.in_time_zone).to eq source_page1.updated.in_time_zone
         end
         Cms::Page.find(source_page2.id).tap do |page_after_unify|
           expect(page_after_unify.group_ids).to eq [ group_after_unify.id ]
@@ -195,6 +201,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_unify.contact_email).to eq contact_after_unify.contact_email
           expect(page_after_unify.contact_link_url).to eq contact_after_unify.contact_link_url
           expect(page_after_unify.contact_link_name).to eq contact_after_unify.contact_link_name
+          expect(page_after_unify.updated.in_time_zone).to eq source_page2.updated.in_time_zone
         end
         Cms::Page.find(source_page3.id).tap do |page_after_unify|
           expect(page_after_unify.group_ids).to eq [ group_after_unify.id ]
@@ -207,6 +214,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_unify.contact_email).to be_blank
           expect(page_after_unify.contact_link_url).to be_blank
           expect(page_after_unify.contact_link_name).to be_blank
+          expect(page_after_unify.updated.in_time_zone).to eq source_page3.updated.in_time_zone
         end
 
         user1.reload

@@ -41,6 +41,7 @@ module Cms::PageImportBase
 
   def import(file, opts = {})
     @task = opts[:task]
+    @keep_timestamp = opts[:keep_timestamp]
     basename = ::File.basename(file.name)
     put_log("import start #{basename}")
     Rails.logger.tagged(basename) do
@@ -76,7 +77,12 @@ module Cms::PageImportBase
     set_page_attributes(row, item)
     raise I18n.t('errors.messages.auth_error') unless allowed_to_import?(item)
 
-    if item.save
+    if @keep_timestamp
+      result = item.without_record_timestamps { item.save }
+    else
+      result = item.save
+    end
+    if result
       item
     else
       raise item.errors.full_messages.join(", ")

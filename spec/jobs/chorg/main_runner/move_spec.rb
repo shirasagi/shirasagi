@@ -1,15 +1,16 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
   let(:job_opts) { { 'newly_created_group_to_site' => 'add' } }
 
   context "with move" do
-    let!(:source_group) { create(:revision_new_group) }
+    let!(:source_group) { Timecop.freeze(now - 4.weeks) { create(:revision_new_group) } }
     let!(:revision) { create(:revision, site_id: site.id) }
-    let!(:source_page) { create(:revision_page, cur_site: site, group: source_group) }
+    let!(:source_page) { Timecop.freeze(now - 2.weeks) { create(:revision_page, cur_site: site, group: source_group) } }
     let!(:changeset) { create(:move_changeset, revision_id: revision.id, source: source_group) }
 
     context "with all supported attributes" do
@@ -33,6 +34,7 @@ describe Chorg::MainRunner, dbscope: :example do
               expect(group_after_move.name).to eq destination["name"]
               expect(group_after_move.order.to_s).to eq destination["order"]
               expect(group_after_move.ldap_dn).to eq destination["ldap_dn"]
+              expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
 
               expect(group_after_move.contact_groups).to have(source_group.contact_groups.count).items
               group_after_move.contact_groups[0].tap do |contact_after_move|
@@ -67,6 +69,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_email).to eq main_destination_contact["contact_email"]
             expect(page_after_move.contact_link_url).to eq main_destination_contact["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq main_destination_contact["contact_link_name"]
+            expect(page_after_move.updated.in_time_zone).to eq source_page.updated.in_time_zone
           end
 
           task.reload
@@ -87,7 +90,11 @@ describe Chorg::MainRunner, dbscope: :example do
 
       context "contact_group_relation is 'unrelated'" do
         before do
-          source_page.update!(contact_group_relation: "unrelated")
+          save_updated = source_page.updated.in_time_zone
+          source_page.without_record_timestamps do
+            source_page.update!(contact_group_relation: "unrelated")
+          end
+          expect(source_page.updated).to eq save_updated
         end
 
         it do
@@ -109,6 +116,7 @@ describe Chorg::MainRunner, dbscope: :example do
               expect(group_after_move.name).to eq destination["name"]
               expect(group_after_move.order.to_s).to eq destination["order"]
               expect(group_after_move.ldap_dn).to eq destination["ldap_dn"]
+              expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
 
               expect(group_after_move.contact_groups).to have(source_group.contact_groups.count).items
               group_after_move.contact_groups[0].tap do |contact_after_move|
@@ -141,6 +149,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_email).to eq source_page.contact_email
             expect(page_after_move.contact_link_url).to eq source_page.contact_link_url
             expect(page_after_move.contact_link_name).to eq source_page.contact_link_name
+            expect(page_after_move.updated.in_time_zone).to eq source_page.updated.in_time_zone
           end
 
           task.reload
@@ -188,6 +197,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(group_after_move.contact_link_url).to eq source_group.contact_link_url
             expect(group_after_move.contact_link_name).to eq source_group.contact_link_name
             expect(group_after_move.ldap_dn).to eq source_group.ldap_dn
+            expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
           end
         end
 
@@ -204,6 +214,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_email).to eq main_source_contact.contact_email
           expect(page_after_move.contact_link_url).to eq main_source_contact.contact_link_url
           expect(page_after_move.contact_link_name).to eq main_source_contact.contact_link_name
+          expect(page_after_move.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         task.reload
@@ -229,14 +240,16 @@ describe Chorg::MainRunner, dbscope: :example do
                group_ids: [source_group.id], cms_role_ids: [cms_role.id])
       end
       let!(:source_page) do
-        page = build(:revision_page, cur_site: site, group: source_group, workflow_user_id: user1.id,
-               workflow_state: "request",
-               workflow_comment: "",
-               workflow_approvers: [{level: 1, user_id: user2.id, state: "request", comment: ""}],
-               workflow_required_counts: [false])
-        page.cur_site = site
-        page.save!
-        page
+        Timecop.freeze(now - 2.weeks) do
+          page = build(:revision_page, cur_site: site, group: source_group, workflow_user_id: user1.id,
+                 workflow_state: "request",
+                 workflow_comment: "",
+                 workflow_approvers: [{level: 1, user_id: user2.id, state: "request", comment: ""}],
+                 workflow_required_counts: [false])
+          page.cur_site = site
+          page.save!
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
@@ -274,6 +287,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_email).to eq main_destination_contact["contact_email"]
           expect(page_after_move.contact_link_url).to eq main_destination_contact["contact_link_url"]
           expect(page_after_move.contact_link_name).to eq main_destination_contact["contact_link_name"]
+          expect(page_after_move.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         task.reload
@@ -295,12 +309,14 @@ describe Chorg::MainRunner, dbscope: :example do
     end
 
     context 'グループの連絡先: 0件 → 1件, ページの連動: 有効' do
-      let(:source_group) { create(:cms_group, name: "組織変更/グループ#{unique_id}") }
+      let(:source_group) { Timecop.freeze(now - 4.weeks) { create(:cms_group, name: "組織変更/グループ#{unique_id}") } }
       let!(:source_page) do
-        create(
-          :article_page, cur_site: site, contact_group: source_group, contact_charge: source_group.trailing_name,
-          contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-          contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
+        Timecop.freeze(now - 2.weeks) do
+          create(
+            :article_page, cur_site: site, contact_group: source_group, contact_charge: source_group.trailing_name,
+            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+            contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
+        end
       end
 
       it do
@@ -327,6 +343,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(group_after_move.name).not_to eq source_group.name
           expect(group_after_move.order.to_s).to eq destination["order"]
           expect(group_after_move.ldap_dn).to eq destination["ldap_dn"]
+          expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
 
           expect(group_after_move.contact_groups).not_to have(source_group.contact_groups.count).items
           expect(group_after_move.contact_groups).to have(1).items
@@ -353,6 +370,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_email).to eq source_page.contact_email
           expect(page_after_move.contact_link_url).to eq source_page.contact_link_url
           expect(page_after_move.contact_link_name).to eq source_page.contact_link_name
+          expect(page_after_move.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         task.reload
@@ -408,6 +426,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_email).to eq source_page.contact_email
           expect(page_after_move.contact_link_url).to eq source_page.contact_link_url
           expect(page_after_move.contact_link_name).to eq source_page.contact_link_name
+          expect(page_after_move.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         task.reload

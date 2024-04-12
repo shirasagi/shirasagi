@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Cms::AllContentsImportJob, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:layout) { create(:cms_layout, cur_site: site) }
@@ -9,18 +10,24 @@ describe Cms::AllContentsImportJob, dbscope: :example do
   let!(:group0) { Cms::Group.create!(name: "#{cms_group.name}/#{unique_id}") }
   let!(:group1) { Cms::Group.create!(name: "#{cms_group.name}/#{unique_id}") }
   let!(:group2) { Cms::Group.create!(name: "#{cms_group.name}/#{unique_id}") }
+  let(:keep_timestamp) { false }
 
   before do
     csv_data = Cms::AllContent.new(site: site, criteria: criteria).enum_csv(encoding: "UTF-8").to_a.join
     ss_file = tmp_ss_file(contents: csv_data)
     expect do
-      described_class.bind(site_id: site, user_id: user).perform_now(ss_file.id)
+      described_class.bind(site_id: site, user_id: user).perform_now(ss_file.id, { keep_timestamp: keep_timestamp })
     end.to output.to_stdout
   end
 
   context "when importing article/node" do
+    let(:keep_timestamp) { true }
     let!(:node) do
-      create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
+      Timecop.freeze(now - 2.weeks) do
+        node = create(
+          :article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
+        Cms::Node.find(node.id)
+      end
     end
 
     context "with basic info" do
@@ -52,6 +59,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
           expect(updated_node.filename).not_to eq filename
           expect(updated_node.filename).to eq node.filename
           expect(updated_node.layout_id).to eq layout1.id
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -83,6 +91,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
           expect(updated_node.order).to eq order
           expect(updated_node.shortcut).to eq shortcut
           expect(updated_node.view_route).to eq view_route
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -111,6 +120,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
           expect(updated_node.keywords).to eq keywords
           expect(updated_node.description).to eq description
           expect(updated_node.summary_html).to eq summary_html
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -164,6 +174,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
           expect(updated_node.loop_liquid).to eq loop_liquid.join("\r\n")
           expect(updated_node.no_items_display_state).to eq no_items_display_state
           expect(updated_node.substitute_html).to eq substitute_html.join("\r\n")
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -186,6 +197,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
 
         Cms::Node.find(node.id).tap do |updated_node|
           expect(updated_node.st_category_ids).to eq [cate1.id]
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -216,6 +228,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
           if released_type == "fixed"
             expect(updated_node.released).to eq released
           end
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -237,6 +250,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
 
         Cms::Node.find(node.id).tap do |updated_node|
           expect(updated_node.group_ids).to eq [group1.id]
+          expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
         end
       end
     end
@@ -251,10 +265,14 @@ describe Cms::AllContentsImportJob, dbscope: :example do
       create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
     end
     let!(:page) do
-      create(
-        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
-        group_ids: [ cms_group.id ]
-      )
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
+          group_ids: [ cms_group.id ]
+        )
+        expect(page.backups.count).to eq 1
+        Cms::Page.find(page.id)
+      end
     end
     let(:filename) { "filename-#{unique_id}.html" }
     let(:released) { Time.zone.now.beginning_of_hour - 1.day }
@@ -295,6 +313,29 @@ describe Cms::AllContentsImportJob, dbscope: :example do
         expect(updated_page.released).to eq released
         expect(updated_page.release_date).to eq release_date
         expect(updated_page.close_date).to eq close_date
+        expect(updated_page.updated.in_time_zone).to be > page.updated.in_time_zone
+
+        updated_page.backups.to_a.tap do |backups|
+          expect(backups.count).to eq 2
+          backups[0].tap do |backup|
+            expect(backup.state).to eq "current"
+            expect(backup.data["category_ids"]).to eq [cate1.id]
+            expect(backup.data["group_ids"]).to eq [group1.id]
+            expect(backup.data["state"]).to eq "ready"
+            expect(backup.data["released"].in_time_zone).to eq released.in_time_zone
+            expect(backup.data["release_date"].in_time_zone).to eq release_date.in_time_zone
+            expect(backup.data["close_date"].in_time_zone).to eq close_date.in_time_zone
+            expect(backup.data["updated"].in_time_zone).to eq updated_page.updated.in_time_zone
+          end
+          backups[1].tap do |backup|
+            expect(backup.state).to eq "before"
+            expect(backup.data["category_ids"]).to eq page.category_ids
+            expect(backup.data["group_ids"]).to eq page.group_ids
+            expect(backup.data["state"]).to eq page.state
+            expect(backup.data["released"].in_time_zone).to eq page.released.in_time_zone
+            expect(backup.data["updated"].in_time_zone).to eq page.updated.in_time_zone
+          end
+        end
       end
     end
   end
@@ -306,10 +347,14 @@ describe Cms::AllContentsImportJob, dbscope: :example do
       create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
     end
     let(:page) do
-      create(
-        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
-        group_ids: [ cms_group.id ]
-      )
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
+          group_ids: [ cms_group.id ]
+        )
+        expect(page.backups.count).to eq 1
+        Cms::Page.find(page.id)
+      end
     end
 
     let(:group_x) { Cms::Group.create!(name: unique_id) }
@@ -342,6 +387,17 @@ describe Cms::AllContentsImportJob, dbscope: :example do
         expect(updated_page.layout_id).to be_blank
         expect(updated_page.category_ids).to be_blank
         expect(updated_page.group_ids).to be_blank
+        expect(updated_page.updated.in_time_zone).to be > page.updated.in_time_zone
+
+        updated_page.backups.to_a.tap do |backups|
+          expect(backups.count).to eq 2
+          backups[0].tap do |backup|
+            expect(backup.state).to eq "current"
+          end
+          backups[1].tap do |backup|
+            expect(backup.state).to eq "before"
+          end
+        end
       end
     end
   end
