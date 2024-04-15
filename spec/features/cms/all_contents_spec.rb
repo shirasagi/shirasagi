@@ -60,6 +60,8 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/all_contents_1.csv"
           if keep_timestamp
             check "item_keep_timestamp"
+          else
+            uncheck "item_keep_timestamp"
           end
           click_on I18n.t("ss.import")
         end
