@@ -32,6 +32,11 @@ en:
       day: "%{count}"
     errors:
       require_approver: Reservation approval requires the registration of an administrative user.
+    options:
+      update_approved_state:
+        disabled: Can be edited by non administrative users
+        enabled: Can only be edited by administrative users
+
   gws/facility/item:
     csv:
       id: ID
@@ -49,6 +54,7 @@ en:
       reservation_start_date: Reservable period (start)
       reservation_end_date: Reservable period (end)
       approval_check_state: Reservation approval
+      update_approved_state: Editing a reservation after approval
       reservable_group_names: Reservable groups
       reservable_member_names: Reservable users
       readable_setting_range: Publication range
@@ -148,6 +154,7 @@ en:
         reservation_start_date: Reservable period (start)
         reservation_end_date: Reservable period (end)
         approval_check_state: Reservation approval
+        update_approved_state: Editing a reservation after approval
         html: Facilities overview
       gws/facility/category:
         name: Category name
@@ -194,6 +201,8 @@ en:
         - "If no reservable period is specified, leave it blank."
       approval_check_state:
         - The reservation requires administrative user approval.
+      update_approved_state:
+        - Set whether or not only the administrator (admin user) can edit approved schedules.
     gws/facility/category:
       name:
         - Enter a category name.

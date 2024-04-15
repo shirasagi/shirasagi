@@ -84,7 +84,7 @@ module Gws::Schedule::PlanFilter
   end
 
   def set_approvals
-    @search_plan = params[:s] || {}
+    @search_plan = params[:s].to_unsafe_h rescue {}
     if params[:action] == "index" || params[:action] == "events"
       @search_plan[:approvals] = %w(request approve)
     end
@@ -169,6 +169,7 @@ module Gws::Schedule::PlanFilter
     @item.record_timestamps = false
     @item.deleted = Time.zone.now
     @item.edit_range = params.dig(:item, :edit_range)
+    @item.reset_approvals
     render_destroy @item.save, location: redirection_url
   end
 

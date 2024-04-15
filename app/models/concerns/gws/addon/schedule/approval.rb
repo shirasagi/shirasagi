@@ -12,7 +12,26 @@ module Gws::Addon::Schedule::Approval
     permit_params approval_member_ids: []
 
     #validates :approval_check_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
+    validate :valdiate_approval_state
   end
+
+  private
+
+  def valdiate_approval_state
+    self.approval_state ||= 'request'
+    return unless @reset_approvals
+
+    if cur_user && approval_member?(cur_user)
+      #
+    elsif approved_and_locked?
+      errors.add :base, :edit_approved
+    else
+      self.approval_state = approval_present? ? 'request' : nil
+      self.approvals = []
+    end
+  end
+
+  public
 
   def approval_state_options
     %w(request approve deny).map do |v|
@@ -25,8 +44,7 @@ module Gws::Addon::Schedule::Approval
   end
 
   def reset_approvals
-    self.approval_state = approval_present? ? 'request' : nil
-    self.approvals = []
+    @reset_approvals = true
   end
 
   def approval_facilities
@@ -84,6 +102,11 @@ module Gws::Addon::Schedule::Approval
     end
     return 'request' if approvals.size < approval_member_ids.size + approval_facilities.size
     status
+  end
+
+  def approved_and_locked?
+    return false if approval_state != "approve"
+    approval_facilities.where(update_approved_state: "enabled").present?
   end
 
   module ClassMethods

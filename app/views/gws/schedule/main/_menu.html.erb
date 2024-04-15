@@ -1,5 +1,13 @@
 <% return if params[:action] =~ /index/ %>
+<%
+  def locked?
+    return false if !@item.respond_to?(:approval_member?)
+    return false if !@item.respond_to?(:approved_and_locked?)
 
+    return false if @item.approval_member?(@cur_user)
+    @item.approved_and_locked?
+  end
+%>
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
     var transition = new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>);
@@ -22,13 +30,13 @@
     <%= link_to t('ss.links.back_to_index'), { controller: 'gws/schedule/main', action: :index }, { class: "back-to-index" } %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item if !locked? %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.copy'), { action: :copy, id: @item } %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item if !locked? %>
     <% end %>
     <% if Gws::Report.allowed?(:use, @cur_user, site: @cur_site) %>
       <% form_limit = 50 %>
@@ -58,3 +66,11 @@
     <%= link_to t('ss.links.back_to_index'), { action: :index, controller: 'gws/schedule/main' }, { class: "back-to-index" } %>
   <% end %>
 </nav>
+
+<% if params[:action] =~ /show/ && locked? %>
+<div class="addon-view" style="margin: 0 10px 10px 10px;">
+  <div class="addon-body">
+    <%= t("errors.messages.edit_approved") %>
+  </div>
+</div>
+<% end %>
