@@ -77,8 +77,15 @@ module Chorg::MongoidSupport
             return @base_model
           end
 
-          entity.move_changes
-          yield entity
+          logger_tags = [ "#{entity.class}(#{entity.id})" ]
+          if entity.respond_to?(:site_id)
+            logger_tags << "site:#{entity.try(:site_id)}"
+          end
+          Rails.logger.tagged(*logger_tags) do
+            entity.move_changes
+            yield entity
+            Rails.logger.info { "done" }
+          end
         end
       end
     end
