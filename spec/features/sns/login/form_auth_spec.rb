@@ -4,9 +4,11 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
   let(:login_path) { sns_login_path }
   let(:guest_login_path) { sns_login_path + "?user=guest" }
 
+  after { ActiveSupport::CurrentAttributes.reset_all }
+
   context "form_auth enabled" do
     before do
-      item = Sys::Auth::Setting.first_or_create
+      item = Sys::Auth::Setting.instance
       item.form_auth = "enabled"
       item.update!
     end
@@ -35,7 +37,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
   context "form_auth disabled" do
     before do
-      item = Sys::Auth::Setting.first_or_create
+      item = Sys::Auth::Setting.instance
       item.form_auth = "disabled"
       item.form_key = "user"
       item.in_form_password = "guest"

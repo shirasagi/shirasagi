@@ -206,10 +206,12 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     subject { create(:cms_ldap_user, ldap_dn: user_dn, group: group) }
 
     before do
-      auth_setting = Sys::Auth::Setting.first_or_create
+      auth_setting = Sys::Auth::Setting.instance
       auth_setting.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       auth_setting.save!
     end
+
+    after { ActiveSupport::CurrentAttributes.reset_all }
 
     it "valid login" do
       visit sns_login_path

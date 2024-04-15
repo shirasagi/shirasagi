@@ -69,10 +69,12 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, ldap: true, js:
 
   context "with system setting" do
     before do
-      auth_setting = Sys::Auth::Setting.first_or_create
+      auth_setting = Sys::Auth::Setting.instance
       auth_setting.ldap_url = ldap_url
       auth_setting.save!
     end
+
+    after { ActiveSupport::CurrentAttributes.reset_all }
 
     it_behaves_like 'パスワード変更'
   end
