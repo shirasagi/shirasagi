@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [ root_group.id ]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
@@ -18,7 +19,7 @@ describe Chorg::MainRunner, dbscope: :example do
           :division_changeset, revision_id: revision.id, source: source_group,
           destinations: [ destination_group1, destination_group2 ])
       end
-      let!(:source_page) { create(:revision_page, cur_site: site, group: source_group) }
+      let!(:source_page) { Timecop.freeze(now - 2.weeks) { create(:revision_page, cur_site: site, group: source_group) } }
 
       it do
         # execute
@@ -85,6 +86,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_email).to eq contact_after_division.contact_email
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         user.reload
@@ -128,7 +130,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group1, destinations: [ group1, group2 ])
       end
-      let!(:source_page) { create(:revision_page, cur_site: site, group: group1) }
+      let!(:source_page) { Timecop.freeze(now - 2.weeks) { create(:revision_page, cur_site: site, group: group1) } }
 
       it do
         # execute
@@ -192,6 +194,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_division.contact_email).to eq contact_after_division.contact_email
           expect(page_after_division.contact_link_url).to eq contact_after_division.contact_link_url
           expect(page_after_division.contact_link_name).to eq contact_after_division.contact_link_name
+          expect(page_after_division.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         user.reload

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let!(:role) { create(:cms_role_admin, cur_site: site) }
@@ -16,7 +17,11 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:layout) { create(:cms_layout, cur_site: site) }
     let!(:cate) { create(:category_node_node, cur_site: site) }
     let!(:node) do
-      create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
+      Timecop.freeze(now - 2.weeks) do
+        node = create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
+        ::FileUtils.rm_rf(node.path)
+        Cms::Node.find(node.id)
+      end
     end
 
     let!(:g1) { create(:cms_group, name: "A", order: 10) }
@@ -100,6 +105,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(node2.lower_html).to eq lower_html
         expect(node2.new_days).to eq new_days
         expect(node2.state).to eq state
+        expect(node2.updated.in_time_zone).to eq node.updated.in_time_zone
       end
     end
   end

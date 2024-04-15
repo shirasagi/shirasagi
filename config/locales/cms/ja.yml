@@ -180,6 +180,7 @@ ja:
           <li>更新日時</li>
           <li>静的ファイル容量</li>
         </ul></p>
+      keep_updated: 更新日時を変更しない
     roles:
       admin: 管理者
       user: 編集者
