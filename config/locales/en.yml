@@ -220,6 +220,7 @@ en:
       password_include_kana: contains your reading.
       edit_approved: Approved plans cannot be changed.
       disallowed_domains: includes disallowed domains
+      disallowed_domains: "Only the following domains are allowed: %{domains}"
     template:
       body: Please check the following items.
       header:
