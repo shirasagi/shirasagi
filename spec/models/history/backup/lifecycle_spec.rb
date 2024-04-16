@@ -59,5 +59,16 @@ describe History::Backup, type: :model, dbscope: :example do
         expect(backup.created).to eq now - 13.days
       end
     end
+
+    History::Backup.max_age.times do |i|
+      Timecop.freeze(now - 3.days + i.hours) do
+        item.name = unique_id
+        item.save!
+      end
+    end
+
+    item.backups.to_a.tap do |backups|
+      expect(backups.count).to eq History::Backup.max_age
+    end
   end
 end
