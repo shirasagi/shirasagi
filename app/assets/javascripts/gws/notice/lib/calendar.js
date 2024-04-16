@@ -86,6 +86,7 @@ SS.ready(function() {
         },
         contentHeight: 'auto',
         displayEventEnd: {
+          month: true,
           basicWeek: true
         },
         endParam: 's[end]',
