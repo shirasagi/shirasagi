@@ -83,7 +83,7 @@ en:
         more: See more
         close: Close
     labels:
-      all_sites: All sites
+      this_site: This site
     menus:
       revisions:
         add: Add a new group
@@ -202,7 +202,8 @@ en:
         reservation: Reservation for execution
       chorg/revision:
         content_csv_file_id: Content CSV files
-        target_site_ids: Target site
+      chorg/site_setting:
+        chorg_site_ids: Sites subject to reorganization
 
   tooltip:
     chorg/model/revision:
@@ -232,9 +233,6 @@ en:
         - Open the CSV file downloaded from "All Contents - List Output" in Excel, etc., and set the group name, etc. after the organizational change is run.
         - Select the All Contents CSV that you have modified in this way for the contents CSV file.
         - Note that the menu "All contents" will not be displayed if the permission "Use all contents" is not granted. If you cannot find the menu "All contents", please consult your administrator.
-      target_site_ids:
-        - Select the site to apply organizational changes to.
-        - Unless specified otherwise, all sites are eligible.
     chorg/run_params:
       reservation:
         - You can reserve a time to run.
@@ -353,3 +351,8 @@ en:
             - If you are using LDAP, enter the identifier (DN) of the merge destination group.
           before_name:
             - Select the group name of the merge source.
+    chorg/site_setting:
+      chorg_site_ids:
+        - Set the site for the organizational change.
+        - If not set, the organizational change will be implemented for this site only.
+        - If there are other target sites besides this own site, set them.

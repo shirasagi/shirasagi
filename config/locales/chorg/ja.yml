@@ -83,7 +83,7 @@ ja:
         more: もっと見る
         close: 閉じる
     labels:
-      all_sites: 全てのサイト
+      this_site: このサイト
     menus:
       revisions:
         add: 新設を追加する
@@ -100,6 +100,7 @@ ja:
       test_run: テスト実行
       import_revision_file_confirmation: 組織変更操作をCSVからインポートします。\n既に操作が登録されている場合は削除されます。\n実行してよろしいですか？
       import_changesets_notice: CSV に含まれる変更内容は常に追加されます。CSV をインポートしても既存の変更内容は何ら変更しません。
+      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。設定する場合、システム管理者へご連絡ください。
     options:
       changeset_type:
         add: 新設
@@ -110,6 +111,8 @@ ja:
       delete_method:
         disable_if_possible: 無効にし、後で回復できるようにする
         always_delete: 常に物理削除する
+    links:
+      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。
     buttons:
       reset_after_move: 移動先の再設定
       reset_after_unify: 統合先の再設定
@@ -202,7 +205,8 @@ ja:
         reservation: 予約実行
       chorg/revision:
         content_csv_file_id: コンテンツCSVファイル
-        target_site_ids: 対象サイト
+      chorg/site_setting:
+        chorg_site_ids: 組織変更の対象サイト
 
   tooltip:
     chorg/model/revision:
@@ -232,9 +236,6 @@ ja:
         - 「全コンテンツ - 一覧出力」からダウンロードしたCSVをエクセルなどで開き、異動後のグループ名などを設定してください。
         - コンテンツCSVファイルには、こうして変更した全コンテンツCSVを選択してください。
         - なお、権限「全コンテンツの利用」が付与されていない場合、メニュー「全コンテンツ」は表示されません。メニュー「全コンテンツ」が見つからない場合は管理者に相談してください。
-      target_site_ids:
-        - 組織変更の対象となるサイトを選択します。
-        - 指定がない場合は全サイトが対象となります。
     chorg/run_params:
       reservation:
         - 実行する時間を予約できます。
@@ -353,3 +354,8 @@ ja:
             - LDAPを利用している場合は統合先グループの識別子(DN)を入力します。
           before_name:
             - 統合元のグループ名を選択します。
+    chorg/site_setting:
+      chorg_site_ids:
+        - 組織変更の対象となるサイトを設定します。
+        - 未設定の場合、自サイトのみを対象に組織変更を実施します。
+        - 自サイト以外に、対象となるサイトがある場合、そのサイトを設定します。
