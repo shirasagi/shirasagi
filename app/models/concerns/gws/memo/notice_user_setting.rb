@@ -57,7 +57,7 @@ module Gws::Memo::NoticeUserSetting
     return if errors.present?
 
     if !send_notice_mail_addresses.all? { |v| cur_site.email_domain_allowed?(v) }
-      self.errors.add :send_notice_mail_addresses, :disallowed_domains
+      self.errors.add :send_notice_mail_addresses, :disallowed_domains, domains: cur_site.sendmail_domains.join(", ")
     end
   end
 
