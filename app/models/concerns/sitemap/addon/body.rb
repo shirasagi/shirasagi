@@ -31,127 +31,12 @@ module Sitemap::Addon
       ]
     end
 
-    def load_sitemap_urls(opts = {})
-      entries = Cms::Node.where(site_id: site_id).and_public.
-        where(:depth.lte => sitemap_depth).
-        order_by(filename: 1).
-        entries
-
-      if sitemap_page_state != "hide"
-        entries += Cms::Page.where(site_id: site_id).and_public.
-          where(:depth.lte => sitemap_depth).
-          not(filename: /\/index\.html$/).
-          order_by(filename: 1).
-          entries
-      end
-
-      # deny
-      if sitemap_deny_urls.present?
-        regex = sitemap_deny_urls.map { |m| /^\/?#{::Regexp.escape(m)}/ }
-        regex = ::Regexp.union(regex)
-        entries = entries.reject { |e| e.url =~ regex }
-      end
-
-      # sort by order
-      tree = {}
-      def tree.flatten(url, entries)
-        return unless self[url]
-        self[url].each do |e|
-          entries << e
-          self.flatten(e.url, entries)
-        end
-      end
-
-      entries.each do |e|
-        parent_url = e.parent ? e.parent.url : "/"
-        tree[parent_url] ||= []
-        tree[parent_url] << e
-      end
-      tree.each_value { |v| v.sort_by!(&:order) }
-      entries = []
-      tree.flatten("/", entries)
-
-      entries.map do |m|
-        if m.is_a?(Cms::Model::Node)
-          url = "/#{m.filename}/"
-        else
-          url = "/#{m.filename}"
-        end
-        opts[:name] ? "#{url} ##{m.name}" : url
-      end
-    end
-
-    def sitemap_list
-      list = []
-      urls = sitemap_urls.presence || load_sitemap_urls(name: false)
-      urls.each do |url|
-        next if url.strip.blank?
-
-        depth = url.scan(/[^\/]+/).size
-        next if depth > sitemap_depth
-
-        name = url.sub(/^.*?\s*#/, "") if /#/.match?(url)
-        url = url.sub(/\s*#.*/, "").strip.sub(/\/$/, "")
-        model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
-
-        if item = model.site(site).and_public.filename(url).first
-          url = item.url
-          path = "#{item.site.url}#{item.filename}"
-          data = { url: url, path: path, name: name.presence || item.name, depth: depth }
-        else
-          data = { url: url, path: url, name: name.presence || url, depth: depth }
-        end
-
-        if data[:depth] < sitemap_depth
-          list << data
-        else
-          next if list.blank?
-          list.last[:pages] ||= []
-          list.last[:pages] << data
-        end
-      end
-
-      list
-    end
-
-    def sitemap_xml
-      site_url = site.full_url
-      urls = sitemap_urls.presence || load_sitemap_urls
-
-      builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
-        xml.urlset xmlns: "http://www.sitemaps.org/schemas/sitemap/0.9" do |urlset|
-          urlset.url do |url|
-            url.loc site.full_url
-            url.priority 1.0
-          end
-
-          urls.each do |page_url|
-            page_url.sub!(/\s*#.*/, "")
-            url = page_url.strip.sub(/\/$/, "")
-            model = /(^|\/)[^.]+$/.match?(url) ? Cms::Node : Cms::Page
-            if item = model.where(site_id: site_id).and_public.filename(url).first
-              page_url = item.url
-            end
-
-            urlset.url do |url|
-              priority = "0.8"
-              priority = "0.5" if page_url.scan("/").size > 2
-
-              url.loc File.join(site_url, page_url)
-              url.priority priority
-            end
-          end
-        end
-      end
-
-      builder.to_xml
-    end
-
     private
 
     def generate_sitemap_xml
       file = sitemap_xml_path
-      data = sitemap_xml
+      service = Sitemap::RenderService.new(cur_site: @cur_site || self.site, cur_node: @cur_node || self.parent, page: self)
+      data = service.render_xml
       return if Fs.exist?(file) && data == Fs.read(file)
       Fs.write file, data
     end

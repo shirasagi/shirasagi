@@ -111,7 +111,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       end
     end
 
-    context "with load_sitemap_urls name" do
+    context "sitemap_urls with specific name" do
       before do
         item.sitemap_urls = ["#{article_node.url} #article_node", "#{article_page.url} #article_page"]
         item.save!
@@ -121,7 +121,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         within ".sitemap-body" do
-          expect(page).to have_selector("h3.page--#{article_node.filename} a", text: 'article_node')
+          expect(page).to have_selector("h2.page--#{article_node.filename} a", text: 'article_node')
           selector = "h3.page--#{article_node.filename}-#{::File.basename(article_page.filename, ".*")} a"
           expect(page).to have_selector(selector, text: 'article_page')
         end
@@ -163,7 +163,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       end
     end
 
-    context "with sitemap_urls slash" do
+    context "sitemap_urls start with / end with slash" do
       before do
         item.sitemap_urls = %W[/#{article_node.filename} #{article_page.url}/]
         item.save!
