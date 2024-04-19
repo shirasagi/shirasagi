@@ -105,6 +105,7 @@ Rails.application.routes.draw do
     resources :users, concerns: [:deletion, :download, :import] do
       post :lock_all, on: :collection
       post :unlock_all, on: :collection
+      post :reset_mfa_otp, on: :member
     end
     resources :groups, concerns: [:deletion, :role, :import] do
       match :download_all, on: :collection, via: %i[get post]

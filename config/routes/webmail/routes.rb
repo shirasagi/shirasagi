@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     end
     resources :users, concerns: [:deletion, :export] do
       get :download_template, on: :collection
+      post :reset_mfa_otp, on: :member
       resources :accounts, concerns: [:deletion], controller: "user_accounts" do
         post :test_connection, on: :collection
       end

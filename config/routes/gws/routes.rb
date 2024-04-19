@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     resources :users, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
       match :download_all, on: :collection, via: %i[get post]
       get :download_template, on: :collection
+      post :reset_mfa_otp, on: :member
     end
     resources :multi_checkboxes, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
       match :download_all, on: :collection, via: %i[get post]

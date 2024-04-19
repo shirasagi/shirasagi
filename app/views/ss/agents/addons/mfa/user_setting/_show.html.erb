@@ -11,7 +11,7 @@
       end
     %>
   </dd>
-  <% if @item.mfa_otp_secret.present? && @item.allowed?(:edit, @cur_user) %>
+  <% if @item.mfa_otp_secret.present? && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
     <dd><%= ss_button_to t("ss.buttons.reset_mfa_otp"), url_for(action: :reset_mfa_otp), name: :reset_mfa_otp, class: "btn", confirm: t('ss.confirm.reset_mfa_otp') %></dd>
   <% end %>
 </dl>
