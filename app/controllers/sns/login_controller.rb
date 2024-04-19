@@ -20,7 +20,7 @@ class Sns::LoginController < ApplicationController
 
   def remote_login
     raise "404" unless SS::config.sns.remote_login
-    raise "404" if Sys::Auth::Setting.instance.mfa_use?
+    raise "404" if Sys::Auth::Setting.instance.mfa_otp_use?
 
     login
     render :login if response.body.blank?

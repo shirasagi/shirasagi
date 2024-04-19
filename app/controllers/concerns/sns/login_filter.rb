@@ -124,7 +124,7 @@ module Sns::LoginFilter
         nil, email_or_uid, session: true, password: password, login_path: login_path, logout_path: logout_path)
       return
     end
-    if Sys::Auth::Setting.instance.mfa_use?(request)
+    if Sys::Auth::Setting.instance.mfa_otp_use?(request)
       session[:authenticated_in_1st_step] = {
         user_id: @item.id,
         password: password,

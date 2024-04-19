@@ -14,7 +14,7 @@ describe "sys_users", type: :feature, dbscope: :example, js: true do
 
       before do
         auth_setting = Sys::Auth::Setting.instance
-        auth_setting.mfa_use_state = [ Sys::Auth::Setting::MFA_USE_ALWAYS, Sys::Auth::Setting::MFA_USE_UNTRUSTED ].sample
+        auth_setting.mfa_otp_use_state = [ Sys::Auth::Setting::MFA_USE_ALWAYS, Sys::Auth::Setting::MFA_USE_UNTRUSTED ].sample
         auth_setting.mfa_trusted_ip_addresses = "192.168.32.0/24"
         auth_setting.save!
 
@@ -50,7 +50,7 @@ describe "sys_users", type: :feature, dbscope: :example, js: true do
     context "when users' opt is not configured" do
       before do
         auth_setting = Sys::Auth::Setting.instance
-        auth_setting.mfa_use_state = [ Sys::Auth::Setting::MFA_USE_ALWAYS, Sys::Auth::Setting::MFA_USE_UNTRUSTED ].sample
+        auth_setting.mfa_otp_use_state = [ Sys::Auth::Setting::MFA_USE_ALWAYS, Sys::Auth::Setting::MFA_USE_UNTRUSTED ].sample
         auth_setting.mfa_trusted_ip_addresses = "192.168.32.0/24"
         auth_setting.save!
       end
@@ -69,7 +69,7 @@ describe "sys_users", type: :feature, dbscope: :example, js: true do
   context "without MFA enabled" do
     before do
       auth_setting = Sys::Auth::Setting.instance
-      auth_setting.mfa_use_state = Sys::Auth::Setting::MFA_USE_NONE
+      auth_setting.mfa_otp_use_state = Sys::Auth::Setting::MFA_USE_NONE
       auth_setting.save!
     end
 

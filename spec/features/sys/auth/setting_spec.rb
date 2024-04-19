@@ -48,8 +48,8 @@ describe "sys/auth/setting", type: :feature, dbscope: :example, js: true do
   end
 
   context "mfa" do
-    let(:mfa_use_state) { %w(always untrusted none).sample }
-    let(:mfa_use_state_label) { I18n.t("ss.options.mfa_use.#{mfa_use_state}") }
+    let(:mfa_otp_use_state) { %w(always untrusted none).sample }
+    let(:mfa_otp_use_state_label) { I18n.t("ss.options.mfa_use.#{mfa_otp_use_state}") }
     let(:mfa_trusted_ip_addresses) do
       <<~IP_ADDR_LIST
         127.0.0.1
@@ -64,7 +64,7 @@ describe "sys/auth/setting", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.edit')
       end
       within "#item-form" do
-        select mfa_use_state_label, from: "item[mfa_use_state]"
+        select mfa_otp_use_state_label, from: "item[mfa_otp_use_state]"
         fill_in "item[mfa_trusted_ip_addresses]", with: mfa_trusted_ip_addresses
         click_on I18n.t('ss.buttons.save')
       end
@@ -72,7 +72,7 @@ describe "sys/auth/setting", type: :feature, dbscope: :example, js: true do
 
       Sys::Auth::Setting.instance.tap do |auth_setting|
         auth_setting.reload
-        expect(auth_setting.mfa_use_state).to eq mfa_use_state
+        expect(auth_setting.mfa_otp_use_state).to eq mfa_otp_use_state
         expect(auth_setting.mfa_trusted_ip_addresses).to eq mfa_trusted_ip_addresses.split("\n")
       end
     end

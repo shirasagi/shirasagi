@@ -9,27 +9,27 @@ module SS::MFA::SiteSetting
   MFA_USE_STATES = [ MFA_USE_NONE, MFA_USE_ALWAYS, MFA_USE_UNTRUSTED ].freeze
 
   included do
-    field :mfa_use_state, type: String
+    field :mfa_otp_use_state, type: String
     field :mfa_trusted_ip_addresses, type: SS::Extensions::Lines
 
-    permit_params :mfa_use_state, :mfa_trusted_ip_addresses
+    permit_params :mfa_otp_use_state, :mfa_trusted_ip_addresses
 
-    validates :mfa_use_state, inclusion: { in: MFA_USE_STATES, allow_blank: true }
+    validates :mfa_otp_use_state, inclusion: { in: MFA_USE_STATES, allow_blank: true }
     validates :mfa_trusted_ip_addresses, ip_address: true
   end
 
-  def mfa_use_state_options
+  def mfa_otp_use_state_options
     MFA_USE_STATES.map do |v|
       [ I18n.t("ss.options.mfa_use.#{v}"), v ]
     end
   end
 
-  def mfa_use_none?
-    mfa_use_state.blank? || mfa_use_state == MFA_USE_NONE
+  def mfa_otp_use_none?
+    mfa_otp_use_state.blank? || mfa_otp_use_state == MFA_USE_NONE
   end
 
-  def mfa_use?(request = nil)
-    case mfa_use_state
+  def mfa_otp_use?(request = nil)
+    case mfa_otp_use_state
     when MFA_USE_ALWAYS
       true
     when MFA_USE_UNTRUSTED

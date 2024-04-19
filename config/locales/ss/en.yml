@@ -1070,7 +1070,7 @@ en:
         audience_id: Audience user
         jwt: API token
       ss/mfa/site_setting:
-        mfa_use_state: Use of MFA
+        mfa_otp_use_state: Use of OTP
         mfa_trusted_ip_addresses: Trusted source
       ss/addon/mfa/user_setting:
         mfa_otp_secret: OTP secret
@@ -1558,16 +1558,16 @@ en:
         - Select Timezone
 
     ss/mfa/site_setting:
-      mfa_use_state:
-        - Select whether to use multi-factor authentication.
+      mfa_otp_use_state:
+        - Select whether to use OTP(one-time password) authentication.
         -
-        - "・Not use: Do not use multi-factor authentication."
-        - "・Use: Use multi-factor authentication."
-        - "・Use when the access source is untrusted: Use multi-factor authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
+        - "・Not use: Do not use OTP authentication."
+        - "・Use: Use OTP authentication."
+        - "・Use when the access source is untrusted: Use OTP authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
         -
-        - Multi-factor authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use multi-factor authentication when using an external authentication server, please configure the external authentication server to use multi-factor authentication.
+        - OTP authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use OTP authentication when using an external authentication server, please configure the external authentication server to use OTP authentication.
       mfa_trusted_ip_addresses:
-        - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of MFA.
+        - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of OTP.
         - To set multiple IP addresses, separate them with a new line.
         - "You can also set network addresses such as \"192.168.10.0/24\" or \"192.168.10.0/255.255.255.0\"."
 

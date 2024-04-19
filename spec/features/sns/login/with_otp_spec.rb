@@ -7,7 +7,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
     before do
       auth_setting = Sys::Auth::Setting.instance
-      auth_setting.mfa_use_state = mfa_use_state
+      auth_setting.mfa_otp_use_state = mfa_otp_use_state
       auth_setting.mfa_trusted_ip_addresses = mfa_trusted_ip_addresses
       auth_setting.save!
     end
@@ -15,8 +15,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     after { ActiveSupport::CurrentAttributes.reset_all }
 
     context "when users' opt is not configured" do
-      context "with 'always' as mfa_use_state" do
-        let(:mfa_use_state) { "always" }
+      context "with 'always' as mfa_otp_use_state" do
+        let(:mfa_otp_use_state) { "always" }
 
         context "login success" do
           it do
@@ -115,8 +115,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      context "with 'untrusted' as mfa_use_state" do
-        let(:mfa_use_state) { "untrusted" }
+      context "with 'untrusted' as mfa_otp_use_state" do
+        let(:mfa_otp_use_state) { "untrusted" }
         let(:mfa_trusted_ip_addresses) { "192.168.32.0/24" }
         let(:rack_proxy_app) do
           source_ip_bind = source_ip
@@ -292,8 +292,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      context "with 'always' as mfa_use_state" do
-        let(:mfa_use_state) { "always" }
+      context "with 'always' as mfa_otp_use_state" do
+        let(:mfa_otp_use_state) { "always" }
 
         context "login success" do
           it do
@@ -385,8 +385,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      context "with 'untrusted' as mfa_use_state" do
-        let(:mfa_use_state) { "untrusted" }
+      context "with 'untrusted' as mfa_otp_use_state" do
+        let(:mfa_otp_use_state) { "untrusted" }
         let(:mfa_trusted_ip_addresses) { "192.168.32.0/24" }
         let(:rack_proxy_app) do
           source_ip_bind = source_ip
