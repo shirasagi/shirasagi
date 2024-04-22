@@ -133,7 +133,7 @@ class Sitemap::RenderService
 
     node_criteria = Cms::Node.all.site(cur_site).and_public
     node_criteria = node_criteria.where(:depth.lte => page.sitemap_depth)
-    node_criteria.in(filename: filenames).only(*REQUIRED_FIELDS)
+    node_criteria = node_criteria.in(filename: filenames).only(*REQUIRED_FIELDS)
     nodes = node_criteria.to_a.map do |node|
       node.cur_site = cur_site
       node.site = cur_site
