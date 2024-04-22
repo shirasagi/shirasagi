@@ -22,6 +22,10 @@ class Webmail::LoginController < ApplicationController
     raise "400"
   end
 
+  def login_path
+    webmail_login_path
+  end
+
   def logout_path
     webmail_logout_path
   end

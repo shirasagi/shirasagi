@@ -21,6 +21,10 @@ class Gws::LoginController < ApplicationController
     raise "400"
   end
 
+  def login_path
+    gws_login_path
+  end
+
   def logout_path
     gws_logout_path
   end

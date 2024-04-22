@@ -21,6 +21,10 @@ class Cms::LoginController < ApplicationController
     raise "400"
   end
 
+  def login_path
+    cms_login_path
+  end
+
   def logout_path
     cms_logout_path
   end
