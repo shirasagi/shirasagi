@@ -48,21 +48,23 @@ class Sitemap::RenderService
   class FakeContent
     include ActiveModel::Model
 
-    attr_accessor :id, :name, :filename, :url, :full_url, :depth, :order
+    attr_accessor :type, :id, :name, :filename, :url, :full_url, :depth, :order
 
     class << self
-      def from_page(page, url_item: nil)
+      def from_page(page, type: :page, url_item: nil)
         new(
-          id: page.id, name: url_item.try(:name) || page.name, filename: page.filename, url: page.url, full_url: page.full_url,
-          order: page.order, depth: page.depth)
+          type: type, id: page.id, name: url_item.try(:name) || page.name, filename: page.filename,
+          url: page.url, full_url: page.full_url, order: page.order, depth: page.depth)
       end
 
-      alias from_node from_page
+      def from_node(node, url_item: nil)
+        from_page(node, type: :node, url_item: url_item)
+      end
 
       def from_url_item(item)
         new(
-          id: nil, name: item.name.presence || item.url, filename: item.filename, url: item.url, full_url: item.full_url,
-          depth: item.depth, order: 0)
+          type: :other, id: nil, name: item.name.presence || item.url, filename: item.filename,
+          url: item.url, full_url: item.full_url, depth: item.depth, order: 0)
       end
     end
   end
@@ -172,7 +174,6 @@ class Sitemap::RenderService
       Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       nil
     end
-    node_filename_set = Set.new(nodes.map(&:filename))
 
     if page.sitemap_page_state != "hide"
       pages = Cms::Page.site(cur_site).and_public.
@@ -196,7 +197,7 @@ class Sitemap::RenderService
     if page.sitemap_deny_urls.present?
       regex = page.sitemap_deny_urls.map { |m| /^\/?#{::Regexp.escape(m)}/ }
       regex = ::Regexp.union(regex)
-      entries.reject! { |e| regex.map(e.url) }
+      entries.reject! { |e| regex.match(e.url) }
     end
 
     # sort by order
@@ -205,13 +206,6 @@ class Sitemap::RenderService
     entries.each do |e|
       dirname = ::File.dirname(e.filename)
       dirname = "" if dirname[0] == "."
-      while dirname != "" && !node_filename_set.include?(dirname)
-        parent_dirname = ::File.dirname(dirname)
-        parent_dirname = "" if parent_dirname[0] == "."
-
-        break if parent_dirname == dirname
-        dirname = parent_dirname
-      end
 
       tree[dirname] ||= []
       tree[dirname] << e

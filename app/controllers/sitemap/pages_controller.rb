@@ -22,6 +22,17 @@ class Sitemap::PagesController < ApplicationController
     @item.site = @cur_site
 
     service = Sitemap::RenderService.new(cur_site: @cur_site, cur_node: @cur_node, page: @item)
-    render plain: service.load_whole_contents.map(&:url).join("\n")
+    contents = service.load_whole_contents
+    urls = contents.map do |content|
+      case content.type
+      when :page
+        "/#{content.filename}"
+      when :node
+        "/#{content.filename}/"
+      else
+        "/#{content.filename}"
+      end
+    end
+    render plain: urls.join("\n")
   end
 end

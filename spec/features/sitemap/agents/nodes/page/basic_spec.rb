@@ -8,7 +8,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
   let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node }
 
   context "when sitemap_page_state is hide" do
-    let!(:item) { create :sitemap_page, filename: "node/item" }
+    let!(:item) { create :sitemap_page, cur_node: node, basename: "item" }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -28,7 +28,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       xml = file.read
       xmldoc = REXML::Document.new(xml)
       url_elements = REXML::XPath.match(xmldoc, "/urlset/url")
-      expect(url_elements).to have(2).items
+      expect(url_elements).to have(3).items
       url_elements[0].tap do |url_element|
         loc_texts = REXML::XPath.match(url_element, "loc/text()")
         expect(loc_texts).to have(1).items
@@ -41,6 +41,15 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       url_elements[1].tap do |url_element|
         loc_texts = REXML::XPath.match(url_element, "loc/text()")
         expect(loc_texts).to have(1).items
+        expect(loc_texts[0].to_s).to eq node.full_url
+
+        priority_texts = REXML::XPath.match(url_element, "priority/text()")
+        expect(priority_texts).to have(1).items
+        expect(priority_texts[0].to_s).to eq "0.8"
+      end
+      url_elements[2].tap do |url_element|
+        loc_texts = REXML::XPath.match(url_element, "loc/text()")
+        expect(loc_texts).to have(1).items
         expect(loc_texts[0].to_s).to eq article_node.full_url
 
         priority_texts = REXML::XPath.match(url_element, "priority/text()")
@@ -51,7 +60,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
   end
 
   context "when sitemap_page_state is show" do
-    let!(:item) { create :sitemap_page, filename: "node/item", sitemap_page_state: 'show' }
+    let!(:item) { create :sitemap_page, cur_node: node, basename: "item", sitemap_page_state: 'show' }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -72,7 +81,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       xml = file.read
       xmldoc = REXML::Document.new(xml)
       url_elements = REXML::XPath.match(xmldoc, "/urlset/url")
-      expect(url_elements).to have(4).items
+      expect(url_elements).to have(5).items
       url_elements[0].tap do |url_element|
         loc_texts = REXML::XPath.match(url_element, "loc/text()")
         expect(loc_texts).to have(1).items
@@ -85,7 +94,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       url_elements[1].tap do |url_element|
         loc_texts = REXML::XPath.match(url_element, "loc/text()")
         expect(loc_texts).to have(1).items
-        expect(loc_texts[0].to_s).to eq article_node.full_url
+        expect(loc_texts[0].to_s).to eq node.full_url
 
         priority_texts = REXML::XPath.match(url_element, "priority/text()")
         expect(priority_texts).to have(1).items
@@ -94,7 +103,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       url_elements[2].tap do |url_element|
         loc_texts = REXML::XPath.match(url_element, "loc/text()")
         expect(loc_texts).to have(1).items
-        expect(loc_texts[0].to_s).to eq article_page.full_url
+        expect(loc_texts[0].to_s).to eq item.full_url
 
         priority_texts = REXML::XPath.match(url_element, "priority/text()")
         expect(priority_texts).to have(1).items
@@ -103,7 +112,16 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       url_elements[3].tap do |url_element|
         loc_texts = REXML::XPath.match(url_element, "loc/text()")
         expect(loc_texts).to have(1).items
-        expect(loc_texts[0].to_s).to eq item.full_url
+        expect(loc_texts[0].to_s).to eq article_node.full_url
+
+        priority_texts = REXML::XPath.match(url_element, "priority/text()")
+        expect(priority_texts).to have(1).items
+        expect(priority_texts[0].to_s).to eq "0.8"
+      end
+      url_elements[4].tap do |url_element|
+        loc_texts = REXML::XPath.match(url_element, "loc/text()")
+        expect(loc_texts).to have(1).items
+        expect(loc_texts[0].to_s).to eq article_page.full_url
 
         priority_texts = REXML::XPath.match(url_element, "priority/text()")
         expect(priority_texts).to have(1).items
