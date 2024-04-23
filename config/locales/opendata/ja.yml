@@ -517,6 +517,21 @@ ja:
     reroute_private_opendata_datasets: データセットの承認経路変更（所有）
     revoke_other_opendata_datasets: データセットの承認申請取消（全て）
     revoke_private_opendata_datasets: データセットの承認申請取消（所有）
+    read_other_opendata_resources: リソースの閲覧（全て）
+    read_private_opendata_resources: リソースの閲覧（所有）
+    read_member_opendata_resources: リソースの閲覧（メンバー）
+    edit_other_opendata_resources: リソースの編集（全て）
+    edit_private_opendata_resources: リソースの編集（所有）
+    edit_member_opendata_resources: リソースの編集（メンバー）
+    delete_other_opendata_resources: リソースの削除（全て）
+    delete_private_opendata_resources: リソースの削除（所有）
+    delete_member_opendata_resources: リソースの削除（メンバー）
+    release_other_opendata_resources: リソースの公開（全て）
+    release_private_opendata_resources: リソースの公開（所有）
+    release_member_opendata_resources: リソースの公開（メンバー）
+    close_other_opendata_resources: リソースの非公開（全て）
+    close_private_opendata_resources: リソースの非公開（所有）
+    close_member_opendata_resources: リソースの非公開（メンバー）
     read_other_opendata_apps: アプリの閲覧（全て）
     read_private_opendata_apps: アプリの閲覧（所有）
     read_member_opendata_apps: アプリの閲覧（メンバー）
