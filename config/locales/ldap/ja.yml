@@ -31,6 +31,7 @@ ja:
         no_results: 結果がありません
         task_info: タスク
         base_dn: 検索の起点階層
+        root_dn: ルートDN
         scope: 検索の対象
         filter: 検索式
       server/index:
@@ -121,9 +122,11 @@ ja:
         group_base_dn: グループ検索の起点階層
         group_scope: グループ検索の対象
         group_filter: グループ検索の検索式
+        group_root_dn: グループルートDN
         user_base_dn: ユーザー検索の起点階層
         user_scope: ユーザー検索の対象
         user_filter: ユーザー検索の検索式
+        user_role_ids: ユーザーの既定のロール
 
   views:
     ldap/server:
@@ -145,3 +148,4 @@ ja:
     models:
       cms/ldap/import_job: LDAPインポート
       cms/ldap/sync_job: LDAP同期
+      gws/ldap/sync_job: LDAP同期

@@ -201,6 +201,7 @@ ja:
       send: 送信
       sending: 送信中
       run: 実行
+      test_run: テスト実行
       running: 実行中
       stop: 停止
       toggle: 折りたたみ表示

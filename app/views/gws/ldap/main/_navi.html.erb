@@ -3,7 +3,7 @@
 
   <h3><%= link_to t("ldap.setting"), gws_ldap_setting_path %></h3>
   <% if Gws::Ldap::SyncTask.allowed?(:show, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t("ldap.buttons.sync"), gws_ldap_sync_path %></h3>
+    <h3><%= link_to t("ldap.buttons.sync"), gws_ldap_sync_main_path %></h3>
   <% end %>
   <h3><%= link_to t("sys.diag"), gws_ldap_diagnostic_main_path %></h3>
 </nav>

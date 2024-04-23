@@ -20,6 +20,9 @@
   <dd class="depth-2"><%= f.text_field :group_filter %></dd>
   <dd class="depth-2"><%= button_tag t("ss.buttons.expand"), type: :button, name: :expand, class: "btn", data: { for: "item_group_filter" } %></dd>
 
+  <dt class="depth-2"><%= t("ldap.views.import/sync.root_dn") %><%= @model.tt :group_root_dn %></dt>
+  <dd class="depth-2"><%= f.text_field :group_root_dn %></dd>
+
   <dt><%= t("ldap.views.import/sync.user") %></dt>
   <dd></dd>
 
@@ -32,6 +35,15 @@
   <dt class="depth-2"><%= t("ldap.views.import/sync.filter") %><%= @model.tt :user_filter %></dt>
   <dd class="depth-2"><%= f.text_field :user_filter %><br></dd>
   <dd class="depth-2"><%= button_tag t("ss.buttons.expand"), type: :button, name: :expand, class: "btn", data: { for: "item_user_filter" } %></dd>
+
+  <dt class="depth-2"><%= @model.t :user_role_ids %><%= @model.tt :user_role_ids %></dt>
+  <dd class="depth-2">
+    <%= f.hidden_field "user_role_ids[]", value: "", id: nil %>
+
+    <% Gws::Role.site(@cur_site).order_by(name: 1).each do |role| %>
+      <label><%= f.check_box("user_role_ids[]", {}, role.id) %> <%= role.name %></label><br />
+    <% end %>
+  </dd>
 </dl>
 
 <%= jquery do %>

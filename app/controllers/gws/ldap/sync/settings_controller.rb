@@ -1,8 +1,8 @@
-class Gws::Ldap::SyncsController < ApplicationController
+class Gws::Ldap::Sync::SettingsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/ldap/main/navi"
+  navi_view "gws/ldap/sync/main/navi"
 
   model Gws::Ldap::SyncTask
 
@@ -12,11 +12,12 @@ class Gws::Ldap::SyncsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("ldap.links.ldap"), gws_ldap_main_path]
-    @crumbs << [t("ldap.buttons.sync"), url_for(action: :show)]
+    @crumbs << [t("ldap.buttons.sync"), gws_ldap_sync_main_path]
+    @crumbs << [t("ldap.setting"), url_for(action: :show)]
   end
 
   def set_item
-    @item ||= Gws::Ldap::SyncTask.site(@cur_site).reorder(id: 1).first_or_create
+    @item ||= Gws::Ldap::SyncTask.where(group_id: @cur_site).reorder(id: 1).first_or_create
   end
 
   def ldap_setting
@@ -35,8 +36,6 @@ class Gws::Ldap::SyncsController < ApplicationController
       render
       return
     end
-
-    render
   end
 
   public

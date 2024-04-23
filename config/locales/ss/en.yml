@@ -201,6 +201,7 @@ en:
       send: Send
       sending: Sending
       run: Run
+      test_run: Test Run
       running: Running
       stop: Stop
       toggle: Collapsed view

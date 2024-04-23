@@ -1,0 +1,11 @@
+<% if Gws::Ldap::SyncTask.allowed?(:read, @cur_user, site: @cur_site) %>
+  <nav class="mod-navi">
+    <h2><%= t("ldap.buttons.sync") %></h2>
+
+    <h3><%= link_to t("ldap.setting"), gws_ldap_sync_setting_path %></h3>
+    <h3><%= link_to t("ss.buttons.test_run"), gws_ldap_sync_dry_run_path %></h3>
+    <h3><%= link_to t("ss.buttons.run"), gws_ldap_sync_run_path %></h3>
+  </nav>
+<% end %>
+
+<%= render partial: "gws/ldap/main/navi" %>
