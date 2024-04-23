@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :ldap_use_state %></dt>
-  <dd><%= @item.label(:ldap_use_state) || t("ldap.options.use_state.use_sys") %></dd>
+  <dd><%= @item.label(:ldap_use_state) || t("ldap.options.use_state.system") %></dd>
 
   <% if @item.ldap_use_state_individual? %>
     <dt><%= @model.t :ldap_url %></dt>
