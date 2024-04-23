@@ -8,9 +8,13 @@ module SS::Zip
     class << self
       def create(path, comment: nil)
         instance = new(path, comment: comment)
-        yield instance
-      ensure
-        instance.close
+        return instance unless block_given?
+
+        begin
+          yield instance
+        ensure
+          instance.close
+        end
       end
     end
 
