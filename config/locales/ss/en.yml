@@ -252,6 +252,7 @@ en:
       prev: Previous
       next: Next
       reset_mfa_otp: Reset OTP
+      expand: Expand
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?

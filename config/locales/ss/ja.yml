@@ -252,6 +252,7 @@ ja:
       prev: 前
       next: 次
       reset_mfa_otp: ワンタイムパスワードの初期化
+      expand: 拡張
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？

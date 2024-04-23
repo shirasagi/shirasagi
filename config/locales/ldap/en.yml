@@ -12,6 +12,8 @@ en:
     buttons:
       import: Import
       sync: Syncing
+      test_connection: Test Connection
+      test_search: Test Search
     confirm:
       import: Are you sure you want to import it?
       import_description: Import information from the LDAP server and create intermediate information.
@@ -28,6 +30,9 @@ en:
         warning: Warning
         no_results: There are no results.
         task_info: Task
+        base_dn: Base DN
+        scope: Scope
+        filter: Filter
       server/index:
         group:
           root: Route
@@ -88,6 +93,7 @@ en:
     models:
       cms/ldap/import: Import
       cms/ldap/sync_task: Import Setting
+      gws/ldap/sync_task: Import Setting
     attributes:
       ss/addon/ldap/group:
         ldap_host: Host
@@ -109,6 +115,15 @@ en:
         ldap_user_dn: User DN
         ldap_user_password: Password
         ldap_exclude_groups: Exclude groups
+      gws/ldap/sync_task:
+        admin_dn: Admin User DN
+        admin_password: Admin Password
+        group_base_dn: Group Base DN
+        group_scope: Group Scope
+        group_filter: Group Filter
+        user_base_dn: User Base DN
+        user_scope: User Scope
+        user_filter: User Filter
 
   views:
     ldap/server:

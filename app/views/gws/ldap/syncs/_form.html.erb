@@ -1,0 +1,53 @@
+<% content_for(:title, t("ldap.buttons.sync")) %>
+
+<dl class="see">
+  <dt><%= @model.t :admin_dn %><%= @model.tt :admin_dn %></dt>
+  <dd><%= f.text_field :admin_dn %></dd>
+
+  <dt><%= @model.t :admin_password %><%= @model.tt :admin_password %></dt>
+  <dd><%= f.password_field :in_admin_password %></dd>
+
+  <dt><%= t("ldap.views.import/sync.group") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.base_dn") %><%= @model.tt :group_base_dn %></dt>
+  <dd class="depth-2"><%= f.text_field :group_base_dn %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.scope") %><%= @model.tt :group_scope %></dt>
+  <dd class="depth-2"><%= f.select :group_scope, @item.group_scope_options, include_blank: true %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.filter") %><%= @model.tt :group_filter %></dt>
+  <dd class="depth-2"><%= f.text_field :group_filter %></dd>
+  <dd class="depth-2"><%= button_tag t("ss.buttons.expand"), type: :button, name: :expand, class: "btn", data: { for: "item_group_filter" } %></dd>
+
+  <dt><%= t("ldap.views.import/sync.user") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.base_dn") %><%= @model.tt :user_base_dn %></dt>
+  <dd class="depth-2"><%= f.text_field :user_base_dn %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.scope") %><%= @model.tt :user_scope %></dt>
+  <dd class="depth-2"><%= f.select :user_scope, @item.user_scope_options, include_blank: true %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.filter") %><%= @model.tt :user_filter %></dt>
+  <dd class="depth-2"><%= f.text_field :user_filter %><br></dd>
+  <dd class="depth-2"><%= button_tag t("ss.buttons.expand"), type: :button, name: :expand, class: "btn", data: { for: "item_user_filter" } %></dd>
+</dl>
+
+<%= jquery do %>
+  $("[name='expand']").on("click", function() {
+    var $this = $(this);
+    var $for = $("#" + $this.data("for"));
+    if (! $for[0]) {
+      return;
+    }
+
+    $for.replaceWith(function() {
+      var $textArea = $("<textarea/>", { name: $for.attr("name"), id: $for.attr("id") });
+      $textArea.html($for.val());
+      return $textArea;
+    });
+
+    $this.remove();
+  });
+<% end %>
