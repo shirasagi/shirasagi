@@ -27,4 +27,11 @@ FactoryBot.define do
     type { SS::Model::User::TYPE_LDAP }
     ldap_dn { "uid=user2, ou=002001管理課, ou=002危機管理部, dc=example, dc=jp" }
   end
+
+  factory :gws_sso_user, class: Gws::User, traits: [:gws_user_base] do
+    name { unique_id }
+    uid { name }
+    email { "#{uid}@example.jp" }
+    type { SS::Model::User::TYPE_SSO }
+  end
 end

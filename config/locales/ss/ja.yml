@@ -571,6 +571,7 @@ ja:
       user_type:
         sns: SNSユーザー
         ldap: LDAPユーザー
+        sso: SSOユーザー
       mfa_use:
         always: 使用する
         untrusted: アクセス元が信頼できない場合に使用する

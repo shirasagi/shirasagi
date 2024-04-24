@@ -3,6 +3,8 @@
     <%= link_to t('ss.links.back_to_show'), action: :show %>
   <% else %>
     <%= link_to t('ss.links.edit'), action: :edit %>
-    <%= link_to t('ss.links.edit_password'), action: :edit_password %>
+    <% unless @cur_user.type_sso? %>
+      <%= link_to t('ss.links.edit_password'), action: :edit_password %>
+    <% end %>
   <% end %>
 </nav>

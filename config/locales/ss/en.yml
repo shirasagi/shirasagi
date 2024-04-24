@@ -571,6 +571,7 @@ en:
       user_type:
         sns: SNS user
         ldap: LDAP user
+        sso: SSO user
       mfa_use:
         always: Use
         untrusted: Use when the access source is untrusted
