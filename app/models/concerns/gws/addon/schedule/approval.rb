@@ -13,14 +13,17 @@ module Gws::Addon::Schedule::Approval
 
     #validates :approval_check_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
     validate :valdiate_approval_state
+    validate :valdiate_reset_approvals, if: -> { @reset_approvals }
   end
 
   private
 
   def valdiate_approval_state
+    return if !approval_present?
     self.approval_state ||= 'request'
-    return unless @reset_approvals
+  end
 
+  def valdiate_reset_approvals
     if cur_user && approval_member?(cur_user)
       #
     elsif approved_and_locked?
