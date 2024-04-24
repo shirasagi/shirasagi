@@ -105,6 +105,8 @@ ja:
     use_cms: CMSの利用
     use_gws: GWSの利用
     use_webmail: メールの利用
+    edit_sys_user_account: アカウントの編集
+    edit_password_sys_user_account: アカウントのパスワード変更
 
   mongoid:
     models:

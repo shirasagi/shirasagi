@@ -12,6 +12,9 @@ module Sys
     Sys::Role.permission :use_gws, module_name: 'sys'
     Sys::Role.permission :use_webmail, module_name: 'sys'
 
+    Sys::Role.permission :edit_sys_user_account, module_name: 'sys'
+    Sys::Role.permission :edit_password_sys_user_account, module_name: 'sys'
+
     SS::File.model "sys/history_archive_file", Sys::HistoryArchiveFile
   end
 end

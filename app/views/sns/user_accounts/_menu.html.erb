@@ -2,7 +2,15 @@
   <% if params[:action] =~ /edit|update|delete/ %>
     <%= link_to t('ss.links.back_to_show'), action: :show %>
   <% else %>
-    <%= link_to t('ss.links.edit'), action: :edit %>
-    <%= link_to t('ss.links.edit_password'), action: :edit_password %>
+    <%=
+      if @cur_user.sys_role_permit_any?(:edit_sys_user_account)
+        link_to t('ss.links.edit'), action: :edit
+      end
+    %>
+    <%=
+      if @cur_user.sys_role_permit_any?(:edit_password_sys_user_account)
+        link_to t('ss.links.edit_password'), action: :edit_password
+      end
+    %>
   <% end %>
 </nav>
