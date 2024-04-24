@@ -1,5 +1,4 @@
 <%
-
   def v2c(item, field)
     return "empty" unless item.key?(field)
     return "blank" if item[field] == ""
@@ -15,14 +14,13 @@
     elsif value == ""
       value = "''"
     elsif value.is_a?(Time)
-      value = I18n.l(value.in_time_zone, format: :picker)
+      value = value.in_time_zone.iso8601
     else
-      value
+      value = value.to_s.truncate(16)
     end
 
-    value.to_s.truncate 16
+    value
   end
-
 %>
 
 <div class="cms-tabs">
@@ -52,7 +50,7 @@
 
 <% if @fields.present? && @items.present? %>
   <div class="table-wrap">
-    <table class="index">
+    <table class="index sys-db-docs">
       <thead>
       <tr>
         <th></th>
