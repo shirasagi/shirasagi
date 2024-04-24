@@ -117,7 +117,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit new_path
       wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
       wait_for_cbox do
-        click_on group.name
+        wait_cbox_close { click_on group.name }
       end
 
       within "form#item-form" do
@@ -125,6 +125,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: name
         expect(page).to have_css('#item_uid_errors', text: '')
+        select I18n.t("ss.options.user_type.#{Cms::User::TYPE_LDAP}"), from: "item[type]"
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")
