@@ -100,6 +100,7 @@ en:
       test_run: Test run
       import_revision_file_confirmation: Import organizational change operations from a CSV. \n If an operation has already been registered, it will be deleted. \n Are you sure you want to run the operation?
       import_changesets_notice: Changed contents contained in the CSV are always appended; importing the CSV does not change existing changed contents in any way.
+      chorg_sites_can_be_changed_in_sys_sites: The target site for organizational changes can be set in the Site Settings on the System Administration page. Please contact the system administrator to set this up.
     options:
       changeset_type:
         add: New
@@ -110,6 +111,8 @@ en:
       delete_method:
         disable_if_possible: Disable and allow recovery later
         always_delete: Always physically delete
+    links:
+      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。
     buttons:
       reset_after_move: Reset transfer-destination
       reset_after_unify: Reset merge-destination
@@ -160,6 +163,7 @@ en:
     chorg: Organizational change
     addons:
       chorg/entity_log: History of changes
+      chorg/option: Option
 
   cms_role:
     edit_chorg_revisions: Manage organizational changes
@@ -212,7 +216,7 @@ en:
       user_csv_file_id:
         - Select the user CSV file to perform user transfers after the organizational change is run.
         -
-        - Open the CSV downloaded from "Site Settings - Users - Downloads" in Excel, etc., and set the group name, user title, etc. after the organizational change is run.
+        - Open the CSV downloaded from "Site Settings - Users" in Excel, etc., and set the group name, user title, etc. after the organizational change is run.
         - Select the user CSV thus modified for the user CSV file.
         -
         - "If you do not select a file, the users will not be transferred after the organizational change is run and you will need to transfer the users manually."
@@ -230,9 +234,8 @@ en:
       content_csv_file_id:
         - "Select the content CSV files for parts, layouts, pages, and folders to be transferred after the organizational change is run."
         -
-        - Open the CSV file downloaded from "All Contents - List Output" in Excel, etc., and set the group name, etc. after the organizational change is run.
+        - Open the CSV file downloaded from "All Contents" in Excel, etc., and set the group name, etc. after the organizational change is run.
         - Select the All Contents CSV that you have modified in this way for the contents CSV file.
-        - Note that the menu "All contents" will not be displayed if the permission "Use all contents" is not granted. If you cannot find the menu "All contents", please consult your administrator.
     chorg/run_params:
       reservation:
         - You can reserve a time to run.
