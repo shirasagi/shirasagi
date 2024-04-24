@@ -20,6 +20,16 @@
 
     <%=
       addon_options = {}
+      addon_options[:id] = "addon-mfa"
+      addon_options[:head] = t("ss.mfa")
+      buf = render "form_mfa", f: f, addon: addon_options
+      render "ss/crud/addon", addon: addon_options do
+        buf
+      end
+    %>
+
+    <%=
+      addon_options = {}
       addon_options[:id] = "addon-ldap"
       addon_options[:head] = t("ldap.server_setting")
       buf = render "form_ldap", f: f, addon: addon_options

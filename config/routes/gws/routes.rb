@@ -34,6 +34,9 @@ Rails.application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get, :delete]
     match "login" => "login#login", as: :login, via: [:get, :post]
     post "access_token" => "login#access_token", as: :access_token
+    get  "mfa_login" => "mfa_login#login", as: :mfa_login
+    post "otp_login" => "mfa_login#otp_login"
+    post "otp_setup" => "mfa_login#otp_setup"
   end
 
   namespace "gws", path: ".g:site/gws" do
@@ -48,6 +51,7 @@ Rails.application.routes.draw do
     resources :users, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
       match :download_all, on: :collection, via: %i[get post]
       get :download_template, on: :collection
+      post :reset_mfa_otp, on: :member
     end
     resources :multi_checkboxes, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
       match :download_all, on: :collection, via: %i[get post]

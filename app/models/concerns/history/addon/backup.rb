@@ -49,8 +49,14 @@ module History::Addon
       before.state = nil if before
 
       backup.save
-      current.update if current
-      before.update if before
+      if current
+        # don't touch "updated"
+        current.without_record_timestamps { current.save }
+      end
+      if before
+        # don't touch "updated"
+        before.without_record_timestamps { before.save }
+      end
 
       # remove old backups
       backups.skip(max_age).destroy

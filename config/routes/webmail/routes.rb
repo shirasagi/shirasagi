@@ -69,6 +69,9 @@ Rails.application.routes.draw do
     get "/" => "main#index", as: :main
     get "logout" => "login#logout", as: :logout
     match "login" => "login#login", as: :login, via: [:get, :post]
+    get "mfa_login" => "mfa_login#login", as: :mfa_login
+    post "otp_login" => "mfa_login#otp_login"
+    post "otp_setup" => "mfa_login#otp_setup"
 
     resources :groups, concerns: [:deletion] do
       match :download_all, on: :collection, via: %i[get post]
@@ -81,6 +84,7 @@ Rails.application.routes.draw do
     end
     resources :users, concerns: [:deletion, :export] do
       get :download_template, on: :collection
+      post :reset_mfa_otp, on: :member
       resources :accounts, concerns: [:deletion], controller: "user_accounts" do
         post :test_connection, on: :collection
       end

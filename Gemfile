@@ -67,6 +67,8 @@ gem 'rexml'
 gem 'romaji'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
+gem 'rotp'
+gem 'rqrcode'
 gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
 gem 'shortuuid'

@@ -48,10 +48,12 @@ describe "cms_login", type: :feature, dbscope: :example, js: true, ldap: true do
 
   context "with system setting" do
     before do
-      auth_setting = Sys::Auth::Setting.first_or_create
+      auth_setting = Sys::Auth::Setting.instance
       auth_setting.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       auth_setting.save!
     end
+
+    after { ActiveSupport::CurrentAttributes.reset_all }
 
     include_context "ldap user login on cms"
   end

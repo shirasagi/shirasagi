@@ -66,6 +66,10 @@ en:
     test_deliver: Test deliver
     target: Target
     unlimited: Unlimited
+    mfa: Multi Factor Authentication
+    mfa_otp: One Time Password
+    mfa_otp_enabled_at: "Enabled at %{time}"
+    mfa_otp_not_enabled_yet: "Not enabled yet"
 
     views:
       login/login:
@@ -92,6 +96,10 @@ en:
         service:
           name: Service
           text: Creates an OAuth 2.0 Service-Application to enable server to server authentication.
+      line:
+        test_deliver:
+          - The text is delivered to the test members.
+          - Click the Deliver button to start the test delivery process.
     navi:
       readable: Browse list
       editable: Management list
@@ -243,6 +251,7 @@ en:
       update: Update
       prev: Previous
       next: Next
+      reset_mfa_otp: Reset OTP
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
@@ -275,7 +284,9 @@ en:
       target_to_public: Check what to make public
       target_to_closed: Check what to make closed
       approve: Are you sure you want to approve it?
+      test_deliver: Are you sure you want to start test delivery
       resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
+      reset_mfa_otp: Are you sure you want ot reset OTP?
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
@@ -329,6 +340,7 @@ en:
       updated: Updated.
       ordered_by_file_name_order: Ordered by name.
       ordered_by_file_upload_order: Ordered by upload order.
+      reset_mfa_otp: Reset OTP
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.
@@ -560,6 +572,10 @@ en:
         sns: SNS user
         ldap: LDAP user
         sso: SSO user
+      mfa_use:
+        always: Use
+        untrusted: Use when the access source is untrusted
+        none: Not use
 
     tasks:
       started: Started.
@@ -623,6 +639,7 @@ en:
       ss/oauth2/gws_permission: Groupware permissions
       ss/oauth2/webmail_permission: Mail permissions
       ss/locale_setting: Locale settings
+      ss/mfa/user_setting: MFA settings
 
   activemodel:
     errors:
@@ -677,6 +694,7 @@ en:
           disallow_datetime_by_system: Date and time are not allowed by the system. Please enter a shorter date and time.
       messages:
         not_selected: Must be selected.
+        mfa_otp_code_verification_is_failed: The confirmation code entered is incorrect. Please carefully check the 6-digit number displayed on the authentication application and enter it again.
     attributes:
       ss/document:
         id: id
@@ -989,6 +1007,7 @@ en:
         translate_mock_api_request_count: No. of API requests
         translate_mock_api_request_word_count: API request character count
         translate_microsoft_api_key: Subscription key
+        translate_microsoft_api_region: Region
         translate_microsoft_api_request_count: No. of API requests
         translate_microsoft_api_request_word_count: API request character count
         translate_microsoft_api_request_metered_usage: x-metered-usage
@@ -998,6 +1017,8 @@ en:
         translate_google_api_request_word_count: API request character count
         translate_api_request_word_limit: Character limit
         translate_api_limit_exceeded_html: Display HTML when limit is exceeded
+        translate_referer_restriction: Restriction by referrer
+        translate_access_log_threshold: History keeping period
       ss/addon/source_cleaner/site_setting:
         source_cleaner_unwrap_tag_state: Remove unnecessary tags
         source_cleaner_remove_tag_state: Remove empty tags
@@ -1049,6 +1070,12 @@ en:
         expiration_date: Expiration datetime
         audience_id: Audience user
         jwt: API token
+      ss/mfa/site_setting:
+        mfa_otp_use_state: Use of OTP
+        mfa_trusted_ip_addresses: Trusted source
+      ss/addon/mfa/user_setting:
+        mfa_otp_secret: OTP secret
+        mfa_otp_enabled_at: OTP enabled at
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1530,6 +1557,20 @@ en:
         - Select language
       timezone:
         - Select Timezone
+
+    ss/mfa/site_setting:
+      mfa_otp_use_state:
+        - Select whether to use OTP(one-time password) authentication.
+        -
+        - "・Not use: Do not use OTP authentication."
+        - "・Use: Use OTP authentication."
+        - "・Use when the access source is untrusted: Use OTP authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
+        -
+        - OTP authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use OTP authentication when using an external authentication server, please configure the external authentication server to use OTP authentication.
+      mfa_trusted_ip_addresses:
+        - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of OTP.
+        - To set multiple IP addresses, separate them with a new line.
+        - "You can also set network addresses such as \"192.168.10.0/24\" or \"192.168.10.0/255.255.255.0\"."
 
   job:
     models:

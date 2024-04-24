@@ -66,6 +66,10 @@ ja:
     test_deliver: テスト配信
     target: 対象
     unlimited: 制限無し
+    mfa: 多要素認証
+    mfa_otp: ワンタイムパスワード
+    mfa_otp_enabled_at: "%{time}に有効化されました。"
+    mfa_otp_not_enabled_yet: "有効化されていません。"
 
     views:
       login/login:
@@ -247,6 +251,7 @@ ja:
       update: 更新
       prev: 前
       next: 次
+      reset_mfa_otp: ワンタイムパスワードの初期化
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -281,6 +286,7 @@ ja:
       approve: 承認してよろしいですか？
       test_deliver: テスト配信を開始してよろしいですか？
       resume_editing: 自動保存された内容があります。編集を直前から再開しますか？
+      reset_mfa_otp: ワンタイムパスワードを初期化しますが、よろしいですか？
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。
@@ -334,6 +340,7 @@ ja:
       updated: 更新しました。
       ordered_by_file_name_order: 名前順で並び変えました。
       ordered_by_file_upload_order: アップロード順で並び変えました。
+      reset_mfa_otp: ワンタイムパスワードを初期化しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -565,6 +572,10 @@ ja:
         sns: SNSユーザー
         ldap: LDAPユーザー
         sso: SSOユーザー
+      mfa_use:
+        always: 使用する
+        untrusted: アクセス元が信頼できない場合に使用する
+        none: 使用しない
 
     tasks:
       started: 開始しました。
@@ -628,6 +639,7 @@ ja:
       ss/oauth2/gws_permission: グループウェア権限
       ss/oauth2/webmail_permission: メール権限
       ss/locale_setting: 言語設定
+      ss/mfa/user_setting: MFA設定
 
   activemodel:
     errors:
@@ -682,6 +694,7 @@ ja:
           disallow_datetime_by_system: の日時はシステムにより許可されていません。より短い日時を入力してください。
       messages:
         not_selected: を選択してください。
+        mfa_otp_code_verification_is_failed: 入力された確認コードが正しくありません。認証アプリに表示されている6桁の数値をよく確認の上、もう一度入力してください。
     attributes:
       ss/document:
         id: id
@@ -1057,6 +1070,12 @@ ja:
         expiration_date: 期限切れ日時
         audience_id: 利用ユーザー
         jwt: APIトークン
+      ss/mfa/site_setting:
+        mfa_otp_use_state: ワンタイムパスワード
+        mfa_trusted_ip_addresses: 信頼できるアクセス元
+      ss/addon/mfa/user_setting:
+        mfa_otp_secret: ワンタイムパスワードシークレット
+        mfa_otp_enabled_at: ワンタイムパスワード有効化日時
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1538,6 +1557,20 @@ ja:
         - 言語を選択してください。
       timezone:
         - タイムゾーンを選択してください。
+
+    ss/mfa/site_setting:
+      mfa_otp_use_state:
+        - ワンタイムパスワードを使用するかどうかを選択します。
+        - 
+        - "・使用しない: ワンタイムパスワードを使用しません。"
+        - "・使用する: ワンタイムパスワードを使用します。"
+        - "・アクセス元が信頼できない場合に使用する: アクセス元が信頼できない場合にワンタイムパスワードを使用します。信頼できるアクセス元を下の「信頼できるアクセス元」に設定します。"
+        - 
+        - ワンタイムパスワードはフォーム認証時に適用されます。外部の認証サーバーからのシングル・サイン・オン時には適用されません。外部の認証サーバー利用時にワンタイムパスワードを利用したい場合、外部の認証サーバー側をワンタイムパスワードを用いるように設定してください。
+      mfa_trusted_ip_addresses:
+        - 信頼できるアクセス元としてIPアドレスを設定します。ワンタイムパスワードの使用に「アクセス元が信頼できない場合に使用する」を選択した場合にアクセス元が信頼できるかどうかの判定に使用します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
 
   job:
     models:

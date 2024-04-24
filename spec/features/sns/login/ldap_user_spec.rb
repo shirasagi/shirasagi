@@ -5,10 +5,12 @@ describe "sns_login", type: :feature, dbscope: :example, js: true, ldap: true do
     let!(:ldap_user) { create :ss_ldap_user2 }
 
     before do
-      item = Sys::Auth::Setting.first_or_create
+      item = Sys::Auth::Setting.instance
       item.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       item.save!
     end
+
+    after { ActiveSupport::CurrentAttributes.reset_all }
 
     context "by uid" do
       it do

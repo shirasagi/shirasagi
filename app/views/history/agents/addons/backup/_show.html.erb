@@ -17,15 +17,18 @@
       <tr class="list-item" data-id="<%= backup.id %>">
         <td class="created">
           <%=
-            backup_data_updated = backup.data[:updated].try(:in_time_zone)
-            time_tag = ss_time_tag(backup_data_updated || backup.created)
+            # history/backup#updated は不意に変更される可能性がある。
+            # 更新日時として history/backup#created を表示するのが適切。
+            time_tag = ss_time_tag(backup.created)
 
-            latest_backup = backup_data_updated && @item.updated == backup_data_updated
+            # マイグレーション実行時、組織変更実行時、全コンテンツインポート時など、シラサギにはタイムスタンプを変更せずにDBを更新する処理がいくつある。
+            # 以前はアイテムの更新日時と編集履歴の更新日時とを比較して同じなら最新としていたが、これは適切ではない。
+            # 編集履歴を created の降順に並べ、先頭のものを最新とする
+            latest_backup = index == 0
             if latest_backup
-              t("history.this_is_latest_html", time: time_tag)
-            else
-              time_tag
+              time_tag = t("history.this_is_latest_html", time: time_tag)
             end
+            time_tag
           %>
         </td>
         <td class="name">
@@ -53,7 +56,7 @@
           %>
         </td>
         <td class="links">
-          <%= link_to t("ss.links.show"), history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: backup.id, compare_to: top_backups[index + 1].try(:id)), class: "btn" %>
+          <%= link_to t("ss.links.show"), history_cms_backup_path(source: source, id: backup.id, compare_to: top_backups[index + 1].try(:id)), class: "btn" %>
           <%=
             if top_backups[index + 1]
               link_to(t('history.compare_backup_to_previsous'), history_cms_change_path(source: source, id: backup.id, compare_to: top_backups[index + 1].id), class: 'btn')

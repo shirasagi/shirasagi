@@ -2,6 +2,7 @@ class Sys::Auth::Setting
   include SS::Document
   include Sys::Permission
   include SS::Ldap::SiteSetting
+  include SS::MFA::SiteSetting
 
   DEFAULT_KEY = "user".freeze
   DEFAULT_PASSWORD = "guest".freeze

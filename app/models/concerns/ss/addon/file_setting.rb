@@ -26,6 +26,7 @@ module SS::Addon
 
       validates :multibyte_filename_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
       validates :file_fs_access_restriction_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+      validates :file_fs_access_restriction_allowed_ip_addresses, ip_address: true
     end
 
     def set_file_resizing
@@ -94,7 +95,7 @@ module SS::Addon
       end
 
       def match?(request)
-        remote_addr = request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
+        remote_addr = SS.remote_addr(request)
         result = @ip_addresses.any? { |addr| addr.include?(remote_addr) }
         Rails.logger.warn { "remote address '#{remote_addr}' is not allowed" } unless result
         result

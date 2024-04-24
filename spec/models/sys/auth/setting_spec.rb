@@ -88,4 +88,97 @@ describe Sys::Auth::Setting do
       end
     end
   end
+
+  describe ".mfa_otp_use?" do
+    context "with initial attributes" do
+      let(:setting) { Sys::Auth::Setting.new }
+
+      it do
+        expect(setting.mfa_otp_use?).to be_falsey
+      end
+    end
+
+    context "with 'none' as mfa_otp_use_state" do
+      let(:setting) { Sys::Auth::Setting.new(mfa_otp_use_state: Sys::Auth::Setting::MFA_USE_NONE) }
+
+      it do
+        expect(setting.mfa_otp_use?).to be_falsey
+      end
+    end
+
+    context "with 'always' as mfa_otp_use_state" do
+      let(:setting) { Sys::Auth::Setting.new(mfa_otp_use_state: Sys::Auth::Setting::MFA_USE_ALWAYS) }
+
+      it do
+        expect(setting.mfa_otp_use?).to be_truthy
+      end
+    end
+
+    context "with 'untrusted' as mfa_otp_use_state" do
+      let(:setting) do
+        addr_list = <<~IP_ADDR_LIST
+          # ipv4 address
+          192.168.32.0/24
+          # ipv4 loopback
+          127.0.0.1
+          # ipv6 address
+          2001:0DB8:0:CD30::/60
+          # ipv6 loopback
+          ::1
+        IP_ADDR_LIST
+
+        Sys::Auth::Setting.new(
+          mfa_otp_use_state: Sys::Auth::Setting::MFA_USE_UNTRUSTED, mfa_trusted_ip_addresses: addr_list)
+      end
+      let(:request) { ActionDispatch::Request.new("HTTP_X_REAL_IP" => source_addr) }
+
+      context "with trusted ipv4 address" do
+        let(:source_addr) { "192.168.32.61" }
+
+        it do
+          expect(setting.mfa_otp_use?(request)).to be_falsey
+        end
+      end
+
+      context "with trusted ipv4 loopback address" do
+        let(:source_addr) { "127.0.0.1" }
+
+        it do
+          expect(setting.mfa_otp_use?(request)).to be_falsey
+        end
+      end
+
+      context "with trusted ipv6 address" do
+        let(:source_addr) { "2001:DB8:0:CD30:8:800:200C:417A" }
+
+        it do
+          expect(setting.mfa_otp_use?(request)).to be_falsey
+        end
+      end
+
+      context "with trusted ipv6 loopback address" do
+        let(:source_addr) { "::1" }
+
+        it do
+          expect(setting.mfa_otp_use?(request)).to be_falsey
+        end
+      end
+
+      context "with untrusted ipv4 address" do
+        let(:source_addr) { "192.168.17.52" }
+
+        it do
+          expect(setting.mfa_otp_use?(request)).to be_truthy
+        end
+      end
+
+      context "with untrusted ipv6 address" do
+        let(:source_addr) { "2001:db8:85a3::8a2e:370:7334" }
+
+        it do
+          expect(setting.mfa_otp_use?(request)).to be_truthy
+        end
+      end
+    end
+  end
 end
