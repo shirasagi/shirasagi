@@ -162,10 +162,12 @@ describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ld
     let!(:user) { create :ss_ldap_user2 }
 
     before do
-      auth_setting = Sys::Auth::Setting.first_or_create
+      auth_setting = Sys::Auth::Setting.instance
       auth_setting.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
       auth_setting.save!
     end
+
+    after { ActiveSupport::CurrentAttributes.reset_all }
 
     it_behaves_like "password validation with password policy"
   end

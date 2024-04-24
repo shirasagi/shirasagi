@@ -25,4 +25,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'OAuth'
   inflect.acronym 'OAuth2'
   inflect.acronym 'JWT'
+  inflect.acronym 'MFA' # stands for Multi Factor Authentication
+  inflect.acronym 'OTP' # stands for One Time Password
 end

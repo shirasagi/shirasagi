@@ -85,6 +85,9 @@ Rails.application.routes.draw do
     get "/" => "main#index", as: :main
     get "logout" => "login#logout", as: :logout
     match "login" => "login#login", as: :login, via: [:get, :post]
+    get "mfa_login" => "mfa_login#login", as: :mfa_login
+    post "otp_login" => "mfa_login#otp_login"
+    post "otp_setup" => "mfa_login#otp_setup"
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
 
@@ -102,6 +105,7 @@ Rails.application.routes.draw do
     resources :users, concerns: [:deletion, :download, :import] do
       post :lock_all, on: :collection
       post :unlock_all, on: :collection
+      post :reset_mfa_otp, on: :member
     end
     resources :groups, concerns: [:deletion, :role, :import] do
       match :download_all, on: :collection, via: %i[get post]

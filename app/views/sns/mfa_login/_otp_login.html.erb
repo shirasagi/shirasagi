@@ -1,0 +1,21 @@
+<section class="main-box login-box otp-login">
+  <header>
+    <h2><%= t("ss.login") %></h2>
+    <div class="version">ver. <%= tryb{SS.version} %></div>
+  </header>
+
+  <%= form_with scope: :item, url: url_for(action: :otp_login), id: "item-form" do |f| %>
+    <%= error_messages_for :item %>
+    <%= hidden_field_tag :ref, ref, id: nil %>
+
+    <div class="form-group">
+      <label for="item_code"><%= t("ss.mfa_otp") %></label>
+      <%= text_field_tag "item[code]", "", autocomplete: "one-time-code", inputmode: "numeric", autofocus: pc_browser?, placeholder: "000000" %>
+    </div>
+
+    <footer class="send">
+      <%= submit_tag t("ss.login"), name: :otp_login, class: "btn-primary" %>
+      <%= link_to t("ss.links.back"), sns_login_path, class: "btn-default" %>
+    </footer>
+  <% end %>
+</section>

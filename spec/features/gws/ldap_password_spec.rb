@@ -18,7 +18,7 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
       let(:new_password) { "password" }
 
       before do
-        auth_setting = Sys::Auth::Setting.first_or_create
+        auth_setting = Sys::Auth::Setting.instance
         auth_setting.ldap_url = ldap_url
         auth_setting.save!
 
@@ -29,6 +29,8 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
       end
 
       after do
+        ActiveSupport::CurrentAttributes.reset_all
+
         # ldap password を変更したのでldap serviceを削除（ldapデータベースを削除する方法を探したが見つからなかった）
         stop_ldap_service
       end
@@ -94,7 +96,7 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
       let(:new_password) { unique_id }
 
       before do
-        auth_setting = Sys::Auth::Setting.first_or_create
+        auth_setting = Sys::Auth::Setting.instance
         auth_setting.ldap_url = ldap_url
         auth_setting.save!
 
@@ -106,6 +108,8 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
       end
 
       after do
+        ActiveSupport::CurrentAttributes.reset_all
+
         # ldap password を変更したのでldap serviceを削除（ldapデータベースを削除する方法を探したが見つからなかった）
         stop_ldap_service
       end

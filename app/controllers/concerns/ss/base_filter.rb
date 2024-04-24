@@ -159,7 +159,7 @@ module SS::BaseFilter
     return true
   end
 
-  def set_user(user, opts = {})
+  def set_user(user, **opts)
     if opts[:session]
       old_session_id = session.id
       reset_session if SS.config.sns.logged_in_reset_session

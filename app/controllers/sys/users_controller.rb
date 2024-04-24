@@ -69,4 +69,12 @@ class Sys::UsersController < ApplicationController
     end
     render_destroy_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
   end
+
+  def reset_mfa_otp
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+
+    @item.unset(:mfa_otp_secret, :mfa_otp_enabled_at)
+    redirect_to url_for(action: :show), notice: t("ss.notice.reset_mfa_otp")
+  end
 end
