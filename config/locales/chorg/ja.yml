@@ -163,6 +163,7 @@ ja:
     chorg: 組織変更
     addons:
       chorg/entity_log: 変更履歴
+      chorg/option: オプション
 
   cms_role:
     edit_chorg_revisions: 組織変更の管理
