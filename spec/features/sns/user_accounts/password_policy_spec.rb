@@ -159,7 +159,9 @@ describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ld
   end
 
   context "with ldap user" do
-    let!(:user) { create :ss_ldap_user2 }
+    let(:permissions) { %w(edit_sys_user_account edit_password_sys_user_account) }
+    let!(:role) { create :sys_role, name: unique_id, permissions: permissions }
+    let!(:user) { create :ss_ldap_user2, sys_role_ids: [ role.id ] }
 
     before do
       auth_setting = Sys::Auth::Setting.instance
