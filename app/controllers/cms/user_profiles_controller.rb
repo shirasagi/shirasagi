@@ -3,7 +3,7 @@ class Cms::UserProfilesController < ApplicationController
   include Cms::CrudFilter
 
   navi_view "cms/user_profiles/navi"
-  menu_view "sns/user_accounts/menu"
+  menu_view "cms/user_profiles/menu"
 
   model Cms::User
 
@@ -33,22 +33,26 @@ class Cms::UserProfilesController < ApplicationController
   end
 
   def edit
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_user_profile)
     render
   end
 
   def update
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_user_profile)
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     render_update @item.save
   end
 
   def edit_password
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :edit_password_cms_user_profile)
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user, self_edit: true, site: @cur_site)
     render
   end
 
   def update_password
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :edit_password_cms_user_profile)
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user, self_edit: true, site: @cur_site)
     @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)
