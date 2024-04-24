@@ -71,7 +71,8 @@ en:
 
   errors:
     messages:
-      unable_to_modify_ldap_users_password: "For LDAP users, it is not possible to change the passwords of others from within Syraseaghi. To change your password, you must change it in person from your profile screen or contact your LDAP administrator."
+      unable_to_modify_ldap_users_password: "For LDAP users, it is not possible to change the passwords of others from within SHIRASAGI. To change your password, you must change it in person from your profile screen or contact your LDAP administrator."
+      unable_to_modify_sso_users_password: "For SSO users, it is not possible to change the passwords from within SHIRASAGI. To change your password, please contact your authentication server administrator."
 
   activemodel:
     attributes:

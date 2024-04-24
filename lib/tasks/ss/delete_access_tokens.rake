@@ -6,6 +6,6 @@ namespace :ss do
 
   task delete_sso_tokens: :environment do
     puts "delete sso tokens"
-    SS::SsoToken.and_unavailable.destroy_all
+    SS::SSOToken.and_unavailable.destroy_all
   end
 end

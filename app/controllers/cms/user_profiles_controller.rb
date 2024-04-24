@@ -46,6 +46,8 @@ class Cms::UserProfilesController < ApplicationController
 
   def edit_password
     raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :edit_password_cms_user_profile)
+    raise "404" if @cur_user.type_sso?
+
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user, self_edit: true, site: @cur_site)
     render
@@ -53,6 +55,8 @@ class Cms::UserProfilesController < ApplicationController
 
   def update_password
     raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :edit_password_cms_user_profile)
+    raise "404" if @cur_user.type_sso?
+
     @model = SS::PasswordUpdateService
     @item = SS::PasswordUpdateService.new(cur_user: @cur_user, self_edit: true, site: @cur_site)
     @item.attributes = params.require(:item).permit(:old_password, :new_password, :new_password_again)

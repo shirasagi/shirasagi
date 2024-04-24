@@ -45,4 +45,13 @@ FactoryBot.define do
 
     lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
+
+  factory :ss_sso_user, class: SS::User do
+    name { unique_id }
+    uid { name }
+    email { "#{name}@example.jp" }
+    type { SS::Model::User::TYPE_SSO }
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
+  end
 end
