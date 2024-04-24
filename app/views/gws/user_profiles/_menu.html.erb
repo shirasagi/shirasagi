@@ -8,7 +8,7 @@
       end
     %>
     <%=
-      if @cur_user.gws_role_permit_any?(@cur_site, :edit_password_gws_user_profile)
+      if @cur_user.gws_role_permit_any?(@cur_site, :edit_password_gws_user_profile) && !@cur_user.type_sso?
         link_to t('ss.links.edit_password'), action: :edit_password
       end
     %>
