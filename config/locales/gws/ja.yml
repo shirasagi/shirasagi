@@ -145,9 +145,12 @@ ja:
     edit_gws_contrasts: コントラストの管理
     edit_gws_bookmarks: お気に入りの利用
     edit_gws_personal_addresses: 個人アドレス帳の利用
+    edit_gws_user_profile: プロフィールの編集
+    edit_password_gws_user_profile: プロフィールのパスワード変更
 
   modules:
     gws: 標準機能
+    gws/user_profile: プロフィール
     addons:
       gws/role: 権限/ロール
       gws/group_permission: 管理権限

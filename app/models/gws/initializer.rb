@@ -39,6 +39,9 @@ module Gws
     Gws::Role.permission :edit_gws_bookmarks
     Gws::Role.permission :edit_gws_personal_addresses
 
+    Gws::Role.permission :edit_gws_user_profile, module_name: 'gws/user_profile'
+    Gws::Role.permission :edit_password_gws_user_profile, module_name: 'gws/user_profile'
+
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File
     SS::File.model "gws/history_archive_file", Gws::HistoryArchiveFile
