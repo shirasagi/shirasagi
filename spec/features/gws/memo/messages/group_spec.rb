@@ -28,7 +28,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within_cbox do
           expect(page).to have_content(group.name)
           click_on I18n.t('mongoid.models.gws/shared_address/group')
-          wait_cbox_close { click_on group.name }
+          wait_for_cbox_closed { click_on group.name }
         end
 
         within 'form#item-form' do
@@ -75,7 +75,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within_cbox do
           expect(page).to have_content(group.name)
           click_on I18n.t('mongoid.models.webmail/address_group')
-          wait_cbox_close { click_on group.name }
+          wait_for_cbox_closed { click_on group.name }
         end
 
         within 'form#item-form' do

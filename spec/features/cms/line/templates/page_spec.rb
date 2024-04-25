@@ -55,7 +55,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
-        wait_cbox_close { click_on page1.name }
+        wait_for_cbox_closed { click_on page1.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
@@ -89,7 +89,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
-        wait_cbox_close { click_on page2.name }
+        wait_for_cbox_closed { click_on page2.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page2.id}']", text: page2.name)
@@ -146,7 +146,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
-        wait_cbox_close { click_on page1.name }
+        wait_for_cbox_closed { click_on page1.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
@@ -164,7 +164,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
-        wait_cbox_close { click_on page2.name }
+        wait_for_cbox_closed { click_on page2.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page2.id}']", text: page2.name)
@@ -213,7 +213,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
-        wait_cbox_close { click_on page1.name }
+        wait_for_cbox_closed { click_on page1.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
@@ -241,7 +241,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
-        wait_cbox_close { click_on page2.name }
+        wait_for_cbox_closed { click_on page2.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page2.id}']", text: page2.name)

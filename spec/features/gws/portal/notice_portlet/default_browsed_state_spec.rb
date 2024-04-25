@@ -38,7 +38,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_link folder.name }
+        wait_for_cbox_closed { click_link folder.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-portal-portlet-notice" do
@@ -103,7 +103,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_link folder.name }
+        wait_for_cbox_closed { click_link folder.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-portal-portlet-notice" do
@@ -168,7 +168,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_link folder.name }
+        wait_for_cbox_closed { click_link folder.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-portal-portlet-notice" do

@@ -33,7 +33,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         attach_file "item[in_files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-portal-portlet-ad_file" do

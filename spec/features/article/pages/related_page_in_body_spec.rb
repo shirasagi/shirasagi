@@ -20,7 +20,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_link item.name
         end
       end
@@ -62,7 +62,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within_cbox do
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_link item.name
           end
         end

@@ -44,7 +44,7 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_on 'メンバーを選択する' }
       end
       within_cbox do
-        wait_cbox_close { click_link member.name }
+        wait_for_cbox_closed { click_link member.name }
       end
       within "form#item-form" do
         expect(page).to have_css(".ajax-selected", text: member.name)

@@ -61,7 +61,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -139,7 +139,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -238,7 +238,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -336,7 +336,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -424,7 +424,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -500,7 +500,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -587,7 +587,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -685,7 +685,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)
@@ -771,7 +771,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close { click_on user1.long_name }
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             expect(page).to have_css("[data-id='1,#{user1.id}']", text: user1.long_name)

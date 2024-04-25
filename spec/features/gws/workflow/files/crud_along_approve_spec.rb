@@ -30,7 +30,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         within "article.file-view" do
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on file.name
           end
         end

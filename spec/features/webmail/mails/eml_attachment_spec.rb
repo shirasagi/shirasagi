@@ -37,7 +37,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             end
           end
           within_cbox do
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on file.name
             end
           end

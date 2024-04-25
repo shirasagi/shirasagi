@@ -47,7 +47,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
         end
       end
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on form.name
         end
       end

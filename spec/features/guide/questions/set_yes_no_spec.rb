@@ -39,7 +39,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_link procedure1.id_name
         expect(page).to have_link procedure2.id_name
-        wait_cbox_close { click_on procedure1.id_name }
+        wait_for_cbox_closed { click_on procedure1.id_name }
       end
 
       within "form#item-form" do
@@ -53,7 +53,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         expect(page).to have_link question1.id_name
         expect(page).to have_link question2.id_name
-        wait_cbox_close { click_on question1.id_name }
+        wait_for_cbox_closed { click_on question1.id_name }
       end
 
       within "form#item-form" do
@@ -67,7 +67,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
 
         wait_event_to_fire("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
         within ".search-ui-select" do
-          wait_cbox_close { click_on I18n.t("ss.links.select") }
+          wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
         end
       end
 
@@ -82,7 +82,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         wait_event_to_fire("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
         within ".search-ui-select" do
-          wait_cbox_close { click_on I18n.t("ss.links.select") }
+          wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
         end
       end
 

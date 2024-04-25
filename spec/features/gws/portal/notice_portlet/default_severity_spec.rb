@@ -46,7 +46,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_link I18n.t('gws/share.apis.folders.index') }
       end
       within_cbox do
-        wait_cbox_close { click_link folder.name }
+        wait_for_cbox_closed { click_link folder.name }
       end
       within 'form#item-form' do
         expect(page).to have_content(folder.name)
@@ -119,7 +119,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_link I18n.t('gws/share.apis.folders.index') }
       end
       within_cbox do
-        wait_cbox_close { click_link folder.name }
+        wait_for_cbox_closed { click_link folder.name }
       end
       within 'form#item-form' do
         expect(page).to have_content(folder.name)
@@ -192,7 +192,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_link I18n.t('gws/share.apis.folders.index') }
       end
       within_cbox do
-        wait_cbox_close { click_link folder.name }
+        wait_for_cbox_closed { click_link folder.name }
       end
       within 'form#item-form' do
         expect(page).to have_content(folder.name)

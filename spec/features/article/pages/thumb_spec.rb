@@ -30,7 +30,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -65,7 +65,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css(".file-view", text: "modify.jpg")
 
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on "modify.jpg"
         end
       end
@@ -99,7 +99,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -143,7 +143,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -185,7 +185,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -246,7 +246,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -259,7 +259,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -328,7 +328,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end

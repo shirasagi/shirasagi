@@ -25,7 +25,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         end
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on I18n.t("ss.buttons.attach")
           end
         end
@@ -91,7 +91,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
           end
           within_cbox do
             attach_file "item[in_files][]", file_path
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on I18n.t("ss.buttons.attach")
             end
           end

@@ -34,7 +34,7 @@ describe "cms_translate_site_setting", type: :feature, dbscope: :example, js: tr
         end
       end
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on lang_ja.name
         end
       end
@@ -45,7 +45,7 @@ describe "cms_translate_site_setting", type: :feature, dbscope: :example, js: tr
         end
       end
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on lang_en.name
         end
       end

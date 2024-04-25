@@ -34,7 +34,7 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
         end
       end
       within all(".file-view")[0] do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on file1.name
         end
       end
@@ -49,7 +49,7 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
         end
       end
       within all(".file-view")[1] do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on file2.name
         end
       end
@@ -64,7 +64,7 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
         end
       end
       within all(".file-view")[2] do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on file3.name
         end
       end

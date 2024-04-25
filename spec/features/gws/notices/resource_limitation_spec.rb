@@ -28,7 +28,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         end
       end
     end
-    wait_cbox_close do
+    wait_for_cbox_closed do
       click_on notice_file.name
     end
     within 'form#item-form' do

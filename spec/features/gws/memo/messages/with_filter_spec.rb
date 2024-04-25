@@ -30,7 +30,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -80,7 +80,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -132,7 +132,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -183,7 +183,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -234,7 +234,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -285,7 +285,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -336,7 +336,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do
@@ -387,7 +387,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close { click_on gws_user.name }
+        wait_for_cbox_closed { click_on gws_user.name }
       end
 
       within 'form#item-form' do

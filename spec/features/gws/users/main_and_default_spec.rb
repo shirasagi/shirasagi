@@ -43,7 +43,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on group1.trailing_name }
+        wait_for_cbox_closed { click_on group1.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-main-group" do
@@ -98,7 +98,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on group3.trailing_name }
+        wait_for_cbox_closed { click_on group3.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-main-group" do
@@ -128,7 +128,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on group2.trailing_name }
+        wait_for_cbox_closed { click_on group2.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-default-group" do
@@ -183,7 +183,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on group3.trailing_name }
+        wait_for_cbox_closed { click_on group3.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-default-group" do

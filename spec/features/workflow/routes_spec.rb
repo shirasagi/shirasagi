@@ -29,7 +29,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
 
         within_cbox do
           within "table.index" do
-            wait_cbox_close { click_on group.name }
+            wait_for_cbox_closed { click_on group.name }
           end
         end
 
@@ -40,7 +40,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         end
         within_cbox do
           within "table.index tbody.items" do
-            wait_cbox_close { click_on user.name }
+            wait_for_cbox_closed { click_on user.name }
           end
         end
 

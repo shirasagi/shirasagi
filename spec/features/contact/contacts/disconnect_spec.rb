@@ -49,7 +49,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
         end
       end
       within_cbox do
-        wait_cbox_close { click_on sub_contact.name }
+        wait_for_cbox_closed { click_on sub_contact.name }
       end
       within "form#item-form" do
         within "#addon-contact-agents-addons-page" do

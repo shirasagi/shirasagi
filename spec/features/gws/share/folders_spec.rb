@@ -114,7 +114,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         end
 
         within_cbox do
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on item.name
           end
         end

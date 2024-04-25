@@ -31,7 +31,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end

@@ -26,7 +26,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on gws_user.name
         end
       end

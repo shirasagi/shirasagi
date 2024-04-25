@@ -46,7 +46,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within_cbox do
           expect(page).to have_content(recipient.name)
           check "#{target}_ids#{recipient.id}"
-          wait_cbox_close { click_on I18n.t('ss.links.select') }
+          wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
         end
 
         within 'form#item-form' do

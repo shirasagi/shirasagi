@@ -27,7 +27,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on category.name }
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
@@ -36,7 +36,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on ss_file.name }
+        wait_for_cbox_closed { click_on ss_file.name }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-basic .file-view", text: ss_file.name)

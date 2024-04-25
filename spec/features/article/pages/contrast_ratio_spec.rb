@@ -158,7 +158,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
             within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
-              wait_cbox_close do
+              wait_for_cbox_closed do
                 js_click first(".file-view[data-file-id='#{file2.id}'] a")
               end
             end
@@ -255,7 +255,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
             within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
-              wait_cbox_close do
+              wait_for_cbox_closed do
                 js_click first(".file-view[data-file-id='#{file3.id}'] a")
               end
             end
@@ -285,7 +285,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
             within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file4.id}']", text: file4.name)
-              wait_cbox_close do
+              wait_for_cbox_closed do
                 js_click first(".file-view[data-file-id='#{file4.id}'] a")
               end
             end

@@ -56,7 +56,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on site.name
         end
         expect(page).to have_content(editor.name)
-        wait_cbox_close { click_on editor.name }
+        wait_for_cbox_closed { click_on editor.name }
       end
       within 'form#item-form' do
         within '.gws-addon-readable-setting' do
@@ -71,7 +71,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on site.name
         end
         expect(page).to have_content(reader.name)
-        wait_cbox_close { click_on reader.name }
+        wait_for_cbox_closed { click_on reader.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-member" do
@@ -112,7 +112,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on cate.name }
+        wait_for_cbox_closed { click_on cate.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-notice-category" do

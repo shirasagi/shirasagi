@@ -33,7 +33,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_on I18n.t("gws/share.apis.folders.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on basename }
+        wait_for_cbox_closed { click_on basename }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: basename)
@@ -108,7 +108,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_on I18n.t("gws/share.apis.folders.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on folder1.name }
+        wait_for_cbox_closed { click_on folder1.name }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: folder1.name)

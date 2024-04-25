@@ -73,7 +73,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)

@@ -27,7 +27,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on category.name }
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
@@ -42,8 +42,8 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
-      wait_cbox_close do
-        wait_cbox_close { click_on "keyvisual.jpg" }
+      wait_for_cbox_closed do
+        wait_for_cbox_closed { click_on "keyvisual.jpg" }
       end
       within '#selected-files' do
         expect(page).to have_css('.name', text: 'keyvisual.jpg')
@@ -159,7 +159,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on category.name }
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)

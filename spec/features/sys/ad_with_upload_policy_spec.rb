@@ -29,7 +29,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
         expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on 'keyvisual.jpg'
         end
       end

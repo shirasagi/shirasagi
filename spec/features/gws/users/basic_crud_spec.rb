@@ -29,7 +29,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on site.name }
+        wait_for_cbox_closed { click_on site.name }
       end
       within "form#item-form" do
         within first('.mod-gws-user-groups') do
@@ -140,7 +140,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on site.name }
+        wait_for_cbox_closed { click_on site.name }
       end
       within "form#item-form" do
         within first('.mod-gws-user-groups') do
@@ -212,7 +212,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on site.name }
+        wait_for_cbox_closed { click_on site.name }
       end
       within 'form#item-form' do
         within first('.mod-gws-user-groups') do

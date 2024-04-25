@@ -37,7 +37,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       end
       within_cbox do
         expect(page).to have_content(user2.long_name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on user2.long_name
         end
       end
@@ -282,7 +282,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       end
       within_cbox do
         expect(page).to have_content(user2.long_name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on user2.long_name
         end
       end

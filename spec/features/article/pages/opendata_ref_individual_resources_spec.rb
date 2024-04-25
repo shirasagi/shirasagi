@@ -82,7 +82,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on opendata_dataset1.name
         end
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
@@ -255,7 +255,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on opendata_dataset1.name
         end
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
@@ -360,7 +360,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on opendata_dataset2.name
         end
         within "div.od-resource-file[data-file-id='#{file2.id}']" do

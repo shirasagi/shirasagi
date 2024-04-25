@@ -34,7 +34,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     end
     within_cbox do
       within ".items" do
-        wait_cbox_close { click_on user1.name }
+        wait_for_cbox_closed { click_on user1.name }
       end
     end
     within "#item-form" do

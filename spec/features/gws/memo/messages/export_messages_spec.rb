@@ -20,7 +20,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
-        wait_cbox_close { click_on memo.subject }
+        wait_for_cbox_closed { click_on memo.subject }
       end
       within "form#item-form" do
         expect(page).to have_content(memo.subject)
@@ -516,7 +516,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
-        wait_cbox_close { click_on memo.subject }
+        wait_for_cbox_closed { click_on memo.subject }
       end
       within "form#item-form" do
         expect(page).to have_content(memo.subject)
@@ -531,7 +531,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
-        wait_cbox_close { click_on memo.subject }
+        wait_for_cbox_closed { click_on memo.subject }
       end
       within "form#item-form" do
         expect(page).to have_content(memo.subject)

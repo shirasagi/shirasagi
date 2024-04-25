@@ -45,7 +45,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -163,7 +163,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -282,7 +282,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -402,7 +402,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_image
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end

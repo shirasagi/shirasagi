@@ -41,7 +41,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           wait_for_cbox_opened { click_on I18n.t("gws/affair.apis.special_leaves.index") }
         end
         within_cbox do
-          wait_cbox_close { click_on "病気休暇（公務）" }
+          wait_for_cbox_closed { click_on "病気休暇（公務）" }
         end
         within "form#item-form" do
           expect(page).to have_css(".select-special-leave", text: "病気休暇（公務）")
@@ -70,7 +70,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)

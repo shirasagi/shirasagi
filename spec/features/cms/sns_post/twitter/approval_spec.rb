@@ -69,7 +69,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on user1.long_name
             end
           end
@@ -151,7 +151,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on user1.long_name
             end
           end
@@ -242,7 +242,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on user1.long_name
             end
           end

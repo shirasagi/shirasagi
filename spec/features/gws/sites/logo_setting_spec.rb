@@ -25,7 +25,7 @@ describe "gws_sites", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
+          wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
         end
         within "form#item-form" do
           expect(page).to have_css(".ss-file-field", text: "keyvisual")

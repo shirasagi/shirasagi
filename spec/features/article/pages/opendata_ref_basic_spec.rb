@@ -351,7 +351,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
         end
       end
-      wait_cbox_close do
+      wait_for_cbox_closed do
         click_on Opendata::Dataset.site(od_site).first.name
       end
       click_on I18n.t('ss.buttons.publish_save')

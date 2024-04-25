@@ -65,7 +65,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on group1.trailing_name }
+        wait_for_cbox_closed { click_on group1.trailing_name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
@@ -101,7 +101,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on group2.trailing_name }
+        wait_for_cbox_closed { click_on group2.trailing_name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")

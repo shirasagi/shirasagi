@@ -27,7 +27,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         wait_for_cbox_opened { click_on I18n.t("cms.apis.layouts.index") }
       end
       within_cbox do
-        wait_cbox_close { click_on layout1.name }
+        wait_for_cbox_closed { click_on layout1.name }
       end
       within "form.search-pages" do
         expect(page).to have_content(layout1.name)

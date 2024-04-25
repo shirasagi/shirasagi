@@ -92,7 +92,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_css("span.select-single-item", text: member_node_my_anpi_post.name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           find("#cboxClose").click
         end
       end
@@ -107,7 +107,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_css("span.select-single-item", text: ezine_node_member_page.name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           find("#cboxClose").click
         end
       end

@@ -30,7 +30,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -76,7 +76,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -145,7 +145,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -199,7 +199,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end

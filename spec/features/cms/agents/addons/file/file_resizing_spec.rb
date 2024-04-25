@@ -50,7 +50,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         # after edit-dialog is canceled, confirm site-setting size is selected
         expect(page).to have_select('item[resizing]', selected: file_resizing_label)
 
-        wait_cbox_close do
+        wait_for_cbox_closed do
           wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
             click_on 'keyvisual.jpg'
           end

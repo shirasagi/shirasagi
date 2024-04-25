@@ -31,7 +31,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on gws_user.name
         end
       end
@@ -52,7 +52,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
           fill_in 's[keyword]', with: category.name
           click_on I18n.t('ss.buttons.search')
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on category.name
         end
       end

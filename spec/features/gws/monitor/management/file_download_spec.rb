@@ -84,7 +84,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
         end
       end
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on "shirasagi-user1-file1.pdf"
         end
       end
@@ -132,7 +132,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
         end
       end
       within_cbox do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on "shirasagi-user1-file2.pdf"
         end
       end

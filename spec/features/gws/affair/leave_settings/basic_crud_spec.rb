@@ -25,7 +25,7 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
           end
         end
         within_cbox do
-          wait_cbox_close { click_on user.name }
+          wait_for_cbox_closed { click_on user.name }
         end
 
         within "form#item-form" do
