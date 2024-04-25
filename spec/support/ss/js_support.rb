@@ -459,19 +459,21 @@ module SS
     # Usage
     #   wait_ckeditor_ready find(:fillable_field, "item[html]")
     #
-    def wait_ckeditor_ready(element)
+    def wait_for_ckeditor_ready(element)
       wait_for_js_ready
       page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
     end
+    alias wait_ckeditor_ready wait_for_ckeditor_ready
 
     #
     # Usage
     #   wait_all_ckeditors_ready
     #
-    def wait_all_ckeditors_ready
+    def wait_for_all_ckeditors_ready
       wait_for_js_ready
       page.evaluate_async_script(WAIT_ALL_CKEDITORS_READY_SCRIPT)
     end
+    alias wait_all_ckeditors_ready wait_for_all_ckeditors_ready
 
     # CKEditor に html を設定する
     #

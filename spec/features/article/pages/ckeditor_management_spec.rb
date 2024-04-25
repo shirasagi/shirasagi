@@ -26,7 +26,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     it do
       visit new_article_page_path(site: site, cid: node)
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 1
       expect(instances).to include("item_html")
@@ -40,7 +40,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 1
       expect(instances).to include("item_html")
@@ -54,7 +54,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
@@ -69,7 +69,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 3
       expect(instances).to include("item_html")
@@ -86,7 +86,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
@@ -101,7 +101,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 1
       expect(instances).to include("item_html")
@@ -115,7 +115,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
@@ -130,7 +130,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
