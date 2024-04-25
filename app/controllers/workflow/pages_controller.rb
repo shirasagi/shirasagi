@@ -30,6 +30,7 @@ class Workflow::PagesController < ApplicationController
     )
 
     @item.set_workflow_approver_state_to_request
+    @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.save
   end
@@ -95,6 +96,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
+    @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
@@ -119,6 +121,7 @@ class Workflow::PagesController < ApplicationController
   def restart_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
+    @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
@@ -164,6 +167,7 @@ class Workflow::PagesController < ApplicationController
       @item.approve_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     end
 
+    @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if @item.finish_workflow?
       @item.approved = Time.zone.now
@@ -174,6 +178,7 @@ class Workflow::PagesController < ApplicationController
       else
         @item.state = 'public'
       end
+      @item.record_timestamps = true
       @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
 
       if @item.respond_to?(:release_date)
@@ -250,6 +255,7 @@ class Workflow::PagesController < ApplicationController
     end
 
     @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])
+    @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
@@ -284,6 +290,7 @@ class Workflow::PagesController < ApplicationController
     # @item.workflow_user_id = nil
     @item.workflow_state = @model::WORKFLOW_STATE_CANCELLED
 
+    @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if @item.save
       render json: { notice: t('workflow.notice.request_cancelled') }
