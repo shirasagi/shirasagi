@@ -65,7 +65,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.name)
         wait_cbox_close { click_on user2.name }
       end
@@ -145,7 +145,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.name)
         wait_cbox_close do
           click_on user2.name
@@ -175,7 +175,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.name)
         wait_cbox_close do
           click_on user2.name

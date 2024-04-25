@@ -28,7 +28,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -57,7 +57,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           # upload file and confirmation
           wait_for_js_ready
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
@@ -93,7 +93,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
@@ -136,7 +136,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
@@ -165,7 +165,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           # upload file and confirmation
-          wait_for_cbox do
+          within_cbox do
             wait_for_js_ready
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
@@ -191,7 +191,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 

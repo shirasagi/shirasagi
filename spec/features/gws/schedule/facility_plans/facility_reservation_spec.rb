@@ -21,7 +21,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         within "form#item-form" do
           wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")
@@ -41,7 +41,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         within "form#item-form" do
           wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")
@@ -62,7 +62,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         within "form#item-form" do
           wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")
@@ -89,7 +89,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         within "form#item-form" do
           wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")

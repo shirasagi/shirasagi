@@ -36,7 +36,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -64,7 +64,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -99,7 +99,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -146,7 +146,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
             click_button I18n.t("ss.buttons.save")
             expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -203,7 +203,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             wait_cbox_close do
               click_on name
             end
@@ -280,7 +280,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("cms.file")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -309,7 +309,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("cms.file")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
@@ -376,7 +376,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", file_path
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
           page.accept_alert(/#{::Regexp.escape(alert)}/) do
@@ -399,7 +399,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", file_path
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
           page.accept_alert(/#{::Regexp.escape(alert)}/) do

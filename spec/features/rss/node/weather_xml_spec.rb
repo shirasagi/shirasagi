@@ -78,7 +78,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       wait_cbox_open do
         click_on I18n.t("jmaxml.apis.quake_regions.index")
       end
-      wait_for_cbox do
+      within_cbox do
         click_on region.name
       end
       within ".mod-rss-anpi-mail-setting-regions" do
@@ -90,7 +90,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("cms.apis.nodes.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css("span.select-single-item", text: member_node_my_anpi_post.name)
         wait_cbox_close do
           find("#cboxClose").click
@@ -105,7 +105,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("cms.apis.nodes.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css("span.select-single-item", text: ezine_node_member_page.name)
         wait_cbox_close do
           find("#cboxClose").click

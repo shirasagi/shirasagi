@@ -53,24 +53,24 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
       end
 
       # search
-      wait_for_cbox do
+      within_cbox do
         fill_in "s[keyword]", with: I18n.t("opendata.links.dataset_map_search_datasets")
         first('input[name="commit"]').click
       end
       expect(page).to have_no_css(".dataset-name", text: item11.name)
 
       # reset
-      wait_for_cbox do
+      within_cbox do
         first("a", text: I18n.t("ss.buttons.reset")).click
       end
       expect(page).to have_css(".dataset-name", text: item11.name)
 
       # select
-      wait_for_cbox do
+      within_cbox do
         fill_in "s[keyword]", with: I18n.t("opendata.links.dataset_map_search_datasets")
       end
 
-      wait_for_cbox do
+      within_cbox do
         first("a", text: item11.name).click
       end
 
@@ -79,11 +79,11 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
       end
 
       # pagination
-      wait_for_cbox do
+      within_cbox do
         click_on I18n.t("views.pagination.next")
       end
 
-      wait_for_cbox do
+      within_cbox do
         first("a", text: item1.name).click
       end
 

@@ -23,7 +23,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
             first(".btn-file-upload").click
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
         end

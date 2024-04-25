@@ -35,7 +35,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/image"))
         wait_cbox_open { first(".btn-file-upload").click }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".file-view", text: file1.name)
         click_on file1.name
       end
@@ -61,7 +61,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/image"))
         wait_cbox_open { first(".btn-file-upload").click }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".file-view", text: file2.name)
         click_on file2.name
       end

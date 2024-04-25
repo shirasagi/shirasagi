@@ -42,7 +42,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
@@ -66,7 +66,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready
@@ -160,7 +160,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
@@ -184,7 +184,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready
@@ -279,7 +279,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
           wait_cbox_close do
@@ -303,7 +303,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready
@@ -399,7 +399,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_image
           wait_cbox_close do
@@ -427,7 +427,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready

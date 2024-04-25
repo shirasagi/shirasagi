@@ -31,7 +31,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
         wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
       end

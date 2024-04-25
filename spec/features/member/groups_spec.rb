@@ -31,7 +31,7 @@ describe "member_groups", type: :feature, js: true do
         wait_cbox_open { click_on I18n.t("cms.apis.members.index") }
       end
 
-      wait_for_cbox do
+      within_cbox do
         first('#ajax-box th [type="checkbox"]').set(true)
         click_on I18n.t("cms.apis.members.select")
         wait_for_ajax

@@ -291,7 +291,7 @@ module SS
       yield if block_given?
     end
 
-    def wait_for_cbox(&block)
+    def within_cbox(&block)
       wait_for_js_ready
       have_css("#cboxClose", text: "close")
       if block
@@ -304,6 +304,8 @@ module SS
         end
       end
     end
+    # old(obsolete) method
+    alias wait_for_cbox within_cbox
 
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")

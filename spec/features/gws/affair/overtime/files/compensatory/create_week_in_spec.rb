@@ -70,7 +70,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           click_on I18n.t("workflow.buttons.select")
           wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
           wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
@@ -103,7 +103,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.set_results") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
           within "#ajax-box" do
             click_on I18n.t("ss.buttons.save")
@@ -117,7 +117,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           wait_for_js_ready
           wait_cbox_open { click_on I18n.t("gws/affair.links.edit_results") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css("#addon-gws-agents-addons-affair-overtime_file")
           within "#ajax-box" do
             click_on I18n.t("ss.buttons.save")

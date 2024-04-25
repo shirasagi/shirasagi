@@ -28,7 +28,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on gws_user.name
         end
@@ -111,7 +111,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_cbox_close do
             click_on folder0.name
           end
@@ -126,7 +126,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_cbox_close do
             click_on gws_user.name
           end
@@ -200,7 +200,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_cbox_close do
             click_on gws_user.name
           end
@@ -244,7 +244,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on folder1.name
         end

@@ -44,7 +44,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
               click_on I18n.t("ss.links.upload")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             wait_cbox_close do
               click_on file.name
             end

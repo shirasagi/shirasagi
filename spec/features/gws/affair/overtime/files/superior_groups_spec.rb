@@ -63,7 +63,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         click_on I18n.t("workflow.buttons.select")
         wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".search-ui-form" do
           expect(page).to have_css("input[name=\"s[group]\"][value=\"#{superior_group.id}\"]")
         end

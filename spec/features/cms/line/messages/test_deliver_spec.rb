@@ -71,7 +71,7 @@ describe "cms/line/messages test_deliver", type: :feature, dbscope: :example, js
     within selector do
       wait_cbox_open { first(".ajax-box", text: "確認する").click }
     end
-    wait_for_cbox do
+    within_cbox do
       expect(page).to have_text(targets_count)
       targets.each do |member|
         expect(page).to have_css(".list-item", text: member.name)

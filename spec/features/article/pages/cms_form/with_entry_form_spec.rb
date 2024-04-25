@@ -225,7 +225,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
           click_on I18n.t('ss.buttons.attach')
         end
@@ -290,7 +290,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
@@ -373,7 +373,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
           click_on I18n.t('ss.buttons.attach')
         end
@@ -406,7 +406,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
@@ -595,7 +595,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
           wait_cbox_close do
             click_on I18n.t('ss.buttons.attach')
@@ -618,7 +618,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
           wait_cbox_close do
             click_on I18n.t('ss.buttons.attach')
@@ -677,7 +677,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
@@ -791,7 +791,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t("ss.links.upload") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
           click_on I18n.t('ss.buttons.attach')
         end
@@ -823,7 +823,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)

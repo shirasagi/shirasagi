@@ -28,7 +28,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on site.name }
       end
       within "form#item-form" do
@@ -139,7 +139,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on site.name }
       end
       within "form#item-form" do
@@ -211,7 +211,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on site.name }
       end
       within 'form#item-form' do

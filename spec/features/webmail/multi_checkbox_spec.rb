@@ -41,7 +41,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_ids#{address1.id}"
             check "cc_ids#{address2.id}"
             check "bcc_ids#{address3.id}"
@@ -98,7 +98,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_all"
             check "cc_all"
             check "bcc_all"
@@ -161,7 +161,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             wait_cbox_close { click_on address1.name }
           end
           within 'form#item-form' do
@@ -207,7 +207,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_ids#{user1.id}"
             check "cc_ids#{user2.id}"
             check "bcc_ids#{user3.id}"
@@ -264,7 +264,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_all"
             check "cc_all"
             check "bcc_all"
@@ -327,7 +327,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             wait_cbox_close { click_on user1.name }
           end
           within 'form#item-form' do
@@ -382,7 +382,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_ids#{address1.id}"
             check "cc_ids#{address2.id}"
             check "bcc_ids#{address3.id}"
@@ -439,7 +439,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_all"
             check "cc_all"
             check "bcc_all"
@@ -502,7 +502,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
               wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             wait_cbox_close { click_on address1.name }
           end
           within 'form#item-form' do

@@ -78,7 +78,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.edit")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "item[text]", with: text
         fill_in "item[achievement_rate]", with: "20"
         select "1", from: "item[in_worktime_hours]"
@@ -105,7 +105,7 @@ describe "gws_workload_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.delete")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         click_on I18n.t("ss.buttons.delete")
       end
       wait_for_notice I18n.t('ss.notice.deleted')

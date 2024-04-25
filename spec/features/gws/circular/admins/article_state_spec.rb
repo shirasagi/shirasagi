@@ -35,7 +35,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "table.index [data-user-id='#{user1.id}']" do
           seen_at = post1.seen_at(user1)
           expect(page).to have_css("td.browsed", text: I18n.t('gws/board.options.browsed_state.read'))

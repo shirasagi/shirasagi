@@ -31,7 +31,7 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.search_approvers.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user.long_name)
         wait_cbox_close do
           click_on user.long_name

@@ -31,7 +31,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", files
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -49,7 +49,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", add_file
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -88,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", files
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -106,7 +106,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", add_file
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -149,7 +149,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", files
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -167,7 +167,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", add_file
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -206,7 +206,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", files
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -224,7 +224,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", add_file
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -280,7 +280,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", files
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -298,7 +298,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", add_file
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -352,7 +352,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", files
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")
@@ -370,7 +370,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", add_file
           wait_cbox_close do
             click_button I18n.t("ss.buttons.attach")

@@ -40,7 +40,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("workflow.search_approvers.index")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           wait_cbox_close do

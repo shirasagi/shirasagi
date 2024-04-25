@@ -17,7 +17,7 @@ describe "member_agents_parts_photo_search", type: :feature, dbscope: :example, 
       visit node.url
 
       wait_cbox_open { click_on I18n.t("member.buttons.detail_search") }
-      wait_for_cbox do
+      within_cbox do
         click_on I18n.t('facility.submit.reset')
         click_on I18n.t('facility.submit.search')
       end

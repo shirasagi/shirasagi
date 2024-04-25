@@ -37,7 +37,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.select")
         wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user1.long_name)
         click_on user1.long_name
       end
@@ -45,7 +45,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       within ".mod-workflow-request" do
         wait_cbox_open { click_on I18n.t("workflow.search_circulations.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end

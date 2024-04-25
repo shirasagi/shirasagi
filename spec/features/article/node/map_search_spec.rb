@@ -25,7 +25,7 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within ".mod-article" do
           click_on I18n.t("cms.nodes.article/map_search")
         end

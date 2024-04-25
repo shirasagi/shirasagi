@@ -22,7 +22,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       #new
       visit new_path
       wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
-      wait_for_cbox do
+      within_cbox do
         click_on group.name
       end
 
@@ -116,7 +116,7 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       visit new_path
       wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on group.name }
       end
 

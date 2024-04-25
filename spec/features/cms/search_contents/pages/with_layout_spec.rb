@@ -26,7 +26,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
       within "form.search-pages" do
         wait_cbox_open { click_on I18n.t("cms.apis.layouts.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on layout1.name }
       end
       within "form.search-pages" do

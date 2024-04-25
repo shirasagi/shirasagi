@@ -30,7 +30,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within ".mod-article" do
           click_on I18n.t("cms.nodes.article/page")
         end
@@ -46,7 +46,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on form.name
         end

@@ -21,7 +21,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "[data-group-id='#{contact_group.id}']" do
           wait_cbox_close { click_on contact_group.section_name }
         end

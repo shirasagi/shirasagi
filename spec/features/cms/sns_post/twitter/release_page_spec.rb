@@ -103,7 +103,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -188,7 +188,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
             wait_cbox_close do
               click_on user1.long_name
@@ -281,7 +281,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -361,7 +361,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -396,7 +396,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -446,7 +446,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -506,7 +506,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
             click_on user1.long_name
           end

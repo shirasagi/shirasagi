@@ -42,7 +42,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         wait_cbox_close do
           click_on I18n.t('ss.buttons.attach')
@@ -56,7 +56,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
         expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("cms.column_file_upload.image.file_label_place_holder"))
       end
-      wait_for_cbox do
+      within_cbox do
         click_on I18n.t("ss.buttons.ignore_alert")
       end
       wait_for_notice I18n.t("ss.notice.saved")

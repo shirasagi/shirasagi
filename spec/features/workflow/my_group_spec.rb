@@ -42,7 +42,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -160,7 +160,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -256,7 +256,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -356,7 +356,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click

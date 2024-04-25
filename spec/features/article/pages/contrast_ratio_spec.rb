@@ -25,7 +25,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file1.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -49,7 +49,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               js_click first(".file-view[data-file-id='#{file1.id}'] a")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             within "#ss-file-view" do
               fill_in "foreground-color", with: "#ffffff" + "\n"
               fill_in "background-color", with: "#ffffff" + "\n"
@@ -91,7 +91,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               first(".file-view[data-file-id='#{file1.id}'] a").click
             end
           end
-          wait_for_cbox do
+          within_cbox do
             within "#ss-file-view" do
               fill_in "foreground-color", with: "#ffffff" + "\n"
               fill_in "background-color", with: "#ffffff" + "\n"
@@ -107,7 +107,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               first(".file-view[data-file-id='#{file2.id}'] a").click
             end
           end
-          wait_for_cbox do
+          within_cbox do
             within "#ss-file-view" do
               fill_in "foreground-color", with: "#ffffff" + "\n"
               fill_in "background-color", with: "#ffffff" + "\n"
@@ -134,7 +134,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file1.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -156,7 +156,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.buttons.upload")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
               wait_cbox_close do
                 js_click first(".file-view[data-file-id='#{file2.id}'] a")
@@ -169,7 +169,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file2.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -213,7 +213,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file1.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -229,7 +229,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file2.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -253,7 +253,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 end
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
               wait_cbox_close do
                 js_click first(".file-view[data-file-id='#{file3.id}'] a")
@@ -266,7 +266,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file3.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -283,7 +283,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 end
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file4.id}']", text: file4.name)
               wait_cbox_close do
                 js_click first(".file-view[data-file-id='#{file4.id}'] a")
@@ -296,7 +296,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 first(".file-view[data-file-id='#{file4.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"

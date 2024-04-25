@@ -62,7 +62,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         within "form#item-form" do
           wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
           click_on I18n.t("ss.buttons.ignore_alert")
         end

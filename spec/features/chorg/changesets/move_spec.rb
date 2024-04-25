@@ -71,7 +71,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       end
       wait_event_to_fire "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_move") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end
@@ -281,7 +281,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       end
       wait_event_to_fire "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_move") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end

@@ -45,7 +45,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     within '.today-box .today .action .enter' do
       wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
     end
-    wait_for_cbox do
+    within_cbox do
       hour, min = before_value.split(":")
       expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: I18n.t("gws/attendance.hour", count: hour))
       expect(page).to have_css('[name="cell[in_minute]"] [selected]', text: I18n.t("gws/attendance.minute", count: min))
@@ -64,7 +64,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     within '.today-box .today .action .leave' do
       wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
     end
-    wait_for_cbox do
+    within_cbox do
       hour, min = before_value.split(":")
       expect(page).to have_css('[name="cell[in_day]"] [selected]', text: before_day)
       expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: I18n.t("gws/attendance.hour", count: hour))

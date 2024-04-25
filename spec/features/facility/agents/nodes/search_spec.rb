@@ -22,7 +22,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_no_selector('.no-marker')
 
       wait_cbox_open { click_link I18n.t('facility.submit.change') }
-      wait_for_cbox do
+      within_cbox do
         click_button I18n.t('facility.submit.reset')
         click_button I18n.t('facility.submit.search')
       end
@@ -37,7 +37,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_selector('div.columns')
 
       wait_cbox_open { click_link I18n.t('facility.submit.change') }
-      wait_for_cbox do
+      within_cbox do
         fill_in 'keyword', with: unique_id
         click_button I18n.t('facility.submit.search')
       end
@@ -67,7 +67,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_no_selector('.no-marker')
 
       wait_cbox_open { click_link I18n.t('facility.submit.change') }
-      wait_for_cbox do
+      within_cbox do
         click_button I18n.t('facility.submit.reset')
         click_button I18n.t('facility.submit.search')
       end
@@ -82,7 +82,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_selector('div.columns')
 
       wait_cbox_open { click_link I18n.t('facility.submit.change') }
-      wait_for_cbox do
+      within_cbox do
         fill_in 'keyword', with: unique_id
         click_button I18n.t('facility.submit.search')
       end
@@ -118,7 +118,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_no_selector('.no-marker')
 
       wait_cbox_open { click_link I18n.t('facility.submit.change') }
-      wait_for_cbox do
+      within_cbox do
         click_button I18n.t('facility.submit.reset')
         click_button I18n.t('facility.submit.search')
       end
@@ -133,7 +133,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_selector('div.columns')
 
       wait_cbox_open { click_link I18n.t('facility.submit.change') }
-      wait_for_cbox do
+      within_cbox do
         fill_in 'keyword', with: unique_id
         click_button I18n.t('facility.submit.search')
       end

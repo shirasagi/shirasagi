@@ -33,7 +33,7 @@ describe "cms_translate_site_setting", type: :feature, dbscope: :example, js: tr
           first('[name="item[translate_source_id]"] + .ajax-box').click
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on lang_ja.name
         end
@@ -44,7 +44,7 @@ describe "cms_translate_site_setting", type: :feature, dbscope: :example, js: tr
           first('[name="item[translate_target_ids][]"] + .ajax-box').click
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on lang_en.name
         end

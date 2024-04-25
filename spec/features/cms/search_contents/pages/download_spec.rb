@@ -39,7 +39,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         wait_cbox_open do
           click_on I18n.t("cms.apis.categories.index")
         end
-        wait_for_cbox do
+        within_cbox do
           wait_cbox_close do
             click_on site1_category1.name
           end
@@ -69,7 +69,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         wait_cbox_open do
           click_on I18n.t("cms.apis.categories.index")
         end
-        wait_for_cbox do
+        within_cbox do
           wait_cbox_close do
             click_on site2_category1.name
           end

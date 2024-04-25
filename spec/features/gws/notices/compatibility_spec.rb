@@ -56,7 +56,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(folder.name)
         click_on folder.name
       end

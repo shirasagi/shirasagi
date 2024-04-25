@@ -39,7 +39,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".mod-gws-survey-custom_form", text: column1.name)
         end
       end
@@ -61,7 +61,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".mod-gws-survey-custom_form", text: column1.name)
         end
       end

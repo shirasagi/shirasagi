@@ -106,7 +106,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -139,7 +139,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -174,7 +174,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               click_on I18n.t("ss.buttons.upload")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             attach_file "item[in_files][]", attach_file_path
             wait_cbox_close do
               click_button I18n.t("ss.buttons.attach")
@@ -197,7 +197,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -224,7 +224,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               click_on I18n.t("ss.buttons.upload")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             attach_file "item[in_files][]", attach_file_path
             wait_cbox_close do
               click_button I18n.t("ss.buttons.attach")
@@ -247,7 +247,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -291,7 +291,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
@@ -321,7 +321,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end

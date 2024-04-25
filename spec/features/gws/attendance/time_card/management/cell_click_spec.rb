@@ -44,7 +44,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           within ".cell-edit" do
             select hour_label, from: "cell[in_hour]"
             select min_label, from: "cell[in_minute]"
@@ -85,7 +85,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           within ".cell-edit" do
             select hour_label, from: "cell[in_hour]"
             select min_label, from: "cell[in_minute]"

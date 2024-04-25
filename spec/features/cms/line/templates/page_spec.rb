@@ -53,7 +53,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/page"))
         wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
         wait_cbox_close { click_on page1.name }
       end
@@ -87,7 +87,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/page"))
         wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
         wait_cbox_close { click_on page2.name }
       end
@@ -144,7 +144,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       within "#addon-cms-agents-addons-line-template-page" do
         wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
         wait_cbox_close { click_on page1.name }
       end
@@ -162,7 +162,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       within "#addon-cms-agents-addons-line-template-page" do
         wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
         wait_cbox_close { click_on page2.name }
       end
@@ -211,7 +211,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       within "#addon-cms-agents-addons-line-template-page" do
         wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
         wait_cbox_close { click_on page1.name }
       end
@@ -239,7 +239,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       within "#addon-cms-agents-addons-line-template-page" do
         wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
         wait_cbox_close { click_on page2.name }
       end

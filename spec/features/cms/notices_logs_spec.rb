@@ -25,7 +25,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")

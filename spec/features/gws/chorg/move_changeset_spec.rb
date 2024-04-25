@@ -20,7 +20,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
         fill_in "item[destinations[][name]]", with: name
         wait_cbox_open { click_on I18n.t("chorg.views.move_changesets.select_group") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on group0.trailing_name }
       end
       within "form#item-form" do

@@ -65,7 +65,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       within "#addon-gws-agents-addons-schedule-approval" do
         choose "item_approvals_facility-#{facility1.id}_state_approve"
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "comment[text]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
@@ -113,7 +113,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       within "#addon-gws-agents-addons-schedule-approval" do
         choose "item_approvals_facility-#{facility1.id}_state_deny"
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "comment[text]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end

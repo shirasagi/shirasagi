@@ -23,7 +23,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         click_on user1.name
       end
       within "form#item-form" do
@@ -180,7 +180,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('gws.apis.categories.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         click_on cate1.name
       end
 
@@ -189,7 +189,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         click_on user1.name
       end
 
@@ -229,7 +229,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         click_on user1.name
       end
       within "form#item-form" do
@@ -321,7 +321,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         # click_on user1.name
         first("[data-id='#{user1.id}'] input[type='checkbox']").click
         # click_on user2.name

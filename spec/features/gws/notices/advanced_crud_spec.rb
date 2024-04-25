@@ -49,7 +49,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(site.name)
         find('.dd-group button.dropdown.btn').click
         within '.dd-group .dropdown-container' do
@@ -64,7 +64,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(site.name)
         find('.dd-group button.dropdown.btn').click
         within '.dd-group .dropdown-container' do
@@ -111,7 +111,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in 'item[text]', with: notice_text
         wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on cate.name }
       end
       within 'form#item-form' do

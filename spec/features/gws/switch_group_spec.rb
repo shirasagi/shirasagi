@@ -87,7 +87,7 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         # モーダルでも「グループ（既定）」が設定されていることを確認する
         expect(page).to have_css(".list-item", text: user_in_default_group.long_name)
       end
@@ -124,7 +124,7 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         # モーダルでも「グループ（既定）」が設定されていることを確認する
         expect(page).to have_css(".list-item", text: user_in_group2.long_name)
       end

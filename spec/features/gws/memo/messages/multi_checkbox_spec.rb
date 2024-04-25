@@ -24,7 +24,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           check "to_ids#{user1.id}"
           check "cc_ids#{user2.id}"
           check "bcc_ids#{user3.id}"
@@ -81,7 +81,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           check "to_all"
           check "cc_all"
           check "bcc_all"
@@ -163,7 +163,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           check "to_ids#{address1.id}"
           check "cc_ids#{address2.id}"
           check "bcc_ids#{address3.id}"
@@ -219,7 +219,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           click_on I18n.t('mongoid.models.gws/shared_address/group')
           check "to_ids#{group1.id}"
           check "cc_ids#{group2.id}"
@@ -277,7 +277,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           check "to_all"
           check "cc_all"
           check "bcc_all"
@@ -342,7 +342,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           click_on I18n.t('mongoid.models.gws/shared_address/group')
           check "g_to_all"
           check "g_cc_all"
@@ -423,7 +423,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           check "to_ids#{address1.id}"
           check "cc_ids#{address2.id}"
           check "bcc_ids#{address3.id}"
@@ -479,7 +479,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           click_on I18n.t('mongoid.models.webmail/address_group')
           check "to_ids#{address_group1.id}"
           check "cc_ids#{address_group2.id}"
@@ -536,7 +536,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           check "to_all"
           check "cc_all"
           check "bcc_all"
@@ -603,7 +603,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           click_on I18n.t('mongoid.models.webmail/address_group')
           check "p_to_all"
           check "p_cc_all"

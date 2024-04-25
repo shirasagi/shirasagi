@@ -29,7 +29,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "article.file-view" do
           wait_cbox_close do
             click_on file.name

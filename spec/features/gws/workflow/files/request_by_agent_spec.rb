@@ -56,21 +56,21 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         choose "agent_type_agent"
         wait_cbox_open { click_on I18n.t("gws/workflow.search_delegatees.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on user1.long_name }
       end
       within ".mod-workflow-request" do
         expect(page).to have_css(".agent-type-agent", text: user1.long_name)
         wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on user2.long_name }
       end
       within ".mod-workflow-request" do
         expect(page).to have_css(".index.approvers", text: user2.long_name)
         wait_cbox_open { click_on I18n.t("workflow.search_circulations.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on user3.long_name }
       end
       within ".mod-workflow-request" do

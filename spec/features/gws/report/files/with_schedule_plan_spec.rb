@@ -57,7 +57,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("gws/report.apis.files.index") }
         end
 
-        wait_for_cbox do
+        within_cbox do
           within ".index .items" do
             # file1 is unable to view because file1 is closed
             expect(page).to have_no_css(".list-item", text: file1.name)

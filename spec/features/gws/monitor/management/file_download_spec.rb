@@ -83,7 +83,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on "shirasagi-user1-file1.pdf"
         end
@@ -131,7 +131,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on "shirasagi-user1-file2.pdf"
         end

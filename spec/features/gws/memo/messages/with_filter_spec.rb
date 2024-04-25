@@ -28,7 +28,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -78,7 +78,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -130,7 +130,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -181,7 +181,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -232,7 +232,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -283,7 +283,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -334,7 +334,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end
@@ -385,7 +385,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
         wait_cbox_close { click_on gws_user.name }
       end

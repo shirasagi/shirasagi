@@ -24,7 +24,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on gws_user.long_name
         end

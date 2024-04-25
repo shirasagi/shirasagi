@@ -22,7 +22,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       select I18n.t('gws/board.options.browsed_state.unread')
       wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
     end
-    wait_for_cbox do
+    within_cbox do
       click_link notice_folder.name
     end
     within 'form#item-form' do

@@ -26,7 +26,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on category.name }
       end
       within "form#item-form" do
@@ -35,7 +35,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on ss_file.name }
       end
       within "form#item-form" do

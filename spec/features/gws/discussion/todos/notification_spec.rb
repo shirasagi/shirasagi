@@ -168,7 +168,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(comment_text)
 
         fill_in "item[achievement_rate]", with: achievement_rate2
@@ -202,7 +202,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("ss.buttons.delete") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(comment_text2)
         click_on I18n.t("ss.buttons.delete")
       end

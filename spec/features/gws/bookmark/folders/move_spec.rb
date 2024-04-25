@@ -95,7 +95,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_no_link(folder.name)
@@ -181,7 +181,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_link(folder.name)
@@ -220,7 +220,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_link(folder.name)

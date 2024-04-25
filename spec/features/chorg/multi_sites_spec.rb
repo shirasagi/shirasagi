@@ -17,7 +17,7 @@ describe 'chorg_results', type: :feature, dbscope: :example, js: true do
       wait_cbox_open do
         click_on I18n.t("cms.apis.sites.index")
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: site1.name)
         expect(page).to have_no_content(site2.name)
       end

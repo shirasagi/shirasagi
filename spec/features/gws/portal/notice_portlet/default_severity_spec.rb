@@ -45,7 +45,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_link folder.name }
       end
       within 'form#item-form' do
@@ -118,7 +118,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         select I18n.t('gws/notice.options.severity.high'), from: "item[notice_severity]"
         wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_link folder.name }
       end
       within 'form#item-form' do
@@ -191,7 +191,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         select I18n.t('gws/notice.options.severity.normal'), from: "item[notice_severity]"
         wait_cbox_open { click_link I18n.t('gws/share.apis.folders.index') }
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_link folder.name }
       end
       within 'form#item-form' do

@@ -91,7 +91,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       end
       wait_event_to_fire "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_unify") do
-          wait_for_cbox do
+          within_cbox do
             within("[data-id='#{group1.id}']") { first('[type="checkbox"]').click }
             within("[data-id='#{group2.id}']") { first('[type="checkbox"]').click }
             click_on I18n.t("ss.apis.groups.select")

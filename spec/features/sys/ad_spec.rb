@@ -22,7 +22,7 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(ss_file.name)
         click_on ss_file.name
       end

@@ -170,7 +170,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/opendata/resource.pdf"
         wait_cbox_close do
           click_on I18n.t("ss.buttons.attach")

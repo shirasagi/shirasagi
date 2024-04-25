@@ -22,7 +22,7 @@ describe "article_agents_nodes_map_search", type: :feature, dbscope: :example, j
       expect(page).to have_css("#map-canvas")
 
       wait_cbox_open { find('.map-search-change').click }
-      wait_for_cbox do
+      within_cbox do
         click_button I18n.t('facility.submit.search')
       end
       expect(page).to have_css(".map-search-result")

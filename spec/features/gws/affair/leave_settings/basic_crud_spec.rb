@@ -24,7 +24,7 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
             wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_cbox_close { click_on user.name }
         end
 

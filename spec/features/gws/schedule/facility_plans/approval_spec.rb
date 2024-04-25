@@ -28,7 +28,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           wait_cbox_open { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           fill_in "comment[text]", with: comment_text1
           click_on I18n.t("ss.buttons.save")
@@ -78,7 +78,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           wait_cbox_open { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           fill_in "comment[text]", with: comment_text1
           click_on I18n.t("ss.buttons.save")
@@ -100,7 +100,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           wait_cbox_open { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           fill_in "comment[text]", with: comment_text2
           click_on I18n.t("ss.buttons.save")
@@ -122,7 +122,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           wait_cbox_open { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           fill_in "comment[text]", with: comment_text3
           click_on I18n.t("ss.buttons.save")
@@ -163,7 +163,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           wait_cbox_open { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           fill_in "comment[text]", with: comment_text1
           click_on I18n.t("ss.buttons.save")

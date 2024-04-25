@@ -56,7 +56,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.select")
           wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
           wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }

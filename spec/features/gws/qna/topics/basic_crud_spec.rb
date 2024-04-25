@@ -39,7 +39,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
       Timecop.freeze(now) do
         visit new_path
         wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
-        wait_for_cbox do
+        within_cbox do
           click_on category.name
         end
 

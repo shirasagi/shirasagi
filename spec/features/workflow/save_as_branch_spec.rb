@@ -106,7 +106,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_public_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -120,7 +120,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_closed_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -138,7 +138,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_public_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -152,7 +152,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_closed_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -292,7 +292,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_public_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -306,7 +306,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_closed_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -324,7 +324,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_public_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -339,7 +339,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_closed_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -487,7 +487,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_public_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -501,7 +501,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_closed_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -519,7 +519,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_public_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end
@@ -533,7 +533,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
           visit edit_closed_item_path
           # 保存ボタンの再配置完了を待つ手段がないため、代わりに CKEditor　の完了を待つ
           wait_ckeditor_ready("item[html]")
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("h2", text: I18n.t("workflow.confirm.would_you_edit_branch"))
             wait_cbox_close { click_on I18n.t("workflow.links.continue_to_edit_master") }
           end

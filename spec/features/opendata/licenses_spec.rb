@@ -29,7 +29,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
           wait_cbox_open { first(".btn-file-upload").click }
         end
-        wait_for_cbox do
+        within_cbox do
           # click_on file.name
           expect(page).to have_css(".file-view", text: file.name)
           click_on file.name

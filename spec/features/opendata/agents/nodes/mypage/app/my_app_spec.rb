@@ -63,7 +63,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         check category.name
         click_link I18n.t("opendata.search_datasets.index")
       end
-      wait_for_cbox do
+      within_cbox do
         click_link I18n.t('views.pagination.next')
         wait_cbox_close do
           click_link dataset1.name
@@ -92,7 +92,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         check category.name
         click_link I18n.t("opendata.search_datasets.index")
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "s[name]", with: dataset2.name
         click_button I18n.t("opendata.search_datasets.search")
         wait_cbox_close do

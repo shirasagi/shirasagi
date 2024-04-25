@@ -31,7 +31,7 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")

@@ -254,7 +254,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   it "search with categories" do
     visit pages_index_path
     wait_cbox_open { click_on I18n.t("cms.apis.categories.index") }
-    wait_for_cbox do
+    within_cbox do
       click_on cate_name1
     end
     expect(page).to have_css(".mod-cms-page-search", text: cate_name1)
@@ -266,7 +266,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   it "search with opendata categories" do
     visit pages_index_path
     wait_cbox_open { click_on I18n.t("cms.apis.categories.index") }
-    wait_for_cbox do
+    within_cbox do
       click_on opendata_cate_name1
     end
     expect(page).to have_css(".mod-cms-page-search", text: opendata_cate_name1)
@@ -278,7 +278,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   it "search with groups" do
     visit pages_index_path
     wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
-    wait_for_cbox do
+    within_cbox do
       click_on cms_group.name
     end
     expect(page).to have_css(".mod-cms-page-search", text: cms_group.name)
@@ -294,7 +294,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   it "search with user" do
     visit pages_index_path
     wait_cbox_open { click_on I18n.t("cms.apis.users.index") }
-    wait_for_cbox do
+    within_cbox do
       click_on user.name
     end
     expect(page).to have_css(".mod-cms-page-search", text: user.name)
@@ -306,7 +306,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
   it "search with nodes" do
     visit pages_index_path
     wait_cbox_open { click_on I18n.t("cms.apis.nodes.index") }
-    wait_for_cbox do
+    within_cbox do
       click_on node_name
     end
     expect(page).to have_css(".mod-cms-page-search", text: node_name)
@@ -321,7 +321,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     visit pages_index_path
     wait_cbox_open { click_on I18n.t("cms.apis.pages_routes.index") }
     page_route = I18n.t("modules.article") + "/" + I18n.t("mongoid.models.article/page")
-    wait_for_cbox do
+    within_cbox do
       click_on page_route
     end
     expect(page).to have_css(".mod-cms-page-search", text: page_route)

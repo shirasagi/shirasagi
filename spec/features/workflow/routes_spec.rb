@@ -27,7 +27,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           wait_cbox_open { click_on "グループを選択する" }
         end
 
-        wait_for_cbox do
+        within_cbox do
           within "table.index" do
             wait_cbox_close { click_on group.name }
           end
@@ -38,7 +38,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
             wait_cbox_open { click_on "承認者を選択する" }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           within "table.index tbody.items" do
             wait_cbox_close { click_on user.name }
           end

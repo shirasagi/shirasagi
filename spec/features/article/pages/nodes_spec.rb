@@ -19,7 +19,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within ".mod-article" do
           click_on I18n.t("cms.nodes.article/page")
         end
@@ -61,7 +61,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within ".mod-article" do
           click_on I18n.t("cms.nodes.article/page")
         end
@@ -78,7 +78,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close do
           click_on form.name
         end

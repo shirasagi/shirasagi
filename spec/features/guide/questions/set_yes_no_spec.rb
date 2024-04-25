@@ -33,7 +33,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         choose "item_question_type_yes_no"
         wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
@@ -46,7 +46,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{procedure1.id}']", text: procedure1.id_name)
         wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           click_on I18n.t("guide.question")
         end
@@ -60,7 +60,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{question1.id}']", text: question1.id_name)
         wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
@@ -75,7 +75,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{procedure2.id}']", text: procedure2.id_name)
         wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           click_on I18n.t("guide.question")
         end

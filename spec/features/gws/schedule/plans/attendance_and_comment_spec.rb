@@ -22,7 +22,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box #item-form" do
           fill_in "comment[text]", with: user_comment
           click_on I18n.t("ss.buttons.save")
