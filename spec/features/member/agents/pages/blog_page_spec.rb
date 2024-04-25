@@ -45,7 +45,7 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
         fill_in 'item[name]', with: blog_page_name
         fill_in_ckeditor 'item[html]', with: blog_page_html
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end

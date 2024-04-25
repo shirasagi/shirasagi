@@ -29,7 +29,7 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
 
       visit "#{path}/#{item.id}/edit"
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
+        wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
       end
       within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"

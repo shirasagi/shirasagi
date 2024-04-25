@@ -32,7 +32,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: item_subject
             fill_in "item[text]", with: item_texts.join("\n")
 
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end

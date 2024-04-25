@@ -54,7 +54,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           fill_in "item[name]", with: plan_name
-          wait_cbox_open { click_on I18n.t("gws/report.apis.files.index") }
+          wait_for_cbox_opened { click_on I18n.t("gws/report.apis.files.index") }
         end
 
         within_cbox do

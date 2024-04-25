@@ -30,7 +30,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         msg = I18n.t('gws/circular.seen_user_info.format', count: count, total: total)
         expect(page).to have_css("dd", text: msg)
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t('gws/circular.seen_user_info.more')
         end
       end

@@ -38,7 +38,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           fill_in "item[reason]", with: reason
           select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
 
-          wait_cbox_open { click_on I18n.t("gws/affair.apis.special_leaves.index") }
+          wait_for_cbox_opened { click_on I18n.t("gws/affair.apis.special_leaves.index") }
         end
         within_cbox do
           wait_cbox_close { click_on "病気休暇（公務）" }
@@ -65,7 +65,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
         within_cbox do
           expect(page).to have_content(user545.long_name)

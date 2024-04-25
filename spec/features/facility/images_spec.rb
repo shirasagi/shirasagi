@@ -28,7 +28,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[order]", with: order
         within "#addon-facility-agents-addons-image_file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end

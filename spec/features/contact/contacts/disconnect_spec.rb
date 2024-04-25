@@ -45,7 +45,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
 
         ensure_addon_opened "#addon-contact-agents-addons-page"
         within "#addon-contact-agents-addons-page" do
-          wait_cbox_open { click_on I18n.t("contact.apis.contacts.index") }
+          wait_for_cbox_opened { click_on I18n.t("contact.apis.contacts.index") }
         end
       end
       within_cbox do

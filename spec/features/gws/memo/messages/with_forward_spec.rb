@@ -36,7 +36,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t("webmail.links.show_cc_bcc")
 
-          wait_cbox_open do
+          wait_for_cbox_opened do
             within 'dl.see.all' do
               click_on I18n.t('gws.organization_addresses')
             end

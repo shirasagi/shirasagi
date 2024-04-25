@@ -30,7 +30,7 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       within "form#item-form" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end

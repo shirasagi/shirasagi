@@ -33,7 +33,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       expect(page).to have_css(".line-select-message-type")
       within "#addon-cms-agents-addons-line-template-image" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/image"))
-        wait_cbox_open { first(".btn-file-upload").click }
+        wait_for_cbox_opened { first(".btn-file-upload").click }
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file1.name)
@@ -59,7 +59,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       expect(page).to have_no_css(".line-select-message-type")
       within "#addon-cms-agents-addons-line-template-image" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/image"))
-        wait_cbox_open { first(".btn-file-upload").click }
+        wait_for_cbox_opened { first(".btn-file-upload").click }
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file2.name)

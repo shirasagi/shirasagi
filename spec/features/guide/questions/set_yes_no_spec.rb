@@ -31,7 +31,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         fill_in "item[id_name]", with: "0.sample"
         choose "item_question_type_yes_no"
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
       end
       within_cbox do
         within ".cms-modal-tabs" do
@@ -44,7 +44,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{procedure1.id}']", text: procedure1.id_name)
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
       end
       within_cbox do
         within ".cms-modal-tabs" do
@@ -58,7 +58,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{question1.id}']", text: question1.id_name)
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
       end
       within_cbox do
         within ".cms-modal-tabs" do
@@ -73,7 +73,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{procedure2.id}']", text: procedure2.id_name)
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
       end
       within_cbox do
         within ".cms-modal-tabs" do

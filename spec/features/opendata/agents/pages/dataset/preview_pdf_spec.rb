@@ -39,7 +39,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       expect(page).to have_css(".dataset-apps .detail .dataset-apps")
       expect(page).to have_css(".dataset-ideas .detail .dataset-ideas")
 
-      wait_cbox_open { click_on I18n.t("opendata.labels.preview") }
+      wait_for_cbox_opened { click_on I18n.t("opendata.labels.preview") }
       within_cbox do
         within ".resource-pdf" do
           imgs = all('img').to_a

@@ -23,7 +23,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         fill_in "item[order]", with: order
 
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.apis.users.index")
           end
         end
@@ -106,7 +106,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           fill_in "item[in_basename]", with: name
           fill_in "item[order]", with: order
           within "#addon-basic" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("gws/share.apis.folders.index")
             end
           end
@@ -121,7 +121,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".ajax-selected", text: folder0.name)
           end
           within "#addon-gws-agents-addons-member" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.apis.users.index")
             end
           end
@@ -195,7 +195,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           fill_in "item[in_basename]", with: "#{unique_id}/#{unique_id}"
 
           within "#addon-gws-agents-addons-member" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.apis.users.index")
             end
           end
@@ -239,7 +239,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("gws/share.apis.folders.index")
           end
         end

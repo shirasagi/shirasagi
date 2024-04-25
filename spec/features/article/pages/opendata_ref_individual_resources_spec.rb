@@ -77,7 +77,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           expect(page).to have_content(file2.name)
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
@@ -250,7 +250,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           expect(page).to have_content(file2.name)
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
@@ -355,7 +355,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end

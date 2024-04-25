@@ -34,7 +34,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-cms-column-free" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.file")
         end
       end

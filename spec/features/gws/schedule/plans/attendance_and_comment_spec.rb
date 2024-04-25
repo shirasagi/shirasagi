@@ -17,7 +17,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit gws_schedule_plan_path(site: site, id: item)
 
       within "#addon-gws-agents-addons-schedule-attendance" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first("span.attendances[data-member-id='#{user.id}'] input#item_attendances_#{user.id}_state_attendance").click
         end
       end

@@ -18,7 +18,7 @@ describe "gws_sites", type: :feature, dbscope: :example, js: true do
         # fill form
         within "#addon-gws-agents-addons-system-logo_setting" do
           fill_in "item[logo_application_name]", with: logo_application_name
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t("ss.buttons.upload")
             first(".btn-file-upload").click
           end

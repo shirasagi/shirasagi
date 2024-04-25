@@ -28,7 +28,7 @@ describe "member_groups", type: :feature, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[invitation_message]", with: "invitation"
-        wait_cbox_open { click_on I18n.t("cms.apis.members.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.members.index") }
       end
 
       within_cbox do

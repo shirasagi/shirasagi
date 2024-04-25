@@ -37,7 +37,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in 'item[text]', with: text
 
         within '#addon-gws-agents-addons-readable_setting' do
-          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
       within_cbox do

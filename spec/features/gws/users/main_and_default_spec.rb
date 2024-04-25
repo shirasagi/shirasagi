@@ -39,7 +39,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       within_cbox do
@@ -94,7 +94,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       within_cbox do
@@ -124,7 +124,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       within_cbox do
@@ -179,7 +179,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
       within_cbox do

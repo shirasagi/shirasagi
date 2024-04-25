@@ -23,7 +23,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end

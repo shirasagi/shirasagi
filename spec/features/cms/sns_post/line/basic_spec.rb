@@ -106,7 +106,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
@@ -152,7 +152,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
@@ -199,7 +199,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
 
           within "#addon-cms-agents-addons-thumb" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               first(".btn-file-upload").click
             end
           end
@@ -224,7 +224,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
@@ -259,7 +259,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit edit_path
           within "#addon-cms-agents-addons-thumb" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               first(".btn-file-upload").click
             end
           end
@@ -284,7 +284,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
@@ -326,7 +326,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit new_path
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
@@ -357,7 +357,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
@@ -393,7 +393,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
@@ -421,7 +421,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
@@ -481,7 +481,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
@@ -524,7 +524,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))

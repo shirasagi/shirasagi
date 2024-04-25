@@ -24,7 +24,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end

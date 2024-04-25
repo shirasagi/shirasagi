@@ -19,7 +19,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         within "form#item-form" do
           fill_in "item[name]", with: name
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -85,7 +85,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
           within "form#item-form" do
             fill_in "item[name]", with: name
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end

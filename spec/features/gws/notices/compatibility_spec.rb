@@ -54,7 +54,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # move post to appropriate folder
       click_on I18n.t('ss.links.move')
       within 'form#item-form' do
-        wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
+        wait_for_cbox_opened { click_on I18n.t('gws/share.apis.folders.index') }
       end
       within_cbox do
         expect(page).to have_content(folder.name)

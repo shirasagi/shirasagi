@@ -20,7 +20,7 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
 
       within "#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.change")
           end
         end

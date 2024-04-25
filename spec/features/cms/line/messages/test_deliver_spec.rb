@@ -69,7 +69,7 @@ describe "cms/line/messages test_deliver", type: :feature, dbscope: :example, js
 
   def check_deliver_members(selector)
     within selector do
-      wait_cbox_open { first(".ajax-box", text: "確認する").click }
+      wait_for_cbox_opened { first(".ajax-box", text: "確認する").click }
     end
     within_cbox do
       expect(page).to have_text(targets_count)

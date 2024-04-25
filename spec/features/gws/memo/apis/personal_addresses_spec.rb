@@ -45,7 +45,7 @@ describe Gws::Memo::Apis::PersonalAddressesController, type: :feature, dbscope: 
       wait_for_js_ready
 
       within 'dl.see.all' do
-        wait_cbox_open { click_on I18n.t("mongoid.models.webmail/address") }
+        wait_for_cbox_opened { click_on I18n.t("mongoid.models.webmail/address") }
       end
 
       within_cbox do

@@ -75,7 +75,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[lower_mail_text]', with: unique_id
       select I18n.t("rss.options.earthquake_intensity.6-"), from: 'item[earthquake_intensity]'
 
-      wait_cbox_open do
+      wait_for_cbox_opened do
         click_on I18n.t("jmaxml.apis.quake_regions.index")
       end
       within_cbox do
@@ -86,7 +86,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
 
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.apis.nodes.index")
         end
       end
@@ -101,7 +101,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
 
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.apis.nodes.index")
         end
       end

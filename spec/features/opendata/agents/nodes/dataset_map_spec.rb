@@ -49,7 +49,7 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
       expect(page).to have_css(".dataset-search")
 
       within ".dataset-search" do
-        wait_cbox_open { click_on I18n.t("opendata.links.dataset_map_search_datasets") }
+        wait_for_cbox_opened { click_on I18n.t("opendata.links.dataset_map_search_datasets") }
       end
 
       # search

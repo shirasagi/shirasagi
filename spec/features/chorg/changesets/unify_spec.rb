@@ -86,7 +86,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.unify_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.unify_changesets.select_group") }
         end
       end
       wait_event_to_fire "turbo:frame-load" do

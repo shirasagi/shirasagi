@@ -36,7 +36,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
@@ -61,7 +61,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
@@ -156,7 +156,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-cms-column-free" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -179,7 +179,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within ".column-value-cms-column-free" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
@@ -275,7 +275,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -298,7 +298,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
@@ -395,7 +395,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -422,7 +422,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end

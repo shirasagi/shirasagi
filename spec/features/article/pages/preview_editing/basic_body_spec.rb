@@ -76,7 +76,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             fill_in_ckeditor "item[html]", with: html2
 
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end

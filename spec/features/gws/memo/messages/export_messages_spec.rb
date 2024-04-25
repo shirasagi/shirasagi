@@ -16,7 +16,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_selected"
-        wait_cbox_open { click_on I18n.t("ss.links.select") }
+        wait_for_cbox_opened { click_on I18n.t("ss.links.select") }
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
@@ -512,7 +512,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     it do
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("ss.links.select") }
+        wait_for_cbox_opened { click_on I18n.t("ss.links.select") }
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
@@ -527,7 +527,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       # export again
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("ss.links.select") }
+        wait_for_cbox_opened { click_on I18n.t("ss.links.select") }
       end
       within_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)

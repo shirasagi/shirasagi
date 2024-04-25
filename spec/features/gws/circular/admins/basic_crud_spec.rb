@@ -20,7 +20,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
       within_cbox do
@@ -177,7 +177,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         within "#addon-gws-agents-addons-circular-category" do
-          wait_cbox_open { click_on I18n.t('gws.apis.categories.index') }
+          wait_for_cbox_opened { click_on I18n.t('gws.apis.categories.index') }
         end
       end
       within_cbox do
@@ -186,7 +186,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
       within_cbox do
@@ -226,7 +226,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
       within_cbox do
@@ -318,7 +318,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
       within_cbox do

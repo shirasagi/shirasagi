@@ -14,7 +14,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened('#addon-cms-agents-addons-body')
       within '#addon-cms-agents-addons-body' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_link I18n.t('cms.apis.related_pages.index')
         end
       end
@@ -56,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened('#addon-cms-agents-addons-body')
         within '#addon-cms-agents-addons-body' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_link I18n.t('cms.apis.related_pages.index')
           end
         end

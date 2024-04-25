@@ -95,7 +95,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment1
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("workflow.links.approver_file_upload")
         end
       end
@@ -154,7 +154,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("workflow.links.approver_file_upload")
         end
       end

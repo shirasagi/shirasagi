@@ -27,7 +27,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         fill_in "item[description]", with: description
         fill_in_code_mirror "item[html]", with: html
-        wait_cbox_open { first(".btn-file-upload").click }
+        wait_for_cbox_opened { first(".btn-file-upload").click }
       end
       within_cbox do
         click_on file.name

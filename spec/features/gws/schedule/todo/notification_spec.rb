@@ -30,7 +30,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
         within '.gws-addon-member' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('ss.apis.users.index')
           end
         end
@@ -163,7 +163,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
         within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
           expect(page).to have_content(comment_text)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.edit")
           end
         end
@@ -196,7 +196,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
         within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
           expect(page).to have_content(comment_text2)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.delete")
           end
         end
@@ -275,7 +275,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
         within '.gws-addon-member' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('ss.apis.users.index')
           end
         end

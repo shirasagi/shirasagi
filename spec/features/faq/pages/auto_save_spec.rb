@@ -22,7 +22,7 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: name
         end
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -66,7 +66,7 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: name
         end
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end

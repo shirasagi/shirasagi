@@ -20,7 +20,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
         fill_in "item[time]", with: rand(1..10)
         fill_in "item[width]", with: rand(1..100)
         within "#addon-ss-agents-addons-link_file" do
-          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
       within_cbox do
@@ -77,7 +77,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
         fill_in "item[time]", with: rand(1..10)
         fill_in "item[width]", with: rand(1..100)
         within "#addon-ss-agents-addons-link_file" do
-          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
       within_cbox do

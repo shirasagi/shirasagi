@@ -14,7 +14,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.change")
           end
         end
@@ -55,7 +55,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.change")
           end
         end
@@ -72,7 +72,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: basename
 
         within "#addon-cms-agents-addons-form-node" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.apis.forms.index")
           end
         end

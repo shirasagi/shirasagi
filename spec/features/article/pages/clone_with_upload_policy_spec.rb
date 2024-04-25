@@ -33,7 +33,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           within first(".column-value-cms-column-fileupload") do
             fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end

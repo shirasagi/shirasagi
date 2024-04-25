@@ -39,7 +39,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         first(".time-card .day-#{record_date.day} .enter").click
         within ".cell-toolbar" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.edit")
           end
         end
@@ -80,7 +80,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         first(".time-card .current .enter").click
         within ".cell-toolbar" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.edit")
           end
         end

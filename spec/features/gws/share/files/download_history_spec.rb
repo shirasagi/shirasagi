@@ -24,7 +24,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('ss.buttons.upload')
           end
         end

@@ -21,7 +21,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_no_selector('.click-marker')
       expect(page).to have_no_selector('.no-marker')
 
-      wait_cbox_open { click_link I18n.t('facility.submit.change') }
+      wait_for_cbox_opened { click_link I18n.t('facility.submit.change') }
       within_cbox do
         click_button I18n.t('facility.submit.reset')
         click_button I18n.t('facility.submit.search')
@@ -36,7 +36,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_selector('span.number', text: 1)
       expect(page).to have_selector('div.columns')
 
-      wait_cbox_open { click_link I18n.t('facility.submit.change') }
+      wait_for_cbox_opened { click_link I18n.t('facility.submit.change') }
       within_cbox do
         fill_in 'keyword', with: unique_id
         click_button I18n.t('facility.submit.search')
@@ -66,7 +66,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_no_selector('.click-marker')
       expect(page).to have_no_selector('.no-marker')
 
-      wait_cbox_open { click_link I18n.t('facility.submit.change') }
+      wait_for_cbox_opened { click_link I18n.t('facility.submit.change') }
       within_cbox do
         click_button I18n.t('facility.submit.reset')
         click_button I18n.t('facility.submit.search')
@@ -81,7 +81,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_selector('span.number', text: 1)
       expect(page).to have_selector('div.columns')
 
-      wait_cbox_open { click_link I18n.t('facility.submit.change') }
+      wait_for_cbox_opened { click_link I18n.t('facility.submit.change') }
       within_cbox do
         fill_in 'keyword', with: unique_id
         click_button I18n.t('facility.submit.search')
@@ -117,7 +117,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_no_selector('.click-marker')
       expect(page).to have_no_selector('.no-marker')
 
-      wait_cbox_open { click_link I18n.t('facility.submit.change') }
+      wait_for_cbox_opened { click_link I18n.t('facility.submit.change') }
       within_cbox do
         click_button I18n.t('facility.submit.reset')
         click_button I18n.t('facility.submit.search')
@@ -132,7 +132,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       expect(page).to have_selector('span.number', text: 1)
       expect(page).to have_selector('div.columns')
 
-      wait_cbox_open { click_link I18n.t('facility.submit.change') }
+      wait_for_cbox_opened { click_link I18n.t('facility.submit.change') }
       within_cbox do
         fill_in 'keyword', with: unique_id
         click_button I18n.t('facility.submit.search')

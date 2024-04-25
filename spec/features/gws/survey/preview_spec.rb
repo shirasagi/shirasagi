@@ -34,7 +34,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on form.name
 
         within "#addon-gws-agents-addons-survey-column_setting" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.preview")
           end
         end
@@ -56,7 +56,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on form.name
 
         within "#addon-gws-agents-addons-survey-column_setting" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.preview")
           end
         end

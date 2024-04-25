@@ -193,7 +193,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end

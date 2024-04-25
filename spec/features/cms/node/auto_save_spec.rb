@@ -24,7 +24,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[basename]", with: basename
         end
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end
@@ -69,7 +69,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: name
         end
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end
@@ -134,7 +134,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: "keyvisual"
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
@@ -188,7 +188,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: "keyvisual"
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end

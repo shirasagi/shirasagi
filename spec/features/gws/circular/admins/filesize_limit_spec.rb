@@ -31,7 +31,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # attach file
       within "form#item-form" do
         within "#addon-gws-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -44,7 +44,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # choose member
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
       within_cbox do
@@ -92,7 +92,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # attach file
       within "form#item-form" do
         within "#addon-gws-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -105,7 +105,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # choose member
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
       within_cbox do

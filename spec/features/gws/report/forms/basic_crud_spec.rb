@@ -25,7 +25,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         fill_in "item[order]", with: order
         fill_in "item[memo]", with: memo
 
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
         click_on category.name

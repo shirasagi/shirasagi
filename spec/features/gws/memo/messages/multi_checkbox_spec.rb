@@ -21,7 +21,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t("webmail.links.show_cc_bcc")
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
+            wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
           end
         end
         within_cbox do
@@ -78,7 +78,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t("webmail.links.show_cc_bcc")
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
+            wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
           end
         end
         within_cbox do
@@ -160,7 +160,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+            wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
           end
         end
         within_cbox do
@@ -216,7 +216,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+            wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
           end
         end
         within_cbox do
@@ -274,7 +274,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+            wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
           end
         end
         within_cbox do
@@ -339,7 +339,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+            wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
           end
         end
         within_cbox do
@@ -420,7 +420,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+            wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
         within_cbox do
@@ -476,7 +476,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+            wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
         within_cbox do
@@ -533,7 +533,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+            wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
         within_cbox do
@@ -599,7 +599,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("webmail.links.show_cc_bcc")
         within 'form#item-form' do
           within 'dl.see.all' do
-            wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+            wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
           end
         end
 

@@ -37,7 +37,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-cms-column-fileupload" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.file")
         end
       end
@@ -52,7 +52,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
 
-      wait_cbox_open do
+      wait_for_cbox_opened do
         click_on I18n.t("ss.buttons.publish_save")
         expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("cms.column_file_upload.image.file_label_place_holder"))
       end

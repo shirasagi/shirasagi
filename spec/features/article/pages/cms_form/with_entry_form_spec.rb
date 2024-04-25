@@ -222,7 +222,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
         within_cbox do
@@ -288,7 +288,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column14.name
             end
           end
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
         within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
@@ -370,7 +370,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
         within_cbox do
@@ -403,7 +403,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-cms-column-selectpage " do
-            wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+            wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
           end
         end
         within_cbox do
@@ -590,7 +590,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end
@@ -613,7 +613,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end
@@ -675,7 +675,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column14.name
             end
           end
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
         within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
@@ -788,7 +788,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
         within_cbox do
@@ -820,7 +820,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
           within ".column-value-cms-column-selectpage " do
-            wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+            wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
           end
         end
         within_cbox do

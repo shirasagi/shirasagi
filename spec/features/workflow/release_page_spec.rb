@@ -39,7 +39,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
         within_cbox do
           expect(page).to have_content(user1.long_name)
@@ -123,7 +123,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
           within_cbox do
             expect(page).to have_content(user1.long_name)

@@ -79,7 +79,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       click_on I18n.t("gws/monitor.links.comment")
       within "form#item-form" do
         fill_in "item[text]", with: unique_id
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
@@ -127,7 +127,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       visit gws_monitor_answer_path(site: site, id: topic1)
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end

@@ -12,7 +12,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       visit gws_report_forms_path(site: site)
       click_on form.name
       within "#addon-gws-agents-addons-report-column_setting" do
-        wait_cbox_open { click_on I18n.t("ss.links.preview") }
+        wait_for_cbox_opened { click_on I18n.t("ss.links.preview") }
       end
 
       within_cbox do
@@ -36,7 +36,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       visit gws_report_forms_path(site: site)
       click_on form.name
       within "#addon-gws-agents-addons-report-column_setting" do
-        wait_cbox_open { click_on I18n.t("ss.links.preview") }
+        wait_for_cbox_opened { click_on I18n.t("ss.links.preview") }
       end
 
       within_cbox do

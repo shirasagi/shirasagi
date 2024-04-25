@@ -15,7 +15,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("chorg.menus.revisions.delete")
 
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
+        wait_for_cbox_opened { click_on I18n.t("chorg.views.delete_changesets.select_group") }
       end
       within_cbox do
         wait_cbox_close { click_on group0.trailing_name }
@@ -53,7 +53,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
+        wait_for_cbox_opened { click_on I18n.t("chorg.views.delete_changesets.select_group") }
       end
       within_cbox do
         wait_cbox_close { click_on group1.trailing_name }

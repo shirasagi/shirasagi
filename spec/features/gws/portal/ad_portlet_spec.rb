@@ -28,7 +28,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-gws-agents-addons-portal-portlet-ad_file" do
-          wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
         end
       end
       within_cbox do

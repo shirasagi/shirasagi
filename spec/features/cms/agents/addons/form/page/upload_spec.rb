@@ -118,7 +118,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on button_label
           end
         end

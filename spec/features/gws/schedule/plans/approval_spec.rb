@@ -20,7 +20,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit edit_path
 
       within ".gws-addon-schedule-approval" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t('ss.apis.users.index')
         end
       end
@@ -41,7 +41,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           choose "item_approvals_#{gws_user.id}_state_approve"
         end
       end
@@ -60,7 +60,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           choose "item_approvals_#{gws_user.id}_state_deny"
         end
       end

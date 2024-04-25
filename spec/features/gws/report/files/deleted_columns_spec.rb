@@ -67,7 +67,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first(".btn-file-upload").click
         end
       end

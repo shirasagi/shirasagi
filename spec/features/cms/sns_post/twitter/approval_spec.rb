@@ -62,7 +62,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("workflow.search_approvers.index")
             end
           end
@@ -144,7 +144,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("workflow.search_approvers.index")
             end
           end
@@ -235,7 +235,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("workflow.search_approvers.index")
             end
           end
@@ -323,7 +323,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           within_cbox do
@@ -379,7 +379,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.withdraw") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
             end
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
@@ -398,7 +398,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           within_cbox do
@@ -454,7 +454,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.withdraw") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
             end
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
@@ -473,7 +473,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           within_cbox do
@@ -556,7 +556,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           within_cbox do
@@ -638,7 +638,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           within_cbox do
@@ -720,7 +720,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
           within_cbox do

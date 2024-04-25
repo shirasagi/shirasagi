@@ -43,7 +43,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   def edit_enter(before_value, after_value)
     expect(page).to have_css('.today-box .today .info .enter', text: before_value)
     within '.today-box .today .action .enter' do
-      wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+      wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
     end
     within_cbox do
       hour, min = before_value.split(":")
@@ -62,7 +62,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   def edit_leave(before_day, before_value, after_day, after_value)
     expect(page).to have_css('.today-box .today .info .leave', text: before_value)
     within '.today-box .today .action .leave' do
-      wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+      wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
     end
     within_cbox do
       hour, min = before_value.split(":")

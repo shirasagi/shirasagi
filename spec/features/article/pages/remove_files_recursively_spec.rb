@@ -56,7 +56,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       visit edit_path
 
       within "form#item-form" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_link I18n.t("ss.links.change")
         end
       end

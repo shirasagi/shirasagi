@@ -14,7 +14,7 @@ describe 'chorg_results', type: :feature, dbscope: :example, js: true do
     it do
       visit chorg_main_path(site: site1)
       click_on I18n.t("ss.links.new")
-      wait_cbox_open do
+      wait_for_cbox_opened do
         click_on I18n.t("cms.apis.sites.index")
       end
       within_cbox do

@@ -25,7 +25,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
 
       within "#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.change")
           end
         end
@@ -41,7 +41,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
         select layout.name, from: "item[layout_id]"
 
         within "#addon-event-agents-addons-page_list" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.apis.forms.index")
           end
         end

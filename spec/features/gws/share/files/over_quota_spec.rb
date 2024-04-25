@@ -30,7 +30,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         within "#addon-basic" do
-          wait_cbox_open { click_on I18n.t("ss.links.upload") }
+          wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
         end
       end
 
@@ -66,7 +66,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           within "#addon-basic" do
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
 

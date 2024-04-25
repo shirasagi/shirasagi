@@ -46,7 +46,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: folder_name
 
         within '.gws-addon-member' do
-          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
       within_cbox do
@@ -61,7 +61,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         within '.gws-addon-readable-setting' do
           click_on I18n.t('ss.buttons.delete')
-          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
       within_cbox do
@@ -109,7 +109,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: notice_name
         fill_in 'item[text]', with: notice_text
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
         wait_cbox_close { click_on cate.name }

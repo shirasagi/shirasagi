@@ -27,7 +27,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
-          wait_cbox_open { first(".btn-file-upload").click }
+          wait_for_cbox_opened { first(".btn-file-upload").click }
         end
         within_cbox do
           # click_on file.name

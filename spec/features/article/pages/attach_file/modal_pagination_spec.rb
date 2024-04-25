@@ -26,7 +26,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -44,7 +44,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -83,7 +83,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -101,7 +101,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -144,7 +144,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("sns.user_file")
           end
         end
@@ -162,7 +162,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("sns.user_file")
           end
         end
@@ -201,7 +201,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("sns.user_file")
           end
         end
@@ -219,7 +219,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("sns.user_file")
           end
         end
@@ -275,7 +275,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -293,7 +293,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -347,7 +347,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -365,7 +365,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end

@@ -48,7 +48,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+                wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
               end
               within_cbox do
                 have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))

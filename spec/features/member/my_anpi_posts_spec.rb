@@ -41,7 +41,7 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
         fill_in 'item[age]', with: member.age
         fill_in 'item[email]', with: member.email
         fill_in 'item[text]', with: text0
-        wait_cbox_open { click_on 'メンバーを選択する' }
+        wait_for_cbox_opened { click_on 'メンバーを選択する' }
       end
       within_cbox do
         wait_cbox_close { click_link member.name }

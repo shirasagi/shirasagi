@@ -109,7 +109,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_event_to_fire("ss:dropdownOpened") { click_button "▼" }
 
         within ".dropdown-menu" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on menu_label
           end
         end

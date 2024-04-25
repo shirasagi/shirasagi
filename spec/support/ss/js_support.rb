@@ -420,11 +420,12 @@ module SS
     #     click_on I18n.t("ss.buttons.upload")
     #   end
     #
-    def wait_cbox_open(&block)
+    def wait_for_cbox_opened(&block)
       wait_for_js_ready
       wait_event_to_fire("cbox_complete", &block)
       wait_for_js_ready
     end
+    alias wait_cbox_open wait_for_cbox_opened
 
     #
     # Usage:
@@ -433,7 +434,7 @@ module SS
     #     click_on user.name
     #   end
     #
-    def wait_cbox_close(&block)
+    def wait_for_cbox_closed(&block)
       wait_for_js_ready
       save = JsSupport.is_within_cbox
       JsSupport.is_within_cbox = true
@@ -441,6 +442,7 @@ module SS
     ensure
       JsSupport.is_within_cbox = save
     end
+    alias wait_cbox_close wait_for_cbox_closed
 
     #
     # Usage:

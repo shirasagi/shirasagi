@@ -23,7 +23,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       fill_in 'item[text]', with: notice_text
 
       within '#addon-gws-agents-addons-file' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t('ss.links.upload')
         end
       end
