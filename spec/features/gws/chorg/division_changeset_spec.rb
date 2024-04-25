@@ -27,7 +27,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
         fill_in "item_destinations_1_name", with: name1
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       revision.reload
       expect(revision.changesets.count).to eq 1
@@ -63,7 +63,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
         fill_in "item_destinations_0_name", with: name
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       revision.reload
       expect(revision.changesets.count).to eq 1
@@ -99,7 +99,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       revision.reload
       expect(revision.changesets.count).to eq 0

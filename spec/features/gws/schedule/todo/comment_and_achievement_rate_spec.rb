@@ -24,7 +24,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         fill_in "item[achievement_rate]", with: achievement_rate1
         click_on I18n.t('gws/schedule.buttons.comment')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq achievement_rate1
@@ -53,7 +53,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq achievement_rate2
@@ -78,7 +78,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         expect(page).to have_content(comment_text2)
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.achievement_rate).to eq 0
@@ -121,7 +121,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq comment2.achievement_rate
@@ -143,7 +143,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         expect(page).to have_content(comment2.text)
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.achievement_rate).to eq comment1.achievement_rate
@@ -160,7 +160,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         fill_in "item[achievement_rate]", with: comment2.achievement_rate - 5
         click_on I18n.t('gws/schedule.buttons.comment')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq comment2.achievement_rate - 5
@@ -177,7 +177,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         fill_in "item[text]", with: unique_id
         click_on I18n.t('gws/schedule.buttons.comment')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.achievement_rate).to eq comment2.achievement_rate

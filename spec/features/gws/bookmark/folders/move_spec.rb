@@ -64,7 +64,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
+      wait_for_notice I18n.t('ss.notice.moved')
 
       folder.reload
       expect(folder.depth).to eq 1
@@ -117,7 +117,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
+      wait_for_notice I18n.t('ss.notice.moved')
 
       folder.reload
       expect(folder.depth).to eq 1
@@ -150,7 +150,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
+      wait_for_notice I18n.t('ss.notice.moved')
 
       folder.reload
       expect(folder.depth).to eq 1
@@ -242,7 +242,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
+      wait_for_notice I18n.t('ss.notice.moved')
 
       folder.reload
       expect(folder.depth).to eq 1

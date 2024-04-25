@@ -19,7 +19,7 @@ describe 'gws_memo_forwards', type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: "item[default]"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(first('#addon-basic')).to have_text(email1)
 
       expect(Gws::Memo::Forward.all.count).to eq 1

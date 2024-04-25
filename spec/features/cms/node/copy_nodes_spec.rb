@@ -19,7 +19,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example, js: true do
       fill_in 'item[target_node_name]', with: target_node_name
       click_on I18n.t('ss.buttons.run')
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice .wrap', text: I18n.t('cms.copy_nodes.started_job'), wait: 60)
+      wait_for_notice I18n.t('cms.copy_nodes.started_job'), wait: 60
       expect(Cms::CopyNodesTask.first.target_node_name).to eq target_node_name
       expect(enqueued_jobs.first[:job]).to eq Cms::Node::CopyNodesJob
     end

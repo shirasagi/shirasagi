@@ -35,7 +35,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: texts.join("\n")
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.comments.count).to eq 1
@@ -62,7 +62,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: texts2.join("\n")
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       comment.reload
       expect(comment.text).to eq texts2.join("\r\n")
@@ -82,7 +82,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.comments.count).to eq 0

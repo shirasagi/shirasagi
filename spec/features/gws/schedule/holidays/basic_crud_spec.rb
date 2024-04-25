@@ -24,7 +24,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).to eq index_path
     end
 
@@ -40,7 +40,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).to eq index_path
     end
 
@@ -50,7 +50,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
     end
   end

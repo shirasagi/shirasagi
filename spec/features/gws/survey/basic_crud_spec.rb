@@ -48,7 +48,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Survey::Form.all.count).to eq 1
 
@@ -65,7 +65,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         fill_in "item[select_options]", with: column_options.join("\n")
         click_on(I18n.t("ss.buttons.save"))
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       # click print
       click_on(form_name)
@@ -119,7 +119,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       #
       # answer by user2
@@ -139,7 +139,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       #
       # check answers
@@ -200,7 +200,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.delete')
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
     end
   end
 end

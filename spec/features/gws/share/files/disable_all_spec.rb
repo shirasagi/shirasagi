@@ -26,7 +26,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       within ".tree-navi" do
         expect(page).to have_css(".item-name", text: folder.name)
       end

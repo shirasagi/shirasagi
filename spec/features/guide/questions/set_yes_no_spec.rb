@@ -90,7 +90,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{question2.id}']", text: question2.id_name)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item = ::Guide::Question.first
       expect(item.edges.size).to eq 2

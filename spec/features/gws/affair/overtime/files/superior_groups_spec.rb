@@ -56,7 +56,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         fill_in "item[overtime_name]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"

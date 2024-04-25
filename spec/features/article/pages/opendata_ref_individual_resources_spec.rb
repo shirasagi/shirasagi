@@ -61,7 +61,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.publish_save')
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        wait_for_notice I18n.t('ss.notice.saved'), wait: 60
         item = article_page.class.find(article_page.id)
         expect(item.state).to eq 'public'
         expect(item.opendata_dataset_state).to eq 'public'
@@ -234,7 +234,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.publish_save')
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        wait_for_notice I18n.t('ss.notice.saved'), wait: 60
         item = Article::Page.find(article_page.id)
         expect(item.state).to eq 'public'
         expect(item.opendata_dataset_state).to eq 'public'

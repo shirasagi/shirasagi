@@ -43,7 +43,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
             click_on I18n.t("ss.buttons.save")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+          wait_for_notice I18n.t("ss.notice.saved")
         end
 
         item = Gws::Board::Topic.site(site).first
@@ -101,7 +101,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
             fill_in "item[name]", with: "modify"
             click_on I18n.t("ss.buttons.save")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+          wait_for_notice I18n.t("ss.notice.saved")
 
           item.reload
           expect(item.name).to eq "modify"
@@ -150,7 +150,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+          wait_for_notice I18n.t("ss.notice.deleted")
 
           item.reload
           expect(item.notification_noticed_at).to be_present
@@ -204,7 +204,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+          wait_for_notice I18n.t("ss.notice.deleted")
 
           expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
           expect(SS::Notification.all.count).to eq 0
@@ -230,7 +230,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           within "form#item-form" do
             click_button I18n.t("ss.buttons.restore")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.restored"))
+          wait_for_notice I18n.t("ss.notice.restored")
 
           item.reload
           expect(item.notification_noticed_at).to be_present
@@ -279,7 +279,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
               click_on I18n.t("ss.links.delete")
             end
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+          wait_for_notice I18n.t("ss.notice.deleted")
 
           item.reload
           expect(item.notification_noticed_at).to be_present

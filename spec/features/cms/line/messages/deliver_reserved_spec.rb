@@ -60,7 +60,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
     within "footer.send" do
       click_on I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
   end
 
   def add_deliver_plans(*dates)
@@ -76,7 +76,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
         fill_in "item[deliver_date]", with: date
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
     within "#menu" do
       click_on I18n.t("ss.links.back")
@@ -123,7 +123,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -145,7 +145,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
                 click_on I18n.t("ss.links.deliver")
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+            wait_for_notice I18n.t('ss.notice.started_deliver')
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -189,7 +189,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -211,7 +211,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
                 click_on I18n.t("ss.links.deliver")
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+            wait_for_notice I18n.t('ss.notice.started_deliver')
           end
 
           expect(capture.multicast.count).to eq 1
@@ -255,7 +255,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
         end
         click_on I18n.t("ss.buttons.save")
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -276,7 +276,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do
@@ -324,7 +324,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select deliver_condition_state_label, from: 'item[deliver_condition_state]'
         end
         click_on I18n.t("ss.buttons.save")
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -345,7 +345,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do
@@ -397,7 +397,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -418,7 +418,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do
@@ -465,7 +465,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -486,7 +486,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do
@@ -538,7 +538,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -559,7 +559,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do
@@ -615,7 +615,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(deliver_date)
 
@@ -636,7 +636,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do
@@ -694,7 +694,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
           select deliver_condition_state_label, from: 'item[deliver_condition_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_deliver_plans(*deliver_dates)
 
@@ -715,7 +715,7 @@ describe "cms/line/messages deliver_reserved multicast_with_no_condition", type:
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
           expect(enqueued_jobs.size).to eq 0
 
           Timecop.travel(today.advance(days: 1)) do

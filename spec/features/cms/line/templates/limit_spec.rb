@@ -23,7 +23,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
     within "footer.send" do
       click_on I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
   end
 
   describe "basic crud" do

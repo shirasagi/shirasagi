@@ -14,7 +14,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       page.accept_confirm do
         find('.disable-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.deleted).to be_present

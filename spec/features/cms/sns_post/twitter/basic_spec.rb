@@ -45,7 +45,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit current_path
@@ -72,7 +72,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -110,7 +110,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit current_path
@@ -143,7 +143,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -201,7 +201,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit current_path
@@ -251,7 +251,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -295,7 +295,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit current_path
@@ -325,7 +325,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit current_path
@@ -351,7 +351,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit current_path

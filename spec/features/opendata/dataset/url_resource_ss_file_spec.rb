@@ -87,7 +87,7 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
         select  I18n.t("opendata.crawl_update.auto"), from: "item_crawl_update"
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       dataset.reload
       expect(dataset.url_resources.count).to eq 1
@@ -116,7 +116,7 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: text
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       dataset.reload
       expect(dataset.url_resources.count).to eq 1
@@ -140,7 +140,7 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_button I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       dataset.reload
       expect(dataset.url_resources.count).to eq 0
@@ -171,7 +171,7 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
           select  I18n.t("opendata.crawl_update.auto"), from: "item_crawl_update"
           click_button I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         dataset.reload
         expect(dataset.url_resources.count).to eq 1

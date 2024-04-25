@@ -35,7 +35,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Cms::EditorTemplate.all.count).to eq 1
       item = Cms::EditorTemplate.all.first
@@ -57,7 +57,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
         fill_in_code_mirror "item[html]", with: html2
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.name).to eq name2
@@ -72,7 +72,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 

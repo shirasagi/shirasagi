@@ -63,7 +63,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # check post
       visit gws_notice_main_path(site: site)

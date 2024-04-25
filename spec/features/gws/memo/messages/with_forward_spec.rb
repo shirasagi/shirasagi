@@ -58,7 +58,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         # do not send forward mail
         expect(ActionMailer::Base.deliveries).to have(0).items
@@ -76,7 +76,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.send")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+        wait_for_notice I18n.t("ss.notice.sent")
 
         expect(Gws::Memo::Message.count).to eq 1
         message = Gws::Memo::Message.first

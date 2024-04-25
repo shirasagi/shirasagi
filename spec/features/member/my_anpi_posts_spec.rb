@@ -120,7 +120,7 @@ describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
       click_on item.name
       click_on 'Google Person Finderに安否情報を提供する'
       click_on '登録'
-      expect(page).to have_css('#notice', text: 'Google Person Finder に登録しました。', wait: 60)
+      wait_for_notice 'Google Person Finder に登録しました。', wait: 60
     end
   end
 end

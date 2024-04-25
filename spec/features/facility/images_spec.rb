@@ -53,7 +53,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Facility::Image.all.count).to eq 1
       image_page = Facility::Image.all.first
@@ -106,13 +106,14 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         click_on name
       end
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
       expect(page.all("form .addon-head h2").map(&:text).sort).to eq expected_addon_titles
       within "form#item-form" do
         fill_in "item[name]", with: name2
 
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       image_page.reload
       expect(image_page.name).to eq name2
@@ -128,7 +129,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { image_page.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       expect { image.reload }.to raise_error Mongoid::Errors::DocumentNotFound

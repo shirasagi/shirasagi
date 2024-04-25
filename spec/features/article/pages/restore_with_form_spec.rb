@@ -108,7 +108,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Article::Page.all.count).to eq 1
       expect(SS::File.all.unscoped.count).to eq 1
@@ -159,7 +159,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Article::Page.all.count).to eq 1
       expect(SS::File.all.unscoped.count).to eq 1
@@ -177,7 +177,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('history.buttons.restore')
       end
-      expect(page).to have_css('#notice', text: I18n.t('history.notice.restored'))
+      wait_for_notice I18n.t('history.notice.restored')
 
       expect(Article::Page.all.count).to eq 1
       Article::Page.all.first.tap do |item|

@@ -50,7 +50,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -107,7 +107,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -173,7 +173,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             end
           end
 
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           expect(capture.update.count).to eq 0
           expect(capture.update.tweet).to eq nil
@@ -285,7 +285,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -315,7 +315,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
 
           within "#addon-cms-agents-addons-release" do
             expect(page).to have_css('dd', text: I18n.t('ss.state.ready'))
@@ -365,7 +365,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -400,7 +400,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-release" do
@@ -450,7 +450,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -493,7 +493,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           expect(capture.update.count).to eq 1

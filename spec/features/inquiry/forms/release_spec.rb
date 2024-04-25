@@ -22,7 +22,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.public"), from: "item[state]"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-cms-agents-addons-release" do
         expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
       end
@@ -38,7 +38,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.closed"), from: "item[state]"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-cms-agents-addons-release" do
         expect(page).to have_css("dd", text: I18n.t("ss.options.state.closed"))
       end
@@ -58,7 +58,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.public"), from: "item[state]"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-cms-agents-addons-release" do
         expect(page).to have_css("dd", text: I18n.t("ss.options.state.ready"))
       end
@@ -78,7 +78,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.public"), from: "item[state]"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-cms-agents-addons-release" do
         expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
       end

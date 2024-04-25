@@ -33,7 +33,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show plan (approve)" do
@@ -49,7 +49,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "comment[text]", with: comment
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_css(".list-item", text: comment)
       end
@@ -68,7 +68,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "comment[text]", with: comment
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_css(".list-item", text: comment)
       end

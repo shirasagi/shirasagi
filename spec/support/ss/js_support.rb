@@ -333,13 +333,6 @@ module SS
       wait_for_js_ready
     end
 
-    def wait_for_notice(text)
-      wait_for_js_ready
-      expect(page).to have_css('#notice', text: text)
-      page.execute_script("SS.clearNotice();")
-      wait_for_js_ready
-    end
-
     def wait_for_error(text)
       wait_for_js_ready
       expect(page).to have_css('#errorExplanation', text: text)
@@ -565,6 +558,8 @@ module SS
     end
 
     def wait_for_js_ready(session = nil, &block)
+      return unless page.driver.is_a?(Capybara::Selenium::Driver)
+
       session ||= page
       unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
         puts_console_logs

@@ -165,7 +165,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_no_selector('div.column-with-errors')
 
@@ -250,7 +250,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       expect(article_pages.count).to eq 1
@@ -280,7 +280,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(article_pages.count).to eq 0
       expect(SS::File.all.unscoped.count).to eq 0
     end

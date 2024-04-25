@@ -27,7 +27,7 @@ describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
         select default_checked, from: "item[default_checked]"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: name)
       expect(page).to have_css("#addon-basic", text: oauth_id)
       expect(page).to have_css("#addon-basic", text: order)
@@ -49,7 +49,7 @@ describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
         select default_checked, from: "item[default_checked]"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: "name")
       expect(page).to have_css("#addon-basic", text: "oauth_id")
       expect(page).to have_css("#addon-basic", text: order)
@@ -61,7 +61,7 @@ describe "cms/line/test_members", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 end

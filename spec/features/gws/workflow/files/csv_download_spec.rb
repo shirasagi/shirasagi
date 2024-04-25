@@ -183,7 +183,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
           click_on I18n.t("gws/workflow.links.download_attachment")
         end
 
-        expect(page).to have_css('#notice', text: I18n.t('gws.notice.delay_download_with_message').sub(/\n.*$/, ''))
+        wait_for_notice I18n.t('gws.notice.delay_download_with_message').sub(/\n.*$/, '')
         expect(enqueued_jobs.size).to eq 1
         expect(enqueued_jobs.first[:job]).to eq Gws::CompressJob
 

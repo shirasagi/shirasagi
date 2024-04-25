@@ -78,7 +78,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           end
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         within ".fc-view-container" do
           expect(page).to have_css(".fc-title", text: plan_name)
         end
@@ -119,7 +119,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: plan_name
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         within ".fc-view-container" do
           expect(page).to have_css(".fc-title", text: plan_name)
         end
@@ -140,7 +140,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: report_name
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(Gws::Report::File.all.count).to eq 1
         report_file = Gws::Report::File.site(site).find_by(name: report_name)

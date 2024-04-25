@@ -40,7 +40,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         expect(find('#item_browsing_authority_all')).to be_checked
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.updated).to eq save_updated
@@ -71,7 +71,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         choose 'item_browsing_authority_author_or_commenter'
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.updated).to eq save_updated
@@ -96,7 +96,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.updated).to eq save_updated

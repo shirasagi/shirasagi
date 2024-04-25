@@ -24,7 +24,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
       within "#post-#{item.id}" do
         click_on I18n.t("gws/circular.post.set_seen")
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.set_seen"))
+      wait_for_notice I18n.t("ss.notice.set_seen")
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
@@ -86,7 +86,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
       within "#post-#{item2.id}" do
         click_on I18n.t("gws/circular.post.unset_seen")
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.unset_seen"))
+      wait_for_notice I18n.t("ss.notice.unset_seen")
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy
@@ -148,7 +148,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/circular.post.set_seen")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.set_seen"))
+      wait_for_notice I18n.t("ss.notice.set_seen")
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
@@ -183,7 +183,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/circular.post.set_seen")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.set_seen"))
+      wait_for_notice I18n.t("ss.notice.set_seen")
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
@@ -218,7 +218,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/circular.post.unset_seen")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.unset_seen"))
+      wait_for_notice I18n.t("ss.notice.unset_seen")
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy
@@ -253,7 +253,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/circular.post.unset_seen")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.unset_seen"))
+      wait_for_notice I18n.t("ss.notice.unset_seen")
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy

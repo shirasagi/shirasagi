@@ -67,7 +67,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             click_on I18n.t("ss.buttons.send")
           end
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.sent"))
+        wait_for_notice I18n.t("ss.notice.sent")
 
         expect(ActionMailer::Base.deliveries).to have(2).items
         ActionMailer::Base.deliveries.last.tap do |mail|

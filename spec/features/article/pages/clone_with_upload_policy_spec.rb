@@ -51,7 +51,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
           click_on I18n.t('ss.buttons.publish_save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css('#selected-files .sanitizer-wait')
 
         # restore
@@ -71,7 +71,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
           click_on I18n.t('ss.buttons.save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         click_on copy_name
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))

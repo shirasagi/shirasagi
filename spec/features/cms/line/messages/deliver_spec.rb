@@ -58,7 +58,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
     within "footer.send" do
       click_on I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
   end
 
   def check_deliver_members(selector)
@@ -94,7 +94,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
         select I18n.t("cms.options.line_deliver_condition_state.broadcast"), from: 'item[deliver_condition_state]'
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-basic" do
         expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.draft"))
@@ -117,7 +117,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
         end
 
         expect(capture.broadcast.count).to eq 1
@@ -159,7 +159,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
         select I18n.t("cms.options.line_deliver_condition_state.multicast_with_no_condition"), from: 'item[deliver_condition_state]'
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-basic" do
         expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.draft"))
@@ -190,7 +190,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
         end
 
         expect(capture.multicast.count).to eq 1
@@ -235,7 +235,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
         find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-basic" do
         expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.draft"))
@@ -266,7 +266,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
         end
 
         expect(capture.multicast.count).to eq 1
@@ -313,7 +313,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
         select deliver_condition.name, from: 'item[deliver_condition_id]'
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#addon-basic" do
         expect(page).to have_css("dd", text: I18n.t("cms.options.deliver_state.draft"))
@@ -344,7 +344,7 @@ describe "cms/line/messages deliver", type: :feature, dbscope: :example, js: tru
               click_on I18n.t("ss.links.deliver")
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+          wait_for_notice I18n.t('ss.notice.started_deliver')
         end
 
         expect(capture.multicast.count).to eq 1

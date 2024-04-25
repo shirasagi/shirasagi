@@ -27,7 +27,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           click_on I18n.t('ss.buttons.publish_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 1
 
         visit article_pages_path(site: site, cid: node)
@@ -37,7 +37,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 2
 
         visit article_pages_path(site: site, cid: node)
@@ -72,7 +72,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.publish_save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 1
         Article::Page.all.find_by(name: name).tap do |item|
           expect(item.column_values.length).to eq 2
@@ -89,7 +89,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 2
 
         visit article_pages_path(site: site, cid: node)

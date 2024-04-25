@@ -51,7 +51,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           end
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        wait_for_notice I18n.t('ss.notice.saved'), wait: 60
 
         expect(Workflow::Route.count).to eq 1
         Workflow::Route.all.first.tap do |route|

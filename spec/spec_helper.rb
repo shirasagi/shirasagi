@@ -247,6 +247,19 @@ def with_env(hash)
   ret
 end
 
+def wait_for_notice(text, wait: nil)
+  if page.driver.is_a?(Capybara::Selenium::Driver)
+    wait_for_js_ready
+    options = { text: text }
+    options[:wait] = wait if wait
+    expect(page).to have_css('#notice', **options)
+    page.execute_script("SS.clearNotice();")
+    wait_for_js_ready
+  else
+    expect(page).to have_css('#notice', text: text)
+  end
+end
+
 # ref.
 #   https://www.relishapp.com/rspec/rspec-expectations/v/2-5/docs/built-in-matchers/be-within-matcher
 #   http://qiita.com/kozy4324/items/9a6530736be7e92954bc

@@ -41,7 +41,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.upload')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Share::File.all.count).to eq 1
       item = Gws::Share::File.all.first
@@ -62,7 +62,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         attach_file "item[in_file]", file_path2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(item.histories.count).to eq 2
       expect(::Fs.file?(item.histories.first.path)).to be_truthy

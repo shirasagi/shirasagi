@@ -17,7 +17,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         click_on I18n.t('gws/attendance.buttons.punch')
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_notice I18n.t('gws/attendance.notice.punched')
     wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
@@ -32,7 +32,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         click_on I18n.t('gws/attendance.buttons.punch')
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_notice I18n.t('gws/attendance.notice.punched')
     wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
@@ -47,7 +47,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         click_on I18n.t('gws/attendance.buttons.punch')
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_notice I18n.t('gws/attendance.notice.punched')
     wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24

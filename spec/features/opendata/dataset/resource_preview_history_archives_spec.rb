@@ -29,7 +29,7 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
@@ -67,7 +67,7 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
       end
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end

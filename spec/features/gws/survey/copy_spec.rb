@@ -32,7 +32,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Survey::Form.all.count).to eq 1
 
@@ -49,7 +49,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
         fill_in "item[select_options]", with: column_options.join("\n")
         click_on(I18n.t("ss.buttons.save"))
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       # publish
       visit gws_survey_main_path(site: site)
@@ -73,7 +73,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       # copy
       login_gws_user
@@ -88,7 +88,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.public"), from: 'copy[file_state]'
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.copied"))
+      wait_for_notice I18n.t("ss.notice.copied")
 
       copy_form = Gws::Survey::Form.where(name: copy_name).first
       expect(copy_form.state).to eq "closed"
@@ -115,7 +115,7 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       # check answers
       form = Gws::Survey::Form.where(name: form_name).first

@@ -10,7 +10,7 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
       visit cms_generation_report_pages_path(site: site)
       click_on I18n.t("ss.links.new")
       notice = I18n.t("mongoid.errors.models.cms/generation_report/title.generate_pages_is_not_done")
-      expect(page).to have_css("#notice", text: notice)
+      wait_for_notice notice
     end
   end
 
@@ -31,7 +31,7 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
         within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("cms.notices.generation_report_jos_is_started"))
+        wait_for_notice I18n.t("cms.notices.generation_report_jos_is_started")
 
         expect(enqueued_jobs.length).to eq 1
         enqueued_jobs.first.tap do |enqueued_job|

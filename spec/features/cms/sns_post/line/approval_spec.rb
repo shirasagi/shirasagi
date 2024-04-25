@@ -44,7 +44,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -122,7 +122,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -221,7 +221,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -319,7 +319,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -408,7 +408,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
@@ -484,7 +484,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
@@ -570,7 +570,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -669,7 +669,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -755,7 +755,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 

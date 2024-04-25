@@ -56,7 +56,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "footer.send" do
         click_on I18n.t('ss.buttons.upload')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within '.list-items' do
         expect(page).to have_content('keyvisual.jpg')
@@ -90,7 +90,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       file.reload
@@ -105,7 +105,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       within ".tree-navi" do
         expect(page).to have_css(".item-name", text: folder.name)
       end
@@ -124,7 +124,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Fs.exist?(file_path)).to be_falsey
       expect(Fs.exist?(sanitizer_input_path)).to be_falsey
 

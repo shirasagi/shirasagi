@@ -39,7 +39,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.upload')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # Create #2
       visit gws_share_files_path(site)
@@ -67,7 +67,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.upload')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # Create #3
       visit gws_share_files_path(site)
@@ -94,7 +94,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.upload')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Share::File.all.count).to eq 3
       file1 = Gws::Share::File.all.find_by(folder_id: folder1.id)

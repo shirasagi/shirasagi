@@ -109,7 +109,7 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
         attach_file "item[in_file]", csv_file
         click_on I18n.t('ss.import')
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::SharedAddress::Address.all).to have(1).items
       item = Gws::SharedAddress::Address.all.first

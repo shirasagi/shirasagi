@@ -38,7 +38,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         fill_in "custom[#{column1.id}]", with: user1_answer
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #
       #  user2
@@ -51,7 +51,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         fill_in "custom[#{column1.id}]", with: user2_answer
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       click_on form.name
       click_on I18n.t("gws/survey.tabs.others")

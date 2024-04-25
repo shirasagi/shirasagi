@@ -74,7 +74,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Attendance::TimeCard.find(user1_this_month_time_card.id) }.to raise_error Mongoid::Errors::DocumentNotFound
       expect { Gws::Attendance::TimeCard.find(user2_this_month_time_card.id) }.to raise_error Mongoid::Errors::DocumentNotFound

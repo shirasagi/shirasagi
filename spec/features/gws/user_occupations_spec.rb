@@ -75,7 +75,7 @@ describe "gws_user_occupations", type: :feature, dbscope: :example do
           click_on I18n.t("ss.buttons.import")
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.started_import"))
+        wait_for_notice I18n.t("ss.notice.started_import")
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)

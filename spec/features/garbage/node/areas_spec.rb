@@ -53,7 +53,7 @@ describe "garbage_node_areas", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: "sample"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end

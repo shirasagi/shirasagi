@@ -24,7 +24,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[html]', with: html
 
       click_on I18n.t('ss.buttons.save')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      wait_for_notice I18n.t('ss.notice.saved'), wait: 60
 
       expect(Rss::WeatherXmlPage.count).to eq 1
       Rss::WeatherXmlPage.first.tap do |item|
@@ -39,7 +39,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[name]', with: name1
 
       click_on I18n.t('ss.buttons.save')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      wait_for_notice I18n.t('ss.notice.saved'), wait: 60
 
       Rss::WeatherXmlPage.first.tap do |item|
         expect(item.name).to eq name1
@@ -49,7 +49,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       click_on name1
       click_on I18n.t('ss.links.delete')
       click_on I18n.t('ss.buttons.delete')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
+      wait_for_notice I18n.t('ss.notice.deleted'), wait: 60
     end
   end
 
@@ -116,7 +116,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
 
       click_on I18n.t('ss.buttons.save')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
   end
 end

@@ -32,7 +32,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
         fill_in "item[basename]", with: basename
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: name)
       expect(root_categories.size).to eq 1
       expect(child_categories.size).to eq 1
@@ -55,7 +55,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
         fill_in "item[name]", with: "modify"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: "modify")
       expect(root_categories.size).to eq 1
       expect(child_categories.size).to eq 1
@@ -68,7 +68,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(root_categories.size).to eq 1
       expect(child_categories.size).to eq 0
     end

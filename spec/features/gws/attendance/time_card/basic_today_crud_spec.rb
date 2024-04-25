@@ -33,7 +33,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             click_on I18n.t('gws/attendance.buttons.punch')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+        wait_for_notice I18n.t('gws/attendance.notice.punched')
         expect(page).to have_css('.today .info .enter', text: format('%d:%02d', now.hour, now.min))
 
         expect(Gws::Attendance::TimeCard.count).to eq 1

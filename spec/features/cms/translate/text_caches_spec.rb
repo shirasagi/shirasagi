@@ -82,7 +82,7 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example, transla
         fill_in "item[target]", with: target
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -113,7 +113,7 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example, transla
         fill_in "item[target]", with: item.target
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -121,7 +121,7 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example, transla
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 end

@@ -29,7 +29,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -52,7 +52,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic.reload
@@ -94,7 +94,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       topic.reload
       expect(topic.deleted).to be_present
@@ -116,7 +116,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
 
       topic.reload
       expect(topic.deleted).to be_blank
@@ -137,7 +137,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       visit gws_circular_admins_path(site)
       click_on I18n.t("gws/circular.tabs.trash")
@@ -148,7 +148,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 0
       expect { Gws::Circular::Post.all.find(topic.id) }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -196,7 +196,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -235,7 +235,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -272,7 +272,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -332,7 +332,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -375,7 +375,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first

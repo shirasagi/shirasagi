@@ -34,7 +34,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
     end
@@ -50,7 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "modify"
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#move" do
@@ -59,7 +59,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "destination", with: "docs/destination"
         click_on I18n.t("ss.buttons.move")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
+      wait_for_notice I18n.t('ss.notice.moved')
       within "form#item-form" do
         expect(page).to have_css(".current-filename", text: "docs/destination.html")
         expect(page).to have_css(".result", text: I18n.t("article.count"))
@@ -69,7 +69,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "destination", with: "docs/sample"
         click_on I18n.t("ss.buttons.move")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
+      wait_for_notice I18n.t('ss.notice.moved')
       within "form#item-form" do
         expect(page).to have_css(".current-filename", text: "docs/sample.html")
         expect(page).to have_css(".result", text: I18n.t("article.count"))
@@ -81,7 +81,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("a", text: "[複製] #{item.name}")
       expect(page).to have_css(".state", text: "非公開")
     end
@@ -95,7 +95,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
 
       it "permited and not contains_urls" do
@@ -104,7 +104,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
 
       it "not permited and contains_urls" do
@@ -123,7 +123,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
 
       it "destroy_all not permited and contains_urls" do

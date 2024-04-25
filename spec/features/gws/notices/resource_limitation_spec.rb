@@ -39,7 +39,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   context 'when notice is created' do
     it do
       create_notice
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       folder.reload
       expect(folder.notice_total_body_size).to eq notice_text.length
@@ -57,7 +57,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       create_notice
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       folder.reload
       expect(folder.notice_total_body_size).to eq folder.notice_total_body_size_limit

@@ -23,7 +23,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Notice::Category.all.count).to eq 1
       Gws::Notice::Category.all.first.tap do |cate|
@@ -42,7 +42,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Notice::Category.all.count).to eq 1
       Gws::Notice::Category.all.first.tap do |cate|
@@ -60,7 +60,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect(Gws::Notice::Category.all.count).to eq 0
     end

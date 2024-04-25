@@ -23,7 +23,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
         fill_in 'item[order]', with: 1
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::InitColumn.form(form).count).to eq 1
       Cms::InitColumn.form(form).first.tap do |item|
         expect(item.order).to eq 1
@@ -41,7 +41,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
         fill_in 'item[order]', with: 2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::InitColumn.form(form).count).to eq 1
       Cms::InitColumn.form(form).first.tap do |item|
         expect(item.order).to eq 2
@@ -58,7 +58,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::InitColumn.form(form).count).to eq 0
     end
   end
@@ -76,7 +76,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
         fill_in 'item[order]', with: 1
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::InitColumn.form(form).count).to eq 1
       Cms::InitColumn.form(form).first.tap do |item|
         expect(item.order).to eq 1
@@ -102,7 +102,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
         fill_in 'item[order]', with: 1
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::InitColumn.form(form).count).to eq 1
       Cms::InitColumn.form(form).first.tap do |item|
         expect(item.order).to eq 1
@@ -133,7 +133,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::InitColumn.form(form).count).to eq 0
     end
   end

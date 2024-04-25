@@ -15,7 +15,7 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/memo/messages.zip"
         click_on I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_import"))
+      wait_for_notice I18n.t("gws/memo/message.notice.start_import")
 
       visit gws_memo_messages_path(site)
 

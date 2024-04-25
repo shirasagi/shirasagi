@@ -25,7 +25,7 @@ describe 'gws_memo_templates', type: :feature, dbscope: :example do
         fill_in 'item[text]', with: name1
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::Template.all.count).to eq 1
       Gws::Memo::Template.all.first.tap do |template|
@@ -42,7 +42,7 @@ describe 'gws_memo_templates', type: :feature, dbscope: :example do
         fill_in 'item[name]', with: name2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::Template.all.count).to eq 1
       Gws::Memo::Template.all.first.tap do |template|
@@ -58,7 +58,7 @@ describe 'gws_memo_templates', type: :feature, dbscope: :example do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Memo::Template.all.count).to eq 0
     end

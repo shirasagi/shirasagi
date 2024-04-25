@@ -59,7 +59,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
+      wait_for_notice I18n.t('gws/report.notice.published')
 
       subject.reload
       expect(subject.state).to eq "public"
@@ -127,7 +127,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.depublished'))
+      wait_for_notice I18n.t('gws/report.notice.depublished')
 
       subject.reload
       expect(subject.state).to eq "closed"
@@ -180,7 +180,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
+      wait_for_notice I18n.t('gws/report.notice.published')
 
       subject.reload
       expect(subject.state).to eq "public"
@@ -212,7 +212,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       subject.reload
       expect(subject.deleted).to be_present

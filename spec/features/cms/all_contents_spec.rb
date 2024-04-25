@@ -61,7 +61,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
           end
         end
         expectation.to have_enqueued_job(Cms::AllContentsImportJob)
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
+        wait_for_notice I18n.t('ss.notice.started_import')
       end
     end
 

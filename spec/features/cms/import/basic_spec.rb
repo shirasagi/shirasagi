@@ -29,7 +29,7 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
         expect(enqueued_job[:at]).to eq now.to_f
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
+      wait_for_notice I18n.t('ss.notice.started_import')
 
       expect(Cms::ImportJobFile.all.count).to eq 1
       Cms::ImportJobFile.first.tap do |task|

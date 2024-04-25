@@ -48,7 +48,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-release" do
@@ -107,7 +107,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-release" do
@@ -173,7 +173,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -297,7 +297,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -330,7 +330,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-release" do
@@ -383,7 +383,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -422,7 +422,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-release" do
@@ -474,7 +474,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -520,7 +520,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           expect(capture.broadcast.count).to eq 1

@@ -152,7 +152,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
       end
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       within "div.info" do
         expect(page).to have_css("a.file")
       end

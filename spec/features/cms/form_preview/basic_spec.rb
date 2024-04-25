@@ -250,7 +250,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(Article::Page.count).to eq 1

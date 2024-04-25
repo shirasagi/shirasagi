@@ -58,7 +58,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.publish_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 1
 
         Article::Page.all.site(site).node(node).first.tap do |item|
@@ -147,7 +147,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.publish_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 1
 
         Article::Page.all.site(site).node(node).first.tap do |item|

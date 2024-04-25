@@ -28,7 +28,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
         fill_in "item[domains]", with: domain
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(SS::Site.all.count).to eq 1
       SS::Site.all.first.tap do |site|
@@ -46,7 +46,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       SS::Site.all.first.tap do |site|
         expect(site.name).to eq name2
@@ -60,7 +60,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect(SS::Site.all.count).to eq 0
     end
@@ -144,7 +144,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect(SS::Site.all.count).to eq 0
     end
@@ -172,7 +172,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
         page1.reload
         page2.reload
         expect(Fs.exist?(page1.path)).to be_truthy
@@ -193,7 +193,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
         page1.reload
         page2.reload
         expect(Fs.exist?(page1.path)).to be_truthy
@@ -206,7 +206,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
         page1.reload
         page2.reload
         expect(Fs.exist?(page1.path)).to be_truthy
@@ -228,7 +228,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
         page1.reload
         page2.reload
         expect(Fs.exist?(page1.path)).to be_truthy
@@ -242,7 +242,7 @@ describe "sys_sites", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
         page1.reload
         page2.reload
         expect(Fs.exist?(page1.path)).to be_truthy

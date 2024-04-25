@@ -40,7 +40,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       file = SS::LinkFile.all.first
       expect(file.sanitizer_state).to eq 'wait'

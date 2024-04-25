@@ -17,7 +17,7 @@ describe "cms_node_import", type: :feature, dbscope: :example, js: true do
         attach_file "item[in_file]", file
         click_button I18n.t('ss.buttons.import')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
+      wait_for_notice I18n.t('ss.notice.started_import')
     end
 
     context "with max file size" do

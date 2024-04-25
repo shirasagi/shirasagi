@@ -54,7 +54,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           find('.download-all').click
         end
 
-        expect(page).to have_css("#notice", text: I18n.t('gws.notice.delay_download_with_message').split("\n").first)
+        wait_for_notice I18n.t('gws.notice.delay_download_with_message').split("\n").first
         within "#gws-share-file-folder-list" do
           expect(page).to have_css(".tree-item", text: folder.name)
         end

@@ -34,7 +34,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         fill_in 'item[text]', with: text
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject
@@ -48,7 +48,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       within '#item-form' do
         click_on I18n.t('ss.buttons.send')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+      wait_for_notice I18n.t('ss.notice.sent')
 
       expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 1
       Gws::Memo::ListMessage.all.and_list_message.first do |message|

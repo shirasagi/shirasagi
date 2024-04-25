@@ -73,7 +73,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: text1
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item.reload
       expect(item.descendants.count).to eq 2
@@ -99,7 +99,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: text2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       comment.reload
       expect(comment.text).to eq text2
@@ -135,7 +135,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item.reload
       expect(item.descendants.count).to eq 3
@@ -157,7 +157,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect { comment.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -208,7 +208,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: text1
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item.reload
       expect(item.descendants.count).to eq 2
@@ -238,7 +238,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: text2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       post.reload
       expect(post.text).to eq text2
@@ -261,7 +261,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect { post.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 

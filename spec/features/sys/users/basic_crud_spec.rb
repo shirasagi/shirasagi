@@ -36,7 +36,7 @@ describe "sys_users", type: :feature, dbscope: :example do
         fill_in "item[in_password]", with: "sample"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -102,7 +102,7 @@ describe "sys_users", type: :feature, dbscope: :example do
       wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("ss.links.delete")
       page.accept_alert
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".index-search" do
         select I18n.t('ss.options.state.disabled'), from: 's[state]'

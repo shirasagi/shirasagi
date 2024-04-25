@@ -16,7 +16,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.todo_state).to eq "finished"
@@ -47,7 +47,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.todo_state).to eq "unfinished"
@@ -68,7 +68,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       page.accept_confirm do
         find('.finish-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.todo_state).to eq "finished"
@@ -97,7 +97,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       page.accept_confirm do
         find('.revert-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.todo_state).to eq "unfinished"
