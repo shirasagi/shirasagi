@@ -398,7 +398,7 @@ module SS
       end
     end
 
-    def wait_event_to_fire(event_name, selector = nil)
+    def wait_for_event_fired(event_name, selector = nil)
       wait_for_js_ready
 
       promise_id = "promise_#{unique_id}"
@@ -412,6 +412,7 @@ module SS
 
       ret
     end
+    alias wait_event_to_fire wait_for_event_fired
 
     #
     # Usage:

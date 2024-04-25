@@ -55,7 +55,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           within "#ss-preview" do
             within ".ss-preview-wrap-column-edit-mode" do
-              wait_event_to_fire "ss:inplaceModeChanged" do
+              wait_for_event_fired "ss:inplaceModeChanged" do
                 click_on I18n.t("cms.inplace_edit")
               end
             end
@@ -82,7 +82,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".ss-preview-notice-wrap", text: I18n.t("workflow.notice.created_branch_page"))
           else
             within "#ss-preview-overlay" do
-              wait_event_to_fire "column:moved" do
+              wait_for_event_fired "column:moved" do
                 first(".ss-preview-overlay-btn-move-down").click
               end
             end
@@ -111,7 +111,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           #
           first(:xpath, "//*[text()='#{column1_value2_value}']").click
           within "#ss-preview-overlay" do
-            wait_event_to_fire "column:moved" do
+            wait_for_event_fired "column:moved" do
               first(".ss-preview-overlay-btn-move-down").click
             end
           end
@@ -153,7 +153,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         it do
           visit cms_preview_path(site: site, path: item.preview_path)
 
-          wait_event_to_fire "ss:inplaceModeChanged" do
+          wait_for_event_fired "ss:inplaceModeChanged" do
             within "#ss-preview" do
               within ".ss-preview-wrap-column-edit-mode" do
                 click_on I18n.t("cms.inplace_edit")
@@ -182,7 +182,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".ss-preview-notice-wrap", text: I18n.t("workflow.notice.created_branch_page"))
           else
             within "#ss-preview-overlay" do
-              wait_event_to_fire "column:moved" do
+              wait_for_event_fired "column:moved" do
                 first(".ss-preview-overlay-btn-move-up").click
               end
             end
@@ -211,7 +211,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           #
           first(:xpath, "//*[text()='#{column1_value1_value}']").click
           within "#ss-preview-overlay" do
-            wait_event_to_fire "column:moved" do
+            wait_for_event_fired "column:moved" do
               first(".ss-preview-overlay-btn-move-up").click
             end
           end

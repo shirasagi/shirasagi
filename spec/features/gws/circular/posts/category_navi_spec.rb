@@ -39,7 +39,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       # choose category: cate1
       within ".gws-category-navi" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('gws.category') }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('gws.category') }
         within ".dropdown-menu.active" do
           click_on cate1.name
         end
@@ -52,7 +52,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       # change category: cate1 --> cate2
       within ".gws-category-navi" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on cate1.name }
+        wait_for_event_fired("ss:dropdownOpened") { click_on cate1.name }
         within ".dropdown-menu.active" do
           click_on cate2.name
         end
@@ -65,7 +65,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       # change category: cate2 --> cate3
       within ".gws-category-navi" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on cate2.name }
+        wait_for_event_fired("ss:dropdownOpened") { click_on cate2.name }
         within ".dropdown-menu.active" do
           click_on cate3.name
         end

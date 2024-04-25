@@ -18,7 +18,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example do
       expect(page2.state).to eq "public"
       expect(page3.state).to eq "public"
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action-update" do
         click_button I18n.t('ss.links.make_them_close')
       end
@@ -43,7 +43,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example do
       expect(page3.backups.size).to eq 2
       expect(page3.backups.first.user_id).to eq user.id
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action-update" do
         click_button I18n.t('ss.links.make_them_public')
       end
@@ -105,7 +105,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example do
       expect(page3.state).to eq "closed"
       expect(page4.state).to eq "closed"
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action-update" do
         click_button I18n.t('ss.links.make_them_public')
       end

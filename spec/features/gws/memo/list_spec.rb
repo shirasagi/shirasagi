@@ -48,7 +48,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       within_cbox do
-        wait_event_to_fire("cbox_complete") do
+        wait_for_event_fired("cbox_complete") do
           fill_in 's[keyword]', with: category.name
           click_on I18n.t('ss.buttons.search')
         end

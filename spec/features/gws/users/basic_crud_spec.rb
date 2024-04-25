@@ -172,7 +172,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-item", count: 1)
 
       within ".list-head" do
-        wait_event_to_fire("ss:checked-all-list-items") { find('label.check input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('label.check input').set(true) }
         page.accept_alert(I18n.t("ss.confirm.delete")) do
           click_button I18n.t("ss.links.delete")
         end

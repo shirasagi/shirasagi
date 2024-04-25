@@ -25,7 +25,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     end
     expect(page).to have_content(item.name)
 
-    wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+    wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
     within ".list-head-action" do
       page.accept_confirm do
         click_on I18n.t("ss.links.delete")

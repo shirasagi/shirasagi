@@ -70,7 +70,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t('ss.links.lock_user')
       wait_for_notice I18n.t('ss.notice.lock_user_all')
       expect(page).to have_no_content(item.name)
@@ -83,7 +83,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t('ss.links.unlock_user')
       wait_for_notice I18n.t('ss.notice.unlock_user_all')
       expect(page).to have_no_content(item.name)
@@ -96,7 +96,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("ss.links.delete")
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')

@@ -121,7 +121,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -152,7 +152,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.edit')
         within 'form#item-form' do
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
@@ -161,7 +161,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end
@@ -170,7 +170,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column3.name
             end
           end
@@ -180,7 +180,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column4.name
             end
           end
@@ -189,7 +189,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column5.name
             end
           end
@@ -198,7 +198,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column6.name
             end
           end
@@ -207,7 +207,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column7.name
             end
           end
@@ -216,7 +216,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column8.name
             end
           end
@@ -235,7 +235,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column9.name
             end
           end
@@ -244,7 +244,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column10.name
             end
           end
@@ -254,7 +254,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column11.name
             end
           end
@@ -263,7 +263,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column12.name
             end
           end
@@ -275,7 +275,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column13.name
             end
           end
@@ -284,7 +284,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column14.name
             end
           end
@@ -511,7 +511,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -520,7 +520,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
@@ -529,7 +529,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end
@@ -538,7 +538,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column3.name
             end
           end
@@ -548,7 +548,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column4.name
             end
           end
@@ -557,7 +557,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column5.name
             end
           end
@@ -566,7 +566,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column6.name
             end
           end
@@ -575,7 +575,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column7.name
             end
           end
@@ -584,7 +584,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column8.name
             end
           end
@@ -607,7 +607,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column9.name
             end
           end
@@ -631,7 +631,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column10.name
             end
           end
@@ -641,7 +641,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column11.name
             end
           end
@@ -650,7 +650,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column12.name
             end
           end
@@ -662,7 +662,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column13.name
             end
           end
@@ -671,7 +671,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column14.name
             end
           end
@@ -952,7 +952,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -975,7 +975,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
@@ -984,7 +984,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end

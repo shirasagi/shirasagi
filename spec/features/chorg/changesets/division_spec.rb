@@ -54,7 +54,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
           wait_for_cbox_opened { click_on I18n.t("chorg.views.division_changesets.select_group") }
         end
       end
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_division") do
           within_cbox do
             click_on group.trailing_name

@@ -76,7 +76,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     context "all files download" do
       it do
         visit gws_workflow_files_path(site: site, state: "all")
-        wait_event_to_fire("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
+        wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
         accept_confirm do
           click_on I18n.t("ss.buttons.csv")
@@ -145,7 +145,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     context "all files download" do
       it do
         visit gws_workflow_files_path(site: site, state: "all")
-        wait_event_to_fire("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
+        wait_for_event_fired("ss:checked-all-list-items") { find(".gws-workflow .list-head input[type=checkbox]").click }
 
         accept_confirm do
           click_on I18n.t("gws/survey.buttons.zip_all_files")

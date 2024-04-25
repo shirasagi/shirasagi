@@ -50,7 +50,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       #
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on form.name
         end

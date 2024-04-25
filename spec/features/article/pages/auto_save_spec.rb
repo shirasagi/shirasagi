@@ -131,7 +131,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[index_name]", with: index_name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -185,7 +185,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit article_edit_path
         within "form#item-form" do
           fill_in "item[name]", with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end

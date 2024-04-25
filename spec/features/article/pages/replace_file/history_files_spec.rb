@@ -203,7 +203,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css("a", text: I18n.t("ss.links.download"))
               expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
-              wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
+              wait_for_event_fired "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
                 page.accept_confirm do
                   click_on I18n.t("ss.buttons.delete")
                 end

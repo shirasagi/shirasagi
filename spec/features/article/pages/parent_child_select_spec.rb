@@ -95,7 +95,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           # 最初に子を追加してみる
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end
@@ -110,7 +110,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           # 次に親を追加してみる
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end

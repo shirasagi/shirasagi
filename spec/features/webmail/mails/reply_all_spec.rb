@@ -32,7 +32,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         wait_for_js_ready
         new_window = window_opened_by do
           within '.webmail-menu-reply' do
-            wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('webmail.links.reply') }
+            wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('webmail.links.reply') }
             wait_for_js_ready
             within ".webmail-dropdown-menu" do
               click_on I18n.t('webmail.links.reply_all')

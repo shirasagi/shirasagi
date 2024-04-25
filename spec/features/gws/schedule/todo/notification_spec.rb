@@ -309,7 +309,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       # Finish All
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.finish-all').click
       end
@@ -330,7 +330,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
       select I18n.t("gws/schedule/todo.options.todo_state_filter.finished"), from: "s[todo_state]"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.revert-all').click
       end
@@ -350,7 +350,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       # Delete All (soft delete)
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.disable-all').click
       end
@@ -371,7 +371,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
       click_on I18n.t('gws/schedule.navi.trash')
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.destroy-all').click
       end

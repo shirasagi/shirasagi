@@ -49,7 +49,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -103,7 +103,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -169,7 +169,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -214,7 +214,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end
@@ -268,7 +268,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end
@@ -325,7 +325,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -373,7 +373,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -440,7 +440,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -484,7 +484,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end
@@ -532,7 +532,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end

@@ -15,7 +15,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/file_upload')
       end
@@ -71,7 +71,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/file_upload')
       end
@@ -127,7 +127,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/file_upload')
       end
@@ -183,7 +183,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/file_upload')
       end

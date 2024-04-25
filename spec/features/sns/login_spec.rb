@@ -24,7 +24,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -47,7 +47,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -72,7 +72,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -105,7 +105,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end

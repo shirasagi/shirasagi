@@ -35,11 +35,11 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
         Gws::User.find(gws_user.id).tap do |user|
           user.cur_site = site
           expect(page).to have_css(".user-navigation-user-id", text: "#{user.gws_default_group.trailing_name} #{user.name}")
-          wait_event_to_fire("turbo:frame-load") { click_on user.name }
+          wait_for_event_fired("turbo:frame-load") { click_on user.name }
         end
 
         within "#user-main-dropdown" do
-          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
         end
 
         within "#gws-group-switch-form" do
@@ -94,10 +94,10 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
 
       visit new_gws_schedule_plan_path(site: site)
       within "nav.user" do
-        wait_event_to_fire("turbo:frame-load") { click_on gws_user.name }
+        wait_for_event_fired("turbo:frame-load") { click_on gws_user.name }
 
         within "#user-main-dropdown" do
-          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
         end
 
         within "#gws-group-switch-form" do

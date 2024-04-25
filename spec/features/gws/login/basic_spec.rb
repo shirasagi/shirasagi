@@ -50,7 +50,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       expect(current_path).to eq main_path
       I18n.with_locale(user.lang.to_sym) do
         within ".user-navigation" do
-          wait_event_to_fire("turbo:frame-load") { click_on user.name }
+          wait_for_event_fired("turbo:frame-load") { click_on user.name }
           expect(page).to have_link(I18n.t("ss.logout"), href: logout_path)
           click_on I18n.t("ss.logout")
         end

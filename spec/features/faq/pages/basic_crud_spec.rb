@@ -123,7 +123,7 @@ describe "faq_pages", type: :feature, js: true do
 
     it "permited and contains_urls" do
       visit edit_path2
-      wait_event_to_fire("ss:formAlertFinish") do
+      wait_for_event_fired("ss:formAlertFinish") do
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
         end
@@ -133,7 +133,7 @@ describe "faq_pages", type: :feature, js: true do
 
     it "permited and not contains_urls" do
       visit edit_path
-      wait_event_to_fire("ss:formAlertFinish") do
+      wait_for_event_fired("ss:formAlertFinish") do
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
         end
@@ -147,7 +147,7 @@ describe "faq_pages", type: :feature, js: true do
                                   release_private_faq_pages release_other_faq_pages
                                   close_private_faq_pages close_other_faq_pages))
       visit edit_path2
-      wait_event_to_fire("ss:formAlertFinish") do
+      wait_for_event_fired("ss:formAlertFinish") do
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
         end
@@ -162,7 +162,7 @@ describe "faq_pages", type: :feature, js: true do
                                   release_private_faq_pages release_other_faq_pages
                                   close_private_faq_pages close_other_faq_pages))
       visit edit_path
-      wait_event_to_fire("ss:formAlertFinish") do
+      wait_for_event_fired("ss:formAlertFinish") do
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
         end

@@ -263,7 +263,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -271,7 +271,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column1.name
           end
         end
@@ -300,7 +300,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column2.name
           end
         end

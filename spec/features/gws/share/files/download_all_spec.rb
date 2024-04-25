@@ -19,7 +19,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         within ".tree-navi" do
           expect(page).to have_css(".item-name", text: folder.name)
         end
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').click }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').click }
         page.accept_confirm do
           find('.download-all').click
         end
@@ -49,7 +49,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         within ".tree-navi" do
           expect(page).to have_css(".item-name", text: folder.name)
         end
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
         page.accept_confirm do
           find('.download-all').click
         end

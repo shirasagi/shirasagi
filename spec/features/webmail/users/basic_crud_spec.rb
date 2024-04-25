@@ -173,7 +173,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_alert(I18n.t("ss.confirm.delete")) do
         click_button I18n.t("ss.links.delete")
       end

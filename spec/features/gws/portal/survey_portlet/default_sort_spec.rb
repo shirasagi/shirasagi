@@ -82,7 +82,7 @@ describe "gws_portal_survey", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -143,7 +143,7 @@ describe "gws_portal_survey", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')

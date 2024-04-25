@@ -14,7 +14,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on column.name
       end
@@ -67,7 +67,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
     it do
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on column.name
       end
@@ -93,7 +93,7 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
     it do
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on column.name
       end

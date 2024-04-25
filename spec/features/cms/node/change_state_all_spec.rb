@@ -15,7 +15,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
       expect(node2.state).to eq "public"
       expect(node3.state).to eq "public"
 
-      wait_event_to_fire("ss:checked-all-list-items") do
+      wait_for_event_fired("ss:checked-all-list-items") do
         find('.list-head input[type="checkbox"]').set(true)
       end
       within ".list-head-action-update" do
@@ -33,7 +33,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
       expect(node2.state).to eq "closed"
       expect(node3.state).to eq "closed"
 
-      wait_event_to_fire("ss:checked-all-list-items") do
+      wait_for_event_fired("ss:checked-all-list-items") do
         find('.list-head input[type="checkbox"]').set(true)
       end
       within ".list-head-action-update" do

@@ -65,7 +65,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
 
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
         within ".search-ui-select" do
           wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
         end
@@ -80,7 +80,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("guide.question")
         end
         wait_for_js_ready
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
         within ".search-ui-select" do
           wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
         end
