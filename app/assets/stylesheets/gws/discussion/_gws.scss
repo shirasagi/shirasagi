@@ -116,10 +116,30 @@
   }
 }
 .gws-discussion-topic {
-  font-size: 180%;
-  font-weight: bold;
-  padding-bottom: 10px;
-  padding-left: 10px;
+  margin-bottom: 8px;
+  //border: 1px solid #d0d0d0;
+  //border-radius: 3px;
+  //background: #fff;
+  @include clear;
+  h2 {
+    float: left;
+    font-size: 180%;
+    font-weight: bold;
+    padding: 10px;
+  }
+  form {
+    float: right;
+    padding: 10px 5px 5px 0;
+    select {
+      width: 160px;
+    }
+    input[type=text] {
+      width: 240px !important;
+    }
+  }
+  @include mb {
+    margin: 10px 0;
+  }
 }
 .gws-discussion-unseen {
   font-weight: bold;

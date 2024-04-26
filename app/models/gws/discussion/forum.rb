@@ -45,4 +45,16 @@ class Gws::Discussion::Forum
 
     main_topic.save!
   end
+
+  class << self
+    def search(params = {})
+      criteria = where({})
+      return criteria if params.blank?
+
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name
+      end
+      criteria
+    end
+  end
 end

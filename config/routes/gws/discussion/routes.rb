@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     scope path: ':mode' do
       resources :forums, concerns: [:soft_deletion, :copy], except: [:destroy] do
         resources :topics, concerns: [:deletion_topics, :copy] do
+          get :search, on: :collection
           get :all, on: :collection
           put :reply, on: :member
           resources :comments, controller: '/gws/discussion/comments', concerns: [:deletion_topics] do

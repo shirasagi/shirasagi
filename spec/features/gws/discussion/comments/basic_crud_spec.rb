@@ -1,16 +1,18 @@
 require 'spec_helper'
 
-describe "gws_discussion_comments", type: :feature, dbscope: :example do
-  context "basic crud", js: true do
-    let!(:site) { gws_site }
-    let!(:item) { create :gws_discussion_topic }
-    let!(:index_path) { gws_discussion_forum_topic_comments_path(mode: '-', site: site.id, forum_id: item.forum.id, topic_id: item.id) }
+describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true do
+  let!(:site) { gws_site }
+  let!(:forum) { create :gws_discussion_forum }
+  let!(:topic) { create :gws_discussion_topic, forum: forum, parent: forum }
 
-    before { login_gws_user }
+  let!(:index_path) { gws_discussion_forum_topic_comments_path(mode: '-', site: site, forum_id: forum, topic_id: topic) }
 
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
+  before { login_gws_user }
+
+  it "#index" do
+    visit index_path
+    within "#topic-#{topic.id}" do
+      expect(page).to have_link(topic.name)
     end
   end
 end
