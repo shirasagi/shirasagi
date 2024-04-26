@@ -1,5 +1,6 @@
 class Gws::Discussion::Post
   include Gws::Discussion::Postable
+  include Gws::Discussion::Searchable
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File

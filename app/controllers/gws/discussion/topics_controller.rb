@@ -9,6 +9,8 @@ class Gws::Discussion::TopicsController < ApplicationController
   before_action :set_crumbs
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :comments, :reply, :copy]
 
+  helper_method :topic_options
+
   navi_view "gws/discussion/main/navi"
 
   private
@@ -50,6 +52,10 @@ class Gws::Discussion::TopicsController < ApplicationController
       limit(@cur_site.discussion_recent_limit)
 
     @bookmarks = @bookmarker.bookmarks.values.take(@cur_site.discussion_bookmark_limit)
+  end
+
+  def topic_options
+    @items.pluck(:name, :id)
   end
 
   public
@@ -174,5 +180,16 @@ class Gws::Discussion::TopicsController < ApplicationController
     else
       render_create false, location: { action: :index }, render: { template: "copy" }
     end
+  end
+
+  def search
+    @items = @forum.children.reorder(order: 1, created: -1).
+      page(params[:page]).per(5)
+
+    @comments = Gws::Discussion::Post.site(@cur_site).
+      where(forum_id: @forum.id).
+      search(params[:s]).
+      reorder(order: 1, updated: -1).
+      page(params[:page]).per(50)
   end
 end

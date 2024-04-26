@@ -14,6 +14,8 @@
     <%= link_to t('ss.links.back'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|copy/ %>
     <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
+  <% elsif params[:action] =~ /search/ %>
+    <%= link_to t('ss.links.back'), { action: :index } %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>

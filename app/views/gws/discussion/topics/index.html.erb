@@ -17,12 +17,11 @@
   highlighter.render();
 <% end %>
 
-<h2 class="gws-discussion-topic"><%= @forum.name %></h2>
+<%= render partial: "header" %>
 
 <p class="gws-discussion-unseen" style="display: none;">
   <%= link_to t("gws/discussion.notice.reload"), { action: :index } %>
 </p>
-
 <%= paginate @items if @items.try(:current_page) %>
 
 <div class="gws-discussion gws-discussion-thread">

@@ -3,6 +3,7 @@ en:
     admin: Management
     topics: Thread
     members: Participants
+    bookmarks: Favorited comments
     navi:
       forum:
         readable: Conference room list
@@ -11,6 +12,8 @@ en:
         readable: Thread list
       todo:
         readable: To-do list
+      bookmark:
+        readable: Favorited comment list
     links:
       forum:
         back_to_index: Back to meeting room list
@@ -51,6 +54,7 @@ en:
       no_todos: Not registered
       bookmarks: Favorited comments will be displayed below.
       no_bookmarks: Not registered.
+      no_results: Search results could not be found.
     notify_message:
       topic:
         subject: 'A “%{topic_name}” thread has been created in [Electronic Conference Room] %{forum_name}.'

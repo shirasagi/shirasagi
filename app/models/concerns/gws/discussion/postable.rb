@@ -48,13 +48,6 @@ module Gws::Discussion::Postable
     after_save :update_forum_descendants_updated, if: -> { forum_id.present? && !skip_descendants_updated }
 
     scope :forum, ->{ exists parent_id: false }
-    scope :search, ->(params) {
-      criteria = where({})
-      return criteria if params.blank?
-
-      criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
-      criteria
-    }
   end
 
   def root_post
