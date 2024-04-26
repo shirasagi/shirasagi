@@ -1,9 +1,11 @@
 module Opendata::Resource::Model
   extend ActiveSupport::Concern
   include SS::Relation::File
-  include Opendata::AllowableAny
+  include Cms::Addon::GroupPermission
 
   included do
+    set_permission_name "opendata_resources"
+
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
