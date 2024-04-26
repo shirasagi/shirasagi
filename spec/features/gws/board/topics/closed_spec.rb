@@ -50,8 +50,8 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
             select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
           end
 
+          ensure_addon_opened "#addon-ss-agents-addons-release"
           within "#addon-ss-agents-addons-release" do
-            first(".addon-head h2").click
             select I18n.t("ss.options.state.closed"), from: "item[state]"
           end
 

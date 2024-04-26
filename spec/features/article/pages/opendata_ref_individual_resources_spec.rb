@@ -52,8 +52,8 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on article_page.name
         click_on I18n.t('ss.links.edit')
 
+        ensure_addon_opened '#addon-cms-agents-addons-opendata_ref-dataset'
         within '#addon-cms-agents-addons-opendata_ref-dataset' do
-          find('.addon-head h2').click
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
@@ -225,8 +225,8 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on article_page.name
         click_on I18n.t('ss.links.edit')
 
+        ensure_addon_opened '#addon-cms-agents-addons-opendata_ref-dataset'
         within '#addon-cms-agents-addons-opendata_ref-dataset' do
-          find('.addon-head h2').click
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'

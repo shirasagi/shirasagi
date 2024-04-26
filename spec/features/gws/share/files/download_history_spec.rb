@@ -74,8 +74,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".item-name", text: folder.name)
         end
         click_on name1
+        ensure_addon_opened "#addon-gws-agents-addons-share-history"
         within "#addon-gws-agents-addons-share-history" do
-          first(".addon-head h2").click
           within "tr#history-#{history.id}" do
             click_on I18n.t("ss.buttons.download")
           end
@@ -90,8 +90,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       item.histories.last.tap do |history|
         visit gws_share_files_path(site)
         click_on name1
+        ensure_addon_opened "#addon-gws-agents-addons-share-history"
         within "#addon-gws-agents-addons-share-history" do
-          first(".addon-head h2").click
           within "tr#history-#{history.id}" do
             click_on I18n.t("ss.buttons.download")
           end
