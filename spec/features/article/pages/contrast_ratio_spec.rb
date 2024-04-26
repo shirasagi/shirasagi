@@ -275,7 +275,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               end
             end
 
-            visit edit_article_page_path(site: site, cid: node, id: item)
+            page.dismiss_confirm(I18n.t("ss.confirm.resume_editing")) do
+              visit edit_article_page_path(site: site, cid: node, id: item)
+            end
             within "#addon-cms-agents-addons-form-page" do
               within ".column-value-cms-column-free" do
                 wait_for_cbox_opened do
