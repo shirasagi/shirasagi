@@ -43,7 +43,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           expect(page).to have_content(user1.long_name)
-          click_on user1.long_name
+          wait_for_cbox_closed { click_on user1.long_name }
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment

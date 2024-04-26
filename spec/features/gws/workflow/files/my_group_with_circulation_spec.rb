@@ -39,7 +39,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       end
       within_cbox do
         expect(page).to have_content(user1.long_name)
-        click_on user1.long_name
+        wait_for_cbox_closed { click_on user1.long_name }
       end
 
       within ".mod-workflow-request" do
@@ -47,7 +47,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       end
       within_cbox do
         expect(page).to have_content(user2.long_name)
-        click_on user2.long_name
+        wait_for_cbox_closed { click_on user2.long_name }
       end
 
       within ".mod-workflow-request" do

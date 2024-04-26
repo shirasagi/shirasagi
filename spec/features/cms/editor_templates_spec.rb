@@ -30,7 +30,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
         wait_for_cbox_opened { first(".btn-file-upload").click }
       end
       within_cbox do
-        click_on file.name
+        wait_for_cbox_closed { click_on file.name }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')

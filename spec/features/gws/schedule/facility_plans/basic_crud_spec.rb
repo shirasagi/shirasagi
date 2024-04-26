@@ -37,7 +37,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         wait_for_cbox_opened { click_button I18n.t('gws/schedule.facility_reservation.index') }
       end
       within_cbox do
-        click_on I18n.t('ss.buttons.close')
+        wait_for_cbox_closed { click_on I18n.t('ss.buttons.close') }
       end
       within 'form#item-form' do
         click_button I18n.t('ss.buttons.save')
@@ -103,7 +103,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           wait_for_cbox_opened { click_button I18n.t('gws/schedule.facility_reservation.index') }
         end
         within_cbox do
-          click_on I18n.t('ss.buttons.close')
+          wait_for_cbox_closed { click_on I18n.t('ss.buttons.close') }
         end
         within 'form#item-form' do
           click_button I18n.t('ss.buttons.save')

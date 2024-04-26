@@ -38,7 +38,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         attach_file "item[in_files][]", file_path
-        click_on I18n.t("ss.buttons.attach")
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
 
       # choose member
@@ -48,7 +48,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        click_on user1.name
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       # save as draft
@@ -99,7 +99,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         attach_file "item[in_files][]", file_path
-        click_on I18n.t("ss.buttons.attach")
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
 
       # choose member
@@ -109,7 +109,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        click_on user1.name
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       # save as draft

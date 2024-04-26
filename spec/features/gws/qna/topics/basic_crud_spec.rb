@@ -40,7 +40,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         visit new_path
         wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
         within_cbox do
-          click_on category.name
+          wait_for_cbox_closed { click_on category.name }
         end
 
         within "form#item-form" do

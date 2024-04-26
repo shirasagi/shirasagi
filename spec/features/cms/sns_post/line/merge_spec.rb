@@ -100,7 +100,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               end
               within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-                click_on I18n.t("ss.buttons.ignore_alert")
+                wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
               end
               wait_for_notice I18n.t('ss.notice.saved')
             end
@@ -158,7 +158,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             perform_enqueued_jobs do
               within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-                click_on I18n.t("ss.buttons.ignore_alert")
+                wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
               end
               wait_for_notice I18n.t('ss.notice.saved')
             end
@@ -267,7 +267,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               end
               within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-                click_on I18n.t("ss.buttons.ignore_alert")
+                wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
               end
               wait_for_notice I18n.t('ss.notice.saved')
             end
@@ -322,7 +322,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               end
               within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-                click_on I18n.t("ss.buttons.ignore_alert")
+                wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
               end
               wait_for_notice I18n.t('ss.notice.saved')
             end

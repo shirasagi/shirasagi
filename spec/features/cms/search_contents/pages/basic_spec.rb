@@ -255,7 +255,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     visit pages_index_path
     wait_for_cbox_opened { click_on I18n.t("cms.apis.categories.index") }
     within_cbox do
-      click_on cate_name1
+      wait_for_cbox_closed { click_on cate_name1 }
     end
     expect(page).to have_css(".mod-cms-page-search", text: cate_name1)
     click_button I18n.t('ss.buttons.search')
@@ -267,7 +267,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     visit pages_index_path
     wait_for_cbox_opened { click_on I18n.t("cms.apis.categories.index") }
     within_cbox do
-      click_on opendata_cate_name1
+      wait_for_cbox_closed { click_on opendata_cate_name1 }
     end
     expect(page).to have_css(".mod-cms-page-search", text: opendata_cate_name1)
     click_button I18n.t('ss.buttons.search')
@@ -279,7 +279,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     visit pages_index_path
     wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
     within_cbox do
-      click_on cms_group.name
+      wait_for_cbox_closed { click_on cms_group.name }
     end
     expect(page).to have_css(".mod-cms-page-search", text: cms_group.name)
     click_button I18n.t('ss.buttons.search')
@@ -295,7 +295,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     visit pages_index_path
     wait_for_cbox_opened { click_on I18n.t("cms.apis.users.index") }
     within_cbox do
-      click_on user.name
+      wait_for_cbox_closed { click_on user.name }
     end
     expect(page).to have_css(".mod-cms-page-search", text: user.name)
     click_button I18n.t('ss.buttons.search')
@@ -307,7 +307,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     visit pages_index_path
     wait_for_cbox_opened { click_on I18n.t("cms.apis.nodes.index") }
     within_cbox do
-      click_on node_name
+      wait_for_cbox_closed { click_on node_name }
     end
     expect(page).to have_css(".mod-cms-page-search", text: node_name)
     click_button I18n.t('ss.buttons.search')
@@ -322,7 +322,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
     wait_for_cbox_opened { click_on I18n.t("cms.apis.pages_routes.index") }
     page_route = I18n.t("modules.article") + "/" + I18n.t("mongoid.models.article/page")
     within_cbox do
-      click_on page_route
+      wait_for_cbox_closed { click_on page_route }
     end
     expect(page).to have_css(".mod-cms-page-search", text: page_route)
     click_button I18n.t('ss.buttons.search')

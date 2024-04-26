@@ -68,9 +68,6 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
       # select
       within_cbox do
         fill_in "s[keyword]", with: I18n.t("opendata.links.dataset_map_search_datasets")
-      end
-
-      within_cbox do
         first("a", text: item11.name).click
       end
 

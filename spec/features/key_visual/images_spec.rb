@@ -30,7 +30,7 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file.name)
-        click_on file.name
+        wait_for_cbox_closed { click_on file.name }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')

@@ -82,7 +82,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         within_cbox do
           expect(page).to have_content(mail1.subject)
           expect(page).to have_content(mail3.subject)
-          click_on mail2.subject
+          wait_for_cbox_closed { click_on mail2.subject }
         end
         within "form#item-form" do
           perform_enqueued_jobs do

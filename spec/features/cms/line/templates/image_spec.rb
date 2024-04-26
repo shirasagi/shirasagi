@@ -37,7 +37,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file1.name)
-        click_on file1.name
+        wait_for_cbox_closed { click_on file1.name }
       end
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
@@ -63,7 +63,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file2.name)
-        click_on file2.name
+        wait_for_cbox_closed { click_on file2.name }
       end
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")

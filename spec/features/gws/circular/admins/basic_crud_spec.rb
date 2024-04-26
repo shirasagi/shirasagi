@@ -24,7 +24,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        click_on user1.name
+        wait_for_cbox_closed { click_on user1.name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
@@ -181,7 +181,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        click_on cate1.name
+        wait_for_cbox_closed { click_on cate1.name }
       end
 
       within "form#item-form" do
@@ -190,7 +190,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        click_on user1.name
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       within "form#item-form" do
@@ -230,7 +230,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        click_on user1.name
+        wait_for_cbox_closed { click_on user1.name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
@@ -327,7 +327,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         # click_on user2.name
         first("[data-id='#{user2.id}'] input[type='checkbox']").click
 
-        click_on I18n.t("ss.links.select")
+        wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")

@@ -79,7 +79,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
         within_cbox do
-          click_on user1.long_name
+          wait_for_cbox_closed { click_on user1.long_name }
         end
         within "form#item-form" do
           click_on I18n.t("ss.buttons.download")
@@ -118,7 +118,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
         within_cbox do
-          click_on user1.long_name
+          wait_for_cbox_closed { click_on user1.long_name }
         end
         within "form#item-form" do
           fill_in_date "item[from_date]", with: from_time
@@ -156,7 +156,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
         within_cbox do
-          click_on user2.long_name
+          wait_for_cbox_closed { click_on user2.long_name }
         end
         within "form#item-form" do
           first("input[value='UTF-8']").click

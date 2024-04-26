@@ -46,7 +46,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
@@ -164,7 +164,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
@@ -260,7 +260,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
@@ -360,7 +360,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
-          click_on I18n.t("workflow.search_approvers.select")
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment

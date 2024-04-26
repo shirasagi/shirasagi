@@ -374,7 +374,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
           within_cbox do
             attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
+            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
           end
           within 'form#item-form' do
             within ".column-value-cms-column-fileupload" do
@@ -419,7 +419,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
           within_cbox do
             attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
+            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
           end
           within "#item-form" do
             within ".column-value-cms-column-free" do
@@ -601,7 +601,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".list-item", text: selectable_page2.name)
             expect(page).to have_css(".list-item", text: selectable_page3.name)
             expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-            click_on column14_page1.name
+            wait_for_cbox_closed { click_on column14_page1.name }
           end
           within 'form#item-form' do
             within ".column-value-cms-column-selectpage " do

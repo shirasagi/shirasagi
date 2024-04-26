@@ -112,7 +112,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{item3.id}\"] a", text: item3.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{item3.id}\"] a", text: item3.name).click }
       end
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
@@ -198,7 +198,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{folder.id}\"] a", text: folder.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{folder.id}\"] a", text: folder.name).click }
       end
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
@@ -237,7 +237,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{item3.id}\"] a", text: item3.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{item3.id}\"] a", text: item3.name).click }
       end
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")

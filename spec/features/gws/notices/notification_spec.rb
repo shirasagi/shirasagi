@@ -42,7 +42,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
       within_cbox do
         expect(page).to have_content(recipient1.name)
-        click_on recipient1.name
+        wait_for_cbox_closed { click_on recipient1.name }
       end
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')

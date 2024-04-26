@@ -183,7 +183,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           expect(page).to have_content(item2.name)
-          click_on item2.name
+          wait_for_cbox_closed { click_on item2.name }
         end
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
@@ -209,7 +209,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         end
         within_cbox do
           expect(page).to have_content(item2.name)
-          click_on item2.name
+          wait_for_cbox_closed { click_on item2.name }
         end
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')

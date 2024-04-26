@@ -68,7 +68,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
             # file4 is able to view because file4's members contains user0
             expect(page).to have_css(".list-item", text: file4.name)
 
-            click_on file2.name
+            wait_for_cbox_closed { click_on file2.name }
           end
         end
 

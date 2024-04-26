@@ -28,7 +28,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
       within_cbox do
-        click_on category.name
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         click_on I18n.t('ss.buttons.save')

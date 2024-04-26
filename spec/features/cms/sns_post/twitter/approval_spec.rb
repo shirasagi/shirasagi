@@ -328,7 +328,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -383,7 +383,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             end
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
-              click_on I18n.t("ss.buttons.ignore_alert")
+              wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
             end
             wait_for_notice I18n.t('ss.notice.saved')
           end
@@ -403,7 +403,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -458,7 +458,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             end
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
-              click_on I18n.t("ss.buttons.ignore_alert")
+              wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
             end
             wait_for_notice I18n.t('ss.notice.saved')
           end
@@ -478,7 +478,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -561,7 +561,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -643,7 +643,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -725,7 +725,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")

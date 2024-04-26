@@ -33,8 +33,7 @@ describe "member_groups", type: :feature, js: true do
 
       within_cbox do
         first('#ajax-box th [type="checkbox"]').set(true)
-        click_on I18n.t("cms.apis.members.select")
-        wait_for_ajax
+        wait_for_cbox_closed { click_on I18n.t("cms.apis.members.select") }
       end
 
       within "form#item-form" do

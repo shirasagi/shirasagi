@@ -24,7 +24,7 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
 
       within_cbox do
         expect(page).to have_content(ss_file.name)
-        click_on ss_file.name
+        wait_for_cbox_closed { click_on ss_file.name }
       end
 
       within "form#item-form" do

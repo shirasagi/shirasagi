@@ -79,7 +79,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("jmaxml.apis.quake_regions.index")
       end
       within_cbox do
-        click_on region.name
+        wait_for_cbox_closed { click_on region.name }
       end
       within ".mod-rss-anpi-mail-setting-regions" do
         expect(page).to have_css(".index", text: region.name)
