@@ -1,0 +1,21 @@
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{index_path}'; return false;" %>
+<% end %>
+
+<dl class="see">
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :permit_comment %><%= @model.tt :permit_comment %></dt>
+  <dd><%= f.select :permit_comment, @item.permit_comment_options %></dd>
+
+  <dt><%= @model.t :permanently %><%= @model.tt :permanently %></dt>
+  <dd><%= f.select :permanently, @item.permanently_options %></dd>
+
+  <dt><%= @model.t :topic_quota %><%= @model.tt :topic_quota %></dt>
+  <dd class="short"><%= f.number_field :topic_quota, min: 0 %> <span class="postfix"><%= t('ss.units.mega_byte') %></span></dd>
+</dl>

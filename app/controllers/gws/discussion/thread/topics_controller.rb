@@ -1,4 +1,4 @@
-class Gws::Discussion::TopicsController < ApplicationController
+class Gws::Discussion::Thread::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Discussion::BaseFilter
@@ -6,7 +6,9 @@ class Gws::Discussion::TopicsController < ApplicationController
   model Gws::Discussion::Topic
 
   before_action :set_crumbs
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :copy]
+  before_action :set_item
+
+  helper_method :index_path
 
   navi_view "gws/discussion/main/navi"
 
@@ -21,34 +23,15 @@ class Gws::Discussion::TopicsController < ApplicationController
     @crumbs << [ @forum.name, gws_discussion_forum_portal_path ]
   end
 
-  def set_items
-    @items = @model.in(id: @forum.children.pluck(:id)).
-      reorder(order: 1, created: 1).
-      search(params[:s]).
-      page(params[:page]).per(50)
+  def index_path
+    gws_discussion_forum_thread_comments_path(topic_id: @item)
+  end
+
+  def crud_redirect_url
+    index_path
   end
 
   public
-
-  def index
-    set_items
-  end
-
-  def show
-    render
-  end
-
-  def create
-    @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-
-    if @item.save
-      @item.save_notify_message(@cur_site, @cur_user)
-      render_create true
-    else
-      render_create false
-    end
-  end
 
   def copy
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
@@ -63,9 +46,14 @@ class Gws::Discussion::TopicsController < ApplicationController
     if @item.valid?
       item = @item.save_clone(@topic)
       item.attributes = get_params
-      render_create true, location: { action: :index }, render: { template: "copy" }
+      render_create true, location: portal_path, render: { template: "copy" }
     else
-      render_create false, location: { action: :index }, render: { template: "copy" }
+      render_create false, location: portal_path, render: { template: "copy" }
     end
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    render_destroy @item.destroy, location: portal_path
   end
 end

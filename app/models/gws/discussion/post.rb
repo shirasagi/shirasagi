@@ -28,8 +28,9 @@ class Gws::Discussion::Post
     notify_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
     return if notify_member_ids.blank?
 
-    url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(
-      site: @cur_site.id, mode: '-', forum_id: forum.id, topic_id: topic.id, anchor: "comment-#{id}")
+    url_helpers = Rails.application.routes.url_helpers
+    url = url_helpers.gws_discussion_forum_thread_comments_path(
+      site: site, mode: '-', forum_id: forum, topic_id: topic, anchor: "comment-#{id}")
 
     item = SS::Notification.new
     item.cur_group = site
