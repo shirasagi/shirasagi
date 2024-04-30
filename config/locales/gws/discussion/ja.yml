@@ -49,11 +49,11 @@ ja:
       reload: ※新着投稿があります。クリックすることで再描画します。
       forum_copy: ※複製後は非公開状態になります。ToDo は複製されません。
       comment_limit: 'コメント数が%{limit}件を超えました。新規スレッドを作成してください。'
-      no_topics: スレッドはありません。
-      no_recents: 新着はありません。
+      no_topics: スレッドはありません
+      no_recents: 新着はありません
       no_todos: 登録されていません
       bookmarks: 会議室ポータルでお気に入りしたコメントが以下に表示されます。
-      no_bookmarks: 登録されていません。
+      no_bookmarks: 登録されていません
       no_results: 検索結果が見つかりませんでした。
     notify_message:
       topic:

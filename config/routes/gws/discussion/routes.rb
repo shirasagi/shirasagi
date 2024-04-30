@@ -11,11 +11,6 @@ Rails.application.routes.draw do
     post :soft_delete_all, on: :collection
   end
 
-  concern :deletion_topics do
-    get :delete, on: :member
-    delete :all, action: :destroy_all, on: :collection
-  end
-
   concern :plans do
     get :events, on: :collection
     get :print, on: :collection
@@ -40,16 +35,26 @@ Rails.application.routes.draw do
 
     scope path: ':mode' do
       resources :forums, concerns: [:soft_deletion, :copy], except: [:destroy] do
-        resources :topics, concerns: [:deletion_topics, :copy] do
-          get :search, on: :collection
-          get :all, on: :collection
-          put :reply, on: :member
-          resources :comments, controller: '/gws/discussion/comments', concerns: [:deletion_topics] do
-            put :reply, on: :collection
+        get 'portal' => "portal#index"
+        get 'portal/search' => "portal#search"
+        put 'portal/reply/:id' => "portal#reply"
+        namespace "portal" do
+          resources :topics, only: [:new, :create]
+          scope path: "topic:topic_id" do
+            resources :comments, only: [:edit, :update, :destroy], concerns: [:deletion]
+          end
+        end
+        namespace "thread" do
+          resources :topics, only: [:edit, :update, :destroy], concerns: [:deletion, :copy]
+          scope path: "topic:topic_id" do
+            resources :comments, concerns: [:deletion] do
+              put :reply, on: :collection
+            end
           end
         end
         resources :todos, concerns: [:plans, :todos, :copy]
         resources :bookmarks, only: [:index, :destroy], concerns: [:deletion]
+        resources :topics, concerns: [:deletion, :copy]
       end
     end
 

@@ -1,19 +1,20 @@
-<%= jquery do %>Gws_Discussion_Thread.render(<%= @cur_user.id %>);<% end %>
+<%= jquery do %>
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+<% end %>
 
-<div class="gws-discussion-topic">
-  <h2><%= @forum.name %></h2>
-</div>
+<%= render partial: "header" %>
 
 <div class="gws-discussion">
-  <div class="addon-views">
-    <div class="addon-view" id="addon-basic"><div class="addon-body">
-      <p><%= t("gws/discussion.notice.bookmarks") %></p>
+  <% if @comments.blank? %>
+    <div class="addon-views">
+      <div class="addon-view" id="addon-basic"><div class="addon-body">
+        <p style="margin-top: 5px;"><%= t("gws/discussion.notice.no_results") %></p>
+      </div>
     </div>
-  </div>
+  <% end %>
 
-  <% @bookmarks.each do |bookmark| %>
+  <% @comments.each do |item| %>
     <%
-      item = bookmark.post
       if item.topic
         topic = item.topic
         ids = item.topic.children.pluck(:id).reverse
@@ -60,5 +61,5 @@
     </div>
   <% end %>
 
-  <%= paginate @bookmarks if @bookmarks.try(:current_page) %>
+  <%= paginate @comments if @comments.try(:current_page) %>
 </div>
