@@ -1,0 +1,20 @@
+<%
+  return if dry_run_groups.count.zero?
+%>
+
+<div class="main-box">
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= Gws::Group.t :name %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% dry_run_groups.each do |group| %>
+      <tr>
+        <td><%= link_to group.name, gws_ldap_sync_group_path(id: group.attributes["basename"]) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

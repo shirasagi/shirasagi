@@ -1,0 +1,20 @@
+<div class="addon-views">
+  <%=
+    addon_options = {
+      id: "addon-task", head: "Step 1. #{t("ss.buttons.test_run")}", toggle: true
+    }
+    addon_options[:display_body] = "hide" if dry_run_results?
+    buf = render "show_task", addon: addon_options
+    render("ss/crud/addon", addon: addon_options) { buf }
+  %>
+
+  <%=
+    if dry_run_results?
+      addon_options = {
+        id: "addon-results", head: "Step 2. #{t("ldap.result")}", toggle: true
+      }
+      buf = render "show_results", addon: addon_options
+      render("ss/crud/addon", addon: addon_options) { buf }
+    end
+  %>
+</div>

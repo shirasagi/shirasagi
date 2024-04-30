@@ -1,0 +1,63 @@
+<%
+  limit = 10
+%>
+
+<% if dry_run_groups.count > 0 %>
+  <dl class="see">
+    <dt class="wide"><%= t("mongoid.models.gws/group") %></dt>
+    <dd class="wide">
+      <table class="index">
+        <thead>
+        <tr>
+          <th><%= Gws::Group.t :name %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% dry_run_groups.take(limit).each do |group| %>
+          <tr>
+            <td><%= link_to group.name, gws_ldap_sync_group_path(id: group.attributes["basename"]) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+        <% if dry_run_groups.count > limit %>
+          <tfoot>
+          <tr>
+            <td><%= t("history.n_out_of_m", m: dry_run_groups.count.to_s(:delimited), n: limit.to_s(:delimited)) %></td>
+          </tr>
+          </tfoot>
+        <% end %>
+      </table>
+      <div><%= link_to t("ss.links.more_all"), gws_ldap_sync_groups_path %></div>
+    </dd>
+  </dl>
+<% end %>
+
+<% if dry_run_users.count > 0 %>
+  <dl class="see">
+    <dt class="wide"><%= t("mongoid.models.gws/user") %></dt>
+    <dd class="wide">
+      <table class="index">
+        <thead>
+        <tr>
+          <th><%= Gws::User.t :name %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% dry_run_users.take(limit).each do |user| %>
+          <tr>
+            <td><%= link_to user.name, gws_ldap_sync_user_path(id: user.attributes["basename"]) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+        <% if dry_run_users.count > limit %>
+          <tfoot>
+          <tr>
+            <div><%= t("history.n_out_of_m", m: dry_run_users.count.to_s(:delimited), n: limit.to_s(:delimited)) %></div>
+          </tr>
+          </tfoot>
+        <% end %>
+      </table>
+      <div><%= link_to t("ss.links.more_all"), gws_ldap_sync_users_path %></div>
+    </dd>
+  </dl>
+<% end %>

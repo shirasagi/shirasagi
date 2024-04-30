@@ -1,0 +1,94 @@
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
+  <div class="width: 100%;">
+    <div style="margin: 10px 0;">
+      <h2 style="display: flex; justify-content: center; padding: 10px; font-size: 200%; background-color: #ccc">
+        <%= "同期前" %>
+      </h2>
+    </div>
+    <% if @before_item %>
+      <%
+        @model = Gws::User
+        @item = @before_item
+      %>
+      <div class="addon-views">
+        <%=
+          addon_options = {
+            id: "addon-basic", head: t("ss.basic_info"), toggle: true
+          }
+          buf = render "gws/users/show", addon: addon_options
+          render("ss/crud/addon", addon: addon_options) { buf }
+        %>
+
+        <%=
+          addon_options = {
+            id: "addon-ss-agents-addons-locale_setting", head: t("modules.addons.ss/locale_setting"), toggle: true
+          }
+          buf = render "ss/agents/addons/locale_setting/show", addon: addon_options
+          render("ss/crud/addon", addon: addon_options) { buf }
+        %>
+
+        <%=
+          addon_options = {
+            id: "addon-ss-agents-addons-ldap-user", head: t("modules.addons.ss/ldap/user"), toggle: true
+          }
+          buf = render "ss/agents/addons/ldap/user/show", addon: addon_options
+          render("ss/crud/addon", addon: addon_options) { buf }
+        %>
+
+        <%=
+          addon_options = {
+            id: "addon-gws-agents-addons-role", head: t("modules.addons.gws/role"), toggle: true
+          }
+          buf = render "gws/agents/addons/role/show", addon: addon_options
+          render("ss/crud/addon", addon: addon_options) { buf }
+        %>
+      </div>
+    <% else %>
+      <%= tag.div "対応する既存ユーザーは見つかりません。新規ユーザーが作成されます。", style: "width: 100%; height: 160px; padding: 10px; background-color: #fff; border: 1px solid #d0d0d0; border-radius: 3px;" %>
+    <% end %>
+  </div>
+  <div class="width: 100%;">
+    <div style="margin: 10px 0;">
+      <h2 style="display: flex; justify-content: center; padding: 10px; font-size: 200%; background-color: #ccc">
+        <%= "同期後" %>
+      </h2>
+    </div>
+    <div class="addon-views">
+      <%
+        @model = Gws::User
+        @item = @after_item
+      %>
+      <%=
+        addon_options = {
+          id: "addon-basic", head: t("ss.basic_info"), toggle: true
+        }
+        buf = render "gws/users/show", addon: addon_options
+        render("ss/crud/addon", addon: addon_options) { buf }
+      %>
+
+      <%=
+        addon_options = {
+          id: "addon-ss-agents-addons-locale_setting", head: t("modules.addons.ss/locale_setting"), toggle: true
+        }
+        buf = render "ss/agents/addons/locale_setting/show", addon: addon_options
+        render("ss/crud/addon", addon: addon_options) { buf }
+      %>
+
+      <%=
+        addon_options = {
+          id: "addon-ss-agents-addons-ldap-user", head: t("modules.addons.ss/ldap/user"), toggle: true
+        }
+        buf = render "ss/agents/addons/ldap/user/show", addon: addon_options
+        render("ss/crud/addon", addon: addon_options) { buf }
+      %>
+
+      <%=
+        addon_options = {
+          id: "addon-gws-agents-addons-role", head: t("modules.addons.gws/role"), toggle: true
+        }
+        buf = render "gws/agents/addons/role/show", addon: addon_options
+        render("ss/crud/addon", addon: addon_options) { buf }
+      %>
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ class Gws::Ldap::Sync::DryRunsController < ApplicationController
   model Gws::Ldap::SyncTask
 
   before_action :check_ldap_url, only: %i[show]
+  helper_method :dry_run_results?, :dry_run_groups, :dry_run_users
 
   private
 
@@ -34,8 +35,57 @@ class Gws::Ldap::Sync::DryRunsController < ApplicationController
   def check_ldap_url
     if ldap_setting.ldap_url.blank?
       @item.errors.add :base, t("ldap.errors.connection_setting_not_found")
-      render template: "gws/ldap/sync/runs/show"
+      render
       return
+    end
+  end
+
+  def dry_run_results?
+    path = "#{@item.base_dir}/dry_run.zip"
+    ::File.size?(path)
+  end
+
+  def dry_run_groups
+    @dry_run_groups ||= begin
+      path = "#{@item.base_dir}/dry_run.zip"
+      groups = []
+
+      Zip::File.open(path) do |zip|
+        zip.each do |entry|
+          name = entry.name
+          name.force_encoding(Encoding::UTF_8)
+          next unless name.start_with?("collections/#{Gws::Group.collection_name}/")
+
+          json = entry.get_input_stream.read
+          json = JSON.parse(json)
+          json["basename"] = ::File.basename(name, ".*")
+          groups << ::Mongoid::Factory.from_db(Gws::Group, json)
+        end
+      end
+
+      groups
+    end
+  end
+
+  def dry_run_users
+    @dry_run_users ||= begin
+      path = "#{@item.base_dir}/dry_run.zip"
+      users = []
+
+      Zip::File.open(path) do |zip|
+        zip.each do |entry|
+          name = entry.name
+          name.force_encoding(Encoding::UTF_8)
+          next unless name.start_with?("collections/#{Gws::User.collection_name}/")
+
+          json = entry.get_input_stream.read
+          json = JSON.parse(json)
+          json["basename"] = ::File.basename(name, ".*")
+          users << ::Mongoid::Factory.from_db(Gws::User, json)
+        end
+      end
+
+      users
     end
   end
 
@@ -45,7 +95,7 @@ class Gws::Ldap::Sync::DryRunsController < ApplicationController
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     respond_to do |format|
-      format.html { render template: "gws/ldap/sync/runs/show" }
+      format.html { render }
       format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end

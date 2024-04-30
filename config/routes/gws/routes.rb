@@ -97,8 +97,10 @@ Rails.application.routes.draw do
           post :group_test_search, on: :member
           post :user_test_search, on: :member
         end
-        resource :dry_run, only: %i[show update]
         resource :run, only: %i[show update]
+        resource :dry_run, only: %i[show update]
+        resources :users, path: "dry_run/users", only: %i[index show]
+        resources :groups, path: "dry_run/groups", only: %i[index show]
       end
       namespace "diagnostic" do
         get '/' => redirect { |p, req| "#{req.path}/auth" }, as: :main

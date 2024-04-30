@@ -1,0 +1,62 @@
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
+  <div class="width: 100%;">
+    <div style="margin: 10px 0;">
+      <h2 style="display: flex; justify-content: center; padding: 10px; font-size: 200%; background-color: #ccc">
+        <%= "同期前" %>
+      </h2>
+    </div>
+    <% if @before_item %>
+      <%
+        @model = Gws::Group
+        @item = @before_item
+      %>
+      <div class="addon-views">
+        <%=
+          addon_options = {
+            id: "addon-basic", head: t("ss.basic_info"), toggle: true
+          }
+          buf = render "gws/groups/show", addon: addon_options
+          render("ss/crud/addon", addon: addon_options) { buf }
+        %>
+
+        <%=
+          addon_options = {
+            id: "addon-ss-agents-addons-ldap-group", head: t("modules.addons.ss/ldap/group"), toggle: true
+          }
+          buf = render "ss/agents/addons/ldap/group/show", addon: addon_options
+          render("ss/crud/addon", addon: addon_options) { buf }
+        %>
+      </div>
+    <% else %>
+      <%= tag.div "対応する既存グループは見つかりません。新規グループが作成されます。", style: "width: 100%; height: 160px; padding: 10px; background-color: #fff; border: 1px solid #d0d0d0; border-radius: 3px;" %>
+    <% end %>
+  </div>
+  <div class="width: 100%;">
+    <div style="margin: 10px 0;">
+      <h2 style="display: flex; justify-content: center; padding: 10px; font-size: 200%; background-color: #ccc">
+        <%= "同期後" %>
+      </h2>
+    </div>
+    <div class="addon-views">
+      <%
+        @model = Gws::Group
+        @item = @after_item
+      %>
+      <%=
+        addon_options = {
+          id: "addon-basic", head: t("ss.basic_info"), toggle: true
+        }
+        buf = render "gws/groups/show", addon: addon_options
+        render("ss/crud/addon", addon: addon_options) { buf }
+      %>
+
+      <%=
+        addon_options = {
+          id: "addon-ss-agents-addons-ldap-group", head: t("modules.addons.ss/ldap/group"), toggle: true
+        }
+        buf = render "ss/agents/addons/ldap/group/show", addon: addon_options
+        render("ss/crud/addon", addon: addon_options) { buf }
+      %>
+    </div>
+  </div>
+</div>
