@@ -251,3 +251,12 @@ a.user-detail {
   color: #333;
   text-decoration: underline;
 }
+.user-detail-modal {
+  padding: 6px;
+  .email {
+    white-space: nowrap;
+  }
+  footer.send {
+    padding: 14px 0 0;
+  }
+}

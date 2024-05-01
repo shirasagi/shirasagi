@@ -11,13 +11,6 @@
 </dl>
 
 <% if @model.member_include_member_ids? %>
-<%= jquery do %>
-$(".user-detail").colorbox({
-  maxWidth: "80%",
-  maxHeight: "80%",
-  fixed: true
-});
-<% end %>
 <dl class="see">
   <dt><%= @model.t :member_ids %></dt>
   <dd>
