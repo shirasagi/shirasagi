@@ -44,7 +44,7 @@ class Gws::Discussion::Thread::TopicsController < ApplicationController
 
     @item.attributes = get_params
     if @item.valid?
-      item = @item.save_clone(@topic)
+      item = @item.save_clone(@forum)
       item.attributes = get_params
       render_create true, location: portal_path, render: { template: "copy" }
     else

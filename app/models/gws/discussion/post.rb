@@ -16,6 +16,41 @@ class Gws::Discussion::Post
 
   validates :text, presence: true
 
+  def save_clone(new_forum, new_topic)
+    item = self.class.new
+    item.attributes = self.attributes
+    item.id = nil
+    item.name = new_topic.name
+
+    item.created = item.updated = Time.zone.now
+    item.released = nil if respond_to?(:released)
+    item.state = "closed" if item.depth == 1
+
+    item.descendants_updated = nil
+    item.skip_descendants_updated = true
+
+    item.forum = new_forum
+    item.topic = new_topic
+    item.parent = new_topic
+
+    if respond_to?(:files)
+      file_ids = []
+      files.each do |f|
+        file = SS::File.new
+        file.attributes = f.attributes
+        file.id = nil
+        file.in_file = f.uploaded_file
+        file.user_id = @cur_user.id if @cur_user
+
+        file.save!
+        file_ids << file.id
+      end
+      item.file_ids = file_ids
+    end
+    item.save!
+    item
+  end
+
   def save_notify_message(site, user)
     return unless site.notify_model?(self)
 
