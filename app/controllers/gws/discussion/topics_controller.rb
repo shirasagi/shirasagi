@@ -61,7 +61,7 @@ class Gws::Discussion::TopicsController < ApplicationController
 
     @item.attributes = get_params
     if @item.valid?
-      item = @item.save_clone(@topic)
+      item = @item.save_clone(@forum)
       item.attributes = get_params
       render_create true, location: { action: :index }, render: { template: "copy" }
     else

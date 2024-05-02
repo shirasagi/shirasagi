@@ -105,39 +105,6 @@ module Gws::Discussion::Postable
     created > Time.zone.now - site.discussion_new_days.day
   end
 
-  def save_clone(new_parent = nil)
-    post = self.class.new
-    post.attributes = self.attributes
-
-    post.id = nil
-    post.created = post.updated = Time.zone.now
-    post.released = nil if respond_to?(:released)
-    post.descendants_updated = nil
-
-    post.state = "closed" if post.depth == 1
-    post.parent = new_parent if new_parent
-
-    if respond_to?(:files)
-      file_ids = []
-      files.each do |f|
-        file = SS::File.new
-        file.attributes = f.attributes
-        file.id = nil
-        file.in_file = f.uploaded_file
-        file.user_id = @cur_user.id if @cur_user
-
-        file.save!
-        file_ids << file.id
-      end
-      post.file_ids = file_ids
-    end
-    post.skip_descendants_updated = true
-    post.save!
-
-    children.order(id: 1).each { |c| c.save_clone(post) }
-    post
-  end
-
   def member?(*args)
     if forum.present? && forum_id != id
       forum.member?(*args)
