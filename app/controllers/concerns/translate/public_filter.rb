@@ -41,7 +41,16 @@ module Translate::PublicFilter
     end
   end
 
+  def translatable_content_type?
+    return false if response.content_type.blank?
+    return true if response.content_type.start_with?("text/html")
+    return true if response.content_type.start_with?("application/json")
+    false
+  end
+
   def render_translate
+    return unless translatable_content_type?
+
     body = response.body
 
     if params[:format] == "json"
