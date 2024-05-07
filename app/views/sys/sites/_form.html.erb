@@ -48,7 +48,7 @@
   </dd>
 </dl>
 
-<dl class="see">
+<dl class="see partner_site_ids">
   <dt><%= @model.t :partner_site_ids %><%= @model.tt :partner_site_ids %></dt>
   <dd>
     <%= f.hidden_field "partner_site_ids[]", value: "", id: nil, class: "hidden-ids" %>
@@ -72,7 +72,35 @@
       </tbody>
     </table>
   </dd>
+</dl>
 
+<dl class="see chorg_site_ids">
+  <dt><%= @model.t :chorg_site_ids %><%= @model.tt :chorg_site_ids %></dt>
+  <dd>
+    <%= f.hidden_field "chorg_site_ids[]", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= SS::Site.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.chorg_sites.each do |site| %>
+        <tr data-id="<%= site.id %>">
+          <td><%= f.hidden_field "chorg_site_ids[]", value: site.id, id: nil %> <%= site.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
   <% if SS.config.ss.upload_policy.present? %>
   <dt><%= @model.t :upload_policy %><%= @model.tt :upload_policy %></dt>
   <dd><%= f.select :upload_policy, @item.upload_policy_options %></dd>

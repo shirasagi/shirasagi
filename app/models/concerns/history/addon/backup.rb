@@ -60,6 +60,10 @@ module History::Addon
 
       # remove old backups
       backups.skip(max_age).destroy
+    rescue => e
+      # delete のタイミングで、別プロセス・別スレッドで保存を実行すると、履歴作成時にエラーになる場合がある。
+      # タイミングが非常にシビアで再現性がないが、このケースに備えて発生したエラーをなかったことにする。
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     end
 
     def destroy_backups

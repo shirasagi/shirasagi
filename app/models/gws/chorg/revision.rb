@@ -2,6 +2,7 @@ class Gws::Chorg::Revision
   include Chorg::Model::Revision
   include Chorg::Model::Revision::Export
   include Gws::Reference::Site
+  include Chorg::Addon::Option
   include Gws::SitePermission
 
   class_variable_set(:@@changeset_class, Gws::Chorg::Changeset)
