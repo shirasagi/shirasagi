@@ -105,6 +105,8 @@ en:
     use_cms: Use of CMS
     use_gws: Use of GWS
     use_webmail: Use of e-mail
+    edit_sys_user_account: Edit Account
+    edit_password_sys_user_account: Edit Password of Account
 
   mongoid:
     models:

@@ -773,10 +773,13 @@ ja:
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
     use_private_cms_line_statistics: LINE統計情報の利用（所有）
     edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
+    edit_cms_user_profile: プロフィールの編集
+    edit_password_cms_user_profile: プロフィールのパスワード変更
 
   modules:
     cms: 標準機能
     cms/line: LINE機能
+    cms/user_profile: プロフィール
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール

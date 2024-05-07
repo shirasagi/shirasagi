@@ -28,7 +28,18 @@ class Sns::UserAccountsController < ApplicationController
 
   public
 
+  def edit
+    raise "403" unless @cur_user.sys_role_permit_any?(:edit_sys_user_account)
+    super
+  end
+
+  def update
+    raise "403" unless @cur_user.sys_role_permit_any?(:edit_sys_user_account)
+    super
+  end
+
   def edit_password
+    raise "403" unless @cur_user.sys_role_permit_any?(:edit_password_sys_user_account)
     raise "404" if @sns_user.type_sso?
 
     @model = SS::PasswordUpdateService
@@ -37,6 +48,7 @@ class Sns::UserAccountsController < ApplicationController
   end
 
   def update_password
+    raise "403" unless @cur_user.sys_role_permit_any?(:edit_password_sys_user_account)
     raise "404" if @sns_user.type_sso?
 
     @model = SS::PasswordUpdateService

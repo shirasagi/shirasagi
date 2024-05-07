@@ -3,12 +3,12 @@
     <%= link_to t('ss.links.back_to_show'), action: :show %>
   <% else %>
     <%=
-      if @cur_user.sys_role_permit_any?(:edit_sys_user_account)
+      if @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_user_profile)
         link_to t('ss.links.edit'), action: :edit
       end
     %>
     <%=
-      if @cur_user.sys_role_permit_any?(:edit_password_sys_user_account) && !@cur_user.type_sso?
+      if @cur_user.cms_role_permit_any?(@cur_site, :edit_password_cms_user_profile) && !@cur_user.type_sso?
         link_to t('ss.links.edit_password'), action: :edit_password
       end
     %>

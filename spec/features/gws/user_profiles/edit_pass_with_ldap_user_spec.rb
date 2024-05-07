@@ -3,7 +3,9 @@ require 'spec_helper'
 describe "gws_user_profiles", type: :feature, dbscope: :example, ldap: true, js: true do
   let!(:site) { gws_site }
   let(:ldap_url) { "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/" }
-  let!(:user) { create :gws_ldap_user2, organization: site, group_ids: [ site.id ] }
+  let(:permissions) { %w(edit_gws_user_profile edit_password_gws_user_profile) }
+  let!(:role) { create :gws_role, name: unique_id, permissions: permissions }
+  let!(:user) { create :gws_ldap_user2, organization: site, group_ids: [ site.id ], gws_role_ids: [ role.id ] }
 
   shared_examples 'パスワード変更' do
     let(:new_password) { unique_id }
