@@ -249,7 +249,9 @@ a.gws-category-label:hover {
 
 a.user-detail {
   color: #333;
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 .user-detail-modal {
   padding: 6px;
