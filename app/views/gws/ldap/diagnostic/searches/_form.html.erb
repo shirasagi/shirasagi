@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= Sys::Auth::Setting.t :ldap_url %></dt>
+  <dd><%= ldap_setting.try(:ldap_url) %></dd>
+
+  <dt><%= @model.human_attribute_name :user_dn %>
+  <dd><%= f.text_field :user_dn, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.human_attribute_name :user_password %>
+  <dd><%= f.password_field :user_password, value: @item.user_password %></dd>
+
+  <dt><%= @model.human_attribute_name :base_dn %>
+  <dd><%= f.text_field :base_dn %></dd>
+
+  <dt><%= @model.human_attribute_name :scope %>
+  <dd><%= f.select :scope, @item.scope_options %></dd>
+
+  <dt><%= @model.human_attribute_name :filter %>
+  <dd><%= f.text_area :filter %></dd>
+</dl>

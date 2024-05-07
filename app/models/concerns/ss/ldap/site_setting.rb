@@ -33,4 +33,20 @@ module SS::Ldap::SiteSetting
   def ldap_use_state_individual?
     ldap_use_state == "individual"
   end
+
+  def ldap_config
+    url = Addressable::URI.parse(ldap_url)
+    host = url.host
+    port = url.port || (url.scheme == 'ldaps' ? URI::LDAPS::DEFAULT_PORT : URI::LDAP::DEFAULT_PORT)
+
+    config = { host: host, port: port }
+    if url.scheme == 'ldaps'
+      config[:encryption] = { method: :simple_tls }
+      if ldap_openssl_verify_mode == "none"
+        # 証明書の検証を無効化
+        config[:encryption][:tls_options] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+      end
+    end
+    config
+  end
 end

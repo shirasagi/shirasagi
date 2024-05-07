@@ -90,7 +90,11 @@ Rails.application.routes.draw do
     namespace "ldap" do
       get '/' => redirect { |p, req| "#{req.path}/setting" }, as: :main
       resource :setting, only: %i[show edit update]
-      resource :diagnostic, only: %i[show update]
+      namespace "diagnostic" do
+        get '/' => redirect { |p, req| "#{req.path}/auth" }, as: :main
+        resource :auth, only: %i[show update]
+        resource :search, only: %i[show update]
+      end
     end
 
     namespace "apis" do

@@ -1,0 +1,42 @@
+<%
+  html_option = { id: "item-form", method: :put, multipart: true, autocomplete: :off }
+%>
+
+<%= form_for :item, url: { action: :update }, html: html_option do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <%
+      addon_options = {}
+      addon_options[:id] = "addon-basic"
+      addon_options[:head] = "Search"
+    %>
+    <% buf = render template: "_form", locals: { f: f, addon: addon_options } %>
+    <% if buf.present? %>
+      <%= render "ss/crud/addon", addon: addon_options do %>
+        <%= buf %>
+      <% end %>
+    <% end %>
+
+    <% if @entries %>
+      <%=
+        addon_options = {}
+        addon_options[:id] = "addon-result"
+        addon_options[:head] = "Result"
+
+        buf = render "show_result", addon: addon_options
+        if buf.present?
+          render("ss/crud/addon", addon: addon_options) { buf }
+        end
+      %>
+    <% end %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t("ss.buttons.search"), class: 'btn-primary save' %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
