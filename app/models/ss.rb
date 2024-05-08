@@ -59,4 +59,14 @@ module SS
     request ||= Rails.application.current_request
     request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
   end
+
+  def decimal_to_s(decimal_value)
+    return unless decimal_value
+
+    stringify_value = decimal_value.try(:to_s, "F")
+    if stringify_value && stringify_value.end_with?(".0")
+      stringify_value = stringify_value[0..-3]
+    end
+    stringify_value
+  end
 end
