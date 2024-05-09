@@ -61,42 +61,60 @@ module Webmail
       @datetime = Time.zone.now
       @mail_ids = opts[:mail_ids]
 
+      export_count = 0
       imap_setting = user.imap_settings[opts[:account].to_i]
       imap_setting ||= Webmail::ImapSetting.new
       @imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
-      @imap.login
-      @imap.select("INBOX")
+      Rails.logger.tagged(@imap.authority) do
+        Rails.logger.info { "capabilities: #{@imap.capabilities.join(", ")}" }
 
-      @root_url = opts[:root_url].to_s
-      @output_zip = SS::ZipCreator.new("webmail-mails.zip", user, site: site)
-
-      if @mail_ids.present?
-        # export_webmail_mails
-        enum = SelectedMailEnumerator.new(@imap, @mail_ids)
-      else
-        # export_webmail_all_mails
-        enum = AllMailEnumerator.new(@imap)
-      end
-
-      export_count = 0
-      enum.each do |m|
-        begin
-          @imap.select(m.mailbox)
-          mail = @imap.mails.find(m.uid, :rfc822)
-
-          basename = ::Fs.sanitize_filename("#{mail.id}_#{mail.subject}")
-          mailbox = enum.mailbox_locale_name(m.mailbox)
-          if mailbox.present?
-            mailbox = ::Fs.sanitize_filename(mailbox)
-            mailbox = mailbox.tr(".", "/")
-            basename = "#{mailbox}/#{basename}"
-          end
-          write_eml(basename, mail.rfc822)
-          export_count += 1
-        rescue => e
-          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-          next
+        result = @imap.login
+        unless result
+          @imap.logout
+          @imap.disconnect
+          result = @imap.login
         end
+        unless result
+          Rails.logger.error { "failed to log-in with #{@imap.conf[:auth_type]}" }
+          raise "failed to log-in"
+        end
+        Rails.logger.info { "successfully logged in" }
+
+        @imap.select("INBOX")
+
+        @root_url = opts[:root_url].to_s
+        @output_zip = SS::ZipCreator.new("webmail-mails.zip", user, site: site)
+
+        if @mail_ids.present?
+          # export_webmail_mails
+          enum = SelectedMailEnumerator.new(@imap, @mail_ids)
+        else
+          # export_webmail_all_mails
+          enum = AllMailEnumerator.new(@imap)
+        end
+
+        enum.each do |m|
+          Rails.logger.tagged(m.mailbox, m.uid) do
+            @imap.select(m.mailbox)
+            mail = @imap.mails.find(m.uid, :rfc822)
+
+            basename = ::Fs.sanitize_filename("#{mail.id}_#{mail.subject}")
+            mailbox = enum.mailbox_locale_name(m.mailbox)
+            if mailbox.present?
+              mailbox = ::Fs.sanitize_filename(mailbox)
+              mailbox = mailbox.tr(".", "/")
+              basename = "#{mailbox}/#{basename}"
+            end
+            write_eml(basename, mail.rfc822)
+            export_count += 1
+            Rails.logger.info { "successfully exported a mail to \"#{basename}\"" }
+          rescue => e
+            Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+            next
+          end
+        end
+
+        Rails.logger.info { "exported #{export_count.to_s(:delimited)} mails to #{@output_zip.path}" }
       end
 
       @output_zip.close
