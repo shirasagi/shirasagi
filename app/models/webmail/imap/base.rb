@@ -84,6 +84,13 @@ module Webmail::Imap
       @conn ||= Proxy.new(self)
     end
 
+    def capabilities
+      borrow_imap do |conn|
+        # ログイン前とログイン後とで得られる内容が異なるので注意
+        conn.capabilities
+      end
+    end
+
     def login
       borrow_imap do |conn|
         conn.authenticate conf[:auth_type], conf[:account], conf[:password]
@@ -93,6 +100,12 @@ module Webmail::Imap
       Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.error = e.to_s
       false
+    end
+
+    def login?
+      borrow_imap do |conn|
+        !conn.capabilities.any? { |cap| cap.start_with?("AUTH=") }
+      end
     end
 
     def disconnect
