@@ -34,6 +34,8 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
       webmail_reload_mailboxes(webmail_imap)
 
+      Webmail.imap_pool.disconnect_all
+
       login_webmail_imap
     end
 
@@ -160,6 +162,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
     before do
       webmail_import_mail(webmail_imap, mail)
       webmail_reload_mailboxes(webmail_imap)
+      Webmail.imap_pool.disconnect_all
       login_webmail_imap
     end
 
@@ -203,6 +206,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
     before do
       webmail_import_mail(webmail_imap, mail)
       webmail_reload_mailboxes(webmail_imap)
+      Webmail.imap_pool.disconnect_all
       login_webmail_imap
     end
 
@@ -253,6 +257,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
     before do
       webmail_import_mail(webmail_imap, mail1)
       webmail_reload_mailboxes(webmail_imap)
+      Webmail.imap_pool.disconnect_all
       login_webmail_imap
     end
 

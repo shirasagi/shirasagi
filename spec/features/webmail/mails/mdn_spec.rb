@@ -8,6 +8,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
   shared_examples "mdn reply" do
     before do
       webmail_import_mail(webmail_imap, mdn_mail, mailbox: mailbox ? mailbox.original_name : 'INBOX')
+      Webmail.imap_pool.disconnect_all
       login_user user
     end
 

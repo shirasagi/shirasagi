@@ -12,6 +12,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
 
       before do
         webmail_import_mail(user, item)
+        Webmail.imap_pool.disconnect_all
 
         ActionMailer::Base.deliveries.clear
         login_user(user)
