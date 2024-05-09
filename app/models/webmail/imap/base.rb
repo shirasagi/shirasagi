@@ -74,6 +74,21 @@ module Webmail::Imap
       end
     end
 
+    def authority
+      @authority ||= begin
+        authority = ""
+        if conf[:account]
+          authority << "#{conf[:account]}@"
+        end
+        authority << conf[:host]
+        options = conf[:options].symbolize_keys
+        if options[:port]
+          authority << ":#{options[:port]}"
+        end
+        authority
+      end
+    end
+
     def borrow_imap(&block)
       host = conf[:host]
       options = conf[:options].symbolize_keys
