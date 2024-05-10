@@ -41,10 +41,10 @@ class Sys::Diag::CertificatesController < ApplicationController
     tmpdir = Rails.root.join("tmp").to_s
     Tempfile.open("cert", tmpdir) do |stdout|
       Tempfile.open("cert", tmpdir) do |stderr|
-        exit_code = SS::Command.run(
+        exit_status = SS::Command.run(
           "openssl", "s_client", "-connect", "#{@host}:#{@port}", "-showcerts",
           stdout: stdout, stderr: stderr)
-        if exit_code == 0
+        if exit_status == 0
           @result = ::File.read(stdout.path)
         else
           @errors = [ "command 'openssl' is failed" ]
