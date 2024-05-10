@@ -723,9 +723,6 @@ en:
         group_ids: Group
         domains_with_subdir: Domain with subdirectory
         upload_policy: Upload restrictions
-        maintenance_mode: Maintenance mode
-        maint_remark: Remarks in maintenance mode
-        maint_excluded_user_ids: Excluded users
       ss/model/user:
         name: Name
         kana: Kana
@@ -1076,6 +1073,10 @@ en:
       ss/addon/mfa/user_setting:
         mfa_otp_secret: OTP secret
         mfa_otp_enabled_at: OTP enabled at
+      ss/addon/maintenance_mode:
+        maintenance_mode: Maintenance mode
+        maint_remark: Notice in maintenance mode
+        maint_excluded_user_ids: Excluded users
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1219,11 +1220,6 @@ en:
       file_order:
         - Change the order of files on the administration screen in real time to make it easier to find files.
         - However, the sort order is not saved.
-      maintenance_mode:
-        - Only excluded users will be able to operate.
-        - No other user operation is allowed.
-      maint_excluded_user_ids:
-        - Select the user who can operate in maintenance mode.
     ss/model/file:
       in_file:
         - Select a file.
@@ -1571,6 +1567,18 @@ en:
         - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of OTP.
         - To set multiple IP addresses, separate them with a new line.
         - "You can also set network addresses such as \"192.168.10.0/24\" or \"192.168.10.0/255.255.255.0\"."
+
+    ss/addon/maintenance_mode:
+      maintenance_mode:
+        - Select whether or not to enable maintenance mode.
+        -
+        - Only excluded users will be able to operate on the site which maintenance mode enabled.
+        - Other user operation is not allowed.
+      maint_remark:
+        - When maintenance mode is enabled, the maintenance notice set here will be displayed when anyone other than excluded users access the site.
+      maint_excluded_user_ids:
+        - Select users who are able to operate on the site which maintenance mode enabled.
+        - Users who aren't listed in excluded users will not be able to operate in the site.
 
   job:
     models:
