@@ -9,7 +9,7 @@
   <dd class="wide">
     <table class="index">
       <tbody>
-        <% @item.resources.allow(:read, @cur_user).order(name: 1).each do |rs| %>
+        <% @item.resources.allow(:read, @cur_user, site: @cur_site, node: @cur_node).order(name: 1).each do |rs| %>
         <tr>
           <td><%= link_to rs.name, opendata_dataset_resource_path(dataset_id: @item.id, id: rs.id) %>
           <td><%= rs.label(:state) %></td>
