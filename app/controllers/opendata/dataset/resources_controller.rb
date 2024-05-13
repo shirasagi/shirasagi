@@ -99,8 +99,8 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def download
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @item = @dataset.resources.find params[:resource_id]
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     send_file @item.file.path, type: @item.content_type, filename: @item.filename,
       disposition: :attachment, x_sendfile: true
   end
@@ -114,8 +114,8 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def content
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @item = @dataset.resources.find params[:resource_id]
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @data = @item.parse_tsv
   end
 

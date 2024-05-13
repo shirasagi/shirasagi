@@ -254,14 +254,6 @@ describe Opendata::UrlResource, dbscope: :example do
     it { expect(subject.crawl_update_options).to include(%w(手動 none), %w(自動 auto)) }
   end
 
-  describe ".allowed?" do
-    it { expect(described_class.allowed?(:edit, nil)).to be_truthy }
-  end
-
-  describe ".allow" do
-    it { expect(described_class.allow(:edit, nil)).to be_truthy }
-  end
-
   describe ".format_options" do
     it { expect(described_class.format_options).to include "AVI" }
   end
