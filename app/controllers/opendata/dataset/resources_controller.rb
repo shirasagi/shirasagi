@@ -55,7 +55,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def create
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     @item = @dataset.resources.new get_params
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
