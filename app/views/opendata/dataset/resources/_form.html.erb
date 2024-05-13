@@ -11,12 +11,10 @@ $("<input />").attr("type", "submit").attr("name", "publish_save").attr("class",
   attr("value", '<%= t("ss.buttons.publish_save") %>').insertAfter("#item-form input.save");
 <% end %>
 
-<% if %w(ready public).include?(@dataset.state) %>
-  <% if @item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
-  $(".save").val("<%= t("ss.buttons.closed_save") %>");
-  <% else %>
-  $(".save").remove();
-  <% end %>
+<% if @item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+$(".save").val("<%= t("ss.buttons.closed_save") %>");
+<% else %>
+$(".save").remove();
 <% end %>
 
 $(".save").on("click", function(e){
