@@ -4,7 +4,8 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
   include Job::SS::Binding::Task
 
   LDAP_GROUP_ATTRIBUTES = %i[dn cn member memberof].freeze
-  LDAP_USER_ATTRIBUTES = %i[dn cn name employeeNumber mail memberof preferredlanguage].freeze
+  LDAP_USER_ATTRIBUTES = %i[
+    dn cn name displayName sn sAMAccountName userPrincipalName mail accountExpires isDeleted memberOf].freeze
   INITIAL_SEQUENCE = 0x8FFF_FFFF + 1
 
   self.task_class = Gws::Ldap::SyncTask
@@ -20,10 +21,16 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
       @zip = SS::Zip::Writer.create(path, comment: "created at #{Time.zone.now.iso8601}")
     end
 
+    @imported_group_ldap_dns = Set.new
+    @imported_user_ldap_dns = Set.new
+
     ldap_open do |ldap|
       import_all_groups(ldap)
       import_all_users(ldap)
     end
+
+    deactivate_all_groups
+    deactivate_all_users
   ensure
     @zip.close if @zip
   end
@@ -42,6 +49,17 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
 
   def group_base_dn
     @group_base_dn ||= Net::LDAP::DN.new(task.group_base_dn)
+  end
+
+  def group_scope
+    @group_scope ||= begin
+      if task.group_scope.present?
+        scope = Net::LDAP.const_get("SearchScope_#{task.group_scope.classify}")
+      else
+        scope = Net::LDAP::SearchScope_WholeSubtree
+      end
+      scope
+    end
   end
 
   def user_base_dn
@@ -63,16 +81,55 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
     end
   end
 
-  def import_all_groups(ldap)
-    if task.group_scope.present?
-      scope = Net::LDAP.const_get("SearchScope_#{task.group_scope.classify}")
-    else
-      scope = Net::LDAP::SearchScope_WholeSubtree
+  def all_groups_in_site
+    @all_groups_in_site ||= Gws::Group.site(site).to_a
+  end
+
+  def ldap_dn_group_map_in_site
+    @ldap_dn_group_map_in_site ||= all_groups_in_site.select { |group| group.ldap_dn.present? }.index_by(&:ldap_dn)
+  end
+
+  def id_group_map_in_site
+    @id_group_map_in_site ||= all_groups_in_site.index_by(&:id)
+  end
+
+  # 同じ DN をもつユーザーが他テナントに存在している可能性があるので、他テナントを含む全ユーザーを捜査対象とする
+  def all_users
+    @all_users ||= Gws::User.all.to_a
+  end
+
+  def ldap_dn_user_map
+    @ldap_dn_user_map ||= all_users.select { |user| user.ldap_dn.present? }.index_by(&:ldap_dn)
+  end
+
+  def uid_user_map
+    @uid_user_map ||= all_users.index_by(&:uid)
+  end
+
+  def all_users_in_site
+    @all_users_in_site ||= begin
+      group_ids = all_groups_in_site.pluck(:id)
+      all_users.select { |user| (user.group_ids & group_ids).present? }
     end
+  end
+
+  def all_roles_in_site
+    @all_roles_in_site ||= Gws::Role.all.site(site).to_a
+  end
+
+  def id_role_map_in_site
+    @id_role_map_in_site ||= all_roles_in_site.index_by(&:id)
+  end
+
+  def expiration_date
+    @expiration_date ||= Time.zone.now.change(hour: 0)
+  end
+
+  def import_all_groups(ldap)
     filter = Net::LDAP::Filter.construct(task.group_filter)
 
     Rails.logger.tagged(group_base_dn.to_s, task.group_scope || "whole_subtree", filter.to_s) do
-      entries = ldap.search(base: group_base_dn, scope: scope, filter: filter, attributes: LDAP_GROUP_ATTRIBUTES)
+      entries = ldap.search(base: group_base_dn, scope: group_scope, filter: filter, attributes: LDAP_GROUP_ATTRIBUTES)
       next unless entries
 
       task.log("found #{entries.length} groups")
@@ -80,10 +137,10 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
       @ldap_group_entries = entries
       @ldap_dn_group_entry_map = @ldap_group_entries.index_by do |entry|
         dn = entry["dn"].first
-        normalize_dn(dn)
+        ::Ldap.normalize_dn(dn)
       end
 
-      root_dn = normalize_dn(task.group_root_dn)
+      root_dn = ::Ldap.normalize_dn(task.group_root_dn)
       root_entry = @ldap_dn_group_entry_map[root_dn]
       unless root_entry
         task.log("unable to find root group: #{task.group_root_dn}")
@@ -94,22 +151,20 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
     end
   end
 
-  def normalize_dn(dn)
-    Net::LDAP::DN.new(dn).to_s
-  end
-
   def import_root_group(entry)
     dn = entry["dn"].first
-    dn = normalize_dn(dn)
+    dn = ::Ldap.normalize_dn(dn)
     site.ldap_dn = dn
-    save_item!(site)
-    ldap_dn_group_map[dn] = site
-    task.log("imported group: #{dn}")
+    if save_item(site)
+      ldap_dn_group_map_in_site[dn] = site
+      @imported_group_ldap_dns << dn
+      task.log("imported group: #{dn}")
+    end
 
     @pending_members = entry["member"]
     while @pending_members.present?
       member_dn = @pending_members.shift
-      member_dn = normalize_dn(member_dn)
+      member_dn = ::Ldap.normalize_dn(member_dn)
       next unless member_dn
 
       child_entry = @ldap_dn_group_entry_map[member_dn]
@@ -122,57 +177,62 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
   def import_child_group(entry)
     dn = entry["dn"].first
     return unless dn
-    dn = normalize_dn(dn)
 
-    name = entry["cn"].first
-    unless name
-      Rails.logger.info { "unsupported entry: #{dn}" }
-      return
+    dn = ::Ldap.normalize_dn(dn)
+    Rails.logger.tagged(dn) do
+      name = entry["cn"].first
+      unless name
+        Rails.logger.info { "unsupported entry: #{dn}" }
+        return
+      end
+
+      group = ldap_dn_group_map_in_site[dn]
+      group = Gws::Group.new if group.nil?
+
+      parent_group = find_parent_group(entry)
+      if parent_group
+        name = "#{parent_group.name}/#{name}"
+      else
+        name = "#{site.name}/#{name}"
+      end
+      group.name = name
+      group.ldap_dn = dn
+      group.expiration_date = nil
+      if save_item(group)
+        ldap_dn_group_map_in_site[dn] ||= group
+        @imported_group_ldap_dns << dn
+        task.log("imported group: #{dn}")
+      end
+
+      @pending_members += entry["member"] if entry["member"].present?
     end
+  end
 
-    group = ldap_dn_group_map[dn]
-    group = Gws::Group.new if group.nil?
-
+  def find_parent_group(entry)
     parent_group_dn = entry["memberof"].first
     if parent_group_dn.present?
-      parent_group_dn = normalize_dn(parent_group_dn)
-      parent_group = ldap_dn_group_map[parent_group_dn]
+      parent_group_dn = ::Ldap.normalize_dn(parent_group_dn)
+      parent_group = ldap_dn_group_map_in_site[parent_group_dn]
       if parent_group.nil?
-        Rails.logger.warn { "parent group is not found: #{parent_group_dn}" }
+        Rails.logger.warn { "unable to find parent group: #{parent_group_dn}" }
       end
+      return parent_group
     end
-    if parent_group
-      name = "#{parent_group.name}/#{name}"
-    else
-      name = "#{site.name}/#{name}"
+
+    group_entry = @ldap_group_entries.find do |group_entry|
+      group_entry["member"].any? { |member_dn| member_dn == entry["dn"].first }
     end
-    group.name = name
-    group.ldap_dn = dn
-    save_item!(group)
-    ldap_dn_group_map[dn] ||= group
-    task.log("imported group: #{dn}")
-
-    @pending_members += entry["member"] if entry["member"].present?
-  end
-
-  def all_groups
-    @all_groups ||= begin
-      Gws::Group.site(site).to_a
+    if group_entry
+      parent_group_dn = ::Ldap.normalize_dn(group_entry["dn"].first)
+      parent_group = ldap_dn_group_map_in_site[parent_group_dn]
+      if parent_group.nil?
+        Rails.logger.warn { "unable to find parent group: #{parent_group_dn}" }
+      end
+      return parent_group
     end
-  end
 
-  def ldap_dn_group_map
-    @ldap_dn_group_map ||= all_groups.select { |group| group.ldap_dn.present? }.index_by(&:ldap_dn)
-  end
-
-  def all_users
-    @all_users ||= begin
-      Gws::User.site(site).to_a
-    end
-  end
-
-  def ldap_dn_user_map
-    @ldap_dn_user_map ||= all_users.select { |user| user.ldap_dn.present? }.index_by(&:ldap_dn)
+    Rails.logger.info { "parent group is not defined" }
+    nil
   end
 
   def import_all_users(ldap)
@@ -195,55 +255,53 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
   end
 
   def import_one_user(entry)
-    # unless supported_user_object_class?(entry)
-    #   Rails.logger.info { "unsupported objectClass: #{entry["objectclass"].join(",")}" }
-    #   return
-    # end
-
     dn = entry["dn"].first
     return unless dn
 
-    dn = normalize_dn(dn)
-    user = ldap_dn_user_map[dn]
-    if user.nil?
-      user = Gws::User.new
-      user.type = Gws::User::TYPE_LDAP
-      user.ldap_dn = dn
-      user.organization = site
-      user.gws_role_ids = task.user_role_ids
-    end
-
-    # cn: If the object corresponds to a person, it is typically the person's full name.
-    # see: https://www.rfc-editor.org/rfc/rfc4519.html#section-2.3
-    user.name = entry["name"].first
-    # https://www.rfc-editor.org/rfc/rfc4519.html#section-2.39
-    user.uid = entry["cn"].first
-    user.organization_uid = entry["employeeNumber"].first
-    user.email = entry["mail"].first
-    if entry["memberof"].present?
-      group_ids = entry["memberof"].map do |group_dn|
-        group = ldap_dn_group_map[group_dn]
-        group.try(:id)
+    dn = ::Ldap.normalize_dn(dn)
+    Rails.logger.tagged(dn) do
+      user = ldap_dn_user_map[dn]
+      if user.nil?
+        user = Gws::User.new
+        user.type = Gws::User::TYPE_LDAP
+        user.ldap_dn = dn
+        user.organization = site
       end
-      group_ids.compact!
-      group_ids.uniq!
-    else
-      group_ids = [ site.id ]
-    end
-    user.group_ids = group_ids
 
-    if entry["preferredlanguage"].present?
-      lang = entry["preferredlanguage"].first
-      if lang.present? && I18n.available_locales.include?(lang.to_sym)
-        user.lang = lang
+      user.name = get_user_name(entry)
+      user.uid = get_user_uid(entry)
+      user.email = get_user_email(entry)
+      if first_ldap_value(entry, "isDeleted")
+        user.account_expiration_date = expiration_date
+      else
+        user.account_expiration_date = get_user_account_expiration_date(entry)
+      end
+      if entry["memberof"].present?
+        group_ids = entry["memberof"].map do |group_dn|
+          group = ldap_dn_group_map_in_site[group_dn]
+          group.try(:id)
+        end
+        group_ids.compact!
+        group_ids.uniq!
+      else
+        group_ids = [ site.id ]
+      end
+      set_user_group_ids(user, group_ids)
+      set_user_role_ids(user)
+
+      if uid_user_map[user.uid].present? && uid_user_map[user.uid].id != user.id
+        Rails.logger.warn { "#{user.uid}: same user is already existed" }
+        return
+      end
+
+      if save_item(user)
+        @imported_user_ldap_dns << dn
+        task.log("imported user: #{dn}")
       end
     end
-
-    save_item!(user)
-    task.log("imported user: #{dn}")
   end
 
-  def save_item!(item)
+  def save_item(item)
     if @dry_run
       if item.new_record?
         item.id = @seq
@@ -256,8 +314,123 @@ class Gws::Ldap::SyncJob < Gws::ApplicationJob
         attributes = Hash[item.attributes]
         output.write attributes.to_json
       end
+      true
     else
-      item.save!
+      result = item.without_record_timestamps { item.save }
+      unless result
+        Rails.logger.warn { "failed to save" }
+        Rails.logger.warn { item.errors.full_messages.join("\n") }
+      end
+      result
+    end
+  end
+
+  def first_ldap_value(entry, *attr_names)
+    attr_names.each do |attr_name|
+      attr_value = entry[attr_name.downcase]
+      if attr_value && attr_value.first
+        return attr_value.first
+      end
+    end
+    nil
+  end
+
+  def get_user_name(entry)
+    first_ldap_value(entry, "displayName", "name", "sn")
+  end
+
+  def get_user_uid(entry)
+    value = first_ldap_value(entry, "sAMAccountName", "userPrincipalName")
+    if value && value.include?("@")
+      value = value.split("@", 2).first
+    end
+    value
+  end
+
+  def get_user_email(entry)
+    first_ldap_value(entry, "userPrincipalName", "mail")
+  end
+
+  def get_user_account_expiration_date(entry)
+    ::Ldap.ad_interval_to_time(first_ldap_value(entry, "accountExpires"))
+  end
+
+  def set_user_group_ids(user, group_ids)
+    if user.group_ids.blank?
+      user.group_ids = group_ids
+      return
+    end
+
+    other_site_group_ids = user.group_ids.reject do |group_id|
+      id_group_map_in_site[group_id]
+    end
+    if other_site_group_ids.blank?
+      user.group_ids = group_ids
+      return
+    end
+
+    new_group_ids = other_site_group_ids + group_ids
+    new_group_ids.sort!
+    new_group_ids.uniq!
+    user.group_ids = new_group_ids
+  end
+
+  def set_user_role_ids(user)
+    if user.gws_role_ids.blank?
+      user.gws_role_ids = task.user_role_ids
+      return
+    end
+    return if user.gws_role_ids.any? { |role_id| id_role_map_in_site[role_id] }
+
+    new_role_ids = user.gws_role_ids + task.user_role_ids
+    new_role_ids.sort!
+    new_role_ids.uniq!
+    user.gws_role_ids = new_role_ids
+  end
+
+  def deactivate_all_groups
+    unimported_groups = all_groups_in_site.select do |group|
+      next false if group.ldap_dn.blank?
+
+      dn = ::Ldap.normalize_dn(group.ldap_dn)
+      next false if @imported_group_ldap_dns.include?(dn)
+
+      true
+    end
+
+    return if unimported_groups.blank?
+
+    Rails.logger.info { "found #{unimported_groups.count} groups which aren't imported" }
+    unimported_groups.each do |group|
+      next if group.expiration_date.present?
+
+      group.expiration_date = expiration_date
+      if save_item(group)
+        Rails.logger.info { "#{group.ldap_dn}: deactivated" }
+      end
+    end
+  end
+
+  def deactivate_all_users
+    unimported_users = all_users_in_site.select do |user|
+      next false if user.ldap_dn.blank?
+
+      dn = ::Ldap.normalize_dn(user.ldap_dn)
+      next false if @imported_user_ldap_dns.include?(dn)
+
+      true
+    end
+
+    return if unimported_users.blank?
+
+    Rails.logger.info { "found #{unimported_users.count} users which aren't imported" }
+    unimported_users.each do |user|
+      next if user.account_expiration_date.present?
+
+      user.account_expiration_date = expiration_date
+      if save_item(user)
+        Rails.logger.info { "#{user.ldap_dn}: deactivated" }
+      end
     end
   end
 end
