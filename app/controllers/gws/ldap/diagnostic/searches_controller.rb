@@ -69,7 +69,7 @@ class Gws::Ldap::Diagnostic::SearchesController < ApplicationController
   def update
     raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_groups)
 
-    @item.attributes = params.require(:item).permit(:user_dn, :user_password, :base_dn, :scope, :filter)
+    @item.attributes = params.require(:item).permit(:user_dn, :user_password, :base_dn, :scope, :filter, :attrs)
     if @item.invalid?
       render template: "show"
       return
@@ -85,7 +85,25 @@ class Gws::Ldap::Diagnostic::SearchesController < ApplicationController
     filter = Net::LDAP::Filter.construct(@item.filter)
 
     ldap_open do |ldap|
-      @entries = ldap.search(base: base_dn, scope: scope, filter: filter, size: Gws::Ldap::MAX_SEARCH_RESULTS)
+      search_params = { base: base_dn, scope: scope, filter: filter }
+      if @item.attrs.present?
+        attrs = @item.attrs.gsub(/[, 　、\r\n]+/, ",").split(",")
+        attrs.select!(&:present?)
+        attrs.uniq!
+
+        if attrs.include?("*")
+          entries = ldap.search(attributes_only: true, size: 1, **search_params)
+
+          index = attrs.index("*")
+          attrs.delete_at(index)
+          attrs.insert(index, *entries.first.attribute_names)
+        end
+
+        search_params[:attributes] = attrs
+      end
+      search_params[:size] = Gws::Ldap::MAX_SEARCH_RESULTS
+
+      @entries = ldap.search(**search_params)
     end
 
     render template: "show"

@@ -8,6 +8,7 @@ class SS::Ldap::SearchDiagnostic
   attribute :base_dn, :string
   attribute :scope, :string, default: ->{ "whole_subtree" }
   attribute :filter, :string, default: ->{ "(objectclass=*)" }
+  attribute :attrs, :string
 
   validates :user_dn, presence: true
   validates :base_dn, presence: true, ldap_dn: true

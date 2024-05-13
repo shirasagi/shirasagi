@@ -23,6 +23,9 @@
 
     <dt><%= @model.human_attribute_name :filter %>
     <dd><%= f.text_area :filter %></dd>
+
+    <dt><%= @model.human_attribute_name :attrs %>
+    <dd><%= f.text_field :attrs, placeholder: "*, memberOf" %></dd>
   </dl>
 
   <footer class="send ss-sticky ss-sticky-bottom">
