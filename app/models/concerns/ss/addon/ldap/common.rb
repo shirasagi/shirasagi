@@ -3,10 +3,7 @@ module SS::Addon::Ldap::Common
     if ldap_dn.blank?
       remove_attribute(:ldap_dn)
     else
-      require 'net/ldap/dn'
-      normalized_dn = []
-      Net::LDAP::DN.new(ldap_dn).each_pair { |k, v| normalized_dn << "#{k}=#{v}" }
-      self.ldap_dn = normalized_dn.join(",")
+      self.ldap_dn = ::Ldap.normalize_dn(ldap_dn)
     end
   end
 end

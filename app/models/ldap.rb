@@ -15,4 +15,14 @@ module Ldap
   self.auth_method = SS.config.ldap.auth_method.try(:to_sym)
   self.admin_user = SS.config.ldap.admin_user.try(:freeze)
   self.admin_password = SS.config.ldap.admin_password.try(:freeze)
+
+  module_function
+
+  def normalize_dn(dn)
+    return dn if dn.blank?
+
+    array = []
+    Net::LDAP::DN.new(dn).each_pair { |key, value| array << "#{key.downcase}=#{value}" }
+    array.join(",")
+  end
 end
