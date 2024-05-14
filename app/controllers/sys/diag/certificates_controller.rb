@@ -44,11 +44,10 @@ class Sys::Diag::CertificatesController < ApplicationController
         exit_status = SS::Command.run(
           "openssl", "s_client", "-connect", "#{@host}:#{@port}", "-showcerts",
           stdout: stdout, stderr: stderr)
-        if exit_status == 0
-          @result = ::File.read(stdout.path)
-        else
+        @result = ::File.read(stdout.path) rescue nil
+        if exit_status != 0
           @errors = [ "command 'openssl' is failed" ]
-          @errors << ::File.read(stderr.path)
+          @errors << ::File.read(stderr.path) rescue nil
         end
       end
     end
