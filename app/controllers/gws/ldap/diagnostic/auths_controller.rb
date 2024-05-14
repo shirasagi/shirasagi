@@ -1,8 +1,8 @@
-class Gws::Ldap::DiagnosticsController < ApplicationController
+class Gws::Ldap::Diagnostic::AuthsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/ldap/main/navi"
+  navi_view "gws/ldap/diagnostic/navi"
   menu_view nil
 
   model SS::Ldap::LoginDiagnostic
@@ -11,7 +11,8 @@ class Gws::Ldap::DiagnosticsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("ldap.links.ldap"), gws_ldap_main_path]
-    @crumbs << [t("sys.diag"), url_for(action: :show)]
+    @crumbs << [t("sys.diag"), gws_ldap_diagnostic_main_path]
+    @crumbs << ["Auth", url_for(action: :show)]
   end
 
   def set_item

@@ -12,6 +12,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
   before do
     webmail_import_mail(webmail_imap, mail1)
+    Webmail.imap_pool.disconnect_all
     login_webmail_imap
   end
 

@@ -44,6 +44,10 @@ ja:
       use_state:
         system: システム設定にしたがう
         individual: 以下の個別設定を使用する
+      search_scope:
+        base_object: 基本オブジェクトのみ
+        single_level: 指定階層のみ
+        whole_subtree: 全てのサブ階層
     messages:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。

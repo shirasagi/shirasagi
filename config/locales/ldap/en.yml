@@ -44,6 +44,10 @@ en:
       use_state:
         system: System settings
         individual: Use the following individual settings
+      search_scope:
+        base_object: Only Base Object
+        single_level: Single Level
+        whole_subtree: While Subtree
     messages:
       no_groups: The group cannot be found.
       no_users: The user cannot be found.

@@ -1,0 +1,30 @@
+<div class="addon-views">
+  <%
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+    addon_options[:head] = "Search"
+    addon_options[:toggle] = true
+  %>
+  <% buf = render template: "_form", locals: { addon: addon_options } %>
+  <% if buf.present? %>
+    <%= render "ss/crud/addon", addon: addon_options do %>
+      <%= buf %>
+    <% end %>
+  <% end %>
+
+  <% if @entries %>
+    <%=
+      addon_options = {}
+      addon_options[:id] = "addon-result"
+      addon_options[:head] = "Result"
+      addon_options[:toggle] = true
+
+      buf = render "show_result", addon: addon_options
+      if buf.present?
+        render("ss/crud/addon", addon: addon_options) { buf }
+      end
+    %>
+  <% end %>
+</div>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
