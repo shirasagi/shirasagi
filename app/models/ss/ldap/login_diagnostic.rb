@@ -3,9 +3,10 @@ class SS::Ldap::LoginDiagnostic
   include ActiveModel::Model
   include ActiveModel::Attributes
 
+  # dn can be DN but also email address
   attribute :dn, :string
   attribute :password, :string
 
-  validates :dn, presence: true, ldap_dn: true
+  validates :dn, presence: true
   validates :password, presence: true
 end
