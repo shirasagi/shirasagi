@@ -723,9 +723,6 @@ ja:
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
         upload_policy: アップロード制限
-        maintenance_mode: メンテナンスモード
-        maint_remark: メンテナンス備考
-        maint_excluded_user_ids: 除外ユーザー
       ss/model/user:
         name: 氏名
         kana: カナ
@@ -1076,6 +1073,10 @@ ja:
       ss/addon/mfa/user_setting:
         mfa_otp_secret: ワンタイムパスワードシークレット
         mfa_otp_enabled_at: ワンタイムパスワード有効化日時
+      ss/addon/maintenance_mode:
+        maintenance_mode: メンテナンスモード
+        maint_remark: メンテナンスお知らせ
+        maint_excluded_user_ids: 除外ユーザー
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1219,11 +1220,6 @@ ja:
       file_order:
         - 管理画面上でのファイルの並び順をリアルタイムで変更し、ファイルを見つけやすくします。
         - ただし、並び順は保存されません。
-      maintenance_mode:
-        - 除外ユーザーのみ操作可能になります。
-        - それ以外のユーザー操作できません。
-      maint_excluded_user_ids:
-        - メンテナンスモード時に操作することができるユーザーを選択します。
     ss/model/file:
       in_file:
         - ファイルを選択します。
@@ -1571,6 +1567,18 @@ ja:
         - 信頼できるアクセス元としてIPアドレスを設定します。ワンタイムパスワードの使用に「アクセス元が信頼できない場合に使用する」を選択した場合にアクセス元が信頼できるかどうかの判定に使用します。
         - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
         - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
+
+    ss/addon/maintenance_mode:
+      maintenance_mode:
+        - メンテナンスモードを有効にするかどうかを選択します。
+        -
+        - メンテナンスモードを有効にすると、除外ユーザーに設定されたユーザーのみ操作可能になります。
+        - それ以外のユーザーでは操作することができなくなります。
+      maint_remark:
+        - メンテナンスモードの有効時、除外ユーザー以外がサイトへアクセスすると、ここで設定したメンテナンスお知らせが表示されます。
+      maint_excluded_user_ids:
+        - メンテナンスモード時に操作することができるユーザーを選択します。
+        - 除外ユーザー以外のユーザーでは操作することができなくなります。
 
   job:
     models:
