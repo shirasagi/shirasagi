@@ -119,6 +119,8 @@ module Webmail::Imap
 
     def login?
       borrow_imap do |conn|
+        # テスト用のdockerコンテナのdovecotでは、ログイン前後のcapabilityを比較するとAUTH=PLAINが消える。
+        # そこで、AUTH=が存在するかどうかでログイン済みかどうかを判定するが、すべてのIMAPサーバーが同じような動作をするかは不明。
         !conn.capabilities.any? { |cap| cap.start_with?("AUTH=") }
       end
     end

@@ -70,11 +70,6 @@ module Webmail
 
         result = @imap.login
         unless result
-          @imap.logout
-          @imap.disconnect
-          result = @imap.login
-        end
-        unless result
           Rails.logger.error { "failed to log-in with #{@imap.conf[:auth_type]}" }
           raise "failed to log-in"
         end
