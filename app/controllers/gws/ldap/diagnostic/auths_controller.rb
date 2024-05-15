@@ -7,6 +7,8 @@ class Gws::Ldap::Diagnostic::AuthsController < ApplicationController
 
   model SS::Ldap::LoginDiagnostic
 
+  helper_method :ldap_setting
+
   private
 
   def set_crumbs
@@ -33,8 +35,15 @@ class Gws::Ldap::Diagnostic::AuthsController < ApplicationController
     ldap_setting.ldap_url
   end
 
-  def ldap_openssl_verify_mode
-    ldap_setting.ldap_openssl_verify_mode
+  def ldap_open(&block)
+    config = ldap_setting.ldap_config
+    config[:auth] = {
+      method: :simple,
+      username: @item.dn,
+      password: @item.password
+    }
+
+    Net::LDAP.open(config, &block)
   end
 
   public
@@ -60,12 +69,20 @@ class Gws::Ldap::Diagnostic::AuthsController < ApplicationController
       return
     end
 
-    result = ::Ldap::Connection.authenticate(
-      url: ldap_url, openssl_verify_mode: ldap_openssl_verify_mode, username: @item.dn, password: @item.password)
-    if result
-      @result = "success"
-    else
-      @result = "failed"
+    ldap_open do |ldap|
+      result = ldap.bind
+
+      if result
+        @results = [ "auth success" ]
+      else
+        @results = [ "auth failed" ]
+
+        operation_result = ldap.get_operation_result
+        @results << "#{operation_result.message}(#{operation_result.code})"
+        if operation_result.error_message
+          @results << operation_result.error_message
+        end
+      end
     end
 
     render template: "show"
