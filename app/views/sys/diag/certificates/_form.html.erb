@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt>Host</dt>
+  <dd><%= f.text_field :host, value: @host %></dd>
+
+  <dt>Port</dt>
+  <dd><%= f.number_field :port, value: @port, list: "port-list" %></dd>
+</dl>
+
+<datalist id="port-list">
+  <option value="443">HTTPS (443)</option>
+  <option value="587">SMTPS (587)</option>
+  <option value="636">LDAPS (636)</option>
+  <option value="993">IMAPS (993)</option>
+  <option value="995">POPS (995)</option>
+  <option value="2525">SMTPS (2525)</option>
+</datalist>
