@@ -37,10 +37,6 @@ class Gws::Ldap::Diagnostic::SearchesController < ApplicationController
     ldap_setting.ldap_url
   end
 
-  def ldap_openssl_verify_mode
-    ldap_setting.ldap_openssl_verify_mode
-  end
-
   def ldap_open(&block)
     config = ldap_setting.ldap_config
     config[:auth] = {
@@ -104,6 +100,13 @@ class Gws::Ldap::Diagnostic::SearchesController < ApplicationController
       search_params[:size] = Gws::Ldap::MAX_SEARCH_RESULTS
 
       @entries = ldap.search(**search_params)
+      operation_result = ldap.get_operation_result
+      if operation_result.code != 0
+        @item.errors.add :base, "#{operation_result.message}(#{operation_result.code})"
+        if operation_result.error_message
+          @item.errors.add :base, operation_result.error_message
+        end
+      end
     end
 
     render template: "show"

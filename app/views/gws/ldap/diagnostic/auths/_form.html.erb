@@ -1,11 +1,14 @@
 <dl class="see">
+  <dt><%= Sys::Auth::Setting.t :ldap_url %></dt>
+  <dd><%= ldap_setting.try(:ldap_url) %></dd>
+
   <dt><%= @model.human_attribute_name :dn %>
   <dd><%= f.text_field :dn, autofocus: pc_browser? %></dd>
 
   <dt><%= @model.human_attribute_name :password %>
-  <dd><%= f.password_field :password %></dd>
+  <dd><%= f.password_field :password, value: @item.password %></dd>
 
-  <% if @result %>
-    <dd class="result"><%= @result %></dd>
+  <% if @results %>
+    <dd class="result"><%= br @results %></dd>
   <% end %>
 </dl>
