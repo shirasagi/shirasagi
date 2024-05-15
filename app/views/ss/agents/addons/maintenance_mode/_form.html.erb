@@ -1,4 +1,6 @@
 <%
+  return if @item.new_record?
+
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 %>
