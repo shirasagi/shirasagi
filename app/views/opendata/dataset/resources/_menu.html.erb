@@ -1,7 +1,7 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to t('ss.links.back'), opendata_dataset_path(id: @dataset.id), class: "back-to-show" %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
       <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all/ %>

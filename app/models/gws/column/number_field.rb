@@ -21,10 +21,10 @@ class Gws::Column::NumberField < Gws::Column::Base
   def form_options
     options = super
     if min_decimal.present?
-      options['min'] = min_decimal
+      options['min'] = SS.decimal_to_s(min_decimal)
     end
     if max_decimal.present?
-      options['max'] = max_decimal
+      options['max'] = SS.decimal_to_s(max_decimal)
     end
     if scale.present? && scale > 0
       options['step'] = "0.#{"0" * (scale - 1)}1"

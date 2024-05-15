@@ -1,0 +1,81 @@
+<%
+  return unless @entries
+
+  addon ||= local_assigns.fetch(:addon, {})
+
+  attribute_name_set = Set.new
+  if @entries.length > 0
+    @entries.each do |entry|
+      attribute_name_set += entry.attribute_names
+    end
+  end
+  attribute_names = attribute_name_set.to_a.sort
+  if attribute_names.include?(:dn)
+    attribute_names.delete(:dn)
+    attribute_names.prepend(:dn)
+  end
+%>
+
+<style>
+  #<%= addon[:id] %> .grid-table-wrap {
+    width: 100%; height: 90dvh; overflow: auto;
+  }
+
+  #<%= addon[:id] %> .grid-table {
+    display: grid;
+    grid-template-columns: repeat(<%= attribute_names.length %>, minmax(auto, 100px));
+
+    thead, tbody, tr {
+      display: contents;
+    }
+    th, td {
+      display: flex;
+      padding: 3px;
+    }
+
+    th {
+      font-weight: bold;
+    }
+
+    .key, .value {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+</style>
+
+<div class="grid-table-wrap">
+  <% if @entries.length > 0 %>
+    <% if @entries.length > Gws::Ldap::MAX_SEARCH_RESULTS %>
+      <div><%= "Up to #{Gws::Ldap::MAX_SEARCH_RESULTS.to_s(:delimited)} items are displayed." %></div>
+    <% end %>
+
+    <table class="grid-table">
+      <% @entries.each_with_index do |entry, index| %>
+        <% if index == 0 %>
+          <thead>
+          <tr>
+            <% attribute_names.each do |attribute| %>
+              <th><div class="key" title="<%= attribute %>"><%= attribute %></div></th>
+            <% end %>
+          </tr>
+          </thead>
+          <tbody>
+        <% end %>
+
+        <tr>
+          <% attribute_names.each do |attribute| %>
+            <td data-attr="<%= attribute %>">
+              <div class="value" title="<%= entry[attribute] %>"><%= entry[attribute] %></div>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    no entries are found
+  <% end %>
+</div>
