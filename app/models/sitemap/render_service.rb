@@ -60,12 +60,6 @@ class Sitemap::RenderService
       def from_node(node, url_item: nil)
         from_page(node, type: :node, url_item: url_item)
       end
-
-      def from_url_item(item)
-        new(
-          type: :other, id: nil, name: item.name.presence || item.url, filename: item.filename,
-          url: item.url, full_url: item.full_url, depth: item.depth, order: 0)
-      end
     end
   end
 
@@ -148,14 +142,8 @@ class Sitemap::RenderService
     end
     nodes.compact!
 
-    existed = Set.new(pages.map(&:filename) + nodes.map(&:filename))
-    not_existed = url_items.reject { |url_item| existed.include?(url_item.filename) }
-    others = not_existed.map do |url_item|
-      FakeContent.from_url_item(url_item)
-    end
-
     filename_index_map = filenames.each.with_index.to_h
-    contents = pages + nodes + others
+    contents = pages + nodes
     contents.sort_by! { |content| filename_index_map[content.filename] || 1_000_000 }
     contents
   end
