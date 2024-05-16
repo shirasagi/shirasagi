@@ -11,7 +11,7 @@ class Sitemap::RenderService
     include ActiveModel::Model
 
     # name may be null
-    attr_accessor :url, :filename, :name
+    attr_accessor :authority, :url, :filename, :name
 
     class << self
       def parse(str)
@@ -23,18 +23,18 @@ class Sitemap::RenderService
         if url.blank?
           url, name = name, url
         end
+        return if url.blank?
 
-        if url
-          url.strip!
-          url.reverse!
-        end
+        url.strip!
+        url.reverse!
+        url = ::Addressable::URI.parse(url)
 
         if name
           name.strip!
           name.reverse!
         end
 
-        new(url: url, filename: url_to_filename(url), name: name)
+        new(authority: url.authority, url: url.request_uri, filename: url_to_filename(url.request_uri), name: name)
       end
 
       private
@@ -51,14 +51,23 @@ class Sitemap::RenderService
     attr_accessor :type, :id, :name, :filename, :url, :full_url, :depth, :order
 
     class << self
-      def from_page(page, type: :page, url_item: nil)
+      def from_page(page, cur_site:, type: :page, url_item: nil)
         new(
           type: type, id: page.id, name: url_item.try(:name) || page.name, filename: page.filename,
           url: page.url, full_url: page.full_url, order: page.order, depth: page.depth)
       end
 
-      def from_node(node, url_item: nil)
-        from_page(node, type: :node, url_item: url_item)
+      def from_node(node, cur_site:, url_item: nil)
+        from_page(node, cur_site: cur_site, type: :node, url_item: url_item)
+      end
+
+      def from_node_sub_url(node, cur_site:, url_item:)
+        full_url = ::Addressable::URI.join(cur_site.full_url, url_item.url).to_s
+
+        new(
+          type: :node_sub_url, id: node.id, name: url_item.try(:name) || node.name,
+          filename: url_item.try(:filename) || node.filename,
+          url: url_item.try(:url) || node.url, full_url: full_url, order: node.order, depth: node.depth)
       end
     end
   end
@@ -109,41 +118,19 @@ class Sitemap::RenderService
     url_items.compact!
     return EMPTY_ARRAY if url_items.blank?
 
+    url_items.select! do |url_item|
+      next true if url_item.authority.blank?
+      cur_site.domains.include?(url_item.authority)
+    end
+    return EMPTY_ARRAY if url_items.blank?
+
+    contents = url_items.map do |url_item|
+      create_fake_content(url_item)
+    end
+    contents.compact!
+
     filenames = url_items.map(&:filename)
-    filename_url_item_map = url_items.index_by(&:filename)
-
-    page_criteria = Cms::Page.all.site(cur_site).and_public
-    page_criteria = page_criteria.where(:depth.lte => page.sitemap_depth)
-    page_criteria = page_criteria.in(filename: filenames).only(*REQUIRED_FIELDS)
-    pages = page_criteria.to_a.map do |page|
-      page.cur_site = cur_site
-      page.site = cur_site
-
-      url_item = filename_url_item_map[page.filename]
-      FakeContent.from_page(page, url_item: url_item)
-    rescue => e
-      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-      nil
-    end
-    pages.compact!
-
-    node_criteria = Cms::Node.all.site(cur_site).and_public
-    node_criteria = node_criteria.where(:depth.lte => page.sitemap_depth)
-    node_criteria = node_criteria.in(filename: filenames).only(*REQUIRED_FIELDS)
-    nodes = node_criteria.to_a.map do |node|
-      node.cur_site = cur_site
-      node.site = cur_site
-
-      url_item = filename_url_item_map[node.filename]
-      FakeContent.from_node(node, url_item: url_item)
-    rescue => e
-      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-      nil
-    end
-    nodes.compact!
-
     filename_index_map = filenames.each.with_index.to_h
-    contents = pages + nodes
     contents.sort_by! { |content| filename_index_map[content.filename] || 1_000_000 }
     contents
   end
@@ -157,7 +144,7 @@ class Sitemap::RenderService
     entries = nodes.map do |node|
       node.cur_site = cur_site
       node.site = cur_site
-      FakeContent.from_node(node)
+      FakeContent.from_node(node, cur_site: cur_site)
     rescue => e
       Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       nil
@@ -173,7 +160,7 @@ class Sitemap::RenderService
       entries += pages.map do |page|
         page.cur_site = cur_site
         page.site = cur_site
-        FakeContent.from_page(page)
+        FakeContent.from_page(page, cur_site: cur_site)
       rescue => e
         Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
         nil
@@ -214,5 +201,61 @@ class Sitemap::RenderService
     end
 
     entries
+  end
+
+  def create_fake_content(url_item)
+    filename = url_item.filename
+    extname = ::File.extname(filename)
+    if extname.present?
+      filename = filename.sub(extname, ".html") if extname != ".html"
+      page = filename_to_page_map[filename]
+    end
+    return FakeContent.from_page(page, cur_site: cur_site, url_item: url_item) if page
+
+    filename = ::File.dirname(filename) if extname.present?
+    node = filename_to_node_map[filename]
+    return FakeContent.from_node(node, cur_site: cur_site, url_item: url_item) if node
+
+    loop do
+      prev_filename = filename
+      filename = ::File.dirname(filename)
+      break if filename.blank? || filename == "/" || prev_filename == filename
+
+      node = filename_to_node_map[filename]
+      next unless node
+
+      rest = url_item.filename[filename.length..-1]
+      path = "/.s#{cur_site.id}/nodes/#{node.route}#{rest}"
+      spec = Rails.application.routes.recognize_path(path, method: "GET") rescue {}
+      return FakeContent.from_node_sub_url(node, cur_site: cur_site, url_item: url_item) if node if spec[:cell]
+    end
+
+    nil
+  end
+
+  def all_pages
+    @all_pages ||= begin
+      criteria = Cms::Page.site(cur_site)
+      criteria = criteria.and_public
+      criteria = criteria.where(:depth.lte => page.sitemap_depth)
+      criteria.only(*REQUIRED_FIELDS).to_a
+    end
+  end
+
+  def all_nodes
+    @all_nodes ||= begin
+      criteria = Cms::Node.site(cur_site)
+      criteria = criteria.and_public
+      criteria = criteria.where(:depth.lte => page.sitemap_depth)
+      criteria.only(*REQUIRED_FIELDS).to_a
+    end
+  end
+
+  def filename_to_page_map
+    @filename_to_page_map ||= all_pages.index_by(&:filename)
+  end
+
+  def filename_to_node_map
+    @filename_to_node_map ||= all_nodes.index_by(&:filename)
   end
 end
