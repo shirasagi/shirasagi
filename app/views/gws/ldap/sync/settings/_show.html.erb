@@ -2,7 +2,7 @@
 
 <%= error_messages_for :item %>
 
-<dl class="see">
+<dl class="see gws-ldap-sync-task-admin">
   <dt><%= @model.t :admin_dn %></dt>
   <dd><%= @item.admin_dn %></dd>
 
@@ -12,7 +12,9 @@
     <%= button_tag t("ldap.buttons.test_connection"), name: "test-connection", type: :button, class: "btn btn-test", data: { href: url_for(action: :test_connection) } %>
     <div class="test-connection-result"></div>
   </dd>
+</dl>
 
+<dl class="see gws-ldap-sync-task-group">
   <dt><%= t("ldap.views.import/sync.group") %></dt>
   <dd></dd>
 
@@ -38,7 +40,9 @@
 
   <dt class="depth-2"><%= t("ldap.views.import/sync.root_dn") %></dt>
   <dd class="depth-2"><%= @item.group_root_dn %></dd>
+</dl>
 
+<dl class="see gws-ldap-sync-task-user">
   <dt><%= t("ldap.views.import/sync.user") %></dt>
   <dd></dd>
 
