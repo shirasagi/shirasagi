@@ -4,10 +4,7 @@ namespace :ss do
   #
   task daily: :environment do
     # 空ディレクトリの削除
-    %w(job_logs ss_files ss_tasks).each do |dir|
-      path = "#{Rails.root}/private/files/#{dir}"
-      system("find #{path} -type d -empty -delete") if ::Dir.exist?(path)
-    end
+    ::Tasks::SS.invoke_task("ss:delete_empty_directories")
 
     # 一時ファイルの削除（エクスポート）
     ::Tasks::SS.invoke_task("ss:delete_download_files")
@@ -15,10 +12,10 @@ namespace :ss do
     # 一時ファイルの削除（CMSお問い合わせ）
     ::Tasks::SS.invoke_task("inquiry:delete_inquiry_temp_files")
 
-    # 一時ファイルの削除（アクセストークン）
+    # アクセストークンの掃除
     ::Tasks::SS.invoke_task("ss:delete_access_tokens")
 
-    # SSO トークン
+    # SSOトークンの掃除
     ::Tasks::SS.invoke_task("ss:delete_sso_tokens")
 
     # history_backupの削除
@@ -27,7 +24,7 @@ namespace :ss do
     # history_backupの削除
     ::Tasks::SS.invoke_task("ss:task:sweep")
 
-    # 動的パーツキャッシュの削除
+    # ファイルキャッシュ掃除ジョブ
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")
 
     # FormDB URL インポート

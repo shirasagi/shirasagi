@@ -1584,3 +1584,9 @@ en:
     models:
       ss/public_file_remover_job: Published file deletion job
       ss/task_sweep_job: Task deletion job
+      ss/delete_empty_directories_job: Delete empty directories job
+      ss/delete_download_files_job: Delete temporary files job (for export)
+      ss/delete_access_tokens_job: Cleanup access tokens job
+      ss/delete_sso_tokens_job: Cleanup SSO tokens job
+      ss/delete_ss_o_tokens_job: Cleanup SSO tokens job
+      ss/cleanup_file_store_cache_job: Cleanup file cache job
