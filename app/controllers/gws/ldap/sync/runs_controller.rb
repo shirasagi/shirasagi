@@ -54,6 +54,11 @@ class Gws::Ldap::Sync::RunsController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
+    unless @item.ready
+      redirect_to url_for(action: :show), notice: I18n.t("ldap.messages.sync_already_started")
+      return
+    end
+
     Gws::Ldap::SyncJob.bind(site_id: @cur_site, user_id: @cur_user, task_id: @item).perform_later
     redirect_to url_for(action: :show), notice: t("ss.tasks.started")
   end

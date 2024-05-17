@@ -25,6 +25,8 @@ describe Gws::Ldap::SyncJob, dbscope: :example, ldap: true do
     task.user_scope = "whole_subtree"
     task.user_filter = "(objectClass=ssUser)"
     task.user_role_ids = [ role.id ]
+
+    task.state = "ready"
     task.save!
   end
 
