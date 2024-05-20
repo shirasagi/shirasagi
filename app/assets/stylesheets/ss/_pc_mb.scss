@@ -2166,6 +2166,7 @@ footer.send {
 .tap-menu {
   display: none;
   position: absolute;
+  max-width: 140px;
   z-index: 100;
   padding: 5px 0;
   border: $border-gray4;
