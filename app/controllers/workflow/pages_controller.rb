@@ -24,7 +24,8 @@ class Workflow::PagesController < ApplicationController
     current_level = @item.workflow_current_level
     current_workflow_approvers = @item.workflow_pull_up_approvers_at(current_level)
     Workflow::Mailer.send_request_mails(
-      f_uid: @item.workflow_user_id, t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
+      f_uid: @item.workflow_user_id, m_id: @item.workflow_member_id,
+      t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
       site: @cur_site, page: @item,
       url: params[:url], comment: @item.workflow_comment
     )
