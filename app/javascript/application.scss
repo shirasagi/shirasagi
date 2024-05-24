@@ -21,9 +21,9 @@
 }
 
 .ss-list-item-overlay {
+  display: flex;
   position: absolute;
   padding: 5px;
-  display: flex;
   overflow: auto;
   background: rgba(220, 220, 220, .9);
 
