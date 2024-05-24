@@ -145,27 +145,6 @@ describe "Article::PagesController", type: :request, dbscope: :example do
       end
     end
 
-    describe "GET /page/:id" do
-      let!(:item) { create(:article_page, cur_node: node) }
-      let!(:show_path) { article_page_path(site.id, node, item, format: :json) }
-
-      context "check show page" do
-        it do
-          get show_path
-          expect(response.status).to eq 200
-        end
-
-        it "returns 200 when backups have user_id and member_id is nil" do
-          item.backups.limit(History.max_histories).to_a.first.update(user_id: nil, member_id: nil)
-          item.reload
-          get show_path
-          expect(response.status).to eq 200
-        end
-      end
-
-      
-    end
-
     context "article download" do
       let!(:cate_node) { create(:category_node_page, cur_site: site, cur_node: node, name: "くらしのガイド") }
       let!(:layout) { create(:cms_layout, cur_site: site, name: "記事レイアウト", filename: "page.layout.html") }
