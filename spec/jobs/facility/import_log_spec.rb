@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Facility::ImportJob, dbscope: :example do
   let(:model) { Facility::Node::Page }
-  let!(:site) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group1.id]) }
+  let!(:site) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.#{unique_id}.#{unique_id}.example.jp"], group_ids: [group1.id]) }
   let!(:layout) { create(:cms_layout, site: site, name: "施設レイアウト") }
 
   let!(:node_categories) { create(:cms_node_node, site: site, filename: "facilities/categories") }

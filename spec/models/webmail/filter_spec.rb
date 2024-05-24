@@ -146,7 +146,7 @@ describe Webmail::Filter, type: :model, dbscope: :example do
           ]
           subject.save!
 
-          expect(subject.search_keys).to eq ["NOT", field1.upcase, value1, "NOT", field2.upcase, value2, "NOT", field3.upcase, value3]
+          expect(subject.search_keys).to eq [ "NOT", field1.upcase, value1, "NOT", field2.upcase, value2, "NOT", field3.upcase, value3 ]
         end
       end
 
@@ -172,7 +172,7 @@ describe Webmail::Filter, type: :model, dbscope: :example do
           ]
           subject.save!
 
-          expect(subject.search_keys).to eq ["OR", "NOT", field1.upcase, value1, "OR", "NOT", field2.upcase, value2, "NOT", field3.upcase, value3]
+          expect(subject.search_keys).to eq [ "OR", "NOT", field1.upcase, value1, "OR", "NOT", field2.upcase, value2, "NOT", field3.upcase, value3 ]
         end
       end
     end
