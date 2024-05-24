@@ -32,20 +32,25 @@ jobs:
       - name: eslint -v
         run: npx eslint -v
       - uses: reviewdog/action-setup@v1
-      - name: reviewdog -list
-        run: reviewdog -list
-#      - name: Run reviewdog - brakeman, eslint, locale
-#        env:
-#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: reviewdog -reporter=github-pr-review -runners "brakeman,eslint,locale"
+      #- name: reviewdog -list
+      #  run: reviewdog -list
+      - name: Run reviewdog - brakeman, eslint, locale
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: reviewdog -reporter=github-pr-review -runners "brakeman,eslint,locale"
+      # stylelintが報告するエラーが多すぎるためか、.reviewdog.ymlからstylelintを実行するとバッファー超過などのエラーになるようで正常に終了せず、
+      # タイムアウトまで実行を続けてしまう。そこでstylelintを個別に実行することにする。
       - name: Run reviewdog - stylelint
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
         run: |
-          npx stylelint -o stylelint-result --no-color '{app,db}/**/*.{css,scss,sass}' || true
+          npx stylelint -o stylelint-result --no-color '{app,db}/**/*.{css,scss,sass}'
           cat stylelint-result | reviewdog -f stylelint -name stylelint -reporter=github-pr-review
-#      - name: Run reviewdog - rubocop
-#        env:
-#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#          bundle exec rubocop | reviewdog -f rubocop -name rubocop -reporter=github-pr-review
+      # rubocopが報告するエラーが多すぎるためか、.reviewdog.ymlからrubocopを実行するとバッファー超過などのエラーになるようで正常に終了せず、
+      # タイムアウトまで実行を続けてしまう。そこでrubocopを個別に実行することにする。
+      - name: Run reviewdog - rubocop
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bundle exec rubocop | reviewdog -f rubocop -name rubocop -reporter=github-pr-review
