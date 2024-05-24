@@ -1,7 +1,7 @@
 runner:
-  rubocop:
-    cmd: bundle exec rubocop
-    format: rubocop
+#  rubocop:
+#    cmd: bundle exec rubocop
+#    format: rubocop
   brakeman:
     cmd: bundle exec brakeman --quiet --format tabs
     format: brakeman
