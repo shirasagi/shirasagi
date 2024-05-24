@@ -41,4 +41,4 @@ jobs:
         #run: |
         #  npx stylelint --no-color '{app,db}/**/*.{css,scss}' | tee stylelint-result
         #  cat stylelint-result | reviewdog -f stylelint -name stylelint -reporter=github-pr-review
-        run: reviewdog -reporter=github-pr-review -runners "stylelint" -tee
+        run: reviewdog -reporter=github-pr-review -runners "rubocop"
