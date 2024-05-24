@@ -6,7 +6,7 @@ runner:
     cmd: bundle exec brakeman --quiet --format tabs
     format: brakeman
   stylelint:
-    cmd: npx stylelint --no-color '{app,db}/**/*.{css,scss}'
+    cmd: npx stylelint --no-color app/javascript/application.scss
     format: stylelint
   eslint:
     cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
