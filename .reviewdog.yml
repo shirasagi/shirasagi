@@ -6,7 +6,10 @@ runner:
     cmd: bundle exec brakeman --quiet --format tabs
     format: brakeman
   stylelint:
-    cmd: npx stylelint --no-color '{app,db}/**/*.{css,scss,sass}'
+    # db/以下をチェックすると（エラーが多すぎるためか）バッファー超過などのエラーになるようで正常に終了せず、
+    # タイムアウトまで実行を続けてしまう。そこでdb/以下をチェックしないようにする。
+    #cmd: npx stylelint --no-color '{app,db}/**/*.{css,scss,sass}'
+    cmd: npx stylelint --no-color 'app/**/*.{css,scss,sass}'
     format: stylelint
   eslint:
     cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
