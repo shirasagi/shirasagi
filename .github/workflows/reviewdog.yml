@@ -32,10 +32,12 @@ jobs:
       - name: eslint -v
         run: npx eslint -v
       - uses: reviewdog/action-setup@v1
+      - name: reviewdog -list
+        run: reviewdog -list
       - name: Run reviewdog
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         #run: reviewdog -reporter=github-pr-review
         run: |
-          npx stylelint --formatter github --no-color 'app/**/*.{css,scss}' | tee stylelint-result
-          cat stylelint-result | reviewdog -reporter=github-pr-review
+          npx stylelint --no-color '{app,db}/**/*.{css,scss}' | tee stylelint-result
+          cat stylelint-result | reviewdog -f stylelint -name stylelint -reporter=github-pr-review
