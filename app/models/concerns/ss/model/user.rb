@@ -171,6 +171,7 @@ module SS::Model::User
     end
 
     SEARCH_HANDLERS = %i[search_name search_title_ids search_occupation_ids search_keyword].freeze
+    SEARCH_FIELDS = %i[name kana uid organization_uid email tel tel_ext remark].freeze
 
     def search(params)
       criteria = all
@@ -193,13 +194,13 @@ module SS::Model::User
       end
 
       if user_ids.blank?
-        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark)
+        return all.keyword_in(params[:keyword], *SEARCH_FIELDS)
       end
 
       # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
       base_criteria = all.dup
 
-      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark).selector
+      selector = all.unscoped.keyword_in(params[:keyword], *SEARCH_FIELDS).selector
       base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
