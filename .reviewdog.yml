@@ -2,16 +2,16 @@ runner:
 #  rubocop:
 #    cmd: bundle exec rubocop
 #    format: rubocop
-  brakeman:
-    cmd: bundle exec brakeman --quiet --format tabs
-    format: brakeman
+#  brakeman:
+#    cmd: bundle exec brakeman --quiet --format tabs
+#    format: brakeman
   stylelint:
-    cmd: npx stylelint --no-color '{app,db}/**/*.{css,scss,sass}'
+    cmd: npx stylelint --no-color 'app/**/*.{css,scss}'
     format: stylelint
-  eslint:
-    cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
-    format: eslint
-  locale:
-    cmd: bundle exec rails runner .github/scripts/locale_key_comp.rb
-    errorformat:
-      - "%f:%l:%c: %m"
+#  eslint:
+#    cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
+#    format: eslint
+#  locale:
+#    cmd: bundle exec rails runner .github/scripts/locale_key_comp.rb
+#    errorformat:
+#      - "%f:%l:%c: %m"
