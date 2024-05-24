@@ -39,3 +39,14 @@
     }
   }
 }
+
+.foo-bar-baz {
+  .ads {
+    position: absolute;
+    margin: 0;
+    padding: 5px;
+    overflow: auto;
+    display: flex;
+    background: rgba(220, 220, 220, 0.9);
+  }
+}
