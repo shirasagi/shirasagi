@@ -8,17 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     # uncomment blow line if you don't want to run reviewdog on your repository
     # if: ${{ github.repository == 'shirasagi/shirasagi' }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.5
+          ruby-version: '3.1'
           bundler-cache: true
       - uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: npm
+      - name: ruby -v
+        run: ruby -v
+      - name: node -v
+        run: node -v
       - name: Install yarn
         run: npm install -g yarn
       - name: Install node modules
