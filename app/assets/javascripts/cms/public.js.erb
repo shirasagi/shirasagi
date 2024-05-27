@@ -72,43 +72,51 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
 
   SS_Kana.render = function () {
-    var $kana = $("#ss-kana");
-    if (!$kana[0]) {
-      return;
-    }
+    var $kanaElements = $('[data-tool="ss-kana"]');
+    console.log("aa vayi kiddan")
+    $kanaElements.each(function (index) {
+        var $kana = $(this);
+        if (!$kana[0]) {
+            return;
+        }
 
-    if (SS.config["site_url"] && SS.config["kana_url"]) {
-      SS_Kana.siteUrl = SS.config["site_url"];
-      SS_Kana.kanaUrl = SS.config["kana_url"];
-    }
+        if (SS.config["site_url"] && SS.config["kana_url"]) {
+            SS_Kana.siteUrl = SS.config["site_url"];
+            SS_Kana.kanaUrl = SS.config["kana_url"];
+        }
 
-    var pathname = location.pathname;
-    var url, cssClass;
-    if ($("body").data("kana")) {
-      url = SS_Kana.url(pathname, false);
-      url = SS_Translate.url(url);
-      cssClass = "off";
-    } else {
-      url = SS_Translate.url(pathname, false)
-      url = SS_Kana.url(url, true);
-      cssClass = "on";
-    }
-    if (url[0] !== '/') {
-      // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
-      // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
-      return;
-    }
+        var pathname = location.pathname;
+        var url, cssClass;
+        if ($("body").data("kana")) {
+            url = SS_Kana.url(pathname, false);
+            url = SS_Translate.url(url);
+            cssClass = "off";
+        } else {
+            url = SS_Translate.url(pathname, false)
+            url = SS_Kana.url(url, true);
+            cssClass = "on";
+        }
+        if (url[0] !== '/') {
+            // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
+            // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
+            return;
+        }
 
-    var html = $kana.html();
-    var $anchor = $("<a />", { class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
-    $kana.html($anchor);
+        var html = $kana.html();
+        var anchorId = 'kana_a_' + index;
+        var $anchor = $("<a />", { id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
+        $kana.html($anchor);
 
-    $anchor.on("click", function(ev) {
-      ev.preventDefault();
-      location.href = url;
-      return false;
+        $anchor.on("click", function (ev) {
+            ev.preventDefault();
+            var $clickedAnchor = $(this);
+            var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
+            location.href = clickedUrl;
+            return false;
+        });
     });
   };
+
 
   SS_Kana.url = function (url, bool) {
     if (bool == null) {
@@ -362,30 +370,31 @@ this.SS_Voice = (function () {
   SS_Voice.timerId = null;
 
   SS_Voice.render = function () {
-    SS_Voice.url = SS_Voice.requestUrl();
-    var $voiceTag = $('#ss-voice');
-    if ($voiceTag.size() === 0) {
-      return;
-    }
-    if ($voiceTag.size() > 1) {
-      $voiceTag = $voiceTag.first();
-    }
-    var anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
-    $voiceTag.html('');
-    anchor.appendTo($voiceTag);
-    SS_Voice.$voiceTag = anchor;
-    var voice_controller = $('#ss-voice-controller');
-    if (voice_controller.size() === 0) {
-      $voiceTag.after('<div id="ss-voice-controller" style="display: none;"/>');
-      voice_controller = $('#ss-voice-controller');
-    }
-    SS_Voice.voiceController = new SS_VoiceController(voice_controller[0]);
-    SS_Voice.state = null;
-    SS_Voice.cancelLoading = false;
-    SS_Voice.timerId = null;
-    SS_Voice.init();
-    voice_controller.find('.ss-jp-close').on('click', SS_Voice.cancel);
+    var $voiceTags = $('[data-tool="ss-voice"]');
+    $voiceTags.each(function (index) {
+        var $voiceTag = $(this);
+        SS_Voice.url = SS_Voice.requestUrl();
+
+        var anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
+        $voiceTag.html('');
+        anchor.appendTo($voiceTag);
+        SS_Voice.$voiceTag = anchor;
+
+        var controllerId = 'ss-voice-controller-' + index;
+        var voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
+        $voiceTag.after(voice_controller);
+        console.log(SS_Voice)
+        SS_Voice.voiceController = new SS_VoiceController(voice_controller[0]);
+        SS_Voice.state = null;
+        SS_Voice.cancelLoading = false;
+        SS_Voice.timerId = null;
+        SS_Voice.init();
+        voice_controller.find('.ss-jp-close').on('click', SS_Voice.cancel);
+    });
   };
+
+
+
 
   SS_Voice.init = function () {
     SS_Voice.state = 'init';

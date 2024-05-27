@@ -271,7 +271,19 @@ module Cms::PublicFilter::Layout
     html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{label}#{$3}"
     end
+    html.gsub(/(<.+?)(id="ss-kana")(.*?>)/) do
+      "#{$1}id='ss-kana' data-tool='ss-kana' #{$3}"
+    end.gsub(/(<.+?)(id="ss-voice")(.*?>)/) do
+      "#{$1}id='ss-voice' data-tool='ss-voice' #{$3}"
+    end.gsub(/(<.+?)(id="ss-small")(.*?>)/) do
+      "#{$1}id='ss-small' data-tool='ss-small' #{$3}"
+    end.gsub(/(<.+?)(id="ss-medium")(.*?>)/) do
+      "#{$1}id='ss-medium' data-tool='ss-medium' #{$3}"
+    end.gsub(/(<.+?)(id="ss-large")(.*?>)/) do
+      "#{$1}id='ss-large' data-tool='ss-large' #{$3}"
+    end   
   end
+  
 
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
