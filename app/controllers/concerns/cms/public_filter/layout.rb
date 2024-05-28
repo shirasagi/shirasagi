@@ -290,6 +290,9 @@ module Cms::PublicFilter::Layout
     html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{template}#{$3}"
     end
+    html.gsub(/(<.+?)(id="ss-theme")(.*?>)/) do
+      "#{$1}id='ss-theme' data-tool='ss-theme' #{$3}"
+    end
   end
 
   def date_convert(date, format = nil, datetime = nil)

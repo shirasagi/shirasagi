@@ -192,63 +192,67 @@ this.SS_Theme = (function () {
   }
 
   SS_Theme.render = function () {
-    var $theme = $("#ss-theme");
-    if ($theme.length === 0) {
+    var $themes = $('[data-tool="ss-theme"]');
+    if ($themes.length === 0) {
       return;
     }
+    $themes.each(function() {
+      var $theme = $(this);
+      var theme = SS.config["theme"];
+      var inlineStyle = '';
+      for (var cls in theme) {
+        var $a = $theme.find("a." + $.escapeSelector(cls));
+        console.log($a)
+        if (!$a[0]) {
+          continue;
+        }
 
-    var theme = SS.config["theme"];
-    var inlineStyle = '';
-    for (var cls in theme) {
-      var $a = $theme.find("a." + $.escapeSelector(cls));
-      if (!$a[0]) {
-        continue;
-      }
-
-      $a.attr("data-ss-theme", cls);
-
-      var v = theme[cls];
-      if (v["css_path"]) {
-        var $styleSheetLink = $('<link />', { rel: "alternate stylesheet", type: "text/css", title: v["name"], href: v["css_path"], class: "ss-theme " + $.escapeSelector(cls), disabled: true });
-        $('head').append($styleSheetLink);
-      }
-      if (v["font_color"] && v["background_color"]) {
-        inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
-      }
-      if (v["default_theme"]) {
-        $theme.find('a').removeClass('active');
-        $a.addClass('active');
-        SS_Theme.switchTheme(cls);
-      }
-      $a.on("click", function () {
-        var $this = $(this);
-        var cls = $this.data("ss-theme");
-        $theme.find('a').removeClass('active');
-        $this.addClass('active');
-        Cookies.set("ss-theme", cls, {
-          expires: 7,
-          path: '/'
+        var anchorId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
+        $a.attr("id", anchorId); // Assign the unique ID to the anchor
+        $a.attr("data-ss-theme", cls);
+        var v = theme[cls];
+        if (v["css_path"]) {
+          var $styleSheetLink = $('<link />', { rel: "alternate stylesheet", type: "text/css", title: v["name"], href: v["css_path"], class: "ss-theme " + $.escapeSelector(cls), disabled: true });
+          $('head').append($styleSheetLink);
+        }
+        if (v["font_color"] && v["background_color"]) {
+          inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
+        }
+        if (v["default_theme"]) {
+          $theme.find('a').removeClass('active');
+          $a.addClass('active');
+          SS_Theme.switchTheme(cls);
+        }
+        $a.on("click", function () {
+          var $this = $(this);
+          var cls = $this.data("ss-theme");
+          $theme.find('a').removeClass('active');
+          $this.addClass('active');
+          Cookies.set("ss-theme", cls, {
+            expires: 7,
+            path: '/'
+          });
+          SS_Theme.switchTheme(cls);
+          return false;
         });
+      }
+
+      if (inlineStyle) {
+        var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
+        $("head").append($inlineStyle);
+      }
+
+      var cls = Cookies.get("ss-theme");
+      if (!theme[cls]) {
+        Cookies.remove("ss-theme");
+        cls = null;
+      }
+      if (cls) {
+        $theme.find('a').removeClass('active');
+        $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
         SS_Theme.switchTheme(cls);
-        return false;
-      });
-    }
-
-    if (inlineStyle) {
-      var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
-      $("head").append($inlineStyle);
-    }
-
-    var cls = Cookies.get("ss-theme");
-    if (!theme[cls]) {
-      Cookies.remove("ss-theme");
-      cls = null;
-    }
-    if (cls) {
-      $theme.find('a').removeClass('active');
-      $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
-      SS_Theme.switchTheme(cls);
-    }
+      }
+    });
   };
 
   SS_Theme.cssTemplate = function (cls, color, backgroundColor) {
