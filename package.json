@@ -52,10 +52,10 @@
     "postcss-loader": "^6.2.1",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
-    "stylelint": "^16.2.1",
+    "stylelint": "^16.5.0",
     "stylelint-config-property-sort-order-smacss": "^10.0.0",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "stylelint-scss": "^6.1.0",
+    "stylelint-scss": "^6.3.0",
     "webpack": "^5.76.0",
     "webpack-cli": "^5.0.1",
     "webpack-remove-empty-scripts": "^0.8.1"
