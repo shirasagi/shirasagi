@@ -423,7 +423,7 @@ module SS
     #
     def wait_for_cbox_opened(&block)
       wait_for_js_ready
-      wait_event_to_fire("cbox_complete", &block)
+      wait_for_event_fired("cbox_complete", &block)
       wait_for_js_ready
     end
     alias wait_cbox_open wait_for_cbox_opened
@@ -439,7 +439,7 @@ module SS
       wait_for_js_ready
       save = JsSupport.is_within_cbox
       JsSupport.is_within_cbox = true
-      wait_event_to_fire("cbox_closed", &block)
+      wait_for_event_fired("cbox_closed", &block)
     ensure
       JsSupport.is_within_cbox = save
     end
@@ -619,7 +619,7 @@ module SS
 
     def fill_in_address(locator, with:)
       wait_for_js_ready
-      wait_event_to_fire("ss:addressCommitted") do
+      wait_for_event_fired("ss:addressCommitted") do
         fill_in locator, with: with
         js_dispatch_focus_event find(:fillable_field, locator), 'blur'
       end
