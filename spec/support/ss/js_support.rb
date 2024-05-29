@@ -458,7 +458,7 @@ module SS
 
     #
     # Usage
-    #   wait_ckeditor_ready find(:fillable_field, "item[html]")
+    #   wait_for_ckeditor_ready find(:fillable_field, "item[html]")
     #
     def wait_for_ckeditor_ready(element)
       wait_for_js_ready
@@ -490,7 +490,7 @@ module SS
       options[:visible] = :all
       element = find(:fillable_field, locator, **options)
 
-      ret = wait_ckeditor_ready(element)
+      ret = wait_for_ckeditor_ready(element)
       expect(ret).to be_truthy
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
@@ -520,7 +520,7 @@ module SS
     def wait_for_ckeditor_event(locator, event_name)
       element = find(:fillable_field, locator)
 
-      ret = wait_ckeditor_ready(element)
+      ret = wait_for_ckeditor_ready(element)
       expect(ret).to be_truthy
 
       promise_id = "promise_#{unique_id}"
