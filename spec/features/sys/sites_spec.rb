@@ -257,7 +257,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         within ".partner_site_ids" do
-          wait_cbox_open { click_on I18n.t("sys.apis.sites.index") }
+          wait_for_cbox_opened { click_on I18n.t("sys.apis.sites.index") }
         end
       end
       within_cbox do
@@ -289,7 +289,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         within ".chorg_site_ids" do
-          wait_cbox_open { click_on I18n.t("sys.apis.sites.index") }
+          wait_for_cbox_opened { click_on I18n.t("sys.apis.sites.index") }
         end
       end
       within_cbox do
