@@ -1584,3 +1584,9 @@ ja:
     models:
       ss/public_file_remover_job: 公開済みファイル削除ジョブ
       ss/task_sweep_job: タスク削除ジョブ
+      ss/delete_empty_directories_job: 空ディレクトリ削除ジョブ
+      ss/delete_download_files_job: 一時ファイル削除（エクスポート）ジョブ
+      ss/delete_access_tokens_job: アクセストークン掃除ジョブ
+      ss/delete_sso_tokens_job: SSOトークン掃除ジョブ
+      ss/delete_ss_o_tokens_job: SSOトークン掃除ジョブ
+      ss/cleanup_file_store_cache_job: ファイルキャッシュ掃除ジョブ

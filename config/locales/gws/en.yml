@@ -670,3 +670,4 @@ en:
       gws/user_occupation_import_job: Occupation import
       gws/cache_rebuild_job: Rebuild cache
       gws/aggregation/group_update_job: Update aggregation group
+      gws/reload_site_usage_job: Update various usages
