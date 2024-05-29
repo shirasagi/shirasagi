@@ -1,0 +1,30 @@
+FactoryBot.define do
+  factory :accessibilty_tool, class: 'Cms::Part::Free' do
+    name { unique_id.to_s }
+    basename { "tool.part.html" }
+    filename { "tool.part.html" }
+    html do
+      "<!-- アクセシビリティツール -->
+      <div id='tool' class='accessibility__tool-wrap'>
+        <nav class='accessibility__tool'>
+          <div class='accessibility__tool-list'>
+            <div id='ss-kana'  data-tool='ss-kana' class='accessibility__kana'>ふりがなをつける</div>
+            <div id='ss-voice' data-tool='ss-voice' class='accessibility__voice'>読み上げる</div>
+            <div id='theme' class='accessibility__theme'>背景色
+              <span id='ss-theme' data-tool='ss-theme'>
+                <a href='#' class='white'>白</a>
+                <a href='#' class='blue'>青</a>
+                <a href='#' class='black'>黒</a>
+              </span>
+            </div>
+            <div id='size' class='accessibility__fontsize'>文字サイズ
+              <span id='ss-small' data-tool='ss-small'>小さく</span>
+              <span id='ss-medium' data-tool='ss-medium'>標準</span>
+              <span id='ss-large' data-tool='ss-large'>大きく</span>
+            </div>
+          </div><!-- .accessibility__tool-list -->
+        </nav><!-- .accessibility__tool -->
+      </div><!--#tool .accessibility__tool-wrap -->"
+    end
+  end
+end

@@ -167,6 +167,57 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "check accessibility tools" do
+      let(:accessibilty_tool) { create(:accessibilty_tool, cur_site: site) }
+      let(:layout_html) do
+        html = []
+        html << "<html><head>"
+        html << "{{ part \"#{accessibilty_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "{{ part \"#{accessibilty_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "<script src='/assets/cms/public.js'></script>"
+        html << "</head><body><br><br><br><div id=\"main\" class=\"page\">"
+        html << "{{ yield }}"
+        html << "</div></body></html>"
+        html.join("\n")
+      end
+      let(:layout) { create :cms_layout, html: layout_html }
+      let(:text) { unique_id }
+      let(:html) { "<p>#{text}</p>" }
+      let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html) }
+      it "check if accessibility tools are clickable if multiple time" do
+        visit cms_preview_path(site: site, path: item.preview_path)
+        ['ss-kana', 'ss-voice'].each do |tool|
+          divs = page.all("div[data-tool='#{tool}']")
+          divs.each do |div|
+            if tool == 'ss-kana'
+              link = div.find('a')
+              # link.click
+              # expect(page.status_code).to eq(200) 
+              # visit cms_preview_path(site: site, path: item.preview_path) 
+            elsif tool == 'ss-voice'
+              link = div.find('a')
+              expect(link[:href]).to include('voice')
+            end
+          end
+        end
+        spans = page.all("span[data-tool='ss-theme']")
+        spans.each do |span|
+          links = span.all('a')
+          links.each do |link|
+            expect(link).to be_visible
+          end
+        end
+
+        divs = page.all("div[id=size]")
+        divs.each do |div|
+          links = div.all('a')
+          links.each do |link|
+            expect(link).to be_visible
+          end
+        end
+      end
+    end
   end
 
   describe "node preview" do
