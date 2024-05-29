@@ -11,7 +11,7 @@ def gws_select_member(user, form_selector: nil, addon_selector: nil)
     end
   end
   wait_for_cbox do
-    wait_cbox_close { click_on user.long_name }
+    wait_for_cbox_closed { click_on user.long_name }
   end
   within form_selector do
     within addon_selector do
@@ -30,7 +30,7 @@ def gws_select_member_group(group, form_selector: nil, addon_selector: nil)
     end
   end
   wait_for_cbox do
-    wait_cbox_close { click_on group.trailing_name }
+    wait_for_cbox_closed { click_on group.trailing_name }
   end
   within form_selector do
     within addon_selector do
@@ -49,7 +49,7 @@ def gws_select_member_custom_group(custom_group, form_selector: nil, addon_selec
     end
   end
   wait_for_cbox do
-    wait_cbox_close { click_on custom_group.name }
+    wait_for_cbox_closed { click_on custom_group.name }
   end
   within form_selector do
     within addon_selector do

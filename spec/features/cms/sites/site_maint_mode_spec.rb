@@ -46,7 +46,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item", text: site1_user2.name)
         expect(page).to have_no_css(".list-item", text: site2_user1.name)
         within ".items" do
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on site1_user1.name
           end
         end

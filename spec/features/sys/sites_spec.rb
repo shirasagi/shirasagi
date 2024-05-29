@@ -261,7 +261,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on site2.name }
+        wait_for_cbox_closed { click_on site2.name }
       end
       within "form#item-form" do
         within ".partner_site_ids" do
@@ -293,7 +293,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        wait_cbox_close { click_on site2.name }
+        wait_for_cbox_closed { click_on site2.name }
       end
       within "form#item-form" do
         within ".chorg_site_ids" do
