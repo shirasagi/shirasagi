@@ -13,6 +13,7 @@ class Sys::SiteCopyController < ApplicationController
 
   def set_item
     @item ||= Sys::SiteCopyTask.order_by(id: 1).first_or_initialize
+    @site ||= Sys::Site.order_by(id: 1).last if @item.persisted?
   end
 
   public
