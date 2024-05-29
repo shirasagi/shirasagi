@@ -30,10 +30,7 @@ class SS::MaxFileSize
     private
 
     def fetch_nginx_config(file, mod: nil)
-      mod ||= Kernel
-      pid = mod.spawn({}, "nginx", "-T", { in: SS::RakeRunner::NULL_DEVICE, out: file.fileno, err: SS::RakeRunner::NULL_DEVICE })
-      status_code, _status = Process.waitpid2(pid)
-      status_code
+      SS::Command.run("nginx", "-T", mod: mod, stdout: file)
     rescue => e
       Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       $CHILD_STATUS ? $CHILD_STATUS.exitstatus : -1

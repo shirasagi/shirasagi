@@ -280,7 +280,12 @@ def webmail_import_mail(user_or_group, mail_or_msg, account: 0, date: Time.zone.
   else
     imap = Webmail::Imap::Base.new_by_user(user_or_group, imap_setting)
   end
-  imap.login
+  unless imap.login?
+    result = imap.login
+    unless result
+      raise "failed to log-in"
+    end
+  end
   imap.examine(mailbox)
   imap.conn.append(mailbox, msg, [:Seen], date)
 end
@@ -288,6 +293,11 @@ end
 def webmail_reload_mailboxes(user, account: 0)
   imap_setting = user.imap_settings[account]
   imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
-  imap.login
+  unless imap.login?
+    result = imap.login
+    unless result
+      raise "failed to log-in"
+    end
+  end
   imap.mailboxes.reload
 end

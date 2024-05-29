@@ -101,8 +101,10 @@ describe "cms_user_profiles", type: :feature, dbscope: :example, js: true do
   end
 
   context "with regular user" do
+    let(:permissions) { %w(edit_cms_user_profile edit_password_cms_user_profile) }
+    let!(:role) { create :cms_role, name: unique_id, permissions: permissions }
     let(:user) do
-      user = create :cms_user, group_ids: site.group_ids
+      user = create :cms_test_user, group_ids: site.group_ids, cms_role_ids: [ role.id ]
       user.update(initial_password_warning: 1)
       user
     end

@@ -74,6 +74,21 @@ module Webmail::Imap
       end
     end
 
+    def authority
+      @authority ||= begin
+        authority = ""
+        if conf[:account]
+          authority << "#{conf[:account]}@"
+        end
+        authority << conf[:host]
+        options = conf[:options].symbolize_keys
+        if options[:port]
+          authority << ":#{options[:port]}"
+        end
+        authority
+      end
+    end
+
     def borrow_imap(&block)
       host = conf[:host]
       options = conf[:options].symbolize_keys
@@ -82,6 +97,13 @@ module Webmail::Imap
 
     def conn
       @conn ||= Proxy.new(self)
+    end
+
+    def capabilities
+      borrow_imap do |conn|
+        # ログイン前とログイン後とで得られる内容が異なるので注意
+        conn.capabilities
+      end
     end
 
     def login
@@ -93,6 +115,14 @@ module Webmail::Imap
       Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.error = e.to_s
       false
+    end
+
+    def login?
+      borrow_imap do |conn|
+        # テスト用のdockerコンテナのdovecotでは、ログイン前後のcapabilityを比較するとAUTH=PLAINが消える。
+        # そこで、AUTH=が存在するかどうかでログイン済みかどうかを判定するが、すべてのIMAPサーバーが同じような動作をするかは不明。
+        !conn.capabilities.any? { |cap| cap.start_with?("AUTH=") }
+      end
     end
 
     def disconnect

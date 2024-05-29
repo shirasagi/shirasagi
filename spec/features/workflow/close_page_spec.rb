@@ -21,11 +21,14 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
   context "with article/page" do
     let(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
     let!(:item) do
-      create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id, state: 'public')
+      create(
+        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, state: 'public', released_type: 'same_as_updated'
+      )
     end
     let(:show_path) { article_page_path(site, node, item) }
 
     it do
+      expect(item.released).to eq item.first_released
       expect(item.backups.count).to eq 1
 
       #
@@ -58,6 +61,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+      expect(item.released).to eq item.first_released
       # no backups are created while requesting approve
       expect(item.backups.count).to eq 1
 
@@ -92,6 +96,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       expect(item.state).to eq "closed"
       expect(item.workflow_approvers).to \
         include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+      expect(item.released).to eq item.first_released
       # backup is created
       expect(item.backups.count).to eq 2
 

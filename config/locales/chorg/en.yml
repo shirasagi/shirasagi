@@ -83,7 +83,7 @@ en:
         more: See more
         close: Close
     labels:
-      all_sites: All sites
+      this_site: This site
     menus:
       revisions:
         add: Add a new group
@@ -100,6 +100,7 @@ en:
       test_run: Test run
       import_revision_file_confirmation: Import organizational change operations from a CSV. \n If an operation has already been registered, it will be deleted. \n Are you sure you want to run the operation?
       import_changesets_notice: Changed contents contained in the CSV are always appended; importing the CSV does not change existing changed contents in any way.
+      chorg_sites_can_be_changed_in_sys_sites: The target site for organizational changes can be set in the Site Settings on the System Administration page. Please contact the system administrator to set this up.
     options:
       changeset_type:
         add: New
@@ -110,6 +111,8 @@ en:
       delete_method:
         disable_if_possible: Disable and allow recovery later
         always_delete: Always physically delete
+    links:
+      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。
     buttons:
       reset_after_move: Reset transfer-destination
       reset_after_unify: Reset merge-destination
@@ -160,6 +163,7 @@ en:
     chorg: Organizational change
     addons:
       chorg/entity_log: History of changes
+      chorg/option: Option
 
   cms_role:
     edit_chorg_revisions: Manage organizational changes
@@ -179,6 +183,7 @@ en:
       models:
         chorg/run_params:
           job_mode_is_not_service: Job service execution mode is not a service and cannot be reserved. Please contact a system administrator.
+          chorg_empty_all: "None of the “Organization Change Data (New Establishment, Move, etc.),” “User CSV,” or “Contents CSV” is set."
         chorg/changeset:
           blank_contact_group_name: "'s contact has blank name."
           duplicate_contact_group_name: "'s contact has duplicated name \"%{name}\"."
@@ -202,7 +207,8 @@ en:
         reservation: Reservation for execution
       chorg/revision:
         content_csv_file_id: Content CSV files
-        target_site_ids: Target site
+      chorg/site_setting:
+        chorg_site_ids: Sites subject to reorganization
 
   tooltip:
     chorg/model/revision:
@@ -211,7 +217,7 @@ en:
       user_csv_file_id:
         - Select the user CSV file to perform user transfers after the organizational change is run.
         -
-        - Open the CSV downloaded from "Site Settings - Users - Downloads" in Excel, etc., and set the group name, user title, etc. after the organizational change is run.
+        - Open the CSV downloaded from "Site Settings - Users" in Excel, etc., and set the group name, user title, etc. after the organizational change is run.
         - Select the user CSV thus modified for the user CSV file.
         -
         - "If you do not select a file, the users will not be transferred after the organizational change is run and you will need to transfer the users manually."
@@ -229,12 +235,8 @@ en:
       content_csv_file_id:
         - "Select the content CSV files for parts, layouts, pages, and folders to be transferred after the organizational change is run."
         -
-        - Open the CSV file downloaded from "All Contents - List Output" in Excel, etc., and set the group name, etc. after the organizational change is run.
+        - Open the CSV file downloaded from "All Contents" in Excel, etc., and set the group name, etc. after the organizational change is run.
         - Select the All Contents CSV that you have modified in this way for the contents CSV file.
-        - Note that the menu "All contents" will not be displayed if the permission "Use all contents" is not granted. If you cannot find the menu "All contents", please consult your administrator.
-      target_site_ids:
-        - Select the site to apply organizational changes to.
-        - Unless specified otherwise, all sites are eligible.
     chorg/run_params:
       reservation:
         - You can reserve a time to run.
@@ -353,3 +355,8 @@ en:
             - If you are using LDAP, enter the identifier (DN) of the merge destination group.
           before_name:
             - Select the group name of the merge source.
+    chorg/site_setting:
+      chorg_site_ids:
+        - Set the site for the organizational change.
+        - If not set, the organizational change will be implemented for this site only.
+        - If there are other target sites besides this own site, set them.

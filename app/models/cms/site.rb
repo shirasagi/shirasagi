@@ -33,6 +33,7 @@ class Cms::Site
   include Cms::SyntaxChecker::UrlSchemeSetting
   include SS::Ldap::SiteSetting
   include Cms::Ldap::ImportSetting
+  include Chorg::SiteSetting
 
   set_permission_name "cms_sites", :edit
 end

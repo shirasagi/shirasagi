@@ -16,6 +16,10 @@ module SS::Model::User
   TYPE_SSO = "sso".freeze
   TYPES = [ TYPE_SNS, TYPE_LDAP, TYPE_SSO ].freeze
 
+  # uidの制限をメールアドレスの"@"の左側（dot-atom-text）の仕様（RFC5322）に近づける
+  # 具体的にいうと、ALPHA | DIGIT | "-" | "-" が利用でき、"." は一度だけ利用できる
+  UID_MATCHER = /^[\w\-_]+(\.[\w\-_]+)?$/
+
   included do
     attr_accessor :cur_site, :cur_user
 
@@ -69,7 +73,10 @@ module SS::Model::User
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :kana, length: { maximum: 40 }
-    validates :uid, length: { maximum: 40 }
+    # メールアドレスの"@"の左側（local-part）の最大長は64文字とするのがデファクトっぽい
+    # 厳密にいうと、64文字という制限は存在せず、メールアドレス全体で254文字を超えてはいけないという制限があるのみ
+    # https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+    validates :uid, length: { maximum: 64 }
     validates :uid, uniqueness: true, if: ->{ uid.present? }
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
@@ -164,6 +171,7 @@ module SS::Model::User
     end
 
     SEARCH_HANDLERS = %i[search_name search_title_ids search_occupation_ids search_keyword].freeze
+    SEARCH_FIELDS = %i[name kana uid organization_uid email tel tel_ext remark].freeze
 
     def search(params)
       criteria = all
@@ -186,13 +194,13 @@ module SS::Model::User
       end
 
       if user_ids.blank?
-        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark)
+        return all.keyword_in(params[:keyword], *SEARCH_FIELDS)
       end
 
       # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
       base_criteria = all.dup
 
-      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark).selector
+      selector = all.unscoped.keyword_in(params[:keyword], *SEARCH_FIELDS).selector
       base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
@@ -388,7 +396,7 @@ module SS::Model::User
   end
 
   def validate_uid
-    return if uid.blank? || /^[\w\-]+$/.match?(uid)
+    return if uid.blank? || UID_MATCHER.match?(uid)
     errors.add :uid, :invalid
   end
 

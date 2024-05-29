@@ -1,17 +1,20 @@
-class Gws::Ldap::DiagnosticsController < ApplicationController
+class Gws::Ldap::Diagnostic::AuthsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/ldap/main/navi"
+  navi_view "gws/ldap/diagnostic/navi"
   menu_view nil
 
   model SS::Ldap::LoginDiagnostic
+
+  helper_method :ldap_setting
 
   private
 
   def set_crumbs
     @crumbs << [t("ldap.links.ldap"), gws_ldap_main_path]
-    @crumbs << [t("sys.diag"), url_for(action: :show)]
+    @crumbs << [t("sys.diag"), gws_ldap_diagnostic_main_path]
+    @crumbs << ["Auth", url_for(action: :show)]
   end
 
   def set_item
@@ -32,8 +35,15 @@ class Gws::Ldap::DiagnosticsController < ApplicationController
     ldap_setting.ldap_url
   end
 
-  def ldap_openssl_verify_mode
-    ldap_setting.ldap_openssl_verify_mode
+  def ldap_open(&block)
+    config = ldap_setting.ldap_config
+    config[:auth] = {
+      method: :simple,
+      username: @item.dn,
+      password: @item.password
+    }
+
+    Net::LDAP.open(config, &block)
   end
 
   public
@@ -59,12 +69,20 @@ class Gws::Ldap::DiagnosticsController < ApplicationController
       return
     end
 
-    result = ::Ldap::Connection.authenticate(
-      url: ldap_url, openssl_verify_mode: ldap_openssl_verify_mode, username: @item.dn, password: @item.password)
-    if result
-      @result = "success"
-    else
-      @result = "failed"
+    ldap_open do |ldap|
+      result = ldap.bind
+
+      if result
+        @results = [ "auth success" ]
+      else
+        @results = [ "auth failed" ]
+
+        operation_result = ldap.get_operation_result
+        @results << "#{operation_result.message}(#{operation_result.code})"
+        if operation_result.error_message
+          @results << operation_result.error_message
+        end
+      end
     end
 
     render template: "show"

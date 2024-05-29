@@ -1,0 +1,19 @@
+<dt><%= t("mongoid.attributes.chorg/site_setting.chorg_site_ids") %></dt>
+<dd>
+  <%=
+    if @cur_site.chorg_sites.present?
+      br @cur_site.chorg_sites.reorder(id: 1).pluck(:name).join("\n")
+    else
+      t("chorg.labels.this_site")
+    end
+  %>
+</dd>
+<dd>
+  <%=
+    if Sys::Site.allowed?(:edit, @cur_user.sys_user)
+      link_to t("chorg.links.chorg_sites_can_be_changed_in_sys_sites"), sys_site_path(id: @cur_site), target: "_blank", rel: "noopener"
+    else
+      t("chorg.messages.chorg_sites_can_be_changed_in_sys_sites")
+    end
+  %>
+</dd>

@@ -159,9 +159,11 @@ describe "sns_cur_user_accounts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with super user" do
+    let(:permissions) { %w(edit_sys_user_account edit_password_sys_user_account) }
+    let(:role) { create :sys_role, name: unique_id, permissions: permissions }
     let(:user) do
       user = ss_user
-      user.update(initial_password_warning: 1)
+      user.update(initial_password_warning: 1, sys_role_ids: [ role.id ])
       user
     end
 
@@ -171,8 +173,10 @@ describe "sns_cur_user_accounts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with regular user" do
+    let(:permissions) { %w(edit_sys_user_account edit_password_sys_user_account) }
+    let(:role) { create :sys_role, name: unique_id, permissions: permissions }
     let(:user) do
-      user = create :ss_user, name: unique_id, email: unique_email
+      user = create :ss_user, name: unique_id, email: unique_email, sys_role_ids: [ role.id ]
       user.update(initial_password_warning: 1)
       user
     end

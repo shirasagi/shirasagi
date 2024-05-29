@@ -27,7 +27,10 @@
   <dd><%=br @item.groups.order_by(name: 1).pluck(:name) %></dd>
 
   <dt><%= @model.t :partner_site_ids %></dt>
-  <dd><%=br @item.partner_sites.order_by(host: 1).pluck(:name) %></dd>
+  <dd><%=br @item.partner_sites.reorder(id: 1).pluck(:name) %></dd>
+
+  <dt><%= @model.t :chorg_site_ids %></dt>
+  <dd><%=br @item.chorg_sites.reorder(id: 1).pluck(:name) %></dd>
 
   <% if SS.config.ss.upload_policy.present? %>
   <dt><%= @model.t :upload_policy %></dt>

@@ -3,7 +3,9 @@ require 'spec_helper'
 describe "cms_user_profiles", type: :feature, dbscope: :example, ldap: true, js: true do
   let!(:site) { cms_site }
   let(:ldap_url) { "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/" }
-  let!(:user) { create :cms_ldap_user2, organization: cms_group, group_ids: site.group_ids }
+  let(:permissions) { %w(edit_cms_user_profile edit_password_cms_user_profile) }
+  let!(:role) { create :cms_role, name: unique_id, permissions: permissions }
+  let!(:user) { create :cms_ldap_user2, organization: cms_group, group_ids: site.group_ids, cms_role_ids: [ role.id ] }
 
   shared_examples 'パスワード変更' do
     let(:new_password) { unique_id }

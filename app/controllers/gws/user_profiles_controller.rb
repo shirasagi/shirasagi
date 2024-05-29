@@ -3,7 +3,7 @@ class Gws::UserProfilesController < ApplicationController
   include Gws::CrudFilter
 
   navi_view "gws/user_settings/navi"
-  menu_view "sns/user_accounts/menu"
+  menu_view "gws/user_profiles/menu"
 
   model Gws::User
 
@@ -59,16 +59,19 @@ class Gws::UserProfilesController < ApplicationController
   end
 
   def edit
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_user_profile)
     render
   end
 
   def update
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_user_profile)
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     render_update @item.save
   end
 
   def edit_password
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_password_gws_user_profile)
     raise "404" if @cur_user.type_sso?
 
     @model = SS::PasswordUpdateService
@@ -77,6 +80,7 @@ class Gws::UserProfilesController < ApplicationController
   end
 
   def update_password
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_password_gws_user_profile)
     raise "404" if @cur_user.type_sso?
 
     @model = SS::PasswordUpdateService

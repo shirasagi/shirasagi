@@ -1,10 +1,8 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to t('ss.links.back'), opendata_dataset_path(id: @dataset.id), class: "back-to-show" %>
-    <% if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-        <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
-      <% end %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+      <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
@@ -14,13 +12,11 @@
     <% end %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% else %>
-    <% if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-        <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
-      <% end %>
-      <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-        <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
-     <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% end %>

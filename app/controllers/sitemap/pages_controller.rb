@@ -18,8 +18,21 @@ class Sitemap::PagesController < ApplicationController
 
   def export_urls
     @item = @model.new get_params
-    @item.site_id = @cur_site.id
+    @item.cur_site = @cur_site
+    @item.site = @cur_site
 
-    render plain: @item.load_sitemap_urls.join("\n")
+    service = Sitemap::RenderService.new(cur_site: @cur_site, cur_node: @cur_node, page: @item)
+    contents = service.load_whole_contents
+    urls = contents.map do |content|
+      case content.type
+      when :page
+        "/#{content.filename}"
+      when :node
+        "/#{content.filename}/"
+      else
+        "/#{content.filename}"
+      end
+    end
+    render plain: urls.join("\n")
   end
 end

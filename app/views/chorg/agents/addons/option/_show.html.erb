@@ -1,0 +1,9 @@
+<dl class="see">
+  <dt><%= @model.t :user_csv_file_id %></dt>
+  <dd><%= tryb { @item.user_csv_file.humanized_name } %></dd>
+
+  <% if @ss_mode == :cms %>
+    <dt><%= @model.t :content_csv_file_id %></dt>
+    <dd><%= tryb { @item.content_csv_file.humanized_name } %></dd>
+  <% end %>
+</dl>

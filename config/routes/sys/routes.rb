@@ -64,6 +64,7 @@ Rails.application.routes.draw do
         match :show, on: :member, via: [:get, :post, :put, :delete]
       end
       resource :app_log, only: [:show]
+      resource :certificate, only: [:show, :update]
     end
 
     namespace "apis" do

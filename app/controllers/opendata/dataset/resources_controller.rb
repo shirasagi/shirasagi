@@ -15,7 +15,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def set_dataset
-    raise "403" unless dataset.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @crumbs << [@dataset.name, opendata_dataset_path(id: @dataset)]
   end
 
@@ -47,15 +47,20 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   public
 
   def index
-    raise "403" unless @dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @items = @dataset.resources.
+      allow(:read, @cur_user, site: @cur_site, node: @cur_node, owned: true).
       search(params[:s]).
       order_by(name: 1).
       page(params[:page]).per(50)
   end
 
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+  end
+
   def create
-    raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node, owned: true)
 
     @item = @dataset.resources.new get_params
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
@@ -63,7 +68,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def update
-    raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     @item.attributes = get_params
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
@@ -99,8 +104,8 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def download
-    raise "403" unless @dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @item = @dataset.resources.find params[:resource_id]
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     send_file @item.file.path, type: @item.content_type, filename: @item.filename,
       disposition: :attachment, x_sendfile: true
   end
@@ -114,21 +119,21 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def content
-    raise "403" unless @dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @item = @dataset.resources.find params[:resource_id]
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     @data = @item.parse_tsv
   end
 
   def check_for_update
     set_item
-    raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     render layout: "ss/ajax"
   end
 
   def sync
     set_item
-    raise "403" unless @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     return if request.get? || request.head?
 

@@ -191,6 +191,7 @@ ja:
           <li style="list-style-type: disc;">(フォルダー種別・レイアウト)でグルーピングの後、それぞれのグループの中から最大10件を無作為に抽出します。ページは、(ページ種別・レイアウト・定型フォーム)でグルーピングの後、それぞれのグループの中から最大10件を無作為に抽出します。</li>
           <li style="list-style-type: disc;">つまり本CSVを利用することで効率よく網羅的にサイト構築結果を確認することができます。</li>
         </ul>
+      keep_updated: 更新日時を変更しない
     roles:
       admin: 管理者
       user: 編集者
@@ -772,10 +773,13 @@ ja:
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
     use_private_cms_line_statistics: LINE統計情報の利用（所有）
     edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
+    edit_cms_user_profile: プロフィールの編集
+    edit_password_cms_user_profile: プロフィールのパスワード変更
 
   modules:
     cms: 標準機能
     cms/line: LINE機能
+    cms/user_profile: プロフィール
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール

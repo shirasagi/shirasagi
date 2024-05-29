@@ -145,9 +145,12 @@ en:
     edit_gws_contrasts: Manage contrast
     edit_gws_bookmarks: Use of favorites
     edit_gws_personal_addresses: Use of personal address books
+    edit_gws_user_profile: Edit user profile
+    edit_password_gws_user_profile: Edit password of user profile
 
   modules:
     gws: Standard
+    gws/user_profile: User Profile
     addons:
       gws/role: Permissions/Roles
       gws/group_permission: Administrative permissions
@@ -667,3 +670,4 @@ en:
       gws/user_occupation_import_job: Occupation import
       gws/cache_rebuild_job: Rebuild cache
       gws/aggregation/group_update_job: Update aggregation group
+      gws/reload_site_usage_job: Update various usages

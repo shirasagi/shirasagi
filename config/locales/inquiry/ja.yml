@@ -355,3 +355,7 @@ ja:
       blank_keyword: "通知メールアドレスに転送するキーワードを入力してください。"
       blank_email: "キーワードが含まれる場合の通知メールアドレスを入力してください。"
       exist_form_select: "「%{input_type}」の項目はすでに存在しています。"
+
+  job:
+    models:
+      inquiry/delete_inquiry_temp_files_job: 一時ファイル削除（CMSお問い合わせ）

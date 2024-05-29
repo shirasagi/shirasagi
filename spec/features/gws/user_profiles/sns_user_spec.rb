@@ -99,8 +99,10 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, js: true do
   end
 
   context "with regular user" do
+    let(:permissions) { %w(edit_gws_user_profile edit_password_gws_user_profile) }
+    let!(:role) { create :gws_role, name: unique_id, permissions: permissions }
     let(:user) do
-      user = create :gws_user, group_ids: gws_user.group_ids
+      user = create :gws_user, group_ids: gws_user.group_ids, gws_role_ids: [ role.id ]
       user.update(initial_password_warning: 1)
       user
     end

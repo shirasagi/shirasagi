@@ -13,7 +13,7 @@
       addon_options[:id] = "addon-basic"
       addon_options[:head] = t("ss.login") + t("sys.diag")
     %>
-    <% buf = render template: "_form", locals: { f: f, addon: addon_options } %>
+    <% buf = render "form", f: f, addon: addon_options %>
     <% if buf.present? %>
       <%= render "ss/crud/addon", addon: addon_options do %>
         <%= buf %>

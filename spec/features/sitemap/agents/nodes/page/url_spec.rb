@@ -29,11 +29,13 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
       item
       visit node.url
 
-      within "h2.#{node_cls1}" do
-        expect(page).to have_selector("a[href=\"#{article_node.url}\"]", text: article_node.name)
-      end
-      within "h3.#{page_cls}" do
-        expect(page).to have_selector("a[href=\"#{article_page.url}\"]", text: article_page.name)
+      within ".sitemap-body" do
+        within "h2.#{node_cls1}" do
+          expect(page).to have_selector("a[href=\"#{article_node.url}\"]", text: article_node.name)
+        end
+        within "h3.#{page_cls}" do
+          expect(page).to have_selector("a[href=\"#{article_page.url}\"]", text: article_page.name)
+        end
       end
     end
   end
@@ -53,14 +55,16 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
       item
       visit node.url
 
-      within "h2.#{node_cls1}" do
-        expect(page).to have_selector("a[href=\"#{cms_node.url}\"]", text: cms_node.name)
-      end
-      within "h3.#{page1_cls}" do
-        expect(page).to have_selector("a[href=\"#{cms_page1.url}\"]", text: cms_page1.name)
-      end
-      within "h3.#{page2_cls}" do
-        expect(page).to have_selector("a[href=\"#{redirect_link}\"]", text: cms_page2.name)
+      within ".sitemap-body" do
+        within "h2.#{node_cls1}" do
+          expect(page).to have_selector("a[href=\"#{cms_node.url}\"]", text: cms_node.name)
+        end
+        within "h3.#{page1_cls}" do
+          expect(page).to have_selector("a[href=\"#{cms_page1.url}\"]", text: cms_page1.name)
+        end
+        within "h3.#{page2_cls}" do
+          expect(page).to have_selector("a[href=\"#{redirect_link}\"]", text: cms_page2.name)
+        end
       end
     end
   end
@@ -77,11 +81,13 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
       item
       visit node.url
 
-      within "h2.#{node_cls1}" do
-        expect(page).to have_selector("a[href=\"#{rss_node.url}\"]", text: rss_node.name)
-      end
-      within "h3.#{page_cls}" do
-        expect(page).to have_selector("a[href=\"#{rss_page.rss_link}\"]", text: rss_page.name)
+      within ".sitemap-body" do
+        within "h2.#{node_cls1}" do
+          expect(page).to have_selector("a[href=\"#{rss_node.url}\"]", text: rss_node.name)
+        end
+        within "h3.#{page_cls}" do
+          expect(page).to have_selector("a[href=\"#{rss_page.rss_link}\"]", text: rss_page.name)
+        end
       end
     end
   end

@@ -14,10 +14,12 @@ describe Webmail::HistoryArchiveJob, dbscope: :example, imap: true do
 
   describe ".perform" do
     before do
-      mail_count.times do
+      mail_count.times do |i|
         webmail_import_mail(user, mail)
       end
       webmail_reload_mailboxes(user)
+
+      Webmail.imap_pool.disconnect_all
     end
 
     it do

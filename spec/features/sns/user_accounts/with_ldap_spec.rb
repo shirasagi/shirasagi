@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: true do
   let(:ldap_url) { "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/" }
-  let!(:user) { create :ss_ldap_user2 }
+  let(:permissions) { %w(edit_sys_user_account edit_password_sys_user_account) }
+  let!(:role) { create :sys_role, name: unique_id, permissions: permissions }
+  let!(:user) { create :ss_ldap_user2, sys_role_ids: [ role.id ] }
 
   before do
     auth_setting = Sys::Auth::Setting.instance

@@ -25,4 +25,5 @@ class SS::Site
   include SS::Addon::GenerateLock
   include SS::Addon::MaintenanceMode
   include SS::Ldap::SiteSetting
+  include Chorg::SiteSetting
 end

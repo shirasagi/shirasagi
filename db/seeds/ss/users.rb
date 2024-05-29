@@ -34,6 +34,15 @@ g11.cms_group.tap do |cms_g11|
       contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp", contact_postal_code: '0000000',
       contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号', contact_link_url: "/kikaku/seisaku/",
       contact_link_name: "企画政策部 政策課")
+    cms_g11.contact_group_name = "企画政策部 政策課"
+    cms_g11.contact_tel = "000-000-0000"
+    cms_g11.contact_fax = "000-000-0001"
+    cms_g11.contact_email = "kikakuseisaku@example.jp"
+    cms_g11.contact_postal_code = '0000000'
+    cms_g11.contact_address = '大鷺県シラサギ市小鷺町1丁目1番地1号'
+    cms_g11.contact_link_url = "/kikaku/seisaku/"
+    cms_g11.contact_link_name = "企画政策部 政策課"
+    cms_g11.save
   end
 end
 

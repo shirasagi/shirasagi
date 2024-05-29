@@ -1,28 +1,33 @@
 <%
 
-def node_class(path)
-  "node-" + path.to_s.sub(/\/$/, "").gsub(/[^\w-]+/, "-")
+def node_class(filename)
+  "node--" + filename.to_s.sub(/\/$/, "").gsub(/[^\w-]+/, "-")
 end
 
-def page_class(path)
-  "page-" + path.to_s.sub(/\/$/, "/index").sub(/\.html$/, "").gsub(/[^\w-]+/, "-")
+def page_class(filename)
+  "page--" + filename.to_s.sub(/\/$/, "/index").sub(/\.html$/, "").gsub(/[^\w-]+/, "-")
 end
 
+service = Sitemap::RenderService.new(cur_site: @cur_site, cur_node: @cur_node, page: @cur_page)
 %>
 <article class="sitemap-body">
-  <% @cur_page.sitemap_list.each do |node| %>
-    <<%= hx = "h" + (node[:depth] + 1).to_s %> class="<%= page_class node[:path] %>">
-      <%= link_to node[:name], node[:url] %>
+  <% service.contents.each do |content| %>
+    <<%= hx = "h" + (content.depth + 1).to_s %> class="<%= page_class content.filename %>">
+      <%= link_to content.name, content.url %>
     </<%= hx %>>
 
-    <% if node[:pages] %>
-    <ul class="<%= node_class node[:path] %>">
-      <% node[:pages].each_with_index do |page, idx| %>
-        <% classes = [page_class(page[:path])] %>
-        <% classes << "last-child" if idx == node[:pages].size - 1 %>
-        <li class="<%= classes.join(' ') %>"><%= link_to page[:name], page[:url] %></li>
+    <% if false %>
+    <%# かつて存在していた仕様。h7やh8が存在しないので、階層が深くなると ul/li を描画していたと考えられる %>
+    <%# 現在は最大5階層までしかロードしないので、以下のループが発動することはない %>
+    <% if content.pages %>
+    <ul class="<%= node_class content.filename %>">
+      <% content.pages.each_with_index do |page, idx| %>
+        <% classes = [page_class(page.filename)] %>
+        <% classes << "last-child" if idx == content.pages.size - 1 %>
+        <li class="<%= classes.join(' ') %>"><%= link_to page.name, page.url %></li>
       <% end %>
     </ul>
+    <% end %>
     <% end %>
   <% end %>
 </article>

@@ -13,12 +13,16 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.5
+          ruby-version: '3.0'
           bundler-cache: true
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
+      - name: ruby -v
+        run: ruby -v
+      - name: node -v
+        run: node -v
       - name: Install yarn
         run: npm install -g yarn
       - name: Install node modules
@@ -28,7 +32,16 @@ jobs:
       - name: eslint -v
         run: npx eslint -v
       - uses: reviewdog/action-setup@v1
-      - name: Run reviewdog
+      #- name: reviewdog -list
+      #  run: reviewdog -list
+      - name: Run reviewdog - brakeman, eslint, stylelint, locale
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: reviewdog -reporter=github-pr-review
+        run: reviewdog -reporter=github-pr-review -runners "brakeman,eslint,stylelint,locale"
+      # rubocopが報告するエラーが多すぎるためか、.reviewdog.ymlからrubocopを実行するとバッファー超過などのエラーになるようで正常に終了せず、
+      # タイムアウトまで実行を続けてしまう。そこでrubocopを個別に実行することにする。
+      - name: Run reviewdog - rubocop
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bundle exec rubocop | reviewdog -f rubocop -name rubocop -reporter=github-pr-review
