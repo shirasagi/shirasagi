@@ -8,7 +8,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "Check change log text for orphan/non-orphan  backup" do
     before { login_cms_user }
 
-    it "show (case for non orphan backup)" do 
+    it "show (case for non orphan backup)" do
       backup = item.backups.limit(History.max_histories).to_a.first
       if backup.user_id
         group = backup.user ? Cms::Group.site(cms_site).in(id: backup.user.group_ids).first : nil
@@ -21,22 +21,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         text = "#{Cms::Member.model_name.human}: #{backup.member_name}"
       end
       visit show_path
-      expect(find("tr[data-id='#{backup.id}']").text).to include("#{text}")
+      expect(page).to have_css("tr[data-id='#{backup.id}']", text: text)
     end
 
-    it ("show case for orphan backup") do
+    it "show case for orphan backup" do
       orphan_backup = item.backups.limit(History.max_histories).to_a.first
       orphan_backup.update(user_id: nil, member_id: nil)
       item.reload
       visit show_path
-      expect(find("tr[data-id='#{orphan_backup.id}']").text).to include("#{I18n.t("ss.system_operation", locale: I18n.default_locale)}")
+      text = I18n.t("ss.system_operation", locale: I18n.default_locale)
+      expect(page).to have_css("tr[data-id='#{orphan_backup.id}']", text: text)
     end
-
   end
 end
-
-
-
-
-
-
