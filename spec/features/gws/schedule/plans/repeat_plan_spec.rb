@@ -18,8 +18,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         select I18n.t("gws/schedule.options.repeat_type.daily"), from: "item[repeat_type]"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       plans = Gws::Schedule::Plan.site(site).to_a
       expect(plans.count).to eq plan_dates.count
@@ -46,8 +45,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(page).to have_field("item[repeat_end]", with: I18n.l(repeat_start, format: :picker))
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       plans = Gws::Schedule::Plan.site(site).to_a
       expect(plans.count).to eq plan_dates.count
@@ -72,8 +70,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in_date "item[repeat_end]", with: repeat_end
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       plans = Gws::Schedule::Plan.site(site).to_a
       expect(plans.count).to eq plan_dates.count
@@ -100,8 +97,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in_date "item[repeat_end]", with: repeat_end
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       plans = Gws::Schedule::Plan.site(site).to_a
       expect(plans.count).to eq plan_dates.count
