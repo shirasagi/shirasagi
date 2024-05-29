@@ -260,7 +260,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("sys.apis.sites.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on site2.name }
       end
       within "form#item-form" do
@@ -292,7 +292,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
           wait_cbox_open { click_on I18n.t("sys.apis.sites.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         wait_cbox_close { click_on site2.name }
       end
       within "form#item-form" do
