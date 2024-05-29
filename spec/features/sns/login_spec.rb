@@ -158,30 +158,15 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
       context "with cms_group domains" do
         let(:domain) { 'www.example.com' }
-        let(:rack_proxy_app) do
-          domain_bind = domain
-          Class.new do
-            cattr_accessor :domain
-            self.domain = domain_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_FORWARDED_HOST"] = self.class.domain
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_FORWARDED_HOST"] = domain
           end
         end
 
         before do
           cms_group.set(domains: [domain])
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
         end
 
         it "valid login" do

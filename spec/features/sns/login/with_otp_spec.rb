@@ -118,31 +118,15 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       context "with 'untrusted' as mfa_otp_use_state" do
         let(:mfa_otp_use_state) { "untrusted" }
         let(:mfa_trusted_ip_addresses) { "192.168.32.0/24" }
-        let(:rack_proxy_app) do
-          source_ip_bind = source_ip
-          Class.new do
-            cattr_accessor :source_ip
-            self.source_ip = source_ip_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_REAL_IP"] = self.class.source_ip
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_REAL_IP"] = source_ip
           end
         end
 
         before do
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-          Sns::MFALoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
-          Sns::MFALoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
+          add_request_decorator Sns::MFALoginController, decorator
         end
 
         context "with trusted source-ip" do
@@ -388,31 +372,15 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       context "with 'untrusted' as mfa_otp_use_state" do
         let(:mfa_otp_use_state) { "untrusted" }
         let(:mfa_trusted_ip_addresses) { "192.168.32.0/24" }
-        let(:rack_proxy_app) do
-          source_ip_bind = source_ip
-          Class.new do
-            cattr_accessor :source_ip
-            self.source_ip = source_ip_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_REAL_IP"] = self.class.source_ip
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_REAL_IP"] = source_ip
           end
         end
 
         before do
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-          Sns::MFALoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
-          Sns::MFALoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
+          add_request_decorator Sns::MFALoginController, decorator
         end
 
         context "with trusted source-ip" do

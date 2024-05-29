@@ -51,6 +51,11 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
 
     context "basic crud" do
       let(:domain) { unique_domain }
+      let(:decorator) do
+        proc do |env|
+          env["HTTP_X_FORWARDED_HOST"] = domain
+        end
+      end
 
       before do
         site.logo_application_name = logo_application_name
@@ -62,13 +67,8 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         end
         site.save!
 
-        SS::Application.request_interceptor = proc do |env|
-          env["HTTP_X_FORWARDED_HOST"] = domain
-        end
-      end
-
-      after do
-        SS::Application.request_interceptor = nil
+        # add_request_decorator Cms::LoginController, decorator
+        add_request_decorator Fs::FilesController, decorator
       end
 
       it do
