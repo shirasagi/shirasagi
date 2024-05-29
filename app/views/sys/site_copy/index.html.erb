@@ -13,10 +13,11 @@
     <%= render partial: 'task' %>
   <% end %>
 </div>
-
-<footer class="send ss-sticky ss-sticky-bottom">
-  <%= f.submit t("ss.buttons.confirm"), class: 'btn-primary save' %>
-</footer>
+<% unless (@item.running? || @item.state == 'ready') %>
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t("ss.buttons.confirm"), class: 'btn-primary save' %>
+  </footer>
+<% end %>
 <% end %>
 
 <%= jquery do %>
