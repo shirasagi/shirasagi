@@ -139,9 +139,12 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         within ".sitemap-body" do
-          expect(page).to have_selector("h2.page--#{article_node.filename} a", text: 'article_node')
-          selector = "h3.page--#{article_node.filename}-#{::File.basename(article_page.filename, ".*")} a"
-          expect(page).to have_selector(selector, text: 'article_page')
+          within "h2.page--#{article_node.filename}" do
+            expect(page).to have_link("article_node", href: article_node.url)
+          end
+          within "h3.page--#{article_node.filename}-#{::File.basename(article_page.filename, ".*")}" do
+            expect(page).to have_link("article_page", href: article_page.url)
+          end
         end
       end
 
@@ -191,9 +194,12 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
         visit node.url
         expect(status_code).to eq 200
         within ".sitemap-body" do
-          expect(page).to have_selector("h2.page--#{article_node.filename} a", text: article_node.name)
-          selector = "h3.page--#{article_node.filename}-#{::File.basename(article_page.filename, ".*")} a"
-          expect(page).to have_selector(selector, text: article_page.name)
+          within "h2.page--#{article_node.filename}" do
+            expect(page).to have_link(article_node.name, href: article_node.url)
+          end
+          within "h3.page--#{article_node.filename}-#{::File.basename(article_page.filename, ".*")}" do
+            expect(page).to have_link(article_page.name, href: article_page.url)
+          end
         end
       end
 
