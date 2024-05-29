@@ -47,6 +47,8 @@
               elsif backup.member_id
                 # メンバーが作成した履歴
                 id = "#{Cms::Member.model_name.human}: #{backup.member_name}"
+              else
+                id = t("ss.system_operation")
               end
             end
 

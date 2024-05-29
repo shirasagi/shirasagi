@@ -70,7 +70,8 @@ en:
     mfa_otp: One Time Password
     mfa_otp_enabled_at: "Enabled at %{time}"
     mfa_otp_not_enabled_yet: "Not enabled yet"
-
+    system_operation: "-- System operation --"
+    
     views:
       login/login:
         id: User ID or e-mail address

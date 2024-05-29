@@ -70,6 +70,7 @@ ja:
     mfa_otp: ワンタイムパスワード
     mfa_otp_enabled_at: "%{time}に有効化されました。"
     mfa_otp_not_enabled_yet: "有効化されていません。"
+    system_operation: "-- システムによる操作 --"
 
     views:
       login/login:
