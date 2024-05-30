@@ -378,11 +378,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within_cbox do
           attach_file "item[in_files][]", file_path
-          wait_for_cbox_closed do
-            alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
-            page.accept_alert(/#{::Regexp.escape(alert)}/) do
-              click_on I18n.t("ss.buttons.save")
-            end
+          alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
+          page.accept_alert(/#{::Regexp.escape(alert)}/) do
+            click_on I18n.t("ss.buttons.save")
           end
 
           expect(page).to have_no_css('.file-view', text: basename)
@@ -403,11 +401,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within_cbox do
           attach_file "item[in_files][]", file_path
-          wait_for_cbox_closed do
-            alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
-            page.accept_alert(/#{::Regexp.escape(alert)}/) do
-              click_on I18n.t("ss.buttons.attach")
-            end
+          alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
+          page.accept_alert(/#{::Regexp.escape(alert)}/) do
+            click_on I18n.t("ss.buttons.attach")
           end
 
           expect(page).to have_no_css('.file-view', text: basename)

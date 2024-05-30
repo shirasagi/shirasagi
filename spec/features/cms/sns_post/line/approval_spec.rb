@@ -406,7 +406,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
               expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
-              wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
+              click_on I18n.t("ss.buttons.ignore_alert")
             end
             wait_for_notice I18n.t('ss.notice.saved')
           end
@@ -482,7 +482,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
               expect(page).to have_no_css(".sns-post-confirm", text: I18n.t("cms.confirm.line_post_enabled"))
-              wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
+              click_on I18n.t("ss.buttons.ignore_alert")
             end
             wait_for_notice I18n.t('ss.notice.saved')
           end

@@ -64,7 +64,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         end
         within_cbox do
           expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
-          wait_for_cbox_closed { click_on I18n.t("ss.buttons.ignore_alert") }
+          click_on I18n.t("ss.buttons.ignore_alert")
         end
         expect(page).to have_css(".errorExplanation",
           text: I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.sanitizer")))
