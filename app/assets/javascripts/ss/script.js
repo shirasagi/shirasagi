@@ -85,7 +85,6 @@
 //= require cms/lib/column_select
 //= require cms/lib/column_select_page
 //= require cms/lib/file_highlighter
-//= require cms/lib/branch
 //= require cms/lib/move
 //= require cms/lib/line
 //= require cms/lib/upload_file_order
