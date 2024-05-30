@@ -11,15 +11,15 @@ this.SS_Font = (function () {
     }
 
     $('[data-tool="ss-medium"]').each(function() {
-    SS_Font.embed($(this), function() { return SS_Font.set(100); });
+      SS_Font.embed($(this), function() { return SS_Font.set(100); });
     });
 
     $('[data-tool="ss-small"]').each(function() {
-        SS_Font.embed($(this), function() { return SS_Font.set(false); });
+      SS_Font.embed($(this), function() { return SS_Font.set(false); });
     });
 
     $('[data-tool="ss-large"]').each(function() {
-        SS_Font.embed($(this), function() { return SS_Font.set(true); });
+      SS_Font.embed($(this), function() { return SS_Font.set(true); });
     });
   };
 
