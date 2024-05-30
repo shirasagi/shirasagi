@@ -303,27 +303,9 @@ class Workflow::PagesController < ApplicationController
     raise "400" if @item.branch?
 
     @item.cur_node = @item.parent
-    if @item.branches.blank?
-      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
-
-      result = nil
-      rejected = -> do
-        @item.errors.add :base, :other_task_is_running
-        render :branch, layout: false, status: :unprocessable_entity
-        result = false
-      end
-
-      task.run_with(rejected: rejected) do
-        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
-
-        copy = @item.new_clone
-        copy.master = @item
-        result = copy.save
-      end
-      return unless result
-
-      @item.reload
-    end
+    service = Workflow::BranchCreationService.new(cur_site: @cur_site, item: @item)
+    result = service.call
+    return unless result
 
     @items = @item.branches
     render :branch, layout: false

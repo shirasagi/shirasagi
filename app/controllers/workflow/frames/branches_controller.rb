@@ -39,33 +39,9 @@ class Workflow::Frames::BranchesController < ApplicationController
       render action: :show, status: :bad_request
       return
     end
-    if item.branches.present?
-      item.error.add :base, :branch_is_already_existed
-      render action: :show, status: :bad_request
-      return
-    end
 
-    task = SS::Task.find_or_create_for_model(item, site: @cur_site)
-
-    result = nil
-    rejected = -> do
-      item.errors.add :base, :other_task_is_running
-      result = false
-    end
-    task.run_with(rejected: rejected) do
-      task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
-
-      item.reload
-      if item.branches.present?
-        item.error.add :base, :branch_is_already_existed
-        result = false
-      else
-        copy = item.new_clone
-        copy.master = item
-        result = copy.save
-      end
-    end
-
+    service = Workflow::BranchCreationService.new(cur_site: @cur_site, item: item)
+    result = service.call
     unless result
       render action: :show, status: :unprocessable_entity
       return
