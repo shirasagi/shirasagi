@@ -113,7 +113,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on article_page.name
       within '#addon-workflow-agents-addons-branch' do
         expect do
-          click_on I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_event_to_fire "turbo:frame-load" do
+            click_on I18n.t('workflow.create_branch')
+          end
+          expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
           expect(page).to have_css('table.branches')
         end.to output(/#{I18n.t("workflow.branch_page")}/).to_stdout
         click_on article_page.name
@@ -150,7 +154,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on article_page.name
       within '#addon-workflow-agents-addons-branch' do
         expect do
-          click_on I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_event_to_fire "turbo:frame-load" do
+            click_on I18n.t('workflow.create_branch')
+          end
+          expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
           expect(page).to have_css('table.branches')
         end.to output(/#{I18n.t("workflow.branch_page")}/).to_stdout
         click_on article_page.name
