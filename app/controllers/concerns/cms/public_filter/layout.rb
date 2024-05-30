@@ -272,7 +272,6 @@ module Cms::PublicFilter::Layout
       "#{$1}#{label}#{$3}"
     end
   end
-  
 
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
