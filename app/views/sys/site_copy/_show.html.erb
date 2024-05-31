@@ -1,41 +1,21 @@
 <dl class="see sys-site-copy-show">
-  <dt><%= @site.t :name %></dt>
-  <dd><%= @site.send :name %></dd>
+  <dt><%= @model.t :target_host_name %></dt>
+  <dd><%= @item.send :target_host_name %></dd>
 
-  <dt><%= @site.t :host %></dt>
-  <dd><%= @site.send :host %></dd>
+  <dt><%= @model.t :target_host_host %></dt>
+  <dd><%= @item.send :target_host_host %></dd>
 
-  <dt><%= @site.t :domains %></dt>
-  <dd><%= @site.send :domains %></dd>
+  <dt><%= @model.t :target_host_domains %></dt>
+  <dd><%= @item.send :target_host_domains %></dd>
 
-  <dt><%= @site.t :subdir %></dt>
-  <dd><%= @site.send :subdir %></dd>
+  <dt><%= @model.t :target_host_subdir %></dt>
+  <dd><%= @item.send :target_host_subdir %></dd>
 
-  <dt><%= @site.t :parent_id %></dt>
-  <dd><%= @site.parent.try(:name) %></dd>
+  <dt><%= @model.t :target_host_parent_id %></dt>
+  <dd><%= @item.target_host_parent.name %></dd>
 
-  <dt><%= @site.t :https %></dt>
-  <dd><%= @site.label :https %></dd>
-
-  <dt><%= @site.t :mypage_scheme %></dt>
-  <dd><%= @site.label :mypage_scheme %></dd>
-
-  <dt><%= @site.t :mypage_domain %></dt>
-  <dd><%= @site.send :mypage_domain %></dd>
-
-  <dt><%= @site.t :group_ids %></dt>
-  <dd><%=br @site.groups.order_by(name: 1).pluck(:name) %></dd>
-
-  <dt><%= @site.t :partner_site_ids %></dt>
-  <dd><%=br @site.partner_sites.reorder(id: 1).pluck(:name) %></dd>
-
-  <dt><%= @site.t :chorg_site_ids %></dt>
-  <dd><%=br @site.chorg_sites.reorder(id: 1).pluck(:name) %></dd>
-
-  <% if SS.config.ss.upload_policy.present? %>
-  <dt><%= @site.t :upload_policy %></dt>
-  <dd><%= @site.label :upload_policy %></dd>
-  <% end %>
+  <dt><%= @model.t :source_site_id %></dt>
+  <dd><%= @item.source_site.name %></dd>
 
   <dt><%= @model.t :copy_contents %></dt>
   <dd>
@@ -55,5 +35,7 @@
       <%= t("sys.options.copy_contents.dictionaries") %><br />
       <%= hidden_field_tag "item[copy_contents][]", "dictionaries", id: nil %>
     <% end %>
+    <br>
+    <p class="description"><%= t('sys.site_copy/description') %></p>
   </dd>
 </dl>
