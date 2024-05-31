@@ -213,7 +213,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         divs = page.all("div[id=size]")
         divs.each do |div|
-          links = div.all('a')
+          links = div.all('a', visible: true)
           links.each do |link|
             expect(link).to be_visible
           end
