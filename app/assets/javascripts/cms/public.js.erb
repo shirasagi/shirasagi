@@ -80,29 +80,29 @@ this.SS_Kana = (function () {
     $kanaElements.each(function (index) {
       var $kana = $(this);
       if (!$kana[0]) {
-          return;
+        return;
       }
 
       if (SS.config["site_url"] && SS.config["kana_url"]) {
-          SS_Kana.siteUrl = SS.config["site_url"];
-          SS_Kana.kanaUrl = SS.config["kana_url"];
+        SS_Kana.siteUrl = SS.config["site_url"];
+        SS_Kana.kanaUrl = SS.config["kana_url"];
       }
 
       var pathname = location.pathname;
       var url, cssClass;
       if ($("body").data("kana")) {
-          url = SS_Kana.url(pathname, false);
-          url = SS_Translate.url(url);
-          cssClass = "off";
+        url = SS_Kana.url(pathname, false);
+        url = SS_Translate.url(url);
+        cssClass = "off";
       } else {
-          url = SS_Translate.url(pathname, false)
-          url = SS_Kana.url(url, true);
-          cssClass = "on";
+        url = SS_Translate.url(pathname, false)
+        url = SS_Kana.url(url, true);
+        cssClass = "on";
       }
       if (url[0] !== '/') {
-          // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
-          // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
-          return;
+        // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
+        // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
+        return;
       }
 
       var html = $kana.html();
@@ -111,11 +111,11 @@ this.SS_Kana = (function () {
       $kana.html($anchor);
 
       $anchor.on("click", function (ev) {
-          ev.preventDefault();
-          var $clickedAnchor = $(this);
-          var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
-          location.href = clickedUrl;
-          return false;
+        ev.preventDefault();
+        var $clickedAnchor = $(this);
+        var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
+        location.href = clickedUrl;
+        return false;
       });
     });
   };
@@ -196,8 +196,8 @@ this.SS_Theme = (function () {
     if ($themes.length === 0) {
       return;
     }
-    var index = 0;
-    $themes.each(function() {
+
+    $themes.each(function(index) {
       var $theme = $(this);
       var theme = SS.config["theme"];
       var inlineStyle = '';
@@ -235,7 +235,6 @@ this.SS_Theme = (function () {
           SS_Theme.switchTheme(cls);
           return false;
         });
-        index++;
       }
 
       if (inlineStyle) {

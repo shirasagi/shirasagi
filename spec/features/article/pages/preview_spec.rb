@@ -191,10 +191,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           divs = page.all("div[data-tool='#{tool}']")
           divs.each do |div|
             if tool == 'ss-kana'
-              link = div.find('a')
-              # link.click
-              # expect(page.status_code).to eq(200) 
-              # visit cms_preview_path(site: site, path: item.preview_path) 
+              links = div.all('a')
+              links.each do |link|
+                expect(link).to be_visible
+              end
             elsif tool == 'ss-voice'
               link = div.find('a')
               expect(link[:href]).to include('voice')
