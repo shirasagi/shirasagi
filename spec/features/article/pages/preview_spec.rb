@@ -196,8 +196,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
                 expect(link).to be_visible
               end
             elsif tool == 'ss-voice'
-              link = div.find('a')
-              expect(link[:href]).to include('voice')
+              links = div.all('a')
+              links.each do |link|
+                expect(link[:href]).to include('voice')
+              end
             end
           end
         end
