@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe "kana/public_filter", type: :feature, dbscope: :example, js: true, mecab: true do
   let(:site) { cms_site }
-  let(:part_html) { '<div id="tool"><nav><span id="ss-kana">ふりがなをつける</span></nav></div>' }
-  let(:part) { create :cms_part_free, cur_site: site, filename: "tool", html: part_html }
+  let(:part) { create :accessibilty_tool, cur_site: site }
   let(:layout) { create_cms_layout part }
   let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
   let(:page_html) do
