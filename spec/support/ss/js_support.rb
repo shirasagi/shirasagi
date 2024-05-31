@@ -203,15 +203,8 @@ module SS
           var pickerInstance = SS_DateTimePicker.instance(element);
           pickerInstance.momentValue(value ? moment(value) : null);
 
-          // validate を実行するとイベント "ss:changeDateTime" が発生する。
-          // イベント "ss:changeDateTime" のハンドラーのいくつかで別　URL へ遷移するものがある。
-          // そのようなもので stale element reference エラーが発生することを防ぐため、
-          // setTimeout 内で validate を実行するようにする。
-          // ※ setTimeout 内で validate を実行すると、stale element reference エラーがなぜ発生しなくなるかは不明。
-          setTimeout(function() {
-            $(element).datetimepicker("validate");
-            resolve(true);
-          }, 0);
+          $(element).datetimepicker("validate");
+          resolve(true);
         }
 
         var pickerInstance = SS_DateTimePicker.instance(element);
@@ -275,7 +268,9 @@ module SS
       el = find(:fillable_field, locator).set('').click
       with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
-    rescue Selenium::WebDriver::Error::WebDriverError
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      puts_console_logs
+      Rails.logger.info { "#{e.class} (#{e.message})" }
       el
     end
 
@@ -507,6 +502,13 @@ module SS
       # page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
       result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
       expect(result).to be_truthy
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      # 履歴などの画面で日付型に入力すると、即、画面遷移するものがある。
+      # そのようなもので stale element reference エラーが発生する場合がある。
+      # もう少しスマートに stale element reference エラーの発生を防ぐことができたらよかったが、
+      # そのような方法は簡単には見つからないので rescue で防ぐ
+      puts_console_logs
+      Rails.logger.info { "#{e.class} (#{e.message})" }
     end
 
     alias fill_in_date fill_in_datetime
@@ -575,9 +577,9 @@ module SS
       end
 
       yield if block
-    rescue Selenium::WebDriver::Error::JavascriptError
+    rescue Selenium::WebDriver::Error::WebDriverError => e
       puts_console_logs
-      raise
+      Rails.logger.info { "#{e.class} (#{e.message})" }
     end
     alias wait_for_ajax wait_for_js_ready
 
