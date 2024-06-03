@@ -46,10 +46,8 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       link_selector1 = ".ss-image-box-item-list span a[target='#{item1.link_target}'] img[alt='#{item1.name}']"
       link_selector2 = ".ss-image-box-item-list span a img[alt='#{item2.name}']"
 
-      #check for the ad needs to open in current_tab
-      expect(page).to have_selector(link_selector2)
-
       # check for the ad needs to open in new tab
+
       expect(page).to have_selector(link_selector1)  
       link = find(link_selector1).find(:xpath, '..')
       expect(link[:target]).to eq "blank"
@@ -60,8 +58,17 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
         expect(previous_url).not_to eq current_url
         expect(current_url).to include(item1.link_url)
       end
+
+      # check for the ad needs to open in current_tab
+
+      expect(page).to have_selector(link_selector2)
+      link2 = find(link_selector2).find(:xpath, '..')
+      expect(link2[:target]).to eq ""
+      link2.click
+      expect(current_url).to eq previous_url
+      expect(current_url).to include(item2.link_url)
     end
-    
+
   end
 
   context "preview" do
