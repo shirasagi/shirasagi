@@ -13,7 +13,7 @@ target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}" re
 
   <div class="ss-image-box-item-list">
     <% @items.each do |item| %>
-    <% link_target = item.link_target.present? ? %(target="#{@cur_part.link_target}" rel="noopener") : nil %>
+    <% link_target = item.link_target.present? ? %(target="#{item.link_target}" rel="noopener") : nil %>
     <%
       url = @cur_part.link_action.present? ? item.link_url : item.url
       attr_h = item.additional_attr.to_h

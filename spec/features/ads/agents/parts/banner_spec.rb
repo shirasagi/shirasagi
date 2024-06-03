@@ -37,6 +37,31 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
         expect(log.count).to eq 1
       end
     end
+
+    it "check link targets" do 
+      item1.update(link_target: "blank", link_url: "/example.jp")
+      item1.reload
+      visit node_cms.full_url
+      expect(page).to have_css(".ss-image-box")
+      link_selector1 = ".ss-image-box-item-list span a[target='#{item1.link_target}'] img[alt='#{item1.name}']"
+      link_selector2 = ".ss-image-box-item-list span a img[alt='#{item2.name}']"
+
+      #check for the ad needs to open in current_tab
+      expect(page).to have_selector(link_selector2)
+
+      # check for the ad needs to open in new tab
+      expect(page).to have_selector(link_selector1)  
+      link = find(link_selector1).find(:xpath, '..')
+      expect(link[:target]).to eq "blank"
+      previous_url = current_url
+      new_window = window_opened_by { link.click }
+
+      within_window new_window do
+        expect(previous_url).not_to eq current_url
+        expect(current_url).to include(item1.link_url)
+      end
+    end
+    
   end
 
   context "preview" do
