@@ -39,11 +39,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group1.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group1.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-main-group" do
@@ -94,11 +94,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-main-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group3.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group3.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-main-group" do
@@ -124,11 +124,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group2.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group2.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-default-group" do
@@ -179,11 +179,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       within "#item-form" do
         within ".mod-gws-user-default-group" do
-          wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group3.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group3.trailing_name }
       end
       within "#item-form" do
         within ".mod-gws-user-default-group" do

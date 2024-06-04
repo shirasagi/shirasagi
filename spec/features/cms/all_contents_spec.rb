@@ -65,7 +65,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
           end
           click_on I18n.t("ss.import")
         end
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
+        wait_for_notice I18n.t('ss.notice.started_import')
 
         expect(enqueued_jobs.length).to eq 1
         enqueued_jobs.first.tap do |enqueued_job|

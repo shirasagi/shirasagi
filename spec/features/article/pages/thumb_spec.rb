@@ -16,21 +16,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+        wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -47,15 +47,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+        wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -65,7 +65,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css(".file-view", text: "modify.jpg")
 
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on "modify.jpg"
         end
       end
@@ -85,21 +85,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+        wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("sns.user_file")
           end
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -129,21 +129,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
-        wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+        wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
         within ".dropdown-menu" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -171,21 +171,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
-          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+          wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("cms.file")
             end
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -236,30 +236,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
-          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+          wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("cms.file")
             end
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
 
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -318,17 +318,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
-          wait_event_to_fire("ss:dropdownOpened") { find('.dropdown-toggle').click }
+          wait_for_event_fired("ss:dropdownOpened") { find('.dropdown-toggle').click }
           within ".dropdown-menu" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end

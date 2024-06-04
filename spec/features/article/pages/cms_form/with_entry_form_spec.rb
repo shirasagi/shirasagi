@@ -121,7 +121,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -131,7 +131,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_selector('#item_body_layout_id', visible: true)
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -152,7 +152,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.edit')
         within 'form#item-form' do
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
@@ -161,7 +161,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end
@@ -170,7 +170,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column3.name
             end
           end
@@ -180,7 +180,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column4.name
             end
           end
@@ -189,7 +189,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column5.name
             end
           end
@@ -198,7 +198,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column6.name
             end
           end
@@ -207,7 +207,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column7.name
             end
           end
@@ -216,18 +216,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column8.name
             end
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_on I18n.t('ss.buttons.attach')
+          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
         end
         within 'form#item-form' do
           within ".column-value-cms-column-fileupload" do
@@ -235,7 +235,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column9.name
             end
           end
@@ -244,7 +244,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column10.name
             end
           end
@@ -254,7 +254,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column11.name
             end
           end
@@ -263,7 +263,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column12.name
             end
           end
@@ -275,7 +275,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column13.name
             end
           end
@@ -284,18 +284,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column14.name
             end
           end
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on column14_page1.name
+          wait_for_cbox_closed { click_on column14_page1.name }
         end
         within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
@@ -305,7 +305,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           wait_for_js_ready
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -370,12 +370,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t('ss.buttons.attach')
+          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
         end
         within 'form#item-form' do
           within ".column-value-cms-column-fileupload" do
@@ -403,15 +403,15 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-cms-column-selectpage " do
-            wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+            wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on column14_page2.name
+          wait_for_cbox_closed{ click_on column14_page2.name }
         end
         within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
@@ -421,7 +421,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           wait_for_js_ready
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -475,7 +475,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -496,7 +496,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
         expect(article_pages.count).to eq 0
         expect(SS::File.all.unscoped.count).to eq 0
       end
@@ -511,7 +511,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -520,7 +520,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
@@ -529,7 +529,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end
@@ -538,7 +538,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column3.name
             end
           end
@@ -548,7 +548,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column4.name
             end
           end
@@ -557,7 +557,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column5.name
             end
           end
@@ -566,7 +566,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column6.name
             end
           end
@@ -575,7 +575,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column7.name
             end
           end
@@ -584,20 +584,20 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column8.name
             end
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
           end
         end
@@ -607,20 +607,20 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column9.name
             end
           end
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.links.upload")
             end
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
           end
         end
@@ -631,7 +631,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column10.name
             end
           end
@@ -641,7 +641,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column11.name
             end
           end
@@ -650,7 +650,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column12.name
             end
           end
@@ -662,7 +662,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column13.name
             end
           end
@@ -671,18 +671,18 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column14.name
             end
           end
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on column14_page1.name
+          wait_for_cbox_closed { click_on column14_page1.name }
         end
         within 'form#item-form' do
           within ".column-value-cms-column-selectpage " do
@@ -690,7 +690,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -788,12 +788,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            wait_cbox_open { click_on I18n.t("ss.links.upload") }
+            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t('ss.buttons.attach')
+          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
         end
         within 'form#item-form' do
           within ".column-value-cms-column-fileupload" do
@@ -820,21 +820,21 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
           end
           within ".column-value-cms-column-selectpage " do
-            wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+            wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".list-item", text: selectable_page1.name)
           expect(page).to have_css(".list-item", text: selectable_page2.name)
           expect(page).to have_css(".list-item", text: selectable_page3.name)
           expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-          click_on column14_page2.name
+          wait_for_cbox_closed { click_on column14_page2.name }
         end
         within 'form#item-form' do
           expect(page).to have_css(".ajax-selected", text: column14_page2.name)
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -889,7 +889,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -910,7 +910,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
         expect(article_pages.count).to eq 0
         expect(SS::File.all.unscoped.count).to eq 0
       end
@@ -952,7 +952,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -961,7 +961,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         login_user(user2)
@@ -975,7 +975,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         within 'form#item-form' do
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
@@ -984,7 +984,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column2.name
             end
           end
@@ -993,7 +993,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         # wait for completion of "/.s:site/workflow:cid/wizard/:id"
         expect(page).to have_css("#addon-workflow-agents-addons-approver", text: I18n.t("workflow.request"))
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))

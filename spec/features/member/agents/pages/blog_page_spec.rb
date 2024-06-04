@@ -45,15 +45,15 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
         fill_in 'item[name]', with: blog_page_name
         fill_in_ckeditor 'item[html]', with: blog_page_html
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: "keyvisual.jpg")
-        first(".user-files .select").click
+        wait_for_cbox_closed { first(".user-files .select").click }
       end
       within 'form div.member-blog-page' do
         expect(page).to have_css('.file-view', text: "keyvisual.jpg")

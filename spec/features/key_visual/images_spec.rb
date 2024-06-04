@@ -26,11 +26,11 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[link_url]", with: "http://example.jp"
-        wait_cbox_open { first(".btn-file-upload").click }
+        wait_for_cbox_opened { first(".btn-file-upload").click }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".file-view", text: file.name)
-        click_on file.name
+        wait_for_cbox_closed { click_on file.name }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')

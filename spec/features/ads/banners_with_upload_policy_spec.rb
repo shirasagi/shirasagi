@@ -29,12 +29,12 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
 
       # set wait
       within first(".ss-file-field") do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first(".btn-file-upload").click
         end
       end
       within all(".file-view")[0] do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on file1.name
         end
       end
@@ -44,12 +44,12 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
 
       # set error
       within first(".ss-file-field") do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first(".btn-file-upload").click
         end
       end
       within all(".file-view")[1] do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on file2.name
         end
       end
@@ -59,12 +59,12 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
 
       # set none
       within first(".ss-file-field") do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first(".btn-file-upload").click
         end
       end
       within all(".file-view")[2] do
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on file3.name
         end
       end

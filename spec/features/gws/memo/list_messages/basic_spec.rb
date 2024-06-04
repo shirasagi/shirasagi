@@ -30,7 +30,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
 
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 1
       Gws::Memo::ListMessage.all.and_list_message.first.tap do |message|
@@ -60,7 +60,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
 
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # send
       visit gws_memo_list_messages_path(site: site, list_id: list)
@@ -71,7 +71,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.send')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+      wait_for_notice I18n.t('ss.notice.sent')
 
       expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 1
       Gws::Memo::ListMessage.all.and_list_message.first.tap do |message|
@@ -100,7 +100,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 0
     end

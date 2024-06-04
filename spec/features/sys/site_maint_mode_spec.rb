@@ -29,12 +29,12 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: "item[maintenance_mode]"
         fill_in "item[maint_remark]", with: maint_remark
 
-        wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+        wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
       end
     end
-    wait_for_cbox do
+    within_cbox do
       within ".items" do
-        wait_cbox_close { click_on user1.name }
+        wait_for_cbox_closed { click_on user1.name }
       end
     end
     within "#item-form" do

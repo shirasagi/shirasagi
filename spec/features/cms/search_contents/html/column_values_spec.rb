@@ -90,7 +90,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "置換"
@@ -132,7 +132,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "置換"
@@ -174,7 +174,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "置換"
@@ -216,7 +216,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "置換"
@@ -258,7 +258,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "/category/page2.html"
@@ -300,7 +300,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "置換1"
@@ -342,7 +342,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "置換"
@@ -384,7 +384,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
         click_button I18n.t("ss.buttons.replace_all")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "form.index-search" do
       fill_in "keyword", with: "#"

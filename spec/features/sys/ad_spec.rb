@@ -17,14 +17,14 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[time]", with: time
         fill_in "item[width]", with: width
-        wait_cbox_open do
+        wait_for_cbox_opened do
           find('a.btn', text: I18n.t('ss.buttons.upload')).click
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(ss_file.name)
-        click_on ss_file.name
+        wait_for_cbox_closed { click_on ss_file.name }
       end
 
       within "form#item-form" do
@@ -32,7 +32,7 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       Sys::Setting.first.tap do |setting|
         expect(setting.time).to eq time

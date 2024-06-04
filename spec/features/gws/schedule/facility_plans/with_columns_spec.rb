@@ -29,7 +29,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[facility_column_values][#{column1.id}]", with: column_value1
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css(".fc-title", text: name)
 
       expect(Gws::Schedule::Plan.all.count).to eq 1
@@ -48,7 +48,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[facility_column_values][#{column1.id}]", with: column_value2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css(".fc-title", text: name2)
 
       expect(Gws::Schedule::Plan.all.count).to eq 1
@@ -67,7 +67,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Plan.all.count).to eq 1
       plan.reload

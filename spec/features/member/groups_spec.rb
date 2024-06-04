@@ -28,13 +28,12 @@ describe "member_groups", type: :feature, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[invitation_message]", with: "invitation"
-        wait_cbox_open { click_on I18n.t("cms.apis.members.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.members.index") }
       end
 
-      wait_for_cbox do
+      within_cbox do
         first('#ajax-box th [type="checkbox"]').set(true)
-        click_on I18n.t("cms.apis.members.select")
-        wait_for_ajax
+        wait_for_cbox_closed { click_on I18n.t("cms.apis.members.select") }
       end
 
       within "form#item-form" do

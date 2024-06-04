@@ -34,17 +34,17 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[name]", with: "name"
         fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
         fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
-        wait_cbox_open { click_button I18n.t('gws/schedule.facility_reservation.index') }
+        wait_for_cbox_opened { click_button I18n.t('gws/schedule.facility_reservation.index') }
       end
-      wait_for_cbox do
-        click_on I18n.t('ss.buttons.close')
+      within_cbox do
+        wait_for_cbox_closed { click_on I18n.t('ss.buttons.close') }
       end
       within 'form#item-form' do
         click_button I18n.t('ss.buttons.save')
       end
 
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -59,7 +59,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -74,7 +74,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     context 'with gws_schedule_facility_plan_few_days' do
@@ -100,17 +100,17 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           fill_in "item[name]", with: "name"
           fill_in_datetime "item[start_at]", with: "2016/04/01 12:00"
           fill_in_datetime "item[end_at]", with: "2016/04/01 13:00"
-          wait_cbox_open { click_button I18n.t('gws/schedule.facility_reservation.index') }
+          wait_for_cbox_opened { click_button I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
-          click_on I18n.t('ss.buttons.close')
+        within_cbox do
+          wait_for_cbox_closed { click_on I18n.t('ss.buttons.close') }
         end
         within 'form#item-form' do
           click_button I18n.t('ss.buttons.save')
         end
 
         wait_for_ajax
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
       end
 
       it "#show" do
@@ -125,7 +125,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           click_button I18n.t('ss.buttons.save')
         end
         wait_for_ajax
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
       end
 
       it "#delete" do
@@ -140,7 +140,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           click_button I18n.t('ss.buttons.delete')
         end
         expect(current_path).to eq index_path
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
     end
 

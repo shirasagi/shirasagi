@@ -163,7 +163,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     context "with notify_state disabled" do
@@ -274,7 +274,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_button I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       click_on I18n.t("ss.links.trash")
       within ".list-items" do
@@ -396,7 +396,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.delete")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     context "with notify_state disabled" do
@@ -467,7 +467,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.restore")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
     end
 
     context "with notify_state disabled" do

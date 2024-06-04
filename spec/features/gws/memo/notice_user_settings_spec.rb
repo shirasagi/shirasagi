@@ -21,7 +21,7 @@ describe 'gws_memo_notice_user_settings', type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq show_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_content(gws_user.email)
     end
   end

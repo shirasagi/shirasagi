@@ -44,7 +44,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           expect(capture.broadcast.count).to eq 0
@@ -72,7 +72,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -106,15 +106,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -152,15 +152,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -199,13 +199,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
 
           within "#addon-cms-agents-addons-thumb" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               first(".btn-file-upload").click
             end
           end
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css(".file-view", text: file.name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on file.name
             end
           end
@@ -224,15 +224,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -259,13 +259,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit edit_path
           within "#addon-cms-agents-addons-thumb" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               first(".btn-file-upload").click
             end
           end
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css(".file-view", text: file.name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on file.name
             end
           end
@@ -284,15 +284,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -326,13 +326,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit new_path
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             attach_file "item[in_files][]", attach_file_path
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_button I18n.t("ss.buttons.attach")
             end
           end
@@ -357,15 +357,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -393,13 +393,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             attach_file "item[in_files][]", attach_file_path
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_button I18n.t("ss.buttons.attach")
             end
           end
@@ -421,15 +421,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.publish_save")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -481,13 +481,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -524,13 +524,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do
@@ -560,7 +560,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-line_poster" do

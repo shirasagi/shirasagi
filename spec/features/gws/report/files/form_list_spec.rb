@@ -14,7 +14,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on I18n.t('gws/workflow.forms.more')
         end
@@ -30,7 +30,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Report::File.count).to eq 1
       file = Gws::Report::File.first

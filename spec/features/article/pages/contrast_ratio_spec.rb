@@ -21,11 +21,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file1.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -45,11 +45,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           within "#addon-cms-agents-addons-thumb" do
             expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-            wait_cbox_open do
+            wait_for_cbox_opened do
               js_click first(".file-view[data-file-id='#{file1.id}'] a")
             end
           end
-          wait_for_cbox do
+          within_cbox do
             within "#ss-file-view" do
               fill_in "foreground-color", with: "#ffffff" + "\n"
               fill_in "background-color", with: "#ffffff" + "\n"
@@ -87,11 +87,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           within "#addon-cms-agents-addons-form-page" do
             expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-            wait_cbox_open do
+            wait_for_cbox_opened do
               first(".file-view[data-file-id='#{file1.id}'] a").click
             end
           end
-          wait_for_cbox do
+          within_cbox do
             within "#ss-file-view" do
               fill_in "foreground-color", with: "#ffffff" + "\n"
               fill_in "background-color", with: "#ffffff" + "\n"
@@ -103,11 +103,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit article_page_path(site: site, cid: node, id: item)
           within "#addon-cms-agents-addons-form-page" do
             expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
-            wait_cbox_open do
+            wait_for_cbox_opened do
               first(".file-view[data-file-id='#{file2.id}'] a").click
             end
           end
-          wait_for_cbox do
+          within_cbox do
             within "#ss-file-view" do
               fill_in "foreground-color", with: "#ffffff" + "\n"
               fill_in "background-color", with: "#ffffff" + "\n"
@@ -130,11 +130,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file1.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -152,24 +152,24 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("ss.buttons.upload")
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
-              wait_cbox_close do
+              wait_for_cbox_closed do
                 js_click first(".file-view[data-file-id='#{file2.id}'] a")
               end
             end
 
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file2.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -209,11 +209,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
             within "#addon-cms-agents-addons-form-page" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file1.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -225,11 +225,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             visit article_page_path(site: site, cid: node, id: item)
             within "#addon-cms-agents-addons-form-page" do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file2.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -248,25 +248,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             visit edit_article_page_path(site: site, cid: node, id: item)
             within "#addon-cms-agents-addons-form-page" do
               within ".column-value-cms-column-fileupload" do
-                wait_cbox_open do
+                wait_for_cbox_opened do
                   click_on I18n.t("ss.buttons.upload")
                 end
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
-              wait_cbox_close do
+              wait_for_cbox_closed do
                 js_click first(".file-view[data-file-id='#{file3.id}'] a")
               end
             end
 
             within "#addon-cms-agents-addons-form-page" do
               expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file3.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"
@@ -275,28 +275,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               end
             end
 
-            visit edit_article_page_path(site: site, cid: node, id: item)
+            page.dismiss_confirm(I18n.t("ss.confirm.resume_editing")) do
+              visit edit_article_page_path(site: site, cid: node, id: item)
+            end
             within "#addon-cms-agents-addons-form-page" do
               within ".column-value-cms-column-free" do
-                wait_cbox_open do
+                wait_for_cbox_opened do
                   click_on I18n.t("ss.buttons.upload")
                 end
               end
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css(".file-view[data-file-id='#{file4.id}']", text: file4.name)
-              wait_cbox_close do
+              wait_for_cbox_closed do
                 js_click first(".file-view[data-file-id='#{file4.id}'] a")
               end
             end
 
             within "#addon-cms-agents-addons-form-page" do
               expect(page).to have_css(".file-view[data-file-id='#{file4.id}']", text: file4.name)
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file4.id}'] a").click
               end
             end
-            wait_for_cbox do
+            within_cbox do
               within "#ss-file-view" do
                 fill_in "foreground-color", with: "#ffffff" + "\n"
                 fill_in "background-color", with: "#ffffff" + "\n"

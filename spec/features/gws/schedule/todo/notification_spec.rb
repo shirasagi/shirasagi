@@ -30,14 +30,14 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
         within '.gws-addon-member' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('ss.apis.users.index')
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.long_name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on user2.long_name
         end
       end
@@ -45,7 +45,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         expect(page).to have_content(user2.name)
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo = Gws::Schedule::Todo.without_deleted.first
@@ -72,7 +72,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo.reload
@@ -94,7 +94,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo.reload
@@ -118,7 +118,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo.reload
@@ -142,7 +142,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         fill_in "item[text]", with: comment_text
         click_on I18n.t('gws/schedule.buttons.comment')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       todo.reload
       expect(todo.achievement_rate).to eq achievement_rate
@@ -163,12 +163,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
         within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
           expect(page).to have_content(comment_text)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.edit")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(comment_text)
 
         fill_in "item[achievement_rate]", with: achievement_rate2
@@ -176,7 +176,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       todo.reload
       expect(todo.achievement_rate).to eq achievement_rate2
@@ -196,16 +196,16 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
         within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
           expect(page).to have_content(comment_text2)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.delete")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(comment_text2)
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       # confirm that no notifications are sent
       expect(SS::Notification.count).to eq 7
@@ -226,7 +226,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 1
@@ -252,7 +252,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 0
@@ -275,14 +275,14 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
         within '.gws-addon-member' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('ss.apis.users.index')
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.long_name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on user2.long_name
         end
       end
@@ -290,7 +290,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
         expect(page).to have_content(user2.name)
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo = Gws::Schedule::Todo.without_deleted.first
@@ -309,11 +309,11 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       # Finish All
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.finish-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       todo.reload
       expect(todo.todo_state).to eq "finished"
@@ -330,11 +330,11 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
       select I18n.t("gws/schedule/todo.options.todo_state_filter.finished"), from: "s[todo_state]"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.revert-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       todo.reload
       expect(todo.todo_state).to eq "unfinished"
@@ -350,11 +350,11 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       # Delete All (soft delete)
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.disable-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       todo.reload
       expect(todo.deleted).to be_present
@@ -371,11 +371,11 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
       click_on I18n.t('gws/schedule.navi.trash')
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.destroy-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 0
@@ -403,7 +403,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
 
       expect(SS::Notification.count).to eq 1
       message = SS::Notification.first

@@ -16,14 +16,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened('#addon-contact-agents-addons-page')
       within '#addon-contact-agents-addons-page' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("contact.apis.contacts.index")
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "[data-group-id='#{contact_group.id}']" do
-          wait_cbox_close { click_on contact_group.section_name }
+          wait_for_cbox_closed { click_on contact_group.section_name }
         end
       end
 
@@ -31,7 +31,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 

@@ -73,7 +73,6 @@ module SS
     config.middleware.use Mongoid::QueryCache::Middleware
 
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
-    cattr_accessor(:request_interceptor, instance_accessor: false)
 
     THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.user_group ss.organization ss.token).freeze
 
@@ -84,7 +83,6 @@ module SS
       end
       Thread.current["ss.env"] = args.first
       Thread.current["ss.request"] = nil
-      self.class.request_interceptor.call(*args) if self.class.request_interceptor
 
       I18n.with_locale(I18n.locale) do
         Time.use_zone(Time.zone) do

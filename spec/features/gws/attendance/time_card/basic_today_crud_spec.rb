@@ -33,7 +33,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             click_on I18n.t('gws/attendance.buttons.punch')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+        wait_for_notice I18n.t('gws/attendance.notice.punched')
         expect(page).to have_css('.today .info .enter', text: format('%d:%02d', now.hour, now.min))
 
         expect(Gws::Attendance::TimeCard.count).to eq 1
@@ -46,9 +46,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         # edit
         within '.today .action .enter' do
-          wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
         end
-        wait_for_cbox do
+        within_cbox do
           select I18n.t("gws/attendance.hour", count: 8), from: 'cell[in_hour]'
           select I18n.t("gws/attendance.minute", count: 32), from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
@@ -66,9 +66,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         # clear
         within '.today .action .enter' do
-          wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
         end
-        wait_for_cbox do
+        within_cbox do
           click_on I18n.t('ss.buttons.clear')
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')

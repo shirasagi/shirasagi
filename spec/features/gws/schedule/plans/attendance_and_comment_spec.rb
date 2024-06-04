@@ -17,18 +17,18 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit gws_schedule_plan_path(site: site, id: item)
 
       within "#addon-gws-agents-addons-schedule-attendance" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first("span.attendances[data-member-id='#{user.id}'] input#item_attendances_#{user.id}_state_attendance").click
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box #item-form" do
           fill_in "comment[text]", with: user_comment
           click_on I18n.t("ss.buttons.save")
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_content(user_comment)
@@ -60,7 +60,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/schedule.buttons.comment")
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_content(user_comment)
@@ -84,7 +84,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[text]", with: user_comment2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_content(user_comment2)
@@ -107,7 +107,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       item.reload
       expect(item.comments.count).to eq 0

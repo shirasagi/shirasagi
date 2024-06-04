@@ -25,12 +25,12 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
 
       within "#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.change")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within ".mod-article" do
           click_on I18n.t("cms.nodes.article/page")
         end
@@ -41,13 +41,13 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
         select layout.name, from: "item[layout_id]"
 
         within "#addon-event-agents-addons-page_list" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.apis.forms.index")
           end
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on form.name
         end
       end
@@ -114,7 +114,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
       within "#item-form" do
         within "#addon-event-agents-addons-page_list" do
           within first(".filter-table .filter-setting") do
-            wait_event_to_fire("ss:conditionFormFilterRemoved") do
+            wait_for_event_fired("ss:conditionFormFilterRemoved") do
               click_on I18n.t("ss.buttons.delete")
             end
           end
@@ -138,7 +138,7 @@ describe "article_node_page_condition_forms", type: :feature, dbscope: :example,
       visit cms_node_path(site: site, id: node)
       click_on I18n.t("ss.links.edit")
       within "#item-form" do
-        wait_event_to_fire "change" do
+        wait_for_event_fired "change" do
           within "#addon-event-agents-addons-page_list" do
             within first(".form-table tr[data-id]") do
               click_on I18n.t("ss.buttons.delete")

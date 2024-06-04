@@ -115,7 +115,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
           click_on I18n.t("ss.buttons.delete")
         end
         expect(current_path).to eq index_path
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
 
       it "not permited and contains_urls" do
@@ -135,7 +135,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
           click_on I18n.t("ss.buttons.delete")
         end
         expect(current_path).to eq index_path
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
     end
   end

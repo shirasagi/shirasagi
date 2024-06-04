@@ -19,13 +19,13 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within '#addon-gws-agents-addons-member' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.apis.users.index")
           end
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on gws_user.long_name
         end
       end

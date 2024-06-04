@@ -16,7 +16,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -30,10 +30,10 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('gws/portal.portlets.bookmark.name')
       end
       within 'form#item-form' do
-        wait_cbox_open { click_on I18n.t("gws/share.apis.folders.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws/share.apis.folders.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on basename }
+      within_cbox do
+        wait_for_cbox_closed { click_on basename }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: basename)
@@ -59,7 +59,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -91,7 +91,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -105,10 +105,10 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('gws/portal.portlets.bookmark.name')
       end
       within 'form#item-form' do
-        wait_cbox_open { click_on I18n.t("gws/share.apis.folders.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws/share.apis.folders.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on folder1.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on folder1.name }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: folder1.name)

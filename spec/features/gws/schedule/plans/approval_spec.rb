@@ -20,20 +20,20 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit edit_path
 
       within ".gws-addon-schedule-approval" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(gws_user.name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on gws_user.name
         end
       end
       within "form#item-form" do
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show plan (approve)" do
@@ -41,15 +41,15 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           choose "item_approvals_#{gws_user.id}_state_approve"
         end
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "comment[text]", with: comment
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_css(".list-item", text: comment)
       end
@@ -60,15 +60,15 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           choose "item_approvals_#{gws_user.id}_state_deny"
         end
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "comment[text]", with: comment
         click_button I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within "#addon-gws-agents-addons-schedule-comments" do
         expect(page).to have_css(".list-item", text: comment)
       end

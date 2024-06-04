@@ -90,7 +90,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_ajax
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.set_seen'))
+        wait_for_notice I18n.t('ss.notice.set_seen')
 
         item_no_info.reload
         expect(item_no_info.user_settings).to be_present

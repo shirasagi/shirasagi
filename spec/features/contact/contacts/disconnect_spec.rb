@@ -45,11 +45,11 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
 
         ensure_addon_opened "#addon-contact-agents-addons-page"
         within "#addon-contact-agents-addons-page" do
-          wait_cbox_open { click_on I18n.t("contact.apis.contacts.index") }
+          wait_for_cbox_opened { click_on I18n.t("contact.apis.contacts.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on sub_contact.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on sub_contact.name }
       end
       within "form#item-form" do
         within "#addon-contact-agents-addons-page" do

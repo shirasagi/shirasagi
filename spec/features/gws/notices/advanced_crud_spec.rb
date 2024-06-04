@@ -46,32 +46,32 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: folder_name
 
         within '.gws-addon-member' do
-          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(site.name)
         find('.dd-group button.dropdown.btn').click
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
         expect(page).to have_content(editor.name)
-        wait_cbox_close { click_on editor.name }
+        wait_for_cbox_closed { click_on editor.name }
       end
       within 'form#item-form' do
         within '.gws-addon-readable-setting' do
           click_on I18n.t('ss.buttons.delete')
-          wait_cbox_open { click_on I18n.t('ss.apis.users.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(site.name)
         find('.dd-group button.dropdown.btn').click
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
         expect(page).to have_content(reader.name)
-        wait_cbox_close { click_on reader.name }
+        wait_for_cbox_closed { click_on reader.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-member" do
@@ -109,10 +109,10 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: notice_name
         fill_in 'item[text]', with: notice_text
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on cate.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on cate.name }
       end
       within 'form#item-form' do
         within "#addon-gws-agents-addons-notice-category" do
@@ -121,7 +121,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.save')
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Notice::Post.all.count).to eq 1
       Gws::Notice::Post.all.first.tap do |post|

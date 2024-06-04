@@ -31,18 +31,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened("#addon-cms-agents-addons-file")
       within "#addon-cms-agents-addons-file" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -58,13 +58,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
@@ -74,7 +74,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css(".file-view", text: "modify.jpg")
 
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on "modify.jpg"
         end
       end
@@ -93,19 +93,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("sns.user_file")
           end
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_button I18n.t("ss.buttons.attach")
         end
       end
@@ -140,19 +140,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("cms.file")
               end
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
             click_button I18n.t("ss.buttons.save")
             expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
             attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_button I18n.t("ss.buttons.attach")
             end
           end
@@ -197,14 +197,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
-              wait_cbox_open do
+              wait_for_cbox_opened do
                 click_on I18n.t("cms.file")
               end
             end
           end
 
-          wait_for_cbox do
-            wait_cbox_close do
+          within_cbox do
+            wait_for_cbox_closed do
               click_on name
             end
           end
@@ -263,7 +263,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -271,22 +271,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column1.name
           end
         end
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
           end
         end
@@ -300,22 +300,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column2.name
           end
         end
         within ".column-value-cms-column-free" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("cms.file")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
 
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
           end
         end
@@ -371,12 +371,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", file_path
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
           page.accept_alert(/#{::Regexp.escape(alert)}/) do
@@ -394,12 +394,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", file_path
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
           page.accept_alert(/#{::Regexp.escape(alert)}/) do

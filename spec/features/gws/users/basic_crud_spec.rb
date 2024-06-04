@@ -25,11 +25,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
       within "form#item-form" do
         within first('.mod-gws-user-groups') do
-          wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.groups.index') }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on site.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on site.name }
       end
       within "form#item-form" do
         within first('.mod-gws-user-groups') do
@@ -136,11 +136,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit new_path
       within "form#item-form" do
         within first('.mod-gws-user-groups') do
-          wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.groups.index') }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on site.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on site.name }
       end
       within "form#item-form" do
         within first('.mod-gws-user-groups') do
@@ -172,7 +172,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-item", count: 1)
 
       within ".list-head" do
-        wait_event_to_fire("ss:checked-all-list-items") { find('label.check input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('label.check input').set(true) }
         page.accept_alert(I18n.t("ss.confirm.delete")) do
           click_button I18n.t("ss.links.delete")
         end
@@ -208,11 +208,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
       within 'form#item-form' do
         within first('.mod-gws-user-groups') do
-          wait_cbox_open { click_on I18n.t('ss.apis.groups.index') }
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.groups.index') }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on site.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on site.name }
       end
       within 'form#item-form' do
         within first('.mod-gws-user-groups') do

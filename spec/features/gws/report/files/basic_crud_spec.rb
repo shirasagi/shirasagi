@@ -50,7 +50,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       #
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on form.name
         end
@@ -69,13 +69,13 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first(".btn-file-upload").click
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t("ss.buttons.attach")
         end
       end
@@ -83,7 +83,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".column-#{column9.id}", text: "logo")
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Report::File.count).to eq 1
       file = Gws::Report::File.first
@@ -148,7 +148,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       file.reload
       expect(file.name).to eq name2
@@ -169,7 +169,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       file.reload
       expect(file.name).to eq name2
@@ -188,7 +188,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
 
       file.reload
       expect(file.name).to eq name2
@@ -220,7 +220,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Report::File.find(file.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end

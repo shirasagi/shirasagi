@@ -48,14 +48,14 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+                wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
               end
-              wait_for_cbox do
+              within_cbox do
                 have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
                 have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
                 click_on I18n.t("ss.buttons.ignore_alert")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -74,7 +74,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
             expect(page).to have_link item.name
             click_on I18n.t("ss.links.delete")
             click_on I18n.t("ss.buttons.delete")
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+            wait_for_notice I18n.t('ss.notice.deleted')
             expect(Cms::SnsPostLog::Twitter.count).to eq 1
             expect(Cms::SnsPostLog::Line.count).to eq 0
 
@@ -85,7 +85,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
             expect(page).to have_link item.name
             click_on I18n.t("ss.links.delete")
             click_on I18n.t("ss.buttons.delete")
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+            wait_for_notice I18n.t('ss.notice.deleted')
             expect(Cms::SnsPostLog::Twitter.count).to eq 0
             expect(Cms::SnsPostLog::Line.count).to eq 0
           end

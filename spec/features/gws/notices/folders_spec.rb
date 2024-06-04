@@ -23,13 +23,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         fill_in "item[order]", with: order
 
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.apis.users.index")
           end
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on gws_user.name
         end
       end
@@ -40,7 +40,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Notice::Folder.all.count).to eq 1
       Gws::Notice::Folder.all.first.tap do |folder|
@@ -62,7 +62,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_basename]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Notice::Folder.all.count).to eq 1
       Gws::Notice::Folder.all.first.tap do |cate|
@@ -81,7 +81,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect(Gws::Notice::Folder.all.count).to eq 0
     end
@@ -106,13 +106,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           fill_in "item[in_basename]", with: name
           fill_in "item[order]", with: order
           within "#addon-basic" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("gws/share.apis.folders.index")
             end
           end
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on folder0.name
           end
         end
@@ -121,13 +121,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css(".ajax-selected", text: folder0.name)
           end
           within "#addon-gws-agents-addons-member" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.apis.users.index")
             end
           end
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on gws_user.name
           end
         end
@@ -138,7 +138,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(Gws::Notice::Folder.all.count).to eq 2
         Gws::Notice::Folder.all.reorder(created: -1).first.tap do |folder|
@@ -160,7 +160,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           fill_in "item[in_basename]", with: name2
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(Gws::Notice::Folder.all.count).to eq 2
         Gws::Notice::Folder.all.reorder(created: -1).first.tap do |cate|
@@ -179,7 +179,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+        wait_for_notice I18n.t("ss.notice.deleted")
 
         expect(Gws::Notice::Folder.all.count).to eq 1
       end
@@ -195,13 +195,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           fill_in "item[in_basename]", with: "#{unique_id}/#{unique_id}"
 
           within "#addon-gws-agents-addons-member" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.apis.users.index")
             end
           end
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on gws_user.name
           end
         end
@@ -239,13 +239,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("gws/share.apis.folders.index")
           end
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on folder1.name
         end
       end
@@ -255,7 +255,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.moved"))
+      wait_for_notice I18n.t("ss.notice.moved")
 
       item.reload
       expect(item.name).to eq "#{folder1.name}/#{name}"
@@ -288,7 +288,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       expect(SS::File.in(id: item.notices.pluck(:file_ids).flatten).sum(:size)).to be > 0
 
       first("button[name='reclaim_total_size']").click
-      expect(page).to have_css("#notice", text: I18n.t("gws/notice.notice.reclaimed"))
+      wait_for_notice I18n.t("gws/notice.notice.reclaimed")
 
       usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_s(:human_size), percentage: "0.00%")
       expect(page).to have_content(usage1)

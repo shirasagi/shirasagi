@@ -61,11 +61,11 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.delete_changesets.select_group") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group1.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group1.trailing_name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
@@ -97,11 +97,11 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.delete_changesets.select_group") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group2.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group2.trailing_name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")

@@ -18,7 +18,7 @@ describe "gws_chorg", type: :feature, dbscope: :example do
         end
       end
       expectation.to have_enqueued_job(Gws::Chorg::TestRunner)
-      expect(page).to have_css("#notice", text: I18n.t('chorg.messages.job_started'))
+      wait_for_notice I18n.t('chorg.messages.job_started')
     end
   end
 

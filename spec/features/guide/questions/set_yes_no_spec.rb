@@ -31,58 +31,58 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         fill_in "item[id_name]", with: "0.sample"
         choose "item_question_type_yes_no"
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
         expect(page).to have_link procedure1.id_name
         expect(page).to have_link procedure2.id_name
-        wait_cbox_close { click_on procedure1.id_name }
+        wait_for_cbox_closed { click_on procedure1.id_name }
       end
 
       within "form#item-form" do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{procedure1.id}']", text: procedure1.id_name)
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[0].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           click_on I18n.t("guide.question")
         end
         expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         expect(page).to have_link question1.id_name
         expect(page).to have_link question2.id_name
-        wait_cbox_close { click_on question1.id_name }
+        wait_for_cbox_closed { click_on question1.id_name }
       end
 
       within "form#item-form" do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{question1.id}']", text: question1.id_name)
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           expect(page).to have_css("a.current .tab-name", text: I18n.t("guide.procedure"))
         end
 
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
         within ".search-ui-select" do
-          wait_cbox_close { click_on I18n.t("ss.links.select") }
+          wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
         end
       end
 
       within "form#item-form" do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{procedure2.id}']", text: procedure2.id_name)
-        wait_cbox_open { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
+        wait_for_cbox_opened { all(".question-edges .edge a", text: I18n.t("ss.links.select"))[1].click }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".cms-modal-tabs" do
           click_on I18n.t("guide.question")
         end
         wait_for_js_ready
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head .checkbox input').set(true) }
         within ".search-ui-select" do
-          wait_cbox_close { click_on I18n.t("ss.links.select") }
+          wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
         end
       end
 
@@ -90,7 +90,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#addon-guide-agents-addons-question [data-id='#{question2.id}']", text: question2.id_name)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item = ::Guide::Question.first
       expect(item.edges.size).to eq 2

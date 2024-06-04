@@ -48,7 +48,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       # Create
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on form.name
         end
@@ -67,13 +67,13 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first(".btn-file-upload").click
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t("ss.buttons.attach")
         end
       end

@@ -60,7 +60,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               click_on I18n.t('gws/attendance.buttons.punch')
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+          wait_for_notice I18n.t('gws/attendance.notice.punched')
           expect(page).to have_css(".today .info .#{cell_type}", text: format('%d:%02d', now.hour, now.min))
           expect(page).to have_css("tr.current td.#{cell_type}", text: format('%d:%02d', now.hour, now.min))
 
@@ -106,7 +106,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               click_on I18n.t('gws/attendance.links.punch')
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+          wait_for_notice I18n.t('gws/attendance.notice.punched')
           expect(page).to have_css(".today .info .#{cell_type}", text: format('%d:%02d', now.hour, now.min))
           expect(page).to have_css("tr.current td.#{cell_type}", text: format('%d:%02d', now.hour, now.min))
 
@@ -167,13 +167,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           # create memo
           within ".today .action .memo" do
-            wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+            wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
           end
-          wait_for_cbox do
+          within_cbox do
             fill_in 'record[memo]', with: memo
             click_on I18n.t('ss.buttons.save')
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
           expect(page).to have_css('.today .info .memo', text: memo)
           expect(page).to have_css('tr.current td.memo', text: memo)
 
@@ -217,13 +217,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             end
           end
           within '.cell-toolbar' do
-            wait_cbox_open { click_on I18n.t('ss.links.edit') }
+            wait_for_cbox_opened { click_on I18n.t('ss.links.edit') }
           end
-          wait_for_cbox do
+          within_cbox do
             fill_in 'record[memo]', with: memo
             click_on I18n.t('ss.buttons.save')
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
           expect(page).to have_css('.today .info .memo', text: memo)
           expect(page).to have_css('tr.current td.memo', text: memo)
 
@@ -283,21 +283,21 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               click_on I18n.t('gws/attendance.buttons.punch')
             end
           end
-          expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+          wait_for_notice I18n.t('gws/attendance.notice.punched')
           expect(page).to have_css(".today .info .#{cell_type}", text: format('%d:%02d', now.hour, now.min))
           expect(page).to have_css("tr.current td.#{cell_type}", text: format('%d:%02d', now.hour, now.min))
 
           # edit
           within ".today .action .#{cell_type}" do
-            wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.edit") }
           end
-          wait_for_cbox do
+          within_cbox do
             select I18n.t('gws/attendance.hour', count: edit_at.hour), from: 'cell[in_hour]'
             select I18n.t('gws/attendance.minute', count: edit_at.min), from: 'cell[in_minute]'
             fill_in 'cell[in_reason]', with: reason1
             click_on I18n.t('ss.buttons.save')
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
           expect(page).to have_css(".today .info .#{cell_type}", text: format('%d:%02d', edit_at.hour, edit_at.min))
           expect(page).to have_css("tr.current td.#{cell_type}", text: format('%d:%02d', edit_at.hour, edit_at.min))
         end
@@ -321,7 +321,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
                 click_on I18n.t('gws/attendance.links.punch')
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+            wait_for_notice I18n.t('gws/attendance.notice.punched')
             expect(page).to have_css(".today .info .#{cell_type}", text: format('%d:%02d', now.hour, now.min))
             expect(page).to have_css("tr.current td.#{cell_type}", text: format('%d:%02d', now.hour, now.min))
 
@@ -332,15 +332,15 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.edit") }
             end
-            wait_for_cbox do
+            within_cbox do
               select I18n.t('gws/attendance.hour', count: edit_at.hour), from: 'cell[in_hour]'
               select I18n.t('gws/attendance.minute', count: edit_at.min), from: 'cell[in_minute]'
               fill_in 'cell[in_reason]', with: reason1
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css(".today .info .#{cell_type}", text: format('%d:%02d', edit_at.hour, edit_at.min))
             expect(page).to have_css("tr.current td.#{cell_type}", text: format('%d:%02d', edit_at.hour, edit_at.min))
           end
@@ -358,15 +358,15 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t('ss.links.edit') }
+              wait_for_cbox_opened { click_on I18n.t('ss.links.edit') }
             end
-            wait_for_cbox do
+            within_cbox do
               select I18n.t('gws/attendance.hour', count: now.hour), from: 'cell[in_hour]'
               select I18n.t('gws/attendance.minute', count: now.min), from: 'cell[in_minute]'
               fill_in 'cell[in_reason]', with: reason1
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("tr.day-#{other_day} td.#{cell_type}", text: format('%d:%02d', now.hour, now.min))
 
             # edit
@@ -376,15 +376,15 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t("ss.links.edit") }
+              wait_for_cbox_opened { click_on I18n.t("ss.links.edit") }
             end
-            wait_for_cbox do
+            within_cbox do
               select I18n.t('gws/attendance.hour', count: edit_at.hour), from: 'cell[in_hour]'
               select I18n.t('gws/attendance.minute', count: edit_at.min), from: 'cell[in_minute]'
               fill_in 'cell[in_reason]', with: reason2
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("tr.day-#{other_day} td.#{cell_type}", text: format('%d:%02d', edit_at.hour, edit_at.min))
           end
         end
@@ -423,25 +423,25 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
           # create new memo
           within ".today .action .memo" do
-            wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.edit") }
           end
-          wait_for_cbox do
+          within_cbox do
             fill_in 'record[memo]', with: memo1
             click_on I18n.t('ss.buttons.save')
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
           expect(page).to have_css(".today .info .memo", text: memo1)
           expect(page).to have_css("tr.current td.memo", text: memo1)
 
           # edit
           within ".today .action .memo" do
-            wait_cbox_open { click_on I18n.t("ss.buttons.edit") }
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.edit") }
           end
-          wait_for_cbox do
+          within_cbox do
             fill_in 'record[memo]', with: memo2
             click_on I18n.t('ss.buttons.save')
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
           expect(page).to have_css(".today .info .memo", text: memo2)
           expect(page).to have_css("tr.current td.memo", text: memo2)
         end
@@ -461,13 +461,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t("ss.links.edit") }
+              wait_for_cbox_opened { click_on I18n.t("ss.links.edit") }
             end
-            wait_for_cbox do
+            within_cbox do
               fill_in 'record[memo]', with: memo1
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css(".today .info .memo", text: memo1)
             expect(page).to have_css("tr.current td.memo", text: memo1)
 
@@ -478,13 +478,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t("ss.links.edit") }
+              wait_for_cbox_opened { click_on I18n.t("ss.links.edit") }
             end
-            wait_for_cbox do
+            within_cbox do
               fill_in 'record[memo]', with: memo2
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css(".today .info .memo", text: memo2)
             expect(page).to have_css("tr.current td.memo", text: memo2)
           end
@@ -502,13 +502,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t('ss.links.edit') }
+              wait_for_cbox_opened { click_on I18n.t('ss.links.edit') }
             end
-            wait_for_cbox do
+            within_cbox do
               fill_in 'record[memo]', with: memo1
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("tr.day-#{other_day} td.memo", text: memo1)
 
             # edit
@@ -518,13 +518,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
               end
             end
             within '.cell-toolbar' do
-              wait_cbox_open { click_on I18n.t("ss.links.edit") }
+              wait_for_cbox_opened { click_on I18n.t("ss.links.edit") }
             end
-            wait_for_cbox do
+            within_cbox do
               fill_in 'record[memo]', with: memo2
               click_on I18n.t('ss.buttons.save')
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("tr.day-#{other_day} td.memo", text: memo2)
           end
         end

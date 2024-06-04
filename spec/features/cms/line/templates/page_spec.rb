@@ -51,11 +51,11 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       expect(page).to have_css(".line-select-message-type")
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/page"))
-        wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
-        wait_cbox_close { click_on page1.name }
+        wait_for_cbox_closed { click_on page1.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
@@ -85,11 +85,11 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
       expect(page).to have_no_css(".line-select-message-type")
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/page"))
-        wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
-        wait_cbox_close { click_on page2.name }
+        wait_for_cbox_closed { click_on page2.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page2.id}']", text: page2.name)
@@ -142,11 +142,11 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
 
       # page1 have no thumb
       within "#addon-cms-agents-addons-line-template-page" do
-        wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
-        wait_cbox_close { click_on page1.name }
+        wait_for_cbox_closed { click_on page1.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
@@ -160,11 +160,11 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
 
       # page2 have thumb
       within "#addon-cms-agents-addons-line-template-page" do
-        wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
-        wait_cbox_close { click_on page2.name }
+        wait_for_cbox_closed { click_on page2.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page2.id}']", text: page2.name)
@@ -209,11 +209,11 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
 
       # page1 have no body image
       within "#addon-cms-agents-addons-line-template-page" do
-        wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page1.name)
-        wait_cbox_close { click_on page1.name }
+        wait_for_cbox_closed { click_on page1.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
@@ -237,11 +237,11 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
 
       # page2 have body image
       within "#addon-cms-agents-addons-line-template-page" do
-        wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+        wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: page2.name)
-        wait_cbox_close { click_on page2.name }
+        wait_for_cbox_closed { click_on page2.name }
       end
       within "#addon-cms-agents-addons-line-template-page" do
         expect(page).to have_css("[data-id='#{page2.id}']", text: page2.name)

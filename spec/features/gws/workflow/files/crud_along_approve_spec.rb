@@ -24,13 +24,13 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "article.file-view" do
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on file.name
           end
         end
@@ -40,7 +40,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
@@ -65,7 +65,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
@@ -90,7 +90,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.delete")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Gws::Workflow::File.site(site).count).to eq 1
       Gws::Workflow::File.site(site).first.tap do |workflow|
         expect(workflow.deleted).not_to be_nil

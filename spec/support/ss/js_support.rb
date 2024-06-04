@@ -203,15 +203,8 @@ module SS
           var pickerInstance = SS_DateTimePicker.instance(element);
           pickerInstance.momentValue(value ? moment(value) : null);
 
-          // validate を実行するとイベント "ss:changeDateTime" が発生する。
-          // イベント "ss:changeDateTime" のハンドラーのいくつかで別　URL へ遷移するものがある。
-          // そのようなもので stale element reference エラーが発生することを防ぐため、
-          // setTimeout 内で validate を実行するようにする。
-          // ※ setTimeout 内で validate を実行すると、stale element reference エラーがなぜ発生しなくなるかは不明。
-          setTimeout(function() {
-            $(element).datetimepicker("validate");
-            resolve(true);
-          }, 0);
+          $(element).datetimepicker("validate");
+          resolve(true);
         }
 
         var pickerInstance = SS_DateTimePicker.instance(element);
@@ -275,7 +268,9 @@ module SS
       el = find(:fillable_field, locator).set('').click
       with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
-    rescue Selenium::WebDriver::Error::WebDriverError
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      puts_console_logs
+      Rails.logger.info { "#{e.class} (#{e.message})" }
       el
     end
 
@@ -291,7 +286,7 @@ module SS
       yield if block_given?
     end
 
-    def wait_for_cbox(&block)
+    def within_cbox(&block)
       wait_for_js_ready
       have_css("#cboxClose", text: "close")
       if block
@@ -304,6 +299,8 @@ module SS
         end
       end
     end
+    # old(obsolete) method
+    alias wait_for_cbox within_cbox
 
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
@@ -330,13 +327,6 @@ module SS
         current_path
         true
       end
-      wait_for_js_ready
-    end
-
-    def wait_for_notice(text)
-      wait_for_js_ready
-      expect(page).to have_css('#notice', text: text)
-      page.execute_script("SS.clearNotice();")
       wait_for_js_ready
     end
 
@@ -403,7 +393,7 @@ module SS
       end
     end
 
-    def wait_event_to_fire(event_name, selector = nil)
+    def wait_for_event_fired(event_name, selector = nil)
       wait_for_js_ready
 
       promise_id = "promise_#{unique_id}"
@@ -417,6 +407,7 @@ module SS
 
       ret
     end
+    alias wait_event_to_fire wait_for_event_fired
 
     #
     # Usage:
@@ -425,11 +416,12 @@ module SS
     #     click_on I18n.t("ss.buttons.upload")
     #   end
     #
-    def wait_cbox_open(&block)
+    def wait_for_cbox_opened(&block)
       wait_for_js_ready
-      wait_event_to_fire("cbox_complete", &block)
+      wait_for_event_fired("cbox_complete", &block)
       wait_for_js_ready
     end
+    alias wait_cbox_open wait_for_cbox_opened
 
     #
     # Usage:
@@ -438,14 +430,15 @@ module SS
     #     click_on user.name
     #   end
     #
-    def wait_cbox_close(&block)
+    def wait_for_cbox_closed(&block)
       wait_for_js_ready
       save = JsSupport.is_within_cbox
       JsSupport.is_within_cbox = true
-      wait_event_to_fire("cbox_closed", &block)
+      wait_for_event_fired("cbox_closed", &block)
     ensure
       JsSupport.is_within_cbox = save
     end
+    alias wait_cbox_close wait_for_cbox_closed
 
     #
     # Usage:
@@ -460,21 +453,23 @@ module SS
 
     #
     # Usage
-    #   wait_ckeditor_ready find(:fillable_field, "item[html]")
+    #   wait_for_ckeditor_ready find(:fillable_field, "item[html]")
     #
-    def wait_ckeditor_ready(element)
+    def wait_for_ckeditor_ready(element)
       wait_for_js_ready
       page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
     end
+    alias wait_ckeditor_ready wait_for_ckeditor_ready
 
     #
     # Usage
     #   wait_all_ckeditors_ready
     #
-    def wait_all_ckeditors_ready
+    def wait_for_all_ckeditors_ready
       wait_for_js_ready
       page.evaluate_async_script(WAIT_ALL_CKEDITORS_READY_SCRIPT)
     end
+    alias wait_all_ckeditors_ready wait_for_all_ckeditors_ready
 
     # CKEditor に html を設定する
     #
@@ -490,7 +485,7 @@ module SS
       options[:visible] = :all
       element = find(:fillable_field, locator, **options)
 
-      ret = wait_ckeditor_ready(element)
+      ret = wait_for_ckeditor_ready(element)
       expect(ret).to be_truthy
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
@@ -503,9 +498,17 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
-      #result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
-      #expect(result).to be_truthy
+      # must use evaluate_async_script because 'resolved' is required in FILL_DATETIME_SCRIPT
+      # page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
+      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      expect(result).to be_truthy
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      # 履歴などの画面で日付型に入力すると、即、画面遷移するものがある。
+      # そのようなもので stale element reference エラーが発生する場合がある。
+      # もう少しスマートに stale element reference エラーの発生を防ぐことができたらよかったが、
+      # そのような方法は簡単には見つからないので rescue で防ぐ
+      puts_console_logs
+      Rails.logger.info { "#{e.class} (#{e.message})" }
     end
 
     alias fill_in_date fill_in_datetime
@@ -520,7 +523,7 @@ module SS
     def wait_for_ckeditor_event(locator, event_name)
       element = find(:fillable_field, locator)
 
-      ret = wait_ckeditor_ready(element)
+      ret = wait_for_ckeditor_ready(element)
       expect(ret).to be_truthy
 
       promise_id = "promise_#{unique_id}"
@@ -565,6 +568,8 @@ module SS
     end
 
     def wait_for_js_ready(session = nil, &block)
+      return unless page.driver.is_a?(Capybara::Selenium::Driver)
+
       session ||= page
       unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
         puts_console_logs
@@ -572,9 +577,9 @@ module SS
       end
 
       yield if block
-    rescue Selenium::WebDriver::Error::JavascriptError
+    rescue Selenium::WebDriver::Error::WebDriverError => e
       puts_console_logs
-      raise
+      Rails.logger.info { "#{e.class} (#{e.message})" }
     end
     alias wait_for_ajax wait_for_js_ready
 
@@ -617,7 +622,7 @@ module SS
 
     def fill_in_address(locator, with:)
       wait_for_js_ready
-      wait_event_to_fire("ss:addressCommitted") do
+      wait_for_event_fired("ss:addressCommitted") do
         fill_in locator, with: with
         js_dispatch_focus_event find(:fillable_field, locator), 'blur'
       end

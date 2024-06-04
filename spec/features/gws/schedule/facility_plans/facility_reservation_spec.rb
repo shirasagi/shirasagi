@@ -19,9 +19,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plans_path(site: site, facility: facility)
         click_on I18n.t("gws/schedule.links.add_plan")
         within "form#item-form" do
-          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
+          wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")
@@ -39,9 +39,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
-          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
+          wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")
@@ -60,9 +60,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
-          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
+          wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")
@@ -87,9 +87,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
         within "form#item-form" do
-          wait_cbox_open { click_on I18n.t('gws/schedule.facility_reservation.index') }
+          wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".reservation-valid", text: I18n.t('gws/schedule.facility_reservation.free'))
           expect(page).to have_css(".reservation.free")
           expect(page).to have_no_css(".reservation.exist")

@@ -39,7 +39,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         select "必須", from: "item[subscription_constraint]"
         click_on I18n.t('ss.buttons.save')
 
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         # after setting subscription_constraint to required, existing member's subscription_ids is chagned.
         member.reload

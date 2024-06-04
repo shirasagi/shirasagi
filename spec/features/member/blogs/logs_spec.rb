@@ -29,15 +29,15 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
 
       visit "#{path}/#{item.id}/edit"
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("ss.buttons.upload") }
+        wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close { click_button I18n.t("ss.buttons.attach") }
+        wait_for_cbox_closed { click_button I18n.t("ss.buttons.attach") }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-member-agents-addons-file .file-view", text: "keyvisual.jpg")

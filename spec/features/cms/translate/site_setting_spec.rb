@@ -29,23 +29,23 @@ describe "cms_translate_site_setting", type: :feature, dbscope: :example, js: tr
 
       within "form#item-form" do
         select I18n.t('ss.options.state.enabled'), from: "item[translate_state]"
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first('[name="item[translate_source_id]"] + .ajax-box').click
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on lang_ja.name
         end
       end
       within "form#item-form" do
         expect(page).to have_content(lang_ja.name)
-        wait_cbox_open do
+        wait_for_cbox_opened do
           first('[name="item[translate_target_ids][]"] + .ajax-box').click
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on lang_en.name
         end
       end

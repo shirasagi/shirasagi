@@ -45,10 +45,10 @@ describe Gws::Memo::Apis::PersonalAddressesController, type: :feature, dbscope: 
       wait_for_js_ready
 
       within 'dl.see.all' do
-        wait_cbox_open { click_on I18n.t("mongoid.models.webmail/address") }
+        wait_for_cbox_opened { click_on I18n.t("mongoid.models.webmail/address") }
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".gws-tabs .current", text: Webmail::Address.model_name.human)
         within "#gws-memo-persona-address-personal" do
           expect(page).to have_css(".list-item", text: address1.name)

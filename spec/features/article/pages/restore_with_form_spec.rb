@@ -60,7 +60,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form.name, from: 'in_form_id'
           end
@@ -91,14 +91,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.upload")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t('ss.buttons.attach')
         end
       end
@@ -108,7 +108,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Article::Page.all.count).to eq 1
       expect(SS::File.all.unscoped.count).to eq 1
@@ -142,14 +142,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.upload")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t('ss.buttons.attach')
         end
       end
@@ -159,7 +159,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Article::Page.all.count).to eq 1
       expect(SS::File.all.unscoped.count).to eq 1
@@ -177,7 +177,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('history.buttons.restore')
       end
-      expect(page).to have_css('#notice', text: I18n.t('history.notice.restored'))
+      wait_for_notice I18n.t('history.notice.restored')
 
       expect(Article::Page.all.count).to eq 1
       Article::Page.all.first.tap do |item|

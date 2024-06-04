@@ -22,15 +22,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -52,12 +52,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            wait_cbox_open { click_on I18n.t("ss.buttons.replace_file") }
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
           wait_for_js_ready
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
@@ -88,12 +88,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: "replaced")
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
@@ -130,16 +130,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -161,11 +161,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            wait_cbox_open { click_on I18n.t("ss.buttons.replace_file") }
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
-          wait_for_cbox do
+          within_cbox do
             wait_for_js_ready
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
@@ -186,12 +186,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: "replaced")
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
@@ -203,7 +203,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css("a", text: I18n.t("ss.links.download"))
               expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
-              wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
+              wait_for_event_fired "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
                 page.accept_confirm do
                   click_on I18n.t("ss.buttons.delete")
                 end

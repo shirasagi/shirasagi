@@ -106,7 +106,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit sns_mypage_path
         within ".user-navigation" do
-          wait_event_to_fire("turbo:frame-load") { click_on cms_user.name }
+          wait_for_event_fired("turbo:frame-load") { click_on cms_user.name }
           within "#user-main-dropdown" do
             click_link I18n.t('ss.logout')
           end

@@ -30,7 +30,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("gws/workflow.columns.index")
 
       within "#menu" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on I18n.t("gws.columns.gws/url_field")
         end
@@ -49,7 +49,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       form.reload
       expect(form.columns.count).to eq 1
@@ -75,7 +75,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       form.reload
       expect(form.columns.count).to eq 1
@@ -100,7 +100,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       form.reload
       expect(form.columns.count).to eq 0

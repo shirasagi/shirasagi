@@ -83,7 +83,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form.name, from: 'in_form_id'
           end
@@ -116,15 +116,15 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
         within ".column-value-cms-column-selectpage " do
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: selectable_page1.name)
         expect(page).to have_css(".list-item", text: selectable_page2.name)
         expect(page).to have_css(".list-item", text: selectable_page3.name)
         expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-        wait_cbox_close { click_on selectable_page1.name }
+        wait_for_cbox_closed { click_on selectable_page1.name }
       end
       within 'form#item-form' do
         expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
@@ -150,12 +150,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-          wait_cbox_open { click_on I18n.t("ss.links.upload") }
+          wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
+        wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -165,7 +165,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_no_selector('div.column-with-errors')
 
@@ -220,27 +220,27 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-          wait_cbox_open { click_on I18n.t("ss.links.upload") }
+          wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_cbox_close { click_on I18n.t('ss.buttons.attach') }
+        wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_content("keyvisual.gif")
         end
         within ".column-value-cms-column-selectpage" do
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: selectable_page1.name)
         expect(page).to have_css(".list-item", text: selectable_page2.name)
         expect(page).to have_css(".list-item", text: selectable_page3.name)
         expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-        wait_cbox_close { click_on selectable_page2.name }
+        wait_for_cbox_closed { click_on selectable_page2.name }
       end
       within 'form#item-form' do
         within ".column-value-cms-column-selectpage " do
@@ -250,7 +250,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       expect(article_pages.count).to eq 1
@@ -280,7 +280,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(article_pages.count).to eq 0
       expect(SS::File.all.unscoped.count).to eq 0
     end

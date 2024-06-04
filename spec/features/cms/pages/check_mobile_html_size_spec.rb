@@ -15,7 +15,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       html_text = "<p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p>" * 10
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
       expect(page).to have_css "form #errorMobileChecker"
@@ -29,7 +29,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       visit new_cms_page_path(site)
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
 
@@ -53,7 +53,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       visit new_cms_page_path(site)
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
 
@@ -74,7 +74,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       visit new_cms_page_path(site)
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
       expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
@@ -93,7 +93,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       visit new_cms_page_path(site)
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
       expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
@@ -103,7 +103,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       end
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
       expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
@@ -128,7 +128,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       visit new_cms_page_path(site)
 
       fill_in_ckeditor "item[html]", with: html_text
-      wait_event_to_fire("ss:mobileSizeCheckCompleted") do
+      wait_for_event_fired("ss:mobileSizeCheckCompleted") do
         click_on I18n.t("cms.mobile_size_check")
       end
       expect(page).to have_selector "form #errorMobileChecker p", text: /携帯電話で表示する場合、ファイルサイズ合計(.+)/i

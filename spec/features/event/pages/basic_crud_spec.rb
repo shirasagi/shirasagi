@@ -31,7 +31,7 @@ describe "event_pages", type: :feature, js: true do
         fill_in "item[basename]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
@@ -48,7 +48,7 @@ describe "event_pages", type: :feature, js: true do
         fill_in "item[name]", with: "modify"
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#move" do
@@ -85,7 +85,7 @@ describe "event_pages", type: :feature, js: true do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     it "#contains_urls" do

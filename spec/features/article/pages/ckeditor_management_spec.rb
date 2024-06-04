@@ -26,21 +26,21 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
     it do
       visit new_article_page_path(site: site, cid: node)
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 1
       expect(instances).to include("item_html")
 
       # change to form1
       within 'form#item-form' do
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form1.name, from: 'in_form_id'
           end
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 1
       expect(instances).to include("item_html")
@@ -48,13 +48,13 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # add free column
       within 'form#item-form' do
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on form1_column_free.name
           end
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
@@ -63,13 +63,13 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # add 1 more free column
       within 'form#item-form' do
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on form1_column_free.name
           end
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 3
       expect(instances).to include("item_html")
@@ -78,7 +78,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # delete free column
       within first(".column-value-cms-column-free") do
         within ".column-value-header" do
-          wait_event_to_fire("ss:columnDeleted") do
+          wait_for_event_fired("ss:columnDeleted") do
             page.accept_confirm(I18n.t("ss.confirm.delete")) do
               click_on I18n.t("ss.links.delete")
             end
@@ -86,7 +86,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
@@ -94,14 +94,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       # change to form2
       within 'form#item-form' do
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form2.name, from: 'in_form_id'
           end
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 1
       expect(instances).to include("item_html")
@@ -109,13 +109,13 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # add free column
       within 'form#item-form' do
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on form2_column_free.name
           end
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")
@@ -123,14 +123,14 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       # change to default form
       within 'form#item-form' do
-        wait_event_to_fire("ss:formDeactivated") do
+        wait_for_event_fired("ss:formDeactivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select I18n.t("cms.default_form"), from: 'in_form_id'
           end
         end
       end
 
-      wait_all_ckeditors_ready
+      wait_for_all_ckeditors_ready
       instances = page.evaluate_script("Object.keys(CKEDITOR.instances)")
       expect(instances.length).to eq 2
       expect(instances).to include("item_html")

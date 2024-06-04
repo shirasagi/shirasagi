@@ -66,7 +66,7 @@ describe "cms_translate_langs", type: :feature, dbscope: :example do
         fill_in "item[accept_languages]", with: "en"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -88,7 +88,7 @@ describe "cms_translate_langs", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "japanese"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -96,7 +96,7 @@ describe "cms_translate_langs", type: :feature, dbscope: :example do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     it "#download" do
@@ -125,7 +125,7 @@ describe "cms_translate_langs", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/db/seeds/demo/translate/lang.csv"
         click_button I18n.t('ss.buttons.import')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       count = Translate::Lang.count
       lang_ja = Translate::Lang.site(site).where(code: "ja").first

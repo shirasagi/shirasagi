@@ -11,7 +11,7 @@ describe "webmail_import_mails", type: :feature, dbscope: :example, imap: true d
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/mail-1.eml"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("webmail.import.start_import"))
+      wait_for_notice I18n.t("webmail.import.start_import")
 
       visit webmail_mails_path(account: 0)
       expect(page).to have_css(".webmail-mails .field.title", text: "rspec-f5ttl71mhn")
@@ -26,7 +26,7 @@ describe "webmail_import_mails", type: :feature, dbscope: :example, imap: true d
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/mail-2.zip"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("webmail.import.start_import"))
+      wait_for_notice I18n.t("webmail.import.start_import")
 
       visit webmail_mails_path(account: 0)
       expect(page).to have_css(".webmail-mails .field.title", text: "rspec-1ikzkezixu")
@@ -41,7 +41,7 @@ describe "webmail_import_mails", type: :feature, dbscope: :example, imap: true d
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/collapsed-multipart.eml"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("webmail.import.start_import"))
+      wait_for_notice I18n.t("webmail.import.start_import")
 
       visit webmail_mails_path(account: 0)
       expect(page).to have_css(".webmail-mails .field.title", text: "rspec-f5ttl71mhn")

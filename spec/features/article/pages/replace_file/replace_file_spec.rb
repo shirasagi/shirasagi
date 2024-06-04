@@ -36,16 +36,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
             end
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -61,12 +61,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready
@@ -142,7 +142,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         wait_for_js_ready
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -150,20 +150,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column1.name
           end
         end
 
         within ".column-value-cms-column-free" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -179,12 +179,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within ".column-value-cms-column-free" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready
@@ -260,7 +260,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         wait_for_js_ready
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -268,21 +268,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column2.name
           end
         end
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -298,12 +298,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready
@@ -380,7 +380,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         wait_for_js_ready
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -388,21 +388,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column3.name
           end
         end
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_js_ready
           attach_file "item[in_files][]", before_image
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_button I18n.t("ss.buttons.attach")
           end
         end
@@ -422,12 +422,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
           wait_for_js_ready

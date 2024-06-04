@@ -20,7 +20,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       wait_for_js_ready
       within ".list-head" do
-        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
+        wait_for_event_fired("ss:checked-all-list-items") { first("input[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end
@@ -37,7 +37,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       wait_for_js_ready
       within ".list-head" do
-        wait_event_to_fire("ss:checked-all-list-items") { first("input[type='checkbox']").click }
+        wait_for_event_fired("ss:checked-all-list-items") { first("input[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end

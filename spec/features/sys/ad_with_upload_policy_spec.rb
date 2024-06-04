@@ -20,16 +20,16 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
         fill_in "item[time]", with: rand(1..10)
         fill_in "item[width]", with: rand(1..100)
         within "#addon-ss-agents-addons-link_file" do
-          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
         expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on 'keyvisual.jpg'
         end
       end
@@ -40,7 +40,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       file = SS::LinkFile.all.first
       expect(file.sanitizer_state).to eq 'wait'
@@ -77,10 +77,10 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
         fill_in "item[time]", with: rand(1..10)
         fill_in "item[width]", with: rand(1..100)
         within "#addon-ss-agents-addons-link_file" do
-          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         page.accept_alert do
           click_on I18n.t("ss.buttons.save")

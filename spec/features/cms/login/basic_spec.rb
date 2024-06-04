@@ -62,7 +62,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       end
       expect(current_path).to eq main_path
       within ".user-navigation" do
-        wait_event_to_fire("turbo:frame-load") { click_on cms_user.name }
+        wait_for_event_fired("turbo:frame-load") { click_on cms_user.name }
         expect(page).to have_link(I18n.t("ss.logout"), href: logout_path)
         click_on I18n.t("ss.logout")
       end

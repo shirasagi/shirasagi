@@ -30,18 +30,18 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       within "form#item-form" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t("ss.buttons.save")
         expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t("ss.buttons.attach")
         end
       end

@@ -82,7 +82,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_no_css("form#item-form")
 
         expect(Facility::Node::Page.all.count).to eq 1
@@ -130,7 +130,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: name2
           click_button I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         page_node.reload
         expect(page_node.name).to eq name2
@@ -147,7 +147,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
         expect(page).to have_css(".tree-navi", text: "refresh")
 
         expect { page_node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -201,7 +201,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: "sample"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_no_css("form#item-form")
 
       expect(Facility::Node::Page.all.count).to eq 1

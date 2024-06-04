@@ -14,7 +14,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/text_field')
       end
@@ -24,7 +24,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         select I18n.t('cms.options.column_input_type.text'), from: 'item[input_type]'
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
@@ -42,7 +42,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         select I18n.t('ss.options.state.optional'), from: 'item[required]'
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
@@ -59,7 +59,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end
@@ -71,7 +71,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/text_field')
       end
@@ -81,7 +81,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         select I18n.t('cms.options.column_input_type.email'), from: 'item[input_type]'
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
@@ -99,7 +99,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         select I18n.t('ss.options.state.optional'), from: 'item[required]'
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
@@ -116,7 +116,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end
@@ -128,7 +128,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
+      wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
       within ".cms-dropdown-menu" do
         click_on I18n.t('cms.columns.cms/text_field')
       end
@@ -138,7 +138,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         select I18n.t('cms.options.column_input_type.tel'), from: 'item[input_type]'
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
@@ -156,7 +156,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         select I18n.t('ss.options.state.optional'), from: 'item[required]'
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
@@ -173,7 +173,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end

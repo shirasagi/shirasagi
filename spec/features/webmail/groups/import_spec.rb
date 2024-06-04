@@ -43,7 +43,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
           click_button I18n.t("ss.import")
         end
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
+        wait_for_notice I18n.t('ss.notice.started_import')
       end
 
       expect(Job::Log.count).to eq 1
@@ -101,7 +101,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
           click_button I18n.t("ss.import")
         end
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
+        wait_for_notice I18n.t('ss.notice.started_import')
       end
 
       visit webmail_groups_path
@@ -113,7 +113,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-2.csv"
           click_button I18n.t("ss.import")
         end
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
+        wait_for_notice I18n.t('ss.notice.started_import')
       end
 
       group0.reload

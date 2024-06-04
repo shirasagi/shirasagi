@@ -95,6 +95,8 @@
     var url = '<%= webmail_daily_histories_path(ymd: ':ymd') %>';
     url = url.replace(':ymd', ymd);
 
-    location.href = url;
+    setTimeout(function() {
+      location.href = url;
+    }, 11);
   });
 <% end %>

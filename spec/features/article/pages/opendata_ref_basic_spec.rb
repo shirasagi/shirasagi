@@ -347,11 +347,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
         # choose 'item_opendata_dataset_state_public'
         find('input#item_opendata_dataset_state_existance').click
-        wait_cbox_open do
+        wait_for_cbox_opened do
           find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
         end
       end
-      wait_cbox_close do
+      wait_for_cbox_closed do
         click_on Opendata::Dataset.site(od_site).first.name
       end
       click_on I18n.t('ss.buttons.publish_save')

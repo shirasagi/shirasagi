@@ -75,7 +75,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: basename2
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Bookmark::Folder.count).to eq 5
       item = Gws::Bookmark::Folder.site(site).user(user).where(depth: 2).to_a.
@@ -91,7 +91,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_no_link(folder.name)
@@ -108,7 +108,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
@@ -125,7 +125,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: basename1
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_no_link(folder.name)
@@ -142,12 +142,12 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Bookmark::Folder.count).to eq 5
       item = Gws::Bookmark::Folder.site(site).user(user).where(depth: 3).to_a.
@@ -162,7 +162,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: basename2
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_no_link(folder.name)
@@ -179,7 +179,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
@@ -196,7 +196,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: basename3
         click_on I18n.t("gws/share.apis.folders.index")
       end
-      wait_for_cbox do
+      within_cbox do
         within "tr[data-id=\"#{folder.id}\"]" do
           expect(page).to have_text(folder.name)
           expect(page).to have_no_link(folder.name)
@@ -213,12 +213,12 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
           expect(page).to have_text(item3.name)
           expect(page).to have_link(item3.name)
         end
-        first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click
+        wait_for_cbox_closed { first("tr[data-id=\"#{item1.id}\"] a", text: item1.name).click }
       end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Bookmark::Folder.count).to eq 5
       item = Gws::Bookmark::Folder.site(site).user(user).where(depth: 3).to_a.

@@ -23,13 +23,13 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
 
       ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t("ss.buttons.attach")
         end
       end

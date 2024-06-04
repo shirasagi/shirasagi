@@ -53,7 +53,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       click_on I18n.t("ss.links.back_to_index")
       within ".list-items" do
@@ -83,7 +83,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       click_on I18n.t("ss.links.back_to_index")
       within ".list-items" do
@@ -113,7 +113,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
         fill_in 'item[in_basename]', with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       click_on I18n.t("ss.links.back_to_index")
       within ".list-items" do

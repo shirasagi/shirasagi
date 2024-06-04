@@ -21,11 +21,11 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
 
         within "form#item-form" do
           within "#addon-basic" do
-            wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+            wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
           end
         end
-        wait_for_cbox do
-          wait_cbox_close { click_on user.name }
+        within_cbox do
+          wait_for_cbox_closed { click_on user.name }
         end
 
         within "form#item-form" do
@@ -33,7 +33,7 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
           fill_in "item[count]", with: 60
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
       end
 
       it "#show" do
@@ -47,7 +47,7 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
           fill_in "item[count]", with: 60
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
       end
 
       it "#delete" do
@@ -55,7 +55,7 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
         within "form#item-form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
 
       it "#new" do
@@ -64,7 +64,7 @@ describe "gws_affair_leave_management_settings", type: :feature, dbscope: :examp
           fill_in "item[count]", with: 60
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
       end
     end
   end

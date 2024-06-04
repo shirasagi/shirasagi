@@ -14,8 +14,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           expect(page).to have_css('.file-view', text: filename)
-          wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
+          wait_for_cbox_closed do
+            wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
               click_on filename
             end
           end
@@ -47,7 +47,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
             expect(page).to have_css(".name", text: filename)
-            wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-thumb .ajax-box" do
+            wait_for_event_fired "ss:ajaxRemoved", "#addon-cms-agents-addons-thumb .ajax-box" do
               page.accept_confirm do
                 click_on I18n.t("ss.buttons.delete")
               end
@@ -65,8 +65,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-          wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
+          wait_for_cbox_closed do
+            wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
               click_on 'keyvisual.jpg'
             end
           end
@@ -84,8 +84,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
+          wait_for_cbox_closed do
+            wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-thumb .ajax-box" do
               click_button I18n.t("ss.buttons.attach")
             end
           end
@@ -106,10 +106,10 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       click_on I18n.t("ss.links.new")
 
       within "#item-form #addon-cms-agents-addons-thumb" do
-        wait_event_to_fire("ss:dropdownOpened") { click_button "▼" }
+        wait_for_event_fired("ss:dropdownOpened") { click_button "▼" }
 
         within ".dropdown-menu" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on menu_label
           end
         end

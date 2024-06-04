@@ -46,7 +46,7 @@ describe "cms/line/deliver_conditions", type: :feature, dbscope: :example, js: t
         find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first1.id}']").set(true)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: name)
     end
 
@@ -61,7 +61,7 @@ describe "cms/line/deliver_conditions", type: :feature, dbscope: :example, js: t
         find("input[name='item[deliver_category_ids][]'][value='#{deliver_category_first2.id}']").set(true)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -69,7 +69,7 @@ describe "cms/line/deliver_conditions", type: :feature, dbscope: :example, js: t
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 end

@@ -22,9 +22,9 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
       now = Time.zone.at(Time.zone.now.to_i)
       Timecop.freeze(now) do
         visit new_path
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
-        wait_for_cbox do
-          click_on category.name
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+        within_cbox do
+          wait_for_cbox_closed { click_on category.name }
         end
 
         within "form#item-form" do
@@ -52,9 +52,9 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
-      wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
-      wait_for_cbox do
-        click_on category.name
+      wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+      within_cbox do
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         fill_in "item[name]", with: "modify"

@@ -24,23 +24,23 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample"
           select "無効", from: "item[pull_up]"
 
-          wait_cbox_open { click_on "グループを選択する" }
+          wait_for_cbox_opened { click_on "グループを選択する" }
         end
 
-        wait_for_cbox do
+        within_cbox do
           within "table.index" do
-            wait_cbox_close { click_on group.name }
+            wait_for_cbox_closed { click_on group.name }
           end
         end
 
         within "form#item-form" do
           within "dl.workflow-level-1" do
-            wait_cbox_open { click_on "承認者を選択する" }
+            wait_for_cbox_opened { click_on "承認者を選択する" }
           end
         end
-        wait_for_cbox do
+        within_cbox do
           within "table.index tbody.items" do
-            wait_cbox_close { click_on user.name }
+            wait_for_cbox_closed { click_on user.name }
           end
         end
 
@@ -51,7 +51,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
           end
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        wait_for_notice I18n.t('ss.notice.saved'), wait: 60
 
         expect(Workflow::Route.count).to eq 1
         Workflow::Route.all.first.tap do |route|

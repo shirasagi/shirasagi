@@ -60,9 +60,9 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         within_window new_window do
           wait_for_document_loading
           wait_for_js_ready
-          wait_cbox_open { first('.gws-addon-memo-member .ajax-box').click }
-          wait_for_cbox do
-            wait_cbox_close { click_on user.name }
+          wait_for_cbox_opened { first('.gws-addon-memo-member .ajax-box').click }
+          within_cbox do
+            wait_for_cbox_closed { click_on user.name }
           end
           page.accept_alert I18n.t("ss.confirm.send") do
             click_on I18n.t('ss.buttons.send')

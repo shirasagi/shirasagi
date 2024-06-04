@@ -24,26 +24,26 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         click_on I18n.t("ss.links.new")
       end
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on category.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
         within "#addon-basic" do
-          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
-      wait_cbox_close do
-        wait_cbox_close { click_on "keyvisual.jpg" }
+      wait_for_cbox_closed do
+        wait_for_cbox_closed { click_on "keyvisual.jpg" }
       end
       within '#selected-files' do
         expect(page).to have_css('.name', text: 'keyvisual.jpg')
@@ -56,7 +56,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "footer.send" do
         click_on I18n.t('ss.buttons.upload')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within '.list-items' do
         expect(page).to have_content('keyvisual.jpg')
@@ -90,7 +90,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
 
       file.reload
@@ -105,7 +105,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       within ".tree-navi" do
         expect(page).to have_css(".item-name", text: folder.name)
       end
@@ -124,7 +124,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Fs.exist?(file_path)).to be_falsey
       expect(Fs.exist?(sanitizer_input_path)).to be_falsey
 
@@ -156,18 +156,18 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         click_on I18n.t("ss.links.new")
       end
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on category.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
         within "#addon-basic" do
-          wait_cbox_open { click_on I18n.t('ss.buttons.upload') }
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         page.accept_alert(/#{::Regexp.escape(I18n.t("errors.messages.upload_restricted"))}/) do
           click_on I18n.t("ss.buttons.save")

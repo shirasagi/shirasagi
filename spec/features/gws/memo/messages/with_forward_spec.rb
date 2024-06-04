@@ -36,17 +36,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t("webmail.links.show_cc_bcc")
 
-          wait_cbox_open do
+          wait_for_cbox_opened do
             within 'dl.see.all' do
               click_on I18n.t('gws.organization_addresses')
             end
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(recipient.name)
           check "#{target}_ids#{recipient.id}"
-          wait_cbox_close { click_on I18n.t('ss.links.select') }
+          wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
         end
 
         within 'form#item-form' do
@@ -58,7 +58,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.draft_save')
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         # do not send forward mail
         expect(ActionMailer::Base.deliveries).to have(0).items
@@ -76,7 +76,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.send")
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+        wait_for_notice I18n.t("ss.notice.sent")
 
         expect(Gws::Memo::Message.count).to eq 1
         message = Gws::Memo::Message.first

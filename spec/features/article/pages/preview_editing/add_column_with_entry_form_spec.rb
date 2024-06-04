@@ -112,7 +112,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit cms_preview_path(site: site, path: item.preview_path)
 
         # start preview editing
-        wait_event_to_fire "ss:inplaceModeChanged" do
+        wait_for_event_fired "ss:inplaceModeChanged" do
           within "#ss-preview" do
             within ".ss-preview-wrap-column-edit-mode" do
               click_on I18n.t("cms.inplace_edit")
@@ -121,7 +121,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         # #1: cms_column_text_field
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column1.name
@@ -166,7 +166,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #2: cms_column_date_field
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column2.name
@@ -197,7 +197,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #3: cms_column_url_field2
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column3.name
@@ -232,7 +232,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #4: cms_column_text_area
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column4.name
@@ -265,7 +265,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #5: cms_column_select
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column5.name
@@ -296,7 +296,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #6: cms_column_radio_button
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column6.name
@@ -327,7 +327,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #7: cms_column_check_box
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column7.name
@@ -358,7 +358,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #8: cms_column_file_upload
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column8.name
@@ -369,12 +369,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-fileupload" do
               fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-              wait_cbox_open { click_on I18n.t("ss.links.upload") }
+              wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
+            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
           end
           within 'form#item-form' do
             within ".column-value-cms-column-fileupload" do
@@ -403,7 +403,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #9: cms_column_free
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column9.name
@@ -414,12 +414,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-              wait_cbox_open { click_on I18n.t("ss.links.upload") }
+              wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
+            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
           end
           within "#item-form" do
             within ".column-value-cms-column-free" do
@@ -451,7 +451,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #10: cms_column_headline
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column10.name
@@ -486,7 +486,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #11: cms_column_list
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column11.name
@@ -519,7 +519,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #12: cms_column_table
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column12.name
@@ -554,7 +554,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #13: cms_column_youtube
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column13.name
@@ -587,7 +587,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #14: cms_column_select_page
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column14.name
@@ -595,13 +595,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_frame page.first("#ss-preview-dialog-frame") do
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
-          wait_for_cbox do
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
+          within_cbox do
             expect(page).to have_css(".list-item", text: selectable_page1.name)
             expect(page).to have_css(".list-item", text: selectable_page2.name)
             expect(page).to have_css(".list-item", text: selectable_page3.name)
             expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-            click_on column14_page1.name
+            wait_for_cbox_closed { click_on column14_page1.name }
           end
           within 'form#item-form' do
             within ".column-value-cms-column-selectpage " do

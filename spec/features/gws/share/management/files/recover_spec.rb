@@ -33,7 +33,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.restore")
     end
 
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+    wait_for_notice I18n.t('ss.notice.restored')
     within "#content-navi" do
       expect(page).to have_css(".tree-item", text: folder.name)
     end

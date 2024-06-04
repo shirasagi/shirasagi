@@ -28,7 +28,7 @@ describe "opendata_harvest_exporter", type: :feature, dbscope: :example, js: tru
         fill_in "item[api_key]", with: SecureRandom.uuid
       end
       click_on I18n.t("ss.buttons.save")
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -42,7 +42,7 @@ describe "opendata_harvest_exporter", type: :feature, dbscope: :example, js: tru
         fill_in "item[name]", with: "modify"
       end
       click_on I18n.t("ss.buttons.save")
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -50,7 +50,7 @@ describe "opendata_harvest_exporter", type: :feature, dbscope: :example, js: tru
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     it "#export" do
@@ -58,7 +58,7 @@ describe "opendata_harvest_exporter", type: :feature, dbscope: :example, js: tru
       page.accept_confirm do
         click_on I18n.t("ss.buttons.run")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_export'))
+      wait_for_notice I18n.t('ss.notice.started_export')
       expect(enqueued_jobs.size).to eq 1
     end
   end

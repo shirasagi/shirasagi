@@ -55,11 +55,11 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         # wait for slider initialization
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
 
-        wait_event_to_fire("swipertransitionend") do
+        wait_for_event_fired("swipertransitionend") do
           first(".ss-swiper-slide-button-next").click
         end
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item2.id}']")
-        wait_event_to_fire("swipertransitionend") do
+        wait_for_event_fired("swipertransitionend") do
           first(".ss-swiper-slide-button-prev").click
         end
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
@@ -81,12 +81,12 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         # wait for slider initialization
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
 
-        wait_event_to_fire("swipertransitionend") do
+        wait_for_event_fired("swipertransitionend") do
           aria_label = I18n.t("ss.swiper_slide.pagination_bullet_message").sub("{{index}}", "3")
           first(".swiper-pagination-bullet[aria-label='#{aria_label}']").click
         end
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item3.id}']")
-        wait_event_to_fire("swipertransitionend") do
+        wait_for_event_fired("swipertransitionend") do
           aria_label = I18n.t("ss.swiper_slide.pagination_bullet_message").sub("{{index}}", "1")
           first(".swiper-pagination-bullet[aria-label='#{aria_label}']").click
         end
@@ -120,7 +120,7 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         # wait for slider initialization
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
 
-        wait_event_to_fire("swiperautoplaystart") do
+        wait_for_event_fired("swiperautoplaystart") do
           click_on I18n.t('key_visual.controls.start')
         end
         expect(page).to have_css(".ss-swiper-slide-play[aria-pressed='true']")
@@ -139,7 +139,7 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         # wait for slider initialization
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
 
-        wait_event_to_fire("swiperautoplaystop") do
+        wait_for_event_fired("swiperautoplaystop") do
           click_on I18n.t('key_visual.controls.stop')
         end
         expect(page).to have_css(".ss-swiper-slide-play[aria-pressed='false']")

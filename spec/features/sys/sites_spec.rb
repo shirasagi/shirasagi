@@ -137,7 +137,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       visit sys_sites_path
 
       within ".list-head" do
-        wait_event_to_fire("ss:checked-all-list-items") { first("[type='checkbox']").click }
+        wait_for_event_fired("ss:checked-all-list-items") { first("[type='checkbox']").click }
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
         end
@@ -257,11 +257,11 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         within ".partner_site_ids" do
-          wait_cbox_open { click_on I18n.t("sys.apis.sites.index") }
+          wait_for_cbox_opened { click_on I18n.t("sys.apis.sites.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on site2.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on site2.name }
       end
       within "form#item-form" do
         within ".partner_site_ids" do
@@ -289,11 +289,11 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         within ".chorg_site_ids" do
-          wait_cbox_open { click_on I18n.t("sys.apis.sites.index") }
+          wait_for_cbox_opened { click_on I18n.t("sys.apis.sites.index") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on site2.name }
+      within_cbox do
+        wait_for_cbox_closed { click_on site2.name }
       end
       within "form#item-form" do
         within ".chorg_site_ids" do

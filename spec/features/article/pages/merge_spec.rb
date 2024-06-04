@@ -41,7 +41,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
 
           # branch page is destroyed after merge
           expect(Cms::Page.where(id: branch_page.id)).to be_blank
@@ -158,7 +158,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          wait_for_notice I18n.t('ss.notice.saved')
 
           # master page has `file`
           master_page.reload

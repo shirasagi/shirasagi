@@ -19,7 +19,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       click_on I18n.t("ss.links.new")
 
       within "#item-form #addon-cms-agents-addons-file" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on button_label
         end
       end
@@ -50,8 +50,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         # after edit-dialog is canceled, confirm site-setting size is selected
         expect(page).to have_select('item[resizing]', selected: file_resizing_label)
 
-        wait_cbox_close do
-          wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+        wait_for_cbox_closed do
+          wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
             click_on 'keyvisual.jpg'
           end
         end

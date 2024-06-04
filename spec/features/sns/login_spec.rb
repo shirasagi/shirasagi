@@ -24,7 +24,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -47,7 +47,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -72,7 +72,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -105,7 +105,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
@@ -158,30 +158,15 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
       context "with cms_group domains" do
         let(:domain) { 'www.example.com' }
-        let(:rack_proxy_app) do
-          domain_bind = domain
-          Class.new do
-            cattr_accessor :domain
-            self.domain = domain_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_FORWARDED_HOST"] = self.class.domain
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_FORWARDED_HOST"] = domain
           end
         end
 
         before do
           cms_group.set(domains: [domain])
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
         end
 
         it "valid login" do

@@ -23,7 +23,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
       within 'form#item-form' do
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form.name, from: 'in_form_id'
           end
@@ -31,20 +31,20 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-palette" do
-        wait_event_to_fire("ss:columnAdded") do
+        wait_for_event_fired("ss:columnAdded") do
           click_on column1.name
         end
       end
 
       within ".column-value-cms-column-fileupload" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.file")
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t('ss.buttons.attach')
         end
       end
@@ -52,11 +52,11 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
 
-      wait_cbox_open do
+      wait_for_cbox_opened do
         click_on I18n.t("ss.buttons.publish_save")
         expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("cms.column_file_upload.image.file_label_place_holder"))
       end
-      wait_for_cbox do
+      within_cbox do
         click_on I18n.t("ss.buttons.ignore_alert")
       end
       wait_for_notice I18n.t("ss.notice.saved")

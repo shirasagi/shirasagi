@@ -18,14 +18,14 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         # fill form
         within "#addon-ss-agents-addons-logo_setting" do
           fill_in "item[logo_application_name]", with: logo_application_name
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t("ss.buttons.upload")
             first(".btn-file-upload").click
           end
         end
-        wait_for_cbox do
+        within_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close { click_on I18n.t("ss.buttons.attach") }
+          wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
         end
         within "form#item-form" do
           expect(page).to have_css(".ss-file-field", text: "keyvisual")
@@ -51,6 +51,11 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
 
     context "basic crud" do
       let(:domain) { unique_domain }
+      let(:decorator) do
+        proc do |env|
+          env["HTTP_X_FORWARDED_HOST"] = domain
+        end
+      end
 
       before do
         site.logo_application_name = logo_application_name
@@ -62,13 +67,8 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         end
         site.save!
 
-        SS::Application.request_interceptor = proc do |env|
-          env["HTTP_X_FORWARDED_HOST"] = domain
-        end
-      end
-
-      after do
-        SS::Application.request_interceptor = nil
+        # add_request_decorator Cms::LoginController, decorator
+        add_request_decorator Fs::FilesController, decorator
       end
 
       it do

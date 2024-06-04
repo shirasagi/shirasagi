@@ -20,7 +20,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
       within 'form#item-form' do
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form.name, from: 'in_form_id'
           end
@@ -28,20 +28,20 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-palette" do
-        wait_event_to_fire("ss:columnAdded") do
+        wait_for_event_fired("ss:columnAdded") do
           click_on column2.name
         end
       end
 
       within ".column-value-cms-column-free" do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.file")
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on I18n.t('ss.buttons.attach')
         end
       end

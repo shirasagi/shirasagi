@@ -54,16 +54,16 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # move post to appropriate folder
       click_on I18n.t('ss.links.move')
       within 'form#item-form' do
-        wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
+        wait_for_cbox_opened { click_on I18n.t('gws/share.apis.folders.index') }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(folder.name)
-        click_on folder.name
+        wait_for_cbox_closed { click_on folder.name }
       end
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # check post
       visit gws_notice_main_path(site: site)

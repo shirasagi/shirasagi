@@ -27,13 +27,13 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("workflow.search_approvers.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user.long_name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on user.long_name
         end
       end

@@ -41,7 +41,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
 
       # do logout
       within ".user-navigation" do
-        wait_event_to_fire("turbo:frame-load") { click_on user.name }
+        wait_for_event_fired("turbo:frame-load") { click_on user.name }
         click_on I18n.t("ss.logout", locale: user.lang)
       end
 

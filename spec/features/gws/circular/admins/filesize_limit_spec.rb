@@ -31,31 +31,31 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # attach file
       within "form#item-form" do
         within "#addon-gws-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", file_path
-        click_on I18n.t("ss.buttons.attach")
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
 
       # choose member
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       # save as draft
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       Gws::Circular::Post.all.topic.first.tap do |topic|
@@ -92,24 +92,24 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # attach file
       within "form#item-form" do
         within "#addon-gws-agents-addons-file" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         attach_file "item[in_files][]", file_path
-        click_on I18n.t("ss.buttons.attach")
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
 
       # choose member
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       # save as draft

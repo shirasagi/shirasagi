@@ -29,7 +29,7 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
@@ -61,13 +61,13 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
   describe "bulk delete" do
     it do
       visit opendata_dataset_history_preview_archives_path(site: site, cid: node)
-      wait_event_to_fire("ss:checked-all-list-items") { first(".list-head input[type='checkbox']").click }
+      wait_for_event_fired("ss:checked-all-list-items") { first(".list-head input[type='checkbox']").click }
       within ".list-head-action" do
         click_on I18n.t("ss.links.delete")
       end
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end

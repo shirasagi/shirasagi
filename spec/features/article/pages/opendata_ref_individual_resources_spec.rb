@@ -52,8 +52,8 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on article_page.name
         click_on I18n.t('ss.links.edit')
 
+        ensure_addon_opened '#addon-cms-agents-addons-opendata_ref-dataset'
         within '#addon-cms-agents-addons-opendata_ref-dataset' do
-          find('.addon-head h2').click
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
@@ -61,7 +61,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.publish_save')
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        wait_for_notice I18n.t('ss.notice.saved'), wait: 60
         item = article_page.class.find(article_page.id)
         expect(item.state).to eq 'public'
         expect(item.opendata_dataset_state).to eq 'public'
@@ -77,12 +77,12 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           expect(page).to have_content(file2.name)
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on opendata_dataset1.name
         end
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
@@ -225,8 +225,8 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on article_page.name
         click_on I18n.t('ss.links.edit')
 
+        ensure_addon_opened '#addon-cms-agents-addons-opendata_ref-dataset'
         within '#addon-cms-agents-addons-opendata_ref-dataset' do
-          find('.addon-head h2').click
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
@@ -234,7 +234,7 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.publish_save')
 
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        wait_for_notice I18n.t('ss.notice.saved'), wait: 60
         item = Article::Page.find(article_page.id)
         expect(item.state).to eq 'public'
         expect(item.opendata_dataset_state).to eq 'public'
@@ -250,12 +250,12 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
           expect(page).to have_content(file2.name)
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on opendata_dataset1.name
         end
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
@@ -355,12 +355,12 @@ xdescribe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
-          wait_cbox_open do
+          wait_for_cbox_opened do
             # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
             find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
           end
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on opendata_dataset2.name
         end
         within "div.od-resource-file[data-file-id='#{file2.id}']" do

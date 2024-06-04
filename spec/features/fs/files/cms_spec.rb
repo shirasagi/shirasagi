@@ -256,13 +256,10 @@ describe "fs_files", type: :feature, dbscope: :example do
           site.mypage_domain = unique_domain
           site.save!
 
-          SS::Application.request_interceptor = proc do |env|
+          decorator = proc do |env|
             env["HTTP_X_FORWARDED_HOST"] = site.mypage_domain
           end
-        end
-
-        after do
-          SS::Application.request_interceptor = nil
+          add_request_decorator Fs::FilesController, decorator
         end
 
         it "via url" do
@@ -336,13 +333,10 @@ describe "fs_files", type: :feature, dbscope: :example do
         site.mypage_domain = mypage_domain
         site.save!
 
-        SS::Application.request_interceptor = proc do |env|
+        decorator = proc do |env|
           env["HTTP_X_FORWARDED_HOST"] = mypage_domain
         end
-      end
-
-      after do
-        SS::Application.request_interceptor = nil
+        add_request_decorator Fs::FilesController, decorator
       end
 
       it "via url" do
@@ -414,13 +408,10 @@ describe "fs_files", type: :feature, dbscope: :example do
       let!(:item) { create :cms_page, cur_site: sub_site, cur_user: user, html: html, file_ids: [ file.id ], state: state }
 
       before do
-        SS::Application.request_interceptor = proc do |env|
+        decorator = proc do |env|
           env["HTTP_X_REAL_IP"] = ip_address
         end
-      end
-
-      after do
-        SS::Application.request_interceptor = nil
+        add_request_decorator Fs::FilesController, decorator
       end
 
       context "with allowed ip address" do

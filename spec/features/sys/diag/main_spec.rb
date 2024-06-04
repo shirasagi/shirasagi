@@ -23,7 +23,7 @@ describe "sys_test", type: :feature, dbscope: :example do
     it do
       visit index_path
       click_on I18n.t("ss.buttons.send")
-      expect(page).to have_css("#notice", text: "Sent Successfully")
+      wait_for_notice "Sent Successfully"
 
       expect(ActionMailer::Base.deliveries.length).to eq 1
       mail = ActionMailer::Base.deliveries.first

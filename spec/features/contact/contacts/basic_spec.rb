@@ -101,8 +101,8 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       #
       # delete all
       #
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
-      wait_event_to_fire("ss:all-list-action-finished") do
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:all-list-action-finished") do
         page.accept_confirm(I18n.t("ss.confirm.delete")) do
           within ".list-head-action" do
             click_on I18n.t("ss.links.delete")

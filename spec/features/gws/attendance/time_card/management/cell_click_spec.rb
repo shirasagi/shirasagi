@@ -39,12 +39,12 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         first(".time-card .day-#{record_date.day} .enter").click
         within ".cell-toolbar" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.edit")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           within ".cell-edit" do
             select hour_label, from: "cell[in_hour]"
             select min_label, from: "cell[in_minute]"
@@ -80,12 +80,12 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         first(".time-card .current .enter").click
         within ".cell-toolbar" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.edit")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           within ".cell-edit" do
             select hour_label, from: "cell[in_hour]"
             select min_label, from: "cell[in_minute]"

@@ -15,7 +15,7 @@ describe "webmail_roles", type: :feature, dbscope: :example do
         check "item_permissions_use_webmail_group_imap_setting"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       Webmail::Role.all.find_by(name: name).tap do |item|
         expect(item.permission_level).to eq 1
@@ -29,7 +29,7 @@ describe "webmail_roles", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect { Webmail::Role.all.find_by(name: name) }.to raise_error(Mongoid::Errors::DocumentNotFound)
       Webmail::Role.all.find_by(name: name2).tap do |item|
@@ -43,7 +43,7 @@ describe "webmail_roles", type: :feature, dbscope: :example do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Webmail::Role.all.find_by(name: name) }.to raise_error(Mongoid::Errors::DocumentNotFound)
       expect { Webmail::Role.all.find_by(name: name2) }.to raise_error(Mongoid::Errors::DocumentNotFound)

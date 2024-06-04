@@ -45,7 +45,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
           click_button I18n.t('ss.links.delete')
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       # wait to list folders up to protected from spec failure
       within "#content-navi" do
