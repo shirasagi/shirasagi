@@ -39,8 +39,10 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     end
 
     it "check link targets" do 
-      item1.update(link_target: "blank", link_url: "/example.jp")
+      item1.update(link_target: "_blank", link_url: "/example.jp")
       item1.reload
+      part.update(link_target: "individual_setting")
+      part.reload
       visit node_cms.full_url
       expect(page).to have_css(".ss-image-box")
       link_selector1 = ".ss-image-box-item-list span a[target='#{item1.link_target}'] img[alt='#{item1.name}']"
@@ -50,7 +52,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
 
       expect(page).to have_selector(link_selector1)  
       link = find(link_selector1).find(:xpath, '..')
-      expect(link[:target]).to eq "blank"
+      expect(link[:target]).to eq "_blank"
       previous_url = current_url
       new_window = window_opened_by { link.click }
 

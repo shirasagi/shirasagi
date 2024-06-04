@@ -29,6 +29,13 @@ class Ads::Banner
 
   default_scope ->{ where(route: "ads/banner") }
 
+  def self.link_target_options
+    [
+      [I18n.t('ads.options.link_target.self'), ''],
+      [I18n.t('ads.options.link_target.blank'), '_blank'],
+    ]
+  end
+
   def url
     uri = ::Addressable::URI.parse(super)
     uri.query = { redirect: link_url }.to_param
