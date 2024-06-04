@@ -39,10 +39,7 @@ module Workflow::Model::Route
   end
 
   module ClassMethods
-    def route_options(user, options = {})
-      item = options[:item]
-      site = options[:site]
-
+    def route_options(user, item:, site:)
       ret = []
       if item && item.workflow_approvers.present?
         ret << [ I18n.t("workflow.restart_workflow"), "restart" ]

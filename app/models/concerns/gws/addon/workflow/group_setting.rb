@@ -6,7 +6,7 @@ module Gws::Addon::Workflow::GroupSetting
 
   included do
     field :workflow_new_days, type: Integer
-    field :workflow_my_group, type: String, default: "enabled"
+    field :workflow_my_group, type: String, default: ->{ SS.config.workflow.disable_my_group ? "disabled" : "enabled" }
     permit_params :workflow_new_days, :workflow_my_group
   end
 
