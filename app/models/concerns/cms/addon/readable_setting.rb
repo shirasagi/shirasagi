@@ -12,7 +12,7 @@ module Cms::Addon::ReadableSetting
     permit_params :readable_setting_range
     permit_params readable_group_ids: [], readable_member_ids: []
 
-    before_validation :apply_readable_setting_range, if: ->{ readable_setting_range_changed? && readable_setting_range }
+    before_validation :apply_readable_setting_range
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
