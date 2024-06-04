@@ -10,9 +10,17 @@ this.SS_Font = (function () {
       this.set(this.size);
     }
 
-    SS_Font.embed($("#ss-medium"), function() { return SS_Font.set(100); });
-    SS_Font.embed($("#ss-small"), function() { return SS_Font.set(false); });
-    SS_Font.embed($("#ss-large"), function() { return SS_Font.set(true); });
+    $('[data-tool="ss-medium"]').each(function() {
+      SS_Font.embed($(this), function() { return SS_Font.set(100); });
+    });
+
+    $('[data-tool="ss-small"]').each(function() {
+      SS_Font.embed($(this), function() { return SS_Font.set(false); });
+    });
+
+    $('[data-tool="ss-large"]').each(function() {
+      SS_Font.embed($(this), function() { return SS_Font.set(true); });
+    });
   };
 
   SS_Font.embed = function($elements, callback) {
