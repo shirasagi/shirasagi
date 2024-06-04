@@ -1,0 +1,41 @@
+<dl class="see sys-site-copy-show">
+  <dt><%= @model.t :target_host_name %></dt>
+  <dd><%= @item.send :target_host_name %></dd>
+
+  <dt><%= @model.t :target_host_host %></dt>
+  <dd><%= @item.send :target_host_host %></dd>
+
+  <dt><%= @model.t :target_host_domains %></dt>
+  <dd><%= @item.send :target_host_domains %></dd>
+
+  <dt><%= @model.t :target_host_subdir %></dt>
+  <dd><%= @item.send :target_host_subdir %></dd>
+
+  <dt><%= @model.t :target_host_parent_id %></dt>
+  <dd><%= @item.target_host_parent.try(:name) %></dd>
+
+  <dt><%= @model.t :source_site_id %></dt>
+  <dd><%= @item.source_site.try(:name) %></dd>
+
+  <dt><%= @model.t :copy_contents %></dt>
+  <dd>
+    <% if @item.copy_contents && @item.copy_contents.include?('pages') %>
+      <%= t("sys.options.copy_contents.pages") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "pages", id: nil %>
+    <% end %>
+    <% if @item.copy_contents && @item.copy_contents.include?('files') %>
+      <%= t("sys.options.copy_contents.files") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "files", id: nil %>
+    <% end %>
+    <% if @item.copy_contents && @item.copy_contents.include?('editor_templates') %>
+      <%= t("sys.options.copy_contents.editor_templates") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "editor_templates", id: nil %>
+    <% end %>
+    <% if @item.copy_contents && @item.copy_contents.include?('dictionaries') %>
+      <%= t("sys.options.copy_contents.dictionaries") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "dictionaries", id: nil %>
+    <% end %>
+    <br>
+    <p class="description"><%= t('sys.site_copy/description') %></p>
+  </dd>
+</dl>

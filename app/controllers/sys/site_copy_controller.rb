@@ -21,7 +21,7 @@ class Sys::SiteCopyController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     set_item
-    @item.clear_params
+    @item.clear_params unless (@item.running? || @item.ready?)
 
     respond_to do |format|
       format.html { render }

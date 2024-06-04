@@ -44,6 +44,10 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
 
       within '#item-form' do
         expect(page).to have_css(".ajax-selected", text: site.name)
+        within '#addon-basic' do
+          expect(page).to have_css('.sys-site-copy')
+        end
+
         click_on I18n.t("ss.buttons.confirm")
       end
 
@@ -51,6 +55,10 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
 
       expect(current_path).to eq index_path
       wait_for_notice I18n.t("sys.site_copy/started_job"), wait: 60
+
+      within '#addon-basic' do
+        expect(page).to have_css('.sys-site-copy-show')
+      end
 
       expect(Sys::SiteCopyTask.count).to eq 1
       Sys::SiteCopyTask.first.tap do |task|
