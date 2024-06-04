@@ -38,6 +38,9 @@ Rails.application.routes.draw do
     get "/wizard/:id/reroute" => "wizard#reroute"
     post "/wizard/:id/reroute" => "wizard#do_reroute"
     match "/wizard/:id" => "wizard#index", via: [:get, :post]
-  end
 
+    namespace :frames do
+      resource :branch, path: "branch/:id", only: %i[create show]
+    end
+  end
 end

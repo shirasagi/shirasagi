@@ -19,13 +19,18 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       # create_branch
       visit show_path
       within "#addon-workflow-agents-addons-branch" do
-        click_button I18n.t('workflow.create_branch')
+        wait_for_turbo_frame "#workflow-branch-frame"
+        wait_event_to_fire "turbo:frame-load" do
+          click_button I18n.t('workflow.create_branch')
+        end
 
         # wait branch created
+        expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
         expect(page).to have_css('.see.branch', text: old_name)
         click_link old_name
       end
       within "#addon-workflow-agents-addons-branch" do
+        wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
       end
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -63,6 +68,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.draft_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       item.reload
@@ -81,6 +87,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       # publish_branch
       branch_url = show_path.sub(/\/\d+$/, "/#{branch.id}")
       visit branch_url
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -290,7 +297,10 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         visit show_path
 
         within "#addon-workflow-agents-addons-branch" do
-          click_button I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_event_to_fire "turbo:frame-load" do
+            click_button I18n.t('workflow.create_branch')
+          end
         end
         within "#addon-workflow-agents-addons-branch" do
           expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
@@ -313,13 +323,18 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         visit show_path
 
         within "#addon-workflow-agents-addons-branch" do
-          click_button I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_event_to_fire "turbo:frame-load" do
+            click_button I18n.t('workflow.create_branch')
+          end
 
           # wait branch created
+          expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
           expect(page).to have_css('.see.branch', text: old_name)
           click_link old_name
         end
         within "#addon-workflow-agents-addons-branch" do
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
         end
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))

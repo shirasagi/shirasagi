@@ -304,13 +304,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit article_page_path(site: site, cid: node, id: item)
       expect do
         within "#addon-workflow-agents-addons-branch" do
-          click_button I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_event_to_fire "turbo:frame-load" do
+            click_button I18n.t('workflow.create_branch')
+          end
         end
         within "#addon-workflow-agents-addons-branch" do
+          expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
           expect(page).to have_content(item.name)
         end
       end.to output.to_stdout
       within "#addon-workflow-agents-addons-branch" do
+        wait_for_turbo_frame "#workflow-branch-frame"
         click_on item.name
       end
 

@@ -11,7 +11,7 @@
   <tbody>
   <% items.each do |item| %>
     <tr>
-      <td class="name"><%= link_to item.name, item.private_show_path %></td>
+      <td class="name"><%= link_to item.name, item.private_show_path, data: { turbo: false } %></td>
       <td class="datetime"><%= item.updated.try { |time| I18n.l(time, format: :picker) } %></td>
     </tr>
   <% end %>

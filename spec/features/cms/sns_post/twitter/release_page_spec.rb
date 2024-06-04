@@ -144,7 +144,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -203,6 +207,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_user user1
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
+            wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -465,7 +470,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -519,6 +528,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_user user1
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
+            wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end

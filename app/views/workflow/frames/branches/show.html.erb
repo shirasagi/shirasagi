@@ -1,0 +1,33 @@
+<dl class="see <%= css_class %>">
+  <% if item.branch? %>
+    <dt class="wide"><%= t("workflow.branch_message") %></dt>
+    <dd></dd>
+
+    <dt><%= t("workflow.master_page") %></dt>
+    <dd class="result">
+      <%= render "workflow/pages/branch", items: [ item.master ] %>
+    </dd>
+  <% else %>
+    <% if item.errors.present? %>
+      <dt class="wide"><%= error_messages_for :item %></dt>
+      <dd></dd>
+    <% end %>
+
+    <% if item.branches.present? %>
+      <dt class="wide"><%= @success_notice || t("workflow.master_message") %></dt>
+      <dd></dd>
+
+      <dt><%= t("workflow.branch_page") %></dt>
+      <dd class="result">
+        <%= render "workflow/pages/branch", items: item.branches %>
+      </dd>
+    <% else %>
+      <dt class="wide">
+        <%= form_with scope: :item, url: url_for(action: :create), method: :post do |f| %>
+          <%= f.submit t("workflow.create_branch"), name: "create_branch", class: "create-branch btn" %>
+        <% end %>
+      </dt>
+      <dd></dd>
+    <% end %>
+  <% end %>
+</dl>

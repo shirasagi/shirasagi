@@ -30,7 +30,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
         capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -69,7 +73,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
         capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -114,7 +122,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # first post
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -154,7 +166,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # second post
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -199,7 +215,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # first post
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -237,7 +257,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # second post (enable twitter_edit_auto_post)
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -276,7 +300,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # third post (disable twitter_edit_auto_post)
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_event_to_fire "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end

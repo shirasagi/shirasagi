@@ -12,7 +12,11 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
       visit faq_pages_path(site: site, cid: node)
       click_on item.name
       within '#addon-workflow-agents-addons-branch' do
-        click_on I18n.t("workflow.create_branch")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        wait_event_to_fire "turbo:frame-load" do
+          click_on I18n.t("workflow.create_branch")
+        end
+        expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
         expect(page).to have_css('table.branches')
         expect(page).to have_css('.see.branch', text: item.name)
       end

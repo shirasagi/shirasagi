@@ -35,6 +35,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(branch_page.html).to include(branch_page.files.first.url)
 
           visit article_page_path(site, node, branch_page)
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: master_page.name)
 
           click_on I18n.t("ss.links.edit")
@@ -67,9 +68,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#addon-cms-agents-addons-edit_lock" do
             expect(page).to have_content(I18n.t("errors.messages.locked", user: user2.long_name))
           end
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: branch_page.name)
 
           visit article_page_path(site, node, branch_page)
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: master_page.name)
 
           click_on I18n.t("ss.links.edit")
@@ -152,6 +155,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       context "without edit lock" do
         it do
           visit article_page_path(site, node, branch_page)
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: master_page.name)
 
           click_on I18n.t("ss.links.edit")
@@ -193,9 +197,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#addon-cms-agents-addons-edit_lock" do
             expect(page).to have_content(I18n.t("errors.messages.locked", user: user2.long_name))
           end
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: branch_page.name)
 
           visit article_page_path(site, node, branch_page)
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#addon-workflow-agents-addons-branch table.branches", text: master_page.name)
 
           click_on I18n.t("ss.links.edit")

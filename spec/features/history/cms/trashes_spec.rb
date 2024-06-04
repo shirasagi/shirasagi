@@ -248,6 +248,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it "#undo_delete as another filename" do
       visit page_path
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_css('div.file-view', text: file.name)
 
       click_link I18n.t('ss.links.delete')
@@ -289,6 +290,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_css('div.file-view', text: file.name)
 
@@ -305,11 +307,13 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       # create branch page
       within "#addon-workflow-agents-addons-branch" do
-        within ".branch" do
+        wait_for_turbo_frame "#workflow-branch-frame"
+        wait_event_to_fire "turbo:frame-load" do
           click_on I18n.t("workflow.create_branch")
-          within ".result .branches" do
-            expect(page).to have_css(".name", text: page_item.name)
-          end
+        end
+        expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
+        within ".result .branches" do
+          expect(page).to have_css(".name", text: page_item.name)
         end
       end
 
@@ -321,10 +325,13 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       # delete branch page
       within "#addon-workflow-agents-addons-branch" do
+        wait_for_turbo_frame "#workflow-branch-frame"
         within ".branch" do
           click_on page_item.name
         end
       end
+      wait_for_turbo_frame "#workflow-branch-frame"
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       click_on I18n.t('ss.links.delete')
       within "form" do
         click_on I18n.t('ss.buttons.delete')
@@ -371,8 +378,9 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       visit page_path
       within "#addon-workflow-agents-addons-branch" do
+        wait_for_turbo_frame "#workflow-branch-frame"
         within ".branch" do
-          expect(page).to have_css(".create-branch", text: I18n.t("workflow.create_branch"))
+          expect(page).to have_button(I18n.t("workflow.create_branch"))
           expect(page).to have_no_content(page_item.name)
         end
       end

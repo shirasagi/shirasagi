@@ -236,6 +236,17 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_FOR_TURBO_FRAME_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        var el = $(element)[0];
+        if (el.hasAttribute("complete")) {
+          resolve(true);
+          return;
+        }
+        el.addEventListener("turbo:frame-load", () => resolve(true), { once: true });
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -642,6 +653,11 @@ module SS
 
       wait_for_js_ready
       result
+    end
+
+    def wait_for_turbo_frame(element)
+      result = page.evaluate_async_script(WAIT_FOR_TURBO_FRAME_SCRIPT, element)
+      expect(result).to be_truthy
     end
   end
 end
