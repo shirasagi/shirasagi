@@ -223,6 +223,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
             find("input.width").set(column12_width)
             find("input.caption").set(column12_caption)
             click_on I18n.t("cms.column_table.create")
+            expect(page).to have_css("th[style='background: #F9E9E6']")
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url
