@@ -16,9 +16,8 @@ target = @cur_part.link_target.present? ? %(target="_#{@cur_part.link_target}" r
     <% unless target.present? %>
       <% link_target = item.link_target.present? ? %(target="#{item.link_target}" rel="noopener") : "_self" %>
     <% else %>
-      <% link_target = "_self" %>
+      <% link_target = target %>
     <% end %>
-
     <%
       url = @cur_part.link_action.present? ? item.link_url : item.url
       attr_h = item.additional_attr.to_h
