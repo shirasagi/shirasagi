@@ -2,7 +2,7 @@
 
 return if @items.blank?
 wrap_id = "ss-image-box-#{@items[0].id}"
-target = (@cur_part.link_target.present? && @cur_part.link_target != "individual_setting") ? %(target="#{@cur_part.link_target}" rel="noopener") : nil
+target = @cur_part.link_target.present? ? %(target="_#{@cur_part.link_target}" rel="noopener") : nil
 
 %>
 <%= jquery do %>
@@ -13,7 +13,7 @@ target = (@cur_part.link_target.present? && @cur_part.link_target != "individual
 
   <div class="ss-image-box-item-list">
     <% @items.each do |item| %>
-    <% if ( @cur_part.link_target.present? && @cur_part.link_target == "individual_setting" ) %>
+    <% unless target.present? %>
       <% link_target = item.link_target.present? ? %(target="#{item.link_target}" rel="noopener") : nil %>
     <% else %>
       <% link_target = target %>

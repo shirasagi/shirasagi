@@ -41,7 +41,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
     it "check link targets" do 
       item1.update(link_target: "_blank", link_url: "/example.jp")
       item1.reload
-      part.update(link_target: "individual_setting")
+      part.update(link_target: "")
       part.reload
       visit node_cms.full_url
       expect(page).to have_css(".ss-image-box")
