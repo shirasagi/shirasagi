@@ -86,21 +86,21 @@ Cms_Column_Table.prototype.createTable = function () {
     for (var j = 0; j < width; j++) {
       if (header == "top") {
         if (i == 0) {
-          tr = tr + "<th scope='col' style='background: #F9E9E6'></th>";
+          tr = tr + "<th scope='col'></th>";
         } else {
           tr = tr + "<td></td>";
         }
       } else if (header == "left") {
         if (j == 0) {
-          tr = tr + "<th scope='row' style='background: #F9E9E6'></th>";
+          tr = tr + "<th scope='row'></th>";
         } else {
           tr = tr + "<td></td>";
         }
       } else if (header == "top-left") {
         if (i == 0) {
-          tr = tr + "<th scope='col' style='background: #F9E9E6'></th>";
+          tr = tr + "<th scope='col'></th>";
         } else if (j == 0) {
-          tr = tr + "<th scope='row' style='background: #F9E9E6'></th>";
+          tr = tr + "<th scope='row'></th>";
         } else {
           tr = tr + "<td></td>";
         }
