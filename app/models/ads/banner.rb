@@ -31,7 +31,7 @@ class Ads::Banner
 
   def self.link_target_options
     [
-      [I18n.t('ads.options.link_target.self'), ''],
+      [I18n.t('ads.options.link_target.self'), '_self'],
       [I18n.t('ads.options.link_target.blank'), '_blank'],
     ]
   end

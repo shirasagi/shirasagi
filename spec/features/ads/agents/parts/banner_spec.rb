@@ -65,7 +65,7 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
 
       expect(page).to have_selector(link_selector2)
       link2 = find(link_selector2).find(:xpath, '..')
-      expect(link2[:target]).to eq ""
+      expect(link2[:target]).to eq "_self"
       link2.click
       expect(current_url).to eq previous_url
       expect(current_url).to include(item2.link_url)
