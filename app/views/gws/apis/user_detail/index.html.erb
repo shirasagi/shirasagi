@@ -1,6 +1,6 @@
 <%= jquery do %>
-SS_Clipboard.renderCopy();
 $(".user-detail-modal .clipboard-copy-button.dummy").remove();
+SS_Clipboard.renderCopy();
 <% end %>
 
 <div class="user-detail-modal">
@@ -16,10 +16,8 @@ $(".user-detail-modal .clipboard-copy-button.dummy").remove();
     <% if @item.email.present? %>
       <dt><%= @item.t :email %></dt>
       <dd>
-        <span class="email js-clipboard-copy">
-          <%= mail_to @item.email %>
-          <a href="#" class="clipboard-copy-button dummy"><%= t("ss.buttons.copy") %></a>
-        </span>
+        <span class="email js-clipboard-copy"><%= mail_to @item.email %></span>
+        <a href="#" class="clipboard-copy-button dummy"><%= t("ss.buttons.copy") %></a>
       </dd>
     <% end %>
 
