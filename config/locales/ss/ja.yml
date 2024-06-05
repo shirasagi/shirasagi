@@ -87,6 +87,7 @@ ja:
         term: "期間：%{term}"
         openrate: "開封率：%{openrate}"
         expiration_date: "期限切れ日時：%{expiration_date}"
+        close_date: "公開終了日: "
       oauth2/application:
         header:
           name: アプリケーション種別
