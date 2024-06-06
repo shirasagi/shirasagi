@@ -64,6 +64,8 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       column_values: [ column7.value_type.new(column: column7, value: '<a href="/top/child/">anchor2</a><p>くらし\r\nガイド</p>') ]
     )
   end
+  let(:result_count_0) { "#{I18n.t("cms.apis.contents.result")}0#{I18n.t("ss.units.count")}" }
+  let(:result_count_1) { "#{I18n.t("cms.apis.contents.result")}1#{I18n.t("ss.units.count")}" }
 
   before { login_cms_user }
 
@@ -74,7 +76,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "一行入力"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -83,7 +85,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "一行入力"
         fill_in "replacement", with: "置換"
@@ -96,7 +98,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "置換"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -107,6 +109,20 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page1.reload
     expect(page1.column_values[0].value).to eq "置換"
+
+    visit html_index_path
+    within "form.index-search" do
+      fill_in "keyword", with: "一行入力"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_text_area with string" do
@@ -116,7 +132,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "複数行入力"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -125,11 +141,11 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
-    within "form.index-search" do
-      fill_in "keyword", with: "複数行入力"
-      fill_in "replacement", with: "置換"
-      click_button I18n.t("ss.buttons.replace_all")
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
+      within "form.index-search" do
+        fill_in "keyword", with: "複数行入力"
+        fill_in "replacement", with: "置換"
+        click_button I18n.t("ss.buttons.replace_all")
       end
     end
     wait_for_notice I18n.t('ss.notice.saved')
@@ -138,7 +154,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "置換"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -149,6 +165,20 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page2.reload
     expect(page2.column_values[0].value).to eq "置換\r\n置換\r\n置換"
+
+    visit html_index_path
+    within "form.index-search" do
+      fill_in "keyword", with: "複数行入力"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_headline with string" do
@@ -158,7 +188,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "見出し"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_css(".result table a", text: "[TEST]page3")
@@ -167,7 +197,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "見出し"
         fill_in "replacement", with: "置換"
@@ -180,7 +210,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "置換"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_css(".result table a", text: "[TEST]page3")
@@ -191,6 +221,21 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page3.reload
     expect(page3.column_values[0].text).to eq "置換"
+
+    visit html_index_path
+    expect(current_path).not_to eq sns_login_path
+    within "form.index-search" do
+      fill_in "keyword", with: "見出し"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_url_field2 (link_label) with string" do
@@ -200,7 +245,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "リンクラベル"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -209,7 +254,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "リンクラベル"
         fill_in "replacement", with: "置換"
@@ -222,7 +267,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "置換"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -233,6 +278,21 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page4.reload
     expect(page4.column_values[0].link_label).to eq "置換"
+
+    visit html_index_path
+    expect(current_path).not_to eq sns_login_path
+    within "form.index-search" do
+      fill_in "keyword", with: "リンクラベル"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_url_field2 (link_url) with string" do
@@ -242,7 +302,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "/docs/page1.html"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -251,7 +311,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "/docs/page1.html"
         fill_in "replacement", with: "/category/page2.html"
@@ -264,7 +324,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "/category/page2.html"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -275,6 +335,20 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page4.reload
     expect(page4.column_values[0].link_url).to eq "/category/page2.html"
+
+    visit html_index_path
+    within "form.index-search" do
+      fill_in "keyword", with: "/docs/page1.html"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_list with string" do
@@ -284,7 +358,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "リスト1"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -293,7 +367,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "リスト1"
         fill_in "replacement", with: "置換1"
@@ -306,7 +380,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "置換1"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -317,6 +391,21 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page5.reload
     expect(page5.column_values[0].lists).to eq ["置換1", "リスト2", "リスト3", ""]
+
+    visit html_index_path
+    expect(current_path).not_to eq sns_login_path
+    within "form.index-search" do
+      fill_in "keyword", with: "リスト1"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_table with string" do
@@ -326,7 +415,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "キャプション"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -335,7 +424,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_css(".result table a", text: "[TEST]page6")
     expect(page).to have_no_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "キャプション"
         fill_in "replacement", with: "置換"
@@ -348,7 +437,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "置換"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -359,6 +448,21 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page6.reload
     expect(page6.column_values[0].value).to eq '<table><caption>置換</caption></table>'
+
+    visit html_index_path
+    expect(current_path).not_to eq sns_login_path
+    within "form.index-search" do
+      fill_in "keyword", with: "キャプション"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 
   it "replace cms_column_free with string" do
@@ -368,7 +472,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "/top/child/"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -377,7 +481,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
     expect(page).to have_no_css(".result table a", text: "[TEST]page6")
     expect(page).to have_css(".result table a", text: "[TEST]page7")
 
-    page.accept_confirm do
+    page.accept_confirm(I18n.t("cms.apis.contents.confirm_message")) do
       within "form.index-search" do
         fill_in "keyword", with: "/top/child/"
         fill_in "replacement", with: "#"
@@ -390,7 +494,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
       fill_in "keyword", with: "#"
       click_button I18n.t('ss.buttons.search')
     end
-    wait_for_ajax
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_1)
     expect(page).to have_no_css(".result table a", text: "[TEST]page1")
     expect(page).to have_no_css(".result table a", text: "[TEST]page2")
     expect(page).to have_no_css(".result table a", text: "[TEST]page3")
@@ -401,5 +505,20 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
 
     page7.reload
     expect(page7.column_values[0].value).to eq '<a href="#">anchor2</a><p>くらし\r\nガイド</p>'
+
+    visit html_index_path
+    expect(current_path).not_to eq sns_login_path
+    within "form.index-search" do
+      fill_in "keyword", with: "/top/child/"
+      click_button I18n.t('ss.buttons.search')
+    end
+    expect(page).to have_css(".cms-apis-contents-html-page", text: result_count_0)
+    expect(page).to have_no_css(".result table a", text: "[TEST]page1")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page2")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page3")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page4")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page5")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page6")
+    expect(page).to have_no_css(".result table a", text: "[TEST]page7")
   end
 end
