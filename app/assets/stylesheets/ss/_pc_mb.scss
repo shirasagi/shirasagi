@@ -2201,6 +2201,40 @@ div.index {
     margin: 6px 0 6px -5px;
     float: left;
   }
+
+  &.flex-list-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    padding: 10px 14px;
+    font-weight: normal;
+
+    &:before, &:after {
+      content: "";
+      display: none;
+    }
+
+    .check {
+      width: unset;
+      margin: 0;
+      float: none;
+    }
+
+    .list-head-action, .list-head-search {
+      margin: 0;
+      float: none;
+    }
+
+    .list-head-right {
+      margin-left: auto;
+      @include mb {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  }
 }
 .list-head-title {
   margin: -10px 0 0 -18px;
