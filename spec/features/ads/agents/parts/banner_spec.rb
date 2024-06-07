@@ -73,6 +73,41 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
       expect(current_url).to include(item2.link_url)
     end
 
+    context "when the SHIRASAGI bumped up from previous version" do
+      before do
+        part.update(link_target: "")
+
+        # Ads::Banner pages don't have "link_target" just after bumped up from previous version
+        item1.unset(:link_target)
+        item1.unset(:link_target)
+      end
+
+      it do
+        visit node_cms.full_url
+        # you can see '<a href="...." _self="">'
+        puts page.html
+
+        link_selector1 = ".ss-image-box-item-list span a img[alt='#{item1.name}']"
+        link_selector2 = ".ss-image-box-item-list span a img[alt='#{item2.name}']"
+        link1 = find(link_selector1).find(:xpath, '..')
+        link1_attributes = link1.evaluate_script("Array.from(this.attributes, (attribute) => attribute.name)")
+        # attribute "href" is good.
+        expect(link1_attributes).to include("href")
+        # attribute "_self" is not good to HTML5 specifications.
+        expect(link1_attributes).not_to include("_self")
+        expect(link1[:_self]).to be_nil
+        expect(link1[:target]).to eq "_self" # or blank
+
+        link2 = find(link_selector2).find(:xpath, '..')
+        link2_attributes = link1.evaluate_script("Array.from(this.attributes, (attribute) => attribute.name)")
+        # attribute "href" is good.
+        expect(link2_attributes).to include("href")
+        # attribute "_self" is not good to HTML5 specifications.
+        expect(link2_attributes).not_to include("_self")
+        expect(link2[:_self]).to be_nil
+        expect(link2[:target]).to eq "_self" # or blank
+      end
+    end
   end
 
   context "preview" do
