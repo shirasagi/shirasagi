@@ -14,7 +14,7 @@ target = @cur_part.link_target.present? ? %(target="_#{@cur_part.link_target}" r
   <div class="ss-image-box-item-list">
     <% @items.each do |item| %>
     <% unless target.present? %>
-      <% link_target = item.link_target.present? ? %(target="#{item.link_target}" rel="noopener") : "_self" %>
+      <% link_target = item.link_target.present? ? %(target="#{item.link_target}" rel="noopener") : %(target="_self") %>
     <% else %>
       <% link_target = target %>
     <% end %>
