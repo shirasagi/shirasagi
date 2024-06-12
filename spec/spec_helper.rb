@@ -1,9 +1,10 @@
 # Don't run always Coverage analysis
 # ref. http://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
+ENV["RAILS_ENV"] = 'test'
+
 require 'dotenv'
 Dotenv.load
 
-ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../config/environment", __dir__)
 require 'rails-controller-testing'
 require 'rspec/rails'
