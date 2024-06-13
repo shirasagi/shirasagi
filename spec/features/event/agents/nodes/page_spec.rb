@@ -4,10 +4,20 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:node) { create :event_node_page, layout_id: layout.id, filename: "node" }
-  let(:list_node) { create :event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'list' }
-  let(:table_node) { create :event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'table' }
-  let(:list_only_node) { create :event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'list_only' }
-  let(:table_only_node) { create :event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'table_only' }
+  let(:list_node) do
+    create(:event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'list')
+  end
+  let(:table_node) do
+    create(:event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'table')
+  end
+  let(:list_only_node) do
+    create(:event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'list',
+    event_display_tabs: %w(list))
+  end
+  let(:table_only_node) do
+    create(:event_node_page, layout_id: layout.id, filename: 'list_node', event_display: 'table',
+    event_display_tabs: %w(table))
+  end
   let(:item) { create :event_page, filename: "node/item" }
 
   context "when access node" do

@@ -1,0 +1,20 @@
+<nav class="event-date" aria-label="<%= t("event.calendar") %>">
+  <h2 class="<%= event_h1_class @month %>">
+    <span class="calendar-year"><%= @year %><%= t_date('year') %></span>
+    <span class="calendar-month"><%= @month %><%= t_date('month') %></span>
+  </h2>
+  <% if @cur_node.event_display_tabs.present? %>
+    <div class="event-format">
+      <% @cur_node.event_display_tabs.each do |display| %>
+        <span class="<%== display %> <%== (display == current) ? "current" : "" %>">
+          <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.#{display}"), display: display, style: true %>
+        </span>
+      <% end %>
+    </div>
+  <% end %>
+  <%= download_ics Date.new(@year, @month, 1), class: "event-ics-file" %>
+  <ul>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display] %></li>
+  </ul>
+</nav>
