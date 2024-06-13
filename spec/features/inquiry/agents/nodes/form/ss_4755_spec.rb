@@ -41,7 +41,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
 
   context "ss-4755" do
     let(:answer1) { unique_id }
-
+    let(:answer2) { unique_id }
     it do
       login_cms_user
 
@@ -102,6 +102,55 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       expect(answer.member).to be_nil
       expect(answer.data.count).to eq 1
       expect(answer.data[0].value).to eq answer1
+      expect(answer.data[0].confirm).to be_blank
+      expect(answer.group_ids).to eq [ group1.id ]
+      expect(answer.group_ids).to eq article_page.group_ids
+
+      expect(ActionMailer::Base.deliveries.count).to eq 0
+
+
+      # Submit the 2nd answer to confirm
+
+      visit article_page.full_url
+      within ".inquiry-form" do
+        click_on I18n.t("contact.view.inquiry_form")
+      end
+
+      # page's title should contain group1.section_name
+      expect(page).to have_css("#ss-page-name", text: "#{group1.section_name} #{inquiry_form.name}")
+      within 'div.inquiry-form' do
+        # page's form should contain group id and page id
+        expect(first('[name="group"]').value).to eq article_page.contact_group.id.to_s
+        expect(first('[name="page"]').value).to eq article_page.id.to_s
+        within 'div.columns' do
+          fill_in "item[1]", with: answer2
+        end
+        click_button I18n.t('inquiry.confirm')
+      end
+
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          expect(find('#item_1')['value']).to eq answer2
+        end
+        within 'footer.send' do
+          click_button I18n.t('inquiry.submit')
+        end
+      end
+      expect(page).to have_content(inquiry_sent)
+
+      expect(Inquiry::Answer.site(site).count).to eq 2
+      answer = Inquiry::Answer.last
+      expect(answer.node_id).to eq inquiry_form.id
+      expect(answer.source_url).to be_blank
+      expect(answer.source_name).to be_blank
+      expect(answer.closed).to be_blank
+      expect(answer.state).to eq "open"
+      expect(answer.comment).to be_blank
+      expect(answer.inquiry_page_url).to eq article_page.url
+      expect(answer.inquiry_page_name).to eq article_page.name
+      expect(answer.member).to be_nil
+      expect(answer.data.count).to eq 1
+      expect(answer.data[0].value).to eq answer2
       expect(answer.data[0].confirm).to be_blank
       expect(answer.group_ids).to eq [ group1.id ]
       expect(answer.group_ids).to eq article_page.group_ids
