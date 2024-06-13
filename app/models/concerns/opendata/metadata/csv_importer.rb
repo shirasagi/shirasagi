@@ -210,6 +210,8 @@ module Opendata::Metadata::CsvImporter
       @report.notice_subject = "#{site.name} #{name}【エラー通知】"
       body << "取り込み時にエラーが発生しました。"
       body << "下記のエラーを確認し、修正してください。"
+      body << "オープンデータカタログのダウンロードURL及びアクセスURLの項目について、"
+      body << "記入されているURLが間違いないか、ご担当者様でご確認をお願いいたします。"
       body << notice_body.join("\n")
       body << url
       @report.notice_body = body.join("\n")
@@ -243,6 +245,8 @@ module Opendata::Metadata::CsvImporter
       if skipped_dataset_ids.present?
         body << "#{skipped_dataset_ids.count}件のデータセットは更新しませんでした。"
       end
+      body << "オープンデータカタログのダウンロードURL及びアクセスURLの項目について、"
+      body << "記入されているURLが間違いないか、ご担当者様でご確認をお願いいたします。"
       # body << notice_body.join("\n")
       body << url
       @report.notice_body = body.join("\n")
