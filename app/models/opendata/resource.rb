@@ -105,7 +105,7 @@ class Opendata::Resource
     end
 
     report_criteria = Opendata::ResourceDownloadReport.site(dataset.site)
-    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_filename: filename)
+    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_id: id)
     counts = report_criteria.pluck(*Opendata::Resource::ReportModel::DAY_COUNT_FIELDS).flatten.compact
     count = counts.sum
 
