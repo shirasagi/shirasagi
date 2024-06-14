@@ -204,7 +204,7 @@ module Gws::Model
 
     def readable?(user, opts = {})
       return false if self.site_id != opts[:site].id
-      return true if member?(user)
+      return true if member_user?(user)
 
       if self.respond_to?(:user_id) && self.user_id == user.id
         if deleted["sent"]

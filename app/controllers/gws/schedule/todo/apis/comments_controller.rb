@@ -56,7 +56,7 @@ class Gws::Schedule::Todo::Apis::CommentsController < ApplicationController
   def create
     @item = @model.new get_params
     @item.text_type ||= 'plain'
-    if !@cur_todo.member?(@cur_user) && !@cur_todo.allowed?(:edit, @cur_user, site: @cur_site)
+    if !@cur_todo.member_user?(@cur_user) && !@cur_todo.allowed?(:edit, @cur_user, site: @cur_site)
       raise "403"
     end
     @cur_todo.errors.clear

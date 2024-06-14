@@ -99,7 +99,7 @@ module Gws::Schedule::TodoFilter
   end
 
   def item_readable?
-    @item.member?(@cur_user) || @item.readable?(@cur_user, site: @cur_site) || @item.allowed?(:read, @cur_user, site: @cur_site)
+    @item.member_user?(@cur_user) || @item.readable?(@cur_user, site: @cur_site) || @item.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   public
@@ -145,7 +145,7 @@ module Gws::Schedule::TodoFilter
   # 完了にする
   def finish
     @item.attributes = fix_params
-    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member_user?(@cur_user)
     @item.errors.clear
     return if request.get? || request.head?
 
@@ -161,7 +161,7 @@ module Gws::Schedule::TodoFilter
   # 未完了にする
   def revert
     @item.attributes = fix_params
-    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member_user?(@cur_user)
     @item.errors.clear
     return if request.get? || request.head?
 
@@ -188,7 +188,7 @@ module Gws::Schedule::TodoFilter
     error_items = []
     @items.each do |item|
       item.attributes = fix_params
-      if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
+      if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member_user?(@cur_user)
         comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: item)
         comment.achievement_rate = 100
         result = comment.save
@@ -215,7 +215,7 @@ module Gws::Schedule::TodoFilter
     error_items = []
     @items.each do |item|
       item.attributes = fix_params
-      if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
+      if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member_user?(@cur_user)
         comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: item)
         comment.achievement_rate = 0
         result = comment.save

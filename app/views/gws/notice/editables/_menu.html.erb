@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @folder && @folder.member?(@cur_user) %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @folder && @folder.member_user?(@cur_user) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|copy|destroy_all/ %>

@@ -28,7 +28,7 @@ class Gws::Board::CommentsController < ApplicationController
     return true if @topic.allowed?(:edit, @cur_user, site: @cur_site, adds_error: false)
 
     # member?
-    if @topic.member?(@cur_user)
+    if @topic.member_user?(@cur_user)
       return true if (@item.group_ids & @cur_user.group_ids).present?
       return true if @item.user_ids.include?(@cur_user.id)
     end
@@ -42,7 +42,7 @@ class Gws::Board::CommentsController < ApplicationController
     return true if @topic.allowed?(:delete, @cur_user, site: @cur_site, adds_error: false)
 
     # member?
-    if @topic.member?(@cur_user)
+    if @topic.member_user?(@cur_user)
       return true if (@item.group_ids & @cur_user.group_ids).present?
       return true if @item.user_ids.include?(@cur_user.id)
     end
@@ -64,14 +64,14 @@ class Gws::Board::CommentsController < ApplicationController
   def new
     @item = @model.new pre_params.merge(fix_params)
     allowed = @item.allowed?(:edit, @cur_user, site: @cur_site, adds_error: false)
-    member = @topic.member?(@cur_user)
+    member = @topic.member_user?(@cur_user)
     raise "403" if !(allowed || member)
   end
 
   def create
     @item = @model.new get_params
     allowed = @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true, adds_error: false)
-    member = @topic.member?(@cur_user)
+    member = @topic.member_user?(@cur_user)
     if !(allowed || member)
       @item.errors.add(:base, :auth_error)
       return render_create(false)

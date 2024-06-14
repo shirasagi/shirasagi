@@ -92,7 +92,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   public
 
   def edit
-    raise "403" unless @cur_schedule.member?(@cur_user) ||
+    raise "403" unless @cur_schedule.member_user?(@cur_user) ||
                        @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
                        @cur_schedule.approval_member?(@cur_user)
     @item.valid?
@@ -100,7 +100,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def update
-    raise "403" unless @cur_schedule.member?(@cur_user) ||
+    raise "403" unless @cur_schedule.member_user?(@cur_user) ||
                        @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
                        @cur_schedule.approval_member?(@cur_user)
     @item.attributes = get_params

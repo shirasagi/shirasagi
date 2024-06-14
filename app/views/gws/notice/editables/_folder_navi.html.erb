@@ -20,7 +20,7 @@
 
   <div class="tree-navi"></div>
 
-  <% if @folder && @folder.member?(@cur_user) %>
+  <% if @folder && @folder.member_user?(@cur_user) %>
     <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
     <div class="body-quota-bar">
       <span><%= t('gws/notice.body_size') %></span>

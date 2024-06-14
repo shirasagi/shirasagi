@@ -21,7 +21,7 @@
         last_updated = comments.max(:updated).try { |time| time.in_time_zone } || item.updated
         last_updated = item.updated if last_updated < item.updated
       %>
-      <li class="list-item <%= 'unread' if (item.member?(@cur_user) && item.unseen?(@cur_user)) %>">
+      <li class="list-item <%= 'unread' if (item.member_user?(@cur_user) && item.unseen?(@cur_user)) %>">
         <nav class="tap-menu">
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
 
@@ -43,7 +43,7 @@
             <span class="datetime"><%= @model.t(:due_date) %>: <%= ss_time_tag(item.due_date, type: :date) %></span>
             <span class="datetime"><%= @model.t(:updated) %>: <%= ss_time_tag last_updated %></span>
             <span class="datetime"><%= @model.t(:created) %>: <%= ss_time_tag item.created %></span>
-            <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>
+            <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member_user?(@cur_user) %></span>
             <span><%= gws_public_user_long_name(item.user_long_name) %></span>
             <span class="gws-share-categories">
               <% item.categories.compact.each do |category| %>
