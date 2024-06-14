@@ -79,6 +79,9 @@ ja:
       ical_sync_method:
         full: 完全
         add_only: 追加
+    calender:
+      info_text: 除外日の指定
+      info_usage: "下のカレンダー上にて、あなたが指定したイベント期間の日付が<span class=\"event__date\"></span>で色付けされています。<br>こちらの色付けされたイベント期間の日付のうち、イベント日から除外したい日をクリックするとその日が<span class=\"exclusion-date\"></span>で色付けされイベント日から除外されます。<br>※色がついていない日はイベント期間外です。こちらをイベント期間に追加する場合は記事編集画面にてイベント日に追加するようにしてください"
 
     apis:
       repeat_dates:
@@ -165,7 +168,7 @@ ja:
       event/addon/date:
         event_name: イベントタイトル
         event_dates: イベント日
-        event_recurrences: 定期開催
+        event_recurrences: 日付
         event_deadline: 申込締切
       event/addon/calendar_list:
         event_display: 表示形式
@@ -212,7 +215,9 @@ ja:
         - イベントページにリンクを表示する場合はイベントの期間を入力します。
         - 「日付フォームを追加する」を選択することで複数の期間を設定することが可能です。
       event_recurrences:
-        - 定期開催イベントを入力します。
+        - イベント開催日を入力します。
+          終了日に開始日の翌日以降を指定すると期間指定となります。期間指定後に「除外日」をクリックすると入力した連日開催期間のうち指定日を除外できます。
+          また下のチェックボックスにて、指定期間のうち曜日または祝日のみの開催を設定することができます。
       event_deadline:
         - イベントの申し込み締切日を入力します。
     event/addon/body:
