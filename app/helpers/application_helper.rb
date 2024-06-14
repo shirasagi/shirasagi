@@ -61,7 +61,7 @@ module ApplicationHelper
     current = current.sub(/#{::Regexp.escape(SS.config.translate.location)}\/[^\/]*/, '') if @cur_site.translate_enabled?
     return nil if current.delete("/").blank?
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-    return :current if current.match?(/^#{::Regexp.escape(url)}(\/|\?|$)/)
+    return :current if current.match?(/^#{::Regexp.escape(url.delete_suffix('/'))}(\/|\?|$)/)
     nil
   end
 
