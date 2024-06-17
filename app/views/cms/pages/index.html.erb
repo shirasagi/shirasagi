@@ -57,6 +57,10 @@
   <% if item.try(:tags) %>
     <span class="tags"><%= item.tags.join(",") %></span>
   <% end %>
+  <% if (item.try(:close_date) && params[:action] == "index_wait_close") %>
+    <br>
+    <span class="close_date"><%= t("ss.views.index.close_date") %> <%= ss_time_tag item.close_date %></span>
+  <% end %>
 <% end %>
 
 <%= render template: "cms/crud/index" %>
