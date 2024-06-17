@@ -16,7 +16,7 @@ module Gws::Addon::Import::Facility
       def to_csv
         I18n.with_locale(I18n.default_locale) do
           CSV.generate do |data|
-            data << csv_headers.map { |k| header_value_to_text(k) }
+            data << csv_headers.map { |k, options| header_value_to_text(k, **options.to_h) }
             criteria.each do |item|
               line = []
               line << item.id
@@ -67,7 +67,9 @@ module Gws::Addon::Import::Facility
               line << item.readable_member_names.join("\n")
               line << item.group_names.join("\n")
               line << item.user_names.join("\n")
-              line << item.permission_level
+              unless SS.config.ss.disable_permission_level
+                line << item.permission_level
+              end
               data << line
             end
           end
@@ -83,8 +85,11 @@ module Gws::Addon::Import::Facility
         headers += columns_headers
         headers += %w(
           reservable_group_names reservable_member_names readable_setting_range
-          readable_group_names readable_member_names group_names user_names permission_level
+          readable_group_names readable_member_names group_names user_names
         )
+        unless SS.config.ss.disable_permission_level
+          headers << 'permission_level'
+        end
         headers
       end
 
@@ -219,7 +224,7 @@ module Gws::Addon::Import::Facility
       readable_member_names = row[header_t("readable_member_names")].to_s.strip.split("\n")
       group_names = row[header_t("group_names")].to_s.strip.split("\n")
       user_names = row[header_t("user_names")].to_s.strip.split("\n")
-      permission_level = row[header_t("permission_level")].to_s.strip
+      permission_level = row[header_t("permission_level")].to_s.strip.to_i
       text_type = row[header_value_to_text("type")].to_s.strip
       text = row[header_value_to_text("html")].to_s.strip
 
@@ -263,7 +268,7 @@ module Gws::Addon::Import::Facility
       item.readable_member_ids = user_names_to_ids(readable_member_names)
       item.group_ids = group_names_to_ids(group_names)
       item.user_ids = user_names_to_ids(user_names)
-      item.permission_level = permission_level
+      item.permission_level = (permission_level == 0) ? 1 : permission_level
 
       item.approval_check_state = approval_check_state_datas_text_to_value(approval_check_state)
       if item.save

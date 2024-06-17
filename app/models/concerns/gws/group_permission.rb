@@ -107,13 +107,13 @@ module Gws::GroupPermission
       action = permission_action || action
 
       if (level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]) && !opts[:private_only]
-        { permission_level: { "$lte" => level } }
+        { "$or" => [{ permission_level: { "$lte" => level }}, { permission_level: nil }] }
       elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        { permission_level: { "$lte" => level }, "$or" => [
+        { "$and" => [{ "$or" => [{ permission_level: { "$lte" => level }}, { permission_level: nil }] }, { "$or" => [
           { user_ids: user.id },
           { :group_ids.in => user.group_ids },
           { :custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
-        ] }
+        ] }] }
       else
         { _id: -1 }
       end

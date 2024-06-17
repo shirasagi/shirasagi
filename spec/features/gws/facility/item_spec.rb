@@ -105,7 +105,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(status_code).to eq 200
         expect(page.response_headers['Content-Type']).to eq("text/csv")
 
-        filename = "gws_items_#{time.to_i}.csv"
+        filename = "gws_facility_items_#{time.to_i}.csv"
         disposition = ActionDispatch::Http::ContentDisposition.format(disposition: "attachment", filename: filename)
         expect(page.response_headers['Content-Disposition']).to eq disposition
       end
