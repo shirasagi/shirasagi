@@ -17,6 +17,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
   let(:contains_urls_path) { contains_urls_article_page_path site.id, node, item }
+  let(:index_wait_close_path) { article_index_wait_close_path site.id, node }
 
   context "basic crud" do
     before { login_cms_user }
@@ -222,6 +223,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
+    end
+
+    it "check publish end date on index with wait" do 
+      item.update(close_date: item.released + 1.day)
+      item.reload
+      visit index_wait_close_path
+
+      expect(page).to have_css(".close_date")
     end
   end
 
