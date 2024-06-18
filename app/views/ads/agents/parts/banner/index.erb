@@ -2,24 +2,28 @@
 
 return if @items.blank?
 wrap_id = "ss-image-box-#{@items[0].id}"
-target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}" rel="noopener") : nil
+target = @cur_part.link_target.present? ? %(target="_#{@cur_part.link_target}" rel="noopener") : nil
 
 %>
 <%= jquery do %>
   Ads_Banner.randomize("#<%= wrap_id %> .ss-image-box-item-list");
 <% end if @random %>
-
 <div class="ss-image-box" id="<%= wrap_id %>">
   <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
 
   <div class="ss-image-box-item-list">
     <% @items.each do |item| %>
+    <% unless target.present? %>
+      <% link_target = item.link_target.present? ? %(target="#{item.link_target}" rel="noopener") : %(target="_self") %>
+    <% else %>
+      <% link_target = target %>
+    <% end %>
     <%
       url = @cur_part.link_action.present? ? item.link_url : item.url
       attr_h = item.additional_attr.to_h
     %>
     <span class="ss-image-box-item">
-      <a href="<%= url %>" <%== target %> <% attr_h.each do |k, v| %><%= k %>="<%= v %>" <% end %>>
+      <a href="<%= url %>" <%== link_target %> <% attr_h.each do |k, v| %><%= k %>="<%= v %>" <% end %>>
         <% if file = item.file %>
           <%= image_tag file.url, alt: item.name %>
         <% else %>

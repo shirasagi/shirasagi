@@ -11,6 +11,7 @@ ja:
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示
+        individual_setting: 個別設定
       sort:
         order: 指定順
         random: ランダム
