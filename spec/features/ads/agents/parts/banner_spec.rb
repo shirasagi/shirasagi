@@ -37,6 +37,71 @@ describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true 
         expect(log.count).to eq 1
       end
     end
+
+    it "check link targets" do 
+      item1.update(link_target: "_blank", link_url: "/example.jp")
+      item1.reload
+      item2.update(link_target: "_self")
+      item2.reload
+      part.update(link_target: "")
+      part.reload
+      visit node_cms.full_url
+      expect(page).to have_css(".ss-image-box")
+      link_selector1 = ".ss-image-box-item-list span a[target='#{item1.link_target}'] img[alt='#{item1.name}']"
+      link_selector2 = ".ss-image-box-item-list span a img[alt='#{item2.name}']"
+
+      # check for the ad needs to open in new tab
+
+      expect(page).to have_selector(link_selector1)  
+      link = find(link_selector1).find(:xpath, '..')
+      expect(link[:target]).to eq "_blank"
+      previous_url = current_url
+      new_window = window_opened_by { link.click }
+
+      within_window new_window do
+        expect(previous_url).not_to eq current_url
+        expect(current_url).to include(item1.link_url)
+      end
+
+      # check for the ad needs to open in current_tab
+
+      expect(page).to have_selector(link_selector2)
+      link2 = find(link_selector2).find(:xpath, '..')
+      expect(link2[:target]).to eq "_self"
+      link2.click
+      expect(current_url).to eq previous_url
+      expect(current_url).to include(item2.link_url)
+    end
+
+    context "when the SHIRASAGI bumped up from previous version" do
+      before do
+        part.update(link_target: "")
+
+        # Ads::Banner pages don't have "link_target" just after bumped up from previous version
+        item1.unset(:link_target)
+        item1.unset(:link_target)
+      end
+
+      it do
+        visit node_cms.full_url
+
+        link_selector1 = ".ss-image-box-item-list span a img[alt='#{item1.name}']"
+        link_selector2 = ".ss-image-box-item-list span a img[alt='#{item2.name}']"
+        link1 = find(link_selector1).find(:xpath, '..')
+        link1_attributes = link1.evaluate_script("Array.from(this.attributes, (attribute) => attribute.name)")
+        expect(link1_attributes).to have(2).items
+        expect(link1_attributes).to include("href", "target")
+        expect(link1[:href]).to eq "#{item1.full_url}?#{{ redirect: node_cms.url }.to_query}"
+        expect(link1[:target]).to eq "_self" # or blank
+
+        link2 = find(link_selector2).find(:xpath, '..')
+        link2_attributes = link1.evaluate_script("Array.from(this.attributes, (attribute) => attribute.name)")
+        expect(link2_attributes).to have(2).items
+        expect(link2_attributes).to include("href", "target")
+        expect(link2[:href]).to eq "#{item2.full_url}?#{{ redirect: node_cms.url }.to_query}"
+        expect(link2[:target]).to eq "_self" # or blank
+      end
+    end
   end
 
   context "preview" do

@@ -7,6 +7,9 @@
 
   <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
   <dd><%= f.ss_file_field :file %></dd>
+  
+  <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
+  <dd><%= f.select :link_target, Ads::Banner.link_target_options %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>

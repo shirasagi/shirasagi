@@ -22,7 +22,8 @@ module Ads::Addon
 
     def link_target_options
       [
-        [I18n.t('ads.options.link_target.self'), ''],
+        [I18n.t('ads.options.link_target.individual_setting'), ''],
+        [I18n.t('ads.options.link_target.self'), 'self'],
         [I18n.t('ads.options.link_target.blank'), 'blank'],
       ]
     end
