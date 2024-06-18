@@ -2166,8 +2166,8 @@ footer.send {
 .tap-menu {
   display: none;
   position: absolute;
-  max-width: 140px;
   z-index: 100;
+  max-width: 140px;
   padding: 5px 0;
   border: $border-gray4;
   background: $white;
@@ -2200,6 +2200,44 @@ div.index {
     width: 32px;
     margin: 6px 0 6px -5px;
     float: left;
+  }
+
+  &.flex-list-head {
+    @include display-flex;
+    @include flex-wrap(wrap);
+    @include align-items(center);
+    gap: 5px;
+    margin: 0;
+    padding: 10px 14px;
+    font-weight: normal;
+
+    &:before, &:after {
+      content: "";
+      display: none;
+    }
+
+    .check {
+      width: unset;
+      margin: 0;
+      float: none;
+    }
+
+    .list-head-action, .list-head-search {
+      margin: 0;
+      float: none;
+    }
+
+    .list-head-right {
+      @include display-flex;
+      @include flex-wrap(wrap);
+      @include align-items(center);
+      gap: 5px;
+      margin-left: auto;
+      @include mb {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
   }
 }
 .list-head-title {
