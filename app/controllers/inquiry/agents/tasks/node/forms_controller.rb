@@ -3,6 +3,7 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
 
   def generate_inquiry_node(node, opts = {})
     return unless node.serve_static_file?
+    
     @cur_site      = node.site
     @cur_path      = opts[:url] || node.url
     @cur_main_path = @cur_path.sub(@cur_site.url, "/")
@@ -35,10 +36,10 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
   def generate
     #@node.save # save for release date
 
-    #if !@node.serve_static_file?
-    #  file = ::File.join(@node.path, "index.html")
-    #  File.delete(file) if File.exist?(file)
-    #end
+    if !@node.serve_static_file?
+     file = ::File.join(@node.path, "index.html")
+     File.delete(file) if File.exist?(file)
+    end
 
     if generate_inquiry_node @node
       @task.log "#{@node.url}index.html" if @task
