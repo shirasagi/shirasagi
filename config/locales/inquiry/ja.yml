@@ -207,7 +207,7 @@ ja:
   simple_captcha:
     placeholder: ""
     refresh_button_text: 違う画像
-    label: 画像の数字を入力してください
+    label: 画像の数字を半角で入力してください
     message:
       default: が正しくありません
     captcha_error: 画像認証はご利用いただけません。

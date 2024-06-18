@@ -16,13 +16,12 @@ module SS::CaptchaFilter
       h << "    <img src=\"data:image/jpeg;base64,#{@cur_captcha.out_captcha_image_base64}\">"
       h << '  </div>'
       h << '  <div class="field">'
-      h << '     <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer">'
+      h << '     <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\d{4}" inputmode="numeric" >'
       h << '  </div>'
       h << '  <div class="captcha-label">'
       h << "    #{t "simple_captcha.label"}"
       h << '  </div>'
       h << '</div>'
-
       return h.join("\n").html_safe
     end
 

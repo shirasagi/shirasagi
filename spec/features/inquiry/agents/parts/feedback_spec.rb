@@ -50,8 +50,10 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
       expect(page).to have_css("dd", text: comment_value.split("\n")[1])
-      expect(page).to have_css(".captcha-label", text: "画像の数字を入力してください")
-
+      expect(page).to have_css(".captcha-label", text: "画像の数字を半角で入力してください")
+      element = find('input[type="text"][name="answer[captcha_answer]"][id="answer_captcha_answer"][inputmode="numeric"]')
+      expect(element[:pattern]).to eq('\d{4}')
+      
       # unable to proceed ahead, because there is captcha
     end
   end
@@ -83,7 +85,9 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
       expect(page).to have_css("dd", text: comment_value.split("\n")[1])
-      expect(page).to have_css(".captcha-label", text: "画像の数字を入力してください")
+      expect(page).to have_css(".captcha-label", text: "画像の数字を半角で入力してください")
+      element = find('input[type="text"][name="answer[captcha_answer]"][id="answer_captcha_answer"][inputmode="numeric"]')
+      expect(element[:pattern]).to eq('\d{4}')
 
       # unable to proceed ahead, because there is captcha
     end
@@ -116,7 +120,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
       expect(page).to have_css("dd", text: comment_value.split("\n")[1])
-      expect(page).to have_no_css(".captcha-label", text: "画像の数字を入力してください")
+      expect(page).to have_no_css(".captcha-label", text: "画像の数字を半角で入力してください")
 
       # proceed ahead
       click_on I18n.t('inquiry.submit')
