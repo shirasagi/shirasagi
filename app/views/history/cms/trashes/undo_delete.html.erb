@@ -47,11 +47,13 @@
 
 <%= jquery do %>
   var $el = $(".btn-change-basename");
-  $el.on("click", function(ev) {
+  $el.one("click", function(ev) {
     var $parent = $el.closest("dd");
-    $parent.next("dd.hide").removeClass("hide");
+    var $next = $parent.next("dd.hide")
+    $next.removeClass("hide");
     $parent.remove();
 
+    setTimeout(function() { $next.trigger("change"); }, 11);
     ev.preventDefault();
     return false;
   });
