@@ -168,7 +168,7 @@ ja:
       event/addon/date:
         event_name: イベントタイトル
         event_dates: イベント日
-        event_recurrences: 日付
+        event_recurrences: 開催日
         event_deadline: 申込締切
       event/addon/calendar_list:
         event_display: 表示形式
