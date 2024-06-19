@@ -7,8 +7,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let!(:page) { create(:article_page, cur_node: node) }
   let!(:edit_exclude_dates_path) { event_apis_edit_exclude_dates_path(site.id) }
   let!(:admin_user) { cms_user }
-  
-  context "admin user" do 
+
+  context "admin user" do
     before do
       # get and save  auth token
       get auth_token_path
@@ -31,12 +31,12 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         { kind: "date", start_at: start_on1, frequency: "daily", until_on: until_on1}
       end
 
-      it " will check if the html have the specification block." do
+      it " will check if the html have the specification block. " do
         page.update(event_name: event_name, event_deadline: event_deadline, event_recurrences: [event_recurrence])
         params = {
           authenticity_token: @auth_token,
           index: 1,
-          item:{
+          item: {
             event_recurrences: [
               {
                 in_update_from_view: ""
