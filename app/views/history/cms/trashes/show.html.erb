@@ -11,8 +11,10 @@
         <dt><%= @item.model.t(:name) %></dt>
         <dd><%= @item.data[:name] %></dd>
 
-        <dt><%= @item.model.t(:filename) %></dt>
-        <dd><%= @item.data[:filename] %></dd>
+        <% if @item.model.ancestors.include?(Cms::Content) && @item.data.key?(:filename) %>
+          <dt><%= @item.model.t(:filename) %></dt>
+          <dd><%= @item.data[:filename] %></dd>
+        <% end %>
       </dl>
     </div>
   </div>

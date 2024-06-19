@@ -272,7 +272,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.buttons.restore')
 
-      click_on I18n.t("ss.links.change")
+      wait_for_event_fired("change") { click_on I18n.t("ss.links.change") }
       fill_in "item[basename]", with: new_filename
 
       click_button I18n.t('ss.buttons.restore')
