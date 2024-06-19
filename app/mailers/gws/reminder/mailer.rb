@@ -8,7 +8,8 @@ class Gws::Reminder::Mailer < ApplicationMailer
 
     from = site.sender_address
     to = format_email(reminder.user)
-    return nil if to.blank?
+    to = site.exclude_disallowed_email(to)
+    return false if to.blank?
 
     subject = I18n.t(
       "gws/reminder.notification.subject",

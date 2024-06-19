@@ -23,8 +23,22 @@ module Gws::Addon::System::GroupSetting
 
   def email_domain_allowed?(email)
     return true if allow_email_domains.blank?
-    domain = email.to_s.sub(/^.*@/, '')
+
+    domain = Mail::Address.new(email).domain rescue nil
+    return true if domain.blank?
+
     allow_email_domains.include?(domain)
+  end
+
+  def exclude_disallowed_emails(emails)
+    emails.map { |email| exclude_disallowed_email(email) }.compact
+  end
+
+  def exclude_disallowed_email(email)
+    return nil if email.blank?
+    return email if email_domain_allowed?(email)
+    Rails.logger.warn("exclude disallowed email : #{email}")
+    nil
   end
 
   def canonical_scheme_options

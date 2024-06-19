@@ -155,4 +155,49 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       end
     end
   end
+
+  context 'set sendmail_domains' do
+    before do
+      site.sendmail_domains = domains
+      site.update!
+    end
+
+    context "allowed domains" do
+      let!(:domains) { %w(example.jp) }
+
+      it do
+        expect(reminder.notifications).to be_present
+        Timecop.travel(reminder.notifications.first.notify_at) do
+          described_class.bind(site_id: site.id).perform_now
+        end
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+      end
+    end
+
+    context "disallowed domains" do
+      let!(:domains) { %w(example.com) }
+
+      it do
+        expect(reminder.notifications).to be_present
+        Timecop.travel(reminder.notifications.first.notify_at) do
+          described_class.bind(site_id: site.id).perform_now
+        end
+
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 0
+      end
+    end
+  end
 end
