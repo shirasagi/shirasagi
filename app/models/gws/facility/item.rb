@@ -27,13 +27,14 @@ class Gws::Facility::Item
   field :reservation_start_date, type: DateTime
   field :reservation_end_date, type: DateTime
   field :approval_check_state, type: String, default: 'disabled'
+  field :update_approved_state, type: String, default: 'disabled'
 
   belongs_to :category, class_name: 'Gws::Facility::Category'
 
   permit_params :name, :order, :category_id, :activation_date, :expiration_date
   permit_params :min_minutes_limit, :max_minutes_limit, :max_days_limit
   permit_params :reservation_start_date, :reservation_end_date
-  permit_params :approval_check_state
+  permit_params :approval_check_state, :update_approved_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :activation_date, datetime: true
@@ -82,7 +83,11 @@ class Gws::Facility::Item
   end
 
   def approval_check_state_options
-    %w(enabled disabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+    %w(disabled enabled).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  def update_approved_state_options
+    %w(disabled enabled).map { |v| [I18n.t("gws/facility.options.update_approved_state.#{v}"), v] }
   end
 
   def approval_check?
