@@ -9,7 +9,7 @@
           <dt><%= @item.model.t(:name) %></dt>
           <dd><%= @item.data[:name] %></dd>
 
-          <% if @item.data.key?(:filename) %>
+          <% if @item.model.ancestors.include?(Cms::Content) %>
             <dt><%= @item.model.t(:basename) %></dt>
             <dd><%= ::File.basename(@item.data[:filename]) %> <%= link_to t("ss.links.change"), "#addon-basic", class: "btn btn-change-basename" %></dd>
             <dd class="hide"><%= text_field_tag "#{f.object_name}[basename]", ::File.basename(@item.data[:filename]) %></dd>
