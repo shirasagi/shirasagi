@@ -87,6 +87,7 @@ en:
         term: "Term：%{term}"
         openrate: "Openrate：%{openrate}"
         expiration_date: "Expiration date：%{expiration_date}"
+        close_date: "Publication end date: "
       oauth2/application:
         header:
           name: Application Type

@@ -8,6 +8,9 @@
   <dt><%= @model.t :file_id %></dt>
   <dd><%= show_image_info @item.file %></dd>
 
+  <dt><%= @model.t :link_target %></dt>
+  <dd><%= (@item.present? && @item.link_target == "_blank") ? I18n.t('ads.options.link_target.blank') : I18n.t('ads.options.link_target.self') %></dd>
+
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
 

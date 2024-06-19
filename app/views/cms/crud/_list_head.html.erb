@@ -13,7 +13,7 @@ if change_state_all
   end
 end
 %>
-<div class="list-head">
+<div class="list-head flex-list-head">
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
@@ -32,5 +32,7 @@ end
     <% end %>
   </div>
 
-  <%= render template: "_search" %>
+  <div class="list-head-right">
+    <%= render template: "_search" %>
+  </div>
 </div>
