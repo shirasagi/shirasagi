@@ -1,0 +1,22 @@
+<div class="main">
+  <table class="index quick-edit-grid" data-col="4">
+    <thead>
+    <tr>
+      <th><%= @model.t :name %></th>
+      <th><%= @model.t :filename %></th>
+      <th><%= @model.t :order %></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |item| %>
+    <tr data-id="<%= item.id %>" data-updated="<%= item.updated.to_f %>">
+      <td><%= text_field_tag "name", item.name %></td>
+      <td><%= text_field_tag "filename", item.filename %></td>
+      <td><%= number_field_tag "order", item.order %></td>
+      <td><%# errors like update errors go here %></td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

@@ -34,5 +34,13 @@ end
 
   <div class="list-head-right">
     <%= render template: "_search" %>
+
+    <% if quick_edit_path = url_for(action: :quick_edit) rescue nil %>
+      <div class="alternative-actions">
+        <%= link_to quick_edit_path, class: "btn", title: "一括編集" do %>
+          <span class="material-icons-outlined md-13">tune</span>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>

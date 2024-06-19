@@ -20,8 +20,12 @@ Rails.application.routes.draw do
 
   content "category" do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
-    resources :nodes, concerns: [:deletion, :change_state, :integration]
-    resources :pages
+    resources :nodes, concerns: [:deletion, :change_state, :integration] do
+      get :quick_edit, on: :collection
+    end
+    resources :pages do
+      get :quick_edit, on: :collection
+    end
 
     get "conf/split" => "node/confs#split"
     post "conf/split" => "node/confs#split"

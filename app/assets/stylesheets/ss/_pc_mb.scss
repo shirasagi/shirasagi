@@ -2298,6 +2298,11 @@ div.index {
       text-align: right;
     }
   }
+
+  & ~ .alternative-actions {
+    border-left: $border-black;
+    padding-left: 5px;
+  }
 }
 .list-head-search-full {
   @include mb {

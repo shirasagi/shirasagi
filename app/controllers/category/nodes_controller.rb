@@ -22,4 +22,18 @@ class Category::NodesController < ApplicationController
     diff = @item.route !~ /^category\//
     diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
   end
+
+  public
+
+  def quick_edit
+    item = @model.new pre_params.merge(fix_params)
+    raise "403" unless item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    # set_items
+    @items = @model.site(@cur_site).node(@cur_node)
+    @items = @items.allow(:read, @cur_user)
+    @items = @items.order_by(filename: 1)
+
+    render
+  end
 end
