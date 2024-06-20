@@ -55,9 +55,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within "form" do
           expect(page).to have_css(".addon-head", text: I18n.t("ss.confirm.target_to_delete"))
-          expect(page).to have_css(".info", text: I18n.t('workflow.confirm.unable_to_delete_master_page'))
-          expect(page).to have_no_css(".check")
-          expect(page).to have_no_css(".send", text: I18n.t("ss.buttons.delete"))
+          expect(page).to have_css(".info", text: "差し替えページが作成されているため削除できません。")
+          # Checkbox isn't displyaed, or checkbox is disabled.
+          expect(page).to have_no_css('[type="checkbox"]')
+          expect(first('[type="checkbox"]')["disabled"]).to be_truthy
+          # The "Delete" button shall be displayed.
+          expect(page).to have_css(".send", text: I18n.t("ss.buttons.delete"))
         end
       end
     end
