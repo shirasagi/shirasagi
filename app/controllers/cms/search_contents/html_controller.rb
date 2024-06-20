@@ -162,6 +162,10 @@ class Cms::SearchContents::HtmlController < ApplicationController
         if old_value.is_a?(String)
           new_value = yield old_value
           attributes[field] = new_value if new_value != old_value
+          if ( field == :value && column_value.class.name == "Cms::Column::Value::Free" )
+            additional_field = :contains_urls
+            attributes[additional_field] = [""]
+          end
         elsif old_value.is_a?(Array)
           old_value = old_value.map(&:to_s)
           new_value = old_value.map(&block)
@@ -170,6 +174,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
       end
       column_value.set(attributes) if attributes.present?
     end
+    item.save!
     true
   end
 end
