@@ -9,9 +9,9 @@
 
   <% if partner_sites.count > 0 %>
     <div class="cms-tabs">
-      <%= link_to(tag.span(@cur_site.name, class: "tab-name"), url_for(action: :index), class: @s.partner_site.blank? ? "current" : nil) %>
+      <%= link_to(tag.span(@cur_site.name, class: "tab-name"), url_for(action: :index, s: { partner_site: nil }), class: params[:s].blank? || params[:s][:partner_site].blank? ? "current" : nil) %>
       <% partner_sites.each do |site| %>
-        <%= link_to(tag.span(site.name, class: "tab-name"), url_for(action: :index, s: { partner_site: site }), class: @s.partner_site == site.id.to_s ? "current" : nil) %>
+        <%= link_to(tag.span(site.name, class: "tab-name"), url_for(action: :index, s: { partner_site: site.id }), class: params[:s] && params[:s][:partner_site] == site.id.to_s ? "current" : nil) %>
       <% end %>
     </div>
   <% end %>
