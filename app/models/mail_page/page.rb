@@ -7,6 +7,7 @@ class MailPage::Page
   include Cms::Addon::Meta
   include Cms::Addon::Body
   include Cms::Addon::File
+  include Category::Addon::Category
   include Map::Addon::Page
   include Cms::Addon::RelatedPage
   include MailPage::Addon::ArrivalPlan
