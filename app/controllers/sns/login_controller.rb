@@ -16,18 +16,6 @@ class Sns::LoginController < ApplicationController
     raise "400"
   end
 
-  def remaining_session_lifetime
-    session_user = session[:user]
-    return unless session_user
-
-    last_logged_in = session_user["last_logged_in"]
-    return unless last_logged_in
-
-    end_of_session_time = last_logged_in + SS.sesession_lieftime_of_user(@cur_user)
-    life = end_of_session_time - Time.zone.now.to_i
-    life > 0 ? life : 0
-  end
-
   public
 
   def remote_login
@@ -48,7 +36,7 @@ class Sns::LoginController < ApplicationController
 
     SS.change_locale_and_timezone(SS.current_user)
 
-    retry_after = remaining_session_lifetime
+    retry_after = remaining_user_session_lifetime
     response.headers["Retry-After"] = retry_after.numeric? && retry_after > 0 ? retry_after : 5
     render plain: 'OK'
   end
