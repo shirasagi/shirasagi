@@ -23,6 +23,10 @@ class Category::NodesController < ApplicationController
     diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
   end
 
+  def item_params
+    params.permit(:name, :filename, :order)
+  end
+
   public
 
   def quick_edit
@@ -36,4 +40,14 @@ class Category::NodesController < ApplicationController
 
     render
   end
+
+  def update_inline
+    item = @model.find(params[:id])
+    if item.update(item_params)
+      render json: { success: true }
+    else
+      render json: { success: false, error: item.errors.full_messages.join(", ") }
+    end
+  end
+
 end

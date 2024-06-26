@@ -1,5 +1,5 @@
-<div class="main">
-  <table class="index quick-edit-grid" data-col="4">
+<div class="main" data-controller="ss--quick-edit" data-ss--quick-edit-url-value="<%= update_inline_category_nodes_path %>">
+  <table class="index quick-edit-grid" data-col="4" id="quick-edit-category-nodes">
     <thead>
     <tr>
       <th><%= @model.t :name %></th>
@@ -14,7 +14,7 @@
       <td><%= text_field_tag "name", item.name %></td>
       <td><%= text_field_tag "filename", item.filename %></td>
       <td><%= number_field_tag "order", item.order %></td>
-      <td><%# errors like update errors go here %></td>
+      <td class="error-messages"></td>
     </tr>
     <% end %>
     </tbody>

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
     resources :nodes, concerns: [:deletion, :change_state, :integration] do
       get :quick_edit, on: :collection
+      post :update_inline, on: :collection
     end
     resources :pages do
       get :quick_edit, on: :collection
