@@ -127,6 +127,9 @@
   <% if notice %>
     SS.ready(function() { SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); });
   <% end %>
+  <% if session_lifetime = remaining_user_session_lifetime %>
+    SS_Login.intervalTime = <%== (session_lifetime > 0 ? session_lifetime : 5).to_json %>;
+  <% end %>
 <% end %>
 </body>
 </html>
