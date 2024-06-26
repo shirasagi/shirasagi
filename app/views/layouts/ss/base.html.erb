@@ -130,6 +130,9 @@
   <% if session_lifetime = remaining_user_session_lifetime %>
     SS_Login.intervalTime = <%== (session_lifetime > 0 ? session_lifetime : 5).to_json %>;
   <% end %>
+  <% if controller && controller.respond_to?(:login_path_by_cookie, true) && (login_path = controller.send(:login_path_by_cookie)) %>
+    SS_Login.loginPath = <%== login_path.to_json %>;
+  <% end %>
 <% end %>
 </body>
 </html>
