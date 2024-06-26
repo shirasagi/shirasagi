@@ -90,6 +90,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".state", text: "非公開")
     end
 
+    context "with release_date and close_date" do
+      before do
+        item.set(release_date: Time.zone.now - 2.days, close_date: Time.zone.now - 1.day)
+      end
+
+      it "#copy" do
+        visit copy_path
+        within "form" do
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+        expect(page).to have_css("a", text: "[複製] #{item.name}")
+        expect(page).to have_css(".state", text: "非公開")
+      end
+    end
+
     context "#delete" do
       let(:user) { cms_user }
 
@@ -228,7 +244,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    it "check publish end date on index with wait" do 
+    it "check publish end date on index with wait" do
       item.update(close_date: item.released + 1.day)
       item.reload
       visit index_wait_close_path

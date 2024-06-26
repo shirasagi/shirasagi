@@ -16,6 +16,8 @@ module Cms::Addon
     end
 
     def validate_release_date
+      return if respond_to?(:new_clone?) && new_clone? && respond_to?(:master?) && master?
+
       self.released ||= release_date if respond_to?(:released)
 
       if close_date.present? && release_date.present? && release_date >= close_date
