@@ -2,47 +2,54 @@ this.SS_Login = (function () {
   function SS_Login() {
   }
 
-  SS_Login.intervalID = null;
-
-  SS_Login.intervalTime = 600000;
+  SS_Login.defaultIntervalTime = 600;
+  SS_Login.intervalTime = null;
 
   SS_Login.render = function () {
     $(document).on('ajaxComplete', function (e, xhr, status) {
       if (xhr.getResponseHeader('ajaxRedirect')) {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          return location.reload();
+          location.reload();
         }
       }
     });
-    return setTimeout(this.startLoggedinCheck, this.intervalTime);
+    var intervalTime = SS_Login.intervalTime || SS_Login.defaultIntervalTime;
+    setTimeout(this.loggedinCheck, intervalTime * 1000);
   };
 
-  SS_Login.startLoggedinCheck = function () {
-    return $.ajax({
+  SS_Login.loggedinCheck = function () {
+    $.ajax({
       url: '/.mypage/status',
       complete: function (xhr, status) {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          return SS_Login.intervalID = setInterval(SS_Login.keepLoggedinCheck, SS_Login.intervalTime);
+        var retryAfter = xhr.getResponseHeader("Retry-After");
+
+        var intervalTime;
+        if (retryAfter) {
+          intervalTime = parseInt(retryAfter);
         }
-      }
-    });
-  };
+        if (!intervalTime || intervalTime <= 0) {
+          intervalTime = SS_Login.intervalTime || SS_Login.defaultIntervalTime;
+        }
 
-  SS_Login.keepLoggedinCheck = function () {
-    return $.ajax({
-      url: '/.mypage/status',
-      complete: function (xhr, status) {
-        if (xhr.readyState === 4 && xhr.status === 403) {
-          if (SS_Login.intervalID) {
-            clearInterval(SS_Login.intervalID);
-          }
-          return alert(i18next.t("ss.warning.session_timeout"));
+        if (xhr.readyState !== 4) {
+          setTimeout(SS_Login.loggedinCheck, intervalTime * 1000);
+          return;
+        }
+        if (xhr.status === 200) {
+          // session is not expired
+          document.body.setAttribute("data-ss-session", "alive");
+          //$(document).trigger("ss:sessionAlive");
+          setTimeout(SS_Login.loggedinCheck, intervalTime * 1000);
+        }
+        if (xhr.status === 403) {
+          // session is expired
+          document.body.setAttribute("data-ss-session", "expired");
+          $(document).trigger("ss:sessionExpired");
+          alert(i18next.t("ss.warning.session_timeout"));
         }
       }
     });
   };
 
   return SS_Login;
-
 })();
-
