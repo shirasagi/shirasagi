@@ -33,6 +33,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.links.input")
         fill_in "item[basename]", with: "sample"
+        background_color = page.evaluate_script("window.getComputedStyle(document.querySelector('.event-recurrence-excludes')).backgroundColor")
+        expect(background_color).to eq("rgb(242, 242, 242)")
+        expect(page).to have_css("dt", text: "日付") 
         click_on I18n.t("ss.buttons.draft_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
