@@ -1,4 +1,3 @@
-<% partner_sites ||= [] %>
 <turbo-frame id="modal-frame">
   <%= jquery do %>
     <% if params[:layout] == "iframe" %>
@@ -8,7 +7,7 @@
     <% end %>
   <% end %>
 
-  <% if partner_sites.count > 0 %>
+  <% if partner_sites.present? && partner_sites.count > 0 %>
     <div class="cms-tabs">
       <%= link_to(tag.span(@cur_site.name, class: "tab-name"), url_for(action: :index, s: { partner_site: nil }), class: params[:s].blank? || params[:s][:partner_site].blank? ? "current" : nil) %>
       <% partner_sites.each do |site| %>
