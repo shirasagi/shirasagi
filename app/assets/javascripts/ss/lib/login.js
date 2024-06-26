@@ -5,6 +5,7 @@ this.SS_Login = (function () {
   var DEFAULT_INTERVAL_TIME = 60; // 1 minute
   var MAX_INTERVAL_TIME = 1800; // 30 minutes = 30 * 60 = 1800 secs
 
+  SS_Login.disabled = false;
   SS_Login.intervalTime = null;
   SS_Login.loginPath = null;
 
@@ -37,6 +38,10 @@ this.SS_Login = (function () {
   }
 
   SS_Login.render = function () {
+    if (SS_Login.disabled) {
+      return;
+    }
+
     $(document).on('ajaxComplete', function (e, xhr, status) {
       if (xhr.getResponseHeader('ajaxRedirect')) {
         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -52,6 +57,10 @@ this.SS_Login = (function () {
     $.ajax({
       url: '/.mypage/status',
       complete: function (xhr, status) {
+        if (SS_Login.disabled) {
+          return;
+        }
+
         var retryAfter = xhr.getResponseHeader("Retry-After");
 
         var intervalTime;
