@@ -25,7 +25,11 @@ class History::Trash
   end
 
   def restore(opts = {})
-    parent.restore(opts) if opts[:parent].present? && opts[:create_by_trash].present? && parent.present?
+    if opts[:parent].present? && opts[:create_by_trash].present? && parent.present?
+      parent_opts = opts.dup
+      parent_opts.delete(:basename)
+      parent.restore(parent_opts)
+    end
     data = self.data.dup
     if data.key?(:state)
       if opts[:state].present?
@@ -46,6 +50,7 @@ class History::Trash
     item = item.becomes_with_route(data[:route]) if data[:route].present?
     if model.include?(Cms::Content) && data[:depth].present? && data[:depth] > 1
       dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
+      dir.sub!(opts[:src_filename], opts[:dst_filename]) if opts[:src_filename].present? && opts[:dst_filename].present?
       item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
       item.errors.add :base, :not_found_parent_node if item_parent.blank?
 
