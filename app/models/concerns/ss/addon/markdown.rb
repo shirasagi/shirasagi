@@ -35,6 +35,13 @@ module SS::Addon
       end
     end
 
+    def summary_text(limit = 80)
+      text = self.text
+      text = ApplicationController.helpers.strip_tags(text) if text_type == 'cke'
+      text = text.squish.truncate(limit) if limit
+      text
+    end
+
     class << self
       def text_to_html(text)
         return nil if text.blank?
