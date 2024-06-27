@@ -1,4 +1,3 @@
-// app/javascript/controllers/ss/quick_edit_controller.js
 import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
 import {csrfToken, dispatchEvent} from "../../ss/tool"
@@ -15,9 +14,10 @@ export default class extends Controller {
     if (input.tagName.toLowerCase() === "input") {
       const row = input.closest("tr");
       const id = row.dataset.id;
+      const in_updated = row.dataset.updated;
       const field = input.name;
       const value = input.value;
-      const data = { id: id };
+      const data = { id: id, in_updated: in_updated };
       data[field] = value;
       fetch(this.urlValue, {
         method: "POST",
@@ -31,6 +31,7 @@ export default class extends Controller {
         .then(data => {
           if (data.success) {
             row.querySelector("td:last-child").innerText = i18next.t("ss.notice.saved");
+            row.dataset.updated = data.updated;
           } else {
             row.querySelector("td:last-child").innerText = data.error;
           }

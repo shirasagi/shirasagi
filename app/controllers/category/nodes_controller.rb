@@ -43,8 +43,10 @@ class Category::NodesController < ApplicationController
 
   def update_inline
     item = @model.find(params[:id])
+    item.in_updated = Time.zone.at(params[:in_updated].to_f).iso8601
+    
     if item.update(item_params)
-      render json: { success: true }
+      render json: { success: true, updated: item.reload.updated.to_f }
     else
       render json: { success: false, error: item.errors.full_messages.join(", ") }
     end
