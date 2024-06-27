@@ -46,4 +46,11 @@ SS.ready(function () {
   });
 
   Gws_Member.render();
+
+  // user detail
+  $(".user-detail").colorbox({
+    maxWidth: "80%",
+    maxHeight: "80%",
+    fixed: true
+  });
 });
