@@ -34,7 +34,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
           fill_in "order", with: "11"
           page.execute_script("document.querySelector('input[name=\"order\"]').blur()")
 
-          expect(page).to have_content("Saved successfully")
+          expect(page).to have_content(I18n.t("ss.notice.saved"))
         end
       end
 

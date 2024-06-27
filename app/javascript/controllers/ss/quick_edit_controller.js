@@ -1,5 +1,6 @@
 // app/javascript/controllers/ss/quick_edit_controller.js
 import { Controller } from "@hotwired/stimulus"
+import i18next from 'i18next'
 import {csrfToken, dispatchEvent} from "../../ss/tool"
 
 export default class extends Controller {
@@ -29,13 +30,13 @@ export default class extends Controller {
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            row.querySelector("td:last-child").innerText = "Saved successfully";
+            row.querySelector("td:last-child").innerText = i18next.t("ss.notice.saved");
           } else {
             row.querySelector("td:last-child").innerText = data.error;
           }
         })
         .catch(() => {
-          row.querySelector("td:last-child").innerText = "An error occurred";
+          row.querySelector("td:last-child").innerText = i18next.t("ss.notice.not_saved_successfully");
         });
     }
   }
