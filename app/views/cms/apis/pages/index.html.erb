@@ -1,4 +1,8 @@
 <turbo-frame id="modal-frame">
+  <% unless params[:controller] == "cms/apis/pages" %>
+    <% partner_sites ||= [] %>
+  <% end %>
+
   <%= jquery do %>
     <% if params[:layout] == "iframe" %>
       window.top.SS_SearchUI.modal({ $el: $(".ss-ajax-in-iframe-content") });
@@ -7,7 +11,7 @@
     <% end %>
   <% end %>
 
-  <% if partner_sites.present? && partner_sites.count > 0 %>
+  <% if partner_sites.count > 0 %>
     <div class="cms-tabs">
       <%= link_to(tag.span(@cur_site.name, class: "tab-name"), url_for(action: :index, s: { partner_site: nil }), class: params[:s].blank? || params[:s][:partner_site].blank? ? "current" : nil) %>
       <% partner_sites.each do |site| %>
