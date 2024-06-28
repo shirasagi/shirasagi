@@ -19,7 +19,7 @@ module SS::AuthFilter
     return nil if user.disabled?
 
     # is session expired?
-    end_of_session_time = last_logged_in + SS.sesession_lieftime_of_user(user)
+    end_of_session_time = last_logged_in + SS.session_lifetime_of_user(user)
     return nil if Time.zone.now.to_i > end_of_session_time
 
     user.decrypted_password = SS::Crypto.decrypt(session[:user]["password"])
