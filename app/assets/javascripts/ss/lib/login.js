@@ -9,6 +9,8 @@ this.SS_Login = (function () {
   SS_Login.intervalTime = null;
   SS_Login.loginPath = null;
 
+  var timeoutID = null;
+
   function normalizeInterval(interval) {
     if (!interval || !Number.isInteger(interval)) {
       return DEFAULT_INTERVAL_TIME;
@@ -50,10 +52,13 @@ this.SS_Login = (function () {
       }
     });
     var intervalTime = normalizeInterval(SS_Login.intervalTime);
-    setTimeout(this.loggedinCheck, intervalTime * 1000);
+    timeoutID = setTimeout(this.loggedinCheck, intervalTime * 1000);
   };
 
   SS_Login.loggedinCheck = function () {
+    clearTimeout(timeoutID);
+    timeoutID = null;
+
     $.ajax({
       url: '/.mypage/status',
       complete: function (xhr, status) {
@@ -74,14 +79,14 @@ this.SS_Login = (function () {
         if (xhr.readyState !== 4) {
           document.body.setAttribute("data-ss-session", "unknown");
           $(document).trigger("ss:sessionUnknown");
-          setTimeout(SS_Login.loggedinCheck, intervalTime * 1000);
+          timeoutID = setTimeout(SS_Login.loggedinCheck, intervalTime * 1000);
           return;
         }
         if (xhr.status === 200) {
           // session is not expired
           document.body.setAttribute("data-ss-session", "alive");
           $(document).trigger("ss:sessionAlive");
-          setTimeout(SS_Login.loggedinCheck, intervalTime * 1000);
+          timeoutID = setTimeout(SS_Login.loggedinCheck, intervalTime * 1000);
           return;
         }
         if (xhr.status === 403) {
