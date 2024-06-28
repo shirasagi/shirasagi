@@ -37,7 +37,9 @@ class Sns::LoginController < ApplicationController
     SS.change_locale_and_timezone(SS.current_user)
 
     retry_after = remaining_user_session_lifetime
-    response.headers["Retry-After"] = retry_after.numeric? && retry_after > 0 ? retry_after : 5
+    if retry_after.numeric? && retry_after > 0
+      response.headers["Retry-After"] = retry_after + 1
+    end
     render plain: 'OK'
   end
 end
