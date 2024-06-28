@@ -9,39 +9,47 @@
 <% end %>
 
 <%= form_tag search_path, multipart: true, method: "get" do %>
-  <h2><%= t('member.view.keyword') %></h2>
-  <div class="keyword">
-    <%= text_field_tag :keyword, @query[:keyword], class: "keyword" %>
-  </div>
+  <fieldset class="keyword">
+    <legend><%= label_tag :keyword, t('member.view.keyword') %></legend>
+    <div>
+      <%= text_field_tag :keyword, @query[:keyword] %>
+    </div>
+  </fieldset>
 
-  <h2><%= t('member.view.contributor') %></h2>
-  <div class="contributor">
-    <%= text_field_tag :contributor, @query[:contributor], class: "contributor" %>
-  </div>
+  <fieldset class="contributor">
+    <legend><%= label_tag :contributor, t('member.view.contributor') %></legend>
+    <div>
+      <%= text_field_tag :contributor, @query[:contributor] %>
+    </div>
+  </fieldset>
 
-  <h2><%= t('member.view.location') %></h2>
-  <div class="location">
-    <%= hidden_field_tag 'location_ids[]', "", id: nil %>
-    <% @locations.order_by(order: 1).each do |item| %>
-      <div class="<%= item.basename %>">
-        <%= check_box_tag 'location_ids[]', item.id, @query[:location_ids].index(item.id),
-          { :id => "q_location_ids_#{item.id}", :class => "prop"} %>
-      <label for=<%= "q_location_ids_#{item.id}" %>><%= item.name %></label>
-      </div>
-    <% end %>
-  </div>
+  <fieldset class="location">
+    <legend><%= t('member.view.location') %></legend>
+    <div>
+      <%= hidden_field_tag 'location_ids[]', "", id: nil %>
+      <% @locations.order_by(order: 1).each do |item| %>
+        <label class="<%= item.basename %>">
+          <%= check_box_tag 'location_ids[]', item.id, @query[:location_ids].index(item.id),
+            { id: "q_location_ids_#{item.id}" } %>
+          <%= item.name %>
+        </label>
+      <% end %>
+    </div>
+  </fieldset>
 
-  <h2><%= t('member.view.category') %></h2>
-  <div class="category">
-    <%= hidden_field_tag 'category_ids[]', "", id: nil %>
-    <% @categories.order_by(order: 1).each do |item| %>
-      <div class="<%= item.basename %>">
-        <%= check_box_tag 'category_ids[]', item.id, @query[:category_ids].index(item.id),
-          { :id => "q_category_ids_#{item.id}", :class => "prop"} %>
-      <label for=<%= "q_category_ids_#{item.id}" %>><%= item.name %></label>
-      </div>
-    <% end %>
-  </div>
+  <fieldset class="category">
+    <legend><%= t('member.view.category') %></legend>
+    <div>
+      <%= hidden_field_tag 'category_ids[]', "", id: nil %>
+      <% @categories.order_by(order: 1).each do |item| %>
+        <label class="<%= item.basename %>">
+          <%= check_box_tag 'category_ids[]', item.id, @query[:category_ids].index(item.id),
+            { id: "q_category_ids_#{item.id}" } %>
+          <%= item.name %>
+        </label>
+      <% end %>
+    </div>
+  </fieldset>
 
   <footer class="send">
     <%= submit_tag t('facility.submit.search'), name: nil %>

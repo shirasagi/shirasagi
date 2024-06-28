@@ -1,13 +1,13 @@
 <%= form_tag search_path, multipart: true, method: "get" do %>
-  <div class="name">
-    <h2><%= t("garbage.item") %></h2>
+  <fieldset class="name">
+    <legend><%= label_tag :name, t("garbage.item") %></legend>
     <%= text_field_tag :name, @name %>
-  </div>
+  </fieldset>
 
-  <div class="category">
-    <h2><%= t("garbage.category.setting") %></h2>
+  <fieldset class="category">
+    <legend><%= label_tag 'category_ids[]', t("garbage.category.setting") %></legend>
     <%= select_tag 'category_ids[]', options_for_select(@options, @category_ids.first), include_blank: "" %>
-  </div>
+  </fieldset>
 
   <footer class="send">
     <%= submit_tag t('facility.submit.search'), name: nil %>

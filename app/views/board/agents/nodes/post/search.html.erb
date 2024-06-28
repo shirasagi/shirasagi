@@ -5,9 +5,9 @@
 
 <nav class="search-settings">
   <%= form_tag "#{@cur_node.url}search", { method: :get } do %>
-    <%= "キーワード" %>
+    <%= label_tag :keyword, t("ss.keyword") %>
     <%= text_field_tag :keyword, params[:keyword] %>
-    <%= submit_tag "検索", name: :search %>
+    <%= submit_tag t("ss.buttons.search"), name: :search %>
   <% end %>
 </nav>
 

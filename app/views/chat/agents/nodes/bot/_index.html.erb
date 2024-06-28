@@ -10,7 +10,7 @@
     <% end %>
   </div>
   <div class="chat-form">
-    <%= text_field_tag 'chat[text]', '', class: 'chat-text' %>
+    <%= text_field_tag 'chat[text]', '', class: 'chat-text', aria: { label: t("mongoid.attributes.chat/history.text") } %>
     <%= button_tag t('ss.buttons.send'), type: 'button', class: 'chat-button', data: { disable_with: t("ss.buttons.sending") } %>
     <%= button_tag t('ss.buttons.close'), type: 'button', class: 'chat-dismiss' %>
   </div>
