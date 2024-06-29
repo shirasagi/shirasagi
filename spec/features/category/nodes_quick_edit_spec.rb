@@ -50,4 +50,85 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
       end    
     end
   end
+
+  context "concurrent quick edit to test optimistic lock" do
+
+    before do 
+      item.save!
+      item.reload
+    end
+
+    it "allows only one user to save changes" do
+      Capybara.using_session(:user1) do
+        login_cms_user
+        visit index_path
+        click_link "tune"
+        wait_for_ajax
+
+        within ".quick-edit-grid" do 
+          within "tr[data-id='#{item.id}']" do 
+            fill_in "name", with: "user1 name"
+          end
+        end
+      end
+
+      Capybara.using_session(:user2) do
+        login_cms_user
+        visit index_path
+        click_link "tune"
+        wait_for_ajax
+        within ".quick-edit-grid" do 
+          within "tr[data-id='#{item.id}']" do 
+            fill_in "name", with: "user2 name"
+            page.execute_script("document.querySelector('input[name=\"name\"]').blur()")
+            expect(page).to have_content(I18n.t("ss.notice.saved"))
+          end
+        end
+      end
+
+      Capybara.using_session(:user1) do
+        within ".quick-edit-grid" do 
+          within "tr[data-id='#{item.id}']" do 
+            page.execute_script("document.querySelector('input[name=\"name\"]').blur()")
+            expect(page).to have_content(I18n.t("errors.messages.invalid_updated"))
+          end
+        end
+          
+      end
+
+      # Giving it a 2nd try to make sure that user 2 can still make updates.
+
+      Capybara.using_session(:user2) do 
+        within ".quick-edit-grid" do 
+          within "tr[data-id='#{item.id}']" do 
+            fill_in "name", with: "user2 name updated"
+            page.execute_script("document.querySelector('input[name=\"name\"]').blur()")
+            expect(page).to have_content(I18n.t("ss.notice.saved"))
+          end
+        end
+      end
+
+      # making sure in both session if the value is updated properly
+
+      Capybara.using_session(:user1) do
+        visit quick_edit_path
+        expect(page).to have_css(".quick-edit-grid")
+        within ".quick-edit-grid" do 
+          within "tr[data-id='#{item.id}']" do 
+            expect(find("input[name='name']").value).to eq "user2 name updated"
+          end
+        end 
+      end
+
+      Capybara.using_session(:user2) do 
+        visit quick_edit_path
+        expect(page).to have_css(".quick-edit-grid")
+        within ".quick-edit-grid" do 
+          within "tr[data-id='#{item.id}']" do 
+            expect(find("input[name='name']").value).to eq "user2 name updated"
+          end
+        end 
+      end
+    end
+  end
 end
