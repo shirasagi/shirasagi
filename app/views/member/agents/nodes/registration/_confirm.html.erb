@@ -6,16 +6,16 @@
   <% end %>
 
   <% if @cur_node.notify_mail_enabled? %>
-  <%= f.hidden_field :sends_notify_mail, value: 'yes' %>
+  <%= f.hidden_field :sends_notify_mail, value: 'yes', id: nil %>
   <% else %>
-  <%= f.hidden_field :sends_verification_mail, value: 'yes' %>
+  <%= f.hidden_field :sends_verification_mail, value: 'yes', id: nil %>
   <% end %>
 
   <dl class="column name">
     <dt><%= @item.class.t :name %></dt>
     <dd>
       <%= @item.name %>
-      <%= f.hidden_field :name, value: @item.name %>
+      <%= f.hidden_field :name, value: @item.name, id: nil %>
     </dd>
   </dl>
 
@@ -23,7 +23,7 @@
     <dt><%= @item.class.t :email %></dt>
     <dd>
       <%= @item.email %>
-      <%= f.hidden_field :email, value: @item.email %>
+      <%= f.hidden_field :email, value: @item.email, id: nil %>
     </dd>
   </dl>
 
@@ -31,7 +31,7 @@
     <dt><%= @item.class.t :kana %></dt>
     <dd>
       <%= @item.kana %>
-      <%= f.hidden_field :kana, value: @item.kana %>
+      <%= f.hidden_field :kana, value: @item.kana, id: nil %>
     </dd>
   </dl>
 
@@ -39,7 +39,7 @@
     <dt><%= @item.class.t :organization_name %></dt>
     <dd>
       <%= @item.organization_name %>
-      <%= f.hidden_field :organization_name, value: @item.organization_name %>
+      <%= f.hidden_field :organization_name, value: @item.organization_name, id: nil %>
     </dd>
   </dl>
 
@@ -47,7 +47,7 @@
     <dt><%= @item.class.t :job %></dt>
     <dd>
       <%= @item.job %>
-      <%= f.hidden_field :job, value: @item.job %>
+      <%= f.hidden_field :job, value: @item.job, id: nil %>
     </dd>
   </dl>
 
@@ -55,7 +55,7 @@
     <dt><%= @item.class.t :tel %></dt>
     <dd>
       <%= @item.tel %>
-      <%= f.hidden_field :tel, value: @item.tel %>
+      <%= f.hidden_field :tel, value: @item.tel, id: nil %>
     </dd>
   </dl>
 
@@ -63,7 +63,7 @@
     <dt><%= @item.class.t :postal_code %></dt>
     <dd>
       <%= @item.postal_code %>
-      <%= f.hidden_field :postal_code, value: @item.postal_code %>
+      <%= f.hidden_field :postal_code, value: @item.postal_code, id: nil %>
     </dd>
   </dl>
 
@@ -71,7 +71,7 @@
     <dt><%= @item.class.t :addr %></dt>
     <dd>
       <%= @item.addr %>
-      <%= f.hidden_field :addr, value: @item.addr %>
+      <%= f.hidden_field :addr, value: @item.addr, id: nil %>
     </dd>
   </dl>
 
@@ -79,7 +79,7 @@
     <dt><%= @item.class.t :sex %></dt>
     <dd>
       <%= @item.label :sex %>
-      <%= f.hidden_field :sex, value: @item.sex %>
+      <%= f.hidden_field :sex, value: @item.sex, id: nil %>
     </dd>
   </dl>
 
@@ -93,10 +93,10 @@
         <%= tryb { "#{@item.in_birth[:day]}#{t("datetime.prompts.day")}" } %>
       <% end %>
       <%= f.fields_for :in_birth do |birth_f| %>
-        <%= birth_f.hidden_field :era, value: tryb { @item.in_birth[:era] } %>
-        <%= birth_f.hidden_field :year, value: tryb { @item.in_birth[:year] } %>
-        <%= birth_f.hidden_field :month, value: tryb { @item.in_birth[:month] } %>
-        <%= birth_f.hidden_field :day, value: tryb { @item.in_birth[:day] } %>
+        <%= birth_f.hidden_field :era, value: tryb { @item.in_birth[:era] }, id: nil %>
+        <%= birth_f.hidden_field :year, value: tryb { @item.in_birth[:year] }, id: nil %>
+        <%= birth_f.hidden_field :month, value: tryb { @item.in_birth[:month] }, id: nil %>
+        <%= birth_f.hidden_field :day, value: tryb { @item.in_birth[:day] }, id: nil %>
       <% end %>
     </dd>
   </dl>

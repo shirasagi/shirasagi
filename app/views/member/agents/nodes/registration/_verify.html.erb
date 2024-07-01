@@ -1,8 +1,8 @@
 <%= stylesheet_link_tag 'member/public', media: 'all' %>
 <%= javascript_include_tag 'member/public' %>
 
-<%= f.hidden_field_tag("token", params[:token]) %>
-<%= f.hidden_field_tag("group", params[:group]) if params[:group].present? %>
+<%= f.hidden_field_tag("token", params[:token], id: nil) %>
+<%= f.hidden_field_tag("group", params[:group], id: nil) if params[:group].present? %>
 
 <dl class="column name">
   <dt><%= f.label :name, @item.class.t(:name) %><span class="required"><%= t("ss.required_field") %></span></dt>
