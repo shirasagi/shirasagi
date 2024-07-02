@@ -22,4 +22,39 @@ class Category::NodesController < ApplicationController
     diff = @item.route !~ /^category\//
     diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
   end
+
+  def quick_edit_params
+    params.permit(:name, :index_name, :order)
+  end
+
+  public
+
+  def quick_edit
+    item = @model.new pre_params.merge(fix_params)
+    raise "403" unless item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    # set_items
+    @items = @model.site(@cur_site).node(@cur_node)
+    @items = @items.allow(:read, @cur_user)
+    @items = @items.order_by(order: 1)
+
+    render
+  end
+
+  def update_inline
+    item = @model.find(params[:id])
+    unless item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      # item.errors.add :base, t("errors.messages.auth_error")
+      render json: { success: false, error: t("errors.messages.auth_error") }
+      return
+    end
+
+    item.in_updated = Time.zone.at(params[:in_updated].to_f).iso8601
+    if item.update(quick_edit_params)
+      render json: { success: true, updated: item.reload.updated.to_f }
+    else
+      render json: { success: false, error: item.errors.full_messages.join(", ") }
+    end
+  end
+
 end
