@@ -81,9 +81,9 @@
 
 <dl class="see gws-addon-reminder">
   <dt>
-    <%= hidden_field_tag "item_name", @item.reference_name %>
-    <%= hidden_field_tag "item_model", @item.reference_model %>
-    <%= hidden_field_tag "item_id", @item.id %>
+    <%= hidden_field_tag "item_name", @item.reference_name, id: nil %>
+    <%= hidden_field_tag "item_model", @item.reference_model, id: nil %>
+    <%= hidden_field_tag "item_id", @item.id, id: nil %>
     <span class="gws-addon-reminder-label"><%= @item.t :reminder_date %></span>
     <%= @model.tt :reminder_date %>
   </dt>

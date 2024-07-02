@@ -46,7 +46,7 @@
     </div>
     <div class="row"><%= text_area_tag 'item[text]' %></div>
     <div class="row">
-      <%= hidden_field_tag('redirect_to', request.fullpath) %>
+      <%= hidden_field_tag('redirect_to', request.fullpath, id: nil) %>
       <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
     </div>
   <% end %>

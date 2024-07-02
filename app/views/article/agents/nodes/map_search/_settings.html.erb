@@ -1,8 +1,8 @@
 <fieldset class="keyword">
-  <legend><%= t("facility.keyword") %></legend>
+  <legend><%= label_tag :keyword, t("facility.keyword") %></legend>
 
   <div class="keyword">
-    <%= text_field_tag :keyword, @keyword, class: "keyword", placeholder: t("facility.keyword"), title: t("facility.keyword") %>
+    <%= text_field_tag :keyword, @keyword, class: "keyword", placeholder: t("facility.keyword") %>
   </div>
 </fieldset>
 
