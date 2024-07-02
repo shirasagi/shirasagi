@@ -79,7 +79,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[5]']")['value']).to eq '男性'
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
-          expect(page).to have_selector("input[name='item[8]']")
+          expect(find("[name='item[8]']")['value']).to be_blank
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
