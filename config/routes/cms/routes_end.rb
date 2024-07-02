@@ -117,7 +117,7 @@ Rails.application.routes.draw do
     end
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: [:deletion, :command, :change_state] do
+    resources :nodes, concerns: [:deletion, :command, :change_state, :download, :import] do
       get :routes, on: :collection
     end
 
@@ -491,7 +491,7 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :change_state]
+    resources :nodes, concerns: [:deletion, :change_state, :download, :import]
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
