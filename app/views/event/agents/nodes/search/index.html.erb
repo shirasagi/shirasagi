@@ -1,6 +1,6 @@
 <%= form_for(:item, url: @cur_node.url, method: "get", html: { class: 'event-search' }) do %>
   <fieldset class="keyword">
-    <legend><%= t("event.keyword") %></legend>
+    <legend><%= label_tag :search_keyword, t("event.keyword") %></legend>
     <%= text_field_tag :search_keyword, @keyword, class: "keyword" %>
   </fieldset>
 
@@ -24,7 +24,7 @@
   </fieldset>
 
   <fieldset class="event-facility">
-    <legend><%= t("event.facility.setting") %></legend>
+    <legend><%= label_tag :facility_id, t("event.facility.setting") %></legend>
     <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true %>
   </fieldset>
 

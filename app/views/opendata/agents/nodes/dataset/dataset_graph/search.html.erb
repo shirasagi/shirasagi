@@ -22,7 +22,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
 %>
 <div class="search-ui-form">
   <%= form_for :s, url: "#{@cur_node.url}search.html", html: { method: "GET", class: :search } do |f| %>
-    <%= f.text_field :keyword %>
+    <%= f.text_field :keyword, title: t("ss.keyword") %>
     <div class="submitters">
       <%= f.submit t("ss.buttons.search"), class: :btn %>
       <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}search.html", class: :btn %>

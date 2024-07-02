@@ -26,7 +26,7 @@ $(".member-photo-search-part .ajax-box").on("click", function () {
 <div class="member-photo-search-part">
   <%= form_tag search_path, multipart: true, method: "get" do %>
   <div class="keyword">
-    <%= text_field_tag :keyword, nil, class: "keyword" %>
+    <%= text_field_tag :keyword, nil, class: "keyword", title: t("ss.keyword") %>
     <%= submit_tag t("ss.buttons.search") %>
   </div>
   <% end %>

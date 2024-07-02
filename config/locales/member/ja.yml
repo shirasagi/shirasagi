@@ -123,6 +123,10 @@ ja:
         completed: 会員登録完了
     placeholder:
       member_name: お子さんの愛称、ニックネームを入力ください
+    birthday_era: 生年月日の元号
+    birthday_year: 生年月日の年
+    birthday_month: 生年月日の月
+    birthday_day: 生年月日の日
 
   modules:
     member: メンバー

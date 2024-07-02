@@ -24,9 +24,9 @@
         <%= render partial: "inquiry/agents/nodes/form/form", locals: { f: f, confirm: false }  %>
       <% end %>
       <% if @preview %>
-      <%= hidden_field_tag "preview", @preview %>
+      <%= hidden_field_tag "preview", @preview, id: nil %>
       <% end %>
-      <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_path %>
+      <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_path, id: nil %>
       <footer class="send">
         <%= f.submit confirmation_enabled ? t('inquiry.confirm') : t('inquiry.submit'), name: :submit %>
       </footer>

@@ -12,7 +12,7 @@
       <dt><%= @model.t :name %></dt>
       <dd><%= @item.name %></dd>
 
-      <dt><%= @model.t :delete_key %></dt>
+      <dt><%= f.label :delete_key, @model.t(:delete_key) %></dt>
       <dd><%= f.text_field :delete_key %></dd>
     </dl>
   </div>

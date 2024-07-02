@@ -23,8 +23,8 @@ ja:
     exclude_dates: 除外日
     dates:
       setting: 開催期間
-      start_date: 開始
-      close_date: 終了
+      start_date: 開催期間開始
+      close_date: 開催期間終了
     category:
       setting: カテゴリー
     search:

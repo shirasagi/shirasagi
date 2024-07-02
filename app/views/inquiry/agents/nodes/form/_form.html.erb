@@ -18,13 +18,13 @@
         <% if column.input_type =~ /upload_file/ %>
           <% file_data = @answer.find_data(column) %>
           <% if file_data && file_data.values.try(:[], 0) %>
-            <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0] %>
+            <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0], id: nil %>
             <%= file_data.values[2] %>
           <% end %>
         <% else %>
-          <%= f.hidden_field column.id, value: data %><%=br data %>
+          <%= f.hidden_field column.id, value: data, id: nil %><%=br data %>
           <% if column.input_confirm == "enabled" %>
-            <%= f.hidden_field "#{column.id}_confirm", value: confirm_data %>
+            <%= f.hidden_field "#{column.id}_confirm", value: confirm_data, id: nil %>
           <% end %>
         <% end %>
       <% end %>
@@ -68,7 +68,7 @@
         <% opt.merge!(column.additional_attr_to_h) %>
         <% file_data = @answer.find_data(column) %>
         <% if file_data && file_data.values.try(:[], 0) %>
-          <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0] if file_data.values[0] %>
+          <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0], id: nil if file_data.values[0] %>
           <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %><br />
           <%= file_data.values[2] %>
         <% else %>
