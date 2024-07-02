@@ -21,7 +21,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     end
     expect(page.evaluate_script("document.body.getAttribute('data-ss-session')")).to eq "alive"
 
-    Timecop.travel(Time.zone.now + (SS.session_lifetime_of_user(user) + 1).seconds) do
+    # CIでテストが失敗するため、1.minute を加える
+    Timecop.travel(Time.zone.now + SS.session_lifetime_of_user(user).seconds + 1.minute) do
       page.accept_alert(I18n.t("ss.warning.session_timeout")) do
         page.execute_script("SS_Login.loggedinCheck();")
       end
