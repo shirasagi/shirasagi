@@ -217,4 +217,17 @@ class ApplicationController < ActionController::Base
       request.session_options[:same_site] = nil
     end
   end
+
+  def remaining_user_session_lifetime
+    session_user = session[:user]
+    return unless session_user
+
+    last_logged_in = session_user["last_logged_in"]
+    return unless last_logged_in
+
+    end_of_session_time = last_logged_in + SS.session_lifetime_of_user(@cur_user)
+    life = end_of_session_time - Time.zone.now.to_i
+    life > 0 ? life : 0
+  end
+  helper_method :remaining_user_session_lifetime
 end

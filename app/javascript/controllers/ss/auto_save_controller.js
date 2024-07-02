@@ -57,7 +57,7 @@ export default class extends Controller {
   }
 
   #onUnload() {
-    if (this.#submitted) {
+    if (this.#submitted && this.#isSessionAlive()) {
       // form を送信したので local storage の編集途中のデータを削除
       localStorage.removeItem(this.#key())
     } else {
@@ -175,5 +175,19 @@ export default class extends Controller {
       newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML))
       scriptElement.parentElement.replaceChild(newScriptElement, scriptElement)
     })
+  }
+
+  #isSessionAlive() {
+    // セッション有効時、data-ss-session 属性が存在しないか、値が "alive" になる。
+    if (!document.body.hasAttribute("data-ss-session")) {
+      return true;
+    }
+
+    const sessionState = document.body.getAttribute("data-ss-session");
+    if (sessionState === "alive") {
+      return true;
+    }
+
+    return false;
   }
 }

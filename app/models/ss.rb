@@ -69,4 +69,8 @@ module SS
     end
     stringify_value
   end
+
+  def session_lifetime_of_user(user)
+    user.try(:session_lifetime) || SS.config.sns.session_lifetime
+  end
 end

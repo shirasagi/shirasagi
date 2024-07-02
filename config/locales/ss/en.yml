@@ -353,7 +353,9 @@ en:
       ie_browser: The browser you are using (IE) cannot perform large file uploads. Please use another browser (e.g. Google Chrome).
     warning:
       initial_password: Please change your initial password.
-      session_timeout: Your session has expired.
+      session_timeout: |-
+        You were automatically logged out of the system for security reasons because it had not been operated for a long time.
+        After closing this message, you will be returned to the login screen. Please log in to the system again to resume your work.
       password_expired: Your password has expired. Please change your password.
       password_neary_expired: Your password will expire soon. Please change your password.
     errors:
