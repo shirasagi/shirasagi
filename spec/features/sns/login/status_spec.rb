@@ -21,9 +21,9 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     end
     expect(page.evaluate_script("document.body.getAttribute('data-ss-session')")).to eq "alive"
 
-    # CIでテストが失敗するため、1.minute を加える
+    # 1.second 加えれば十分なはずだが、CIでテストが失敗するため、1.minute を加える
     Timecop.travel(Time.zone.now + SS.session_lifetime_of_user(user).seconds + 1.minute) do
-      page.accept_alert(I18n.t("ss.warning.session_timeout")) do
+      page.accept_alert(I18n.t("ss.warning.session_timeout", locale: user.lang)) do
         page.execute_script("SS_Login.loggedinCheck();")
       end
       expect(page.evaluate_script("document.body.getAttribute('data-ss-session')")).to eq "expired"
