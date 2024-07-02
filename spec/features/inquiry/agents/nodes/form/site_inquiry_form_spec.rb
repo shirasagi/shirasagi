@@ -60,7 +60,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq name
+          expect(find("[name='item[1]']")['value']).to eq name
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
@@ -111,7 +111,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq name
+          expect(find("[name='item[1]']")['value']).to eq name
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')

@@ -72,14 +72,14 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
-          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
-          expect(find('#item_3')['value']).to eq 'キーワード'
-          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
-          expect(find('#item_5')['value']).to eq '男性'
-          expect(find('#item_6')['value']).to eq '50代'
-          expect(find('#item_7_2')['value']).to eq '申請について'
-          expect(page).to have_selector('input#item_8')
+          expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
+          expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
+          expect(find("[name='item[3]']")['value']).to eq 'キーワード'
+          expect(find("[name='item[4]']")['value']).to eq 'shirasagi@example.jp'
+          expect(find("[name='item[5]']")['value']).to eq '男性'
+          expect(find("[name='item[6]']")['value']).to eq '50代'
+          expect(find("[name='item[7][2]']")['value']).to eq '申請について'
+          expect(page).to have_selector("input[name='item[8]']")
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
@@ -161,13 +161,13 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
-          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
-          expect(find('#item_3')['value']).to eq 'キーワード'
-          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
-          expect(find('#item_5')['value']).to eq '男性'
-          expect(find('#item_6')['value']).to eq '50代'
-          expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
+          expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
+          expect(find("[name='item[3]']")['value']).to eq 'キーワード'
+          expect(find("[name='item[4]']")['value']).to eq 'shirasagi@example.jp'
+          expect(find("[name='item[5]']")['value']).to eq '男性'
+          expect(find("[name='item[6]']")['value']).to eq '50代'
+          expect(find("[name='item[7][2]']")['value']).to eq '申請について'
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: ""
@@ -200,13 +200,13 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
-          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
-          expect(find('#item_3')['value']).to eq 'キーワード'
-          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
-          expect(find('#item_5')['value']).to eq '男性'
-          expect(find('#item_6')['value']).to eq '50代'
-          expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
+          expect(find("[name='item[2]']")['value']).to eq '株式会社シラサギ'
+          expect(find("[name='item[3]']")['value']).to eq 'キーワード'
+          expect(find("[name='item[4]']")['value']).to eq 'shirasagi@example.jp'
+          expect(find("[name='item[5]']")['value']).to eq '男性'
+          expect(find("[name='item[6]']")['value']).to eq '50代'
+          expect(find("[name='item[7][2]']")['value']).to eq '申請について'
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: "0000"
