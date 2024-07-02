@@ -57,7 +57,12 @@ module Cms::Apis::PageFilter
   end
 
   def set_items
-    @items = @model.site(@cur_site).exists(master_id: false)
+    if params[:s] && params[:s][:partner_site].present?
+      site = Cms::Site.find_by(id: params[:s][:partner_site])
+      @items = @model.site(site).exists(master_id: false)
+    else
+      @items = @model.site(@cur_site).exists(master_id: false)
+    end
 
     set_select_items
     set_statuses_items

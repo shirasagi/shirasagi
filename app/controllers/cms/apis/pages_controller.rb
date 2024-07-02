@@ -4,6 +4,14 @@ class Cms::Apis::PagesController < ApplicationController
 
   model Cms::Page
 
+  before_action :set_partner_sites
+
+  private
+
+  def set_partner_sites
+    @partner_sites ||= Cms::Site.all.where(partner_site_ids: @cur_site.id).to_a
+  end
+
   public
 
   def index
