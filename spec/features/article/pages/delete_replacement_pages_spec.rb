@@ -60,6 +60,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(page).to_not have_css("input[type='checkbox'][value='#{branch_page.id}'][checked='checked']")
       expect(page).to_not have_css("input[type='checkbox'][value='#{master_page.id}'][checked='checked']")
       expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
+      expect(page).to_not have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))
     end
 
     it "Hit index and try to delete without delete_alert_disabled" do
