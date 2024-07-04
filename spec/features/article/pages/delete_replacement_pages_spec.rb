@@ -52,10 +52,44 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       find('.destroy-all').click
       wait_for_ajax
 
+      contains_urls = Cms::Page.site(site).and_linking_pages(master_page)
+      delete_alert_enabled = cms_user.cms_role_permit_any?(site, %w(delete_cms_ignore_alert)) && contains_urls.present?
+      expect(contains_urls.present? && delete_alert_enabled).to eq false
+
       expect(page).to have_css("h2", text: I18n.t("ss.confirm.target_to_delete"))
       expect(page).to_not have_css("input[type='checkbox'][value='#{branch_page.id}'][checked='checked']")
       expect(page).to_not have_css("input[type='checkbox'][value='#{master_page.id}'][checked='checked']")
       expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
+    end
+
+    it "Hit index and try to delete without delete_alert_disabled" do
+      role = cms_role
+      role.update(permissions: (role.permissions + %w(delete_cms_ignore_alert)))
+      role.reload
+
+      visit index_path
+      expect(page).to have_css(".list-items")
+
+      within ".list-items" do 
+        expect(page).to have_css("input[type='checkbox'][value='#{master_page.id}']")
+        expect(page).to have_css("input[type='checkbox'][value='#{branch_page.id}']")
+        find("input[type='checkbox'][value='#{master_page.id}']").click
+        find("input[type='checkbox'][value='#{branch_page.id}']").click
+        expect(find("input[type='checkbox'][value='#{master_page.id}']")).to be_checked
+        expect(find("input[type='checkbox'][value='#{branch_page.id}']")).to be_checked
+      end
+      find('.destroy-all').click
+      wait_for_ajax
+
+      contains_urls = Cms::Page.site(site).and_linking_pages(master_page)
+      delete_alert_enabled = cms_user.cms_role_permit_any?(site, %w(delete_cms_ignore_alert)) && contains_urls.present?
+      expect(contains_urls.present? && delete_alert_enabled).to eq true
+
+      expect(page).to have_css("h2", text: I18n.t("ss.confirm.target_to_delete"))
+      expect(page).to_not have_css("input[type='checkbox'][value='#{branch_page.id}'][checked='checked']")
+      expect(page).to_not have_css("input[type='checkbox'][value='#{master_page.id}'][checked='checked']")
+      expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
+      expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))
     end
   end
 end
