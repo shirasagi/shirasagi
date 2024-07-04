@@ -67,7 +67,9 @@ module Gws::Addon::Import::Facility
               line << item.readable_member_names.join("\n")
               line << item.group_names.join("\n")
               line << item.user_names.join("\n")
-              line << item.permission_level
+              unless SS.config.ss.disable_permission_level
+                line << item.permission_level
+              end
               data << line
             end
           end
@@ -83,8 +85,11 @@ module Gws::Addon::Import::Facility
         headers += columns_headers
         headers += %w(
           reservable_group_names reservable_member_names readable_setting_range
-          readable_group_names readable_member_names group_names user_names permission_level
+          readable_group_names readable_member_names group_names user_names
         )
+        unless SS.config.ss.disable_permission_level
+          headers << "permission_level"
+        end
         headers
       end
 

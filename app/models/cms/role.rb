@@ -28,18 +28,25 @@ class Cms::Role
     private
 
     def header
-      %w(id name permissions permission_level).map { |e| t e }
+      headers = %w(id name permissions)
+      unless SS.config.ss.disable_permission_level
+        headers << 'permission_level'
+      end
+      headers.map { |e| t e }
     end
 
     def row(item)
       item.site ||= site
 
-      [
+      row = [
         item.id,
         item.name,
-        localized_permissions(item).join("\n"),
-        item.permission_level
+        localized_permissions(item).join("\n")
       ]
+      unless SS.config.ss.disable_permission_level
+        row << item.permission_level
+      end
+      row
     end
 
     def localized_permissions(item)
