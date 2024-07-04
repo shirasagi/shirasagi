@@ -10,27 +10,29 @@ module SS::CaptchaFilter
     session[:captcha_id] = @cur_captcha.id
 
     if @cur_captcha.captcha_error.blank?
-      h = []
-      h << '<div class="simple-captcha">'
-      h << '  <div class="image">'
-      h << "    <img src=\"data:image/jpeg;base64,#{@cur_captcha.out_captcha_image_base64}\">"
-      h << '  </div>'
-      h << '  <div class="field">'
-      h << '     <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\d{4}" inputmode="numeric" >'
-      h << '  </div>'
-      h << '  <div class="captcha-label">'
-      h << "    #{t "simple_captcha.label"}"
-      h << '  </div>'
-      h << '</div>'
-      return h.join("\n").html_safe
+      h = <<~HTML
+        <div class="simple-captcha">
+          <div class="image">
+            <img src="data:image/jpeg;base64,#{@cur_captcha.out_captcha_image_base64}">
+          </div>
+          <div class="field">
+            <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\d{4}" inputmode="numeric" title="#{t "simple_captcha.title"}" >
+          </div>
+          <div class="captcha-label">
+            #{t "simple_captcha.label"}
+          </div>
+        </div>
+      HTML
+      return h.html_safe
     end
 
     if show_specific_error
-      h = []
-      h << "<p>#{t "simple_captcha.captcha_error"}</p>"
-      h << "<p>#{@cur_captcha.captcha_error}</p>"
+      h = <<~HTML
+        <p>#{t "simple_captcha.captcha_error"}</p>
+        <p>#{@cur_captcha.captcha_error}</p>
+      HTML
 
-      return h.join("\n").html_safe
+      return h.html_safe
     else
       return "<p>#{t "simple_captcha.captcha_error"}</p>".html_safe
     end
