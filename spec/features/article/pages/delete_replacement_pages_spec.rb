@@ -68,6 +68,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       role.update(permissions: (role.permissions + %w(delete_cms_ignore_alert)))
       role.reload
 
+      contains_urls = Cms::Page.site(site).and_linking_pages(master_page)
+      delete_alert_enabled = cms_user.cms_role_permit_any?(site, %w(delete_cms_ignore_alert)) && contains_urls.present?
+      expect(contains_urls.present? && delete_alert_enabled).to eq true
+
       visit index_path
       expect(page).to have_css(".list-items")
 
@@ -81,16 +85,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       find('.destroy-all').click
       wait_for_ajax
-
-      contains_urls = Cms::Page.site(site).and_linking_pages(master_page)
-      delete_alert_enabled = cms_user.cms_role_permit_any?(site, %w(delete_cms_ignore_alert)) && contains_urls.present?
-      expect(contains_urls.present? && delete_alert_enabled).to eq true
-
       expect(page).to have_css("h2", text: I18n.t("ss.confirm.target_to_delete"))
-      # expect(page).to_not have_css("input[type='checkbox'][value='#{branch_page.id}'][checked='checked']")
-      # expect(page).to_not have_css("input[type='checkbox'][value='#{master_page.id}'][checked='checked']")
-      # expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
-      # expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))
 
       # master page
       within "[data-id='#{master_page.id}']" do
@@ -104,6 +99,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       # branch page
       within "[data-id='#{branch_page.id}']" do
         # branch page is always safe to delete.
+        contains_urls = Cms::Page.site(site).and_linking_pages(branch_page)
+        delete_alert_enabled = cms_user.cms_role_permit_any?(site, %w(delete_cms_ignore_alert)) && contains_urls.present?
+        expect(contains_urls.present? && delete_alert_enabled).to eq false
         expect(page).to have_css("[type='checkbox']")
         if delete_alert_enabled
           expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))

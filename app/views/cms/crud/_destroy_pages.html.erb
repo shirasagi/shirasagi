@@ -1,31 +1,39 @@
 <%
   contains_urls = Cms::Page.site(@cur_site).and_linking_pages(item)
+  has_branch_pages = item.branches.present?
+  is_branch = item.branch? && !has_branch_pages
   delete_alert_enabled = @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && contains_urls.present?
-  has_branch_page = (item.branches.present? || item.branch?)
-  if contains_urls.present?
-    if delete_alert_enabled
-      check_state = "unchecked"
-    elsif has_branch_page
-      check_state = "hide"
-    else
-      check_state = "disabled" # when pages other than branch page present or linked 
-    end
-  else
-    if has_branch_page 
-      check_state = "hide"
-    else
-      check_state = "checked"
-    end
-  end
+
+  # Determine the check state based on the presence of URLs and branch pages
+  check_state = if contains_urls.present?
+                  if delete_alert_enabled && !has_branch_pages
+                    "unchecked" # User can ignore alerts and no branch pages exist
+                  elsif has_branch_pages
+                    "hide" # Branch pages are present, hide the checkbox
+                  else
+                    "safe_to_delete" # Linked pages present but no branch pages
+                  end
+                else
+                  if has_branch_pages
+                    "hide" # Branch pages are present, hide the checkbox
+                  elsif is_branch
+                    "safe_to_delete" # Item is a branch page without any other branches
+                  else
+                    "checked" # No linked pages or branches, safe to check
+                  end
+                end
 %>
+
 <li class="list-item" data-id="<%= item.id %>">
   <label class="check">
     <% case check_state %>
       <% when "unchecked" %>
         <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
+      <% when "safe_to_delete" %>
+        <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
       <% when "checked" %>
         <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
-      <%# No need to show anything for "hide" and "disabled" states %>
+      <%# No need to show anything for "hide" %>
     <% end %>
   </label>
   <div class="info">
@@ -43,7 +51,7 @@
             class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %>
         <% when "checked" %>
           <%= t("ss.confirm.not_contains_links_in_file") %>
-        <% when "disabled" %>
+        <% when "safe_to_delete" %>
           <%= link_to t("ss.confirm.contains_links_in_file"), { action: :contains_urls, id: item },
             class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %>
         <% when "hide" %>
