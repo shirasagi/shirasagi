@@ -87,10 +87,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(contains_urls.present? && delete_alert_enabled).to eq true
 
       expect(page).to have_css("h2", text: I18n.t("ss.confirm.target_to_delete"))
-      expect(page).to_not have_css("input[type='checkbox'][value='#{branch_page.id}'][checked='checked']")
-      expect(page).to_not have_css("input[type='checkbox'][value='#{master_page.id}'][checked='checked']")
-      expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
-      expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))
+      # expect(page).to_not have_css("input[type='checkbox'][value='#{branch_page.id}'][checked='checked']")
+      # expect(page).to_not have_css("input[type='checkbox'][value='#{master_page.id}'][checked='checked']")
+      # expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
+      # expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))
+
+      # master page
+      within "[data-id='#{master_page.id}']" do
+        # master page unable to delete.
+        # If the master page is deleted, the relationship in the database becomes inconsistent,
+        # causing unrecoverable problems with the operation on the branch page.
+        expect(page).to have_no_css("[type='checkbox']")
+        expect(page).to have_content(I18n.t("ss.confirm.unable_to_delete_due_to_branch_page"))
+      end
+
+      # branch page
+      within "[data-id='#{branch_page.id}']" do
+        # branch page is always safe to delete.
+        expect(page).to have_css("[type='checkbox']")
+        if delete_alert_enabled
+          expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert"))
+        else
+          expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file"))
+        end
+      end
     end
   end
 end
