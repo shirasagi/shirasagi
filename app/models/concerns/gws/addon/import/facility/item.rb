@@ -224,7 +224,6 @@ module Gws::Addon::Import::Facility
       readable_member_names = row[header_t("readable_member_names")].to_s.strip.split("\n")
       group_names = row[header_t("group_names")].to_s.strip.split("\n")
       user_names = row[header_t("user_names")].to_s.strip.split("\n")
-      permission_level = row[header_t("permission_level")].to_s.strip
       text_type = row[header_value_to_text("type")].to_s.strip
       text = row[header_value_to_text("html")].to_s.strip
 
@@ -268,7 +267,9 @@ module Gws::Addon::Import::Facility
       item.readable_member_ids = user_names_to_ids(readable_member_names)
       item.group_ids = group_names_to_ids(group_names)
       item.user_ids = user_names_to_ids(user_names)
-      item.permission_level = permission_level
+      if row.key?(header_t("permission_level"))
+        item.permission_level = row[header_t("permission_level")].to_s.strip
+      end
 
       item.approval_check_state = approval_check_state_datas_text_to_value(approval_check_state)
       if item.save
