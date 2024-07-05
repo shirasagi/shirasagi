@@ -54,7 +54,7 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
     return unless row.key?(key)
 
     value = row[key].try(:strip)
-    if block_given?
+    if block
       return yield value
     end
 
