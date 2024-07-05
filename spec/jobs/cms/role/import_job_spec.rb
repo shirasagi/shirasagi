@@ -34,7 +34,7 @@ describe Cms::Role::ImportJob, dbscope: :example do
         expect(role.permission_level).to be_numeric
       end
       Cms::Role.find(role3.id).tap do |role|
-        expect(role.permissions).to be_present
+        expect(role.permissions).to be_blank
         expect(role.permission_level).to be_numeric
       end
     end
