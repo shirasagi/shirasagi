@@ -10,16 +10,17 @@ module SS::CaptchaFilter
     session[:captcha_id] = @cur_captcha.id
 
     if @cur_captcha.captcha_error.blank?
+      title = CGI.escape_html(t "simple_captcha.title")
       h = <<~HTML
         <div class="simple-captcha">
           <div class="image">
             <img src="data:image/jpeg;base64,#{@cur_captcha.out_captcha_image_base64}">
           </div>
           <div class="field">
-            <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\d{4}" inputmode="numeric" title="#{t "simple_captcha.title"}" >
+            <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\d{4}" inputmode="numeric" title="#{title}" >
           </div>
           <div class="captcha-label">
-            #{t "simple_captcha.label"}
+            #{CGI.escape_html(t "simple_captcha.label")}
           </div>
         </div>
       HTML
@@ -28,13 +29,13 @@ module SS::CaptchaFilter
 
     if show_specific_error
       h = <<~HTML
-        <p>#{t "simple_captcha.captcha_error"}</p>
-        <p>#{@cur_captcha.captcha_error}</p>
+        <p>#{CGI.escape_html(t "simple_captcha.captcha_error")}</p>
+        <p>#{CGI.escape_html(@cur_captcha.captcha_error)}</p>
       HTML
 
       return h.html_safe
     else
-      return "<p>#{t "simple_captcha.captcha_error"}</p>".html_safe
+      return "<p>#{CGI.escape_html(t "simple_captcha.captcha_error")}</p>".html_safe
     end
 
     return
