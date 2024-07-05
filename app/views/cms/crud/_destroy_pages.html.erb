@@ -29,11 +29,17 @@
     <% case check_state %>
       <% when "unchecked" %>
         <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
-      <% when "safe_to_delete" %>
-        <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
       <% when "checked" %>
         <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
       <%# No need to show anything for "hide" %>
+    <% end %>
+    
+    <% if check_state == "safe_to_delete" %>
+      <% if delete_alert_enabled %>
+         <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
+      <% else %>
+         <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+      <% end %>
     <% end %>
   </label>
   <div class="info">
