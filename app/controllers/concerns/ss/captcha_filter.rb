@@ -17,7 +17,7 @@ module SS::CaptchaFilter
             <img src="data:image/jpeg;base64,#{@cur_captcha.out_captcha_image_base64}">
           </div>
           <div class="field">
-            <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\d{4}" inputmode="numeric" title="#{title}" >
+            <input type="text" name="answer[captcha_answer]" id="answer_captcha_answer" pattern="\\d{4}" inputmode="numeric" title="#{title}" >
           </div>
           <div class="captcha-label">
             #{CGI.escape_html(I18n.t("simple_captcha.label"))}
