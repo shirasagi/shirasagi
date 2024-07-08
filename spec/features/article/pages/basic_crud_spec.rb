@@ -110,7 +110,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "#delete" do
       let(:user) { cms_user }
 
-      it "permited and contains_urls" do
+      it "permitted and contains_urls" do
         visit delete_path2
         expect(page).to have_css(".delete")
         within "form" do
@@ -119,7 +119,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.deleted')
       end
 
-      it "permited and not contains_urls" do
+      it "permitted and not contains_urls" do
         visit delete_path
         expect(page).to have_css(".delete")
         within "form" do
@@ -128,7 +128,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.deleted')
       end
 
-      it "not permited and contains_urls" do
+      it "not permitted and contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(delete_private_article_pages delete_other_article_pages))
         visit delete_path2
@@ -136,7 +136,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
       end
 
-      it "not permited and not contains_urls" do
+      it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(delete_private_article_pages delete_other_article_pages))
         visit delete_path
@@ -147,7 +147,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.deleted')
       end
 
-      it "destroy_all not permited and contains_urls" do
+      it "destroy_all not permitted and contains_urls" do
         role = user.cms_roles[0]
         role_permissions = role.permissions.map do |permission|
           next if permission == "delete_cms_ignore_alert"
@@ -203,7 +203,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "#draft_save" do
       let(:user) { cms_user }
 
-      it "permited and contains_urls" do
+      it "permitted and contains_urls" do
         visit edit_path2
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
@@ -211,7 +211,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
 
-      it "permited and not contains_urls" do
+      it "permitted and not contains_urls" do
         visit edit_path
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
@@ -219,7 +219,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
 
-      it "not permited and contains_urls" do
+      it "not permitted and contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
                                     release_private_article_pages release_other_article_pages
@@ -232,7 +232,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
       end
 
-      it "not permited and not contains_urls" do
+      it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
                                     release_private_article_pages release_other_article_pages
