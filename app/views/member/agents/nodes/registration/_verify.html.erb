@@ -1,30 +1,30 @@
 <%= stylesheet_link_tag 'member/public', media: 'all' %>
 <%= javascript_include_tag 'member/public' %>
 
-<%= f.hidden_field_tag("token", params[:token]) %>
-<%= f.hidden_field_tag("group", params[:group]) if params[:group].present? %>
+<%= f.hidden_field_tag("token", params[:token], id: nil) %>
+<%= f.hidden_field_tag("group", params[:group], id: nil) if params[:group].present? %>
 
 <dl class="column name">
-  <dt><%= @item.class.t :name %><span class="required"><%= t("ss.required_field") %></span></dt>
+  <dt><%= f.label :name, @item.class.t(:name) %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.text_field :name %><%= remarks :name %></dd>
 </dl>
 
 <dl class="column email">
-  <dt><%= @item.class.t :email %></dt>
+  <dt><%= @item.class.t(:email) %></dt>
   <dd><%= @item.email %></dd>
 </dl>
 
 <dl class="column password">
-  <dt><%= @item.t :in_password %><span class="required"><%= t("ss.required_field") %></span></dt>
+  <dt><%= f.label :in_password, @item.t(:in_password) %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.password_field :in_password, autocomplete: "new-password" %><%= remarks :in_password %></dd>
 
-  <dt><%= @item.class.t :in_password_again %><span class="required"><%= t("ss.required_field") %></span></dt>
+  <dt><%= f.label :in_password_again, @item.class.t(:in_password_again) %><span class="required"><%= t("ss.required_field") %></span></dt>
   <dd><%= f.password_field :in_password_again, autocomplete: "new-password" %><%= remarks :in_password_again %></dd>
 </dl>
 
 <dl class="column kana">
   <dt>
-    <%= @item.class.t :kana %>
+    <%= f.label :kana, @item.class.t(:kana) %>
     <% if @cur_node.kana_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -34,7 +34,7 @@
 
 <dl class="column organization-name">
   <dt>
-    <%= @item.class.t :organization_name %>
+    <%= f.label :organization_name, @item.class.t(:organization_name) %>
     <% if @cur_node.organization_name_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -44,7 +44,7 @@
 
 <dl class="column job">
   <dt>
-    <%= @item.class.t :job %>
+    <%= f.label :job, @item.class.t(:job) %>
     <% if @cur_node.job_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -54,7 +54,7 @@
 
 <dl class="column tel">
   <dt>
-    <%= @item.class.t :tel %>
+    <%= f.label :tel, @item.class.t(:tel) %>
     <% if @cur_node.tel_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -64,7 +64,7 @@
 
 <dl class="column postal-code">
   <dt>
-    <%= @item.class.t :postal_code %>
+    <%= f.label :postal_code, @item.class.t(:postal_code) %>
     <% if @cur_node.postal_code_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -79,7 +79,7 @@
 
 <dl class="column addr">
   <dt>
-    <%= @item.class.t :addr %>
+    <%= f.label :addr, @item.class.t(:addr) %>
     <% if @cur_node.addr_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -89,7 +89,7 @@
 
 <dl class="column sex">
   <dt>
-    <%= @item.class.t :sex %>
+    <%= @item.class.t(:sex) %>
     <% if @cur_node.sex_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -106,7 +106,7 @@
 
 <dl class="column birthday">
   <dt>
-    <%= @item.class.t :birthday %>
+    <%= @item.class.t(:birthday) %>
     <% if @cur_node.birthday_required? %>
     <span class="required"><%= t("ss.required_field") %></span>
     <% end %>
@@ -114,12 +114,12 @@
   <dd>
     <%= f.fields_for :in_birth do |birth_f| %>
       <% era, year, month, day = @item.parse_in_birth %>
-      <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
-      <%= birth_f.number_field :year, value: year %>
+      <%= birth_f.select :era, @item.wareki_options, { selected: era, include_blank: true }, { title: t("member.birthday_era") } %>
+      <%= birth_f.number_field :year, value: year, title: t("member.birthday_year") %>
       <%= t("datetime.prompts.year") %>
-      <%= birth_f.select :month, options_for_select((1..12).to_a, month), include_blank: true  %>
+      <%= birth_f.select :month, options_for_select((1..12).to_a, month), { include_blank: true }, { title: t("member.birthday_month") } %>
       <%= t("datetime.prompts.month") %>
-      <%= birth_f.select :day, options_for_select((1..31).to_a, day), include_blank: true %>
+      <%= birth_f.select :day, options_for_select((1..31).to_a, day), { include_blank: true }, { title: t("member.birthday_day") } %>
       <%= t("datetime.prompts.day") %>
     <% end %>
     <%= remarks :birthday %>
