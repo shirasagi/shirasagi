@@ -1,5 +1,5 @@
 <%
-  contains_urls = Cms::Page.site(@cur_site).and_linking_pages(item)
+  contains_urls = Cms.contains_urls(item, site: @cur_site)
   has_branch_pages = item.branches.present?
   is_branch = item.branch? && !has_branch_pages
   delete_alert_enabled = @cur_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) && contains_urls.present?
