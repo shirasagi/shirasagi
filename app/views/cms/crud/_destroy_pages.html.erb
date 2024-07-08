@@ -23,7 +23,6 @@
                   end
                 end
 %>
-
 <li class="list-item" data-id="<%= item.id %>">
   <label class="check">
     <% case check_state %>
@@ -36,6 +35,8 @@
     
     <% if check_state == "safe_to_delete" %>
       <% if delete_alert_enabled %>
+         <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
+      <% elsif (!delete_alert_enabled && contains_urls.present?)%>
          <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
       <% else %>
          <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
