@@ -408,7 +408,11 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
           expect(plan.start_at).to eq plan_to_csv.start_at
           expect(plan.end_at).to eq plan_to_csv.end_at
           expect(plan.member_ids).to include(user.id)
-          expect(plan.permission_level).to eq permission_level
+          if SS.config.ss.disable_permission_level
+            expect(plan.permission_level).to be_numeric
+          else
+            expect(plan.permission_level).to eq permission_level
+          end
           expect(plan.user_ids).to include(user.id, user1.id)
           expect(plan.group_ids).to include(group1.id)
           expect(plan.custom_group_ids).to include(custom_group1.id)
