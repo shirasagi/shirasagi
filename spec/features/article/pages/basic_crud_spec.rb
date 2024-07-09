@@ -160,8 +160,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_content I18n.t('ss.confirm.contains_links_in_file')
-        expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
+        expect(page).to have_css("h2", text: I18n.t('ss.confirm.target_to_delete'))
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_no_css("[type='checkbox']")
+          expect(page).to have_content I18n.t('ss.confirm.contains_links_in_file')
+        end
+        within "[data-id='#{item3.id}']" do
+          first("[type='checkbox']").tap do |checkbox|
+            expect(checkbox["checked"]).to eq "true"
+            expect(checkbox["disabled"]).to eq "false"
+          end
+          expect(page).to have_content I18n.t('ss.confirm.not_contains_links_in_file')
+        end
         click_button I18n.t('ss.buttons.delete')
         wait_for_ajax
 
