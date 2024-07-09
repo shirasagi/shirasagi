@@ -102,7 +102,16 @@ describe "event_pages", type: :feature, js: true do
           click_on I18n.t("ss.links.import")
         end
       end
-      expect(page).to have_content I18n.t("ss.notice.started_import")
+      wait_for_notice I18n.t("ss.notice.started_import")
+
+      expect(enqueued_jobs.length).to eq 1
+      enqueued_jobs.first.tap do |enqueued_job|
+        expect(enqueued_job[:job]).to eq Event::Page::ImportJob
+        expect(enqueued_job[:args]).to be_present
+        expect(enqueued_job[:args]).to have(1).items
+        # file id
+        expect(enqueued_job[:args][0]).to be_present
+      end
     end
   end
 end

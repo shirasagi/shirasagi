@@ -85,6 +85,7 @@ describe Event::Page::ImportJob, dbscope: :example do
           expect(item.permission_level).to be 2
         end
         expect(item.state).to eq state
+        expect(item.permission_level).to be_numeric
       end
     end
   end

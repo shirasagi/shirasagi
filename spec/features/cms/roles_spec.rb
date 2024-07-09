@@ -61,6 +61,16 @@ describe "cms_roles", type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
+      wait_for_notice I18n.t("ss.notice.started_import")
+
+      expect(enqueued_jobs.length).to eq 1
+      enqueued_jobs.first.tap do |enqueued_job|
+        expect(enqueued_job[:job]).to eq Cms::Role::ImportJob
+        expect(enqueued_job[:args]).to be_present
+        expect(enqueued_job[:args]).to have(1).items
+        # file id
+        expect(enqueued_job[:args][0]).to be_present
+      end
     end
   end
 end

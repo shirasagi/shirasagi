@@ -22,6 +22,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
+        wait_for_notice I18n.t("ss.notice.saved")
         item1 = Gws::Facility::Item.site(site).where(name: "example1").first
         item2 = Gws::Facility::Item.site(site).where(name: "example2").first
 
@@ -41,7 +42,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(item1.readable_member_names).to eq ["gw-admin (admin)"]
         expect(item1.group_names).to eq %w(シラサギ市/企画政策部/政策課)
         expect(item1.user_names).to eq ["gw-admin (admin)"]
-        expect(item1.permission_level).to eq 1
+        expect(item1.permission_level).to be_numeric
 
         expect(item2).to be_valid
         expect(item2.category.name).to eq "会議室"
@@ -63,7 +64,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(item2.readable_member_names).to eq ["gw-admin (admin)"]
         expect(item2.group_names).to eq %w(シラサギ市/企画政策部/政策課)
         expect(item2.user_names).to eq ["gw-admin (admin)"]
-        expect(item2.permission_level).to eq 2
+        expect(item2.permission_level).to be_numeric
       end
     end
 
@@ -75,6 +76,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         end
         expect(status_code).to eq 200
         expect(current_path).to eq import_path
+        wait_for_notice I18n.t("ss.notice.saved")
         items = Gws::Facility::Item.site(site)
         expect(items.size).to eq 1
         normal_item = Gws::Facility::Item.site(site).find_by(name: "normal")

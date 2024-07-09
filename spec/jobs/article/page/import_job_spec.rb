@@ -50,8 +50,14 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         expect(Article::Page.site(site).count).to eq 2
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+          expect(page.permission_level).to be_numeric
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+          expect(page.permission_level).to be_numeric
+        end
       end
     end
 
@@ -421,8 +427,14 @@ describe Article::Page::ImportJob, dbscope: :example do
 
         expect(Article::Page.site(site).count).to eq 2
 
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+          expect(page.permission_level).to be_numeric
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+          expect(page.permission_level).to be_numeric
+        end
       end
     end
 

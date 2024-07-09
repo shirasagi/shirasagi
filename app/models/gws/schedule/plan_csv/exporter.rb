@@ -233,7 +233,9 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
       end
     end
-    drawer.column :permission_level
+    unless SS.config.ss.disable_permission_level
+      drawer.column :permission_level
+    end
   end
 
   def find_facility_column_value(item, facility, column)

@@ -25,9 +25,18 @@ describe Cms::Role::ImportJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-      expect(Cms::Role.find(role1.id).permissions.present?).to be_truthy
-      expect(Cms::Role.find(role2.id).permissions.present?).to be_truthy
-      expect(Cms::Role.find(role3.id).permissions.present?).to be_falsey
+      Cms::Role.find(role1.id).tap do |role|
+        expect(role.permissions).to be_present
+        expect(role.permission_level).to be_numeric
+      end
+      Cms::Role.find(role2.id).tap do |role|
+        expect(role.permissions).to be_present
+        expect(role.permission_level).to be_numeric
+      end
+      Cms::Role.find(role3.id).tap do |role|
+        expect(role.permissions).to be_blank
+        expect(role.permission_level).to be_numeric
+      end
     end
   end
 end
