@@ -1,0 +1,29 @@
+.quick-edit-grid {
+  display: grid;
+  //grid-template-columns: [col-start] 1fr [col-end];
+  @for $i from 1 through 20 {
+    &[data-col="#{$i}"] {
+      grid-template-columns: repeat($i, 1fr);
+    }
+  }
+
+  thead, tbody, tfoot, tr {
+    display: contents;
+  }
+
+  tr:hover td {
+    background-color: #f2f2f2;
+  }
+  tr:nth-child(2n) {
+    td {
+      background-color: #f8f8f8;
+    }
+    &:hover td {
+      background-color: #f2f2f2;
+    }
+  }
+
+  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url], input[type=email], input[type=number], input[type=tel] {
+    width: 100%;
+  }
+}
