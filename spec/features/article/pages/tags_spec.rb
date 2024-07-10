@@ -1,4 +1,3 @@
-
 require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
