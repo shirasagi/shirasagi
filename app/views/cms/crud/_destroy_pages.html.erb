@@ -35,11 +35,11 @@
     
     <% if check_state == "safe_to_delete" %>
       <% if delete_alert_enabled %>
-         <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
+          <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
       <% elsif (!delete_alert_enabled && contains_urls.present?)%>
-         <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
+          <%# No need to show anything for this case %>
       <% else %>
-         <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+          <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
       <% end %>
     <% end %>
   </label>
