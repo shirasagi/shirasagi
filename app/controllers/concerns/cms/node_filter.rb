@@ -4,7 +4,7 @@ module Cms::NodeFilter
 
   included do
     prepend_view_path "app/views/cms/nodes"
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :move_confirm]
     before_action :change_item_class, if: -> { @item.present? }
     before_action :set_tree_navi, only: [:index]
   end

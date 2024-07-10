@@ -4,6 +4,7 @@ this.SS_SearchUI = (function () {
 
   var selectTable = null;
   let toSelected = [], ccSelected = [], bcSelected = [];
+  var currentDestinationVal
 
   SS_SearchUI.anchorAjaxBox;
 
@@ -60,6 +61,14 @@ this.SS_SearchUI = (function () {
     var data = $data[0].dataset;
     if (!data.name) {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
+    }
+
+    var $destinationInput = $("input[name='destination']");
+    if ($destinationInput.length) {
+      if (!currentDestinationVal) {
+        currentDestinationVal = $destinationInput.val();
+      }
+      $destinationInput.val(data.filename + "/" + currentDestinationVal);
     }
 
     var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});

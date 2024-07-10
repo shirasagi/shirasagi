@@ -31,4 +31,16 @@ class Cms::Node::ConfsController < ApplicationController
     raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.destroy, location: redirect_url_on_destroy
   end
+
+  def move_confirm 
+    @destination = params[:destination]
+    @confirm = params[:confirm]
+    @filename   = params[:filename]
+    if @confirm
+      @source = "/#{@item.filename}/"
+      @item.validate_destination_filename(@destination)
+      @item.filename = @destination
+      @link_check = @item.errors.empty?
+    end
+  end
 end

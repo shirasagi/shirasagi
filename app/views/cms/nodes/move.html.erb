@@ -2,7 +2,7 @@
 new Cms_Move("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @source %>", <%= @link_check.present? %>);
 <% end %>
 
-<%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= form_for :item, url: { action: :move_confirm }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
   <section class="main-box">
@@ -12,13 +12,31 @@ new Cms_Move("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @sourc
       <dl class="see">
         <dt><%= t("cms.move_node.current_filename") %></dt>
         <dd class="current-filename"><%= @filename %></dd>
-
+        <dl class="see mod-cms-page-search">
+          <dt><%= @model.t :destination_filename %><%= @model.tt :destination_filename %></dt>
+          <dd>
+            <%= hidden_field_tag :destination_folder, nil, id: nil, class: "hidden-ids" %>
+            <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path, class: "btn ajax-box" %>
+          </dd>
+          <dd>
+            <table class="index ajax-selected">
+              <thead>
+              <tr>
+                <th class="name"><%= @model.t :destination_filename %></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </dd>
+        </dl>
         <dt><%= t("cms.move_node.destination_filename") %><%= @model.tt :destination_filename %></dt>
         <dd>
           <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
           <%= hidden_field_tag :filename, "", value: @filename %>
           <%= hidden_field_tag :source, "", value: @source %>
-          <%= f.button t("cms.move_page.confirm"), name: :confirm, class: "confirm btn" %>
+          <%#= f.button t("cms.move_page.confirm"), name: :confirm, class: "confirm btn" %>
         </dd>
       </dl>
 
@@ -35,7 +53,7 @@ new Cms_Move("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @sourc
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.move"), class: "btn-primary", data: { disable_with: t("ss.buttons.moving") } %>
+    <%= f.submit t("ss.buttons.move"), class: "btn-primary", name: :confirm %>
     <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
   </footer>
 
