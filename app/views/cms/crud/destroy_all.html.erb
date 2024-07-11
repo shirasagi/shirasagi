@@ -1,10 +1,13 @@
 <%
   if @selected_items.is_a?(Array)
     template_path = "cms/crud/confirm_all"
+    extra_css_class = ""
   elsif @selected_items.klass.ancestors.include?(Cms::Model::Page)
     template_path = "cms/crud/destroy_pages"
+    extra_css_class = "list-items-grid"
   else
     template_path = "cms/crud/confirm_all"
+    extra_css_class = ""
   end
 %>
 
@@ -17,7 +20,7 @@
       </div>
       <div class="addon-body">
         <div class="index">
-          <ul class="list-items">
+          <ul class="list-items <%= extra_css_class %>">
             <% @selected_items.each do |item| %>
               <%= render template_path, item: item, f: f %>
             <% end %>

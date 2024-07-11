@@ -24,25 +24,28 @@
                 end
 %>
 <li class="list-item" data-id="<%= item.id %>">
-  <label class="check">
-    <% case check_state %>
-      <% when "unchecked" %>
-        <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
-      <% when "checked" %>
-        <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
-      <%# No need to show anything for "hide" %>
+  <% case check_state %>
+  <% when "unchecked" %>
+    <% checkbox = f.check_box_tag 'ids[]', item.id.to_s, false %>
+  <% when "checked" %>
+    <% checkbox = f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+    <%# No need to show anything for "hide" %>
+  <% end %>
+
+  <% if check_state == "safe_to_delete" %>
+    <% if delete_alert_enabled %>
+      <% checkbox = f.check_box_tag 'ids[]', item.id.to_s, false %>
+    <% elsif (!delete_alert_enabled && contains_urls.present?)%>
+      <%# No need to show anything for this case %>
+    <% else %>
+      <% checkbox = f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
     <% end %>
-    
-    <% if check_state == "safe_to_delete" %>
-      <% if delete_alert_enabled %>
-          <%= f.check_box_tag 'ids[]', item.id.to_s, false %>
-      <% elsif (!delete_alert_enabled && contains_urls.present?)%>
-          <%# No need to show anything for this case %>
-      <% else %>
-          <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
-      <% end %>
-    <% end %>
-  </label>
+  <% end %>
+  <% if checkbox %>
+    <label class="check">
+      <%= checkbox %>
+    </label>
+  <% end %>
   <div class="info">
     <% item_url = url_for({ action: :show, id: item }) rescue nil %>
     <% if item_url %>
