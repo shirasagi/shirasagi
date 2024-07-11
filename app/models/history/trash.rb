@@ -31,6 +31,15 @@ class History::Trash
       parent.restore(parent_opts)
     end
     data = self.data.dup
+    if model.include?(Cms::Content) && data[:depth].present? && data[:depth] > 1
+      dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
+      dir.sub!(opts[:src_filename], opts[:dst_filename]) if opts[:src_filename].present? && opts[:dst_filename].present?
+      item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
+      if opts[:create_by_trash].present? && item_parent.blank?
+        errors.add :base, :not_found_parent_node
+        return false
+      end
+    end
     if data.key?(:state)
       if opts[:state].present?
         data[:state] = opts[:state]
@@ -48,14 +57,7 @@ class History::Trash
       item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
     end
     item = item.becomes_with_route(data[:route]) if data[:route].present?
-    if model.include?(Cms::Content) && data[:depth].present? && data[:depth] > 1
-      dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
-      dir.sub!(opts[:src_filename], opts[:dst_filename]) if opts[:src_filename].present? && opts[:dst_filename].present?
-      item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
-      item.errors.add :base, :not_found_parent_node if item_parent.blank?
-
-      item.cur_node = item_parent if item.respond_to?(:cur_node=)
-    end
+    item.cur_node = item_parent if item.respond_to?(:cur_node=)
     if opts[:file_restore]
       data = data.except(*%w(id _id model node_id owner_item_type owner_item_id))
     end
