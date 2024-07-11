@@ -10,6 +10,7 @@ module Cms::ContentLiquid
       export :full_url
       export :basename
       export :filename
+      export :depth
       export :order
       export :date
       export :released

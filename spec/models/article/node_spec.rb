@@ -65,6 +65,7 @@ describe Article::Node::Page, type: :model, dbscope: :example do
         expect(subject.full_url).to eq node.full_url
         expect(subject.basename).to eq node.basename
         expect(subject.filename).to eq node.filename
+        expect(subject.depth).to eq node.depth
         expect(subject.order).to eq node.order
         expect(subject.date).to eq node.date
         expect(subject.released).to eq node.released
