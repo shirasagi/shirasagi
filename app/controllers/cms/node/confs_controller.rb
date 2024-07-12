@@ -41,6 +41,11 @@ class Cms::Node::ConfsController < ApplicationController
       @item.validate_destination_filename(@destination)
       @item.filename = @destination
       @link_check = @item.errors.empty?
+      if !@link_check
+        location = { action: :move }
+        render_update @item.move(@destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+        return
+      end
     end
   end
 end

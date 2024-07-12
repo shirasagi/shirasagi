@@ -1,21 +1,26 @@
-
 <div id="cms-dialog" style="display: none;">
   <%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
     <%= error_messages_for :item %>
     <dl class="see">
-        <dd class="result" style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;"></dd>
+      <dd class="result border p-3" style="height: 300px; overflow: auto;"></dd>
     </dl>
-    <%= check_box_tag :confirm_changes, "「移動により影響を受けるコンテンツを確認しました。」", checked:  false, required: true %>
+    <div class="form-group form-check">
+      <%= check_box_tag :confirm_changes, "1", false, class: "form-check-input border-none", id: "confirm_changes", required: true %>
+      <label for="confirm_changes" class="form-check-label">
+        移動により影響を受けるコンテンツを確認しました。
+      </label>
+    </div>
     <%= hidden_field_tag :destination, "", value: @item.filename %>
     <%= hidden_field_tag :filename, "", value: @filename %>
     <%= hidden_field_tag :source, "", value: @source %>
 
-  <div class="send">
-    <%= f.submit t("ss.buttons.move"), class: "btn-primary", data: { disable_with: t("ss.buttons.moving") } %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
-  </div>
+    <div class="send" style="display: flex; justify-content: center; margin: 5px;">
+      <%= f.submit t("ss.buttons.move"), class: "btn btn-primary", style: "margin-right: 10px;", data: { disable_with: t("ss.buttons.moving") } %>
+      <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn btn-secondary" %>
+    </div>
   <% end %>
 </div>
+
 
 <%= jquery do %>
   new FolderMove("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @source %>", <%= @link_check.present? %>);

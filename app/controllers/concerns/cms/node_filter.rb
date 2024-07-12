@@ -68,7 +68,6 @@ module Cms::NodeFilter
     @link_check = params[:link_check]
     destination = params[:destination]
     confirm     = params[:confirm]
-
     if request.get? || request.head?
       @filename = @item.filename
     elsif confirm
@@ -80,7 +79,7 @@ module Cms::NodeFilter
       @source = "/#{@item.filename}/"
       raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
 
-      location = { action: :move, source: @source, link_check: true }
+      location = { action: :move }
       render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
     end
   end

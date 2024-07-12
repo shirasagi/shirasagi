@@ -84,12 +84,12 @@ FolderMove.prototype.openDialog = function(data) {
   var $dialog = $("#cms-dialog").dialog({
     autoOpen: false,
     width: 800,
-    height: 400,
     modal: true,
     create: function() {
       $(this).closest(".ui-dialog").css({
         "z-index": 9999, 
-        "position": "fixed"
+        "position": "fixed",
+        "height": "auto"
       });
     },
     open: function() {
