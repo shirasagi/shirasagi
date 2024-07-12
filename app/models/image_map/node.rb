@@ -28,7 +28,7 @@ module ImageMap::Node
     self.use_sort = false
     self.use_loop_html = false
     self.use_new_days = false
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
     self.use_no_items_display = false
     self.use_substitute_html = false
     self.default_limit = 20

@@ -155,7 +155,7 @@ module Member::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "member/blog") }
 
@@ -178,7 +178,7 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     set_permission_name "member_blogs"
 
@@ -209,7 +209,7 @@ module Member::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "member/blog_page_location") }
 
