@@ -55,6 +55,7 @@ module SS::Model::Group
       export as: :to_s do
         name
       end
+      export :id
       export :name
       export :full_name
       export :section_name
