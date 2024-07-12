@@ -2,9 +2,111 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   include Cms::NodeFilter::View
   include Member::LoginFilter
 
-  skip_before_action :logged_in?, only: [:login, :logout, :callback, :failure]
+  class OAuthBuilder < ::OmniAuth::Builder
+    attr_accessor :cur_site, :cur_node, :cur_date
+
+    def initialize(default_app, cur_site, cur_node, cur_date, &block)
+      @cur_site = cur_site
+      @cur_node = cur_node
+      @cur_date = cur_date
+      super(default_app, &block)
+    end
+  end
+
+  skip_before_action :logged_in?, only: [:login, :logout, :init, :callback, :failure]
+  around_action :execute_action_within_omni_auth
 
   private
+
+  def build_middleware(klass, *args, &block)
+    ActionDispatch::MiddlewareStack::Middleware.new(klass, args, block)
+  end
+
+  def execute_action_within_omni_auth(*_args, &block)
+    middleware = build_middleware OAuthBuilder, @cur_site, @cur_node, @cur_date do
+      configure do |config|
+        config.logger = Rails.logger
+        prefix = @cur_node.url
+        prefix = prefix[0..-2] if prefix.end_with?("/")
+        config.path_prefix = prefix
+      end
+      on_failure do |env|
+        new_path = env["omniauth.origin"].presence
+        new_path ||= @cur_node.try(:full_url)
+        new_path ||= "/"
+        Rack::Response.new(['302 Moved'], 302, 'Location' => new_path).finish
+      end
+
+      if @cur_node.twitter_oauth == "enabled"
+        provider ::OAuth::Twitter
+      end
+      if @cur_node.twitter2_oauth == "enabled"
+        provider ::OAuth::Twitter2
+      end
+      if @cur_node.facebook_oauth == "enabled"
+        provider ::OAuth::Facebook, {
+          site: "https://graph.facebook.com/v17.0",
+          authorize_url: "https://www.facebook.com/v17.0/dialog/oauth",
+          scope: "public_profile"
+        }
+      end
+      if @cur_node.yahoojp_oauth == "enabled"
+        provider ::OAuth::YahooJp, {
+          name: "yahoojp_v2",
+          scope: "openid profile email address"
+        }
+      end
+      if @cur_node.yahoojp_v2_oauth == "enabled"
+        provider ::OAuth::YahooJp, {
+          scope: "openid profile email address",
+          client_options: {
+            authorize_url: '/yconnect/v1/authorization',
+            token_url: '/yconnect/v1/token'
+          }
+        }
+      end
+      if @cur_node.google_oauth2_oauth == "enabled"
+        provider ::OAuth::GoogleOAuth2, { scope: "userinfo.email, userinfo.profile, plus.me" }
+      end
+      if @cur_node.github_oauth == "enabled"
+        provider ::OAuth::Github
+      end
+      if @cur_node.line_oauth == "enabled"
+        provider ::OAuth::Line
+      end
+    end
+
+    available = %i[twitter twitter2 facebook yahoojp yahoojp_v2 google_oauth2 github line].any? do |type|
+      @cur_node.send("#{type}_oauth") == "enabled"
+    end
+    unless available
+      # no oauth is available.
+      return yield
+    end
+
+    builder = middleware.build(block)
+    rack_app = builder.to_app
+
+    request.env["ss.site"] ||= @cur_site
+    request.env["ss.node"] ||= @cur_node
+    status, headers, body = rack_app.call(request.env)
+    if status.present?
+      # OmniAuth が応答する場合と Member::Agents::Nodes::LoginController が応答する場合とがある。
+      # OmniAuth が応答した場合、Rack レスポンスが生成されるので status が nil 以外になる。
+      # Member::Agents::Nodes::LoginController が応答した場合、status が nil になる。
+      #
+      # OmniAuth が応答した場合、response オブジェクトに応答がセットされていないので、セットしてやる
+      response.status = status
+      if headers.present?
+        headers.each do |key, value|
+          response.headers[key] = value
+        end
+      end
+      if body.present?
+        response.body = body
+      end
+    end
+  end
 
   def get_params
     params.require(:item).permit(:email, :password)
@@ -55,6 +157,10 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     reset_session if SS.config.sns.logged_in_reset_session
     flash.discard(:ref)
     redirect_to member_login_path
+  end
+
+  def init
+    head :not_found
   end
 
   def callback
