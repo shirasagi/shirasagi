@@ -1844,6 +1844,7 @@ ja:
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
       both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
       not_found_test_members: テストメンバーが選択されていません。
+      plz_check_targets_to_delete: 削除対象が選択されていません。削除したい項目のチェックボックスにチェックを入れてください。
 
     template:
       no_errors: エラーは見つかりませんでした。
