@@ -352,7 +352,9 @@ ja:
     move_node:
       title: フォルダーの移動
       current_filename: 現在のフォルダー名
-      destination_filename: 移動先のフォルダー名
+      destination: 移動先
+      destination_folder: 親フォルダー
+      destination_filename: フォルダー名
     copy_nodes:
       from: 複製元フォルダー
       to: 複製先
@@ -2065,9 +2067,12 @@ ja:
       st_categories:
         - フォルダー下で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+
+    cms/move_node:
+      destination_folder:
+        - 移動先のフォルダーを選択してください。
       destination_filename:
-        - ページやフォルダーを移動します。
-        - 移動先をフルパスで設定します。
+        - 移動先のフォルダー名を入力します。
 
     cms/line/service/base:
       service:

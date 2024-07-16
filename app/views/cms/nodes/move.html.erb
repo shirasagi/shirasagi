@@ -8,13 +8,17 @@
       <dl class="see">
         <dt><%= t("cms.move_node.current_filename") %></dt>
         <dd class="current-filename"><%= @filename %></dd>
+
+        <dt><%= t("cms.move_node.destination") %></dt>
+        <dd></dd>
+
         <dl class="see mod-cms-page-search">
-          <dt><%= @model.t :destination_filename %><%= @model.tt :destination_filename %></dt>
-          <dd>
+          <dt class="depth-2"><%= t("cms.move_node.destination_folder") %><%= tt "cms/move_node.destination_folder" %></dt>
+          <dd class="depth-2">
             <%= hidden_field_tag :destination_folder, nil, id: nil, class: "hidden-ids" %>
             <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path, class: "btn ajax-box" %>
           </dd>
-          <dd>
+          <dd class="depth-2">
             <table class="index ajax-selected">
               <thead>
               <tr>
@@ -27,8 +31,8 @@
             </table>
           </dd>
         </dl>
-        <dt><%= t("cms.move_node.destination_filename") %><%= @model.tt :destination_filename %></dt>
-        <dd>
+        <dt class="depth-2"><%= t("cms.move_node.destination_filename") %><%= tt "cms/move_node.destination_filename" %></dt>
+        <dd class="depth-2">
           <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
           <%= hidden_field_tag :filename, "", value: @filename %>
           <%= hidden_field_tag :source, "", value: @source %>
