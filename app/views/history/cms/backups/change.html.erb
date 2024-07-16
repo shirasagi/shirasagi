@@ -1,8 +1,8 @@
 <div class="main-box">
   <table class="see index history-backup">
     <tr>
-      <th></th>
-      <th colspan="2">
+      <th class="name"></th>
+      <th colspan="2" class="selected-history">
         <%=
           current_notice = (item.data[:updated] || item.created).try do |updated|
             time_tag = ss_time_tag(updated, format: :picker)
@@ -15,7 +15,7 @@
           t('history.current_state_html', current_notice: current_notice)
         %>
       </th>
-      <th colspan="2">
+      <th colspan="2" class="target-history">
         <%=
           version = (compare_to_item.data[:updated] || compare_to_item.created).try do |updated|
             time_tag = ss_time_tag(updated, format: :picker)

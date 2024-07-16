@@ -55,12 +55,12 @@ module History::Cms::Diff
 
     def column_value_diff_html(before_column, after_column, before_value, current_value)
       html = []
-      html << "<tr>"
-      html << "  <th>#{@form_name}</th>"
-      html << "  <td>#{before_column}</td>"
-      html << "  <td>#{diff_before_value(before_value, current_value)}</td>"
-      html << "  <td>#{after_column}</td>"
-      html << "  <td>#{diff_current_value(current_value, before_value)}</td>"
+      html << "<tr data-field-name=\"#{CGI.escape_html(@field)}\" data-column-name=\"#{CGI.escape_html(before_column)}\">"
+      html << "  <th>#{CGI.escape_html(@form_name)}</th>"
+      html << "  <td>#{CGI.escape_html(before_column)}</td>"
+      html << "  <td class=\"selected-history\">#{diff_before_value(before_value, current_value)}</td>"
+      html << "  <td>#{CGI.escape_html(after_column)}</td>"
+      html << "  <td class=\"target-history\">#{diff_current_value(current_value, before_value)}</td>"
       html << "</tr>"
       html.join.html_safe
     end
