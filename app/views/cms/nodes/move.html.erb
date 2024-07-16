@@ -16,7 +16,7 @@
           <dt class="depth-2"><%= t("cms.move_node.destination_folder") %><%= tt "cms/move_node.destination_folder" %></dt>
           <dd class="depth-2">
             <%= hidden_field_tag :destination_folder, nil, id: nil, class: "hidden-ids" %>
-            <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path, class: "btn ajax-box" %>
+            <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1), class: "btn ajax-box" %>
           </dd>
           <dd class="depth-2">
             <table class="index ajax-selected">
