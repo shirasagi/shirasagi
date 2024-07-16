@@ -54,6 +54,7 @@ ja:
         link_url: リンクURL
         file_id: バナー画像
         additional_attr: 追加属性
+        link_target: リンク表示
       ads/access_log:
         date: アクセス日
         link_url: リンクURL
@@ -70,6 +71,8 @@ ja:
         - 広告バナーに利用する画像を登録します。
       additional_attr:
         - a要素の追加属性を入力します。
+      link_target:
+        - リンクの表示形式を設定します。
     ads/addon/page_list:
       link_action:
         - リンクの動作を設定します。
