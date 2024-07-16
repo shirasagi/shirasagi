@@ -71,7 +71,7 @@ en:
     mfa_otp_enabled_at: "Enabled at %{time}"
     mfa_otp_not_enabled_yet: "Not enabled yet"
     system_operation: "-- System operation --"
-    
+
     views:
       login/login:
         id: User ID or e-mail address
@@ -1562,11 +1562,11 @@ en:
     ss/mfa/site_setting:
       mfa_otp_use_state:
         - Select whether to use OTP(one-time password) authentication.
-        -
+        - ""
         - "・Not use: Do not use OTP authentication."
         - "・Use: Use OTP authentication."
         - "・Use when the access source is untrusted: Use OTP authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
-        -
+        - ""
         - OTP authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use OTP authentication when using an external authentication server, please configure the external authentication server to use OTP authentication.
       mfa_trusted_ip_addresses:
         - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of OTP.
