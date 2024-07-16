@@ -252,4 +252,12 @@ module Cms
       updated || created
     end
   end
+
+  def self.contains_urls(page, site:)
+    if !page.is_a?(Cms::Model::Page) || page.try(:branch?)
+      Cms::Page.none
+    else
+      Cms::Page.all.site(site).and_linking_pages(page)
+    end
+  end
 end

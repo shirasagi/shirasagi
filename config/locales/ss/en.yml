@@ -289,6 +289,7 @@ en:
       test_deliver: Are you sure you want to start test delivery
       resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
       reset_mfa_otp: Are you sure you want ot reset OTP?
+      unable_to_delete_due_to_branch_page: It cannot be deleted because a replacement page has been created.
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
