@@ -24,11 +24,9 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
       wait_for_ajax
       expect(page).to have_css("tr[data-id='#{node_1.id}']")
       within("tr[data-id='#{node_1.id}']") do
-        find("input[type='checkbox'][value='#{node_1.id}']").click
+        find("a.select-single-item").click
       end
       
-      wait_for_ajax
-      click_button(I18n.t("cms.apis.nodes.select"))
       wait_for_ajax
   
       expect(page).to have_css(".send")
