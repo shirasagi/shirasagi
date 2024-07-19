@@ -1489,9 +1489,16 @@ en:
         - Enter the default signature for e-mails sent from the system.
 
     ss/addon/elasticsearch/site_setting:
-      elasticsearch_deny:
-        - Enter the path of the pages that you want to exclude from searches.
-        - Separate them with line breaks.
+      elasticsearch_deny: |-
+        Enter the path of the pages that you want to exclude from searches.
+        Separate them with line breaks.
+
+        Example: Exclude by specifying the URL of the page
+        docs/123.html
+        404.html
+
+        After the change, the full-text search index needs to be updated.
+        https://shirasagi.github.io/updation/elasticsearch_index.html
       elasticsearch_site_ids:
         - Set the site to be searched.
         - This will allow you to see the pages for the site you set.

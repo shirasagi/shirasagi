@@ -1489,9 +1489,16 @@ ja:
         - システムから送信されるメールの既定の署名を入力します。
 
     ss/addon/elasticsearch/site_setting:
-      elasticsearch_deny:
-        - 検索対象から除外するページのパスを入力します。
-        - 改行区切りで入力します。
+      elasticsearch_deny: |-
+        検索対象から除外するページのパスを入力します。
+        改行区切りで入力します。
+
+        例：ページのURLを指定して除外
+        docs/123.html
+        404.html
+
+        変更後全文検索インデックスの更新が必要です。
+        https://shirasagi.github.io/updation/elasticsearch_index.html
       elasticsearch_site_ids:
         - 検索対象サイトを設定します。
         - 設定したサイトのページが表示されるようになります。
