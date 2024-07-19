@@ -15,7 +15,13 @@ class History::Trash::RestoreJob < Cms::ApplicationJob
       @item.file_restore!(file_params)
     else
       result = @item.restore!(restore_params)
-      @item.children.restore!(restore_params) if restore_params[:children] == 'restore' && @item.ref_coll == 'cms_nodes' && result
+      if restore_params[:children] == 'restore' && @item.ref_coll == 'cms_nodes' && result
+        children_params = restore_params.dup
+        children_params.delete(:basename)
+        children_params[:src_filename] = @item.data['filename']
+        children_params[:dst_filename] = result.filename
+        @item.children.restore!(children_params)
+      end
     end
 
     @item.errors.full_messages

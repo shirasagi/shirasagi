@@ -159,14 +159,12 @@ describe History::Trash, type: :model, dbscope: :example do
         it do
           trashes = History::Trash.all.to_a
           node_trash = trashes.find { |trash| trash.ref_class == node.class.name }
-          # https://github.com/shirasagi/shirasagi/issues/4217 に示す問題があるので、
-          # 名前を変更して配下のコンテンツを「復元にする」でフォルダーをゴミ箱から復元できない
-          # result = trashes.first.restore!(basename: basename, children: "restore")
-          # trashes.first.children.restore!(basename: basename, children: "restore")
-          result = node_trash.restore!(children: "restore")
-          node_trash.children.restore!(children: "restore")
+          result = node_trash.restore!(basename: basename, children: "restore")
+          src = node_trash.data['filename']
+          dst = result.filename
+          node_trash.children.restore!(src_filename: src, dst_filename: dst, children: "restore")
           expect(result).to be_persisted
-          # expect(result.filename).to eq basename
+          expect(result.filename).to eq basename
 
           expect { node.reload }.not_to raise_error
           expect { item.reload }.not_to raise_error
@@ -205,6 +203,73 @@ describe History::Trash, type: :model, dbscope: :example do
           expect { file1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
           expect { file2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
           expect(History::Trash.all.count).to eq 3
+        end
+      end
+    end
+
+    context "when parent: true is given" do
+      describe "#restore" do
+        it do
+          trashes = History::Trash.all.to_a
+          item_trash = trashes.find { |trash| trash.ref_class == item.class.name }
+          result = item_trash.restore(basename: basename, parent: true)
+          expect(result).to be_new_record
+          expect(result.filename).to be_nil
+
+          expect { node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { file1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { file2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect(History::Trash.all.count).to eq 4
+        end
+      end
+
+      describe "#restore!" do
+        it do
+          trashes = History::Trash.all.to_a
+          item_trash = trashes.find { |trash| trash.ref_class == item.class.name }
+          result = item_trash.restore!(basename: basename, parent: true)
+          expect(result).to be_persisted
+          expect(result.filename).to end_with "#{basename}.html"
+
+          expect { node.reload }.not_to raise_error
+          expect { item.reload }.not_to raise_error
+          expect { file1.reload }.not_to raise_error
+          expect { file2.reload }.not_to raise_error
+          expect(History::Trash.all.count).to eq 0
+        end
+      end
+    end
+
+    context "when parent: false is given" do
+      describe "#restore" do
+        it do
+          trashes = History::Trash.all.to_a
+          item_trash = trashes.find { |trash| trash.ref_class == item.class.name }
+          result = item_trash.restore(basename: basename, parent: false)
+          expect(result).to be_new_record
+          expect(result.filename).to be_nil
+
+          expect { node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { file1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { file2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect(History::Trash.all.count).to eq 4
+        end
+      end
+
+      describe "#restore!" do
+        it do
+          trashes = History::Trash.all.to_a
+          item_trash = trashes.find { |trash| trash.ref_class == item.class.name }
+          result = item_trash.restore!(basename: basename, parent: false)
+          expect(result).to be_falsey
+
+          expect { node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { file1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect { file2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+          expect(History::Trash.all.count).to eq 4
         end
       end
     end
