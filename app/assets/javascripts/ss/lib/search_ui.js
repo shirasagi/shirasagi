@@ -68,7 +68,7 @@ this.SS_SearchUI = (function () {
       if (!currentDestinationVal) {
         currentDestinationVal = $destinationInput.val();
       }
-      $destinationInput.val(data.filename + currentDestinationVal);
+      $destinationInput.val(data.filename + "/" + currentDestinationVal);
     }
 
     var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});

@@ -16,7 +16,7 @@
 
     <div class="send" style="display: flex; justify-content: center; margin: 5px;">
       <%= f.submit t("ss.buttons.move"), class: "btn btn-primary", style: "margin-right: 10px;", data: { disable_with: t("ss.buttons.moving") } %>
-      <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn btn-secondary" %>
+      <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "$('#cms-dialog').dialog('close'); return false;", class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>

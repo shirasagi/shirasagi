@@ -48,7 +48,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
       wait_for_ajax
 
       node.reload
-      expect(node.parent).to eq node_1
+      expect(node.parent.id).to eq node_1.id
       expect(node.filename).to eq "#{node_1.filename}/#{save_filename}"
     end
 
@@ -84,7 +84,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
         click_on I18n.t("ss.buttons.cancel")
       end
 
-      expect(current_path).to eq move_confirm_node_conf_path(site: site, cid: node)
+      expect(current_path).to eq move_node_conf_path(site: site, cid: node)
       expect(page).to have_css("form#item-form")
     end
 

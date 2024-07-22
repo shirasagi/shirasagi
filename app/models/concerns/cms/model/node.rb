@@ -186,8 +186,11 @@ module Cms::Model::Node
       return errors.add :base, :exist_physical_file if Fs.exist?("#{s.path}/#{dst}")
 
       if dst_dir.present?
-        dst_parent = Cms::Node.site(s).where(filename: dst_dir).first
+        unless self.cur_node.present?
+          return errors.add :base, :invalid_filename unless (dst.include?(filename))
+        end
 
+        dst_parent = Cms::Node.site(s).where(filename: dst_dir).first
         return errors.add :base, :not_found_parent_node if dst_parent.blank?
         return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
 

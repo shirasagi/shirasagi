@@ -78,6 +78,11 @@ module Cms::NodeFilter
     else
       @source = "/#{@item.filename}/"
       raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
+
+      if (@item.cur_node.present?) 
+        destination = "#{@item.cur_node.filename}/#{destination}" unless destination.include?(@item.cur_node.filename)
+      end
+    
       if @item.move(destination)
         location = { action: :show }
         render_update true, location: location, render: { template: "show" }, notice: t('ss.notice.moved')
