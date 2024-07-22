@@ -13,6 +13,8 @@
     <%= hidden_field_tag :destination, "", value: @item.filename %>
     <%= hidden_field_tag :filename, "", value: @filename %>
     <%= hidden_field_tag :source, "", value: @source %>
+    <%= hidden_field_tag :parent_node_id, "", value: @parent_node_id %>
+
 
     <div class="send" style="display: flex; justify-content: center; margin: 5px;">
       <%= f.submit t("ss.buttons.move"), class: "btn btn-primary", style: "margin-right: 10px;", data: { disable_with: t("ss.buttons.moving") } %>

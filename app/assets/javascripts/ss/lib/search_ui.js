@@ -71,6 +71,12 @@ this.SS_SearchUI = (function () {
       $destinationInput.val(data.filename + "/" + currentDestinationVal);
     }
 
+    var $parentNodeInput =  $("input[name='parent_node_id']")
+
+    if ($parentNodeInput.length){
+      $parentNodeInput.val(data.id)
+    }
+
     var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
     var $tr = $(tr);
     var $ajaxSelected;

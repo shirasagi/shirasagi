@@ -236,7 +236,7 @@ module Cms::Content
   def parent
     return @cur_node if @cur_node
     return @parent unless @parent.nil?
-    return @parent = nil if depth == 1 || filename !~ /\//
+    return @parent = false if depth == 1
 
     @parent ||= begin
       path = File.dirname(filename)

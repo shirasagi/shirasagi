@@ -36,6 +36,7 @@ class Cms::Node::ConfsController < ApplicationController
     @destination = params[:destination]
     @confirm = params[:confirm]
     @filename   = params[:filename]
+    @parent_node_id = params[:parent_node_id]
     if @confirm
       @source = "/#{@item.filename}/"
       @item.validate_destination_filename(@destination)
