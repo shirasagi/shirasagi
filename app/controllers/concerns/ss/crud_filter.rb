@@ -6,6 +6,7 @@ module SS::CrudFilter
     before_action :prepend_current_view_path
     before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :set_deletable, only: [:index]
     before_action :set_selected_items, only: [:destroy_all, :change_state_all]
     menu_view "ss/crud/menu"
   end
@@ -33,6 +34,10 @@ module SS::CrudFilter
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def set_deletable
+    @deletable ||= @model.allowed?(:delete, @cur_user, site: @cur_site, owned: true) if @model.respond_to?(:allowed?)
   end
 
   def set_selected_items

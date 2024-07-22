@@ -8,6 +8,10 @@ class Gws::Job::ReservationsController < ApplicationController
 
   private
 
+  def set_deletable
+    @deletable ||= Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   def filter_permission
     raise "403" unless Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site)
   end

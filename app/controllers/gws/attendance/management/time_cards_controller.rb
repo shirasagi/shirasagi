@@ -71,6 +71,10 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     @record = @item.records.where(date: @cur_date).first_or_create
   end
 
+  def set_deletable
+    @deletable ||= %i[manage_private manage_all].any? { |priv| @model.allowed?(priv, @cur_user, site: @cur_site) }
+  end
+
   def crud_redirect_url
     if params[:action] == 'time' || params[:action] == 'memo'
       { action: :show }
