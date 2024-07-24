@@ -81,11 +81,12 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
       wait_for_ajax
 
       within "form#item-form" do
-        fill_in "item[basename]", with: "#{node_1.filename}/#{unique_id}"
+        fill_in "item[destination_basename]", with: "#{node_1.filename}/#{unique_id}"
         click_on I18n.t("ss.buttons.move")
       end
       message = I18n.t("errors.messages.invalid_filename")
-      message = I18n.t("errors.format", attribute: I18n.t("activemodel.attributes.cms/node/move_service.basename"), message: message)
+      attribute = I18n.t("activemodel.attributes.cms/node/move_service.destination_basename")
+      message = I18n.t("errors.format", attribute: attribute, message: message)
       wait_for_error message
     end
 
@@ -101,7 +102,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
         wait_for_ajax
 
         within "form#item-form" do
-          fill_in "item[basename]", with: new_basename
+          fill_in "item[destination_basename]", with: new_basename
           click_on I18n.t("ss.buttons.move")
         end
 

@@ -18,7 +18,7 @@
 
         <dt class="depth-2"><%= t("cms.move_node.destination_folder") %><%= tt "cms/move_node.destination_folder" %></dt>
         <dd class="depth-2">
-          <%= f.hidden_field :parent_node_id, value: "", id: nil, class: "hidden-ids" %>
+          <%= f.hidden_field :destination_parent_node_id, value: "", id: nil, class: "hidden-ids" %>
           <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1), class: "btn ajax-box" %>
         </dd>
         <dd class="depth-2">
@@ -30,9 +30,9 @@
             </tr>
             </thead>
             <tbody>
-            <% if @item.parent_node %>
-              <tr data-id="<%= @item.parent_node.id %>">
-                <td><%= f.hidden_field :parent_node_id, value: @item.parent_node.id, id: nil %> <%= @item.parent_node.name %></td>
+            <% if @item.destination_parent_node %>
+              <tr data-id="<%= @item.destination_parent_node.id %>">
+                <td><%= f.hidden_field :destination_parent_node_id, value: @item.destination_parent_node.id, id: nil %> <%= @item.destination_parent_node.name %></td>
                 <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
               </tr>
             <% end %>
@@ -42,7 +42,7 @@
 
         <dt class="depth-2"><%= t("cms.move_node.destination_filename") %><%= tt "cms/move_node.destination_filename" %></dt>
         <dd class="depth-2">
-          <%= f.text_field :basename, class: "filename" %>
+          <%= f.text_field :destination_basename, class: "filename" %>
         </dd>
       </dl>
     </div>

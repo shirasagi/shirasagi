@@ -1726,8 +1726,8 @@ ja:
         area: 面積
       cms/node/move_service:
         source: 移動元フォルダー
-        parent_node: 移動先の親フォルダー
-        basename: 移動先のファイル名
+        destination_parent_node: 移動先の親フォルダー
+        destination_basename: 移動先のファイル名
         confirm_changes: 移動により影響を受けるコンテンツの確認
 
   errors:

@@ -64,13 +64,16 @@ module Cms::NodeFilter
 
   def move
     if request.get? || request.head?
-      @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: @item, parent_node: @item.parent ? @item.parent : nil, basename: @item.basename)
+      source = @item
+      @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: source)
+      @item.destination_parent_node = source.parent ? source.parent : nil
+      @item.destination_basename = source.basename
       render
       return
     end
 
     @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: @item)
-    @item.attributes = params.require(:item).permit(:parent_node_id, :basename, :confirm_changes)
+    @item.attributes = params.require(:item).permit(:destination_parent_node_id, :destination_basename, :confirm_changes)
     if @item.invalid?
       render
       return

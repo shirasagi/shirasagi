@@ -12,8 +12,8 @@
         <%= t("cms.confirm.confirm_move_changes") %>
       </label>
     </div>
-    <%= f.hidden_field :parent_node_id, value: @item.parent_node.try(:id) %>
-    <%= f.hidden_field :basename %>
+    <%= f.hidden_field :destination_parent_node_id, value: @item.destination_parent_node.try(:id) %>
+    <%= f.hidden_field :destination_basename %>
 
     <div class="send" style="display: flex; justify-content: center; margin: 5px;">
       <%= f.submit t("ss.buttons.move"), class: "btn btn-primary", style: "margin-right: 10px;", data: { disable_with: t("ss.buttons.moving") } %>

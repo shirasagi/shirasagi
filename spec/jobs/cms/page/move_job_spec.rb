@@ -29,7 +29,7 @@ describe Cms::Page::MoveJob, dbscope: :example do
       perform_enqueued_jobs do
         expect do
           service = Cms::Node::MoveService.new(cur_site: site, cur_user: user, source: node)
-          service.basename = dst
+          service.destination_basename = dst
           result = service.move
         end.to output(include(item1.full_url.sub(src, dst))).to_stdout
       end
