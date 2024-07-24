@@ -32,6 +32,12 @@ class Workflow::BranchCreationService
         copy = item.new_clone
         copy.master = item
         result = copy.save
+        
+        if !result && copy.errors.any?
+          copy.errors.each do |attribute, message|
+            item.errors.add(attribute, message)
+          end
+        end
       end
     end
 
