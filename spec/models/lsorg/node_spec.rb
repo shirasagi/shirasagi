@@ -65,10 +65,10 @@ describe Lsorg::Node::Node, dbscope: :example do
   end
 
   context "all groups" do
-    let!(:node) do create :lsorg_node_node, cur_site: site, root_group_ids: [
+    let!(:node) do
+      create :lsorg_node_node, cur_site: site, root_group_ids: [
         g1, g1_1, g1_2, g1_1_1, g1_1_2, g1_2, g1_2_1, g1_2_2, g1_3,
-        g2, g2_1, g2_2
-      ].map(&:id)
+        g2, g2_1, g2_2].map(&:id)
     end
 
     it do

@@ -26,8 +26,8 @@ describe Lsorg::GroupTree, dbscope: :example do
       expect(root.filename).to eq g1.basename
       expect(root.root.group.id).to eq g1.id
       expect(root.parent).to eq nil
-      expect(root.children.map { |c| c.group.id }).to match_array [g1_1.id, g1_2.id, g1_3.id]
-      expect(root.descendants.map { |c| c.group.id }).to match_array [g1_1.id, g1_1_1.id, g1_1_2.id, g1_2.id, g1_2_1.id, g1_2_2.id, g1_3.id]
+      expect(root.children.map { |c| c.group.id }).to match_array [g1_1, g1_2, g1_3].map(&:id)
+      expect(root.descendants.map { |c| c.group.id }).to match_array [g1_1, g1_1_1, g1_1_2, g1_2, g1_2_1, g1_2_2, g1_3].map(&:id)
 
       c1_1 = root.children.find { |c| c.group.id == g1_1.id }
       c1_2 = root.children.find { |c| c.group.id == g1_2.id }
@@ -40,8 +40,8 @@ describe Lsorg::GroupTree, dbscope: :example do
       expect(c1_1.filename).to eq "#{g1.basename}/#{g1_1.basename}"
       expect(c1_1.root.group.id).to eq g1.id
       expect(c1_1.parent.group.id).to eq g1.id
-      expect(c1_1.children.map { |c| c.group.id }).to match_array [g1_1_1.id, g1_1_2.id]
-      expect(c1_1.descendants.map { |c| c.group.id }).to match_array [g1_1_1.id, g1_1_2.id]
+      expect(c1_1.children.map { |c| c.group.id }).to match_array [g1_1_1, g1_1_2].map(&:id)
+      expect(c1_1.descendants.map { |c| c.group.id }).to match_array [g1_1_1, g1_1_2].map(&:id)
 
       expect(c1_2.name).to eq "E"
       expect(c1_2.full_name).to eq "A/E"
@@ -51,8 +51,8 @@ describe Lsorg::GroupTree, dbscope: :example do
       expect(c1_2.filename).to eq "#{g1.basename}/#{g1_2.basename}"
       expect(c1_2.root.group.id).to eq g1.id
       expect(c1_2.parent.group.id).to eq g1.id
-      expect(c1_2.children.map { |c| c.group.id }).to match_array [g1_2_1.id, g1_2_2.id]
-      expect(c1_2.descendants.map { |c| c.group.id }).to match_array [g1_2_1.id, g1_2_2.id]
+      expect(c1_2.children.map { |c| c.group.id }).to match_array [g1_2_1, g1_2_2].map(&:id)
+      expect(c1_2.descendants.map { |c| c.group.id }).to match_array [g1_2_1, g1_2_2].map(&:id)
 
       c1_1_1 = c1_1.children.find { |c| c.group.id == g1_1_1.id }
       c1_1_2 = c1_1.children.find { |c| c.group.id == g1_1_2.id }
@@ -115,8 +115,8 @@ describe Lsorg::GroupTree, dbscope: :example do
       expect(root.filename).to eq g1_1.basename
       expect(root.root.group.id).to eq g1_1.id
       expect(root.parent).to eq nil
-      expect(root.children.map { |c| c.group.id }).to match_array [g1_1_1.id, g1_1_2.id]
-      expect(root.descendants.map { |c| c.group.id }).to match_array [g1_1_1.id, g1_1_2.id]
+      expect(root.children.map { |c| c.group.id }).to match_array [g1_1_1, g1_1_2].map(&:id)
+      expect(root.descendants.map { |c| c.group.id }).to match_array [g1_1_1, g1_1_2].map(&:id)
 
       c1_1_1 = root.children.find { |c| c.group.id == g1_1_1.id }
       c1_1_2 = root.children.find { |c| c.group.id == g1_1_2.id }
