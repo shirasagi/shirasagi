@@ -15,7 +15,7 @@ class Lsorg::GroupTree
       next if exclude?(group.name)
 
       item = Lsorg::GroupItem.new
-      item.delegate_proc = Proc.new do |caller, method|
+      item.delegate_proc = proc do |caller, method|
         send(method, caller)
       end
 
@@ -76,7 +76,7 @@ class Lsorg::GroupTree
   def descendants(item)
     name = item.group.name
     names = group_names.select { |n| n.start_with?(name + "/") }
-    names.map { |name| item_by_name[name] }.compact
+    names.filter_map { |name| item_by_name[name] }
   end
 
   def children(item)
