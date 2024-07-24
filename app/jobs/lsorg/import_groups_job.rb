@@ -101,11 +101,9 @@ class Lsorg::ImportGroupsJob < Cms::ApplicationJob
     item
   end
 
-
   def layout
     node.page_layout || node.layout
   end
-
 
   def task_cond
     cond = { name: self.class.task_name }

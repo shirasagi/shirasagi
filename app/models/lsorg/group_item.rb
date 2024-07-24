@@ -43,9 +43,7 @@ class Lsorg::GroupItem
 
   # group
 
-  def group_id
-    group.id
-  end
+  delegate :overview, to: :group
 
   def contacts
     group.contact_groups
@@ -53,10 +51,6 @@ class Lsorg::GroupItem
 
   def main_contact
     contacts.where(main_state: "main").first
-  end
-
-  def overview
-    group.overview
   end
 
   liquidize do
