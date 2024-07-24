@@ -71,7 +71,7 @@ en:
     mfa_otp_enabled_at: "Enabled at %{time}"
     mfa_otp_not_enabled_yet: "Not enabled yet"
     system_operation: "-- System operation --"
-    
+
     views:
       login/login:
         id: User ID or e-mail address
@@ -289,6 +289,7 @@ en:
       test_deliver: Are you sure you want to start test delivery
       resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
       reset_mfa_otp: Are you sure you want ot reset OTP?
+      unable_to_delete_due_to_branch_page: It cannot be deleted because a replacement page has been created.
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
@@ -1488,9 +1489,16 @@ en:
         - Enter the default signature for e-mails sent from the system.
 
     ss/addon/elasticsearch/site_setting:
-      elasticsearch_deny:
-        - Enter the path of the pages that you want to exclude from searches.
-        - Separate them with line breaks.
+      elasticsearch_deny: |-
+        Enter the path of the pages that you want to exclude from searches.
+        Separate them with line breaks.
+
+        Example: Exclude by specifying the URL of the page
+        docs/123.html
+        404.html
+
+        After the change, the full-text search index needs to be updated.
+        https://shirasagi.github.io/updation/elasticsearch_index.html
       elasticsearch_site_ids:
         - Set the site to be searched.
         - This will allow you to see the pages for the site you set.
@@ -1561,11 +1569,11 @@ en:
     ss/mfa/site_setting:
       mfa_otp_use_state:
         - Select whether to use OTP(one-time password) authentication.
-        -
+        - ""
         - "・Not use: Do not use OTP authentication."
         - "・Use: Use OTP authentication."
         - "・Use when the access source is untrusted: Use OTP authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
-        -
+        - ""
         - OTP authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use OTP authentication when using an external authentication server, please configure the external authentication server to use OTP authentication.
       mfa_trusted_ip_addresses:
         - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of OTP.

@@ -49,6 +49,18 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
     row[model.t(key)].try(:strip)
   end
 
+  def try_value(row, key, &block)
+    key = model.t(key)
+    return unless row.key?(key)
+
+    value = row[key].try(:strip)
+    if block
+      return yield value
+    end
+
+    value
+  end
+
   def permissions_value(row, key)
     permissions = []
     model.module_permission_names(separator: true).each do |mod, names|
@@ -65,6 +77,6 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
     item.name = value(row, :name)
     item.permissions = permissions_value(row, :permissions)
     item.site_id = site.id
-    item.permission_level = value(row, :permission_level)
+    try_value(row, :permission_level) { |value| item.permission_level = value }
   end
 end

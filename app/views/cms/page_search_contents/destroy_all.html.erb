@@ -9,7 +9,7 @@
         <div class="index">
           <ul class="list-items">
             <% @selected_items.each do |item| %>
-              <%= render "destroy_pages", item: item, f: f %>
+              <%= render "cms/crud/destroy_pages", item: item, f: f %>
             <% end %>
           </ul>
         </div>

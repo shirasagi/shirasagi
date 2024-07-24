@@ -29,6 +29,8 @@ describe "faq_pages", type: :feature, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.links.input")
         fill_in "item[basename]", with: "sample"
+        fill_in_ckeditor "item[question]", with: "<p>question</p>"
+        fill_in_ckeditor "item[html]", with: "<p>body</p>"
         click_on I18n.t("ss.buttons.draft_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -40,15 +42,19 @@ describe "faq_pages", type: :feature, js: true do
     it "#show" do
       visit show_path
       expect(page).to have_css("#addon-basic", text: item.name)
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
     end
 
     it "#edit" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in_ckeditor "item[question]", with: "<p>modified question</p>"
+        fill_in_ckeditor "item[html]", with: "<p>modified body</p>"
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
     end
 
     it "#move" do
