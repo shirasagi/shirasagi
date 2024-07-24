@@ -1,29 +1,27 @@
-<div id="cms-dialog" style="display: none;">
-  <%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<div id="cms-dialog" class="hide">
+  <%= form_with scope: :item, url: url_for(action: :move), id: "item-form", method: :put, html: { autocomplete: :off } do |f| %>
     <%= error_messages_for :item %>
-    <dl class="see">
-      <dd class="result border p-3" style="height: 300px; overflow: auto;"></dd>
-    </dl>
+
+    <turbo-frame id="contents-frame" src="<%= cms_apis_contents_html_path(s: { keyword: @item.source.filename, option: 'string' }) %>" loading="lazy">
+      <%= loading %>
+    </turbo-frame>
+
     <div class="form-group form-check">
-      <%= check_box_tag :confirm_changes, "1", false, class: "form-check-input border-none", id: "confirm_changes", required: true %>
+      <%= f.check_box :confirm_changes, { class: "form-check-input border-none", id: "confirm_changes", required: true }, "1" %>
       <label for="confirm_changes" class="form-check-label">
-        移動により影響を受けるコンテンツを確認しました。
+        <%= t("cms.confirm.confirm_move_changes") %>
       </label>
     </div>
-    <%= hidden_field_tag :destination, "", value: @item.filename %>
-    <%= hidden_field_tag :filename, "", value: @filename %>
-    <%= hidden_field_tag :source, "", value: @source %>
-    <%= hidden_field_tag :parent_node_id, "", value: @parent_node_id %>
-
+    <%= f.hidden_field :parent_node_id, value: @item.parent_node.try(:id) %>
+    <%= f.hidden_field :basename %>
 
     <div class="send" style="display: flex; justify-content: center; margin: 5px;">
       <%= f.submit t("ss.buttons.move"), class: "btn btn-primary", style: "margin-right: 10px;", data: { disable_with: t("ss.buttons.moving") } %>
-      <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "$('#cms-dialog').dialog('close'); return false;", class: "btn btn-secondary" %>
+      <%= f.button t("ss.buttons.close"), type: :reset, onclick: "$.colorbox.close(); return false;", class: "btn btn-secondary" %>
     </div>
   <% end %>
 </div>
 
-
 <%= jquery do %>
-  new FolderMove("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @source %>", <%= @link_check.present? %>);
+  new FolderMove("#cms-dialog");
 <% end %>

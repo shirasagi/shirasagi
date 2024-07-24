@@ -175,46 +175,6 @@ module Cms::Model::Node
     ]
   end
 
-  def validate_destination_filename(dst)
-    dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
-    (@cur_site || site).then do |s|
-      return errors.add :filename, :empty if dst.blank?
-      return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
-
-      return errors.add :base, :same_filename if filename == dst
-      return errors.add :filename, :taken if Cms::Node.site(s).where(filename: dst).first
-      return errors.add :base, :exist_physical_file if Fs.exist?("#{s.path}/#{dst}")
-
-      if dst_dir.present?
-        unless self.cur_node.present?
-          return errors.add :base, :invalid_filename unless (dst.include?(filename))
-        end
-
-        dst_parent = Cms::Node.site(s).where(filename: dst_dir).first
-        return errors.add :base, :not_found_parent_node if dst_parent.blank?
-        return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
-
-        allowed = dst_parent.allowed?(:read, @cur_user, site: s)
-        return errors.add :base, :not_have_parent_read_permission unless allowed
-      end
-    end
-  end
-
-  def move(dst)
-    validate_destination_filename(dst)
-    return false unless errors.empty?
-
-    src = url
-    self.cur_node = nil
-    self.filename = dst
-    self.basename = nil
-    result = save
-    if result && SS.config.cms.replace_urls_after_move
-      Cms::Page::MoveJob.bind(site_id: @cur_site, user_id: @cur_user).perform_later(src: src, dst: url)
-    end
-    result
-  end
-
   # returns admin side show path
   def private_show_path(*args)
     model = "node"

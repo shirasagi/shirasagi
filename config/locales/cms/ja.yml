@@ -225,6 +225,7 @@ ja:
       change_form: 定型フォームを変更してよろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
       disallow_edit_ignore_syntax_check: アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。
+      confirm_move_changes: 移動により影響を受けるコンテンツを確認しました。
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -354,7 +355,7 @@ ja:
       current_filename: 現在のフォルダー名
       destination: 移動先
       destination_folder: 親フォルダー
-      destination_filename: フォルダー名
+      destination_filename: ファイル名
     copy_nodes:
       from: 複製元フォルダー
       to: 複製先
@@ -1723,11 +1724,15 @@ ja:
         x: X座標
         y: Y座標
         area: 面積
+      cms/node/move_service:
+        source: 移動元フォルダー
+        parent_node: 移動先の親フォルダー
+        basename: 移動先のファイル名
+        confirm_changes: 移動により影響を受けるコンテンツの確認
 
   errors:
     messages:
       set_filename: ファイル名を入力してください。
-      invalid_filename: ファイル名は不正な値です。
       too_bigsize: 携帯電話で表示する場合、ファイルサイズ合計(%{total})が制限値の%{mobile_size}以下になるようにしてください。
       too_bigfile: 携帯電話で表示する場合、%{filename}(%{filesize})のファイルサイズを%{mobile_size}以下になるようにしてください。
       set_name: タイトルを入力してください。
@@ -1846,6 +1851,7 @@ ja:
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
       both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
       not_found_test_members: テストメンバーが選択されていません。
+      plz_confirm_move_changes: 移動により影響を受けるコンテンツを確認してください。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2072,7 +2078,7 @@ ja:
       destination_folder:
         - 移動先のフォルダーを選択してください。
       destination_filename:
-        - 移動先のフォルダー名を入力します。
+        - 移動先のファイル名を入力します。
 
     cms/line/service/base:
       service:

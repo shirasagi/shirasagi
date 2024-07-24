@@ -1,41 +1,48 @@
-<%= form_for :item, url: { action: :move_confirm }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<% show_confirmation ||= nil %>
+
+<%= form_with scope: :item, url: url_for(action: :move_confirm), id: "item-form", method: :put, html: { autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
   <section class="main-box">
     <header><h2><%= t("cms.move_node.title") %></h2></header>
 
     <div class="main-body">
-      <dl class="see">
+      <dl class="see source">
         <dt><%= t("cms.move_node.current_filename") %></dt>
-        <dd class="current-filename"><%= @filename %></dd>
+        <dd class="current-filename"><%= @item.source.filename %></dd>
+      </dl>
 
+      <dl class="see destination">
         <dt><%= t("cms.move_node.destination") %></dt>
         <dd></dd>
 
-        <dl class="see mod-cms-page-search">
-          <dt class="depth-2"><%= t("cms.move_node.destination_folder") %><%= tt "cms/move_node.destination_folder" %></dt>
-          <dd class="depth-2">
-            <%= hidden_field_tag :parent_node_id, nil, id: nil, class: "hidden-ids" %>
-            <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1), class: "btn ajax-box" %>
-          </dd>
-          <dd class="depth-2">
-            <table class="index ajax-selected">
-              <thead>
-              <tr>
-                <th class="name"><%= @model.t :destination_filename %></th>
-                <th></th>
+        <dt class="depth-2"><%= t("cms.move_node.destination_folder") %><%= tt "cms/move_node.destination_folder" %></dt>
+        <dd class="depth-2">
+          <%= f.hidden_field :parent_node_id, value: "", id: nil, class: "hidden-ids" %>
+          <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1), class: "btn ajax-box" %>
+        </dd>
+        <dd class="depth-2">
+          <table class="index ajax-selected">
+            <thead>
+            <tr>
+              <th class="name"><%= Cms::Node.t :filename %></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% if @item.parent_node %>
+              <tr data-id="<%= @item.parent_node.id %>">
+                <td><%= f.hidden_field :parent_node_id, value: @item.parent_node.id, id: nil %> <%= @item.parent_node.name %></td>
+                <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
               </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </dd>
-        </dl>
+            <% end %>
+            </tbody>
+          </table>
+        </dd>
+
         <dt class="depth-2"><%= t("cms.move_node.destination_filename") %><%= tt "cms/move_node.destination_filename" %></dt>
         <dd class="depth-2">
-          <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
-          <%= hidden_field_tag :filename, "", value: @filename %>
-          <%= hidden_field_tag :source, "", value: @source %>
+          <%= f.text_field :basename, class: "filename" %>
         </dd>
       </dl>
     </div>
@@ -43,7 +50,10 @@
 
   <footer class="send">
     <%= f.submit t("ss.buttons.move"), class: "btn-primary", name: :confirm %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
+    <%= link_to t("ss.buttons.cancel"), url_for(action: :show), class: "btn-default" %>
   </footer>
+<% end %>
 
+<% if show_confirmation %>
+  <%= render template: "move_confirm" %>
 <% end %>

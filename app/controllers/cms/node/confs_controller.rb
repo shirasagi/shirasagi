@@ -32,21 +32,14 @@ class Cms::Node::ConfsController < ApplicationController
     render_destroy @item.destroy, location: redirect_url_on_destroy
   end
 
-  def move_confirm 
-    @destination = params[:destination]
-    @confirm = params[:confirm]
-    @filename   = params[:filename]
-    @parent_node_id = params[:parent_node_id]
-    if @confirm
-      @source = "/#{@item.filename}/"
-      @item.validate_destination_filename(@destination)
-      @item.filename = @destination
-      @link_check = @item.errors.empty?
-      if !@link_check
-        location = { action: :move }
-        render_update @item.move(@destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
-        return
-      end
+  def move_confirm
+    @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: @item)
+    @item.attributes = params.require(:item).permit(:parent_node_id, :basename)
+    if @item.invalid?
+      render template: "move"
+      return
     end
+
+    render template: "move", locals: { show_confirmation: true }
   end
 end

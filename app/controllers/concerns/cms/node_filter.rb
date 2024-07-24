@@ -63,38 +63,30 @@ module Cms::NodeFilter
   end
 
   def move
-    @filename   = params[:filename]
-    @source     = params[:source]
-    @link_check = params[:link_check]
-    destination = params[:destination]
-    confirm     = params[:confirm]
     if request.get? || request.head?
-      @filename = @item.filename
-    elsif confirm
-      @source = "/#{@item.filename}/"
-      @item.validate_destination_filename(destination)
-      @item.filename = destination
-      @link_check = @item.errors.empty?
+      @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: @item, parent_node: @item.parent ? @item.parent : nil, basename: @item.basename)
+      render
+      return
+    end
+
+    @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: @item)
+    @item.attributes = params.require(:item).permit(:parent_node_id, :basename, :confirm_changes)
+    if @item.invalid?
+      render
+      return
+    end
+    if @item.confirm_changes != "1"
+      @item.errors.add :base, :plz_confirm_move_changes
+      render
+      return
+    end
+
+    if @item.move
+      location = { action: :show }
+      render_update true, location: location, render: { template: "show" }, notice: t('ss.notice.moved')
     else
-      @source = "/#{@item.filename}/"
-      raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
-
-      if (params[:parent_node_id])
-        parent_node = Cms::Node.where(site_id: @cur_site.id, id: params[:parent_node_id]).first
-        @item.update(cur_node: parent_node) if parent_node
-      end
-      
-      if (@item.reload.cur_node.present?) 
-        destination = "#{@item.cur_node.filename}/#{destination}" unless destination.include?(@item.cur_node.filename)
-      end
-
-      if @item.move(destination)
-        location = { action: :show }
-        render_update true, location: location, render: { template: "show" }, notice: t('ss.notice.moved')
-      else
-        location = { action: :move } 
-        render_update false, location: location, render: { template: "move" }, notice: t('ss.notice.moved')
-      end
+      location = { action: :move }
+      render_update false, location: location, render: { template: "move" }, notice: t('ss.notice.moved')
     end
   end
 
