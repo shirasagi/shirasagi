@@ -8,7 +8,7 @@ class Lsorg::GroupTree
 
     groups = Cms::Group.where(name: /^#{root_group.name}(\/|$)/).active
     groups = groups.tree_sort(root_name: dirname(root_group.name))
-    @group_names = groups.map(&:name).select { |name| !exclude?(name) }
+    @group_names = groups.map(&:name).reject { |name| exclude?(name) }
 
     @item_by_name = {}
     groups.each do |group|
