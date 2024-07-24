@@ -997,3 +997,6 @@ Layout/ArgumentAlignment:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 130
+
+Naming/VariableNumber:
+  Enabled: false
