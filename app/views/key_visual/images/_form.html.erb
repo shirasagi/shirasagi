@@ -1,3 +1,6 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -8,8 +11,8 @@
   <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
   <dd><%= f.ss_file_field :file %></dd>
 
-  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
-  <dd><%= f.text_area :remark %></dd>
+  <dt><%= @model.t :remark_html %><%= @model.tt :remark_html %></dt>
+  <dd><%= f.text_area :remark_html, class: "html" %></dd>
 
   <dt><%= @model.t :display_remarks %><%= @model.tt :display_remarks %></dt>
   <dd>

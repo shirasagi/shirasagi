@@ -149,44 +149,41 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
 
     context "when display remark" do
       let!(:part) { create :key_visual_part_swiper_slide, filename: "#{folder_path}/#{unique_id}" }
+      let!(:remark_text) { unique_id }
+      let!(:remark_html) { "<div class=\"remark\">#{remark_text}</div>" }
 
       before do
-        item1.remark = unique_id
-        item1.display_remark = %w(remark)
+        item1.remark_html = remark_html
+        item1.display_remarks = %w(remark_html)
         item1.update
 
-        item2.remark = unique_id
-        item2.display_remark = %w(title)
+        item2.remark_html = remark_html
+        item2.display_remarks = %w(title)
         item2.update
       end
 
       it do
         visit node.full_url
 
-        # wait for slider initialization
-        expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
-        within ".swiper-slide-active[data-ss-page-id='#{item1.id}']" do
-          within ".slide-remark" do
-            expect(page).to have_no_css(".title", text: item1.name)
-            expect(page).to have_css(".remark", text: item1.remark)
-          end
-        end
+        within ".ss-swiper-slide#key_visual-swiper_slide-#{part.id}" do
+          # wait for slider initialization
+          expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
 
-        wait_event_to_fire("transitionEnd") do
-          first(".swiper-pagination-bullet[aria-label='Go to slide 2']").click
-        end
-        within ".swiper-slide-active[data-ss-page-id='#{item2.id}']" do
-          within ".slide-remark" do
-            expect(page).to have_css(".title", text: item2.name)
-            expect(page).to have_no_css(".remark", text: item2.remark)
+          within ".ss-swiper-slide-item[data-ss-page-id='#{item1.id}']" do
+            within ".slide-remark" do
+              expect(page).to have_no_css(".title", text: item1.name)
+              expect(page).to have_css(".remark", text: remark_text)
+            end
           end
-        end
-
-        wait_event_to_fire("transitionEnd") do
-          first(".swiper-pagination-bullet[aria-label='Go to slide 3']").click
-        end
-        within ".swiper-slide-active[data-ss-page-id='#{item3.id}']" do
-          expect(page).to have_no_css(".slide-remark")
+          within ".ss-swiper-slide-item[data-ss-page-id='#{item2.id}']" do
+            within ".slide-remark" do
+              expect(page).to have_css(".title", text: item2.name)
+              expect(page).to have_no_css(".remark", text: remark_text)
+            end
+          end
+          within ".ss-swiper-slide-item[data-ss-page-id='#{item3.id}']" do
+            expect(page).to have_no_css(".slide-remark")
+          end
         end
       end
     end

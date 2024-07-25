@@ -23,7 +23,7 @@ ja:
         progressbar: プログレスバー
       display_remarks:
         title: タイトル
-        remark: 説明テキスト
+        remark_html: 説明HTML
 
   modules:
     key_visual: キービジュアル
@@ -61,7 +61,7 @@ ja:
         link_url: リンクURL
         file_id: 画像
         in_file: 画像
-        remark: 説明テキスト
+        remark_html: 説明HTML
         display_remarks: 表示
       key_visual/addon/swiper_setting:
         link_target: リンク表示
@@ -84,8 +84,8 @@ ja:
         - キービジュアル画像のリンク先のURLを入力します。
       file_id:
         - キービジュアル画像に利用する画像を登録します。
-      remark:
-        - 説明テキストを入力します。
+      remark_html:
+        - 説明HTMLを入力します。
       display_remarks:
         - キービジュアルに追加表示する文言を選択します。
     key_visual/addon/page_list:

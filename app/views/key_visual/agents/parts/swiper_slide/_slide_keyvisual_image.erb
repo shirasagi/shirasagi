@@ -11,11 +11,11 @@
   <% end %>
   <% if item.display_remarks.present? %>
     <div class="slide-remark">
-      <% if item.display_remarks.include?("title") %>
+      <% if item.display_title? %>
         <div class="title"><%= item.name %></div>
       <% end %>
-      <% if item.display_remarks.include?("remark") %>
-        <div class="remark"><%=br item.remark %></div>
+      <% if item.display_remark_html? && item.remark_html.present? %>
+        <%== item.remark_html.html_safe %>
       <% end %>
     </div>
   <% end %>
