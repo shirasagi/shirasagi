@@ -37,8 +37,8 @@ class KeyVisual::Image
   end
 
   def display_remarks_label
-    I18n.t("key_visual.options.display_remarks").map do |k, v|
-      display_remarks.include?(k.to_s) ? v : nil
-    end.compact.join(", ")
+    I18n.t("key_visual.options.display_remarks").select do |k, v|
+      display_remarks.include?(k.to_s)
+    end.values.join(", ")
   end
 end
