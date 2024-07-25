@@ -62,14 +62,14 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank?
 
     if column.required? && head.blank?
-      self.errors.add(:head, :blank)
+      self.errors.add(:head, :blank) unless _parent.skip_required?
     end
 
     if column.required? && text.blank?
-      self.errors.add(:text, :blank)
+      self.errors.add(:text, :blank) unless _parent.skip_required?
     end
 
     return if text.blank?

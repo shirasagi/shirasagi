@@ -41,10 +41,10 @@ class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank?
 
     if column.required? && page.nil?
-      self.errors.add(:page_id, :blank)
+      self.errors.add(:page_id, :blank) unless _parent.skip_required?
     end
     self.value = page.try(:name)
   end

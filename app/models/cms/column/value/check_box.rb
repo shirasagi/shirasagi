@@ -61,10 +61,10 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank? 
 
     if column.required? && values.blank?
-      self.errors.add(:values, :blank)
+      self.errors.add(:values, :blank) unless _parent.skip_required?
     end
 
     return if values.blank?

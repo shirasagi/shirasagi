@@ -150,10 +150,10 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank?
 
     if column.required? && effective_link_url.blank?
-      self.errors.add(:link_url, :blank)
+      self.errors.add(:link_url, :blank) unless _parent.skip_required?
     end
 
     if link_label.present? && column.label_max_length.present? && column.label_max_length > 0
@@ -164,7 +164,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     if link_url.present? && column.link_max_length.present? && column.link_max_length > 0
       if link_url.length > column.link_max_length
-        self.errors.add(:link_url, :too_long, count: column.link_max_length)
+        self.errors.add(:link_url, :too_long, count: column.link_max_length) 
       end
     end
   end
