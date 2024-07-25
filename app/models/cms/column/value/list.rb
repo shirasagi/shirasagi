@@ -63,7 +63,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || _parent.skip_required?
 
     if column.required? && text_blank?
       self.errors.add(:lists, :blank)

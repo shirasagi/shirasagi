@@ -75,7 +75,7 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || _parent.skip_required?
 
     if column.required? && date.blank?
       self.errors.add(:date, :blank)

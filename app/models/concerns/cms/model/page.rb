@@ -290,6 +290,16 @@ module Cms::Model::Page
     self.set(size: (html_bytesize + owned_files_bytesize))
   end
 
+  def skip_required?
+    return false if self.branch?
+
+    return false if (state == "closed" && workflow_state.present? && workflow_state == "request")
+
+    return true if state == "closed"
+
+    false
+  end
+
   private
 
   def fix_extname

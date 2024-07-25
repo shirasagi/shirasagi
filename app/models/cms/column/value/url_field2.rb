@@ -150,7 +150,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || _parent.skip_required?
 
     if column.required? && effective_link_url.blank?
       self.errors.add(:link_url, :blank)

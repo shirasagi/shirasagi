@@ -39,7 +39,7 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || _parent.skip_required?
 
     if column.required? && value.blank?
       self.errors.add(:value, :blank)

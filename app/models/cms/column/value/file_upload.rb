@@ -120,7 +120,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || _parent.skip_required?
 
     if column.required? && file.blank?
       self.errors.add(:file_id, :blank)
