@@ -1,8 +1,8 @@
-class Cms::CheckLinksController < ApplicationController
+class Cms::CheckLinks::RunController < ApplicationController
   include Cms::BaseFilter
   include SS::JobFilter
 
-  navi_view "cms/main/conf_navi"
+  navi_view "cms/check_links/main/navi"
 
   private
 
