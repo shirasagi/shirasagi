@@ -1,3 +1,6 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -7,6 +10,19 @@
 
   <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
   <dd><%= f.ss_file_field :file %></dd>
+
+  <dt><%= @model.t :remark_html %><%= @model.tt :remark_html %></dt>
+  <dd><%= f.text_area :remark_html, class: "html" %></dd>
+
+  <dt><%= @model.t :display_remarks %><%= @model.tt :display_remarks %></dt>
+  <dd>
+    <% t("key_visual.options.display_remarks").each do |k, v| %>
+      <label>
+        <%= check_box_tag "#{f.object_name}[display_remarks][]", k, @item.display_remarks.include?(k.to_s) %>
+        <%= v %>
+      </label>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
