@@ -1,6 +1,9 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
+
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.name %></dd>
 
   <% if @item.link_url.present? %>
   <dt><%= @model.t :link_url %></dt>
@@ -10,6 +13,16 @@
   <dt><%= @model.t :file_id %></dt>
   <dd><%= show_image_info @item.file %></dd>
 
+  <dt><%= @model.t :remark_html %></dt>
+  <dd>
+    <% if @item.remark_html.present? %>
+      <%= text_area_tag :remark_html, @item.remark_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :display_remarks %></dt>
+  <dd><%= @item.display_remarks_label %></dd>
+
   <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
+  <dd><%= @item.order %></dd>
 </dl>

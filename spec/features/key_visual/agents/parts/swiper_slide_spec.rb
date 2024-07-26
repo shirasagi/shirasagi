@@ -146,5 +146,46 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         expect(page).to have_css(".ss-swiper-slide-stop[aria-pressed='true']")
       end
     end
+
+    context "when display remark" do
+      let!(:part) { create :key_visual_part_swiper_slide, filename: "#{folder_path}/#{unique_id}" }
+      let!(:remark_text) { unique_id }
+      let!(:remark_html) { "<div class=\"remark\">#{remark_text}</div>" }
+
+      before do
+        item1.remark_html = remark_html
+        item1.display_remarks = %w(remark_html)
+        item1.update
+
+        item2.remark_html = remark_html
+        item2.display_remarks = %w(title)
+        item2.update
+      end
+
+      it do
+        visit node.full_url
+
+        within ".ss-swiper-slide#key_visual-swiper_slide-#{part.id}" do
+          # wait for slider initialization
+          expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
+
+          within ".ss-swiper-slide-item[data-ss-page-id='#{item1.id}']" do
+            within ".slide-remark" do
+              expect(page).to have_no_css(".title", text: item1.name)
+              expect(page).to have_css(".remark", text: remark_text)
+            end
+          end
+          within ".ss-swiper-slide-item[data-ss-page-id='#{item2.id}']" do
+            within ".slide-remark" do
+              expect(page).to have_css(".title", text: item2.name)
+              expect(page).to have_no_css(".remark", text: remark_text)
+            end
+          end
+          within ".ss-swiper-slide-item[data-ss-page-id='#{item3.id}']" do
+            expect(page).to have_no_css(".slide-remark")
+          end
+        end
+      end
+    end
   end
 end
