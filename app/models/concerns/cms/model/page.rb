@@ -291,14 +291,14 @@ module Cms::Model::Page
   end
 
   def skip_required?
-    return false if self.branch?
-
-    return false if (state == "closed" && workflow_state.present? && workflow_state == "request")
-
+    return false if self.try(:branch?)
+  
+    return false if (state == "closed" && self.try(:workflow_state).present? && self.try(:workflow_state) == "request")
+  
     return true if state == "closed"
-
+  
     false
-  end
+  end  
 
   private
 
