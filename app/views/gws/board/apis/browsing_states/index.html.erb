@@ -24,7 +24,7 @@
 
       <% options = Gws::User.new(cur_site: @cur_site).title_id_options %>
       <% if options.present? %>
-      <dt><%= @model.t :title_ids %></dt>
+      <dt><%= Gws::User.t :title_ids %></dt>
       <dd>
         <%= f.select :title_ids, options,
           { selected: params[:s].try(:[], :title_ids), include_blank: true },
@@ -34,7 +34,7 @@
 
       <% options = Gws::User.new(cur_site: @cur_site).occupation_id_options %>
       <% if options.present? %>
-      <dt><%= @model.t :occupation_ids %></dt>
+      <dt><%= Gws::User.t :occupation_ids %></dt>
       <dd>
         <%= f.select :occupation_ids, options,
           { selected: params[:s].try(:[], :occupation_ids), include_blank: true },
