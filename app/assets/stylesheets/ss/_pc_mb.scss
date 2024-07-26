@@ -2718,9 +2718,11 @@ select, input, textarea, button {
   }
 }
 #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
-  @include btn;
-  &.add-date {
-    @include btn-orange;
+  &:not(.link) {
+    @include btn;
+    &.add-date {
+      @include btn-orange;
+    }
   }
 }
 select {

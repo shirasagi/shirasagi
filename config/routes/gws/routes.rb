@@ -113,6 +113,7 @@ Rails.application.routes.draw do
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
       get "cke_config" => "cke_config#index"
+      get "user_detail/:id" => "user_detail#index", as: :user_detail
 
       resources :files, concerns: [:deletion, :file_api]
     end

@@ -246,3 +246,19 @@ a.gws-category-label:hover {
     -webkit-box-orient: vertical;
   }
 }
+
+a.user-detail {
+  color: #333;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.user-detail-modal {
+  padding: 6px;
+  .email {
+    white-space: nowrap;
+  }
+  footer.send {
+    padding: 14px 0 0;
+  }
+}
