@@ -10,7 +10,7 @@ class Cms::Column::Value::TextField < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank? || skip_required?
 
     if column.required? && value.blank?
       self.errors.add(:value, :blank)

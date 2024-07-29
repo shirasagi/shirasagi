@@ -64,7 +64,7 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
     return if column.blank? 
 
     if column.required? && values.blank?
-      self.errors.add(:values, :blank) unless _parent.skip_required?
+      self.errors.add(:values, :blank) unless skip_required?
     end
 
     return if values.blank?

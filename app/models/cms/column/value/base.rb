@@ -166,8 +166,13 @@ class Cms::Column::Value::Base
     template.render(render_opts).html_safe
   end
 
+  def skip_required?
+    return false if validation_context.is_a?(Array) && validation_context.include?(:form_check)
+    _parent.skip_required?
+  end
+
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank? || skip_required?
 
     if column.required? && value.blank?
       self.errors.add(:value, :blank)

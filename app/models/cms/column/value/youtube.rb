@@ -117,7 +117,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank? || _parent.skip_required?
+    return if column.blank? || skip_required?
 
     if column.required? && youtube_id.blank?
       self.errors.add(:url, :blank)
