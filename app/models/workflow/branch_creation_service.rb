@@ -34,9 +34,7 @@ class Workflow::BranchCreationService
         result = copy.save
         
         if !result && copy.errors.any?
-          copy.errors.each do |attribute, message|
-            item.errors.add(attribute, message)
-          end
+          SS::Model.copy_errors(copy, item)
         end
       end
     end
