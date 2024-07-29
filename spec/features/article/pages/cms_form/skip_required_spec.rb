@@ -27,6 +27,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      wait_for_turbo_frame "#workflow-branch-frame"
     end
 
     it "check saving as published" do 
@@ -37,8 +39,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.publish_save')
       end
 
-      wait_for_ajax
-      wait_for_error "登録内容を確認してください。次の項目を確認してください。#{column1.name}を入力してください。"
+      wait_for_all_ckeditors_ready
+      msg = I18n.t("errors.messages.blank")
+      msg = I18n.t("errors.format", attribute: column1.name, message: msg)
+      wait_for_error msg
     end
 
     it "check saving as a draft and creating a branch page" do 
@@ -51,10 +55,16 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       wait_for_notice I18n.t('ss.notice.saved')
 
-      find('input[value="差し替えページを作成する"]').click
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      wait_for_turbo_frame "#workflow-branch-frame"
+      wait_event_to_fire "turbo:frame-load" do
+        click_on I18n.t("workflow.create_branch")
+      end
 
       wait_for_ajax
-      wait_for_error "登録内容を確認してください。次の項目を確認してください。#{column1.name}を入力してください。"
+      msg = I18n.t("errors.messages.blank")
+      msg = I18n.t("errors.format", attribute: column1.name, message: msg)
+      wait_for_error msg
     end
 
     it "check saving as a draft and creating a approval request" do 
@@ -67,36 +77,44 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       wait_for_notice I18n.t('ss.notice.saved')
 
-      click_link "選択"
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      wait_for_turbo_frame "#workflow-branch-frame"
+      click_link I18n.t("workflow.buttons.select")
       wait_for_ajax
 
       expect(page).to have_css(".workflow-partial-section")
       within(".workflow-partial-section") do 
         fill_in 'workflow[comment]', with: unique_id
-        click_link "承認者を選択する"
+        wait_for_cbox_opened { click_link I18n.t("workflow.search_approvers.index") }
       end
 
       wait_for_ajax
       expect(page).to have_css(".search-ui-form")
 
-      within(".items") do 
-        first('input[type="checkbox"][name="ids[]"]').click
-      end
+      within_cbox do
+        within(".items") do
+          first('input[type="checkbox"][name="ids[]"]').click
+        end
 
-      wait_for_ajax
-      expect(page).to have_css(".search-ui-select")
+        wait_for_ajax
+        expect(page).to have_css(".search-ui-select")
 
-      within(".search-ui-select") do
-        click_button "承認者を設定する"
+        within(".search-ui-select") do
+          wait_for_cbox_closed { click_button I18n.t("workflow.search_approvers.select") }
+        end
       end
 
       wait_for_ajax
 
       within(".workflow-partial-section") do 
-        click_button "申請"
+        click_button I18n.t("workflow.buttons.request")
       end
 
       wait_for_ajax
+
+      msg = I18n.t("errors.messages.blank")
+      msg = I18n.t("errors.format", attribute: column1.name, message: msg)
+      page.accept_alert(msg)
   
       expect( Article::Page.first.try(:workflow_state)).to eq nil
     end
