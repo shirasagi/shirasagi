@@ -7,5 +7,9 @@ module Member::Addon
     included do
       define_oauth_fields(:twitter)
     end
+
+    def twitter_oauth_strategy
+      [ ::OAuth::Twitter, {} ]
+    end
   end
 end

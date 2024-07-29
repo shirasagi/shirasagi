@@ -37,42 +37,11 @@ class Member::Agents::Nodes::LoginController < ApplicationController
         Rack::Response.new(['302 Moved'], 302, 'Location' => new_path).finish
       end
 
-      if @cur_node.twitter_oauth == "enabled"
-        provider ::OAuth::Twitter
-      end
-      if @cur_node.twitter2_oauth == "enabled"
-        provider ::OAuth::Twitter2
-      end
-      if @cur_node.facebook_oauth == "enabled"
-        provider ::OAuth::Facebook, {
-          site: "https://graph.facebook.com/v17.0",
-          authorize_url: "https://www.facebook.com/v17.0/dialog/oauth",
-          scope: "public_profile"
-        }
-      end
-      if @cur_node.yahoojp_oauth == "enabled"
-        provider ::OAuth::YahooJp, {
-          name: "yahoojp_v2",
-          scope: "openid profile email address"
-        }
-      end
-      if @cur_node.yahoojp_v2_oauth == "enabled"
-        provider ::OAuth::YahooJp, {
-          scope: "openid profile email address",
-          client_options: {
-            authorize_url: '/yconnect/v1/authorization',
-            token_url: '/yconnect/v1/token'
-          }
-        }
-      end
-      if @cur_node.google_oauth2_oauth == "enabled"
-        provider ::OAuth::GoogleOAuth2, { scope: "userinfo.email, userinfo.profile, plus.me" }
-      end
-      if @cur_node.github_oauth == "enabled"
-        provider ::OAuth::Github
-      end
-      if @cur_node.line_oauth == "enabled"
-        provider ::OAuth::Line
+      Cms::Member::OAUTH_PROVIDERS.each do |oauth_provider|
+        if @cur_node.send("#{oauth_provider}_oauth") == "enabled"
+          klass, *args = @cur_node.send("#{oauth_provider}_oauth_strategy")
+          provider klass, *args
+        end
       end
     end
 

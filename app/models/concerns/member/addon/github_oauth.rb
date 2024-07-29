@@ -7,5 +7,9 @@ module Member::Addon
     included do
       define_oauth_fields(:github)
     end
+
+    def github_oauth_strategy
+      [ ::OAuth::Github, {} ]
+    end
   end
 end
