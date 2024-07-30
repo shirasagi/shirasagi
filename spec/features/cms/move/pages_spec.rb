@@ -85,7 +85,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
             expect(page).to have_css("tr[data-id='#{parent_node.id}']", text: parent_node.name)
           end
           fill_in "item[destination_basename]", with: "E"
-          click_on I18n.t('ss.buttons.move')
+          click_on I18n.t('ss.buttons.confirm')
         end
         within_cbox do
           wait_for_turbo_frame("#contents-frame")
@@ -159,7 +159,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
             expect(page).to have_css("tr[data-id='#{parent_node.id}']", text: parent_node.name)
           end
           fill_in "item[destination_basename]", with: "C"
-          click_button I18n.t('ss.buttons.move')
+          click_button I18n.t('ss.buttons.confirm')
         end
         within_cbox do
           wait_for_turbo_frame("#contents-frame")

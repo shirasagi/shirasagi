@@ -30,7 +30,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
         within(".destination") do
           expect(page).to have_css("tr[data-id='#{node_1.id}']", text: node_1.name)
         end
-        click_on I18n.t("ss.buttons.move")
+        click_on I18n.t("ss.buttons.confirm")
       end
 
       within_cbox do
@@ -63,7 +63,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
         within(".destination") do
           expect(page).to have_css("tr[data-id='#{node_1.id}']", text: node_1.name)
         end
-        click_on I18n.t("ss.buttons.move")
+        click_on I18n.t("ss.buttons.confirm")
       end
       wait_for_ajax
 
@@ -82,7 +82,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
 
       within "form#item-form" do
         fill_in "item[destination_basename]", with: "#{node_1.filename}/#{unique_id}"
-        click_on I18n.t("ss.buttons.move")
+        click_on I18n.t("ss.buttons.confirm")
       end
       message = I18n.t("errors.messages.invalid_filename")
       attribute = I18n.t("activemodel.attributes.cms/node/move_service.destination_basename")
@@ -103,7 +103,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
 
         within "form#item-form" do
           fill_in "item[destination_basename]", with: new_basename
-          click_on I18n.t("ss.buttons.move")
+          click_on I18n.t("ss.buttons.confirm")
         end
 
         within_cbox do

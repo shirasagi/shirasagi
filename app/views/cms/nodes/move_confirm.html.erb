@@ -2,9 +2,13 @@
   <%= form_with scope: :item, url: url_for(action: :move), id: "item-form", method: :put, html: { autocomplete: :off } do |f| %>
     <%= error_messages_for :item %>
 
-    <turbo-frame id="contents-frame" src="<%= cms_apis_contents_html_path(s: { keyword: @item.source.filename, option: 'string' }) %>" loading="lazy">
-      <%= loading %>
-    </turbo-frame>
+    <section class="main-box">
+      <header><h2><%= t("cms.move_page.message", source: @item.source.filename) %></h2></header>
+
+      <turbo-frame id="contents-frame" src="<%= cms_apis_contents_html_path(s: { keyword: @item.source.filename, option: 'string' }) %>" loading="lazy">
+        <%= loading %>
+      </turbo-frame>
+    </section>
 
     <div class="form-group form-check">
       <%= f.check_box :confirm_changes, { class: "form-check-input border-none", id: "confirm_changes", required: true }, "1" %>
@@ -17,7 +21,7 @@
 
     <div class="send" style="display: flex; justify-content: center; margin: 5px;">
       <%= f.submit t("ss.buttons.move"), class: "btn btn-primary", style: "margin-right: 10px;", data: { disable_with: t("ss.buttons.moving") } %>
-      <%= f.button t("ss.buttons.close"), type: :reset, onclick: "$.colorbox.close(); return false;", class: "btn btn-secondary" %>
+      <%= f.button t("ss.buttons.close"), type: :reset, onclick: "$.colorbox.close(); return false;", class: "btn-default" %>
     </div>
   <% end %>
 </div>
