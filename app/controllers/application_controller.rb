@@ -187,11 +187,13 @@ class ApplicationController < ActionController::Base
   end
 
   def set_received_by
-    response.headers["X-SS-Received-At"] = Time.zone.now.to_i
+    # set first received time to received-at
+    response.headers["X-SS-Received-At"] ||= Time.zone.now.to_i
 
     controller_name = params[:controller].presence
     action_name = params[:action].presence
     if controller_name && action_name
+      # set last controller and action to received-by
       response.headers["X-SS-Received-By"] = "#{request.method} #{controller_name}##{action_name}"
     end
   end
