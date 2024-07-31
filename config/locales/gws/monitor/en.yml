@@ -115,6 +115,9 @@ en:
         '15.months': 15 months
         '18.months': 18 months
         '24.months': 24 months
+      download_comment:
+        last: Only Latest one
+        all: All
     links:
       back_to_thread: Go back
       comment: Respond
