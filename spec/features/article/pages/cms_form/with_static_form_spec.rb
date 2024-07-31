@@ -130,7 +130,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".ajax-selected", text: selectable_page1.name)
 
         wait_for_js_ready
-        click_on I18n.t('ss.buttons.draft_save')
+        click_on I18n.t('ss.buttons.publish_save')
       end
       click_on I18n.t('ss.buttons.ignore_alert')
       expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -163,10 +163,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_js_ready
-        click_on I18n.t('ss.buttons.draft_save')
+        click_on I18n.t('ss.buttons.publish_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_no_selector('div.column-with-errors')
 
       expect(article_pages.count).to eq 1
@@ -248,10 +249,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_js_ready
-        click_on I18n.t('ss.buttons.draft_save')
+        click_on I18n.t('ss.buttons.publish_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      wait_for_turbo_frame "#workflow-branch-frame"
 
       expect(article_pages.count).to eq 1
       article_pages.first.tap do |item|
