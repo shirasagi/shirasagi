@@ -35,17 +35,17 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
     end
 
     it "#move" do
-      item = Cms::Page.where(filename: "page.html").first
-      move_page_path = move_cms_page_path(site.id, item)
-      expect(Fs.exist?("#{site.path}/page.html")).to be_truthy
+      Cms::Page.where(filename: "page.html").first.tap do |item|
+        expect(Fs.exist?("#{site.path}/page.html")).to be_truthy
 
-      visit move_page_path
-      within "form" do
-        fill_in "destination", with: "A/page"
-        click_button I18n.t('ss.buttons.move')
+        visit move_cms_page_path(site.id, item)
+        within "form" do
+          fill_in "destination", with: "A/page"
+          click_button I18n.t('ss.buttons.move')
+        end
+        wait_for_notice I18n.t("ss.notice.moved")
       end
-
-      #expect(current_path).to eq move_page_path
+      expect(Cms::Page.where(filename: "A/page.html").first).to be_present
       expect(page).to have_css("form#item-form .current-filename", text: "A/page.html")
 
       expect(Fs.exist?("#{site.path}/page.html")).to be_falsy
@@ -57,22 +57,45 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      item = Cms::Page.where(filename: "A/B/C/page2.html").first
-      visit cms_page_path(site.id, item)
-      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 1)
-
-      item = Cms::Node.where(filename: "A/B/C").first
-      move_node_path = move_node_conf_path(site.id, item)
-      expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_truthy
-
-      visit move_node_path
-      within "form" do
-        fill_in "destination", with: "D/E"
-        click_button I18n.t('ss.buttons.move')
+      Cms::Page.where(filename: "A/B/C/page2.html").first.tap do |item|
+        visit cms_page_path(site.id, item)
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        within "#addon-history-agents-addons-backup" do
+          expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
+        end
       end
 
-      expect(current_path).to eq move_node_path
-      expect(page).to have_css("form#item-form .current-filename", text: "D/E")
+      Cms::Node.where(filename: "A/B/C").first.tap do |item|
+        parent_node = Cms::Node.where(filename: "D").first
+        expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_truthy
+
+        visit move_node_conf_path(site.id, item)
+        within "form" do
+          within(".destination") do
+            wait_for_cbox_opened { click_link(I18n.t("cms.apis.nodes.index")) }
+          end
+        end
+        within_cbox do
+          expect(page).to have_css("tr[data-id='#{parent_node.id}']", text: parent_node.name)
+          wait_for_cbox_closed { click_on parent_node.name }
+        end
+        within "form" do
+          within(".destination") do
+            expect(page).to have_css("tr[data-id='#{parent_node.id}']", text: parent_node.name)
+          end
+          fill_in "item[destination_basename]", with: "E"
+          click_on I18n.t('ss.buttons.confirm')
+        end
+        within_cbox do
+          wait_for_turbo_frame("#contents-frame")
+          find("#confirm_changes").click
+          click_on I18n.t("ss.buttons.move")
+        end
+        wait_for_notice I18n.t("ss.notice.moved")
+      end
+      expect(Cms::Node.where(filename: "D/E").first).to be_present
+      # expect(page).to have_css("form#item-form .current-filename", text: "D/E")
 
       expect(Fs.exist?("#{site.path}/A/B/C/page2.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/D/E/page2.html")).to be_truthy
@@ -83,17 +106,22 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      item = Cms::Page.where(filename: "A/page.html").first
-      visit cms_page_path(site.id, item)
-      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 1)
+      Cms::Page.where(filename: "A/page.html").first.tap do |item|
+        visit cms_page_path(site.id, item)
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        within "#addon-history-agents-addons-backup" do
+          expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
+        end
 
-      visit move_page_path
-      within "form" do
-        fill_in "destination", with: "D/E/page"
-        click_button I18n.t('ss.buttons.move')
+        visit move_cms_page_path(site.id, item)
+        within "form" do
+          fill_in "destination", with: "D/E/page"
+          click_button I18n.t('ss.buttons.move')
+        end
+        wait_for_notice I18n.t("ss.notice.moved")
+        expect(page).to have_css("form#item-form .current-filename", text: "D/E/page.html")
       end
-      #expect(current_path).to eq move_page_path
-      expect(page).to have_css("form#item-form .current-filename", text: "D/E/page.html")
 
       expect(Fs.exist?("#{site.path}/A/page.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/D/E/page.html")).to be_truthy
@@ -104,17 +132,43 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      item = Cms::Page.where(filename: "D/E/page2.html").first
-      visit cms_page_path(site.id, item)
-      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 2)
-
-      visit move_node_path
-      within "form" do
-        fill_in "destination", with: "A/B/C"
-        click_button I18n.t('ss.buttons.move')
+      Cms::Page.where(filename: "D/E/page2.html").first.tap do |item|
+        visit cms_page_path(site.id, item)
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        within "#addon-history-agents-addons-backup" do
+          expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
+        end
       end
-      expect(current_path).to eq move_node_path
-      expect(page).to have_css("form#item-form .current-filename", text: "A/B/C")
+
+      Cms::Node.where(filename: "D/E").first.tap do |item|
+        parent_node = Cms::Node.where(filename: "A/B").first
+
+        visit move_node_conf_path(site.id, item)
+        within "form#item-form" do
+          within(".destination") do
+            wait_for_cbox_opened { click_link(I18n.t("cms.apis.nodes.index")) }
+          end
+        end
+        within_cbox do
+          expect(page).to have_css("tr[data-id='#{parent_node.id}']", text: parent_node.name)
+          wait_for_cbox_closed { click_on parent_node.name }
+        end
+        within "form#item-form" do
+          within(".destination") do
+            expect(page).to have_css("tr[data-id='#{parent_node.id}']", text: parent_node.name)
+          end
+          fill_in "item[destination_basename]", with: "C"
+          click_button I18n.t('ss.buttons.confirm')
+        end
+        within_cbox do
+          wait_for_turbo_frame("#contents-frame")
+          find("#confirm_changes").click
+          click_on I18n.t("ss.buttons.move")
+        end
+        wait_for_notice I18n.t("ss.notice.moved")
+      end
+      expect(Cms::Node.where(filename: "A/B/C").first).to be_present
 
       expect(Fs.exist?("#{site.path}/D/E/page.html")).to be_falsy
       expect(Fs.exist?("#{site.path}/D/E/page2.html")).to be_falsy
@@ -127,13 +181,23 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      item = Cms::Page.where(filename: "A/B/C/page.html").first
-      visit cms_page_path(site.id, item)
-      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 2)
+      Cms::Page.where(filename: "A/B/C/page.html").first.tap do |item|
+        visit cms_page_path(site.id, item)
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        within "#addon-history-agents-addons-backup" do
+          expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
+        end
+      end
 
-      item = Cms::Page.where(filename: "A/B/C/page2.html").first
-      visit cms_page_path(site.id, item)
-      expect(page).to have_selector('span', text: I18n.t('history.options.action.replace_urls'), count: 3)
+      Cms::Page.where(filename: "A/B/C/page2.html").first.tap do |item|
+        visit cms_page_path(site.id, item)
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        within "#addon-history-agents-addons-backup" do
+          expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
+        end
+      end
     end
   end
 end

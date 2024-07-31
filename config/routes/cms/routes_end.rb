@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   concern :move do
     get :move, on: :member
     put :move, on: :member
+    put :move_confirm, on: :member
   end
 
   concern :template do
