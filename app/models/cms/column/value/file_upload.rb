@@ -123,11 +123,11 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && file.blank?
-      self.errors.add(:file_id, :blank)
+      self.errors.add(:file_id, :blank) unless skip_required?
     end
 
     if column.required? && column.file_type == 'banner' && link_url.blank?
-      self.errors.add(:link_url, :blank)
+      self.errors.add(:link_url, :blank) unless skip_required?
     end
 
     self.file_name = file.name if file
