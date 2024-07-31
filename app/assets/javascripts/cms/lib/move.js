@@ -38,3 +38,12 @@ Cms_Move.prototype.render = function() {
     });
   }
 };
+
+function FolderMove(el) {
+  this.$el = $(el);
+  this.render();
+}
+
+FolderMove.prototype.render = function() {
+  $.colorbox({ fixed: true, open: true, inline: true, href: this.$el.find("form"), width: "90%", height: "90%", });
+};

@@ -31,4 +31,15 @@ class Cms::Node::ConfsController < ApplicationController
     raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.destroy, location: redirect_url_on_destroy
   end
+
+  def move_confirm
+    @item = Cms::Node::MoveService.new(cur_site: @cur_site, cur_user: @cur_user, source: @item)
+    @item.attributes = params.require(:item).permit(:destination_parent_node_id, :destination_basename)
+    if @item.invalid?
+      render template: "move"
+      return
+    end
+
+    render template: "move", locals: { show_confirmation: true }
+  end
 end

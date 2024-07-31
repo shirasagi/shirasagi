@@ -33,29 +33,23 @@
   });
 <% end %>
 
-<dl class="see cms-apis-contents-html cms-apis-contents-html-page">
-  <dt class="wide">
-    <%= t("cms.apis.contents.page") %>
-    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @pages.size %><%= t "ss.units.count" %></span>
-  </dt>
-  <dd style="margin: 0 0 0 40px; padding: 10px 0;">
+<% render_table = proc do |items, check_name| %>
+  <% if items.size > 0 %>
     <table class="index">
       <thead>
       <tr>
-        <th class="checkbox">
-          <input type="checkbox"/>
-        </th>
+        <th class="checkbox"><input type="checkbox"/></th>
         <th><%= t("cms.apis.contents.title") %></th>
         <th><%= t("ss.url") %></th>
       </tr>
       </thead>
       <tbody>
-      <% @pages.each do |item| %>
+      <% items.each do |item| %>
         <% readable = item.allowed?(:read, @cur_user, site: @cur_site) %>
         <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
-            <%= check_box_tag("page_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
+            <%= check_box_tag(check_name, item.id, false, (editable ? { id: nil } : { id: nil, disabled: true })) %>
           </td>
           <% if readable %>
             <td><%= link_to item.name, item.private_show_path, target: "_blank", rel: "noopener" %></td>
@@ -67,6 +61,16 @@
       <% end %>
       </tbody>
     </table>
+  <% end %>
+<% end %>
+
+<dl class="see cms-apis-contents-html cms-apis-contents-html-page">
+  <dt class="wide">
+    <%= t("cms.apis.contents.page") %>
+    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @pages.size %><%= t "ss.units.count" %></span>
+  </dt>
+  <dd style="margin: 0 0 0 40px; padding: 10px 0;">
+    <% render_table.call(@pages, "page_ids[]") %>
   </dd>
 </dl>
 
@@ -76,32 +80,7 @@
     <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @parts.size %><%= t "ss.units.count" %></span>
   </dt>
   <dd style="margin: 0 0 0 40px; padding: 10px 0;">
-    <table class="index">
-      <thead>
-      <tr>
-        <th class="checkbox"><input type="checkbox"/></th>
-        <th><%= t("cms.apis.contents.title") %></th>
-        <th><%= t("ss.url") %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @parts.each do |item| %>
-        <% readable = item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <tr>
-          <td class="checkbox">
-            <%= check_box_tag("part_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
-          </td>
-          <% if readable %>
-            <td><%= link_to item.name, item.private_show_path, target: "_blank", rel: "noopener" %></td>
-          <% else %>
-            <td><%= item.name %></td>
-          <% end %>
-          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank", rel: "noopener" %></td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+    <% render_table.call(@parts, "part_ids[]") %>
   </dd>
 </dl>
 
@@ -111,31 +90,6 @@
     <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @layouts.size %><%= t "ss.units.count" %></span>
   </dt>
   <dd style="margin: 0 0 0 40px; padding: 10px 0;">
-    <table class="index">
-      <thead>
-      <tr>
-        <th class="checkbox"><input type="checkbox"/></th>
-        <th><%= t("cms.apis.contents.title") %></th>
-        <th><%= t("ss.url") %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @layouts.each do |item| %>
-        <% readable = item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <tr>
-          <td class="checkbox">
-            <%= check_box_tag("layout_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
-          </td>
-          <% if readable %>
-            <td><%= link_to item.name, item.private_show_path, target: "_blank", rel: "noopener" %></td>
-          <% else %>
-            <td><%= item.name %></td>
-          <% end %>
-          <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank", rel: "noopener" %></td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+    <% render_table.call(@layouts, "layout_ids[]") %>
   </dd>
 </dl>
