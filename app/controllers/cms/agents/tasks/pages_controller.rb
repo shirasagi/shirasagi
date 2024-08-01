@@ -107,7 +107,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     ids.each do |id|
       rescue_with(rescue_p: rescue_p) do
         @task.count
-        page = Cms::Page.site(@site).where("$or" => cond).where(id: id).first
+        page = pages.where(id: id).first
         next unless page
         @task.log page.full_url
         release_page page
