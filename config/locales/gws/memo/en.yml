@@ -175,12 +175,12 @@ en:
     edit_private_gws_memo_categories: Edit categories (own)
     delete_other_gws_memo_categories: Delete categories (all)
     delete_private_gws_memo_categories: Delete categories (own)
-    read_other_gws_memo_templates: View phone notes (all)
-    read_private_gws_memo_templates: View phone notes (own)
-    edit_other_gws_memo_templates: Edit phone notes (all)
-    edit_private_gws_memo_templates: Edit phone notes (own)
-    delete_other_gws_memo_templates: Delete phone notes (all)
-    delete_private_gws_memo_templates: Delete phone notes (own)
+    read_other_gws_memo_templates: View templates (all)
+    read_private_gws_memo_templates: View templates (own)
+    edit_other_gws_memo_templates: Edit templates (all)
+    edit_private_gws_memo_templates: Edit templates (own)
+    delete_other_gws_memo_templates: Delete templates (all)
+    delete_private_gws_memo_templates: Delete templates (own)
     restore_gws_memo_messages: Message recovery
     backup_gws_memo_messages: Message backup
   mongoid:
@@ -382,9 +382,9 @@ en:
         - "Disable: Does not enter this signature automatically"
     gws/memo/template:
       name:
-        - Enter the name that appears in the phone memo list.
+        - Enter the name that appears in the template list.
       text:
-        - Enter the text for the phone memo.
+        - Enter the text for the template.
       order:
         - Enter the order.
         - "The lower the number, the higher the position."
