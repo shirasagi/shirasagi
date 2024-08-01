@@ -12,7 +12,7 @@ class Gws::Monitor::TopicExporter
 
     enum = Enumerator.new do |yielder|
       item.attend_groups.each_with_index do |group, group_index|
-        comments = item.comment(group.id)
+        comments = item.comment(group.id).reorder(created: -1)
         case download_comment
         when 'all'
           if comments.count > 0
@@ -23,7 +23,7 @@ class Gws::Monitor::TopicExporter
             yielder << [ group, group_index, nil, 0 ]
           end
         else # 'last'
-          yielder << [ group, group_index, comments.last, 0 ]
+          yielder << [ group, group_index, comments.first, 0 ]
         end
       end
     end
@@ -84,12 +84,12 @@ class Gws::Monitor::TopicExporter
         comment.try(:text)
       end
     end
-    drawer.column :comment_updated do
+    drawer.column :comment_created do
       drawer.head { I18n.t('gws/monitor.csv')[6] }
       drawer.body do |group, group_index, comment, comment_index|
-        updated = comment.try(:updated)
-        if updated
-          I18n.l(updated, format: :picker)
+        created = comment.try(:created)
+        if created
+          I18n.l(created, format: :picker)
         end
       end
     end
