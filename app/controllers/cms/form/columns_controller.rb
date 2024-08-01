@@ -30,6 +30,10 @@ class Cms::Form::ColumnsController < ApplicationController
     raise e
   end
 
+  def set_deletable
+    @deletable ||= @cur_form.allowed?(:delete, @cur_user, site: @cur_site, owned: true)
+  end
+
   def set_crumbs
     set_form
     @crumbs << [Cms::Form.model_name.human, cms_forms_path]

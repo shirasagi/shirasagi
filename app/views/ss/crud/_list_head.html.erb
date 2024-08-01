@@ -1,5 +1,4 @@
 <%
-
 releasable = false
 closeable = false
 if @model.include?(Cms::Addon::Release)
@@ -16,9 +15,11 @@ end
 
   <div class="list-head-action">
     <%= render template: "_list_head_tags" %>
-    <div class="list-head-action-destroy">
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
-    </div>
+    <% if @deletable %>
+      <div class="list-head-action-destroy">
+        <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+      </div>
+    <% end %>
     <% if releasable || closeable %>
       <div class="list-head-action-update">
         <%= ss_button_to t("ss.links.make_them_public"), "",

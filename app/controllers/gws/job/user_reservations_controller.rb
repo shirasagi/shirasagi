@@ -10,6 +10,10 @@ class Gws::Job::UserReservationsController < ApplicationController
 
   private
 
+  def set_deletable
+    @deletable ||= true
+  end
+
   def set_crumbs
     @crumbs << [t("job.task_manager"), gws_job_user_main_path]
     @crumbs << [t("job.reservation"), action: :index]
