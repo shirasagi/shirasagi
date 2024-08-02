@@ -2,12 +2,6 @@
   next_month = month + 1.month
   date = month - month.wday.days
 %>
-<div class="information">
-  <p class="information__text"><%= t("event.calender.info_text") %></p>
-  <p class="information__usage">
-      <%= t("event.calender.info_usage").html_safe %>
-  </p>
-</div>
 <table class="event-recurrence-exclude-dates-calendar">
   <caption><%= I18n.l(month, format: :month) %></caption>
   <thead>
