@@ -3,6 +3,13 @@
   to = @item.until_on || from_month + Event::Extensions::Recurrence::TERM_LIMIT - 1.day
 %>
 
+<div class="information">
+  <p class="information__text"><%= t("event.calender.info_text") %></p>
+  <p class="information__usage">
+    <%= t("event.calender.info_usage").html_safe %>
+  </p>
+</div>
+
 <div class="event-recurrence-exclude-dates">
   <div class="event-recurrence-exclude-dates-calendars">
     <% month = from_month %>
