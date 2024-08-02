@@ -14,17 +14,17 @@ RSpec.describe Gws::Monitor::TopicExporter, type: :model, dbscope: :example do
       )
     end
   end
-  let!(:post_g1_1) do
+  let!(:g1_post1) do
     Timecop.freeze(4.hours.ago) do
       create(:gws_monitor_post, user: user, user_group_id: g1.id, user_group_name: g1.name, parent_id: topic1.id)
     end
   end
-  let!(:post_g1_2) do
+  let!(:g1_post2) do
     Timecop.freeze(3.hours.ago) do
       create(:gws_monitor_post, user: user, user_group_id: g1.id, user_group_name: g1.name, parent_id: topic1.id)
     end
   end
-  let!(:post_g2_1) do
+  let!(:g2_post1) do
     Timecop.freeze(4.hours.ago) do
       create(:gws_monitor_post, user: user, user_group_id: g2.id, user_group_name: g2.name, parent_id: topic1.id)
     end
@@ -45,27 +45,27 @@ RSpec.describe Gws::Monitor::TopicExporter, type: :model, dbscope: :example do
           expect(row[1]).to eq topic1.name
           expect(row[2]).to eq I18n.t("gws/monitor.options.answer_state.answered")
           expect(row[3]).to eq g1.name
-          expect(row[4]).to eq post_g1_2.contributor_name
-          expect(row[5]).to eq post_g1_2.text
-          expect(row[6]).to eq I18n.l(post_g1_2.updated, format: :picker)
+          expect(row[4]).to eq g1_post2.contributor_name
+          expect(row[5]).to eq g1_post2.text
+          expect(row[6]).to eq I18n.l(g1_post2.updated, format: :picker)
         end
         table[1].tap do |row|
           expect(row[0]).to be_blank
           expect(row[1]).to be_blank
           expect(row[2]).to be_blank
           expect(row[3]).to be_blank
-          expect(row[4]).to eq post_g1_1.contributor_name
-          expect(row[5]).to eq post_g1_1.text
-          expect(row[6]).to eq I18n.l(post_g1_1.updated, format: :picker)
+          expect(row[4]).to eq g1_post1.contributor_name
+          expect(row[5]).to eq g1_post1.text
+          expect(row[6]).to eq I18n.l(g1_post1.updated, format: :picker)
         end
         table[2].tap do |row|
           expect(row[0]).to be_blank
           expect(row[1]).to be_blank
           expect(row[2]).to eq I18n.t("gws/monitor.options.answer_state.answered")
           expect(row[3]).to eq g2.name
-          expect(row[4]).to eq post_g2_1.contributor_name
-          expect(row[5]).to eq post_g2_1.text
-          expect(row[6]).to eq I18n.l(post_g2_1.updated, format: :picker)
+          expect(row[4]).to eq g2_post1.contributor_name
+          expect(row[5]).to eq g2_post1.text
+          expect(row[6]).to eq I18n.l(g2_post1.updated, format: :picker)
         end
       end
     end
@@ -86,18 +86,18 @@ RSpec.describe Gws::Monitor::TopicExporter, type: :model, dbscope: :example do
           expect(row[1]).to eq topic1.name
           expect(row[2]).to eq I18n.t("gws/monitor.options.answer_state.answered")
           expect(row[3]).to eq g1.name
-          expect(row[4]).to eq post_g1_2.contributor_name
-          expect(row[5]).to eq post_g1_2.text
-          expect(row[6]).to eq I18n.l(post_g1_2.updated, format: :picker)
+          expect(row[4]).to eq g1_post2.contributor_name
+          expect(row[5]).to eq g1_post2.text
+          expect(row[6]).to eq I18n.l(g1_post2.updated, format: :picker)
         end
         table[1].tap do |row|
           expect(row[0]).to be_blank
           expect(row[1]).to be_blank
           expect(row[2]).to eq I18n.t("gws/monitor.options.answer_state.answered")
           expect(row[3]).to eq g2.name
-          expect(row[4]).to eq post_g2_1.contributor_name
-          expect(row[5]).to eq post_g2_1.text
-          expect(row[6]).to eq I18n.l(post_g2_1.updated, format: :picker)
+          expect(row[4]).to eq g2_post1.contributor_name
+          expect(row[5]).to eq g2_post1.text
+          expect(row[6]).to eq I18n.l(g2_post1.updated, format: :picker)
         end
       end
     end
