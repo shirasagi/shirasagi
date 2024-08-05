@@ -35,7 +35,7 @@ module SS::Model::Column
 
   module ClassMethods
     def search(params = {})
-      criteria = self.where({})
+      criteria = all
       return criteria if params.blank?
 
       criteria = criteria.search_name(params)

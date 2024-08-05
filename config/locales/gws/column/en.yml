@@ -129,10 +129,10 @@ en:
         - Enter a placeholder.
 
     gws/column/title:
-      i18n_title:
+      title:
         - Enter the title to be displayed.
         - This input can be omitted, but the multilingual input must also be omitted.
-      i18n_explanation:
+      explanation:
         - Enter the description to be displayed.
         - This input can be omitted, but the multilingual input must also be omitted.
 

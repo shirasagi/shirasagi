@@ -15,7 +15,7 @@
 
     <div class="gws-column-form-input-group">
       <%= label_tag "#{f.object_name}[explanation]", model.t(:explanation) %>
-      <div class="i18n_explanation">
+      <div>
         <%= text_area_tag "#{f.object_name}[explanation]", item.explanation, autofocus: pc_browser? %>
       </div>
     </div>

@@ -10,7 +10,16 @@
   <div class="addon-view" id="addon-basic">
     <div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div>
     <div class="addon-body">
-      <%= render template: '_form', locals: { f: f } %>
+      <%=
+        column_path = Gws::Column.to_path(@item.class)
+        partial_view_path = "gws/apis/columns/#{column_path}/form"
+        physical_view_path = "app/views/gws/apis/columns/#{column_path}/_form.html.erb"
+        if ::File.exist?(physical_view_path)
+          render partial_view_path, f: f
+        else
+          render 'form', f: f
+        end
+      %>
     </div>
   </div>
   <%= render template: "_column_form", locals: { f: f } %>
