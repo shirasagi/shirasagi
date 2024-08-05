@@ -13,13 +13,14 @@ Gws_Column.renderRadioButton = function(columnId) {
 
   // change
   $el.find("input[type='radio']").each(function() {
-    var sectionId = $(this).attr('data-section-id');
-    $(this).on('change', function() {
+    var $this = $(this);
+    var sectionId = $this.attr('data-section-id');
+    $this.on('change', function() {
       ids.forEach(function(id) {
-        $(`.section-${id}`).hide();
+        $(`.section-${id}`).addClass("hide");
         $(`.section-${id} *`).prop('disabled', true);
       });
-      $(`.section-${sectionId}`).show();
+      $(`.section-${sectionId}`).removeClass("hide");
       $(`.section-${sectionId} *`).prop('disabled', false);
 
       if (sectionId === 'other') {
@@ -27,6 +28,8 @@ Gws_Column.renderRadioButton = function(columnId) {
       } else {
         $el.find("input[type='text']").prop('disabled', true);
       }
+
+      $this.trigger("column:sectionChanged");
     });
   });
 
@@ -45,7 +48,7 @@ Gws_Column.renderRadioButton = function(columnId) {
 
 Gws_Column.resetRadioButton = function($el, ids) {
   ids.forEach(function(id) {
-    $(`.section-${id}`).hide();
+    $(`.section-${id}`).addClass("hide");
     $(`.section-${id} *`).prop('disabled', true);
     $el.find("input[type='text']").prop('value', null);
     $el.find("input[type='text']").prop('disabled', true);
