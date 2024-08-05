@@ -39,7 +39,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       fill_in 'item[name]', with: name
       fill_in 'item[basename]', with: basename
       click_on I18n.t('ss.buttons.save')
-      wait_for_ajax
+      wait_for_js_ready
 
       expect(Opendata::Node::Category.count).to eq 1
       Opendata::Node::Category.first.tap do |node|
@@ -60,7 +60,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       ensure_addon_opened("#addon-cms-agents-addons-meta")
       fill_in 'item[keywords]', with: keywords.join(' ')
       click_on I18n.t('ss.buttons.save')
-      wait_for_ajax
+      wait_for_js_ready
       Opendata::Node::Category.first.tap do |node|
         expect(node.name).to eq name
         expect(node.filename).to end_with basename
@@ -71,7 +71,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('cms.node_config')
       click_on I18n.t('ss.links.delete')
       click_on I18n.t('ss.buttons.delete')
-      wait_for_ajax
+      wait_for_js_ready
       expect(Opendata::Node::Category.count).to eq 0
     end
   end

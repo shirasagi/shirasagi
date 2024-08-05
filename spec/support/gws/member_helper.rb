@@ -10,7 +10,7 @@ def gws_select_member(user, form_selector: nil, addon_selector: nil)
       wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
     end
   end
-  wait_for_cbox do
+  within_cbox do
     wait_for_cbox_closed { click_on user.long_name }
   end
   within form_selector do
@@ -29,7 +29,7 @@ def gws_select_member_group(group, form_selector: nil, addon_selector: nil)
       wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
     end
   end
-  wait_for_cbox do
+  within_cbox do
     wait_for_cbox_closed { click_on group.trailing_name }
   end
   within form_selector do
@@ -48,7 +48,7 @@ def gws_select_member_custom_group(custom_group, form_selector: nil, addon_selec
       wait_for_cbox_opened { click_on I18n.t("gws.apis.custom_groups.index") }
     end
   end
-  wait_for_cbox do
+  within_cbox do
     wait_for_cbox_closed { click_on custom_group.name }
   end
   within form_selector do

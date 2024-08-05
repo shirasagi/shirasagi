@@ -17,11 +17,12 @@ class Gws::Survey::FileEnumerator < Enumerator
   def headers
     terms = []
     if !@cur_form.anonymous?
-      terms << Gws::Survey::File.t(:updated)
-      terms << Gws::User.t(:name)
-      terms << Gws::User.t(:organization_uid)
+      terms += user_personal_header_terms
     end
     columns.each do |column|
+      next if column.is_a?(Gws::Column::Title)
+      next if column.is_a?(Gws::Column::Section)
+
       terms << column.name
     end
     terms
@@ -36,12 +37,13 @@ class Gws::Survey::FileEnumerator < Enumerator
   def enum_record(yielder, item)
     terms = []
     if !@cur_form.anonymous?
-      terms << I18n.l(item.updated, format: :csv)
-      terms << item.user_name
-      terms << (item.user.organization_uid.presence || item.user_uid)
+      terms += user_personal_record_terms(item)
     end
 
     columns.each do |column|
+      next if column.is_a?(Gws::Column::Title)
+      next if column.is_a?(Gws::Column::Section)
+
       column_value = item.column_values.where(column_id: column.id).first
       if column_value.blank?
         terms << nil
@@ -49,11 +51,12 @@ class Gws::Survey::FileEnumerator < Enumerator
       end
 
       term = ""
-      if column.is_a?(Gws::Column::TextArea)
+      case column
+      when Gws::Column::TextArea
         term << "#{column.prefix_label}\n" if column.prefix_label
         term << column_value.value if column_value.value
         term << "\n#{column.postfix_label}" if column.postfix_label
-      elsif column.is_a?(Gws::Column::FileUpload)
+      when Gws::Column::FileUpload
         if column_value.files.present?
           column_value.files.each do |file|
             term << "\n" if !term.empty?
@@ -61,6 +64,12 @@ class Gws::Survey::FileEnumerator < Enumerator
             term << file.humanized_name
             term << column.postfix_label if column.postfix_label
           end
+        end
+      when Gws::Column::RadioButton
+        if column_value.try(:other_value?)
+          term = column_value.other_value_text
+        else
+          term = "#{column.prefix_label}#{column_value.value}#{column.postfix_label}"
         end
       else
         term = "#{column.prefix_label}#{column_value.value}#{column.postfix_label}"
@@ -82,5 +91,21 @@ class Gws::Survey::FileEnumerator < Enumerator
 
     str = str.encode('CP932', invalid: :replace, undef: :replace) if @params.encoding == 'Shift_JIS'
     str
+  end
+
+  def user_personal_header_terms
+    terms = []
+    terms << Gws::Survey::File.t(:updated)
+    terms << Gws::User.t(:name)
+    terms << Gws::User.t(:organization_uid)
+    terms
+  end
+
+  def user_personal_record_terms(item)
+    terms = []
+    terms << I18n.l(item.updated, format: :csv)
+    terms << item.user_name
+    terms << (item.user.organization_uid.presence || item.user_uid)
+    terms
   end
 end

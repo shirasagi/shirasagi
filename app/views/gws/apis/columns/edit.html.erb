@@ -1,8 +1,9 @@
 <% addons = @item ? @item.class.addons : [] %>
 
-<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off, data: { controller: "ss--unload-protection ss--close-on-submit", turbo: true, turbo_frame: "item-#{@item.id}" } } do |f| %>
 <%= error_messages_for :item %>
 
+<%= hidden_field_tag :ref, params[:ref] if params[:ref] %>
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="addon-views">
@@ -16,12 +17,18 @@
   <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
 
-<footer class="send ss-sticky ss-sticky-bottom">
+<footer class="send">
   <% if @crud_buttons %>
     <% @crud_buttons.call f %>
   <% else %>
     <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
-    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <% if request.xhr? %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <% elsif request.headers['X-SS-DIALOG'].present? || request.headers['Turbo-Frame'].present? %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: "button", data: { action: "close-dialog" } %>
+    <% else %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <% end %>
   <% end %>
 </footer>
 

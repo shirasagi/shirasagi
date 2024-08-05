@@ -147,7 +147,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.publish')
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css('div.ss-preview-notice-wrap', text: I18n.t('ss.notice.published'))
 
         within "#ss-preview" do

@@ -1,101 +1,126 @@
 require 'spec_helper'
 
-describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
+describe "gws_survey", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:user1) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:user2) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:cate) { create(:gws_survey_category, cur_site: site) }
 
+  let!(:form) do
+    create(
+      :gws_survey_form, cur_site: site, cur_user: gws_user, category_ids: [ cate.id ],
+      readable_setting_range: 'public')
+  end
+  let(:column_options) { Array.new(3) { "option-#{unique_id}" } }
+  let!(:column1) do
+    create(:gws_column_radio_button, cur_site: site, form: form, select_options: column_options)
+  end
+
   context "copy" do
-    let(:form_name) { "form-#{unique_id}" }
-    let(:column_name) { "column-#{unique_id}" }
-    let(:column_options) { [ "option-#{unique_id}", "option-#{unique_id}", "option-#{unique_id}" ] }
     let(:copy_name) { "copy-#{unique_id}" }
+    let(:copy_anonymous_state) { %w(disabled enabled).sample }
+    let(:copy_anonymous_state_label) { I18n.t("ss.options.state.#{copy_anonymous_state}") }
+    let(:copy_file_state) { %w(closed public).sample }
+    let(:copy_file_state_label) { I18n.t("ss.options.state.#{copy_file_state}") }
+
+    before do
+      expect(form.notification_noticed_at).to be_blank
+      form.update(state: 'public')
+    end
 
     it do
+      Gws::Survey::Form.find(form.id).tap do |form0|
+        expect(form0.answered_users_hash).to be_blank
+        expect(form0.notification_noticed_at).to be_present
+      end
+
+      # answer by gws_user
       login_gws_user
-
-      # create new form
       visit gws_survey_main_path(site: site)
-      click_on I18n.t("ss.navi.editable")
-      click_on I18n.t("ss.links.new")
-
-      within "form#item-form" do
-        fill_in "item[name]", with: form_name
-        choose I18n.t("gws.options.readable_setting_range.public")
-        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
-      end
-      within_cbox do
-        expect(page).to have_content(cate.name)
-        wait_for_cbox_closed { click_on cate.name }
-      end
-      within "form#item-form" do
-        click_on I18n.t("ss.buttons.save")
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
-
-      expect(Gws::Survey::Form.all.count).to eq 1
-
-      click_on(I18n.t('gws/workflow.columns.index'))
-
-      within ".nav-menu" do
-        wait_for_event_fired("ss:dropdownOpened") { click_on(I18n.t("ss.links.new")) }
-      end
-      within ".gws-dropdown-menu" do
-        click_on(I18n.t("gws.columns.gws/radio_button"))
-      end
-      within "form#item-form" do
-        fill_in "item[name]", with: column_name
-        fill_in "item[select_options]", with: column_options.join("\n")
-        click_on(I18n.t("ss.buttons.save"))
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
-
-      # publish
-      visit gws_survey_main_path(site: site)
-      click_on I18n.t("ss.navi.editable")
-      click_on form_name
-      click_on I18n.t("gws/workflow.links.publish")
-
-      within "form#item-form" do
-        click_on(I18n.t("ss.buttons.save"))
-      end
-
-      expect(Gws::Survey::Form.all.count).to eq 1
-
-      # answer by user1
-      login_user user1
-      visit gws_survey_main_path(site: site)
-      click_on form_name
+      click_on form.name
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
           choose column_options[0]
         end
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.answered")
+
+      # answer by user1
+      login_user user1
+      visit gws_survey_main_path(site: site)
+      click_on form.name
+      within "form#item-form" do
+        within ".mod-gws-survey-custom_form" do
+          choose column_options[2]
+        end
+        click_on I18n.t("ss.buttons.answer")
+      end
+      wait_for_notice I18n.t("ss.notice.answered")
+
+      Gws::Survey::Form.find(form.id).tap do |form0|
+        expect(form0.files.count).to eq 2
+        expect(form0.answered_users_hash).to include(gws_user.id.to_s, user1.id.to_s)
+        expect(form0.answered_users_hash.count).to eq form0.files.count
+      end
 
       # copy
       login_gws_user
       visit gws_survey_main_path(site: site)
       click_on I18n.t("ss.navi.editable")
-      click_on form_name
+      click_on form.name
       click_on I18n.t("ss.links.copy")
 
       within "form#item-form" do
-        fill_in "copy[name]", with: copy_name
-        select I18n.t("ss.options.state.enabled"), from: 'copy[anonymous_state]'
-        select I18n.t("ss.options.state.public"), from: 'copy[file_state]'
+        fill_in "item[name]", with: copy_name
+        select copy_anonymous_state_label, from: 'item[anonymous_state]'
+        select copy_file_state_label, from: 'item[file_state]'
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t("ss.notice.copied")
 
-      copy_form = Gws::Survey::Form.where(name: copy_name).first
-      expect(copy_form.state).to eq "closed"
-      expect(copy_form.columns.count).to eq 1
+      copy_form = Gws::Survey::Form.where(name: copy_name).first.tap do |copy_form|
+        expect(copy_form.name).to eq copy_name
+        expect(copy_form.description).to eq form.description
+        expect(copy_form.order).to eq form.order
+        expect(copy_form.state).to eq "closed"
+        expect(copy_form.memo).to eq form.memo
+        expect(copy_form.due_date).to eq form.due_date
+        expect(copy_form.release_date).to eq form.release_date
+        expect(copy_form.close_date).to eq form.close_date
+        expect(copy_form.anonymous_state).to eq copy_anonymous_state
+        expect(copy_form.file_state).to eq copy_file_state
+        expect(copy_form.file_edit_state).to eq form.file_edit_state
+        expect(copy_form.contributor_model).to eq form.contributor_model
+        expect(copy_form.contributor_id).to eq form.contributor_id
+        expect(copy_form.contributor_name).to eq form.contributor_name
+        expect(copy_form.columns.count).to eq 1
+        copy_form.columns.first.tap do |copy_column|
+          expect(copy_column.id).not_to eq column1.id
+          expect(copy_column.name).to eq column1.name
+          expect(copy_column.order).to eq column1.order
+          expect(copy_column.required).to eq column1.required
+          expect(copy_column.tooltips).to eq column1.tooltips
+          expect(copy_column.prefix_label).to eq column1.prefix_label
+          expect(copy_column.postfix_label).to eq column1.postfix_label
+          expect(copy_column.prefix_explanation).to eq column1.prefix_explanation
+          expect(copy_column.postfix_explanation).to eq column1.postfix_explanation
+          expect(copy_column.select_options).to eq column1.select_options
+        end
+        expect(copy_form.category_ids).to eq form.category_ids
+        expect(copy_form.files.count).to eq 0
+        expect(copy_form.readable_setting_range).to eq form.readable_setting_range
+        expect(copy_form.readable_group_ids).to eq form.readable_group_ids
+        expect(copy_form.readable_member_ids).to eq form.readable_member_ids
+        expect(copy_form.readable_custom_group_ids).to eq form.readable_custom_group_ids
+        expect(copy_form.group_ids).to eq form.group_ids
+        expect(copy_form.custom_group_ids).to eq form.custom_group_ids
+        expect(copy_form.answered_users_hash).to be_blank
+        expect(copy_form.notification_notice_state).to eq form.notification_notice_state
+        expect(copy_form.notification_noticed_at).to be_blank
+      end
 
       # publish
-      click_on copy_name
       click_on I18n.t("gws/workflow.links.publish")
 
       within "form#item-form" do
@@ -108,33 +133,33 @@ describe "gws_survey copy", type: :feature, dbscope: :example, js: true do
       login_user user2
       visit gws_survey_main_path(site: site)
 
-      click_on copy_name
+      click_on copy_form.name
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
           choose column_options[1]
         end
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.answered")
 
       # check answers
-      form = Gws::Survey::Form.where(name: form_name).first
-      answers = form.files.to_a
-      answer = answers.first
+      Gws::Survey::Form.find(form.id).tap do |form0|
+        expect(form0.files.count).to eq 2
+        expect(form0.answered_users_hash).to include(gws_user.id.to_s, user1.id.to_s)
+        expect(form0.answered_users_hash.count).to eq form0.files.count
+      end
 
-      expect(answers.count).to eq 1
-      expect(answer.user_name).to eq user1.name
-      expect(answer.column_values.count).to eq 1
-      expect(answer.column_values.first.value).to eq column_options[0]
+      Gws::Survey::Form.where(name: copy_name).first.then do |copy_form|
+        answers = copy_form.files.to_a
+        expect(answers.count).to eq 1
+        expect(copy_form.answered_users_hash).to include(user2.id.to_s)
+        expect(copy_form.answered_users_hash.count).to eq answers.count
 
-      copy_form = Gws::Survey::Form.where(name: copy_name).first
-      answers = copy_form.files.to_a
-      answer = answers.first
-
-      expect(answers.count).to eq 1
-      expect(answer.user_name).to eq user2.name
-      expect(answer.column_values.count).to eq 1
-      expect(answer.column_values.first.value).to eq column_options[1]
+        answer = answers.first
+        expect(answer.user_name).to eq user2.name
+        expect(answer.column_values.count).to eq 1
+        expect(answer.column_values.first.value).to eq column_options[1]
+      end
     end
   end
 end

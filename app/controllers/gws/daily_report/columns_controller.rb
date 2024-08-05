@@ -1,7 +1,7 @@
 class Gws::DailyReport::ColumnsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include Gws::ColumnFilter
+  include Gws::ColumnFilter2
 
   navi_view "gws/daily_report/main/navi"
 

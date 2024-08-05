@@ -27,6 +27,8 @@
 
 <% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
   <% next if !select_like_columns.any? { |t| column.is_a?(t) } %>
+  <% selected_options = column.select_options %>
+  <% selected_options << t("mongoid.attributes.gws/column/radio_button.other_value") if column.try(:other_state) == 'enabled' %>
 
   <% gen = SS::RandomColor.new(column.id) %>
   <% labels = [] %>
@@ -42,7 +44,7 @@
 
     <table class="index">
       <tbody>
-        <% column.select_options.each do |option| %>
+        <% selected_options.each do |option| %>
           <tr>
             <td><%= option %></td>
             <td class="count">

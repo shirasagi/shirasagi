@@ -1,0 +1,46 @@
+<% new_item ||= false %>
+<%= form_with scope: :item, url: gws_frames_column_path(id: item), html: { method: "put", class: "gws-column-form", data: { turbo: true, controller: "ss--unload-protection" } } do |f| %>
+  <%= hidden_field_tag :ref, ref, id: nil %>
+
+  <div class="gws-column-item" data-id="<%= item.id %>">
+    <div class="main-box">
+      <div class="gws-column-item-drag-handle">
+        <h2 class="header"><%= item.class.model_name.human %></h2>
+        <span class="material-icons-outlined gws-column-item-drag-handle-icon">drag_handle</span>
+        <%= link_to gws_frames_column_path(id: item, ref: ref), title: t("ss.buttons.close"), class: "btn-close", data: { turbo: true } do %>
+          <span class="material-icons-outlined">cancel</span>
+        <% end %>
+      </div>
+
+      <% if new_item %>
+        <% new_item_notices = t("gws/column.new_item_notice", model_name: item.class.model_name.human, link: link_to("詳細画面で編集する", edit_gws_apis_column_path(form_id: item.form, id: item, ref: ref), class: "gws-column-item-detail-link")) %>
+        <%= ss_stimulus_tag "gws/column/new_item_notice", class: "gws-column-new-item-notice" do %>
+          <ul class="gws-column-new-item-notice-list">
+            <% new_item_notices.each do |message, options| %>
+              <%=
+                if options.present?
+                  options = options.dup
+                  options[:class] = Array(options[:class]) + %w(gws-column-new-item-notice-item)
+                else
+                  options = { class: %w(gws-column-new-item-notice-item) }
+                end
+
+                tag.li message.html_safe, **options
+              %>
+            <% end %>
+          </ul>
+        <% end %>
+      <% end %>
+
+      <%= error_messages_for :item %>
+
+      <div class="gws-column-form-grid-wrap">
+        <%= render "#{item.path}/compact_form", f: f, model: item.class, item: item %>
+      </div>
+
+      <footer class="send">
+        <%= f.submit t("ss.buttons.save"), class: "btn btn-primary" %>
+      </footer>
+    </div>
+  </div>
+<% end %>

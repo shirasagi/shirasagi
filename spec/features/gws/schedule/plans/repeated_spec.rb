@@ -39,7 +39,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css("aside#notice div", text: I18n.t('ss.notice.saved'))
 
         # gws_schedule_repeat_plans
@@ -100,7 +100,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           click_on I18n.t('ss.buttons.save')
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css("aside#notice div", text: I18n.t('ss.notice.saved'))
 
         # gws_schedule_repeat_plans

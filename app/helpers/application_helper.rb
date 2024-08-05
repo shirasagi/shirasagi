@@ -54,6 +54,10 @@ module ApplicationHelper
     ApplicationController.helpers.sanitize(html, options)
   end
 
+  def sanitize_easy(html)
+    sanitize_with html, tags: %w(font b u i br)
+  end
+
   def current_url?(url)
     current = @cur_path.sub(/\?.*/, "")
     current = current.sub(@cur_site.mobile_location, '') if @cur_site.mobile_enabled?
@@ -230,11 +234,11 @@ module ApplicationHelper
     options[:style] ||= "vertical-align:middle"
     options[:alt] ||= "loading.."
     options[:border] ||= 0
-    options[:widtth] ||= 16
+    options[:width] ||= 16
     options[:height] ||= 11
     options[:class] ||= %w(ss-base-loading)
 
-    # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+    # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" width="16" height="11" />'
     image_tag("/assets/img/loading.gif", options)
   end
 
@@ -290,6 +294,10 @@ module ApplicationHelper
 
   def required_label
     %(<div class="required">&lt;#{I18n.t('ss.required')}&gt;</div>).html_safe
+  end
+
+  def required_mark
+    %(<span class="required" title="#{I18n.t('ss.required')}">*</span>).html_safe
   end
 
   def sanitizer_status(item)

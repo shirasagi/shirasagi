@@ -20,7 +20,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       visit show_path
       within "#addon-workflow-agents-addons-branch" do
         wait_for_turbo_frame "#workflow-branch-frame"
-        wait_event_to_fire "turbo:frame-load" do
+        wait_for_event_fired "turbo:frame-load" do
           click_button I18n.t('workflow.create_branch')
         end
 
@@ -298,7 +298,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
 
         within "#addon-workflow-agents-addons-branch" do
           wait_for_turbo_frame "#workflow-branch-frame"
-          wait_event_to_fire "turbo:frame-load" do
+          wait_for_event_fired "turbo:frame-load" do
             click_button I18n.t('workflow.create_branch')
           end
         end
@@ -324,7 +324,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
 
         within "#addon-workflow-agents-addons-branch" do
           wait_for_turbo_frame "#workflow-branch-frame"
-          wait_event_to_fire "turbo:frame-load" do
+          wait_for_event_fired "turbo:frame-load" do
             click_button I18n.t('workflow.create_branch')
           end
 

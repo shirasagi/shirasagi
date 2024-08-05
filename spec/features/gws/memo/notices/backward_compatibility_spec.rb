@@ -82,14 +82,14 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".popup-notice-unseen", text: SS::Notification.count.to_s)
           first(".toggle-popup-notice").click
 
-          wait_for_ajax
+          wait_for_js_ready
           within ".popup-notice" do
             expect(page).to have_content(item_no_info.subject)
             click_on item_no_info.subject
           end
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         wait_for_notice I18n.t('ss.notice.set_seen')
 
         item_no_info.reload

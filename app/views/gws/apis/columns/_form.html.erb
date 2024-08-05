@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
@@ -16,4 +16,10 @@
 
   <dt><%= @model.t :postfix_label %><%= @model.tt :postfix_label %></dt>
   <dd><%= f.text_field :postfix_label %></dd>
+
+  <dt><%= @model.t :prefix_explanation %><%= @model.tt :prefix_explanation %></dt>
+  <dd><%= f.text_field :prefix_explanation %></dd>
+
+  <dt><%= @model.t :postfix_explanation %><%= @model.tt :postfix_explanation %></dt>
+  <dd><%= f.text_field :postfix_explanation %></dd>
 </dl>

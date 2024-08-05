@@ -41,7 +41,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.saved')
 
         5.times.each do |index|
-          page.execute_script("SS.clearNotice();")
+          clear_notice
           wait_for_js_ready
 
           # open replace file dialog
@@ -151,7 +151,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         3.times.each do |index|
           wait_for_js_ready
-          page.execute_script("SS.clearNotice();")
+          clear_notice
 
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
@@ -203,7 +203,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css("a", text: I18n.t("ss.links.download"))
               expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
-              wait_for_event_fired "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
+              wait_for_event_fired "ss:ajaxRemoved", selector: "#addon-cms-agents-addons-file .replace-file .ajax-box" do
                 page.accept_confirm do
                   click_on I18n.t("ss.buttons.delete")
                 end

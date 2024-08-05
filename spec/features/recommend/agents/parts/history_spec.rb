@@ -34,7 +34,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
           expect(page).to have_no_link(cms_page.name, href: cms_page.url)
         end
 
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(Recommend::History::Log.count).to eq 1
         Recommend::History::Log.first.tap do |log|
@@ -54,7 +54,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
           expect(page).to have_no_link(cms_page.name, href: cms_page.url)
         end
 
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(Recommend::History::Log.count).to eq 2
         Recommend::History::Log.order_by(created: -1).first.tap do |log|
@@ -74,7 +74,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
           expect(page).to have_no_link(cms_page.name, href: cms_page.url)
         end
 
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(Recommend::History::Log.count).to eq 3
         Recommend::History::Log.order_by(created: -1).first.tap do |log|

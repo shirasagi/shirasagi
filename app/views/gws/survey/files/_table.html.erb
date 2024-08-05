@@ -25,6 +25,8 @@
             <th><%= Gws::User.t :name %></th>
           <% end %>
           <% cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+            <% next if column.is_a?(Gws::Column::Title) %>
+            <% next if column.is_a?(Gws::Column::Section) %>
             <th><%= column.name %></th>
           <% end %>
         </tr>
@@ -37,6 +39,8 @@
               <td><div><%= item.user_long_name %></div></td>
             <% end %>
             <% cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+              <% next if column.is_a?(Gws::Column::Title) %>
+              <% next if column.is_a?(Gws::Column::Section) %>
               <% column_value = item.column_values.where(column_id: column.id).first %>
               <td class="<%= column.class.name.underscore.gsub("/", "-") %>">
                 <div class="container">
@@ -56,6 +60,18 @@
                         <%= sanitizer_status(file) %>
                         <span class="postfix"><%= column.postfix_label %></span>
                         <br/>
+                      <% end %>
+                    <% end %>
+                  <% elsif column.is_a?(Gws::Column::RadioButton) %>
+                    <% if column_value.try(:other_value?) %>
+                      <%= column_value.try(:other_value_text) %>
+                    <% else %>
+                      <% if column.prefix_label %>aa
+                        <span class="prefix"><%= column.prefix_label %></span>
+                      <% end %>
+                      <span class="value"><%= auto_link(column_value ? column_value.value : '') %></span>
+                      <% if column.postfix_label %>
+                        <span class="postfix"><%= column.postfix_label %></span>
                       <% end %>
                     <% end %>
                   <% else %>

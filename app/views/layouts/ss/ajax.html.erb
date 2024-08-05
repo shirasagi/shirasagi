@@ -1,7 +1,20 @@
-<div id="ajax-box">
-<%= yield %>
-</div>
+<%
+  turbo_frame = self.try(:turbo_frame)
+  content = capture do
+%>
+  <div id="ajax-box">
+    <%= yield %>
+  </div>
 
-<%= javascript_tag do %>
-SS.render("#ajax-box");
-<% end %>
+  <%= javascript_tag do %>
+    SS.render("#ajax-box");
+  <% end %>
+<%
+  end
+
+  if turbo_frame
+    output_buffer << tag.turbo_frame(content, id: turbo_frame)
+  else
+    output_buffer << content
+  end
+%>

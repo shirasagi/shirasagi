@@ -5,7 +5,8 @@
   <% if files.present? %>
     <% files.each do |file| %>
     <div id="file-<%= file.id %>" class="fileview" style="display: table">
-      <span class="prefix" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px"><%= column.prefix_label %></span>
+      <span class="prefix" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px">
+        <%= column.prefix_label %></span>
       <span class="icon" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px; width: 48px">
         <% if file.image? %>
         <%= image_tag(file.thumb_url, alt: file.name, style: 'max-width: 40px; max-height: 40px') %>
@@ -18,7 +19,8 @@
         <%= link_to(file.humanized_name, file.url) %>
         <%= sanitizer_status(file) %>
       </span>
-      <span class="postfix" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px"><%= column.postfix_label %></span>
+      <span class="postfix" style="display: table-cell; text-align: center; vertical-align: middle; padding: 4px">
+        <%= column.postfix_label %></span>
     </div>
     <% end %>
   <% end %>

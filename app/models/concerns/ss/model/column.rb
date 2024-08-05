@@ -14,8 +14,11 @@ module SS::Model::Column
     field :tooltips, type: SS::Extensions::Lines
     field :prefix_label, type: String
     field :postfix_label, type: String
+    field :prefix_explanation, type: String
+    field :postfix_explanation, type: String
 
     permit_params :name, :order, :required, :tooltips, :prefix_label, :postfix_label
+    permit_params :prefix_explanation, :postfix_explanation
 
     before_validation :set_form_id, if: ->{ @cur_form }
 
@@ -24,8 +27,8 @@ module SS::Model::Column
     validates :name, format: { without: /[{}"'\[\]\/]/ }, if: ->{ SS.config.cms.column_name_type == 'restricted' }
     validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
-    validates :prefix_label, length: { maximum: 80 }
-    validates :postfix_label, length: { maximum: 80 }
+    validates :prefix_label, length: { maximum: 10 }
+    validates :postfix_label, length: { maximum: 10 }
 
     scope :form, ->(form) { where(form_id: form.id, form_type: form.class.name) }
   end
@@ -56,8 +59,14 @@ module SS::Model::Column
         column = all.find(key) rescue nil
         next nil if column.blank?
 
-        column.serialize_value(value)
-      end
+        if column.class == Gws::Column::RadioButton
+          values = {}
+          hash.each { |k,v| values[k.to_s.gsub(/^#{key}_/, '').to_sym] = v if k.match(/^#{key}_/) }
+          column.serialize_value(value, values)
+        else
+          column.serialize_value(value)
+        end
+      end.compact
     end
 
     def value_type

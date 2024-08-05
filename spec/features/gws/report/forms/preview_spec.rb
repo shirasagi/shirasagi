@@ -31,6 +31,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
     let!(:column7) { create(:gws_column_radio_button, cur_site: site, form: form, order: 70) }
     let!(:column8) { create(:gws_column_check_box, cur_site: site, form: form, order: 80) }
     let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90) }
+    let!(:column10) { create(:gws_column_section, cur_site: site, form: form, order: 100) }
+    let!(:column11) { create(:gws_column_title, cur_site: site, form: form, order: 110) }
 
     it do
       visit gws_report_forms_path(site: site)
@@ -50,6 +52,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".mod-gws-report-custom_form dt", text: column7.name)
         expect(page).to have_css(".mod-gws-report-custom_form dt", text: column8.name)
         expect(page).to have_css(".mod-gws-report-custom_form dt", text: column9.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt .column-title", text: column11.title)
+        expect(page).to have_css(".mod-gws-report-custom_form dt .column-explanation", text: column11.explanation)
       end
     end
   end

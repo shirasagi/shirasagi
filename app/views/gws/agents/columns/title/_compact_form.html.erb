@@ -1,0 +1,23 @@
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :title %><%= model.tt :title %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= label_tag "#{f.object_name}[title]", model.t(:title) %>
+      <div>
+        <%= text_field_tag "#{f.object_name}[title]", item.title, autofocus: pc_browser? %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :explanation %><%= model.tt :explanation %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= label_tag "#{f.object_name}[explanation]", model.t(:explanation) %>
+      <div class="i18n_explanation">
+        <%= text_area_tag "#{f.object_name}[explanation]", item.explanation, autofocus: pc_browser? %>
+      </div>
+    </div>
+  </fieldset>
+</div>
