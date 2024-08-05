@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_workflow_routes", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
-  let!(:group) { create :gws_group, name: "#{site.name}/#{unique_id}"}
+  let!(:group) { create :gws_group, name: "#{site.name}/#{unique_id}" }
   let!(:approver_user) { create :gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
   let!(:circulation_user) { create :gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
   let(:name) { unique_id }

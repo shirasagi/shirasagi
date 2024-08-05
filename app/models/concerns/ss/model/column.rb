@@ -34,12 +34,15 @@ module SS::Model::Column
   end
 
   module ClassMethods
+    SEARCH_HANDLERS = %i[search_name search_keyword].freeze
+
     def search(params = {})
       criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_name(params)
-      criteria = criteria.search_keyword(params)
+      SEARCH_HANDLERS.each do |handler|
+        criteria = criteria.send(handler, params)
+      end
       criteria
     end
 
@@ -55,18 +58,20 @@ module SS::Model::Column
 
     def build_column_values(hash)
       hash = hash.to_unsafe_h if hash.respond_to?(:to_unsafe_h)
-      hash.map do |key, value|
+      hash.filter_map do |key, value|
         column = all.find(key) rescue nil
-        next nil if column.blank?
-
-        if column.class == Gws::Column::RadioButton
+        if column.is_a?(Gws::Column::RadioButton)
+          prefix = "#{key}_"
           values = {}
-          hash.each { |k,v| values[k.to_s.gsub(/^#{key}_/, '').to_sym] = v if k.match(/^#{key}_/) }
+          hash.each do |k, v|
+            k = k.to_s
+            values[k[prefix.length..-1].to_sym] = v if k.start_with?(prefix)
+          end
           column.serialize_value(value, values)
-        else
+        elsif column.present?
           column.serialize_value(value)
         end
-      end.compact
+      end
     end
 
     def value_type
