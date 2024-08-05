@@ -123,8 +123,12 @@ en:
         - Enter the label that you want to display after the item (within 10 characters).
       prefix_explanation:
         - Enter the explanation that you want to display before the item.
+        - "Some HTML tags such as &lt;br&gt; can be used."
+        - "To break a line, insert &lt;br&gt;."
       postfix_explanation:
         - Enter the explanation that you want to display after the item.
+        - "Some HTML tags such as &lt;br&gt; can be used."
+        - "To break a line, insert &lt;br&gt;."
       place_holder:
         - Enter a placeholder.
 
