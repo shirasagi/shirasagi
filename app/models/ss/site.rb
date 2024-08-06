@@ -19,6 +19,7 @@ class SS::Site
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::PartnerSetting
   include SS::Addon::InquirySetting
+  include SS::Addon::CheckLinksSetting
   include SS::Addon::WorkflowSetting
   include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage

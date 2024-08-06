@@ -4,6 +4,6 @@ class Cms::CheckLinks::ReportsController < ApplicationController
 
   model Cms::CheckLinks::Report
 
-  navi_view "cms/main/navi"
+  navi_view "cms/check_links/main/navi"
   menu_view nil
 end

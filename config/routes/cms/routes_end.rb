@@ -266,8 +266,6 @@ Rails.application.routes.draw do
       resources :event_sessions, only: [:index, :show, :destroy], concerns: :deletion
     end
 
-    get "check_links" => "check_links#index"
-    post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
     get "generate_nodes/segment/:segment" => "generate_nodes#index", as: :segment_generate_nodes
     post "generate_nodes" => "generate_nodes#run"
@@ -313,7 +311,10 @@ Rails.application.routes.draw do
     delete "search_contents/:id" => "page_search_contents#destroy_all"
     resource :generate_lock
 
+    get "check_links" => redirect { |p, req| "#{req.path}/reports" }, as: :check_links
     namespace "check_links" do
+      get "run" => "run#index"
+      post "run" => "run#run"
       resources :reports, concerns: [:deletion], only: [:show, :index] do
         resources :pages, only: [:show, :index] do
           get :download, on: :collection
@@ -323,6 +324,7 @@ Rails.application.routes.draw do
         end
       end
       resources :ignore_urls, concerns: :deletion
+      resource :site_setting
     end
 
     namespace 'ldap' do

@@ -147,11 +147,12 @@ module Cms
     Cms::Role.permission :delete_cms_image_resizes
     Cms::Role.permission :disable_cms_image_resizes
 
-    Cms::Role.permission :read_cms_check_links_reports
-    Cms::Role.permission :delete_cms_check_links_reports
-    Cms::Role.permission :read_other_cms_check_links_errors
-    Cms::Role.permission :read_private_cms_check_links_errors
-    Cms::Role.permission :edit_cms_check_links_ignore_urls
+    Cms::Role.permission :use_cms_check_links, module_name: 'cms/check_links'
+    Cms::Role.permission :run_cms_check_links, module_name: 'cms/check_links'
+    Cms::Role.permission :read_other_cms_check_links_errors, module_name: 'cms/check_links'
+    Cms::Role.permission :read_private_cms_check_links_errors, module_name: 'cms/check_links'
+    Cms::Role.permission :edit_cms_check_links_ignore_urls, module_name: 'cms/check_links'
+
     Cms::Role.permission :edit_cms_ignore_syntax_check
 
     Cms::Role.permission :edit_cms_user_profile, module_name: 'cms/user_profile'

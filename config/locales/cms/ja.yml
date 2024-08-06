@@ -665,6 +665,18 @@ ja:
       success: miChecker による検証が完了しました。
       failed: miChecker による検証が失敗しました。
 
+  cms/check_links:
+    run: 実行
+    site_setting: 設定
+    reports: レポート
+    ignore_urls: 除外URL
+    nodes: フォルダー
+    pages: ページ
+    options:
+      message_format:
+        text: メール本文
+        csv: CSVを添付
+
   cms_role:
     edit_cms_sites: サイトの管理
     edit_cms_groups: グループの管理
@@ -755,11 +767,11 @@ ja:
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
-    read_cms_check_links_reports: リンクチェックレポートの閲覧
-    delete_cms_check_links_reports: リンクチェックレポートの削除
-    read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
-    read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
-    edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
+    use_cms_check_links: リンクチェックの利用
+    run_cms_check_links: リンクチェックの実行
+    read_other_cms_check_links_errors: エラーの閲覧（全て）
+    read_private_cms_check_links_errors: エラーの閲覧（所有）
+    edit_cms_check_links_ignore_urls: 除外URLの管理
     read_cms_image_resizes: 画像リサイズの閲覧
     edit_cms_image_resizes: 画像リサイズの編集
     delete_cms_image_resizes: 画像リサイズの削除
@@ -782,6 +794,7 @@ ja:
   modules:
     cms: 標準機能
     cms/line: LINE機能
+    cms/check_links: リンクチェック
     cms/user_profile: プロフィール
     import_node: フォルダー取り込み
     addons:
