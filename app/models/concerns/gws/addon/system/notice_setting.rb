@@ -37,13 +37,14 @@ module Gws::Addon::System::NoticeSetting
                when "gws/workload/work" then 'workload'
                when "gws/schedule/plan", "gws/schedule/comment", "gws/schedule/attendance", "gws/schedule/approval" then 'schedule'
                when "gws/discussion/topic", "gws/discussion/post" then 'discussion'
-               when "gws/workflow/file" then 'workflow'
+               when "gws/workflow/file", "gws/workflow2/file" then 'workflow'
                when "gws/report/file" then 'report'
                when "gws/notice/post" then 'announcement'
                when "gws/survey/form", "gws/survey/file" then 'survey'
                when "gws/monitor/topic", "gws/monitor/post" then 'monitor'
                when "gws/affair/overtime_file", "gws/affair/leave_file" then 'gws/affair'
                end
+    return unless function
     !force_silence?(function)
   end
 

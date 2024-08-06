@@ -8,200 +8,49 @@ class Gws::Memo::Notifier
       new(opts).deliver!
     end
 
-    def deliver_workflow_request!(opts)
-      return unless opts[:cur_site].notify_model?(opts[:item].class)
+    def deliver_workflow!(cur_site:, item:, url:, subject:, **options)
+      return unless cur_site.notify_model?(item.class)
 
-      opts = opts.dup
-
-      url = opts.delete(:url)
-      comment = opts.delete(:comment)
-      cur_site = opts[:cur_site]
-      cur_user = opts[:cur_user]
-      item = opts[:item]
-      from = item.try(:workflow_user) || cur_user
-      agent = item.try(:workflow_agent)
-
-      title = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
-
-      text = []
-      text << "#{from.name}さん#{agent ? "（代理: #{agent.name}さん）" : ""}より次の記事について承認依頼が届きました。"
-      text << "承認作業を行ってください。"
-      text << ""
-      text << "- タイトル"
-      text << "  #{item.name}"
-      text << ""
-      text << "- 申請者"
-      text << "  #{from.name}"
-      if agent
-        text << "  （代理: #{agent.name}）"
-      end
-      text << ""
-      if comment.present?
-        text << "- 申請者コメント"
-        text << "  #{comment}"
-        text << ""
-      end
-      text << "- URL"
-      text << "  #{url}"
-
-      opts[:item_title] = title
-      opts[:item_text] = url
-
-      new(opts).deliver!
-    end
-
-    def deliver_workflow_approve!(opts)
-      return unless opts[:cur_site].notify_model?(opts[:item].class)
-
-      opts = opts.dup
-
-      url = opts.delete(:url)
-      comment = opts.delete(:comment)
-      cur_site = opts[:cur_site]
-      item = opts[:item]
-      from = item.try(:workflow_user)
-      agent = item.try(:workflow_agent)
-
-      title = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
-
-      text = []
-      text << "次の申請が承認されました。"
-      text << ""
-      text << "- タイトル"
-      text << "  #{item.name}"
-      text << ""
-      text << "- 申請者"
-      text << "  #{from.name}"
-      if agent
-        text << "  （代理: #{agent.name}）"
-      end
-      text << ""
-      text << "- URL"
-      text << "  #{url}"
-
-      opts[:item_title] = title
-      opts[:item_text] = url
-      new(opts).deliver!
-    end
-
-    def deliver_workflow_remand!(opts)
-      return unless opts[:cur_site].notify_model?(opts[:item].class)
-
-      opts = opts.dup
-
-      url = opts.delete(:url)
-      comment = opts.delete(:comment)
-      cur_site = opts[:cur_site]
-      cur_user = opts[:cur_user]
-      item = opts[:item]
-      from = item.try(:workflow_user)
-      agent = item.try(:workflow_agent)
-
-      title = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
-
-      text = []
-      text << "#{cur_user.name}さんより次の申請について承認依頼が差し戻されました。"
-      text << "適宜修正を行い、再度承認依頼を行ってください。"
-      text << ""
-      text << "- タイトル"
-      text << "  #{item.name}"
-      text << ""
-      text << "- 申請者"
-      text << "  #{from.name}"
-      if agent
-        text << "  （代理: #{agent.name}）"
-      end
-      text << ""
-      if comment.present?
-        text << "- 差し戻しコメント"
-        text << "  #{comment}"
-        text << ""
-      end
-      text << "- URL"
-      text << "  #{url}"
-
-      opts[:item_title] = title
-      opts[:item_text] = url
-
-      new(opts).deliver!
+      options.delete(:comment)
+      new(cur_site: cur_site, item: item, subject: subject, text: url, **options).deliver!
     rescue => e
-      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       raise
     end
 
-    def deliver_workflow_circulations!(opts)
-      return unless opts[:cur_site].notify_model?(opts[:item].class)
-
-      opts = opts.dup
-
-      url = opts.delete(:url)
-      comment = opts.delete(:comment)
-      cur_site = opts[:cur_site]
-      item = opts[:item]
-      from = item.try(:workflow_user)
-      agent = item.try(:workflow_agent)
-
-      title = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
-
-      text = []
-      text << "次の申請が承認されました。"
-      text << "申請内容を確認してください。"
-      text << ""
-      text << "- タイトル"
-      text << "  #{item.name}"
-      text << ""
-      text << "- 申請者"
-      text << "  #{from.name}"
-      if agent
-        text << "  （代理: #{agent.name}）"
-      end
-      text << ""
-      text << "- URL"
-      text << "  #{url}"
-
-      opts[:item_title] = title
-      opts[:item_text] = url
-
-      new(opts).deliver!
+    def deliver_workflow_request!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
-    def deliver_workflow_comment!(opts)
-      return unless opts[:cur_site].notify_model?(opts[:item].class)
+    def deliver_workflow_approve!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
+    end
 
-      opts = opts.dup
+    def deliver_workflow_remand!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
+    end
 
-      url = opts.delete(:url)
-      comment = opts.delete(:comment)
-      cur_site = opts[:cur_site]
-      item = opts[:item]
-      from = item.try(:workflow_user)
-      agent = item.try(:workflow_agent)
+    def deliver_workflow_circulations!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
+    end
 
-      title = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
+    def deliver_workflow_comment!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
+    end
 
-      text = []
-      text << "次の申請にコメントがありました。"
-      text << "コメントの内容を確認してください。"
-      text << ""
-      text << "- タイトル"
-      text << "  #{item.name}"
-      text << ""
-      text << "- 申請者"
-      text << "  #{from.name}"
-      if agent
-        text << "  （代理: #{agent.name}）"
-      end
-      text << ""
-      text << "- コメント"
-      text << "  #{comment}"
-      text << ""
-      text << "- URL"
-      text << "  #{url}"
+    def deliver_workflow_destination!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow2/file.destination", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
+    end
 
-      opts[:item_title] = title
-      opts[:item_text] = url
-
-      new(opts).deliver!
+    def deliver_workflow_cancel!(cur_site:, item:, url:, **options)
+      subject = I18n.t("gws_notification.gws/workflow2/file.cancel", name: item.name)
+      deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
   end
 
@@ -233,11 +82,12 @@ class Gws::Memo::Notifier
     now = Time.zone.now
 
     url = item_to_url(item)
+    notify_users = to_users.to_a.select { |user| user.use_notice?(item) }.uniq
 
     message = SS::Notification.new
     message.cur_group = cur_site
     message.cur_user = cur_user
-    message.member_ids = to_users.pluck(:id)
+    message.member_ids = notify_users.map(&:id)
 
     message.send_date = now
 
@@ -259,10 +109,12 @@ class Gws::Memo::Notifier
     message.created = now
     message.updated = now
 
-    message.save!
+    if notify_users.present?
+      message.save!
 
-    mail = Gws::Memo::Mailer.notice_mail(message, to_users, item)
-    mail.deliver_now if mail
+      mail = Gws::Memo::Mailer.notice_mail(message, notify_users, item)
+      mail.deliver_now if mail
+    end
 
     # item は操作対象の copy の場合がある。copy の場合 `set(...)` を呼び出しても DB が更新されないので、
     # 回りくどいようだが `where(id: item.id).set(...)` とする。

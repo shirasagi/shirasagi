@@ -24,8 +24,9 @@ en:
     comment: Comments
     state_remind_suffix: "(Demand)"
     state:
-      request: Applying
-      approve: Approve
+      request: Applying (Awaiting approval)
+      approve: Approved
+      approve_without_approval: Approved instantly
       pending: Pending sub-approval
       remand: Remand
       cancelled: Cancel application
@@ -149,7 +150,7 @@ en:
     models:
       workflow/route: Approval route
     attributes:
-      workflow/addon/approver:
+      workflow/approver:
         workflow_user_id: Applicant
         workflow_member_id: Application members
         workflow_state: Approval status

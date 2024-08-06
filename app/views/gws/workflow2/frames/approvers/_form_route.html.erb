@@ -1,0 +1,15 @@
+<%
+  return if @item.deleted?
+  return unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  return if route_options.blank?
+%>
+
+<% if defined?(f) && f.is_a?(ActionView::Helpers::FormBuilder) %>
+  <%= hidden_field_tag "#{f.object_name}[route_id]", route_id, id: nil %>
+<% else %>
+  <%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "workflow-route", autocomplete: :off, data: { turbo: true } } do |f| %>
+    <%= hidden_field_tag :ref, ref, id: nil %>
+    <%= error_messages_for :item %>
+    <%= render "form_route", f: f %>
+  <% end %>
+<% end %>
