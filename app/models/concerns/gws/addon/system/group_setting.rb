@@ -31,7 +31,7 @@ module Gws::Addon::System::GroupSetting
   end
 
   def exclude_disallowed_emails(emails)
-    emails.map { |email| exclude_disallowed_email(email) }.compact
+    emails.filter_map { |email| exclude_disallowed_email(email) }
   end
 
   def exclude_disallowed_email(email)
