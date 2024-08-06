@@ -28,6 +28,7 @@ en:
     new_item_notice:
       - "Created %{model_name} with default settings."
       - "Set appropriate values for the following items or set appropriate values from %{link}."
+    other_value: Other
 
   gws:
     columns:
@@ -47,6 +48,7 @@ en:
     addons:
       gws/column/text_like: Constraints
       gws/column/select_like: Selection
+      gws/column/other_option: Others Input
 
   mongoid:
     models:
@@ -96,15 +98,15 @@ en:
         minus_type: How negative numbers are displayed
       gws/column/radio_button:
         conditinal_branch: Conditional branch
-        other_input: Other input
-        other_state: Display
-        other_required: Required field
-        other_value: Other
       gws/addon/column/text_like:
         max_length: Maximum length
         additional_attr: Additional attributes
       gws/addon/column/select_like:
         select_options: Choices
+      gws/addon/column/other_option:
+        other_input: Other input
+        other_state: Display
+        other_required: Required field
 
   tooltip:
     gws/column/base:
@@ -170,10 +172,6 @@ en:
         - '1. show section1 ... Section1: show, Section2: hide'
         - '2. Show section2 ... Section1: hide, Section2: show'
         - '3. Not entered ... Section1:hide, Section2:hide'
-      other_state:
-        - 'Add "Other" to the selection candidates, which allows text input.'
-      other_required:
-        - 'Requires text input when "Other" is selected.'
 
     gws/column/file_upload:
       upload_file_count:
@@ -189,3 +187,9 @@ en:
       select_options:
         - Enter your answer choices.
         - You can enter multiple answer choices by separating the text for each answer with a line break.
+
+    gws/addon/column/other_option:
+      other_state:
+        - 'Add "Other" to the selection candidates, which allows text input.'
+      other_required:
+        - 'Requires text input when "Other" is selected.'

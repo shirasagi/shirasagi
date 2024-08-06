@@ -7,6 +7,7 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
   let!(:column_type) { I18n.with_locale(gws_user.lang) { I18n.t("gws.columns").stringify_keys.to_a.sample } }
   # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/title", I18n.t("gws.columns.gws/title") ] } }
   # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/section", I18n.t("gws.columns.gws/section") ] } }
+  # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/radio_button", I18n.t("gws.columns.gws/radio_button") ] } }
   let(:available_fields_map) do
     common = %i(name order required tooltips label explanation)
     {
@@ -17,7 +18,7 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
       "gws/url_field" => common + %i(max_length place_holder additional_attr),
       "gws/text_area" => common + %i(max_length place_holder additional_attr),
       "gws/select" => common + %i(place_holder select_options),
-      "gws/radio_button" => common + %i(select_options),
+      "gws/radio_button" => common + %i(select_options other_option),
       "gws/check_box" => common + %i(select_options),
       "gws/file_upload" => common + %i(upload_file_count),
       "gws/section" => %i(name),
@@ -57,6 +58,10 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
     let(:upload_file_count) { rand(1..5) }
     let(:upload_file_count_label) { upload_file_count.to_s }
     let(:select_options) { Array.new(rand(3..5)) { unique_id } }
+    let(:other_state) { %w(enabled disabled).sample }
+    let(:other_state_label) { I18n.t("ss.options.state.#{other_state}") }
+    let(:other_required) { %w(required optional).sample }
+    let(:other_required_label) { I18n.t("ss.options.state.#{other_required}") }
 
     it do
       #
@@ -132,6 +137,10 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
           if available_fields.include?(:select_options)
             fill_in "item[select_options]", with: select_options.join("\n")
           end
+          if available_fields.include?(:other_option)
+            select other_state_label, from: "item[other_state]"
+            select other_required_label, from: "item[other_required]"
+          end
 
           click_on I18n.t("ss.buttons.save")
         end
@@ -196,6 +205,10 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
       end
       if available_fields.include?(:select_options)
         expect(column.select_options).to eq select_options
+      end
+      if available_fields.include?(:other_option)
+        expect(column.other_state).to eq other_state
+        expect(column.other_required).to eq other_required
       end
 
       #

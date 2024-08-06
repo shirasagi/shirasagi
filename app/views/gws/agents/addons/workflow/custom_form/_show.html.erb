@@ -21,9 +21,10 @@
       <dt><%= value.name %></dt>
       <dd>
         <%= column.try(:prefix_label) %>
-        <%= br value.value %>
         <% if value.try(:other_value?) %>
-          : <%= value.other_value %>
+          : <%= value.other_value_text %>
+        <% else %>
+          <%= br value.value %>
         <% end %>
         <%= column.try(:postfix_label) %>
       </dd>

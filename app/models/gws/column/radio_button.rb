@@ -1,23 +1,8 @@
 class Gws::Column::RadioButton < Gws::Column::Base
   include Gws::Addon::Column::SelectLike
+  include Gws::Addon::Column::OtherOption
 
   field :branch_section_ids, type: Array, default: []
-  field :other_state, type: String, default: 'disabled'
-  field :other_required, type: String, default: 'optional'
-  permit_params :other_state, :other_required
-  permit_params branch_section_ids: []
-
-  def other_state_options
-    %w(enabled disabled).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
-  end
-
-  def other_required_options
-    %w(required optional).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
-  end
-
-  def other_required?
-    other_required == 'required'
-  end
 
   def branch_section_options
     form.columns.where(_type: Gws::Column::Section.to_s).order_by(order: 1).map do |c|

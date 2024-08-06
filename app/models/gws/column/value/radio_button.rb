@@ -3,11 +3,15 @@ class Gws::Column::Value::RadioButton < Gws::Column::Value::Base
   field :other_value, type: String
 
   def other_value?
-    value == I18n.t("mongoid.attributes.gws/column/radio_button.other_value")
+    value == Gws::Column::RadioButton::OTHER_VALUE
   end
 
   def other_value_text
-    "#{I18n.t("mongoid.attributes.gws/column/radio_button.other_value")} : #{other_value}"
+    if other_value.present?
+      "#{I18n.t("gws/column.other_value")} : #{other_value}"
+    else
+      I18n.t("gws/column.other_value")
+    end
   end
 
   def validate_value(record, attribute)
@@ -19,8 +23,12 @@ class Gws::Column::Value::RadioButton < Gws::Column::Value::Base
 
     return if value.blank?
 
-    unless column.select_options.include?(value) || t("mongoid.attributes.gws/column/radio_button.other_value") == value
+    unless column.select_options.include?(value) || Gws::Column::RadioButton::OTHER_VALUE == value
       record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+    end
+
+    if Gws::Column::RadioButton::OTHER_VALUE == value && column.other_required? && other_value.blank?
+      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
     end
   end
 

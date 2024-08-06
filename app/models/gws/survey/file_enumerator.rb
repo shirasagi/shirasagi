@@ -67,7 +67,7 @@ class Gws::Survey::FileEnumerator < Enumerator
         end
       when Gws::Column::RadioButton
         if column_value.try(:other_value?)
-          term = column_value.other_value_text
+          term = "#{column.prefix_label}#{column_value.other_value_text}#{column.postfix_label}"
         else
           term = "#{column.prefix_label}#{column_value.value}#{column.postfix_label}"
         end

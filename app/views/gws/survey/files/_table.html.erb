@@ -63,16 +63,16 @@
                       <% end %>
                     <% end %>
                   <% elsif column.is_a?(Gws::Column::RadioButton) %>
+                    <% if column.prefix_label %>
+                      <span class="prefix"><%= column.prefix_label %></span>
+                    <% end %>
                     <% if column_value.try(:other_value?) %>
-                      <%= column_value.try(:other_value_text) %>
+                      <span class="value"><%= column_value.try(:other_value_text) %></span>
                     <% else %>
-                      <% if column.prefix_label %>aa
-                        <span class="prefix"><%= column.prefix_label %></span>
-                      <% end %>
                       <span class="value"><%= auto_link(column_value ? column_value.value : '') %></span>
-                      <% if column.postfix_label %>
-                        <span class="postfix"><%= column.postfix_label %></span>
-                      <% end %>
+                    <% end %>
+                    <% if column.postfix_label %>
+                      <span class="postfix"><%= column.postfix_label %></span>
                     <% end %>
                   <% else %>
                     <% if column.prefix_label %>

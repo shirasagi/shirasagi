@@ -21,8 +21,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
     let(:radio_option0) { "option-#{unique_id}" }
     let(:radio_option1) { "option-#{unique_id}" }
     let(:radio_option2) { "option-#{unique_id}" }
-    let(:radio_option3) { "option-#{unique_id}" }
-    let(:radio_options) { [ radio_option0, radio_option1, radio_option2, radio_option3 ] }
+    let(:radio_other1) { "other-option-#{unique_id}" }
+    let(:radio_options) { [ radio_option0, radio_option1, radio_option2 ] }
     let(:section1_name) { "column-#{unique_id}" }
     let(:section1_text_name) { "column-#{unique_id}" }
     let(:section2_name) { "column-#{unique_id}" }
@@ -58,6 +58,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within "form.gws-column-form" do
         fill_in "item[name]", with: radio_name
         fill_in "item[select_options]", with: radio_options.join("\n")
+        choose "item_other_state_enabled"
+        choose "item_other_required_required"
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
@@ -141,11 +143,10 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(radio_column.prefix_explanation).to be_blank
       expect(radio_column.postfix_explanation).to be_blank
       expect(radio_column.select_options).to eq radio_options
-      expect(radio_column.branch_section_ids).to have(4).items
+      expect(radio_column.branch_section_ids).to have(3).items
       expect(radio_column.branch_section_ids[0]).to be_blank
       expect(radio_column.branch_section_ids[1]).to eq section1_column.id.to_s
       expect(radio_column.branch_section_ids[2]).to eq section2_column.id.to_s
-      expect(radio_column.branch_section_ids[3]).to be_blank
 
       #
       # 公開する
@@ -241,8 +242,19 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         within ".radio-button-#{radio_column.id}" do
-          wait_for_event_fired("column:sectionChanged") { choose radio_option3 }
+          wait_for_event_fired("column:sectionChanged") { choose I18n.t("gws/column.other_value") }
         end
+        script = <<~SCRIPT
+          document.querySelector("[name='custom[#{radio_column.id}_other_value]']").removeAttribute('required')
+        SCRIPT
+        page.execute_script(script)
+        click_on I18n.t("ss.buttons.answer")
+      end
+      message = "#{radio_column.name}#{I18n.t("errors.messages.blank")}"
+      wait_for_error message
+
+      within "form#item-form" do
+        fill_in "custom[#{radio_column.id}_other_value]", with: radio_other1
 
         click_on I18n.t("ss.buttons.answer")
       end
@@ -260,6 +272,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
               expect(column_value.value).to eq radio_option0
+              expect(column_value.other_value).to be_blank
             end
             column_values[1].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::TextField)
@@ -283,6 +296,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
               expect(column_value.value).to eq radio_option1
+              expect(column_value.other_value).to be_blank
             end
             column_values[1].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::TextField)
@@ -311,6 +325,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
               expect(column_value.value).to eq radio_option2
+              expect(column_value.other_value).to be_blank
             end
             column_values[1].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::TextField)
@@ -338,7 +353,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
             column_values[0].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
-              expect(column_value.value).to eq radio_option3
+              expect(column_value.value).to eq Gws::Column::RadioButton::OTHER_VALUE
+              expect(column_value.other_value).to eq radio_other1
             end
             column_values[1].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::TextField)
@@ -355,7 +371,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       end
 
       #
-      # 公開する
+      # 回答一覧
       #
       visit gws_survey_main_path(site: site)
       click_on I18n.t("ss.navi.editable")
@@ -381,7 +397,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           end
           within rows[3] do
             expect(page).to have_content user4.long_name
-            expect(page).to have_content radio_option3
+            expect(page).to have_content "#{I18n.t("gws/column.other_value")} : #{radio_other1}"
           end
         end
       end
@@ -429,7 +445,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           expect(csv_row[0]).to be_present
           expect(csv_row[1]).to eq user4.name
           expect(csv_row[2]).to eq user4.uid
-          expect(csv_row[3]).to eq radio_option3
+          option_value = with_default_locale { "#{I18n.t("gws/column.other_value")} : #{radio_other1}" }
+          expect(csv_row[3]).to eq option_value
           expect(csv_row[4]).to be_blank
           expect(csv_row[5]).to be_blank
         end
