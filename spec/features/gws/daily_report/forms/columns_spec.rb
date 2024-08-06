@@ -5,6 +5,8 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
   let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
   let!(:form) { create :gws_daily_report_form, cur_site: site, daily_report_group: group1 }
   let!(:column_type) { I18n.with_locale(gws_user.lang) { I18n.t("gws.columns").stringify_keys.to_a.sample } }
+  # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/title", I18n.t("gws.columns.gws/title") ] } }
+  # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/section", I18n.t("gws.columns.gws/section") ] } }
   let(:available_fields_map) do
     common = %i(name order required tooltips label explanation)
     {

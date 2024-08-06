@@ -1,5 +1,5 @@
 class Gws::Column::Section < Gws::Column::Base
-  include Gws::Addon::Column::TextLike
+  include Gws::Column::TextLike
 
   def section_id
     "section-#{id}"

@@ -1,5 +1,5 @@
 class Gws::Column::Title < Gws::Column::Base
-  include Gws::Addon::Column::TextLike
+  include Gws::Column::TextLike
 
   field :title, type: String
   field :explanation, type: String
