@@ -8,6 +8,11 @@ en:
     search_users: Search users
     search_times: Search available times
     today_wday: Today's week day
+    views:
+      approval_state: Approval state
+      request: Request
+      approve: Approve
+      deny: Deny
     navi:
       holiday: Holiday settings
       category: Type settings
