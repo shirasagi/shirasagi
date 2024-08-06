@@ -63,8 +63,7 @@ class Cms::Line::Template::Base
   def owned_files
     files = SS::File.where(owner_item_type: self.class.name, owner_item_id: id).to_a
     if page
-      _page = page.becomes_with_route
-      files += SS::File.where(owner_item_type: _page.class.name, owner_item_id: _page.id).to_a
+      files += SS::File.where(owner_item_type: page.class.name, owner_item_id: page.id).to_a
     end
     files
   end
