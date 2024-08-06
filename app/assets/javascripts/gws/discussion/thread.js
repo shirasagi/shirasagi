@@ -16,7 +16,7 @@ this.Gws_Discussion_Thread = (function () {
       a.text(humanizedName);
       a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
       input.attr("value", fileId);
-      icon.on("click", function (e) {
+      icon.on("click", function (_e) {
         $(this).parent("span").remove();
         if ($(selected).find("[data-file-id]").length <= 0) {
           $(selected).hide();
@@ -91,7 +91,7 @@ this.Gws_Discussion_Thread = (function () {
         success: function(data) {
           $warp.html(data);
         },
-        error: function (xhr, status, error) {
+        error: function (xhr, _status, _error) {
           alert(xhr.responseJSON.join("\n"));
         },
       });
