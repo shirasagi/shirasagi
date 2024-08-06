@@ -16,7 +16,14 @@ class History::Cms::BackupsController < ApplicationController
   end
 
   def set_item
-    @item ||= @model.where("data.site_id" => @cur_site.id).find(params[:id])
+    @item ||= begin
+      item = @model.find(params[:id])
+      site_id = item.data.with_indifferent_access['site_id']
+
+      raise "404" if site_id.present? && site_id != @cur_site.id
+
+      item
+    end
   end
   alias item set_item
 
@@ -39,7 +46,22 @@ class History::Cms::BackupsController < ApplicationController
       return @compare_to_item
     end
 
-    @compare_to_item = @model.where("data.site_id" => @cur_site.id).find(compare_to)
+    item.model.relations.each do |k, relation|
+      next if relation.class != Mongoid::Association::Embedded::EmbeddedIn
+
+      parent = relation.class_name.constantize.where(
+        relation.inverse_of => { "$elemMatch" => { '_id' => compare_to } }
+      ).first
+      @compare_to_item = parent.send(relation.inverse_of).find(compare_to) rescue nil
+
+      break @compare_to_item if @compare_to_item
+    end
+    @compare_to_item = @model.find(compare_to)
+    site_id = @compare_to_item.data.with_indifferent_access['site_id']
+
+    raise "404" if site_id.present? && site_id != @cur_site.id
+
+    @compare_to_item
   end
 
   def check_compare_to
