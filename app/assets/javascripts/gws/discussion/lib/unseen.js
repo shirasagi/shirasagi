@@ -22,7 +22,7 @@ this.Gws_Discussion_Unseen = (function () {
   Gws_Discussion_Unseen.checkMessage = function () {
     return $.ajax({
       url: Gws_Discussion_Unseen.url,
-      success: function (data, status) {
+      success: function (data, _status) {
         var timestamp;
         timestamp = parseInt(data);
         if (timestamp > Gws_Discussion_Unseen.timestamp) {

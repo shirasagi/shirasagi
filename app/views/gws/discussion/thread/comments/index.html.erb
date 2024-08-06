@@ -1,0 +1,36 @@
+<%
+  SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
+    controller.javascript js
+  end
+%>
+<%= jquery do %>
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+  <% if @cur_site.discussion_unseen_interval.present? %>
+  Gws_Discussion_Unseen.renderUnseen(
+    "<%= gws_discussion_apis_unseen_path(id: @topic.id) %>",
+    <%= @cur_site.discussion_unseen_interval %>,
+    <%= @topic.descendants_updated.to_i %>
+  );
+  <% end %>
+
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>
+
+<p class="gws-discussion-unseen" style="display: none; padding-bottom: 10px;">
+  <%= link_to t("gws/discussion.notice.reload"), { action: :index } %>
+</p>
+
+<div class="gws-discussion">
+  <%= form_for :item, url: { action: :reply, id: @topic.id }, html: { method: :put, class: "reply", multipart: true, autocomplete: :off } do |f| %>
+    <%
+      locals = {
+        f: f, topic: @topic, limit: 0, reply_menu: false,
+        show_path_proc: ->(forum, topic) { url_for(action: :index) },
+        edit_path_proc: ->(forum, topic, comment) { url_for(action: :edit, id: comment) },
+        delete_path_proc: ->(forum, topic, comment) { url_for(action: :delete, id: comment) },
+      }
+    %>
+    <%= render partial: 'gws/discussion/main/thread', locals: locals %>
+  <% end %>
+</div>
