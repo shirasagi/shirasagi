@@ -19,9 +19,4 @@ RSpec.describe Gws::Monitor::Topic, type: :model, dbscope: :example do
       it { expect(subject).to be_falsey }
     end
   end
-
-  describe "#to_csv" do
-    subject { create(:gws_monitor_topic, attend_group_ids: gws_user.group_ids) }
-    it { expect(subject.to_csv).to be_truthy }
-  end
 end

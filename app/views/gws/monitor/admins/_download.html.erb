@@ -1,0 +1,21 @@
+<dl class="see">
+  <dt><%= t('ss.encoding') %></dt>
+  <dd>
+    <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', {id: nil} %>
+        <%= t("ss.options.csv_encoding.#{encoding}") %>
+      </label>
+    <% end %>
+  </dd>
+
+  <dt><%= t('gws/monitor.topic.comment') %></dt>
+  <dd>
+    <% %w(last all).each do |type| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[download_comment]", type, type == 'all', { id: nil } %>
+        <%= t("gws/monitor.options.download_comment.#{type}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

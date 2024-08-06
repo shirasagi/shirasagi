@@ -1,0 +1,23 @@
+<%= form_with scope: :item, url: url_for(action: :download), html: { id: "item-form", method: :post, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/survey.confirm.download') %></h2></div>
+      <div class="addon-body">
+        <%= render template: '_download', locals: {f: f} %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <%= link_to t('ss.buttons.cancel'), url_for(action: :show), class: 'btn-default' %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  SS.confirmUnloading();
+<% end %>
