@@ -22,7 +22,7 @@ class Member::Agents::Parts::BookmarkController < ApplicationController
 
   def set_bookmark_node
     if @cur_part.parent.try(:route) == "member/bookmark"
-      @bookmark_node = @cur_part.parent.becomes_with_route
+      @bookmark_node = @cur_part.parent
     else
       @bookmark_node = Member::Node::Bookmark.site(@cur_site).first
     end

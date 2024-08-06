@@ -7,7 +7,7 @@ module Cms::PublicFilter::FindContent
     page = Cms::Page.site(site).filename(filename).first
     return unless page
 
-    page.becomes_with_route
+    page
   end
 
   def find_node(site, path)
@@ -21,7 +21,7 @@ module Cms::PublicFilter::FindContent
     spec = recognize_agent(path, method: "GET")
     return unless spec
 
-    node.becomes_with_route
+    node
   end
 
   def find_content(site, path)

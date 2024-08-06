@@ -18,7 +18,7 @@ class Facility::Map
   private
 
   def save_facility
-    parent.becomes_with_route.save rescue nil
+    parent.save rescue nil
   end
 
   def serve_static_file?

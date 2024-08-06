@@ -166,10 +166,10 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     ids.each do |id|
       rescue_with(rescue_p: rescue_p) do
         @task.count
-        node = Cms::Node.site(@site).or(cond).where(id: id).first
+        node = nodes.where(id: id).first
         next unless node
 
-        release_node node.becomes_with_route
+        release_node node
       end
     end
   end
