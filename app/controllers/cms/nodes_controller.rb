@@ -57,9 +57,13 @@ class Cms::NodesController < ApplicationController
 
     csv_params = params.require(:item).permit(:encoding)
 
+    # TODO and Memo:
+    # this controller is implementation of root node actions.
+    # so need to searching depth 1 nodes.
+    # but this criteria is searching all depth nodes.
     criteria = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site, node: @cur_node)
-    
+
     exporter = Cms::NodeExporter.new(mode: "article", site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
