@@ -29,7 +29,7 @@ Gws_Bookmark.prototype.renderCreate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 };
@@ -73,7 +73,7 @@ Gws_Bookmark.prototype.renderUpdate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 
@@ -100,7 +100,7 @@ Gws_Bookmark.prototype.renderUpdate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 };

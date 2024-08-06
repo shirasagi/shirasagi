@@ -29,7 +29,7 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[link_url]", with: "http://example.jp"
         fill_in_code_mirror "item[remark_html]", with: remark_html
-        wait_cbox_open { first(".btn-file-upload").click }
+        wait_for_cbox_opened { first(".btn-file-upload").click }
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: file.name)

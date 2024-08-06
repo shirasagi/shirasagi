@@ -1,0 +1,15 @@
+<dd style="height: 0; margin: 0; padding: 0; font-size: 0;">
+  <%= hidden_field_tag("#{object_name}[#{column.id}]", column.default_value) %>
+</dd>
+
+<% value ||= nil %>
+
+<dt class="wide <%= @section_id %>">
+  <% if column.title.present? %>
+    <span class="column-title"><%= column.title %></span>
+  <% end %>
+  <% if column.explanation.present? %>
+    <span class="column-explanation"><%= sanitize_easy column.explanation %></span>
+  <% end %>
+</dt>
+<dd class="m-0 p-0 <%= @section_id %>"></dd>

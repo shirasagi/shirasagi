@@ -1,6 +1,6 @@
 <% show ||= false %>
-<dt>
-  <%= column.name %>
+<dt class="<%= @section_id %>">
+  <%= sanitize_easy column.name %>
   <% if !show && column.tooltips.present? %>
   <div class="tooltip">?
     <ul class="tooltip-content">
@@ -9,5 +9,8 @@
       <% end %>
     </ul>
   </div>
+  <% end %>
+  <% if column.required? %>
+    <%= required_mark %>
   <% end %>
 </dt>

@@ -4,6 +4,14 @@ class Gws::Column::DateField < Gws::Column::Base
   field :place_holder, type: String
   permit_params :input_type, :place_holder, :html_tag, :html_additional_attr
 
+  class << self
+    def default_attributes
+      attributes = super
+      attributes[:input_type] = "date"
+      attributes
+    end
+  end
+
   def input_type_options
     %w(date datetime).map do |v|
       [ I18n.t("gws/column.options.date_input_type.#{v}"), v ]

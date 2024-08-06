@@ -1,5 +1,6 @@
 module Gws
   class Initializer
+    Gws::Column.plugin 'gws/title'
     Gws::Column.plugin 'gws/text_field'
     Gws::Column.plugin 'gws/date_field'
     Gws::Column.plugin 'gws/number_field'
@@ -9,6 +10,7 @@ module Gws
     Gws::Column.plugin 'gws/radio_button'
     Gws::Column.plugin 'gws/check_box'
     Gws::Column.plugin 'gws/file_upload'
+    Gws::Column.plugin 'gws/section'
 
     Gws::Role.permission :edit_gws_groups
     Gws::Role.permission :edit_gws_users

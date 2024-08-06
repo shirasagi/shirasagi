@@ -20,7 +20,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".addon-view.my-todo" do
         click_on I18n.t("gws/discussion.links.todo.index")
       end
-      wait_for_ajax
+      wait_for_js_ready
       click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
@@ -43,7 +43,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".addon-view.my-todo" do
         click_on I18n.t("gws/discussion.links.todo.index")
       end
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css('.fc-view a.fc-event-todo', text: item.name)
       # click_on item.name
       first('.fc-view a.fc-event-todo').click

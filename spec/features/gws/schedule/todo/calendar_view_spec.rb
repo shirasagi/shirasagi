@@ -9,7 +9,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
   it "group_plans_member_link_check" do
     item
     visit group_index_path
-    wait_for_ajax
+    wait_for_js_ready
     within("div#cal-#{gws_user.id}.calendar.multiple.fc.fc-ltr.fc-unthemed") do
       expect(page).to have_content(item.name)
     end

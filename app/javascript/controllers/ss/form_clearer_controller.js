@@ -18,7 +18,6 @@ export default class extends Controller {
     Array.from(form.elements).forEach(element => {
       if (isAncestor(this.element, element)) {
         if ('type' in element && (element.type === "radio" || element.type === "checkbox" || element.type === "button" || element.type === "submit" || element.type === "reset")) {
-          console.log(element)
           element.checked = false;
         } else {
           element.value = null

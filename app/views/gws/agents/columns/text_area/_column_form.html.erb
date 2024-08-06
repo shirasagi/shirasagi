@@ -1,7 +1,9 @@
 <% value ||= nil %>
 <%= render 'gws/agents/columns/main/common_label', column: column %>
-<dd>
+<dd class="<%= @section_id %>">
+  <span class="prefix-block"><%= sanitize_easy column.prefix_explanation %></span>
   <span class="prefix"><%= column.prefix_label %></span>
   <%= text_area_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
   <span class="postfix"><%= column.postfix_label %></span>
+  <span class="postfix-block"><%= sanitize_easy column.postfix_explanation %></span>
 </dd>

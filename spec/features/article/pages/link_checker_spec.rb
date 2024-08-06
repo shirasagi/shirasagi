@@ -87,7 +87,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
@@ -121,7 +121,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
@@ -175,7 +175,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
@@ -216,7 +216,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
@@ -246,7 +246,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{redirection_url5}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{redirection_self_url}")

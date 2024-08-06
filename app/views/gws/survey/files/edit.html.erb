@@ -21,7 +21,7 @@
     <% if @crud_buttons %>
       <% @crud_buttons.call f %>
     <% else %>
-      <%= f.submit t('ss.buttons.save'), class: %w(btn-primary save), data: { disable_with: t("ss.buttons.saving") } %>
+      <%= f.submit t('ss.buttons.answer'), class: %w(btn-primary save), data: { disable_with: t("ss.buttons.saving") } %>
       <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: 'reset', onclick: "location.href='#{gws_survey_readables_path}'; return false;" %>
     <% end %>
   </footer>

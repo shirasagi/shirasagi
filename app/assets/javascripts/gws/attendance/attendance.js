@@ -101,7 +101,7 @@ Gws_Attendance.prototype.onPunchClicked = function(action, message) {
   $form = $('<form/>', { action: action, method: 'post' });
   $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
   $('body').append($form);
-  $form.submit();
+  $form[0].requestSubmit();
 };
 
 Gws_Attendance.prototype.onEditClicked = function(action, message) {

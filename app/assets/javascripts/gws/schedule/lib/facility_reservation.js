@@ -214,7 +214,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
           self.$html_facility_reservation = $('<div></div>').html(data);
           if(self.$html_facility_reservation.find(".reservation-valid.free").length) {
             self.proceed();
-            $('form#item-form').submit();
+            $('form#item-form')[0].requestSubmit();
           } else {
             self.confirmFacilityReservation();
           }
@@ -305,7 +305,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
     $('#cboxLoadedContent .send .confirm').on('click', function(ev) {
       self.proceed();
       if (self.item_submit) {
-        $('form#item-form').submit();
+        $('form#item-form')[0].requestSubmit();
       }
       ev.preventDefault();
       return false;

@@ -79,6 +79,8 @@ td {
 
 .hide { display: none !important; }
 
+.nowrap { white-space: nowrap; }
+
 .material-icons {
   vertical-align: middle;
 }
@@ -1640,6 +1642,7 @@ dl.see {
   }
   > dt.wide {
     width: 100%;
+    max-width: 100%;
     float: none;
   }
   > dd.wide {
@@ -1720,6 +1723,9 @@ dl.mod-cms-parent_crumbs {
   .tooltip-content {
     display: none;
   }
+}
+.tooltip-border {
+  border: 1px solid #fff;
 }
 .tippy-tooltip {
   &.ss-tooltip-theme {

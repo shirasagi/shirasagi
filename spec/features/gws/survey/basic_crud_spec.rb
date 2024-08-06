@@ -46,24 +46,25 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         wait_for_cbox_closed { click_on cate.name }
       end
       within "form#item-form" do
+        expect(page).to have_css("#addon-gws-agents-addons-survey-category [data-id='#{cate.id}']", text: cate.name)
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Survey::Form.all.count).to eq 1
+      survey_form = Gws::Survey::Form.all.first
+      expect(survey_form.name).to eq form_name
 
-      click_on(I18n.t('gws/workflow.columns.index'))
+      expect(page).to have_css(".gws-column-new-form-notice-item", count: 3)
+      expect(page).to have_css(".gws-column-new-form-notice-item", text: I18n.t("gws/column.new_form_notice").first)
 
-      within ".nav-menu" do
-        wait_for_event_fired("ss:dropdownOpened") { click_on(I18n.t("ss.links.new")) }
+      within ".gws-column-list-toolbar[data-placement='top']" do
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/radio_button") }
       end
-      within ".gws-dropdown-menu" do
-        click_on(I18n.t("gws.columns.gws/radio_button"))
-      end
-      within "form#item-form" do
+      within first(".gws-column-item") do
         fill_in "item[name]", with: column_name
         fill_in "item[select_options]", with: column_options.join("\n")
-        click_on(I18n.t("ss.buttons.save"))
+        click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
@@ -81,6 +82,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
+      wait_for_notice I18n.t("ss.notice.published")
 
       expect(Gws::Survey::Form.all.count).to eq 1
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
@@ -117,9 +119,21 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
         end
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.answered")
+
+      expect(Gws::Survey::File.all.count).to eq 1
+      survey_file1 = Gws::Survey::File.all.first
+      expect(survey_file1.site_id).to eq site.id
+      expect(survey_file1.user_id).to eq user1.id
+      expect(survey_file1.form_id).to eq form.id
+      expect(survey_file1.name).to be_present
+      expect(survey_file1.anonymous_state).to eq survey_form.anonymous_state
+      expect(survey_file1.column_values.count).to eq 1
+      survey_file1.column_values.first.tap do |column_value|
+        expect(column_value.value).to be_present
+      end
 
       #
       # answer by user2
@@ -137,9 +151,21 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
         end
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.answered")
+
+      expect(Gws::Survey::File.all.count).to eq 2
+      survey_file2 = Gws::Survey::File.all.reorder(id: -1).first
+      expect(survey_file2.site_id).to eq site.id
+      expect(survey_file2.user_id).to eq user2.id
+      expect(survey_file2.form_id).to eq form.id
+      expect(survey_file2.name).to be_present
+      expect(survey_file2.anonymous_state).to eq survey_form.anonymous_state
+      expect(survey_file2.column_values.count).to eq 1
+      survey_file2.column_values.first.tap do |column_value|
+        expect(column_value.value).to be_present
+      end
 
       #
       # check answers

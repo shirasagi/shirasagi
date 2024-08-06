@@ -21,17 +21,17 @@ describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example, js:
       expect(page).to have_css(".event-calendar")
 
       click_on I18n.t("event.prev_month")
-      wait_for_ajax
+      wait_for_js_ready
       label = date_label(prev_date)
       expect(page).to have_css('table.calendar caption', text: label)
 
       click_on I18n.t("event.current_month")
-      wait_for_ajax
+      wait_for_js_ready
       label = date_label(cur_date)
       expect(page).to have_css('table.calendar caption', text: label)
 
       click_on I18n.t("event.next_month")
-      wait_for_ajax
+      wait_for_js_ready
       label = date_label(next_date)
       expect(page).to have_css('table.calendar caption', text: label)
     end

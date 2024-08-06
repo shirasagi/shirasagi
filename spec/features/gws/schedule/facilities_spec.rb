@@ -12,12 +12,12 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example do
     it "#index" do
       visit index_path
 
-      wait_for_ajax
+      wait_for_js_ready
       within ".calendar-name" do
         expect(page).to have_content(facility.name)
       end
 
-      #wait_for_ajax
+      #wait_for_js_ready
       #within ".fc-title" do
       #  expect(page).to have_content(item.name)
       #end

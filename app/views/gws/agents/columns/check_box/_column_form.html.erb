@@ -1,13 +1,15 @@
 <% value ||= [] %>
 <%= render 'gws/agents/columns/main/common_label', column: column %>
-<dd>
+<dd class="<%= @section_id %>">
   <%= hidden_field_tag("#{object_name}[#{column.id}][]", nil, id: nil) %>
+  <span class="prefix-block"><%= sanitize_easy column.prefix_explanation %></span>
   <span class="prefix"><%= column.prefix_label %></span>
   <% column.select_options.each do |val| %>
     <label>
       <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options.reverse_merge(id: nil)) %>
       <%= val %>
-    </label>
+    </label><br>
   <% end %>
   <span class="postfix"><%= column.postfix_label %></span>
+  <span class="postfix-block"><%= sanitize_easy column.postfix_explanation %></span>
 </dd>

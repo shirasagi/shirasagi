@@ -3,10 +3,11 @@
     if (!confirm($(this).data('confirm'))) return false;
     var token = $('meta[name="csrf-token"]').attr('content');
     var form = $('<form/>').
-    attr('method', 'POST').
-    attr('action', $(this).attr('href')).
-    append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" })).
-    appendTo("body").submit();
+      attr('method', 'POST').
+      attr('action', $(this).attr('href')).
+      append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" })).
+      appendTo("body");
+    form[0].requestSubmit();
     return false;
   });
 <% end %>

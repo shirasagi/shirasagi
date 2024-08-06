@@ -264,11 +264,11 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           find('.set-seen-all').click
         end
       end
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css(".list-item.seen")
       expect(page).to have_no_css(".list-item.unseen")
 
-      page.execute_script("SS.clearNotice();")
+      clear_notice
       wait_for_js_ready
 
       wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
@@ -278,7 +278,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           find('.unset-seen-all').click
         end
       end
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css(".list-item.unseen")
       expect(page).to have_no_css(".list-item.seen")
     end

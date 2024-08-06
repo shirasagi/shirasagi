@@ -7,7 +7,7 @@
   $("form.search .index.groups .select-group").on("click", function(e) {
     $("#ajax-box #s_group").val($(e.target).data("id"));
     SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
+    $("#ajax-box form.search")[0].requestSubmit()
 
     e.preventDefault();
     e.stopPropagation();

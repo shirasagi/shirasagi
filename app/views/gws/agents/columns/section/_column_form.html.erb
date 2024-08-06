@@ -1,0 +1,12 @@
+<dd style="height: 0; margin: 0; padding: 0; font-size: 0;">
+  <%= hidden_field_tag("#{object_name}[#{column.id}]", column.default_value) %>
+</dd>
+
+<% @section_id = column.section_id %>
+
+<% if %w(gws/survey/columns gws/frames/columns gws/workflow/form/columns).include?(params[:controller]) %>
+  <% @section_id = nil %>
+  <dt class="wide">
+    <%= column.name %>
+  </dt>
+<% end %>

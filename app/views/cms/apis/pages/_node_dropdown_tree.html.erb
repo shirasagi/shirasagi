@@ -13,7 +13,7 @@
     var nodeId = $treeItem.data("id");
 
     $form.find("[name='s[node]']").val(nodeId);
-    $form.submit();
+    $form[0].requestSubmit();
 
     return false;
   });

@@ -114,7 +114,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within '#addon-workflow-agents-addons-branch' do
         expect do
           wait_for_turbo_frame "#workflow-branch-frame"
-          wait_event_to_fire "turbo:frame-load" do
+          wait_for_event_fired "turbo:frame-load" do
             click_on I18n.t('workflow.create_branch')
           end
           expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
@@ -155,7 +155,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within '#addon-workflow-agents-addons-branch' do
         expect do
           wait_for_turbo_frame "#workflow-branch-frame"
-          wait_event_to_fire "turbo:frame-load" do
+          wait_for_event_fired "turbo:frame-load" do
             click_on I18n.t('workflow.create_branch')
           end
           expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))

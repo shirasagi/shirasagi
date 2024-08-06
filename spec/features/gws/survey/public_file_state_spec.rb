@@ -36,9 +36,9 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".gws-survey .limit", text: Gws::Survey::Form.t(:due_date))
       within "form#item-form" do
         fill_in "custom[#{column1.id}]", with: user1_answer
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_notice I18n.t('ss.notice.answered')
 
       #
       #  user2
@@ -49,9 +49,9 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       click_on form.name
       within "form#item-form" do
         fill_in "custom[#{column1.id}]", with: user2_answer
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_notice I18n.t('ss.notice.answered')
 
       click_on form.name
       click_on I18n.t("gws/survey.tabs.others")
