@@ -9,8 +9,13 @@ module Member::Addon
     end
 
     def google_oauth2_oauth_strategy
-      options = { scope: "userinfo.email, userinfo.profile, plus.me" }
-      [ ::OAuth::GoogleOAuth2, options ]
+      options = {
+        client_id: google_oauth2_client_id.presence || SS.config.oauth.try(:google_oauth2_client_id),
+        client_secret: google_oauth2_client_secret.presence || SS.config.oauth.try(:google_oauth2_client_secret),
+        scope: "userinfo.email,userinfo.profile,plus.me"
+      }
+
+      [ OmniAuth::Strategies::GoogleOauth2, options ]
     end
   end
 end

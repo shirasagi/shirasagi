@@ -9,7 +9,12 @@ module Member::Addon
     end
 
     def line_oauth_strategy
-      [ ::OAuth::Line, {} ]
+      options = {
+        client_id: line_client_id.presence || SS.config.oauth.try(:line_client_id),
+        client_secret: line_client_secret.presence || SS.config.oauth.try(:line_client_secret)
+      }
+
+      [ OmniAuth::Strategies::Line, options ]
     end
   end
 end

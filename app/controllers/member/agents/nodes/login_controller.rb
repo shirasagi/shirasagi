@@ -56,8 +56,6 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     builder = middleware.build(block)
     rack_app = builder.to_app
 
-    request.env["ss.site"] ||= @cur_site
-    request.env["ss.node"] ||= @cur_node
     status, headers, body = rack_app.call(request.env)
     if status.present?
       # OmniAuth が応答する場合と Member::Agents::Nodes::LoginController が応答する場合とがある。

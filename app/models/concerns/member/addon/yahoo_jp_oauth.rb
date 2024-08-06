@@ -10,10 +10,16 @@ module Member::Addon
 
     def yahoojp_oauth_strategy
       options = {
-        name: "yahoojp_v2",
-        scope: "openid profile email address"
+        client_id: yahoojp_client_id.presence || SS.config.oauth.try(:yahoojp_client_id),
+        client_secret: yahoojp_client_secret.presence || SS.config.oauth.try(:yahoojp_client_secret),
+        scope: "openid profile email address",
+        client_options: {
+          authorize_url: '/yconnect/v1/authorization',
+          token_url: '/yconnect/v1/token'
+        }
       }
-      [ ::OAuth::YahooJp, options ]
+
+      [ OmniAuth::Strategies::YahooJp, options ]
     end
   end
 end
