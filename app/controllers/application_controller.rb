@@ -9,6 +9,10 @@ class ApplicationController < ActionController::Base
 
   before_action :clear_secure_option_of_session
 
+  if SS.config.env.set_received_by
+    before_action :set_received_by
+  end
+
   class CloseableChunkedBody < Rack::Chunked::Body
     def initialize(*args)
       super
@@ -179,6 +183,18 @@ class ApplicationController < ActionController::Base
       response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
       response.headers["Pragma"] = "no-cache"
       response.headers["Expires"] = "-1"
+    end
+  end
+
+  def set_received_by
+    # set first received time to received-at
+    response.headers["X-SS-Received-At"] ||= Time.zone.now.to_i
+
+    controller_name = params[:controller].presence
+    action_name = params[:action].presence
+    if controller_name && action_name
+      # set last controller and action to received-by
+      response.headers["X-SS-Received-By"] = "#{request.method} #{controller_name}##{action_name}"
     end
   end
 
