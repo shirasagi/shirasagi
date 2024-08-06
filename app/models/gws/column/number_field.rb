@@ -12,6 +12,14 @@ class Gws::Column::NumberField < Gws::Column::Base
   validates :scale, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :minus_type, presence: true, inclusion: { in: %w(normal filled_triangle triangle), allow_blank: true }
 
+  class << self
+    def default_attributes
+      attributes = super
+      attributes[:minus_type] = "normal"
+      attributes
+    end
+  end
+
   def minus_type_options
     %w(normal filled_triangle triangle).map do |v|
       [ I18n.t("gws/column.options.minus_type.#{v}"), v ]

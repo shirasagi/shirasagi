@@ -26,6 +26,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   let!(:column7) { create(:gws_column_radio_button, cur_site: site, form: form, order: 70, required: "optional") }
   let!(:column8) { create(:gws_column_check_box, cur_site: site, form: form, order: 80, required: "optional") }
   let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90, required: "optional") }
+  let!(:column10) { create(:gws_column_section, cur_site: site, form: form, order: 100) }
+  let!(:column11) { create(:gws_column_title, cur_site: site, form: form, order: 110) }
 
   context "basic crud" do
     let(:name) { unique_id }
@@ -132,6 +134,12 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           expect(cv_file.owner_item_id).to eq file.id
           expect(cv_file.owner_item_type).to eq file.class.name
         end
+      end
+      file.column_values.where(column_id: column10.id).first.tap do |cv|
+        expect(cv.value).to eq column10.default_value
+      end
+      file.column_values.where(column_id: column11.id).first.tap do |cv|
+        expect(cv.value).to eq column11.default_value
       end
       expect(file.state).to eq "closed"
       expect(file.deleted).to be_blank

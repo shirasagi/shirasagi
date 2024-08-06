@@ -29,7 +29,7 @@ describe "image_map_pages", type: :feature, dbscope: :example, js: true do
       visit item2.private_show_path
       within "#addon-workflow-agents-addons-branch" do
         wait_for_turbo_frame "#workflow-branch-frame"
-        wait_event_to_fire "turbo:frame-load" do
+        wait_for_event_fired "turbo:frame-load" do
           click_button I18n.t('workflow.create_branch')
         end
         expect(page).to have_css('.see.branch')

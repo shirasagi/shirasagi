@@ -11,6 +11,14 @@ module Gws::Addon::Column::SelectLike
     validate :validate_select_options
   end
 
+  module ClassMethods
+    def default_attributes
+      attributes = super
+      attributes[:select_options] = SS::Extensions::Lines.demongoize(I18n.t("gws/column.default_select_options"))
+      attributes
+    end
+  end
+
   private
 
   def normalize_select_options

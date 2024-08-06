@@ -101,6 +101,17 @@ class Gws::Survey::EditablesController < ApplicationController
     @items = @items.order_by(updated: -1, id: 1).page(params[:page]).per(50)
   end
 
+  def create
+    @item = @model.new get_params
+    return render_create(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
+
+    result = @item.save
+
+    create_opts = {}
+    create_opts[:location] = gws_survey_editable_columns_path(editable_id: @item) if result
+    render_create result, create_opts
+  end
+
   def publish
     if @item.state == "public"
       redirect_to({ action: :show }, { notice: t('ss.notice.published') })
@@ -127,24 +138,27 @@ class Gws::Survey::EditablesController < ApplicationController
   end
 
   def copy
-    @copy = @model.new
+    raise "404" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if @copy.name.nil?
-      prefix = I18n.t("workflow.cloned_name_prefix")
-      @copy.name = "[#{prefix}] #{@item.name}"
+    if request.get? || request.head?
+      @item.name = "[#{I18n.t("workflow.cloned_name_prefix")}] #{@item.name}"
+      render
+      return
     end
-    return if request.get? || request.head?
 
-    copy = params.require(:copy).permit(:name, :anonymous_state, :file_state)
-    @copy = @item.new_clone(
-      site: @cur_site,
-      user: @cur_user,
-      name: copy["name"],
-      anonymous_state: copy["anonymous_state"],
-      file_state: copy["file_state"]
-    )
-    render_opts = { location: { action: :index }, render: { template: "copy" }, notice: t('ss.notice.copied') }
-    render_create @copy.save, render_opts
+    service = Gws::Column::CopyService.new(cur_site: @cur_site, cur_user: @cur_user, model: @model, item: @item)
+    service_params = params.require(:item).permit(:name, :anonymous_state, :file_state)
+    service_params[:state] = "closed"
+    service_params[:answered_users_hash] = {}
+    service_params[:notification_noticed_at] = nil
+    service.overwrites = service_params
+    result = service.call
+    if result
+      @item = service.new_item
+    else
+      SS::Model.copy_errors(service, @item)
+    end
+    render_create result, render: { template: "copy" }, notice: t("ss.notice.copied")
   end
 
   def print

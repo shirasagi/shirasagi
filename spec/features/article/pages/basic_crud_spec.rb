@@ -173,7 +173,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_content I18n.t('ss.confirm.not_contains_links_in_file')
         end
         click_button I18n.t('ss.buttons.delete')
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(page).to have_content File.basename(item2.filename)
       end
@@ -184,7 +184,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(page).to have_css('.contains-urls', text: I18n.t('ss.confirm.contains_links_in_file_ignoring_alert'))
       end
@@ -196,7 +196,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
-        wait_for_ajax
+        wait_for_js_ready
 
         find('.list-item input[type="checkbox"][checked="checked"]').set(false)
         click_button I18n.t('ss.buttons.delete')

@@ -262,11 +262,11 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html1
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax do
+          wait_for_js_ready do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
           end
           click_on I18n.t("cms.auto_correct.link")
-          wait_for_ajax do
+          wait_for_js_ready do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
         end
@@ -279,11 +279,11 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           fill_in_ckeditor "item[html]", with: html2
           click_button I18n.t("cms.syntax_check")
         end
-        wait_for_ajax do
+        wait_for_js_ready do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
         end
         click_on I18n.t("cms.auto_correct.link")
-        wait_for_ajax do
+        wait_for_js_ready do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end
@@ -295,7 +295,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           fill_in_ckeditor "item[html]", with: html3
           click_button I18n.t("cms.syntax_check")
         end
-        wait_for_ajax do
+        wait_for_js_ready do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end
@@ -319,11 +319,11 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
           click_on I18n.t("cms.auto_correct.link")
-          wait_for_ajax do
+          wait_for_js_ready do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
         end
@@ -342,10 +342,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+          wait_for_js_ready
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
           click_on I18n.t("cms.auto_correct.link")
-          wait_for_ajax do
+          wait_for_js_ready do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
         end
@@ -364,7 +364,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+          wait_for_js_ready
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end
@@ -382,11 +382,11 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
           click_on I18n.t("cms.auto_correct.link")
-          wait_for_ajax do
+          wait_for_js_ready do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
         end
@@ -405,10 +405,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+          wait_for_js_ready
           expect(page).to have_css(".errorExplanationBody", text: I18n.t('errors.messages.invalid_multibyte_character'))
           click_on I18n.t("cms.auto_correct.link")
-          wait_for_ajax do
+          wait_for_js_ready do
             expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
           end
         end
@@ -427,7 +427,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+          wait_for_js_ready
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end

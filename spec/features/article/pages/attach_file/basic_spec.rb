@@ -328,8 +328,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # 定型フォームに動画を添付すると Cms_Form.addSyntaxCheck を呼び出し、アクセシビリティチェックを登録する。
           # Cms_Form.addSyntaxCheck の呼び出しが完了する前に「公開保存」をクリックしてしまうと、
           # アクセシビリティチェックが実行されないので、警告ダイアログが表示されず、テストが失敗してしまう。
-          # そこで、苦渋だが  wait_for_ajax で Cms_Form.addSyntaxCheck の呼び出し完了を待機する。
-          wait_for_ajax
+          # そこで、苦渋だが  wait_for_js_ready で Cms_Form.addSyntaxCheck の呼び出し完了を待機する。
+          wait_for_js_ready
 
           click_on I18n.t("ss.buttons.publish_save")
         end

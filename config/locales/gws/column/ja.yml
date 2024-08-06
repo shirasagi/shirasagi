@@ -1,5 +1,9 @@
 ja:
   gws/column:
+    add_column: "%{name}を追加"
+    show_section: "%{name} を表示"
+    default_select_options:
+      - "選択肢1"
     options:
       column_input_type:
         text: テキスト
@@ -12,9 +16,23 @@ ja:
         normal: "-"
         filled_triangle: "▲"
         triangle: "△"
+    notice:
+      reordered: 並び替えました。
+    links:
+      edit_in_detail: 詳細画面で編集する
+      edit_conditional_branch: 条件分岐を編集する
+    new_form_notice:
+      - "上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。"
+      - "下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。"
+      - "ツールバー内にある適切な入力項目のボタンをクリックし、%{name}の作成を完了させてください。"
+    new_item_notice:
+      - "既定の設定で%{model_name}を作成しました。"
+      - "以下の項目に適切な値を設定するか%{link}から適切な値を設定してください。"
+    other_value: その他
 
   gws:
     columns:
+      gws/title: タイトル
       gws/text_field: 一行入力
       gws/date_field: 日付入力
       gws/number_field: 数値入力
@@ -24,15 +42,18 @@ ja:
       gws/radio_button: ラジオボタン
       gws/check_box: チェックボックス
       gws/file_upload: ファイルアップロード
+      gws/section: セクション
 
   modules:
     addons:
       gws/column/text_like: 制約条件
       gws/column/select_like: 選択
+      gws/column/other_option: その他入力
 
   mongoid:
     models:
       gws/column/base: 入力項目
+      gws/column/title: タイトル
       gws/column/text_field: 一行入力
       gws/column/date_field: 日付入力
       gws/column/number_field: 数値入力
@@ -42,6 +63,7 @@ ja:
       gws/column/radio_button: ラジオボタン
       gws/column/check_box: チェックボックス
       gws/column/file_upload: ファイルアップロード
+      gws/column/section: セクション
     attributes:
       gws/column/base:
         _type: 型
@@ -55,8 +77,13 @@ ja:
         tooltips: ツールチップ
         prefix_label: 前ラベル
         postfix_label: 後ラベル
+        prefix_explanation: 説明(上)
+        postfix_explanation: 説明(下)
         # common attributes
         place_holder: プレースホルダー
+      gws/column/title:
+        title: タイトル
+        explanation: 説明
       gws/column/text_field:
         input_type: 種類
       gws/column/date_field:
@@ -69,11 +96,17 @@ ja:
         initial_decimal: 初期値
         scale: 小数点以下の桁数
         minus_type: 負数の表示方法
+      gws/column/radio_button:
+        conditinal_branch: 条件分岐
       gws/addon/column/text_like:
         max_length: 最大長
         additional_attr: 追加属性
       gws/addon/column/select_like:
         select_options: 選択肢
+      gws/addon/column/other_option:
+        other_input: その他入力
+        other_state: 表示
+        other_required: 必須入力
 
   tooltip:
     gws/column/base:
@@ -87,11 +120,27 @@ ja:
       tooltips:
         - 項目のツールチップを入力します。
       prefix_label:
-        - 入力項目の前に表示するラベルを入力します。
+        - 入力項目の前に表示するラベルを入力します。(10文字以内)
       postfix_label:
-        - 入力項目の後に表示するラベルを入力します。
+        - 入力項目の後に表示するラベルを入力します。(10文字以内)
+      prefix_explanation:
+        - 入力項目の前に表示する説明文を入力します。
+        - "&lt;br&gt;など一部のHTMLが使用できます。"
+        - "改行するには&lt;br&gt;を挿入してください。"
+      postfix_explanation:
+        - 入力項目の後に表示する説明文を入力します。
+        - "&lt;br&gt;など一部のHTMLが使用できます。"
+        - "改行するには&lt;br&gt;を挿入してください。"
       place_holder:
         - プレースホルダーを入力します。
+
+    gws/column/title:
+      title:
+        - 表示するタイトルを入力します。
+        - この入力は省略できますが、多言語の入力も省略する必要があります。
+      explanation:
+        - 表示する説明を入力します。
+        - この入力は省略できますが、多言語の入力も省略する必要があります。
 
     gws/column/text_field:
       input_type:
@@ -114,6 +163,16 @@ ja:
       minus_type:
         - 負数の表示方法を選択します。
 
+    gws/column/radio_button:
+      conditinal_branch:
+        - 指定したセクションを表示し、それ以外を非表示にします。
+        - 未入力の場合は、設定されているセクションをすべて非表示にします。
+        -
+        - 例）
+        - 1. セクション1を表示 ... セクション1:表示、セクション2:非表示
+        - 2. セクション2を表示 ... セクション1:非表示、セクション2:表示
+        - 3. 未入力 ... セクション1:非表示、セクション2:非表示
+
     gws/column/file_upload:
       upload_file_count:
         - アップロードできるファイル数を選択します。
@@ -128,3 +187,9 @@ ja:
       select_options:
         - 回答の選択肢を入力します。
         - テキストを改行で区切ることで複数の選択肢を入力することができます。
+
+    gws/addon/column/other_option:
+      other_state:
+        - テキスト入力ができる「その他」を選択候補に追加します。
+      other_required:
+        - 「その他」を選択している時のテキスト入力を必須にします。

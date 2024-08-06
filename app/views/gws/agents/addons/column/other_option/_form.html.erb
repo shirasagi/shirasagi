@@ -1,0 +1,7 @@
+<dl class="see mod-gws-column-select-like">
+  <dt><%= @model.t :other_state %><%= @model.tt :other_state %></dt>
+  <dd><%= f.select :other_state, @item.other_state_options %></dd>
+
+  <dt><%= @model.t :other_required %><%= @model.tt :other_required %></dt>
+  <dd><%= f.select :other_required, @item.other_required_options %></dd>
+</dl>

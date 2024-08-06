@@ -1,4 +1,5 @@
 @import "material-icons/iconfont/material-icons.css";
+@import 'animate.css';
 
 .material-icons, .material-icons-outlined, .material-icons-round, .material-icons-sharp, .material-icons-two-tone {
   /* Rules for sizing the icon. */
@@ -38,4 +39,44 @@
       padding: 8px;
     }
   }
+}
+
+.open-in-new-tab {
+  .icon {
+    display: inline-block;
+    padding-left: 2px;
+    font-size: 100%;
+    vertical-align: -3px;
+  }
+}
+
+@keyframes show-dialog {
+  from {
+    transform: translateY(-110%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+.ss-dialog-container {
+  overflow-y: hidden;
+}
+
+.ss-dialog {
+  position: fixed; // 既定では body が top までスクロールしてしまう。それを防ぐために position を fixed へ変更する
+  width: 90vw;
+  height: 90vh;
+
+  &[open] {
+    animation: show-dialog .5s ease normal;
+  }
+}
+
+.ss-dialog-header {
+  display: flex;
+}
+
+.ss-dialog-close {
+  margin-left: auto;
 }

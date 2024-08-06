@@ -42,11 +42,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
-          expect(csv.length).to eq this_month.end_of_month.day
-          expect(csv[0][0]).to eq user.uid
-          expect(csv[0][1]).to eq user.name
-          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          SS::Csv.open(downloads.first, headers: true) do |csv|
+            table = csv.read
+            expect(table.length).to eq this_month.end_of_month.day
+            expect(table[0][0]).to eq user.uid
+            expect(table[0][1]).to eq user.name
+            expect(table[0][2]).to eq this_month.to_date.iso8601
+          end
         end
       end
     end
@@ -68,11 +70,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-          expect(csv.length).to eq this_month.end_of_month.day
-          expect(csv[0][0]).to eq user.uid
-          expect(csv[0][1]).to eq user.name
-          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          SS::Csv.open(downloads.first, headers: true) do |csv|
+            table = csv.read
+            expect(table.length).to eq this_month.end_of_month.day
+            expect(table[0][0]).to eq user.uid
+            expect(table[0][1]).to eq user.name
+            expect(table[0][2]).to eq this_month.to_date.iso8601
+          end
         end
       end
     end
@@ -94,11 +98,13 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
-          expect(csv.length).to eq this_month.end_of_month.day
-          expect(csv[0][0]).to eq user.uid
-          expect(csv[0][1]).to eq user.name
-          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          SS::Csv.open(downloads.first, headers: true) do |csv|
+            table = csv.read
+            expect(table.length).to eq this_month.end_of_month.day
+            expect(table[0][0]).to eq user.uid
+            expect(table[0][1]).to eq user.name
+            expect(table[0][2]).to eq this_month.to_date.iso8601
+          end
         end
       end
     end

@@ -55,5 +55,5 @@ SS_ButtonTo.invokeAction = function(ev) {
   }
 
   ev.preventDefault();
-  $form.appendTo(document.body).submit();
+  $form.appendTo(document.body)[0].requestSubmit();
 };

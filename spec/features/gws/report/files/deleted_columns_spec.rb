@@ -26,6 +26,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   let!(:column7) { create(:gws_column_radio_button, cur_site: site, form: form, order: 70, required: "optional") }
   let!(:column8) { create(:gws_column_check_box, cur_site: site, form: form, order: 80, required: "optional") }
   let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90, required: "optional") }
+  let!(:column10) { create(:gws_column_section, cur_site: site, form: form, order: 100) }
+  let!(:column11) { create(:gws_column_title, cur_site: site, form: form, order: 110) }
 
   context "with deleted columns" do
     let(:name) { unique_id }

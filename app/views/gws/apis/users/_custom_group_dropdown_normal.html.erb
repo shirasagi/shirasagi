@@ -3,7 +3,7 @@
 <%= jquery do %>
   $("form.search #s_custom_group").on("change", function(e) {
     SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
+    $("#ajax-box form.search")[0].requestSubmit()
   });
 <% end %>
 

@@ -1,5 +1,9 @@
 en:
   gws/column:
+    add_column: "Add %{name}"
+    show_section: "Show %{name}"
+    default_select_options:
+      - "選択肢1"
     options:
       column_input_type:
         text: Text
@@ -12,9 +16,23 @@ en:
         normal: "-"
         filled_triangle: "▲"
         triangle: "△"
+    notice:
+      reordered: Reordered.
+    links:
+      edit_in_detail: Edit in detail
+      edit_conditional_branch: Edit conditional branch
+    new_form_notice:
+      - "You can add an entry at the top by clicking on the button in the top toolbar."
+      - "You can also add an entry at the bottom by clicking on the button in the bottom toolbar."
+      - "Click on the appropriate entry button in the toolbar to complete the creation of %{name}."
+    new_item_notice:
+      - "Created %{model_name} with default settings."
+      - "Set appropriate values for the following items or set appropriate values from %{link}."
+    other_value: Other
 
   gws:
     columns:
+      gws/title: Title
       gws/text_field: Text
       gws/date_field: Date
       gws/number_field: Number
@@ -24,15 +42,18 @@ en:
       gws/radio_button: Radio Button
       gws/check_box: Checkbox
       gws/file_upload: File Upload
+      gws/section: Section
 
   modules:
     addons:
       gws/column/text_like: Constraints
       gws/column/select_like: Selection
+      gws/column/other_option: Others Input
 
   mongoid:
     models:
       gws/column/base: Input items
+      gws/column/title: Title
       gws/column/text_field: Enter one line
       gws/column/date_field: Enter date
       gws/column/number_field: Enter number
@@ -42,6 +63,7 @@ en:
       gws/column/radio_button: Radio button
       gws/column/check_box: Checkbox
       gws/column/file_upload: Upload file
+      gws/column/section: Section
     attributes:
       gws/column/base:
         _type: Type
@@ -55,8 +77,13 @@ en:
         tooltips: Tooltips
         prefix_label: Pre-label
         postfix_label: Post-label
+        prefix_explanation: Pre-explanation
+        postfix_explanation: Post-explanation
         # common attributes
         place_holder: Placeholder
+      gws/column/title:
+        title: Title
+        explanation: Explanation
       gws/column/text_field:
         input_type: Type
       gws/column/date_field:
@@ -69,11 +96,17 @@ en:
         initial_decimal: Initial value
         scale: Number of decimal places
         minus_type: How negative numbers are displayed
+      gws/column/radio_button:
+        conditinal_branch: Conditional branch
       gws/addon/column/text_like:
         max_length: Maximum length
         additional_attr: Additional attributes
       gws/addon/column/select_like:
         select_options: Choices
+      gws/addon/column/other_option:
+        other_input: Other input
+        other_state: Display
+        other_required: Required field
 
   tooltip:
     gws/column/base:
@@ -87,11 +120,27 @@ en:
       tooltips:
         - Enter the tooltip for the item.
       prefix_label:
-        - Enter the label that you want to display before the item.
+        - Enter the label that you want to display before the item (within 10 characters).
       postfix_label:
-        - Enter the label that you want to display after the item.
+        - Enter the label that you want to display after the item (within 10 characters).
+      prefix_explanation:
+        - Enter the explanation that you want to display before the item.
+        - "Some HTML tags such as &lt;br&gt; can be used."
+        - "To break a line, insert &lt;br&gt;."
+      postfix_explanation:
+        - Enter the explanation that you want to display after the item.
+        - "Some HTML tags such as &lt;br&gt; can be used."
+        - "To break a line, insert &lt;br&gt;."
       place_holder:
         - Enter a placeholder.
+
+    gws/column/title:
+      title:
+        - Enter the title to be displayed.
+        - This input can be omitted, but the multilingual input must also be omitted.
+      explanation:
+        - Enter the description to be displayed.
+        - This input can be omitted, but the multilingual input must also be omitted.
 
     gws/column/text_field:
       input_type:
@@ -114,6 +163,16 @@ en:
       minus_type:
         - Select how negative numbers are displayed.
 
+    gws/column/radio_button:
+      conditinal_branch:
+        - Shows the specified section and hides all others.
+        - If not entered, hides all sections that have been set.
+        -
+        - Example)
+        - '1. show section1 ... Section1: show, Section2: hide'
+        - '2. Show section2 ... Section1: hide, Section2: show'
+        - '3. Not entered ... Section1:hide, Section2:hide'
+
     gws/column/file_upload:
       upload_file_count:
         - Select the number of files that can be uploaded.
@@ -128,3 +187,9 @@ en:
       select_options:
         - Enter your answer choices.
         - You can enter multiple answer choices by separating the text for each answer with a line break.
+
+    gws/addon/column/other_option:
+      other_state:
+        - 'Add "Other" to the selection candidates, which allows text input.'
+      other_required:
+        - 'Requires text input when "Other" is selected.'

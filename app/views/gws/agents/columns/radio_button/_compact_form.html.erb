@@ -1,0 +1,101 @@
+<% if params[:form] == 'branch' %>
+
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= f.label :conditinal_branch, model.t(:conditinal_branch) %><%= model.tt :conditinal_branch %></legend>
+
+    <table style="border-spacing: 5px;">
+      <tr>
+        <td style="width: 200px;"></td>
+        <td></td>
+      </tr>
+      <% @item.select_options.each_with_index do |option, idx| %>
+        <% next if option.blank? %>
+        <tr>
+          <td>
+            <div style="width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <%= idx + 1 %>.
+              <%= option %>
+            </div>
+          </td>
+          <td>
+            <%= select_tag "item[branch_section_ids][]",
+              options_for_select(@item.branch_section_options, @item.branch_section_ids[idx]),
+              { id: nil, style: "width: 300px;", include_blank: '' } %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </fieldset>
+</div>
+
+<% else # params[:detail] %>
+
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :name %><%= model.tt :name %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= label_tag "#{f.object_name}[name]", model.t(:name) %>
+      <div>
+        <%= text_field_tag "#{f.object_name}[name]", item.name, autofocus: pc_browser? %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= f.label :select_options, model.t(:select_options) %><%= model.tt :select_options %></legend>
+
+    <div class="gws-column-form-input-group">
+      <div>
+        <%= f.text_area :select_options, value: @item.select_options.to_s %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("modules.addons.gws/column/text_like") %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :required, model.t(:required) %><%= model.tt :required %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.required_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :required, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t(:other_input) %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :other_state, model.t(:other_state) %><%= model.tt :other_state %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.other_state_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :other_state, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :other_required, model.t(:other_required) %><%= model.tt :other_required %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.other_required_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :other_required, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+</div>
+<% end %>

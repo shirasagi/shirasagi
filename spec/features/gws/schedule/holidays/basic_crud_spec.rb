@@ -11,7 +11,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
     it "#index" do
       item
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_content(item.name)
     end
 
@@ -23,7 +23,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_on]", with: "2016/01/02"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).to eq index_path
     end
@@ -39,7 +39,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "name2"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
       expect(current_path).to eq index_path
     end
@@ -49,7 +49,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
     end

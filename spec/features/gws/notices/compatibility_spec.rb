@@ -52,15 +52,18 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content(v170_item.name)
 
       # move post to appropriate folder
-      click_on I18n.t('ss.links.move')
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.move")
+      end
       within 'form#item-form' do
-        wait_for_cbox_opened { click_on I18n.t('gws/share.apis.folders.index') }
+        open_dialog I18n.t('gws/share.apis.folders.index')
       end
       within_cbox do
         expect(page).to have_content(folder.name)
         wait_for_cbox_closed { click_on folder.name }
       end
       within 'form#item-form' do
+        expect(page).to have_css("#addon-basic .ajax-selected [data-id='#{folder.id}']", text: folder.name)
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')

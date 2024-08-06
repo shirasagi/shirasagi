@@ -1,6 +1,6 @@
 <%= jquery do %>
 $(".select-submit").on("change", function() {
-  $(this).closest("form").submit();
+  $(this).closest("form")[0].requestSubmit();
 });
 <% end %>
 

@@ -39,6 +39,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
+      clear_notice
+
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
         wait_for_js_ready
@@ -304,6 +306,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
+      clear_notice
+
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
         wait_for_js_ready
@@ -375,6 +379,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      clear_notice
 
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
@@ -453,6 +459,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      clear_notice
 
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click

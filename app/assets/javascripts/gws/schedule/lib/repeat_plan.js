@@ -34,13 +34,13 @@ this.Gws_Schedule_Repeat_Plan = (function () {
     b2 = $('<input />', { type: "button", class: "btn", value: i18next.t("gws/schedule.buttons.delete_later") });
     b3 = $('<input />', { type: "button", class: "btn", value: i18next.t("gws/schedule.buttons.delete_all") });
     b1.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="one" />')[0].requestSubmit();
     });
     b2.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="later" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="later" />')[0].requestSubmit();
     });
     b3.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="all" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="all" />')[0].requestSubmit();
     });
     buttons = $('<div class="gws-schedule-repeat-submit"></div>');
     buttons.append(b1).append(sp).append(b2).append(sp).append(b3);

@@ -6,8 +6,8 @@ FactoryBot.define do
     order { rand(999) }
     required { %w(required optional).sample }
     tooltips { "tooltips-#{unique_id}" }
-    prefix_label { "prefix_label-#{unique_id}" }
-    postfix_label { "postfix_label-#{unique_id}" }
+    prefix_label { "pre-#{unique_id}"[0, 10] }
+    postfix_label { "pos-#{unique_id}"[0, 10] }
     list_type { %w(ol ul).sample }
   end
 end

@@ -43,7 +43,10 @@ Rails.application.routes.draw do
     resources :forms, concerns: :deletion do
       match :publish, on: :member, via: [:get, :post]
       match :depublish, on: :member, via: [:get, :post]
-      resources :columns, concerns: :deletion
+      resources :columns, only: %i[index create] do
+        post :reorder, on: :collection
+      end
+      match :copy, on: :member, via: [:get, :post]
     end
     get "/search_approvers" => "search_approvers#index"
     match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post]

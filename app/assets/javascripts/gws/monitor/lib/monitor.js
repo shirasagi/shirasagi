@@ -21,7 +21,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     $(".preparation").on("click", function () {
       var $this, action, confirm, form, token;
@@ -41,7 +41,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     $(".question_not_applicable").on("click", function () {
       var form, id, token;
@@ -59,7 +59,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     return $(".answered").on("click", function () {
       var form, id, token;
@@ -77,7 +77,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
   };
 

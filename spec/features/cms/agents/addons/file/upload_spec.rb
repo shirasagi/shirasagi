@@ -15,7 +15,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           expect(page).to have_css('.file-view', text: filename)
           wait_for_cbox_closed do
-            wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
               click_on filename
             end
           end
@@ -49,7 +49,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
             expect(page).to have_css(".name", text: filename)
-            wait_for_event_fired "ss:ajaxRemoved", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_for_event_fired "ss:ajaxRemoved", selector: "#addon-cms-agents-addons-file .ajax-box" do
               page.accept_confirm do
                 click_on I18n.t("ss.buttons.delete")
               end
@@ -68,7 +68,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
           wait_for_cbox_closed do
-            wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
               click_on 'keyvisual.jpg'
             end
           end
@@ -87,7 +87,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           wait_for_cbox_closed do
-            wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
               click_button I18n.t("ss.buttons.attach")
             end
           end

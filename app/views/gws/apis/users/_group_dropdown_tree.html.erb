@@ -7,7 +7,7 @@
   $("form.search .index.groups .select-group").on("click", function(ev) {
     $("form.search [name='s[group]']").val($(ev.target).data("id"));
     SS_SearchUI.selectItems();
-    $(this).closest('form.search').submit();
+    $(this).closest('form.search')[0].requestSubmit();
 
     ev.preventDefault();
     ev.stopPropagation();

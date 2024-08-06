@@ -16,7 +16,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css("a", text: "tune")
       click_link "tune"
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css(".quick-edit-grid")
 
       within ".quick-edit-grid" do

@@ -53,7 +53,7 @@ this.Gws_Schedule_Todo_Search = (function () {
     }
 
     var self = this;
-    this.timerId = setTimeout(function() { self.$el.submit(); }, 0);
+    this.timerId = setTimeout(function() { self.$el[0].requestSubmit(); }, 0);
   };
 
   return Gws_Schedule_Todo_Search;

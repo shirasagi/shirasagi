@@ -39,9 +39,10 @@ module SS
     module_function
 
     HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
-      (function(promiseId, eventName, selector) {
+      (function(promiseId, eventNames, selector) {
         var defer = $.Deferred();
-        $(selector || document).one(eventName, function() { defer.resolve(true); });
+        var $eventTarget = $(selector || document);
+        eventNames.forEach((eventName) => $eventTarget.one(eventName, function() { defer.resolve(true); }));
         window.SS[promiseId] = defer.promise();
       })(...arguments)
     SCRIPT
@@ -299,12 +300,13 @@ module SS
 
     def within_cbox(&block)
       wait_for_js_ready
-      have_css("#cboxClose", text: "close")
+      have_css(page.document.find("#cboxClose"), text: "close")
       if block
         save = JsSupport.is_within_cbox
         JsSupport.is_within_cbox = true
         begin
-          within("#cboxContent", &block)
+          element = page.document.find("#cboxContent")
+          within(element, &block)
         ensure
           JsSupport.is_within_cbox = save
         end
@@ -312,6 +314,15 @@ module SS
     end
     # old(obsolete) method
     alias wait_for_cbox within_cbox
+
+    def open_dialog(locator)
+      wait_for_cbox_opened { click_on locator }
+    end
+
+    def within_dialog(&block)
+      element = page.document.find("#ss-dialog")
+      page.within_element(element, &block)
+    end
 
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
@@ -404,11 +415,11 @@ module SS
       end
     end
 
-    def wait_for_event_fired(event_name, selector = nil)
+    def wait_for_event_fired(*event_names, selector: nil)
       wait_for_js_ready
 
       promise_id = "promise_#{unique_id}"
-      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name, selector)
+      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_names, selector)
 
       # do operations which fire events
       ret = yield
@@ -422,21 +433,21 @@ module SS
 
     #
     # Usage:
-    #   wait_cbox_open do
+    #   wait_for_cbox_opened do
     #     # do operations to open a colorbox
     #     click_on I18n.t("ss.buttons.upload")
     #   end
     #
     def wait_for_cbox_opened(&block)
       wait_for_js_ready
-      wait_for_event_fired("cbox_complete", &block)
+      wait_for_event_fired("cbox_complete", "ss:dialog:opened", &block)
       wait_for_js_ready
     end
     alias wait_cbox_open wait_for_cbox_opened
 
     #
     # Usage:
-    #   wait_cbox_close do
+    #   wait_for_cbox_closed do
     #     # do operations to close a colorbox
     #     click_on user.name
     #   end
@@ -445,7 +456,7 @@ module SS
       wait_for_js_ready
       save = JsSupport.is_within_cbox
       JsSupport.is_within_cbox = true
-      wait_for_event_fired("cbox_closed", &block)
+      wait_for_event_fired("cbox_closed", "ss:dialog:closed", &block)
     ensure
       JsSupport.is_within_cbox = save
     end
@@ -658,6 +669,10 @@ module SS
     def wait_for_turbo_frame(element)
       result = page.evaluate_async_script(WAIT_FOR_TURBO_FRAME_SCRIPT, element)
       expect(result).to be_truthy
+    end
+
+    def clear_notice
+      page.execute_script("SS.clearNotice();")
     end
   end
 end

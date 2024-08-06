@@ -15,9 +15,9 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
 
     it "#index" do
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css('.calendar-multiple-header', text: gws_user.name)
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css('.calendar.multiple', text: item.name)
     end
 
@@ -27,13 +27,13 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
       visit show_path
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_content(item.name)
     end
 
@@ -43,7 +43,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
     end
 
@@ -52,7 +52,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.deleted')
     end
   end

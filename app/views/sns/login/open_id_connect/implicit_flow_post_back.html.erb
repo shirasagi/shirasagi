@@ -22,7 +22,7 @@
     value = decodeURIComponent(m[2]);
     $("form.sso").append('<input type="hidden" name="' + key + '" value="' + value + '" />')
   }
-  $("form.sso").submit();
+  $("form.sso")[0].requestSubmit();
 <% end %>
 
 </body>

@@ -1,8 +1,0 @@
-<% buf = render(@item.show_partial_path) if @item.show_partial_path %>
-<% return if buf.blank? %>
-<div class="addon-view" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
-  <div class="addon-head toggle-head"><h2><%= @model.model_name.human %></h2></div>
-  <div class="addon-body toggle-body">
-    <%= buf %>
-  </div>
-</div>

@@ -182,6 +182,7 @@ ja:
       update: 更新する
       open_in_new_tab: 別タブで開く
     buttons:
+      answer: 回答
       save: 保存
       saving: 保存中
       new: 新規作成
@@ -300,6 +301,7 @@ ja:
       copied: 複製しました。
       imported: インポートしました。
       approved: 承認しました。
+      answered: 回答しました。
       started_import: インポートを開始しました。
       started_export: エクスポートを開始しました。
       started_upload: アップロードを開始しました。

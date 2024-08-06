@@ -1,0 +1,45 @@
+<%# ユーザーの拡張情報の場合 .name は存在しないので、存在しない場合は表示しないようにする %>
+<% if cur_form.respond_to?(:name) %>
+  <div class="main-box">
+    <header>
+      <h2><%= cur_form.name %></h2>
+    </header>
+    <% if (description = cur_form.try(:description)).present? %>
+      <div>
+        <%= sanitize br(description, html_escape: false) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="main-box">
+  <% new_form_notices = t("gws/column.new_form_notice", name: cur_form.class.model_name.human) %>
+  <div class="gws-column-new-form-notice">
+    <ul class="gws-column-new-form-notice-list">
+      <% new_form_notices.each do |message, options| %>
+        <%=
+          if options.present?
+            options = options.dup
+            options[:class] = Array(options[:class]) + %w(gws-column-new-form-notice-item)
+          else
+            options = { class: %w(gws-column-new-form-notice-item) }
+          end
+
+          tag.li message.html_safe, **options
+        %>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<%= render "gws/columns2/toolbar", target: ".gws-column-item-list", placement: 'top' %>
+
+<%= ss_stimulus_tag({ "gws/column/drag_drop" => { reorder: url_for(action: :reorder) } }, class: "gws-column-item-list") do %>
+  <% items.each do |item| %>
+    <turbo-frame id="item-<%= item.id %>">
+      <%= render template: "gws/frames/columns/show", locals: { ref: request.path, model: item.class, item: item } %>
+    </turbo-frame>
+  <% end %>
+<% end %>
+
+<%= render "gws/columns2/toolbar", target: ".gws-column-item-list", placement: 'bottom' %>

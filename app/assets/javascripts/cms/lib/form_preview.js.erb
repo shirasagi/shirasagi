@@ -80,7 +80,7 @@ this.Form_Preview = (function () {
       height = $(window).height();
       window.open("about:blank", "FormPreview", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes");
       form.appendTo("body");
-      form.submit();
+      form[0].requestSubmit();
       return false;
     });
     $("button.preview").addClass("form-preview-rendered");

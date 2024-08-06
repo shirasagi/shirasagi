@@ -399,7 +399,7 @@ this.Webmail_Mail_List = (function () {
         }));
       }
     }
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
     return false;
   };
 
@@ -444,7 +444,7 @@ this.Webmail_Mail_List = (function () {
         value: opts['dst']
       }));
     }
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
     return false;
   };
 

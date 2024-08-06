@@ -23,6 +23,10 @@ module SS
       end
     end
 
+    def with_default_locale(&block)
+      I18n.with_locale(I18n.default_locale, &block)
+    end
+
     module Hooks
       def self.extended(obj)
         obj.around do |example|
@@ -42,3 +46,4 @@ module SS
 end
 
 RSpec.configuration.extend(SS::LocaleSupport::Hooks)
+RSpec.configuration.include(SS::LocaleSupport)

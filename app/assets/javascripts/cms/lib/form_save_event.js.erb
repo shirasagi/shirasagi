@@ -7,7 +7,7 @@ this.Form_Save_Event = (function () {
       if (event.ctrlKey || event.metaKey) {
         if (event.keyCode === 83) {
           event.keyCode = 0;
-          $("#" + Form_Preview.form_id).submit();
+          $("#" + Form_Preview.form_id)[0].requestSubmit();
           return false;
         }
       }

@@ -39,6 +39,6 @@
     var $token = $("<input/>", { type: "hidden", name: "authenticity_token", value: token });
     $form.append($token);
     $el.append($form);
-    $form.submit();
+    $form[0].requestSubmit();
   });
 <% end %>

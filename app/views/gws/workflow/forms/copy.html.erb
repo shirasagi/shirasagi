@@ -1,0 +1,23 @@
+<%= form_with scope: :item, url: url_for(action: :copy), id: "item-form", method: :post, html: { multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+  <div class="addon-views">
+    <%
+      addon_options = {}
+      addon_options[:id] = "addon-basic"
+      addon_options[:head] = t("ss.confirm.clone")
+    %>
+    <%= render "ss/crud/addon", addon: addon_options do %>
+      <dl class="see">
+        <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+        <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+      </dl>
+    <% end %>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.copy"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.copy") } %>
+    <%= link_to t("ss.buttons.cancel"), url_for(action: :show), class: 'btn-default' %>
+  </footer>
+<% end %>

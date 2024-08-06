@@ -182,6 +182,7 @@ en:
       update: Update
       open_in_new_tab: Open in new tab
     buttons:
+      answer: Answer
       save: Save
       saving: Saving
       new: Create new
@@ -300,6 +301,7 @@ en:
       copied: Duplicated.
       imported: Imported.
       approved: Approved.
+      answered: Answered.
       started_import: Importing started.
       started_export: Exporting started.
       started_upload: Upload started.

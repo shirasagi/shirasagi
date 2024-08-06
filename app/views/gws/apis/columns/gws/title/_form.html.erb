@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :title %><%= @model.tt :title %></dt>
+  <dd><%= f.text_field :title, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :explanation %><%= @model.tt :explanation %></dt>
+  <dd><%= f.text_area :explanation %></dd>
+</dl>

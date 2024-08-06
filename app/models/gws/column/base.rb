@@ -8,6 +8,14 @@ class Gws::Column::Base
   after_destroy :update_form
   after_save :update_form
 
+  class << self
+    def default_attributes
+      {
+        name: self.model_name.human
+      }
+    end
+  end
+
   def to_es
     texts = []
     texts << name

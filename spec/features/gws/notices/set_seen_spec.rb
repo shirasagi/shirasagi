@@ -28,7 +28,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_css(".list-item", text: item.name)
       within "form.index-search" do
         select I18n.t("gws/board.options.browsed_state.read"), from: "s[browsed_state]"
-        click_on I18n.t("ss.buttons.search")
       end
       expect(page).to have_css(".list-item", text: item.name)
 
@@ -37,7 +36,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
       within "#addon-gws-agents-addons-notice-member" do
         expect(page).to have_content(I18n.t('gws/board.topic.browsed_user_info.format', count: 1, total: 1))
-        click_on I18n.t('gws/board.topic.browsed_user_info.more')
+        open_dialog I18n.t('gws/board.topic.browsed_user_info.more')
       end
       within "#ajax-box" do
         expect(page).to have_css("tr[data-user-id='#{gws_user.id}']", text: I18n.t('gws/board.options.browsed_state.read'))
@@ -55,8 +54,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_link(item.name)
       within "form.index-search" do
         select I18n.t("gws/board.options.browsed_state.read"), from: 's[browsed_state]'
-        click_on I18n.t('ss.buttons.search')
       end
+      expect(page).to have_css(".list-item", text: item.name)
 
       click_on item.name
       wait_for_js_ready

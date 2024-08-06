@@ -50,7 +50,7 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
       it do
         visit item.full_url
         select lang_en.name, from: "translate-tool-1"
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css("article.body", text: "[en:#{text}]")
 
         # access with no referer

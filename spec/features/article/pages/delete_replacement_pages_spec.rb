@@ -50,7 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(find("input[type='checkbox'][value='#{branch_page.id}']")).to be_checked
       end
       find('.destroy-all').click
-      wait_for_ajax
+      wait_for_js_ready
 
       contains_urls = Cms::Page.site(site).and_linking_pages(master_page)
       delete_alert_enabled = cms_user.cms_role_permit_any?(site, %w(delete_cms_ignore_alert)) && contains_urls.present?

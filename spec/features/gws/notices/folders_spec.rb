@@ -118,7 +118,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         end
         within "form#item-form" do
           within "#addon-basic" do
-            expect(page).to have_css(".ajax-selected", text: folder0.name)
+            expect(page).to have_css(".ajax-selected [data-id='#{folder0.id}']", text: folder0.name)
           end
           within "#addon-gws-agents-addons-member" do
             wait_for_cbox_opened do
@@ -251,7 +251,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#addon-basic" do
-          expect(page).to have_css(".ajax-selected", text: folder1.name)
+          expect(page).to have_css(".ajax-selected [data-id='#{folder1.id}']", text: folder1.name)
         end
         click_on I18n.t("ss.buttons.save")
       end

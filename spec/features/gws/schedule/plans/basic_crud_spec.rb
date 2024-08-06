@@ -17,7 +17,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
 
       # index
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_content(item.name)
 
@@ -34,7 +34,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
 
       # show
@@ -47,7 +47,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
 
       # delete
@@ -55,7 +55,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.deleted')
     end
   end

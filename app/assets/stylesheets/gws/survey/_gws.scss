@@ -149,8 +149,11 @@
     }
   }
   &.addon-views {
-    .addon-body {
+    #addon-basic .addon-body {
       padding: 0;
+    }
+    .addon-body {
+      padding: 20px 10px;
     }
     .header {
       float: right;

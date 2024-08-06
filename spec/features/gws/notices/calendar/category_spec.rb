@@ -24,6 +24,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
+      # wait for ajax completion
+      wait_for_js_ready
       within "#content-navi" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
