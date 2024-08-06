@@ -8,6 +8,11 @@ ja:
     search_users: ユーザーを検索
     search_times: 空き時間を検索
     today_wday: 本日の曜日
+    views:
+      approval_state: 申請承認
+      request: 申請
+      approve: 承認
+      deny: 否認
     navi:
       holiday: 休日設定
       category: 種別設定
