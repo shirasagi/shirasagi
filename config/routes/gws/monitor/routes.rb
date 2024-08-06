@@ -49,7 +49,7 @@ Rails.application.routes.draw do
         match :publish, on: :member, via: %i[get post]
         post :close, on: :member
         post :open, on: :member
-        post :download, on: :member
+        match :download, on: :member, via: [:get, :post]
         post :file_download, on: :member
       end
 
