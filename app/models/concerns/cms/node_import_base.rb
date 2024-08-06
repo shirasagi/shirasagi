@@ -25,7 +25,11 @@ module Cms::NodeImportBase
   end
 
   def put_log(message)
-    @task.log(message) if @task
+    if @task
+      @task.log(message)
+    else
+      puts message
+    end
     Rails.logger.info(message)
   end
 
@@ -107,7 +111,6 @@ module Cms::NodeImportBase
         raise "unknown route given (#{route})"
       end
     end
-
 
     object.cur_site = @site
     object.cur_node = @node if @node

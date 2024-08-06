@@ -1,0 +1,78 @@
+﻿ファイル名,フォルダー属性,タイトル,一覧用タイトル,レイアウト,並び順,ページレイアウト,ショートカット,既定のモジュール,キーワード,概要,サマリー,検索条件(URL),リスト並び順,表示件数,NEWマーク期間,ループHTML形式,上部HTML,ループHTML(SHIRASAGI形式),下部HTML,ループHTML(Liquid形式),ページ未検出時表示,代替HTML,カテゴリー設定,公開日時種別,公開日時,管理グループ,ステータス
+list,garbage/node,ゴミ品目一覧,,ゴミ品目検索 (garbage.layout.html),0,,非表示,,ゴミ品目検索,,,,,100,1,,,,,,,,"燃えないゴミ (garbage/category/c1)
+回収不可 (garbage/category/c10)
+燃えるゴミ (garbage/category/c2)
+小型家電 (garbage/category/c3)
+金属類 (garbage/category/c4)
+缶類 (garbage/category/c5)
+びん類 (garbage/category/c6)
+プラスチック (garbage/category/c7)
+古着 (garbage/category/c8)
+ダンボール (garbage/category/c9)",手動入力,2024/6/1 6:03,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+item1,garbage/page,紙コップ,,ゴミ品目検索 (garbage.layout.html),0,,非表示,,"ゴミ品目一覧, 燃えるゴミ",,,,,,,,,,,,,,,手動入力,2024/6/1 6:03,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+garbage,garbage/search,ゴミ品目検索,,ゴミ品目検索 (garbage.layout.html),0,,非表示,,自治体サンプル,,,,,100,1,,,,,,,,"燃えないゴミ (garbage/category/c1)
+回収不可 (garbage/category/c10)
+燃えるゴミ (garbage/category/c2)
+小型家電 (garbage/category/c3)
+金属類 (garbage/category/c4)
+缶類 (garbage/category/c5)
+びん類 (garbage/category/c6)
+プラスチック (garbage/category/c7)
+古着 (garbage/category/c8)
+ダンボール (garbage/category/c9)",手動入力,2024/6/1 6:03,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+category,garbage/category_list,品目カテゴリー,,ゴミ品目検索 (garbage.layout.html),0,,非表示,,ゴミ品目検索,,,,,100,1,,,,,,,,,手動入力,2024/6/1 6:03,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+c1,garbage/category,燃えないゴミ,,ゴミ品目検索 (garbage.layout.html),10,,非表示,,品目カテゴリー,,,,,100,1,,,,,,,,,手動入力,2024/6/1 6:03,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+purpose-guide,guide/guide,移住目的別ガイド,,汎用レイアウト（1カラム） (general.layout.html),0,,非表示,,自治体サンプル,,,,,100,1,,,"<div class=""guide__lists"">
+  <h2>#{name}</h2>
+  <div class=""procedure__wrap"">
+    <dl class=""procedure item-#{id}"">
+      <dt>リンク URL</dt>
+      <dd><a href=""#{link_url}"">#{link_url}</a></dd>
+      <dt>実施場所</dt>
+      <dd>#{procedure_location}</dd>
+      <dt>必要なもの</dt>
+      <dd>#{belongings}</dd>
+      <dt>対象者</dt>
+      <dd>#{procedure_applicant}</dd>
+      <dt>備考</dt>
+      <dd>#{remarks}</dd>
+    </dl>
+    <div class=""close-btn""><span>×</span>閉じる</div>
+  </div>
+</div>","<a class=""print-btn"" href=""javascript:void(0)"" onclick=""window.print();return false;"">結果ページを印刷</a>",,,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
