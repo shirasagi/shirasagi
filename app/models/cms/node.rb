@@ -129,7 +129,7 @@ class Cms::Node
     self.use_lower_html = false
     self.use_loop_html = false
     self.use_new_days = false
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
     self.use_sort = false
 
     default_scope ->{ where(route: "cms/photo_album") }

@@ -1,0 +1,120 @@
+ja:
+  lsorg:
+    page: ページリスト
+    notice:
+      import: |-
+        インポートを実行すると、起点グループ配下をページリストフォルダーとして一括で登録します。
+        グループを追加、変更した際には再度インポートを実行してください。
+      update_nodes: フォルダーの登録/更新
+      close_nodes: 不要なフォルダーを非公開に変更
+    views:
+      group: 課名
+      overview: 事業内容
+      tel: 電話
+      contact: お問い合わせ
+
+  modules:
+    lsorg: 組織一覧
+    addons:
+      lsorg/group: 組織情報
+      lsorg/node_list: リスト表示
+      lsorg/page_list: リスト表示
+
+  cms:
+    nodes:
+      lsorg/node: 組織一覧
+      lsorg/page: ページリスト
+
+  mongoid:
+    attributes:
+      lsorg/addon/group:
+        basename: ファイル名
+        overview: 組織概要
+      lsorg/addon/node_list:
+        root_group_ids: 起点グループ
+        exclude_group_ids: 除外グループ
+      lsorg/addon/page_list:
+        page_group_id: 検索条件(グループ)
+
+  tooltip:
+    lsorg/addon/group:
+      basename:
+        - ファイル名を入力します。
+      overview:
+        - 組織概要を入力します。
+    lsorg/addon/node_list:
+      root_group_ids:
+        - 起点グループを設定します。
+        - ページリストをグループからインポートした際に、設定されたグループ配下をインポートします。
+      exclude_group_ids:
+        - 除外グループを設定します。
+        - 設定したグループ配下を除外します。
+      loop_liquid:
+        - Liquid 形式で記述します。
+        - ""
+        - |-
+          組織一覧のリスト表示では以下の変数が利用できます。
+          roots ... 起点グループ配列
+          root ... 起点グループ(rootsの先頭)
+          inquiry_form ... サイトのお問い合わせフォーム
+
+          また root の様なグループ項目は、以下のメソッドで別のグループ項目を参照できます。
+          children ... 1階層下のグループ項目
+          descendants ... 配下全てのグループ項目
+          parent ... 親のグループ項目
+          root ... 起点のグループ項目
+          tree_list ... グループ項目全体の配列
+
+          グループ項目から属性を取得する際には、以下のメソッドが利用できます。
+          name ... 名称(末端のみ)
+          full_name ... 名称(全体)
+          basename ... ファイル名(末端のみ)
+          filename ... ファイル名(全体)
+          depth ... 階層
+          order ... 並び順
+          overview ... グループの組織概要
+          contacts ... グループの連絡先の配列
+          main_contact ... グループの連絡先(主)
+          group ... グループ自体(組織一覧のグループ項目ではなく、グループ自体を直接参照する場合に利用する)
+          node ... ページリストフォルダー
+
+          使用例：
+          {% for dept in root.children %}
+          &lt;h2 class="{{ dept.basename }}">{{ dept.name }}&lt;/h2>
+          &lt;table class="{{ dept.basename }} children">
+            &lt;thead>
+              &lt;tr>
+                &lt;th>課名&lt;/th>
+                &lt;th>事業内容&lt;/th>
+                &lt;th>電話&lt;/th>
+                &lt;th>お問い合わせ&lt;/th>
+              &lt;/tr>
+            &lt;/thead>
+            &lt;tbody>
+            {% for div in dept.children %}
+              &lt;tr class="{{ div.basename }}">
+                {% if div.node %}
+                  &lt;td>&lt;a href="{{ div.node.url }}">{{ div.name }}&lt;/a>&lt;/td>
+                {% else %}
+                  &lt;td>{{ div.name }}&lt;/td>
+                {% endif %}
+                &lt;td>{{ div.overview }}&lt;/td>
+                &lt;td>{{ div.main_contact.contact_tel }}&lt;/td>
+                {% if inquiry_form %}
+                  &lt;td>&lt;a href="{{ inquiry_form.url }}?group={{ div.group.id }}">お問い合わせ&lt;/a>&lt;/td>
+                {% else %}
+                  &lt;td>&lt;/td>
+                {% endif %}
+              &lt;/tr>
+            {% endfor %}
+            &lt;/tbody>
+          &lt;/table>
+          {% endfor %}
+
+    lsorg/addon/page_list:
+      page_group_id:
+        - グループを選択します。
+        - 選択したグループが連絡先の所属に設定されているページをリスト表示します。
+
+  cms_role:
+    import_lsorg_node_pages: ページリストのインポート

@@ -21,6 +21,7 @@ module SS::GroupExporterBase
     draw_basic(drawer)
     draw_ldap(drawer)
     draw_contact(drawer)
+    draw_lsorg(drawer)
   end
 
   def draw_basic(drawer)
@@ -36,6 +37,11 @@ module SS::GroupExporterBase
 
   def draw_ldap(drawer)
     drawer.column :ldap_dn
+  end
+
+  def draw_lsorg(drawer)
+    drawer.column :basename
+    drawer.column :overview
   end
 
   CONTACT_GROUP_ATTRIBUTES = %i[

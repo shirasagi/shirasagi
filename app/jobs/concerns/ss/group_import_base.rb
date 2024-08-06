@@ -58,6 +58,7 @@ module SS::GroupImportBase
     define_importer_basic(importer)
     define_importer_ldap(importer)
     define_importer_contact(importer)
+    define_importer_lsorg(importer)
   end
 
   def define_importer_basic(importer)
@@ -105,6 +106,11 @@ module SS::GroupImportBase
         end
       end
     end
+  end
+
+  def define_importer_lsorg(importer)
+    importer.simple_column :basename
+    importer.simple_column :overview
   end
 
   delegate :to_array, :from_label, to: SS::Csv::CsvImporter

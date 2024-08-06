@@ -15,7 +15,7 @@ module Opendata::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/dataset") }
 
@@ -74,7 +74,7 @@ module Opendata::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/app") }
 
@@ -108,7 +108,7 @@ module Opendata::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/idea") }
 

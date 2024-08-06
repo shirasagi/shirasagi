@@ -1,0 +1,28 @@
+<dl class="see" style="margin-bottom: 10px;">
+  <dt><%= @model.t :page_group_id %><%= @model.tt :page_group_id %></dt>
+  <dd>
+    <%= f.hidden_field "page_group_id", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Cms::Group.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% group = @item.page_group %>
+        <% if group %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "page_group_id", value: group.id, id: nil %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<%= render "cms/agents/addons/page_list/form", local_assigns %>
