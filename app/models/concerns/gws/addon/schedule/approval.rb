@@ -25,7 +25,7 @@ module Gws::Addon::Schedule::Approval
 
   def valdiate_reset_approvals
     if cur_user && approval_member?(cur_user)
-      #
+      return
     elsif approved_and_locked?
       errors.add :base, :edit_approved
     else

@@ -65,8 +65,11 @@ en:
       permission_level: Permission level
 
       approval_check_state_datas:
-        enabled: Valid
         disabled: Invalid
+        enabled: Valid
+      update_approved_state_datas:
+        disabled: Can be edited by non-admin
+        enabled: Can only be edited by admin
       readable_setting_range_datas:
         select: Selection range
         public: Fully public

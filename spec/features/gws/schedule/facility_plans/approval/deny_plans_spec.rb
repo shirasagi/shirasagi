@@ -40,7 +40,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       click_button I18n.t('ss.buttons.save')
 
-
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       within ".gws-schedule-box" do
         expect(page).to have_css(".fc-event-approval-request", text: title1)
