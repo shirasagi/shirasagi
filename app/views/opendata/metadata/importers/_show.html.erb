@@ -2,7 +2,7 @@
   <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <dt><%= t("ss.links.import") %></dt>
     <dd><%= link_to(t('opendata.links.harvest_import_datasets'), { action: :import }) %></dd>
-    <dd><%= link_to(t('opendata.links.harvest_destroy_datasets'), { action: :destroy_datasets }) %></dd>
+    <dd><%= link_to(t('opendata.links.harvest_purge_datasets'), { action: :destroy_datasets }) %></dd>
   <% end %>
 
   <dt><%= @model.t :name %></dt>

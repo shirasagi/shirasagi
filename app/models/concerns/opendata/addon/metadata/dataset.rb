@@ -80,7 +80,7 @@ module Opendata::Addon::Metadata::Dataset
   end
 
   def metadata_dataset_category
-    (metadata_imported_attributes["データセット_愛媛県分類"].presence || metadata_imported_attributes["分類"]).
+    (metadata_imported_attributes["データセット_分類"].presence || metadata_imported_attributes["分類"]).
       to_s.
       split(/\R|\s|\u00A0|　/)
   end

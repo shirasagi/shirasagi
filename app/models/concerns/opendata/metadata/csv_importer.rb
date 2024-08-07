@@ -177,10 +177,8 @@ module Opendata::Metadata::CsvImporter
                 end
               end
 
-              if dataset.updated_changed?
-                dataset.metadata_imported ||= Time.zone.now
-                set_relation_ids(dataset)
-              end
+              dataset.metadata_imported ||= Time.zone.now
+              set_relation_ids(dataset)
 
               @report_dataset.set_reports(dataset, attributes, source_url, idx)
             rescue => e

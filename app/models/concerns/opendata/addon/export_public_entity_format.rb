@@ -59,13 +59,7 @@ module Opendata::Addon::ExportPublicEntityFormat
           dataset = Opendata::Dataset.find(dataset_id) rescue nil
           next unless dataset
 
-          row = []
-          no = format("%010d", dataset.id)
-
-          pref, city = dataset.pref_codes
-          code = nil
-          code = city.first if city.present?
-          code = pref.first if pref.present?
+          no = dataset.metadata_dataset_id.presence || format("%010d", dataset.id)
 
           category_filenames = dataset.categories.pluck(:filename).map do |filename|
             parent = filename.index("/") ? ::File.dirname(filename) : nil
@@ -89,28 +83,52 @@ module Opendata::Addon::ExportPublicEntityFormat
 
           cate4 = estat_category_filenames.map { |filename, _| st_estat_categories2[filename] }.compact.join("\n")
 
-          resources = dataset.resources.to_a
+          dataset.resources.each do |resource|
+            row = []
+            row << no
+            row << dataset.metadata_japanese_local_goverment_code
+            row << dataset.metadata_local_goverment_name
+            row << dataset.name
+            row << nil
+            row << dataset.text
+            row << dataset.metadata_dataset_keyword.to_s.gsub(',', ';')
+            row << cate3
+            row << nil
+            row << dataset.created.strftime("%Y-%m-%d")
+            row << dataset.updated.strftime("%Y-%m-%d")
+            row << nil
+            row << I18n.locale
+            row << dataset.full_url
+            row << dataset.update_plan
+            row << dataset.metadata_dataset_follow_standards
+            row << dataset.metadata_dataset_related_document
+            row << nil
+            row << dataset.areas.pluck(:name).join("\n")
+            row << dataset.metadata_dataset_target_period
+            row << dataset.metadata_dataset_contact_name
+            row << dataset.metadata_dataset_contact_email
+            row << dataset.metadata_dataset_contact_tel
+            row << dataset.metadata_dataset_contact_ext
+            row << dataset.metadata_dataset_contact_form_url
+            row << dataset.metadata_dataset_contact_remark
+            row << dataset.metadata_dataset_remark
+            row << resource.name
+            row << resource.metadata_file_access_url
+            row << resource.metadata_file_download_url
+            row << resource.format
+            row << resource.license.try(:name)
+            row << '配信中'
+            row << (resource.metadata_imported_attributes['ファイル_サイズ'].presence || resource.file.try(:size))
+            row << resource.created.strftime("%Y-%m-%d")
+            row << resource.updated.strftime("%Y-%m-%d")
+            row << resource.metadata_file_terms_of_service
+            row << resource.metadata_file_related_document
+            row << I18n.locale
+            row << resource.metadata_file_follow_standards
+            row << dataset.label(:api_state)
 
-          row << (code ? code.code : "")
-          row << no
-          row << (code ? code.prefecture : "")
-          row << (code ? code.city : "")
-          row << dataset.name
-          row << dataset.text
-          row << resources.map { |r| r.format }.uniq.join("\n")
-          row << cate1
-          row << cate2
-          row << cate3
-          row << cate4
-          row << dataset.update_plan
-          row << dataset.full_url
-          row << dataset.label(:api_state)
-          row << resources.map { |r| r.license.name }.uniq.join("\n")
-          row << dataset.created.strftime("%Y-%m-%d")
-          row << dataset.updated.strftime("%Y-%m-%d")
-          row << resources.map { |r| (r.source_url.presence || r.name) }.uniq.join("\n")
-
-          data << encode_sjis_csv(row)
+            data << encode_sjis_csv(row)
+          end
         end
       end
     end

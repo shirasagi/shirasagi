@@ -1,4 +1,4 @@
-class Opendata::Dataset::Metadata::Importer::EstatCategorySettingsController < ApplicationController
+class Opendata::Metadata::Importer::EstatCategorySettingsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 

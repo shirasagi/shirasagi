@@ -130,27 +130,28 @@ Rails.application.routes.draw do
           resources :owner_org_settings, concerns: :deletion
         end
       end
-      namespace :metadata do
-        resources :importers, concerns: :deletion do
-          get :import, on: :member
-          put :import, on: :member
-          get :destroy_datasets, on: :member
-          put :destroy_datasets, on: :member
-          scope module: :importer do
-            resources :category_settings, concerns: :deletion, path: 'c:category_id', defaults: { category_id: '-' } do
-              get :download, on: :collection
-              get :import, on: :collection
-              put :import, on: :collection
-            end
-            resources :estat_category_settings, concerns: :deletion, path: 'estat:category_id', defaults: { category_id: '-' } do
-              get :download, on: :collection
-              get :import, on: :collection
-              put :import, on: :collection
-            end
-            resources :reports, only: [:show, :destroy], concerns: :deletion do
-              get :dataset, on: :member
-              get :download, on: :member
-            end
+    end
+
+    namespace :metadata do
+      resources :importers, concerns: :deletion do
+        get :import, on: :member
+        put :import, on: :member
+        get :destroy_datasets, on: :member
+        put :destroy_datasets, on: :member
+        scope module: :importer do
+          resources :category_settings, concerns: :deletion, path: 'c:category_id', defaults: { category_id: '-' } do
+            get :download, on: :collection
+            get :import, on: :collection
+            put :import, on: :collection
+          end
+          resources :estat_category_settings, concerns: :deletion, path: 'estat:category_id', defaults: { category_id: '-' } do
+            get :download, on: :collection
+            get :import, on: :collection
+            put :import, on: :collection
+          end
+          resources :reports, only: [:show, :destroy], concerns: :deletion do
+            get :dataset, on: :member
+            get :download, on: :member
           end
         end
       end

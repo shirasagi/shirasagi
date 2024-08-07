@@ -93,26 +93,49 @@ ja:
       preview_history_archives: アーカイブ
     public_entity:
       format: データセット一覧
-      download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。
+      download: 公開中のデータセットの一覧を自治体標準オープンデータセット「オープンデータ一覧」の形式にてダウンロードできます。
       headers:
-        - 都道府県コード又は市区町村コード
-        - "NO"
-        - 都道府県名
-        - 市区町村名
-        - データ名称
-        - データ概要
-        - データ形式
-        - 分類１
-        - 分類２
-        - 分類３
-        - 分類４
-        - 更新頻度
-        - URL
-        - API対応有無
-        - ライセンス
-        - 登録日
-        - 最終更新日
-        - 備考
+        - データセット_ID
+        - 全国地方公共団体コード
+        - 地方公共団体名
+        - データセット_タイトル
+        - データセット_サブタイトル
+        - データセット_概要
+        - データセット_キーワード
+        - データセット_分類
+        - データセット_ユニバーサルメニュー
+        - データセット_公開日
+        - データセット_最終更新日
+        - データセット_バージョン
+        - データセット_言語
+        - データセット_URL
+        - データセット_更新頻度
+        - データセット_準拠する標準
+        - データセット_関連ドキュメント
+        - データセット_来歴情報
+        - データセット_対象地域
+        - データセット_対象期間
+        - データセット_連絡先名称
+        - データセット_連絡先メールアドレス
+        - データセット_連絡先電話番号
+        - データセット_連絡先内線番号
+        - データセット_連絡先FormURL
+        - データセット_連絡先備考（その他、SNSなど）
+        - データセット_備考
+        - ファイル_タイトル
+        - ファイル_アクセスURL
+        - ファイル_ダウンロードURL
+        - ファイル形式
+        - ファイル_ライセンス
+        - ファイル_ステータス
+        - ファイル_サイズ
+        - ファイル_公開日
+        - ファイル_最終更新日
+        - ファイル_利用規約
+        - ファイル_関連ドキュメント
+        - ファイル_言語
+        - ファイル_準拠する標準
+        - ファイル_API対応有無
     download_reports:
       dataset_data: データセット/データ名
     errors:
@@ -422,7 +445,7 @@ ja:
     metadata_type_condition_options:
       string: 文字列
       regexp: 正規表現
-      metadata_category: 愛媛県分類
+      metadata_category: カテゴリー
       metadata_estat_category: 分類
 
   modules:
@@ -674,7 +697,7 @@ ja:
         harvest_shirasagi_categories: SHIRASAGI分野
         harvest_shirasagi_areas: SHIRASAGI地域
         metadata_text_index: テキストインデックス
-        metadata_dataset_category: 愛媛県分類
+        metadata_dataset_category: カテゴリー
         metadata_dataset_estat_category: 分類
       opendata/resource:
         file_id: ファイル

@@ -1,4 +1,4 @@
-class Opendata::Dataset::Metadata::ImportersController < ApplicationController
+class Opendata::Metadata::ImportersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
