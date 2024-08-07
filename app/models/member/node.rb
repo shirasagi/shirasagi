@@ -12,6 +12,7 @@ module Member::Node
     include Member::Addon::Redirection
     include Member::Addon::FormAuth
     include Member::Addon::TwitterOAuth
+    include Member::Addon::Twitter2OAuth
     include Member::Addon::FacebookOAuth
     include Member::Addon::YahooJpOAuth
     include Member::Addon::YahooJpOAuthV2
