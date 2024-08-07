@@ -38,7 +38,21 @@ class Cms::Node::NodesController < ApplicationController
 
   # TODO: Implement download
   def download
-    render plain: "export csv file"
+    return if request.get?
+
+    csv_params = params.require(:item).permit(:encoding)
+    
+    criteria = @model.site(@cur_site).node(@cur_node).
+      allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    exporter = Cms::NodeExporter.new(site: @cur_site, criteria: criteria)
+    enumerable = exporter.enum_csv(csv_params)
+
+    filename = @model.to_s.tableize.tr("/", "_")
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   # TODO: Implement import referring to Article::PagesController#import

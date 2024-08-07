@@ -151,7 +151,7 @@ describe Cms::NodeExporter, dbscope: :example do
     let!(:parent) { node1 }
 
     it "#export" do
-      criteria = Cms::Node.site(site).where(depth: 2) # bind site and depth conditions
+      criteria = Cms::Node.site(site).node(parent)
       criteria = criteria.allow(:read, user, site: site, node: parent) # filter allowed nodes by permissions; but since the user is like an admin, all nodes are retrieved.
       criteria = criteria.order_by(order: 1)
 
