@@ -7,23 +7,23 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
   let(:client_secret) { unique_id }
   let(:code) { unique_id }
 
-  context "facebook" do
+  context "line" do
     let!(:node) do
       create :member_node_login, layout: layout, redirect_url: "/#{unique_id}/",
-        facebook_oauth: "enabled", facebook_client_id: client_id, facebook_client_secret: client_secret
+        line_oauth: "enabled", line_client_id: client_id, line_client_secret: client_secret
     end
-    let(:facebook_api_version) { 'v17.0' }
     let(:access_token) { unique_id }
-    let(:facebook_id) { rand(100..999) }
-    let(:facebook_name) { unique_id }
-    let(:facebook_email) { unique_email }
-    let(:facebook_username) { unique_id }
+    let(:id_token) { unique_id }
+    let(:refresh_token) { unique_id }
+    let(:line_user_id) { unique_id }
+    let(:line_display_name) { unique_id }
+    let(:line_picture_url) { unique_url }
 
     before do
       # WebMock.disable_net_connect!
       WebMock.reset!
 
-      stub_request(:post, "https://graph.facebook.com/#{facebook_api_version}/oauth/access_token").to_return do |request|
+      stub_request(:post, "https://api.line.me/oauth2/v2.1/token").to_return do |request|
         expect(request.headers["Authorization"]).to eq "Basic #{Base64.strict_encode64("#{client_id}:#{client_secret}")}"
         expect(request.url_encoded?).to be_truthy
         params = URI.decode_www_form(request.body)
@@ -32,25 +32,27 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         grant_type_params = params.select { |k, _v| k == "grant_type" }.map { |_k, v| v }
         expect(grant_type_params).to eq %w(authorization_code)
         redirect_uri_params = params.select { |k, _v| k == "redirect_uri" }.map { |_k, v| v }
-        expect(redirect_uri_params).to eq [ "#{node.full_url}facebook/callback" ]
+        expect(redirect_uri_params).to eq [ "#{node.full_url}line/callback" ]
 
         body = {
           token_type: "bearer",
+          scope: "profile",
           expires_in: 7200,
-          access_token: access_token
+          access_token: access_token,
+          id_token: id_token,
+          refresh_token: refresh_token,
         }
         { status: 200, headers: { 'Content-Type' => 'application/json' }, body: body.to_json }
       end
-      stub_request(:get, /#{::Regexp.escape("https://graph.facebook.com/#{facebook_api_version}/me")}/).to_return do |request|
-        expect(request.headers["Authorization"]).to eq "OAuth #{access_token}"
+      stub_request(:get, "https://api.line.me/v2/profile").to_return do |request|
+        expect(request.headers["Authorization"]).to eq "Bearer #{access_token}"
         expect(request.body).to be_blank
-        expect(request.uri.query).to be_present
+        expect(request.uri.query).to be_blank
 
         body = {
-          id: facebook_id,
-          name: facebook_name,
-          username: facebook_username,
-          email: facebook_email
+          "userId" => line_user_id,
+          "displayName" => line_display_name,
+          "pictureUrl" => line_picture_url,
         }
         { status: 200, headers: { 'Content-Type' => 'application/json' }, body: body.to_json }
       end
@@ -61,20 +63,20 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
     end
 
     it do
-      post "#{node.full_url}facebook"
+      post "#{node.full_url}line"
       expect(response.status).to eq 302
       expect(response.location).to be_present
       location = ::Addressable::URI.parse(response.location)
-      expect(location.origin).to eq "https://www.facebook.com"
+      expect(location.origin).to eq "https://access.line.me"
       expect(location.query).to be_present
       query_values = location.query_values
       expect(query_values["client_id"]).to eq client_id
-      expect(query_values["redirect_uri"]).to eq "#{node.full_url}facebook/callback"
+      expect(query_values["redirect_uri"]).to eq "#{node.full_url}line/callback"
       expect(query_values["response_type"]).to eq "code"
-      expect(query_values["scope"]).to eq %w(public_profile).join(" ")
+      expect(query_values["scope"]).to eq %w(profile openid).join(" ")
       expect(query_values["state"]).to be_present
 
-      get "#{node.full_url}facebook/callback?#{{state: query_values["state"], code: code}.to_query}"
+      get "#{node.full_url}line/callback?#{{state: query_values["state"], code: code}.to_query}"
       expect(response.status).to eq 302
       location = ::Addressable::URI.parse(response.location)
       expect(location.origin).to eq site.full_url[0..-2]
@@ -82,7 +84,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
       expect(Cms::Member.all.count).to eq 1
       Cms::Member.all.first.tap do |member|
-        expect(member.name).to eq facebook_name
+        expect(member.name).to eq line_display_name
       end
     end
   end

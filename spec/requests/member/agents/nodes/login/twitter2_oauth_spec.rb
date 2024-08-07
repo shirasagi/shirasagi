@@ -5,13 +5,13 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
   let!(:layout) { create_cms_layout }
   let(:client_id) { unique_id }
   let(:client_secret) { unique_id }
+  let(:code) { unique_id }
 
   context "twitter2" do
     let!(:node) do
       create :member_node_login, layout: layout, redirect_url: "/#{unique_id}/",
         twitter2_oauth: "enabled", twitter2_client_id: client_id, twitter2_client_secret: client_secret
     end
-    let(:code) { unique_id }
     let(:access_token) { unique_id }
     let(:twitter_id) { rand(100..999) }
     let(:twitter_name) { unique_id }
@@ -69,6 +69,9 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       query_values = location.query_values
       expect(query_values["client_id"]).to eq client_id
       expect(query_values["redirect_uri"]).to eq "#{node.full_url}twitter2/callback"
+      expect(query_values["response_type"]).to eq "code"
+      expect(query_values["scope"]).to be_blank
+      expect(query_values["state"]).to be_present
 
       get "#{node.full_url}twitter2/callback?#{{state: query_values["state"], code: code}.to_query}"
       expect(response.status).to eq 302

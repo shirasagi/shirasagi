@@ -5,13 +5,13 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
   let!(:layout) { create_cms_layout }
   let(:client_id) { unique_id }
   let(:client_secret) { unique_id }
+  let(:code) { unique_id }
 
   context "twitter" do
     let!(:node) do
       create :member_node_login, layout: layout, redirect_url: "/#{unique_id}/",
         twitter_oauth: "enabled", twitter_client_id: client_id, twitter_client_secret: client_secret
     end
-    let(:code) { unique_id }
     let(:token) { unique_id }
     let(:token_secret) { unique_id }
     let(:twitter_id) { rand(100..999) }
@@ -56,7 +56,8 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         }
         { status: 200, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' }, body: body.to_query }
       end
-      stub_request(:get, /#{::Regexp.escape("https://api.twitter.com/1.1/account/verify_credentials.json")}/).to_return do |request|
+      url = "https://api.twitter.com/1.1/account/verify_credentials.json"
+      stub_request(:get, /#{::Regexp.escape(url)}/).to_return do |request|
         # puts request.headers["Authorization"]
         expect(request.headers["Authorization"]).to start_with("OAuth ")
         expect(request.headers["Authorization"]).to include "oauth_consumer_key=\"#{client_id}\""

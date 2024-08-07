@@ -4,6 +4,8 @@ module Member::Addon
     extend ActiveSupport::Concern
     include Member::Addon::BaseOAuth
 
+    FACEBOOK_API_VERSION = 'v17.0'.freeze
+
     included do
       define_oauth_fields(:facebook)
     end
@@ -12,8 +14,10 @@ module Member::Addon
       options = {
         client_id: facebook_client_id.presence || SS.config.oauth.try(:facebook_client_id),
         client_secret: facebook_client_secret.presence || SS.config.oauth.try(:facebook_client_secret),
-        site: "https://graph.facebook.com/v17.0",
-        authorize_url: "https://www.facebook.com/v17.0/dialog/oauth",
+        client_options: {
+          site: "https://graph.facebook.com/#{FACEBOOK_API_VERSION}",
+          authorize_url: "https://www.facebook.com/#{FACEBOOK_API_VERSION}/dialog/oauth",
+        },
         scope: "public_profile"
       }
 

@@ -14,6 +14,9 @@ module Member::Addon
         client_secret: google_oauth2_client_secret.presence || SS.config.oauth.try(:google_oauth2_client_secret),
         scope: "userinfo.email,userinfo.profile,plus.me"
       }
+      if Rails.env.test?
+        options[:skip_jwt] = true
+      end
 
       [ OmniAuth::Strategies::GoogleOauth2, options ]
     end
