@@ -57,14 +57,10 @@ class Cms::NodesController < ApplicationController
 
     csv_params = params.require(:item).permit(:encoding)
 
-    # TODO and Memo:
-    # this controller is implementation of root node actions.
-    # so need to searching depth 1 nodes.
-    # but this criteria is searching all depth nodes.
-    criteria = @model.site(@cur_site).
+    criteria = @model.site(@cur_site).where(depth: 1).
       allow(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    exporter = Cms::NodeExporter.new(mode: "article", site: @cur_site, criteria: criteria)
+    exporter = Cms::NodeExporter.new(site: @cur_site, criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
     filename = @model.to_s.tableize.tr("/", "_")
@@ -74,7 +70,6 @@ class Cms::NodesController < ApplicationController
     send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
-  # TODO: Implement import referring to Article::PagesController#import
   def import
     # TODO: Implement import permission
     #raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)

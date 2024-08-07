@@ -1,5 +1,34 @@
 ja:
   cms:
+    node_columns:
+      filename: 'ファイル名'
+      route: 'フォルダー属性'
+      name: 'タイトル'
+      index_name: '一覧用タイトル'
+      order: '並び順'
+      layout_filename: 'レイアウト'
+      page_layout_filename: 'ページレイアウト'
+      shortcut: 'ショートカット'
+      view_route: '既定のモジュール'
+      keywords: 'キーワード'
+      description: '概要'
+      summary_html: 'サマリー'
+      conditions: '検索条件(URL)'
+      sort: 'リスト並び順'
+      limit: '表示件数'
+      new_days: 'NEWマーク期間'
+      loop_format: 'ループHTML形式'
+      upper_html: '上部HTML'
+      loop_html: 'ループHTML(SHIRASAGI形式)'
+      lower_html: '下部HTML'
+      loop_liquid: 'ループHTML(Liquid形式)'
+      no_items_display_state: 'ページ未検出時表示'
+      substitute_html: '代替HTML'
+      category_ids: 'カテゴリー設定'
+      released_type: '公開日時種別'
+      released: '公開日時'
+      state: 'ステータス'
+      group_ids: '管理グループ'
     add_max_file_size: 最大ファイルサイズを設定する
     add_image_resize: 画像リサイズを設定する
     alert: 警告

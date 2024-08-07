@@ -104,34 +104,6 @@ describe Cms::NodeExporter, dbscope: :example do
       # first row is node1
       row = csv[0]
 
-      #TODO and Memo:
-      # check attributes with following rules
-      #
-      # 1. inputting directly fields
-      #    e.g. ファイル名, タイトル...
-      #    localized string or integer fields
-      #    simply outputs a string or integer directly in this case
-      #
-      #    others area array like fields
-      #    e.g. キーワード, 検索条件(URL)...
-      #    outputs a string separated by line breaks ("\n") in this case
-      #
-      # 2. options fields (like a select tags or checkboxes in web view)
-      #    e.g. ショートカット, 既定のモジュール...
-      #    these fields are non localized string keys
-      #    node1.shortcut's database value is "show" or "hide"
-      #    but these are displayed as "表示", "非表示" in web view
-      #    so csv import feature should suppport localized value (表示", "非表示")
-      #
-      #    localized value can referenced by label method in node object
-      #    like a node1.label(:shortcut)
-      #
-      # 3. relations
-      #    relation fields are outputs relation item's name (or filename label)
-      #
-      # as a normal use case, the CSV output here must be imported
-      # please note that the CSV output here must be imported (download csv format must be same as import csv format)
-
       # basic
       expect(row["ファイル名"]).to eq node1.basename
       expect(row["フォルダー属性"]).to eq node1.route
@@ -179,11 +151,19 @@ describe Cms::NodeExporter, dbscope: :example do
     let!(:parent) { node1 }
 
     it "#export" do
-      #TODO and Memo:
-      # create test case of export from node1.
+      criteria = Cms::Node.site(site).where(depth: 2) # bind site and depth conditions
+      criteria = criteria.allow(:read, user, site: site, node: parent) # filter allowed nodes by permissions; but since the user is like an admin, all nodes are retrieved.
+      criteria = criteria.order_by(order: 1)
 
-      # there is 1 node on the parent node (node3)
-      #expect(csv.size).to eq 1
+      exporter = described_class.new(site: site, criteria: criteria)
+      enumerable = exporter.enum_csv(csv_params)
+      
+      csv = enumerable.to_a.join.delete_prefix(SS::Csv::UTF8_BOM)
+      csv = CSV.parse(csv, headers: true)
+      expect(csv.size).to eq 1
+
+      row = csv[0]
+      expect(row["並び順"]).to eq node3.order.to_s
     end
   end
 end

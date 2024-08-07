@@ -1,86 +1,134 @@
 require 'csv'
 
 class Cms::NodeExporter
-  # TODO and Memo:
-  # should unify our naming conventions
-  #
-  # Cms::NodeExporter => Cms::Node::Exporter
-  # or
-  # Cms::Node::Importer => Cms::NodeImporter
 
   include ActiveModel::Model
-
-  # TODO and Memo:
-  # not used accessor of mode
-  attr_accessor :mode, :site, :criteria
+  attr_accessor :site, :criteria
 
   def enum_csv(options = {})
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
-      #adding header once
+
+      drawer_columns = I18n.t('cms.node_columns').invert
+      csv_headers = drawer_columns.keys
+      
       csv_headers.each do |header|
         drawer.column drawer_columns["#{header}"] do
           drawer.head { header }
+      
+          if header == I18n.t('cms.node_columns.layout_filename')
+            drawer.body do |item|
+              format_layout(item) 
+            end
+            next
+          end
+      
+          if header == I18n.t('cms.node_columns.page_layout_filename')
+            drawer.body do |item|
+              format_page_layout(item) 
+            end
+            next
+          end
+      
+          if header == I18n.t('cms.node_columns.category_ids')
+            drawer.body do |item|
+              format_category(item)
+            end
+            next
+          end
+      
+          if header == I18n.t('cms.node_columns.group_ids')
+            drawer.body do |item|
+              format_group(item)
+            end
+            next
+          end
+      
+          if header == I18n.t('cms.node_columns.shortcut')
+            drawer.body do |item|
+              item.label(:shortcut) if item.respond_to?(:shortcut) && item.shortcut.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.view_route')
+            drawer.body do |item|
+              item.label(:view_route) if item.respond_to?(:view_route) && item.view_route.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.keywords')
+            drawer.body do |item|
+              item.keywords.join("\n") if item.respond_to?(:keywords) && item.keywords.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.conditions')
+            drawer.body do |item|
+              item.conditions.join("\n") if item.respond_to?(:conditions) && item.conditions.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.sort')
+            drawer.body do |item|
+              item.label(:sort) if item.respond_to?(:sort) && item.sort.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.loop_format')
+            drawer.body do |item|
+              item.label(:loop_format) if item.respond_to?(:loop_format) && item.loop_format.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.no_items_display_state')
+            drawer.body do |item|
+              item.label(:no_items_display_state) if item.respond_to?(:no_items_display_state) && item.no_items_display_state.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.released_type')
+            drawer.body do |item|
+              item.label(:released_type) if item.respond_to?(:released_type) && item.released_type.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.released')
+            drawer.body do |item|
+              I18n.l(item.released, format: :picker) if item.respond_to?(:released) && item.released.present?
+            end
+          end
+      
+          if header == I18n.t('cms.node_columns.state')
+            drawer.body do |item|
+              item.label(:state) if item.respond_to?(:state) && item.state.present?
+            end
+          end
         end
       end
     end
-
-    # TODO and Memo:
-    # this enum block outputs attirbutes as simple_column (just outputs  string or integer
-    # need to consider of relation fields and label fields
-    #
-    # please check the spec/models/cms/node/exporter/basic_spec.rb
-    # expected outputs is described
     drawer.enum(criteria, options)
   end
 
   private
-
-  # TODO and Memo:
-  # writing localized string in logic code directly is not preferred
-  # if possible, please put these keys and values in ja.yml
-  # the same goes for Cms::Node::Importer's "row[key]"
-  #
-  # e.g.
-  # I18n.t("cms.import_node.headers")
-  # > [ key => value, key => value... ]
-  def csv_headers
-    ['ファイル名', 'フォルダー属性', 'タイトル', '一覧用タイトル', '並び順', 'レイアウト', 'ページレイアウト',
-     'ショートカット', '既定のモジュール', 'キーワード', '概要', 'サマリー', '検索条件(URL)',
-     'リスト並び順', '表示件数', 'NEWマーク期間', 'ループHTML形式', '上部HTML', 'ループHTML(SHIRASAGI形式)',
-     '下部HTML', 'ループHTML(Liquid形式)', 'ページ未検出時表示', '代替HTML', 'カテゴリー設定',
-     '公開日時種別', '公開日時', 'ステータス', '管理グループ']
+  
+  def format_layout(item)
+    if item.respond_to?(:layout)
+      return '' unless item.layout.present?
+      "#{item.layout.name} (#{item.layout.filename})"
+    end
   end
 
-  def drawer_columns
-    {
-      'ファイル名' => :filename,
-      'フォルダー属性' => :route,
-      'タイトル' => :name,
-      '一覧用タイトル' => :index_name,
-      '並び順' => :order,
-      'レイアウト' => :layout_filename,
-      'ページレイアウト' => :page_layout_filename,
-      'ショートカット' => :shortcut,
-      '既定のモジュール' => :view_route,
-      'キーワード' => :keywords,
-      '概要' => :description,
-      'サマリー' => :summary_html,
-      '検索条件(URL)' => :conditions,
-      'リスト並び順' => :sort,
-      '表示件数' => :limit,
-      'NEWマーク期間' => :new_days,
-      'ループHTML形式' => :loop_format,
-      '上部HTML' => :upper_html,
-      'ループHTML(SHIRASAGI形式)' => :loop_html,
-      '下部HTML' => :lower_html,
-      'ループHTML(Liquid形式)' => :loop_liquid,
-      'ページ未検出時表示' => :no_items_display_state,
-      '代替HTML' => :substitute_html,
-      'カテゴリー設定' => :category_ids,
-      '公開日時種別' => :released_type,
-      '公開日時' => :released,
-      'ステータス' => :state,
-      '管理グループ' => :group_ids
-    }
+  def format_page_layout(item)
+    if item.respond_to?(:page_layout)
+      return '' unless item.page_layout.present?
+      "#{item.page_layout.name} (#{item.page_layout.filename})"
+    end
+  end
+  
+  def format_category(item)
+    item.st_categories.map { |cate| "#{cate.name} (#{cate.filename})" }.join("\n") if (item.respond_to?(:st_categories) && item.st_categories.present?)
+  end
+
+  def format_group(item)
+    item.groups.map(&:name).join("\n") if ( item.respond_to?(:groups) && item.groups.present? )
   end
 end
