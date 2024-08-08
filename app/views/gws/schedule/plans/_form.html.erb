@@ -7,6 +7,7 @@
 <%= hidden_field_tag 'calendar[viewFormat]', params.dig(:calendar, :viewFormat) %>
 <%= hidden_field_tag 'calendar[viewTodo]', params.dig(:calendar, :viewTodo) %>
 <%= hidden_field_tag 'calendar[viewAttendance]', params.dig(:calendar, :viewAttendance) %>
+<%= hidden_field_tag 'calendar[facilityCategory]', params.dig(:calendar, :facilityCategory) %>
 
 <dl class="see gws-schedule-plan">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>

@@ -46,7 +46,7 @@ module Gws::Workload::CalendarFilter
     return unless Sys::TrustedUrlValidator.myself_url?(path)
 
     uri = ::Addressable::URI.parse(path)
-    uri.query = { calendar: redirection_calendar_params }.to_param
+    uri.query = redirection_calendar_query.to_param
     uri.request_uri
   end
 
