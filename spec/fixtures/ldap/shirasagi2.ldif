@@ -1,0 +1,178 @@
+dn: dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: domain
+dc: shirasagi-city
+organizationName: shirasagi-city
+
+# Users
+dn: ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: organizationalUnit
+ou: Users
+
+# User: ldap_sys
+dn: cn=ldap_sys, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_sys
+mail: ldap_sys@example.jp
+sn: システム管理者
+displayName: システム管理者
+userPassword: pass
+userPrincipalName: ldap_sys@example.jp
+sAMAccountName: ldap_sys
+
+# User: ldap_admin
+dn: cn=ldap_admin, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_admin
+mail: ldap_admin@example.jp
+sn: サイト管理者
+displayName: サイト管理者
+userPassword: pass
+userPrincipalName: ldap_admin@example.jp
+sAMAccountName: ldap_admin
+
+# User: ldap_user1
+dn: cn=ldap_user1, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_user1
+mail: ldap_user1@example.jp
+sn: 鈴木
+givenName: 茂
+displayName: 鈴木 茂
+userPassword: pass
+userPrincipalName: ldap_user1@example.jp
+sAMAccountName: ldap_user1
+
+# User: ldap_user2
+dn: cn=ldap_user2, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_user2
+mail: ldap_user2@example.jp
+sn: 渡辺
+givenName: 和子
+displayName: 渡辺 和子
+userPassword: pass
+userPrincipalName: ldap_user2@example.jp
+sAMAccountName: ldap_user2
+
+# User: ldap_user3
+dn: cn=ldap_user3, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_user3
+mail: ldap_user3@example.jp
+sn: 斎藤
+givenName: 拓也
+displayName: 斎藤　拓也
+userPassword: pass
+userPrincipalName: ldap_user3@example.jp
+sAMAccountName: ldap_user3
+
+# User: ldap_user4
+dn: cn=ldap_user4, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_user4
+mail: ldap_user4@example.jp
+sn: 伊藤
+givenName: 幸子
+displayName: 伊藤 幸子
+userPassword: pass
+userPrincipalName: ldap_user4@example.jp
+sAMAccountName: ldap_user4
+
+# User: ldap_user5
+dn: cn=ldap_user5, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssUser
+cn: ldap_user5
+mail: ldap_user5@example.jp
+sn: 高橋
+givenName: 清
+displayName: 高橋 清
+userPassword: pass
+userPrincipalName: ldap_user5@example.jp
+sAMAccountName: ldap_user5
+accountExpires: 135298944000000000
+
+# シラサギ市
+dn: cn=シラサギ市, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: シラサギ市
+displayName: シラサギ市
+name: シラサギ市
+sAMAccountName: シラサギ市
+member: cn=企画政策部, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=危機管理部, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+
+# シラサギ市/企画政策部
+dn: cn=企画政策部, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: 企画政策部
+displayName: 企画政策部
+name: 企画政策部
+sAMAccountName: 企画政策部
+member: cn=政策課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=広報課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+
+# シラサギ市/危機管理部
+dn: cn=危機管理部, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: 危機管理部
+displayName: 危機管理部
+name: 危機管理部
+sAMAccountName: 危機管理部
+member: cn=管理課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=防災課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+
+# シラサギ市/企画政策部/政策課
+dn: cn=政策課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: 政策課
+displayName: 政策課
+name: 政策課
+sAMAccountName: 政策課
+member: cn=ldap_sys, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=ldap_admin, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=ldap_user1, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+
+# シラサギ市/企画政策部/広報課
+dn: cn=広報課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: 広報課
+displayName: 広報課
+name: 広報課
+sAMAccountName: 広報課
+member: cn=ldap_user3, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=ldap_user5, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+
+# シラサギ市/危機管理部/管理課
+dn: cn=管理課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: 管理課
+displayName: 管理課
+name: 管理課
+sAMAccountName: 管理課
+member: cn=ldap_user2, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+member: cn=ldap_user4, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+
+# シラサギ市/危機管理部/防災課
+dn: cn=防災課, ou=Users, dc=shirasagi-city, dc=example, dc=jp
+objectClass: top
+objectClass: ssGroup
+cn: 防災課
+displayName: 防災課
+name: 防災課
+sAMAccountName: 防災課
+member: cn=ldap_user3, ou=Users, dc=shirasagi-city, dc=example, dc=jp

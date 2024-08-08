@@ -12,6 +12,8 @@ ja:
     buttons:
       import: インポート
       sync: 同期
+      test_connection: 接続確認
+      test_search: 検索確認
     confirm:
       import: インポートしてよろしいですか？
       import_description: LDAPサーバから情報をインポートし、中間情報を作成します。
@@ -28,6 +30,10 @@ ja:
         warning: 警告
         no_results: 結果がありません
         task_info: タスク
+        base_dn: 検索の起点階層
+        root_dn: ルートDN
+        scope: 検索の対象
+        filter: 検索式
       server/index:
         group:
           root: ルート
@@ -88,6 +94,7 @@ ja:
     models:
       cms/ldap/import: インポート
       cms/ldap/sync_task: インポート設定
+      gws/ldap/sync_task: 同期設定
     attributes:
       ss/addon/ldap/group:
         ldap_host: ホスト
@@ -109,6 +116,17 @@ ja:
         ldap_user_dn: ユーザDN
         ldap_user_password: パスワード
         ldap_exclude_groups: 除外グループ
+      gws/ldap/sync_task:
+        admin_dn: 管理者ユーザーDN
+        admin_password: 管理者パスワード
+        group_base_dn: グループ検索の起点階層
+        group_scope: グループ検索の対象
+        group_filter: グループ検索の検索式
+        group_root_dn: グループルートDN
+        user_base_dn: ユーザー検索の起点階層
+        user_scope: ユーザー検索の対象
+        user_filter: ユーザー検索の検索式
+        user_role_ids: ユーザーの既定のロール
 
   views:
     ldap/server:
@@ -130,3 +148,4 @@ ja:
     models:
       cms/ldap/import_job: LDAPインポート
       cms/ldap/sync_job: LDAP同期
+      gws/ldap/sync_job: LDAP同期
