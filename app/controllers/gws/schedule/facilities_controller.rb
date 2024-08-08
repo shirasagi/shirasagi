@@ -23,11 +23,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
     @facility_categories = facility_category_criteria.tree_sort
 
     if params[:s].blank?
-      @facility_category ||= begin
-        c = @facility_categories.find { |c| c.id.present? }
-        c = facility_category_criteria.find(c.id) rescue nil
-        c
-      end
+      @facility_category = @facility_categories.first
       return
     end
 
