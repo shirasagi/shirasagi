@@ -46,7 +46,7 @@ module Gws::Schedule::CalendarFilter
 
     def redirection_calendar_query
       query = { calendar: redirection_calendar_params }
-      query.merge!({ s: redirection_search_params }) if redirection_search_params.present?
+      query[:s] = redirection_search_params if redirection_search_params.present?
       query
     end
 
