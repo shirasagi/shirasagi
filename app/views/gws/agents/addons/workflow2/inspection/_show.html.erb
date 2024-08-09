@@ -1,0 +1,15 @@
+<%
+  return if @item.workflow_state != "request" || @item.deleted?
+
+  workflow_approver = @item.find_workflow_request_to(@cur_user)
+  return if workflow_approver.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:head] = "#{addon[:head]}#{@model.tt :approve_remand}".html_safe
+  addon[:toggle] = false
+  addon[:location] = { before: "addon-basic" }
+%>
+
+<turbo-frame id="workflow-inspection-frame">
+  <%= render template: "gws/workflow2/frames/inspections/edit", locals: local_assigns.merge(ref: request.path) %>
+</turbo-frame>

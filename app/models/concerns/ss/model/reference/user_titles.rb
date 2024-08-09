@@ -20,6 +20,22 @@ module SS::Model::Reference
           item.save
         end
       end
+
+      def order_users_by_title(users, cur_site:)
+        return users.dup if users.blank? || users.length <= 1
+
+        users.sort do |lhs_user, rhs_user|
+          # !!!be careful!!! title_order is descendant
+          diff = rhs_user.title_orders[cur_site.id] <=> lhs_user.title_orders[cur_site.id]
+          next diff if diff != 0
+
+          diff = lhs_user.organization_uid <=> rhs_user.organization_uid
+          next diff if diff != 0
+
+          diff = lhs_user.uid <=> rhs_user.uid
+          diff
+        end
+      end
     end
 
     def title(site = nil)

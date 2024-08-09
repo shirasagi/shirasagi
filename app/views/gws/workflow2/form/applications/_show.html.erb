@@ -1,0 +1,60 @@
+<dl class="see">
+  <dt><%= @model.t :i18n_name %></dt>
+  <% if I18n.available_locales.length == 1 %>
+    <dd><%= @item.i18n_name %></dd>
+  <% else %>
+    <dd></dd>
+    <% SS.each_locale_in_order do |lang| %>
+      <dt class="depth-2 i18n_name"><%= @model.t(:"i18n_name_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)) %></dt>
+      <dd class="depth-2 i18n_name">
+        <%= @item.i18n_name_translations[lang] %>
+      </dd>
+    <% end %>
+  <% end %>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label(:state) %></dd>
+
+  <dt><%= @model.t :approval_state %></dt>
+  <dd>
+    <%= @item.label(:approval_state) || t("gws/workflow2.options.approval_state.with_approval") %>
+    <% if @item.approval_state == "with_approval" && @item.default_route_id.present? %>
+      （
+      <%=
+        case @item.default_route_id
+        when "my_group"
+          t("mongoid.attributes.gws/workflow2/route.my_group")
+        when "my_group_alternate"
+          t("mongoid.attributes.gws/workflow2/route.my_group_alternate")
+        else
+          # 他人のプライベートな承認経路でも名前は確認することができる点に留意
+          route = Gws::Workflow2::Route.site(@cur_site).where(id: @item.default_route_id).first
+          route.try(:name)
+        end
+      %>
+      ）
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :agent_state %></dt>
+  <dd><%= @item.label(:agent_state) %></dd>
+
+  <dt><%= @model.t :i18n_description %></dt>
+  <% if I18n.available_locales.length == 1 %>
+    <dd><%= sanitize ss_auto_link_urls br(@item.i18n_description, html_escape: false) %></dd>
+  <% else %>
+    <dd></dd>
+    <% SS.each_locale_in_order do |lang| %>
+      <dt class="depth-2 i18n_description"><%= @model.t("i18n_description_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)) %></dt>
+      <dd class="depth-2 i18n_description">
+        <%= sanitize ss_auto_link_urls br(@item.i18n_description_translations[lang], html_escape: false) %>
+      </dd>
+    <% end %>
+  <% end %>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= auto_link br(@item.memo) %></dd>
+</dl>

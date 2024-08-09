@@ -320,7 +320,7 @@ module SS
     end
 
     def within_dialog(&block)
-      element = page.document.find("#ss-dialog")
+      element = page.document.first(".ss-dialog")
       page.within_element(element, &block)
     end
 

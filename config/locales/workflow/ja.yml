@@ -24,8 +24,9 @@ ja:
     comment: コメント
     state_remind_suffix: （督促）
     state:
-      request: 申請中
-      approve: 承認
+      request: 申請中 (承認待ち)
+      approve: 承認済
+      approve_without_approval: 即時承認済
       pending: 下位承認待ち
       remand: 差し戻し
       cancelled: 申請キャンセル
@@ -149,7 +150,7 @@ ja:
     models:
       workflow/route: 承認経路
     attributes:
-      workflow/addon/approver:
+      workflow/approver:
         workflow_user_id: 申請者
         workflow_member_id: 申請メンバー
         workflow_state: 承認状態

@@ -1,0 +1,6 @@
+<% return if @item.deleted? %>
+
+<dl class="see workflow_comment">
+  <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
+  <dd><%= f.text_area :workflow_comment, id: nil %></dd>
+</dl>

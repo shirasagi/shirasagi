@@ -1,0 +1,17 @@
+<dl class="see">
+  <% if @cur_form && @item.new_record? %>
+    <dt><%= Gws::Workflow2::Form::Base.t :i18n_name %></dt>
+    <dd><%= @cur_form.i18n_name %></dd>
+
+    <dt><%= Gws::Workflow2::Form::Base.t :i18n_description %></dt>
+    <dd><%= sanitize ss_auto_link_urls br(@cur_form.i18n_description, html_escape: false) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+</dl>
+
+<%= jquery do %>
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>

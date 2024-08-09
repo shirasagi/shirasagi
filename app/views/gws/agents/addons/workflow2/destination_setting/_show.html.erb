@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :destination_group_ids %></dt>
+  <dd><%= br @item.destination_groups.active.pluck(:name) %></dd>
+
+  <dt><%= @model.t :destination_user_ids %></dt>
+  <dd><%= br @item.destination_users.active.order_by_title(@cur_site).map { |user| gws_public_user_long_name(user.long_name, cur_site: @cur_site) } %></dd>
+</dl>

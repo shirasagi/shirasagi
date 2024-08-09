@@ -34,4 +34,10 @@ FactoryBot.define do
     email { "#{uid}@example.jp" }
     type { SS::Model::User::TYPE_SSO }
   end
+
+  trait :gws_workflow_notice do
+    notice_workflow_user_setting { "notify" }
+    notice_workflow_email_user_setting { "notify" }
+    send_notice_mail_addresses { unique_email }
+  end
 end

@@ -11,7 +11,7 @@ module Gws::Addon::User::AffairSetting
     field :staff_address_uid, type: String
     permit_params :staff_address_uid
 
-    # 上長
+    # 上位ユーザー
     attr_accessor :in_gws_superior_group_ids, :in_gws_superior_user_ids
 
     field :gws_superior_group_ids, type: Hash, default: {}
