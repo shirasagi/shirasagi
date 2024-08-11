@@ -76,10 +76,11 @@ module Cms::NodeImportBase
     item.released = row[I18n.t('cms.node_columns.released')] if item.respond_to?(:released)
     item.state = row[I18n.t('cms.node_columns.state')] if item.respond_to?(:state)
 
+    item.for_member_state = 'enabled' if item.respond_to?(:for_member_state)
+
     update_groups(row, item)
-
+    
     item.save!
-
     item
   end
 

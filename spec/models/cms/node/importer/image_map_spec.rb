@@ -15,11 +15,16 @@ describe Cms::Node::Importer, dbscope: :example do
 
   context "image_map nodes" do
     it "#import" do
+      # Check initial node count
+      expect(Cms::Node.count).to eq(0)
+
       importer = described_class.new(site, node, user)
       importer.import(ss_file)
 
-      # TODO and Memo:
-      # do import and find node and check nodes attributes ...
+      # Check the node count after import
+      csv = CSV.read(csv_path, headers: true)
+      expect(Cms::Node.count).to eq(0) # it will not save the node because no image is present
+
     end
   end
 end
