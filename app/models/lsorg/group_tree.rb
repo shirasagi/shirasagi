@@ -38,8 +38,8 @@ class Lsorg::GroupTree
     item_by_name
   end
 
-  def each
-    to_a.each { |item| yield item }
+  def each(&block)
+    to_a.each(&block)
   end
 
   def tree(item = nil)
