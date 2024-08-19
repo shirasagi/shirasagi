@@ -36,7 +36,6 @@ class Cms::Node::NodesController < ApplicationController
 
   public
 
-  # TODO: Implement download
   def download
     return if request.get?
 
@@ -55,10 +54,8 @@ class Cms::Node::NodesController < ApplicationController
     send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
-  # TODO: Implement import referring to Article::PagesController#import
   def import
-    # TODO: Implement import permission
-    #raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+    raise "403" unless Cms::Tool.allowed?(:read, @cur_user, site: @cur_site)
 
     set_task
 

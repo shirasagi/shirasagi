@@ -51,7 +51,7 @@ class Cms::NodesController < ApplicationController
       page(params[:page]).per(50)
   end
 
-  # TODO: Implement download
+
   def download
     return if request.get?
 
@@ -71,8 +71,7 @@ class Cms::NodesController < ApplicationController
   end
 
   def import
-    # TODO: Implement import permission
-    #raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+    raise "403" unless Cms::Tool.allowed?(:read, @cur_user, site: @cur_site)
 
     set_task
 
