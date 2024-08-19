@@ -10,15 +10,11 @@ class Cms::CheckLinks::Errors
     @errors = {}
   end
 
-  delegate :each, to: :errors
+  delegate :each, :size, :present?, :empty?, to: :errors
 
   def add_error(ref, url)
     @errors[ref] ||= []
     @errors[ref] << url
-  end
-
-  def size
-    errors.size
   end
 
   def display_meta?

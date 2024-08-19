@@ -13,7 +13,7 @@ class Cms::Mailer < ApplicationMailer
   def link_errors(site, to, errors)
     if site.check_links_message_format == "csv"
       body = "[#{errors.size} errors]\n"
-      if errors.size > 0
+      if errors.present?
         body += "error details are in the attached csv\n"
         attachments["errors.csv"] = errors.to_csv
       end

@@ -1,4 +1,3 @@
-
 require 'spec_helper'
 require Rails.root.join("lib/migrations/cms/20240729000000_check_links_permissions.rb")
 

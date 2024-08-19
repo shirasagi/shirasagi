@@ -12,10 +12,17 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
   before do
     ActionMailer::Base.deliveries = []
+
+    Fs.rm_rf site.path
+    Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+    Cms::Page::GenerateJob.bind(site_id: site.id).perform_now
+    Job::Log.destroy_all
   end
 
   after do
     ActionMailer::Base.deliveries = []
+
+    Fs.rm_rf site.path
   end
 
   let!(:html1) do
@@ -51,6 +58,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(log.logs).to include(include("#{site_url}/"))
         expect(log.logs).to include(include("  - #{site_url}/notfound1.html"))
         expect(log.logs).not_to include(include("  - #{site_url}/commentout1.html"))
+
+        expect(log.logs).to include(include("#{site_url}/index.html"))
+        expect(log.logs).to include(include("  - #{site_url}/notfound1.html"))
 
         expect(log.logs).to include(include("#{site_url}/docs/page1.html"))
         expect(log.logs).to include(include("  - #{site_url}/notfound2.html"))
@@ -90,6 +100,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
         expect(mail.body.raw_source).to include "[3 errors]"
         expect(mail.body.raw_source).to include "#{site_url}/"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
+        expect(mail.body.raw_source).to include "#{site_url}/index.html"
         expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
         expect(mail.body.raw_source).to include "#{site_url}/docs/page1.html"
         expect(mail.body.raw_source).to include "  - #{site_url}/notfound2.html"
@@ -148,6 +160,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
         expect(mail.body.raw_source).to include "[3 errors]"
         expect(mail.body.raw_source).to include "#{site_url}/"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
+        expect(mail.body.raw_source).to include "#{site_url}/index.html"
         expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
         expect(mail.body.raw_source).to include "#{site_url}/docs/page1.html"
         expect(mail.body.raw_source).to include "  - #{site_url}/notfound2.html"
