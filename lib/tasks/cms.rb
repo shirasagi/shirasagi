@@ -60,10 +60,10 @@ module Tasks
         each_sites do |site|
           if ENV.key?("node")
             with_node(site, ENV["node"]) do |node|
-              perform_job(::Cms::CheckLinksJob, site: site, node: node, email: ENV["email"], meta: ENV["meta"])
+              perform_job(::Cms::CheckLinksJob, site: site, node: node, email: ENV["email"], meta: ENV["display_meta"])
             end
           else
-            perform_job(::Cms::CheckLinksJob, site: site, email: ENV["email"], meta: ENV["meta"])
+            perform_job(::Cms::CheckLinksJob, site: site, email: ENV["email"], meta: ENV["display_meta"])
           end
         end
       end

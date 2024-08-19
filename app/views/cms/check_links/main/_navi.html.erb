@@ -1,10 +1,6 @@
 <nav class="mod-navi">
   <h2><%= t("modules.cms/check_links") %></h2>
   <h3><%= link_to t("cms/check_links.reports"), cms_check_links_reports_path %></h3>
-  <ul class="narrow-page">
-    <h3><%= link_to t("cms.check_links_pages"), cms_check_links_report_pages_path %></h3>
-    <h3><%= link_to t("cms.check_links_nodes"), cms_check_links_report_nodes_path %></h3>
-  </ul>
 
   <% if Cms::CheckLinks::IgnoreUrl.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("cms/check_links.ignore_urls"), cms_check_links_ignore_urls_path %></h3>
