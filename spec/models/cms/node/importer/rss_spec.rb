@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Node::Importer, dbscope: :example do
+describe Cms::NodeImporter, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { nil }

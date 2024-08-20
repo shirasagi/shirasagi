@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Node::Importer, dbscope: :example do
+describe Cms::NodeImporter, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { nil }
@@ -26,7 +26,7 @@ describe Cms::Node::Importer, dbscope: :example do
       expect(Cms::Node.count).to eq(csv.size)
       Cms::Node.each_with_index do |node1, index|
         row = csv[index].to_hash
-        
+
         if node1.respond_to?(:basename) && node1.basename.present?
           expect(row["﻿ファイル名"]).to eq node1.basename
         end
@@ -45,7 +45,7 @@ describe Cms::Node::Importer, dbscope: :example do
         if node1.respond_to?(:shortcut)
           expect(row["ショートカット"]).to eq node1&.shortcut
         end
-        if node1.respond_to?(:view_route) 
+        if node1.respond_to?(:view_route)
           expect(row["既定のモジュール"]).to eq node1&.view_route
         end
 

@@ -1,11 +1,9 @@
-
-
 require 'spec_helper'
 
-describe "cms_node_nodes", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  subject(:download_path) { download_node_nodes_path site.id, item1 }
-  subject(:import_path) { import_node_nodes_path site.id, item1 }
+describe "cms_nodes", type: :feature, dbscope: :example do
+  subject(:site) { cms_site }
+  subject(:download_path) { download_cms_nodes_path site.id }
+  subject(:import_path) { import_cms_nodes_path site.id }
 
   let!(:item1) { create :cms_node, filename: "parent1" }
   let!(:item2) { create :cms_node, filename: "parent2" }
@@ -27,8 +25,8 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
 
       expect(csv.size).to eq 2
 
-      expect(csv[0][I18n.t("cms.node_columns.filename")]).to eq item3.basename
-      expect(csv[1][I18n.t("cms.node_columns.filename")]).to eq item4.basename
+      expect(csv[0][I18n.t("cms.node_columns.filename")]).to eq item1.basename
+      expect(csv[1][I18n.t("cms.node_columns.filename")]).to eq item2.basename
     end
   end
 
@@ -50,8 +48,8 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
         wait_for_notice I18n.t("ss.notice.started_import")
       end
       expect(Cms::Node.count).to eq 7
-      expect(item.filename).to eq "#{item1.filename}/ad"
-      expect(item.parent.id).to eq item1.id
+      expect(item.filename).to eq "ad"
+      expect(item.parent).to eq false
     end
   end
 end

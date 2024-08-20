@@ -1,12 +1,7 @@
-module Cms::NodeImportBase
-  extend ActiveSupport::Concern
+class Cms::NodeImporter
   include Cms::CsvImportBase
 
-  included do
-    cattr_accessor :model, instance_accessor: false
-    self.model = Cms::Node
-    attr_reader :site, :node, :user
-  end
+  attr_reader :site, :node, :user
 
   def initialize(site, node, user)
     @site = site
@@ -79,7 +74,7 @@ module Cms::NodeImportBase
     item.for_member_state = 'enabled' if item.respond_to?(:for_member_state)
 
     update_groups(row, item)
-    
+
     item.save!
     item
   end
