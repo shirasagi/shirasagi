@@ -31,12 +31,15 @@ class Cms::NodeImporter
   def import_csv(file)
     self.class.each_csv(file) do |row, i|
       i += 1
-      Rails.logger.tagged("#{i + 1}行目") do
-        item = update_record(row)
-        put_log("update #{i + 1}: #{item.name}") if item.present?
-      rescue => e
-        put_log("error  #{i + 1}: #{e}")
+
+      item = update_record(row)
+      if item.errors.empty?
+        put_log("update #{i + 1}行目: #{item.name}")
+      else
+        put_log("error #{i + 1}行目: #{item.errors.full_messages.join(', ')}")
       end
+    rescue => e
+      put_log("error  #{i + 1}行目: #{e}")
     end
   end
 
@@ -75,7 +78,7 @@ class Cms::NodeImporter
 
     update_groups(row, item)
 
-    item.save!
+    item.save
     item
   end
 
