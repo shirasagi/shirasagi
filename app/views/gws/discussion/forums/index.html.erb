@@ -1,6 +1,6 @@
 <% @index_title = proc do |item| %>
   <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-  <%= link_to title,  gws_discussion_forum_topics_path(forum_id: item.id), class: "title" %>
+  <%= link_to title,  gws_discussion_forum_portal_path(forum_id: item.id), class: "title" %>
 <% end %>
 
 <% @tap_menu = proc do |item| %>
