@@ -1,0 +1,9 @@
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{index_path}'; return false;" %>
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+</dl>

@@ -1,0 +1,12 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index|reply/ %>
+    <% if @forum.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/discussion.links.forum.edit'), edit_gws_discussion_forum_path(id: @forum) %>
+    <% end %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/discussion.links.topic.new'), new_gws_discussion_forum_portal_topic_path %>
+    <% end %>
+  <% else %>
+    <%= link_to t('ss.links.back'), { action: :index } %>
+  <% end %>
+</nav>

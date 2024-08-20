@@ -9,5 +9,5 @@
 
 <dl class="see">
   <dt><%= @model.t :discussion_forum_id %></dt>
-  <dd><%= link_to discussion_forum.name, gws_discussion_forum_topics_path(mode: "-", forum_id: discussion_forum) %></dd>
+  <dd><%= link_to discussion_forum.name, gws_discussion_forum_portal_path(mode: "-", forum_id: discussion_forum) %></dd>
 </dl>

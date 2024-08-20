@@ -1,0 +1,11 @@
+<%
+  @s = OpenStruct.new params[:s]
+%>
+<div class="gws-discussion-topic">
+  <h2><%= @forum.name %></h2>
+  <%= form_for :s, url: { action: :search }, html: { method: :get, autocomplete: :off } do |f| %>
+    <%= f.select :topic, topic_options, include_blank: "スレッド名" %>
+    <%= f.text_field :body %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>

@@ -1,0 +1,28 @@
+<% addon_options = { head: head, class: css_class, toggle: true } %>
+<%= render "ss/crud/addon", addon: addon_options do %>
+  <ul class="list-items">
+    <% @bookmarks.each do |bookmark| %>
+      <%
+        item = bookmark.post
+        topic = item.topic ? item.topic : item
+        url = gws_discussion_forum_thread_comments_path(forum_id: @forum, topic_id: topic)
+        url += "\#comment-#{item.id}"
+      %>
+      <li class="list-item">
+        <div class="info">
+          <div class="summary"><%= item.summary_text %></div>
+          <div class="meta">
+            <% item.descendants_updated.try do |updated| %>
+              <span class="datetime"><%= ss_time_tag updated %></span>
+            <% end %>
+          </div>
+          <%= link_to item.name, url %>
+        </div>
+      </li>
+    <% end %>
+    <% if @bookmarks.blank? %>
+      <li class="list-item"><%= t("gws/discussion.notice.no_bookmarks") %></li>
+    <% end %>
+    <li class="list-item"><%= link_to t("gws/discussion.links.bookmark.index"), gws_discussion_forum_bookmarks_path %></li>
+  </ul>
+<% end %>

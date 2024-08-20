@@ -45,4 +45,40 @@ class Gws::Discussion::Forum
 
     main_topic.save!
   end
+
+  def save_clone
+    item = self.class.new
+    item.attributes = self.attributes
+    item.id = nil
+
+    item.created = item.updated = Time.zone.now
+    item.released = nil if respond_to?(:released)
+    item.state = "closed" if item.depth == 1
+
+    item.descendants_updated = nil
+    item.skip_descendants_updated = true
+
+    item.save!
+
+    ids = children.order(id: 1).pluck(:id)
+    ids.each do |id|
+      child = Gws::Discussion::Topic.find(id) rescue nil
+      next if child.nil?
+      child.save_clone(item)
+    end
+
+    item
+  end
+
+  class << self
+    def search(params = {})
+      criteria = where({})
+      return criteria if params.blank?
+
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name
+      end
+      criteria
+    end
+  end
 end
