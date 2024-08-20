@@ -157,7 +157,7 @@ describe Cms::NodeExporter, dbscope: :example do
 
       exporter = described_class.new(site: site, criteria: criteria)
       enumerable = exporter.enum_csv(csv_params)
-      
+
       csv = enumerable.to_a.join.delete_prefix(SS::Csv::UTF8_BOM)
       csv = CSV.parse(csv, headers: true)
       expect(csv.size).to eq 1

@@ -143,7 +143,7 @@ ja:
       loop_liquid: 'ループHTML(Liquid形式)'
       no_items_display_state: 'ページ未検出時表示'
       substitute_html: '代替HTML'
-      category_ids: 'カテゴリー設定'
+      st_category_ids: 'カテゴリー設定'
       released_type: '公開日時種別'
       released: '公開日時'
       state: 'ステータス'

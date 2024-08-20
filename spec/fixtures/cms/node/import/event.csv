@@ -6,9 +6,9 @@ search,event/search,イベント検索,,イベント検索 (event-search.layout.
 シラサギ市/危機管理部
 シラサギ市/危機管理部/管理課
 シラサギ市/危機管理部/防災課",公開
-calendar,event/page,イベントカレンダー,,イベントトップ (event-top.layout.html),0,,非表示,,自治体サンプル,,,docs,,100,1,,,,,,,,"文化・芸術 (calendar/bunka)
-講演・講座 (calendar/kohen)
-スポーツ (calendar/sports)",手動入力,2024/6/1 6:01,"シラサギ市
+calendar,event/page,イベントカレンダー,,イベントトップ (event-top.layout.html),0,,非表示,,自治体サンプル,,,docs,,100,1,,,,,,,,"文化・芸術 (bunka)
+講演・講座 (kohen)
+スポーツ (sports)",手動入力,2024/6/1 6:01,"シラサギ市
 シラサギ市/企画政策部
 シラサギ市/企画政策部/政策課
 シラサギ市/企画政策部/広報課

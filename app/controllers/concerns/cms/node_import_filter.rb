@@ -56,7 +56,6 @@ module Cms::NodeImportFilter
     end
 
     begin
-      # TODO: Implement import validations
       file = params[:item].try(:[], :file)
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
@@ -64,9 +63,9 @@ module Cms::NodeImportFilter
       if SS::Csv.detect_encoding(file) == Encoding::ASCII_8BIT
         raise I18n.t("errors.messages.unsupported_encoding")
       end
-      #if !Article::Page::Importer.valid_csv?(file)
-      #  raise I18n.t("errors.messages.malformed_csv")
-      #end
+      if !Cms::NodeImporter.valid_csv?(file)
+        raise I18n.t("errors.messages.malformed_csv")
+      end
 
       # save csv to use in job
       ss_file = SS::File.new

@@ -23,7 +23,7 @@ class Cms::NodeExporter
           when I18n.t('cms.node_columns.page_layout_filename')
             drawer.body { |item| format_page_layout(item) }
 
-          when I18n.t('cms.node_columns.category_ids')
+          when I18n.t('cms.node_columns.st_category_ids')
             drawer.body { |item| format_category(item) }
 
           when I18n.t('cms.node_columns.group_ids')
@@ -70,25 +70,25 @@ class Cms::NodeExporter
 
   def format_layout(item)
     return '' if !item.respond_to?(:layout)
-
     return '' if item.layout.blank?
-
     "#{item.layout.name} (#{item.layout.filename})"
   end
 
   def format_page_layout(item)
     return '' if !item.respond_to?(:page_layout)
-
-    return '' if  item.page_layout.blank?
-
+    return '' if item.page_layout.blank?
     "#{item.page_layout.name} (#{item.page_layout.filename})"
   end
 
   def format_category(item)
-    item.st_categories.map { |cate| "#{cate.name} (#{cate.filename})" }.join("\n") if (item.respond_to?(:st_categories) && item.st_categories.present?)
+    return '' if !item.respond_to?(:st_category_ids)
+    return '' if item.st_categories.blank?
+    item.st_categories.map { |cate| "#{cate.name} (#{cate.filename})" }.join("\n")
   end
 
   def format_group(item)
-    item.groups.map(&:name).join("\n") if ( item.respond_to?(:groups) && item.groups.present? )
+    return '' if !item.respond_to?(:group_ids)
+    return '' if item.groups.blank?
+    item.groups.map(&:name).join("\n")
   end
 end
