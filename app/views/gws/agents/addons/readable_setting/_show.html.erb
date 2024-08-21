@@ -12,14 +12,14 @@
     <dl class="see">
       <% if @item.class.readable_setting_included_custom_groups? %>
       <dt><%= @model.t :readable_custom_group_ids %></dt>
-      <dd><%=tryb { br @item.readable_custom_group_names } %></dd>
+      <dd><%=tryb { br @item.readable_custom_groups.map(&:name) } %></dd>
       <% end %>
 
       <dt><%= @model.t :readable_group_ids %></dt>
-      <dd><%=br @item.readable_group_names %></dd>
+      <dd><%=br @item.readable_groups.map(&:name) %></dd>
 
       <dt><%= @model.t :readable_member_ids %></dt>
-      <dd><%=br gws_public_user_long_names(@item.readable_member_names) %></dd>
+      <dd><%=br gws_public_user_long_names(@item.readable_members.map(&:name)) %></dd>
     </dl>
   </div>
 </div>

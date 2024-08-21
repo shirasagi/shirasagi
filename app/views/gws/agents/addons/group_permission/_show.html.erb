@@ -6,14 +6,14 @@
 <dl class="see mod-gws-owner_permission">
   <% if @item.class.permission_included_custom_groups? %>
   <dt><%= @model.t :custom_group_ids %></dt>
-  <dd><%=tryb { br @item.custom_group_names } %></dd>
+  <dd><%=tryb { br @item.custom_groups.map(&:name) } %></dd>
   <% end %>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.group_names %></dd>
+  <dd><%=br @item.groups.map(&:name) %></dd>
 
   <dt><%= @model.t :user_ids %></dt>
-  <dd><%=br gws_public_user_long_names(@item.user_names) %></dd>
+  <dd><%=br gws_public_user_long_names(@item.users.map(&:name)) %></dd>
 
   <% unless SS.config.ss.disable_permission_level %>
     <dt><%= @model.t :permission_level %></dt>
