@@ -114,7 +114,7 @@ class Cms::NodeImporter
       object = object.becomes_with_route(route)
       object.route = route
     end
-    return nil if object.class == Cms::Node::Base
+    return nil if object.instance_of?(Cms::Node::Base)
 
     object.cur_site = site
     object.cur_node = node if node
@@ -146,7 +146,7 @@ class Cms::NodeImporter
     return if !item.respond_to?(:sort_options)
     return if row[t_columns(:sort)].blank?
 
-    options = item.sort_options.map { |v| v.take(2) }.to_h
+    options = item.sort_options.to_h { |v| v.take(2) }
     item.sort = options[row[t_columns(:sort)]]
   end
 

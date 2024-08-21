@@ -8,9 +8,8 @@ class Cms::NodeExporter
 
       drawer_columns = I18n.t('cms.node_columns').invert
       csv_headers = drawer_columns.keys
-
       csv_headers.each do |header|
-        drawer.column drawer_columns["#{header}"] do
+        drawer.column drawer_columns[header] do
           drawer.head { header }
 
           case header

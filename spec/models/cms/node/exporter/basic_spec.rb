@@ -56,15 +56,13 @@ describe Cms::NodeExporter, dbscope: :example do
     let!(:parent) { nil }
 
     it "#export" do
-      criteria = Cms::Node.site(site).where(depth: 1) # bind site and depth conditions
-      criteria = criteria.allow(:read, user, site: site, node: parent) # filter allowed nodes by permissions; but since the user is like an admin, all nodes are retrieved.
+      criteria = Cms::Node.site(site).where(depth: 1)
+      criteria = criteria.allow(:read, user, site: site, node: parent)
       criteria = criteria.order_by(order: 1)
 
       exporter = described_class.new(site: site, criteria: criteria)
       enumerable = exporter.enum_csv(csv_params)
 
-      # enum csv encoded by UTF-8 with BOM
-      # be careful that CSV.parse required non BOM UTF8 string
       csv = enumerable.to_a.join.delete_prefix(SS::Csv::UTF8_BOM)
       csv = CSV.parse(csv, headers: true)
 
@@ -152,7 +150,7 @@ describe Cms::NodeExporter, dbscope: :example do
 
     it "#export" do
       criteria = Cms::Node.site(site).node(parent)
-      criteria = criteria.allow(:read, user, site: site, node: parent) # filter allowed nodes by permissions; but since the user is like an admin, all nodes are retrieved.
+      criteria = criteria.allow(:read, user, site: site, node: parent)
       criteria = criteria.order_by(order: 1)
 
       exporter = described_class.new(site: site, criteria: criteria)
