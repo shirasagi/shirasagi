@@ -174,7 +174,7 @@ module SS::CrudFilter
     if result
       notice = { notice: opts[:notice].presence || t("ss.notice.#{action}d") }
     else
-      notice = { notice: t("ss.notice.unable_to_#{action}", items: @items.pluck(:name).join("、")) }
+      notice = { notice: t("ss.notice.unable_to_#{action}", items: @items.to_a.map(&:name).join("、")) }
     end
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 

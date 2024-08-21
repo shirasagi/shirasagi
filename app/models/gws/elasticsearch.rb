@@ -22,4 +22,11 @@ module Gws::Elasticsearch
   def init_ingest(site:)
     ::Cms::Elasticsearch.init_ingest(site: site)
   end
+
+  def mappings_keys
+    @mappings_keys ||= begin
+      json = JSON.parse(::File.read("#{Rails.root}/vendor/elasticsearch/mappings.json"))
+      json["properties"].keys.freeze
+    end
+  end
 end

@@ -1,0 +1,82 @@
+<%
+  user_ids = []
+  user_title_ids = []
+  user_occupation_ids = []
+
+  @item.circulations.each do |circulator|
+    case circulator[:user_type]
+    when Gws::User.name
+      user_ids << circulator[:user_id]
+    when Gws::UserTitle.name
+      user_title_ids << circulator[:user_id]
+    when Gws::UserOccupation.name
+      user_occupation_ids << circulator[:user_id]
+    end
+  end
+
+  id_user_map = Gws::User.all.site(@cur_site).in(id: user_ids).active.to_a.index_by(&:id)
+  id_title_map = Gws::UserTitle.all.site(@cur_site).in(id: user_title_ids).active.to_a.index_by(&:id)
+  id_occupation_map = Gws::UserOccupation.all.site(@cur_site).in(id: user_occupation_ids).active.to_a.index_by(&:id)
+%>
+
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
+  <% next if @item.circulations_at(level).blank? %>
+
+  <div class="gws-workflow-route-circulation-item" data-level="<%= level %>">
+    <h1 class="workflow-level-header"><%= @model.t :level, level: level %></h1>
+
+    <dl class="see circulation_attachment_uses">
+      <dt><%= @model.t :circulation_attachment_uses %></dt>
+      <dd><%= @item.circulation_attachment_enabled_at?(level) ? t("ss.options.state.enabled") : t("ss.options.state.disabled") %></dd>
+    </dl>
+
+    <dl class="see circulations">
+      <dt><%= @model.t :circulations %></dt>
+      <dd>
+        <table class="index gws-workflow-grid-table" data-col="2">
+          <thead>
+          <tr>
+            <th class="type"><%= t("gws/workflow2.labels.approver_type") %></th>
+            <th class="name"><%= t("gws/workflow2.labels.approver_name") %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @item.circulations_at(level).each do |circulator| %>
+            <tr>
+              <td>
+                <%=
+                  case circulator[:user_type]
+                  when "superior"
+                    t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")
+                  when Gws::User.name
+                    Gws::User.model_name.human
+                  when Gws::UserTitle.name
+                    Gws::UserTitle.model_name.human
+                  when Gws::UserOccupation.name
+                    Gws::UserOccupation.model_name.human
+                  end
+                %>
+              </td>
+              <td>
+                <%=
+                  case circulator[:user_type]
+                  when "superior"
+                    t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")
+                  when Gws::User.name
+                    user = id_user_map[circulator[:user_id]]
+                    user ? gws_public_user_long_name(user.long_name) : t("workflow.user_deleted")
+                  when Gws::UserTitle.name
+                    id_title_map[circulator[:user_id]].try(:name) || t("workflow.user_deleted")
+                  when Gws::UserOccupation.name
+                    id_occupation_map[circulator[:user_id]].try(:name) || t("workflow.user_deleted")
+                  end
+                %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  </div>
+<% end %>
