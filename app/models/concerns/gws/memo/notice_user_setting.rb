@@ -60,7 +60,7 @@ module Gws::Memo::NoticeUserSetting
     when "gws/workload/work" then 'workload'
     when "gws/schedule/plan", "gws/schedule/comment", "gws/schedule/attendance", "gws/schedule/approval" then 'schedule'
     when "gws/discussion/topic", "gws/discussion/post" then 'discussion'
-    when "gws/workflow/file" then 'workflow'
+    when "gws/workflow/file", "gws/workflow2/file" then 'workflow'
     when "gws/report/file" then 'report'
     when "gws/notice/post" then 'announcement'
     when "gws/survey/form", "gws/survey/file" then 'survey'

@@ -48,4 +48,37 @@
       margin-left: 5px;
     }
   }
+
+  .workflow-cancel {
+    display: inline-block;
+  }
+
+  .btn-reroute {
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    background: #f7f7f7;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    &:hover {
+      background: #ebecec;
+      cursor: pointer;
+    }
+    &:disabled {
+      border: 0;
+      &:hover {
+        background: #f7f7f7;
+        cursor: default;
+      }
+    }
+  }
+}
+
+.workflow-request-notice {
+  .workflow-request-notice-list {
+    padding-inline-start: 10px;
+  }
+  .workflow-request-notice-item {
+    list-style-type: disc;
+  }
 }

@@ -1,0 +1,108 @@
+<% render_filter = proc do |filter, index| %>
+  <%
+    radio_seq = "#{Time.zone.now.to_i}_#{index}"
+    case filter[:op]
+    when "any"
+      op = "any"
+    when "none"
+      op = "none"
+    else
+      op = "all"
+    end
+  %>
+  <div class="individual-criteria">
+    <div class="individual-criteria-handler">
+    </div>
+    <fieldset>
+      <legend><%= t("gws.apis.categories.individual_criteria") %></legend>
+      <div class="individual-criteria-operator-list">
+        <%= hidden_field_tag "individual_op", op, id: nil %>
+        <label><%= radio_button_tag "individual_#{radio_seq}", "all", op == "all", id: nil, class: "individual-criteria-operator" %> <%= t("ss.buttons.include_all_of") %></label>
+        <label><%= radio_button_tag "individual_#{radio_seq}", "any", op == "any", id: nil, class: "individual-criteria-operator" %> <%= t("ss.buttons.include_any_of") %></label>
+        <label><%= radio_button_tag "individual_#{radio_seq}", "none", op == "none", id: nil, class: "individual-criteria-operator" %> <%= t("ss.buttons.include_none_of") %></label>
+      </div>
+
+      <div class="category-item-list">
+        <% advanced_each_category(filter[:categories]) do |cate| %>
+          <div class="category-item-wrap gws-category-label" data-id="<%= cate.id %>" style="<%= category_label_css(cate) %>">
+            <%=
+              cate_value = {
+                id: cate.id, depth: cate.depth, order: cate.order, style: category_label_css(cate),
+                name: cate.name, trailing_name: cate.trailing_name
+              }
+              cate_value = Base64.urlsafe_encode64(cate_value.to_json)
+              hidden_field_tag "s[category_ids][]", cate_value, id: nil
+            %>
+            <span><%= cate.name %></span>
+            <button name="btn-delete-category" type="button">
+              <span class="material-icons-outlined md-15">close</span>
+            </button>
+          </div>
+        <% end %>
+
+        <%= link_to t('gws.apis.categories.index'), url_for_category_decide, class: "btn btn-open-category-dialog" %>
+      </div>
+    </fieldset>
+    <div class="individual-criteria-action">
+      <div>
+        <button name="btn-delete-individual-criteria" type="button" class="btn"><%= t("ss.buttons.delete") %></button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="gws-category-navi-dialog">
+  <form method="dialog" class="gws-category-navi-dialog-form" data-controller="gws--category--advanced-editing" data-gws--category--advanced-editing-url-value="<%= return_path %>">
+    <%= hidden_field_tag "base64_filter", id: nil %>
+    <%= hidden_field_tag "return_path", id: nil %>
+    <%= hidden_field_tag "filter_expr", id: nil %>
+
+    <div class="overall-criteria">
+      <fieldset>
+        <legend><%= t("gws.apis.categories.overall_criteria") %></legend>
+        <label><%= radio_button_tag "overall_op", "all", advanced_overall_operator_all?, id: nil %><%= t("ss.buttons.match_all") %></label>
+        <label><%= radio_button_tag "overall_op", "any", advanced_overall_operator_any?, id: nil %> <%= t("ss.buttons.match_any_of") %></label>
+      </fieldset>
+    </div>
+
+    <div class="individual-criteria-container">
+      <% filter_count = 0 %>
+      <% advanced_each_filter do |filter, index| %>
+        <% render_filter.call(filter, index) %>
+        <% filter_count += 1 %>
+      <% end %>
+      <% if filter_count == 0 %>
+        <% render_filter.call({ op: "all", categories: [] }, 0) %>
+      <% end %>
+    </div>
+
+    <div>
+      <button name="btn-add-individual-criteria" type="button" class="btn"><%= t("gws.apis.categories.add_individual_criteria") %></button>
+    </div>
+
+    <template data-name="individual-criteria-form">
+      <% render_filter.call({ op: "all", categories: [] }, 9_999) %>
+    </template>
+
+    <template data-name="category">
+      <div class="category-item-wrap gws-category-label">
+        <%= hidden_field_tag "s[category_ids][]", "", id: nil %>
+        <% I18n.available_locales.each do |lang| %>
+          <%= tag.span "", data: { show_in: lang } %>
+        <% end %>
+        <button name="btn-delete-category" type="button">
+          <span class="material-icons-outlined md-15">close</span>
+        </button>
+      </div>
+    </template>
+
+    <footer class="send">
+      <% if category_frame_options[:action_btn].to_s == "decide" %>
+        <%= button_tag t("ss.buttons.decide"), name: nil, value: "send", class: "btn-primary save btn-decide" %>
+      <% else %>
+        <%= button_tag t("ss.buttons.search"), name: nil, value: "send", class: "btn-primary save btn-send" %>
+      <% end %>
+      <%= button_tag t("ss.buttons.close"), name: nil, value: "close", class: "btn-default btn-close" %>
+    </footer>
+  </form>
+</div>

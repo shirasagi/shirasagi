@@ -114,7 +114,7 @@ module Tasks
 
           %i[
             feed_all_memos feed_all_boards feed_all_faqs feed_all_qnas feed_all_surveys feed_all_circulars
-            feed_all_monitors feed_all_reports feed_all_workflows feed_all_files
+            feed_all_monitors feed_all_reports feed_all_workflows feed_all_workflows2 feed_all_files
           ].each do |method|
             ::Tasks::Gws::Es.send(method)
           end
@@ -337,6 +337,27 @@ module Tasks
           ::Tasks::Gws::Base.each_item(::Gws::Workflow::Form.site(site)) do |file|
             puts "- #{file.name}"
             job = ::Gws::Elasticsearch::Indexer::WorkflowFormJob.bind(site_id: site)
+            job.perform_now(action: 'index', id: file.id.to_s)
+          end
+        end
+      end
+
+      def feed_all_workflows2
+        ::Tasks::Gws::Base.with_site(ENV['site']) do |site|
+          if !site.menu_elasticsearch_visible?
+            puts 'elasticsearch was not enabled'
+            break
+          end
+
+          if site.elasticsearch_client.nil?
+            puts 'elasticsearch was not configured'
+            break
+          end
+
+          puts 'gws/workflow2/file'
+          ::Tasks::Gws::Base.each_item(::Gws::Workflow2::File.site(site).without_deleted) do |file|
+            puts "- #{file.name}"
+            job = ::Gws::Elasticsearch::Indexer::Workflow2FileJob.bind(site_id: site)
             job.perform_now(action: 'index', id: file.id.to_s)
           end
         end
