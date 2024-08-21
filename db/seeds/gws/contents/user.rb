@@ -99,7 +99,25 @@ titles_hash = user_titles.index_by(&:name)
   user.without_record_timestamps do
     user.title_ids = [ titles_hash[title_name].id ]
     unless user.save
-      $stderr.puts user.errors.full_messages.join("\n")
+      puts user.errors.full_messages
+    end
+  end
+end
+
+## -------------------------------------
+puts "# user superior"
+
+[
+  %w(sys admin), %w(admin admin), %w(user1 admin), %w(user2 user4), %w(user3 user3),
+  %w(user4 user4), %w(user5 user3)
+].each do |user_uid, superior_user_uid|
+  user = u(user_uid)
+  superior_user = u(superior_user_uid)
+
+  user.without_record_timestamps do
+    user.in_gws_superior_user_ids = [ superior_user.id ]
+    unless user.save
+      puts user.errors.full_messages
     end
   end
 end

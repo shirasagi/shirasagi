@@ -91,6 +91,8 @@ end
 
 ## -------------------------------------
 
+load "#{Rails.root}/db/seeds/gws/contents/group.rb"
+load "#{Rails.root}/db/seeds/gws/contents/user.rb"
 load "#{Rails.root}/db/seeds/gws/contents/custom_group.rb"
 load "#{Rails.root}/db/seeds/gws/contents/notice.rb"
 load "#{Rails.root}/db/seeds/gws/contents/link.rb"
@@ -107,7 +109,6 @@ load "#{Rails.root}/db/seeds/gws/contents/monitor.rb"
 load "#{Rails.root}/db/seeds/gws/contents/qna.rb"
 load "#{Rails.root}/db/seeds/gws/contents/report.rb"
 load "#{Rails.root}/db/seeds/gws/contents/share.rb"
-load "#{Rails.root}/db/seeds/gws/contents/user.rb"
 load "#{Rails.root}/db/seeds/gws/contents/workflow.rb"
 load "#{Rails.root}/db/seeds/gws/contents/bookmark.rb"
 load "#{Rails.root}/db/seeds/gws/contents/max.rb"
