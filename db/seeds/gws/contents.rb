@@ -11,7 +11,11 @@
 
 @users_hash = {}
 def u(uid)
-  @users_hash[uid.to_s] ||= Gws::User.find_by(uid: uid)
+  @users_hash[uid.to_s] ||= begin
+    user = Gws::User.find_by(uid: uid)
+    user.cur_site = @site
+    user
+  end
 end
 
 @groups_hash = {}

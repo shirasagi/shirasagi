@@ -90,9 +90,16 @@ user_titles = [
   create_user_title(name: '係長', code: 'T0300', order: 20),
   create_user_title(name: '主任', code: 'T0400', order: 10)
 ]
+titles_hash = user_titles.index_by(&:name)
 
-u('sys').add_to_set(title_ids: [user_titles[1].id])
-u('admin').add_to_set(title_ids: [user_titles[0].id])
-u('user2').add_to_set(title_ids: [user_titles[3].id])
-u('user3').add_to_set(title_ids: [user_titles[1].id])
-u('user4').add_to_set(title_ids: [user_titles[1].id])
+[ %w(sys 課長), %w(admin 部長), %w(user2 主任), %w(user3 課長), %w(user4 課長) ].each do |uid, title_name|
+  user = u(uid)
+  # title_ids だけでなく、title_orders も正しく構成する必要がある。
+  # title_orders はモデル・コールバックによりセットされるので .save によりDBへ保存する
+  user.without_record_timestamps do
+    user.title_ids = [ titles_hash[title_name].id ]
+    unless user.save
+      $stderr.puts user.errors.full_messages.join("\n")
+    end
+  end
+end
