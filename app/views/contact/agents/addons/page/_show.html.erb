@@ -129,4 +129,7 @@
       end
     %>
   </dd>
+
+  <dt><%= @model.t :contact_sub_group_ids %></dt>
+  <dd class="contact-sub-group-ids"><%=br @item.contact_sub_groups.map(&:name) %></dd>
 </dl>

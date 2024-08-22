@@ -86,6 +86,7 @@ ja:
         contact_group_name_id: 表示用グループ名
         contact_group_contact: 連絡先
         contact_group_relation: 連絡先連動設定
+        contact_sub_group_ids: 所属(組織一覧用)
       contact/addon/group:
         contact_group_name: 表示用グループ名
         contact_charge: 担当部署・係
@@ -147,6 +148,8 @@ ja:
       contact_group_relation:
         - グループの連絡先と連動するかどうかを選択します。
         - 未選択の場合、「グループと連動する」が選択されているものとみなします。
+      contact_sub_group_ids:
+        - 組織一覧のページリストにて表示されるページの所属を選択します。
     ss/contact:
       name:
         - CSV インポート時のキーとなる名前を記入します。他の連絡先と重複しない名前を記入してください。

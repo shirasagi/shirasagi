@@ -1,0 +1,14 @@
+<%= form_for :item, url: { action: :import }, html: { method: :post, id: "task-form" } do |f| %>
+  <div class="main-box">
+    <div class="notice">
+      <%=br t("lsorg.notice.import") %>
+    </div>
+  </div>
+
+  <%= render "ss/tasks/box", task: @task, url: url_for(action: :import, format: :json) %>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.import"), class: "save", data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

@@ -2,6 +2,7 @@ class Sys::Group
   include SS::Model::Group
   include Sys::Permission
   include Contact::Addon::Group
+  include Lsorg::Addon::Group
 
   set_permission_name "sys_groups", :edit
 

@@ -2,6 +2,7 @@ class Cms::Group
   include SS::Model::Group
   include Cms::SitePermission
   include Contact::Addon::Group
+  include Lsorg::Addon::Group
 
   set_permission_name "cms_groups", :edit
 
