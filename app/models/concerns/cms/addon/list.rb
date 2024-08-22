@@ -14,7 +14,7 @@ module Cms::Addon::List
       cattr_accessor(:use_lower_html, instance_accessor: false) { true }
       cattr_accessor(:use_loop_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
-      cattr_accessor(:default_limit, instance_accessor: false) { 100 }
+      cattr_accessor(:default_limit, instance_accessor: false) { 20 }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
       cattr_accessor(:use_conditions, instance_accessor: false) { true }
