@@ -16,7 +16,7 @@ class Opendata::Metadata::Importer
     default_scope ->{ order_by created: -1 }
 
     def name
-      "#{created.try { |time| I18n.l(time, format: :picker) }}"
+      created.try { |time| I18n.l(time, format: :picker) }
     end
 
     def new_dataset

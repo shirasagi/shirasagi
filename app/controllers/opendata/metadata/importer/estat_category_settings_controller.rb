@@ -35,7 +35,8 @@ class Opendata::Metadata::Importer::EstatCategorySettingsController < Applicatio
 
   def download
     csv = @model.where(importer_id: @importer.id).to_csv
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "metadata_estat_category_#{Time.zone.now.to_i}.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+      filename: "metadata_estat_category_#{Time.zone.now.to_i}.csv"
   end
 
   def import

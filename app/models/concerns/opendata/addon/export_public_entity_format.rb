@@ -15,18 +15,20 @@ module Opendata::Addon::ExportPublicEntityFormat
       criteria = self.node(node)
       dataset_ids = criteria.pluck(:id)
 
-      def encode_sjis_csv(row)
-        row.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
-      end
-
-      def name_hier(category)
-        names = []
-        names << category.name
-        while category.parent.present?
-          category = category.parent
-          names << category.name
+      class << self
+        def encode_sjis_csv(row)
+          row.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
         end
-        names.reverse.join('/')
+
+        def name_hier(category)
+          names = []
+          names << category.name
+          while category.parent.present?
+            category = category.parent
+            names << category.name
+          end
+          names.reverse.join('/')
+        end
       end
 
       st_categories = node.st_categories.presence || node.default_st_categories
@@ -66,22 +68,22 @@ module Opendata::Addon::ExportPublicEntityFormat
             [filename, parent]
           end
 
-          cate1 = category_filenames.map do |filename, parent|
+          cate1 = category_filenames.filter_map do |filename, parent|
             st_categories1[filename] || st_categories1[parent]
-          end.compact.uniq.join("\n")
+          end.uniq.join("\n")
 
-          cate2 = category_filenames.map { |filename, _| st_categories2[filename] }.compact.join("\n")
+          cate2 = category_filenames.filter_map { |filename, _| st_categories2[filename] }.join("\n")
 
           estat_category_filenames = dataset.estat_categories.pluck(:filename).map do |filename|
             parent = filename.index("/") ? ::File.dirname(filename) : nil
             [filename, parent]
           end
 
-          cate3 = estat_category_filenames.map do |filename, parent|
+          cate3 = estat_category_filenames.filter_map do |filename, parent|
             st_estat_categories1[filename] || st_estat_categories1[parent]
-          end.compact.uniq.join("\n")
+          end.uniq.join("\n")
 
-          cate4 = estat_category_filenames.map { |filename, _| st_estat_categories2[filename] }.compact.join("\n")
+          cate4 = estat_category_filenames.filter_map { |filename, _| st_estat_categories2[filename] }.join("\n")
 
           dataset.resources.each do |resource|
             row = []
@@ -91,7 +93,7 @@ module Opendata::Addon::ExportPublicEntityFormat
             row << dataset.name
             row << nil
             row << dataset.text
-            row << dataset.metadata_dataset_keyword.to_s.gsub(',', ';')
+            row << dataset.metadata_dataset_keyword.to_s.tr(',', ';')
             row << cate3
             row << nil
             row << dataset.created.strftime("%Y-%m-%d")

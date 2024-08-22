@@ -25,7 +25,7 @@ module Opendata::Metadata::CsvImporter
 
     begin
       Tempfile.create('import_csv') do |tempfile|
-        ::URI.open(source_url, opts) do |res|
+        ::URI.parse(source_url).open(opts) do |res|
           IO.copy_stream(res, tempfile.path)
           put_log('[Download] ' + tempfile.size.to_s(:delimited) + ' bytes')
           put_log('[Import] start')
@@ -62,10 +62,10 @@ module Opendata::Metadata::CsvImporter
               dataset.metadata_host = source_host
               dataset.metadata_dataset_id = metadata_dataset_id
               dataset.metadata_japanese_local_goverment_code = csv_row['全国地方公共団体コード'].presence ||
-                csv_row['都道府県コード又は市区町村コード']
+                                                               csv_row['都道府県コード又は市区町村コード']
               dataset.metadata_local_goverment_name = csv_row['地方公共団体名'].presence ||
-                (csv_row['都道府県名'].to_s + csv_row['市区町村名'].to_s)
-              dataset.metadata_dataset_keyword = csv_row['データセット_キーワード'].to_s.gsub(';', ',')
+                                                      (csv_row['都道府県名'].to_s + csv_row['市区町村名'].to_s)
+              dataset.metadata_dataset_keyword = csv_row['データセット_キーワード'].to_s.tr(';', ',')
               dataset.metadata_dataset_released = dataset.created
               dataset.metadata_dataset_updated = dataset.updated
               dataset.metadata_dataset_url = csv_row['データセット_URL'].presence || csv_row['URL']
@@ -211,8 +211,6 @@ module Opendata::Metadata::CsvImporter
       body << "オープンデータカタログのダウンロードURL及びアクセスURLの項目について、"
       body << "記入されているURLが間違いないか、ご担当者様でご確認をお願いいたします。"
       body << notice_body.join("\n")
-      body << url
-      @report.notice_body = body.join("\n")
     else
       # destroy unimported datasets
       dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
@@ -246,9 +244,9 @@ module Opendata::Metadata::CsvImporter
       body << "オープンデータカタログのダウンロードURL及びアクセスURLの項目について、"
       body << "記入されているURLが間違いないか、ご担当者様でご確認をお願いいたします。"
       # body << notice_body.join("\n")
-      body << url
-      @report.notice_body = body.join("\n")
     end
+    body << url
+    @report.notice_body = body.join("\n")
 
     @report.save!
   end
