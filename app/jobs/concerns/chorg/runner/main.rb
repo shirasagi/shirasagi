@@ -4,24 +4,28 @@ module Chorg::Runner::Main
   private
 
   def save_or_collect_errors(entity)
+    if entity.respond_to?(:without_record_timestamps)
+      entity.without_record_timestamps do
+        # `.valid?` も without_record_timestamps 内で実行する必要がある。
+        # そうしないと released が不意に書き換わってしまう。
+        _save_or_collect_errors(entity)
+      end
+    else
+      _save_or_collect_errors(entity)
+    end
+  end
+
+  def _save_or_collect_errors(entity)
     new_record = entity.new_record?
     if entity.valid?
-      if entity.respond_to?(:without_record_timestamps)
-        entity.without_record_timestamps { entity.save }
-      else
-        entity.save
-      end
+      entity.save
       if entity.previous_changes.present?
         put_log("saved : #{entity.class}(#{entity.id})")
         task.store_entity_changes(entity, target_site(entity), new_record: new_record)
       end
       true
     elsif exclude_validation_model?(entity)
-      if entity.respond_to?(:without_record_timestamps)
-        entity.without_record_timestamps { entity.save!(validate: false) }
-      else
-        entity.save!(validate: false)
-      end
+      entity.save!(validate: false)
       if entity.previous_changes.present?
         put_log("saved (skip validate) : #{entity.class}(#{entity.id})")
         task.store_entity_changes(entity, target_site(entity), new_record: new_record)
