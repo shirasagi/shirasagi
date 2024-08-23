@@ -44,7 +44,7 @@ module Cms::PageImportBase
     @keep_timestamp = opts[:keep_timestamp]
     basename = ::File.basename(file.name)
     put_log("import start #{basename}")
-    Rails.logger.tagged(basename) do
+    Rails.logger.tagged(basename, @keep_timestamp) do
       import_csv(file)
     end
   end
