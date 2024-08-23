@@ -1,0 +1,31 @@
+<%
+  action = params[:action]
+  is_changeable = permitted && (item.try(:state_changeable?) || action == "destroy_all")
+%>
+<li class="list-item">
+  <label class="check">
+    <% if is_changeable %>
+      <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
+    <% end %>
+  </label>
+  <div class="info">
+    <% if is_changeable %>
+      <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
+    <% end %>
+    <% show_path = url_for(action: :show, id: item) rescue nil %>
+    <% if show_path %>
+      <%= link_to item.try(:name), show_path, class: "title", target: "_blank", rel: "noopener" %>
+    <% else %>
+      <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+    <% end %>
+    <div class="meta">
+      <%= render "cms/crud/destroy_info", item: item, action: action %>
+      <% if item.try(:tags) %>
+        <span class="tags"><%= item.tags.join(",") %></span>
+      <% end %>
+      <% unless permitted %>
+        <%= message %>
+      <% end %>
+    </div>
+  </div>
+</li>

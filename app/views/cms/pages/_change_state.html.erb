@@ -1,0 +1,34 @@
+<%= form_with url: request.url, method: :put do |f| %>
+  <%= hidden_field_tag "change_state_all", true %>
+  <%= hidden_field_tag "state", @change_state %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head">
+        <h2><%= t("ss.confirm.target_to_#{@change_state}") %></h2>
+      </div>
+      <div class="addon-body">
+        <div class="index">
+          <ul class="list-items">
+            <% @selected_items.each do |item| %>
+              <%= render "cms/pages/confirm_all", item: item, f: f, permitted: permitted, message: message %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <footer class="send ss-sticky ss-sticky-bottom">
+      <%= f.submit t("ss.buttons.make_them_#{@change_state}"), class: "btn-danger delete" %>
+      <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
+    </footer>
+  </div>
+<% end %>
+
+<%= jquery do %>
+  $('.send .change-state').on('click', function() {
+    var checkedCount = $('.list-item :checked').length;
+    if (checkedCount === 0){
+      alert("<%= I18n.t("errors.messages.plz_check_targets_to_change_state") %>");
+      return false;
+    }
+  });
+<% end %>

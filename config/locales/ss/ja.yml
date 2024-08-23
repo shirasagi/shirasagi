@@ -291,6 +291,8 @@ ja:
       resume_editing: 自動保存された内容があります。編集を直前から再開しますか？
       reset_mfa_otp: ワンタイムパスワードを初期化しますが、よろしいですか？
       unable_to_delete_due_to_branch_page: 差し替えページが作成されているため削除できません。
+      not_allowed_to_publish: このページを公開することは許可されていません
+      not_allowed_to_close: このページを閉じることはできません
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。
