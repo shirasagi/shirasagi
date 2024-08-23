@@ -312,7 +312,20 @@ module Cms::PageImportBase
         item.released_type = released_type.presence
       end
     end
-    importer.simple_column :released
+    importer.simple_column :released do |row, item, head, value|
+      released_type = item.try(:released_type)
+      if item.respond_to?(:released_type)
+        # 列が前後する可能性を考慮し、CSVの released_type を取得する
+        released_type_key = self.class.model.t(:released_type)
+        if row.header?(released_type_key)
+          released_type_value = row[released_type_key]
+          released_type = from_label(released_type_value, item.released_type_options)
+        end
+      end
+      if released_type.blank? || released_type == "fixed"
+        item.released = value
+      end
+    end
     importer.simple_column :release_date
     importer.simple_column :close_date
   end
