@@ -72,10 +72,6 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     before do
       request = OpenStruct.new(url: "http://#{domain}/#{unique_id}/")
 
-      # Rails.application.current_request = request
-      Thread.current["ss.env"] = request
-      Thread.current["ss.request"] = request
-
       trusted_urls = [ "http://#{domain}/", "https://#{domain}/", "http://シラサギプロジェクト.jp", "https://シラサギプロジェクト.jp" ]
       @save_trusted_urls = SS.config.sns.trusted_urls
       SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
@@ -83,10 +79,6 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     end
 
     after do
-      # Rails.application.current_request = nil
-      Thread.current["ss.env"] = nil
-      Thread.current["ss.request"] = nil
-
       SS.config.replace_value_at(:sns, :trusted_urls, @save_trusted_urls)
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
     end
