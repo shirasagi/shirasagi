@@ -41,6 +41,21 @@ module SS
     end
   end
 
+  class CurrentScoping
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      Current.with_scope do
+        Current.env = env
+        Current.request = nil
+
+        @app.call(env)
+      end
+    end
+  end
+
   def self.config
     @_ss_config ||= SS::Config.setup
   end
@@ -87,15 +102,16 @@ module SS
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
     config.middleware.use Mongoid::QueryCache::Middleware
+    # middelware "ActionDispatch::Executor" で ActiveSupport::CurrentAttributes は reset される。
+    # そこで、middelware "ActionDispatch::Executor" の後で Current.env をセットする必要がある
+    config.middleware.use CurrentScoping
 
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
 
     def call(*args, &block)
-      Current.with_scope do
-        I18n.with_locale(I18n.locale) do
-          Time.use_zone(Time.zone) do
-            super
-          end
+      I18n.with_locale(I18n.locale) do
+        Time.use_zone(Time.zone) do
+          super
         end
       end
     end
