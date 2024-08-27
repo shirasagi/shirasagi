@@ -1,33 +1,33 @@
 require 'spec_helper'
 
-describe "cms_nodes", type: :feature, js: true do
-  subject(:site) { cms_site }
-  subject(:item) { Cms::Node.last }
-  subject(:index_path) { cms_nodes_path site.id }
-  subject(:new_path) { new_cms_node_path site.id }
-  subject(:show_path) { cms_node_path site.id, item }
-  subject(:edit_path) { edit_cms_node_path site.id, item }
-  subject(:delete_path) { delete_cms_node_path site.id, item }
+describe "cms_nodes", type: :feature, dbscope: :example, js: true do
+  let!(:site) { cms_site }
 
-  context "with auth" do
+  context "basic crud" do
     before { login_cms_user }
 
-    it "#crud" do
-      visit index_path
-
+    it do
       # new
-      visit new_path
+      visit cms_nodes_path(site: site)
+      expect(page).to have_css("#content-navi", text: "refresh")
+      click_on I18n.t("ss.links.new")
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      expect(Cms::Node.all.count).to eq 1
+      node = Cms::Node.all.first
+      expect(node.site_id).to eq site.id
+      expect(node.name).to eq "sample"
+      expect(node.basename).to eq "sample"
+      expect(node.filename).to eq "sample"
+      expect(node.state).to eq "public"
 
       # show
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
+      visit cms_node_path(site: site, id: node)
 
       # preview
       within "#addon-basic" do
@@ -40,20 +40,83 @@ describe "cms_nodes", type: :feature, js: true do
       wait_for_document_loading
 
       # edit
-      visit edit_path
+      visit cms_node_path(site: site, id: node)
+      click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      node.reload
+      expect(node.name).to eq "modify"
 
       # delete
-      visit delete_path
-      within "form" do
+      visit cms_node_path(site: site, id: node)
+      click_on I18n.t("ss.links.delete")
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(current_path).to eq index_path
+      wait_for_notice I18n.t("ss.notice.deleted")
+      expect(page).to have_css("#content-navi", text: "refresh")
+
+      expect { node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+    end
+  end
+
+  context "batch publish" do
+    let!(:node1) { create :category_node_page, cur_site: site, state: "closed" }
+    let!(:node2) { create :category_node_page, cur_site: site, state: "closed" }
+
+    before { login_cms_user }
+
+    it do
+      visit cms_nodes_path(site: site)
+      expect(page).to have_css("#content-navi", text: "refresh")
+      within ".list-head" do
+        wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
+        click_on I18n.t("ss.links.make_them_public")
+      end
+      within "form" do
+        click_on I18n.t("ss.links.make_them_public")
+      end
+      wait_for_notice I18n.t("ss.notice.changed")
+      expect(page).to have_css("#content-navi", text: "refresh")
+
+      Cms::Node.find(node1.id).tap do |node|
+        expect(node.state).to eq "public"
+      end
+      Cms::Node.find(node2.id).tap do |node|
+        expect(node.state).to eq "public"
+      end
+    end
+  end
+
+  context "batch close" do
+    let!(:node1) { create :category_node_page, cur_site: site, state: "public" }
+    let!(:node2) { create :category_node_page, cur_site: site, state: "public" }
+
+    before { login_cms_user }
+
+    it do
+      visit cms_nodes_path(site: site)
+      expect(page).to have_css("#content-navi", text: "refresh")
+      within ".list-head" do
+        wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
+        click_on I18n.t("ss.links.make_them_close")
+      end
+      within "form" do
+        click_on I18n.t("ss.links.make_them_close")
+      end
+      wait_for_notice I18n.t("ss.notice.changed")
+      expect(page).to have_css("#content-navi", text: "refresh")
+
+      Cms::Node.find(node1.id).tap do |node|
+        expect(node.state).to eq "closed"
+      end
+      Cms::Node.find(node2.id).tap do |node|
+        expect(node.state).to eq "closed"
+      end
     end
   end
 end

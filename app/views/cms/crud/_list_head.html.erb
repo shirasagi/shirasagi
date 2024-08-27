@@ -22,6 +22,14 @@ end
       <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
       <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
     </div>
+    <% if change_state_all && (releasable || closeable) %>
+      <div class="list-head-action-update">
+        <%= ss_button_to t("ss.links.make_them_public"), change_state_all,
+          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'public' } if releasable %>
+        <%= ss_button_to t("ss.links.make_them_close"), change_state_all,
+          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'closed' } if closeable %>
+      </div>
+    <% end %>
   </div>
 
   <div class="list-head-right">
