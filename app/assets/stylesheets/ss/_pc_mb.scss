@@ -1371,11 +1371,17 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .nav-menu {
     margin-left: 230px;
   }
+  .notice-menu {
+    margin: 0 10px 10px 220px;
+  }
 }
 @include mb {
   #menu {
     .nav-menu {
       margin: 10px 0;
+    }
+    .notice-menu {
+      margin: 0 10px 0 10px;
     }
     .nav-management-menu {
       position: static;

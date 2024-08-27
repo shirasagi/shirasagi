@@ -111,19 +111,4 @@ module Gws::Addon::Schedule::Approval
     return false if approval_state != "approve"
     approval_facilities.where(update_approved_state: "enabled").present?
   end
-
-  module ClassMethods
-    #def exclude_denied_plans(user)
-    #  criteria = self.criteria
-    #  return criteria.ne(approval_state: "deny") if user.nil?
-    #
-    #  cond = []
-    #  cond << { approval_state: { "$ne" => "deny" }  }
-    #  cond << { "$and" => [
-    #    { approval_state: "deny" },
-    #    { user_ids: { "$in" => [user.id] } }
-    #  ]}
-    #  criteria.where("$or" => cond)
-    #end
-  end
 end
