@@ -2,12 +2,12 @@
   action = params[:action]
   is_changeable = permitted && (item.try(:state_changeable?) || action == "destroy_all")
 %>
-<li class="list-item">
-  <label class="check">
-    <% if is_changeable %>
+<li class="list-item" data-id="<%= item.id %>">
+  <% if is_changeable %>
+    <label class="check">
       <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
-    <% end %>
-  </label>
+    </label>
+  <% end %>
   <div class="info">
     <% if is_changeable %>
       <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
