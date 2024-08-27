@@ -16,6 +16,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   def set_target_user
     set_cur_schedule
 
+    return if @target_user
     target_user = Gws::User.site(@cur_site).active.where(id: params[:user_id]).first
     raise '404' unless target_user
 
@@ -104,7 +105,8 @@ class Gws::Schedule::ApprovalsController < ApplicationController
                        @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
                        @cur_schedule.approval_member?(@cur_user)
     @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    #@item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    @item.updated = Time.zone.now
 
     render_opts = {
       location: CGI.unescapeHTML(params[:redirect_to])
@@ -115,10 +117,10 @@ class Gws::Schedule::ApprovalsController < ApplicationController
       post_comment
 
       @cur_schedule = @cur_schedule.class.find(@cur_schedule.id) # nocache
-      @cur_schedule.update_approval_state
+      @cur_schedule.update_approval_state(@cur_user)
       if @cur_schedule.approval_state == 'approve'
         send_approval_approve_mail
-      elsif params.dig(:item, :approval_state) == 'deny'
+      elsif @cur_schedule.approval_state == 'deny'
         send_approval_deny_mail
       end
     end
