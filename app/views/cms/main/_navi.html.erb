@@ -56,6 +56,11 @@
     <h2><%= link_to t("cms.command"), cms_command_path, class: "icon-write" %></h2>
   <% end %>
 
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t("cms.csv_export"), download_cms_nodes_path, class: "icon-export" %></h2>
+    <h2><%= link_to t("cms.csv_import"), import_cms_nodes_path, class: "icon-import" %></h2>
+  <% end %>
+
   <% if @cur_user.cms_role_permit_any?(@cur_site, :use_cms_all_contents) %>
     <h2><%= link_to t("cms.all_contents"), cms_all_contents_path, class: "icon-write" %></h2>
   <% end %>

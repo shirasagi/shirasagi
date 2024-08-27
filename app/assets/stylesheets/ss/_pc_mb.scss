@@ -1212,6 +1212,18 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .icon-workload:hover:before {
     background-position: -32px -1088px !important;
   }
+  .icon-export:before {
+    background-position: left -1120px !important;
+  }
+  .icon-export:hover:before {
+    background-position: -32px -1120px !important;
+  }
+  .icon-import:before {
+    background-position: left -1152px !important;
+  }
+  .icon-import:hover:before {
+    background-position: -32px -1152px !important;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------

@@ -1,0 +1,59 @@
+﻿ファイル名,フォルダー属性,タイトル,一覧用タイトル,レイアウト,並び順,ページレイアウト,ショートカット,既定のモジュール,キーワード,概要,サマリー,検索条件(URL),リスト並び順,表示件数,NEWマーク期間,ループHTML形式,上部HTML,ループHTML(SHIRASAGI形式),下部HTML,ループHTML(Liquid形式),ページ未検出時表示,代替HTML,カテゴリー設定,公開日時種別,公開日時,管理グループ,ステータス
+anzen,category/page,交通安全・防犯・非行防止,,カテゴリー：中間階層 (category-middle.layout.html),10,,非表示,,くらし・手続き,,交通安全や犯罪から身を守る知識や施策について紹介しています。,,,100,1,,,,,,,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+bosai,category/page,防災情報,,カテゴリー：中間階層 (category-middle.layout.html),20,,非表示,,くらし・手続き,,災害や危機管理、消防などに関する情報を紹介しています。,,,100,1,,,,,,,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",非公開
+koseki,category/page,戸籍・印鑑登録・住民登録,,カテゴリー：中間階層 (category-middle.layout.html),50,,非表示,,くらし・手続き,,住民票の写しや戸籍など、必要書類の届出・申請方法について紹介しています。,,,100,1,,,,,,,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+nenkin,category/page,年金・保険,,カテゴリー：中間階層 (category-middle.layout.html),60,,非表示,,くらし・手続き,,国民健康保険や国民年金、高齢者医療の制度について紹介しています。,,,100,1,,,,,,,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+attention,category/page,注目情報,,記事一覧 (more.layout.html),0,,非表示,,自治体サンプル,,,,,100,1,,,,,,,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
+faq,category/node,よくある質問,,FAQトップ (faq-top.layout.html),0,,非表示,,自治体サンプル,,,,指定順（昇順）,100,1,Liquid,,,,"{% for node in nodes %}
+{% if forloop.first == true %}
+<div class=""deepest-catelist-wrap"">
+  <section class=""deepest-catelist"">
+    <ul class=""deepest-catelist__list"">
+      {% endif %}
+      <li class=""deepest-catelist__item deepest-catelist__item--{{ node.css_class }}"">
+        <header class=""deepest-catelist__item-header"">
+          <h2 class=""deepest-catelist__item-title""><a href=""{{ node.url }}"" class=""deepest-catelist__item-link"">{{ node.name }}</a></h2>
+        </header><!-- .deepest-catelist__item-header -->
+      </li><!-- .deepest-catelist__item -->
+      {% if forloop.last == true %}
+    </ul><!-- .deepest-catelist__list -->
+  </section><!-- .deepest-catelist -->
+</div><!-- .deepest-catelist-wrap -->
+{% endif %}
+{% endfor %}",,,,手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+シラサギ市/企画政策部/広報課
+シラサギ市/危機管理部
+シラサギ市/危機管理部/管理課
+シラサギ市/危機管理部/防災課",公開
