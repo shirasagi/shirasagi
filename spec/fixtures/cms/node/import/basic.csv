@@ -1,0 +1,11 @@
+﻿ファイル名,フォルダー属性,タイトル,一覧用タイトル,レイアウト,並び順,ページレイアウト,ショートカット,既定のモジュール,キーワード,概要,サマリー,検索条件(URL),リスト並び順,表示件数,NEWマーク期間,ループHTML形式,上部HTML,ループHTML(SHIRASAGI形式),下部HTML,ループHTML(Liquid形式),ページ未検出時表示,代替HTML,カテゴリー設定,公開日時種別,公開日時,管理グループ,ステータス
+docs,article/page,title,index_title,記事一覧 (more.layout.html),10,記事レイアウト (pages.layout.html),表示,記事/記事リスト,"自治体サンプル
+自治体サンプル
+自治体サンプル",概要です,<div>summary</div>,"filename1
+filename2
+filename3",指定順（昇順）,20,6,Liquid,<div>upper</div>,<div>#{loop}</div>,<div>lower</div>,<div>{{liquid}}</div>,表示,<div>substitute_html</div>,"安全 (anzen)
+防災 (bosai)
+",手動入力,2024/6/1 6:01,"シラサギ市
+シラサギ市/企画政策部
+シラサギ市/企画政策部/政策課
+",公開

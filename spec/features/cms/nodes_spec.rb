@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_nodes", type: :feature, js: true do
+describe "cms_nodes", type: :feature, dbscope: :example, js: true do
   subject(:site) { cms_site }
   subject(:item) { Cms::Node.last }
   subject(:index_path) { cms_nodes_path site.id }
@@ -8,6 +8,8 @@ describe "cms_nodes", type: :feature, js: true do
   subject(:show_path) { cms_node_path site.id, item }
   subject(:edit_path) { edit_cms_node_path site.id, item }
   subject(:delete_path) { delete_cms_node_path site.id, item }
+  subject(:download_path) { download_cms_nodes_path site.id }
+  subject(:import_path) { import_cms_nodes_path site.id }
 
   context "with auth" do
     before { login_cms_user }
