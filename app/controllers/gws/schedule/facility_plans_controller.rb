@@ -29,7 +29,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
     set_facility
     @items ||= Gws::Schedule::Plan.site(@cur_site).without_deleted.
       facility(@facility).
-      search(params[:s])
+      search(@search_plan)
   end
 
   public

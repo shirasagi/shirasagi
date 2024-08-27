@@ -32,6 +32,11 @@ ja:
       day: "%{count}日"
     errors:
       require_approver: 予約承認には管理ユーザーの登録が必要です。
+    options:
+      update_approved_state:
+        disabled: 管理者以外も編集可能
+        enabled: 管理者のみ編集可能
+
   gws/facility/item:
     csv:
       id: ID
@@ -49,6 +54,7 @@ ja:
       reservation_start_date: 予約可能期間（開始）
       reservation_end_date: 予約可能期間（終了）
       approval_check_state: 予約承認
+      update_approved_state: 承認後の予約の編集
       reservable_group_names: 予約可能グループ
       reservable_member_names: 予約可能ユーザー
       readable_setting_range: 公開範囲
@@ -59,8 +65,11 @@ ja:
       permission_level: 権限レベル
 
       approval_check_state_datas:
-        enabled: 有効
         disabled: 無効
+        enabled: 有効
+      update_approved_state_datas:
+        disabled: 管理者以外も編集可能
+        enabled: 管理者のみ編集可能
       readable_setting_range_datas:
         select: 選択範囲
         public: 全公開
@@ -148,6 +157,7 @@ ja:
         reservation_start_date: 予約可能期間（開始）
         reservation_end_date: 予約可能期間（終了）
         approval_check_state: 予約承認
+        update_approved_state: 承認後の予約の編集
         html: 設備概要
       gws/facility/category:
         name: カテゴリー名
@@ -197,6 +207,8 @@ ja:
         - この制限は設備管理者にも適用されます。
       approval_check_state:
         - 予約に管理ユーザーの承認を必要とします。
+      update_approved_state:
+        - 承認した予定を管理者（管理ユーザー）のみ編集可能とするか、設定できます。
     gws/facility/category:
       name:
         - カテゴリー名を入力します。
