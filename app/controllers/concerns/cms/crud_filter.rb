@@ -189,7 +189,7 @@ module Cms::CrudFilter
     @change_state = params[:state]
 
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.published"))
       return
     end
 
@@ -205,7 +205,7 @@ module Cms::CrudFilter
     @change_state = params[:state]
 
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
       return
     end
 
@@ -213,5 +213,5 @@ module Cms::CrudFilter
       format.html { render "cms/pages/close_all" }
       format.json { head json: errors }
     end
-  end 
+  end
 end

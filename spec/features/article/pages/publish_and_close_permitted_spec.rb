@@ -22,30 +22,32 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it "check make public if not permitted" do
       visit index_path
-      wait_for_event_fired("ss:checked-all-list-items") do
-        find('.list-head input[type="checkbox"]').set(true)
+      within ".list-head" do
+        wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
+        click_button I18n.t("ss.links.make_them_public")
       end
 
-      click_button I18n.t("ss.links.make_them_public")
-
-      wait_for_ajax
-
-      expect(page).to have_css("[data-id='#{item1.id}']", text: I18n.t("ss.confirm.not_allowed_to_publish"))
-      expect(page).to have_css("[data-id='#{item2.id}'] [type='checkbox']")
+      within "form" do
+        expect(page).to have_css("[data-id='#{item1.id}']", text: I18n.t("ss.confirm.not_allowed_to_publish"))
+        expect(page).to have_css("[data-id='#{item2.id}'] [type='checkbox']")
+        click_button I18n.t("ss.links.make_them_public")
+      end
+      wait_for_notice I18n.t("ss.notice.published")
     end
 
     it "check make private if not permitted" do
       visit index_path
-      wait_for_event_fired("ss:checked-all-list-items") do
-        find('.list-head input[type="checkbox"]').set(true)
+      within ".list-head" do
+        wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
+        click_button I18n.t('ss.links.make_them_close')
       end
 
-      click_button I18n.t("ss.links.make_them_close")
-
-      wait_for_ajax
-
-      expect(page).to have_css("[data-id='#{item1.id}']", text: I18n.t("ss.confirm.not_allowed_to_close"))
-      expect(page).to have_css("[data-id='#{item2.id}'] [type='checkbox']")
+      within "form" do
+        expect(page).to have_css("[data-id='#{item1.id}']", text: I18n.t("ss.confirm.not_allowed_to_close"))
+        expect(page).to have_css("[data-id='#{item2.id}'] [type='checkbox']")
+        click_button I18n.t('ss.links.make_them_close')
+      end
+      wait_for_notice I18n.t("ss.notice.depublished")
     end
   end
 end

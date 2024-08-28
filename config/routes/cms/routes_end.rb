@@ -503,6 +503,8 @@ Rails.application.routes.draw do
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :import_pages, concerns: [:deletion, :convert, :change_state]
     resources :import_nodes, concerns: [:deletion, :change_state]
