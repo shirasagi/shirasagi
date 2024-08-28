@@ -241,7 +241,7 @@ end
 
 def webmail_load_mail(name)
   path = "#{Rails.root}/spec/fixtures/webmail/mail/#{name}"
-  yaml = YAML.safe_load_file(path, aliases: true, permitted_classes: [Symbol])
+  yaml = YAML.safe_load_file(path, permitted_classes: [Symbol])
 
   data = Net::IMAP::FetchData.new
   data.attr = yaml.dup
