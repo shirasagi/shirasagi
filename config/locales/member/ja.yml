@@ -8,6 +8,7 @@ ja:
     group_member: グループメンバー
     login_by:
       twitter: Twitter ID でログイン
+      twitter2: X でログイン
       facebook: Facebook ID でログイン
       yahoojp: Yahoo! JAPAN ID でログイン
       yahoojp_v2: Yahoo! JAPAN ID（V2）でログイン
@@ -19,6 +20,8 @@ ja:
         disabled: 無効
         enabled: 有効
       twitter_oauth:
+        <<: *disabled_enabled
+      twitter2_oauth:
         <<: *disabled_enabled
       facebook_oauth:
         <<: *disabled_enabled
@@ -134,6 +137,7 @@ ja:
       member/redirection: リダイレクト
       member/form_auth: フォーム認証
       member/twitter_oauth: Twitter OAuth 認証
+      member/twitter2_oauth: X OAuth2 認証
       member/facebook_oauth: Facebook OAuth 認証
       member/yahoo_jp_oauth: Yahoo! OAuth 認証
       member/yahoo_jp_oauth_v2: Yahoo! OAuth V2 認証
@@ -222,6 +226,10 @@ ja:
         twitter_oauth: OAuth 認証
         twitter_client_id: Consumer Key
         twitter_client_secret: Consumer Secret
+      member/addon/twitter2_oauth:
+        twitter2_oauth: OAuth2 認証
+        twitter2_client_id: Client ID
+        twitter2_client_secret: Client Secret
       member/addon/facebook_oauth:
         facebook_oauth: OAuth 認証
         facebook_client_id: App ID
@@ -456,6 +464,16 @@ ja:
       twitter_client_secret:
         - Twitter でアプリケーションを作成した際に付与される Consumer Secret を設定します。
         - Twitter でアプリケーションを作成するには、https://apps.twitter.com/ にブラウザでアクセスします。
+    member/addon/twitter2_oauth:
+      twitter2_oauth:
+        - X による OAuth2 認証を有効にするかどうかを指定します。
+        - 有効にした場合、X アカウントでログインすることができます。
+      twitter2_client_id:
+        - X でアプリケーションを作成した際に付与される Client ID を設定します。
+        - X でアプリケーションを作成するには、https://developer.twitter.com/apps にブラウザでアクセスします。
+      twitter2_client_secret:
+        - X でアプリケーションを作成した際に付与される Client Secret を設定します。
+        - X でアプリケーションを作成するには、https://developer.twitter.com/apps にブラウザでアクセスします。
     member/addon/facebook_oauth:
       facebook_oauth:
         - Facebook による OAuth 認証を有効にするかどうかを指定します。

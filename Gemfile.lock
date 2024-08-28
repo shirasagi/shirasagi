@@ -421,6 +421,9 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
+    omniauth-twitter2 (0.1.0)
+      omniauth
+      omniauth-oauth2 (~> 1.0)
     omniauth-yahoojp (0.2.1)
       httpauth
       omniauth (>= 1.0)
@@ -795,6 +798,7 @@ DEPENDENCIES
   omniauth-line
   omniauth-rails_csrf_protection
   omniauth-twitter
+  omniauth-twitter2
   omniauth-yahoojp
   pry-byebug
   pry-doc
