@@ -114,13 +114,34 @@
     SS_Preview.render(opts);
   </script>
 <% end %>
-<div id="ss-preview" style="position: relative;">
-  <div class="ss-preview-wrap">
-      <div class="ss-preview-wrap-column ss-preview-wrap-column-title-wrap">
-          <div id="ss-preview-title">画面プレビュー</div>
+  <% if params[:action] == "form_preview" %>
+    <div id="ss-preview" style="position: relative;">
+      <div class="ss-preview-wrap">
+          <div class="ss-preview-wrap-column ss-preview-wrap-column-title-wrap">
+              <div id="ss-preview-title">画面プレビュー</div>
+          </div>
       </div>
-  </div>
-  <div class="ss-preview-notice-wrap" style="display: none;"></div>
-</div>
+      <div class="ss-preview-notice-wrap" style="display: none;"></div>
+    </div>
+  <% else %>
+    <div id="ss-preview">
+      <div class="ss-preview-wrap">
+        <% left = render "tool_left", local_assigns %>
+        <% if left.present? %>
+          <div class="ss-preview-wrap-column ss-preview-wrap-column-edit-mode">
+            <%= left %>
+          </div>
+        <% end %>
+        <% right = render "tool_right", local_assigns %>
+        <% if right.present? %>
+          <div class="ss-preview-wrap-column ss-preview-wrap-column-mode-change">
+            <%= right %>
+          </div>
+        <% end %>
+      </div>
+      <div class="ss-preview-notice-wrap" style="display: none;"></div>
+    </div>  
+  <% end %>
+  
 
 <%= render "link_errors", local_assigns %>

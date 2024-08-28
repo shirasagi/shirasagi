@@ -233,6 +233,10 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         new_window = window_opened_by { page.first("#addon-cms-agents-addons-form-page .preview").click }
         within_window new_window do
           wait_for_document_loading
+          expect(page).to have_css("#ss-preview")
+          within("#ss-preview") do
+            expect(page).to have_content("画面プレビュー")
+          end
           expect(page).to have_css("div", text: column1_value)
           expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
           expect(page).to have_css("div", text: column3_value)

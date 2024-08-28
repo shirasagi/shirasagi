@@ -69,9 +69,8 @@ describe "webapi", dbscope: :example, type: :request do
           expect(response.body.include?('パーツ１')).to be_truthy
           expect(response.body.include?('パーツ２')).to be_truthy
           expect(response.body.include?('パーツ３')).to be_truthy
-          expect(response.body.include?('<div id="ss-preview">')).to be_truthy
-          expect(response.body.include?(pc)).to be_truthy
-          expect(response.body.include?(mobile)).to be_truthy
+          expect(response.body.include?('画面プレビュー')).to be_truthy
+          expect(response.body.include?('<div id="ss-preview" style="position: relative;">')).to be_truthy
         end
 
         #it "400" do
