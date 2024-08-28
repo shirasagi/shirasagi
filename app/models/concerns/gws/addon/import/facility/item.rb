@@ -31,6 +31,7 @@ module Gws::Addon::Import::Facility
               line << datetime_to_text(item.activation_date)
               line << datetime_to_text(item.expiration_date)
               line << approval_check_state_datas_value_to_text(item.approval_check_state)
+              line << update_approved_state_datas_value_to_text(item.update_approved_state)
               line << type_datas_value_to_text(item.text_type)
               line << item.text
               attrs = %i(
@@ -80,7 +81,8 @@ module Gws::Addon::Import::Facility
         headers = %w(
           id name category_id order min_minutes_limit max_minutes_limit
           max_days_limit reservation_start_date reservation_end_date
-          activation_date expiration_date approval_check_state type html
+          activation_date expiration_date approval_check_state update_approved_state
+          type html
         )
         headers += columns_headers
         headers += %w(
@@ -170,6 +172,11 @@ module Gws::Addon::Import::Facility
         I18n.t("gws/facility/item.csv.approval_check_state_datas.#{approval_check_state}")
       end
 
+      def update_approved_state_datas_value_to_text(update_approved_state)
+        return if update_approved_state.blank?
+        I18n.t("gws/facility/item.csv.update_approved_state_datas.#{update_approved_state}")
+      end
+
       def readable_setting_range_datas_value_to_text(readable_setting_range)
         return if readable_setting_range.blank?
         I18n.t("gws/facility/item.csv.readable_setting_range_datas.#{readable_setting_range}")
@@ -216,6 +223,7 @@ module Gws::Addon::Import::Facility
       activation_date = row[header_t("activation_date")].to_s.strip
       expiration_date = row[header_t("expiration_date")].to_s.strip
       approval_check_state = row[header_t("approval_check_state")].to_s.strip
+      update_approved_state = row[header_t("update_approved_state")].to_s.strip
 
       reservable_group_names = row[header_t("reservable_group_names")].to_s.strip.split("\n")
       reservable_member_names = row[header_t("reservable_member_names")].to_s.strip.split("\n")
@@ -272,6 +280,7 @@ module Gws::Addon::Import::Facility
       end
 
       item.approval_check_state = approval_check_state_datas_text_to_value(approval_check_state)
+      item.update_approved_state = update_approved_state_datas_text_to_value(update_approved_state)
       if item.save
         @imported += 1
         @cur_form = item
@@ -446,6 +455,13 @@ module Gws::Addon::Import::Facility
     def approval_check_state_datas_text_to_value(approval_check_state_datas)
       k, _v = I18n.t("gws/facility/item.csv.approval_check_state_datas").find do |key, value|
         approval_check_state_datas.match(value)
+      end
+      k.to_s
+    end
+
+    def update_approved_state_datas_text_to_value(update_approved_state_datas)
+      k, _v = I18n.t("gws/facility/item.csv.update_approved_state_datas").find do |key, value|
+        update_approved_state_datas.match(value)
       end
       k.to_s
     end

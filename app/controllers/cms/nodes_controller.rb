@@ -1,6 +1,7 @@
 class Cms::NodesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::NodeImportFilter
 
   model Cms::Node
 

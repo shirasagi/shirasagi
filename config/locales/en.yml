@@ -218,6 +218,7 @@ en:
       password_include_email: contains email address.
       password_include_name: contains your name.
       password_include_kana: contains your reading.
+      edit_approved: Approved plans cannot be changed.
     template:
       body: Please check the following items.
       header:
