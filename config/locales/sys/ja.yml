@@ -93,6 +93,7 @@ ja:
       when_disabled: フォーム認証無効時
       form_key: キー
       form_password: パスワード
+      form_enabled_ip_addresses: 除外IPアドレス
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -213,6 +214,7 @@ ja:
         form_key: フォーム認証利用時のキー
         form_password: フォーム認証利用時のパスワード
         in_form_password: フォーム認証利用時のパスワード
+        form_enabled_ip_addresses: 除外IPアドレス
 
   errors:
     messages:
@@ -329,6 +331,7 @@ ja:
         - ログイン画面のフォーム認証を表示するか選択します。
       when_form_auth_disabled:
         - フォーム認証無効時でも以下に設定したキーとパスワードがQuery Stringに設定されていたらフォーム認証を表示します。
+        - また、除外IPアドレスを設定した場合はアクセス元と一致する場合もフォーム認証を表示します。
 
   job:
     models:
