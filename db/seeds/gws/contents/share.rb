@@ -47,12 +47,20 @@ puts "# share/file"
 def sh_upload_file(path, options = {}, &block)
   path = File.expand_path(path, "#{Rails.root}/db/seeds/gws/files")
   filename = options[:filename] || ::File.basename(path)
+  if ::File.extname(filename).blank?
+    filename = "#{filename}#{::File.extname(path)}"
+  end
   content_type = options[:content_type] || ::Fs.content_type(path)
 
   Fs::UploadedFile.create_from_file(path, filename: filename, content_type: content_type, &block)
 end
 
 def create_share_file(data)
+  name = data[:name]
+  if ::File.extname(name).blank?
+    name = "#{name}#{::File.extname(data[:in_file.filename])}"
+    data[:name] = name
+  end
   create_item(Gws::Share::File, data)
 end
 
@@ -75,93 +83,93 @@ sh_upload_file('kikaku01.jpg', filename: 'koho01.jpg') do |f|
     category_ids: [@sh_cate[1].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市広報パンフレット") do |f|
+sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市広報パンフレット.pdf") do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: "#{@site_name}市広報パンフレット", folder_id: sh_folder("広報関連パンフレット").id,
+    cur_user: u("sys"), in_file: f, name: "#{@site_name}市広報パンフレット.pdf", folder_id: sh_folder("広報関連パンフレット").id,
     category_ids: [@sh_cate[0].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市総合パンフレット") do |f|
+sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市総合パンフレット.pdf") do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: "#{@site_name}市総合パンフレット", folder_id: sh_folder("事業パンフレット").id,
+    cur_user: u("sys"), in_file: f, name: "#{@site_name}市総合パンフレット.pdf", folder_id: sh_folder("事業パンフレット").id,
     category_ids: [@sh_cate[0].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市観光マップ") do |f|
+sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市観光マップ.pdf") do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: "#{@site_name}市観光マップ", folder_id: sh_folder("観光パンフレット").id,
+    cur_user: u("sys"), in_file: f, name: "#{@site_name}市観光マップ.pdf", folder_id: sh_folder("観光パンフレット").id,
     category_ids: [@sh_cate[0].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市観光案内") do |f|
+sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市観光案内.pdf") do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: "#{@site_name}市観光案内", folder_id: sh_folder("観光パンフレット").id,
+    cur_user: u("sys"), in_file: f, name: "#{@site_name}市観光案内.pdf", folder_id: sh_folder("観光パンフレット").id,
     category_ids: [@sh_cate[0].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市防災計画パンフレット") do |f|
+sh_upload_file('shirasagi_kohopamphlet.pdf', filename: "#{@site_name}市防災計画パンフレット.pdf") do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: "#{@site_name}市防災計画パンフレット", folder_id: sh_folder("防災関連パンフレット").id,
+    cur_user: u("sys"), in_file: f, name: "#{@site_name}市防災計画パンフレット.pdf", folder_id: sh_folder("防災関連パンフレット").id,
     group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('seminar_application.pdf', filename: 'セミナー参加申込書') do |f|
+sh_upload_file('seminar_application.pdf', filename: 'セミナー参加申込書.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: 'セミナー参加申込書', folder_id: sh_folder("講習会資料").id,
+    cur_user: u("sys"), in_file: f, name: 'セミナー参加申込書.pdf', folder_id: sh_folder("講習会資料").id,
     category_ids: [@sh_cate[2].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('file.pdf', filename: '企画セミナーチラシ') do |f|
+sh_upload_file('file.pdf', filename: '企画セミナーチラシ.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("admin"), in_file: f, name: '企画セミナーチラシ', folder_id: sh_folder("講習会資料/企画セミナー").id,
+    cur_user: u("admin"), in_file: f, name: '企画セミナーチラシ.pdf', folder_id: sh_folder("講習会資料/企画セミナー").id,
     category_ids: [@sh_cate[3].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('kikakuseisakubu_kohoka.pdf', filename: '企画政策部広報課') do |f|
+sh_upload_file('kikakuseisakubu_kohoka.pdf', filename: '企画政策部広報課.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: '企画政策部 広報課', folder_id: sh_folder("企画政策部 広報課").id,
+    cur_user: u("sys"), in_file: f, name: '企画政策部 広報課.pdf', folder_id: sh_folder("企画政策部 広報課").id,
     group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('kikakuseisakubu_seisakuka.pdf', filename: '企画制作部政策課') do |f|
+sh_upload_file('kikakuseisakubu_seisakuka.pdf', filename: '企画制作部政策課.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("admin"), in_file: f, name: '企画政策部 政策課', folder_id: sh_folder("企画政策部 政策課").id,
+    cur_user: u("admin"), in_file: f, name: '企画政策部 政策課.pdf', folder_id: sh_folder("企画政策部 政策課").id,
     group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('kikikanribu_kanrika.pdf', filename: '危機管理部管理課') do |f|
+sh_upload_file('kikikanribu_kanrika.pdf', filename: '危機管理部管理課.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: '危機管理部 管理課', folder_id: sh_folder("危機管理部 管理課").id,
+    cur_user: u("sys"), in_file: f, name: '危機管理部 管理課.pdf', folder_id: sh_folder("危機管理部 管理課").id,
     group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('kikikanribu_bosaika.pdf', filename: '危機管理部防災課') do |f|
+sh_upload_file('kikikanribu_bosaika.pdf', filename: '危機管理部防災課.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: '危機管理部 防災課', folder_id: sh_folder("危機管理部 防災課").id,
+    cur_user: u("sys"), in_file: f, name: '危機管理部 防災課.pdf', folder_id: sh_folder("危機管理部 防災課").id,
     group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('nenkankousyuukai_keikaku.pdf', filename: '年間講習会計画') do |f|
+sh_upload_file('nenkankousyuukai_keikaku.pdf', filename: '年間講習会計画.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: '年間講習会計画', folder_id: sh_folder("講習会資料").id,
+    cur_user: u("sys"), in_file: f, name: '年間講習会計画.pdf', folder_id: sh_folder("講習会資料").id,
     category_ids: [@sh_cate[3].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('koho_shirasagi.pdf', filename: "広報#{@site_name}") do |f|
+sh_upload_file('koho_shirasagi.pdf', filename: "広報#{@site_name}.pdf") do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: "広報#{@site_name}", folder_id: sh_folder("広報関連パンフレット").id,
+    cur_user: u("sys"), in_file: f, name: "広報#{@site_name}.pdf", folder_id: sh_folder("広報関連パンフレット").id,
     category_ids: [@sh_cate[0].id], group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('hontyousya_floorzu.pdf', filename: '本庁舎フロア図') do |f|
+sh_upload_file('hontyousya_floorzu.pdf', filename: '本庁舎フロア図.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: '本庁舎フロア図', folder_id: sh_folder("座席表").id,
+    cur_user: u("sys"), in_file: f, name: '本庁舎フロア図.pdf', folder_id: sh_folder("座席表").id,
     group_ids: [g('政策課').id]
   )
 end
-sh_upload_file('bosai_seminarreport.pdf', filename: '防災セミナー報告書') do |f|
+sh_upload_file('bosai_seminarreport.pdf', filename: '防災セミナー報告書.pdf') do |f|
   @sh_files << create_share_file(
-    cur_user: u("sys"), in_file: f, name: '防災セミナー報告書', folder_id: sh_folder("防災セミナー").id,
+    cur_user: u("sys"), in_file: f, name: '防災セミナー報告書.pdf', folder_id: sh_folder("防災セミナー").id,
     category_ids: [@sh_cate[3].id], group_ids: [g('政策課').id]
   )
 end

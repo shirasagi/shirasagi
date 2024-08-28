@@ -145,30 +145,30 @@ end
 create_staff_record_seating(
   name: '企画政策部', remark: '企画政策部の座席表です。', cur_user: u("sys"),
   year_id: @staff_record_years[0].id, year_code: '2015', year_name: '平成27年度',
-  url: "/.g#{@site.id}/share/folder-#{sh_file("本庁舎フロア図").folder_id}/files/#{sh_file("本庁舎フロア図").id}"
+  url: "/.g#{@site.id}/share/folder-#{sh_file('本庁舎フロア図.pdf').folder_id}/files/#{sh_file('本庁舎フロア図.pdf').id}"
 )
 create_staff_record_seating(
   name: '危機管理部', remark: '危機管理部の座席表です。', cur_user: u("sys"),
   year_id: @staff_record_years[0].id, year_code: '2015', year_name: '平成27年度',
-  url: "/.g#{@site.id}/share/folder-#{sh_file("本庁舎フロア図").folder_id}/files/#{sh_file("本庁舎フロア図").id}"
+  url: "/.g#{@site.id}/share/folder-#{sh_file('本庁舎フロア図.pdf').folder_id}/files/#{sh_file('本庁舎フロア図.pdf').id}"
 )
 create_staff_record_seating(
   name: '企画政策部', remark: '企画政策部の座席表です。', cur_user: u("sys"),
   year_id: @staff_record_years[1].id, year_code: '2016', year_name: '平成28年度',
-  url: "/.g#{@site.id}/share/folder-#{sh_file("本庁舎フロア図").folder_id}/files/#{sh_file("本庁舎フロア図").id}"
+  url: "/.g#{@site.id}/share/folder-#{sh_file('本庁舎フロア図.pdf').folder_id}/files/#{sh_file('本庁舎フロア図.pdf').id}"
 )
 create_staff_record_seating(
   name: '危機管理部', remark: '危機管理部の座席表です。', cur_user: u("sys"),
   year_id: @staff_record_years[1].id, year_code: '2016', year_name: '平成28年度',
-  url: "/.g#{@site.id}/share/folder-#{sh_file("本庁舎フロア図").folder_id}/files/#{sh_file("本庁舎フロア図").id}"
+  url: "/.g#{@site.id}/share/folder-#{sh_file('本庁舎フロア図.pdf').folder_id}/files/#{sh_file('本庁舎フロア図.pdf').id}"
 )
 create_staff_record_seating(
   name: '企画政策部', remark: '企画政策部の座席表です。', cur_user: u("sys"),
   year_id: @staff_record_years[2].id, year_code: '2017', year_name: '平成29年度',
-  url: "/.g#{@site.id}/share/folder-#{sh_file("本庁舎フロア図").folder_id}/files/#{sh_file("本庁舎フロア図").id}"
+  url: "/.g#{@site.id}/share/folder-#{sh_file('本庁舎フロア図.pdf').folder_id}/files/#{sh_file('本庁舎フロア図.pdf').id}"
 )
 create_staff_record_seating(
   name: '危機管理部', remark: '危機管理部の座席表です。', cur_user: u("sys"),
   year_id: @staff_record_years[2].id, year_code: '2017', year_name: '平成29年度',
-  url: "/.g#{@site.id}/share/folder-#{sh_file("本庁舎フロア図").folder_id}/files/#{sh_file("本庁舎フロア図").id}"
+  url: "/.g#{@site.id}/share/folder-#{sh_file('本庁舎フロア図.pdf').folder_id}/files/#{sh_file('本庁舎フロア図.pdf').id}"
 )
