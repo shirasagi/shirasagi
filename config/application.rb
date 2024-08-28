@@ -25,6 +25,37 @@ Bundler.require(*Rails.groups)
 module SS
   mattr_reader(:version) { "1.18.2" }
 
+  class Current < ActiveSupport::CurrentAttributes
+    attribute :env, :request
+    attribute :site, :user, :user_group, :organization, :token
+
+    THREAD_LOCAL_VARIABLES = %i[env request site user user_group organization token].freeze
+
+    def self.with_scope
+      save_context = instance.attributes.dup
+      yield
+    ensure
+      THREAD_LOCAL_VARIABLES.each do |variable_name|
+        instance.attributes[variable_name] = save_context[variable_name]
+      end
+    end
+  end
+
+  class CurrentScoping
+    def initialize(app)
+      @app = app
+    end
+
+    def call(env)
+      Current.with_scope do
+        Current.env = env
+        Current.request = nil
+
+        @app.call(env)
+      end
+    end
+  end
+
   def self.config
     @_ss_config ||= SS::Config.setup
   end
@@ -71,37 +102,27 @@ module SS
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
     config.middleware.use Mongoid::QueryCache::Middleware
+    # middelware "ActionDispatch::Executor" で ActiveSupport::CurrentAttributes は reset される。
+    # そこで、middelware "ActionDispatch::Executor" の後で Current.env をセットする必要がある
+    config.middleware.use CurrentScoping
 
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
 
-    THREAD_LOCAL_VARIABLES = %w(ss.env ss.request ss.site ss.user ss.user_group ss.organization ss.token).freeze
-
     def call(*args, &block)
-      save_context = {}
-      THREAD_LOCAL_VARIABLES.each do |variable_name|
-        save_context[variable_name] = Thread.current[variable_name]
-      end
-      Thread.current["ss.env"] = args.first
-      Thread.current["ss.request"] = nil
-
       I18n.with_locale(I18n.locale) do
         Time.use_zone(Time.zone) do
           super
         end
       end
-    ensure
-      THREAD_LOCAL_VARIABLES.each do |variable_name|
-        Thread.current[variable_name] = save_context[variable_name]
-      end
     end
 
     def current_env
-      Thread.current["ss.env"]
+      Current.env
     end
 
     def current_request
       return if current_env.nil?
-      Thread.current["ss.request"] ||= ActionDispatch::Request.new(current_env)
+      Current.request ||= ActionDispatch::Request.new(current_env)
     end
 
     def current_session_id
@@ -162,43 +183,43 @@ module SS
   end
 
   def self.current_site
-    Thread.current["ss.site"]
+    Current.site
   end
 
   def self.current_site=(site)
-    Thread.current["ss.site"] = site
+    Current.site = site
   end
 
   def self.current_user
-    Thread.current["ss.user"]
+    Current.user
   end
 
   def self.current_user=(user)
-    Thread.current["ss.user"] = user
+    Current.user = user
   end
 
   def self.current_user_group
-    Thread.current["ss.user_group"]
+    Current.user_group
   end
 
   def self.current_user_group=(group)
-    Thread.current["ss.user_group"] = group
+    Current.user_group = group
   end
 
   def self.current_organization
-    Thread.current["ss.organization"]
+    Current.organization
   end
 
   def self.current_organization=(group)
-    Thread.current["ss.organization"] = group
+    Current.organization = group
   end
 
   def self.current_token
-    Thread.current["ss.token"]
+    Current.token
   end
 
   def self.current_token=(token)
-    Thread.current["ss.token"] = token
+    Current.token = token
   end
 end
 

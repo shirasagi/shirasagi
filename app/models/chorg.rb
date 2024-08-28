@@ -1,16 +1,21 @@
 module Chorg
 
+  class Current < ActiveSupport::CurrentAttributes
+    attribute :context
+  end
+
   module_function
 
   def new_current_context(**options)
-    Thread.current["ss.chorg.context"] = OpenStruct.new(options)
+    Current.context = OpenStruct.new(options)
   end
 
   def clear_current_context
-    Thread.current["ss.chorg.context"] = nil
+    # Current.context = nil
+    Current.clear_all
   end
 
   def current_context
-    Thread.current["ss.chorg.context"]
+    Current.context
   end
 end
