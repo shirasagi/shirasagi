@@ -62,6 +62,21 @@ module Gws::Schedule::Planable
       if params[:category_id].present?
         criteria = criteria.where category_id: params[:category_id]
       end
+      if params[:approval].present?
+        criteria = criteria.where({
+          "$or" => [
+            { approval_state: nil },
+            { approval_state: params[:approval] }
+          ]
+        })
+      elsif params[:approvals].present?
+        criteria = criteria.where({
+          "$or" => [
+            { approval_state: nil },
+            { approval_state: { "$in" => params[:approvals] } }
+          ]
+        })
+      end
 
       criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
       criteria

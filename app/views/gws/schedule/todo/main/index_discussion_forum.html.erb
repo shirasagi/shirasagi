@@ -10,7 +10,7 @@
         <div class="info">
           <span><%= forum.name %></span>
           <% if forum.id != "none" %>
-            <%= link_to "[" + t("ss.buttons.move") + "]", gws_discussion_forum_topics_path(mode: "-", forum_id: forum.id) %>
+            <%= link_to "[" + t("ss.buttons.move") + "]", gws_discussion_forum_portal_path(mode: "-", forum_id: forum.id) %>
           <% end %>
         </div>
       </li>

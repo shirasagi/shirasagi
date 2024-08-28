@@ -14,8 +14,8 @@ module Cms::Addon::List
       cattr_accessor(:use_lower_html, instance_accessor: false) { true }
       cattr_accessor(:use_loop_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
-      cattr_accessor(:default_limit, instance_accessor: false) { 100 }
-      cattr_accessor(:use_liquid, instance_accessor: false) { true }
+      cattr_accessor(:default_limit, instance_accessor: false) { 20 }
+      cattr_accessor(:use_loop_formats, instance_accessor: false) { %i(shirasagi liquid) }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
       cattr_accessor(:use_conditions, instance_accessor: false) { true }
       cattr_accessor(:use_condition_forms, instance_accessor: false) { false }
@@ -63,7 +63,7 @@ module Cms::Addon::List
     end
 
     def loop_format_options
-      %w(shirasagi liquid).map do |v|
+      self.class.use_loop_formats.map do |v|
         [ I18n.t("cms.options.loop_format.#{v}"), v ]
       end
     end
@@ -256,6 +256,16 @@ module Cms::Addon::List
       end
 
       cond
+    end
+
+    module ClassMethods
+      def use_liquid
+        use_loop_formats.include?(:liquid)
+      end
+
+      def use_shirasagi_loop
+        use_loop_formats.include?(:shirasagi)
+      end
     end
   end
 end

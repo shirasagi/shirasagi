@@ -227,7 +227,7 @@ _::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notic
 }
 .gws-memo-notice {
   display: inline-block;
-  color: $white;
+  //color: $white;
   a {
     color: $white;
     &:hover {
@@ -1212,6 +1212,18 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .icon-workload:hover:before {
     background-position: -32px -1088px !important;
   }
+  .icon-export:before {
+    background-position: left -1120px !important;
+  }
+  .icon-export:hover:before {
+    background-position: -32px -1120px !important;
+  }
+  .icon-import:before {
+    background-position: left -1152px !important;
+  }
+  .icon-import:hover:before {
+    background-position: -32px -1152px !important;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1371,11 +1383,17 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .nav-menu {
     margin-left: 230px;
   }
+  .notice-menu {
+    margin: 0 10px 10px 220px;
+  }
 }
 @include mb {
   #menu {
     .nav-menu {
       margin: 10px 0;
+    }
+    .notice-menu {
+      margin: 0 10px 0 10px;
     }
     .nav-management-menu {
       position: static;

@@ -40,6 +40,16 @@ module Gws::Schedule::CalendarFilter
       params.dig(:calendar, :viewAttendance).presence || 'inactive'
     end
 
+    def redirection_facility_category
+      params.dig(:calendar, :facilityCategory).presence
+    end
+
+    def redirection_calendar_query
+      query = { calendar: redirection_calendar_params }
+      query[:s] = redirection_search_params if redirection_search_params.present?
+      query
+    end
+
     def redirection_calendar_params
       {
         view: redirection_view,
@@ -48,6 +58,12 @@ module Gws::Schedule::CalendarFilter
         viewTodo: redirection_view_todo,
         viewAttendance: redirection_view_attendance
       }
+    end
+
+    def redirection_search_params
+      s = {}
+      s[:facility_category_id] = redirection_facility_category if redirection_facility_category
+      s
     end
   end
 
