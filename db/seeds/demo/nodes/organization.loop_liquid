@@ -1,0 +1,39 @@
+{% for dept in root.children %}
+<h2 id="{{ dept.basename }}" class="{{ dept.basename }}">{{ dept.name }}</h2>
+<table class="{{ dept.basename }} children">
+  <thead>
+    <tr>
+      <th>課名</th>
+      <th>事業内容</th>
+      <th>電話</th>
+      <th>お問い合わせ</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for div in dept.descendants %}
+    {% assign have_child = "" %}
+    {% for div in div.children %}
+    {% assign have_child = 'ture' %}
+    {% endfor %}
+    {% unless have_child == 'ture' %}
+    <tr class="{{ div.basename }}">
+      {% if div.parent.name == dept.name %}
+      <td><a href="{{ div.node.url }}">{{ div.name }}</a></td>
+      {% else %}
+      <td><a href="{{ div.node.url }}">{{ div.parent.name }}({{ div.name }})</a></td>
+      {% else %}
+      {% endif %}
+      <td>{{ div.overview }}</td>
+      <td>{{ div.main_contact.contact_tel }}</td>
+      {% if inquiry_form %}
+      <td><a href="{{ inquiry_form.url }}?group={{ div.group.id }}"></a></td>
+      {% else %}
+      <td></td>
+      {% endif %}
+
+    </tr>
+    {% endunless %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
