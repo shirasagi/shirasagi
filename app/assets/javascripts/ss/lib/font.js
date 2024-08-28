@@ -10,16 +10,25 @@ this.SS_Font = (function () {
       this.set(this.size);
     }
 
-    $('[data-tool="ss-medium"]').each(function() {
-      SS_Font.embed($(this), function() { return SS_Font.set(100); });
+    $('#ss-medium,[data-tool="ss-medium"]').each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-font", function() {
+        SS_Font.embed($this, function () { return SS_Font.set(100); });
+      });
     });
 
-    $('[data-tool="ss-small"]').each(function() {
-      SS_Font.embed($(this), function() { return SS_Font.set(false); });
+    $('#ss-small,[data-tool="ss-small"]').each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-font", function() {
+        SS_Font.embed($this, function () { return SS_Font.set(false); });
+      });
     });
 
-    $('[data-tool="ss-large"]').each(function() {
-      SS_Font.embed($(this), function() { return SS_Font.set(true); });
+    $('#ss-large,[data-tool="ss-large"]').each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-font", function() {
+        SS_Font.embed($this, function () { return SS_Font.set(true); });
+      });
     });
   };
 
