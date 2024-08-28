@@ -68,6 +68,8 @@ Rails.application.routes.draw do
     ] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :form_exports, only: [:index]
     resources :map_searches, only: [:index]

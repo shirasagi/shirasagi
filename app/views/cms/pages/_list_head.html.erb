@@ -1,0 +1,47 @@
+<%
+publish_all = url_for(action: :publish_all) rescue nil
+close_all = url_for(action: :close_all) rescue nil
+if publish_all && close_all
+  releasable = false
+  closeable = false
+
+  if @model.include?(Cms::Addon::Release)
+    releasable = @model.allowed?(:release, @cur_user, site: @cur_site, owned: true)
+    closeable = @model.allowed?(:close, @cur_user, site: @cur_site, owned: true)
+  elsif @model.include?(Cms::Model::Node)
+    releasable = @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true)
+    closeable = releasable
+  end
+end
+%>
+<div class="list-head flex-list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <%= render template: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
+    </div>
+    <% if (publish_all && close_all ) && (releasable || closeable) %>
+      <div class="list-head-action-update">
+        <%= ss_button_to t("ss.links.make_them_public"), publish_all,
+          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'public' } if releasable %>
+        <%= ss_button_to t("ss.links.make_them_close"), close_all,
+          class: "change-state-all btn btn-list-head-action", method: "put", params: { state: 'closed' } if closeable %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="list-head-right">
+    <%= render template: "_search" %>
+
+    <% if quick_edit_path = url_for(action: :quick_edit) rescue nil %>
+      <div class="alternative-actions">
+        <%= link_to quick_edit_path, class: "btn", title: "一括編集" do %>
+          <span class="material-icons-outlined md-13">tune</span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

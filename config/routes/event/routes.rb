@@ -52,6 +52,8 @@ Rails.application.routes.draw do
       put :change_state_all, on: :collection, path: ''
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :searches, only: [:index]
   end
