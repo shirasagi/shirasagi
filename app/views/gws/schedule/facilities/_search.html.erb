@@ -21,6 +21,7 @@
 
     $("form.search #s_facility_category_id").on("change", submit_search);
     $("form.search #s_category_id").on("change", submit_search);
+    $("form.search #s_approval").on("change", submit_search);
 
     $('.gws-schedule-box header .operations .btn-print').on('click', function() {
       var viewName = $('#calendar').fullCalendar('getView').name
@@ -46,6 +47,12 @@
   })($jQuery1);
 <% end %>
 
+<%
+  category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options
+  approval_options = %w(request approve deny).map do |v|
+    [ I18n.t("gws/schedule.views.#{v}"), v ]
+  end
+%>
 <div class="operations">
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
@@ -54,6 +61,7 @@
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <%= f.select :facility_category_id, options_for_select(@facility_categories.to_options(offset: 1), @facility_category.try(:id)), include_blank: t('gws/schedule.tabs.facility') if @facility_categories.present? %>
   <%= f.select :category_id, options_for_select(@schedule_categories.to_options, @schedule_category.try(:id)), include_blank: @model.t(:category_id) if @schedule_categories.present? %>
+  <%= f.select :approval, approval_options, include_blank: t("gws/schedule.views.approval_state") %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 <% end %>

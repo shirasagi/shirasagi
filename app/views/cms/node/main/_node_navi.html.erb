@@ -34,6 +34,12 @@
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h2><%= link_to t("cms.generate_page"), node_generate_pages_path, class: "icon-write" %></h2>
   <% end %>
+
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t("cms.csv_export"), download_node_nodes_path, class: "icon-export" %></h2>
+    <h2><%= link_to t("cms.csv_import"), import_node_nodes_path, class: "icon-import" %></h2>
+  <% end %>
+
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site) %>
       <h2><%= link_to t("cms.command"), node_command_path, class: "icon-write" %></h2>

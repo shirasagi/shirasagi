@@ -363,10 +363,10 @@ describe Cms::AllContentsImportJob, dbscope: :example do
   end
 
   context "when importing article/page" do
+    let(:keep_timestamp) { [ false, true ].sample }
     let!(:layout) { create(:cms_layout, cur_site: site) }
-    let!(:layout1) { create(:cms_layout, cur_site: site) }
     let!(:cate) { create(:category_node_node, cur_site: site) }
-    let!(:cate1) { create(:category_node_node, cur_site: site) }
+    let(:released_type) { "same_as_updated" }
     let!(:node) do
       create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
     end
@@ -374,72 +374,230 @@ describe Cms::AllContentsImportJob, dbscope: :example do
       Timecop.freeze(now - 2.weeks) do
         page = create(
           :article_page, cur_site: site, cur_node: node, layout_id: layout.id, category_ids: [ cate.id ],
-          group_ids: [ cms_group.id ]
+          released_type: released_type, state: "public", group_ids: [ cms_group.id ]
         )
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
     end
-    let(:filename) { "filename-#{unique_id}.html" }
-    let(:released) { Time.zone.now.beginning_of_hour - 1.day }
-    let(:release_date) { Time.zone.now.beginning_of_hour + 1.hour }
-    let(:close_date) { Time.zone.now.beginning_of_hour + 13.hours }
-    let(:criteria) do
-      page2 = page.dup
-      page2.id = page.id
-      page2.layout = layout1
-      page2.filename = filename
-      page2.category_ids = [ cate1.id ]
-      page2.released = released
-      page2.release_date = release_date
-      page2.close_date = close_date
-      page2.group_ids = [ group1.id ]
-      [ page2 ]
-    end
 
-    it do
+    before do
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+    end
 
-      Cms::Page.find(page.id).tap do |updated_page|
-        expect(updated_page.name).to eq page.name
-        expect(updated_page.index_name).to eq page.index_name
-        expect(updated_page.filename).to eq page.filename
-        expect(updated_page.layout_id).to eq layout1.id
-        expect(updated_page.keywords).to eq page.keywords
-        expect(updated_page.description).to eq page.description
-        expect(updated_page.summary_html).to eq page.summary_html
-        expect(updated_page.category_ids).to eq [cate1.id]
-        expect(updated_page.group_ids).to eq [group1.id]
-        expect(updated_page.status).to eq 'ready'
-        expect(updated_page.released).to eq released
-        expect(updated_page.release_date).to eq release_date
-        expect(updated_page.close_date).to eq close_date
-        expect(updated_page.updated.in_time_zone).to be > page.updated.in_time_zone
+    context "with basic info" do
+      let(:name1) { "name-#{unique_id}" }
+      let(:index_name1) { "index_name-#{unique_id}" }
+      let!(:layout1) { create(:cms_layout, cur_site: site) }
+      let(:filename1) { "filename-#{unique_id}.html" }
+      let(:order1) { rand(100..999) }
+      let(:criteria) do
+        page2 = page.dup
+        page2.id = page.id
+        page2.name = name1
+        page2.index_name = index_name1
+        page2.filename = filename1
+        page2.layout = layout1
+        page2.order = order1
+        [ page2 ]
+      end
 
-        updated_page.backups.to_a.tap do |backups|
-          expect(backups.count).to eq 2
-          backups[0].tap do |backup|
-            expect(backup.state).to eq "current"
-            expect(backup.data["category_ids"]).to eq [cate1.id]
-            expect(backup.data["group_ids"]).to eq [group1.id]
-            expect(backup.data["state"]).to eq "ready"
-            expect(backup.data["released"].in_time_zone).to eq released.in_time_zone
-            expect(backup.data["release_date"].in_time_zone).to eq release_date.in_time_zone
-            expect(backup.data["close_date"].in_time_zone).to eq close_date.in_time_zone
-            expect(backup.data["updated"].in_time_zone).to eq updated_page.updated.in_time_zone
+      it do
+        Cms::Page.find(page.id).tap do |updated_page|
+          expect(updated_page.name).to eq name1
+          expect(updated_page.index_name).to eq index_name1
+          expect(updated_page.filename).to eq page.filename # be careful: filename is excluded from updating
+          expect(updated_page.layout_id).to eq layout1.id
+          expect(updated_page.order).to eq order1
+          if keep_timestamp
+            expect(updated_page.released.in_time_zone).to eq page.released.in_time_zone
+            expect(updated_page.updated.in_time_zone).to eq page.updated.in_time_zone
+          else
+            expect(updated_page.released.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(updated_page.updated.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
           end
-          backups[1].tap do |backup|
-            expect(backup.state).to eq "before"
-            expect(backup.data["category_ids"]).to eq page.category_ids
-            expect(backup.data["group_ids"]).to eq page.group_ids
-            expect(backup.data["state"]).to eq page.state
-            expect(backup.data["released"].in_time_zone).to eq page.released.in_time_zone
-            expect(backup.data["updated"].in_time_zone).to eq page.updated.in_time_zone
+          expect(updated_page.created.in_time_zone).to eq page.created.in_time_zone
+
+          updated_page.backups.to_a.tap do |backups|
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["name"]).to eq name1
+              expect(backup.data["index_name"]).to eq index_name1
+              expect(backup.data["filename"]).to eq page.filename
+              expect(backup.data["layout_id"]).to eq layout1.id
+              expect(backup.data["order"]).to eq order1
+              expect(backup.data["released"].in_time_zone).to eq updated_page.released.in_time_zone
+              expect(backup.data["updated"].in_time_zone).to eq updated_page.updated.in_time_zone
+              expect(backup.data["created"].in_time_zone).to eq updated_page.created.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["name"]).to eq page.name
+              expect(backup.data["index_name"]).to eq page.index_name
+              expect(backup.data["filename"]).to eq page.filename
+              expect(backup.data["layout_id"]).to eq page.layout_id
+              expect(backup.data["order"]).to eq page.order
+              expect(backup.data["released"].in_time_zone).to eq page.released.in_time_zone
+              expect(backup.data["updated"].in_time_zone).to eq page.updated.in_time_zone
+              expect(backup.data["created"].in_time_zone).to eq page.created.in_time_zone
+            end
+          end
+        end
+      end
+    end
+
+    context "with category/addon/category" do
+      let!(:cate1) { create(:category_node_node, cur_site: site) }
+      let(:criteria) do
+        page2 = page.dup
+        page2.id = page.id
+        page2.category_ids = [ cate1.id ]
+        [ page2 ]
+      end
+
+      it do
+        Cms::Page.find(page.id).tap do |updated_page|
+          expect(updated_page.category_ids).to eq [cate1.id]
+          if keep_timestamp
+            expect(updated_page.released.in_time_zone).to eq page.released.in_time_zone
+            expect(updated_page.updated.in_time_zone).to eq page.updated.in_time_zone
+          else
+            expect(updated_page.released.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(updated_page.updated.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          end
+
+          updated_page.backups.to_a.tap do |backups|
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["category_ids"]).to eq [cate1.id]
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["category_ids"]).to eq page.category_ids
+            end
+          end
+        end
+      end
+    end
+
+    context "with cms/addon/release" do
+      let(:released1) { Time.zone.now.beginning_of_hour - 1.day }
+      let(:criteria) do
+        page2 = page.dup
+        page2.id = page.id
+        page2.released_type = "fixed"
+        page2.released = released1
+        [ page2 ]
+      end
+
+      it do
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        Cms::Page.find(page.id).tap do |updated_page|
+          expect(updated_page.status).to eq page.status
+          expect(updated_page.released_type).to eq "fixed"
+          expect(updated_page.released).to eq released1
+          if keep_timestamp
+            expect(updated_page.updated.in_time_zone).to eq page.updated.in_time_zone
+          else
+            expect(updated_page.updated.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          end
+
+          updated_page.backups.to_a.tap do |backups|
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["released_type"]).to eq "fixed"
+              expect(backup.data["released"].in_time_zone).to eq released1.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["released_type"]).to eq page.released_type
+              expect(backup.data["released"].in_time_zone).to eq page.released.in_time_zone
+            end
+          end
+        end
+      end
+    end
+
+    context "with cms/addon/release_plan" do
+      let(:release_date1) { Time.zone.now.beginning_of_hour + 1.hour }
+      let(:close_date1) { Time.zone.now.beginning_of_hour + 13.hours }
+      let(:criteria) do
+        page2 = page.dup
+        page2.id = page.id
+        page2.release_date = release_date1
+        page2.close_date = close_date1
+        [ page2 ]
+      end
+
+      it do
+        Cms::Page.find(page.id).tap do |updated_page|
+          expect(updated_page.name).to eq page.name
+          expect(updated_page.state).to eq 'ready'
+          expect(updated_page.release_date).to eq release_date1
+          expect(updated_page.close_date).to eq close_date1
+
+          updated_page.backups.to_a.tap do |backups|
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["state"]).to eq "ready"
+              expect(backup.data["release_date"].in_time_zone).to eq release_date1.in_time_zone
+              expect(backup.data["close_date"].in_time_zone).to eq close_date1.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["state"]).to eq page.state
+              expect(backup.data["release_date"].try(:in_time_zone)).to eq page.release_date.try(:in_time_zone)
+              expect(backup.data["close_date"].try(:in_time_zone)).to eq page.close_date.try(:in_time_zone)
+            end
+          end
+        end
+      end
+    end
+
+    context "with cms/addon/group_permission" do
+      let(:criteria) do
+        page2 = page.dup
+        page2.id = page.id
+        page2.group_ids = [ group1.id ]
+        [ page2 ]
+      end
+
+      it do
+        Cms::Page.find(page.id).tap do |updated_page|
+          expect(updated_page.group_ids).to eq [group1.id]
+          if keep_timestamp
+            expect(updated_page.released.in_time_zone).to eq page.released.in_time_zone
+            expect(updated_page.updated.in_time_zone).to eq page.updated.in_time_zone
+          else
+            expect(updated_page.released.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(updated_page.updated.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          end
+
+          updated_page.backups.to_a.tap do |backups|
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["group_ids"]).to eq [group1.id]
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["group_ids"]).to eq page.group_ids
+            end
           end
         end
       end
