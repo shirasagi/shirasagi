@@ -75,7 +75,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
       Timecop.freeze(now - 2.weeks) do
         page = create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ], released_type: "same_as_updated",
           contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
           contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
           contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
@@ -91,7 +91,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
       Timecop.freeze(now - 2.weeks) do
         page = create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ], released_type: "same_as_updated",
           contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
           contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
           contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
@@ -113,7 +113,9 @@ describe Chorg::MainRunner, dbscope: :example do
     end
     let!(:irrelevant_page1) do
       Timecop.freeze(now - 2.weeks) do
-        page = create(:article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ])
+        page = create(
+          :article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ],
+          released_type: "same_as_updated")
         ::FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
@@ -131,7 +133,9 @@ describe Chorg::MainRunner, dbscope: :example do
     end
     let!(:other_site_page1) do
       Timecop.freeze(now - 2.weeks) do
-        page = create(:article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids)
+        page = create(
+          :article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids,
+          released_type: "same_as_updated")
         ::FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
@@ -158,6 +162,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(node.backups.count).to eq 1
           end
           Cms::Page.find(irrelevant_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
             expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
             expect(page.backups.count).to eq 1
           end
@@ -166,6 +171,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(node.backups.count).to eq 1
           end
           Cms::Page.find(other_site_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
             expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
             expect(page.backups.count).to eq 1
           end
@@ -229,6 +235,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_address).to eq destination_contact1["contact_address"]
             expect(page_after_move.contact_link_url).to eq destination_contact1["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq destination_contact1["contact_link_name"]
+            expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
             expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
 
             backups = page_after_move.backups.to_a
@@ -265,6 +272,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_address).to eq destination_contact2["contact_address"]
             expect(page_after_move.contact_link_url).to eq destination_contact2["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq destination_contact2["contact_link_name"]
+            expect(page_after_move.released.in_time_zone).to eq article_page2.released.in_time_zone
             expect(page_after_move.updated.in_time_zone).to eq article_page2.updated.in_time_zone
 
             backups = page_after_move.backups.to_a
@@ -319,10 +327,12 @@ describe Chorg::MainRunner, dbscope: :example do
 
       context "contact_group_relation is 'unrelated'" do
         before do
+          save_released = article_page1.released.in_time_zone
           save_updated = article_page1.updated.in_time_zone
           article_page1.without_record_timestamps do
             article_page1.update!(contact_group_relation: "unrelated")
           end
+          expect(article_page1.released).to eq save_released
           expect(article_page1.updated).to eq save_updated
         end
 
@@ -343,12 +353,14 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
           end
           Cms::Page.find(irrelevant_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
             expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
           end
           Cms::Node.find(other_site_node.id).tap do |node|
             expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
           end
           Cms::Page.find(other_site_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
             expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
           end
 
@@ -395,6 +407,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_address).to eq article_page1.contact_address
             expect(page_after_move.contact_link_url).to eq article_page1.contact_link_url
             expect(page_after_move.contact_link_name).to eq article_page1.contact_link_name
+            expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
             expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
           end
 
@@ -437,12 +450,14 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
         end
         Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
         end
         Cms::Node.find(other_site_node.id).tap do |node|
           expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
         end
         Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
@@ -480,6 +495,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq main_source_contact.contact_address
           expect(page_after_move.contact_link_url).to eq main_source_contact.contact_link_url
           expect(page_after_move.contact_link_name).to eq main_source_contact.contact_link_name
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
           expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
@@ -539,12 +555,14 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
         end
         Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
         end
         Cms::Node.find(other_site_node.id).tap do |node|
           expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
         end
         Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
@@ -564,6 +582,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq main_destination_contact["contact_address"]
           expect(page_after_move.contact_link_url).to eq main_destination_contact["contact_link_url"]
           expect(page_after_move.contact_link_name).to eq main_destination_contact["contact_link_name"]
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
           expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
@@ -660,12 +679,14 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
         end
         Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
         end
         Cms::Node.find(other_site_node.id).tap do |node|
           expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
         end
         Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
@@ -706,6 +727,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq article_page1.contact_address
           expect(page_after_move.contact_link_url).to eq article_page1.contact_link_url
           expect(page_after_move.contact_link_name).to eq article_page1.contact_link_name
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
           expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
@@ -754,12 +776,14 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
         end
         Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
         end
         Cms::Node.find(other_site_node.id).tap do |node|
           expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
         end
         Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
@@ -778,6 +802,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq article_page1.contact_address
           expect(page_after_move.contact_link_url).to eq article_page1.contact_link_url
           expect(page_after_move.contact_link_name).to eq article_page1.contact_link_name
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
           expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
@@ -847,12 +872,14 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
         end
         Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
         end
         Cms::Node.find(other_site_node.id).tap do |node|
           expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
         end
         Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
           expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
@@ -1057,6 +1084,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page_after_move.contact_address).to eq destination_contact1["contact_address"]
         expect(page_after_move.contact_link_url).to eq destination_contact1["contact_link_url"]
         expect(page_after_move.contact_link_name).to eq destination_contact1["contact_link_name"]
+        expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
         expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
       end
       Cms::Page.find(article_page2.id).tap do |page_after_move|
@@ -1074,6 +1102,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page_after_move.contact_address).to eq destination_contact2["contact_address"]
         expect(page_after_move.contact_link_url).to eq destination_contact2["contact_link_url"]
         expect(page_after_move.contact_link_name).to eq destination_contact2["contact_link_name"]
+        expect(page_after_move.released.in_time_zone).to eq article_page2.released.in_time_zone
         expect(page_after_move.updated.in_time_zone).to eq article_page2.updated.in_time_zone
       end
     end

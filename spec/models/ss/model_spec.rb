@@ -70,4 +70,59 @@ describe SS::Model do
       end
     end
   end
+
+  describe ".record_timestamps? / .without_record_timestamps" do
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let(:time) { now - 2.weeks }
+    let!(:item) do
+      Timecop.freeze(time) { create(:sys_postal_code) }
+    end
+
+    context "normal" do
+      it do
+        expect(described_class.record_timestamps?).to be_truthy
+
+        item.prefecture = unique_id
+        item.save!
+
+        Sys::PostalCode.find(item.id).tap do |new_item|
+          expect(new_item.updated.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(new_item.created.in_time_zone).to eq time
+        end
+      end
+    end
+
+    context "execute '#save' within without_record_timestamps" do
+      it do
+        described_class.without_record_timestamps do
+          expect(described_class.record_timestamps?).to be_falsey
+
+          item.prefecture = unique_id
+          item.save!
+
+          Sys::PostalCode.find(item.id).tap do |new_item|
+            expect(new_item.updated.in_time_zone).to eq time
+            expect(new_item.created.in_time_zone).to eq time
+          end
+        end
+      end
+
+      context "but individual record_timestamps set to true" do
+        it do
+          described_class.without_record_timestamps do
+            expect(described_class.record_timestamps?).to be_falsey
+
+            item.record_timestamps = true
+            item.prefecture = unique_id
+            item.save!
+
+            Sys::PostalCode.find(item.id).tap do |new_item|
+              expect(new_item.updated.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+              expect(new_item.created.in_time_zone).to eq time
+            end
+          end
+        end
+      end
+    end
+  end
 end
