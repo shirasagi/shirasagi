@@ -10,7 +10,7 @@ puts "Site not found: #{ENV['site']}" or exit unless @site
 
 load "#{Rails.root}/db/seeds/cms/users.rb"
 
-@g_ss =  SS::Group.where(name: "シラサギ市").first
+@g_ss = SS::Group.where(name: "シラサギ市").first
 @g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
 
 if @site.translate_api_limit_exceeded_html.blank?

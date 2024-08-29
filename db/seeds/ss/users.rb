@@ -49,9 +49,9 @@ g110.cms_group.tap do |cms_g110|
   if cms_g110.contact_groups.blank?
     cms_g110.contact_groups.create(
       main_state: "main", name: "企画政策部 政策課", contact_group_name: "企画政策部 政策課",
-      contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号', contact_link_url: "/kikaku/seisaku/",
-      contact_link_name: "企画政策部 政策課")
+      contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号',
+      contact_link_url: "/kikaku/seisaku/", contact_link_name: "企画政策部 政策課")
     cms_g110.contact_group_name = "企画政策部 政策課"
     cms_g110.contact_tel = "000-000-0000"
     cms_g110.contact_fax = "000-000-0001"
@@ -67,8 +67,8 @@ g111.cms_group.tap do |cms_g111|
   if cms_g111.contact_groups.blank?
     cms_g111.contact_groups.create(
       main_state: "main", name: "企画政策部 政策課 経営戦略係", contact_group_name: "企画政策部 政策課", contact_charge: "経営戦略係",
-      contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g111.contact_group_name = "企画政策部 政策課"
     cms_g111.contact_charge = "経営戦略係"
     cms_g111.contact_tel = "000-000-0000"
@@ -83,8 +83,8 @@ g112.cms_group.tap do |cms_g112|
   if cms_g112.contact_groups.blank?
     cms_g112.contact_groups.create(
       main_state: "main", name: "企画政策部 政策課 デジタル戦略係", contact_group_name: "企画政策部 政策課", contact_charge: "デジタル戦略係",
-      contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g112.contact_group_name = "企画政策部 政策課"
     cms_g112.contact_charge = "デジタル戦略係"
     cms_g112.contact_tel = "000-000-0000"
@@ -99,8 +99,8 @@ g120.cms_group.tap do |cms_g120|
   if cms_g120.contact_groups.blank?
     cms_g120.contact_groups.create(
       main_state: "main", name: "企画政策部 広報課", contact_group_name: "企画政策部 広報課",
-      contact_tel: "111-111-1111", contact_fax: "111-111-1112", contact_email: "koho@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "111-111-1111", contact_fax: "111-111-1112", contact_email: "koho@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g120.contact_group_name = "企画政策部 広報課"
     cms_g120.contact_tel = "111-111-1111"
     cms_g120.contact_fax = "111-111-1112"
@@ -114,8 +114,8 @@ g210.cms_group.tap do |cms_g210|
   if cms_g210.contact_groups.blank?
     cms_g210.contact_groups.create(
       main_state: "main", name: "危機管理部 管理課", contact_group_name: "危機管理部 管理課",
-      contact_tel: "222-2222-2222", contact_fax: "222-2222-2223", contact_email: "kikikanri_kanri@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "222-2222-2222", contact_fax: "222-2222-2223", contact_email: "kikikanri_kanri@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g210.contact_group_name = "危機管理部 管理課"
     cms_g210.contact_tel = "222-2222-2222"
     cms_g210.contact_fax = "222-2222-2223"
@@ -129,8 +129,8 @@ g220.cms_group.tap do |cms_g220|
   if cms_g220.contact_groups.blank?
     cms_g220.contact_groups.create(
       main_state: "main", name: "危機管理部 防災課", contact_group_name: "危機管理部 防災課",
-      contact_tel: "333-3333-3333", contact_fax: "333-3333-3334", contact_email: "kikikanri_bousai@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "333-3333-3333", contact_fax: "333-3333-3334", contact_email: "kikikanri_bousai@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g220.contact_group_name = "危機管理部 防災課"
     cms_g220.contact_tel = "333-3333-3333"
     cms_g220.contact_fax = "333-3333-3334"
@@ -144,8 +144,8 @@ g221.cms_group.tap do |cms_g221|
   if cms_g221.contact_groups.blank?
     cms_g221.contact_groups.create(
       main_state: "main", name: "危機管理部 防災課 生活安全係", contact_group_name: "危機管理部 防災課", contact_charge: "生活安全係",
-      contact_tel: "333-3333-3333", contact_fax: "333-3333-3334", contact_email: "kikikanri_bousai@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "333-3333-3333", contact_fax: "333-3333-3334", contact_email: "kikikanri_bousai@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g221.contact_group_name = "危機管理部 防災課"
     cms_g221.contact_charge = "生活安全係"
     cms_g221.contact_tel = "333-3333-3333"
@@ -160,8 +160,8 @@ g222.cms_group.tap do |cms_g222|
   if cms_g222.contact_groups.blank?
     cms_g222.contact_groups.create(
       main_state: "main", name: "危機管理部 防災課 消防団係", contact_group_name: "危機管理部 防災課", contact_charge: "消防団係",
-      contact_tel: "333-3333-3333", contact_fax: "333-3333-3334", contact_email: "kikikanri_bousai@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "333-3333-3333", contact_fax: "333-3333-3334", contact_email: "kikikanri_bousai@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g222.contact_group_name = "危機管理部 防災課"
     cms_g222.contact_charge = "消防団係"
     cms_g222.contact_tel = "333-3333-3333"
@@ -176,8 +176,8 @@ g310.cms_group.tap do |cms_g310|
   if cms_g310.contact_groups.blank?
     cms_g310.contact_groups.create(
       main_state: "main", name: "総務部 人事課", contact_group_name: "総務部 人事課",
-      contact_tel: "444-4444-4444", contact_fax: "444-4444-4445", contact_email: "jinji@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "444-4444-4444", contact_fax: "444-4444-4445", contact_email: "jinji@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g310.contact_group_name = "総務部 人事課"
     cms_g310.contact_tel = "444-4444-4444"
     cms_g310.contact_fax = "444-4444-4445"
@@ -191,8 +191,8 @@ g311.cms_group.tap do |cms_g311|
   if cms_g311.contact_groups.blank?
     cms_g311.contact_groups.create(
       main_state: "main", name: "総務部 人事課 人材育成係", contact_group_name: "総務部 人事課", contact_charge: "人材育成係",
-      contact_tel: "444-4444-4444", contact_fax: "444-4444-4445", contact_email: "jinji@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "444-4444-4444", contact_fax: "444-4444-4445", contact_email: "jinji@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g311.contact_group_name = "総務部 人事課"
     cms_g311.contact_charge = "人材育成係"
     cms_g311.contact_tel = "444-4444-4444"
@@ -207,8 +207,8 @@ g320.cms_group.tap do |cms_g320|
   if cms_g320.contact_groups.blank?
     cms_g320.contact_groups.create(
       main_state: "main", name: "総務部 財産管理課", contact_group_name: "総務部 財産管理課",
-      contact_tel: "555-555-5555", contact_fax: "555-555-5556", contact_email: "zaisankanri@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "555-555-5555", contact_fax: "555-555-5556", contact_email: "zaisankanri@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g320.contact_group_name = "総務部 財産管理課"
     cms_g320.contact_tel = "555-555-5555"
     cms_g320.contact_fax = "555-555-5556"
@@ -222,8 +222,8 @@ g321.cms_group.tap do |cms_g321|
   if cms_g321.contact_groups.blank?
     cms_g321.contact_groups.create(
       main_state: "main", name: "総務部 財産管理課 管理・営繕係", contact_group_name: "総務部 財産管理課", contact_charge: "管理・営繕係",
-      contact_tel: "555-555-5555", contact_fax: "555-555-5556", contact_email: "zaisankanri@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "555-555-5555", contact_fax: "555-555-5556", contact_email: "zaisankanri@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g321.contact_group_name = "総務部 財産管理課"
     cms_g321.contact_charge = "管理・営繕係"
     cms_g321.contact_tel = "555-555-5555"
@@ -238,8 +238,8 @@ g322.cms_group.tap do |cms_g322|
   if cms_g322.contact_groups.blank?
     cms_g322.contact_groups.create(
       main_state: "main", name: "総務部 財産管理課 電算管理係", contact_group_name: "総務部 財産管理課", contact_charge: "電算管理係",
-      contact_tel: "555-555-5555", contact_fax: "555-555-5556", contact_email: "zaisankanri@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "555-555-5555", contact_fax: "555-555-5556", contact_email: "zaisankanri@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g322.contact_group_name = "総務部 財産管理課"
     cms_g322.contact_charge = "電算管理係"
     cms_g322.contact_tel = "555-555-5555"
@@ -254,8 +254,8 @@ g330.cms_group.tap do |cms_g330|
   if cms_g330.contact_groups.blank?
     cms_g330.contact_groups.create(
       main_state: "main", name: "総務部 市民課", contact_group_name: "総務部 市民課",
-      contact_tel: "666-666-6666", contact_fax: "666-666-6667", contact_email: "shimin@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "666-666-6666", contact_fax: "666-666-6667", contact_email: "shimin@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g330.contact_group_name = "総務部 市民課"
     cms_g330.contact_tel = "666-666-6666"
     cms_g330.contact_fax = "666-666-6667"
@@ -269,8 +269,8 @@ g331.cms_group.tap do |cms_g331|
   if cms_g331.contact_groups.blank?
     cms_g331.contact_groups.create(
       main_state: "main", name: "総務部 市民課 市民税係", contact_group_name: "総務部 市民課", contact_charge: "市民税係",
-      contact_tel: "666-666-6666", contact_fax: "666-666-6667", contact_email: "shimin@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "666-666-6666", contact_fax: "666-666-6667", contact_email: "shimin@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g331.contact_group_name = "総務部 市民課"
     cms_g331.contact_charge = "市民税係"
     cms_g331.contact_tel = "666-666-6666"
@@ -285,8 +285,8 @@ g332.cms_group.tap do |cms_g332|
   if cms_g332.contact_groups.blank?
     cms_g332.contact_groups.create(
       main_state: "main", name: "総務部 市民課 戸籍係", contact_group_name: "総務部 市民課", contact_charge: "戸籍係",
-      contact_tel: "666-666-6666", contact_fax: "666-666-6667", contact_email: "shimin@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "666-666-6666", contact_fax: "666-666-6667", contact_email: "shimin@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g332.contact_group_name = "総務部 市民課"
     cms_g332.contact_charge = "戸籍係"
     cms_g332.contact_tel = "666-666-6666"
@@ -301,8 +301,8 @@ g410.cms_group.tap do |cms_g410|
   if cms_g410.contact_groups.blank?
     cms_g410.contact_groups.create(
       main_state: "main", name: "福祉健康部 社会福祉課", contact_group_name: "福祉健康部 社会福祉課",
-      contact_tel: "777-777-7777", contact_fax: "777-777-7778", contact_email: "fukushi@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "777-777-7777", contact_fax: "777-777-7778", contact_email: "fukushi@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g410.contact_group_name = "福祉健康部 社会福祉課"
     cms_g410.contact_tel = "777-777-7777"
     cms_g410.contact_fax = "777-777-7778"
@@ -316,8 +316,8 @@ g411.cms_group.tap do |cms_g411|
   if cms_g411.contact_groups.blank?
     cms_g411.contact_groups.create(
       main_state: "main", name: "福祉健康部 社会福祉課 福祉政策係", contact_group_name: "福祉健康部 社会福祉課", contact_charge: "福祉政策係",
-      contact_tel: "777-777-7777", contact_fax: "777-777-7778", contact_email: "fukushi@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "777-777-7777", contact_fax: "777-777-7778", contact_email: "fukushi@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g411.contact_group_name = "福祉健康部 社会福祉課"
     cms_g411.contact_charge = "福祉政策係"
     cms_g411.contact_tel = "777-777-7777"
@@ -332,8 +332,8 @@ g412.cms_group.tap do |cms_g412|
   if cms_g412.contact_groups.blank?
     cms_g412.contact_groups.create(
       main_state: "main", name: "福祉健康部 社会福祉課 障がい福祉係", contact_group_name: "福祉健康部 社会福祉課", contact_charge: "障がい福祉係",
-      contact_tel: "777-777-7777", contact_fax: "777-777-7778", contact_email: "fukushi@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "777-777-7777", contact_fax: "777-777-7778", contact_email: "fukushi@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g412.contact_group_name = "福祉健康部 社会福祉課"
     cms_g412.contact_charge = "障がい福祉係"
     cms_g412.contact_tel = "777-777-7777"
@@ -348,8 +348,8 @@ g420.cms_group.tap do |cms_g420|
   if cms_g420.contact_groups.blank?
     cms_g420.contact_groups.create(
       main_state: "main", name: "福祉健康部 子育て支援課", contact_group_name: "福祉健康部 子育て支援課",
-      contact_tel: "888-888-8888", contact_fax: "888-888-8889", contact_email: "kosodate@example.jp", contact_postal_code: '0000000',
-      contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
+      contact_tel: "888-888-8888", contact_fax: "888-888-8889", contact_email: "kosodate@example.jp",
+      contact_postal_code: '0000000', contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g420.contact_group_name = "福祉健康部 社会福祉課"
     cms_g420.contact_tel = "888-888-8888"
     cms_g420.contact_fax = "888-888-8889"
@@ -410,49 +410,49 @@ sys = save_user(
   {
     type: SS::User::TYPE_SNS,
     group_ids: [g110.id], sys_role_ids: [sys_r01.id],
-    organization_id: g000.id, organization_uid: "0000001", deletion_lock_state: "locked" }
-)
+    organization_id: g000.id, organization_uid: "0000001", deletion_lock_state: "locked"
+  })
 adm = save_user(
   { name: "サイト管理者", uid: "admin", email: "admin@example.jp", in_password: "pass", kana: "サイトカンリシャ " },
   {
     type: SS::User::TYPE_SNS,
     group_ids: [g110.id], sys_role_ids: [sys_r02.id],
-    organization_id: g000.id, organization_uid: "0000000", deletion_lock_state: "locked" }
-)
+    organization_id: g000.id, organization_uid: "0000000", deletion_lock_state: "locked"
+  })
 u01 = save_user(
   { name: "鈴木 茂", uid: "user1", email: "user1@example.jp", in_password: "pass", kana: "スズキ シゲル" },
   {
     type: SS::User::TYPE_SNS,
     group_ids: [g110.id], sys_role_ids: [sys_r02.id],
-    organization_id: g000.id, organization_uid: "0000002" }
-)
+    organization_id: g000.id, organization_uid: "0000002"
+  })
 u02 = save_user(
   { name: "渡辺 和子", uid: "user2", email: "user2@example.jp", in_password: "pass", kana: "ワタナベ カズコ" },
   {
     type: SS::User::TYPE_SNS,
     group_ids: [g210.id], sys_role_ids: [sys_r02.id],
-    organization_id: g000.id, organization_uid: "0000003" }
-)
+    organization_id: g000.id, organization_uid: "0000003"
+  })
 u03 = save_user(
   { name: "斎藤　拓也", uid: "user3", email: "user3@example.jp", in_password: "pass", kana: "サイトウ　タクヤ" },
   {
     type: SS::User::TYPE_SNS,
-    group_ids: [g120.id, g220.id], sys_role_ids: [sys_r02.id], organization_id: g000.id, organization_uid: "0000005" }
-)
+    group_ids: [g120.id, g220.id], sys_role_ids: [sys_r02.id], organization_id: g000.id, organization_uid: "0000005"
+  })
 u04 = save_user(
   { name: "伊藤 幸子", uid: "user4", email: "user4@example.jp", in_password: "pass", kana: "イトウ サチコ" },
   {
     type: SS::User::TYPE_SNS,
     group_ids: [g210.id], sys_role_ids: [sys_r02.id],
-    organization_id: g000.id, organization_uid: "0000006" }
-)
+    organization_id: g000.id, organization_uid: "0000006"
+  })
 u05 = save_user(
   { name: "高橋 清", uid: "user5", email: "user5@example.jp", in_password: "pass", kana: "タカハシ キヨシ" },
   {
     type: SS::User::TYPE_SNS,
     group_ids: [g120.id], sys_role_ids: [sys_r02.id],
-    organization_id: g000.id, organization_uid: "0000007" }
-)
+    organization_id: g000.id, organization_uid: "0000007"
+  })
 
 sys.add_to_set(group_ids: [g110.id], sys_role_ids: [sys_r01.id])
 adm.add_to_set(group_ids: [g110.id], sys_role_ids: [sys_r02.id])
