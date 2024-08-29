@@ -23,7 +23,7 @@
       <td><a href="{{ div.node.url }}">{{ div.parent.name }}({{ div.name }})</a></td>
       {% else %}
       {% endif %}
-      <td>{{ div.overview }}</td>
+      <td>{{ div.overview | ss_br }}</td>
       <td>{{ div.main_contact.contact_tel }}</td>
       {% if inquiry_form %}
       <td><a href="{{ inquiry_form.url }}?group={{ div.group.id }}"></a></td>

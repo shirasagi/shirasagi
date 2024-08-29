@@ -21,8 +21,8 @@ puts "# groups"
 g000 = save_group name: site_name, order: 10
 g100 = save_group name: "#{site_name}/企画政策部", order: 20
 g110 = save_group name: "#{site_name}/企画政策部/政策課", order: 30
-g111 = save_group name: "#{site_name}/企画政策部/政策課/デジタル戦略係", order: 40
-g112 = save_group name: "#{site_name}/企画政策部/政策課/経営戦略係", order: 50
+g111 = save_group name: "#{site_name}/企画政策部/政策課/経営戦略係", order: 40
+g112 = save_group name: "#{site_name}/企画政策部/政策課/デジタル戦略係", order: 50
 g120 = save_group name: "#{site_name}/企画政策部/広報課", order: 60
 g200 = save_group name: "#{site_name}/危機管理部", order: 70
 g210 = save_group name: "#{site_name}/危機管理部/管理課", order: 80
@@ -66,11 +66,11 @@ end
 g111.cms_group.tap do |cms_g111|
   if cms_g111.contact_groups.blank?
     cms_g111.contact_groups.create(
-      main_state: "main", name: "企画政策部 政策課 デジタル戦略係", contact_group_name: "企画政策部 政策課", contact_charge: "デジタル戦略係",
+      main_state: "main", name: "企画政策部 政策課 経営戦略係", contact_group_name: "企画政策部 政策課", contact_charge: "経営戦略係",
       contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp", contact_postal_code: '0000000',
       contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g111.contact_group_name = "企画政策部 政策課"
-    cms_g111.contact_charge = "デジタル戦略係"
+    cms_g111.contact_charge = "経営戦略係"
     cms_g111.contact_tel = "000-000-0000"
     cms_g111.contact_fax = "000-000-0001"
     cms_g111.contact_email = "kikakuseisaku@example.jp"
@@ -82,11 +82,11 @@ end
 g112.cms_group.tap do |cms_g112|
   if cms_g112.contact_groups.blank?
     cms_g112.contact_groups.create(
-      main_state: "main", name: "企画政策部 政策課 経営戦略係", contact_group_name: "企画政策部 政策課", contact_charge: "経営戦略係",
+      main_state: "main", name: "企画政策部 政策課 デジタル戦略係", contact_group_name: "企画政策部 政策課", contact_charge: "デジタル戦略係",
       contact_tel: "000-000-0000", contact_fax: "000-000-0001", contact_email: "kikakuseisaku@example.jp", contact_postal_code: '0000000',
       contact_address: '大鷺県シラサギ市小鷺町1丁目1番地1号')
     cms_g112.contact_group_name = "企画政策部 政策課"
-    cms_g112.contact_charge = "経営戦略係"
+    cms_g112.contact_charge = "デジタル戦略係"
     cms_g112.contact_tel = "000-000-0000"
     cms_g112.contact_fax = "000-000-0001"
     cms_g112.contact_email = "kikakuseisaku@example.jp"
@@ -361,14 +361,18 @@ g420.cms_group.tap do |cms_g420|
 end
 
 # lsorg
-g110.overview = "情報システムの標準化に係る支援\nマイナンバー制度\nオープンデータ推進"
-g110.save
+g111.overview = "総合計画の策定及び進行管理に関すること\n重要政策の企画、立案及び総合調整"
+g111.save
+g112.overview = "情報システムの標準化に係る支援\nマイナンバー制度\nオープンデータ推進"
+g112.save
 g120.overview = "市政に関する情報提供、広報紙の発行"
 g120.save
-g210.overview = "大規模災害 テロや有事などの国民保護事案 新型コロナウイルスなどの感染症"
+g210.overview = "大規模災害\nテロや有事などの国民保護事案\n新型コロナウイルスなどの感染症"
 g210.save
-g220.overview = "災害対策基本法の施行関連\n市町村の防災対策の指導\n震災に強い社会づくり\n市町村の防災対策支援"
-g220.save
+g221.overview = "災害などの防災体制の充実\n調布市消防団の活動支援を行い消防力の強化"
+g221.save
+g222.overview = "災害対策基本法の施行関連\n市町村の防災対策の指導"
+g222.save
 
 def save_role(data)
   if item = Sys::Role.where(name: data[:name]).first

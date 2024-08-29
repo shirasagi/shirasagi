@@ -19,7 +19,9 @@ if @site.translate_api_limit_exceeded_html.blank?
 end
 
 @contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
-@contact_group_id = @contact_group.id rescue nil
+@contact_group_id = @contact_group.id if @contact_group
+@contact_sub_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課/経営戦略係").first
+@contact_sub_group_ids = [@contact_sub_group.id] if @contact_sub_group
 @contact = @contact_group.contact_groups.first
 
 load "#{Rails.root}/db/seeds/cms/workflow.rb"
@@ -42,7 +44,6 @@ load "#{Rails.root}/db/seeds/demo/contents/key_visual.rb"
 load "#{Rails.root}/db/seeds/demo/contents/editor_templates.rb"
 load "#{Rails.root}/db/seeds/demo/contents/theme_templates.rb"
 load "#{Rails.root}/db/seeds/demo/contents/board.rb"
-load "#{Rails.root}/db/seeds/demo/contents/lsorg.rb"
 load "#{Rails.root}/db/seeds/demo/contents/anpi.rb"
 load "#{Rails.root}/db/seeds/demo/contents/weather_xml.rb"
 load "#{Rails.root}/db/seeds/demo/contents/cms_garbage_node.rb"
