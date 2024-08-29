@@ -1,0 +1,26 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-opendata_dataset_importer_resource">
+  <dt><%= @model.t :metadata_file_access_url %></dt>
+  <dd><%= f.text_field :metadata_file_access_url %></dd>
+
+  <dt><%= @model.t :metadata_file_download_url %></dt>
+  <dd><%= f.text_field :metadata_file_download_url %></dd>
+
+  <dt><%= @model.t :metadata_file_released %></dt>
+  <dd><%= f.ss_date_field :metadata_file_released %></dd>
+
+  <dt><%= @model.t :metadata_file_updated %></dt>
+  <dd><%= f.ss_date_field :metadata_file_updated %></dd>
+
+  <dt><%= @model.t :metadata_file_terms_of_service %></dt>
+  <dd><%= f.text_field :metadata_file_terms_of_service %></dd>
+
+  <dt><%= @model.t :metadata_file_related_document %></dt>
+  <dd><%= f.text_field :metadata_file_related_document %></dd>
+
+  <dt><%= @model.t :metadata_file_follow_standards %></dt>
+  <dd><%= f.text_field :metadata_file_follow_standards %></dd>
+</dl>

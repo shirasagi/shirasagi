@@ -123,6 +123,8 @@ module Opendata
     Cms::Role.permission :edit_other_opendata_harvests
     Cms::Role.permission :edit_other_opendata_harvested
 
+    Cms::Role.permission :edit_other_opendata_metadata
+
     Cms::Role.permission :edit_other_opendata_public_entity_datasets
 
     Cms::Role.permission :read_opendata_reports

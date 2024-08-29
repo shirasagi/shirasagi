@@ -4,6 +4,7 @@ class Opendata::License
   include SS::Reference::Site
   include SS::Relation::File
   include Opendata::Addon::Harvest::License
+  include Opendata::Addon::Metadata::License
   include Cms::Addon::GroupPermission
   include Fs::FilePreviewable
 

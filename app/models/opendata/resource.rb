@@ -6,6 +6,7 @@ class Opendata::Resource
   include Opendata::Addon::RdfStore
   include Opendata::Addon::CmsRef::AttachmentFile
   include Opendata::Addon::Harvest::Resource
+  include Opendata::Addon::Metadata::Resource
   include History::Addon::Backup
 
   DOWNLOAD_CACHE_LIFETIME = 10.minutes

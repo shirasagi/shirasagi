@@ -36,4 +36,14 @@ class Opendata::Mailer < ApplicationMailer
 
     mail from: site.sender_address, to: site.sender_address, message_id: Cms.generate_message_id(site)
   end
+
+  def notice_metadata_import_mail(importer, report)
+    @importer = importer
+    @report = report
+    @subject = report.notice_subject
+    @site = importer.site
+
+    mail from: @site.sender_address, to: importer.notice_users.pluck(:email), subject: @subject,
+      message_id: Cms.generate_message_id(@site)
+  end
 end

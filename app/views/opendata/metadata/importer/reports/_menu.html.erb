@@ -1,0 +1,11 @@
+<% if params[:action] =~ /dataset/ %>
+<nav class="nav-menu">
+  <%= link_to t('ss.links.back'), opendata_metadata_importer_report_path(id: @item.report_id), class: "back-to-index" %>
+</nav>
+<% else %>
+<nav class="nav-menu">
+  <%= link_to t('ss.links.back'), opendata_metadata_importer_path(id: @item.importer_id), class: "back-to-index" %>
+  <%= link_to t('ss.links.download'), action: :download %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+</nav>
+<% end %>

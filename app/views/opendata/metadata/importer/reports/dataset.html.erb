@@ -1,0 +1,64 @@
+<% @dataset = @item.imported_dataset %>
+
+<% if @dataset %>
+  <table class="see index history-backup">
+    <tbody>
+      <tr>
+        <th colspan="2">
+          <%= link_to @dataset.name, @dataset.private_show_path, target: "_blank", rel: "noopener" %>
+        </th>
+      </tr>
+      <tr>
+        <th><%= @dataset.t :metadata_text_index %></th>
+        <td><%= @dataset.metadata_text_index  %></td>
+      </tr>
+      <tr>
+        <th><%= @dataset.t :metadata_dataset_category %></th>
+        <td><%= @dataset.metadata_dataset_category %></td>
+      </tr>
+      <tr>
+        <th><%= @dataset.t :metadata_dataset_estat_category %></th>
+        <td><%= @dataset.metadata_dataset_estat_category %></td>
+      </tr>
+    </tbody>
+  </table>
+<% else %>
+  <table class="see index history-backup">
+    <tbody>
+      <tr>
+        <th colspan="2"><%= t("opendata.labels.not_found_dataset") %></th>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
+
+<br>
+
+<table class="see index history-backup">
+  <tbody>
+    <tr>
+      <th colspan="2"><%= @item.t :imported %></th>
+    </tr>
+    <tr>
+      <th><%= @item.t :imported_attributes %></th>
+      <td><pre><%= ::JSON.pretty_generate(@item.imported_attributes) %></pre></td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<% if @item.state == "failed" %>
+  <table class="see index history-backup">
+    <tbody>
+    <tr>
+      <th colspan="2"><%= t("opendata.labels.errors") %></th>
+    </tr>
+      <% style = (@item.state == "failed") ? 'background-color: #ffdada;' : "" %>
+      <tr>
+        <th style="<%= style %>"><%= t("opendata.dataset") %></th>
+        <td style="<%= style %>"><%=br @item.error_messages %></td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
