@@ -7,12 +7,13 @@ class Opendata::Resource
   include Opendata::Addon::CmsRef::AttachmentFile
   include Opendata::Addon::Harvest::Resource
   include Opendata::Addon::Metadata::Resource
+  include History::Addon::Backup
 
   DOWNLOAD_CACHE_LIFETIME = 10.minutes
 
   attr_accessor :workflow, :status
 
-  embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
+  embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resources
   field :order, type: Integer, default: 0
   field :downloaded_count_cache, type: Hash
 
@@ -160,6 +161,7 @@ class Opendata::Resource
     dataset.apply_status(status, workflow) if status.present?
     dataset.released ||= Time.zone.now
     dataset.save(validate: false)
+    # dataset.send(:save_backup)
   end
 
   def set_source_url

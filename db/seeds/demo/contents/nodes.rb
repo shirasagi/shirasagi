@@ -292,6 +292,8 @@ inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
   reply_content_state: "static",
   reply_lower_text: "",
   aggregation_state: "disabled"
+@site.inquiry_form = @inquiry_node
+@site.update
 
 ## feedback
 feedback_html = File.read("nodes/feedback.inquiry_html") rescue nil
@@ -468,3 +470,8 @@ save_node route: "ckan/page", filename: "ckan", name: "CKAN", layout_id: @layout
 ## import node
 save_node route: "cms/import_node", filename: "testf", name: "取込ページ", layout_id: @layouts["general"].id,
   new_days: 0
+
+## lsorg
+@lsorg_node = save_node route: "lsorg/node", filename: "organization", name: "組織案内",
+  layout_id: @layouts["organization"].id, root_group_ids: [@g_ss.id]
+Lsorg::ImportGroupsJob.bind(site_id: @site.id, node_id: @lsorg_node.id).perform_now

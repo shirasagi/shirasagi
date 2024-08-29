@@ -19,6 +19,7 @@ class Opendata::Dataset
   include Opendata::Addon::Harvest::Dataset
   include Opendata::Addon::Metadata::Dataset
   include Cms::Addon::GroupPermission
+  include History::Addon::Backup
   include Workflow::MemberPermission
   include Opendata::DatasetSearchable
   include Opendata::DatasetTemplateVariables

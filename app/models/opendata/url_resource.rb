@@ -5,13 +5,14 @@ class Opendata::UrlResource
   include Opendata::Addon::UrlRdfStore
   include Opendata::Addon::Harvest::Resource
   include Opendata::Addon::Metadata::Resource
+  include History::Addon::Backup
 
   field :original_url, type: String
   field :original_updated, type: DateTime
   field :crawl_state, type: String, default: "same"
   field :crawl_update, type: String
 
-  embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :url_resource
+  embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :url_resources
 
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 

@@ -14,8 +14,8 @@ module Cms::Addon::List
       cattr_accessor(:use_lower_html, instance_accessor: false) { true }
       cattr_accessor(:use_loop_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
-      cattr_accessor(:default_limit, instance_accessor: false) { 100 }
-      cattr_accessor(:use_liquid, instance_accessor: false) { true }
+      cattr_accessor(:default_limit, instance_accessor: false) { 20 }
+      cattr_accessor(:use_loop_formats, instance_accessor: false) { %i(shirasagi liquid) }
       cattr_accessor(:use_sort, instance_accessor: false) { true }
       cattr_accessor(:use_conditions, instance_accessor: false) { true }
       cattr_accessor(:use_condition_forms, instance_accessor: false) { false }
@@ -44,6 +44,7 @@ module Cms::Addon::List
       permit_params condition_forms: [ form_ids: [], filters: [ :column_name, :condition_values ] ]
 
       before_validation :validate_conditions
+      before_validation :validate_loop_format
 
       validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
@@ -63,7 +64,7 @@ module Cms::Addon::List
     end
 
     def loop_format_options
-      %w(shirasagi liquid).map do |v|
+      self.class.use_loop_formats.map do |v|
         [ I18n.t("cms.options.loop_format.#{v}"), v ]
       end
     end
@@ -206,6 +207,12 @@ module Cms::Addon::List
       end.compact.uniq
     end
 
+    def validate_loop_format
+      options = loop_format_options.to_h.invert.with_indifferent_access
+      return if options[loop_format]
+      self.loop_format = options.keys.first
+    end
+
     def interpret_default_location(default_site, &block)
       if self.is_a?(Cms::Model::Part)
         if parent
@@ -256,6 +263,16 @@ module Cms::Addon::List
       end
 
       cond
+    end
+
+    module ClassMethods
+      def use_liquid
+        use_loop_formats.include?(:liquid)
+      end
+
+      def use_shirasagi_loop
+        use_loop_formats.include?(:shirasagi)
+      end
     end
   end
 end
