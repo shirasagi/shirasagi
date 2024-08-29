@@ -18,6 +18,7 @@ class Opendata::Dataset
   include Cms::Addon::RelatedPage
   include Opendata::Addon::Harvest::Dataset
   include Cms::Addon::GroupPermission
+  include History::Addon::Backup
   include Workflow::MemberPermission
   include Opendata::DatasetSearchable
   include Opendata::DatasetTemplateVariables

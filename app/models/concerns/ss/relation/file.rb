@@ -119,7 +119,7 @@ module SS::Relation::File
         end
       end
 
-      if upload_file
+      if upload_file.present?
         item.run_callbacks("#{name}_save") do
           Changes.upload_and_set_relation(item, name, class_name: class_name, default_resizing: default_resizing)
         end
