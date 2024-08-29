@@ -2,6 +2,16 @@ class History::Backup
   include History::Model::Data
 
   def ref_item
+    model.relations.each do |k, relation|
+      next if relation.class != Mongoid::Association::Embedded::EmbeddedIn
+
+      parent = relation.class_name.constantize.where(
+        relation.inverse_of => { "$elemMatch" => { '_id' => data["_id"] } }
+      ).first
+      @_ref_item ||= parent.send(relation.inverse_of).find(data["_id"]) rescue nil
+
+      break @_ref_item if @_ref_item
+    end
     @_ref_item ||= model.find(data["_id"])
   end
 

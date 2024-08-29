@@ -133,6 +133,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace "opendata", path: ".s:site/opendata" do
+    namespace "apis" do
+      scope "node:cid/opendata", as: "node", cid: /\w+/ do
+        resources :resources, path: ":dataset_id/resources", only: [:edit, :update]
+      end
+    end
+  end
+
   node "opendata" do
     get "dataset_category/" => "public#index", cell: "nodes/dataset/dataset_category"
     get "dataset_category/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_category"
