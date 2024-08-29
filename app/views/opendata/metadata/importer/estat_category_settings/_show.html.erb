@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= t("opendata.labels.estat-category") %><%= @model.tt :category_id %></dt>
+  <dd><%= "#{@item.category.name}（#{@item.category.filename}）" if @item.category %></dd>
+
+  <dt><%= t("opendata.labels.sort") %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= t("opendata.labels.and_condition") %></dt>
+  <dd>
+    <table class="index">
+      <tbody>
+        <% @item.conditions.each do |cond| %>
+          <tr data-base="true">
+            <td style="height: 40px; width: 180px;"><%= t("opendata.metadata_type_condition_options.#{cond["type"]}") %></td>
+            <td><%= cond["value"] %></td>
+            <td style="height: 40px; width: 120px;"><%= t("opendata.operator_condition_options.#{cond["operator"]}") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
