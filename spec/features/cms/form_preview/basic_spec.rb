@@ -11,11 +11,16 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
   context "with article page" do
     let(:site) { cms_site }
+    let(:layout) { create_cms_layout }
     let(:node) { create :article_node_page, cur_site: site }
     let(:node_category_root) { create :category_node_node, cur_site: site }
     let(:node_category_child1) { create :category_node_page, cur_site: site, cur_node: node_category_root }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
-    let(:item) { create(:article_page, cur_site: site, cur_node: node, html: html, category_ids: [ node_category_child1.id ]) }
+    let(:item) do
+      create(
+        :article_page, cur_site: site, cur_node: node, layout: layout, html: html,
+        category_ids: [ node_category_child1.id ])
+    end
     let(:edit_path) { edit_article_page_path site.id, node.id, item }
 
     before { login_cms_user }
@@ -23,7 +28,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     context "pc form preview" do
       it do
         visit edit_path
-
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
 
@@ -34,6 +39,10 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
         within_window new_window do
           wait_for_document_loading
+          expect(page).to have_css("#ss-preview")
+          within("#ss-preview") do
+            expect(page).to have_content(I18n.t("cms.preview_page2"))
+          end
           expect(page).to have_css("h2", text: "見出し2")
           expect(page).to have_css("p", text: "内容が入ります。")
           expect(page).to have_css("h3", text: "見出し3")
@@ -47,7 +56,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
   context "with root cms page" do
     let(:site) { cms_site }
-    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, html: html) }
+    let(:layout) { create_cms_layout }
+    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, layout: layout, html: html) }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
 
     let(:edit_path) { edit_cms_page_path site.id, item }
@@ -57,7 +67,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     context "pc form preview" do
       it do
         visit edit_path
-
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
@@ -66,6 +76,10 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
         within_window new_window do
           wait_for_document_loading
+          expect(page).to have_css("#ss-preview")
+          within("#ss-preview") do
+            expect(page).to have_content(I18n.t("cms.preview_page2"))
+          end
           expect(page).to have_css("h2", text: "見出し2")
           expect(page).to have_css("p", text: "内容が入ります。")
           expect(page).to have_css("h3", text: "見出し3")
@@ -153,7 +167,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         # Create
         #
         visit new_article_page_path(site: site, cid: node)
-
+        wait_for_all_ckeditors_ready
         within 'form#item-form' do
           fill_in 'item[name]', with: name
 
@@ -169,6 +183,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+          wait_for_all_ckeditors_ready
 
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value
@@ -235,7 +250,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           wait_for_document_loading
           expect(page).to have_css("#ss-preview")
           within("#ss-preview") do
-            expect(page).to have_content("画面プレビュー")
+            expect(page).to have_content(I18n.t("cms.preview_page2"))
           end
           expect(page).to have_css("div", text: column1_value)
           expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
