@@ -5,6 +5,7 @@ class Cms::Site
   include Cms::Addon::PageSetting
   include Cms::Addon::Site::NodeSetting
   include Cms::Addon::DefaultReleasePlan
+  include Cms::Addon::FormAlertSetting
   include SS::Addon::MobileSetting
   include SS::Addon::MapSetting
   include SS::Addon::KanaSetting

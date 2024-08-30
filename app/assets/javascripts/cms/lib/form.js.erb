@@ -12,7 +12,7 @@
 this.Cms_Form = (function () {
   function Cms_Form() {};
 
-  Cms_Form.options = { check: { syntax: true } };
+  Cms_Form.options = { check: { syntax: true, link: false } };
   Cms_Form.addonSelector = ".mod-cms-body";
 
   Cms_Form.render = function () {
@@ -33,6 +33,9 @@ this.Cms_Form = (function () {
     Form_Alert.addValidation(Form_Alert.snsPostConfirmation);
     if(Cms_Form.options.check.syntax) {
       Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
+    }
+    if(Cms_Form.options.check.link) {
+      Form_Alert.addAsyncValidation(Form_Alert.asyncValidateLinkCheck);
     }
     Form_Alert.addAsyncValidation(Mobile_Size_Checker.asyncValidateHtml);
     Form_Alert.addAsyncValidation(Backlink_Checker.asyncCheck);

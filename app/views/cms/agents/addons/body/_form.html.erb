@@ -2,6 +2,7 @@
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config(site: @cur_site)
 
   syntax_check = cms_syntax_check_enabled?
+  link_check = @cur_site.form_alert_link_check_enabled?
 
   addon ||= local_assigns.fetch(:addon, {})
   if @item.respond_to?(:form) && @item.form.present?
@@ -50,6 +51,7 @@
     Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>
 
     Cms_Form.options.check.syntax = <%= syntax_check %>;
+    Cms_Form.options.check.link = <%= link_check %>;
     Cms_Form.render();
 
   <% end %>
