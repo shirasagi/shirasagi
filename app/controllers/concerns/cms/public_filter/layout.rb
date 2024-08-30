@@ -203,7 +203,7 @@ module Cms::PublicFilter::Layout
     criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
     criteria.each { |part| @parts[part.filename] = part }
 
-    return html.gsub(/\{\{ part "(.*?)" \}\}/) do
+    html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
       part ? render_layout_part(part, opts) : ''
