@@ -278,7 +278,10 @@ module Cms::PublicFilter::Layout
 
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
-    html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+    html = html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{template}#{$3}"
+    end
+    html.gsub(/(<.+? data-tool="ss-theme".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{template}#{$3}"
     end
   end
