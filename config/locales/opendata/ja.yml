@@ -282,6 +282,7 @@ ja:
       and_condition: AND条件
       convert_setting: コンバート設定
       errors: エラー
+      update_dataset: データセットの更新日を更新する
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       max_pdf_preview_notice: "最大で%{max}ページ表示しています。"
