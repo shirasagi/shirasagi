@@ -192,6 +192,10 @@ module Cms::Addon::Form::Page
       end
     end
 
+    if !self.form.present? && self.contains_urls.present?
+      form_contains_urls += self.contains_urls
+    end
+
     self.form_contains_urls = form_contains_urls.flatten.uniq.compact.collect(&:strip)
   end
 
