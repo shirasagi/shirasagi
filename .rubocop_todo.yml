@@ -349,22 +349,7 @@ Naming/MemoizedInstanceVariableName:
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: snake_case, normalcase, non_integer
 Naming/VariableNumber:
-  Exclude:
-    - 'db/seeds/childcare/load.rb'
-    - 'db/seeds/cms/members.rb'
-    - 'db/seeds/demo/load.rb'
-    - 'spec/jobs/rss/import_weather_xml_job_spec.rb'
-    - 'spec/models/category/addon/split_spec.rb'
-    - 'spec/models/jmaxml/action/publish_page_spec.rb'
-    - 'spec/models/jmaxml/action/send_mail_spec.rb'
-    - 'spec/models/jmaxml/filter_spec.rb'
-    - 'spec/models/jmaxml/trigger/ash_fall_forecast_spec.rb'
-    - 'spec/models/jmaxml/trigger/quake_info_spec.rb'
-    - 'spec/models/jmaxml/trigger/quake_intensity_flash_spec.rb'
-    - 'spec/models/jmaxml/trigger/tornado_alert_spec.rb'
-    - 'spec/models/jmaxml/trigger/tsunami_alert_spec.rb'
-    - 'spec/models/jmaxml/trigger/tsunami_info_spec.rb'
-    - 'spec/models/jmaxml/trigger/weather_alert_spec.rb'
+  Enabled: false
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -997,6 +982,3 @@ Layout/ArgumentAlignment:
 # URISchemes: http, https
 Layout/LineLength:
   Max: 130
-
-Naming/VariableNumber:
-  Enabled: false
