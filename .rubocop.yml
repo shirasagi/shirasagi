@@ -163,6 +163,9 @@ Style/EmptyElse:
 Style/IfInsideElse:
   Enabled: false
 
+Style/MissingElse:
+  Enabled: false
+
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
 Style/PercentLiteralDelimiters:
@@ -183,6 +186,9 @@ Style/SignalException:
     - only_raise
     - only_fail
     - semantic
+
+Style/StringLiteralsInInterpolation:
+  Enabled: false
 
 # Cop supports --auto-correct.
 Style/RedundantPercentQ:
