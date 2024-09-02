@@ -11,6 +11,13 @@
   font-size: 12px;
   -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
+
+  .post-head {
+    padding: 0;
+  }
+  .post-text {
+    margin-top: 15px;
+  }
 }
 #marker-popup:after, #marker-popup:before {
   content: " ";
@@ -42,14 +49,6 @@
 }
 #marker-popup .closer:after {
   content: "×";
-}
-#marker-popup {
-  .post-head {
-    padding: 0;
-  }
-  .post-text {
-    margin-top: 15px;
-  }
 }
 
 // markerclusterer

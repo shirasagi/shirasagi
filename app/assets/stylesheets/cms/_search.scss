@@ -48,9 +48,7 @@
         border: 0;
         background: #333;
         color: #fff;
-
     }
-
 }
 @media only screen and (max-width: 600px) {
     .search-wrap,
@@ -66,14 +64,7 @@
         }
         .site-search-history {
             top: 40px;
-            li {
-                a {
-                    &:hover {
-                    }
-                }
-            }
         }
-    
     }
 }
 
@@ -82,17 +73,8 @@
         display: inline-block;
         margin-bottom: 30px;
         .site-search-keyword {
-            input#s_keyword {
-            }
             .site-search-history {
                 min-width: 100%;
-                li {
-                    a {
-                    }
-                }
-            }
-            button[type="submit"],
-            input[type="submit"] {
             }
             input[type="submit"] {
                 margin: 0;
@@ -149,16 +131,6 @@
                     border-radius: 0;
     
                 }
-                .site-search-history {
-                    li {
-                        a {
-                        }
-                    }
-                }
-            }
-            button[type="submit"],
-            input[type="submit"] {
-
             }
             input[type="submit"] {
                 position: absolute;
@@ -195,15 +167,6 @@
         -webkit-justify-content: space-between;
         justify-content: space-between;
         margin-bottom: 5px;
-        .site-search-keyword {
-            input#s_keyword {
-            }
-            .site-search-history {
-            }
-        }
-        button[type="submit"],
-        input[type="submit"] {
-        }
     }
 }
 @media only screen and (max-width: 600px) {
@@ -220,13 +183,6 @@
             margin-bottom: 15px;
             .site-search-keyword {
                 width: calc(100% - 52px);
-                input#s_keyword {
-                }
-                .site-search-history {
-                }
-            }
-            button[type="submit"],
-            input[type="submit"] {
             }
         }
     }

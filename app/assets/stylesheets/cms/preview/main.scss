@@ -21,8 +21,7 @@
     text-decoration: none;
     vertical-align: top;
   }
-  button, select, #ss-preview-btn-select-draft-page, input,
-  #ss-preview-btn-select-draft-page, .ss-preview-part-list {
+  button, select, #ss-preview-btn-select-draft-page, input, .ss-preview-part-list {
     @include btn;
     box-sizing: border-box;
     width: auto;
@@ -320,7 +319,38 @@ div.ss-preview-dialog {
     color: #a0522d;
     font-weight: bold;
   }
+  textarea {
+    @include input;
+    width: 100%;
+    height: 6.5em;
+    padding: 5px;
+    line-height: 1.4;
+  }
+  .btn-primary, .commit {
+    @include btn-red;
+
+  }
+  .btn-default {
+    @include btn-gray-l;
+  }
+  .btn-primary, .commit, .btn-default {
+    font-size: $px13;
+  }
+  .send {
+    margin-top: 10px;
+    text-align: center;
+    input, button {
+      vertical-align: top;
+    }
+  }
+  dt.wide {
+    margin-bottom: 15px;
+    color: #a0522d;
+    font-size: $px13;
+    font-weight: bold;
+  }
 }
+
 .ss-preview-page, .ss-preview-column {
   min-height: 1em;
 }
@@ -534,38 +564,6 @@ table.index {
       padding: 0 30px;
       font-size: 100%;
     }
-  }
-}
-.ss-preview-dialog {
-  textarea {
-    @include input;
-    width: 100%;
-    height: 6.5em;
-    padding: 5px;
-    line-height: 1.4;
-  }
-  .btn-primary, .commit {
-    @include btn-red;
-
-  }
-  .btn-default {
-    @include btn-gray-l;
-  }
-  .btn-primary, .commit, .btn-default {
-    font-size: $px13;
-  }
-  .send {
-    margin-top: 10px;
-    text-align: center;
-    input, button {
-      vertical-align: top;
-    }
-  }
-  dt.wide {
-    margin-bottom: 15px;
-    color: #a0522d;
-    font-size: $px13;
-    font-weight: bold;
   }
 }
 
