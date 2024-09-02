@@ -10,7 +10,7 @@ module Event::Addon
 
       permit_params :event_display, event_display_tabs: []
 
-      validates :event_display, inclusion: { in: %w(list table) }
+      validates :event_display, inclusion: { in: %w(list table map) }
       validate :validate_event_display_tabs
     end
 
