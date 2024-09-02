@@ -1,7 +1,7 @@
 .role-permissions {
   .module {
-    margin-bottom: 20px;
     position: relative;
+    margin-bottom: 20px;
   }
   .module-name {
     margin-bottom: 10px;
@@ -12,18 +12,18 @@
     font-size: 120%;
   }
   .buttons {
-    font-size: 80%;
     position: absolute;
     top: 5px;
     right: 8px;
+    font-size: 80%;
   }
   .permissions {
     padding: 0 2px;
   }
   label {
     display: inline-block;
-    padding: 2px 0;
     min-width: 230px;
+    padding: 2px 0;
   }
   label.disabled {
     color: #bbb;

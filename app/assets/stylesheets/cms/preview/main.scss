@@ -71,13 +71,13 @@
   }
   // scss-lint:disable PropertySpelling
   #ss-preview-btn-workflow-start, #ss-preview-btn-workflow-approve {
+    *zoom: 1;
     border: 1px solid #b23a3d;
     background: #e13026;
-    @include background-image(linear-gradient(top, #e13026, #b23a3d));
     color: #fff;
-    *zoom: 1;
     filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE13026', endColorstr='#FFB23A3D');
     filter: none \9;
+    @include background-image(linear-gradient(top, #e13026, #b23a3d));
     &:hover {
       background: #b23a3d;
     }
@@ -470,7 +470,6 @@ table.index {
         left: -25px;
         width: 30em;
         padding: 15px;
-        list-style: none;
         border: 1px solid #d0d0d0;
         background: #fff;
         -moz-box-shadow: 0 1px 6px #d0d0d0;
@@ -480,6 +479,7 @@ table.index {
         font-size: 90%;
         font-weight: normal;
         line-height: 1.6;
+        list-style: none;
         text-align: left;
         cursor: auto;
         @include mb {
@@ -571,9 +571,9 @@ table.index {
 
 .sns-post-confirm {
   h2 {
-    font-weight: bold;
     color: #a0522d;
     font-size: $px13;
+    font-weight: bold;
   }
   li {
     font-size: $px12;

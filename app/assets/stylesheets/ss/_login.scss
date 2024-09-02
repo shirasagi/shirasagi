@@ -33,8 +33,8 @@
   }
   header {
     h2 {
-      width: 300px;
       display: inline-block;
+      width: 300px;
     }
     .version {
       padding: 2px;
@@ -200,8 +200,8 @@
   .otp-setup-step2 {
     .addon-body {
       display: grid;
-      grid-template-rows: auto auto;
       grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
       gap: 5px;
     }
 
