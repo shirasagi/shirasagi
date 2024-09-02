@@ -8,7 +8,7 @@
   <dd>
     <%= hidden_field_tag "#{f.object_name}[event_display_tabs][]", '', id: nil %>
     <% @item.event_display_options.each do |v, k| %>
-      <% checked = (k.to_s == @item.event_display || @item.event_display_tabs.include?(k.to_s)) %>
+      <% checked = (k.to_s == @item.event_display || @item.event_display_tabs.to_a.include?(k.to_s)) %>
       <label>
         <%= check_box_tag "#{f.object_name}[event_display_tabs][]", k, checked %>
         <%= v %>
