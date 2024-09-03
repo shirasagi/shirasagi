@@ -1,5 +1,7 @@
 <%= code_editor ".mod-event-calendarlist .html", mode: :html %>
-
+<%
+  @item.event_display_tabs = %w(list table) if @item.event_display_tabs.blank?
+%>
 <dl class="see mod-event-calendarlist">
   <dt><%= @model.t :event_display %><%= @model.tt :event_display %></dt>
   <dd><%= f.select :event_display, @item.event_display_options %></dd>
@@ -8,7 +10,7 @@
   <dd>
     <%= hidden_field_tag "#{f.object_name}[event_display_tabs][]", '', id: nil %>
     <% @item.event_display_options.each do |v, k| %>
-      <% checked = (k.to_s == @item.event_display || @item.event_display_tabs.to_a.include?(k.to_s)) %>
+      <% checked = (k.to_s == @item.event_display || @item.event_display_tabs.include?(k.to_s)) %>
       <label>
         <%= check_box_tag "#{f.object_name}[event_display_tabs][]", k, checked %>
         <%= v %>

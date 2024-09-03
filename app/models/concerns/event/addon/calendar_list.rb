@@ -6,7 +6,7 @@ module Event::Addon
 
     included do
       field :event_display, type: String, default: "list"
-      field :event_display_tabs, type: Array, default: %w(list table)
+      field :event_display_tabs, type: Array, default: []
 
       permit_params :event_display, event_display_tabs: []
 
