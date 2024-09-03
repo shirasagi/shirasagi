@@ -31,7 +31,7 @@ module SS::Addon
       when 'cke'
         "<div class=\"ss-cke\">#{ApplicationController.helpers.sanitize(text)}</div>".html_safe
       else
-        ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+        ("<p>" + ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />") + "</p>").html_safe
       end
     end
 
