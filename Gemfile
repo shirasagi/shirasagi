@@ -138,10 +138,10 @@ group :development, :test do
   gem 'rspec-collection_matchers', require: false
   gem 'rspec-its', require: false
   gem 'rspec-rails', require: false
-  gem 'rubocop', '1.18.4', require: false
+  gem 'rubocop', '~> 1.66', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
-  gem 'rubocop-rails', '2.11.3', require: false
+  gem 'rubocop-rails', '~> 2.26', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', '~> 4.11', require: false
   gem 'simplecov', require: false

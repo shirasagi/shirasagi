@@ -110,7 +110,6 @@ module Webmail
     size
   end
 
-  # rubocop:disable Style::RedundantAssignment
   def text_to_html(text)
     return text if text.blank?
 
@@ -120,7 +119,6 @@ module Webmail
     text = text.gsub(/\R/, '<br />')
     text
   end
-  # rubocop:enable Style::RedundantAssignment
 
   def html_to_text(html)
     return html if html.blank?
