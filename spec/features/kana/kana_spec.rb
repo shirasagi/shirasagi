@@ -29,10 +29,10 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         visit item.full_url
         expect(page).to have_no_css('ruby')
 
-        click_on 'ふりがなをつける'
+        click_on I18n.t("cms.links.ruby_on")
         expect(page).to have_css('ruby')
 
-        click_on 'ふりがなをはずす'
+        click_on I18n.t("cms.links.ruby_off")
         expect(page).to have_no_css('ruby')
       end
     end
@@ -41,7 +41,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       context "on default mode" do
         it do
           visit item.full_url
-          click_on 'ふりがなをつける'
+          click_on I18n.t("cms.links.ruby_on")
           expect(page).to have_css('ruby', text: '無償(むしょう)')
           expect(page).to have_css('ruby', text: '必要(ひつよう)')
           expect(page).to have_css('ruby', text: '場合(ばあい)')
@@ -58,7 +58,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
 
         it do
           visit item.full_url
-          click_on 'ふりがなをつける'
+          click_on I18n.t("cms.links.ruby_on")
           expect(page).to have_css('ruby', text: '無償(むしょう)')
           expect(page).to have_css('ruby', text: '必要(ひつよう)')
           expect(page).to have_css('ruby', text: '場合(ばあい)')
@@ -73,7 +73,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
 
         it do
           visit item.full_url
-          click_on 'ふりがなをつける'
+          click_on I18n.t("cms.links.ruby_on")
           expect(page).to have_css('ruby', text: '無償(ムショウ)')
           expect(page).to have_css('ruby', text: '必要(ヒツヨウ)')
           expect(page).to have_css('ruby', text: '場合(バアイ)')
@@ -88,7 +88,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
 
         it do
           visit item.full_url
-          click_on 'ふりがなをつける'
+          click_on I18n.t("cms.links.ruby_on")
           expect(page).to have_css('ruby', text: '無償(mushou)')
           expect(page).to have_css('ruby', text: '必要(hitsuyou)')
           expect(page).to have_css('ruby', text: '場合(baai)')
@@ -115,7 +115,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
 
         it do
           visit item.full_url
-          click_on 'ふりがなをつける'
+          click_on I18n.t("cms.links.ruby_on")
 
           expect(page).to have_css('ruby', text: '大鷺県(だいさぎけん)')
           expect(page).to have_css('ruby', text: '小鷺町(こさぎまち)')
@@ -289,5 +289,60 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
     let!(:part) { create :accessibility_tool_compat, cur_site: site }
 
     it_behaves_like "kana"
+  end
+
+  context "with multiple accessibility parts" do
+    let!(:part1) { create :accessibility_tool, cur_site: site }
+    let!(:part2) { create :accessibility_tool_compat, cur_site: site }
+    let!(:layout) { create_cms_layout part1, part2 }
+    let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+    let(:page_html) do
+      html = []
+      html << '<div id="content">'
+      html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
+      html << '<nav class="ss-adobe-reader">'
+      html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
+      html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
+      html << '  <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>'
+      html << '</nav>'
+      html << '</div>'
+      html << '<footer>'
+      html << '  〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号'
+      html << '  <small>Copyright © City of Shirasagi All rights Reserved.</small>'
+      html << '</footer>'
+      html.join("\n")
+    end
+    let!(:item) { create :article_page, cur_site: site, cur_node: node, layout: layout, html: page_html }
+
+    it do
+      visit item.full_url
+      expect(page).to have_no_css('ruby')
+
+      expect(page).to have_css(".accessibility__tool-wrap", count: 2)
+
+      within ".accessibility__tool-wrap:first-child" do
+        click_on I18n.t("cms.links.ruby_on")
+      end
+      expect(page).to have_css('ruby')
+
+      within all(".accessibility__tool-wrap")[0] do
+        expect(page).to have_content(I18n.t("cms.links.ruby_off"))
+      end
+      within all(".accessibility__tool-wrap")[1] do
+        expect(page).to have_content(I18n.t("cms.links.ruby_off"))
+      end
+
+      within all(".accessibility__tool-wrap")[1] do
+        click_on I18n.t("cms.links.ruby_off")
+      end
+      expect(page).to have_no_css('ruby')
+
+      within all(".accessibility__tool-wrap")[0] do
+        expect(page).to have_content(I18n.t("cms.links.ruby_on"))
+      end
+      within all(".accessibility__tool-wrap")[1] do
+        expect(page).to have_content(I18n.t("cms.links.ruby_on"))
+      end
+    end
   end
 end

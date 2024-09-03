@@ -203,7 +203,7 @@ module Cms::PublicFilter::Layout
     criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
     criteria.each { |part| @parts[part.filename] = part }
 
-    return html.gsub(/\{\{ part "(.*?)" \}\}/) do
+    html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
       part ? render_layout_part(part, opts) : ''
@@ -268,14 +268,20 @@ module Cms::PublicFilter::Layout
 
   def render_kana_tool(html)
     label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
-    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+    html = html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{label}#{$3}"
+    end
+    html.gsub(/(<.+? data-tool="ss-kana".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{label}#{$3}"
     end
   end
 
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
-    html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+    html = html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{template}#{$3}"
+    end
+    html.gsub(/(<.+? data-tool="ss-theme".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{template}#{$3}"
     end
   end

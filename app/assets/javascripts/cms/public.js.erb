@@ -237,8 +237,8 @@ this.SS_Theme = (function () {
           $a.on("click", function () {
             var $this = $(this);
             var cls = $this.data("ss-theme");
-            $theme.find('a').removeClass('active');
-            $this.addClass('active');
+            $themes.find("[data-ss-theme]").removeClass('active');
+            $themes.find("[data-ss-theme='" + $.escapeSelector(cls) + "']").addClass('active');
             Cookies.set("ss-theme", cls, {
               expires: 7,
               path: '/'
@@ -274,7 +274,6 @@ this.SS_Theme = (function () {
   SS_Theme.switchTheme = function (cls) {
     $('head link.ss-theme').prop("disabled", true);
     $('head link.ss-theme.' + $.escapeSelector(cls)).prop("disabled", false);
-    $("body").attr("data-ss-theme", "");
     $("body").attr("data-ss-theme", cls);
   };
 
