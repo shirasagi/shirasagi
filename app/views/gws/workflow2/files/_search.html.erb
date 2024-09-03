@@ -1,0 +1,10 @@
+<% @s ||= OpenStruct.new params[:s] %>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <% if respond_to?(:destination_treat_state_options) %>
+      <%= f.select :destination_treat_state, destination_treat_state_options, { include_blank: t("gws/board.options.browsed_state.both") }, { id: nil, data: { controller: "ss--submit-on-change" } } %>
+    <% end %>
+    <%= f.text_field :keyword, placeholder: t('ss.keyword'), id: nil, style: "width: 240px;" %>
+    <%= f.submit t('ss.buttons.search'), class: "btn" %>
+  <% end %>
+</div>

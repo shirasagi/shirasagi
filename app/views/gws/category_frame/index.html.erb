@@ -1,0 +1,21 @@
+<% if simple_activated? && advanced_activated? %>
+  <div class="gws-tabs gws-notice-category-dialog-tabs">
+    <%= link_to url_for_simple, class: (simple_mode? ? "current" : nil) do %>
+      <%= tag.span t("ss.buttons.simple"), class: "tab-name" %>
+    <% end %>
+    <%= link_to url_for_advanced, class: (simple_mode? ? nil : "current") do %>
+      <%= tag.span t("ss.buttons.advanced"), class: "tab-name" %>
+    <% end %>
+  </div>
+<% end %>
+<div class="main-box">
+  <% if simple_mode? %>
+    <div id="gws-notice-category-dialog-simple">
+      <%= render template: "_index_simple", locals: local_assigns %>
+    </div>
+  <% else %>
+    <div id="gws-notice-category-dialog-advanced">
+      <%= render template: "_index_advanced", locals: local_assigns %>
+    </div>
+  <% end %>
+</div>

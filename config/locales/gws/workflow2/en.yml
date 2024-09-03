@@ -1,0 +1,395 @@
+en:
+  gws/workflow2:
+#    columns:
+#      index: Manage input settings
+#    forms:
+#      default: Standard application form
+#      more: See more
+    options:
+      file_state:
+        all: All
+        approve: Asking For
+        request: Requested To
+        circulation: On Circulation
+        destination: Submitted / Awaiting to be treated
+      agent_state:
+        disabled: Proxy application not allowed
+        enabled: Proxy application allowed
+      search_operator:
+        and: AND
+        or: OR
+      approval_state:
+        with_approval: With approval
+        without_approval: Without approval
+      destination_treat_state:
+        no_need_to_treat: No need to treat
+        untreated: Untreated
+        treated: Treated
+      route_optgroup:
+        my_group: My Department
+        user_occupation: Occupation
+        user_title: Job title
+#    links:
+#      publish: Publish
+#      depublish: Make private
+#      download_comment: Approval/circular comment CSV
+#      download_attachment: Download attached file
+    buttons:
+      save_and_apply: Save and proceed to application
+    apis:
+      purposes:
+        index: Select a purpose
+    navi:
+      new_application: New
+      find_by_keyword: By Keyword
+      find_by_purpose: By Business
+      readable: All Applications
+      approve: Asking For
+      request: Requested To
+      circulation: On Circulation
+      destination: Submitted / Awaiting to be treated
+      route: Approval Routes
+      form:
+        main: Form Setting
+        application: Application Forms
+        external: Ex App Links
+        category: Categories
+        purpose: Business type
+    notice:
+      requested: Your application has been requested.
+      approved: Approved.
+      pulled_up: Pulled-up approval.
+      remanded: Remanded.
+      count_approved: "Approved %{count} cases."
+      count_remanded: "Remanded %{count} cases."
+      not_approved: "Could not approve."
+      not_remanded: "Could not remand."
+      seen: Confirmed.
+      rerouted: Changed approver.
+#      no_files: "There are no attached files."
+      copy_created: "created by copying %{name}."
+      data_might_not_latest: Names and other information are at the time of application. They may differ from the latest one.
+      untreated: Changed to untreated.
+      treated: Changed to treated.
+      unable_to_edit_because_form_is_deleted: "The application form has been deleted and cannot be edited."
+      unable_to_copy_because_form_is_deleted: "The application form has been deleted and cannot be copied."
+      select_correct_proxy_approver: "* Specify the correct alternate approver designated by the original approver."
+      use_approver_alternator:
+        - The original approver must have appointed you as a proxy approver in advance.
+        - Report to the original approver that you have approved on behalf of the other person.
+    labels:
+#      user: Author
+#      form: Report
+      approver_type: Type
+      approver_name: Name
+      approver_alternator: (Proxy approver)
+    search_delegatees:
+      index: Select a original delegate
+      select: Set a original delegate
+      search: Search
+#    agent_type:
+#      myself: Apply for oneself
+#      agent: Apply as a proxy
+    search_alternates:
+      index: Search a proxy approver
+    alert:
+      create_workflow_with_cur_group: "You are trying to create a new workflow as %{name} group. Please change the concurrent post if necessary."
+#    view_files: Go to applications
+    find_by_purpose: Find by business
+    table:
+      gws/workflow2/file:
+        user_id: User ID
+        user_name: Name
+        user_group: Group
+        user_email: E-mail address
+        agent_id: User ID (proxy)
+        agent_name: Name (proxy)
+        agent_group: Group (proxy)
+        agent_email: E-mail address (proxy)
+        file_name: Application Title
+        requested: Application Date
+        workflow_state: Approval status
+        workflow_approvers_and_circulations: Approvers and circulators
+        workflow_comment: Approval comment
+        updated: Updated
+    request_notice:
+      - Please make sure that the application and the approving party are correct.
+      - Set [application comments] if necessary.
+    request_notice_without_approval:
+      - Please make sure that your application is correct before applying it.
+    select_other_approvers: 'Select other approvers...'
+    select_other_circulations: 'Select other circulators...'
+    errors:
+      messages:
+        approver_is_deleted: The approver is deleted. Select another approver.
+        circulator_is_deleted: The circulator is deleted. Select another circulator.
+        superior_is_not_found: The superior is not set or is not found.
+        plz_select_delegatee: Select the delegate. The selected delegate's superior will be automatically set.
+        lower_level_superior_is_not_set: The lower level superior is not set.
+        user_title_is_not_found: The user title is not found.
+        user_whos_title_is_not_found: "The active user who has title %{title_name} is not found."
+        user_occupation_is_not_found: The user occupation is not found.
+        user_whos_occupation_is_not_found: "The active user who has occupation %{occupation_name} is not found."
+        user_is_not_found: The user is not found.
+
+  gws_notification:
+    gws/workflow2/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+#      request: "[REQUEST] %{name}"
+#      approve: "[COMPLETED] %{name}"
+#      remand: "[DECLINED] %{name}"
+#      circular: "[ARRIVED] %{name}"
+#      comment: "[COMMENT] %{name}"
+      destination: "An approval request for [Workflow] “%{name}” has been submitted."
+      cancel: "An approval request for [Workflow] “%{name}” has been cancelled."
+
+  modules:
+    gws/workflow2: Application2
+    addons:
+      gws/workflow2/column_setting: Input settings
+      gws/workflow2/custom_form: Input details
+      gws/workflow2/approver: Approve
+      gws/workflow2/approver_print: Approve
+      gws/workflow2/approver_view: Approval route
+      gws/workflow2/circulation_view: Circulation route
+      gws/workflow2/group_setting: Applications
+      gws/workflow2/form_category: Category
+      gws/workflow2/form_purpose: Business type
+      gws/workflow2/destination_setting: Destination
+      gws/workflow2/destination_view: Destination
+      gws/workflow2/destination_state: Treated state
+      gws/workflow2/inspection: Approve/Remand
+      gws/workflow2/circulation: Circulation
+      gws/workflow2/route_readable_setting: Viewing permission
+      gws/workflow2/route_group_permission: Administrative permissions
+
+  gws_role:
+    use_gws_workflow2: Use of workflow2
+
+    read_other_gws_workflow2_routes: View approval routes (all)
+    read_private_gws_workflow2_routes: View approval routes (own)
+    edit_other_gws_workflow2_routes: Edit approval routes (all)
+    edit_private_gws_workflow2_routes: Edit approval routes (own)
+    delete_other_gws_workflow2_routes: Delete approval routes (all)
+    delete_private_gws_workflow2_routes: Delete approval routes (own)
+    public_readable_range_gws_workflow2_routes: Publication of approval routes
+
+    read_other_gws_workflow2_files: View applications (all)
+#    read_private_gws_workflow2_files: View applications (own)
+    edit_other_gws_workflow2_files: Edit applications (all)
+#    edit_private_gws_workflow2_files: Edit applications (own)
+    delete_other_gws_workflow2_files: Delete applications (all)
+#    delete_private_gws_workflow2_files: Delete applications (own)
+#    reroute_other_gws_workflow2_files: Reroute applications (all)
+#    reroute_private_gws_workflow2_files: Reroute applications (own)
+#    trash_other_gws_workflow2_files: Manage application trash (all)
+#    trash_private_gws_workflow2_files: Manage application trash (own)
+#    agent_all_gws_workflow2_files: Proxy applications (all)
+#    agent_private_gws_workflow2_files: Proxy applications (own group)
+
+    read_other_gws_workflow2_forms: View application forms (all)
+    read_private_gws_workflow2_forms: View application forms (own)
+    edit_other_gws_workflow2_forms: Edit application forms (all)
+    edit_private_gws_workflow2_forms: Edit application forms (own)
+    delete_other_gws_workflow2_forms: Delete application forms (all)
+    delete_private_gws_workflow2_forms: Delete application forms (own)
+
+    read_other_gws_workflow2_form_categories: View application form categories (all)
+    read_private_gws_workflow2_form_categories: View application form categories (own)
+    edit_other_gws_workflow2_form_categories: Edit application form categories (all)
+    edit_private_gws_workflow2_form_categories: Edit application form categories (own)
+    delete_other_gws_workflow2_form_categories: Delete application form categories (all)
+    delete_private_gws_workflow2_form_categories: Delete application form categories (own)
+
+    read_other_gws_workflow2_form_purposes: View purposes for application (all)
+    read_private_gws_workflow2_form_purposes: View purposes for application (own)
+    edit_other_gws_workflow2_form_purposes: Edit purposes for application (all)
+    edit_private_gws_workflow2_form_purposes: Edit purposes for application (own)
+    delete_other_gws_workflow2_form_purposes: Delete purposes for application (all)
+    delete_private_gws_workflow2_form_purposes: Delete purposes for application (own)
+
+  errors:
+    messages:
+      unable_to_request_due_to_deleted_form: You cannot apply because the application form has been deleted or is closed.
+      unable_to_request_due_to_closed_form: You cannot apply because the application form has been deleted or is closed.
+
+  mongoid:
+    models:
+      gws/workflow2/route: Approval route setting
+      gws/workflow2/file: Application Data
+      gws/workflow2/column: Input items
+      gws/workflow2/form/base: Application form
+      gws/workflow2/form/application: Application form
+      gws/workflow2/form/external: External application link
+      gws/workflow2/form/category: Application form category
+      gws/workflow2/form/purpose: Purpose for application
+    errors:
+      models:
+        gws/workflow2/route:
+          readable_setting_range_error: You do not have permission "Publication of approval routes".
+        gws/workflow2/file:
+          unable_to_delete: Unable to delete.
+    attributes:
+      gws/workflow2/file:
+        name: Application Title
+        form: Form
+        form_id: Form
+        workflow_member_id: Approver
+      gws/workflow2/route:
+        name: Name
+        pull_up: Pull-up approval
+        on_remand: On remand
+        approvers: Approver
+        circulations: Circulator
+        required_counts: No. of approvals required
+        group_ids: Group
+        level: Level %{level}
+        my_group: Approval by the superior
+        my_group_alternate: Approval by the superior (Can be changed to proxy approver)
+        approver_at: Level %{level} approver
+        required_count_at: No. of approvals required in level %{level}.
+        approvers_level: Level
+        approvers_user_id: Applicant
+        approver_attachment_uses: Add files by approver
+        circulation_attachment_uses: Add files by circulator
+        remark: Remark
+      gws/workflow2/form/base:
+        name: Application
+        order: Order
+        state: Publishing status
+        description: Description
+        memo: Remarks
+      gws/workflow2/form/application:
+        approval_state: Use of approvals
+        default_route_id: Default approval route
+        agent_state: Proxy application
+      gws/workflow2/form/external:
+        url: URL
+      gws/addon/workflow2/column_setting:
+        columns: Input settings
+      gws/workflow2/column:
+        name: Item name
+        order: Order
+      gws/addon/workflow2/group_setting:
+        workflow_new_days: Display period for new items
+        workflow_my_group: Display own group
+      gws/addon/workflow2/form_category:
+        category_ids: Category
+      gws/addon/workflow2/form_purpose:
+        purpose_ids: Business type
+      gws/workflow2/form/purpose:
+        name: Purpose of Work
+      gws/workflow2/destination_setting:
+        destination_treat_state: Treated state
+        destination_group_ids: Destination group
+        destination_user_ids: Destination user
+
+  tooltip:
+    gws/workflow2/file:
+      name:
+        - Enter a title.
+    gws/workflow2/route:
+      name:
+        - Enter a name for the approval route.
+      pull_up:
+        - Enable or disable pull-up approval.
+      on_remand:
+        - Select the action at the time of remand.
+        - “Back to start” takes you back to the start of approval when you remand it. This is the default action.
+        - “Previous” takes you back one level when you remand it.
+      approvers:
+        - Select an approver.
+      required_counts:
+        - Enter the number of approvals that are required.
+        - If Everyone” is selected, all approvers will need to approve it.
+        - If “n people” is selected, at least n of the approvers will need to approve it.
+      circulations:
+        - Select a circulator.
+      group_ids:
+        - Select the groups that can use this approval route.
+      approver_attachment_uses:
+        - Select “Enable” to allow approvers to add files, or “Disable” for others.
+      circulation_attachment_uses:
+        - Select “Enable” to allow circulators to add files, or “Disable” for others.
+      remark:
+        - Input remark.
+    gws/workflow2/form/base:
+      name:
+        - Enter an application title.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+      state:
+        - Select whether to publish the application form.
+      description:
+        - Enter a description for this application form.
+        - The description will be made available to users and will be subject to search.
+      memo:
+        - Enter remarks.
+        - "Remarks are not shown elsewhere, so enter notes for administrative purposes."
+    gws/workflow2/form/application:
+      approval_state:
+        - Select whether or not to use approvals.
+        - When "Without Approval" is selected, the application is immediately approved and submitted to the destinations without going through the approval process.
+        - When "With Approval" is selected, the application is submitted to the approvers, who reviews it and submits it to the destinations as approved.
+        - You can also specify the default approval route to be used in the case of "with approval".
+      agent_state:
+        - Select whether to allow proxy applications.
+    gws/workflow2/form/external:
+      url:
+        - Enter the url to redirect to.
+    gws/workflow2/column:
+      name:
+        - Enter an item.
+      order:
+        - Enter the order.
+        - "The lower the number, the higher the position."
+    gws/addon/workflow2/group_setting:
+      workflow_new_days:
+        - Enter the display period for new items.
+      workflow_my_group:
+        - Select the display own group
+      workflow_route_approver_superior:
+        - Select whether or not to display the superior as an option in the approval route for the approval route setting.
+      workflow_route_approver_title:
+        - Select whether or not the title is displayed as an option in the approval route in the approval route settings.
+      workflow_route_approver_occupation:
+        - Select whether or not the occupation is displayed as an option in the approval route in the approval route settings.
+      workflow_route_circulation_superior:
+        - Select whether or not to show the superior as an option in the circular route for the approval route setting.
+      workflow_route_circulation_title:
+        - Select whether or not the title is displayed as an option in the circular route in the approval route settings.
+      workflow_route_circulation_occupation:
+        - Select whether or not the occupation is displayed as an option in the circular route in the approval route settings.
+    gws/workflow2/form/purpose:
+      name:
+        - Enter a purpose
+    gws/workflow2/destination_setting:
+      destination_group_ids:
+        - Select the groups where the application submit.
+      destination_user_ids:
+        - Select the users where the application submit.
+
+  input_guide:
+    gws/addon/workflow2/approver_view:
+      approvers_html: |-
+        <p>If a superior is selected as approver, the superior of the level %{lower_level} is automatically set at the time of application.</p>
+        <p>Note that if the superior is not selected as the approver at the level %{lower_level}, it is invalid.</p>
+    gws/addon/workflow2/circulation_view:
+      circulations_html: |-
+        <p>If a superior is selected as circulator, the superior of the level %{lower_level} is automatically set at the time of application.</p>
+        <p>Note that if the superior is not selected as the circulator at the level %{lower_level}, it is invalid.</p>
+    gws/workflow2/route:
+      template_html: |-
+        <p>Select the approval route setting which you wish to duplicate as a template.</p>
+    gws/addon/workflow2/approver:
+      restart_notice_html: |-
+        <p style="color: #f00;">If you reapply this application, the remand comments and attached files at the time of remand will disappear.</p>
+
+  job:
+    models:
+      gws/workflow2/trash_purge_job: Empty workflow/application trash

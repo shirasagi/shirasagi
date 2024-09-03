@@ -1,0 +1,59 @@
+<%
+  grouped_categories = categories.reorder(order: 1, name: 1).to_a.group_by { |cate| cate.name.split("/", 2).first }
+  grouped_categories = grouped_categories.map { |_key, value| value }
+%>
+
+<% render_cate = proc do |cate, checkbox: true| %>
+  <% checked = simple_selected?(cate) %>
+  <div class="category-item-wrap gws-category-label" style="<%= category_label_css(cate) %>" data-checked="<%= checked %>" data-id="<%= cate.id %>">
+    <label>
+      <%=
+        if checkbox
+          checkbox_value = {
+            id: cate.id, depth: cate.depth, order: cate.order, style: category_label_css(cate),
+            name: cate.name, trailing_name: cate.trailing_name
+          }
+          checkbox_value = Base64.urlsafe_encode64(checkbox_value.to_json)
+          check_box_tag "s[category_ids][]", checkbox_value, checked, id: nil
+        end
+      %>
+      <%= tag.span cate.name %>
+    </label>
+  </div>
+<% end %>
+
+<div class="gws-category-navi-dialog">
+  <form method="dialog" class="gws-category-navi-dialog-form" data-controller="gws--category--simple-editing" data-gws--category--simple-editing-url-value="<%= return_path %>">
+    <%= hidden_field_tag "base64_filter" %>
+    <%= hidden_field_tag "return_path" %>
+
+    <div><%= button_tag t("ss.buttons.clear"), name: nil, type: "button", class: "btn btn-clear", data: { controller: "ss--clear-all-checkbox" } %></div>
+    <div class="category-list">
+      <% grouped_categories.select { |categories| categories.length == 1 }.each do |categories| %>
+        <% cate = categories.first %>
+        <% render_cate.call(cate) %>
+      <% end %>
+    </div>
+    <% grouped_categories.select { |categories| categories.length != 1 }.each do |categories| %>
+      <% categories.shift.tap do |cate| %>
+        <div class="category-list depth depth-0">
+          <% render_cate.call(cate, checkbox: false) %>
+        </div>
+      <% end %>
+      <div class="category-list depth depth-1">
+        <% categories.each do |cate| %>
+          <% render_cate.call(cate) %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <footer class="send">
+      <% if category_frame_options[:action_btn].to_s == "decide" %>
+        <%= button_tag t("ss.buttons.decide"), name: nil, value: "send", class: "btn-primary save btn-decide" %>
+      <% else %>
+        <%= button_tag t("ss.buttons.search"), name: nil, value: "send", class: "btn-primary save btn-send" %>
+      <% end %>
+      <%= button_tag t("ss.buttons.close"), name: nil, value: "close", class: "btn-default btn-close" %>
+    </footer>
+  </form>
+</div>

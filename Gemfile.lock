@@ -303,6 +303,7 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
+    language_server-protocol (3.17.0.3)
     levenshtein (0.2.2)
     line-bot-api (1.29.0)
     link_header (0.0.8)
@@ -460,7 +461,6 @@ GEM
     pry-stack_explorer (0.6.1)
       binding_of_caller (~> 1.0)
       pry (~> 0.13)
-    psych (3.3.4)
     public_suffix (6.0.1)
     puma (6.4.2)
       nio4r (~> 2.0)
@@ -581,27 +581,28 @@ GEM
     rspec-support (3.13.1)
     rss (0.3.1)
       rexml
-    rubocop (1.18.4)
+    rubocop (1.66.0)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.0.0.0)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.8, < 3.0)
-      rexml
-      rubocop-ast (>= 1.8.0, < 2.0)
+      regexp_parser (>= 2.4, < 3.0)
+      rubocop-ast (>= 1.32.1, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
+      unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.32.1)
       parser (>= 3.3.1.0)
-    rubocop-performance (1.19.1)
-      rubocop (>= 1.7.0, < 2.0)
-      rubocop-ast (>= 0.4.0)
-    rubocop-rails (2.11.3)
+    rubocop-performance (1.21.1)
+      rubocop (>= 1.48.1, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
+    rubocop-rails (2.26.0)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
-      rubocop (>= 1.7.0, < 2.0)
-    rubocop-rspec (2.4.0)
-      rubocop (~> 1.0)
-      rubocop-ast (>= 1.1.0)
+      rubocop (>= 1.52.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
+    rubocop-rspec (3.0.4)
+      rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     ruby-saml (1.16.0)
       nokogiri (>= 1.13.10)
@@ -811,7 +812,6 @@ DEPENDENCIES
   pry-doc
   pry-rails
   pry-stack_explorer
-  psych (< 4.0.0)
   puma
   rails (~> 6.1.0)
   rails-controller-testing
@@ -830,9 +830,9 @@ DEPENDENCIES
   rspec-rails
   rspec-retry
   rss
-  rubocop (= 1.18.4)
+  rubocop (~> 1.66)
   rubocop-performance
-  rubocop-rails (= 2.11.3)
+  rubocop-rails (~> 2.26)
   rubocop-rspec
   ruby-saml
   rubyzip (~> 2.3.0)

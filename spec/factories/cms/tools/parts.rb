@@ -10,8 +10,8 @@ FactoryBot.define do
 
   factory :accessibility_tool_compat, class: 'Cms::Part::Free' do
     name { unique_id.to_s }
-    basename { "tool.part.html" }
-    filename { "tool.part.html" }
+    basename { "tool-#{unique_id}.part.html" }
+    filename { "tool-#{unique_id}.part.html" }
     html do
       # "id=" で機能を指定する形式
       <<~HTML

@@ -4,6 +4,9 @@ module Gws::Addon
     extend SS::Addon
 
     included do
+      cattr_accessor :show_history, instance_accessor: false
+      self.show_history = true
+
       after_find :save_history_for_find
       after_save :save_history_for_save
       after_destroy :save_history_for_destroy
