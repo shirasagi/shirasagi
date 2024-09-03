@@ -211,6 +211,32 @@ def unique_color
   @random_color.next.to_rgb.to_s
 end
 
+def i18n_translations(prefix: nil, count: nil, join: nil, sep: nil, length: nil)
+  if prefix.present?
+    gen_value = proc do
+      ret = "#{prefix}#{sep || "-"}#{unique_id}"
+      length.numeric? && length > 0 ? ret[0, length] : ret
+    end
+  else
+    gen_value = proc do
+      ret = unique_id
+      length.numeric? && length > 0 ? ret[0, length] : ret
+    end
+  end
+  translations = {}.with_indifferent_access
+  I18n.available_locales.each do |lang|
+    if count
+      value = Array.new(count) { gen_value.call }
+      value = value.join(join) if join
+    else
+      value = gen_value.call
+    end
+
+    translations[lang.to_s] = value
+  end
+  translations
+end
+
 def ss_japanese_text(length: 10, separator: '')
   @japanese_chars ||= begin
     hiragana = ('あ'..'ん').to_a
