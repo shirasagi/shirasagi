@@ -32,7 +32,8 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
     let(:google_oauth2_image_url) { unique_url }
 
     before do
-      # WebMock.disable_net_connect!
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!(allow_localhost: true)
       WebMock.reset!
 
       stub_request(:post, "https://oauth2.googleapis.com/token").to_return do |request|
@@ -55,10 +56,10 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         }
         { status: 200, headers: { 'Content-Type' => 'application/json' }, body: body.to_json }
       end
-      stub_request(:get, /#{::Regexp.escape("https://www.googleapis.com/oauth2/v3/tokeninfo")}/).to_return do |request|
+      stub_request(:post, /#{::Regexp.escape("https://www.googleapis.com/oauth2/v3/tokeninfo")}/).to_return do |request|
         expect(request.headers["Authorization"]).to be_blank
-        expect(request.body).to be_blank
-        expect(request.uri.query_values["access_token"]).to eq access_token
+        expect(request.body).to eq "access_token=#{access_token}"
+        expect(request.uri.query_values).to be_blank
 
         body = {
           azp: google_oauth2_azp,
@@ -91,6 +92,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
     after do
       WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
     end
 
     it do

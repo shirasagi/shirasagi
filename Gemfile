@@ -143,7 +143,7 @@ group :development, :test do
   gem 'rubocop-rspec', require: false
   gem 'rubocop-rails', '~> 2.26', require: false
   gem 'scss_lint', require: false
-  gem 'selenium-webdriver', '~> 4.11', require: false
+  gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
