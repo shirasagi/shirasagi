@@ -42,8 +42,8 @@
 
   &__footer {
     width: 100%;
-    border-top: 1px solid $gray2;
     padding: 10px;
+    border-top: 1px solid $gray2;
   }
 
   &-report {
@@ -68,12 +68,12 @@
         padding: 5px;
 
         &:before {
-          font-family: "Material Icons";
-          font-size: 108%;
           content: "\e160";
 
           display: inline;
           margin-right: 4px;
+          font-family: "Material Icons";
+          font-size: 108%;
           vertical-align: -3px;
         }
       }
@@ -86,12 +86,12 @@
         padding: 5px;
 
         &:before {
-          font-family: "Material Icons";
-          font-size: 108%;
           content: "\e000";
 
           display: inline;
           margin-right: 4px;
+          font-family: "Material Icons";
+          font-size: 108%;
           vertical-align: -3px;
         }
       }
@@ -100,12 +100,12 @@
         padding: 5px;
 
         &:before {
-          font-family: "Material Icons";
-          font-size: 108%;
           content: "\e002";
 
           display: inline;
           margin-right: 4px;
+          font-family: "Material Icons";
+          font-size: 108%;
           vertical-align: -3px;
         }
       }
@@ -114,12 +114,12 @@
         padding: 5px;
 
         &:before {
-          font-family: "Material Icons";
-          font-size: 108%;
           content: "\e001";
 
           display: inline;
           margin-right: 4px;
+          font-family: "Material Icons";
+          font-size: 108%;
           vertical-align: -3px;
         }
       }
@@ -128,12 +128,12 @@
         padding: 5px;
 
         &:before {
-          font-family: "Material Icons";
-          font-size: 108%;
           content: "\e8b2";
 
           display: inline;
           margin-right: 4px;
+          font-family: "Material Icons";
+          font-size: 108%;
           vertical-align: -3px;
         }
       }
@@ -175,8 +175,8 @@
         display: inline-block;
         min-width: 16px;
         padding: 0 2px;
-        border-radius: 4px;
         border: 1px solid $gray3;
+        border-radius: 4px;
         font-size: 80%;
         text-align: center;
       }

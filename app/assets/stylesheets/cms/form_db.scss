@@ -112,17 +112,17 @@ body {
   }
 }
 footer.send {
+  display: flex !important;
   position: fixed;
   bottom: 0;
   left: 0;
-  gap: 1rem;
-  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   width: 100%;
   padding: 15px;
   border-top: 1px solid var(--color-border-gray);
   background: rgba(240, 240, 240, .75);
+  gap: 1rem;
   .pagination { margin: 0; }
 }
 

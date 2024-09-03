@@ -43,8 +43,8 @@
   }
 
   .nav-menu, .nav-operation {
-    margin: 5px 0;
     display: inline-block;
+    margin: 5px 0;
   }
 
   .nav-operation {
@@ -53,39 +53,39 @@
   }
 
   .reason-tooltip {
-    position: relative;
     display: inline-block;
+    position: relative;
     width: 16px;
     height: 16px;
-    line-height: 1.1;
-    @include border-radius(8px);
     background: $orange;
     color: $white;
+    line-height: 1.1;
     text-align: center;
     cursor: pointer;
+    @include border-radius(8px);
 
     .reason {
       display: none;
       position: absolute;
       z-index: 101;
 
-      color: $black;
-      text-align: left;
-      border: $border-gray4;
-      background: $white;
-      @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
-      @include border-radius(3px);
-
       bottom: 100%;
       left: 50%;
       margin-left: -50px;
+      border: $border-gray4;
+      background: $white;
+
+      color: $black;
+      text-align: left;
+      @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+      @include border-radius(3px);
 
       time {
         display: block;
         padding: 5px;
         border-top: $border-gray1;
-        font-size: 80%;
         color: $gray2;
+        font-size: 80%;
         text-align: right;
       }
 
@@ -111,9 +111,9 @@
   }
 
   .today {
-    white-space: nowrap;
-    border-collapse: collapse;
     border-spacing: 0;
+    border-collapse: collapse;
+    white-space: nowrap;
 
     th, td {
       padding: 5px;
@@ -138,9 +138,9 @@
   }
 
   .time-card {
-    white-space: nowrap;
-    border-collapse: collapse;
     border-spacing: 0;
+    border-collapse: collapse;
+    white-space: nowrap;
 
     th {
       padding: 5px;
@@ -270,18 +270,18 @@
       padding: 5px;
 
       table {
-        border-collapse: collapse;
-        border-spacing: 0;
         table-layout: fixed;
+        border-spacing: 0;
+        border-collapse: collapse;
 
         th, td {
-          border: 1px solid $gray4;
           padding: 5px;
+          border: 1px solid $gray4;
         }
 
         th {
-          background: $gray1;
           width: 5em;
+          background: $gray1;
         }
 
         td.time {
@@ -296,8 +296,8 @@
     }
 
     button:disabled {
-      color: #999;
       background-color: #ddd;
+      color: #999;
     }
   }
 }
