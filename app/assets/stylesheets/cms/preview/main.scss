@@ -134,6 +134,14 @@
   }
   .ss-preview-wrap-column {
     padding: 0 12px 10px;
+    &.ss-preview-wrap-column-title-wrap {
+      padding-top: 10px;
+      .ss-preview-title {
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
   }
   .ss-preview-wrap-column ~ .ss-preview-wrap-column {
     border-left: 1px solid #666;
@@ -184,16 +192,6 @@
 
     &.ss-preview-workflow-notice {
       display: inline-block;
-    }
-  }
-  .ss-preview-wrap-column {
-    &.ss-preview-wrap-column-title-wrap {
-      padding-top: 10px;
-      .ss-preview-title {
-        color: #fff;
-        font-size: 20px;
-        font-weight: bold;
-      }
     }
   }
 }
