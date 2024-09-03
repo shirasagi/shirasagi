@@ -33,7 +33,7 @@ module Sys::SiteImport::Contents
       item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
       if item[:column_values].present?
         item.column_values.each do |column_value|
-          column_value['column_id'] = @cms_columns_map["$oid" => column_value['column_id'].to_s]
+          column_value['column_id'] = @cms_columns_map[column_value['column_id'].to_s]
           if column_value['file_id'].present?
             column_value['file_id'] = @ss_files_map[column_value['file_id']]
           end

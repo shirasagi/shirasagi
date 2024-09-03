@@ -27,6 +27,7 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.user_id).to eq cms_user.id
           expect(subject.model).to eq "member/photo"
           expect(subject.image_dimension).to eq [ 712, 210 ]
+          expect(subject.content_type).to eq "image/jpeg"
 
           # variant test
           expect(subject.variants.count).to eq 2
@@ -144,20 +145,23 @@ describe Member::PhotoFile, dbscope: :example do
       end
     end
 
-    context "with ImageMagick6" do
-      around do |example|
-        MiniMagick.with_cli(:imagemagick) do
-          example.run
-        end
-      end
-
+    context "with ImageMagick6/7" do
       include_context "member/photo_file is"
     end
 
     context "with GraphicsMagick" do
+      # As of MiniMagick 5+, GraphicsMagick isn't officially supported. However, we can work with it
       around do |example|
-        MiniMagick.with_cli(:graphicsmagick) do
-          example.run
+        save_cli_prefix = nil
+        MiniMagick.configure do |config|
+          save_cli_prefix = config.cli_prefix
+          config.cli_prefix = "gm"
+        end
+
+        example.run
+      ensure
+        MiniMagick.configure do |config|
+          config.cli_prefix = save_cli_prefix
         end
       end
 

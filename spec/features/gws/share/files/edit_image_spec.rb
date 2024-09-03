@@ -10,26 +10,15 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
   def extract_image_info(filepath)
     image = MiniMagick::Image.open(filepath)
-    if MiniMagick.graphicsmagick?
-      image_details = image.details
-      image_class_type = image_details["Class"]
-      image_depth = image_details["Depth"]
-    else
-      image_data = image.data
-      image_class_type = image_data["class"]
-      image_depth = "#{image_data["depth"]}-bits"
-    end
 
     {
       filename: ::File.basename(filepath),
       format: image.type,
       width: image.width,
       height: image.height,
-      class_type: image_class_type,
-      depth: image_depth,
-      # colors: img.number_colors,
+      colorspace: image.colorspace,
       size: image.size,
-      resolution: { x: image.height[0], y: image.height[1] }
+      resolution: { x: image.resolution[0], y: image.resolution[1] }
     }
   ensure
     image.destroy! if image
@@ -95,20 +84,23 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "with ImageMagick6" do
-      around do |example|
-        MiniMagick.with_cli(:imagemagick) do
-          example.run
-        end
-      end
-
+    context "with ImageMagick6/7" do
       include_context "with png and jpg"
     end
 
     context "with GraphicsMagick" do
+      # As of MiniMagick 5+, GraphicsMagick isn't officially supported. However, we can work with it
       around do |example|
-        MiniMagick.with_cli(:graphicsmagick) do
-          example.run
+        save_cli_prefix = nil
+        MiniMagick.configure do |config|
+          save_cli_prefix = config.cli_prefix
+          config.cli_prefix = "gm"
+        end
+
+        example.run
+      ensure
+        MiniMagick.configure do |config|
+          config.cli_prefix = save_cli_prefix
         end
       end
 

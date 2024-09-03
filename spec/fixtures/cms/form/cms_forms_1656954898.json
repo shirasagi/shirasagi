@@ -119,9 +119,7 @@
     ],
     "init_columns": [
       {
-        "column_id": {
-          "$oid": "603d00dc686c825b8533d0e7"
-        },
+        "column_id": "603d00dc686c825b8533d0e7",
         "form_type": "Cms::Form"
       }
     ]

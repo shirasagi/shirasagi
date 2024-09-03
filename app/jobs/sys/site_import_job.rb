@@ -161,7 +161,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
     data['contact_group_id'] = @cms_groups_map[data['contact_group_id']] if data['contact_group_id'].present?
 
     if data['contact_group_contact_id'].present?
-      old_id = data['contact_group_contact_id']["$oid"]
+      old_id = data['contact_group_contact_id']
+      if old_id.is_a?(Hash) && old_id.key?("$oid")
+        old_id = old_id["$oid"]
+      end
       data['contact_group_contact_id'] = @cms_contact_groups_map[old_id]
     end
 
@@ -189,6 +192,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
     read_json(name).each do |data|
       id   = data.delete('_id')
       data = convert_data(data)
+
+      if id.is_a?(Hash) && id.key?("$oid")
+        id = id["$oid"]
+      end
 
       if data.key?("_type")
         effective_model = data["_type"].constantize rescue model
@@ -251,7 +258,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
       next if data['contact_groups'].blank?
       data['contact_groups'].each do |dist|
         dist.deep_stringify_keys!
-        old_id = dist["_id"]["$oid"]
+        old_id = dist["_id"]
+        if old_id.is_a?(Hash) && old_id.key?("$oid")
+          old_id = old_id["$oid"]
+        end
         contact_groups = item.contact_groups.to_a
 
         # 属性が全て一致する連絡先

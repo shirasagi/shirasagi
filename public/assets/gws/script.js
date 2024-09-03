@@ -540,7 +540,11 @@ Gws_Contrast.prototype.renderContrasts = function(data) {
 
   var _this = this;
   $.each(data, function() {
-    _this.renderContrast(this._id['$oid'], this.name, this.color, this.text_color);
+    var id = this._id;
+    if (id !== null && typeof id === 'object' && '$oid' in id) {
+      id = id['$oid']
+    }
+    _this.renderContrast(id, this.name, this.color, this.text_color);
   });
 
   this.checkActiveContrast();
@@ -1788,7 +1792,10 @@ Gws_Portal.prototype.addItems = function(items) {
 };
 
 Gws_Portal.prototype.addItem = function(item) {
-  var id = item._id.$oid;
+  var id = item._id;
+  if (id !== null && typeof id === 'object' && "$oid" in id) {
+    id = id.$oid
+  }
 
   var li = this.gs.add_widget(
     '<li class="portlet-item" data-id="' + id + '"></li>',
