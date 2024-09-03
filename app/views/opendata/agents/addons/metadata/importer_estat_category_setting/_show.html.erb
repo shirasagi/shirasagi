@@ -1,0 +1,33 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-opendata_metadata_estat_category_setting">
+  <% if @item.default_estat_categories.present? %>
+    <dt><%= @model.t :default_estat_category_ids %></dt>
+    <dd><%= @item.default_estat_categories.pluck(:name).join(", ") %></dd>
+  <% end %>
+
+  <dt><%= t("opendata.labels.convert_setting") %></dt>
+  <dd>
+    <span>
+      <%= link_to t("ss.links.download"), download_opendata_metadata_importer_estat_category_settings_path(importer_id: @item.id) %>
+    </span>
+    <span style="margin-left: 10px;">
+      <%= link_to t("ss.links.import"), import_opendata_metadata_importer_estat_category_settings_path(importer_id: @item.id) %>
+    </span>
+
+    <table class="index" style="margin-top: 10px;">
+      <% Opendata::Node::EstatCategory.order_by(filename: 1).each do |cate| %>
+        <tr>
+          <td><%= link_to cate.name, opendata_metadata_importer_estat_category_settings_path(importer_id: @item.id, category_id: cate.id) %></td>
+          <td><%= cate.filename %></td>
+          <td>
+            <% count = @item.estat_category_settings.where(category_id: cate.id).count %>
+            <%= count > 0 ? count : "" %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </dd>
+</dl>

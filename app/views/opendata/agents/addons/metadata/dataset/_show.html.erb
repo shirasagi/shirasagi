@@ -1,0 +1,63 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-opendata_dataset_importer_dataset">
+  <dt><%= @model.t :metadata_dataset_id %></dt>
+  <dd><%= @item.metadata_dataset_id %></dd>
+
+  <dt><%= @model.t :metadata_japanese_local_goverment_code %></dt>
+  <dd><%= @item.metadata_japanese_local_goverment_code %></dd>
+
+  <dt><%= @model.t :metadata_local_goverment_name %></dt>
+  <dd><%= @item.metadata_local_goverment_name %></dd>
+
+  <dt><%= @model.t :metadata_dataset_keyword %></dt>
+  <dd><%= br @item.metadata_dataset_keyword %></dd>
+
+  <% if @item.metadata_dataset_released.present? %>
+    <dt><%= @model.t :metadata_dataset_released %></dt>
+    <dd><%= I18n.l(@item.metadata_dataset_released.to_date, format: :iso) %></dd>
+  <% end %>
+
+  <% if @item.metadata_dataset_updated.present? %>
+    <dt><%= @model.t :metadata_dataset_updated %></dt>
+    <dd><%= I18n.l(@item.metadata_dataset_updated.to_date, format: :iso) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :metadata_dataset_url %></dt>
+  <dd><%= @item.metadata_dataset_url %></dd>
+
+  <dt><%= @model.t :metadata_dataset_update_frequency %></dt>
+  <dd><%= @item.metadata_dataset_update_frequency %></dd>
+
+  <dt><%= @model.t :metadata_dataset_follow_standards %></dt>
+  <dd><%= @item.metadata_dataset_follow_standards %></dd>
+
+  <dt><%= @model.t :metadata_dataset_related_document %></dt>
+  <dd><%= @item.metadata_dataset_related_document %></dd>
+
+  <dt><%= @model.t :metadata_dataset_target_period %></dt>
+  <dd><%= @item.metadata_dataset_target_period %></dd>
+
+  <dt><%= @model.t :metadata_dataset_contact_name %></dt>
+  <dd><%= @item.metadata_dataset_contact_name %></dd>
+
+  <dt><%= @model.t :metadata_dataset_contact_email %></dt>
+  <dd><%= @item.metadata_dataset_contact_email %></dd>
+
+  <dt><%= @model.t :metadata_dataset_contact_tel %></dt>
+  <dd><%= @item.metadata_dataset_contact_tel %></dd>
+
+  <dt><%= @model.t :metadata_dataset_contact_ext %></dt>
+  <dd><%= @item.metadata_dataset_contact_ext %></dd>
+
+  <dt><%= @model.t :metadata_dataset_contact_form_url %></dt>
+  <dd><%= @item.metadata_dataset_contact_form_url %></dd>
+
+  <dt><%= @model.t :metadata_dataset_contact_remark %></dt>
+  <dd><%= @item.metadata_dataset_contact_remark %></dd>
+
+  <dt><%= @model.t :metadata_dataset_remark %></dt>
+  <dd><%= @item.metadata_dataset_remark %></dd>
+</dl>

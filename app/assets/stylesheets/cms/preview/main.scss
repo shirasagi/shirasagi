@@ -21,8 +21,7 @@
     text-decoration: none;
     vertical-align: top;
   }
-  button, select, #ss-preview-btn-select-draft-page, input,
-  #ss-preview-btn-select-draft-page, .ss-preview-part-list {
+  button, select, #ss-preview-btn-select-draft-page, input, .ss-preview-part-list {
     @include btn;
     box-sizing: border-box;
     width: auto;
@@ -71,13 +70,13 @@
   }
   // scss-lint:disable PropertySpelling
   #ss-preview-btn-workflow-start, #ss-preview-btn-workflow-approve {
+    *zoom: 1;
     border: 1px solid #b23a3d;
     background: #e13026;
-    @include background-image(linear-gradient(top, #e13026, #b23a3d));
     color: #fff;
-    *zoom: 1;
     filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE13026', endColorstr='#FFB23A3D');
     filter: none \9;
+    @include background-image(linear-gradient(top, #e13026, #b23a3d));
     &:hover {
       background: #b23a3d;
     }
@@ -135,6 +134,14 @@
   }
   .ss-preview-wrap-column {
     padding: 0 12px 10px;
+    &.ss-preview-wrap-column-title-wrap {
+      padding-top: 10px;
+      .ss-preview-title {
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
   }
   .ss-preview-wrap-column ~ .ss-preview-wrap-column {
     border-left: 1px solid #666;
@@ -320,7 +327,38 @@ div.ss-preview-dialog {
     color: #a0522d;
     font-weight: bold;
   }
+  textarea {
+    @include input;
+    width: 100%;
+    height: 6.5em;
+    padding: 5px;
+    line-height: 1.4;
+  }
+  .btn-primary, .commit {
+    @include btn-red;
+
+  }
+  .btn-default {
+    @include btn-gray-l;
+  }
+  .btn-primary, .commit, .btn-default {
+    font-size: $px13;
+  }
+  .send {
+    margin-top: 10px;
+    text-align: center;
+    input, button {
+      vertical-align: top;
+    }
+  }
+  dt.wide {
+    margin-bottom: 15px;
+    color: #a0522d;
+    font-size: $px13;
+    font-weight: bold;
+  }
 }
+
 .ss-preview-page, .ss-preview-column {
   min-height: 1em;
 }
@@ -470,7 +508,6 @@ table.index {
         left: -25px;
         width: 30em;
         padding: 15px;
-        list-style: none;
         border: 1px solid #d0d0d0;
         background: #fff;
         -moz-box-shadow: 0 1px 6px #d0d0d0;
@@ -480,6 +517,7 @@ table.index {
         font-size: 90%;
         font-weight: normal;
         line-height: 1.6;
+        list-style: none;
         text-align: left;
         cursor: auto;
         @include mb {
@@ -536,44 +574,12 @@ table.index {
     }
   }
 }
-.ss-preview-dialog {
-  textarea {
-    @include input;
-    width: 100%;
-    height: 6.5em;
-    padding: 5px;
-    line-height: 1.4;
-  }
-  .btn-primary, .commit {
-    @include btn-red;
-
-  }
-  .btn-default {
-    @include btn-gray-l;
-  }
-  .btn-primary, .commit, .btn-default {
-    font-size: $px13;
-  }
-  .send {
-    margin-top: 10px;
-    text-align: center;
-    input, button {
-      vertical-align: top;
-    }
-  }
-  dt.wide {
-    margin-bottom: 15px;
-    color: #a0522d;
-    font-size: $px13;
-    font-weight: bold;
-  }
-}
 
 .sns-post-confirm {
   h2 {
-    font-weight: bold;
     color: #a0522d;
     font-size: $px13;
+    font-weight: bold;
   }
   li {
     font-size: $px12;

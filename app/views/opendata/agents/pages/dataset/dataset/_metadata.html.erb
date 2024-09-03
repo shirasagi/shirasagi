@@ -1,0 +1,360 @@
+<%= stylesheet_link_tag "colorbox", media: 'all' %>
+<%= javascript_include_tag "colorbox", defer: true %>
+<%
+  path_prefix = nil
+  if controller.filter_include?(:preview)
+    path_prefix = cms_preview_path(site: @cur_site, preview_date: params[:preview_date])
+  end
+
+  if path_prefix.present? && path_prefix.end_with?('/')
+    path_prefix = path_prefix[0..-2]
+  end
+
+  @my_dataset_node = Opendata::Node::MyDataset.site(@cur_site).first
+%>
+<%= javascript_include_tag "opendata/public" %>
+<%= jquery do %>
+//Tabs
+SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
+
+<% if @cur_node.show_point? %>
+//show point
+Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
+<% end %>
+
+//show apps
+$.ajax({
+  url: "<%= path_prefix %><%= @cur_page.dataset_apps_url %>",
+  success: function (data) {
+    $(".dataset-apps").html(data);
+  }
+});
+
+//show ideas
+$.ajax({
+  url: "<%= path_prefix %><%= @cur_page.dataset_ideas_url %>",
+  success: function (data) {
+    $(".dataset-ideas").html(data);
+  }
+});
+
+//show favorite
+$.ajax({
+  url: "<%= path_prefix %><%= @cur_page.dataset_favorite_url %>",
+  success: function (data) {
+    $(".dataset-favorite").html(data);
+  }
+});
+
+//hide categorise
+$(".categories a[data-class=other]").on("click", function () {
+  var type;
+  type = $(this).attr("class");
+  $(".categories a." + type).show();
+  $(this).remove();
+  return false;
+});
+
+SS.renderClipboardCopy();
+
+<% end %>
+
+<header>
+  <h1 class="name"><%= @cur_page.name %></h1>
+</header>
+
+<div class="mypage-content">
+  <% if @cur_node.show_point? %>
+    <div class="point">
+      <div class="count">
+        <span class="label"><%= t("opendata.labels.iine") %></span>
+        <span class="number"><%= @cur_page.point %></span>
+      </div>
+    </div>
+  <% end %>
+  <div class="dataset-favorite"></div>
+</div>
+
+<%
+  max = 3
+  categories = [
+      { items: @cur_page.categories.sort(order: 1), type: :category, name: :name, key: :category_id, val: :id },
+      { items: @cur_page.estat_categories.sort(order: 1), type: "estat-category", name: :name, key: :estat_category_id, val: :id },
+      { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
+      { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
+  ]
+%>
+<nav class="categories">
+  <% categories.each do |cate| %>
+    <% cate[:items].each_with_index do |item, idx| %>
+      <% hide = (idx >= max) ? "display: none" : nil %>
+      <%= link_to(item.send(cate[:name]), @search_path.call("s[#{cate[:key]}]" => "#{item.send(cate[:val])}"), class: cate[:type], style: hide) %>
+    <% end %>
+    <% if cate[:items].size > max %>
+      <%= link_to t("opendata.labels.other") + "#{cate[:items].size - max}" + t("opendata.labels.count"), "#",
+                  class: "#{cate[:type]}", "data-class" => "other" %>
+    <% end %>
+  <% end %>
+</nav>
+
+<% api_url = api_package_show_path(id: @cur_page.uuid) %>
+<% if api_url.present? %>
+  <div class="api"><%= link_to("WEBAPI", api_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %></div>
+<% end %>
+
+<div class="text">
+  <%= auto_link paragraph(sanitize(@cur_page.text)) %>
+</div>
+
+<% render_rs = proc do |rs| %>
+  <div class="<%= rs.context_path[1..-1].dasherize %>" data-uuid="<%= rs.uuid %>">
+    <div class="info">
+      <div class="name format-<%= rs.format.downcase %>">
+        <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
+      </div>
+      <% if rs.text.present? %>
+        <div class="info__text">
+          <%= auto_link paragraph(sanitize(rs.text)) %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="info-detail">
+      <dl class="info-list">
+        <% if rs.respond_to?(:downloaded_count) %>
+          <dt class="info-list__title"><%= rs.t :downloaded_count %></dt>
+          <dd class="info-list__content"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
+        <% end %>
+        <% if rs.metadata_file_released.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_released %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_released.to_date, format: :long) } %></dd>
+        <% end %>
+        <% if rs.metadata_file_updated.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_updated %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_updated.to_date, format: :long) } %></dd>
+        <% end %>
+        <% if rs.metadata_file_follow_standards.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_follow_standards %></dt>
+          <dd class="info-list__content"><%= rs.metadata_file_follow_standards %></dd>
+        <% end %>
+      </dl>
+      <div class="info-detail__access">
+        <div class="icons">
+          <% license = rs.license %>
+          <% if license.present? %>
+            <span class="license">
+              <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+              <% if license.related_url.present? %>
+                <%= link_to(label, license.related_url, target: "_blank", rel: [ "noopener", @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil ]) %>
+              <% else %>
+                <%= label %>
+              <% end %>
+            </span>
+          <% end %>
+          <% if rs.metadata_file_access_url.present? %>
+            <div class="content-wrap">
+              <%= link_to('掲載ページはこちら', rs.metadata_file_access_url, class: "content noicon", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% end %>
+          <% if rs.metadata_file_download_url.present? %>
+            <div class="download-wrap">
+              <%= link_to(rs.metadata_file_download_url, class: "download noicon", "data-url": rs.metadata_file_download_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) do %>
+                <small>市町村ページから</small>ダウンロード
+              <% end %>
+            </div>
+          <% end %>
+          <% if rs.rdf_iri.present? %>
+            <div class="sparql">
+              <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% end %>
+        </div>
+        <div class="info-detail__link">
+          <% if rs.metadata_file_terms_of_service.present? %>
+            <p><%= rs.t :metadata_file_terms_of_service %>：<%= auto_link sanitize(rs.metadata_file_terms_of_service) %></p>
+          <% end %>
+          <% if rs.metadata_file_related_document.present? %>
+            <p><%= rs.t :metadata_file_related_document %>：<%= link_to(rs.metadata_file_related_document, rs.metadata_file_related_document) rescue rs.metadata_file_related_document %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="dataset-tabs tabs" id="dataset-tabs-<%= @cur_node.id %>">
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
+    <header><h2><%= t("opendata.labels.resource") %></h2></header>
+    <div class="pages">
+      <div class="info-wrap">
+        <div class="resources">
+          <header>
+            <h1><%= t("opendata.labels.resource") %></h1>
+          </header>
+
+          <% @cur_page.resources.and_public.order(name: 1).each do |rs| %>
+            <% render_rs.call(rs) %>
+          <% end %>
+
+          <% @cur_page.url_resources.order(name: 1).each do |urs| %>
+            <% render_rs.call(urs) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <nav class="feed"></nav>
+  </article>
+  <% if app_enabled? %>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
+      <header><h2><%= t("opendata.labels.relation_app") %></h2></header>
+      <div class="pages">
+        <div id="tab-app">
+          <header><h1><%= t("opendata.labels.relation_app") %></h1></header>
+          <div class="dataset-apps" id="dataset-apps"></div>
+        </div>
+      </div>
+      <nav class="feed"></nav>
+    </article>
+  <% end %>
+  <% if idea_enabled? %>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
+      <header><h2><%= t("opendata.labels.relation_idea") %></h2></header>
+      <div class="pages">
+        <div id="tab-idea">
+          <header><h1><%= t("opendata.labels.relation_idea") %></h1></header>
+          <div class="dataset-ideas" id="dataset-ideas"></div>
+        </div>
+      </div>
+      <nav class="feed"></nav>
+    </article>
+  <% end %>
+</div>
+
+<div class="dataset-tabs tabs">
+  <nav class="names">
+    <a class="name current" href="#">データセット情報</a>
+  </nav>
+  <article class="view">
+    <div class="pages">
+      <div class="info-wrap">
+        <%
+          prefs, cities = @cur_page.pref_codes
+          codes = cities.presence || prefs
+        %>
+        <dl class="cio-format author">
+          <dt><%= @cur_page.t :api_state %></dt>
+          <dd>
+            <span class="api-state"><%= @cur_page.label :api_state %></span>
+            <span class="api-uuid"><%= @cur_page.uuid %></span>
+          </dd>
+
+          <% if @cur_page.metadata_dataset_id.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_id) %></dt>
+            <dd><%= @cur_page.metadata_dataset_id %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_japanese_local_goverment_code.present? %>
+            <dt><%= @cur_page.t(:metadata_japanese_local_goverment_code) %></dt>
+            <dd><%= @cur_page.metadata_japanese_local_goverment_code %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_local_goverment_name.present? %>
+            <dt><%= @cur_page.t(:metadata_local_goverment_name) %></dt>
+            <dd><%= @cur_page.metadata_local_goverment_name %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_released.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_released) %></dt>
+            <dd><%= tryb { I18n.l(@cur_page.metadata_dataset_released.to_date, format: :long) } %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_updated.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_updated) %></dt>
+            <dd><%= tryb { I18n.l(@cur_page.metadata_dataset_updated.to_date, format: :long) } %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_url.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_url) %></dt>
+            <dd><%= link_to(@cur_page.metadata_dataset_url, @cur_page.metadata_dataset_url, target: '_blank') rescue @cur_page.metadata_dataset_url %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_update_frequency.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_update_frequency) %></dt>
+            <dd><%= @cur_page.metadata_dataset_update_frequency %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_follow_standards.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_follow_standards) %></dt>
+            <dd><%= @cur_page.metadata_dataset_follow_standards %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_related_document.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_related_document) %></dt>
+            <dd><%= link_to(@cur_page.metadata_dataset_related_document, @cur_page.metadata_dataset_related_document, target: '_blank') rescue @cur_page.metadata_dataset_related_document %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_target_period.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_target_period) %></dt>
+            <dd><%= @cur_page.metadata_dataset_target_period %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_remark.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_remark) %></dt>
+            <dd><%= @cur_page.metadata_dataset_remark %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </article>
+</div>
+
+<%= render template: "cms/agents/addons/related_page/view/index" %>
+
+<% if @cur_page.metadata_dataset_contact_name.present? %>
+  <footer class="contact">
+    <h2><%= t("contact.view.title") %></h2>
+    <p class="group"><%= @cur_page.metadata_dataset_contact_name %></p>
+    <% if @cur_page.metadata_dataset_contact_tel.present? %>
+      <dl class="tel" style="margin-right: 0;">
+        <dt><%= t("contact.view.tel") %>:</dt>
+        <dd><%= link_to(@cur_page.metadata_dataset_contact_tel, "tel:#{@cur_page.metadata_dataset_contact_tel.delete("-")}") %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_ext.present? %>
+      <dl class="extension tel">
+        <dt>（内線:</dt>
+        <dd><%= @cur_page.metadata_dataset_contact_ext %></dd>）
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_email.present? %>
+      <dl class="email">
+        <dt><%= t("contact.view.email") %>:</dt>
+        <dd><%= mail_to_entity(@cur_page.metadata_dataset_contact_email) %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_form_url.present? %>
+      <dl class="url">
+        <dt>フォームURL:</dt>
+        <dd><%= link_to(@cur_page.metadata_dataset_contact_form_url, @cur_page.metadata_dataset_contact_form_url) %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_remark.present? %>
+      <dl class="remarks">
+        <dt>備考:</dt>
+        <dd><%= @cur_page.metadata_dataset_contact_remark %></dd>
+      </dl>
+    <% end %>
+  </footer>
+<% end %>
+
+<% if @cur_page.metadata_dataset_keyword.present? %>
+  <div class="key-word">
+    <dl><%= @cur_page.t(:metadata_dataset_keyword) %></dl>
+    <dd>
+      <% @cur_page.metadata_dataset_keyword.each_with_index do |keyword, i| %>
+        <%= "、" if i > 0 %>
+        <%= link_to(keyword, @search_path.call("s[keyword]" => keyword)) %>
+      <% end %>
+    </dd>
+  </div>
+<% end %>

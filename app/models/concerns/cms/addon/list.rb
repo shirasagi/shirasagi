@@ -44,6 +44,7 @@ module Cms::Addon::List
       permit_params condition_forms: [ form_ids: [], filters: [ :column_name, :condition_values ] ]
 
       before_validation :validate_conditions
+      before_validation :validate_loop_format
 
       validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
@@ -204,6 +205,12 @@ module Cms::Addon::List
       self.conditions = conditions.map do |m|
         m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
       end.compact.uniq
+    end
+
+    def validate_loop_format
+      options = loop_format_options.to_h.invert.with_indifferent_access
+      return if options[loop_format]
+      self.loop_format = options.keys.first
     end
 
     def interpret_default_location(default_site, &block)

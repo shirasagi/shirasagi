@@ -29,7 +29,8 @@ save_page route: "article/page", filename: "docs/page1.html", name: "インフ�
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids
 save_page route: "article/page", filename: "docs/page2.html", name: "コンビニ納付のお知らせ",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["attention"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
@@ -38,7 +39,8 @@ save_page route: "article/page", filename: "docs/page2.html", name: "コンビ�
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids
 save_page route: "article/page", filename: "docs/page3.html", name: "平成26年第1回シラサギ市議会定例会を開催します",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -46,7 +48,8 @@ save_page route: "article/page", filename: "docs/page3.html", name: "平成26年
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids
 save_page route: "article/page", filename: "docs/page4.html", name: "放射性物質・震災関連情報",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -54,7 +57,8 @@ save_page route: "article/page", filename: "docs/page4.html", name: "放射性�
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids
 file_page5_1 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
 file_page5_2 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
 html_page5_1 = []

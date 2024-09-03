@@ -103,6 +103,11 @@ module SS::LiquidFilters
     Utils.stringify_number(input, :human_size)
   end
 
+  def ss_br(input)
+    return input if input.blank?
+    ApplicationController.helpers.br(input)
+  end
+
   def ss_append(input, string)
     string = string.to_s
     if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)

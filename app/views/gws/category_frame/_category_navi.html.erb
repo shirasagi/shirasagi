@@ -1,0 +1,29 @@
+<%= ss_stimulus_tag("gws/category/multi_navi", class: "gws-category-navi") do %>
+  <div class="gws-category-navi-toolbar">
+    <%= button_tag class: "btn btn-category", type: "button", data: { action: "gws--category--multi-navi#open" } do %>
+      <%= t('gws.apis.categories.index') %>
+      <i class="material-icons md-13">keyboard_arrow_down</i>
+    <% end %>
+    <% if category_filter.simple? %>
+      <% category_filter.selected_categories.reorder(order: 1, name: 1).each do |cate| %>
+        <%= link_to base_url.sub('ID', category_filter.change(delete: cate.id).base64_filter || "-"), class: "gws-category-label", style: category_label_css(cate) do %>
+          <span><%= cate.trailing_name %></span>
+          <span class="material-icons-outlined md-13">close</span>
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= render Gws::CategoryFilterAdvancedExprComponent.new(cur_site: @cur_site, cur_user: @cur_user, categories: categories, category_filter: category_filter) %>
+    <% end %>
+    <% if category_filter.present? %>
+      <%= link_to base_url.sub('ID', "-"), class: "gws-category-label", title: t("ss.buttons.clear") do %>
+        <span class="material-icons-outlined md-13">close</span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <template class="gws-category-navi-dialog-template" data-gws--category--multi-navi-target="content">
+    <turbo-frame id="gws-category-navi-dialog" src="<%= frame_path %>">
+      <%= loading %>
+    </turbo-frame>
+  </template>
+<% end %>

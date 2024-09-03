@@ -40,7 +40,7 @@ jobs:
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.9.0
         with:
-          mongodb-version: 6.0
+          mongodb-version: 7.0
       - name: Prepare Ldap
         run: docker pull osixia/openldap
       - name: Start Shirasagi Mail
@@ -90,7 +90,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
       - name: Install yarn
         run: npm install -g yarn

@@ -1,0 +1,40 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label(:state) %></dd>
+
+  <dt><%= @model.t :approval_state %></dt>
+  <dd>
+    <%= @item.label(:approval_state) || t("gws/workflow2.options.approval_state.with_approval") %>
+    <% if @item.approval_state == "with_approval" && @item.default_route_id.present? %>
+      （
+      <%=
+        case @item.default_route_id
+        when "my_group"
+          t("mongoid.attributes.gws/workflow2/route.my_group")
+        when "my_group_alternate"
+          t("mongoid.attributes.gws/workflow2/route.my_group_alternate")
+        else
+          # 他人のプライベートな承認経路でも名前は確認することができる点に留意
+          route = Gws::Workflow2::Route.site(@cur_site).where(id: @item.default_route_id).first
+          route.try(:name)
+        end
+      %>
+      ）
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :agent_state %></dt>
+  <dd><%= @item.label(:agent_state) %></dd>
+
+  <dt><%= @model.t :description %></dt>
+  <dd><%= sanitize ss_auto_link_urls br(@item.description, html_escape: false) %></dd>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= auto_link br(@item.memo) %></dd>
+</dl>
