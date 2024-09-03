@@ -186,6 +186,16 @@
       display: inline-block;
     }
   }
+  .ss-preview-wrap-column {
+    &.ss-preview-wrap-column-title-wrap {
+      padding-top: 10px;
+      .ss-preview-title {
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
+  }
 }
 .ss-preview-hide {
   display: none !important;

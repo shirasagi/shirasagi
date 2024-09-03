@@ -1,0 +1,135 @@
+<% return if @item.deleted? %>
+
+<% render_approver_row = proc do |_level, editable, user_type, user_id, user_name| %>
+  <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
+    <td>
+      <% if user_type == "superior" && use_agent? %>
+        <span class="user myself-approvers"><%= user_name %></span>
+        <span class="user agent-approvers hide"><span class="info"><%= I18n.t("gws/workflow2.errors.messages.plz_select_delegatee") %></span></span>
+      <% else %>
+        <span class="user"><%= user_name %></span>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+<% render_approver_error_row = proc do |_level, user_type, error| %>
+  <tr data-type="<%= user_type %>" data-id="error">
+    <td>
+      <% if user_type == "superior" && use_agent? %>
+        <span class="user myself-approvers"><span class="error"><%= error %></span></span>
+        <span class="user agent-approvers hide"><span class="info"><%= I18n.t("gws/workflow2.errors.messages.plz_select_delegatee") %></span></span>
+      <% else %>
+        <span class="user"><span class="error"><%= error %></span></span>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+
+<dl class="see workflow_approvers" data-route-id="<%= route_id %>">
+  <dt><%= @model.t :workflow_approvers %></dt>
+  <dd></dd>
+
+  <% 1.upto(Gws::Workflow2::Route::MAX_APPROVERS) do |level| %>
+    <%
+      workflow_approvers = @item.workflow_approvers_at(level)
+      next if workflow_approvers.blank?
+    %>
+    <dt class="depth-2"><%= Gws::Workflow2::Route.t :level, level: level %></dt>
+    <dd class="depth-2">
+      <table class="index gws-workflow-grid-table" data-col="2">
+        <tbody>
+        <tr>
+          <th scope="col"><%= @model.t :workflow_required_counts %></th>
+          <td>
+            <%=
+              selected_required_count = route ? route.required_count_at(level) : false
+              selected_required_count = 1 if @item.route_my_group_alternate?
+              Gws::Workflow2::Route.required_count_options.find { |_label, value| value == selected_required_count }.try(:[], 0)
+            %>
+          </td>
+        </tr>
+        <tr>
+          <th scope="col"><%= @model.t :workflow_approver_attachment_uses %></th>
+          <td>
+            <%=
+              selected_attachment_use = route.try(:approver_attachment_use_at, level).presence || "disabled"
+              Gws::Workflow2::Route.approver_attachment_use_options.find { |_label, value| value == selected_attachment_use }.try(:[], 0)
+            %>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </dd>
+
+    <dd class="depth-2">
+      <%= tag.div class: "gws-workflow-file-approver-item", data: { level: level } do %>
+        <table class="index gws-workflow-grid-table" data-col="1">
+          <thead>
+          <tr>
+            <th class="name"><span><%= Gws::User.t :name %></span></th>
+          </tr>
+          </thead>
+          <tbody>
+          <%
+            workflow_approvers.each do |approver_hash|
+              if approver_hash[:error].present?
+                user_type = approver_hash[:user_type]
+                render_approver_error_row.call(level, user_type, approver_hash[:error])
+                next
+              end
+
+              case approver_hash[:user_type]
+              when "superior"
+                user = approver_hash[:user]
+                user ||= find_approver(approver_hash[:user_id])
+                user_type = "superior"
+                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")})"
+              when Gws::UserTitle.name
+                user = approver_hash[:user]
+                user ||= find_approver(approver_hash[:user_id])
+                user_type = Gws::UserTitle.name
+                name = "#{gws_public_user_long_name(user.long_name)} (#{Gws::UserTitle.model_name.human})"
+              when Gws::UserOccupation.name
+                user = approver_hash[:user]
+                user ||= find_approver(approver_hash[:user_id])
+                user_type = Gws::UserOccupation.name
+                name = "#{gws_public_user_long_name(user.long_name)} (#{Gws::UserOccupation.model_name.human})"
+              else # Gws::User.name
+                user = approver_hash[:user]
+                user ||= find_approver(approver_hash[:user_id])
+                user_type = Gws::User.name
+                name = gws_public_user_long_name(user.long_name)
+              end
+
+              if user_type
+                render_approver_row.call(level, approver_hash[:editable] == 1, user_type, user.id, name)
+              end
+            end
+          %>
+          </tbody>
+        </table>
+      <% end %>
+    </dd>
+
+    <% if @item.route_my_group_alternate? %>
+      <dd class="depth-2">
+        <div class="mb-2">
+          <%= link_to t("gws/workflow2.search_alternates.index"), gws_apis_users_path(single: 1, myself: 0), class: "btn ajax-box" %>
+          <%= f.hidden_field "workflow_approver_alternate", value: "", class: "hidden-ids", id: nil %>
+          <span style="vertical-align: middle; color: #e00"><%= I18n.t('gws/workflow2.notice.select_correct_proxy_approver') %></span>
+        </div>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% if user = @workflow_approver_alternate %>
+              <tr data-id="<%= user.id %>">
+                <td><%= f.hidden_field "workflow_approver_alternate", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
+                <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    <% end %>
+  <% end %>
+</dl>

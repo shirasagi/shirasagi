@@ -1,0 +1,81 @@
+<%=
+  return_path = url_for(action: :index, s: { purpose_id: @s.purpose_id, category_filter: "$(category_id)" })
+  frame_path = gws_workflow2_frames_categories_path(
+    s: { category_filter: category_filter.present? ? category_filter.base64_filter : "-" },
+    "gws/category_frame" => { only: "advanced", return_path: return_path })
+  render "gws/category_frame/category_navi",
+         base_url: url_for(action: :index, s: { purpose_id: @s.purpose_id, category_filter: 'ID' }),
+         category_filter: category_filter, categories: categories,
+         frame_path: frame_path
+%>
+
+<div class="index">
+  <%= render "list_head" %>
+
+  <div class="gws-workflow-select-forms-index">
+    <table class="index gws-workflow-select-forms-table">
+      <thead>
+      <tr>
+        <th><%= @model.t :name %></th>
+        <th><%= @model.t :description %></th>
+        <th><%= @model.t :updated %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <tr class="gws-workflow-select-forms-table-row" data-id="<%= item.id %>">
+          <td class="gws-workflow-select-forms-table-col name">
+            <%
+              data = {
+                "target-model" => item.class.name.underscore,
+                "target-id" => item.id.to_s
+              }
+            %>
+            <% if item.is_a?(Gws::Workflow2::Form::External) %>
+              <% if item.url.present? %>
+                <%
+                  data["original-href"] = item.url.presence
+                %>
+                <%= link_to new_gws_workflow2_form_file_path(form_id: item), class: "title", target: "_blank", rel: "noopener", title: item.name, data: data do %>
+                  <%= item.name %>
+                  <i class="material-icons md-15">open_in_new</i>
+                <% end %>
+              <% else %>
+                <%= item.name %>
+              <% end %>
+            <% else %>
+              <%= link_to new_gws_workflow2_form_file_path(form_id: item), class: "title", title: item.name, data: data do %>
+                <%= item.name %>
+              <% end %>
+            <% end %>
+          </td>
+          <td class="gws-workflow-select-forms-table-col description">
+            <%= tag.div class: "description", title: sanitize(item.description, tags: []) do %>
+              <%= sanitize ss_auto_link_urls br(truncate(item.description, length: 200, escape: false), html_escape: false) %>
+            <% end %>
+            <div class="categories">
+              <% categories_in_order(item).each do |category| %>
+                <%=
+                  attr = { class: "gws-category-label", style: category_label_css(category) }
+                  if category_filter.simple?
+                    link_to category.trailing_name, url_for(action: :index, s: { purpose_id: @s.purpose_id, category_filter: category_filter.change(add: category.id).base64_filter }), **attr
+                  else
+                    tag.span category.trailing_name, **attr
+                  end
+                %>
+              <% end %>
+            </div>
+          </td>
+          <td class="gws-workflow-select-forms-table-col updated"><%= ss_time_tag item.updated %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>
+
+<%# render "gws/workflow/select_forms/search_dialog" %>
+
+<% @index_rendered = true %>

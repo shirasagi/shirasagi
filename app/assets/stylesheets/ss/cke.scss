@@ -43,10 +43,11 @@
     text-decoration: line-through;
   }
   p {
-    margin-block-start: 1em;
-    margin-block-end: 1em;
+    margin-block-start: 2.25em;
+    margin-block-end: 2.25em;
     margin-inline-start: 0;
     margin-inline-end: 0;
+    line-height: 2em;
   }
   blockquote {
     margin: 15px 0 15px 15px;
@@ -64,5 +65,13 @@
   table {
     empty-cells: show;
     border-spacing: 0;
+  }
+  &:not(.cke_editable) {
+    p:first-child {
+      margin-block-start: 0;
+    }
+    p:last-child {
+      margin-block-end: 0;
+    }
   }
 }

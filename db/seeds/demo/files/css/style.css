@@ -1185,9 +1185,9 @@ common
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/shirasagi\/public\/sites\/d\/e\/m\/o\/_\/css\/style\.scss}line{font-family:\00003853}}
 .chat--close p {
+  padding-left: 8px;
   width: 100%;
   font-size: 88%;
-  text-align: center;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/shirasagi\/public\/sites\/d\/e\/m\/o\/_\/css\/style\.scss}line{font-family:\00003859}}
 .chat--close img {
