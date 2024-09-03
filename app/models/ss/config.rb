@@ -25,7 +25,7 @@ module SS::Config
     end
 
     def load_yml(file, section = nil)
-      conf = YAML.load_file(file)
+      conf = YAML.safe_load_file(file, aliases: true, permitted_classes: [Symbol])
       section ? conf[section] : conf
     end
 

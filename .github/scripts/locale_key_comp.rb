@@ -38,8 +38,8 @@ class LocaleKeyComp
       ja_path = en_path.sub("en.yml", "ja.yml")
       next unless ::File.exist?(ja_path)
 
-      ja = YAML.load_file(ja_path)
-      en = YAML.load_file(en_path)
+      ja = YAML.safe_load_file(ja_path, aliases: true, permitted_classes: [Symbol])
+      en = YAML.safe_load_file(en_path, aliases: true, permitted_classes: [Symbol])
       ja_locale = Locale.new(file_path: ja_path, locale: ja["ja"], parent_keys: ["ja"])
       en_locale = Locale.new(file_path: en_path, locale: en["en"], parent_keys: ["en"])
 
