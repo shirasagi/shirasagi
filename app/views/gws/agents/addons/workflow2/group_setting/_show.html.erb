@@ -1,0 +1,39 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-gws-workflow-group-setting">
+  <dt><%= @model.t :workflow_new_days %></dt>
+  <dd><%= @item.workflow_new_days %> <%= t("datetime.prompts.day") %></dd>
+
+  <dt><%= @model.t :workflow_my_group %></dt>
+  <dd><%= @item.label :workflow_my_group_options %></dd>
+
+  <dt><%= Gws::Workflow2::Route.model_name.human %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("modules.addons.gws/workflow/approver_view") %></dt>
+  <dd class="depth-2"></dd>
+
+  <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids") %></dt>
+  <dd class="depth-3"><%= @item.label :workflow_route_approver_superior %></dd>
+
+  <dt class="depth-3"><%= Gws::UserTitle.model_name.human %></dt>
+  <dd class="depth-3"><%= @item.label :workflow_route_approver_title %></dd>
+
+  <dt class="depth-3"><%= Gws::UserOccupation.model_name.human %></dt>
+  <dd class="depth-3"><%= @item.label :workflow_route_approver_occupation %></dd>
+
+  <dt class="depth-2"><%= t("modules.addons.gws/workflow/circulation_view") %></dt>
+  <dd class="depth-2"></dd>
+
+  <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids") %></dt>
+  <dd class="depth-3"><%= @item.label :workflow_route_circulation_superior %></dd>
+
+  <dt class="depth-3"><%= Gws::UserTitle.model_name.human %></dt>
+  <dd class="depth-3"><%= @item.label :workflow_route_circulation_title %></dd>
+
+  <dt class="depth-3"><%= Gws::UserOccupation.model_name.human %></dt>
+  <dd class="depth-3"><%= @item.label :workflow_route_circulation_occupation %></dd>
+</dl>

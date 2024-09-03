@@ -1,0 +1,143 @@
+<% return unless @gws_workflow_print %>
+
+<% render_file = proc do |file| %>
+  <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
+    <% if file.image? %>
+      <%= image_tag(file.thumb_url, class: "thumb") %>
+    <% else %>
+      <span class="thumb ext icon-<%= file.extname %>">
+        <i class="material-icons">&#xE24D;</i><br>
+        <span class="ext-name"><%= file.extname %></span>
+      </span>
+    <% end %>
+    <span class="name"><%= file.humanized_name %></span>
+  <% end %>
+<% end %>
+
+<% render_file_ids = proc do |file_ids| %>
+  <div class="approver-files">
+    <% SS::File.in(id: file_ids).each do |file| %>
+      <% render_file.call(file) %>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="mod-workflow">
+  <div class="mod-workflow-view">
+    <dl class="see">
+      <dt><%= @model.t :workflow_user_id %></dt>
+      <dd>
+        <% if @item.try(:workflow_member).present? %>
+          <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
+        <% elsif @item.workflow_user.present? %>
+          <%= "#{gws_public_user_long_name(@item.workflow_user.long_name)}(#{@item.workflow_user.email})" %>
+        <% else %>
+          <%= t("workflow.user_deleted") %>
+        <% end %><br>
+        <%= @item.workflow_user.gws_main_group(@cur_site).section_name_shashed rescue nil %>
+      </dd>
+
+      <% agent = @item.workflow_agent %>
+      <% if agent.present? %>
+        <dt><%= @model.t :workflow_agent_id %></dt>
+        <dd>
+          <%= t(agent.email.blank? ? "agent_value" : "agent_value_with_email", scope: :workflow, long_name: gws_public_user_long_name(agent.long_name), email: agent.email) %><br>
+          <%= agent.gws_main_group(@cur_site).section_name_shashed rescue nil %>
+        </dd>
+      <% end %>
+
+      <dt><%= @model.t :workflow_state %></dt>
+      <dd><%= t("workflow.state.#{@item.workflow_state.presence || "draft"}") %></dd>
+
+      <% if @item.workflow_comment.present? %>
+        <dt><%= @model.t :workflow_comment %></dt>
+        <dd><%= @item.workflow_comment %></dd>
+      <% end %>
+
+      <dt class="wide"><%= @model.t :workflow_approvers %></dt>
+      <dd class="wide">
+        <% if @item.workflow_approvers.present? %>
+        <table class="index">
+          <tbody>
+          <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
+            <% workflow_approvers.each_with_index do |workflow_approver, index| %>
+            <% user_id = workflow_approver[:user_id] %>
+            <% user = SS::User.where(id: user_id).first %>
+            <% state = workflow_approver[:state] %>
+            <tr>
+              <% if index == 0 %>
+              <td rowspan="<%= workflow_approvers.count %>">
+                <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+              </td>
+              <td rowspan="<%= workflow_approvers.count %>">
+                <% required_count = @item.workflow_required_counts[level - 1] %>
+                <% if required_count %>
+                  <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+                <% else %>
+                  <%= t('workflow.required_count_label.all') %>
+                <% end %>
+              </td>
+              <% end %>
+              <td>
+              <% if user %>
+                <%= "#{gws_public_user_long_name(user.long_name)}(#{user.email})" %>
+              <% else %>
+                <%= t("workflow.user_deleted") %>
+              <% end %>
+              </td>
+              <td>
+                <%= t("workflow.state.#{state}") %>
+                <%= workflow_approver[:created].in_time_zone(@cur_user.timezone).strftime("(%Y/%m/%d %H:%M)") rescue nil %>
+              </td>
+            </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+        <% end %>
+      </dd>
+
+      <% if @ss_mode == :gws %>
+      <dt class="wide"><%= @model.t :workflow_circulations %></dt>
+      <dd class="wide">
+        <% if @item.workflow_circulations.present? %>
+        <table class="index">
+          <tbody>
+            <% @item.workflow_circulations.group_by { |workflow_circulation| workflow_circulation[:level] }.each do |level, workflow_circulations| %>
+              <% workflow_circulations.each_with_index do |workflow_circulation, index| %>
+                <% user_id = workflow_circulation[:user_id] %>
+                <% user = SS::User.where(id: user_id).first %>
+                <% state = workflow_circulation[:state] %>
+                <tr>
+                  <% if index == 0 %>
+                    <td rowspan="<%= workflow_circulations.count %>">
+                      <%= t("workflow.circulation_step") %> <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+                    </td>
+                  <% end %>
+                  <td>
+                  <% if user %>
+                    <%= "#{gws_public_user_long_name(user.long_name)}(#{user.email})" %>
+                  <% else %>
+                    <%= t("workflow.user_deleted") %>
+                  <% end %>
+                  </td>
+                  <td>
+                    <%= t("workflow.circulation_state.#{state}") %>
+                  </td>
+                  <td>
+                    <div class="approver-comment"><%= workflow_circulation[:comment] %></div>
+                    <% if @ss_mode == :gws && workflow_circulation[:file_ids].present? %>
+                      <% render_file_ids.call(workflow_circulation[:file_ids]) %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+        <% end %>
+      </dd>
+      <% end %>
+    </dl>
+  </div>
+</div>

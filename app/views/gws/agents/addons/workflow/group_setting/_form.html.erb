@@ -3,10 +3,43 @@
   addon[:display_body] = "hide"
 %>
 
-<dl class="see addon-gws-workflow-group-setting">
+<dl class="see">
   <dt><%= @model.t :workflow_new_days %><%= @model.tt :workflow_new_days %></dt>
   <dd class="short"><%= f.number_field :workflow_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
 
   <dt><%= @model.t :workflow_my_group %><%= @model.tt :workflow_my_group %></dt>
   <dd><%= f.select :workflow_my_group, @item.workflow_my_group_options %></dd>
 </dl>
+
+<section>
+  <header><h2><%= t("modules.gws/workflow2") %></h2></header>
+
+  <dl class="see">
+    <dt><%= Gws::Workflow::Route.model_name.human %></dt>
+    <dd></dd>
+
+    <dt class="depth-2"><%= t("modules.addons.gws/workflow2/approver_view") %></dt>
+    <dd class="depth-2"></dd>
+
+    <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids") %><%= @model.tt :workflow_route_approver_superior %></dt>
+    <dd class="depth-3"><%= f.select :workflow_route_approver_superior, @item.workflow_route_approver_superior_options %></dd>
+
+    <dt class="depth-3"><%= Gws::UserTitle.model_name.human %><%= @model.tt :workflow_route_approver_title %></dt>
+    <dd class="depth-3"><%= f.select :workflow_route_approver_title, @item.workflow_route_approver_title_options %></dd>
+
+    <dt class="depth-3"><%= Gws::UserOccupation.model_name.human %><%= @model.tt :workflow_route_approver_occupation %></dt>
+    <dd class="depth-3"><%= f.select :workflow_route_approver_occupation, @item.workflow_route_approver_occupation_options %></dd>
+
+    <dt class="depth-2"><%= t("modules.addons.gws/workflow2/circulation_view") %></dt>
+    <dd class="depth-2"></dd>
+
+    <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids") %><%= @model.tt :workflow_route_circulation_superior %></dt>
+    <dd class="depth-3"><%= f.select :workflow_route_circulation_superior, @item.workflow_route_circulation_superior_options %></dd>
+
+    <dt class="depth-3"><%= Gws::UserTitle.model_name.human %><%= @model.tt :workflow_route_circulation_title %></dt>
+    <dd class="depth-3"><%= f.select :workflow_route_circulation_title, @item.workflow_route_circulation_title_options %></dd>
+
+    <dt class="depth-3"><%= Gws::UserOccupation.model_name.human %><%= @model.tt :workflow_route_circulation_occupation %></dt>
+    <dd class="depth-3"><%= f.select :workflow_route_circulation_occupation, @item.workflow_route_circulation_occupation_options %></dd>
+  </dl>
+</section>

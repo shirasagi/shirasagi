@@ -132,6 +132,7 @@ class Workflow::PagesController < ApplicationController
     copy.each do |approver|
       approver[:state] = @model::WORKFLOW_STATE_PENDING
       approver[:comment] = ''
+      approver.delete(:created)
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     @item.workflow_current_circulation_level = 0
@@ -254,7 +255,7 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])
+    @item.remand_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     @item.record_timestamps = false
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if !@item.save

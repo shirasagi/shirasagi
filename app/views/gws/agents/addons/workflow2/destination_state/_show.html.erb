@@ -1,0 +1,12 @@
+<%
+  return if @item.workflow_state.blank?
+  return unless %w(approve approve_without_approval).include?(@item.workflow_state)
+  return if !@item.destination_group_ids.include?(@cur_group.id) && !@item.destination_user_ids.include?(@cur_user.id)
+
+  addon = local_assigns.fetch(:addon, {})
+  addon[:head] = nil
+  addon[:location] = { before: "addon-basic" }
+%>
+<turbo-frame src="<%= gws_workflow2_frames_destination_state_path(id: @item) %>" id="gws-workflow-destination-states-frame">
+  <%= loading %>
+</turbo-frame>

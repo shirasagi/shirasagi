@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :approval_state %><%= @model.tt :approval_state %></dt>
+  <dd>
+    <label><%= f.radio_button :approval_state, "without_approval" %> <%= t("gws/workflow2.options.approval_state.without_approval") %></label>
+  </dd>
+  <dd>
+    <label><%= f.radio_button :approval_state, "with_approval" %> <%= t("gws/workflow2.options.approval_state.with_approval") %></label>
+    <%=
+      route_options = Gws::Workflow2::Route.route_options(@cur_user, cur_site: @cur_site, selected: @item.default_route_id)
+      f.select :default_route_id, options_for_select(route_options, selected: @item.default_route_id), include_blank: true
+    %>
+  </dd>
+
+  <dt><%= @model.t :agent_state %><%= @model.tt :agent_state %></dt>
+  <dd><%= f.select :agent_state, @item.agent_state_options %></dd>
+
+  <dt><%= @model.t :description %><%= @model.tt :description %></dt>
+  <dd><%= f.text_area :description %></dd>
+
+  <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+</dl>

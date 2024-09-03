@@ -6,8 +6,8 @@ module Gws::Bookmark
   module_function
 
   BOOKMARK_MODEL_TYPES = %w(
-    portal notice schedule todo reminder presence memo bookmark attendance affair daily_report report workflow workload
-    circular monitor survey board faq qna discussion share shared_address personal_address elasticsearch staff_record
+    portal notice schedule todo reminder presence memo bookmark attendance affair daily_report report workflow workflow2
+    workload circular monitor survey board faq qna discussion share shared_address personal_address elasticsearch staff_record
   ).freeze
   BOOKMARK_MODEL_SPECIAL_TYPES = %w(external_link other).freeze
   BOOKMARK_MODEL_DEFAULT_TYPE = "external_link".freeze

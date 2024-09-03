@@ -1,0 +1,9 @@
+<%
+  return if @item.deleted?
+  return if !@item.workflow_requested? || !@item.allowed?(:edit, @cur_user, site: @cur_site)
+%>
+
+<%= form_with scope: :item, url: url_for(action: :cancel), html: { method: "post", id: "workflow-cancel", class: "workflow-cancel", data: { turbo: true } } do |f| %>
+  <%= hidden_field_tag :ref, ref, id: nil %>
+  <%= f.submit t('workflow.buttons.cancel'), name: 'cancel', class: 'btn', data: { confirm: t("workflow.confirm.request_cancel"), turbo_confirm: t("workflow.confirm.request_cancel") } %>
+<% end %>

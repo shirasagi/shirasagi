@@ -27,7 +27,7 @@
           <td class="name"><%= column.name %></td>
           <td class="input_type"><%= column.class.model_name.human %></td>
           <td class="required"><%= column.label(:required) %></td>
-          <td class="datetime"><%= tryb { I18n.l(column.updated) } %></td>
+          <td class="datetime"><%= ss_time_tag column.updated %></td>
         </tr>
         <% end %>
         </tbody>

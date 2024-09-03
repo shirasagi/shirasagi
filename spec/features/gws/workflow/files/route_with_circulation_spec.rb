@@ -109,7 +109,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'unseen', comment: ''})
@@ -151,7 +154,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})
@@ -187,7 +193,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})
@@ -229,7 +238,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})

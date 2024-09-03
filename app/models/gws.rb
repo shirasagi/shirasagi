@@ -5,6 +5,8 @@ module Gws
 
   mattr_accessor(:module_usable_handlers) { {} }
 
+  mattr_reader(:max_name_length, default: 200)
+
   def module_usable(name, proc = nil, &block)
     proc = block if block
     module_usable_handlers[name.to_sym] = proc
@@ -27,8 +29,8 @@ module Gws
     Gws::Attendance::TimeCard
     Gws::Board::Category
     Gws::Board::Post
-    Gws::Bookmark::Item
     Gws::Bookmark::Folder
+    Gws::Bookmark::Item
     Gws::Chorg::Changeset
     Gws::Chorg::Revision
     Gws::Circular::Post
@@ -41,7 +43,6 @@ module Gws
     Gws::Faq::Post
     Gws::History
     Gws::HistoryArchiveFile
-    Gws::Link
     Gws::Link
     Gws::Memo::Filter
     Gws::Memo::Folder
@@ -80,11 +81,17 @@ module Gws
     Gws::Survey::Form
     Gws::UserForm
     Gws::UserFormData
+    Gws::UserOccupation
     Gws::UserPresence
     Gws::UserTitle
-    Gws::UserOccupation
     Gws::Workflow::File
     Gws::Workflow::Form
+    Gws::Workflow2::File
+    Gws::Workflow2::Form::Application
+    Gws::Workflow2::Form::Category
+    Gws::Workflow2::Form::External
+    Gws::Workflow2::Form::Purpose
+    Gws::Workflow2::Route
   ).freeze
 
   MODULES_BOUND_TO_GROUP = %w(

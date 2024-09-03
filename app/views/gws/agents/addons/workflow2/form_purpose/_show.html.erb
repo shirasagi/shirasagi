@@ -1,0 +1,9 @@
+<dl class="see">
+  <dt><%= @model.t :purpose_ids %></dt>
+  <dd>
+    <% @item.purposes.site(@cur_site).readable(@cur_user, site: @cur_site).reorder(order: 1, name: 1).each do |purpose| %>
+      <% next unless purpose %>
+      <span class="gws-category-label" style="<%= category_label_css(purpose) %>"><%= purpose.name %></span>
+    <% end %>
+  </dd>
+</dl>

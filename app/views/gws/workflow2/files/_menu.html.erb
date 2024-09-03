@@ -1,0 +1,29 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @forms.present? %>
+      <%= link_to("#{t('gws/workflow2.navi.new_application')}（#{t('gws/workflow2.navi.find_by_keyword')}）", gws_workflow2_select_forms_path(mode: "by_keyword")) %>
+      <%= link_to("#{t('gws/workflow2.navi.new_application')}（#{t('gws/workflow2.navi.find_by_purpose')}）", gws_workflow2_select_forms_path(mode: "by_purpose")) %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|destroy_all/ %>
+    <%= link_to t('ss.links.back'), "#", class: "gws-history-back" %>
+  <% elsif params[:action] =~ /edit|update|delete|move|copy|soft_delete|request_cancel/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back'), "#", class: "gws-history-back" %>
+  <% else %>
+    <%= link_to t('ss.links.print'), action: :print %>
+    <% if @item.editable?(@cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
+    <% end %>
+    <% if @item.destroyable?(@cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
+    <% end %>
+    <%= link_to t("gws/workflow.links.download_comment"), { action: :download_comment }, { method: 'post', data: { confirm: t("ss.confirm.download") } } %>
+    <%= link_to t("gws/workflow.links.download_attachment"), { action: :download_attachment }, { method: 'post', data: { confirm: t("ss.confirm.download") } } %>
+    <%= link_to t('ss.links.back'), "#", class: "gws-history-back" %>
+  <% end %>
+</nav>

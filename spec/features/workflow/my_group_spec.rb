@@ -104,7 +104,10 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
         # no backups are created while requesting approve
         expect(item.backups.count).to eq 1
@@ -128,9 +131,15 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil})
+          include({
+            level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         # backup is created because page is in public
         expect(item.backups.count).to eq 2
 
@@ -222,7 +231,10 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_state).to eq "remand"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'remand', comment: remand_comment1})
+          include({
+            level: 1, user_id: user1.id, editable: '', state: 'remand', comment: remand_comment1,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user2.id, editable: '', state: 'other_remanded', comment: ''})
         # no backups are created
@@ -299,7 +311,10 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
         # no backups are created while requesting approve
         expect(item.backups.count).to eq 1
@@ -323,9 +338,15 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_state).to eq "remand"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment2})
+          include({
+            level: 1, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment2,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         # no backups are created
         expect(item.backups.count).to eq 1
 

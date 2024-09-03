@@ -1,0 +1,175 @@
+<div class="mod-workflow-view gws-workflow-view">
+  <% if @item.workflow_state == @model::WORKFLOW_STATE_REMAND || @item.workflow_state == @model::WORKFLOW_STATE_CANCELLED %>
+    <%= render "form_restart", local_assigns %>
+  <% end %>
+
+  <dl class="see workflow_user_id">
+    <dt><%= @model.t :workflow_user_id %></dt>
+    <dd>
+      <%=
+        if @item.workflow_user.present?
+          workflow_user_profile(@item.workflow_user)
+        else
+          t("workflow.user_deleted")
+        end
+      %><br>
+      <%= @item.workflow_user.gws_main_group(@cur_site).section_name_shashed rescue nil %>
+    </dd>
+  </dl>
+
+  <% agent = @item.workflow_agent %>
+  <% if agent.present? %>
+    <dl class="see workflow_agent_id">
+      <dt><%= @model.t :workflow_agent_id %></dt>
+      <dd>
+        <%= t(agent.email.blank? ? "agent_value" : "agent_value_with_email", scope: :workflow, long_name: workflow_user_long_name(agent), email: workflow_user_email(agent)) %><br>
+        <%= agent.gws_main_group(@cur_site).section_name_shashed rescue nil %>
+      </dd>
+    </dl>
+  <% end %>
+
+  <dl class="see workflow_state">
+    <dt><%= @model.t :workflow_state %></dt>
+    <dd>
+      <%= t("workflow.state.#{@item.workflow_state.presence || "draft"}") %>
+      <%= render "form_cancel", local_assigns %>
+    </dd>
+  </dl>
+
+  <dl class="see workflow_comment">
+    <dt><%= @model.t :workflow_comment %></dt>
+    <dd><%= @item.workflow_comment %></dd>
+  </dl>
+
+  <% if @item.workflow_state != Gws::Workflow2::File::WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL %>
+    <dl class="see workflow_pull_up">
+      <dt><%= @model.t :workflow_pull_up %></dt>
+      <dd><%= @item.label :workflow_pull_up %></dd>
+    </dl>
+
+    <dl class="see workflow_on_remand">
+      <dt><%= @model.t :workflow_on_remand %></dt>
+      <dd><%= @item.label :workflow_on_remand %></dd>
+    </dl>
+
+    <dl class="see workflow_approvers">
+      <dt><%= @model.t :workflow_approvers %></dt>
+      <dd>
+        <% if @item.workflow_approvers.present? %>
+          <table class="index">
+            <tbody>
+            <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
+              <% workflow_approvers.each_with_index do |workflow_approver, index| %>
+                <% approver_id = workflow_approver[:user_id] %>
+                <% approver = Gws::User.site(@cur_site).where(id: approver_id).first %>
+                <% state = workflow_approver[:state] %>
+                <tr>
+                  <% if index == 0 %>
+                    <td rowspan="<%= workflow_approvers.count %>">
+                      <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+                    </td>
+                    <td rowspan="<%= workflow_approvers.count %>">
+                      <% required_count = @item.workflow_required_counts[level - 1] %>
+                      <% if required_count %>
+                        <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+                      <% else %>
+                        <%= t('workflow.required_count_label.all') %>
+                      <% end %>
+                    </td>
+                  <% end %>
+                  <td>
+                    <% if approver %>
+                      <% if @item.route_my_group_alternate? && index == 1 %>
+                        <%= I18n.t('gws/workflow2.labels.approver_alternator') %>
+                      <% end %>
+                      <%= workflow_user_profile(approver) %>
+                    <% else %>
+                      <%= t("workflow.user_deleted") %>
+                    <% end %>
+                    <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) && !@item.deleted? %>
+                      <%= button_tag type: :button, name: :reroute, title: t("ss.buttons.change"), class: "btn-reroute", data: { level: level, approver_id: approver_id, action: url_for(action: :reroute), method: :post, dialog_src: gws_apis_users_path(single: true), controller: "gws--workflow2--reroute" } do %>
+                        <i class="material-icons" style="font-size: inherit">mode_edit</i>
+                      <% end %>
+                    <% end %>
+                  </td>
+                  <td>
+                    <span class="workflow_approvers_state">
+                      <%= t("workflow.state.#{state}") %></span>
+                    <span class="workflow_approvers_created">
+                      <%= workflow_approver[:created].in_time_zone(@cur_user.timezone).strftime("(%Y/%m/%d %H:%M)") rescue nil %>
+                    </span>
+                    <% if workflow_approver[:file_ids].present? || workflow_approver[:comment].present? %>
+                      <%= link_to comment_gws_workflow2_file_path(state: 'all', level: level, index: index),
+                        title: t('workflow.comment'), class: "ajax-box approver_comment", style: "padding: 2px 4px;" do %>
+                        <i class="material-icons" style="font-size: 15px;">chat</i>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </dd>
+    </dl>
+
+    <dl class="see workflow_circulations">
+      <dt><%= @model.t :workflow_circulations %></dt>
+      <dd>
+        <% if @item.workflow_circulations.present? %>
+          <table class="index">
+            <tbody>
+            <% @item.workflow_circulations.group_by { |workflow_circulation| workflow_circulation[:level] }.each do |level, workflow_circulations| %>
+              <% workflow_circulations.each_with_index do |workflow_circulation, index| %>
+                <% user_id = workflow_circulation[:user_id] %>
+                <% user = SS::User.where(id: user_id).first %>
+                <% state = workflow_circulation[:state] %>
+                <tr>
+                  <% if index == 0 %>
+                    <td rowspan="<%= workflow_circulations.count %>">
+                      <%= t("workflow.circulation_step") %> <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+                    </td>
+                  <% end %>
+                  <td>
+                    <% if user %>
+                      <%= workflow_user_profile(user) %>
+                    <% else %>
+                      <%= t("workflow.user_deleted") %>
+                    <% end %>
+                  </td>
+                  <td>
+                    <% if state.present? %>
+                      <%= t("workflow.circulation_state.#{state}", default: state) %>
+                    <% end %>
+                  </td>
+                  <td>
+                    <div class="approver-comment"><%= workflow_circulation[:comment] %></div>
+                    <% if workflow_circulation[:file_ids].present? %>
+                      <div class="approver-files">
+                        <% SS::File.in(id: workflow_circulation[:file_ids]).each do |file| %>
+                          <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
+                            <% if file.image? %>
+                              <%= image_tag(file.thumb_url, class: "thumb") %>
+                            <% else %>
+                                <span class="thumb ext icon-<%= file.extname %>">
+                                  <i class="material-icons">insert_drive_file</i><br>
+                                  <span class="ext-name"><%= file.extname %></span>
+                                </span>
+                            <% end %>
+                            <span class="name"><%= file.humanized_name %></span>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </dd>
+    </dl>
+  <% end %>
+</div>

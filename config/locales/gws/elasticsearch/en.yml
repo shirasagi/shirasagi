@@ -6,8 +6,8 @@ en:
     format:
       search_results_count:
         zero: No documents matched the search format.
-        one: 'Of %{count} results, showing results %{from} through %{to} (%{took} seconds)'
-        other: 'Of %{count} results, showing results %{from} through %{to} (%{took} seconds)'
+        one: 'Showing results %{from} to %{to} out of %{count} (%{took} seconds)'
+        other: 'Showing results %{from} to %{to} out of %{count} (%{took} seconds)'
 
   modules:
     gws/elasticsearch: Full-text search

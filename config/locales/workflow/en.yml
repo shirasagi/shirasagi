@@ -24,8 +24,10 @@ en:
     comment: Comments
     state_remind_suffix: "(Demand)"
     state:
-      request: Applying
-      approve: Approve
+      draft: Draft
+      request: Applying (Awaiting approval)
+      approve: Approved
+      approve_without_approval: Approved instantly
       pending: Pending sub-approval
       remand: Remand
       cancelled: Cancel application
@@ -128,6 +130,8 @@ en:
       approvers_or_circulations: Approvers and circulators
     agent_name: "(Surrogate: %{long_name})"
     agent_name_with_email: "(Surrogate: %{long_name} (%{email}))"
+    agent_value: "%{long_name}"
+    agent_value_with_email: "%{long_name} (%{email})"
 
   modules:
     workflow: Workflow
@@ -149,8 +153,9 @@ en:
     models:
       workflow/route: Approval route
     attributes:
-      workflow/addon/approver:
+      workflow/approver:
         workflow_user_id: Applicant
+        workflow_agent_id: "Applicant (Surrogate)"
         workflow_member_id: Application members
         workflow_state: Approval status
         workflow_kind: Approval kind
@@ -206,7 +211,7 @@ en:
       branch_is_already_existed: A replacement page has been created.
 
   tooltip:
-    workflow/addon/approver:
+    workflow/approver:
       workflow_kind: |-
         Displays the kind of approval.
         "Public" makes the target public.

@@ -1,0 +1,57 @@
+<%
+  return if @item.workflow_state != "request" || @item.deleted?
+
+  workflow_approver = @item.find_workflow_request_to(@cur_user)
+  return if workflow_approver.blank?
+
+  show_file_attachment = @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level])
+%>
+
+<%= form_with scope: :item, url: gws_workflow2_frames_inspection_path(id: @item), html: { method: "put", id: "workflow-inspection", autocomplete: :off, data: { turbo: true } } do |f| %>
+  <%= hidden_field_tag :ref, ref, id: nil %>
+
+  <%= error_messages_for :item %>
+
+  <section class="mod-workflow-approve">
+    <%= f.text_area :comment, value: "", id: nil %>
+    <% if show_file_attachment %>
+      <div class="upload">
+        <span class="upload-menu-new">
+          <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+        </span>
+        <div class="upload-drop-area">
+          <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+        </div>
+        <div id="selected-files"></div>
+      </div>
+    <% end %>
+    <% if @item.workflow_approver_alternator?(@cur_user) %>
+      <%= jquery do %>
+        $('.mod-workflow-approve .alternator-notice input').on('change', function() {
+          var checked = $(this).closest('.alternator-notice').find('input:checkbox:not(:checked)').length == 0;
+          $('.mod-workflow-approve .buttons .btn-primary').attr('disabled', (checked ? null : 'disabled'))
+        }).trigger('change');
+      <% end %>
+      <div class="alternator-notice">
+        <label class="notice-1"><input type="checkbox"> <%= I18n.t('gws/workflow2.notice.use_approver_alternator')[0] %></label><br>
+        <label class="notice-2"><input type="checkbox"> <%= I18n.t('gws/workflow2.notice.use_approver_alternator')[1] %></label><br>
+      </div>
+    <% end %>
+    <div class="buttons">
+      <% if workflow_approver[:state] == 'request' %>
+        <%= f.button t("workflow.buttons.approve"), type: :submit, name: :approve, class: "btn-primary" %>
+        <%= f.button t("workflow.buttons.remand"), type: :submit, name: :remand, class: "btn-default" %>
+      <% elsif workflow_approver[:state] == 'pending' %>
+        <%= f.button t("workflow.buttons.pull_up"), type: :submit, name: :pull_up, class: "btn-primary" %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<% if show_file_attachment %>
+  <%= jquery do %>
+    var $el = $("#workflow-inspection");
+    var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>);
+    SS_FileView.renderFileView($el);
+  <% end %>
+<% end %>

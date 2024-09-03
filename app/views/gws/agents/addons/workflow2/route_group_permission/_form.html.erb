@@ -1,0 +1,2 @@
+<% return unless @cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow2_routes) %>
+<%= render "gws/agents/addons/group_permission/form", local_assigns %>

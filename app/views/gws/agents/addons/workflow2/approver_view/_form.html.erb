@@ -1,0 +1,157 @@
+<%
+  addon = local_assigns.fetch(:addon, {})
+
+  approver_options = "".html_safe
+  if @cur_site.workflow_route_approver_title == 'show'
+    approver_options += render(Gws::Workflow2::RouteOption::TitleComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
+  end
+  if @cur_site.workflow_route_approver_occupation == 'show'
+    approver_options += render(Gws::Workflow2::RouteOption::OccupationComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
+  end
+  approver_options += render(Gws::Workflow2::RouteOption::UserUnderCurGroupComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
+  approver_options += tag.option(t('gws/workflow2.select_other_approvers'), value: 'select_other')
+
+  if @cur_site.workflow_route_approver_superior == 'show'
+    approver_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
+    approver_options0 += approver_options
+  else
+    approver_options0 = approver_options.dup
+  end
+  approver_options0 = tag.option('', value: '', label: " ") + approver_options0
+  approver_options = tag.option('', value: '', label: " ") + approver_options
+
+  user_ids = []
+  user_title_ids = []
+  user_occupation_ids = []
+
+  @item.approvers.each do |approver|
+    case approver[:user_type]
+    when Gws::User.name
+      user_ids << approver[:user_id]
+    when Gws::UserTitle.name
+      user_title_ids << approver[:user_id]
+    when Gws::UserOccupation.name
+      user_occupation_ids << approver[:user_id]
+    end
+  end
+
+  id_user_map = Gws::User.all.site(@cur_site).in(id: user_ids).active.to_a.index_by(&:id)
+  id_title_map = Gws::UserTitle.all.site(@cur_site).in(id: user_title_ids).active.to_a.index_by(&:id)
+  id_occupation_map = Gws::UserOccupation.all.site(@cur_site).in(id: user_occupation_ids).active.to_a.index_by(&:id)
+%>
+
+<template id="<%= addon[:id] %>-options-template0">
+  <%= approver_options0 %>
+</template>
+<template id="<%= addon[:id] %>-options-template">
+  <%= approver_options %>
+</template>
+
+<% render_row = proc do |level, editable, user_type, user_id, user_name| %>
+  <%
+    options_template = level == 1 ? "##{addon[:id]}-options-template0" : "##{addon[:id]}-options-template"
+    select_data = {
+      approver_path: gws_apis_users_path(single: true), options_template_ref: options_template
+    }
+    if user_type != 'new'
+      select_data[:default_user_type] = user_type
+      select_data[:default_user_id] = user_id
+      select_data[:default_user_name] = user_name
+    end
+  %>
+  <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
+    <td><%= button_tag t("ss.buttons.delete"), type: 'button', name: 'delete-row', class: "btn btn-delete" %></td>
+    <td class="check">
+      <%= hidden_field_tag("#{f.object_name}[approvers][][editable]", "", id: nil) %>
+      <%= check_box_tag("#{f.object_name}[approvers][][editable]", 1, editable, id: nil) %>
+    </td>
+
+    <td>
+      <%= hidden_field_tag("#{f.object_name}[approvers][][level]", level, id: nil) %>
+      <%= ss_stimulus_tag "gws/workflow2/route_approver_select", data: select_data do %>
+        <%= select_tag "dummy-approver", (level == 1 ? approver_options0 : approver_options), id: nil, class: "approver-select" %>
+        <%= hidden_field_tag("#{f.object_name}[approvers][][user_type]", user_type != 'new' ? user_type : '', id: nil) %>
+        <%= hidden_field_tag("#{f.object_name}[approvers][][user_id]", user_id != 'new' ? user_id : '', id: nil) %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+
+<template id="<%= addon[:id] %>-row-template0">
+  <% render_row.call(1, false, 'new', 'new', '') %>
+</template>
+<template id="<%= addon[:id] %>-row-template">
+  <% render_row.call('', false, 'new', 'new', '') %>
+</template>
+
+<% 1.upto(@model::MAX_APPROVERS) do |level| %>
+  <%= tag.div class: "gws-workflow-route-approver-item", data: { level: level } do %>
+    <h1 class="workflow-level-header"><%= @model.t :level, level: level %></h1>
+
+    <dl class="see required_counts">
+      <dt><%= @model.t :required_counts %><%= @model.tt :required_counts %></dt>
+      <dd><%= select_tag "#{f.object_name}[required_counts][]", options_for_select(@item.required_count_options, @item.required_count_at(level)), id: nil %></dd>
+    </dl>
+
+    <dl class="see approver_attachment_uses">
+      <dt><%= @model.t :approver_attachment_uses %><%= @model.tt :approver_attachment_uses %></dt>
+      <dd><%= select_tag "#{f.object_name}[approver_attachment_uses][]", options_for_select(@item.approver_attachment_use_options, @item.approver_attachment_use_at(level)), id: nil, include_blank: true %></dd>
+    </dl>
+
+    <dl class="see approvers">
+      <dt><%= @model.t :approvers %><%= @model.tt :approvers %></dt>
+      <dd>
+        <%= f.hidden_field "approvers[]", value: "", class: "hidden-ids", id: nil %>
+        <% row_template = level == 1 ? "##{addon[:id]}-row-template0" : "##{addon[:id]}-row-template" %>
+        <%= ss_stimulus_tag "gws/workflow2/route_approver_table", data: { level: level, row_template_ref: row_template } do %>
+          <table class="index gws-workflow-grid-table" data-col="3">
+            <thead>
+            <tr>
+              <th></th>
+              <th><span><%= t('ss.buttons.edit') %></span></th>
+              <th class="name"><span><%= @model.t :name %></span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+              @item.approvers_at(level).each do |approver|
+                case approver[:user_type]
+                when "superior"
+                  render_row.call(level, approver[:editable] == 1, "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
+                when Gws::User.name
+                  user = id_user_map[approver[:user_id]]
+                  if user
+                    render_row.call(level, approver[:editable] == 1, user.class.name, user.id, gws_public_user_long_name(user.long_name))
+                  end
+                when Gws::UserTitle.name
+                  user = id_title_map[approver[:user_id]]
+                  if user
+                    render_row.call(level, approver[:editable] == 1, user.class.name, user.id, user.name)
+                  end
+                when Gws::UserOccupation.name
+                  user = id_occupation_map[approver[:user_id]]
+                  if user
+                    render_row.call(level, approver[:editable] == 1, user.class.name, user.id, user.name)
+                  end
+                end
+              end
+            %>
+
+            <%
+              # new record at last
+              render_row.call(level, false, 'new', 'new', '')
+            %>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td><%= button_tag t("ss.buttons.add"), type: 'button', name: 'add-row', class: "btn btn-add" %></td>
+              <td></td>
+              <td></td>
+            </tr>
+            </tfoot>
+          </table>
+        <% end %>
+      </dd>
+    </dl>
+  <% end %>
+<% end %>

@@ -79,7 +79,10 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       expect(item.workflow_state).to eq "approve"
       expect(item.state).to eq "public"
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user.id, editable: '', state: 'approve', comment: approve_comment, file_ids: nil})
+        include({
+          level: 1, user_id: user.id, editable: '', state: 'approve', comment: approve_comment, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
 
       expect(Sys::MailLog.count).to eq 2
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count

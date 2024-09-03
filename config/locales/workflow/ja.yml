@@ -24,8 +24,10 @@ ja:
     comment: コメント
     state_remind_suffix: （督促）
     state:
-      request: 申請中
-      approve: 承認
+      draft: 下書き
+      request: 申請中 (承認待ち)
+      approve: 承認済
+      approve_without_approval: 即時承認済
       pending: 下位承認待ち
       remand: 差し戻し
       cancelled: 申請キャンセル
@@ -128,6 +130,8 @@ ja:
       approvers_or_circulations: 承認者・回覧者
     agent_name: "（代理: %{long_name}）"
     agent_name_with_email: "（代理: %{long_name}(%{email})）"
+    agent_value: "%{long_name}"
+    agent_value_with_email: "%{long_name}(%{email})"
 
   modules:
     workflow: ワークフロー
@@ -149,8 +153,9 @@ ja:
     models:
       workflow/route: 承認経路
     attributes:
-      workflow/addon/approver:
+      workflow/approver:
         workflow_user_id: 申請者
+        workflow_agent_id: 申請者（代理）
         workflow_member_id: 申請メンバー
         workflow_state: 承認状態
         workflow_kind: 承認の種類
@@ -206,7 +211,7 @@ ja:
       branch_is_already_existed: 差し替えページが作成されています。
 
   tooltip:
-    workflow/addon/approver:
+    workflow/approver:
       workflow_kind:
         - 承認の種類が表示されます。
         - 「公開」は、承認後、このページを公開状態にします。

@@ -13,9 +13,9 @@
 </div>
 <ul class="list-items">
   <% @result['hits']['hits'].each do |hit| %>
-    <li class="list-item">
+    <% source = hit['_source'] %>
+    <li class="list-item <%= source['collection_name'] %>" data-id="<%= hit['_id'] %>">
       <div class="info">
-        <% source = hit['_source'] %>
         <% title = source['name'] %>
         <% if source.dig('file', 'extname').present? %>
           <% title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})" %>

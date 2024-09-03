@@ -11,6 +11,7 @@ namespace :gws do
         ::Gws::Schedule::TodoTrashPurgeJob.bind(site_id: site).perform_now(*params)
         ::Gws::Report::TrashPurgeJob.bind(site_id: site).perform_now(*params)
         ::Gws::Workflow::TrashPurgeJob.bind(site_id: site).perform_now(*params)
+        ::Gws::Workflow2::TrashPurgeJob.bind(site_id: site).perform_now(*params)
         ::Gws::Circular::TrashPurgeJob.bind(site_id: site).perform_now(*params)
         ::Gws::Monitor::TrashPurgeJob.bind(site_id: site).perform_now(*params)
         ::Gws::Board::TrashPurgeJob.bind(site_id: site).perform_now(*params)

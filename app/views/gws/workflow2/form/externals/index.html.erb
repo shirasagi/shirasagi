@@ -1,0 +1,42 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, url_for(action: :show, id: item), class: "title"%>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+  <span class="state"><%= item.label(:state) %></span>
+  <span class="order"><%= item.order %></span>
+  <% if item.categories.present? %>
+    <span class="categories">
+      <% categories_in_order(item).each do |category| %>
+        <%=
+          attr = { class: "gws-category-label", style: category_label_css(category) }
+          if category_filter.simple?
+            link_to category.trailing_name, url_for(action: :index, s: { category_filter: category_filter.change(add: category.id).base64_filter }), **attr
+          else
+            tag.span category.trailing_name, **attr
+          end
+        %>
+      <% end %>
+    </span>
+  <% end %>
+  <% if item.purposes.present? %>
+    <span class="purposes">
+      <% purposes_in_order(item).each do |purpose| %>
+        <%= tag.span purpose.trailing_name, class: "gws-category-label", style: category_label_css(purpose) %>
+      <% end %>
+    </span>
+  <% end %>
+<% end %>
+
+<%=
+  frame_path = gws_workflow2_frames_categories_path(
+    mode: "-", state: "-", s: { category_filter: category_filter.present? ? category_filter.base64_filter : "-" },
+    "gws/category_frame" => { only: "advanced", return_path: url_for(action: :index, s: { category_filter: "$(category_id)" }) })
+  render "gws/category_frame/category_navi",
+         base_url: url_for(action: :index, s: { category_filter: 'ID' }),
+         category_filter: category_filter, categories: categories_in_order,
+         frame_path: frame_path
+%>
+
+<%= render template: 'gws/crud/index' %>

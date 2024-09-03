@@ -48,6 +48,9 @@ en:
       categories:
         index: Select a category
         parent_id: Parent category
+        overall_criteria: Overall
+        individual_criteria: Individual
+        add_individual_criteria: Add individual
       custom_groups:
         index: Select a custom group
       user_titles:
@@ -178,8 +181,8 @@ en:
       gws/user/duty_hour: Duty hour
       gws/link: Link
       gws/site_usage: Usage amount
-      gws/user/affair_setting: Affair setting
-      gws/group/affair_setting: Affair setting
+      gws/user/affair_setting: Affair setting / Workflow2
+      gws/group/affair_setting: Affair setting / Workflow2
       gws/user/staff_category: Staff category setting
       gws/circular/browsing_authority: Viewing permission
 
@@ -322,7 +325,7 @@ en:
         custom_group_ids: Administrative custom group
         custom_groups_hash: Administrative custom group (hash)
         permission_level: Permission level
-      gws/addon/readable_setting:
+      gws/readable_setting:
         readable_setting_range: Publication range
         readable_group_ids: Viewing group
         readable_groups_hash: Viewing group (hash)
@@ -375,8 +378,10 @@ en:
         menu_faq_state: Display FAQ
         menu_qna_label: Display Q&A
         menu_qna_state: Display Q&A
-        menu_workflow_label: Display workflows
-        menu_workflow_state: Display workflows
+        menu_workflow_label: Display workflow
+        menu_workflow_state: Display workflow
+        menu_workflow2_label: Display workflow2
+        menu_workflow2_state: Display workflow2
         menu_workload_label: Display workloads
         menu_workload_state: Display workloads
         menu_report_label: Display reports
