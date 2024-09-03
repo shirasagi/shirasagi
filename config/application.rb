@@ -80,10 +80,20 @@ module SS
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
 
     I18n.enforce_available_locales = true
-    I18n.available_locales = SS.config.env.available_locales.map(&:to_sym) if SS.config.env.available_locales.present?
-    config.time_zone = 'Tokyo'
     config.i18n.default_locale = :ja
-    config.i18n.fallbacks = [ :en ]
+    if SS.config.env.available_locales.present?
+      I18n.available_locales = SS.config.env.available_locales.map(&:to_sym)
+      config.i18n.fallbacks = I18n.available_locales.index_with do |lang|
+        if lang == config.i18n.default_locale
+          I18n.available_locales - [ config.i18n.default_locale ]
+        else
+          I18n.available_locales - [ lang ]
+        end
+      end
+    else
+      config.i18n.fallbacks = [ :en ]
+    end
+    config.time_zone = 'Tokyo'
 
     Dir["#{config.root}/config/locales/**/*.{rb,yml}"].each do |file|
       config.i18n.load_path << file unless config.i18n.load_path.index(file)

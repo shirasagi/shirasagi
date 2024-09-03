@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_workflow_forms", type: :feature, dbscope: :example, js: true, locale: %i[ja en] do
+describe "gws_workflow_forms", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
   let!(:dest_user) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:form) do

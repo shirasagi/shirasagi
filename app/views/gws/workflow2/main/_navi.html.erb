@@ -1,0 +1,43 @@
+<%
+  workflow_form_lins = []
+  if Gws::Workflow2::Form::Application.allowed?(:read, @cur_user, site: @cur_site)
+    workflow_form_lins << [ t("gws/workflow2.navi.form.application"), gws_workflow2_form_forms_path ]
+  end
+  if Gws::Workflow2::Form::External.allowed?(:read, @cur_user, site: @cur_site)
+    workflow_form_lins << [ t("gws/workflow2.navi.form.external"), gws_workflow2_form_externals_path ]
+  end
+  if Gws::Workflow2::Form::Category.allowed?(:read, @cur_user, site: @cur_site)
+    workflow_form_lins << [ t("gws/workflow2.navi.form.category"), gws_workflow2_form_categories_path ]
+  end
+  if Gws::Workflow2::Form::Purpose.allowed?(:read, @cur_user, site: @cur_site)
+    workflow_form_lins << [ t("gws/workflow2.navi.form.purpose"), gws_workflow2_form_purposes_path ]
+  end
+%>
+
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_workflow2_label || t('modules.gws/workflow2'), gws_workflow2_files_main_path, class: "icon-workflow" %></h2>
+
+  <h3><%= link_to t('gws/workflow2.navi.new_application'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h3>
+  <h4><%= link_to t('gws/workflow2.navi.find_by_keyword'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h4>
+  <h4><%= link_to t('gws/workflow2.navi.find_by_purpose'), gws_workflow2_select_forms_path(state: "all", mode: "by_purpose") %></h4>
+
+  <h3><%= link_to t('gws/workflow2.navi.readable'), gws_workflow2_files_path(state: :all) %></h3>
+  <h4><%= link_to t('gws/workflow2.navi.approve'), gws_workflow2_files_path(state: :approve) %></h4>
+  <h4><%= link_to t('gws/workflow2.navi.request'), gws_workflow2_files_path(state: :request) %></h4>
+  <h4><%= link_to t('gws/workflow2.navi.circulation'), gws_workflow2_files_path(state: :circulation) %></h4>
+
+  <h3><%= link_to t('gws/workflow2.navi.destination'), gws_workflow2_files_path(state: :destination) %></h3>
+
+  <h3><%= link_to t('ss.links.trash'), gws_workflow2_trashes_path, class: 'trash' %></h3>
+  <% if Gws::Workflow2::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/workflow2.navi.route'), gws_workflow2_routes_path, class: "management" %></h3>
+  <% end %>
+  <% if workflow_form_lins.present? %>
+    <h3><%= link_to t("gws/workflow2.navi.form.main"), sns_redirect_path(ref: workflow_form_lins.first[1]), class: "management" %></h3>
+    <% workflow_form_lins.each do |label, path| %>
+      <h4><%= link_to label, path, class: "management" %></h4>
+    <% end %>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

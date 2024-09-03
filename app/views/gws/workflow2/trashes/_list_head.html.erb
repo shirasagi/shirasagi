@@ -1,0 +1,12 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <%= render template: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.hard_delete') %>
+    </div>
+  </div>
+
+  <%= render template: "_search" %>
+</div>

@@ -177,6 +177,7 @@ en:
       edit_password: Change password
       registration: Registration
       approve: Approve
+      remand: Remand
       prev: Previous
       next: Next
       update: Update
@@ -254,6 +255,14 @@ en:
       update: Update
       prev: Previous
       next: Next
+      simple: Simple
+      advanced: Advanced
+      match_all: Match all
+      match_any_of: Match one of
+      include_all_of: Include all of
+      include_any_of: Include any of
+      include_none_of: Include none of
+      decide: Decide
       reset_mfa_otp: Reset OTP
     confirm:
       change_state: Are you sure you want to change your publication status?

@@ -239,7 +239,7 @@ ja:
       survey_sort:
         - 表示するアンケートの並びを選択します。
       survey_category_ids:
-        - 分類ラベルを選択します。
+        - カテゴリーを選択します。
       limit:
         - 表示件数を入力します。
     gws/addon/portal/notice_setting:

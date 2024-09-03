@@ -140,7 +140,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
@@ -166,9 +169,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil})
+        include({
+          level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
 
       expect(SS::Notification.count).to eq 3
       notice3 = SS::Notification.all.reorder(created: -1).first
