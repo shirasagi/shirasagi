@@ -41,7 +41,7 @@ module Cms::BaseFilter
 
     if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
       @ss_maintenance_mode = true
-      render "cms/maintenance_mode_notice/index.html", layout: "ss/base"
+      render "cms/maintenance_mode_notice/index", layout: "ss/base"
       return
     end
 
