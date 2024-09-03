@@ -655,8 +655,6 @@ GEM
     sparql-client (3.3.0)
       net-http-persistent (~> 4.0, >= 4.0.2)
       rdf (~> 3.3)
-    spring (2.0.2)
-      activesupport (>= 4.2)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -841,7 +839,6 @@ DEPENDENCIES
   simplecov-lcov
   sparql
   sparql-client
-  spring (~> 2.0.2)
   sprockets
   terminal-notifier-guard
   test-queue
