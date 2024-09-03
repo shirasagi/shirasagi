@@ -169,12 +169,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
 
     context "check accessibility tools" do
-      let(:accessibilty_tool) { create(:accessibilty_tool, cur_site: site) }
+      let(:accessibility_tool) { create(:accessibility_tool, cur_site: site) }
       let(:layout_html) do
         html = []
         html << "<html><head>"
-        html << "{{ part \"#{accessibilty_tool.filename.sub(/\..*/, '')}\" }}"
-        html << "{{ part \"#{accessibilty_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "{{ part \"#{accessibility_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "{{ part \"#{accessibility_tool.filename.sub(/\..*/, '')}\" }}"
         html << "<script src='/assets/cms/public.js'></script>"
         html << "</head><body><br><br><br><div id=\"main\" class=\"page\">"
         html << "{{ yield }}"

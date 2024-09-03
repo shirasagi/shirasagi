@@ -10,6 +10,21 @@ describe Cms::CheckLinksJob, dbscope: :example do
   let!(:page2) { create :article_page, cur_site: site, layout_id: layout.id, filename: "docs/page2.html" }
   let!(:page3) { create :article_page, cur_site: site, layout_id: layout.id, filename: "docs/page3.html" }
 
+  before do
+    ActionMailer::Base.deliveries = []
+
+    Fs.rm_rf site.path
+    Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+    Cms::Page::GenerateJob.bind(site_id: site.id).perform_now
+    Job::Log.destroy_all
+  end
+
+  after do
+    ActionMailer::Base.deliveries = []
+
+    Fs.rm_rf site.path
+  end
+
   let!(:html1) do
     h = []
     h << '<a href="/docs/">docs</a>'
@@ -31,13 +46,10 @@ describe Cms::CheckLinksJob, dbscope: :example do
     h.join("\n")
   end
 
-  before do
-    #Capybara.app_host = site_url
-    ss_perform_now described_class.bind(site_id: site.id)
-  end
-
-  context ".perform_now" do
+  context "normal case" do
     it do
+      ss_perform_now described_class.bind(site_id: site.id)
+
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -47,9 +59,112 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(log.logs).to include(include("  - #{site_url}/notfound1.html"))
         expect(log.logs).not_to include(include("  - #{site_url}/commentout1.html"))
 
+        expect(log.logs).to include(include("#{site_url}/index.html"))
+        expect(log.logs).to include(include("  - #{site_url}/notfound1.html"))
+
         expect(log.logs).to include(include("#{site_url}/docs/page1.html"))
         expect(log.logs).to include(include("  - #{site_url}/notfound2.html"))
         expect(log.logs).not_to include(include("  - #{site_url}/commentout2.html"))
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
+    end
+  end
+
+  context "send mail" do
+    let!(:email1) { "#{unique_id}@example.jp" }
+    let!(:email2) { "#{unique_id}@example.jp" }
+
+    before do
+      site.check_links_email = email1
+      site.check_links_message_format = message_format
+      site.update!
+    end
+
+    context "format text" do
+      let!(:message_format) { "text" }
+
+      it do
+        ss_perform_now described_class.bind(site_id: site.id)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.from.first).to eq site.check_links_default_sender_address
+        expect(mail.to.first).to eq email1
+        expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
+        expect(mail.body.raw_source).to include "[3 errors]"
+        expect(mail.body.raw_source).to include "#{site_url}/"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
+        expect(mail.body.raw_source).to include "#{site_url}/index.html"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
+        expect(mail.body.raw_source).to include "#{site_url}/docs/page1.html"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound2.html"
+      end
+    end
+
+    context "format csv" do
+      let!(:message_format) { "csv" }
+
+      it do
+        ss_perform_now described_class.bind(site_id: site.id)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.from.first).to eq site.check_links_default_sender_address
+        expect(mail.to.first).to eq email1
+
+        expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
+        expect(mail.multipart?).to be_truthy
+        expect(mail.parts[0].body.raw_source).to include "[3 errors]"
+        expect(mail.parts[0].body.raw_source).to include "error details are in the attached csv"
+
+        csv = mail.parts[1].body.raw_source
+        csv = csv.delete_prefix(SS::Csv::UTF8_BOM)
+        csv = CSV.parse(csv)
+
+        expect(csv[0]).to eq %w(reference url)
+        expect(csv[1]).to eq %w(/ /notfound1.html)
+        expect(csv[2]).to eq %w(/index.html /notfound1.html)
+        expect(csv[3]).to eq %w(/docs/page1.html /notfound2.html)
+      end
+    end
+
+    context "set email in task arguments" do
+      let!(:message_format) { "text" }
+
+      it do
+        ss_perform_now described_class.bind(site_id: site.id), email: email2
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.from.first).to eq site.check_links_default_sender_address
+        expect(mail.to.first).to eq email2
+        expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
+        expect(mail.body.raw_source).to include "[3 errors]"
+        expect(mail.body.raw_source).to include "#{site_url}/"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
+        expect(mail.body.raw_source).to include "#{site_url}/index.html"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
+        expect(mail.body.raw_source).to include "#{site_url}/docs/page1.html"
+        expect(mail.body.raw_source).to include "  - #{site_url}/notfound2.html"
       end
     end
   end

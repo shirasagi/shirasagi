@@ -10,12 +10,20 @@
   .addon-body header {
     @include clear;
     .contributor {
+      margin-bottom: 10px;
       float: left;
       font-weight: bold;
-      margin-bottom: 10px;
     }
     .datetime {
+      display: flex;
       float: right;
+      .bookmark-comment {
+        margin-right: 4px;
+        cursor: pointer;
+      }
+      time {
+        padding-top: 2px;
+      }
     }
   }
   .addon-body .updated {
@@ -38,8 +46,8 @@
       a {
         display: inline-block;
         line-height: 1.5;
-        word-break: normal;
         word-wrap: normal;
+        word-break: normal;
       }
     }
     .deselect {
@@ -80,8 +88,8 @@
     cursor: pointer;
   }
   .menu {
-    float: right;
     padding-top: 10px;
+    float: right;
   }
   .addon-body .files {
     margin-top: 5px;
@@ -93,38 +101,58 @@
   .addon-body.reply-menu {
     color: #b30;
     span {
-      float: right;
       margin-right: 10px;
+      float: right;
     }
   }
 }
 .gws-discussion-thread {
-  float: left;
   width: calc(100% - 350px);
   min-height: 400px;
+  float: left;
   @include mb {
-    float: none;
     width: 100%;
+    float: none;
   }
 }
 .gws-discussion-topic {
-  font-size: 180%;
-  font-weight: bold;
-  padding-bottom: 10px;
-  padding-left: 10px;
+  margin-bottom: 8px;
+  //border: 1px solid #d0d0d0;
+  //border-radius: 3px;
+  //background: #fff;
+  @include clear;
+  h2 {
+    padding: 10px;
+    float: left;
+    font-size: 180%;
+    font-weight: bold;
+  }
+  form {
+    padding: 10px 5px 5px 0;
+    float: right;
+    select {
+      width: 160px;
+    }
+    input[type=text] {
+      width: 240px !important;
+    }
+  }
+  @include mb {
+    margin: 10px 0;
+  }
 }
 .gws-discussion-unseen {
-  font-weight: bold;
   padding-left: 10px;
+  font-weight: bold;
 }
 .gws-discussion-navi {
-  float: right;
-  margin-left: 10px;
   width: 340px;
+  margin-left: 10px;
+  float: right;
   @include mb {
-    float: none;
-    margin: 0;
     width: 100%;
+    margin: 0;
+    float: none;
   }
 
   .gws-discussion-navi-list {

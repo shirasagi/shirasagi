@@ -1,0 +1,11 @@
+<%
+  return if @item.notice_users.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see mod-opendata_metadata_notice">
+  <dt><%= @model.t :notice_user_ids %></dt>
+  <dd><%= @item.notice_users.pluck(:name).join(", ") %></dd>
+</dl>

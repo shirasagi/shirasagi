@@ -54,7 +54,7 @@ class Gws::Workflow2::RoutesController < ApplicationController
 
   def create
     @item = @model.new get_params
-    unless @cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow_routes)
+    unless @cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow2_routes)
       set_default_readable_setting
       set_default_group
     end
@@ -66,7 +66,7 @@ class Gws::Workflow2::RoutesController < ApplicationController
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     # rubocop:disable Style::SoleNestedConditional
     if @item.readable_setting_range != "private"
-      if !@cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow_routes)
+      if !@cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow2_routes)
         notice = I18n.t("mongoid.errors.models.gws/workflow2/route.readable_setting_range_error")
         redirect_to url_for(action: :show), notice: notice
         return

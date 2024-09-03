@@ -1,0 +1,22 @@
+<dl class="see">
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <dt><%= t("ss.links.import") %></dt>
+    <dd><%= link_to(t('opendata.links.harvest_import_datasets'), { action: :import }) %></dd>
+    <dd><%= link_to(t('opendata.links.harvest_purge_datasets'), { action: :destroy_datasets }) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :source_url %></dt>
+  <dd><%= @item.source_url %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :basicauth_state %></dt>
+  <dd><%= @item.label :basicauth_state %></dd>
+</dl>

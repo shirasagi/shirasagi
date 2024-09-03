@@ -6,7 +6,6 @@ module ApplicationHelper
   include SS::DateTimeHelper
   include SS::ErrorMessagesFor
   include SS::StimulusHelper
-  include SS::I18nNaming
   include SS::InputGuide
   include Workflow::ViewHelper
 

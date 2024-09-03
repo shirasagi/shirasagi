@@ -6,7 +6,7 @@ FactoryBot.define do
     name { "name-#{unique_id}" }
     text { "text-#{unique_id}" }
 
-    association :parent, factory: :gws_discussion_forum
-    forum { parent }
+    # forum {}
+    # parent {}
   end
 end

@@ -44,10 +44,12 @@ SS.ready(function () {
   SS_Font.render();
   SS_AdobeReader.render();
   SS_Mobile.render();
-  var $voiceTags = $('[data-tool="ss-voice"]');
+  var $voiceTags = $('#ss-voice,[data-tool="ss-voice"]');
   $voiceTags.each(function (index, voiceTag) {
-    var voiceInstance = new SS_Voice(); // Instantiate SS_Voice for each voiceTag
-    voiceInstance.render($(voiceTag), index); // Pass the voiceTag to the render method
+    SS.justOnce(voiceTag, "ss-voice", function() {
+      var voiceInstance = new SS_Voice(); // Instantiate SS_Voice for each voiceTag
+      voiceInstance.render($(voiceTag), index); // Pass the voiceTag to the render method
+    });
   });
   SS_Theme.render();
   SS.renderAjaxBox();
@@ -76,50 +78,51 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
 
   SS_Kana.render = function () {
-    var $kanaElements = $('[data-tool="ss-kana"]');
+    if (SS.config["site_url"] && SS.config["kana_url"]) {
+      SS_Kana.siteUrl = SS.config["site_url"];
+      SS_Kana.kanaUrl = SS.config["kana_url"];
+    }
+
+    var $kanaElements = $('#ss-kana,[data-tool="ss-kana"]');
     $kanaElements.each(function (index) {
       var $kana = $(this);
       if (!$kana[0]) {
         return;
       }
 
-      if (SS.config["site_url"] && SS.config["kana_url"]) {
-        SS_Kana.siteUrl = SS.config["site_url"];
-        SS_Kana.kanaUrl = SS.config["kana_url"];
-      }
+      SS.justOnce($kana[0], "ss-kana", function() {
+        var pathname = location.pathname;
+        var url, cssClass;
+        if ($("body").data("kana")) {
+          url = SS_Kana.url(pathname, false);
+          url = SS_Translate.url(url);
+          cssClass = "off";
+        } else {
+          url = SS_Translate.url(pathname, false)
+          url = SS_Kana.url(url, true);
+          cssClass = "on";
+        }
+        if (url[0] !== '/') {
+          // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
+          // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
+          return;
+        }
 
-      var pathname = location.pathname;
-      var url, cssClass;
-      if ($("body").data("kana")) {
-        url = SS_Kana.url(pathname, false);
-        url = SS_Translate.url(url);
-        cssClass = "off";
-      } else {
-        url = SS_Translate.url(pathname, false)
-        url = SS_Kana.url(url, true);
-        cssClass = "on";
-      }
-      if (url[0] !== '/') {
-        // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
-        // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
-        return;
-      }
+        var html = $kana.html();
+        var anchorId = 'kana_a_' + index;
+        var $anchor = $("<a />", { id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
+        $kana.html($anchor);
 
-      var html = $kana.html();
-      var anchorId = 'kana_a_' + index;
-      var $anchor = $("<a />", { id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
-      $kana.html($anchor);
-
-      $anchor.on("click", function (ev) {
-        ev.preventDefault();
-        var $clickedAnchor = $(this);
-        var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
-        location.href = clickedUrl;
-        return false;
+        $anchor.on("click", function (ev) {
+          ev.preventDefault();
+          var $clickedAnchor = $(this);
+          var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
+          location.href = clickedUrl;
+          return false;
+        });
       });
     });
   };
-
 
   SS_Kana.url = function (url, bool) {
     if (bool == null) {
@@ -192,66 +195,75 @@ this.SS_Theme = (function () {
   }
 
   SS_Theme.render = function () {
-    var $themes = $('[data-tool="ss-theme"]');
+    var $themes = $('#ss-theme,[data-tool="ss-theme"]');
     if ($themes.length === 0) {
       return;
     }
 
     $themes.each(function(index) {
       var $theme = $(this);
-      var theme = SS.config["theme"];
-      var inlineStyle = '';
-      for (var cls in theme) {
-        var $a = $theme.find("a." + $.escapeSelector(cls));
-        if (!$a[0]) {
-          continue;
-        }
+      SS.justOnce(this, "ss-theme", function() {
+        var theme = SS.config["theme"];
+        var inlineStyle = '';
+        for (var cls in theme) {
+          var $a = $theme.find("a." + $.escapeSelector(cls));
+          if (!$a[0]) {
+            continue;
+          }
 
-        var anchorId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
-        $a.attr("id", anchorId); // Assign the unique ID to the anchor
-        $a.attr("data-ss-theme", cls);
-        var v = theme[cls];
-        if (v["css_path"]) {
-          var $styleSheetLink = $('<link />', { rel: "alternate stylesheet", type: "text/css", title: v["name"], href: v["css_path"], class: "ss-theme " + $.escapeSelector(cls), disabled: true });
-          $('head').append($styleSheetLink);
-        }
-        if (v["font_color"] && v["background_color"]) {
-          inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
-        }
-        if (v["default_theme"]) {
-          $theme.find('a').removeClass('active');
-          $a.addClass('active');
-          SS_Theme.switchTheme(cls);
-        }
-        $a.on("click", function () {
-          var $this = $(this);
-          var cls = $this.data("ss-theme");
-          $theme.find('a').removeClass('active');
-          $this.addClass('active');
-          Cookies.set("ss-theme", cls, {
-            expires: 7,
-            path: '/'
+          var anchorId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
+          $a.attr("id", anchorId); // Assign the unique ID to the anchor
+          $a.attr("data-ss-theme", cls);
+          var v = theme[cls];
+          if (v["css_path"]) {
+            var $styleSheetLink = $('<link />', {
+              rel: "alternate stylesheet",
+              type: "text/css",
+              title: v["name"],
+              href: v["css_path"],
+              class: "ss-theme " + $.escapeSelector(cls),
+              disabled: true
+            });
+            $('head').append($styleSheetLink);
+          }
+          if (v["font_color"] && v["background_color"]) {
+            inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
+          }
+          if (v["default_theme"]) {
+            $theme.find('a').removeClass('active');
+            $a.addClass('active');
+            SS_Theme.switchTheme(cls);
+          }
+          $a.on("click", function () {
+            var $this = $(this);
+            var cls = $this.data("ss-theme");
+            $themes.find("[data-ss-theme]").removeClass('active');
+            $themes.find("[data-ss-theme='" + $.escapeSelector(cls) + "']").addClass('active');
+            Cookies.set("ss-theme", cls, {
+              expires: 7,
+              path: '/'
+            });
+            SS_Theme.switchTheme(cls);
+            return false;
           });
+        }
+
+        if (inlineStyle) {
+          var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
+          $("head").append($inlineStyle);
+        }
+
+        var cls = Cookies.get("ss-theme");
+        if (!theme[cls]) {
+          Cookies.remove("ss-theme");
+          cls = null;
+        }
+        if (cls) {
+          $theme.find('a').removeClass('active');
+          $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
           SS_Theme.switchTheme(cls);
-          return false;
-        });
-      }
-
-      if (inlineStyle) {
-        var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
-        $("head").append($inlineStyle);
-      }
-
-      var cls = Cookies.get("ss-theme");
-      if (!theme[cls]) {
-        Cookies.remove("ss-theme");
-        cls = null;
-      }
-      if (cls) {
-        $theme.find('a').removeClass('active');
-        $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
-        SS_Theme.switchTheme(cls);
-      }
+        }
+      });
     });
   };
 
@@ -262,7 +274,6 @@ this.SS_Theme = (function () {
   SS_Theme.switchTheme = function (cls) {
     $('head link.ss-theme').prop("disabled", true);
     $('head link.ss-theme.' + $.escapeSelector(cls)).prop("disabled", false);
-    $("body").attr("data-ss-theme", "");
     $("body").attr("data-ss-theme", cls);
   };
 

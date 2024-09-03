@@ -300,6 +300,8 @@ ja:
       resume_editing: 自動保存された内容があります。編集を直前から再開しますか？
       reset_mfa_otp: ワンタイムパスワードを初期化しますが、よろしいですか？
       unable_to_delete_due_to_branch_page: 差し替えページが作成されているため削除できません。
+      not_allowed_to_publish: このページを公開することは許可されていません
+      not_allowed_to_close: このページを非公開にすることは許可されていません
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。
@@ -656,6 +658,7 @@ ja:
       ss/oauth2/webmail_permission: メール権限
       ss/locale_setting: 言語設定
       ss/mfa/user_setting: MFA設定
+      ss/check_links_setting: メール通知設定
 
   activemodel:
     errors:
@@ -1060,6 +1063,9 @@ ja:
         partner_site_ids: 提携サイト
       ss/addon/inquiry_setting:
         inquiry_form_id: お問い合わせフォーム
+      ss/addon/check_links_setting:
+        check_links_email: 通知メールアドレス
+        check_links_message_format: フォーマット
       ss/oauth2/application/base:
         name: 名前
         state: ステータス
@@ -1543,6 +1549,12 @@ ja:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - グループ共通のお問い合わせフォームを設定します。
+
+    ss/addon/check_links_setting:
+      check_links_email:
+        - メールアドレスを設定すると、リンクチェック実行後にエラー結果を通知します。
+      check_links_message_format:
+        - エラー結果をメール通知する際のフォーマットを選択します。
 
     ss/addon/workflow_setting:
       workflow_my_group:

@@ -30,6 +30,9 @@ $(function () {
   // ハンバーガーメニュー開閉用
   hamburgerFunc();
 
+  // TOPページSP時キービジュアルのページネーションを外に出す処理（htmlの移動）
+  keyVisualMovePagination();
+
   // ？
   // externalIcon();
 
@@ -60,14 +63,14 @@ $(function () {
 
   // マイページ　チェックボックス見た目調整用タグ追加
   mypageCheckboxAddTags();
+
+  // チャットボットのテキスト改行
+  lineBreakChatbot();
 });
 
 // load : 画像などが表示された後に実行
 $(window).load(function () {
   // Firefox対応
-
-  // 新着タブにカテゴリーを表示（標準機能にないため）
-  // tabsCategoryFunc();
 
   // 新着タブの記事がない場合、RSSリンクを非表示にする
   invisibleNoinfoTabsRss();
@@ -99,6 +102,11 @@ $(window).load(function () {
   //イメージマップ
   imagemapFunc();
 
+  // アンカーリンク自動生成
+  addAnchorLinks();
+
+  // ページ内アンカーリンクのスムーススクロール
+  smoothScrollFunc();
 });
 
 
@@ -197,13 +205,19 @@ var naviHoverFunc = function () {
 /* ----------------------------------------------------------
  hamburgerFunc
 ---------------------------------------------------------- */
-var hamburgerFunc =  function () {
+var hamburgerFunc = function () {
   $(".hamburger-menu__btn").click(function () {
     $(this).toggleClass('click-on');
     $(".hamburger-menu__btn + div").toggleClass('menu-on');
   });
 }
 
+/* ----------------------------------------------------------
+ keyVisualMovePagination
+---------------------------------------------------------- */
+var keyVisualMovePagination = function () {
+  $('.ss-swiper-slide swiper-container div .swiper-pagination').insertBefore('.ss-swiper-slide-controller');
+}
 
 /* ----------------------------------------------------------
  externalIcon
@@ -315,11 +329,11 @@ var underTBFunc = function () {
  tabsCategoryFunc
 ---------------------------------------------------------- */
 var tabsCategoryFunc = function () {
-    // 新着情報以外のタブについて処理
+  // 新着情報以外のタブについて処理
   $('.cms-tabs .tab:nth-child(n+2)').each(function () {
     var catName = $('h2', this).text();
     var catId = $(this).attr('id');
-    $('time', this).before('<span class="cat ' + catId + '">' + catName + '</span>');
+    $('time', this).after('<span class="cat ' + catId + '">' + catName + '</span>');
 
     var tabCont = $(this).html();
 
@@ -328,19 +342,10 @@ var tabsCategoryFunc = function () {
       var link = $('a', this).attr('href');
       if (tabCont.indexOf(link) !== -1) {
         //$(this).prev('span.cat').remove();
-        $(this).prev('time').before('<span class="cat ' + catId + '">' + catName + '</span>');
+        $(this).prev('time').after('<span class="cat ' + catId + '">' + catName + '</span>');
       }
     });
   });
-
-  // $('.cms-tabs .tab').each(function () {
-  //   var label = $('h2', this).text();
-  //   $('a.more', this).text('お知らせ一覧を見る');
-  // });
-  // $('.cms-tabs .tab').each(function () {
-  //   var label = $('h2', this).text();
-  //   $('a.more', this).text($('a.more', this).parents('article').find('h2').text() + '一覧を見る');
-  // });
 
   $('.cms-tabs article').each(function () {
     var label = $('h2', this).text();
@@ -583,6 +588,14 @@ var mypageCheckboxAddTags = function () {
 }
 
 /* ----------------------------------------------------------
+ lineBreakChatbot
+---------------------------------------------------------- */
+
+var lineBreakChatbot = function () {
+  $('#chat .chat--close p').html('<p>なんでも<br>聞いてね！</p>');
+}
+
+/* ----------------------------------------------------------
  imagemapFunc
 ---------------------------------------------------------- */
 var imagemapFunc = function () {
@@ -627,4 +640,43 @@ var imagemapFunc = function () {
       $("table").wrap('<div class="wrap-table" />');
     } else {}
   }
+}
+
+/* ----------------------------------------------------------
+ addAnchorLinks
+---------------------------------------------------------- */
+var addAnchorLinks = function () {
+  if (window.document.body.id === 'body--organization-index') {
+    if ($('#anchor-links-wrap').length) {
+      $('#anchor-links-wrap').append('<nav class="anchor-links"><h2 class="anchor-links__header">ページ内目次</h2><ul class="anchor-links__list"></ul></nav>');
+      $('.yield-wrap h2').each(function () {
+        var id = $(this).attr('id');
+        var title = $(this).text();
+        $('ul.anchor-links__list').append('<li class="anchor-links__item"><a href="#' + id + '">' + title + '</a></li>');
+      })
+    }
+  }
+}
+
+/* ----------------------------------------------------------
+ smoothScrollFunc
+---------------------------------------------------------- */
+var smoothScrollFunc = function () {
+  $('#main a[href^="#"]').click(function () {
+    // 移動先
+    var adjust = 0;
+    // スクロール速度
+    var speed = 400;
+    // アンカーの値取得
+    var href = $(this).attr("href");
+    // 移動先取得
+    var target = $(href == "#" || href == "" ? 'html' : href);
+    // 移動先調整
+    var position = target.offset().top + adjust;
+    // スムーススクロール
+    $('body,html').animate({
+      scrollTop: position
+    }, speed, 'swing');
+    return false;
+  });
 }

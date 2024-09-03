@@ -18,7 +18,7 @@
           if @item.readable_setting_range == "private"
             # 非公開承認ルートは、編集権限があれば編集できる
             link_to t('ss.links.edit'), action: :edit, id: @item
-          elsif @cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow_routes)
+          elsif @cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow2_routes)
             # 全公開や選択範囲の承認ルートを編集するには、追加で権限「承認ルートの公開」が必要
             link_to t('ss.links.edit'), action: :edit, id: @item
           end

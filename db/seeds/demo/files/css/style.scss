@@ -23,11 +23,11 @@ body {
   }
 }
 
-#wrap{
+#wrap {
   // min-height:  calc(100vh - 215px - 362px);
   background-color: $bg;
 
-  footer{
+  footer {
     margin-top: auto;
   }
 }
@@ -126,6 +126,76 @@ br {
   }
 }
 
+.anchor-links-wrap {
+  margin-bottom: 25px;
+
+  .anchor-links {
+    padding: 20px;
+    background-color: #FFF8D0;
+    border-radius: 10px;
+
+    .anchor-links__header {
+      font-weight: bold;
+    }
+
+    .anchor-links__list {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      padding-left: 10px;
+
+      .anchor-links__item {
+        margin-right: 1em;
+
+        a {
+          display: inline-block;
+          position: relative;
+          padding-left: 30px;
+          text-decoration: none;
+          color: #000;
+
+          &:hover {
+            text-decoration: underline;
+          }
+
+          &:before,
+          &:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 14px;
+          }
+
+          &:before {
+            margin-top: 2px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-right: 12px solid transparent;
+            border-left: 12px solid transparent;
+            border-top: 14px solid #46c0f5;
+            border-bottom: 0;
+          }
+
+          &:after {
+            margin-top: -2px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-right: 12px solid transparent;
+            border-left: 12px solid transparent;
+            border-top: 14px solid #0c53b7;
+            border-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
 /* ===================================================================================================
 utility
 =================================================================================================== */
@@ -138,7 +208,7 @@ common
 ---------------------------------------------------------- */
 .accessibility {
   padding: 5px 0;
-  color: #787878;
+  color: #4f4f4f;
   background-color: $gray;
   font-size: $px12;
   display: flex;
@@ -177,7 +247,7 @@ common
     }
 
     a {
-      color: #787878;
+      color: #4f4f4f;
       text-decoration: none;
 
       &:hover,
@@ -198,16 +268,16 @@ common
       .translate-box {
         @include translate-box;
 
-        @include tb{
+        @include tb {
           width: calc(8em + 8px);
 
-          select{
+          select {
             padding: 8px 17px 3px 7px;
           }
         }
 
-        &::before{
-          @include tb{
+        &::before {
+          @include tb {
             top: 34%;
           }
         }
@@ -248,7 +318,7 @@ common
             background-size: 14px;
           }
 
-          .ss-voice-controller {
+          #ss-voice-controller {
             position: absolute;
             top: 46px;
             z-index: 60;
@@ -283,16 +353,14 @@ common
             padding: 0 10px;
             margin-right: 30px;
 
-            span {
+            a {
               padding: 5px;
               background-color: $white;
               @include border-radius(5px);
-            }
 
-            span:hover {
-              background-color: $blue;
-
-              a {
+              &:hover,
+              &:focus {
+                background-color: $blue;
                 color: $white;
               }
             }
@@ -314,11 +382,11 @@ common
   z-index: 50;
 
   @include tb {
-    height: 100px;
+    height: 220px;
     box-shadow: none;
   }
 
-  a{
+  a {
     text-decoration: none;
 
     &:hover,
@@ -340,7 +408,7 @@ common
     .siteinfo__logo {
       width: 250px;
 
-      @include tb{
+      @include tb {
         margin-left: 20px;
       }
     }
@@ -353,10 +421,10 @@ common
       justify-content: space-around;
 
       @include tb {
-        width: 100%;
         position: absolute;
-        bottom: -100px;
         left: 0;
+        top: 110px;
+        width: 100%;
       }
 
       &-inner {
@@ -783,9 +851,9 @@ common
     }
 
     p {
+      padding-left: 8px;
       width: 100%;
       font-size: $px14;
-      text-align: center;
     }
 
     img {
@@ -986,14 +1054,14 @@ common
 
 /* common - パンくず .crumbs-wrap
 ---------------------------------------------------------- */
-.crumbs{
+.crumbs {
   font-size: $px12;
 
-  a{
+  a {
     // font-size: $px12;
   }
 
-  .separator{
+  .separator {
     padding: 0 10px;
     font-size: $px16;
   }
@@ -1584,6 +1652,7 @@ body#body--index {
             justify-content: space-between;
             color: $text;
             transition: .3s ease-in-out;
+            text-decoration: none;
 
             .thumb {
               width: 120px;
@@ -1591,6 +1660,7 @@ body#body--index {
 
               img {
                 width: 100%;
+                border-radius: 10px;
               }
             }
 
@@ -1600,6 +1670,8 @@ body#body--index {
 
             &:hover,
             &:focus {
+              text-decoration: underline;
+
               .thumb {
                 opacity: .7;
                 transition: .3s ease-in-out;
@@ -1623,6 +1695,7 @@ body#body--index {
           font-size: $px14;
           font-weight: bold;
           color: #3b4043;
+          text-decoration: none;
 
           &:after {
             position: absolute;
@@ -1671,7 +1744,7 @@ body#body--index {
       .date {
         margin-top: 10px;
         text-align: right;
-        font-size: 14px;
+        font-size: $px14;
       }
     }
 
@@ -1771,10 +1844,6 @@ body#body--index {
       max-width: 1040px;
       width: 100%;
       padding: 60px 20px;
-
-      @include tb {
-        padding-top: 124px;
-      }
     }
 
     .main__area--important {
@@ -1840,13 +1909,14 @@ body#body--index {
 
       section#safety {
         margin-left: 30px;
+
         @include tb {
           margin-top: 35px;
           margin-left: 0px;
         }
 
         >header {
-          background-color: #FF4C5B;
+          background-color: #ee0418;
         }
 
         ul {
@@ -1901,6 +1971,7 @@ body#body--index {
 
       section#online {
         margin-left: 30px;
+
         @include tb {
           margin-top: 35px;
           margin-left: 0px;
@@ -1962,17 +2033,17 @@ body#body--index {
             }
 
             &[href="/oshirase/"],
-            &[href$="/preview/oshirase/"]  {
+            &[href$="/preview/oshirase/"] {
               background-color: #cae9ff;
             }
 
             &[href="/oshirase/event/"],
-            &[href$="/preview/oshirase/event/"]  {
+            &[href$="/preview/oshirase/event/"] {
               background-color: $yellow;
             }
 
             &[href="/shisei/jinji/"],
-            &[href$="/preview/shisei/jinji/"]  {
+            &[href$="/preview/shisei/jinji/"] {
               background-color: $orange;
             }
 
@@ -2023,11 +2094,14 @@ body#body--index {
                 padding: 15px 0;
 
                 @include tb {
-                  display: grid;
-                  grid-column-gap: 0px;
-                  grid-row-gap: 0px;
-                  grid-template-columns: 120px auto;
-                  grid-template-rows: 20px 20px;
+                  // display: grid;
+                  // grid-column-gap: 0px;
+                  // grid-row-gap: 0px;
+                  // grid-template-columns: 120px auto;
+                  // grid-template-rows: 20px 20px;
+
+                  flex-wrap: wrap;
+                  gap: 10px;
                 }
 
                 .cat {
@@ -2039,36 +2113,42 @@ body#body--index {
                   line-height: 20px;
                   font-weight: bold;
                   white-space: nowrap;
+                  margin-left: 25px;
 
                   @include tb {
-                    grid-area: 1 / 1 / 2 / 2;
-                    margin-top: 3px;
+                    // grid-area: 1 / 1 / 2 / 2;
+                    // margin-top: 3px;
+                    margin: 0;
                     font-size: $px10;
                   }
 
                   // 新着情報
-                  &.cms-tab-403-0 {
+                  &.cms-tab-403-0,
+                  &.cms-tab-28-0 {
                     background-color: #ebfc8a;
                   }
 
                   // お知らせ
-                  &.cms-tab-403-1 {
+                  &.cms-tab-403-1,
+                  &.cms-tab-28-1 {
                     background-color: #cae9ff;
                   }
 
                   // イベント
-                  &.cms-tab-403-2 {
+                  &.cms-tab-403-2,
+                  &.cms-tab-28-2 {
                     background-color: $yellow;
                   }
 
                   // 人員・職員募集
-                  &.cms-tab-403-3 {
+                  &.cms-tab-403-3,
+                  &.cms-tab-28-3 {
                     background-color: $orange;
                   }
                 }
 
                 time {
-                  margin-left: 25px;
+                  margin-left: 10px;
                   width: 105px;
                   font-size: $px12;
                   letter-spacing: 0.5px;
@@ -2227,23 +2307,24 @@ body#body--index {
     @include border-radius(20px);
 
     &.current {
-    width: 34px;
-    font-size: 82%;
-    background-color: #b0e8ff;
-    font-weight: bold;
+      width: 34px;
+      font-size: 82%;
+      background-color: #b0e8ff;
+      font-weight: bold;
     }
 
     a {
-    display: block;
-    padding: 5px 11px;
-    font-size: 82%;
-    text-decoration: none;
-    color: #000;
-    text-align: center;
-    background-color: #EEE;
-    @include border-radius(20px);
+      display: block;
+      padding: 5px 11px;
+      font-size: 82%;
+      text-decoration: none;
+      color: #000;
+      text-align: center;
+      background-color: #EEE;
+      @include border-radius(20px);
 
-      &:hover {
+      &:hover,
+      &:focus {
         text-decoration: underline;
       }
     }
@@ -2289,7 +2370,7 @@ body#body--index {
           padding: 0 10px;
           position: relative;
 
-          &::before{
+          &::before {
             content: '';
             position: absolute;
             right: 0px;
@@ -2298,6 +2379,12 @@ body#body--index {
             width: 1px;
             height: 12px;
             background-color: $blue;
+          }
+
+          &:last-of-type {
+            &::before {
+              content: none;
+            }
           }
 
           a {
@@ -2451,7 +2538,7 @@ body#body--index {
         transform: scale(1.05);
       }
 
-      a{
+      a {
         text-decoration: none;
       }
 
@@ -2536,7 +2623,7 @@ body#body--index {
     text-align: center;
   }
 
-  .footer{
+  .footer {
     margin-top: 80px;
   }
 }
@@ -2653,7 +2740,7 @@ body.general {
             position: absolute;
             bottom: 0;
             right: 35px;
-            font-size: 11px;
+            font-size: $px11;
             color: #000ead;
 
             @include tb {
@@ -2725,7 +2812,7 @@ body.general {
 
         }
 
-        .yield-wrap>.categories{
+        .yield-wrap>.categories {
           margin-top: 40px;
         }
 
@@ -2744,7 +2831,7 @@ body.general {
             h2 {
               margin: 30px 0 12px;
               padding: 8px 12px;
-              font-size: 15px;
+              font-size: $px15;
               font-weight: bold;
               background-color: #ccf0ff;
 
@@ -2761,6 +2848,7 @@ body.general {
               }
 
               .inquiry-form {
+
                 dl,
                 fieldset {
                   margin-bottom: 10px;
@@ -2791,7 +2879,7 @@ body.general {
 
                     .required {
                       display: block;
-                      color: $red;
+                      color: #d50000;
                       font-weight: normal;
                     }
                   }
@@ -2884,7 +2972,7 @@ body.general {
       h2 {
         margin: 30px 0 12px;
         padding: 8px 12px;
-        font-size: 15px;
+        font-size: $px15;
         font-weight: bold;
         background-color: #ccf0ff;
 
@@ -2920,7 +3008,7 @@ body.general {
       ol {
         margin-bottom: 20px;
         padding-left: 1em;
-        font-size: 14px;
+        font-size: $px14;
 
         @include tb {
           font-size: $px12;
@@ -2971,23 +3059,24 @@ body.general {
       }
     }
 
-    article{
+    article {
       margin: 20px;
       @include docs;
-      video{
+
+      video {
         max-width: 100%;
       }
     }
 
-    >.map-page{
+    >.map-page {
       order: 2;
       margin: 0px 0px 30px;
 
-      header{
-        h2{
+      header {
+        h2 {
           margin: 30px 0 12px;
           padding: 8px 12px;
-          font-size: 15px;
+          font-size: $px15;
           font-weight: bold;
           background-color: #ccf0ff;
         }
@@ -3029,7 +3118,7 @@ body.general {
       .email {
         display: inline-flex;
         margin-left: 10px;
-        font-size: 12px;
+        font-size: $px12;
 
         @include tb {
           margin-left: 0;
@@ -3051,7 +3140,7 @@ body.general {
 
       .link {
         display: flex;
-        font-size: 12px;
+        font-size: $px12;
       }
 
       .inquiry-form {
@@ -3067,7 +3156,7 @@ body.general {
         a {
           display: inline-block;
           padding: 9px 28px;
-          font-size: 14px;
+          font-size: $px14;
           font-weight: bold;
           @include border-radius(20px);
           border: 1px solid #09698e;
@@ -3135,7 +3224,7 @@ body.general {
       }
     }
 
-    .copy-wrap{
+    .copy-wrap {
       margin-top: 40px;
       width: 100%;
       display: flex;
@@ -3143,7 +3232,7 @@ body.general {
       order: 9;
 
       button[name="clipboard-copy"],
-      button[name="print"]{
+      button[name="print"] {
         min-width: 132px;
         margin: 0 5px;
         padding: 1em;
@@ -3153,14 +3242,14 @@ body.general {
         font-weight: bold;
 
         &:hover,
-        &:focus{
+        &:focus {
           opacity: 0.7;
           transition: .3s ease-in-out;
           cursor: pointer;
         }
       }
 
-      button[name="clipboard-copy"].unsupported{
+      button[name="clipboard-copy"].unsupported {
         display: none;
       }
 
@@ -3202,6 +3291,7 @@ body.general {
     .inquiry-form,
     .columns,
     .form-login {
+
       dl,
       fieldset {
         @include clear;
@@ -3482,9 +3572,9 @@ body.general {
           display: none;
         }
 
-        .site-search-type{
-          dd{
-            select{
+        .site-search-type {
+          dd {
+            select {
               padding: 7.5px;
               margin-right: 5px;
               border: 1px solid $hgry;
@@ -3494,9 +3584,11 @@ body.general {
 
         .site-search-keyword {
           border: none;
+
           @media only screen and (max-width: 600px) {
             margin-top: 5px;
           }
+
           dt {
             display: none;
           }
@@ -3518,7 +3610,7 @@ body.general {
           }
         }
 
-        .send{
+        .send {
           border: 1px solid $hgry;
           border-left: none;
 
@@ -3526,7 +3618,7 @@ body.general {
             margin-top: 5px;
           }
 
-          input[type="submit"]{
+          input[type="submit"] {
             padding: 6px 10px;
 
             @media only screen and (max-width: 600px) {
@@ -3542,75 +3634,78 @@ body.general {
   }
 
   /* パブリックコメント */
-  &.body--comment{
-    table#forms{
+  &.body--comment {
+    table#forms {
       width: 100%;
 
       tr,
       th,
-      td{
+      td {
         border: 1px solid #787878;
       }
-      thead{
+
+      thead {
         background-color: aliceblue;
       }
-      td{
+
+      td {
         padding: 3px 10px;
       }
     }
 
-    .inquiry-html{
-      p:last-child{
+    .inquiry-html {
+      p:last-child {
         font-size: $px14;
         padding: 10px 15px;
         color: #666;
 
-        a{
+        a {
           font-size: $px14;
         }
       }
     }
 
-    div.inquiry-form{
+    div.inquiry-form {
       padding: 20px 0;
 
-      fieldset{
-        legend{
+      fieldset {
+        legend {
           display: contents;
 
           span,
-          label{
+          label {
             padding: 0 10px;
           }
-          span.required{
+
+          span.required {
             font-size: $px12;
             color: $red;
           }
         }
 
-        div.fields{
+        div.fields {
           padding: 0 20px;
           font-size: $px15;
           margin-left: 25%;
 
-          @include tb{
+          @include tb {
             margin-left: 0;
           }
 
-          textarea{
+          textarea {
             width: 100%;
             height: 70px;
           }
         }
       }
 
-      footer.send{
-      margin: 20px auto;
-      text-align: center;
+      footer.send {
+        margin: 20px auto;
+        text-align: center;
       }
     }
 
-    &[id$="results"]{
+    &[id$="results"] {
       .columns {
         .column {
           dd.wide {
@@ -3620,8 +3715,11 @@ body.general {
               caption {
                 display: none;
               }
+
               tbody {
-                tr {border: 1px solid $hgry;
+                tr {
+                  border: 1px solid $hgry;
+
                   th {
                     border: 1px solid $hgry;
                     width: 30%;
@@ -3631,6 +3729,7 @@ body.general {
                     font-weight: bold;
                     background-color: #edf9ff;
                   }
+
                   td.count {
                     border: 1px solid $hgry;
                     padding-left: 20px;
@@ -3639,10 +3738,11 @@ body.general {
               }
             }
           }
+
           dd.graph {
             margin-left: 200px;
 
-            @include tb{
+            @include tb {
               margin-left: 0px;
             }
           }
@@ -3653,7 +3753,7 @@ body.general {
 
   /* マイページ */
   &#body--login-login {
-    .yield-wrap{
+    .yield-wrap {
 
       /* ログイン */
       .member-login-box {
@@ -3719,6 +3819,7 @@ body.general {
           width: calc(100% - 80px);
           margin: 0 auto;
           order: 2;
+
           dl,
           fieldset {
             @include clear;
@@ -3967,8 +4068,8 @@ body.general {
     }
   }
 
-  &.body--mypage{
-    #ss-page-name{
+  &.body--mypage {
+    #ss-page-name {
       display: none;
     }
 
@@ -3978,7 +4079,7 @@ body.general {
       @include border-radius(15px);
       color: $red;
 
-      .wrap{
+      .wrap {
         background-color: $white;
       }
     }
@@ -3986,7 +4087,8 @@ body.general {
     #mypage-tabs {
       @include clear;
       margin-bottom: 1em;
-      border-bottom: 2px solid $blue;;
+      border-bottom: 2px solid $blue;
+      ;
 
       @include mb {
         padding: 10px 10px 0;
@@ -3998,10 +4100,10 @@ body.general {
         float: left;
         margin-left: $item-margin;
         padding: 5px 30px;
-        border-top-right-radius : 15px;
+        border-top-right-radius: 15px;
         -webkit-border-top-right-radius: 15px;
         -moz-border-radius-topright: 15px;
-        border-top-left-radius : 15px;
+        border-top-left-radius: 15px;
         -webkit-border-top-left-radius: 15px;
         -moz-border-radius-topleft: 15px;
         background-color: #ccc;
@@ -4016,7 +4118,7 @@ body.general {
         }
 
         &:hover,
-        &:focus{
+        &:focus {
           opacity: 0.75;
         }
       }
@@ -4052,20 +4154,21 @@ body.general {
     .member-profile,
     .member-my-group,
     .member-photo-page,
-    .mypage-form{
-      .columns{
+    .mypage-form {
+      .columns {
+
         .column,
         .marker-setting,
-        .colum{
+        .colum {
           clear: both;
           display: flex;
 
-          @include tb{
+          @include tb {
             flex-direction: column;
           }
 
           dt,
-          legend{
+          legend {
             width: 35%;
             margin: 10px 10px 10px 0;
             padding: 5px 15px;
@@ -4074,29 +4177,30 @@ body.general {
             @include border-radius(10px);
             float: left;
 
-            @include tb{
+            @include tb {
               width: 100%;
               float: unset;
             }
           }
-          dd{
+
+          dd {
             width: 60%;
             margin: 10px 10px 10px 0;
             padding: 5px 15px;
 
-            @include tb{
+            @include tb {
               width: 100%;
             }
           }
 
-          dd.wide{
+          dd.wide {
             display: flex;
             justify-content: left;
             width: 100%;
             justify-items: end;
             align-items: baseline;
 
-            #selected-files{
+            #selected-files {
               padding-left: 50px;
             }
           }
@@ -4291,24 +4395,24 @@ body.general {
       }
     }
 
-    footer.send{
+    footer.send {
       margin: 30px auto;
       display: flex;
       flex-direction: column;
 
       input,
-      button{
+      button {
         width: 200px;
         margin: 10px auto;
         padding: 10px 15px;
         font-weight: bold;
-        font-size: 12px;
+        font-size: $px12;
         color: $white;
         border: 1px solid $blue;
         @include border-radius(20px);
         background-color: $blue;
 
-        @include tb{
+        @include tb {
           width: 100%;
         }
 
@@ -4319,7 +4423,7 @@ body.general {
         }
       }
 
-      button[name="button"]{
+      button[name="button"] {
         color: $text;
         background-color: $hgry;
         border: 1px solid $hgry;
@@ -4354,7 +4458,7 @@ body.general {
 
   /* 記事レイアウト */
   &.body--docs,
-  &.docs__layout{
+  &.docs__layout {
     .wrap {
       #content {
 
@@ -4373,6 +4477,7 @@ body.general {
 
         #side {
           width: 25%;
+
           @include tb {
             margin-top: 40px;
             width: 100%;
@@ -4383,40 +4488,40 @@ body.general {
   }
 
   /* 移住目的別ガイド */
-  &.body--purpose-guide{
+  &.body--purpose-guide {
 
     //押し上げ用
-    #page{
+    #page {
       height: 100vh;
       background-color: #e2edee;
       display: flex;
       flex-direction: column;
 
-      footer{
+      footer {
         margin-top: auto;
       }
     }
 
-    .guide-node-form{
+    .guide-node-form {
       margin-bottom: 30px;
 
-      .question-nav{
+      .question-nav {
         font-weight: bold;
         border-bottom: 1px dashed #787878;
         padding-bottom: 10px;
       }
 
-      .question{
+      .question {
         margin: 25px;
       }
 
-      .procedure-count{
+      .procedure-count {
         font-size: $px14;
       }
 
-      .guide-nodes{
-        .guide__lists{
-          h2{
+      .guide-nodes {
+        .guide__lists {
+          h2 {
             width: 100%;
             padding: 10px 30px 10px 0;
             margin-bottom: 10px;
@@ -4430,7 +4535,7 @@ body.general {
             transition: .3s;
 
 
-            &::after{
+            &::after {
               content: "";
               position: absolute;
               top: 0;
@@ -4445,14 +4550,14 @@ body.general {
             }
           }
 
-          h2.click--on{
-            &::after{
+          h2.click--on {
+            &::after {
               content: "";
               transform: rotate(315deg);
             }
           }
 
-          .procedure__wrap{
+          .procedure__wrap {
             margin: 0 20px 10px;
             background-color: aliceblue;
             padding: 10px;
@@ -4462,21 +4567,21 @@ body.general {
             display: flex;
             flex-direction: column;
 
-            @include tb{
+            @include tb {
               margin: 0 0 10px;
             }
 
-            .procedure{
+            .procedure {
               width: 100%;
               align-self: flex-start;
 
-              dt{
+              dt {
                 margin-top: 10px;
                 font-weight: bold;
               }
             }
 
-            .close-btn{
+            .close-btn {
               display: block;
               margin: 20px 0 10px;
               padding: 5px 20px;
@@ -4489,30 +4594,33 @@ body.general {
               &:focus {
                 opacity: 0.7;
               }
-              span{
+
+              span {
                 margin-right: 5px;
               }
             }
           }
         }
 
-        .your-answers{
+        .your-answers {
           margin: 30px 0;
           padding: 8px 12px;
-          font-size: 15px;
+          font-size: $px15;
           font-weight: bold;
           background-color: #ccf0ff;
         }
+
         ul {
           li {
             margin: 10px 0;
 
-            @include tb{
+            @include tb {
               display: flex;
               flex-direction: column;
               align-items: baseline;
             }
-            span.answer-state{
+
+            span.answer-state {
               display: inline-block;
               min-width: 80px;
               padding: 5px 1em;
@@ -4521,8 +4629,9 @@ body.general {
               border-radius: 5px;
               text-align: center;
             }
-            span.value {
-            }
+
+            span.value {}
+
             span.answer-state.not-applicable {
               background-color: #e8e8e8;
             }
@@ -4530,7 +4639,7 @@ body.general {
         }
       }
 
-      .print-btn{
+      .print-btn {
         display: block;
         width: 100%;
         margin: 20px 0 15px;
@@ -4548,13 +4657,13 @@ body.general {
         }
       }
 
-      .show-result
-      ,.back-to-first{
+      .show-result,
+      .back-to-first {
         display: flex;
         flex-direction: column;
         align-items: center;
 
-        a{
+        a {
           display: block;
           text-align: center;
           width: 165px;
@@ -4576,27 +4685,27 @@ body.general {
         }
       }
 
-      footer.send{
+      footer.send {
         width: 50%;
         margin: 30px auto;
         display: flex;
         justify-content: space-around;
 
-        @include tb{
+        @include tb {
           width: 100%;
         }
 
-        input{
+        input {
           min-width: 100px;
           padding: 10px 15px;
           font-weight: bold;
-          font-size: 12px;
+          font-size: $px12;
           color: $white;
           border: 1px solid $blue;
           @include border-radius(20px);
           background-color: $blue;
 
-          @include tb{
+          @include tb {
             margin-top: 10px;
           }
 
@@ -4609,18 +4718,18 @@ body.general {
       }
     }
 
-    .guide-node-header{
-      .links{
+    .guide-node-header {
+      .links {
         display: flex;
         justify-content: space-between;
 
-        a{
+        a {
           display: inline-block;
           padding: 8px 24px 8px 40px;
           color: $text;
           font-size: $px12;
           font-weight: bold;
-          text-decoration:none;
+          text-decoration: none;
           background-color: $lyblue;
           @include border-radius(20px);
           position: relative;
@@ -4630,7 +4739,7 @@ body.general {
             background: $ygreen;
           }
 
-          &::before{
+          &::before {
             content: "";
             position: absolute;
             top: 50%;
@@ -4644,7 +4753,7 @@ body.general {
             -ms-transform: translate(0, -50%) rotate(225deg);
           }
 
-          &:nth-child(2):after{
+          &:nth-child(2):after {
             content: "";
             position: absolute;
             top: 50%;
@@ -4661,32 +4770,32 @@ body.general {
       }
     }
 
-    .progress{
+    .progress {
       margin: 30px 0;
       display: flex;
       justify-content: center;
 
-      span{
+      span {
         margin: 0 10px;
       }
 
-      .longest-length{
+      .longest-length {
         position: relative;
 
-        &::before{
+        &::before {
           position: absolute;
           content: "/";
           left: -13px;
-          top:-1px;
+          top: -1px;
         }
       }
     }
   }
 
   /* 避難所検索・情報 */
-  &.body--hinanjo{
-    .yield-wrap{
-      .map-search-settings{
+  &.body--hinanjo {
+    .yield-wrap {
+      .map-search-settings {
         fieldset {
           @include clear;
           clear: both;
@@ -4718,22 +4827,23 @@ body.general {
             }
           }
 
-          &.category{
-            .category{
+          &.category {
+            .category {
               display: flex;
               gap: 20px;
 
-              @include tb{
+              @include tb {
                 margin-top: 20px;
               }
             }
           }
 
-          div.keyword{
-            @include tb{
+          div.keyword {
+            @include tb {
               margin-top: 20px;
             }
           }
+
           .remarks ul li {
             font-size: $px14;
           }
@@ -4742,24 +4852,25 @@ body.general {
             margin-left: 200px;
           }
         }
-        footer.send{
+
+        footer.send {
           margin: 30px auto;
           display: flex;
           flex-direction: column;
 
           input,
-          button{
+          button {
             width: 200px;
             margin: 10px auto;
             padding: 10px 15px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: $px12;
             color: $white;
             border: 1px solid $blue;
             @include border-radius(20px);
             background-color: $blue;
 
-            @include tb{
+            @include tb {
               width: 100%;
             }
 
@@ -4770,7 +4881,7 @@ body.general {
             }
           }
 
-          button[name="button"]{
+          button[name="button"] {
             color: $text;
             background-color: $hgry;
             border: 1px solid $hgry;
@@ -4783,7 +4894,8 @@ body.general {
         }
       }
 
-      .map-search-index{
+      .map-search-index {
+
         h2,
         legend {
           clear: both;
@@ -4968,7 +5080,7 @@ body.general {
               border-bottom: 0;
             }
 
-            p{
+            p {
               margin-bottom: 0.5em;
             }
 
@@ -5010,7 +5122,7 @@ body.general {
           overflow: hidden;
           margin-bottom: 12px;
 
-          @include tb{
+          @include tb {
             width: 100% !important;
             height: 400px !important;
           }
@@ -5043,7 +5155,7 @@ body.general {
               padding: 4px 8px 4px 8px;
               border: 1px solid #e25b08;
               @include border-radius(2px);
-              font-size: 10px;
+              font-size: $px10;
               text-decoration: none;
               transition: .3s;
 
@@ -5057,18 +5169,19 @@ body.general {
         }
 
         .filters {
-          @include tb{
+          @include tb {
             margin-top: 20px;
           }
+
           li {
             float: left;
             padding-left: 0.5em;
 
-            &:first-of-type{
+            &:first-of-type {
               padding-left: 0;
             }
 
-            &::before{
+            &::before {
               content: none;
             }
 
@@ -5265,18 +5378,20 @@ body.general {
     }
   }
 
-  &.body--hinanjo-docs{
+  &.body--hinanjo-docs {
     .yield-wrap {
       display: flex;
+
       .body {
         order: 1;
+
         div.hinanjo__contents {
           div.hinanjo_info {
             table {
               tbody {
                 tr {
-                  th {
-                  }
+                  th {}
+
                   td {
                     div {
                       span.post-code {
@@ -5290,11 +5405,14 @@ body.general {
           }
         }
       }
+
       .categories {
         display: none !important;
       }
+
       section.map-page {
         order: 2;
+
         header {
           h2 {
             display: none;
@@ -5306,20 +5424,20 @@ body.general {
   }
 
   /* フィードバック */
-  &.body--feedback{
-    .yield-wrap{
-      .inquiry-form{
-        .columns{
-          .column{
+  &.body--feedback {
+    .yield-wrap {
+      .inquiry-form {
+        .columns {
+          .column {
             clear: both;
             display: flex;
 
-            @include tb{
+            @include tb {
               flex-direction: column;
             }
 
             dt,
-            legend{
+            legend {
               width: 35%;
               margin: 10px 10px 10px 0;
               padding: 5px 15px;
@@ -5328,52 +5446,54 @@ body.general {
               @include border-radius(10px);
               float: left;
 
-              @include tb{
+              @include tb {
                 width: 100%;
                 float: unset;
               }
             }
-            dd{
+
+            dd {
               width: 60%;
               margin: 10px 10px 10px 0;
               padding: 5px 15px;
 
-              @include tb{
+              @include tb {
                 width: 100%;
               }
             }
 
-            dd.wide{
+            dd.wide {
               display: flex;
               justify-content: left;
               width: 100%;
               justify-items: end;
               align-items: baseline;
 
-              #selected-files{
+              #selected-files {
                 padding-left: 50px;
               }
             }
           }
         }
-        footer.send{
+
+        footer.send {
           margin: 30px auto;
           display: flex;
           flex-direction: column;
 
           input,
-          button{
+          button {
             width: 200px;
             margin: 10px auto;
             padding: 10px 15px;
             font-weight: bold;
-            font-size: 12px;
+            font-size: $px12;
             color: $white;
             border: 1px solid $blue;
             @include border-radius(20px);
             background-color: $blue;
 
-            @include tb{
+            @include tb {
               width: 100%;
             }
 
@@ -5384,7 +5504,7 @@ body.general {
             }
           }
 
-          button[name="button"]{
+          button[name="button"] {
             color: $text;
             background-color: $hgry;
             border: 1px solid $hgry;
@@ -5415,36 +5535,123 @@ body#body--index {
     .ss-swiper-slide {
       width: 100%;
       margin-top: -64px;
+      position: relative;
 
       @include tb {
-        display: none;
+        margin-top: 0;
       }
 
       .ss-swiper-slide-controller {
-        button{
+        position: absolute;
+        right: 60px;
+        bottom: 20px;
+        z-index: 100;
+
+        @include tb {
+          position: relative;
+          right: 0;
+          bottom: 7px;
+          margin-top: 50px;
+          padding-right: 10px;
+          text-align: end;
+        }
+
+        button {
           padding: 5px 1.5em;
           font-weight: bold;
           background-color: #abe2fb;
           border: 4px solid $white;
           @include border-radius(13px);
 
+          @include tb {
+            padding: 5px 1em;
+            border: 2px solid $white;
+            font-size: $px14;
+          }
 
-          &[aria-pressed="true"]{
+          &[aria-pressed="true"] {
             background-color: $ygreen;
           }
 
           &:hover,
-          &:focus{
+          &:focus {
             background-color: $ygreen;
           }
         }
       }
 
-      .ss-swiper-slide-item-image{
+      .ss-swiper-slide-item-image {
         display: block;
         width: 100%;
-        height: 400px;
+        height: 550px;
         object-fit: cover;
+
+        @include tb {
+          height: auto;
+          object-fit: fill;
+        }
+      }
+
+      .slide-remark {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        position: absolute;
+        left: 100px;
+        bottom: 20px;
+
+        padding: 8px 15px;
+        background-color: #000000bd;
+        border-radius: 5px;
+
+        @include tb {
+          // left: 10px;
+          display: none;
+        }
+
+        .title {
+          margin-left: 10px;
+          max-width: 250px;
+          font-weight: bold;
+          color: $white;
+        }
+
+        .remark {
+          padding: 0px 10px;
+          height: fit-content;
+          font-weight: bold;
+          color: #555;
+          background-color: $white;
+          border-radius: 10px;
+          white-space: nowrap;
+        }
+      }
+
+      .swiper-pagination {
+        bottom: 20px;
+
+        @include tb {
+          text-align: center;
+          bottom: 50px;
+        }
+
+        .swiper-pagination-bullet {
+          width: 25px;
+          height: 25px;
+          border: 4px solid #333;
+          background-color: $white;
+          opacity: 1;
+
+          @include tb {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #333;
+          }
+        }
+
+        .swiper-pagination-bullet-active {
+          background-color: #007AFF;
+        }
       }
     }
   }
@@ -5452,39 +5659,39 @@ body#body--index {
 
 /* pages - body.category-top　カテゴリートップページ
 ---------------------------------------------------------- */
-body.category-top{
+body.category-top {
   background-color: $bg;
 
-  #page{
-    .crumbs{
+  #page {
+    .crumbs {
       padding-left: 10px;
     }
 
-    #wrap{
+    #wrap {
       margin: 20px auto;
       width: 1000px;
 
-      @include tb{
+      @include tb {
         margin: 120px auto;
         width: 100%;
       }
 
-      #content{
-        overflow : hidden
+      #content {
+        overflow: hidden
       }
 
-      #main{
+      #main {
         padding: 20px 30px 0 0;
         width: 75%;
         float: left;
 
-        @include tb{
+        @include tb {
           float: none;
           width: 100%;
           padding: 10px;
         }
 
-        h1{
+        h1 {
           display: inline-block;
           width: 100%;
           padding: 20px 25px;
@@ -5495,12 +5702,12 @@ body.category-top{
           @include border-radius(20px);
         }
 
-        .whats-new{
+        .whats-new {
           margin-top: 30px;
           background-color: $white;
           @include border-radius(20px);
 
-          &__header-title{
+          &__header-title {
             padding: 20px 25px;
             font-size: $px18;
             font-weight: bold;
@@ -5508,35 +5715,35 @@ body.category-top{
             @include border-radius(20px 20px 0 0);
           }
 
-          &__list-wrap{
+          &__list-wrap {
             padding: 20px 25px;
 
-            article{
+            article {
               padding: 10px 0;
               border-bottom: 1px dashed $black;
 
-              header{
+              header {
                 display: flex;
                 align-items: center;
 
-                @include tb{
+                @include tb {
                   display: block;
                 }
 
-                time{
+                time {
                   font-size: $px12;
                 }
 
-                h2{
+                h2 {
                   padding-left: 50px;
                   font-size: $px14;
                   font-weight: bold;
 
-                  @include tb{
+                  @include tb {
                     padding-left: 0;
                   }
 
-                  a:hover{
+                  a:hover {
                     text-decoration: underline;
                   }
                 }
@@ -5544,18 +5751,18 @@ body.category-top{
             }
           }
 
-          &__feed{
+          &__feed {
             padding-top: 10px;
             text-align: right;
 
-            a{
+            a {
               padding-right: 20px;
               color: #585c5f;
               font-weight: bold;
-              font-size: 13px;
+              font-size: $px13;
               position: relative;
 
-              &::after{
+              &::after {
                 content: '';
                 position: absolute;
                 top: 7px;
@@ -5566,12 +5773,13 @@ body.category-top{
                 border-color: transparent transparent transparent #585c5f;
               }
 
-              a:hover{
+              &:hover,
+              &:focus {
                 text-decoration: underline;
               }
             }
 
-            a.rss::before{
+            a.rss::before {
               content: "";
               position: absolute;
               top: 4px;
@@ -5584,7 +5792,7 @@ body.category-top{
           }
         }
 
-        .yield-wrap{
+        .yield-wrap {
           display: inline-block;
           width: 100%;
           height: 100%;
@@ -5593,50 +5801,52 @@ body.category-top{
           background-color: $white;
           @include border-radius(20px);
 
-          .category-nodes{
+          .category-nodes {
             display: inline-block;
             width: 100%;
 
-            article{
+            article {
               width: 46%;
               min-height: 150px;
               margin-left: 20px;
               border-bottom: 1px solid $blue;
               float: left;
 
-              @include tb{
+              @include tb {
                 width: 100%;
                 margin-left: 0;
                 min-height: 0;
               }
 
-              h2{
+              h2 {
                 padding: 10px 0 10px 35px;
                 font-size: $px20;
                 font-weight: bold;
                 background-position: 12px 60%;
                 background-size: 30px;
 
-                @include tb{
+                @include tb {
                   padding: 10px 0;
                   font-size: $px16;
                   font-weight: 400;
                 }
 
-                a{
+                a {
                   display: block;
                   width: 100%;
                   position: relative;
-                }
-                a:hover{
-                  text-decoration: underline;
+
+                  &:hover,
+                  &:focus {
+                    text-decoration: underline;
+                  }
                 }
 
-                @include tb{
-                  a::after{
+                @include tb {
+                  a::after {
                     position: absolute;
                     content: '';
-                    top:14px;
+                    top: 14px;
                     right: 15px;
                     width: 0;
                     height: 0;
@@ -5646,7 +5856,7 @@ body.category-top{
                   }
                 }
 
-                a::before{
+                a::before {
                   content: url(/img/ic-folder.png);
                   background-size: 30px;
                   transform: scale(0.5);
@@ -5654,17 +5864,18 @@ body.category-top{
                   top: -9px;
                   left: -39px;
 
-                  @include tb{
+                  @include tb {
                     display: none;
                   }
                 }
               }
-              p{
+
+              p {
                 display: inline-block;
                 padding: 0 0 10px 35px;
                 font-size: $px14;
 
-                @include tb{
+                @include tb {
                   display: none;
                 }
               }
@@ -5674,25 +5885,25 @@ body.category-top{
       }
     }
 
-    #side{
+    #side {
       padding-top: 20px;
       width: 25%;
       float: left;
 
-      @include tb{
+      @include tb {
         float: none;
         width: 100%;
       }
 
-      .relation-link{
+      .relation-link {
         margin: 0 auto;
 
-        @include tb{
+        @include tb {
           width: 100%;
           padding: 0 10px;
         }
 
-        &__title{
+        &__title {
           width: 100%;
           margin: 0 auto;
           padding: 20px;
@@ -5703,22 +5914,22 @@ body.category-top{
           @include border-radius(15px);
         }
 
-        .ss-image-box-item-list{
+        .ss-image-box-item-list {
           padding: 20px 0 0;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: space-between;
 
-          .ss-image-box-item{
+          .ss-image-box-item {
             width: 95%;
 
-            @include tb{
+            @include tb {
               max-width: 300px;
             }
 
-            a{
-              img{
+            a {
+              img {
                 width: 100%;
               }
             }
@@ -5726,47 +5937,47 @@ body.category-top{
         }
       }
 
-      .mod-menu--lifeevent{
+      .mod-menu--lifeevent {
         width: 250px;
         margin-top: 30px;
 
-        @include tb{
+        @include tb {
           width: 100%;
           padding: 0 10px;
         }
 
-        .mod-menu__header{
+        .mod-menu__header {
           width: 80%;
           margin: 0 auto;
           padding: 6px 10px 0;
           text-align: center;
           background-color: #96d7ff;
-          border-top-right-radius : 20px;
+          border-top-right-radius: 20px;
           -webkit-top-bottom-right-radius: 20px;
           -moz-border-radius-topright: 20px;
-          border-top-left-radius : 20px;
+          border-top-left-radius: 20px;
           -webkit-border-top-left-radius: 20px;
           -moz-border-radius-topleft: 20px;
 
-          &-title{
-            font-size: 15px;
+          &-title {
+            font-size: $px15;
             font-weight: bold;
           }
         }
 
-        .mod-menu__list-wrap{
+        .mod-menu__list-wrap {
           padding: 10px;
           background-color: $white;
           border: 5px solid #96d7ff;
           @include border-radius(20px);
 
-          .mod-menu__list{
+          .mod-menu__list {
             display: flex;
-            flex-wrap:wrap
+            flex-wrap: wrap
           }
         }
 
-        .mod-menu__item{
+        .mod-menu__item {
           display: block;
           width: 49%;
           height: 100px;
@@ -5775,7 +5986,7 @@ body.category-top{
           padding: 0 5px 5px;
 
 
-          &:nth-child(2n+1)::after{
+          &:nth-child(2n+1)::after {
             width: 1px;
             position: absolute;
             content: "";
@@ -5787,11 +5998,11 @@ body.category-top{
 
           /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
           &:last-child,
-          &:nth-last-child(2):nth-child(odd){
+          &:nth-last-child(2):nth-child(odd) {
             border-bottom: none;
           }
 
-          .mod-menu__link{
+          .mod-menu__link {
             display: block;
             width: 100%;
             height: 95%;
@@ -5810,107 +6021,108 @@ body.category-top{
               opacity: 1;
             }
 
-            .mod-menu__icon{
+            .mod-menu__icon {
               width: 90px;
             }
-            .mod-menu__menu-name{
-              font-size: 13px;
+
+            .mod-menu__menu-name {
+              font-size: $px13;
               font-weight: bold;
               color: $text;
             }
           }
 
-          &--kekkon{
-            .mod-menu__icon{
+          &--kekkon {
+            .mod-menu__icon {
               @include submenu-ic(icon_kekkon#{'.png'});
             }
           }
 
-          &--ninshin{
-            .mod-menu__icon{
+          &--ninshin {
+            .mod-menu__icon {
               @include submenu-ic(icon_ninshin#{'.png'});
             }
           }
 
-          &--kosodate{
-            .mod-menu__icon{
+          &--kosodate {
+            .mod-menu__icon {
               @include submenu-ic(icon_kosodate#{'.png'});
             }
           }
 
-          &--kyoiku{
-            .mod-menu__icon{
+          &--kyoiku {
+            .mod-menu__icon {
               @include submenu-ic(icon_kyoiku#{'.png'});
             }
           }
 
-          &--hikkoshi{
-            .mod-menu__icon{
+          &--hikkoshi {
+            .mod-menu__icon {
               @include submenu-ic(icon_hikkoshi#{'.png'});
             }
           }
 
-          &--shushoku{
-            .mod-menu__icon{
+          &--shushoku {
+            .mod-menu__icon {
               @include submenu-ic(icon_shushoku#{'.png'});
             }
           }
 
-          &--fukushi{
-            .mod-menu__icon{
+          &--fukushi {
+            .mod-menu__icon {
               @include submenu-ic(icon_fukushi#{'.png'});
             }
           }
 
-          &--okuyami{
-            .mod-menu__icon{
+          &--okuyami {
+            .mod-menu__icon {
               @include submenu-ic(icon_okuyami#{'.png'});
             }
           }
         }
       }
 
-      .sec-cmn-top--online{
+      .sec-cmn-top--online {
         width: 250px;
         margin-top: 30px;
 
-        @include tb{
+        @include tb {
           width: 100%;
           padding: 0 10px;
         }
 
-        .sec-cmn-top__header{
+        .sec-cmn-top__header {
           width: 80%;
           margin: 0 auto;
           padding: 6px 10px 3px;
           text-align: center;
           background-color: $lygreen;
-          border-top-right-radius : 20px;
+          border-top-right-radius: 20px;
           -webkit-top-bottom-right-radius: 20px;
           -moz-border-radius-topright: 20px;
-          border-top-left-radius : 20px;
+          border-top-left-radius: 20px;
           -webkit-border-top-left-radius: 20px;
           -moz-border-radius-topleft: 20px;
 
-          &-title{
-            font-size: 15px;
+          &-title {
+            font-size: $px15;
             font-weight: bold;
           }
         }
 
-        .sec-cmn-top__list-wrap{
+        .sec-cmn-top__list-wrap {
           padding: 10px;
           background-color: $lygreen;
           border: 5px solid $white;
           @include border-radius(20px);
 
-          .sec-cmn-top__list{
+          .sec-cmn-top__list {
             display: flex;
-            flex-wrap:wrap
+            flex-wrap: wrap
           }
         }
 
-        .sec-cmn-top__item{
+        .sec-cmn-top__item {
           display: block;
           width: 49%;
           height: 100px;
@@ -5919,7 +6131,7 @@ body.category-top{
           padding-bottom: 5px;
 
 
-          &:nth-child(2n+1)::after{
+          &:nth-child(2n+1)::after {
             width: 1px;
             position: absolute;
             content: "";
@@ -5927,16 +6139,15 @@ body.category-top{
             right: 0;
             height: calc(100% - 30%);
             background-color: $white
-
           }
 
           /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
           &:last-child,
-          &:nth-last-child(2):nth-child(odd){
+          &:nth-last-child(2):nth-child(odd) {
             border-bottom: none;
           }
 
-          a{
+          a {
             display: block;
             width: 90%;
             height: 95%;
@@ -5965,16 +6176,17 @@ body.category-top{
       }
     }
   }
-  .footer{
+
+  .footer {
     margin-top: 80px;
   }
 
-  &.body--guide{
-    .yield-wrap{
+  &.body--guide {
+    .yield-wrap {
 
-      .category-nodes{
+      .category-nodes {
 
-        article{
+        article {
           min-height: 0px !important;
         }
       }
@@ -5984,43 +6196,43 @@ body.category-top{
 
 /* pages - body.category-middle-layer　
 ---------------------------------------------------------- */
-body.category-middle-layer{
+body.category-middle-layer {
   background-color: $bg;
 
-  #page{
-    .crumbs{
+  #page {
+    .crumbs {
       padding-left: 10px;
     }
 
-    #wrap{
+    #wrap {
       margin: 20px auto;
       width: 1000px;
 
-      @include tb{
+      @include tb {
         margin: 120px auto;
         width: 100%;
       }
 
-      #content{
-        overflow : hidden
+      #content {
+        overflow: hidden
       }
 
-      #main{
+      #main {
         padding: 20px 30px 0 0;
         width: 75%;
         float: left;
 
-        @include tb{
+        @include tb {
           float: none;
           width: 100%;
           padding: 10px;
         }
 
-        .main-inner{
+        .main-inner {
           background-color: $white;
           @include border-radius(20px);
 
-          .cat-header__title{
+          .cat-header__title {
             display: inline-block;
             width: 100%;
             padding: 20px 25px;
@@ -6032,7 +6244,8 @@ body.category-middle-layer{
           }
 
           .ss-swiper-slide-controller {
-            button{
+
+            button {
               padding: 5px 1.5em;
               font-weight: bold;
               background-color: #abe2fb;
@@ -6040,50 +6253,50 @@ body.category-middle-layer{
               @include border-radius(13px);
 
               &:hover,
-              &:focus{
+              &:focus {
                 background-color: $ygreen;
               }
             }
           }
 
           .category-nodes,
-          .cms-nodes
-          {
-            .deepest-catelist-wrap{
+          .cms-nodes {
+            .deepest-catelist-wrap {
               width: 100%;
             }
 
-            .deepest-catelist{
+            .deepest-catelist {
 
-              &__list{
+              &__list {
                 padding: 20px 20px 20px 0;
                 display: flow-root;
                 list-style: none;
 
-                .deepest-catelist__item{
+                .deepest-catelist__item {
                   width: 46%;
                   margin-left: 20px;
                   float: left;
 
                   border-bottom: $text dashed 1px;
 
-                  @include tb{
+                  @include tb {
                     width: 94%;
 
                     /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
                     &:last-child,
-                    &:nth-last-child(2):nth-child(odd){
+                    &:nth-last-child(2):nth-child(odd) {
                       border-bottom: none;
                     }
                   }
 
-                  a{
+                  a {
                     display: block;
                     width: 100%;
                     padding: 10px 10px 10px 35px;
                     position: relative;
                   }
-                  a::before{
+
+                  a::before {
                     content: url(/img/ic-folder.png);
                     background-size: 30px;
                     transform: scale(0.5);
@@ -6096,53 +6309,54 @@ body.category-middle-layer{
             }
           }
 
-          .yield-wrap{
+          .yield-wrap {
             margin-top: 20px;
             padding-bottom: 20px;
             border-top: 2px solid $blue;
 
-            .page{
-              .body{
+            .page {
+              .body {
                 margin: 20px;
                 @include docs;
 
-                video{
+                video {
                   max-width: 100%;
                 }
               }
             }
 
-            .category-pages{
+            .category-pages {
               padding: 20px 20px 20px 0;
               display: flex;
               flex-wrap: wrap;
 
-              article{
+              article {
                 width: 46%;
                 margin-left: 20px;
                 border-bottom: $text dashed 1px;
 
-                @include tb{
+                @include tb {
                   width: 94%;
 
                   /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
                   &:last-child,
-                  &:nth-last-child(2):nth-child(odd){
+                  &:nth-last-child(2):nth-child(odd) {
                     border-bottom: none;
                   }
                 }
 
-                time{
+                time {
                   display: none;
                 }
 
-                a{
+                a {
                   display: block;
                   width: 100%;
                   padding: 10px 10px 10px 35px;
                   position: relative;
                 }
-                a::before{
+
+                a::before {
                   content: url(/img/ic-file.png);
                   background-size: 30px;
                   transform: scale(0.5);
@@ -6153,40 +6367,41 @@ body.category-middle-layer{
               }
             }
 
-            .cms-group-pages{
-                article{
+            .cms-group-pages {
+              article {
                 border-bottom: $text dashed 1px;
                 margin: 20px;
 
-                @include tb{
+                @include tb {
 
                   /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
                   &:last-child,
-                  &:nth-last-child(2):nth-child(odd){
+                  &:nth-last-child(2):nth-child(odd) {
                     border-bottom: none;
                   }
                 }
-                header{
+
+                header {
                   display: flex;
                   align-items: center;
                   margin: 10px 0;
 
-                  @include tb{
+                  @include tb {
                     flex-direction: column;
                     align-items: flex-start;
                   }
 
-                  time{
+                  time {
                     font-size: $px12;
                   }
 
-                  a{
+                  a {
                     display: block;
                     padding-left: 50px;
                     font-size: $px14;
                     font-weight: bold;
 
-                    @include tb{
+                    @include tb {
                       padding-left: 0px;
                     }
                   }
@@ -6197,23 +6412,23 @@ body.category-middle-layer{
         }
       }
 
-      #side{
+      #side {
         padding-top: 20px;
         width: 25%;
         float: left;
 
-        @include tb{
+        @include tb {
           float: none;
           width: 100%;
         }
 
-        .sub-catelist{
-          @include tb{
+        .sub-catelist {
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          &__header{
+          &__header {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
@@ -6224,41 +6439,42 @@ body.category-middle-layer{
             @include border-radius(15px);
           }
 
-          &__list{
+          &__list {
             width: 100%;
             margin-top: 15px;
             background-color: $white;
             list-style-type: none;
             @include border-radius(20px);
 
-            .sub-catelist__item{
+            .sub-catelist__item {
               border-bottom: 1px solid $blue;
 
-              &:first-child{
+              &:first-child {
                 padding-top: 10px;
                 @include border-radius-tr(20px);
                 @include border-radius-tl(20px);
               }
 
-              &:last-child{
+              &:last-child {
                 padding-bottom: 10px;
                 @include border-radius-br(20px);
                 @include border-radius-bl(20px);
                 border-bottom: none;
               }
 
-              &--current{
+              &--current {
                 background-color: #b0e8ff;
               }
 
-              span{
+              span {
                 display: block;
                 width: 100%;
                 padding: 10px 20px;
                 font-size: $px15;
                 font-weight: bold;
               }
-              a{
+
+              a {
                 display: block;
                 width: 100%;
                 padding: 10px 20px;
@@ -6275,16 +6491,16 @@ body.category-middle-layer{
           }
         }
 
-        .relation-link{
+        .relation-link {
           margin: 0 auto;
           margin-top: 30px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          &__title{
+          &__title {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
@@ -6295,22 +6511,22 @@ body.category-middle-layer{
             @include border-radius(15px);
           }
 
-          .ss-image-box-item-list{
+          .ss-image-box-item-list {
             padding: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
 
-            .ss-image-box-item{
+            .ss-image-box-item {
               width: 95%;
 
-              @include tb{
+              @include tb {
                 max-width: 300px;
               }
 
-              a{
-                img{
+              a {
+                img {
                   width: 100%;
                 }
               }
@@ -6318,47 +6534,47 @@ body.category-middle-layer{
           }
         }
 
-        .mod-menu--lifeevent{
+        .mod-menu--lifeevent {
           width: 250px;
           margin-top: 30px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          .mod-menu__header{
+          .mod-menu__header {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 0;
             text-align: center;
             background-color: #96d7ff;
-            border-top-right-radius : 20px;
+            border-top-right-radius: 20px;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius : 20px;
+            border-top-left-radius: 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
-            &-title{
-              font-size: 15px;
+            &-title {
+              font-size: $px15;
               font-weight: bold;
             }
           }
 
-          .mod-menu__list-wrap{
+          .mod-menu__list-wrap {
             padding: 10px;
             background-color: $white;
             border: 5px solid #96d7ff;
             @include border-radius(20px);
 
-            .mod-menu__list{
+            .mod-menu__list {
               display: flex;
-              flex-wrap:wrap
+              flex-wrap: wrap
             }
           }
 
-          .mod-menu__item{
+          .mod-menu__item {
             display: block;
             width: 49%;
             height: 100px;
@@ -6367,7 +6583,7 @@ body.category-middle-layer{
             padding: 0 5px 5px;
 
 
-            &:nth-child(2n+1)::after{
+            &:nth-child(2n+1)::after {
               width: 1px;
               position: absolute;
               content: "";
@@ -6379,11 +6595,11 @@ body.category-middle-layer{
 
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
-            &:nth-last-child(2):nth-child(odd){
+            &:nth-last-child(2):nth-child(odd) {
               border-bottom: none;
             }
 
-            .mod-menu__link{
+            .mod-menu__link {
               display: block;
               width: 100%;
               height: 95%;
@@ -6402,114 +6618,115 @@ body.category-middle-layer{
                 opacity: 1;
               }
 
-              .mod-menu__icon{
+              .mod-menu__icon {
                 width: 90px;
               }
-              .mod-menu__menu-name{
-                font-size: 13px;
+
+              .mod-menu__menu-name {
+                font-size: $px13;
                 font-weight: bold;
                 color: $text;
               }
             }
 
-            &.current{
-              .mod-menu__link{
+            &.current {
+              .mod-menu__link {
                 background-color: rgba(0, 0, 0, 0.1);
                 pointer-events: none;
               }
             }
 
-            &--kekkon{
-              .mod-menu__icon{
+            &--kekkon {
+              .mod-menu__icon {
                 @include submenu-ic(icon_kekkon#{'.png'});
               }
             }
 
-            &--ninshin{
-              .mod-menu__icon{
+            &--ninshin {
+              .mod-menu__icon {
                 @include submenu-ic(icon_ninshin#{'.png'});
               }
             }
 
-            &--kosodate{
-              .mod-menu__icon{
+            &--kosodate {
+              .mod-menu__icon {
                 @include submenu-ic(icon_kosodate#{'.png'});
               }
             }
 
-            &--kyoiku{
-              .mod-menu__icon{
+            &--kyoiku {
+              .mod-menu__icon {
                 @include submenu-ic(icon_kyoiku#{'.png'});
               }
             }
 
-            &--hikkoshi{
-              .mod-menu__icon{
+            &--hikkoshi {
+              .mod-menu__icon {
                 @include submenu-ic(icon_hikkoshi#{'.png'});
               }
             }
 
-            &--shushoku{
-              .mod-menu__icon{
+            &--shushoku {
+              .mod-menu__icon {
                 @include submenu-ic(icon_shushoku#{'.png'});
               }
             }
 
-            &--fukushi{
-              .mod-menu__icon{
+            &--fukushi {
+              .mod-menu__icon {
                 @include submenu-ic(icon_fukushi#{'.png'});
               }
             }
 
-            &--okuyami{
-              .mod-menu__icon{
+            &--okuyami {
+              .mod-menu__icon {
                 @include submenu-ic(icon_okuyami#{'.png'});
               }
             }
           }
         }
 
-        .sec-cmn-top--online{
+        .sec-cmn-top--online {
           width: 250px;
           margin-top: 30px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          .sec-cmn-top__header{
+          .sec-cmn-top__header {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 3px;
             text-align: center;
             background-color: $lygreen;
-            border-top-right-radius : 20px;
+            border-top-right-radius: 20px;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius : 20px;
+            border-top-left-radius: 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
-            &-title{
-              font-size: 15px;
+            &-title {
+              font-size: $px15;
               font-weight: bold;
             }
           }
 
-          .sec-cmn-top__list-wrap{
+          .sec-cmn-top__list-wrap {
             padding: 10px;
             background-color: $lygreen;
             border: 5px solid $white;
             @include border-radius(20px);
 
-            .sec-cmn-top__list{
+            .sec-cmn-top__list {
               display: flex;
-              flex-wrap:wrap
+              flex-wrap: wrap
             }
           }
 
-          .sec-cmn-top__item{
+          .sec-cmn-top__item {
             display: block;
             width: 49%;
             height: 100px;
@@ -6518,7 +6735,7 @@ body.category-middle-layer{
             padding-bottom: 5px;
 
 
-            &:nth-child(2n+1)::after{
+            &:nth-child(2n+1)::after {
               width: 1px;
               position: absolute;
               content: "";
@@ -6526,16 +6743,15 @@ body.category-middle-layer{
               right: 0;
               height: calc(100% - 30%);
               background-color: $white
-
             }
 
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
-            &:nth-last-child(2):nth-child(odd){
+            &:nth-last-child(2):nth-child(odd) {
               border-bottom: none;
             }
 
-            a{
+            a {
               display: block;
               width: 90%;
               height: 95%;
@@ -6566,42 +6782,42 @@ body.category-middle-layer{
     }
   }
 
-  .footer{
+  .footer {
     margin-top: 80px;
   }
 
   // 市の概要　クリッカブルマップ
-  &.body--shisei-gaiyo{
-    .yield-wrap{
+  &.body--shisei-gaiyo {
+    .yield-wrap {
       border-top: none !important;
     }
 
-    .image-map-pages{
+    .image-map-pages {
       text-align: center;
 
-      img{
+      img {
         width: 500px;
         height: auto;
 
-        @include tb{
+        @include tb {
           width: 70%;
         }
       }
 
-      .supplement-guide-list{
+      .supplement-guide-list {
         display: none;
       }
     }
   }
 
-  &.body--map-clickable{
-    .image-map-pages{
+  &.body--map-clickable {
+    .image-map-pages {
       text-align: center;
 
-      img{
+      img {
         width: 500px;
 
-        @include tb{
+        @include tb {
           width: 70%;
         }
       }
@@ -6611,22 +6827,22 @@ body.category-middle-layer{
 
 body.category-middle-layer.kanko-info-layer,
 body.category-middle-layer.kanko-info-under-layer,
-body.category-middle-layer.body--kanko-info-blog{
-  .yield-wrap{
+body.category-middle-layer.body--kanko-info-blog {
+  .yield-wrap {
     border-top: none !important;
   }
 
-  #side{
+  #side {
     display: flex;
     flex-direction: column;
 
-    @include tb{
+    @include tb {
       width: 90% !important;
       margin: auto;
     }
 
     a.login,
-    a.registration{
+    a.registration {
       @include btn-blue;
       display: block;
       text-align: center;
@@ -6634,7 +6850,7 @@ body.category-middle-layer.body--kanko-info-blog{
       margin: 0 auto;
     }
 
-    a.registration{
+    a.registration {
       margin-top: 20px;
     }
 
@@ -6642,22 +6858,24 @@ body.category-middle-layer.body--kanko-info-blog{
     #side-blog {
       width: 100%;
       margin-top: 30px;
+
       header {
         padding: 6px 0;
         text-align: center;
         background-color: #96d7ff;
-        border-top-left-radius : 20px;
+        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
-        border-top-right-radius : 20px;
+        border-top-right-radius: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
 
-        h2{
+        h2 {
           font-size: $px15;
           font-weight: bold;
         }
       }
+
       ul {
         padding: 10px 10px 20px;
         background-color: $white;
@@ -6667,7 +6885,7 @@ body.category-middle-layer.body--kanko-info-blog{
           border-bottom: $text dashed 1px;
           margin-bottom: 10px;
 
-          &:last-of-type{
+          &:last-of-type {
             margin-bottom: 0px;
           }
 
@@ -6688,6 +6906,7 @@ body.category-middle-layer.body--kanko-info-blog{
           }
         }
       }
+
       div.more {
         padding: 0 10px 10px;
         background-color: $white;
@@ -6697,6 +6916,7 @@ body.category-middle-layer.body--kanko-info-blog{
         border-bottom-right-radius: 20px;
         -webkit-border-bottom-right-radius: 20px;
         -moz-border-radius-bottomright: 20px;
+
         a {
           display: block;
           text-align: right;
@@ -6706,7 +6926,7 @@ body.category-middle-layer.body--kanko-info-blog{
           font-size: $px12;
           position: relative;
 
-          &::after{
+          &::after {
             content: '';
             position: absolute;
             top: 8.5px;
@@ -6720,19 +6940,21 @@ body.category-middle-layer.body--kanko-info-blog{
       }
     }
 
-    #side-blog{
+    #side-blog {
       margin-top: 30px;
 
-      ul{
-        li{
-          time{
+      ul {
+        li {
+          time {
             font-size: $px14;
             font-weight: bold;
           }
+
           a {
             text-align: left;
           }
-          div{
+
+          div {
             text-align: right;
             font-size: $px14;
           }
@@ -6747,22 +6969,23 @@ body.category-middle-layer.body--kanko-info-blog{
 }
 
 body.category-middle-layer.kanko-info-under-layer,
-body.category-middle-layer.body--kanko-info-blog{
-  .member-photos{
+body.category-middle-layer.body--kanko-info-blog {
+  .member-photos {
     padding: 0 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 20px 10px;
 
-    .title{
+    .title {
       display: none;
     }
   }
 
-  .member-blogs{
+  .member-blogs {
     padding: 0 20px;
-    .blog{
+
+    .blog {
       padding-bottom: 10px;
       margin-bottom: 10px;
       display: flex;
@@ -6770,7 +6993,7 @@ body.category-middle-layer.body--kanko-info-blog{
       gap: 20px 10px;
       border-bottom: #231815 dashed 1px;
 
-      a{
+      a {
         text-decoration: none;
 
         &:hover,
@@ -6781,21 +7004,23 @@ body.category-middle-layer.body--kanko-info-blog{
     }
   }
 
-  .member-blog-pages{
+  .member-blog-pages {
     .blog {
       @include docs;
-      video{
+
+      video {
         max-width: 100%;
       }
     }
   }
 
-  .blog-center{
+  .blog-center {
     padding: 0 20px;
 
     .blog {
       @include docs;
-      video{
+
+      video {
         max-width: 100%;
       }
     }
@@ -6804,10 +7029,11 @@ body.category-middle-layer.body--kanko-info-blog{
   .photo-body,
   .photo-categories,
   .photo-locations,
-  .map-page{
+  .map-page {
     padding: 0 20px;
     @include docs;
-    video{
+
+    video {
       max-width: 100%;
     }
   }
@@ -6819,7 +7045,7 @@ body.category-middle-layer.body--kanko-info-blog{
     gap: 20px;
     border-top: #231815 dashed 1px;
 
-    @include tb{
+    @include tb {
       flex-direction: column;
     }
 
@@ -6829,7 +7055,7 @@ body.category-middle-layer.body--kanko-info-blog{
       background-color: #fcf8d7;
       @include border-radius(20px);
 
-      @include tb{
+      @include tb {
         width: 100%;
       }
 
@@ -6837,9 +7063,11 @@ body.category-middle-layer.body--kanko-info-blog{
         img.thumb {
           float: left;
         }
+
         header {
           display: inline-block;
           padding-left: 20px;
+
           h2 {
             a {
               text-decoration: none;
@@ -6851,18 +7079,20 @@ body.category-middle-layer.body--kanko-info-blog{
             }
           }
         }
+
         .contributor {
           clear: both;
         }
       }
     }
+
     .blog-genres {
       width: 40%;
       padding: 20px 10px;
       background-color: #fcf8d7;
       @include border-radius(20px);
 
-      @include tb{
+      @include tb {
         width: 100%;
       }
 
@@ -6870,6 +7100,7 @@ body.category-middle-layer.body--kanko-info-blog{
         h2 {
           font-weight: bold;
         }
+
         ul {
           li {
             a {
@@ -6890,43 +7121,43 @@ body.category-middle-layer.body--kanko-info-blog{
 
 /* pages - body.docs--list　記事一覧ページ
 ---------------------------------------------------------- */
-body.docs--list{
+body.docs--list {
   background-color: $bg;
 
-  #page{
-    .crumbs{
+  #page {
+    .crumbs {
       padding-left: 10px;
     }
 
-    #wrap{
+    #wrap {
       margin: 20px auto;
       width: 1000px;
 
-      @include tb{
+      @include tb {
         margin: 120px auto;
         width: 100%;
       }
 
-      #content{
-        overflow : hidden
+      #content {
+        overflow: hidden
       }
 
-      #main{
+      #main {
         padding: 20px 30px 0 0;
         width: 75%;
         float: left;
 
-        @include tb{
+        @include tb {
           float: none;
           width: 100%;
           padding: 10px;
         }
 
-        .main-inner{
+        .main-inner {
           background-color: $white;
           @include border-radius(20px);
 
-          .cat-header__title{
+          .cat-header__title {
             display: inline-block;
             width: 100%;
             padding: 20px 25px;
@@ -6938,53 +7169,53 @@ body.docs--list{
           }
 
 
-          .yield-wrap{
+          .yield-wrap {
             margin-top: 20px;
             padding-bottom: 20px;
 
-            .pages{
+            .pages {
               padding: 20px;
 
-              article{
+              article {
                 width: 100%;
 
                 border-bottom: $text dashed 1px;
 
-                @include tb{
+                @include tb {
 
                   /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
-                  &:last-child{
+                  &:last-child {
                     border-bottom: none;
                   }
                 }
 
-                header{
+                header {
                   display: flex;
                   align-items: center;
                   margin: 10px 0;
 
-                  @include tb{
+                  @include tb {
                     flex-direction: column;
                     align-items: flex-start;
                   }
 
-                  time{
+                  time {
                     font-size: $px12;
                   }
 
-                  a{
+                  a {
                     display: block;
                     padding-left: 50px;
                     font-size: $px14;
                     font-weight: bold;
 
-                    @include tb{
+                    @include tb {
                       padding-left: 0px;
                     }
                   }
                 }
 
-                video{
+                video {
                   max-width: 100%;
                 }
               }
@@ -6993,23 +7224,23 @@ body.docs--list{
         }
       }
 
-      #side{
+      #side {
         padding-top: 20px;
         width: 25%;
         float: left;
 
-        @include tb{
+        @include tb {
           float: none;
           width: 100%;
         }
 
-        .sub-catelist{
-          @include tb{
+        .sub-catelist {
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          &__header{
+          &__header {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
@@ -7021,41 +7252,42 @@ body.docs--list{
 
           }
 
-          &__list{
+          &__list {
             width: 100%;
             margin-top: 15px;
             background-color: $white;
             list-style-type: none;
             @include border-radius(20px);
 
-            .sub-catelist__item{
+            .sub-catelist__item {
               border-bottom: 1px solid $blue;
 
-              &:first-child{
+              &:first-child {
                 padding-top: 10px;
                 @include border-radius-tr(20px);
                 @include border-radius-tl(20px);
               }
 
-              &:last-child{
+              &:last-child {
                 padding-bottom: 10px;
                 @include border-radius-br(20px);
                 @include border-radius-bl(20px);
                 border-bottom: none;
               }
 
-              &--current{
+              &--current {
                 background-color: #b0e8ff;
               }
 
-              span{
+              span {
                 display: block;
                 width: 100%;
                 padding: 10px 20px;
                 font-size: $px15;
                 font-weight: bold;
               }
-              a{
+
+              a {
                 display: block;
                 width: 100%;
                 padding: 10px 20px;
@@ -7072,16 +7304,16 @@ body.docs--list{
           }
         }
 
-        .relation-link{
+        .relation-link {
           margin: 0 auto;
           margin-top: 30px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          &__title{
+          &__title {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
@@ -7092,22 +7324,22 @@ body.docs--list{
             @include border-radius(15px);
           }
 
-          .ss-image-box-item-list{
+          .ss-image-box-item-list {
             padding: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
 
-            .ss-image-box-item{
+            .ss-image-box-item {
               width: 95%;
 
-              @include tb{
+              @include tb {
                 max-width: 300px;
               }
 
-              a{
-                img{
+              a {
+                img {
                   width: 100%;
                 }
               }
@@ -7115,47 +7347,47 @@ body.docs--list{
           }
         }
 
-        .mod-menu--lifeevent{
+        .mod-menu--lifeevent {
           width: 250px;
           margin-top: 30px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          .mod-menu__header{
+          .mod-menu__header {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 0;
             text-align: center;
             background-color: #96d7ff;
-            border-top-right-radius : 20px;
+            border-top-right-radius: 20px;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius : 20px;
+            border-top-left-radius: 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
-            &-title{
-              font-size: 15px;
+            &-title {
+              font-size: $px15;
               font-weight: bold;
             }
           }
 
-          .mod-menu__list-wrap{
+          .mod-menu__list-wrap {
             padding: 10px;
             background-color: $white;
             border: 5px solid #96d7ff;
             @include border-radius(20px);
 
-            .mod-menu__list{
+            .mod-menu__list {
               display: flex;
-              flex-wrap:wrap
+              flex-wrap: wrap
             }
           }
 
-          .mod-menu__item{
+          .mod-menu__item {
             display: block;
             width: 49%;
             height: 100px;
@@ -7163,7 +7395,7 @@ body.docs--list{
             position: relative;
             padding: 0 5px 5px;
 
-            &:nth-child(2n+1)::after{
+            &:nth-child(2n+1)::after {
               width: 1px;
               position: absolute;
               content: "";
@@ -7176,11 +7408,11 @@ body.docs--list{
 
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
-            &:nth-last-child(2):nth-child(odd){
+            &:nth-last-child(2):nth-child(odd) {
               border-bottom: none;
             }
 
-            .mod-menu__link{
+            .mod-menu__link {
               display: block;
               width: 100%;
               height: 95%;
@@ -7199,114 +7431,115 @@ body.docs--list{
                 opacity: 1;
               }
 
-              .mod-menu__icon{
+              .mod-menu__icon {
                 width: 90px;
               }
-              .mod-menu__menu-name{
-                font-size: 13px;
+
+              .mod-menu__menu-name {
+                font-size: $px13;
                 font-weight: bold;
                 color: $text;
               }
             }
 
-            &.current{
-              .mod-menu__link{
+            &.current {
+              .mod-menu__link {
                 background-color: rgba(0, 0, 0, 0.1);
                 pointer-events: none;
               }
             }
 
-            &--kekkon{
-              .mod-menu__icon{
+            &--kekkon {
+              .mod-menu__icon {
                 @include submenu-ic(icon_kekkon#{'.png'});
               }
             }
 
-            &--ninshin{
-              .mod-menu__icon{
+            &--ninshin {
+              .mod-menu__icon {
                 @include submenu-ic(icon_ninshin#{'.png'});
               }
             }
 
-            &--kosodate{
-              .mod-menu__icon{
+            &--kosodate {
+              .mod-menu__icon {
                 @include submenu-ic(icon_kosodate#{'.png'});
               }
             }
 
-            &--kyoiku{
-              .mod-menu__icon{
+            &--kyoiku {
+              .mod-menu__icon {
                 @include submenu-ic(icon_kyoiku#{'.png'});
               }
             }
 
-            &--hikkoshi{
-              .mod-menu__icon{
+            &--hikkoshi {
+              .mod-menu__icon {
                 @include submenu-ic(icon_hikkoshi#{'.png'});
               }
             }
 
-            &--shushoku{
-              .mod-menu__icon{
+            &--shushoku {
+              .mod-menu__icon {
                 @include submenu-ic(icon_shushoku#{'.png'});
               }
             }
 
-            &--fukushi{
-              .mod-menu__icon{
+            &--fukushi {
+              .mod-menu__icon {
                 @include submenu-ic(icon_fukushi#{'.png'});
               }
             }
 
-            &--okuyami{
-              .mod-menu__icon{
+            &--okuyami {
+              .mod-menu__icon {
                 @include submenu-ic(icon_okuyami#{'.png'});
               }
             }
           }
         }
 
-        .sec-cmn-top--online{
+        .sec-cmn-top--online {
           width: 250px;
           margin-top: 30px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             padding: 0 10px;
           }
 
-          .sec-cmn-top__header{
+          .sec-cmn-top__header {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 3px;
             text-align: center;
             background-color: $lygreen;
-            border-top-right-radius : 20px;
+            border-top-right-radius: 20px;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius : 20px;
+            border-top-left-radius: 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
-            &-title{
-              font-size: 15px;
+            &-title {
+              font-size: $px15;
               font-weight: bold;
             }
           }
 
-          .sec-cmn-top__list-wrap{
+          .sec-cmn-top__list-wrap {
             padding: 10px;
             background-color: $lygreen;
             border: 5px solid $white;
             @include border-radius(20px);
 
-            .sec-cmn-top__list{
+            .sec-cmn-top__list {
               display: flex;
-              flex-wrap:wrap
+              flex-wrap: wrap
             }
           }
 
-          .sec-cmn-top__item{
+          .sec-cmn-top__item {
             display: block;
             width: 49%;
             height: 100px;
@@ -7315,7 +7548,7 @@ body.docs--list{
             padding-bottom: 5px;
 
 
-            &:nth-child(2n+1)::after{
+            &:nth-child(2n+1)::after {
               width: 1px;
               position: absolute;
               content: "";
@@ -7323,16 +7556,15 @@ body.docs--list{
               right: 0;
               height: calc(100% - 30%);
               background-color: $white
-
             }
 
             /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
             &:last-child,
-            &:nth-last-child(2):nth-child(odd){
+            &:nth-last-child(2):nth-child(odd) {
               border-bottom: none;
             }
 
-            a{
+            a {
               display: block;
               width: 90%;
               height: 95%;
@@ -7350,8 +7582,8 @@ body.docs--list{
 
               @include border-radius(15px);
 
-                &:hover,
-                &:focus {
+              &:hover,
+              &:focus {
                 background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
@@ -7363,16 +7595,162 @@ body.docs--list{
     }
   }
 
-  .footer{
+  .footer {
     margin-top: 80px;
+  }
+
+  &#body--organization-index {
+    .yield-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+      @include border-radius(0 0 16px 16px);
+      padding: 25px 35px;
+
+      @include tb {
+        width: 100%;
+        padding: 15px;
+      }
+
+      &>.lsorg-groups {
+        padding-bottom: 30px;
+        order: 1;
+
+        h2 {
+          margin: 30px 0 12px;
+          padding: 8px 12px;
+          font-size: 15px;
+          font-weight: bold;
+          background-color: #ccf0ff;
+
+          @include tb {
+            font-size: $px14;
+          }
+        }
+
+        h3 {
+          margin-bottom: 12px;
+          padding: 0 8px;
+          font-size: $px14;
+          font-weight: bold;
+          border-left: 2px solid $main-blue;
+
+          @include tb {
+            font-size: $px12;
+          }
+        }
+
+        h4 {
+          margin-bottom: 12px;
+          font-size: $px14;
+          font-weight: bold;
+          color: $main-blue;
+
+          @include tb {
+            font-size: $px12;
+          }
+        }
+
+        ul,
+        ol {
+          margin-bottom: 20px;
+          padding-left: 1em;
+          font-size: 14px;
+
+          @include tb {
+            font-size: $px12;
+          }
+        }
+
+        ul {
+          list-style-type: disc;
+        }
+
+        table {
+          width: 100%;
+          margin-bottom: 24px;
+
+          @include tb {
+            font-size: $px14;
+          }
+
+          @include mb {
+            font-size: $px12;
+          }
+
+          caption {
+            padding: 0 10px;
+            color: $main-blue;
+            text-align: left;
+          }
+
+          p {
+            margin-bottom: 0;
+          }
+
+          tr {
+
+            td:nth-of-type(1) {
+              width: 190px;
+
+              @include tb {
+                width: 120px;
+              }
+            }
+
+            td:nth-of-type(3),
+            td:nth-of-type(4) {
+              white-space: nowrap;
+            }
+
+            td:nth-of-type(4) {
+              text-align: center;
+
+              a {
+                display: inline-block;
+                width: 31px;
+                height: 25px;
+                background-image: url(/img/ic-inquiry.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+                opacity: .6;
+
+                &:hover {
+                  opacity: 1;
+                }
+              }
+            }
+          }
+
+          th {
+            padding: 3px 8px 0;
+            border: 1px solid $hgry;
+            background: $ivory;
+            text-align: left;
+            white-space: nowrap;
+          }
+
+          td {
+            padding: 3px 8px 0;
+            vertical-align: middle;
+            border: 1px solid $hgry;
+          }
+        }
+
+        strong {
+          font-weight: bold;
+        }
+      }
+    }
   }
 }
 
 /* pages - body.body--docs　記事詳細ページ
 ---------------------------------------------------------- */
 body.body--docs,
-body.docs__layout{
-  #side{
+body.docs__layout {
+  #side {
     div.cms-tabs.tabs {
       @include tb {
         padding: 14px;
@@ -7381,10 +7759,10 @@ body.docs__layout{
       }
 
       nav.names {
-        border-top-left-radius : 20px;
+        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
-        border-top-right-radius : 20px;
+        border-top-right-radius: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
         display: flex;
@@ -7410,14 +7788,14 @@ body.docs__layout{
           text-decoration: none;
           transition: .3s ease-in-out;
 
-          &:first-child{
-            border-top-left-radius : 20px;
+          &:first-child {
+            border-top-left-radius: 20px;
             -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
           }
 
-          &:last-child{
-            border-top-right-radius : 20px;
+          &:last-child {
+            border-top-right-radius: 20px;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
           }
@@ -7425,26 +7803,27 @@ body.docs__layout{
           @include tb {
             width: calc((100% - 7px) / 3);
             @include border-radius(7px);
-            &:first-child{
-              border-top-left-radius : 7px;
+
+            &:first-child {
+              border-top-left-radius: 7px;
               -webkit-border-top-left-radius: 7px;
               -moz-border-radius-topleft: 7px;
             }
 
-            &:last-child{
-              border-top-right-radius : 7px;
+            &:last-child {
+              border-top-right-radius: 7px;
               -webkit-top-bottom-right-radius: 7px;
               -moz-border-radius-topright: 7px;
             }
           }
 
           &[href="/oshirase/"],
-          &[href$="/preview/oshirase/"]  {
+          &[href$="/preview/oshirase/"] {
             background-color: #cae9ff;
           }
 
           &[href="/oshirase/event/"],
-          &[href$="/preview/oshirase/event/"]  {
+          &[href$="/preview/oshirase/event/"] {
             background-color: $yellow;
           }
 
@@ -7453,7 +7832,8 @@ body.docs__layout{
             background-color: $orange;
           }
 
-          &:hover {
+          &:hover,
+          &:focus {
             opacity: .7;
             transition: .3s ease-in-out;
           }
@@ -7525,7 +7905,8 @@ body.docs__layout{
                     font-size: $px12;
                   }
 
-                  &:hover {
+                  &:hover,
+                  &:focus {
                     text-decoration: underline;
                   }
                 }
@@ -7537,18 +7918,18 @@ body.docs__layout{
         nav {
           text-align: right;
 
-          a{
+          a {
             padding-right: 20px;
             color: #585c5f;
             font-weight: bold;
             font-size: $px12;
             position: relative;
 
-            &.more{
+            &.more {
               margin-right: 15px;
             }
 
-            &::after{
+            &::after {
               content: '';
               position: absolute;
               top: 3.5px;
@@ -7559,12 +7940,13 @@ body.docs__layout{
               border-color: transparent transparent transparent #585c5f;
             }
 
-            a:hover{
+            a:hover,
+            a:focus {
               text-decoration: underline;
             }
           }
 
-          a.rss::before{
+          a.rss::before {
             content: "";
             position: absolute;
             top: -1px;
@@ -7578,28 +7960,28 @@ body.docs__layout{
       }
     }
 
-    #month{
+    #month {
       width: 100%;
       margin-top: 30px;
 
-      .title{
+      .title {
         padding: 6px 0;
         text-align: center;
         background-color: #96d7ff;
-        border-top-left-radius : 20px;
+        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
-        border-top-right-radius : 20px;
+        border-top-right-radius: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
 
-        h2{
+        h2 {
           font-size: $px15;
           font-weight: bold;
         }
       }
 
-      .archive-nav{
+      .archive-nav {
         padding: 10px 10px 20px;
         background-color: $white;
 
@@ -7610,11 +7992,12 @@ body.docs__layout{
         -webkit-border-bottom-right-radius: 20px;
         -moz-border-radius-bottomright: 20px;
 
-        li{
+        li {
           padding: 2px 0;
           border-bottom: $text dashed 1px;
 
-          span,a{
+          span,
+          a {
             font-size: $px14;
             padding-left: 5px;
           }
@@ -7622,17 +8005,17 @@ body.docs__layout{
       }
     }
 
-    #calendar{
+    #calendar {
       display: none;
       margin: 0 auto;
       margin-top: 30px;
 
-      @include tb{
+      @include tb {
         width: 100%;
         padding: 0 10px;
       }
 
-      .title{
+      .title {
         width: 100%;
         margin: 0 auto;
         padding: 10px 20px;
@@ -7643,41 +8026,46 @@ body.docs__layout{
         @include border-radius(15px);
       }
 
-      .calendar-nav{
-        h2{
+      .calendar-nav {
+        h2 {
           display: none;
         }
-        ul{
+
+        ul {
           padding: 5px 20px;
           display: flex;
           justify-content: space-between;
 
-          li{
+          li {
             padding: 0 5px;
             font-size: $px12;
           }
 
-          li.current{
+          li.current {
             font-weight: bold;
           }
         }
       }
 
-      table.calendar{
+      table.calendar {
         width: 100%;
 
-        &,td,th{
+        &,
+        td,
+        th {
           border-collapse: collapse;
-          border:1px solid #999;
+          border: 1px solid #999;
         }
 
-        .caption{
+        .caption {
           font-size: $px14;
         }
+
         /* 曜日 */
         thead {
           tr {
             background-color: $ygreen;
+
             th {
               span.wday {
                 span.unit {
@@ -7687,6 +8075,7 @@ body.docs__layout{
             }
           }
         }
+
         /* 日にち */
         tbody {
           font-size: $px14;
@@ -7694,13 +8083,19 @@ body.docs__layout{
           background-color: $white;
 
           tr {
-            td.prev-month,td.next-month {
+
+            td.prev-month,
+            td.next-month {
               opacity: 0.5;
             }
-            td.sat,td.sat > a {
+
+            td.sat,
+            td.sat>a {
               color: #004bb4;
             }
-            td.sun,td.sat > a {
+
+            td.sun,
+            td.sat>a {
               color: #df3646;
             }
           }
@@ -7708,46 +8103,46 @@ body.docs__layout{
       }
     }
 
-    .mod-menu--lifeevent{
+    .mod-menu--lifeevent {
       margin-top: 30px;
 
-      @include tb{
+      @include tb {
         width: 100%;
         padding: 0 10px;
       }
 
-      .mod-menu__header{
+      .mod-menu__header {
         width: 80%;
         margin: 0 auto;
         padding: 6px 10px 0;
         text-align: center;
         background-color: #96d7ff;
-        border-top-right-radius : 20px;
+        border-top-right-radius: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
-        border-top-left-radius : 20px;
+        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
 
-        &-title{
-          font-size: 15px;
+        &-title {
+          font-size: $px15;
           font-weight: bold;
         }
       }
 
-      .mod-menu__list-wrap{
+      .mod-menu__list-wrap {
         padding: 10px;
         background-color: $white;
         border: 5px solid #96d7ff;
         @include border-radius(20px);
 
-        .mod-menu__list{
+        .mod-menu__list {
           display: flex;
-          flex-wrap:wrap
+          flex-wrap: wrap
         }
       }
 
-      .mod-menu__item{
+      .mod-menu__item {
         display: block;
         width: 49%;
         height: 100px;
@@ -7756,7 +8151,7 @@ body.docs__layout{
         padding: 0 5px 5px;
 
 
-        &:nth-child(2n+1)::after{
+        &:nth-child(2n+1)::after {
           width: 1px;
           position: absolute;
           content: "";
@@ -7769,11 +8164,11 @@ body.docs__layout{
 
         /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
         &:last-child,
-        &:nth-last-child(2):nth-child(odd){
+        &:nth-last-child(2):nth-child(odd) {
           border-bottom: none;
         }
 
-        .mod-menu__link{
+        .mod-menu__link {
           display: block;
           width: 100%;
           height: 95%;
@@ -7785,115 +8180,116 @@ body.docs__layout{
           align-items: center;
           justify-content: space-around;
 
-            &:hover,
-            &:focus {
+          &:hover,
+          &:focus {
             background-color: rgba(0, 0, 0, 0.1);
             transition: .3s ease-in-out;
             opacity: 1;
           }
 
 
-          .mod-menu__icon{
+          .mod-menu__icon {
             width: 90px;
           }
-          .mod-menu__menu-name{
-            font-size: 13px;
+
+          .mod-menu__menu-name {
+            font-size: $px13;
             font-weight: bold;
             color: $text;
           }
         }
 
-        &--kekkon{
-          .mod-menu__icon{
+        &--kekkon {
+          .mod-menu__icon {
             @include submenu-ic(icon_kekkon#{'.png'});
           }
         }
 
-        &--ninshin{
-          .mod-menu__icon{
+        &--ninshin {
+          .mod-menu__icon {
             @include submenu-ic(icon_ninshin#{'.png'});
           }
         }
 
-        &--kosodate{
-          .mod-menu__icon{
+        &--kosodate {
+          .mod-menu__icon {
             @include submenu-ic(icon_kosodate#{'.png'});
           }
         }
 
-        &--kyoiku{
-          .mod-menu__icon{
+        &--kyoiku {
+          .mod-menu__icon {
             @include submenu-ic(icon_kyoiku#{'.png'});
           }
         }
 
-        &--hikkoshi{
-          .mod-menu__icon{
+        &--hikkoshi {
+          .mod-menu__icon {
             @include submenu-ic(icon_hikkoshi#{'.png'});
           }
         }
 
-        &--shushoku{
-          .mod-menu__icon{
+        &--shushoku {
+          .mod-menu__icon {
             @include submenu-ic(icon_shushoku#{'.png'});
           }
         }
 
-        &--fukushi{
-          .mod-menu__icon{
+        &--fukushi {
+          .mod-menu__icon {
             @include submenu-ic(icon_fukushi#{'.png'});
           }
         }
 
-        &--okuyami{
-          .mod-menu__icon{
+        &--okuyami {
+          .mod-menu__icon {
             @include submenu-ic(icon_okuyami#{'.png'});
           }
         }
       }
     }
 
-    .sec-cmn-top--online{
+    .sec-cmn-top--online {
       // width: 250px;
       margin-top: 30px;
 
-      @include tb{
+      @include tb {
         width: 100%;
         padding: 0 10px;
       }
 
-      .sec-cmn-top__header{
+      .sec-cmn-top__header {
         width: 80%;
         margin: 0 auto;
         padding: 6px 10px 3px;
         text-align: center;
         background-color: $lygreen;
-        border-top-right-radius : 20px;
+        border-top-right-radius: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
-        border-top-left-radius : 20px;
+        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
 
-        &-title{
-          font-size: 15px;
+        &-title {
+          font-size: $px15;
           font-weight: bold;
         }
       }
 
-      .sec-cmn-top__list-wrap{
+      .sec-cmn-top__list-wrap {
         padding: 10px;
         background-color: $lygreen;
         border: 5px solid $white;
         @include border-radius(20px);
 
-        .sec-cmn-top__list{
+        .sec-cmn-top__list {
           display: flex;
-          flex-wrap:wrap
+          flex-wrap: wrap
         }
       }
 
-      .sec-cmn-top__item{
+      .sec-cmn-top__item {
         display: block;
         width: 49%;
         height: 100px;
@@ -7901,7 +8297,7 @@ body.docs__layout{
         position: relative;
         padding-bottom: 5px;
 
-        &:nth-child(2n+1)::after{
+        &:nth-child(2n+1)::after {
           width: 1px;
           position: absolute;
           content: "";
@@ -7909,16 +8305,15 @@ body.docs__layout{
           right: 0;
           height: calc(100% - 30%);
           background-color: $white
-
         }
 
         /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
         &:last-child,
-        &:nth-last-child(2):nth-child(odd){
+        &:nth-last-child(2):nth-child(odd) {
           border-bottom: none;
         }
 
-        a{
+        a {
           display: block;
           width: 90%;
           height: 95%;
@@ -7936,8 +8331,8 @@ body.docs__layout{
 
           @include border-radius(15px);
 
-            &:hover,
-            &:focus {
+          &:hover,
+          &:focus {
             background-color: rgba(0, 0, 0, 0.1);
             transition: .3s ease-in-out;
             opacity: 1;
@@ -7950,47 +8345,54 @@ body.docs__layout{
 
 /* pages - サイトマップ
 ---------------------------------------------------------- */
-article.sitemap-body{
-  h2,h3{
+article.sitemap-body {
+
+  h2,
+  h3 {
     float: left;
   }
 
-  h2{
+  h2 {
     width: 100%;
     padding: 20px 30px;
     margin: 35px 0 15px;
     background-color: #96d7ff;
-    font-size: 18px;
+    font-size: $px18;
     font-weight: bold;
     @include border-radius(20px);
 
-    &:first-child{
+    &:first-child {
       margin: 0 0 10px;
     }
   }
 
-  h3{
+  h3 {
     display: inline-block;
     padding: 0 10px;
     position: relative;
+    border-left: none !important;
 
-    &::before{
+    &::before {
       content: '';
       position: absolute;
       right: 0px;
       top: 5px;
       display: inline-block;
-      width: 1px;/*線の長さ*/
-      height: 18px;/*線の太さ*/
-      background-color: #787878;/*線の色*/
+      width: 1px;
+      /*線の長さ*/
+      height: 18px;
+      /*線の太さ*/
+      background-color: #787878;
+      /*線の色*/
     }
   }
 
-  a{
+  a {
     color: $text;
     text-decoration: none;
 
-    &:hover {
+    &:hover,
+    &:focus {
       text-decoration: underline;
     }
   }
@@ -7999,36 +8401,37 @@ article.sitemap-body{
 /* pages - body#body--map 施設検索
 ---------------------------------------------------------- */
 /* 共通 */
-body.body--map{
+body.body--map {
 
-  #wrap{
+  #wrap {
     display: flow-root;
     width: 1000px;
     margin: 30px auto;
   }
 
-  #wrap{
-    @include tb{
+  #wrap {
+    @include tb {
       width: 100%;
       margin-top: 110px;
       padding: 0 10px;
     }
 
-    #main{
+    #main {
       margin-top: 45px;
       @include border-radius(16px);
       background-color: $white;
 
-      @include tb{
+      @include tb {
         margin: 40px auto 0;
         padding-bottom: 30px;
         width: 90%;
         float: none;
       }
 
-      header:first-child{
+      header:first-child {
         padding: 25px 35px 48px;
-        #ss-page-name{
+
+        #ss-page-name {
           padding-top: 4px;
           font-size: $px28;
           color: $blue;
@@ -8038,34 +8441,34 @@ body.body--map{
       }
     }
 
-    #side{
+    #side {
       width: 25%;
       margin-top: 45px;
       float: right;
 
-      @include tb{
+      @include tb {
         width: 90%;
         margin: 45px auto;
         float: none;
       }
 
-      #side-menu{
+      #side-menu {
         @include border-radius(16px);
         background-color: $white;
 
-        header{
+        header {
           padding: 10px 20px;
           color: white;
-          font-size: 20px;
+          font-size: $px20;
           font-weight: bold;
           background-color: $blue;
           @include border-radius(16px 16px 0 0);
         }
 
-        nav{
+        nav {
           padding: 0 10px;
 
-          a{
+          a {
             display: block;
             width: 100%;
             padding: 5px 10px;
@@ -8073,14 +8476,15 @@ body.body--map{
             text-decoration: none;
             border-bottom: #787878 dashed 1px;
 
-            &:hover {
+            &:hover,
+            &:focus {
               text-decoration: underline;
             }
 
           }
 
-          li:last-child{
-            a{
+          li:last-child {
+            a {
               border-bottom: 0;
             }
           }
@@ -8091,38 +8495,38 @@ body.body--map{
 }
 
 /* 検索ページ */
-body#body--map{
+body#body--map {
   background-color: $bg;
 
-  #main{
-    form{
+  #main {
+    form {
       padding: 0 35px 48px;
 
-      @include tb{
+      @include tb {
         padding-bottom: 0;
       }
 
-      fieldset{
+      fieldset {
         margin-top: 30px;
 
-        &:first-child{
+        &:first-child {
           margin-top: 0px;
         }
       }
 
-      legend{
+      legend {
         display: block;
         width: 100%;
         margin-bottom: 10px;
         padding-bottom: 5px;
-        font-size: 18px;
+        font-size: $px18;
         color: $blue;
         font-weight: bold;
         border-bottom: 1px solid $blue;
       }
 
-      .keyword{
-        input{
+      .keyword {
+        input {
           margin-left: 5px;
           padding-left: 10px;
           width: 90%;
@@ -8131,33 +8535,33 @@ body#body--map{
         }
       }
 
-      footer.send{
+      footer.send {
         width: 60%;
         margin: 30px auto;
         display: flex;
         justify-content: space-around;
 
-        @include tb{
+        @include tb {
           width: 100%;
           flex-direction: column;
           align-items: center;
         }
 
-        input{
+        input {
           padding: 10px 15px;
           font-weight: bold;
-          font-size: 12px;
+          font-size: $px12;
           color: $white;
           border: 1px solid $blue;
           @include border-radius(20px);
           background-color: $blue;
 
-          @include tb{
+          @include tb {
             margin-top: 10px;
           }
 
-            &:hover,
-            &:focus {
+          &:hover,
+          &:focus {
             color: $text;
             background-color: $white;
           }
@@ -8168,9 +8572,10 @@ body#body--map{
 }
 
 /* 検索結果 */
-body#body--map{
+body#body--map {
 
-  #main{
+  #main {
+
     .condition,
     .settings,
     .result,
@@ -8182,11 +8587,11 @@ body#body--map{
       margin: 0 35px;
     }
 
-    .condition{
+    .condition {
       display: flex;
       flex-wrap: wrap;
 
-      dt{
+      dt {
         width: 35%;
         margin: 10px 10px 10px 0;
         padding: 5px 15px;
@@ -8194,40 +8599,41 @@ body#body--map{
         background-color: $lyblue;
         @include border-radius(10px);
 
-        @include tb{
+        @include tb {
           width: 100%;
         }
       }
-      dd{
+
+      dd {
         width: 60%;
         margin: 10px 10px 10px 0;
         padding: 5px 15px;
 
-        @include tb{
+        @include tb {
           width: 100%;
         }
       }
     }
 
-    .settings{
+    .settings {
       font-size: $px14;
       text-align: end;
     }
 
-    .result{
+    .result {
       margin: 10px 0;
       font-size: $px14;
       text-align: center;
     }
 
-    .tabs{
+    .tabs {
       border-bottom: 1px solid $text;
 
-      ul{
+      ul {
         display: flex;
         justify-content: end;
 
-        a{
+        a {
           display: block;
           margin: 0 1px;
           padding: 5px 10px;
@@ -8240,8 +8646,8 @@ body#body--map{
 
         }
 
-        .current{
-          a{
+        .current {
+          a {
             color: $white;
             background-color: $blue;
           }
@@ -8249,7 +8655,7 @@ body#body--map{
       }
     }
 
-    #map-sidebar{
+    #map-sidebar {
       float: left;
       width: 180px;
       height: 480px !important;
@@ -8259,27 +8665,28 @@ body#body--map{
       border: 1px solid $hgry;
       overflow-y: scroll;
 
-      @include tb{
+      @include tb {
         float: none;
         width: calc(100% - 70px);
         // height: 250px !important;
         height: auto !important;
       }
 
-      .column{
+      .column {
         margin-bottom: 5px;
         padding-bottom: 5px;
         border-bottom: #787878 dashed 1px;
 
-        &:last-child{
+        &:last-child {
           border-bottom: 0;
         }
 
-        a{
+        a {
           font-weight: bold;
         }
+
         a.click-marker,
-        div.no-marker{
+        div.no-marker {
           display: block;
           font-size: $px10;
           font-weight: normal;
@@ -8288,7 +8695,7 @@ body#body--map{
       }
     }
 
-    #map-canvas{
+    #map-canvas {
       float: right;
       width: 750px !important;
       height: 480px !important;
@@ -8296,7 +8703,7 @@ body#body--map{
       margin-bottom: 15px;
       position: relative;
 
-      @include tb{
+      @include tb {
         float: none;
         width: calc(100% - 70px) !important;
         height: auto;
@@ -8304,20 +8711,20 @@ body#body--map{
       }
     }
 
-    .filters{
+    .filters {
       display: inline-block;
       clear: both;
       margin: 10px 35px 20px;
 
-      ul{
+      ul {
         display: flex;
 
-        @include tb{
+        @include tb {
           flex-direction: column;
         }
 
-        li{
-          a{
+        li {
+          a {
             display: block;
             margin-right: 10px;
             padding: 5px 15px;
@@ -8328,17 +8735,18 @@ body#body--map{
             @include border-radius(16px);
             background-color: #ecf1f1;
 
-            @include tb{
+            @include tb {
               font-size: $px12;
               margin-top: 10px;
             }
 
-            &.clicked{
+            &.clicked {
               background-color: $ygreen;
               color: $text;
             }
 
-            &:hover {
+            &:hover,
+            &:focus {
               text-decoration: underline;
             }
           }
@@ -8346,43 +8754,46 @@ body#body--map{
       }
     }
 
-    .columns{
+    .columns {
       margin: 0 35px 20px;
-      .column{
+
+      .column {
         padding: 10px;
 
         border-bottom: 1px dashed #787878;
 
-        &:last-child{
+        &:last-child {
           border-bottom: 0;
         }
 
-        header{
+        header {
           padding: 0 !important;
-          a{
+
+          a {
             font-weight: bold;
             color: $text;
 
           }
         }
 
-        .categories{
-          ul{
+        .categories {
+          ul {
             display: flex;
 
-            li{
+            li {
 
-              a{
+              a {
                 margin-left: 5px;
                 padding: 2px 5px;
-                font-size: 10px;
+                font-size: $px10;
                 font-weight: bold;
                 color: $text;
                 @include border-radius(10px);
                 background-color: $ygreen;
                 text-decoration: none;
 
-                &:hover {
+                &:hover,
+                &:focus {
                   text-decoration: underline;
                 }
               }
@@ -8390,7 +8801,7 @@ body#body--map{
           }
         }
 
-        .address{
+        .address {
           font-size: $px14;
           margin-left: 10px;
         }
@@ -8431,7 +8842,7 @@ body#body--map{
   //         margin-top: 10px;
   //         padding: 10px 15px;
   //         font-weight: bold;
-  //         font-size: 12px;
+  // font-size: $px12;
   //         color: $white;
   //         border: 1px solid $blue;
   //         @include border-radius(20px);
@@ -8448,7 +8859,7 @@ body#body--map{
   // }
 }
 
-  /* 検索ページ /kanko/map/
+/* 検索ページ /kanko/map/
      検索結果ページ /kanko/map/map.html モーダルウィンドウ */
 #colorbox {
   form {
@@ -8500,7 +8911,7 @@ body#body--map{
       }
     }
 
-    fieldset{
+    fieldset {
       padding: 54px 0;
       display: flex;
       align-items: center;
@@ -8534,8 +8945,7 @@ body#body--map{
         }
       }
 
-      div.category
-      {
+      div.category {
         width: calc(100% - 130px);
         // padding: 54px 0;
         display: flex;
@@ -8618,7 +9028,8 @@ body#body--map{
         border: 1px solid $blue;
         transition: .3s ease-in-out;
 
-        &:hover {
+        &:hover,
+        &:focus {
           color: $blue;
           background-color: #fff;
           transition: .3s ease-in-out;
@@ -8637,7 +9048,8 @@ body#body--map{
           margin-left: 0;
         }
 
-        &:hover {
+        &:hover,
+        &:focus {
           background-color: #fff;
           border: 1px solid #000;
           transition: .3s ease-in-out;
@@ -8701,37 +9113,39 @@ body#body--map{
 }
 
 /* 施設詳細ページ */
-.body--institution.general{
-  #main{
-    .yield-wrap{
+.body--institution.general {
+  #main {
+    .yield-wrap {
       display: block;
 
-      h2{
+      h2 {
         margin: 30px 0 12px;
         padding: 8px 12px;
-        font-size: 15px;
+        font-size: $px15;
         font-weight: bold;
         background-color: #ccf0ff;
       }
-      article{
+
+      article {
         padding-bottom: 0px;
 
-        header{
+        header {
           display: flex;
           align-items: baseline;
           gap: 10px 20px;
           padding: 10px 0;
           border-bottom: 1px dashed #000;
 
-          @include tb{
+          @include tb {
             display: block;
           }
 
-          time{
-            font-size: $px13;;
+          time {
+            font-size: $px13;
+            ;
           }
 
-          h2{
+          h2 {
             margin: 0;
             padding: 0;
             font-weight: normal;
@@ -8740,12 +9154,13 @@ body#body--map{
         }
       }
     }
-    dl.see{
+
+    dl.see {
 
       display: flex;
       flex-wrap: wrap;
 
-      dt{
+      dt {
         width: 35%;
         margin: 10px 10px 10px 0;
         padding: 5px 15px;
@@ -8753,16 +9168,17 @@ body#body--map{
         background-color: $lyblue;
         @include border-radius(10px);
 
-        @include tb{
+        @include tb {
           width: 100%;
         }
       }
-      dd{
+
+      dd {
         width: 60%;
         margin: 10px 10px 10px 0;
         padding: 5px 15px;
 
-        @include tb{
+        @include tb {
           width: 100%;
         }
       }
@@ -8771,37 +9187,43 @@ body#body--map{
 }
 
 /* 施設一覧ページ */
-.body--institution.body--institution-shisetsu{
-  .facility-nodes{
+.body--institution.body--institution-shisetsu {
+  .facility-nodes {
     box-sizing: border-box;
     margin: 0px 35px 30px;
     overflow-x: auto;
 
-    .facility-page-table{
+    .facility-page-table {
       width: 930px;
       margin-bottom: 30px;
 
-      caption{
+      caption {
         text-align: left;
 
-        &::before{
+        &::before {
           content: "●";
         }
       }
 
-      tr{
+      tr {
+
         th,
-        td{
+        td {
           border: 1px solid #4d4d4d;
           padding: 3px 3px 3px 1em;
         }
       }
 
-      thead{
+      thead {
         background-color: #e2edee;
         text-align: left;
       }
     }
+  }
+
+  article {
+    margin: 0 30px;
+    @include docs;
   }
 }
 
@@ -8811,34 +9233,34 @@ body#body--map{
 body.body--garbage {
   background-color: $bg;
 
-  #wrap{
+  #wrap {
     display: flow-root;
     width: 1000px;
     margin: 30px auto;
 
-    @include tb{
+    @include tb {
       width: 100%;
       margin-top: 110px;
       padding: 0 10px;
     }
 
-    #main{
+    #main {
       width: 70%;
       margin-top: 45px;
       float: left;
 
-      @include tb{
+      @include tb {
         margin: 40px auto 0;
         width: 90%;
         float: none;
       }
 
-      header:first-child{
+      header:first-child {
         padding: 25px 35px 48px;
         @include border-radius(16px 16px 0 0);
         background-color: $white;
 
-        #ss-page-name{
+        #ss-page-name {
           // margin: 25px 35px 48px;
           padding-top: 4px;
           font-size: $px28;
@@ -8848,25 +9270,26 @@ body.body--garbage {
         }
       }
 
-      .content-box{
+      .content-box {
         margin-top: -11px;
         padding: 0 35px 10px;
         @include border-radius(0 0 16px 16px);
         background-color: $white;
 
-        form{
+        form {
+
           .name,
-          .category{
+          .category {
             display: flex;
             align-items: center;
 
-            @include tb{
+            @include tb {
               display: block;
             }
           }
 
-          .name > h2,
-          .category > h2{
+          .name>h2,
+          .category>h2 {
             width: 30%;
             margin: 10px 10px 10px 0;
             padding: 2px 15px;
@@ -8875,61 +9298,61 @@ body.body--garbage {
             background-color: $lyblue;
             @include border-radius(10px);
 
-            @include tb{
+            @include tb {
               width: 100%;
             }
           }
 
-          .name{
-            input{
+          .name {
+            input {
               width: 65%;
               margin-left: 5px;
               padding-left: 10px;
               height: 30px;
               @include border-radius(5px);
 
-              @include tb{
+              @include tb {
                 width: 100%;
                 margin-left: 0;
               }
             }
           }
 
-          .category{
-            select{
+          .category {
+            select {
               margin-left: 5px;
               padding-left: 10px;
               height: 30px;
               @include border-radius(5px);
 
-              @include tb{
+              @include tb {
                 margin: 0 auto;
               }
             }
           }
 
-          footer.send{
+          footer.send {
             margin: 30px auto;
             display: flex;
             flex-direction: column;
 
-            input{
+            input {
               width: 200px;
               margin: 10px auto;
               padding: 10px 15px;
               font-weight: bold;
-              font-size: 12px;
+              font-size: $px12;
               color: $white;
               border: 1px solid $blue;
               @include border-radius(20px);
               background-color: $blue;
 
-              @include tb{
+              @include tb {
                 width: 100%;
               }
 
-                &:hover,
-                &:focus {
+              &:hover,
+              &:focus {
                 color: $text;
                 background-color: $white;
               }
@@ -8938,7 +9361,7 @@ body.body--garbage {
         }
       }
 
-      .cms-nodes{
+      .cms-nodes {
         padding: 35px;
         margin: 35px 0;
         @include border-radius(16px);
@@ -8947,21 +9370,21 @@ body.body--garbage {
         justify-content: space-around;
         flex-wrap: wrap;
 
-        @include tb{
+        @include tb {
           display: block;
         }
 
-        article{
+        article {
           width: 46%;
           border-bottom: #787878 dashed 1px;
 
-          @include tb{
+          @include tb {
             width: 100%;
             margin-left: 0;
             min-height: 0;
           }
 
-          header{
+          header {
             padding: 10px 0 10px 35px;
             font-size: $px20;
             font-weight: bold;
@@ -8969,27 +9392,29 @@ body.body--garbage {
             background-size: 30px;
             @include border-radius(0);
 
-            @include tb{
+            @include tb {
               padding: 10px 0;
               font-size: $px16;
               font-weight: 400;
             }
 
-            a{
+            a {
               display: block;
               width: 100%;
               position: relative;
               text-decoration: none;
-            }
-            a:hover{
-              text-decoration: underline;
+
+              &:hover,
+              &:focus {
+                text-decoration: underline;
+              }
             }
 
-            @include tb{
-              a::after{
+            @include tb {
+              a::after {
                 position: absolute;
                 content: '';
-                top:14px;
+                top: 14px;
                 right: 15px;
                 width: 0;
                 height: 0;
@@ -8999,7 +9424,7 @@ body.body--garbage {
               }
             }
 
-            a::before{
+            a::before {
               content: url(/img/ic-folder.png);
               background-size: 30px;
               transform: scale(0.5);
@@ -9007,7 +9432,7 @@ body.body--garbage {
               top: -9px;
               left: -39px;
 
-              @include tb{
+              @include tb {
                 display: none;
               }
             }
@@ -9016,34 +9441,34 @@ body.body--garbage {
       }
     }
 
-    #side{
+    #side {
       width: 25%;
       margin-top: 45px;
       float: right;
 
-      @include tb{
+      @include tb {
         width: 90%;
         margin: 45px auto;
         float: none;
       }
 
-      #links-life{
+      #links-life {
         @include border-radius(16px);
         background-color: $white;
 
-        header{
+        header {
           padding: 10px 20px;
           color: white;
-          font-size: 20px;
+          font-size: $px20;
           font-weight: bold;
           background-color: $blue;
           @include border-radius(16px 16px 0 0);
         }
 
-        nav{
+        nav {
           padding: 0 10px;
 
-          a{
+          a {
             display: block;
             width: 100%;
             padding: 5px 10px;
@@ -9051,13 +9476,14 @@ body.body--garbage {
             text-decoration: none;
             border-bottom: #787878 dashed 1px;
 
-            &:hover {
+            &:hover,
+            &:focus {
               text-decoration: underline;
             }
           }
 
-          li:last-child{
-            a{
+          li:last-child {
+            a {
               border-bottom: 0;
             }
           }
@@ -9071,20 +9497,20 @@ body.body--garbage {
 
 /* 検索結果ページ　ゴミ品目一覧 */
 body.body--garbage {
+
   .condition,
   .setting,
   .result,
-  .garbage-nodes
-  {
+  .garbage-nodes {
     padding: 0 35px;
     background-color: $white;
   }
 
-  .condition{
+  .condition {
     display: flex;
     flex-wrap: wrap;
 
-    dt{
+    dt {
       width: 35%;
       margin: 10px 10px 10px 0;
       padding: 5px 15px;
@@ -9092,77 +9518,80 @@ body.body--garbage {
       background-color: $lyblue;
       @include border-radius(10px);
 
-      @include tb{
+      @include tb {
         width: 100%;
       }
 
     }
-    dd{
+
+    dd {
       width: 60%;
       margin: 10px 10px 10px 0;
       padding: 5px 15px;
 
-      @include tb{
+      @include tb {
         width: 100%;
       }
     }
   }
 
-  .setting{
+  .setting {
     font-size: $px14;
     text-align: end;
   }
 
-  .result{
+  .result {
     padding: 10px 35px;
     font-size: $px14;
     text-align: center;
   }
 
-  .garbage-nodes{
+  .garbage-nodes {
     padding: 10px 35px 30px;
     font-size: $px16;
     @include border-radius(0 0 16px 16px);
 
-    @include tb{
+    @include tb {
       font-size: $px14;
     }
 
-    .columns{
+    .columns {
       width: 100%;
-      caption{
+
+      caption {
         display: none;
       }
-      thead{
+
+      thead {
         width: 100%;
         text-align: left;
         background-color: $ygreen;
 
-        tr{
-          th{
+        tr {
+          th {
             padding: 5px 10px;
             white-space: nowrap;
             border: 1px solid #787878;
 
-            @include tb{
+            @include tb {
               white-space: normal;
             }
           }
         }
       }
 
-      tbody{
-        tr{
-          td{
+      tbody {
+        tr {
+          td {
             padding: 5px 10px;
             white-space: nowrap;
             border: 1px solid #787878;
 
-            @include tb{
+            @include tb {
               white-space: normal;
             }
 
-            &:last-child{
+            &:last-child {
               white-space: normal;
             }
           }
@@ -9259,7 +9688,8 @@ body.body--garbage {
             transition: 0.3s;
             cursor: pointer;
 
-            &:hover {
+            &:hover,
+            &:focus {
               background: #fff;
               color: #09698e;
             }
@@ -9270,12 +9700,12 @@ body.body--garbage {
   }
 }
 
-body.body--garbage-category{
-  #main{
+body.body--garbage-category {
+  #main {
     background-color: $white;
     @include border-radius(16px);
 
-    .cms-nodes{
+    .cms-nodes {
       margin-top: 0px !important;
       padding-top: 0px !important;
     }
@@ -9284,17 +9714,17 @@ body.body--garbage-category{
 
 /* pages - body.body--calendar イベントカレンダー
 ---------------------------------------------------------- */
-body.body--calendar{
-  #wrap.event{
+body.body--calendar {
+  #wrap.event {
     margin: 20px auto;
     width: 1000px;
 
-    @include tb{
+    @include tb {
       width: 90%;
       margin: 110px auto 0;
     }
 
-    #main{
+    #main {
       margin-top: 20px;
 
       >header {
@@ -9312,121 +9742,122 @@ body.body--calendar{
         }
       }
 
-      .content-box{
+      .content-box {
         margin-top: 20px;
         @include border-radius(16px);
 
-        .content-head{
+        .content-head {
           padding: 18px 35px;
           background-color: $ygreen;
           @include border-radius(16px 16px 0 0);
 
-          h2{
+          h2 {
             font-size: $px18;
             font-weight: bold;
           }
         }
 
-        .content-body{
+        .content-body {
           background-color: $white;
           padding-top: 20px;
           @include border-radius(0 0 16px 16px);
 
-          form{
+          form {
             padding: 0 35px 1px;
 
-            @include tb{
+            @include tb {
               padding-bottom: 1px;
             }
 
-            fieldset{
+            fieldset {
               margin-top: 20px;
 
-              &:first-child{
+              &:first-child {
                 margin-top: 0px;
               }
             }
 
-            legend{
+            legend {
               display: block;
               width: 100%;
               margin-bottom: 10px;
               padding-bottom: 5px;
-              font-size: 18px;
+              font-size: $px18;
               color: $blue;
               font-weight: bold;
               border-bottom: 1px solid $blue;
 
             }
 
-            .keyword{
-              input{
+            .keyword {
+              input {
                 margin-left: 5px;
                 padding-left: 10px;
                 width: 90%;
                 height: 30px;
                 @include border-radius(5px);
 
-                @include tb{
+                @include tb {
                   width: 98%;
                 }
               }
 
             }
-            .event-date-range{
-              input{
+
+            .event-date-range {
+              input {
                 margin-left: 5px;
                 padding-left: 10px;
                 height: 30px;
                 @include border-radius(5px);
 
-                @include tb{
+                @include tb {
                   width: 45%;
                 }
               }
             }
 
-            .event-facility{
-              input{
+            .event-facility {
+              input {
                 margin-left: 5px;
                 padding-left: 10px;
                 height: 30px;
                 @include border-radius(5px);
 
-                @include tb{
+                @include tb {
                   width: 98%;
                 }
               }
             }
 
-            footer.send{
+            footer.send {
               width: 50%;
               margin: 30px auto;
               display: flex;
               justify-content: space-around;
 
-              @include tb{
+              @include tb {
                 width: 100%;
                 flex-direction: column;
                 align-items: center;
               }
 
-              input{
+              input {
                 padding: 10px 30px;
                 font-weight: bold;
-                font-size: 12px;
+                font-size: $px12;
                 color: $white;
                 border: 1px solid $blue;
                 @include border-radius(20px);
                 background-color: $blue;
 
-                @include tb{
+                @include tb {
                   width: 90%;
                   margin-top: 10px;
                 }
 
-                  &:hover,
-                  &:focus {
+                &:hover,
+                &:focus {
                   color: $text;
                   background-color: $white;
                 }
@@ -9435,7 +9866,8 @@ body.body--calendar{
           }
         }
       }
-      .event-date{
+
+      .event-date {
         margin-top: 20px;
         padding: 25px 35px 0;
         background-color: $white;
@@ -9449,15 +9881,16 @@ body.body--calendar{
           padding: 44px 35px;
         }
 
-        h2{
-          order:1;
+        h2 {
+          order: 1;
           font-size: $px18;
           font-weight: bold;
           margin-left: 5px;
+          white-space: nowrap;
         }
 
-        .event-format{
-          order:4;
+        .event-format {
+          order: 4;
           position: absolute;
           bottom: 0;
           right: 34px;
@@ -9468,7 +9901,7 @@ body.body--calendar{
             left: 34px;
           }
 
-          a{
+          a {
             display: block;
             min-width: 80px;
             margin: 0 1px;
@@ -9482,16 +9915,16 @@ body.body--calendar{
             @include border-radius(16px 16px 0 0);
           }
 
-          .current{
-            a{
+          .current {
+            a {
               color: $white;
               background-color: $blue;
             }
           }
         }
 
-        .event-ics-file{
-          order:3;
+        .event-ics-file {
+          order: 3;
           padding: 5px 13px;
           margin: 0px 0px 44px calc(100% - 330px);
           font-size: $px12;
@@ -9500,6 +9933,8 @@ body.body--calendar{
           font-weight: bold;
           background-color: $ygreen;
           @include border-radius(10px);
+          white-space: nowrap;
+          z-index: 5;
 
           @include tb {
             margin: 0px 0px -40px calc(100% - 300px);
@@ -9507,25 +9942,27 @@ body.body--calendar{
             font-size: $px12;
           }
         }
-        ul{
-          order:2;
+
+        ul {
+          order: 2;
           margin: 0 10px;
           display: flex;
 
-          a{
+          a {
             margin-left: 15px;
             font-size: $px13;
             color: #666;
+            white-space: nowrap;
           }
 
-          li.next{
-            a{
+          li.next {
+            a {
               position: relative;
 
-              &::before{
+              &::before {
                 position: absolute;
                 content: "|";
-                font-size: 11px;
+                font-size: $px11;
                 color: #666;
                 top: -4px;
                 left: -9px;
@@ -9534,17 +9971,26 @@ body.body--calendar{
           }
         }
       }
-      #event-table{
+
+      #event-table {
         padding: 0px 35px 25px;
         margin-bottom: 70px;
         background-color: $white;
         @include border-radius(0 0 16px 16px);
 
-        .calendar{
+        @include tb {
+          overflow: auto;
+        }
+
+        .calendar {
           margin: 0 auto;
           width: 100%;
 
-          caption{
+          @include tb {
+            width: 930px;
+          }
+
+          caption {
             display: none;
           }
 
@@ -9560,28 +10006,32 @@ body.body--calendar{
                 font-weight: normal;
                 text-align: center;
 
-                &:first-child{
+                &:first-child {
+                  color: #d90000;
                   border-bottom: 1px solid $white;
                   background: #f8edf3;
                 }
-                &:last-child{
+
+                &:last-child {
+                  color: #26499d;
                   border-bottom: 1px solid $white;
                   background: #e9eff7;
                 }
 
                 @include tb {
-                  span.unit{
+                  span.unit {
                     display: none;
                   }
                 }
               }
             }
           }
+
           tbody {
             @include tb {
               font-size: $px10;
 
-              a{
+              a {
                 // font-size: $px10;
               }
             }
@@ -9599,30 +10049,35 @@ body.body--calendar{
                   flex-direction: column;
                   padding: 5px;
                   font-size: $px11;
+
                   div.daily {
-                    a{
+                    a {
                       // font-size: $px11;
                       color: $text;
                     }
                   }
-                  div.page{
+
+                  div.page {
+
                     .kohen,
                     .sports,
-                    .bunka{
+                    .bunka {
                       display: inline-block;
                       padding: 0 3px;
                       font-weight: bold;
                       background: #f6ffc5;
                       @include border-radius(7px);
                     }
-                    .sports{
+
+                    .sports {
                       background: #b6fbff;
                     }
-                    .bunka{
+
+                    .bunka {
                       background: #fabfdb;
                     }
 
-                    a{
+                    a {
                       // font-size: $px11;
                       color: $text;
                     }
@@ -9630,21 +10085,18 @@ body.body--calendar{
                 }
               }
 
+              td.next-month,
               td.prev-month {
-                color: #666;
+                color: #606060 !important;
+                background-color: #ddd !important;
 
                 div.date {
-                  a{
-                    color: #666;
+                  a {
+                    color: #606060 !important;
                   }
-                }
-              }
 
-              td.next-month {
-                color: #666;
-                div.date {
-                  a{
-                    color: #666;
+                  div.holiday {
+                    color: #c50000 !important;
                   }
                 }
               }
@@ -9653,6 +10105,7 @@ body.body--calendar{
               td.holiday {
                 background: #f8edf3;
                 color: #d90000;
+
                 div.date {
 
                   div.holiday {
@@ -9660,12 +10113,13 @@ body.body--calendar{
                   }
                 }
               }
+
               td.today {
                 background: #f8f8ed;
                 font-weight: bold;
 
                 div.date {
-                  a{
+                  a {
                     font-weight: bold;
                   }
                 }
@@ -9675,6 +10129,7 @@ body.body--calendar{
                 border-bottom: 1px solid $white;
                 background: #f8edf3;
                 color: #d90000;
+
                 div.date {
 
                   a {
@@ -9687,6 +10142,7 @@ body.body--calendar{
                 border-bottom: 1px solid $white;
                 background: #e9eff7;
                 color: #26499d;
+
                 div.date {
 
                   a {
@@ -9699,18 +10155,22 @@ body.body--calendar{
         }
       }
 
-      .event-pages-filter{
+      .event-pages-filter {
         margin: 20px 35px;
 
-        ul{
+        @include tb {
+          margin: 20px 0px;
+        }
+
+        ul {
           display: flex;
 
-          @include tb{
-            flex-direction: column;
+          @include tb {
+            flex-wrap: wrap;
           }
 
-          li{
-            a{
+          li {
+            a {
               display: block;
               margin-right: 10px;
               padding: 5px 15px;
@@ -9721,12 +10181,13 @@ body.body--calendar{
               @include border-radius(16px);
               background-color: $ygreen;
 
-              @include tb{
+              @include tb {
                 font-size: $px12;
                 margin-top: 10px;
               }
 
-              &:hover {
+              &:hover,
+              &:focus {
                 text-decoration: underline;
               }
             }
@@ -9734,25 +10195,29 @@ body.body--calendar{
         }
       }
 
-      #event-list{
+      #event-list {
         padding: 0 35px 30px;
         margin-bottom: 70px;
         background-color: $white;
         @include border-radius(0 0 16px 16px);
 
-        dl{
+        dl {
           padding: 5px 0;
           font-size: $px14;
           border-bottom: 1px dashed #787878;
 
-          &::before{
+          &:first-of-type {
+            border-top: 1px solid #ccc;
+          }
+
+          &::before {
             content: "\0020";
             display: block;
             height: 0;
             overflow: hidden;
           }
 
-          &::after{
+          &::after {
             content: "\0020";
             clear: both;
             display: block;
@@ -9760,41 +10225,37 @@ body.body--calendar{
             overflow: hidden;
           }
 
-          a{
+          a {
             font-size: $px14;
           }
 
-          dt{
+          dt {
             width: 15%;
             margin-left: 5px;
             float: left;
           }
 
-          dd{
-            width: 74%;
+          dd {
             margin-bottom: 0;
             padding-bottom: 6px;
             border: 0;
-            float: left;
             margin-left: 15.5%;
-
-            &:nth-child(2){
-              margin-left: 0;
-            }
 
             .kohen,
             .sports,
-            .bunka{
+            .bunka {
               display: inline-block;
               padding: 0 3px;
               font-weight: bold;
               background: #f6ffc5;
               @include border-radius(7px);
             }
-            .sports{
+
+            .sports {
               background: #b6fbff;
             }
-            .bunka{
+
+            .bunka {
               background: #fabfdb;
             }
           }
@@ -9803,34 +10264,35 @@ body.body--calendar{
             font-size: $px10;
             flex-direction: column;
 
-            a{
+            a {
               font-size: $px10;
             }
 
-            dt{
+            dt {
               width: 100%;
             }
-            dd{
+
+            dd {
               margin-left: 5px;
             }
           }
         }
 
-        dl.sat{
+        dl.sat {
           background: #e9eff7;
           color: #26499d;
 
-          a{
+          a {
             color: #26499d;
           }
         }
 
         dl.sun,
-        dl.holiday{
+        dl.holiday {
           background: #f8edf3;
           color: #d90000;
 
-          a{
+          a {
             color: #d90000;
           }
         }
@@ -9839,25 +10301,25 @@ body.body--calendar{
   }
 }
 
-body.body--calendar-search{
-  #wrap.event{
-    #main{
+body.body--calendar-search {
+  #wrap.event {
+    #main {
       margin-bottom: 70px;
 
-      #calendar-search{
+      #calendar-search {
         @include border-radius(16px);
         background-color: $white;
 
-        .content-body.search{
+        .content-body.search {
           background-color: transparent;
         }
 
-        form{
-          footer.send{
-            a{
+        form {
+          footer.send {
+            a {
               padding: 10px 30px;
               font-weight: bold;
-              font-size: 12px;
+              font-size: $px12;
               color: $white;
               text-decoration: none;
               text-align: center;
@@ -9865,13 +10327,13 @@ body.body--calendar-search{
               @include border-radius(20px);
               background-color: $blue;
 
-              @include tb{
+              @include tb {
                 width: 90%;
                 margin-top: 10px;
               }
 
-                &:hover,
-                &:focus {
+              &:hover,
+              &:focus {
                 color: $text;
                 background-color: $white;
               }
@@ -9879,33 +10341,34 @@ body.body--calendar-search{
           }
         }
 
-        div.page{
+        div.page {
           margin: 0 35px;
           padding: 30px 0;
           border-top: 1px solid $main-blue;
 
-          article{
+          article {
             padding: 10px 0;
             margin-bottom: 5px;
             border-bottom: 1px dashed #787878;
 
-            header{
+            header {
               display: flex;
 
-              @include tb{
+              @include tb {
                 flex-direction: column;
               }
 
-              time{
+              time {
                 width: 20%;
                 padding-left: 5px;
 
-                @include tb{
+                @include tb {
                   width: 100%;
                 }
               }
-              h2{
-                @include tb{
+
+              h2 {
+                @include tb {
                   padding-left: 5px;
                 }
               }
@@ -9917,35 +10380,35 @@ body.body--calendar-search{
   }
 }
 
-body.body--calendar{
+body.body--calendar {
   background-color: $bg;
 
-  #wrap.event__page{
+  #wrap.event__page {
     display: flow-root;
     width: 1000px;
     margin: 30px auto;
 
-    @include tb{
+    @include tb {
       width: 100%;
       padding: 0 10px;
       margin: 110px auto;
     }
 
-    #main{
+    #main {
       width: 70%;
       margin-top: 45px;
       @include border-radius(16px);
       background-color: $white;
       float: left;
 
-      @include tb{
+      @include tb {
         float: none;
         width: 100%;
         padding: 10px;
       }
 
-      header{
-        h1{
+      header {
+        h1 {
           margin: 20px 35px;
           font-size: $px24;
           color: $main-blue;
@@ -9954,31 +10417,32 @@ body.body--calendar{
         }
       }
 
-      .released{
+      .released {
         margin: 0 35px;
         font-size: $px14;
         color: #2c2c2c;
         border-bottom: 1px #787878 dashed;
       }
 
-      .categories{
+      .categories {
         margin: 0 35px;
-        header{
+
+        header {
           display: none;
         }
 
-        .nodes{
-            margin-top: 20px;
+        .nodes {
+          margin-top: 20px;
 
-          ul{
+          ul {
             display: flex;
 
-            @include tb{
+            @include tb {
               flex-wrap: wrap;
             }
 
-            li{
-              a{
+            li {
+              a {
                 display: block;
                 margin-right: 10px;
                 padding: 5px 15px;
@@ -9989,13 +10453,14 @@ body.body--calendar{
                 @include border-radius(16px);
                 background-color: $ygreen;
 
-                @include tb{
+                @include tb {
                   font-size: $px12;
                   margin-top: 10px;
                   text-align: center;
                 }
 
-                &:hover {
+                &:hover,
+                &:focus {
                   text-decoration: underline;
                 }
               }
@@ -10006,17 +10471,17 @@ body.body--calendar{
 
       }
 
-      dl.see{
+      dl.see {
         margin: 20px 35px;
         display: flex;
         flex-wrap: wrap;
         font-size: $px14;
 
-        @include tb{
+        @include tb {
           flex-direction: column;
         }
 
-        dt{
+        dt {
           width: 25%;
           margin-bottom: 10px;
           padding: 5px 10px;
@@ -10024,40 +10489,42 @@ body.body--calendar{
           background-color: #cae9ff;
           @include border-radius(10px);
 
-          @include tb{
+          @include tb {
             width: 100%;
           }
         }
-        dd{
+
+        dd {
           width: 75%;
           margin-bottom: 10px;
           padding: 5px 10px;
 
-          @include tb{
+          @include tb {
             width: 100%;
           }
         }
       }
     }
-    #side{
+
+    #side {
       width: 25%;
       margin-top: 45px;
       float: right;
 
-      @include tb{
+      @include tb {
         float: none;
         width: 100%;
       }
 
-      #calendar{
+      #calendar {
         margin: 0 auto;
 
-        @include tb{
+        @include tb {
           width: 100%;
           padding: 0 10px;
         }
 
-        .title{
+        .title {
           width: 100%;
           margin: 0 auto;
           padding: 10px 20px;
@@ -10068,41 +10535,46 @@ body.body--calendar{
           @include border-radius(15px);
         }
 
-        .calendar-nav{
-          h2{
-          display: none;
+        .calendar-nav {
+          h2 {
+            display: none;
           }
-          ul{
+
+          ul {
             padding: 5px 20px;
             display: flex;
             justify-content: space-between;
 
-            li{
+            li {
               padding: 0 5px;
               font-size: $px12;
             }
 
-            li.current{
+            li.current {
               font-weight: bold;
             }
           }
         }
 
-        table.calendar{
+        table.calendar {
           width: 100%;
 
-          &,td,th{
+          &,
+          td,
+          th {
             border-collapse: collapse;
-            border:1px solid #999;
+            border: 1px solid #999;
           }
 
-          .caption{
+          .caption {
             font-size: $px14;
           }
+
           /* 曜日 */
           thead {
             tr {
               background-color: $ygreen;
+
               th {
                 span.wday {
                   span.unit {
@@ -10112,6 +10584,7 @@ body.body--calendar{
               }
             }
           }
+
           /* 日にち */
           tbody {
             font-size: $px14;
@@ -10119,13 +10592,19 @@ body.body--calendar{
             background-color: $white;
 
             tr {
-              td.prev-month,td.next-month {
+
+              td.prev-month,
+              td.next-month {
                 opacity: 0.5;
               }
-              td.sat,td.sat > a {
+
+              td.sat,
+              td.sat>a {
                 color: #004bb4;
               }
-              td.sun,td.sat > a {
+
+              td.sun,
+              td.sat>a {
                 color: #df3646;
               }
             }
@@ -10133,10 +10612,10 @@ body.body--calendar{
         }
       }
 
-      #calendar-search{
+      #calendar-search {
         margin-top: 30px;
 
-        .title{
+        .title {
           width: 100%;
           margin: 0 auto;
           padding: 10px 20px;
@@ -10147,15 +10626,16 @@ body.body--calendar{
           @include border-radius(15px 15px 0 0);
         }
 
-        form{
+        form {
           padding: 10px 20px 20px;
           background-color: $white;
           @include border-radius(0 0 15px 15px);
 
           .keyword,
-          .event-facility{
+          .event-facility {
             margin-top: 10px;
-            input{
+
+            input {
               margin-left: 5px;
               padding-left: 10px;
               width: 90%;
@@ -10164,15 +10644,16 @@ body.body--calendar{
             }
           }
 
-          fieldset.categories{
+          fieldset.categories {
             margin-top: 10px;
             display: flex;
             flex-direction: column;
           }
 
-          .event-date-range{
+          .event-date-range {
             margin-top: 10px;
-            input{
+
+            input {
               margin-left: 5px;
               padding-left: 10px;
               width: 40%;
@@ -10181,12 +10662,13 @@ body.body--calendar{
             }
           }
 
-          footer.send{
+          footer.send {
             margin-top: 10px;
-            input{
+
+            input {
               padding: 10px 25px;
               font-weight: bold;
-              font-size: 12px;
+              font-size: $px12;
               color: $white;
               text-decoration: none;
               text-align: center;
@@ -10194,13 +10676,13 @@ body.body--calendar{
               @include border-radius(20px);
               background-color: $main-blue;
 
-              @include tb{
+              @include tb {
                 width: 90%;
                 margin-top: 10px;
               }
 
-                &:hover,
-                &:focus {
+              &:hover,
+              &:focus {
                 color: $text;
                 background-color: $white;
               }
@@ -10214,28 +10696,30 @@ body.body--calendar{
 
 /* pages - body.body--faq　よくある質問
 ---------------------------------------------------------- */
-body.body--faq{
-  #main{
-    .faq-search{
+body.body--faq {
+  #main {
+    .faq-search {
       padding: 30px 20px;
 
       form {
         div.category {
           float: left;
 
-          @include tb{
+          @include tb {
             float: none;
           }
         }
+
         div.keyword {
           label {
             margin-left: 20px;
 
-            @include tb{
+            @include tb {
               margin-left: 0px;
             }
           }
         }
+
         div.submitters {
           margin-top: 40px;
           clear: both;
@@ -10243,7 +10727,7 @@ body.body--faq{
           input {
             @include btn-gry;
 
-            &[name="search"]{
+            &[name="search"] {
               color: $white;
               background: $blue;
               border: 1px solid $blue;
@@ -10253,16 +10737,17 @@ body.body--faq{
       }
     }
 
-    .yield-wrap{
+    .yield-wrap {
       padding: 0 20px;
 
-      .faq-question{
+      .faq-question {
         font-weight: bold;
         padding: 1em;
         background-color: #fcf8d7;
         @include border-radius(15px);
       }
-      .body{
+
+      .body {
         padding: 30px 0px;
         order: 1;
 
@@ -10283,7 +10768,7 @@ body.body--faq{
         h2 {
           margin: 30px 0 12px;
           padding: 8px 12px;
-          font-size: 15px;
+          font-size: $px15;
           font-weight: bold;
           background-color: #ccf0ff;
 
@@ -10371,7 +10856,7 @@ body.body--faq{
         }
       }
 
-      .categories{
+      .categories {
         display: flex;
         padding: 8px 0 35px;
         border-top: 1px solid #09698e;
@@ -10433,18 +10918,19 @@ body.body--faq{
 
 /* pages - body.ezine__layout
 ---------------------------------------------------------- */
-body.ezine__layout{
+body.ezine__layout {
   background-color: $bg;
 
-  #wrap{
+  #wrap {
     width: $page-width;
     margin: 20px auto;
 
-    @include tb{
+    @include tb {
       width: 100%;
       padding: 115px 20px 0;
     }
   }
+
   #main {
     width: 70%;
     margin: 20px 30px 70px 0;
@@ -10453,7 +10939,7 @@ body.ezine__layout{
     @include border-radius(20px);
     float: left;
 
-    @include tb{
+    @include tb {
       float: none;
       width: 100%;
       margin: 20px 30px 30px 0;
@@ -10471,9 +10957,11 @@ body.ezine__layout{
         @include border-radius(20px 20px 0 0);
       }
     }
+
     .released {
       display: none;
     }
+
     ul.ezine-pages {
       padding: 30px 20px;
       display: flex;
@@ -10484,13 +10972,13 @@ body.ezine__layout{
         margin-left: 20px;
         border-bottom: $text dashed 1px;
 
-        @include tb{
+        @include tb {
           width: 94%;
           margin-left: 0px;
 
           /* 最後の要素 + 最後から２つ目のliが奇数の場合、その要素 */
           &:last-child,
-          &:nth-last-child(2):nth-child(odd){
+          &:nth-last-child(2):nth-child(odd) {
             border-bottom: none;
           }
         }
@@ -10501,7 +10989,7 @@ body.ezine__layout{
           padding: 10px 10px 10px 35px;
           position: relative;
 
-          &::before{
+          &::before {
             content: url(/img/ic-file.png);
             background-size: 30px;
             transform: scale(0.5);
@@ -10513,23 +11001,23 @@ body.ezine__layout{
       }
     }
 
-    .ezine-html{
+    .ezine-html {
       margin: 30px 20px 12px;
       padding: 8px 12px;
-      font-size: 15px;
+      font-size: $px15;
       font-weight: bold;
       background-color: #ccf0ff;
     }
 
-    form{
+    form {
       padding: 20px;
 
-      .columns{
-        .column{
+      .columns {
+        .column {
           clear: both;
 
           dt,
-          legend{
+          legend {
             width: 35%;
             margin: 10px 10px 10px 0;
             padding: 5px 15px;
@@ -10538,56 +11026,57 @@ body.ezine__layout{
             @include border-radius(10px);
             float: left;
 
-            @include tb{
+            @include tb {
               width: 100%;
               float: unset;
             }
           }
-          dd{
+
+          dd {
             width: 60%;
             margin: 10px 10px 10px 0;
             padding: 5px 15px;
             float: left;
 
-            @include tb{
+            @include tb {
               width: 100%;
               float: unset;
             }
           }
 
-          dd.wide{
+          dd.wide {
             display: flex;
             justify-content: left;
             width: 100%;
             justify-items: end;
             align-items: baseline;
 
-            #selected-files{
+            #selected-files {
               padding-left: 50px;
             }
           }
         }
       }
 
-      footer.send{
+      footer.send {
         clear: both;
         margin: 30px auto;
         display: flex;
         flex-direction: column;
 
         input,
-        button{
+        button {
           width: 200px;
           margin: 10px auto;
           padding: 10px 15px;
           font-weight: bold;
-          font-size: 12px;
+          font-size: $px12;
           color: $white;
           border: 1px solid $blue;
           @include border-radius(20px);
           background-color: $blue;
 
-          @include tb{
+          @include tb {
             width: 100%;
           }
 
@@ -10598,7 +11087,7 @@ body.ezine__layout{
           }
         }
 
-        button[name="button"]{
+        button[name="button"] {
           color: $text;
           background-color: $hgry;
           border: 1px solid $hgry;
@@ -10611,35 +11100,36 @@ body.ezine__layout{
       }
     }
 
-    div.ezine-pages{
+    div.ezine-pages {
       padding: 20px 25px;
 
-      article{
+      article {
         padding: 10px 0;
         border-bottom: 1px dashed $black;
 
-        header{
+        header {
           display: flex;
           align-items: center;
 
-          @include tb{
+          @include tb {
             display: block;
           }
 
-          time{
+          time {
             font-size: $px12;
           }
 
-          h2{
+          h2 {
             padding-left: 50px;
             font-size: $px14;
             font-weight: bold;
 
-            @include tb{
+            @include tb {
               padding-left: 0;
             }
 
-            a:hover{
+            a:hover,
+            a:focus {
               text-decoration: underline;
             }
           }
@@ -10647,28 +11137,32 @@ body.ezine__layout{
       }
     }
 
-    article.body{
+    article.body {
       @include docs;
-      video{
+
+      video {
         max-width: 100%;
       }
+
       padding: 30px 20px;
 
-      p{
+      p {
         font-size: $px16;
       }
     }
   }
+
   #side {
     padding-top: 20px;
     margin-bottom: 70px;
     width: 25%;
     float: left;
 
-    @include tb{
+    @include tb {
       float: none;
       width: 100%;
     }
+
     section#side-menu {
       header {
         h2 {
@@ -10683,6 +11177,7 @@ body.ezine__layout{
 
         }
       }
+
       nav {
         ul {
           width: 100%;
@@ -10694,20 +11189,20 @@ body.ezine__layout{
           li {
             border-bottom: 1px solid $blue;
 
-            &:first-child{
+            &:first-child {
               padding-top: 10px;
               @include border-radius-tr(20px);
               @include border-radius-tl(20px);
             }
 
-            &:last-child{
+            &:last-child {
               padding-bottom: 10px;
               @include border-radius-br(20px);
               @include border-radius-bl(20px);
               border-bottom: none;
             }
 
-            &--current{
+            &--current {
               background-color: #b0e8ff;
             }
 

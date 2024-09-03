@@ -187,6 +187,16 @@
       display: inline-block;
     }
   }
+  .ss-preview-wrap-column {
+    &.ss-preview-wrap-column-title-wrap {
+      padding-top: 10px;
+      .ss-preview-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #fff;
+      }
+    }
+  }
 }
 .ss-preview-hide {
   display: none !important;

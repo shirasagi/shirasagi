@@ -86,7 +86,7 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
   def show_template
     if @item.try(:cloned_name?) && @item.readable?(@cur_user, site: @cur_site)
       "cloned_name"
-    elsif @item.workflow_state.blank? && @item.editable?(@cur_user, site: @cur_site)
+    elsif @item.not_yet_requested? && @item.owned?(@cur_user)
       "edit"
     elsif @item.readable?(@cur_user, site: @cur_site)
       "show"

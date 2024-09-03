@@ -1,0 +1,25 @@
+<dl class="see mod-opendata_metadata_notice">
+  <dt><%= @model.t :notice_user_ids %><%= @model.tt :notice_user_ids %></dt>
+  <dd class="wide">
+    <%= f.hidden_field "notice_user_ids[]", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.users.index"), cms_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= @cur_user.t(:name) %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.notice_users.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "notice_user_ids[]", value: user.id, id: nil %><%= user.name %> (<%= user.email %>)</td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

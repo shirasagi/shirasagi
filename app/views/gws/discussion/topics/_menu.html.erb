@@ -1,19 +1,15 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <% if @forum.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/discussion.links.forum.edit'), edit_gws_discussion_forum_path(id: @forum.id) %>
-    <% end %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/discussion.links.topic.new'), action: :new %>
+      <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /all/ %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/discussion.links.topic.new'), action: :new %>
+  <% elsif params[:action] =~ /new|create|download_all|destroy_all/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|destroy_all/ %>
-    <%= link_to t('ss.links.back'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|copy/ %>
-    <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
@@ -24,6 +20,6 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
-    <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

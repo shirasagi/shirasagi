@@ -99,4 +99,8 @@ module Gws::Addon::Workflow2::Approver
     end
     self.workflow_agent_custom_data = custom_data
   end
+
+  def not_yet_requested?
+    workflow_state.blank?
+  end
 end

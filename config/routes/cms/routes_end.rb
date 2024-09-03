@@ -118,8 +118,9 @@ Rails.application.routes.draw do
     end
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: [:deletion, :command, :change_state] do
+    resources :nodes, concerns: [:deletion, :command, :change_state, :import] do
       get :routes, on: :collection
+      match :download, on: :collection, via: %i[get post]
     end
 
     resources :parts, concerns: :deletion do
@@ -129,6 +130,8 @@ Rails.application.routes.draw do
     resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
@@ -266,8 +269,6 @@ Rails.application.routes.draw do
       resources :event_sessions, only: [:index, :show, :destroy], concerns: :deletion
     end
 
-    get "check_links" => "check_links#index"
-    post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
     get "generate_nodes/segment/:segment" => "generate_nodes#index", as: :segment_generate_nodes
     post "generate_nodes" => "generate_nodes#run"
@@ -313,7 +314,10 @@ Rails.application.routes.draw do
     delete "search_contents/:id" => "page_search_contents#destroy_all"
     resource :generate_lock
 
+    get "check_links" => redirect { |p, req| "#{req.path}/reports" }, as: :check_links
     namespace "check_links" do
+      get "run" => "run#index"
+      post "run" => "run#run"
       resources :reports, concerns: [:deletion], only: [:show, :index] do
         resources :pages, only: [:show, :index] do
           get :download, on: :collection
@@ -323,6 +327,7 @@ Rails.application.routes.draw do
         end
       end
       resources :ignore_urls, concerns: :deletion
+      resource :site_setting
     end
 
     namespace 'ldap' do
@@ -492,10 +497,14 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :change_state]
+    resources :nodes, concerns: [:deletion, :change_state, :import] do  
+      match :download, on: :collection, via: %i[get post]
+    end
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :import_pages, concerns: [:deletion, :convert, :change_state]
     resources :import_nodes, concerns: [:deletion, :change_state]

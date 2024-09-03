@@ -9,6 +9,10 @@
   <% if item.harvest_imported %>
     <span class="opendata-harvest"><%= item.harvest_importer ? item.harvest_importer.name : t("opendata.links.deleted") %></span>
   <% end %>
+
+  <% if item.metadata_imported %>
+    <span class="opendata-harvest"><%= item.metadata_importer ? item.metadata_importer.name : t("opendata.links.deleted") %></span>
+  <% end %>
 <% end %>
 
 <%= render template: "cms/crud/index" %>
