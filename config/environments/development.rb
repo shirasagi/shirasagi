@@ -13,6 +13,8 @@ Rails.application.configure do
   config.eager_load = false
 
   # Don't include all helpers
+  # include_all_helpers が true の場合、"Cms::ListHelper#render_page_list" ではなく
+  # "Opendata::ListHelper#render_page_list" が実行され、view のレンダリングに失敗する。
   config.action_controller.include_all_helpers = false
 
   # CSRF
@@ -26,15 +28,18 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Enable server timing
+  config.server_timing = true
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :file_store, "#{Rails.root}/tmp/cache_store"
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      "Cache-Control" => "public, max-age=#{2.days.to_i}"
     }
   else
     config.action_controller.perform_caching = false

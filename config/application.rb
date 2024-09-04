@@ -12,7 +12,6 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 require_relative "../app/models/ss"
@@ -78,6 +77,9 @@ module SS
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
+
+    # Don't generate system test files.
+    config.generators.system_tests = nil
 
     I18n.enforce_available_locales = true
     config.i18n.default_locale = :ja
