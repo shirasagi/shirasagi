@@ -87,4 +87,8 @@ module SS
   def each_locale_in_order(&block)
     locales_in_order.each(&block)
   end
+
+  def deprecator
+    @deprecator ||= ActiveSupport::Deprecation.new(SS.version, "SHIRASAGI")
+  end
 end
