@@ -856,6 +856,7 @@ DEPENDENCIES
   sparql
   sparql-client
   sprockets
+  sprockets-rails
   terminal-notifier-guard
   test-queue
   thinreports
