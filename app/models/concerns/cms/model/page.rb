@@ -72,6 +72,7 @@ module Cms::Model::Page
           file_urls += column_value.files.map{|file| file.url} if (column_value.respond_to?(:files) && column_value.files.present?)
         end
         cond << { form_contains_urls: { '$in' => file_urls } } if file_urls.present?
+        cond << { contains_urls: { '$in' => file_urls } } if file_urls.present?
       end
 
       return all.none if cond.blank?

@@ -51,8 +51,9 @@ describe "cms_delete_linked_pages", type: :feature, dbscope: :example, js: true 
     page2.update(form_id: nil)
     page2.column_values.map {|c| c.destroy}
     page2.set(contains_urls: [ss_file.url])
+    page2.set(form_contains_urls: [])
     page2.reload
-
+    
     visit index_path
     expect(page).to have_css(".flex-list-head")
     expect(page).to have_css("input[type='checkbox'][value='#{page1.id}']")
