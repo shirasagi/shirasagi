@@ -17,13 +17,10 @@ class SS::Migration20240903000000
       when "table"
         item.event_display = "table"
         item.event_display_tabs = %w(list table)
-      when "list_only"
-        item.event_display = "list"
-        item.event_display_tabs = %w(list)
       when "table_only"
         item.event_display = "table"
         item.event_display_tabs = %w(table)
-      else
+      else # "list_only"
         item.event_display = "list"
         item.event_display_tabs = %w(list)
       end
