@@ -61,6 +61,7 @@ module Gws::Addon::Import::Facility
                   line << output_line(attr, item.columns[i])
                 end
               end
+              line << item.default_members.map(&:long_name).join("\n")
               line << item.reservable_group_names.join("\n")
               line << item.reservable_member_names.join("\n")
               line << readable_setting_range_datas_value_to_text(item.readable_setting_range)
@@ -85,6 +86,7 @@ module Gws::Addon::Import::Facility
           type html
         )
         headers += columns_headers
+        headers += %w(default_member_names)
         headers += %w(
           reservable_group_names reservable_member_names readable_setting_range
           readable_group_names readable_member_names group_names user_names
@@ -225,6 +227,7 @@ module Gws::Addon::Import::Facility
       approval_check_state = row[header_t("approval_check_state")].to_s.strip
       update_approved_state = row[header_t("update_approved_state")].to_s.strip
 
+      default_member_names = row[header_t("default_member_names")].to_s.strip.split("\n")
       reservable_group_names = row[header_t("reservable_group_names")].to_s.strip.split("\n")
       reservable_member_names = row[header_t("reservable_member_names")].to_s.strip.split("\n")
       readable_setting_range = row[header_t("readable_setting_range")].to_s.strip
@@ -263,6 +266,7 @@ module Gws::Addon::Import::Facility
       item.activation_date = activation_date
       item.expiration_date = expiration_date
 
+      item.default_member_ids = user_names_to_ids(default_member_names)
       item.reservable_group_ids = group_names_to_ids(reservable_group_names)
       item.reservable_member_ids = user_names_to_ids(reservable_member_names)
 

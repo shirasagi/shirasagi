@@ -55,6 +55,7 @@ en:
       reservation_end_date: Reservable period (end)
       approval_check_state: Reservation approval
       update_approved_state: Editing a reservation after approval
+      default_member_names: Default users
       reservable_group_names: Reservable groups
       reservable_member_names: Reservable users
       readable_setting_range: Publication range
@@ -176,6 +177,8 @@ en:
       gws/facility/custom_field:
         name: Name
         order: Order
+      gws/addon/facility/default_member_setting:
+        default_member_ids: Default users
 
   tooltip:
     gws/facility/item:
@@ -218,3 +221,6 @@ en:
       order:
         - Specify the question order.
         - "The lower the number, the higher the position."
+    gws/addon/facility/default_member_setting:
+      default_member_ids:
+        - Select who will include participants by default when reserving equipment.

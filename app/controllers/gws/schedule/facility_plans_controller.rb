@@ -18,7 +18,15 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   end
 
   def pre_params
-    super.merge facility_ids: [@facility.id]
+    h = super
+    h[:facility_ids] = [@facility.id]
+
+    member_ids = h[:member_ids].to_a
+    member_ids += @facility.default_member_ids
+    member_ids.uniq!
+
+    h[:member_ids] = member_ids
+    h
   end
 
   def set_download_url

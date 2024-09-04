@@ -55,6 +55,7 @@ ja:
       reservation_end_date: 予約可能期間（終了）
       approval_check_state: 予約承認
       update_approved_state: 承認後の予約の編集
+      default_member_names: 初期設定の参加者
       reservable_group_names: 予約可能グループ
       reservable_member_names: 予約可能ユーザー
       readable_setting_range: 公開範囲
@@ -137,6 +138,7 @@ ja:
       gws/facility/group_setting: 設備管理
       gws/facility/reservable_setting: 予約権限
       gws/facility/column_setting: 追加入力
+      gws/facility/default_member_setting: 初期設定
 
   mongoid:
     models:
@@ -176,6 +178,8 @@ ja:
       gws/facility/custom_field:
         name: 名前
         order: 並び順
+      gws/addon/facility/default_member_setting:
+        default_member_ids: 初期設定の参加者
 
   tooltip:
     gws/facility/item:
@@ -221,3 +225,6 @@ ja:
       order:
         - 質問項目の並び順を指定します。
         - 数字が小さいほど上位に表示されます。
+    gws/addon/facility/default_member_setting:
+      default_member_ids:
+        - 設備予約を登録する際に、初期設定で参加者に含めるユーザーを選択します。

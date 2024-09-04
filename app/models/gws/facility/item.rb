@@ -6,6 +6,7 @@ class Gws::Facility::Item
   include SS::Scope::ActivationDate
   include SS::Addon::Markdown
   include Gws::Addon::Facility::ColumnSetting
+  include Gws::Addon::Facility::DefaultMemberSetting
   include Gws::Addon::Facility::ReservableSetting
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
