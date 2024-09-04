@@ -63,6 +63,9 @@ module SS
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # see: https://til.toshimaru.net/2023-03-30
+    config.action_controller.raise_on_open_redirects = false
+
     config.middleware.delete ActionDispatch::HostAuthorization
 
     # Configuration for the application, engines, and railties goes here.
