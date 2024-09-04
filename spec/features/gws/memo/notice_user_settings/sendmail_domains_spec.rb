@@ -61,7 +61,8 @@ describe 'gws_memo_notice_user_settings', type: :feature, dbscope: :example do
           fill_in "item[send_notice_mail_addresses]", with: email
           click_button I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css("#errorExplanation", text: I18n.t("errors.messages.disallowed_domains", domains: domains2.join(",")))
+        expect(page).to have_css("#errorExplanation", text: I18n.t("errors.messages.disallowed_domains",
+          domains: domains2.join(",")))
       end
     end
   end
