@@ -47,14 +47,29 @@ module SS::Model::Task
   end
 
   class TaskLogFormatter
-    class << self
-      def default
-        self
-      end
+    def call(_severity, _time, _progname, msg)
+      msg
+    end
+  end
 
-      def call(_severity, _time, _progname, msg)
-        msg
-      end
+  class LogDev
+    def initialize(path)
+      dirname = ::File.dirname(path)
+      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
+
+      file = ::File.open(path, 'a')
+      # file = ::File.open(path, (File::WRONLY | File::APPEND))
+      file.sync = true
+      @file = file
+    end
+
+    def write(message)
+      @file.puts(message)
+      $stdout.puts(message)
+    end
+
+    def close
+      @file.close
     end
   end
 
@@ -152,11 +167,6 @@ module SS::Model::Task
         @logger = nil
       end
 
-      if @log_file
-        @log_file.close rescue nil
-        @log_file = nil
-      end
-
       if @performance
         @performance.close rescue nil
         @performance = nil
@@ -200,11 +210,6 @@ module SS::Model::Task
       @logger = nil
     end
 
-    if @log_file
-      @log_file.close rescue nil
-      @log_file = nil
-    end
-
     self.unset(:logs) if self[:logs].present?
 
     ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exist?(log_file_path)
@@ -238,25 +243,9 @@ module SS::Model::Task
   end
 
   def logger
-    @log_file ||= begin
-      dirname = ::File.dirname(log_file_path)
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
-
-      file = ::File.open(log_file_path, 'a')
-      # file = ::File.open(log_file_path, (File::WRONLY | File::APPEND))
-      file.sync = true
-      file
-    end
-
     @logger ||= begin
-      base_logger = ActiveSupport::Logger.new(@log_file, formatter: TaskLogFormatter.default)
-      stdout_logger = ActiveSupport::Logger.new($stdout, formatter: TaskLogFormatter.default)
-      def stdout_logger.close
-        # do not close $stdout
-      end
-
-      base_logger.extend(ActiveSupport::Logger.broadcast(stdout_logger))
-      ActiveSupport::TaggedLogging.new(base_logger)
+      logger = ActiveSupport::Logger.new(LogDev.new(log_file_path), formatter: TaskLogFormatter.new)
+      ActiveSupport::TaggedLogging.new(logger)
     end
   end
 
