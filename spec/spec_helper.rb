@@ -97,6 +97,7 @@ RSpec.configure do |config|
 
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
+  config.include RSpec::Rails::RailsExampleGroup
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include FactoryBot::Syntax::Methods
