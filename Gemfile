@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 6.1.0'
+gem 'rails', '~> 7.0.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sass-rails'
@@ -11,6 +11,10 @@ gem 'uglifier'
 gem 'coffee-rails'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
+# rdoc 6.4 以降にアップデートすると依存関係に 'psych' と 'stringio' が組み込まれる。
+# 'psych' と 'stringio' が組み込まれると 'bin/rails' コマンドや 'bin/rake' コマンドが動作しなくなり、
+# 'bundle exec rails' や 'bundle exec rake' を使用しなければならなくなるので、バージョンを固定する。
+gem 'rdoc', '~> 6.3.0', group: :doc #
 
 # Server
 gem 'unicorn'
