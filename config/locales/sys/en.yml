@@ -93,6 +93,7 @@ en:
       when_disabled: When form authentication is disabled
       form_key: Key
       form_password: Password
+      form_enabled_ip_addresses: Excluded IP address
 
   sys_role:
     edit_sys_sites: Manage site
@@ -213,6 +214,7 @@ en:
         form_key: Key name to activate form authentication
         form_password: Password to activate form authentication
         in_form_password: Password to activate form authentication
+        form_enabled_ip_addresses: Excluded IP address
 
   errors:
     messages:
@@ -329,6 +331,7 @@ en:
         - Select whether to show form authentication on the login screen.
       when_form_auth_disabled:
         - Even when form authentication is disabled, if the key and password set below are set in the Query String, form authentication will be displayed.
+        - Also if you set excluded IP address, form authentication will be displayed even if it matches the access source.
 
   job:
     models:

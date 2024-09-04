@@ -12,12 +12,14 @@ class Sys::Auth::Setting
   field :form_auth, type: String, default: "enabled"
   field :form_key, type: String
   field :form_password, type: String
+  field :form_enabled_ip_addresses, type: SS::Extensions::Lines
 
   attr_accessor :in_form_password
 
-  permit_params :form_auth, :form_key, :in_form_password
+  permit_params :form_auth, :form_key, :in_form_password, :form_enabled_ip_addresses
 
   before_validation :update_form_password
+  validates :form_enabled_ip_addresses, ip_address: true
 
   class << self
     class Current < ActiveSupport::CurrentAttributes
@@ -44,8 +46,24 @@ class Sys::Auth::Setting
     !form_auth_disabled?
   end
 
-  def form_auth_available?(param)
+  def form_enabled_ip_addresses_any?(request = nil)
+    return false if form_enabled_ip_addresses.blank?
+
+    remote_addr = SS.remote_addr(request)
+    enabled = form_enabled_ip_addresses.any? do |addr|
+      next false if addr.blank? || addr.start_with?("#")
+
+      addr = IPAddr.new(addr) rescue nil
+      next false unless addr
+
+      addr.include?(remote_addr)
+    end
+    enabled
+  end
+
+  def form_auth_available?(param, request = nil)
     return true if form_auth_enabled?
+    return true if form_enabled_ip_addresses_any?(request)
 
     password = param[form_key.presence || DEFAULT_KEY]
     return false if password.blank?

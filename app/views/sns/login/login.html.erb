@@ -16,7 +16,7 @@
     </header>
 
     <% setting = Sys::Auth::Setting.instance %>
-    <% if setting.form_auth_available?(params) %>
+    <% if setting.form_auth_available?(params, request) %>
       <% form_key = setting.form_key.presence || Sys::Auth::Setting::DEFAULT_KEY %>
       <%= form_tag action: params[:action] do |f| %>
         <% if flash[:alert] %>
