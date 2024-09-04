@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
     before_action :set_received_by
   end
 
-  class CloseableChunkedBody < Rack::Chunked::Body
+  class CloseableChunkedBody < ActionController::Streaming::Body
     def initialize(*args)
       super
       @closed = false
