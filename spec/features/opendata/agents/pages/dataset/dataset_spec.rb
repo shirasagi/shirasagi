@@ -79,7 +79,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       within "div#dataset-tabs-#{node_dataset.id}" do
         within "article#cms-tab-#{node_dataset.id}-0-view" do
           within ".resource[data-uuid='#{@rs1.uuid}']" do
-            expect(page).to have_css(".info .name", text: "#{@rs1.name} (#{@rs1.format} #{@rs1.size.to_s(:human_size)})")
+            expect(page).to have_css(".info .name", text: "#{@rs1.name} (#{@rs1.format} #{@rs1.size.to_fs(:human_size)})")
             expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@rs1.license.file.url}\"]")
             expect(page).to have_css(".icons .content-wrap a.content", text: I18n.t("opendata.labels.preview"))
@@ -117,7 +117,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
           end
 
           within ".url-resource[data-uuid='#{@urs1.uuid}']" do
-            name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_s(:human_size)})"
+            name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_fs(:human_size)})"
             expect(page).to have_css(".info .name", text: name)
             expect(page).to have_no_css(".info .download-count")
             expect(page).to have_css(".icons .license img[src=\"#{@urs1.license.file.url}\"]")

@@ -22,7 +22,7 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
     end
 
     create_notify_message
-    Rails.logger.info("#{@backup_items.to_s(:delimied)} 件のメッセージのバックアアップを実行しました。")
+    Rails.logger.info("#{@backup_items.to_fs(:delimied)} 件のメッセージのバックアアップを実行しました。")
   ensure
     @output_zip.close if @output_zip
   end

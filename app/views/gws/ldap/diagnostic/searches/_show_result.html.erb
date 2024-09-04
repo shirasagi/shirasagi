@@ -50,7 +50,7 @@
 <div class="grid-table-wrap">
   <% if @entries.length > 0 %>
     <% if @entries.length > Gws::Ldap::MAX_SEARCH_RESULTS %>
-      <div><%= "Up to #{Gws::Ldap::MAX_SEARCH_RESULTS.to_s(:delimited)} items are displayed." %></div>
+      <div><%= "Up to #{Gws::Ldap::MAX_SEARCH_RESULTS.to_fs(:delimited)} items are displayed." %></div>
     <% end %>
 
     <table class="grid-table">
