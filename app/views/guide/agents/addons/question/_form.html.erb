@@ -1,6 +1,20 @@
+<% @render_form = proc do |form_id, form_name, form_not_applicable, form_optional_necessary| %>
+  <tr data-id="<%= form_id %>">
+    <td><%= hidden_field_tag "item[in_edges][][point_ids][]", form_id %> <%= form_name %></td>
+    <td>
+      <label><%= check_box_tag('item[in_edges][][not_applicable_point_ids][]', form_id, form_not_applicable) %> <%= t('guide.labels.not_applicable') %></label>
+    </td>
+    <td>
+      <label><%= check_box_tag('item[in_edges][][optional_necessary_point_ids][]', form_id, form_optional_necessary) %> <%= t('guide.labels.optional_necessary') %></label>
+    </td>
+    <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+  </tr>
+<% end %>
+
 <%= jquery do %>
+var template = $("#addon-guide-agents-addons-question .form-template").html();
 var toggleQuestionEdges = function() {
-var type = $('[name="item[question_type]"]:checked').val();
+  var type = $('[name="item[question_type]"]:checked').val();
   $(".question-edges").hide();
   $(".question-edges." + type).show();
 };
@@ -59,12 +73,41 @@ $('.add-edge').on("click", function() {
 
   $(".question-edges.choices .edge:last").after(edge);
 
+  edge.find(".ajax-box").data("on-select", function($item) {
+    var $data = $item.closest("[data-id]");
+    var formId = $data.data('id');
+    var formName = $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+    if (! formId || !formName) {
+      return;
+    }
+
+    var html = template.replace(/:id/g, formId).replace(/:name/g, formName);
+
+    var $tbody = SS_SearchUI.anchorAjaxBox.closest('dd').next('dd').find('tbody');
+    $tbody.prepend(html);
+    $tbody.find(".deselect").on("click", SS_SearchUI.deselect);
+  });
+
   setEdgeNo();
   return false;
 });
 
 // deselect edge
 $(".deselect-edge").on("click", deselectEdge);
+
+$("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($item) {
+  var $data = $item.closest("[data-id]");
+  var formId = $data.data('id');
+  var formName = $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+  if (! formId || !formName) {
+    return;
+  }
+
+  var html = template.replace(/:id/g, formId).replace(/:name/g, formName);
+
+  var $tbody = SS_SearchUI.anchorAjaxBox.closest('dd').next('dd').find('tbody');
+  $tbody.prepend(html);
+});
 
 <% end %>
 <%
@@ -91,7 +134,9 @@ $(".deselect-edge").on("click", deselectEdge);
         question_type: edge.question_type,
         value: edge.value,
         explanation: edge.explanation,
-        point_ids: edge.point_ids
+        point_ids: edge.point_ids,
+        not_applicable_point_ids: edge.not_applicable_point_ids,
+        optional_necessary_point_ids: edge.optional_necessary_point_ids
       )
     end
   end
@@ -142,3 +187,7 @@ $(".deselect-edge").on("click", deselectEdge);
     <dd><%= button_tag t("ss.links.add"), { type: :button, class: "add-edge btn" } %></dd>
   </dl>
 </div>
+
+<script type="text/html" class="form-template">
+  <% @render_form.call(":id", ":name", false, false, false) %>
+</script>

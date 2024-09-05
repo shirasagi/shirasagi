@@ -39,6 +39,8 @@ ja:
       import_procedures: 手続きのインポート
       import_questions: 質問のインポート
       import_transitions: 選択肢のインポート
+      necessary: 必要
+      optional_necessary: 任意必要
     views:
       choose_yes_no: 次の項目に該当しますか？
       procedures_needed: "%{count}件の手続きが必要です。"

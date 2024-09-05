@@ -5,8 +5,13 @@ class Guide::Apis::ProceduresController < ApplicationController
 
   def index
     @multi = params[:single].blank?
-    @node = Cms::Node.find(params[:nid])
+    @node = Cms::Node.where(id: params[:nid]).first
     @id = params[:id].to_i
+
+    unless @node
+      @items = @model.none
+      return
+    end
 
     @items = @model.site(@cur_site).
       node(@node).

@@ -15,7 +15,8 @@ module Guide::Addon
       permit_params :question_type
       permit_params :check_type
       permit_params in_edges: [
-        :value, :question_type, :explanation, point_ids: []
+        :value, :question_type, :explanation, point_ids: [], not_applicable_point_ids: [],
+        optional_necessary_point_ids: []
       ]
 
       before_validation :set_check_type, if: ->{ question_type == "yes_no" }
@@ -61,18 +62,14 @@ module Guide::Addon
     end
 
     def set_referenced_questions
-      Guide::Question.site(@cur_site || site).node(node).each do |question|
-        ids = question.referenced_question_ids.to_a
-        next if !ids.include?(id)
-        ids -= [id]
-        question.set(referenced_question_ids: ids)
-      end
-
+      question_ids = []
       self.edges.each do |edge|
         edge.questions.each do |question|
+          question_ids << question.id
           question.add_to_set(referenced_question_ids: id)
         end
       end
+      self.class.nin(id: question_ids).pull(referenced_question_ids: id)
     end
 
     def set_check_type
