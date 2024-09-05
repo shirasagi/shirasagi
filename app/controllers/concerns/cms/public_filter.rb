@@ -210,7 +210,11 @@ module Cms::PublicFilter
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
       render html: "", layout: "cms/redirect"
     elsif resp.media_type == "text/html" && page.layout
-      render html: render_layout(page.layout, content: resp.body).html_safe, layout: (request.xhr? ? false : "cms/page")
+      layout = request.xhr? ? false : "cms/page"
+      html = render_layout(page.layout, content: resp.body)
+      html = render_to_string html: html.html_safe, layout: layout
+      resp.body = html
+      self.response = resp
     else
       self.response = resp
     end
