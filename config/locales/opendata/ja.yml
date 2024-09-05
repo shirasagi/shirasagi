@@ -964,7 +964,7 @@ ja:
         category_settings: コンバート設定
       opendata/addon/metadata/importer_estat_category_setting:
         default_estat_category_ids: 既定のeStat分野
-        category_settings: コンバート設定
+        estat_category_settings: コンバート設定
       opendata/addon/metadata/importer_area_setting:
         default_area_ids: 既定の地域
       opendata/addon/metadata/importer_notice:
@@ -1275,24 +1275,61 @@ ja:
       state:
         - ステータスを設定します。
         - 無効に設定すると定期実行の際に無視されます。
-      basicauth_state:
-        - Basic認証のステータスを設定します。
+      basicauth_state: |-
+        Basic認証のステータスを設定します。
+        取得するメタデータにBasic認証が掛かっている際は有効にし、「Basic認証ユーザー名」と「Basic認証パスワード」にユーザー名とパスワードに設定してください。
       basicauth_username:
         - Basic認証のユーザー名を設定します。
       basicauth_password:
         - Basic認証のパスワードを設定します。
+    opendata/metadata/importer/category_setting:
+      order: 並び順を設定します。
+      category_id: コンバート先の分野を選択しています。
+      conditions: |-
+        コンバート先の分野に反映したいデータセット側の該当条件を選択します。
+        右側の「＋」「−」により複数条件を設定可能です。
+        【文字列】：データセットに該当の文字列があるものを条件とします。完全一致するものが対象です。
+        【正規表現】：データセットに該当の文字列があるものを条件とします。正規表現が使用可能です。
+        　　　　　　　（例）「^観光」：先頭に「観光」があるものを対象とする。
+        　　　　　　　　　　「観光$」：文末に「観光」があるものを対象とする。
+        【カテゴリー】：データセットの「カテゴリー」項目に該当の文字列があるものを条件とします。完全一致するものが対象です。
+        【分野】：データセットの「分類」項目に該当の文字列があるものを条件とします。完全一致するものが対象です。
+    opendata/metadata/importer/estat_category_setting:
+      order: 並び順を設定します。
+      category_id: コンバート先のeStat分野を選択しています。
+      conditions: |-
+        コンバート先のeStat分野に反映したいデータセット側の該当条件を選択します。
+        右側の「＋」「−」により複数条件を設定可能です。
+        【文字列】：データセットに該当の文字列があるものを条件とします。完全一致するものが対象です。
+        【正規表現】：データセットに該当の文字列があるものを条件とします。正規表現が使用可能です。
+        　　　　　　　（例）「^観光」：先頭に「観光」があるものを対象とする。
+        　　　　　　　　　　「観光$」：文末に「観光」があるものを対象とする。
+        【カテゴリー】：データセットの「カテゴリー」項目に該当の文字列があるものを条件とします。完全一致するものが対象です。
+        【分野】：データセットの「分類」項目に該当の文字列があるものを条件とします。完全一致するものが対象です。
     opendata/addon/metadata/importer_category_setting:
-      default_category_ids:
-        - 既定の分野を設定します。
+      default_category_ids: |-
+        既定の分野を設定します。
+        取得するデータセットに個別で分野が設定されている場合は選択の必要はございません。
+        追加で分野が設定したい場合は選択してください。取得するメタデータ内の全てのデータセットが対象です。
+      category_settings: |-
+        ホームページで作成している分野に対し、条件のあったデータセットを分野毎にコンバートすることが可能です。
+        【ダウンロード】:作成したコンバート設定のCSVをダウンロードできます。
+        【インポート】:編集したCSVをインポートすると、コンバート設定の一括編集が可能です。
     opendata/addon/metadata/importer_estat_category_setting:
-      default_estat_category_ids:
-        - 既定のeStat分野を設定します。
+      default_estat_category_ids: |-
+        既定のeStat分野を設定します。
+        取得するデータセットに個別でeStat分野が設定されている場合は選択の必要はございません。
+        追加でeStat分野が設定したい場合は選択してください。取得するメタデータ内の全てのデータセットが対象です。
+      estat_category_settings: |-
+        ホームページで作成しているeStat分野に対し、条件のあったデータセットをeStat分野毎にコンバートすることが可能です。
+        【ダウンロード】:作成したコンバート設定のCSVをダウンロードできます。
+        【インポート】:編集したCSVをインポートすると、コンバート設定の一括編集が可能です。
     opendata/addon/metadata/importer_area_setting:
       default_area_ids:
         - 既定の地域を設定します。
     opendata/addon/metadata/importer_notice:
       notice_user_ids:
-        - 通知するユーザーを設定します。
+        - メタデータのインポート完了時に、選択したユーザーへメールで通知します。
   job:
     models:
       opendata/csv2rdf_converter/job: RDF変換ジョブ
