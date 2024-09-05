@@ -5,7 +5,8 @@ class Guide::Diagram::Point
   include SS::Reference::Site
   include Cms::Reference::Node
 
-  attr_accessor :transitions, :longest_length, :shortest_length
+  attr_accessor :transitions, :applicable_transitions, :not_applicable_transitions, :necessary_transitions,
+    :optional_necessary_transitions
 
   field :name, type: String
   field :id_name, type: String
@@ -24,8 +25,17 @@ class Guide::Diagram::Point
 
   store_in collection: "guide_diagram_point"
 
-  def export_label
-    procedure? ? "[#{I18n.t("guide.procedure")}] #{id_name}" : "[#{I18n.t("guide.question")}] #{id_name}"
+  def export_label(edge = nil)
+    label = [procedure? ? I18n.t("guide.procedure") : I18n.t("guide.question")]
+    if edge
+      if edge.not_applicable_point_ids.include?(id)
+        label << I18n.t('guide.labels.not_applicable')
+      end
+      if edge.optional_necessary_point_ids.include?(id)
+        label << I18n.t('guide.labels.optional_necessary')
+      end
+    end
+    "[#{label.join(':')}] #{id_name}"
   end
 
   def procedure?
