@@ -5,10 +5,10 @@ class History::Backup
     model.relations.each do |k, relation|
       next if relation.class != Mongoid::Association::Embedded::EmbeddedIn
 
-      parent = relation.class_name.constantize.where(
+      @nest_parent = relation.class_name.constantize.where(
         relation.inverse_of => { "$elemMatch" => { '_id' => data["_id"] } }
       ).first
-      @_ref_item ||= parent.send(relation.inverse_of).find(data["_id"]) rescue nil
+      @_ref_item ||= @nest_parent.send(relation.inverse_of).find(data["_id"]) rescue nil
 
       break @_ref_item if @_ref_item
     end
@@ -38,7 +38,11 @@ class History::Backup
   def restore(opts = {})
     opts[:create_by_trash] = true
     data  = self.data.dup
-    query = coll.find _id: data["_id"]
+    if ref_item != @nest_parent && @nest_parent.present?
+      query = collection.database[@nest_parent.collection_name].find _id: @nest_parent.id
+    else
+      query = coll.find _id: data["_id"]
+    end
     if query.count != 1
       errors.add :base, "#{query.count} documents were found."
       return false
@@ -49,8 +53,13 @@ class History::Backup
     data.delete("state")
 
     begin
-      query.update_many('$set' => data)
-      item = ref_class.constantize.find(self.data["_id"])
+      if ref_item != @nest_parent && @nest_parent.present?
+        ref_item.set(data)
+        item = ref_item
+      else
+        query.update_many('$set' => data)
+        item = ref_class.constantize.find(self.data["_id"])
+      end
       current = item.current_backup
       before = item.before_backup
 

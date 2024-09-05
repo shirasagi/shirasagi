@@ -9,6 +9,6 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
   private
 
   def set_item
-    @item = @dataset.resources.find_by id: params[:id]
+    @item = @dataset.resources.and_public.find_by id: params[:id]
   end
 end

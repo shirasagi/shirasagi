@@ -1,6 +1,7 @@
 module Opendata::Resource::Model
   extend ActiveSupport::Concern
   include SS::Relation::File
+  include SS::Reference::User
   include Cms::Addon::GroupPermission
 
   included do

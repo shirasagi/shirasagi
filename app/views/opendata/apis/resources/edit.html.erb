@@ -3,44 +3,36 @@ licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c|
 %>
 
 <%= jquery do %>
-  SS_ReplaceFile.instance().renderConfirm("<%= url_for action: :update %>", "<%= url_for(action: :edit) %>");
+SS_ReplaceFile.instance().renderConfirm("<%= url_for action: :update %>", "<%= url_for(action: :edit) %>");
+
+<% if @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+$("<input />").attr("type", "submit").attr("name", "publish_save").attr("class", "publish_save").
+  attr("value", '<%= t("ss.buttons.publish_save") %>').insertAfter("#ajax-form input.save");
+<% end %>
+
+<% if @item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+$(".save").val("<%= t("ss.buttons.closed_save") %>");
+<% else %>
+$(".save").remove();
+<% end %>
+
+$(".save").on("click", function(e){
+  $("<input />").attr("type", "hidden").attr("name", "item[state]").attr("value", "closed").appendTo("#ajax-form")
+});
+$(".publish_save").on("click", function(e){
+  $("<input />").attr("type", "hidden").attr("name", "item[state]").attr("value", "public").appendTo("#ajax-form")
+  $("<input />").attr("type", "hidden").attr("name", "item[workflow_reset]").attr("value", "1").appendTo("#ajax-form")
+});
 <% end %>
 
 <div style="padding: 10px; border: 1px solid #ddd;">
   <%= form_for :item, url: { action: :update }, html: { id: "ajax-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
-  <dl class="see">
-    <dt><%= @model.t :file_id %><%= required_label %></dt>
-    <dd><%= f.file_field :in_file %></dd>
-
-    <dt><%= @model.t :source_url %><%= @model.tt :source_url %></dt>
-    <dd><%= f.url_field :source_url, placeholder: t("opendata.notice.source_url") %></dd>
-
-    <dt><%= @model.t :name %><%= required_label %></dt>
-    <dd><%= f.text_field :name %></dd>
-
-    <dt><%= @model.t :format %><%= @model.tt :format %><%= required_label %></dt>
-    <dd><%= f.text_field :format, style: "width: 8em; ime-mode: disabled;" %></dd>
-
-    <dt><%= @model.t :license_id %><%= required_label %></dt>
-    <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
-
-    <dt><%= @model.t :order %><%= @model.tt :order %></dt>
-    <dd><%= f.number_field :order, min: 0 %></dd>
-
-    <dt><%= @model.t :text %><%= @model.tt :text %></dt>
-    <dd><%= f.text_area :text %></dd>
-
-    <dt class="in_tsv"><%= @model.t :tsv_id %><%= @model.tt :tsv_id %></dt>
-    <dd class="in_tsv"><%= f.file_field :in_tsv %></dd>
-    <% if @item.tsv_id %>
-      <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "ss.buttons.delete" %> (<%= @item.tsv.filename %>)</label></dd>
-    <% end %>
-  </dl>
+  <%= render partial: 'opendata/dataset/resources/form', locals: { f: f } %>
 
   <footer class="send">
-    <%= f.submit t('ss.buttons.replace_save'), class: "btn-primary save" %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
     <%= link_to(t("ss.buttons.cancel"), "", { class: "btn-default", onclick: '$.colorbox.close(); return false;' }) %>
   </footer>
 

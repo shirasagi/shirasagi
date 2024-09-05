@@ -8,7 +8,7 @@
     <dd><%= @item.default_categories.pluck(:name).join(", ") %></dd>
   <% end %>
 
-  <dt><%= t("opendata.labels.convert_setting") %></dt>
+  <dt><%= t("opendata.labels.convert_setting") %><%= @model.tt(:category_settings) %></dt>
   <dd>
     <span>
       <%= link_to t("ss.links.download"), download_opendata_metadata_importer_category_settings_path(importer_id: @item.id) %>

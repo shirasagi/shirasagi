@@ -7,7 +7,7 @@
     <%= hidden_field_tag "item[preview_graph_types][]", "", id: nil %>
     <% %w(bar line pie).each do |type| %>
       <label>
-        <%= check_box_tag 'item[preview_graph_types][]', type, @item.preview_graph_types.include?(type) %>
+        <%= check_box_tag 'item[preview_graph_types][]', type, @item.preview_graph_types.to_a.include?(type) %>
         <%= t("opendata.graph_types.#{type}") %>
       </label>
     <% end %>
