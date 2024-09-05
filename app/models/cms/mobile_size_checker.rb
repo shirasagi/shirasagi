@@ -19,7 +19,7 @@ class Cms::MobileSizeChecker
 
     message = I18n.t(
       'errors.messages.mobile_size_check_failed_to_size',
-      mobile_size: limit_size.to_s(:human_size), size: size.to_s(:human_size)
+      mobile_size: limit_size.to_fs(:human_size), size: size.to_fs(:human_size)
     )
     errors.add :base, message
   end
@@ -44,15 +44,15 @@ class Cms::MobileSizeChecker
       errors.add :base, I18n.t(
         "errors.messages.too_bigfile",
         filename: file.name,
-        filesize: thumb.size.to_s(:human_size),
-        mobile_size: limit_size.to_s(:human_size)
+        filesize: thumb.size.to_fs(:human_size),
+        mobile_size: limit_size.to_fs(:human_size)
       )
     end
     if total_size > limit_size
       errors.add :base, I18n.t(
         "errors.messages.too_bigsize",
-        total: total_size.to_s(:human_size),
-        mobile_size: limit_size.to_s(:human_size)
+        total: total_size.to_fs(:human_size),
+        mobile_size: limit_size.to_fs(:human_size)
       )
     end
   end

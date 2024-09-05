@@ -5,7 +5,7 @@ module SS::LiquidFilters
   module Utils
     def self.stringify_number(input, format)
       return input unless input.numeric?
-      ::Liquid::Utils.to_number(input).to_s(format)
+      ::Liquid::Utils.to_number(input).to_fs(format)
     end
   end
 

@@ -59,7 +59,7 @@ module Job::LogsFilter
         id = d["_id"]
         count = d["count"]
         humanized_id = I18n.t("job.models.#{id.underscore}", default: id)
-        [ "#{humanized_id} (#{count.to_s(:delimited)})", id ]
+        [ "#{humanized_id} (#{count.to_fs(:delimited)})", id ]
       end
       options.sort!
       options

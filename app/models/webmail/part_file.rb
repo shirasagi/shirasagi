@@ -41,7 +41,7 @@ class Webmail::PartFile
   alias thumb_url url
 
   def humanized_name
-    "#{::File.basename(part.filename, ".*")} (#{extname.upcase} #{part.part.size.to_s(:human_size)})"
+    "#{::File.basename(part.filename, ".*")} (#{extname.upcase} #{part.part.size.to_fs(:human_size)})"
   end
 
   def read

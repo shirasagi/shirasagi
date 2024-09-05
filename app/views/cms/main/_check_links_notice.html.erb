@@ -9,7 +9,7 @@
 %>
 
 <div class="cms-notice check-links" data-id="<%= report.id %>" data-timestamp="<%= report.created.iso8601 %>">
-  <h2><%= t("cms.notices.check_links_report_header", count: error.urls.size.to_s(:delimited), time: I18n.l(report.created, format: :picker)) %></h2>
+  <h2><%= t("cms.notices.check_links_report_header", count: error.urls.size.to_fs(:delimited), time: I18n.l(report.created, format: :picker)) %></h2>
   <p><%= t("cms.notices.check_links_report_body") %></p>
   <ul>
     <% error.urls.each do |url| %>

@@ -42,7 +42,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
 
       expect(File.exist?(dataset.path)).to be_truthy
       html = ::File.read(dataset.path)
-      expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_s(:human_size)})")
+      expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_fs(:human_size)})")
     end
   end
 
@@ -85,7 +85,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
 
         expect(File.exist?(dataset.path)).to be_truthy
         html = ::File.read(dataset.path)
-        expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_s(:human_size)})")
+        expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_fs(:human_size)})")
       end
     end
 
@@ -101,7 +101,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
 
         expect(File.exist?(dataset.path)).to be_truthy
         html = ::File.read(dataset.path)
-        expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_s(:human_size)})")
+        expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_fs(:human_size)})")
       end
     end
   end

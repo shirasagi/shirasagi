@@ -9,7 +9,7 @@ describe Map::Addon::Page, dbscope: :example do
     it do
       expect(Cms::Page.where(id: item.id).count).to eq 1
       size = Cms::Page.where(id: item.id).total_bsonsize
-      puts "initial size=#{size.to_s(:delimited)}"
+      puts "initial size=#{size.to_fs(:delimited)}"
 
       map_points = []
       100.times do
@@ -27,7 +27,7 @@ describe Map::Addon::Page, dbscope: :example do
       expect(item.map_points.length).to eq 100
 
       size = Cms::Page.where(id: item.id).total_bsonsize
-      puts "after 100 points added=#{size.to_s(:delimited)} (#{size.to_s(:human_size)})"
+      puts "after 100 points added=#{size.to_fs(:delimited)} (#{size.to_fs(:human_size)})"
 
       900.times do
         map_points << {
@@ -44,7 +44,7 @@ describe Map::Addon::Page, dbscope: :example do
       expect(item.map_points.length).to eq 1_000
 
       size = Cms::Page.where(id: item.id).total_bsonsize
-      puts "after 1,000 points added=#{size.to_s(:delimited)} (#{size.to_s(:human_size)})"
+      puts "after 1,000 points added=#{size.to_fs(:delimited)} (#{size.to_fs(:human_size)})"
 
       1000.times do
         map_points << {
@@ -61,7 +61,7 @@ describe Map::Addon::Page, dbscope: :example do
       expect(item.map_points.length).to eq 2_000
 
       size = Cms::Page.where(id: item.id).total_bsonsize
-      puts "after 2,000 points added=#{size.to_s(:delimited)} (#{size.to_s(:human_size)})"
+      puts "after 2,000 points added=#{size.to_fs(:delimited)} (#{size.to_fs(:human_size)})"
     end
   end
 end

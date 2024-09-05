@@ -44,14 +44,14 @@ $(".gws-schedule-search-times-result .hour-wrap").on({
         <span class="minutes-limit-text"><%= Gws::Facility::Item.t(:minutes_limit) %></span>
         <% if @min_minutes_limit %>
           <span class="min-minutes-limit">
-            <%= @min_minutes_limit.to_s(:delimited) %>
+            <%= @min_minutes_limit.to_fs(:delimited) %>
             <%= I18n.t('gws/facility.prompts.minutes') %>
           </span>
         <% end %>
         <span class="delimiter">-</span>
         <% if @max_minutes_limit %>
           <span class="max-minutes-limit">
-            <%= @max_minutes_limit.to_s(:delimited) %>
+            <%= @max_minutes_limit.to_fs(:delimited) %>
             <%= I18n.t('gws/facility.prompts.minutes') %>
           </span>
         <% end %>

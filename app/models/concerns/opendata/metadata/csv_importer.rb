@@ -27,7 +27,7 @@ module Opendata::Metadata::CsvImporter
       Tempfile.create('import_csv') do |tempfile|
         ::URI.parse(source_url).open(opts) do |res|
           IO.copy_stream(res, tempfile.path)
-          put_log('[Download] ' + tempfile.size.to_s(:delimited) + ' bytes')
+          put_log('[Download] ' + tempfile.size.to_fs(:delimited) + ' bytes')
           put_log('[Import] start')
           SS::Csv.foreach_row(tempfile.path, headers: true) do |csv_row, idx|
             begin

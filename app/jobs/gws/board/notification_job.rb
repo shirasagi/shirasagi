@@ -22,7 +22,7 @@ class Gws::Board::NotificationJob < Gws::ApplicationJob
   end
 
   def send_all_notifications
-    Rails.logger.info("#{@items.count.to_s(:delimited)}件の掲示板があります。")
+    Rails.logger.info("#{@items.count.to_fs(:delimited)}件の掲示板があります。")
 
     each_item do |item|
       if item.notification_noticed_at.present?

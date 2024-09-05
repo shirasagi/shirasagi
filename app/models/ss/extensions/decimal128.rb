@@ -33,7 +33,7 @@ class SS::Extensions::Decimal128
   #
   # Implements BigDecimal
   #
-  delegate :precs, :hash, :to_s, :to_i, :to_r, :split, :to_f, :floor, :ceil, to: :value
+  delegate :precs, :hash, :to_s, :to_fs, :to_i, :to_r, :split, :to_f, :floor, :ceil, to: :value
 
   def add(value, digits)
     value = value.value if value.is_a?(SS::Extensions::Decimal128)

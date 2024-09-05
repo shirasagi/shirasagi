@@ -35,7 +35,7 @@ class Cms::Agents::Tasks::FormDb::ImportController < ApplicationController
       Tempfile.create('import_csv') do |tempfile|
         URI.parse(@import_url).open do |res|
           IO.copy_stream(res, tempfile.path)
-          @task.log('[Download] ' + tempfile.size.to_s(:delimited) + ' bytes')
+          @task.log('[Download] ' + tempfile.size.to_fs(:delimited) + ' bytes')
           @task.log('[Import] start') if @task
           @db.import_csv(file: tempfile, task: @task, manually: @import_manually)
           @task.log('[Import] finished')

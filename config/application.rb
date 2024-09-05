@@ -12,7 +12,6 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 require_relative "../app/models/ss"
@@ -62,7 +61,10 @@ module SS
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.0
+
+    # see: https://til.toshimaru.net/2023-03-30
+    config.action_controller.raise_on_open_redirects = false
 
     config.middleware.delete ActionDispatch::HostAuthorization
 
@@ -78,6 +80,9 @@ module SS
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
+
+    # Don't generate system test files.
+    config.generators.system_tests = nil
 
     I18n.enforce_available_locales = true
     config.i18n.default_locale = :ja

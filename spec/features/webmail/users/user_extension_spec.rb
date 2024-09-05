@@ -11,7 +11,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
 
     context "with quota" do
       let(:quota) { Webmail::Quota.where(imap.quota.quota_root_scope).first_or_create }
-      let(:quota_label) { "#{(quota.usage * 1_024).to_s(:human_size)}/#{(quota.quota * 1_024).to_s(:human_size)}" }
+      let(:quota_label) { "#{(quota.usage * 1_024).to_fs(:human_size)}/#{(quota.quota * 1_024).to_fs(:human_size)}" }
 
       before do
         quota.usage = quota_usage

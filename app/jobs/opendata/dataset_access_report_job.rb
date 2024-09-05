@@ -168,7 +168,7 @@ class Opendata::DatasetAccessReportJob < Cms::ApplicationJob
     year_month = @start_at.year * 100 + @start_at.month
     criteria = Opendata::DatasetAccessReport.site(site).where(year_month: year_month).exists(deleted: false)
     dataset_ids = available_dataset_ids - criteria.pluck(:dataset_id)
-    Rails.logger.info "found #{dataset_ids.length.to_s(:delimited)} datasets with no history"
+    Rails.logger.info "found #{dataset_ids.length.to_fs(:delimited)} datasets with no history"
 
     dataset_ids.each do |dataset_id|
       dataset = find_dataset(dataset_id)

@@ -1,3 +1,5 @@
+require_relative "../../lib/ss/filter_support"
+
 module SS
   module MobileSupport
     extend SS::FilterSupport

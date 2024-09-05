@@ -23,7 +23,7 @@ class SS::TaskSweepJob < SS::ApplicationJob
       end
     end
 
-    Rails.logger.info("#{count.to_s(:delimited)} 件のタスクを削除しました。")
+    Rails.logger.info("#{count.to_fs(:delimited)} 件のタスクを削除しました。")
   end
 
   private

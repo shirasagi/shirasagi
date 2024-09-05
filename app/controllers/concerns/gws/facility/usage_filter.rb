@@ -64,7 +64,7 @@ module Gws::Facility::UsageFilter
   def format_usage_count(*args)
     data = find_usage(*args)
     return unless data
-    data['count'].to_s(:delimited)
+    data['count'].to_fs(:delimited)
   end
 
   def format_usage_hours(*args)

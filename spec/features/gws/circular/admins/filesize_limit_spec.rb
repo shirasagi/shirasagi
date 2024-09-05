@@ -118,7 +118,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       end
       msg = I18n.t(
         "mongoid.errors.models.gws/circular/post.file_size_limit",
-        size: file_size.to_s(:human_size), limit: limit.to_s(:human_size)
+        size: file_size.to_fs(:human_size), limit: limit.to_fs(:human_size)
       )
       expect(page).to have_css("#errorExplanation", text: msg)
 

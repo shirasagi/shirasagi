@@ -36,7 +36,7 @@
             </td>
             <% (min_year..this_year).each do |year| %>
               <% count = item["year#{year}_count"] || 0 %>
-              <th><%= count.to_s(:delimited) %></th>
+              <th><%= count.to_fs(:delimited) %></th>
             <% end %>
           </tr>
         <% end %>

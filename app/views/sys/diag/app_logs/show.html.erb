@@ -4,7 +4,7 @@
       <%= text_area_tag "app_log", tail_log, style: "height: 20.5em;" %>
     </div>
     <div>
-      Show recent logs at most <%= ::Fs::DEFAULT_TAIL_BYTES.to_s(:human_size) %>
+      Show recent logs at most <%= ::Fs::DEFAULT_TAIL_BYTES.to_fs(:human_size) %>
     </div>
   <% end %>
 </div>

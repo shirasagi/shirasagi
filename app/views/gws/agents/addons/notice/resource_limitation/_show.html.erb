@@ -12,7 +12,7 @@
   <dt class="depth-2"><%= t('gws/notice.total_body_size') %></dt>
   <dd class="depth-2">
     <%= number_to_human_size(@item.notice_total_body_size_limit) %>
-    （<span class="current-stats"><%= t('gws/notice.total_body_size_current_stats', size: number_to_human_size(@item.notice_total_body_size), percentage: @item.notice_total_body_size_percentage.to_s(:percentage, precision: 2)) %></span>
+    （<span class="current-stats"><%= t('gws/notice.total_body_size_current_stats', size: number_to_human_size(@item.notice_total_body_size), percentage: @item.notice_total_body_size_percentage.to_fs(:percentage, precision: 2)) %></span>
     <%= button_tag t('gws/notice.links.reclaim_total_size'), name: 'reclaim_total_size', type: 'button', class: 'btn' %>）
   </dd>
 
@@ -25,7 +25,7 @@
   <dt class="depth-2"><%= t('gws/notice.total_file_size') %></dt>
   <dd class="depth-2">
     <%= number_to_human_size(@item.notice_total_file_size_limit) %>
-    （<span class="current-stats"><%= t('gws/notice.total_file_size_current_stats', size: number_to_human_size(@item.notice_total_file_size), percentage: @item.notice_total_file_size_percentage.to_s(:percentage, precision: 2)) %></span>
+    （<span class="current-stats"><%= t('gws/notice.total_file_size_current_stats', size: number_to_human_size(@item.notice_total_file_size), percentage: @item.notice_total_file_size_percentage.to_fs(:percentage, precision: 2)) %></span>
     <%= button_tag t('gws/notice.links.reclaim_total_size'), name: 'reclaim_total_size', type: 'button', class: 'btn' %>）
   </dd>
 </dl>

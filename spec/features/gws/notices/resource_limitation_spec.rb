@@ -69,15 +69,15 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     let(:exceeded_total_body_size_limit) do
       I18n.t(
         'mongoid.errors.models.gws/notice/post.exceeded_total_body_size_limit',
-        size: folder.notice_total_body_size_limit.to_s(:human_size),
-        limit: folder.notice_total_body_size_limit.to_s(:human_size)
+        size: folder.notice_total_body_size_limit.to_fs(:human_size),
+        limit: folder.notice_total_body_size_limit.to_fs(:human_size)
       )
     end
     let(:exceeded_total_file_size_limit) do
       I18n.t(
         'mongoid.errors.models.gws/notice/post.exceeded_total_file_size_limit',
-        size: folder.notice_total_body_size_limit.to_s(:human_size),
-        limit: folder.notice_total_body_size_limit.to_s(:human_size)
+        size: folder.notice_total_body_size_limit.to_fs(:human_size),
+        limit: folder.notice_total_body_size_limit.to_fs(:human_size)
       )
     end
 

@@ -1,3 +1,6 @@
+require_relative "../../../app/mailers/application_mailer"
+require_relative "../../../app/mailers/ss/mailer"
+
 module SS::Mailer::Rescuable
   extend ActiveSupport::Concern
 

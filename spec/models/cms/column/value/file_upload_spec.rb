@@ -93,7 +93,7 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
         expect(subject.link_url).to eq value.link_url
 
         html = CGI.escapeHTML(value.file_label.gsub(/<\/?script>/, ""))
-        html = "<a href=\"#{file.url}\">#{html} (#{file.extname.upcase} #{file.size.to_s(:human_size)})</a>"
+        html = "<a href=\"#{file.url}\">#{html} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})</a>"
         expect(subject.html).to eq html
 
         expect(page.form_contains_urls).to include value.link_url

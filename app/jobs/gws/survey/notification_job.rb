@@ -27,7 +27,7 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
   end
 
   def send_all_notifications
-    Rails.logger.info("#{@items.count.to_s(:delimited)}件のアンケートがあります。")
+    Rails.logger.info("#{@items.count.to_fs(:delimited)}件のアンケートがあります。")
 
     each_item do |item|
       if !@options[:resend]

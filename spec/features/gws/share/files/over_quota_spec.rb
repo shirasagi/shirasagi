@@ -91,7 +91,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_limit",
-          size: filesize.to_s(:human_size), limit: folder.share_max_file_size.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: folder.share_max_file_size.to_fs(:human_size)
         )
       end
 
@@ -107,7 +107,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_folder_limit",
-          size: filesize.to_s(:human_size), limit: folder.share_max_folder_size.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: folder.share_max_folder_size.to_fs(:human_size)
         )
       end
 
@@ -123,7 +123,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_limit",
-          size: filesize.to_s(:human_size), limit: site.share_max_file_size.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: site.share_max_file_size.to_fs(:human_size)
         )
       end
 
@@ -139,7 +139,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_capacity",
-          size: filesize.to_s(:human_size), limit: site.share_files_capacity.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: site.share_files_capacity.to_fs(:human_size)
         )
       end
 
@@ -158,7 +158,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     let(:msg) do
       I18n.t(
         "mongoid.errors.models.gws/share/file.file_size_exceeds_capacity",
-        size: filesize2.to_s(:human_size), limit: site.share_files_capacity.to_s(:human_size)
+        size: filesize2.to_fs(:human_size), limit: site.share_files_capacity.to_fs(:human_size)
       )
     end
 
