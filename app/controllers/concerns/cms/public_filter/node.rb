@@ -26,12 +26,12 @@ module Cms::PublicFilter::Node
     agent.render spec[:action]
   end
 
-  def render_layout_with_pagination_cache(layout, cache_key)
+  def render_layout_with_pagination_cache(layout, cache_key, content: nil)
     @layout_cache ||= {}
 
     # no cache
     if cache_key.nil?
-      return render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
+      return render_to_string html: render_layout(layout, content: content).html_safe, layout: "cms/page"
     end
 
     # use cache
@@ -40,7 +40,7 @@ module Cms::PublicFilter::Node
     end
 
     # set cache
-    html = render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
+    html = render_to_string html: render_layout(layout, content: content).html_safe, layout: "cms/page"
     @layout_cache[cache_key] = html.sub(/(<!-- layout_yield -->).*?<!-- \/layout_yield -->/m, '\\1')
 
     html
