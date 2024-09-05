@@ -132,7 +132,7 @@ this.Googlemaps_Map = (function () {
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
     $.each(Googlemaps_Map.markers, function (id, value) {
-      var name, text, opts;
+      var name, text, html, markerHtml, pos, opts;
 
       opts = {
         position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
@@ -146,30 +146,33 @@ this.Googlemaps_Map = (function () {
       Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
       markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
 
-      var markerHtml = "";
-      if (value["html"]) {
-        markerHtml = value["html"];
-      } else if (value["name"] || value["text"]) {
-        name = value["name"];
-        text = value["text"];
+      name = value['name'];
+      text = value['text'];
+      html = value['html'];
+      pos = [value['loc'][0], value['loc'][1]];
+
+      markerHtml = "";
+      if (html) {
+        markerHtml = html;
+      } else if (name || text) {
         markerHtml = '<div class="marker-info">';
-        if (name && name !== "") {
+        if (name) {
           markerHtml += '<p>' + name + '</p>';
-          if (text && text !== "") {
-            $.each(text.split(/[\r\n]+/), function () {
-              if (this.match(/^https?:\/\//)) {
-                return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
-              } else {
-                return markerHtml += '<p>' + this + '</p>';
-              }
-            });
-          }
+        }
+        if (text) {
+          $.each(text.split(/[\r\n]+/), function () {
+            if (this.match(/^https?:\/\//)) {
+              return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+            } else {
+              return markerHtml += '<p>' + this + '</p>';
+            }
+          });
         }
         markerHtml += '</div>';
       }
 
       if (Googlemaps_Map.showGoogleMapsSearch) {
-        markerHtml += Googlemaps_Map.getMapsSearchHtml(value["loc"][1], value["loc"][0]);
+        markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);
       }
       if (markerHtml) {
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
