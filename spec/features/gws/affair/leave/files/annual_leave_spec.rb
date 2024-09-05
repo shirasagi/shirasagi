@@ -36,6 +36,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
       Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
     end
