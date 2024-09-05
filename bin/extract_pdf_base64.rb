@@ -13,7 +13,7 @@ begin
   image.pages.each_with_index do |page, n|
     break if n >= limit
     Tempfile.open(['extract_pdf_base64', '.png'], binmode: true) do |temp|
-      MiniMagick::Tool::Convert.new do |convert|
+      MiniMagick.convert do |convert|
         convert.quality 100
         convert.density 200
         convert << page.path
