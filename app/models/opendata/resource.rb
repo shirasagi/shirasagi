@@ -11,13 +11,13 @@ class Opendata::Resource
 
   DOWNLOAD_CACHE_LIFETIME = 10.minutes
 
-  attr_accessor :workflow, :status
+  attr_accessor :workflow, :status, :in_update_dataset
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resources
   field :order, type: Integer, default: 0
   field :downloaded_count_cache, type: Hash
 
-  permit_params :state, :name, :text, :format, :license_id, :source_url, :order
+  permit_params :state, :name, :text, :format, :license_id, :source_url, :order, :in_update_dataset
 
   validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
@@ -159,6 +159,7 @@ class Opendata::Resource
     self.workflow ||= {}
     dataset.cur_site = dataset.site
     dataset.apply_status(status, workflow) if status.present?
+    dataset.updated = updated if in_update_dataset.present?
     dataset.released ||= Time.zone.now
     dataset.save(validate: false)
     # dataset.send(:save_backup)

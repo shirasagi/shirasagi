@@ -10,10 +10,10 @@ sort.renderItems(<%== @item.conditions.to_json %>);
     <%= f.hidden_field "category_id", value: @category.id %>
   </dd>
 
-  <dt><%= t("opendata.labels.sort") %></dt>
+  <dt><%= t("opendata.labels.sort") %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt><%= t("opendata.labels.and_condition") %></dt>
+  <dt><%= t("opendata.labels.and_condition") %><%= @model.tt :conditions %></dt>
   <dd>
     <table class="index form-index sortable-index">
       <thead>
