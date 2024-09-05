@@ -15,6 +15,7 @@ class Gws::Memo::Forward
 
   validates :emails, presence: true, if: ->{ self.default == "enabled" }
   validates :emails, emails: true, length: { maximum: MAX_MAIL_COUNT, message: :too_large }
+  validate :validate_allowed_mail_addresses
 
   #scope :default, -> { where default: 'disabled' }
   #scope :search, ->(params) {
@@ -32,4 +33,16 @@ class Gws::Memo::Forward
   #def default?
   #  default == 'disabled'
   #end
+
+  private
+
+  def validate_allowed_mail_addresses
+    return if cur_site.nil?
+    return if emails.blank?
+    return if errors.present?
+
+    if !emails.all? { |v| cur_site.email_domain_allowed?(v) }
+      self.errors.add :emails, :disallowed_domains, domains: cur_site.sendmail_domains.join(", ")
+    end
+  end
 end

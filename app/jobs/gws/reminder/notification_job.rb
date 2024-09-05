@@ -10,6 +10,7 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     each_reminder do |item|
       mail = Gws::Reminder::Mailer.notify_mail(site, item)
       next if mail.blank?
+      next if mail.message.is_a?(ActionMailer::Base::NullMail)
 
       item.notifications.each do |notification|
         next if notification.notify_at < @from || notification.notify_at > @to

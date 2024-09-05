@@ -220,6 +220,7 @@ ja:
       password_include_name: に氏名が含まれています。
       password_include_kana: によみがなが含まれています。
       edit_approved: 承認済みの予約は変更できません。
+      disallowed_domains: は %{domains} のみ許可されています。
     template:
       body: 次の項目を確認してください。
       header:
