@@ -1,3 +1,5 @@
+require_relative "../../lib/ss/mailer/rescuable"
+
 ActiveSupport::Notifications.subscribe('deliver.action_mailer') do |*args|
   begin
     event = ActiveSupport::Notifications::Event.new(*args)

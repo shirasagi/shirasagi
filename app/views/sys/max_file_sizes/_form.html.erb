@@ -13,8 +13,8 @@
   <dd><%= f.text_field :extensions %></dd>
 
   <dt><%= @model.t :size %><%= @model.tt :size %></dt>
-  <dd><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %><%= t("ss.notice.max_file_size_hard_limit_short_notice", human_size: SS::MaxFileSize.nginx_client_max_body_size.to_s(:human_size)) %></dd>
-  <dd><%= br t("ss.notice.max_file_size_hard_limit_long_notices", human_size: SS::MaxFileSize.nginx_client_max_body_size.to_s(:human_size)) %></dd>
+  <dd><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %><%= t("ss.notice.max_file_size_hard_limit_short_notice", human_size: SS::MaxFileSize.nginx_client_max_body_size.to_fs(:human_size)) %></dd>
+  <dd><%= br t("ss.notice.max_file_size_hard_limit_long_notices", human_size: SS::MaxFileSize.nginx_client_max_body_size.to_fs(:human_size)) %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>

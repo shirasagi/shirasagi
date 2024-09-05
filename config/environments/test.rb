@@ -8,15 +8,17 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Turn false under Spring and add config.action_view.cache_template_loading = true.
   config.cache_classes = true
-  config.action_view.cache_template_loading = true
 
-  # Do not eager load code on boot. This avoids loading your whole application
-  # just for the purpose of running a single test. If you are using a tool that
-  # preloads Rails for running tests, you may have to set it to true.
-  config.eager_load = false
+  # Eager loading loads your whole application. When running a single test locally,
+  # this probably isn't necessary. It's a good idea to do in a continuous integration
+  # system, or in some way before deploying your code.
+  config.eager_load = ENV["CI"].present?
 
   # Don't include all helpers
+  # include_all_helpers が true の場合、"Cms::ListHelper#render_page_list" ではなく
+  # "Opendata::ListHelper#render_page_list" が実行され、view のレンダリングに失敗する。
   config.action_controller.include_all_helpers = false
 
   # CSRF
@@ -26,16 +28,13 @@ Rails.application.configure do
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}"
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}"
   }
-
-  # action view
-  config.action_view.automatically_disable_submit_tag = true
-  config.action_view.form_with_generates_remote_forms = false
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
+  # config.cache_store = :null_store
   config.cache_store = :file_store, "#{Rails.root}/tmp/rspec_#{$PID}/cache_store"
 
   # Raise exceptions instead of rendering exception templates.
@@ -60,10 +59,6 @@ Rails.application.configure do
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
 
-  # Compress using a preprocessor.
-  # config.assets.js_compressor = :uglifier
-  # config.assets.css_compressor = :sass
-
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
@@ -74,11 +69,6 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
   config.log_level = ENV['TEST_LOG_LEVEL'] || :debug
 
-  # ActiveJob Queue Adapter
+  # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :test
-
-  config.assets.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
-  config.assets.configure do |env|
-    env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
-  end
 end

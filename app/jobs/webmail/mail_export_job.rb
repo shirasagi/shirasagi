@@ -109,7 +109,7 @@ module Webmail
           end
         end
 
-        Rails.logger.info { "exported #{export_count.to_s(:delimited)} mails to #{@output_zip.path}" }
+        Rails.logger.info { "exported #{export_count.to_fs(:delimited)} mails to #{@output_zip.path}" }
       end
 
       @output_zip.close

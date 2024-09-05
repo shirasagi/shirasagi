@@ -117,7 +117,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
           end
 
           within ".url-resource[data-uuid='#{@urs1.uuid}']" do
-            name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_s(:human_size)})"
+            name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_fs(:human_size)})"
             expect(page).to have_css(".info .name", text: name)
             expect(page).to have_no_css(".info-detail .info-list__content", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@urs1.license.file.url}\"]")
