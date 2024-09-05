@@ -3,7 +3,7 @@
   <dd></dd>
   <% @model::GROUP_ATTRIBUTES.each do |k| %>
     <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %><%= tt "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
-    <dd><%= f.text_field "destinations[][#{k}]", value: @item.destinations.try(:first).try(:send, :[], k) %></dd>
+    <dd><%= text_field_tag "#{f.object_name}[destinations][][#{k}]", @item.destinations.try(:first).try(:send, :[], k), id: nil %></dd>
   <% end %>
 </dl>
 
@@ -12,7 +12,7 @@
   <dd></dd>
   <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %><%= tt "chorg.views.#{params[:type]}_changesets.before_name" %></dt>
   <dd>
-    <%= f.hidden_field "sources[][id]", value: "", id: nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[sources][][id]", "", id: nil, class: "hidden-ids" %>
     <%= link_to t("chorg.views.#{params[:type]}_changesets.select_group"), gws_apis_groups_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
@@ -27,7 +27,7 @@
       <% source = @item.sources.try(:first) %>
       <% if source.present? %>
         <tr data-id="<%= source["id"] %>">
-          <td><%= f.hidden_field "sources[][id]", value: source["id"], id: nil %> <%= source["name"] %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[sources][][id]", source["id"], id: nil %> <%= source["name"] %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
