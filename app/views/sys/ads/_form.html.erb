@@ -1,12 +1,12 @@
 <dl class="see">
   <dt class="depth-1"><%= @model.t :time %></dt>
   <dd class="depth-1">
-    <%= f.number_field :time, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_PAUSE.to_s(:delimited)}" %>
+    <%= f.number_field :time, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_PAUSE.to_fs(:delimited)}" %>
     <span><%= t("datetime.prompts.second") %></span>
   </dd>
   <dt class="depth-1"><%= @model.t :width %></dt>
   <dd class="depth-1">
-    <%= f.number_field :width, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_WIDTH.to_s(:delimited)}" %>
+    <%= f.number_field :width, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_WIDTH.to_fs(:delimited)}" %>
     <span>px</span>
   </dd>
 </dl>

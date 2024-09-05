@@ -73,6 +73,6 @@ class Cms::Page::ExpirationNoticeJob < Cms::ApplicationJob
       end
     end
 
-    task.log "#{count.to_s(:limited)} 通のメールを送信"
+    task.log "#{count.to_fs(:limited)} 通のメールを送信"
   end
 end

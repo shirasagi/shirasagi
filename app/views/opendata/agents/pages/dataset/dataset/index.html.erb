@@ -132,7 +132,7 @@ SS.renderClipboardCopy();
       <% if rs.respond_to?(:downloaded_count) %>
         <div class="download-count">
           <span class="label"><%= rs.t :downloaded_count %></span>
-          <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
+          <span class="count"><%= rs.downloaded_count.to_fs(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
         </div>
       <% end %>
     </div>

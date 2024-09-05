@@ -27,9 +27,9 @@ class Gws::Share::Folder
   end
 
   def quota_label
-    ret = total_file_size.to_s(:human_size)
+    ret = total_file_size.to_fs(:human_size)
     if quota_bytes > 0
-      ret = "#{ret}/#{quota_bytes.to_s(:human_size)}"
+      ret = "#{ret}/#{quota_bytes.to_fs(:human_size)}"
     end
     ret
   end

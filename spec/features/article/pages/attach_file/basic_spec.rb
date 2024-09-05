@@ -357,9 +357,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "attach file which size exceeds the limit" do
     let(:file_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
     let(:basename) { ::File.basename(file_path) }
-    let(:file_size_human) { ::File.size(file_path).to_s(:human_size) }
+    let(:file_size_human) { ::File.size(file_path).to_fs(:human_size) }
     let!(:max) { create :ss_max_file_size, in_size_mb: 0 }
-    let(:limit_human) { max.size.to_s(:human_size) }
+    let(:limit_human) { max.size.to_fs(:human_size) }
 
     before do
       login_cms_user

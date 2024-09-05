@@ -67,7 +67,7 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
         klass.site(@site).in(id: ids).to_a.each(&block)
       end
 
-      @task.log "#{all_ids.size.to_s(:delimited)} items loaded"
+      @task.log "#{all_ids.size.to_fs(:delimited)} items loaded"
     end
   end
 

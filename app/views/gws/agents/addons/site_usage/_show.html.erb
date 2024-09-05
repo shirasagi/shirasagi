@@ -7,16 +7,16 @@
 
 <dl class="see">
   <dt><%= @model.t :usage_file_count %></dt>
-  <dd><span class="usage-file-count"><%= @item.usage_file_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
+  <dd><span class="usage-file-count"><%= @item.usage_file_count.try { |v| v.to_fs(:delimited) } || '-' %></span></dd>
 
   <dt><%= @model.t :usage_db_size %></dt>
-  <dd><span class="usage-db-size"><%= @item.usage_db_size.try { |v| v.to_s(:human_size) } || '-' %></span></dd>
+  <dd><span class="usage-db-size"><%= @item.usage_db_size.try { |v| v.to_fs(:human_size) } || '-' %></span></dd>
 
   <dt><%= @model.t :usage_group_count %></dt>
-  <dd><span class="usage-group-count"><%= @item.usage_group_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
+  <dd><span class="usage-group-count"><%= @item.usage_group_count.try { |v| v.to_fs(:delimited) } || '-' %></span></dd>
 
   <dt><%= @model.t :usage_user_count %></dt>
-  <dd><span class="usage-user-count"><%= @item.usage_user_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
+  <dd><span class="usage-user-count"><%= @item.usage_user_count.try { |v| v.to_fs(:delimited) } || '-' %></span></dd>
 
   <dt><%= @model.t :usage_calculated_at %></dt>
   <dd><span class="usage-calculated-at"><%= @item.usage_calculated_at.try { |v| ss_time_tag(v) } || '-' %></span></dd>
