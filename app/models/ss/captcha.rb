@@ -16,7 +16,7 @@ class SS::Captcha
         captcha_text = format("%04d", rand(10_000))
         captcha_image_path = "#{dir}/captcha.jpeg"
 
-        MiniMagick::Tool::Convert.new do |convert|
+        MiniMagick.convert do |convert|
           convert.size SS.config.cms.captcha["image_size"]
           convert.background SS.config.cms.captcha["background"]
           convert.fill SS.config.cms.captcha["fill"]
