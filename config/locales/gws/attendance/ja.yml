@@ -115,6 +115,7 @@ ja:
         attendance_leave_label: 退勤表示
         attendance_management_year: 管理年数
         attendance_year_changed_month: 年度替わり月
+        attendance_time_changed_minute: 日替わり時刻
         attendance_break_time1_state: 休憩1表示
         attendance_break_enter1_label: 休憩1開始ラベル
         attendance_break_leave1_label: 休憩1終了ラベル

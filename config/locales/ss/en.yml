@@ -658,6 +658,7 @@ en:
       ss/oauth2/webmail_permission: Mail permissions
       ss/locale_setting: Locale settings
       ss/mfa/user_setting: MFA settings
+      ss/check_links_setting: Email Notification Settings
 
   activemodel:
     errors:
@@ -1062,6 +1063,9 @@ en:
         partner_site_ids: Partner sites
       ss/addon/inquiry_setting:
         inquiry_form_id: Inquiry form
+      ss/addon/check_links_setting:
+        check_links_email: Notification e-mail address
+        check_links_message_format: Format
       ss/oauth2/application/base:
         name: Name
         state: Status
@@ -1545,6 +1549,12 @@ en:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - Set a group-wide inquiry form.
+
+    ss/addon/check_links_setting:
+      check_links_email:
+        - If an e-mail address is set, error results will be notified after the link check is executed.
+      check_links_message_format:
+        - Select the format for e-mail notification of error results.
 
     ss/addon/workflow_setting:
       workflow_my_group:
