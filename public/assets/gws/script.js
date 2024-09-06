@@ -154,27 +154,59 @@ this.Gws_Member = (function () {
 
   Gws_Member.users = null;
 
-  Gws_Member.render = function () {
+  Gws_Member.render = function (box) {
     if ($('.js-copy-groups').length < 2) {
-      $('.js-copy-groups').remove();
-      $('.js-paste-groups').remove();
+      $('.js-copy-groups').addClass("hide");
+      $('.js-paste-groups').addClass("hide");
+    } else {
+      $('.js-copy-groups').removeClass("hide");
+      $('.js-paste-groups').removeClass("hide");
     }
-    $('.js-copy-groups').on("click", function () {
-      return Gws_Member.copyGroups($(this));
-    });
-    $('.js-paste-groups').on("click", function () {
-      return Gws_Member.pasteGroups($(this));
-    });
     if ($('.js-copy-users').length < 2) {
-      $('.js-copy-users').remove();
-      $('.js-paste-users').remove();
+      $('.js-copy-users').addClass("hide");
+      $('.js-paste-users').addClass("hide");
+    } else {
+      $('.js-copy-users').removeClass("hide");
+      $('.js-paste-users').removeClass("hide");
     }
-    $('.js-copy-users').on("click", function () {
-      return Gws_Member.copyUsers($(this));
+
+    if (!box) {
+      box = document;
+    }
+    box = $(box);
+
+    box.find('.js-copy-groups').each(function() {
+      var $copyEl = $(this);
+      SS.justOnce(this, "copyGroups", function() {
+        $copyEl.on("click", function () {
+          return Gws_Member.copyGroups($copyEl);
+        });
+      });
     });
-    return $('.js-paste-users').on("click", function () {
-      return Gws_Member.pasteUsers($(this));
+    box.find('.js-paste-groups').each(function() {
+      var $pasteEl = $(this);
+      SS.justOnce(this, "pasteGroups", function() {
+        $pasteEl.on("click", function () {
+          return Gws_Member.pasteGroups($pasteEl);
+        });
+      });
     });
+    box.find('.js-copy-users').each(function() {
+      var $copyEl = $(this);
+      SS.justOnce(this, "copyUsers", function() {
+        $copyEl.on("click", function () {
+          return Gws_Member.copyUsers($copyEl);
+        });
+      });
+    });
+    box.find('.js-paste-users').each(function() {
+      var $pasteEl = $(this);
+      SS.justOnce(this, "pasteUsers", function() {
+        $pasteEl.on("click", function () {
+          return Gws_Member.pasteUsers($(this));
+        });
+      });
+    })
   };
 
   Gws_Member.confirmReadableSetting = function () {
@@ -354,7 +386,7 @@ Gws_Bookmark.prototype.renderCreate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 };
@@ -398,7 +430,7 @@ Gws_Bookmark.prototype.renderUpdate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 
@@ -425,7 +457,7 @@ Gws_Bookmark.prototype.renderUpdate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 };
@@ -459,139 +491,6 @@ Gws_ReadableSetting.prototype.showSelectForm = function() {
 
 Gws_ReadableSetting.prototype.hideSelectForm = function() {
   this.el.find('.gws-addon-readable-setting-select').slideUp("fast");
-};
-function Gws_Contrast(opts) {
-  this.opts = opts;
-  this.$el = $('#user-contrast-menu');
-  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; } ' +
-                  'body *:after { background: :background !important; }';
-
-  this.render();
-}
-
-Gws_Contrast.getContrastId = function(siteId) {
-  return Cookies.get("gws-contrast-" + siteId);
-};
-
-Gws_Contrast.setContrastId = function(siteId, contrastId) {
-  Cookies.set("gws-contrast-" + siteId, contrastId, { expires: 7, path: '/' });
-};
-
-Gws_Contrast.removeContrastId = function(siteId) {
-  Cookies.remove("gws-contrast-" + siteId);
-};
-
-Gws_Contrast.prototype.render = function() {
-  var _this = this;
-
-  this.$el.data('load', function() {
-    _this.loadContrasts();
-  });
-
-  this.$el.on('click', '.gws-contrast-item', function(ev) {
-    var $this = $(this);
-    var id = $this.data('id');
-    if (id === 'default') {
-      _this.removeContrast($this.data('text-color'), $this.data('color'));
-      Gws_Contrast.removeContrastId(_this.opts.siteId);
-    } else {
-      _this.changeContrast($this.data('text-color'), $this.data('color'));
-      Gws_Contrast.setContrastId(_this.opts.siteId, id);
-    }
-    SS.notice(_this.opts.notice.replace(':name', $this.text()));
-
-    ev.stopPropagation();
-  });
-};
-
-Gws_Contrast.prototype.loadContrasts = function() {
-  if (this.$el.data('loadedAt')) {
-    this.checkActiveContrast();
-    return;
-  }
-
-  var _this = this;
-  $.ajax({
-    url: this.opts.url,
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) { _this.renderContrasts(data); },
-    error: function(xhr, status, error) { _this.showMessage(this.opts.loadError); },
-    complete: function(xhr, status) { _this.completeLoading(xhr); }
-  });
-};
-
-Gws_Contrast.prototype.completeLoading = function(xhr) {
-  this.$el.data('loadedAt', Date.now());
-  this.$el.find('.gws-contrast-loading').closest('li').hide();
-};
-
-Gws_Contrast.prototype.showMessage = function(message) {
-  this.$el.append($('<li/>').html($('<div class="gws-contrast-error"/>').text(message)));
-};
-
-Gws_Contrast.prototype.renderContrasts = function(data) {
-  if (data.length === 0) {
-    this.showMessage(this.opts.noContrasts);
-    return;
-  }
-
-  this.renderContrast('default', this.opts.defaultContrast);
-
-  var _this = this;
-  $.each(data, function() {
-    var id = this._id;
-    if (id !== null && typeof id === 'object' && '$oid' in id) {
-      id = id['$oid']
-    }
-    _this.renderContrast(id, this.name, this.color, this.text_color);
-  });
-
-  this.checkActiveContrast();
-};
-
-Gws_Contrast.prototype.renderContrast = function(id, name, color, textColor) {
-  var dataAttrs = { id: id };
-  if (color) {
-    dataAttrs.color = color;
-  }
-  if (textColor) {
-    dataAttrs.textColor = textColor;
-  }
-
-  var $input = $('<input/>', { type: 'radio', name: 'gws-contrast-item', value: id });
-  var $label = $('<label/>', { class: 'gws-contrast-item', data: dataAttrs });
-  $label.append($input);
-  $label.append($('<span class="gws-contrast-name"/>').text(name));
-
-  this.$el.append($('<li/>').append($label));
-};
-
-Gws_Contrast.prototype.checkActiveContrast = function() {
-  var contrastId = Gws_Contrast.getContrastId(this.opts.siteId);
-  if (! contrastId) {
-    $('input[name="gws-contrast-item"]').val(['default']);
-    return;
-  }
-
-  $('input[name="gws-contrast-item"]').val([contrastId]);
-};
-
-Gws_Contrast.prototype.changeContrast = function(textColor, color) {
-  if (! this.$style) {
-    this.$style = $('<style/>', { type: 'text/css' });
-    $('head').append(this.$style);
-  }
-
-  this.$style.html(this.template.replace(/:color/g, textColor).replace(/:background/g, color));
-};
-
-Gws_Contrast.prototype.removeContrast = function() {
-  if (! this.$style) {
-    return;
-  }
-
-  this.$style.html('');
 };
 function Gws_Workload_Navi(selector) {
   this.el = $(selector);
@@ -846,13 +745,13 @@ this.Gws_Schedule_Repeat_Plan = (function () {
     b2 = $('<input />', { type: "button", class: "btn", value: i18next.t("gws/schedule.buttons.delete_later") });
     b3 = $('<input />', { type: "button", class: "btn", value: i18next.t("gws/schedule.buttons.delete_all") });
     b1.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="one" />')[0].requestSubmit();
     });
     b2.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="later" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="later" />')[0].requestSubmit();
     });
     b3.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="all" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="all" />')[0].requestSubmit();
     });
     buttons = $('<div class="gws-schedule-repeat-submit"></div>');
     buttons.append(b1).append(sp).append(b2).append(sp).append(b3);
@@ -961,7 +860,7 @@ this.Gws_Schedule_Todo_Search = (function () {
     }
 
     var self = this;
-    this.timerId = setTimeout(function() { self.$el.submit(); }, 0);
+    this.timerId = setTimeout(function() { self.$el[0].requestSubmit(); }, 0);
   };
 
   return Gws_Schedule_Todo_Search;
@@ -1388,7 +1287,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
           self.$html_facility_reservation = $('<div></div>').html(data);
           if(self.$html_facility_reservation.find(".reservation-valid.free").length) {
             self.proceed();
-            $('form#item-form').submit();
+            $('form#item-form')[0].requestSubmit();
           } else {
             self.confirmFacilityReservation();
           }
@@ -1479,7 +1378,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
     $('#cboxLoadedContent .send .confirm').on('click', function(ev) {
       self.proceed();
       if (self.item_submit) {
-        $('form#item-form').submit();
+        $('form#item-form')[0].requestSubmit();
       }
       ev.preventDefault();
       return false;
@@ -1644,7 +1543,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     $(".preparation").on("click", function () {
       var $this, action, confirm, form, token;
@@ -1664,7 +1563,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     $(".question_not_applicable").on("click", function () {
       var form, id, token;
@@ -1682,7 +1581,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     return $(".answered").on("click", function () {
       var form, id, token;
@@ -1700,7 +1599,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
   };
 
@@ -1907,7 +1806,7 @@ this.Gws_Discussion_Thread = (function () {
       a.text(humanizedName);
       a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
       input.attr("value", fileId);
-      icon.on("click", function (e) {
+      icon.on("click", function (_e) {
         $(this).parent("span").remove();
         if ($(selected).find("[data-file-id]").length <= 0) {
           $(selected).hide();
@@ -1968,6 +1867,26 @@ this.Gws_Discussion_Thread = (function () {
       $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor);
       return $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor);
     });
+
+    // bookmark
+    $(".bookmark-comment").on("click", function () {
+      var $warp = $(this);
+      var url = $warp.data("url");
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          $warp.html(data);
+        },
+        error: function (xhr, _status, _error) {
+          alert(xhr.responseJSON.join("\n"));
+        },
+      });
+      return false;
+    });
   };
 
   return Gws_Discussion_Thread;
@@ -1997,7 +1916,7 @@ this.Gws_Discussion_Unseen = (function () {
   Gws_Discussion_Unseen.checkMessage = function () {
     return $.ajax({
       url: Gws_Discussion_Unseen.url,
-      success: function (data, status) {
+      success: function (data, _status) {
         var timestamp;
         timestamp = parseInt(data);
         if (timestamp > Gws_Discussion_Unseen.timestamp) {
@@ -2114,7 +2033,7 @@ Gws_Attendance.prototype.onPunchClicked = function(action, message) {
   $form = $('<form/>', { action: action, method: 'post' });
   $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
   $('body').append($form);
-  $form.submit();
+  $form[0].requestSubmit();
 };
 
 Gws_Attendance.prototype.onEditClicked = function(action, message) {
@@ -2283,7 +2202,7 @@ Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
   $button.attr('disabled', 'disabled');
 
   var url = this.options.editUrl.replace(':TYPE', fieldName);
-  $a = $('<a/>', { href: url });
+  var $a = $('<a/>', { href: url });
   $a.colorbox({
     open: true,
     width: '90%',
@@ -2972,6 +2891,121 @@ Gws_Affair_ShiftRecords.prototype.onClickCell = function($cell) {
   this.$toolbar.show();
   this.$toolbar.offset(offset);
 };
+Gws_Column = function () {
+  //
+};
+
+Gws_Column.renderRadioButton = function(columnId) {
+  var ids = [];
+
+  // prepare
+  var $el = $(".radio-button-" + columnId);
+  $el.find('input[data-section-id]').each(function() {
+    ids.push($(this).attr('data-section-id'));
+  });
+
+  // change
+  $el.find("input[type='radio']").each(function() {
+    var $this = $(this);
+    var sectionId = $this.attr('data-section-id');
+    $this.on('change', function() {
+      ids.forEach(function(id) {
+        $(`.section-${id}`).addClass("hide");
+        $(`.section-${id} *`).prop('disabled', true);
+      });
+      $(`.section-${sectionId}`).removeClass("hide");
+      $(`.section-${sectionId} *`).prop('disabled', false);
+
+      if (sectionId === 'other') {
+        $el.find("input[type='text']").prop('disabled', false);
+      } else {
+        $el.find("input[type='text']").prop('disabled', true);
+      }
+
+      $this.trigger("column:sectionChanged");
+    });
+  });
+
+  // clear
+  $el.find('.btn').on('click', function() {
+    Gws_Column.resetRadioButton($el, ids);
+  });
+
+  // on validation error
+  if ($el.find("input[type='radio']:checked").length > 0) {
+    $el.find("input[type='radio']:checked").trigger('change');
+  } else {
+    Gws_Column.resetRadioButton($el, ids);
+  }
+};
+
+Gws_Column.resetRadioButton = function($el, ids) {
+  ids.forEach(function(id) {
+    $(`.section-${id}`).addClass("hide");
+    $(`.section-${id} *`).prop('disabled', true);
+    $el.find("input[type='text']").prop('value', null);
+    $el.find("input[type='text']").prop('disabled', true);
+  });
+};
+Gws_Workflow2_Approver = function () {
+};
+
+Gws_Workflow2_Approver.prototype.renderAgentForm = function(params) {
+  this.superiorsUrl = params.url;
+  this.errorHtml = $("<span/>", { class: "error" }).text(i18next.t("gws/workflow2.errors.messages.superior_is_not_found"));
+
+  var _this = this;
+  $('.agent-type-agent .ajax-selected').on('change', function() {
+    _this.changeApprovers();
+  });
+
+  $('input[name="item[workflow_agent_type]"]').on('change', function() {
+    var type = $(this).val();
+    if (type === 'myself') {
+      $('.myself-approvers').removeClass('hide');
+      $('.agent-approvers').addClass('hide');
+    } else {
+      $('.myself-approvers').addClass('hide');
+      $('.agent-approvers').removeClass('hide');
+    }
+    _this.renderSubmitButton();
+  });
+};
+
+Gws_Workflow2_Approver.prototype.changeApprovers = function() {
+  var _this = this;
+  var userId = $('.change_agent_type table.index input').val();
+
+  if (!userId) {
+    var $message = $("<span />", { class: "info" }).text(i18next.t("gws/workflow2.errors.messages.plz_select_delegatee"));
+    $('.gws-workflow-file-approver-item .agent-approvers').html($message);
+    _this.renderSubmitButton();
+    return;
+  }
+
+  $.ajax({
+    url: this.superiorsUrl.replace('$id', userId),
+    dataType: "json",
+    beforeSend: function() {
+      $('.gws-workflow-file-approver-item .agent-approvers').text('Loading..');
+    },
+    success: function(user) {
+      $('.gws-workflow-file-approver-item .agent-approvers').text(user.long_name);
+    },
+    error: function() {
+      $('.gws-workflow-file-approver-item .agent-approvers').html(_this.errorHtml);
+    },
+    complete: function() {
+      _this.renderSubmitButton();
+    }
+  });
+};
+
+Gws_Workflow2_Approver.prototype.renderSubmitButton = function() {
+  var disabled = $('.gws-workflow-file-approver-item').find('.user:not(.hide)').find('.error,.info').length > 0;
+  $('form#workflow-request').find('.btn-primary').attr({ 'disabled': (disabled ? 'disabled': null) });
+};
+
 
 
 
@@ -3021,4 +3055,11 @@ SS.ready(function () {
   });
 
   Gws_Member.render();
+
+  // user detail
+  $(".user-detail").colorbox({
+    maxWidth: "80%",
+    maxHeight: "80%",
+    fixed: true
+  });
 });

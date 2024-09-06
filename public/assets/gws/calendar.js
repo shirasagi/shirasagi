@@ -28955,6 +28955,7 @@ SS.ready(function() {
         },
         contentHeight: 'auto',
         displayEventEnd: {
+          month: true,
           basicWeek: true
         },
         endParam: 's[end]',
@@ -29047,11 +29048,20 @@ SS.ready(function() {
     };
 
     Gws_Schedule_Calendar.viewStateQuery = function (view) {
-      var attendance, format, todo;
+      var attendance, format, todo, path;
       format = view.el.closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
       todo = $('.fc .fc-withTodo-button').hasClass("fc-state-active") ? 'active' : 'inactive';
       attendance = $('.fc .fc-withAbsence-button').hasClass("fc-state-active") ? 'active' : 'inactive';
-      return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format + "&calendar[viewTodo]=" + todo + "&calendar[viewAttendance]=" + attendance;
+
+      path = "calendar[path]=" + location.pathname;
+      path += "&calendar[view]=" + view.name;
+      path += "&calendar[viewFormat]=" + format;
+      path += "&calendar[viewTodo]=" + todo;
+      path += "&calendar[viewAttendance]=" + attendance;
+      if ($('[name="s[facility_category_id]"]').val()) {
+        path += "&calendar[facilityCategory]=" + $('[name="s[facility_category_id]"]').val();
+      }
+      return path
     };
 
     Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
@@ -30151,6 +30161,7 @@ SS.ready(function() {
         },
         contentHeight: 'auto',
         displayEventEnd: {
+          month: true,
           basicWeek: true
         },
         endParam: 's[end]',

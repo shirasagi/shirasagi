@@ -251,7 +251,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
-    var feature, iconSrc, id, marker, markerHtml, name, pos, style, text;
+    var feature, iconSrc, id, marker, markerHtml, name, pos, style, text, html;
 
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
@@ -259,21 +259,26 @@ this.Openlayers_Map = (function () {
       style = this.createMarkerStyle(iconSrc);
 
       name = marker['name'];
-      text = marker['html'] || marker['text'];
+      text = marker['text'];
+      html = marker['html'];
       pos = [marker['loc'][0], marker['loc'][1]];
 
       markerHtml = "";
-      if (name) {
-        markerHtml += '<p>' + name + '</p>';
-      }
-      if (text) {
-        $.each(text.split(/[\r\n]+/), function () {
-          if (this.match(/^https?:\/\//)) {
-            markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
-          } else {
-            markerHtml += '<p>' + this + '</p>';
-          }
-        });
+      if (html) {
+        markerHtml = html;
+      } else if (name || text) {
+        if (name) {
+          markerHtml += '<p>' + name + '</p>';
+        }
+        if (text) {
+          $.each(text.split(/[\r\n]+/), function () {
+            if (this.match(/^https?:\/\//)) {
+              markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+            } else {
+              markerHtml += '<p>' + this + '</p>';
+            }
+          });
+        }
       }
       if (this.showGoogleMapsSearch) {
         markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);
