@@ -135,7 +135,7 @@ SS.renderClipboardCopy();
       <dl class="info-list">
         <% if rs.respond_to?(:downloaded_count) %>
           <dt class="info-list__title"><%= rs.t :downloaded_count %></dt>
-          <dd class="info-list__content"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
+          <dd class="info-list__content"><%= rs.downloaded_count.to_fs(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
         <% end %>
         <% if rs.metadata_file_released.present? %>
           <dt class="info-list__title"><%= rs.t :metadata_file_released %></dt>
