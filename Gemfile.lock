@@ -343,6 +343,7 @@ GEM
     marcel (1.0.4)
     marked-rails (9.1.2.0)
     matrix (0.4.2)
+    mecab (0.996)
     method_source (1.1.0)
     mime-types (3.5.2)
       mime-types-data (~> 3.2015)
@@ -813,6 +814,7 @@ DEPENDENCIES
   mail-iso-2022-jp
   marcel
   marked-rails
+  mecab
   mini_magick
   mongo_session_store
   mongoid

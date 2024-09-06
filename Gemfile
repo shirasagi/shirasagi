@@ -81,6 +81,7 @@ gem 'thinreports'
 gem 'ungarbled'
 gem 'view_component'
 gem 'wareki'
+gem 'mecab'
 
 # OAuth
 gem 'oauth2'
