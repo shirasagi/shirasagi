@@ -221,7 +221,7 @@ module Cms::PublicFilter
   end
 
   def page_not_found
-    request.env["action_dispatch.show_exceptions"] = false if @preview
+    request.env["action_dispatch.show_exceptions"] = :none if @preview
     raise "404"
   end
 
