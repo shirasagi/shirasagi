@@ -65,7 +65,7 @@ module SS::Copy::CmsContents
   end
 
   def safe_reference_type?(type)
-    [:group, :user, :layout].include?(type)
+    [:group, :user, :layout, :node].include?(type)
   end
 
   def unsafe_reference_type?(type)
