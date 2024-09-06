@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 7.0.0'
+gem 'rails', '~> 7.1.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sass-rails'
@@ -43,6 +43,7 @@ gem 'browser'
 gem 'clam_scan'
 gem 'diff-lcs'
 gem 'diffy'
+gem 'dotenv-rails'
 gem 'fast_blank'
 gem 'fastimage'
 gem 'geocoder'
@@ -123,7 +124,6 @@ gem 'kintone', git: "https://github.com/jue58/kintone.git"
 
 group :development, :test do
   gem 'brakeman', require: false
-  gem 'dotenv-rails'
   gem 'capybara', require: false
   gem 'debase', require: false
   gem 'factory_bot_rails', require: false

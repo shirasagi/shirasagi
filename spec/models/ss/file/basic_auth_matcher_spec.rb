@@ -6,11 +6,11 @@ describe SS::Addon::FileSetting::BasicAuthMatcher, dbscope: :example do
   let(:digest) { Base64.encode64("#{id}:#{pass}").chomp }
 
   before do
-    SS::LogSupport.stdout_logger.enable
+    SS::LogSupport.enable
   end
 
   after do
-    SS::LogSupport.stdout_logger.disable(false)
+    SS::LogSupport.disable(false)
   end
 
   it do
@@ -28,7 +28,7 @@ describe SS::Addon::FileSetting::BasicAuthMatcher, dbscope: :example do
     [ "authorization is not presented",
       "authorization type is not 'basic'",
       "authorization credential is not matched" ].tap do |messages|
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to output(include(*messages)).to_stdout
+      expect { SS::LogSupport.disable(true) }.to output(include(*messages)).to_stdout
     end
   end
 end

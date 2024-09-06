@@ -1,113 +1,40 @@
-require 'logger'
-
 class Job::TaskLogger < ::Logger
-  extend Forwardable
-
-  FLUSH_INTERVAL = 10.seconds
-
-  private_class_method :new
-
-  def initialize
-    if Fs.mode == :grid_fs
-      @device = TaskLogDevice.new
-    else
-      @device = WrapLogDevice.new
-    end
-    super(@device)
-  end
-
-  def_delegators(:@device, :attach, :detach)
-
   class << self
-    def attach(loggable)
-      @@task_logger ||= begin
-        logger = new
-        logger.level = ::Job::Service.config.log_level || Rails.logger.level
-        logger.formatter = Rails.logger.formatter
-        Rails.logger.extend ActiveSupport::Logger.broadcast(logger)
-        logger
-      end
+    def attach(job_log)
+      new_logger = new(job_log)
+      old_loggers = Rails.logger.broadcasts.select { |logger| logger.is_a?(Job::TaskLogger) }
+      old_loggers.each { |logger| Rails.logger.stop_broadcasting_to(logger) }
+      Rails.logger.broadcast_to(new_logger)
 
-      @@task_logger.attach(loggable)
+      old_loggers.each(&:close)
+      old_loggers[0].try(:job_log)
     end
 
-    def detach(_)
-      return unless @@task_logger
-      @@task_logger.detach
-    end
-  end
-
-  class TaskLogDevice
-    attr_accessor :loggable
-
-    def attach(loggable)
-      save = detach
-      @loggable = loggable
-      save
-    end
-
-    def detach
-      save = @loggable
-      @loggable = nil
-
-      save.save if save
-      save
-    end
-
-    def write(message)
-      if @loggable
-        @loggable.logs << message
-        elapsed = Time.zone.now - @loggable.updated
-        @loggable.save if elapsed > FLUSH_INTERVAL
-      end
-    end
-
-    # do not remove close method
-    def close
+    def detach(*_args)
+      loggers = Rails.logger.broadcasts.select { |logger| logger.is_a?(Job::TaskLogger) }
+      loggers.each { |logger| Rails.logger.stop_broadcasting_to(logger) }
+      loggers.each(&:close)
+      loggers[0].try(:job_log)
     end
   end
 
-  class WrapLogDevice
-    attr_accessor :loggable
+  def initialize(job_log)
+    file = open_logfile(job_log.file_path)
 
-    def attach(loggable)
-      save = detach
-      @loggable = loggable
-      @file = open_logfile(loggable.file_path)
-      save
-    end
+    @job_log = job_log
+    super(file, formatter: Rails.logger.formatter, level: ::Job::Service.config.log_level || Rails.logger.level)
+  end
 
-    def detach
-      save = @loggable
-      @loggable = nil
+  attr_reader :job_log
 
-      if @file
-        @file.close
-      end
-      @file = nil
+  private
 
-      save
-    end
+  def open_logfile(filename)
+    dirname = ::File.dirname(filename)
+    ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
 
-    def write(message)
-      if @file
-        @file.puts(message)
-      end
-    end
-
-    # do not remove close method
-    def close
-    end
-
-    private
-
-    def open_logfile(filename)
-      dirname = ::File.dirname(filename)
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
-
-      file = ::File.open(filename, 'a')
-      file.sync = true
-      file
-    end
+    file = ::File.open(filename, 'a')
+    file.sync = true
+    file
   end
 end

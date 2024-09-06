@@ -36,13 +36,13 @@ describe "sys_diag_servers", type: :feature, dbscope: :example do
     end
 
     within "#http-env-list" do
-      expect(page).to have_css("dt", text: "CONTENT_LENGTH")
+      expect(page).to have_css("dt", text: "PATH_INFO")
       expect(page).to have_css("dt", text: "SERVER_PORT")
     end
 
     within "#rack-env-list" do
       expect(page).to have_css("dt", text: "rack.errors")
-      expect(page).to have_css("dt", text: "rack.version")
+      expect(page).to have_css("dt", text: "rack.session")
     end
 
     within "#rails-env-list" do

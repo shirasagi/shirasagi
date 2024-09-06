@@ -39,14 +39,14 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
       it "returns 202, and then returns 200" do
         visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 202
-        expect(response_headers.keys).to include("Retry-After")
+        expect(response_headers.keys).to include("retry-after")
         expect(Voice::File.where(url: url).count).to be >= 1
 
         # visit again
         visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 200
         expect(response_headers).to include("Content-Type" => "audio/mpeg")
-        expect(response_headers.keys).to_not include("Retry-After")
+        expect(response_headers.keys).to_not include("retry-after")
       end
     end
 
@@ -169,7 +169,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
         # request url with query string
         visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 202
-        expect(response_headers.keys).to include("Retry-After")
+        expect(response_headers.keys).to include("retry-after")
         # record exists if query string is not given.
         expect(Voice::File.where(url: url0).count).to be >= 1
         # record does not exist if query string is given.
@@ -179,7 +179,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
         visit voice_path(Addressable::URI.encode_component(url, '0-9a-zA-Z'))
         expect(status_code).to eq 200
         expect(response_headers).to include("Content-Type" => "audio/mpeg")
-        expect(response_headers.keys).to_not include("Retry-After")
+        expect(response_headers.keys).to_not include("retry-after")
       end
     end
 
