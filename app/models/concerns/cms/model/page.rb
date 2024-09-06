@@ -28,7 +28,7 @@ module Cms::Model::Page
     field :route, type: String, default: ->{ "cms/page" }
     field :size, type: Integer
 
-    embeds_ids :categories, class_name: "Cms::Node"
+    embeds_ids :categories, class_name: "Cms::Node", metadata: { on_copy: :safe }
 
     permit_params category_ids: []
 
@@ -292,13 +292,13 @@ module Cms::Model::Page
 
   def skip_required?
     return false if self.try(:branch?)
-  
+
     return false if (state == "closed" && self.try(:workflow_state).present? && self.try(:workflow_state) == "request")
-  
+
     return true if state == "closed"
-  
+
     false
-  end  
+  end
 
   private
 
