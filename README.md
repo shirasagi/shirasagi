@@ -20,10 +20,12 @@ SHIRASAGI is Contents Management System.
 ## Platform
 
 - AlmaLinux, RockyLinux, Ubuntu
-- Ruby 3.0 or 3.1
-- Ruby on Rails 6.1
-- MongoDB 4.4 or 6.0
+- Ruby 3.1 or 3.2
+- Ruby on Rails 7.1
+- MongoDB 6.0 or 7.0
 - Unicorn
+- Node.js 20
+- Elasticsearch 7.1
 
 ## Installation (Auto)
 
@@ -55,20 +57,20 @@ $ su -
 
 ```
 $ su -
-# vi /etc/yum.repos.d/mongodb-org-6.0.repo
+# vi /etc/yum.repos.d/mongodb-org-7.0.repo
 ```
 
 ```
-[mongodb-org-6.0]
+[mongodb-org-7.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/6.0/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/7.0/x86_64/
 gpgcheck=1
-enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
+enabled=1
+gpgkey=https://pgp.mongodb.com/server-7.0.asc
 ```
 
 ```
-# dnf install -y --enablerepo=mongodb-org-6.0 mongodb-org
+# dnf install -y --enablerepo=mongodb-org-7.0 mongodb-org
 # systemctl start mongod
 # systemctl enable mongod
 ```
@@ -91,8 +93,8 @@ $ su -
 ```
 $ su -
 # asdf plugin add ruby
-# asdf install ruby 3.1.4
-# asdf global ruby 3.1.4
+# asdf install ruby 3.2.5
+# asdf global ruby 3.2.5
 ```
 
 ### Nodejs のインストール
@@ -100,8 +102,8 @@ $ su -
 ```
 $ su -
 # asdf plugin add nodejs
-# asdf install nodejs 20.5.0
-# asdf global nodejs 20.5.0
+# asdf install nodejs 20.17.0
+# asdf global nodejs 20.17.0
 # npm install -g yarn
 ```
 
