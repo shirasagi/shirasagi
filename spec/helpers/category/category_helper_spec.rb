@@ -16,15 +16,15 @@ describe Category::CategoryHelper, type: :helper, dbscope: :example do
       @item = item
 
       helper.render_cate_form(categories.tree_sort.to_a, cate_options)
-      html = Capybara.string(helper.output_buffer)
+      html = Nokogiri::HTML.fragment(helper.output_buffer)
 
-      expect(html.has_css?(".parent input[name=\"item[category_ids][]\"][value=\"#{cate1.id}\"]")).to be_truthy
-      expect(html.has_css?(".child input[name=\"item[category_ids][]\"][value=\"#{cate2.id}\"]")).to be_truthy
-      expect(html.has_css?(".child input[name=\"item[category_ids][]\"][value=\"#{cate3.id}\"]")).to be_truthy
+      expect(html.css(".parent input[name=\"item[category_ids][]\"][value=\"#{cate1.id}\"]")).to be_present
+      expect(html.css(".child input[name=\"item[category_ids][]\"][value=\"#{cate2.id}\"]")).to be_present
+      expect(html.css(".child input[name=\"item[category_ids][]\"][value=\"#{cate3.id}\"]")).to be_present
 
-      expect(html.has_css?(".parent input[value=\"#{cate1.id}\"][checked=\"checked\"]")).to be_truthy
-      expect(html.has_css?(".child input[value=\"#{cate2.id}\"][checked=\"checked\"]")).to be_truthy
-      expect(html.has_css?(".child input[value=\"#{cate3.id}\"][checked=\"checked\"]")).to be_falsey
+      expect(html.css(".parent input[value=\"#{cate1.id}\"][checked=\"checked\"]")).to be_present
+      expect(html.css(".child input[value=\"#{cate2.id}\"][checked=\"checked\"]")).to be_present
+      expect(html.css(".child input[value=\"#{cate3.id}\"][checked=\"checked\"]")).to be_blank
     end
   end
 
@@ -38,15 +38,15 @@ describe Category::CategoryHelper, type: :helper, dbscope: :example do
       @item = item
 
       helper.render_cate_form(categories.tree_sort.to_a, cate_options)
-      html = Capybara.string(helper.output_buffer)
+      html = Nokogiri::HTML.fragment(helper.output_buffer)
 
-      expect(html.has_css?(".parent input[name=\"item[ads_category_ids][]\"][value=\"#{cate1.id}\"]")).to be_truthy
-      expect(html.has_css?(".child input[name=\"item[ads_category_ids][]\"][value=\"#{cate2.id}\"]")).to be_truthy
-      expect(html.has_css?(".child input[name=\"item[ads_category_ids][]\"][value=\"#{cate3.id}\"]")).to be_truthy
+      expect(html.css(".parent input[name=\"item[ads_category_ids][]\"][value=\"#{cate1.id}\"]")).to be_present
+      expect(html.css(".child input[name=\"item[ads_category_ids][]\"][value=\"#{cate2.id}\"]")).to be_present
+      expect(html.css(".child input[name=\"item[ads_category_ids][]\"][value=\"#{cate3.id}\"]")).to be_present
 
-      expect(html.has_css?(".parent input[value=\"#{cate1.id}\"][checked=\"checked\"]")).to be_truthy
-      expect(html.has_css?(".child input[value=\"#{cate2.id}\"][checked=\"checked\"]")).to be_truthy
-      expect(html.has_css?(".child input[value=\"#{cate3.id}\"][checked=\"checked\"]")).to be_falsey
+      expect(html.css(".parent input[value=\"#{cate1.id}\"][checked=\"checked\"]")).to be_present
+      expect(html.css(".child input[value=\"#{cate2.id}\"][checked=\"checked\"]")).to be_present
+      expect(html.css(".child input[value=\"#{cate3.id}\"][checked=\"checked\"]")).to be_blank
     end
   end
 end

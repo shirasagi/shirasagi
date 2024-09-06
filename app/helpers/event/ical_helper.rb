@@ -34,7 +34,7 @@ module Event::IcalHelper
           else
             # BE CAREFUL: uid specification is updated in RFC-7986
             uid = "#{site.domain}#{item.url}@#{index}".sub(/\.html$/, '').gsub(NONE_IANA_TOKENS_RE, "-")
-            uid += Rails.application.secrets.secret_key_base
+            uid += Rails.application.secret_key_base
             uid = Digest::MD5.hexdigest(uid)
           end
           event.uid = uid

@@ -9,9 +9,11 @@
 
 /app/assets/builds
 /config/*.yml
+/config/*.yml.enc
 /config/after_initializers
 /config/commands
 /config/environments
+/config/master.key
 /config/unicorn.rb
 /config/puma.rb
 /config/nginx.conf
@@ -47,6 +49,7 @@ ehthumbs.db
 
 # Dotenv
 /.env
+/.env.*
 
 # test-queue
 .test_queue_stats

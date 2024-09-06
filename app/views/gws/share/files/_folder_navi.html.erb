@@ -85,7 +85,7 @@
 
   <%= jquery do %>
     var treeNavi = new SS_TreeNavi('#gws-share-file-folder-list .tree-navi');
-    treeNavi.render("<%= @tree_navi %>");
+    treeNavi.render(<%== @tree_navi.to_json %>);
     <% if tools_presented %>
       new Gws_Share_FolderToolbar('.gws-share-file-folder-navi', { treeNavi: treeNavi });
     <% end %>

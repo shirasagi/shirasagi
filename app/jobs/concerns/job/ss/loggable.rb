@@ -30,7 +30,7 @@ module Job::SS::Loggable
       job_log.closed = Time.zone.now
       Rails.logger.info("Completed Job #{job_id} in #{time * 1000} ms")
     ensure
-      Job::TaskLogger.detach(job_log)
+      Job::TaskLogger.detach
       job_log.save
       Job::TaskLogger.attach(prev_job_log) if prev_job_log.present?
     end

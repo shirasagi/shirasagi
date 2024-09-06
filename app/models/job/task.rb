@@ -90,7 +90,7 @@ class Job::Task
       job_log.closed = Time.zone.now
       Rails.logger.info("Completed Job #{id} in #{time * 1000} ms")
     ensure
-      Job::TaskLogger.detach(job_log)
+      Job::TaskLogger.detach
       job_log.save
     end
     ret

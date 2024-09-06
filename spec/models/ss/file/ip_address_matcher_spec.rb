@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe SS::Addon::FileSetting::IPAddressMatcher, dbscope: :example do
   before do
-    SS::LogSupport.stdout_logger.enable
+    SS::LogSupport.enable
   end
 
   after do
-    SS::LogSupport.stdout_logger.disable(false)
+    SS::LogSupport.disable(false)
   end
 
   context "with specific addresses" do
@@ -21,7 +21,7 @@ describe SS::Addon::FileSetting::IPAddressMatcher, dbscope: :example do
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.10.2"))).to be_truthy
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.10.4"))).to be_falsey
 
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+      expect { SS::LogSupport.disable(true) }.to \
         output(include("remote address '192.168.10.3' is not allowed", "remote address '192.168.10.4' is not allowed")).to_stdout
     end
   end
@@ -40,7 +40,7 @@ describe SS::Addon::FileSetting::IPAddressMatcher, dbscope: :example do
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.10.255"))).to be_truthy
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.11.2"))).to be_falsey
 
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+      expect { SS::LogSupport.disable(true) }.to \
         output(include("remote address '192.168.11.1' is not allowed", "remote address '192.168.11.2' is not allowed")).to_stdout
     end
   end
@@ -59,7 +59,7 @@ describe SS::Addon::FileSetting::IPAddressMatcher, dbscope: :example do
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.10.255"))).to be_truthy
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.11.2"))).to be_falsey
 
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+      expect { SS::LogSupport.disable(true) }.to \
         output(include("remote address '192.168.11.1' is not allowed", "remote address '192.168.11.2' is not allowed")).to_stdout
     end
   end
@@ -76,7 +76,7 @@ describe SS::Addon::FileSetting::IPAddressMatcher, dbscope: :example do
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.10.2"))).to be_truthy
       expect(matcher.match?(OpenStruct.new(env: {}, remote_addr: "192.168.10.4"))).to be_falsey
 
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+      expect { SS::LogSupport.disable(true) }.to \
         output(include("remote address '192.168.10.3' is not allowed", "remote address '192.168.10.4' is not allowed")).to_stdout
     end
   end

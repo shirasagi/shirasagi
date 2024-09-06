@@ -48,7 +48,7 @@ module SS::ExceptionFilter
       separator << logger.formatter.tags_text
     end
 
-    ActiveSupport::Deprecation.silence do
+    Rails.application.deprecators.silence do
       logger.fatal "  "
       logger.fatal "#{exception.class} (#{exception.message}):"
       if exception.respond_to?(:annoted_source_code) && exception.annoted_source_code.present?

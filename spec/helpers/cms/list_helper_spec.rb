@@ -53,22 +53,22 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
 
   context "render_node_list" do
     it "with default template" do
-      html = Capybara.string(helper.render_node_list)
+      html = Nokogiri::HTML.fragment(helper.render_node_list)
 
-      expect(html.first("article.item-#{node2.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node2.url}\"]", text: node2.index_name)).to be_truthy
+      expect(html.css("article.item-#{node2.basename}")).to be_present
+      expect(html.css("a[href=\"#{node2.url}\"]").text).to eq node2.index_name
 
-      expect(html.first("article.item-#{node3.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node3.url}\"]", text: node3.index_name)).to be_truthy
+      expect(html.css("article.item-#{node3.basename}")).to be_present
+      expect(html.css("a[href=\"#{node3.url}\"]").text).to eq node3.index_name
 
-      expect(html.first("article.item-#{node4.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node4.url}\"]", text: node4.index_name)).to be_truthy
+      expect(html.css("article.item-#{node4.basename}")).to be_present
+      expect(html.css("a[href=\"#{node4.url}\"]").text).to eq node4.index_name
 
-      expect(html.first("article.item-#{node5.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node5.url}\"]", text: node5.index_name)).to be_truthy
+      expect(html.css("article.item-#{node5.basename}")).to be_present
+      expect(html.css("a[href=\"#{node5.url}\"]").text).to eq node5.index_name
 
-      expect(html.first("article.item-#{node6.basename}")).to be_truthy
-      expect(html.first("a[href=\"#{node6.url}\"]", text: node6.index_name)).to be_truthy
+      expect(html.css("article.item-#{node6.basename}")).to be_present
+      expect(html.css("a[href=\"#{node6.url}\"]").text).to eq node6.index_name
     end
 
     it "with shirasagi loop template" do
@@ -76,173 +76,173 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
       node1.loop_html = loop_html
       node1.save!
 
-      html = Capybara.string(helper.render_node_list)
+      html = Nokogiri::HTML.fragment(helper.render_node_list)
 
-      expect(html.has_css?(".item-#{node2.basename}")).to be_truthy
-      expect(html.first(".item-#{node2.basename} .class").text).to eq node2.basename
-      expect(html.first(".item-#{node2.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .date").text).to eq node2_date
-      expect(html.first(".item-#{node2.basename} .date-default").text).to eq node2_date_default
-      expect(html.first(".item-#{node2.basename} .date-iso").text).to eq node2_date_iso
-      expect(html.first(".item-#{node2.basename} .date-long").text).to eq node2_date_long
-      expect(html.first(".item-#{node2.basename} .date-short").text).to eq node2_date_short
-      expect(html.first(".item-#{node2.basename} .time").text).to eq node2_time
-      expect(html.first(".item-#{node2.basename} .time-default").text).to eq node2_time_default
-      expect(html.first(".item-#{node2.basename} .time-iso").text).to eq node2_time_iso
-      expect(html.first(".item-#{node2.basename} .time-long").text).to eq node2_time_long
-      expect(html.first(".item-#{node2.basename} .time-short").text).to eq node2_time_short
-      expect(html.first(".item-#{node2.basename} .url").text).to eq node2.url
-      expect(html.first(".item-#{node2.basename} .name").text).to eq node2.name
-      expect(html.first(".item-#{node2.basename} .index_name").text).to eq node2.index_name
-      expect(html.first(".item-#{node2.basename} .summary").text).to eq node2.summary
-      expect(html.first(".item-#{node2.basename} .html").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .current").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .new").text).to eq "new"
-      expect(html.first(".item-#{node2.basename} .id").text).to eq node2.id.to_s
-      expect(html.first(".item-#{node2.basename} .group").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .groups").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .img-src").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .thumb-src").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .categories").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .pages-count").text).to eq "1"
-      expect(html.first(".item-#{node2.basename} .event_dates").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_dates-default").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_dates-default_full").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_dates-iso").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_dates-iso_full").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_dates-long").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_dates-full").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_deadline").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_deadline-iso").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_deadline-long").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .event_deadline-short").text).to eq ""
-      expect(html.first(".item-#{node2.basename} .tags").text).to eq ""
+      expect(html.css(".item-#{node2.basename}")).to be_present
+      expect(html.css(".item-#{node2.basename} .class").text).to eq node2.basename
+      expect(html.css(".item-#{node2.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .date").text).to eq node2_date
+      expect(html.css(".item-#{node2.basename} .date-default").text).to eq node2_date_default
+      expect(html.css(".item-#{node2.basename} .date-iso").text).to eq node2_date_iso
+      expect(html.css(".item-#{node2.basename} .date-long").text).to eq node2_date_long
+      expect(html.css(".item-#{node2.basename} .date-short").text).to eq node2_date_short
+      expect(html.css(".item-#{node2.basename} .time").text).to eq node2_time
+      expect(html.css(".item-#{node2.basename} .time-default").text).to eq node2_time_default
+      expect(html.css(".item-#{node2.basename} .time-iso").text).to eq node2_time_iso
+      expect(html.css(".item-#{node2.basename} .time-long").text).to eq node2_time_long
+      expect(html.css(".item-#{node2.basename} .time-short").text).to eq node2_time_short
+      expect(html.css(".item-#{node2.basename} .url").text).to eq node2.url
+      expect(html.css(".item-#{node2.basename} .name").text).to eq node2.name
+      expect(html.css(".item-#{node2.basename} .index_name").text).to eq node2.index_name
+      expect(html.css(".item-#{node2.basename} .summary").text).to eq node2.summary
+      expect(html.css(".item-#{node2.basename} .html").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .current").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .new").text).to eq "new"
+      expect(html.css(".item-#{node2.basename} .id").text).to eq node2.id.to_s
+      expect(html.css(".item-#{node2.basename} .group").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .groups").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .img-src").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .thumb-src").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .categories").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .pages-count").text).to eq "1"
+      expect(html.css(".item-#{node2.basename} .event_dates").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_dates-default").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_dates-default_full").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_dates-iso").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_dates-iso_full").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_dates-long").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_dates-full").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_deadline").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_deadline-iso").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_deadline-long").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .event_deadline-short").text).to eq ""
+      expect(html.css(".item-#{node2.basename} .tags").text).to eq ""
 
-      expect(html.has_css?(".item-#{node3.basename}")).to be_truthy
-      expect(html.first(".item-#{node3.basename} .class").text).to eq node3.basename
-      expect(html.first(".item-#{node3.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .url").text).to eq node3.url
-      expect(html.first(".item-#{node3.basename} .name").text).to eq node3.name
-      expect(html.first(".item-#{node3.basename} .index_name").text).to eq node3.index_name
-      expect(html.first(".item-#{node3.basename} .summary").text).to eq node3.summary
-      expect(html.first(".item-#{node3.basename} .html").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .current").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .new").text).to eq "new"
-      expect(html.first(".item-#{node3.basename} .id").text).to eq node3.id.to_s
-      expect(html.first(".item-#{node3.basename} .group").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .groups").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .img-src").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .thumb-src").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .categories").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .pages-count").text).to eq "0"
-      expect(html.first(".item-#{node3.basename} .event_dates").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_dates-default").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_dates-default_full").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_dates-iso").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_dates-iso_full").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_dates-long").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_dates-full").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_deadline").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_deadline-iso").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_deadline-long").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .event_deadline-short").text).to eq ""
-      expect(html.first(".item-#{node3.basename} .tags").text).to eq ""
+      expect(html.css(".item-#{node3.basename}")).to be_present
+      expect(html.css(".item-#{node3.basename} .class").text).to eq node3.basename
+      expect(html.css(".item-#{node3.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .url").text).to eq node3.url
+      expect(html.css(".item-#{node3.basename} .name").text).to eq node3.name
+      expect(html.css(".item-#{node3.basename} .index_name").text).to eq node3.index_name
+      expect(html.css(".item-#{node3.basename} .summary").text).to eq node3.summary
+      expect(html.css(".item-#{node3.basename} .html").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .current").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .new").text).to eq "new"
+      expect(html.css(".item-#{node3.basename} .id").text).to eq node3.id.to_s
+      expect(html.css(".item-#{node3.basename} .group").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .groups").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .img-src").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .thumb-src").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .categories").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .pages-count").text).to eq "0"
+      expect(html.css(".item-#{node3.basename} .event_dates").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_dates-default").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_dates-default_full").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_dates-iso").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_dates-iso_full").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_dates-long").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_dates-full").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_deadline").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_deadline-iso").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_deadline-long").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .event_deadline-short").text).to eq ""
+      expect(html.css(".item-#{node3.basename} .tags").text).to eq ""
 
-      expect(html.has_css?(".item-#{node4.basename}")).to be_truthy
-      expect(html.first(".item-#{node4.basename} .class").text).to eq node4.basename
-      expect(html.first(".item-#{node4.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .url").text).to eq node4.url
-      expect(html.first(".item-#{node4.basename} .name").text).to eq node4.name
-      expect(html.first(".item-#{node4.basename} .index_name").text).to eq node4.index_name
-      expect(html.first(".item-#{node4.basename} .summary").text).to eq node4.summary
-      expect(html.first(".item-#{node4.basename} .html").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .current").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .new").text).to eq "new"
-      expect(html.first(".item-#{node4.basename} .id").text).to eq node4.id.to_s
-      expect(html.first(".item-#{node4.basename} .group").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .groups").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .img-src").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .thumb-src").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .categories").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .pages-count").text).to eq "0"
-      expect(html.first(".item-#{node4.basename} .event_dates").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_dates-default").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_dates-default_full").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_dates-iso").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_dates-iso_full").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_dates-long").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_dates-full").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_deadline").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_deadline-iso").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_deadline-long").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .event_deadline-short").text).to eq ""
-      expect(html.first(".item-#{node4.basename} .tags").text).to eq ""
+      expect(html.css(".item-#{node4.basename}")).to be_present
+      expect(html.css(".item-#{node4.basename} .class").text).to eq node4.basename
+      expect(html.css(".item-#{node4.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .url").text).to eq node4.url
+      expect(html.css(".item-#{node4.basename} .name").text).to eq node4.name
+      expect(html.css(".item-#{node4.basename} .index_name").text).to eq node4.index_name
+      expect(html.css(".item-#{node4.basename} .summary").text).to eq node4.summary
+      expect(html.css(".item-#{node4.basename} .html").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .current").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .new").text).to eq "new"
+      expect(html.css(".item-#{node4.basename} .id").text).to eq node4.id.to_s
+      expect(html.css(".item-#{node4.basename} .group").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .groups").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .img-src").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .thumb-src").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .categories").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .pages-count").text).to eq "0"
+      expect(html.css(".item-#{node4.basename} .event_dates").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_dates-default").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_dates-default_full").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_dates-iso").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_dates-iso_full").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_dates-long").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_dates-full").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_deadline").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_deadline-iso").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_deadline-long").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .event_deadline-short").text).to eq ""
+      expect(html.css(".item-#{node4.basename} .tags").text).to eq ""
 
-      expect(html.has_css?(".item-#{node5.basename}")).to be_truthy
-      expect(html.first(".item-#{node5.basename} .class").text).to eq node5.basename
-      expect(html.first(".item-#{node5.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .class").text).to eq node5.basename
-      expect(html.first(".item-#{node5.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .url").text).to eq node5.url
-      expect(html.first(".item-#{node5.basename} .name").text).to eq node5.name
-      expect(html.first(".item-#{node5.basename} .index_name").text).to eq node5.index_name
-      expect(html.first(".item-#{node5.basename} .summary").text).to eq node5.summary
-      expect(html.first(".item-#{node5.basename} .html").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .current").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .new").text).to eq "new"
-      expect(html.first(".item-#{node5.basename} .id").text).to eq node5.id.to_s
-      expect(html.first(".item-#{node5.basename} .group").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .groups").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .img-src").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .thumb-src").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .categories").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .pages-count").text).to eq "0"
-      expect(html.first(".item-#{node5.basename} .event_dates").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_dates-default").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_dates-default_full").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_dates-iso").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_dates-iso_full").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_dates-long").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_dates-full").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_deadline").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_deadline-iso").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_deadline-long").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .event_deadline-short").text).to eq ""
-      expect(html.first(".item-#{node5.basename} .tags").text).to eq ""
+      expect(html.css(".item-#{node5.basename}")).to be_present
+      expect(html.css(".item-#{node5.basename} .class").text).to eq node5.basename
+      expect(html.css(".item-#{node5.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .class").text).to eq node5.basename
+      expect(html.css(".item-#{node5.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .url").text).to eq node5.url
+      expect(html.css(".item-#{node5.basename} .name").text).to eq node5.name
+      expect(html.css(".item-#{node5.basename} .index_name").text).to eq node5.index_name
+      expect(html.css(".item-#{node5.basename} .summary").text).to eq node5.summary
+      expect(html.css(".item-#{node5.basename} .html").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .current").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .new").text).to eq "new"
+      expect(html.css(".item-#{node5.basename} .id").text).to eq node5.id.to_s
+      expect(html.css(".item-#{node5.basename} .group").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .groups").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .img-src").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .thumb-src").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .categories").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .pages-count").text).to eq "0"
+      expect(html.css(".item-#{node5.basename} .event_dates").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_dates-default").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_dates-default_full").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_dates-iso").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_dates-iso_full").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_dates-long").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_dates-full").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_deadline").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_deadline-iso").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_deadline-long").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .event_deadline-short").text).to eq ""
+      expect(html.css(".item-#{node5.basename} .tags").text).to eq ""
 
-      expect(html.has_css?(".item-#{node6.basename}")).to be_truthy
-      expect(html.first(".item-#{node6.basename} .class").text).to eq node6.basename
-      expect(html.first(".item-#{node6.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .class").text).to eq node6.basename
-      expect(html.first(".item-#{node6.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .class").text).to eq node6.basename
-      expect(html.first(".item-#{node6.basename} .class_categories").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .url").text).to eq node6.url
-      expect(html.first(".item-#{node6.basename} .name").text).to eq node6.name
-      expect(html.first(".item-#{node6.basename} .index_name").text).to eq node6.index_name
-      expect(html.first(".item-#{node6.basename} .summary").text).to eq node6.summary
-      expect(html.first(".item-#{node6.basename} .html").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .current").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .new").text).to eq "new"
-      expect(html.first(".item-#{node6.basename} .id").text).to eq node6.id.to_s
-      expect(html.first(".item-#{node6.basename} .group").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .groups").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .img-src").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .thumb-src").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .categories").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .pages-count").text).to eq "0"
-      expect(html.first(".item-#{node6.basename} .event_dates").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_dates-default").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_dates-default_full").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_dates-iso").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_dates-iso_full").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_dates-long").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_dates-full").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_deadline").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_deadline-iso").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_deadline-long").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .event_deadline-short").text).to eq ""
-      expect(html.first(".item-#{node6.basename} .tags").text).to eq ""
+      expect(html.css(".item-#{node6.basename}")).to be_present
+      expect(html.css(".item-#{node6.basename} .class").text).to eq node6.basename
+      expect(html.css(".item-#{node6.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .class").text).to eq node6.basename
+      expect(html.css(".item-#{node6.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .class").text).to eq node6.basename
+      expect(html.css(".item-#{node6.basename} .class_categories").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .url").text).to eq node6.url
+      expect(html.css(".item-#{node6.basename} .name").text).to eq node6.name
+      expect(html.css(".item-#{node6.basename} .index_name").text).to eq node6.index_name
+      expect(html.css(".item-#{node6.basename} .summary").text).to eq node6.summary
+      expect(html.css(".item-#{node6.basename} .html").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .current").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .new").text).to eq "new"
+      expect(html.css(".item-#{node6.basename} .id").text).to eq node6.id.to_s
+      expect(html.css(".item-#{node6.basename} .group").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .groups").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .img-src").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .thumb-src").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .categories").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .pages-count").text).to eq "0"
+      expect(html.css(".item-#{node6.basename} .event_dates").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_dates-default").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_dates-default_full").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_dates-iso").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_dates-iso_full").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_dates-long").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_dates-full").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_deadline").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_deadline-iso").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_deadline-long").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .event_deadline-short").text).to eq ""
+      expect(html.css(".item-#{node6.basename} .tags").text).to eq ""
     end
   end
 end

@@ -1,7 +1,7 @@
 class SS::MessageEncryptor
   class << self
     def secret
-      @secret ||= Rails.application.secrets[:secret_key_base][0..31]
+      @secret ||= Rails.application.secret_key_base[0..31]
     end
 
     def basic_auth
