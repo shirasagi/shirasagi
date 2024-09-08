@@ -48,14 +48,14 @@ module Gws::Model::Category
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth..-1].join("/")
+    @trailing_name ||= name.to_s.split("/")[depth..-1].join("/")
   end
 
   def depth
     @depth ||= begin
       count = 0
       full_name = ""
-      name.split("/").map do |part|
+      name.to_s.split("/").map do |part|
         full_name << "/" if full_name.present?
         full_name << part
 

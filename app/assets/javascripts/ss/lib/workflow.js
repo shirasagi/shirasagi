@@ -570,6 +570,8 @@ SS_WorkflowApprover.prototype.render = function () {
   if (self.options.draft_save) {
     $(".save")
       .val(self.options.draft_save)
+      .attr("name", "draft_save")
+      .attr("class", "btn-primary save draft_save")
       .attr("data-disable-with", null)
       .attr("data-disable", "")
       .on("click", function (_ev) {

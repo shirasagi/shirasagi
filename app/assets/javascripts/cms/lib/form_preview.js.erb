@@ -83,6 +83,8 @@ this.Form_Preview = (function () {
       form[0].requestSubmit();
       return false;
     });
+
+    $("button.preview").hide().eq(0).prependTo("footer.send").addClass("icon-material").show();
     $("button.preview").addClass("form-preview-rendered");
   };
 

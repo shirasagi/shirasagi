@@ -8,37 +8,7 @@
 <% end %>
 
 <nav class="main-navi">
-  <h2><%= link_to t("cms.content"), cms_contents_path, class: "icon-content" %></h2>
-  <h2><%= link_to t("cms.node"), node_nodes_path, class: "icon-node" %></h2>
-  <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.page"), node_pages_path, class: "icon-page" %></h2>
-  <% end %>
-  <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.part"), node_parts_path, class: "icon-part" %></h2>
-  <% end %>
-  <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.layout"), node_layouts_path, class: "icon-layout" %></h2>
-  <% end %>
-</nav>
-
-<nav class="main-navi">
-  <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.node_config"), node_conf_path, class: "icon-conf" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
-    <h2><%= link_to t("cms.import_node"), node_import_path, class: "icon-conf" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.generate_node"), node_generate_nodes_path, class: "icon-write" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.generate_page"), node_generate_pages_path, class: "icon-write" %></h2>
-  <% end %>
-
-  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to t("cms.csv_export"), download_node_nodes_path, class: "icon-export" %></h2>
-    <h2><%= link_to t("cms.csv_import"), import_node_nodes_path, class: "icon-import" %></h2>
-  <% end %>
+  <h2><%= link_to t("cms.shortcut"), cms_contents_path, class: "icon-material icon-material-shortcut" %></h2>
 
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site) %>

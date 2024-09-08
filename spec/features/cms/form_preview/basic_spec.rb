@@ -36,7 +36,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           fill_in "item[basename]", with: "sample"
         end
 
-        new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
+        new_window = window_opened_by { page.first("footer.send .preview").click }
         within_window new_window do
           wait_for_document_loading
           expect(page).to have_css("#ss-preview")
@@ -73,7 +73,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           fill_in "item[basename]", with: "sample"
         end
 
-        new_window = window_opened_by { page.first("#addon-cms-agents-addons-body .preview").click }
+        new_window = window_opened_by { page.first("footer.send .preview").click }
         within_window new_window do
           wait_for_document_loading
           expect(page).to have_css("#ss-preview")
@@ -245,7 +245,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        new_window = window_opened_by { page.first("#addon-cms-agents-addons-form-page .preview").click }
+        new_window = window_opened_by { page.first("footer.send .preview").click }
         within_window new_window do
           wait_for_document_loading
           expect(page).to have_css("#ss-preview")
@@ -278,7 +278,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.links.edit')
         within 'form#item-form' do
           ensure_addon_opened "#addon-cms-agents-addons-form-page"
-          page.first("#addon-cms-agents-addons-form-page .preview").click
+          page.first("footer.send .preview").click
         end
         within_window new_window do # new_window is re-used.
           wait_for_document_loading

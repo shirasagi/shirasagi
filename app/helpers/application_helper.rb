@@ -335,4 +335,8 @@ module ApplicationHelper
     return options if options.key?(:media)
     options.merge(media: "all")
   end
+
+  def main_navi_closed?
+    cookies["ss-navi"] == "closed"
+  end
 end

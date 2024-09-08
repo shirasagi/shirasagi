@@ -28,7 +28,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
         end
 
-        page.first("#addon-cms-agents-addons-body .preview").click
+        page.first("footer.send .preview").click
 
         switch_to_window(windows.last)
         wait_for_document_loading
@@ -59,7 +59,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
         end
 
-        page.first("#addon-cms-agents-addons-body .preview").click
+        page.first("footer.send .preview").click
 
         switch_to_window(windows.last)
         wait_for_document_loading
@@ -221,7 +221,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        page.first("#addon-cms-agents-addons-form-page .preview").click
+        page.first("footer.send .preview").click
 
         switch_to_window(windows.last)
         wait_for_document_loading
@@ -252,7 +252,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         expect(Article::Page.count).to eq 1
 
         click_on I18n.t('ss.links.edit')
-        page.first("#addon-cms-agents-addons-form-page .preview").click
+        page.first("footer.send .preview").click
 
         switch_to_window(windows.last)
         wait_for_document_loading

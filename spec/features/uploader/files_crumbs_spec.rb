@@ -40,7 +40,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
 
       expect(page).to have_css(".list-item a", text: "logo.png")
 
-      expect(page).to have_css("#crumbs li:nth-child(1) a", text: site.name)
+      expect(page).to have_css("#crumbs li:nth-child(1) a", text: I18n.t("cms.top"))
       expect(page).to have_css("#crumbs li:nth-child(2) a", text: node.name)
       expect(page).to have_css("#crumbs li:nth-child(3) a", text: node1)
       expect(page).to have_css("#crumbs li:nth-child(4) a", text: node2)
@@ -55,7 +55,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
 
       expect(page).to have_css(".list-item a", text: "logo.png")
 
-      expect(page).to have_css("#crumbs li:nth-child(1) a", text: site.name)
+      expect(page).to have_css("#crumbs li:nth-child(1) a", text: I18n.t("cms.top"))
       expect(page).to have_css("#crumbs li:nth-child(2) a", text: node.name)
       expect(page).to have_css("#crumbs li:nth-child(3) a", text: node1)
       expect(page).to have_css("#crumbs li:nth-child(4) a", text: node2)
@@ -71,7 +71,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
       expect(page).to have_css(".list-item a", text: node3)
       expect(page).to have_no_css(".list-item a", text: "logo.png")
 
-      expect(page).to have_css("#crumbs li:nth-child(1) a", text: site.name)
+      expect(page).to have_css("#crumbs li:nth-child(1) a", text: I18n.t("cms.top"))
       expect(page).to have_css("#crumbs li:nth-child(2) a", text: node.name)
       expect(page).to have_css("#crumbs li:nth-child(3) a", text: node1)
       expect(page).to have_css("#crumbs li:nth-child(4) a", text: node2)
@@ -87,7 +87,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
       expect(page).to have_css(".list-item a", text: node2)
       expect(page).to have_no_css(".list-item a", text: "logo.png")
 
-      expect(page).to have_css("#crumbs li:nth-child(1) a", text: site.name)
+      expect(page).to have_css("#crumbs li:nth-child(1) a", text: I18n.t("cms.top"))
       expect(page).to have_css("#crumbs li:nth-child(2) a", text: node.name)
       expect(page).to have_css("#crumbs li:nth-child(3) a", text: node1)
       expect(page).to have_no_css("#crumbs li:nth-child(4) a", text: node2)
@@ -103,7 +103,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
       expect(page).to have_css(".list-item a", text: node1)
       expect(page).to have_no_css(".list-item a", text: "logo.png")
 
-      expect(page).to have_css("#crumbs li:nth-child(1) a", text: site.name)
+      expect(page).to have_css("#crumbs li:nth-child(1) a", text: I18n.t("cms.top"))
       expect(page).to have_css("#crumbs li:nth-child(2) a", text: node.name)
       expect(page).to have_no_css("#crumbs li:nth-child(3) a", text: node1)
       expect(page).to have_no_css("#crumbs li:nth-child(4) a", text: node2)

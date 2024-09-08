@@ -27,7 +27,7 @@ describe "cms_parts", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit contents_path
-      expect(page).to have_css(".main-navi a", text: I18n.t("cms.content"))
+      expect(page).to have_css(".main-navi a", text: I18n.t("cms.shortcut"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.node"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.page"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.part"))
@@ -124,7 +124,7 @@ describe "cms_parts", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit contents_path
-      expect(page).to have_css(".main-navi a", text: I18n.t("cms.content"))
+      expect(page).to have_css(".main-navi a", text: I18n.t("cms.shortcut"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.node"))
       expect(page).to have_no_css(".main-navi a", text: I18n.t("cms.page"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.part"))
