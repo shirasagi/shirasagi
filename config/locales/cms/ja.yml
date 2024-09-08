@@ -19,6 +19,7 @@ ja:
     convert_to_cms_page: 固定ページに変換する
     count_log_of_errors: 発生したエラー数は『%{number_of_errors}件』です。
     editor_template: テンプレート
+    etc: その他
     event_calendar: イベントカレンダー
     file: 共有ファイル
     generate_node: フォルダー書き出し
@@ -93,6 +94,7 @@ ja:
     search_form: サイト検索フォーム
     search_target: サイト検索範囲を選択してください
     search_contents_sitemap: サイトマップ
+    shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
     site_config: サイト設定
@@ -100,7 +102,9 @@ ja:
     site_menu: サイトメニュー
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
+    switch_module: 表示切り替え
     syntax_check: アクセシビリティチェック
+    top: トップ
     url_scheme: URLスキーム設定
     backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
@@ -120,6 +124,9 @@ ja:
     state_expired_suffix: （期限切れ）
     csv_export: CSVエクスポート
     csv_import: CSVインポート
+    batch_operation: 一括操作
+    csv_export_node: 一括エクスポート
+    csv_import_node: 一括インポート
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -395,6 +402,16 @@ ja:
       link_to_job_history: ジョブ実行履歴
       target_node_name: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
+    download_nodes:
+      messages:
+        - 現在のフォルダー直下の全てのフォルダー情報をCSVに出力いたします。
+        - 「一括インポート」メニューにてインポートすることで、修正したCSV内容を一括反映させたり、違うフォルダー配下や違うサイトに一括で同じフォルダーを設置することもできます。
+    import_nodes:
+      messages:
+        - 現在のフォルダー直下において、作成したいフォルダーを一括して作成したり、既存フォルダーの設定を一括して更新することができます。
+        -
+        - ※「ファイル名」（フォルダー名）をキーにしてインポートを行いますので、同じファイル名があれば上書きし、配下にないフォルダー名を「ファイル名」に指定した場合は新規作成します。
+        - ※フォルダーを一括して非公開にするとリンク切れが発生する可能性があります。 一括して非公開にした後はリンクチェックを実行し、想定外のリンク切れが発生していないか確認するようにしてください。
     sort_options:
       name:
         title: タイトル

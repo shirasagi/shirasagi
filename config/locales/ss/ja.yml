@@ -17,6 +17,7 @@ ja:
     export_log: エクスポートログ
     login: ログイン
     logout: ログアウト
+    menu: メニュー
     module: モジュール
     operation: 操作
     regexp: 正規表現
@@ -182,6 +183,8 @@ ja:
       next: 次へ
       update: 更新する
       open_in_new_tab: 別タブで開く
+      navi_open: サイドメニューを開く
+      navi_close: サイドメニューを閉じる
     buttons:
       answer: 回答
       save: 保存

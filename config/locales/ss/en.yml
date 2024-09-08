@@ -17,6 +17,7 @@ en:
     export_log: Export log
     login: Login
     logout: Logout
+    menu: Menu
     module: Module
     operation: Operation
     regexp: Regular expression
@@ -182,6 +183,8 @@ en:
       next: Next
       update: Update
       open_in_new_tab: Open in new tab
+      navi_open: Open side menu
+      navi_close: Close side menu
     buttons:
       answer: Answer
       save: Save

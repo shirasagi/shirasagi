@@ -4,6 +4,10 @@
       <div class="addon-head"><h2><%= t('gws/survey.confirm.download') %></h2></div>
       <div class="addon-body">
         <%= render template: '_download', locals: {f: f} %>
+
+        <div class="mt-2">
+          <%= br t("cms.download_nodes.messages").join("\n") %>
+        </div>
       </div>
     </div>
   </div>

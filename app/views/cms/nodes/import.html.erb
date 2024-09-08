@@ -8,6 +8,10 @@
         <dt><%= t("ss.file") %><%= tt('cms/csv_import_base.file') %></dt>
         <dd><%= f.file_field :file %></dd>
       </dl>
+
+      <div class="mt-2">
+        <%= br t("cms.import_nodes.messages").join("\n") %>
+      </div>
     </div>
   </section>
 
