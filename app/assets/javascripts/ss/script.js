@@ -136,6 +136,37 @@ SS.ready(function () {
       });
     });
   }
+  // toggle navi
+  var toggleNavi = function() {
+    return $("#toggle-navi").hasClass("opened") ? closeNavi() : openNavi();
+  };
+  var openNavi = function() {
+    $("#navi").css("margin-left", "-200px");
+    $("#navi").show();
+    $("#navi").animate({"margin-left":"0px"}, 200, function(){
+      $(window).trigger('resize');
+    });
+    var toggle = $("#toggle-navi");
+    toggle.addClass("opened").removeClass("closed");
+    toggle.attr("aria-label", i18next.t("ss.navi_close"));
+
+    Cookies.set("ss-navi", "opened", { expires: 7, path: '/' });
+    return false;
+  };
+  var closeNavi = function() {
+    $("#navi").animate({"margin-left":"-200px"}, 200, function(){
+      $(this).hide();
+      $(this).css("margin-left", "0px");
+      $(window).trigger('resize');
+    });
+    var toggle = $("#toggle-navi");
+    toggle.addClass("closed").removeClass("opened");
+    toggle.attr("aria-label", i18next.t("ss.navi_open"));
+
+    Cookies.set("ss-navi", "closed", { expires: 7, path: '/' });
+    return false;
+  };
+  $("#toggle-navi").on("click", toggleNavi);
   // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
@@ -165,6 +196,7 @@ SS.ready(function () {
     return true;
   };
   addCurrent("#navi .mod-navi a") || addCurrent("#navi .main-navi a");
+  addCurrent("#main .main-navi a");
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current');
   // navi
   $('.sp-menu-button a').on("click", function (e) {

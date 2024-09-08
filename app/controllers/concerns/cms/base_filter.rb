@@ -46,7 +46,7 @@ module Cms::BaseFilter
     end
 
     request.env["ss.site"] = @cur_site
-    @crumbs << [@cur_site.name, cms_contents_path]
+    @crumbs << [t("cms.top"), cms_contents_path]
   end
 
   def set_cms_logged_in

@@ -36,36 +36,40 @@
 
 <div id="wrap">
   <div class="wrap">
-    <div id="navi">
-      <div class="wrap">
-        <% if @ss_mode == :cms %>
-        <nav class="site-navi">
-          <h2><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", rel: "noopener" %></h2>
-          <h2><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", rel: "noopener" %></h2>
-        </nav>
-        <% end %>
-
-        <% if @ss_rescue %>
+    <div id="main-wrap">
+      <div id="navi" <%== main_navi_closed? ? 'style="display: none;"' : "" %>>
+        <div class="wrap">
           <% if @ss_mode == :cms %>
-            <%= render partial: "cms/main/navi" %>
-          <% elsif @ss_mode == :gws %>
-            <%= render partial: "gws/main/navi" %>
-          <% elsif @ss_mode == :webmail %>
-            <%= render partial: "webmail/main/navi" %>
-          <% else %>
-            <%= render partial: "sns/main/navi" %>
+          <nav class="site-name">
+            <%= @cur_site.name %>
+          </nav>
+          <nav class="site-navi">
+            <h2><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", rel: "noopener" %></h2>
+            <h2><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", rel: "noopener" %></h2>
+          </nav>
           <% end %>
-        <% else %>
-          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
-          <%= render partial: "navi" %>
-          <% elsif controller.navi_view_file %>
-          <%= render partial: controller.navi_view_file %>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
 
-    <article id="main">
+          <% if @ss_rescue %>
+            <% if @ss_mode == :cms %>
+              <%= render partial: "cms/main/navi" %>
+            <% elsif @ss_mode == :gws %>
+              <%= render partial: "gws/main/navi" %>
+            <% elsif @ss_mode == :webmail %>
+              <%= render partial: "webmail/main/navi" %>
+            <% else %>
+              <%= render partial: "sns/main/navi" %>
+            <% end %>
+          <% else %>
+            <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+            <%= render partial: "navi" %>
+            <% elsif controller.navi_view_file %>
+            <%= render partial: controller.navi_view_file %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <article id="main">
       <%= render "layouts/ss/password_warn" %>
       <% if !@ss_maintenance_mode %>
         <ol class="breadcrumb" id="crumbs">
@@ -87,10 +91,14 @@
 
       <% if !@ss_rescue %>
         <% if !@ss_maintenance_mode %>
+          <% if @ss_mode == :cms %>
+            <%= render partial: 'cms/main/main_menu' %>
+          <% end %>
+
           <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-          <div id="menu"><%= render partial: "menu" %></div>
+            <div id="menu"><%= render partial: "menu" %></div>
           <% elsif controller.menu_view_file %>
-          <div id="menu"><%= render partial: controller.menu_view_file %></div>
+            <div id="menu"><%= render partial: controller.menu_view_file %></div>
           <% end %>
         <% end %>
       <% end %>
@@ -108,10 +116,10 @@
 
         <%= yield %>
       </div>
-    <!-- /#main --></article>
-
-  <!-- /.wrap --></div>
-<!-- /#wrap --></div>
+      </article>
+    </div>
+  </div>
+</div>
 
 <footer id="foot">
   <div id="ss-pc" style="display: none">PC View</div>

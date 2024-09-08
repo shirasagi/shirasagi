@@ -14,13 +14,12 @@ module Cms::NodeHelper
 
     if block
       h << %(<nav class="mod-navi">).html_safe
-
-      if mod_name
-        mod_name = t("modules.#{mod_name}")
-        h << mod_navi { %(<h2>#{mod_name}</h2>).html_safe }
-      end
-
+      h << %(<h2>#{t("modules.#{mod_name}")}</h2>).html_safe if mod_name
       h << capture(&block)
+      h << %(</nav>).html_safe
+
+      h << %(<nav class="mod-navi">).html_safe
+      h << mod_navi { %(<h2 class="icon-material icon-material-display">#{t('cms.switch_module')}</h2>).html_safe }
       h << %(</nav>).html_safe
     end
 

@@ -66,7 +66,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     expect(page).to have_css(".maint-mode-text", text: site1.maint_remark)
 
     visit cms_contents_path(site: site2)
-    expect(page).to have_css(".list-head", text: I18n.t("cms.content", locale: I18n.default_locale))
+    expect(page).to have_css(".list-head", text: I18n.t("cms.shortcut", locale: I18n.default_locale))
     expect(page).to have_no_css(".maint-mode-text")
     expect(page).to have_no_text(site1.maint_remark)
   end
