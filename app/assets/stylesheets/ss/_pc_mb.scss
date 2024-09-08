@@ -632,6 +632,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // -------------------------------------------------------------------------------------------------
 // nav
 #navi {
+  position: relative;
   z-index: 1;
   min-width: 211px;
   padding-bottom: 120px;
@@ -885,6 +886,12 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       margin-left: 15px;
       font-size: 90%;
     }
+  }
+}
+@include mb {
+  #main .main-navi {
+    margin-top: 10px;
+    margin-bottom: 0;
   }
 }
 
