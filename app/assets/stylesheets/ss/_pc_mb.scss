@@ -640,6 +640,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   border-bottom: 1px solid #dcdcdc;
   background: $white;
   .icon-material::before {
+    top: 6px;
     left: 16px;
   }
   .icon-material-display {
@@ -816,6 +817,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     display: inline-block;
   }
   .icon-material::before {
+    top: 6px;
     left: 10px;
     margin-left: 5px;
   }
@@ -1955,7 +1957,7 @@ footer.send {
     @include btn-green;
   }
   button.preview {
-    @include btn-gray-l;
+    @include btn-white;
     position: relative;
     margin-top: -2px;
     padding-left: 36px;
@@ -1963,7 +1965,7 @@ footer.send {
     &::before {
       content: "pageview";
       position: absolute;
-      top: 6px;
+      top: 5px;
       left: 10px;
       background: none !important;
       font-family: "Material Icons Outlined";
