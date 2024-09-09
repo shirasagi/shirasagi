@@ -1,9 +1,10 @@
+<% latest_backup = ref_item.try(:backups).try(:first) %>
 <div class="main-box">
   <div>
     <%=
-      current_notice = (item.data[:updated] || item.created).try do |updated|
+      current_notice = item.created.try do |updated|
         time_tag = ss_time_tag(updated, format: :picker)
-        if ref_item && ref_item.updated == updated
+        if latest_backup && latest_backup.id == item.id
           "(#{t("history.this_is_latest_html", time: time_tag)})".html_safe
         else
           "(#{time_tag})".html_safe
@@ -14,9 +15,9 @@
 
     <%=
       if compare_to_item
-        latest_notice = (compare_to_item.data[:updated] || compare_to_item.created).try do |updated|
+        latest_notice = compare_to_item.created.try do |updated|
           time_tag = ss_time_tag(updated, format: :picker)
-          if ref_item && ref_item.updated == updated
+          if latest_backup && latest_backup.id == compare_to_item.id
             t("history.this_is_latest_html", time: time_tag)
           else
             "(#{time_tag})".html_safe
