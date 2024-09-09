@@ -47,8 +47,6 @@ def save_column(type, data)
   cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
   item = model.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site)
-  layout = File.read("layout/" + data.delete(:layout)) rescue nil
-  item.attributes = data.merge layout: layout
   puts item.errors.full_messages unless item.save
   item
 end
@@ -67,7 +65,7 @@ end
 
 @form_columns = [
   save_column(:file_upload, form: @form, name: 'メイン画像', order: 10, required: 'required',
-              tooltips: '画像ファイルをアップロードしてください。', html_tag: 'img', file_type: 'image', layout: '1.layout.html'),
+              tooltips: '画像ファイルをアップロードしてください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:text_area, form: @form, name: '説明文', order: 20, required: 'required',
               tooltips: '観光地の説明を入力してください。'),
@@ -97,42 +95,42 @@ end
               tooltips: 'ホームページのURLを入力してください。'),
 
   save_column(:file_upload, form: @form, name: '写真1', order: 110, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '2.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form, name: '写真2', order: 120, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '2.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form, name: '写真3', order: 130, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '2.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form, name: '写真4', order: 140, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '2.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form, name: '写真5', order: 150, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '2.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 ]
 
 @form2 = save_form(name: 'イベント報告', order: 20, state: 'public', filename: '2.html', sub_type: 'static', group_ids: [@g_seisaku.id])
 
 @form_columns2 = [
   save_column(:file_upload, form: @form2, name: 'メイン写真', order: 10, required: 'required',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '1.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form2, name: 'サブ写真1', order: 20, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '1.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form2, name: 'サブ写真2', order: 30, required: 'optional',
-              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: '1.layout.html'),
+              tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:text_area, form: @form2, name: '内容', order: 40, required: 'optional',
-              tooltips: 'イベント報告を入力してください。', layout: '3.layout.html')
+              tooltips: 'イベント報告を入力してください。')
 ]
 
 @form3 = save_form(name: '広報シラサギ', order: 30, state: 'public', filename: '3.html', sub_type: 'static', group_ids: [@g_seisaku.id])
 
 @form_columns3 = [
   save_column(:file_upload, form: @form3, name: '表紙画像', order: 10, required: 'required',
-              tooltips: '表紙の画像を登録してください。', html_tag: 'img', file_type: 'image', layout: '1.layout.html'),
+              tooltips: '表紙の画像を登録してください。', html_tag: 'img', file_type: 'image'),
 
   save_column(:file_upload, form: @form3, name: '全ページ', order: 20, required: 'required',
               tooltips: '全ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
@@ -173,18 +171,20 @@ end
 )
 
 @form_columns4 = [
-  save_column(:text, form: @form4, name: '一行入力', order: 10, required: 'optional', input_type: 'text', layout: '3.layout.html'),
-  save_column(:text_area, form: @form4, name: '複数行入力', order: 20, required: 'optional', layout: '4.layout.html'),
+  save_column(:text, form: @form4, name: '一行入力', order: 10, required: 'optional', input_type: 'text'),
+  save_column(:text_area, form: @form4, name: '複数行入力', order: 20, required: 'optional'),
   save_column(:head_line, form: @form4, name: '見出し', order: 30, required: 'optional'),
-  save_column(:url, form: @form4, name: 'リンク', order: 40, required: 'optional', layout: '5.layout.html'),
-  save_column(:file_upload, form: @form4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image', layout: '6.layout.html'),
-  save_column(:file_upload, form: @form4, name: '添付ファイル', order: 60, required: 'optional', file_type: 'attachment', layout: '7.layout.html'),
+  save_column(:url, form: @form4, name: 'リンク', order: 40, required: 'optional'),
+  save_column(:file_upload, form: @form4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image'),
+  save_column(:file_upload, form: @form4, name: '添付ファイル', order: 60, required: 'optional', file_type: 'attachment'),
   save_column(:list, form: @form4, name: '番号付きリスト', order: 70, required: 'optional', list_type: 'ol'),
   save_column(:list, form: @form4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ul'),
   save_column(:table, form: @form4, name: '表', order: 90, required: 'optional'),
   save_column(:youtube, form: @form4, name: 'YouTube埋め込み', order: 100, required: 'optional'),
   save_column(:file_upload, form: @form4, name: '動画埋め込み', order: 110, required: 'optional', file_type: 'video'),
   save_column(:free, form: @form4, name: '自由入力', order: 120, required: 'optional'),
+  save_column(:text, form: @form4, name: 'ライン', order: 130, required: 'optional', input_type: 'text',
+    layout: '<hr>', place_holder: 'ラインを挿入します。記入しないでください。'),
 ]
 
 @form5 = save_form(
@@ -193,22 +193,22 @@ end
 
 @form_columns5 = [
   save_column(:file_upload, form: @form5, name: '画像', order: 10, required: 'optional',
-              tooltips: '画像を登録してください。', file_type: 'image', layout: '8.layout.html'),
+              tooltips: '画像を登録してください。', file_type: 'image'),
 
   save_column(:text, form: @form5, name: '名前', order: 20, required: 'optional',
-              tooltips: '名前を入力してください。', input_type: 'text', layout: '9.layout.html'),
+              tooltips: '名前を入力してください。', input_type: 'text'),
 
   save_column(:head_line, form: @form5, name: '質問', order: 30, required: 'optional',
-              tooltips: '質問を入力してください。', layout: '10.layout.html'),
+              tooltips: '質問を入力してください。'),
 
   save_column(:text_area, form: @form5, name: '回答', order: 40, required: 'optional',
-              tooltips: '回答を入力してください。', layout: '3.layout.html'),
+              tooltips: '回答を入力してください。'),
 
   save_column(:file_upload, form: @form5, name: '画像左', order: 50, required: 'optional',
-              tooltips: "画像を登録してください。\nテキストの左に回り込みます。", file_type: 'image', layout: '11.layout.html'),
+              tooltips: "画像を登録してください。\nテキストの左に回り込みます。", file_type: 'image'),
 
   save_column(:file_upload, form: @form5, name: '画像右', order: 60, required: 'optional',
-              tooltips: "画像を登録してください。\nテキストの右に回り込みます。", file_type: 'image', layout: '12.layout.html'),
+              tooltips: "画像を登録してください。\nテキストの右に回り込みます。", file_type: 'image'),
 ]
 
 save_init_column(order: 10, form: @form5, column: @form_columns5[0])
