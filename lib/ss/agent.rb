@@ -1,8 +1,14 @@
 class SS::Agent
   attr_accessor :controller
 
-  def initialize(controller_name)
-    controller = "#{controller_name}_controller".camelize.constantize
+  def initialize(controller_or_name)
+    if controller_or_name.is_a?(String)
+      controller = "#{controller_or_name}_controller".camelize.constantize
+      controller_name = controller_or_name
+    else
+      controller = controller_or_name
+      controller_name = self.class.controller_name(controller_or_name.name)
+    end
     @controller_name = controller_name
     @controller = controller.new
     @controller.params   = ActionController::Parameters.new
@@ -25,6 +31,10 @@ class SS::Agent
       agent.controller.params[:controller] = controller_name
       agent.controller.params[:action] = action.to_s
       agent.invoke(action)
+    end
+
+    def controller_name(class_name)
+      class_name.underscore.sub("_controller", "")
     end
   end
 
