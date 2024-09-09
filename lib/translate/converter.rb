@@ -82,6 +82,16 @@ class Translate::Converter
 
       nodes << value
     end
+    %w(alt aria-label placeholder title).each do |attr|
+      doc.search("//*[@#{attr}]").each do |node|
+        value = node.attributes[attr]
+
+        next if value.blank?
+        next if node.instance_variable_get(:@notranslate)
+
+        nodes << value
+      end
+    end
 
     begin
       item = Translate::RequestBuffer.new(@site, @source, @target)
