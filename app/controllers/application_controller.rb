@@ -48,14 +48,6 @@ class ApplicationController < ActionController::Base
     agent
   end
 
-  def render_agent(controller_name, action)
-    new_agent(controller_name).render(action)
-  end
-
-  def invoke_agent(controller_name, action)
-    new_agent(controller_name).invoke(action)
-  end
-
   def send_enum(enum, options = {})
     content_type = options.fetch(:type, DEFAULT_SEND_FILE_TYPE)
     self.content_type = content_type
