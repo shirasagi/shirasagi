@@ -58,7 +58,8 @@ save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name
 save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
 save_part route: "event/search", filename: "calendar/search/search.part.html", name: "イベント検索"
 save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
-save_part route: "cms/sns_share", filename: "sns.part.html", name: "SNSシェアボタン", mobile_view: "hide"
+save_part route: "cms/sns_share", filename: "sns.part.html", name: "SNSシェアボタン", mobile_view: "hide",
+  sns_share_orders: { fb_share: "20", twitter: "10", hatena: "30", line: "40" }
 save_part route: "key_visual/swiper_slide", filename: "key-visual/slide.part.html", name: "スライドショー",
   mobile_view: "hide", kv_autoplay: "enabled", kv_navigation: "hide", kv_pagination_style: "disc", kv_thumbnail: "hide",
   kv_thumbnail_count: 5
