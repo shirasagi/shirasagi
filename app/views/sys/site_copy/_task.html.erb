@@ -1,17 +1,19 @@
-<dl class="info mod-ss-task">
-  <dt><%= @item.t :state %></dt>
-  <dd><span class="state"><%= @item.send :state %></span></dd>
+<section class="main-box task-box" id="task-box-<%= @item.id %>">
+  <dl class="info mod-ss-task">
+    <dt><%= @item.t :state %></dt>
+    <dd><span class="state"><%= @item.send :state %></span></dd>
 
-  <dt><%= @item.t :started %></dt>
-  <dd class="started"><%= ss_time_tag @item.started %></dd>
+    <dt><%= @item.t :started %></dt>
+    <dd class="started"><%= ss_time_tag @item.started %></dd>
 
-  <dt><%= @item.t :closed %></dt>
-  <dd class="closed"><%= ss_time_tag @item.closed %></dd>
-</dl>
+    <dt><%= @item.t :closed %></dt>
+    <dd class="closed"><%= ss_time_tag @item.closed %></dd>
+  </dl>
 
-<div class="logs">
-  <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
-</div>
+  <div class="logs">
+    <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
+  </div>
+</section>
 
 <%= jquery do %>
   var reload = function() {
