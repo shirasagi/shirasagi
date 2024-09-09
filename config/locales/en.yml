@@ -187,6 +187,7 @@ en:
       not_found_user_title: Job position code “%{code}” cannot be found.
       not_found_user_occupation: "Job title code “%{code}” cannot be found."
       upload_restricted: You cannot upload files in your environment.
+      edit_restricted: File editing operations are not available in your environment.
       sanitizer_waiting: Sanitization is being performed. Please wait for a while.
       url: Must be a valid URL.
       invalid_latlon: |-
