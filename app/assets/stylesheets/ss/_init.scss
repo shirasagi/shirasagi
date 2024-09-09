@@ -156,6 +156,26 @@ $border-white: 1px solid $white;
     @include btn-pressed;
   }
 }
+@mixin btn-white {
+  display: inline-block;
+  padding: 8px 10px;
+  @include border-radius(6px);
+  @include grd-white;
+  filter: none \9;
+  font-size: $px15;
+  cursor: pointer;
+  &:hover {
+    opacity: .9;
+    text-decoration: none;
+  }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
+  }
+  @include mb {
+    padding: 5px 12px;
+    font-size: $px14;
+  }
+}
 @mixin btn-gray-l {
   display: inline-block;
   padding: 8px 10px;
