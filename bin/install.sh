@@ -3,7 +3,6 @@
 SS_HOSTNAME=${1:-"example.jp"}
 SS_USER=${2:-"$USER"}
 SS_DIR=/var/www/shirasagi
-ASDF_HOME=${HOME}/.asdf/shims
 
 PORT_COMPA=8001
 PORT_CHILD=8002
@@ -16,74 +15,142 @@ sudo setenforce 0
 
 sudo dnf -y upgrade almalinux-release
 sudo dnf -y groupinstall "Development tools" --setopt=group_package_types=mandatory,default,optional
-sudo dnf -y install epel-release
+sudo dnf -y install epel-release openssl-devel
 sudo dnf config-manager --disable epel
 sudo dnf --enablerepo=epel -y update epel-release
-sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel git wget
+sudo dnf -y --enablerepo=epel,powertools install ImageMagick ImageMagick-devel git wget libyaml-devel
 
-cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-4.4.repo
-[mongodb-org-4.4]
+cat <<EOS | sudo tee -a /etc/yum.repos.d/mongodb-org-7.0.repo
+[mongodb-org-7.0]
 name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/4.4/x86_64/
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/7.0/x86_64/
 gpgcheck=1
 enabled=0
-gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
 EOS
 
-sudo dnf install -y --enablerepo=mongodb-org-4.4 mongodb-org
+sudo dnf install -y --enablerepo=mongodb-org-7.0 mongodb-org
 sudo systemctl enable mongod.service --now
 
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf
+# asdf のパスを確認する関数
+check_asdf_installed() {
+  if command -v asdf >/dev/null 2>&1; then
+    echo "asdf がインストールされています。"
+    return 0
+  else
+    echo "asdf がインストールされていません。"
+    return 1
+  fi
+}
 
-cat <<'EOF' | sudo tee -a $HOME/.bashrc >>/dev/null
-. "${HOME}/.asdf/asdf.sh"
-. "${HOME}/.asdf/completions/asdf.bash"
-EOF
+# asdf のインストール（すでにクローン済みかチェック）
+if [ ! -d /usr/local/asdf ]; then
+  echo "Cloning asdf..."
+  sudo git clone https://github.com/asdf-vm/asdf.git /usr/local/asdf
+  if [ $? -ne 0 ]; then
+    echo "asdf のクローンに失敗しました。"
+    exit 1
+  fi
+else
+  echo "asdf は既にインストールされています。"
+fi
 
-source $HOME/.bashrc
+# root ユーザーの場合の処理
+if [ "$SS_USER" = "root" ]; then
+  echo "root ユーザーでは実行できませんが、スクリプトは続行します。"
+else
+  echo "処理を続行します..."
+  # グループが存在しない場合は作成
+  if ! getent group asdf >/dev/null; then
+    sudo groupadd asdf
+  fi
 
-asdf plugin add ruby
+  # /usr/local/asdf の権限設定
+  sudo chgrp -R asdf /usr/local/asdf
+  sudo chmod -R g+rwXs /usr/local/asdf
+
+  # ユーザーをグループに追加
+  sudo usermod -aG asdf "$SS_USER"
+
+  # /usr/local/asdf の所有者とグループを変更
+  sudo chown -R "$SS_USER":asdf /usr/local/asdf
+  # 新しいグループを適用
+  newgrp asdf
+fi
+
+# asdf の環境設定ファイルを作成
+if [ ! -f /etc/profile.d/asdf.sh ]; then
+  echo "Creating /etc/profile.d/asdf.sh..."
+  echo 'export ASDF_DIR=/usr/local/asdf
+export ASDF_DATA_DIR=$ASDF_DIR
+
+ASDF_BIN="${ASDF_DIR}/bin"
+ASDF_USER_SHIMS="${ASDF_DATA_DIR}/shims"
+PATH="${ASDF_BIN}:${ASDF_USER_SHIMS}:${PATH}"
+
+. "${ASDF_DIR}/asdf.sh"
+. "${ASDF_DIR}/completions/asdf.bash"
+' | sudo tee /etc/profile.d/asdf.sh >/dev/null
+
+  if [ $? -ne 0 ]; then
+    echo "/etc/profile.d/asdf.sh の作成に失敗しました。"
+    exit 1
+  fi
+else
+  echo "/etc/profile.d/asdf.sh は既に存在しています。"
+fi
+
+export SS_HOSTNAME=${1:-"example.jp"}
+export SS_USER=${2:-"$USER"}
+export SS_DIR=/var/www/shirasagi
+export PORT_COMPA=8001
+export PORT_CHILD=8002
+export PORT_OPEND=8003
+export PORT_LPSPL=8004
+
+check_asdf_installed() {
+  if command -v asdf >/dev/null 2>&1; then
+    return 0 # `asdf` コマンドが存在する場合、成功を示すステータスコード 0 を返します。
+  else
+    return 1 # `asdf` コマンドが存在しない場合、失敗を示すステータスコード 1 を返します。
+  fi
+}
+
+# asdf コマンドの確認
+if ! check_asdf_installed; then
+  echo "asdf コマンドが利用できません。シェルの設定をリロードして再度確認します。"
+  # シェルの設定ファイルをリロード
+  exec bash -c "source /etc/profile.d/asdf.sh && echo '再度確認: $(command -v asdf)'; exec bash"
+  # exec "$0" "$@"
+fi
+
+# asdf プラグインと言語のインストール
+echo "Installing asdf plugins and languages..."
+asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
 asdf install ruby 3.2.5
 asdf global ruby 3.2.5
 
-if [ ! $(which ruby) ]; then exit 1; fi
-asdf plugin add nodejs
+if ! command -v ruby >/dev/null; then
+  echo 'Rubyのインストールに失敗しました'
+  exit 1
+fi
+
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 asdf install nodejs 20.5.0
 asdf global nodejs 20.5.0
+
+if ! command -v node >/dev/null; then
+  echo 'Node.js のインストールに失敗しました'
+  exit 1
+fi
+
 npm install -g yarn
+if [ $? -ne 0 ]; then
+  echo 'Yarn のインストールに失敗しました'
+  exit 1
+fi
 
-git clone -b stable https://github.com/shirasagi/shirasagi
-sudo mkdir -p /var/www
-sudo mv shirasagi $SS_DIR
-
-cd $SS_DIR
-cp -n config/samples/*.{rb,yml} config/
-for i in $(seq 1 5); do
-	bundle install --without development test --path vendor/bundle
-	if [ $? -eq 0 ]; then
-		break
-	fi
-	sleep 5s
-done
-
-# change secret
-sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
-
-# enable recommendation
-sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
-
-sudo systemctl enable firewalld.service --now
-
-sudo firewall-cmd --add-port=http/tcp --permanent
-#sudo firewall-cmd --add-port=https/tcp --permanent
-#sudo firewall-cmd --add-port=3000/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
-sudo firewall-cmd --reload
-
-#### Furigana
+echo "すべてのインストールが完了しました。"
 
 cd
 wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"
@@ -126,10 +193,10 @@ sudo ldconfig
 
 cd
 wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
-	wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
-	http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz \
-	http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz \
-	http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
+  wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
+  http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz \
+  http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz \
+  http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
 
 cd
 tar xvzf hts_engine_API-1.08.tar.gz
@@ -170,6 +237,141 @@ sudo make install
 #sudo mv sox-14.4.1 /usr/local/src
 
 sudo ldconfig
+
+echo "Creating /var/www directory..."
+sudo mkdir -p /var/www
+if [ $? -ne 0 ]; then
+  echo "Failed to create /var/www directory."
+  exit 1
+fi
+
+# Shirasagi のインストール
+cd
+git clone -b stable https://github.com/shirasagi/shirasagi
+if [ $? -ne 0 ]; then
+  echo "Shirasagi のクローンに失敗しました。"
+  exit 1
+fi
+
+# クローンした shirasagi ディレクトリを移動
+echo "Moving shirasagi directory to $SS_DIR..."
+sudo mv shirasagi "$SS_DIR"
+if [ $? -ne 0 ]; then
+  echo "Failed to move shirasagi directory to $SS_DIR."
+  exit 1
+fi
+
+# Shirasagi の設定ファイルをコピー
+echo "Changing directory to /var/www/shirasagi..."
+cd $SS_DIR
+if [ $? -ne 0 ]; then
+  echo "ディレクトリの移動に失敗しました。スクリプトを終了します。"
+  exit 1
+fi
+
+# Gemfile の存在を確認
+if [ ! -f "Gemfile" ]; then
+  echo "Gemfile が見つかりません。スクリプトを終了します。"
+  exit 1
+fi
+
+cp -n config/samples/*.{rb,yml} config/
+if [ $? -ne 0 ]; then
+  echo "設定ファイルのコピーに失敗しました。"
+  exit 1
+fi
+
+export SS_HOSTNAME=${1:-"example.jp"}
+export SS_USER=${2:-"$USER"}
+export SS_DIR=/var/www/shirasagi
+export PORT_COMPA=8001
+export PORT_CHILD=8002
+export PORT_OPEND=8003
+export PORT_LPSPL=8004
+
+if ! check_asdf_installed; then
+  echo "asdf コマンドが利用できません。シェルの設定をリロードして再度確認します。"
+  # シェルの設定ファイルをリロード
+  exec bash -lc "source /etc/profile.d/asdf.sh && echo '再度確認: $(command -v asdf)'"
+fi
+
+# 絶対パスで bundle install を実行（リトライ付き）
+for i in $(seq 1 5); do
+  # Bundler を使って依存関係をインストール
+  $(asdf which bundle) install
+
+  if [ $? -eq 0 ]; then
+    echo "Bundle install succeeded"
+    break
+  else
+    echo "Attempt $i: Bundle install failed, retrying..."
+    sleep 5s
+  fi
+
+  if [ $i -eq 5 ]; then
+    echo "Bundle install が5回失敗しました。スクリプトを終了します。"
+    exit 1
+  fi
+done
+
+echo "セットアップが完了しました。"
+
+# asdf reshim を実行
+echo "asdf reshim を実行しています..."
+asdf reshim
+
+# 結果の確認
+if [ $? -eq 0 ]; then
+  echo "asdf reshim の実行が成功しました。"
+else
+  echo "エラー: asdf reshim の実行に失敗しました。"
+  exit 1
+fi
+# change secret
+# 資格情報の編集
+echo "Editing Rails credentials using cat <<EOF"
+
+# 資格情報ファイルの暗号化
+echo "Encrypting the credentials file"
+$(asdf which rails) credentials:edit --environment=production
+
+# エラーチェック
+if [ $? -ne 0 ]; then
+  echo "Error: Encryption of credentials file failed"
+  exit 1
+else
+  echo "Credentials file encrypted successfully"
+fi
+
+# secret_key_base の取得
+echo "Running: bundle exec rails runner 'puts Rails.application.credentials.secret_key_base'"
+$(asdf which bundle) exec rails runner 'puts Rails.application.credentials.secret_key_base'
+
+# config/secrets.yml の削除
+if [ -f "config/secrets.yml" ]; then
+  echo "Removing config/secrets.yml"
+  rm config/secrets.yml
+else
+  echo "config/secrets.yml does not exist, skipping removal."
+fi
+
+#sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
+
+# enable recommendation
+#sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
+
+sudo systemctl enable firewalld.service --now
+
+sudo firewall-cmd --add-port=http/tcp --permanent
+#sudo firewall-cmd --add-port=https/tcp --permanent
+#sudo firewall-cmd --add-port=3000/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
+sudo firewall-cmd --reload
+
+#### Furigana
 
 #### Nginx
 
@@ -327,30 +529,55 @@ EOF
 
 sudo systemctl restart nginx.service
 
-cd $SS_DIR
-bin/deploy
-bundle exec rake db:drop
-bundle exec rake db:create_indexes
-bundle exec rake ss:migrate
-bundle exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
-bundle exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
-bundle exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
-bundle exec rake ss:create_site data="{ name: \"オープンデータサンプル\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
-bundle exec rake ss:create_site data="{ name: \"ＬＰサンプル\", host: \"lp_\", domains: \"${SS_HOSTNAME}:${PORT_LPSPL}\" }"
-bundle exec rake db:seed name=demo site=www
-bundle exec rake db:seed name=company site=company
-bundle exec rake db:seed name=childcare site=childcare
-bundle exec rake db:seed name=opendata site=opendata
-bundle exec rake db:seed name=lp site=lp_
-bundle exec rake db:seed name=gws
-bundle exec rake db:seed name=webmail
-bundle exec rake assets:precompile RAILS_ENV=production
+# ディレクトリの確認
+if [ -z "$SS_DIR" ]; then
+  echo "Error: SS_DIR is not set"
+  exit 1
+fi
+cd "$SS_DIR"
 
-# use openlayers as default map
-echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongo ss >/dev/null
+# アセットのプリコンパイル
+$(asdf which bundle) exec rake assets:precompile RAILS_ENV=production
 
-bundle exec rake cms:generate_nodes
-bundle exec rake cms:generate_pages
+# データベース管理
+# データベース削除のコマンド
+$(asdf which bundle) exec rake db:drop
+
+# インデックス作成
+$(asdf which bundle) exec rake db:create_indexes
+
+# サイトの作成
+if [ -z "$SS_HOSTNAME" ]; then
+  echo "Error: SS_HOSTNAME is not set"
+  exit 1
+fi
+
+$(asdf which bundle) exec rake ss:create_site data="{ name: \"自治体サンプル\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
+$(asdf which bundle) exec rake ss:create_site data="{ name: \"企業サンプル\", host: \"company\", domains: \"${SS_HOSTNAME}:${PORT_COMPA}\" }"
+$(asdf which bundle) exec rake ss:create_site data="{ name: \"子育て支援サンプル\", host: \"childcare\", domains: \"${SS_HOSTNAME}:${PORT_CHILD}\" }"
+$(asdf which bundle) exec rake ss:create_site data="{ name: \"オープンデータサンプル\", host: \"opendata\", domains: \"${SS_HOSTNAME}:${PORT_OPEND}\" }"
+$(asdf which bundle) exec rake ss:create_site data="{ name: \"ＬＰサンプル\", host: \"lp_\", domains: \"${SS_HOSTNAME}:${PORT_LPSPL}\" }"
+
+# データのシーディング
+$(asdf which bundle) exec rake db:seed name=demo site=www
+$(asdf which bundle) exec rake db:seed name=company site=company
+$(asdf which bundle) exec rake db:seed name=childcare site=childcare
+$(asdf which bundle) exec rake db:seed name=opendata site=opendata
+$(asdf which bundle) exec rake db:seed name=lp site=lp_
+$(asdf which bundle) exec rake db:seed name=gws
+$(asdf which bundle) exec rake db:seed name=webmail
+
+# CMS ノードとページの生成
+$(asdf which bundle) exec rake cms:generate_nodes
+$(asdf which bundle) exec rake cms:generate_pages
+
+# MongoDB での OpenLayers API 設定
+if command -v mongosh &>/dev/null; then
+  echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongosh ss >/dev/null
+else
+  echo "Error: MongoDB is not installed or not available in the PATH"
+  exit 1
+fi
 
 cat <<EOF | crontab
 */15 * * * * /bin/bash -l -c 'cd ${SS_DIR}; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_release_nodes_lock bundle exec rake cms:release_nodes; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_release_pages_lock bundle exec rake cms:release_pages; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_generate_nodes_lock bundle exec rake cms:generate_nodes' >/dev/null
@@ -359,7 +586,7 @@ EOF
 
 # modify ImageMagick policy to work with simple captcha
 # see: https://github.com/diaspora/diaspora/issues/6828
-cd /etc/ImageMagick && cat <<EOF | sudo patch
+cd /etc/ImageMagick-6 && cat <<EOF | sudo patch
 --- policy.xml.orig     2016-12-08 13:50:47.344009000 +0900
 +++ policy.xml  2016-12-08 13:15:22.529009000 +0900
 @@ -67,6 +67,8 @@
@@ -396,3 +623,5 @@ sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
 sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
 sudo systemctl daemon-reload
 sudo systemctl enable shirasagi-unicorn.service --now
+
+exit
