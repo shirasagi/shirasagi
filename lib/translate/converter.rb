@@ -1,4 +1,6 @@
 class Translate::Converter
+  TEXT_ATTRS = %w(alt aria-label placeholder title).freeze
+
   attr_reader :site, :source, :target
 
   def initialize(site, source, target)
@@ -82,9 +84,9 @@ class Translate::Converter
 
       nodes << value
     end
-    %w(alt aria-label placeholder title).each do |attr|
-      doc.search("//*[@#{attr}]").each do |node|
-        value = node.attributes[attr]
+    TEXT_ATTRS.each do |text_attr|
+      doc.search("//*[@#{text_attr}]").each do |node|
+        value = node.attributes[text_attr]
 
         next if value.blank?
         next if node.instance_variable_get(:@notranslate)
