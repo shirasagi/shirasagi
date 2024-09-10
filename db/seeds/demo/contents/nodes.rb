@@ -77,7 +77,7 @@ save_node route: "category/page", filename: "kurashi/bosai", name: "防災情報
 save_node route: "category/page", filename: "kurashi/kankyo", name: "環境", order: 40
 save_node route: "category/page", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
 save_node route: "category/page", filename: "kurashi/nenkin", name: "年金・保険", order: 60
-save_node route: "category/node", filename: "kurashi/zeikin", name: "税金", order: 110
+save_node route: "category/page", filename: "kurashi/zeikin", name: "税金", order: 110
 save_node route: "category/node", filename: "sangyo", name: "産業・仕事", order: 50
 save_node route: "category/page", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
 save_node route: "category/page", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
