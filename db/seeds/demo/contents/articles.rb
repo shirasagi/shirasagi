@@ -244,7 +244,7 @@ save_page route: "article/page", filename: "docs/page19.html", name: "自動交�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届", layout_id: @layouts["pages"].id,
-  category_ids: [@categories["attention"].id, @categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
+  category_ids: [@categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -521,8 +521,7 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
     @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: ''),
   ],
   category_ids: [
-    @categories["attention"].id, @categories["oshirase"].id, @categories["oshirase/event"].id,
-    @categories["oshirase/kanko"].id
+    @categories["oshirase"].id, @categories["oshirase/event"].id, @categories["oshirase/kanko"].id
   ],
   event_name: '小鷲町　ひまわり祭り',
   event_recurrences: [ recurrence ],
