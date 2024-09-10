@@ -221,7 +221,7 @@ save_node route: "category/page", filename: "kohoshi/kakopdf", name: "過去のP
   new_days: 0
 save_node route: "category/page", filename: "kohoshi/kongetsukoho", name: "今月の広報シラサギ",
   layout_id: @layouts["pages"].id, new_days: 0, loop_format: 'liquid'
-save_node route: "category/page", filename: "topics", name: "街の話題"
+save_node route: "category/page", filename: "topics", name: "街の話題", layout_id: @layouts["more"].id
 
 array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 @categories = Hash[*array.flatten]

@@ -573,8 +573,8 @@ save_page route: "article/page", filename: "docs/page36.html", name: "令和４�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-file_page37_1 = save_ss_files "ss_files/article/topic.jpeg", filename: "topic.jpeg",
-  name: "topic.jpeg", model: "ss/temp_file"
+file_page37_1 = save_ss_files "ss_files/article/topic1.jpg", filename: "topic1.jpg",
+  name: "topic1.jpg", model: "ss/temp_file"
 save_page route: "article/page", filename: "docs/page37.html", name: "SHIRASAGI川堤防の桜が開花しました。",
   layout_id: @layouts["pages"].id, form_id: @form4.id, thumb_id: file_page37_1.id,
   column_values: [
@@ -594,18 +594,10 @@ save_page route: "article/page", filename: "docs/page37.html", name: "SHIRASAGI�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/page38.html", name: "SHIRASAGI川堤防の桜が開花しました。２",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["topics"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
-
-save_page route: "article/page", filename: "docs/page39.html", name: "SHIRASAGI川堤防の桜が開花しました。３",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+file_page38 = save_ss_files "ss_files/article/topic2.jpg", filename: "topic2.jpg",
+  name: "topic2.jpg", model: "ss/temp_file"
+save_page route: "article/page", filename: "docs/page38.html", name: "シラサギ西公園の睡蓮が見頃です（7月上旬〜中頃）",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, thumb_id: file_page38.id,
   category_ids: [@categories["topics"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
