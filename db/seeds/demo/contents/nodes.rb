@@ -475,6 +475,9 @@ save_node route: "key_visual/image", filename: "key-visual", name: "キービジ
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",
   layout_id: @layouts["general"].id, guide_index_html: '<p class="guide__text">移住に必要な手続きをご案内いたします。</p>'
 
+## line
+save_node route: "cms/line_hub", filename: "receiver", name: "LINE HUB", layout_id: @layouts["general"].id
+
 ## ckan
 save_node route: "ckan/page", filename: "ckan", name: "CKAN", layout_id: @layouts["more"].id,
   ckan_url: 'https://ckan.open-governmentdata.org/', ckan_max_docs: 20,
