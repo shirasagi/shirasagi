@@ -537,7 +537,7 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
   contact_link_name: @contact.contact_link_name,
   map_points: [
     {
-      name: 'ウェブチップス', loc: [133.6806607, 33.8957612], text: 'ウェブチップス地図説明',
+      name: 'ウェブチップス', loc: [134.5758945, 34.0612009], text: 'ウェブチップス地図説明',
       image: '/assets/img/googlemaps/marker11.png'
     }
   ],
@@ -782,7 +782,8 @@ save_page route: "article/page", filename: "docs/page48.html", name: "シラサ�
 #  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
 #  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "population/page52.html", name: "2022年10月3日", form_id: @form7.id,
+save_page route: "article/page", filename: "population/page52.html", name: "2022年10月3日",
+  layout_id: @layouts["pages"].id, form_id: @form7.id,
   column_values: [
     @form_columns7[0].value_type.new(column: @form_columns7[0], value: '777777'),
     @form_columns7[1].value_type.new(column: @form_columns7[1], value: "123456"),
@@ -796,7 +797,8 @@ save_page route: "article/page", filename: "population/page52.html", name: "2022
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "population/page53.html", name: "2022年9月1日", form_id: @form7.id,
+save_page route: "article/page", filename: "population/page53.html", name: "2022年9月1日",
+  layout_id: @layouts["pages"].id, form_id: @form7.id,
   column_values: [
     @form_columns7[0].value_type.new(column: @form_columns7[0], value: '66666'),
     @form_columns7[1].value_type.new(column: @form_columns7[1], value: "12345"),

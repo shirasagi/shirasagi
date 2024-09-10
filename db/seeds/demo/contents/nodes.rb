@@ -70,8 +70,9 @@ save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情�
   layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
 @node_form_db3 = save_node route: "article/page", filename: "hinanjo-docs/thunami", name: "津波",
   layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
-save_node route: "article/page", filename: "population", name: "人口・世帯数", new_days: 0, st_form_ids: [@form7.id],
-  st_form_default_id: @form7.id
+save_node route: "article/page", filename: "population", name: "人口・世帯数",
+  layout_id: @layouts["pages"].id, st_form_ids: [@form7.id], st_form_default_id: @form7.id,
+  new_days: 0
 
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
@@ -221,13 +222,16 @@ save_node route: "category/page", filename: "calendar/bunka", name: "文化・�
 save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
 save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
 save_node route: "event/search", filename: "calendar/search", name: "イベント検索", conditions: %w(calendar)
-save_node route: "category/node", filename: "download", name: "申請書ダウンロード", layout_id: @layouts["category-top"].id,
-  sort: 'order', child_limit: 0
-save_node route: "category/node", filename: "kohoshi", name: "広報シラサギ", child_limit: 0
-save_node route: "category/page", filename: "kohoshi/kakopdf", name: "過去のPDF版広報", layout_id: @layouts["more"].id,
-  new_days: 0
+save_node route: "category/node", filename: "download", name: "申請書ダウンロード",
+  layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
+save_node route: "category/node", filename: "kohoshi", name: "広報シラサギ",
+  layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
 save_node route: "category/page", filename: "kohoshi/kongetsukoho", name: "今月の広報シラサギ",
-  layout_id: @layouts["pages"].id, new_days: 0, loop_format: 'liquid'
+  layout_id: @layouts["pages"].id, summary_html: "今月の広報シラサギを掲載しています。",
+  order: 10, new_days: 0, loop_format: 'liquid'
+save_node route: "category/page", filename: "kohoshi/kakopdf", name: "過去のPDF版広報",
+  layout_id: @layouts["more"].id, summary_html: "過去の広報シラサギを掲載しています。",
+  order: 20, new_days: 0
 save_node route: "category/page", filename: "topics", name: "街の話題", layout_id: @layouts["more"].id
 
 array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
@@ -259,7 +263,8 @@ save_node route: "cms/site_search", filename: "search", name: "サイト内検�
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
 ## event
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs), event_display: "table",
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs),
+  event_display: "table", event_display_tabs: %w(list table map),
   st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map { |c| @categories[c].id }
 
 ## uploader
