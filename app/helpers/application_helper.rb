@@ -139,10 +139,6 @@ module ApplicationHelper
     h.join("\n").html_safe
   end
 
-  def render_agent(controller_name, action)
-    controller.render_agent(controller_name, action).body.html_safe
-  end
-
   def mail_to_entity(email_address, name = nil, html_options = {}, &block)
     if block
       html_options = name
