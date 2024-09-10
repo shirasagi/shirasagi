@@ -246,6 +246,37 @@ save_init_column(order: 80, form: @form5, column: @form_columns5[3])
 
 @form_columns8 = [
   save_column(:select, form: @form8, name: '地域', order: 10, required: 'required', select_options: %w(東部 北部 南部)),
-  save_column(:text, form: @form8, name: '郵便番号', order: 20, required: 'required', input_type: 'text'),
-  save_column(:text_area, form: @form8, name: '住所', order: 30, required: 'required')
+  save_column(:text, form: @form8, name: 'ID', order: 20, required: 'required', input_type: 'text'),
+  save_column(:text, form: @form8, name: '郵便番号', order: 30, required: 'required', input_type: 'text'),
+  save_column(:text, form: @form8, name: '名称', order: 40, required: 'required', input_type: 'text'),
+  save_column(:text, form: @form8, name: '名称_カナ', order: 50, required: 'required', input_type: 'text'),
+  save_column(:text_area, form: @form8, name: '所在地_連結表記', order: 60, required: 'required'),
+  save_column(:text, form: @form8, name: '電話番号', order: 70, required: 'required', input_type: 'text'),
+  save_column(:text, form: @form8, name: '想定収容人数', order: 80, required: 'required', input_type: 'text')
 ]
+
+puts "form dbs"
+
+def save_form_db(data)
+  puts data[:name]
+  cond = { site_id: @site.id, form_id: data[:form].id, name: data[:name] }
+  item = Cms::FormDb.find_or_create_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site)
+  item.save!
+  item
+end
+save_form_db name: "避難所情報（土砂災害）", form: @form8, node: @node_form_db1,
+  import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
+  import_primary_key: "ID", import_page_name: "名称",
+  import_column_options: [{name: "災害種別_崖崩れ、土石流及び地滑り", kind: "any_of", values: ["1"]}],
+  import_map: 1, generate_on_import: 1, import_skip_same_file: 1
+save_form_db name: "避難所情報（地震）", form: @form8, node: @node_form_db2,
+  import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
+  import_primary_key: "ID", import_page_name: "名称",
+  import_column_options: [{name: "災害種別_地震", kind: "any_of", values: ["1"]}],
+  import_map: 1, generate_on_import: 1, import_skip_same_file: 1
+save_form_db name: "避難所情報（津波）", form: @form8, node: @node_form_db3,
+  import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
+  import_primary_key: "ID", import_page_name: "名称",
+  import_column_options: [{name: "災害種別_津波", kind: "any_of", values: ["1"]}],
+  import_map: 1, generate_on_import: 1, import_skip_same_file: 1

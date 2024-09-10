@@ -719,68 +719,68 @@ save_page route: "article/page", filename: "docs/page48.html", name: "シラサ�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "小しらさぎ南公民館",
-  layout_id: @layouts["general"].id, form_id: @form8.id,
-  column_values: [
-    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '南部'),
-    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
-    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市小白鷺南町12-3")
-  ],
-  category_ids: [@categories["hinanjo/dosya"].id],
-  map_points: [
-    {
-      "name" => "小しらさぎ南公民館", "loc" => [134.560032, 33.974649], "text" => "",
-      "image" => 	"http://demo.devss6.web-tips.co.jp/img/ic-dosha.png"
-    }
-  ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+#save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "小しらさぎ南公民館",
+#  layout_id: @layouts["general"].id, form_id: @form8.id,
+#  column_values: [
+#    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '南部'),
+#    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
+#    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市小白鷺南町12-3")
+#  ],
+#  category_ids: [@categories["hinanjo/dosya"].id],
+#  map_points: [
+#    {
+#      "name" => "小しらさぎ南公民館", "loc" => [134.560032, 33.974649], "text" => "",
+#      "image" => 	"http://demo.devss6.web-tips.co.jp/img/ic-dosha.png"
+#    }
+#  ],
+#  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+#  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+#  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+#  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
+#  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
+#  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo-docs/page50.html", name: "白鷺城展望台",
-  layout_id: @layouts["general"].id, form_id: @form8.id,
-  column_values: [
-    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '北部'),
-    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
-    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市白鷺23-1")
-  ],
-  category_ids: [@categories["hinanjo/thunami"].id],
-  map_points: [
-    {
-      "name" => "白鷺城展望台", "loc" => [134.449601, 34.047952], "text" => "",
-      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-thunami.png"
-    }
-  ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+#save_page route: "article/page", filename: "hinanjo-docs/page50.html", name: "白鷺城展望台",
+#  layout_id: @layouts["general"].id, form_id: @form8.id,
+#  column_values: [
+#    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '北部'),
+#    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
+#    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市白鷺23-1")
+#  ],
+#  category_ids: [@categories["hinanjo/thunami"].id],
+#  map_points: [
+#    {
+#      "name" => "白鷺城展望台", "loc" => [134.449601, 34.047952], "text" => "",
+#      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-thunami.png"
+#    }
+#  ],
+#  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+#  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+#  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+#  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
+#  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
+#  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo-docs/page51.html", name: "みらいシラサギ市民パーク",
-  layout_id: @layouts["general"].id, form_id: @form8.id,
-  column_values: [
-    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '東部'),
-    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
-    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市赤鷺町45−6")
-  ],
-  category_ids: [@categories["hinanjo/jishin"].id],
-  map_points: [
-    {
-      "name" => "みらいシラサギ市民パーク", "loc" => [134.53251, 34.038195], "text" => "",
-      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-jishin.png"
-    }
-  ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+#save_page route: "article/page", filename: "hinanjo-docs/page51.html", name: "みらいシラサギ市民パーク",
+#  layout_id: @layouts["general"].id, form_id: @form8.id,
+#  column_values: [
+#    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '東部'),
+#    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
+#    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市赤鷺町45−6")
+#  ],
+#  category_ids: [@categories["hinanjo/jishin"].id],
+#  map_points: [
+#    {
+#      "name" => "みらいシラサギ市民パーク", "loc" => [134.53251, 34.038195], "text" => "",
+#      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-jishin.png"
+#    }
+#  ],
+#  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+#  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+#  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+#  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
+#  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
+#  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "population/page52.html", name: "2022年10月3日", form_id: @form7.id,
   column_values: [

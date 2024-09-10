@@ -60,9 +60,16 @@ article_map_search_categories = [
 article_map_search.st_category_ids = article_map_search_categories.map(&:id)
 article_map_search.update
 save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
-  page_layout_id: @layouts["general"].id, conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
-  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0, st_form_ids: [@form8.id],
+  view_route: "cms/node", page_layout_id: @layouts["general"].id, st_form_ids: [@form8.id],
+  conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
+  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0,
   st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
+@node_form_db1 = save_node route: "article/page", filename: "hinanjo-docs/dosya", name: "土砂災害",
+  layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
+@node_form_db2 = save_node route: "article/page", filename: "hinanjo-docs/jishin", name: "地震",
+  layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
+@node_form_db3 = save_node route: "article/page", filename: "hinanjo-docs/thunami", name: "津波",
+  layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
 save_node route: "article/page", filename: "population", name: "人口・世帯数", new_days: 0, st_form_ids: [@form7.id],
   st_form_default_id: @form7.id
 
@@ -259,6 +266,7 @@ save_node route: "event/page", filename: "calendar", name: "イベントカレ�
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
 save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
 save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
+save_node route: "uploader/file", filename: "dataset", name: "javascript", shortcut: "hide"
 
 ## faq
 save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [@categories["faq"].id]
