@@ -1,10 +1,15 @@
 class SS::Agent
   attr_accessor :controller
 
-  def initialize(controller)
-    if controller.is_a?(String)
-      controller = "#{controller}_controller".camelize.constantize
+  def initialize(controller_or_name)
+    if controller_or_name.is_a?(String)
+      controller = "#{controller_or_name}_controller".camelize.constantize
+      controller_name = controller_or_name
+    else
+      controller = controller_or_name
+      controller_name = self.class.controller_name(controller_or_name.name)
     end
+    @controller_name = controller_name
     @controller = controller.new
     @controller.params   = ActionController::Parameters.new
     @controller.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
@@ -16,11 +21,8 @@ class SS::Agent
 
   class << self
     def invoke_action(controller_name, action, variables)
-      cont = controller_name.camelize
-      cname = cont + "Controller"
-
       agent = SS::Agent.new(controller_name) rescue nil
-      return if agent.blank? || agent.controller.class.to_s != cname
+      return if agent.blank?
       return unless agent.controller.respond_to?(action)
 
       variables.each do |key, value|
@@ -30,6 +32,10 @@ class SS::Agent
       agent.controller.params[:action] = action.to_s
       agent.invoke(action)
     end
+
+    def controller_name(class_name)
+      class_name.underscore.sub("_controller", "")
+    end
   end
 
   def invoke(action)
@@ -37,12 +43,14 @@ class SS::Agent
       def obj.render(*args); end
     end
 
+    @controller.params[:controller] = @controller_name
     @controller.params[:action] = action
     @controller.process action
     @controller
   end
 
   def render(action)
+    @controller.params[:controller] = @controller_name
     @controller.params[:action] = action
     @controller.process action
     @controller.response
