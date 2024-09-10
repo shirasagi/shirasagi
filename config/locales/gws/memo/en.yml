@@ -298,7 +298,7 @@ en:
         notice_workload_user_setting: Workload
         notice_presence_user_setting: Presence status
         notice_affair_user_setting: Affairs
-        notice_workflow_user_setting: Workflows
+        notice_workflow_user_setting: Workflow / Workflow2
         notice_circular_user_setting: Circular boards
         notice_monitor_user_setting: Inquiries and responses
         notice_survey_user_setting: Questionnaires
