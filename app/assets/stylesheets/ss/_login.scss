@@ -61,6 +61,9 @@
   footer.send {
     margin: 20px;
     padding: 0;
+    input.btn-primary {
+      @include btn-red;
+    }
   }
   .sso {
     width: 100%;
