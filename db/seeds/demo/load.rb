@@ -20,8 +20,10 @@ end
 
 @contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
 @contact_group_id = @contact_group.id if @contact_group
-@contact_sub_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課/経営戦略係").first
-@contact_sub_group_ids = [@contact_sub_group.id] if @contact_sub_group
+@contact_sub_group1 = Cms::Group.where(name: "シラサギ市/企画政策部/政策課/経営戦略係").first
+@contact_sub_group_ids1 = [@contact_sub_group1.id] if @contact_sub_group1
+@contact_sub_group2 = Cms::Group.where(name: "シラサギ市/企画政策部/政策課/デジタル戦略係").first
+@contact_sub_group_ids2 = [@contact_sub_group2.id] if @contact_sub_group2
 @contact = @contact_group.contact_groups.first
 
 load "#{Rails.root}/db/seeds/cms/workflow.rb"

@@ -196,9 +196,9 @@ save_node route: "category/page", filename: "shisei/koho/shiryo", name: "報道�
 save_node route: "category/page", filename: "shisei/senkyo", name: "選挙", order: 50
 save_node route: "category/page", filename: "shisei/shicho", name: "市長の部屋", order: 60
 save_node route: "category/page", filename: "shisei/shisaku", name: "施策・計画", order: 70
-save_node route: "category/node", filename: "shisei/soshiki", name: "組織案内", order: 80
-save_node route: "category/node", filename: "shisei/soshiki/kikaku", name: "企画政策部", order: 10
-save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "危機管理部", order: 50
+save_node route: "category/node", filename: "shisei/soshiki", name: "組織案内", order: 80, state: "closed"
+save_node route: "category/node", filename: "shisei/soshiki/kikaku", name: "企画政策部", order: 10, state: "closed"
+save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "危機管理部", order: 50, state: "closed"
 save_node route: "category/page", filename: "shisei/toke", name: "統計・人口", order: 90
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備", order: 100
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革", order: 110
