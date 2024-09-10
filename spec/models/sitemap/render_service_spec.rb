@@ -94,5 +94,29 @@ describe Sitemap::RenderService do
         expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2.url)
       end
     end
+
+    context 'tooltip #4: /news_2023/、/news_2022/を前方一致で一括して除外' do
+      let(:prefix) { "news" }
+      let!(:article_node2022) { create :article_node_page, basename: "#{prefix}_2022" }
+      let!(:article_node2023) { create :article_node_page, basename: "#{prefix}_2023" }
+      let!(:article_page2022_1) { create :article_page, cur_node: article_node2022 }
+      let!(:article_page2022_2) { create :article_page, cur_node: article_node2022 }
+      let!(:article_page2023_1) { create :article_page, cur_node: article_node2023 }
+      let!(:article_page2023_2) { create :article_page, cur_node: article_node2023 }
+      let!(:node) { create :sitemap_node_page }
+      let!(:item) do
+        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ "#{prefix}_" ]
+      end
+      subject! { Sitemap::RenderService.new(cur_site: cms_site, cur_node: node, page: item) }
+
+      it do
+        expect(subject.load_whole_contents.map(&:url)).not_to include(article_node2022.url)
+        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2022_1.url)
+        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2022_2.url)
+        expect(subject.load_whole_contents.map(&:url)).not_to include(article_node2023.url)
+        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2023_1.url)
+        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2023_2.url)
+      end
+    end
   end
 end
