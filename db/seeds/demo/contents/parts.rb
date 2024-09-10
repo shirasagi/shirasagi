@@ -114,3 +114,4 @@ save_part route: "cms/page", filename: "urgency-disaster-top-list.part.html", na
     kurashi/bosai/shobo
   ), new_days: 0
 save_part route: "chat/bot", filename: "bot.part.html", name: "チャットボット", chat_path: 'chatbot', mobile_view: "hide"
+save_part route: "cms/free", filename: "favicon.part.html", name: "ファビコン"
