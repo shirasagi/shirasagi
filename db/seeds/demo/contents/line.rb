@@ -167,8 +167,7 @@ end
 richmenu_group = create_richmenu_group name: "リッチメニュー", state: "public"
 richmenu_group.menus.destroy_all
 
-image = save_ss_files "ss_files/line/richmenu.png", filename: "richmenu.png", model: "cms/line/richmenu/menu",
-  state: "public"
+image = Fs::UploadedFile.create_from_file("ss_files/line/richmenu.png")
 richmenu_in_areas = [
   { x: "16", y: "15", width: "252", height: "219", type: "uri", uri: @site.full_url },
   { x: "276", y: "14", width: "248", height: "222", type: "postback", data: "チャットボット"},
@@ -177,7 +176,7 @@ richmenu_in_areas = [
 richmenu = create_richmenu_menu richmenu_group,
   name: "シラサギリッチメニュー ", target: "default",
   area_size: 3, width: 800, height: 250, chat_bar_text: "shirasagi",
-  image: image, in_areas: richmenu_in_areas
+  in_image: image, in_areas: richmenu_in_areas
 
 # サービス
 def create_service_group(data)
