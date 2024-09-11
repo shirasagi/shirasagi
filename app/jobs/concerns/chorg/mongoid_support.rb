@@ -58,7 +58,7 @@ module Chorg::MongoidSupport
           entities = criteria.in(id: ids).to_a
           entities.each do |entity|
             entity = entity.try(:becomes_with_topic) || entity
-            entity.try(:cur_site=, @cur_site)
+            next unless set_site(entity)
             entity.try(:allow_other_user_files)
 
             entity_user = (entity.try(:user) || @cur_user)
@@ -93,6 +93,44 @@ module Chorg::MongoidSupport
     end
   end
   # rubocop:enable Layout::EmptyLineBetweenDefs
+
+  def all_cms_sites
+    @all_cms_sites ||= Cms::Site.all.to_a
+  end
+
+  def cms_site_id_map
+    @cms_site_id_map ||= all_cms_sites.index_by(&:id)
+  end
+
+  def all_gws_sites
+    @all_gws_sites ||= Gws::Group.all.to_a.select { |group| group.gws_use? }
+  end
+
+  def gws_site_id_map
+    @gws_site_id_map ||= all_gws_sites.index_by(&:id)
+  end
+
+  def set_site(entity)
+    if entity.is_a?(SS::Reference::Site) || entity.is_a?(Cms::Reference::Site)
+      site = cms_site_id_map[entity.site_id]
+      return false if site.blank?
+
+      entity.try(:cur_site=, site)
+      entity.try(:site=, site)
+      return true
+    end
+
+    if entity.is_a?(Gws::Reference::Site)
+      site = gws_site_id_map[entity.site_id]
+      return false if site.blank?
+
+      entity.try(:cur_site=, site)
+      entity.try(:site=, site)
+      return true
+    end
+
+    true
+  end
 
   def find_or_create_group(attributes, alternative_names: nil)
     group = self.class.group_class.where(name: attributes["name"]).first
