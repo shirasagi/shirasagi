@@ -1,0 +1,16 @@
+{
+  "type": "template",
+  "altText": "デモサイト",
+  "template": {
+    "type": "image_carousel",
+    "columns": [
+      {
+        "imageUrl": "https://demo.ss-proj.org/img/json_dummy1.png",
+        "action": {
+          "type": "uri",
+          "uri": "https://demo.ss-proj.org/"
+        }
+      }
+    ]
+  }
+}

@@ -430,6 +430,8 @@ common
       &-inner {
         display: flex;
         justify-content: flex-end;
+        align-items: end;
+        margin-bottom: 10px;
 
 
         .head-search {
@@ -495,11 +497,13 @@ common
             width: 150px;
             min-height: 30px;
             margin-left: 10px;
-            padding-top: 3px;
+            padding: 10px 0;
+            font-weight: bold;
             color: $white;
             text-align: center;
             background-color: $blue;
             @include border-radius(25px);
+
           }
 
           a:hover {

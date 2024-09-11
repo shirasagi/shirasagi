@@ -130,7 +130,7 @@ body.body--index__urgency{
 
       article{
         width: 100%;
-        padding: 5px 15px; 
+        padding: 5px 15px;
         // border-bottom: 1px dotted #808080;
         margin: 10px;
 
@@ -779,16 +779,16 @@ body.body--index__urgency{
             color: $text;
             text-decoration: none;
             font-weight: bold;
-  
+
             @include tb {
               // font-size: 12px;
               padding: 20px 0;
             }
-  
+
             &:hover {
               text-decoration: underline;
             }
-            
+
           }
         }
       }
@@ -829,4 +829,3 @@ body.body--index__urgency{
     }
   }
 }
-

@@ -1,47 +1,47 @@
 <html>
-<head>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
-  <link href="/css/style.css" media="all" rel="stylesheet" />
-<script src="/js/common.js"></script>
-<script src="/js/jquery.rwdImageMaps.min.js"></script>
-</head>
-<body>
-<div id="page">
-
- <div class="accessibility">
-    <div class="accessibility-inner">
-      <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
-      <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
-      <div class="accessibility__translate translate-wrap">
-        <div class="translate-box">
-          {{ part "translate" }}
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+    <link href="/css/style.css" media="all" rel="stylesheet" />
+    <script src="/js/common.js"></script>
+    <script src="/js/jquery.rwdImageMaps.min.js"></script>
+    {{ part "favicon" }}
+  </head>
+  <body>
+  <div id="page">
+    <div class="accessibility">
+      <div class="accessibility-inner">
+        <p class="accessibility__contentlink"><a href="#wrap">本文へ</a></p>
+        <p class="accessibility__uselink"><a href="/use/">ご利用案内</a></p>
+        <div class="accessibility__translate translate-wrap">
+          <div class="translate-box">
+            {{ part "translate" }}
+          </div>
+        </div>
+        {{ part "tool" }}
+        </div><!-- /.accessibility-inner -->
+      </div><!-- .accessibility -->
+      {{ part "head" }}
+      <div class="search-wrap">
+        {{ part "search" }}
       </div>
-              </div>
-      {{ part "tool" }}
-      </div><!-- /.accessibility-inner -->
-  </div><!-- .accessibility -->
-{{ part "head" }}
-  <div class="search-wrap">
-  {{ part "search" }}
-  </div>
-{{ part "navi" }}
+      {{ part "navi" }}
 
-<div id="wrap">
-  {{ part "breadcrumb" }}
-  <div id="main">
-    <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    {{ part "kanko-info/photo/search/search" }}
-    {{ yield }}
-    {{ part "page-top" }}
-  </div>
-  <div id="side">
-    {{ part "login/login" }}
-    {{ part "invited-group" }}
-    <a class="registration" href="/registration/">会員登録</a>
-    {{ part "kanko-info/photo/recent" }}
-    {{ part "kanko-info/blog/recent" }}
-  </div>
-</div>
+      <div id="wrap">
+        {{ part "breadcrumb" }}
+        <div id="main">
+          <header><h1 id="ss-page-name">#{page_name}</h1></header>
+          {{ part "kanko-info/photo/search/search" }}
+          {{ yield }}
+          {{ part "page-top" }}
+        </div>
+        <div id="side">
+          {{ part "login/login" }}
+          {{ part "invited-group" }}
+          <a class="registration" href="/registration/">会員登録</a>
+          {{ part "kanko-info/photo/recent" }}
+          {{ part "kanko-info/blog/recent" }}
+        </div>
+      </div>
       <section id="chat" class="chat">
         <div class="chat--close">
           <p>なんでも聞いてね！</p>
@@ -57,9 +57,8 @@
           {{ part "bot" }}
         </div>
       </section>
-{{ part "foot" }}
-
-</div>
-  <div style="display: none;">{{ part "browsing-history" }}</div>
-</body>
+      {{ part "foot" }}
+    </div>
+    <div style="display: none;">{{ part "browsing-history" }}</div>
+  </body>
 </html>
