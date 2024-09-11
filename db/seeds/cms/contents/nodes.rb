@@ -383,9 +383,6 @@ save_node route: "key_visual/image", filename: "key_visual", name: "キービジ
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",
   layout_id: @layouts["one"].id, guide_index_html: "移住に必要な手続きをご案内いたします。"
 
-## line
-save_node route: "cms/line_hub", filename: "receiver", name: "LINE HUB", layout_id: @layouts["one"].id
-
 ## inquiry
 def save_inquiry_column(data)
   puts data[:name]
