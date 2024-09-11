@@ -46,17 +46,19 @@
 
     <% if !@item.resolved? && @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
-      <%= link_to(t('gws/qna.links.comment'), new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-        class: "btn primary") %>
+      <%= link_to(new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary") do %>
+        <span class="material-icons-outlined md-15">reply</span>
+        <span class="button-label"><%= t('gws/qna.links.comment') %></span>
+      <% end %>
     </div>
     <% end %>
-  </article>
 
-  <% if @item.children.present? %>
-  <div class="comments">
-    <%= render partial: 'gws/qna/comments/comment', collection: @item.children, locals: { parent: @item, recursion: true } %>
-  </div>
-  <% end %>
+    <% if @item.children.present? %>
+      <div class="comments">
+        <%= render partial: 'gws/qna/comments/comment', collection: @item.children, locals: { parent: @item, recursion: true } %>
+      </div>
+    <% end %>
+  </article>
 
   <% if @item.subscribed_users.present? %>
   <%= render partial: 'gws/qna/topics/subscribed_users' %>
