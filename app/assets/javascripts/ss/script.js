@@ -52,6 +52,7 @@
 //= require ss/lib/search_ui
 //= require ss/lib/popup
 //= require ss/lib/dropdown
+//= require ss/lib/dropdown_toggle
 //= require ss/lib/clipboard
 //= require ss/lib/color
 //= require ss/lib/workflow
@@ -204,35 +205,7 @@ SS.ready(function () {
     $(this).toggleClass("active");
     return false;
   });
-  //dropdown
-  $(document).on("click", function (e) {
-    if ($(e.target).closest('.dropdown-menu').length === 0) {
-      $(".dropdown").removeClass('active');
-      return $(".dropdown-menu").removeClass('active');
-    }
-  });
-  $(document).on("click", ".dropdown-toggle", function (e) {
-    var $this = $(this);
-    var $target = $(e.target);
-    var ref = $this.data('ref');
-    var $dropdown = $target.closest('.dropdown');
-    var $menu = ref ? $this.find(ref) : $dropdown.find('.dropdown-menu').first();
-
-    // close other dropdown
-    $(".dropdown").not($dropdown.get(0)).each(function () {
-      return $(this).find('.dropdown-menu').removeClass('active');
-    });
-
-    // popup_notice
-    SS_PopupNotice.closePopup();
-
-    // open dropdown
-    if ($target.parents('.dropdown-menu').length === 0) {
-      $menu.toggleClass('active');
-      e.stopPropagation();
-      $this.trigger("ss:dropdownOpened");
-    }
-  });
+  SS_DropdownToggle.render();
   $("select").on("change", function () {
     if ($(this).val() === "") {
       return $(this).addClass("blank-value has-blank-value");
