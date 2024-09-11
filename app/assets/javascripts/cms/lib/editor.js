@@ -94,7 +94,13 @@ this.Cms_Editor_CKEditor = (function () {
       opts = {};
     }
 
-    $(selector).ckeditor(opts);
+    // $(selector).ckeditor(opts);
+    $(selector).each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-editor", function() {
+        $this.ckeditor(opts);
+      });
+    });
 
     CKEDITOR.on('dialogDefinition', function (ev) {
       var def, info, name, text;
