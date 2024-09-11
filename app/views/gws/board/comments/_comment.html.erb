@@ -3,19 +3,21 @@
 menu = []
 if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
   link = new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
-  menu << link_to(t('gws/board.links.comment'), link, class: "btn primary")
+  menu << link_to(link, class: "btn primary") do
+    tag.span("reply", class: "material-icons-outlined md-15") + tag.span(t('gws/board.links.comment'), class: "button-label")
+  end
 end
 if @item.allowed?(:edit, @cur_user, site: @cur_site) || (@item.member?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(t('ss.links.edit'), link, class: "btn")
+  menu << link_to(tag.span("edit", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.edit'))
 end
 if @item.allowed?(:delete, @cur_user, site: @cur_site) || (@item.member?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(t('ss.links.delete'), link, class: "btn")
+  menu << link_to(tag.span("delete", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.delete'))
 end
 
 %>
-<aside class="addon-view comment <%= "body-closed" if recursion %>" id="post-<%= comment.id %>">
+<aside class="addon-view comment" id="post-<%= comment.id %>" data-comment-depth="<%= depth %>">
   <header class="<%= 'toggle-head' if recursion %>">
     <h2><%= comment.name %></h2>
     <nav class="meta">
@@ -24,7 +26,7 @@ end
     </nav>
   </header>
 
-  <div class="toggle-body" <% if recursion %>style="display: none;"<% end %>>
+  <div class="toggle-body">
     <div class="body markdown-body"><%= comment.html %></div>
 
     <% if comment.files.present? %>
@@ -49,11 +51,11 @@ end
     <% if menu.present? %>
     <div class="menu"><%= safe_join(menu) %></div>
     <% end %>
+
+    <% if comment.children.present? %>
+      <div class="comments">
+        <%= render partial: 'gws/board/comments/comment', collection: comment.children, locals: { parent: comment, recursion: recursion, depth: depth + 1 } if recursion %>
+      </div>
+    <% end %>
   </div>
 </aside>
-
-<% if comment.children.present? %>
-<div class="comments">
-  <%= render partial: 'gws/board/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
-</div>
-<% end %>

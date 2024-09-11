@@ -40,30 +40,30 @@
       <% @item_menu_proc.call(@item) %>
     </div>
     <% end %>
-  </article>
 
-  <div class="comments">
-    <% @item.browsable_comments.each_with_index do |comment, i| %>
-      <aside class="comment" id="post-<%= comment.id %>">
-        <header>
-          <h2><%= comment.name %></h2>
-          <nav class="meta">
-            <span class="user"><%= gws_public_user_long_name(comment.user.try(:long_name)) %></span>
-            <span class="datetime"><%= ss_time_tag comment.updated %></span>
-          </nav>
-        </header>
+    <div class="comments">
+      <% @item.browsable_comments.each_with_index do |comment, i| %>
+        <aside class="comment" id="post-<%= comment.id %>">
+          <header>
+            <h2><%= comment.name %></h2>
+            <nav class="meta">
+              <span class="user"><%= gws_public_user_long_name(comment.user.try(:long_name)) %></span>
+              <span class="datetime"><%= ss_time_tag comment.updated %></span>
+            </nav>
+          </header>
 
-        <div class="toggle-body">
-          <div class="body"><pre><%= comment.text %></pre></div>
-          <% if @comment_menu_proc %>
-          <div class="menu">
-            <% @comment_menu_proc.call(@item, comment) %>
+          <div class="toggle-body">
+            <div class="body markdown-body"><p><%= br comment.text %></p></div>
+            <% if @comment_menu_proc %>
+            <div class="menu">
+              <% @comment_menu_proc.call(@item, comment) %>
+            </div>
+            <% end %>
           </div>
-          <% end %>
-        </div>
-      </aside>
-    <% end %>
-  </div>
+        </aside>
+      <% end %>
+    </div>
+  </article>
 
   <article class="topic">
     <header>

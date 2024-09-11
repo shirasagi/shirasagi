@@ -15,40 +15,47 @@
     </nav>
   </header>
 
-  <div class="body markdown-body">
-    <%= @item.html %>
+  <div>
+    <div class="body markdown-body">
+      <%= @item.html %>
+    </div>
+
+    <% if @item.files.present? %>
+      <div class="files">
+        <span class='heading <%= @cur_site.board_files_break == 'horizontal' ? 'd-block' : 'd-inline-block' %>'>
+          <%= I18n.t('modules.addons.gws/file') %>
+        </span>
+        <% @item.files.each do |file| %>
+          <span id="file-<%= file.id %>" class='<%= @cur_site.board_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>'>
+            <i class="material-icons">&#xE226;</i>
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
+            <%= sanitizer_status(file) %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @item.links.present? %>
+      <%= render "gws/board/main/links", links: @item.links %>
+    <% end %>
+
+    <% if @item.severity.present? %>
+      <div class="status">
+        <span class="severity">
+          <label><%= @model.t(:severity) %></label>: <%= @item.label(:severity) %>
+        </span>
+      </div>
+    <% end %>
+
+    <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user)) %>
+      <div class="menu">
+        <%= link_to new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" do %>
+          <span class="material-icons-outlined md-15">reply</span>
+          <span class="button-label"><%= t('gws/board.links.comment') %></span>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
-  <% if @item.files.present? %>
-    <div class="files">
-      <span class='heading <%= @cur_site.board_files_break == 'horizontal' ? 'd-block' : 'd-inline-block' %>'>
-        <%= I18n.t('modules.addons.gws/file') %>
-      </span>
-      <% @item.files.each do |file| %>
-        <span id="file-<%= file.id %>" class='<%= @cur_site.board_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>'>
-          <i class="material-icons">&#xE226;</i>
-          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
-          <%= sanitizer_status(file) %>
-        </span>
-      <% end %>
-    </div>
-  <% end %>
-
-  <% if @item.links.present? %>
-    <%= render "gws/board/main/links", links: @item.links %>
-  <% end %>
-
-  <% if @item.severity.present? %>
-    <div class="status">
-      <span class="severity">
-        <label><%= @model.t(:severity) %></label>: <%= @item.label(:severity) %>
-      </span>
-    </div>
-  <% end %>
-
-  <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user)) %>
-    <div class="menu">
-      <%= link_to t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" %>
-    </div>
-  <% end %>
+  <%= yield if block_given? %>
 </article>

@@ -3,15 +3,15 @@
 menu = []
 if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
   link = new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
-  menu << link_to(t('gws/qna.links.comment'), link, class: "btn primary")
+  menu << link_to(link, class: "btn primary") { tag.span("reply", class: "material-icons-outlined md-15") + tag.span(t('gws/qna.links.comment'), class: "button-label") }
 end
 if comment.allowed?(:edit, @cur_user, site: @cur_site)
   link = edit_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(t('ss.links.edit'), link, class: "btn")
+  menu << link_to(tag.span("edit", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.edit'))
 end
 if comment.allowed?(:delete, @cur_user, site: @cur_site)
   link = delete_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(t('ss.links.delete'), link, class: "btn")
+  menu << link_to(tag.span("delete", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.delete'))
 end
 if @item.resolved?
   menu = []
@@ -19,7 +19,7 @@ end
 
 %>
 <aside class="comment" id="post-<%= comment.id %>">
-  <header class="<%= 'toggle-head' if recursion %>">
+  <header class="toggle-head">
     <h2><%= comment.name %></h2>
     <nav class="meta">
       <span class="user"><%= gws_public_user_long_name(comment.contributor_name.presence || comment.user_long_name) %></span>
@@ -27,7 +27,7 @@ end
     </nav>
   </header>
 
-  <div class="toggle-body <%= 'hide' if recursion %>">
+  <div class="toggle-body">
     <div class="body markdown-body"><%= comment.html %></div>
 
     <% if comment.files.present? %>

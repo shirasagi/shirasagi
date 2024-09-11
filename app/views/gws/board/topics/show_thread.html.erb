@@ -1,10 +1,10 @@
 <div class="gws-board gws-board-thread">
-  <%= render 'show_topic' %>
-
-  <% if @item.children.present? %>
-  <div class="comments">
-    <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
-  </div>
+  <%= render 'show_topic' do %>
+    <% if @item.children.present? %>
+    <div class="comments">
+      <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false, depth: 0 } %>
+    </div>
+    <% end %>
   <% end %>
 
   <% if @item.subscribed_users.present? %>
