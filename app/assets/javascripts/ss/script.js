@@ -211,7 +211,7 @@ SS.ready(function () {
       return $(".dropdown-menu").removeClass('active');
     }
   });
-  $(".dropdown-toggle").on("click", function (e) {
+  $(document).on("click", ".dropdown-toggle", function (e) {
     var $this = $(this);
     var $target = $(e.target);
     var ref = $this.data('ref');
