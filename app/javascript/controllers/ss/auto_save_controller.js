@@ -37,6 +37,7 @@ export default class extends Controller {
     window.addEventListener("beforeunload", this.#beforeUnloadHandler);
 
     const autoSaveData = localStorage.getItem(this.#key());
+    localStorage.removeItem(this.#key())
     if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing"))) {
       await this.#restoreForm(autoSaveData);
     }
@@ -78,6 +79,10 @@ export default class extends Controller {
   }
 
   #serializeFormData() {
+    if (!SS.formChanged) {
+      return;
+    }
+
     Object.values(CKEDITOR.instances).forEach((editor) => {
       if (!editor.checkDirty()) {
         return;
