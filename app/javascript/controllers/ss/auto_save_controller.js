@@ -192,6 +192,7 @@ export default class extends Controller {
     SS.renderAjaxBox();
     SS_SearchUI.render();
     SS_DropdownToggle.render();
+    SS.renderFileUpload();
   }
 
   #isSessionAlive() {
