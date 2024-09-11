@@ -82,6 +82,15 @@ module Gws::Elasticsearch::Indexer::Base
     self.class.url_helpers
   end
 
+
+  def each_item(criteria: nil, ids: nil, &block)
+    criteria ||= self.class.model.site(site).without_deleted
+    ids ||= @ids
+    ids.each_slice(20) do |ids|
+      criteria.in(id: ids).to_a.each(&block)
+    end
+  end
+
   def item
     @item ||= model.find(@id)
   end
@@ -103,8 +112,9 @@ module Gws::Elasticsearch::Indexer::Base
   end
 
   def index(options)
-    @id = options[:id]
+    @ids = Array(options[:id])
     @remove_file_ids = options[:remove_file_ids].presence || []
+    @recursive = options[:recursive]
 
     es_client = self.site.elasticsearch_client
     return unless es_client

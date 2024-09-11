@@ -14,11 +14,20 @@ class Gws::Elasticsearch::Indexer::CircularPostJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << self.class.convert_to_doc(self.site, item, item)
-      item.files.each do |file|
-        y << self.class.convert_file_to_doc(self.site, item, item, file)
+      each_item do |item|
+        y << self.class.convert_to_doc(self.site, item, item)
+        item.files.each do |file|
+          y << self.class.convert_file_to_doc(self.site, item, item, file)
+        end
+      end
+
+      if @recursive
+        criteria = Gws::Circular::Comment.site(site).without_deleted
+        all_comment_ids = criteria.in(post_id: @ids).pluck(:id)
+        each_item(criteria: criteria, ids: all_comment_ids) do |comment|
+          y << self.class.convert_to_doc(self.site, comment.post, comment)
+        end
       end
     end
   end
 end
-

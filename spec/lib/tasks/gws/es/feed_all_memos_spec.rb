@@ -28,10 +28,16 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     let!(:recipient0) { create(:gws_user, group_ids: [ site.id ], gws_role_ids: gws_user.gws_role_ids) }
     let!(:recipient1) { create(:gws_user, group_ids: [ site.id ], gws_role_ids: gws_user.gws_role_ids) }
     let!(:recipient2) { create(:gws_user, group_ids: [ site.id ], gws_role_ids: gws_user.gws_role_ids) }
-    let!(:file) do
-      tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", binary: true, content_type: 'image/png')
+    let!(:message1) do
+      file = tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", binary: true, content_type: 'image/png')
+      create(
+        :gws_memo_message, cur_site: site, cur_user: user, state: "public",
+        in_to_members: [ recipient0.id ], in_cc_members: [ recipient1.id ], in_bcc_members: [ recipient2.id ],
+        file_ids: [file.id]
+      )
     end
-    let!(:message) do
+    let!(:message2) do
+      file = tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", binary: true, content_type: 'image/png')
       create(
         :gws_memo_message, cur_site: site, cur_user: user, state: "public",
         in_to_members: [ recipient0.id ], in_cc_members: [ recipient1.id ], in_bcc_members: [ recipient2.id ],
@@ -44,7 +50,18 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_memos }.to output(include("- #{message.subject}\n")).to_stdout
+      expect { described_class.feed_all_memos }.to output(include("gws/memo/message\n")).to_stdout
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      ::Gws::Elasticsearch.refresh_index(site: site)
+      site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
+        expect(es_docs["hits"]["hits"].length).to eq 4
+      end
     end
   end
 end

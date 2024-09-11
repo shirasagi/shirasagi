@@ -22,8 +22,19 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << convert_to_doc
-      item.files.each { |file| y << convert_file_to_doc(file) }
+      each_item(criteria: ::Gws::Memo::Message.site(site)) do |item|
+        if item.list_message?
+          item = item.to_list_message
+        end
+        @id = item.id.to_s
+        @item = item
+
+        y << convert_to_doc
+        item.files.each { |file| y << convert_file_to_doc(file) }
+      ensure
+        @id = nil
+        @item = nil
+      end
     end
   end
 
