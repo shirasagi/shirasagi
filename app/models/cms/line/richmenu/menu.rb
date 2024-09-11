@@ -84,7 +84,7 @@ module Cms::Line::Richmenu
       true
     end
 
-    def file_previewable?(file, user:, member:)
+    def file_previewable?(file, site:, user:, member:)
       true
     end
 

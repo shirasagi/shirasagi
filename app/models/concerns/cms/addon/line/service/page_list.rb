@@ -16,7 +16,7 @@ module Cms::Addon
       "public"
     end
 
-    def file_previewable?(file, user:, member:)
+    def file_previewable?(file, site:, user:, member:)
       true
     end
 

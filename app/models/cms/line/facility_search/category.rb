@@ -35,7 +35,7 @@ class Cms::Line::FacilitySearch::Category
     state == 'public'
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     public?
   end
 
