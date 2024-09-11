@@ -1,28 +1,25 @@
-/* @import url(./style.css); */
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\000031}}
 body {
   /* Font */
   font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
   font-size: 12px;
-
   /* Text color */
   color: #333;
-
   /* Remove the background color to make it transparent */
   background-color: #fff;
-
   margin: 20px;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000315}}
 .cke_editable {
   padding: 5px;
   font-size: 13px;
   line-height: 1.6;
-
   /* Fix for missing scrollbars with RTL texts. (#10488) */
   word-wrap: break-word;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000324}}
 blockquote {
   font-style: italic;
   font-family: Georgia, Times, "Times New Roman", serif;
@@ -32,22 +29,26 @@ blockquote {
   border-width: 0;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000334}}
 .cke_contents_ltr blockquote {
   padding-left: 20px;
   padding-right: 8px;
   border-left-width: 5px;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000342}}
 .cke_contents_rtl blockquote {
   padding-left: 8px;
   padding-right: 20px;
   border-right-width: 5px;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000349}}
 a {
   color: #0782C1;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000353}}
 ol,
 ul,
 dl {
@@ -57,6 +58,7 @@ dl {
   padding: 0 40px;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000362}}
 h1,
 h2,
 h3,
@@ -67,25 +69,28 @@ h6 {
   line-height: 1.2;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000372}}
 hr {
   border: 0px;
   border-top: 1px solid #ccc;
 }
 
-img.right {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000378}}
+img .right {
   border: 1px solid #ccc;
   float: right;
   margin-left: 15px;
   padding: 5px;
 }
-
-img.left {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000384}}
+img .left {
   border: 1px solid #ccc;
   float: left;
   margin-right: 15px;
   padding: 5px;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\0000392}}
 pre {
   white-space: pre-wrap;
   /* CSS 2.1 */
@@ -95,14 +100,17 @@ pre {
   tab-size: 4;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003101}}
 .marker {
   background-color: Yellow;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003105}}
 span[lang] {
   font-style: italic;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003109}}
 figure {
   text-align: center;
   border: solid 1px #ccc;
@@ -113,35 +121,39 @@ figure {
   display: inline-block;
 }
 
-figure>figcaption {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003120}}
+figure > figcaption {
   text-align: center;
   display: block;
   /* For IE8 */
 }
 
-a>img {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003128}}
+a > img {
   padding: 1px;
   margin: 1px;
   border: none;
   outline: 1px solid #0782C1;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003136}}
 p {
   margin-bottom: 20px;
   font-size: 14px;
 }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003139}}
 p img {
   max-width: 100%;
 }
-
 @media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003136}}
   p {
     font-size: 12px;
     line-height: 1.57;
   }
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003148}}
 h2 {
   margin: 30px 0 12px;
   padding: 8px 12px;
@@ -149,13 +161,14 @@ h2 {
   font-weight: bold;
   background-color: #ccf0ff;
 }
-
 @media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003148}}
   h2 {
     font-size: 14px;
   }
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003159}}
 h3 {
   margin-bottom: 12px;
   padding: 0 8px;
@@ -163,87 +176,131 @@ h3 {
   font-weight: bold;
   border-left: 2px solid #003bbc;
 }
-
 @media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003159}}
   h3 {
     font-size: 12px;
   }
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003170}}
 h4 {
   margin-bottom: 12px;
   font-size: 14px;
   font-weight: bold;
   color: #003bbc;
 }
-
 @media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003170}}
   h4 {
     font-size: 12px;
   }
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003180}}
 ul,
 ol {
   margin-bottom: 20px;
   padding-left: 1em;
   font-size: 14px;
 }
-
 @media only screen and (max-width: 768px) {
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003180}}
   ul,
   ol {
     font-size: 12px;
   }
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003190}}
 ul {
   list-style-type: disc;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003194}}
 strong {
   font-weight: bold;
 }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003198}}
 table {
   width: 100%;
   margin-bottom: 24px;
   border-collapse: collapse;
   border-spacing: 0;
 }
-
 @media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003198}}
   table {
     font-size: 14px;
   }
 }
-
 @media only screen and (max-width: 480px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003198}}
   table {
     font-size: 12px;
   }
 }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003210}}
 table caption {
   padding: 0 10px;
   color: #003bbc;
   text-align: left;
 }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003215}}
 table p {
   margin-bottom: 0;
 }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003218}}
 table th {
   padding: 3px 8px 0;
   border: 1px solid #ccc;
   background: #ecebe3;
   text-align: left;
 }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003225}}
 table td {
   padding: 3px 8px 0;
   border: 1px solid #ccc;
   font-size: 14px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003232}}
+.column2 {
+  display: flex;
+  gap: 10px;
+  margin: 10px auto;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003236}}
+.column2 .column-item {
+  width: calc((100% - 10px)/2);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003238}}
+.column2 .column-item img {
+  width: 100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003241}}
+.column2 .column-item .caption {
+  margin: 0;
+  font-size: 13px;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003248}}
+.column3 {
+  display: flex;
+  gap: 10px;
+  margin: 10px auto;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003252}}
+.column3 .column-item {
+  width: calc((100% - 20px)/3);
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003254}}
+.column3 .column-item img {
+  width: 100%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/ckeditor_contents\.scss}line{font-family:\00003257}}
+.column3 .column-item .caption {
+  margin: 0;
+  font-size: 13px;
 }

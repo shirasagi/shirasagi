@@ -30,7 +30,7 @@ save_page route: "article/page", filename: "docs/page1.html", name: "インフ�
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids
+  contact_sub_group_ids: @contact_sub_group_ids1
 save_page route: "article/page", filename: "docs/page2.html", name: "コンビニ納付のお知らせ",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["attention"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
@@ -40,7 +40,7 @@ save_page route: "article/page", filename: "docs/page2.html", name: "コンビ�
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids
+  contact_sub_group_ids: @contact_sub_group_ids1
 save_page route: "article/page", filename: "docs/page3.html", name: "平成26年第1回シラサギ市議会定例会を開催します",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -49,7 +49,7 @@ save_page route: "article/page", filename: "docs/page3.html", name: "平成26年
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids
+  contact_sub_group_ids: @contact_sub_group_ids1
 save_page route: "article/page", filename: "docs/page4.html", name: "放射性物質・震災関連情報",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -58,7 +58,7 @@ save_page route: "article/page", filename: "docs/page4.html", name: "放射性�
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids
+  contact_sub_group_ids: @contact_sub_group_ids1
 file_page5_1 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
 file_page5_2 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
 html_page5_1 = []
@@ -118,7 +118,8 @@ save_page route: "article/page", filename: "docs/page5.html", name: "市内の�
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids2
 save_page route: "article/page", filename: "docs/page6.html", name: "還付金詐欺と思われる不審な電話にご注意ください",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
@@ -127,7 +128,8 @@ save_page route: "article/page", filename: "docs/page6.html", name: "還付金�
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids2
 save_page route: "article/page", filename: "docs/page7.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
@@ -136,7 +138,8 @@ save_page route: "article/page", filename: "docs/page7.html", name: "平成26年
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: @contact_sub_group_ids2
 save_page route: "article/page", filename: "docs/page8.html", name: "冬の感染症に備えましょう",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -244,7 +247,7 @@ save_page route: "article/page", filename: "docs/page19.html", name: "自動交�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届", layout_id: @layouts["pages"].id,
-  category_ids: [@categories["attention"].id, @categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
+  category_ids: [@categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
   contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
@@ -521,8 +524,7 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
     @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: ''),
   ],
   category_ids: [
-    @categories["attention"].id, @categories["oshirase"].id, @categories["oshirase/event"].id,
-    @categories["oshirase/kanko"].id
+    @categories["oshirase"].id, @categories["oshirase/event"].id, @categories["oshirase/kanko"].id
   ],
   event_name: '小鷲町　ひまわり祭り',
   event_recurrences: [ recurrence ],
@@ -535,7 +537,7 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
   contact_link_name: @contact.contact_link_name,
   map_points: [
     {
-      name: 'ウェブチップス', loc: [133.6806607, 33.8957612], text: 'ウェブチップス地図説明',
+      name: 'ウェブチップス', loc: [134.5758945, 34.0612009], text: 'ウェブチップス地図説明',
       image: '/assets/img/googlemaps/marker11.png'
     }
   ],
@@ -573,8 +575,8 @@ save_page route: "article/page", filename: "docs/page36.html", name: "令和４�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-file_page37_1 = save_ss_files "ss_files/article/topic.jpeg", filename: "topic.jpeg",
-  name: "topic.jpeg", model: "ss/temp_file"
+file_page37_1 = save_ss_files "ss_files/article/topic1.jpg", filename: "topic1.jpg",
+  name: "topic1.jpg", model: "ss/temp_file"
 save_page route: "article/page", filename: "docs/page37.html", name: "SHIRASAGI川堤防の桜が開花しました。",
   layout_id: @layouts["pages"].id, form_id: @form4.id, thumb_id: file_page37_1.id,
   column_values: [
@@ -594,18 +596,10 @@ save_page route: "article/page", filename: "docs/page37.html", name: "SHIRASAGI�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "docs/page38.html", name: "SHIRASAGI川堤防の桜が開花しました。２",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["topics"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
-
-save_page route: "article/page", filename: "docs/page39.html", name: "SHIRASAGI川堤防の桜が開花しました。３",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+file_page38 = save_ss_files "ss_files/article/topic2.jpg", filename: "topic2.jpg",
+  name: "topic2.jpg", model: "ss/temp_file"
+save_page route: "article/page", filename: "docs/page38.html", name: "シラサギ西公園の睡蓮が見頃です（7月上旬〜中頃）",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, thumb_id: file_page38.id,
   category_ids: [@categories["topics"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
   contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
@@ -725,70 +719,71 @@ save_page route: "article/page", filename: "docs/page48.html", name: "シラサ�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "小しらさぎ南公民館",
-  layout_id: @layouts["general"].id, form_id: @form8.id,
-  column_values: [
-    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '南部'),
-    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
-    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市小白鷺南町12-3")
-  ],
-  category_ids: [@categories["hinanjo/dosya"].id],
-  map_points: [
-    {
-      "name" => "小しらさぎ南公民館", "loc" => [134.560032, 33.974649], "text" => "",
-      "image" => 	"http://demo.devss6.web-tips.co.jp/img/ic-dosha.png"
-    }
-  ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+#save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "小しらさぎ南公民館",
+#  layout_id: @layouts["general"].id, form_id: @form8.id,
+#  column_values: [
+#    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '南部'),
+#    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
+#    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市小白鷺南町12-3")
+#  ],
+#  category_ids: [@categories["hinanjo/dosya"].id],
+#  map_points: [
+#    {
+#      "name" => "小しらさぎ南公民館", "loc" => [134.560032, 33.974649], "text" => "",
+#      "image" => 	"http://demo.devss6.web-tips.co.jp/img/ic-dosha.png"
+#    }
+#  ],
+#  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+#  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+#  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+#  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
+#  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
+#  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo-docs/page50.html", name: "白鷺城展望台",
-  layout_id: @layouts["general"].id, form_id: @form8.id,
-  column_values: [
-    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '北部'),
-    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
-    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市白鷺23-1")
-  ],
-  category_ids: [@categories["hinanjo/thunami"].id],
-  map_points: [
-    {
-      "name" => "白鷺城展望台", "loc" => [134.449601, 34.047952], "text" => "",
-      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-thunami.png"
-    }
-  ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+#save_page route: "article/page", filename: "hinanjo-docs/page50.html", name: "白鷺城展望台",
+#  layout_id: @layouts["general"].id, form_id: @form8.id,
+#  column_values: [
+#    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '北部'),
+#    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
+#    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市白鷺23-1")
+#  ],
+#  category_ids: [@categories["hinanjo/thunami"].id],
+#  map_points: [
+#    {
+#      "name" => "白鷺城展望台", "loc" => [134.449601, 34.047952], "text" => "",
+#      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-thunami.png"
+#    }
+#  ],
+#  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+#  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+#  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+#  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
+#  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
+#  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "hinanjo-docs/page51.html", name: "みらいシラサギ市民パーク",
-  layout_id: @layouts["general"].id, form_id: @form8.id,
-  column_values: [
-    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '東部'),
-    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
-    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市赤鷺町45−6")
-  ],
-  category_ids: [@categories["hinanjo/jishin"].id],
-  map_points: [
-    {
-      "name" => "みらいシラサギ市民パーク", "loc" => [134.53251, 34.038195], "text" => "",
-      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-jishin.png"
-    }
-  ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+#save_page route: "article/page", filename: "hinanjo-docs/page51.html", name: "みらいシラサギ市民パーク",
+#  layout_id: @layouts["general"].id, form_id: @form8.id,
+#  column_values: [
+#    @form_columns8[0].value_type.new(column: @form_columns8[0], value: '東部'),
+#    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "000-0000"),
+#    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "大鷲県白鷺市赤鷺町45−6")
+#  ],
+#  category_ids: [@categories["hinanjo/jishin"].id],
+#  map_points: [
+#    {
+#      "name" => "みらいシラサギ市民パーク", "loc" => [134.53251, 34.038195], "text" => "",
+#      "image" => "http://demo.devss6.web-tips.co.jp/img/ic-jishin.png"
+#    }
+#  ],
+#  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
+#  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
+#  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
+#  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
+#  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
+#  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "population/page52.html", name: "2022年10月3日", form_id: @form7.id,
+save_page route: "article/page", filename: "population/page52.html", name: "2022年10月3日",
+  layout_id: @layouts["pages"].id, form_id: @form7.id,
   column_values: [
     @form_columns7[0].value_type.new(column: @form_columns7[0], value: '777777'),
     @form_columns7[1].value_type.new(column: @form_columns7[1], value: "123456"),
@@ -802,7 +797,8 @@ save_page route: "article/page", filename: "population/page52.html", name: "2022
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-save_page route: "article/page", filename: "population/page53.html", name: "2022年9月1日", form_id: @form7.id,
+save_page route: "article/page", filename: "population/page53.html", name: "2022年9月1日",
+  layout_id: @layouts["pages"].id, form_id: @form7.id,
   column_values: [
     @form_columns7[0].value_type.new(column: @form_columns7[0], value: '66666'),
     @form_columns7[1].value_type.new(column: @form_columns7[1], value: "12345"),

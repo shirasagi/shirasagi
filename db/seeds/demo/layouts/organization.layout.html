@@ -21,11 +21,13 @@
           {{ part "tool" }}
         </div><!-- /.accessibility-inner -->
       </div><!-- .accessibility -->
+
       <header id="head">
         <div class="head__utility-wrap">
           <h1 class="siteinfo__logo">
             <a href="/"><img src="/img/logo.png" alt="シラサギ市" title="シラサギ市 ポータルサイト" /></a>
           </h1>
+
           <div class="head__utility">
             <div class="head__utility-inner">
               <div class="head-search">
@@ -34,13 +36,18 @@
                     <input type="text" title=サイト内検索 placeholder=サイト内検索 class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
                     <ul class="site-search-history" style="display: none;"></ul>
                   </div>
-                  <button type="submit" id="search-button"><img src="/img/ic-search.svg" alt="検索" ></button>
+                  <button type="submit" id="search-button"><img src="/img/ic-search.svg" alt="検索"></button>
                 </form>
               </div>
+
               <div class="head-inquiry">
                 <a href="/inquiry/">お問い合わせ</a>
               </div>
+              <div class="head-inquiry">
+                <a href="/organization/">組織案内</a>
+              </div>
             </div><!-- .head__utility-inner -->
+
             {{ part "keyword" }}
           </div><!-- /.head__utility -->
         </div><!-- /.head__utility-wrap -->
@@ -51,19 +58,23 @@
       <!-- コンテンツ -->
       <div id="wrap">
         <div class="wrap__inner">
+
           <!-- パンくず -->
           {{ part "breadcrumb" }}
 
           <div id="content">
             <!-- メイン -->
             <div id="main">
+
               <div id="anchor-links-wrap" class="anchor-links-wrap"></div>
+
               <div class="main-inner">
                 <!-- use-site-search -->
                 <header id="cat-header">
                   <h1 class="cat-header__title">#{page_name}</h1>
                 </header>
                 <!-- end-use-site-search -->
+
                 <div class="yield-wrap">
                   <!-- use-site-search -->
                   {{ yield }}
@@ -74,6 +85,7 @@
 
             <!-- サイド -->
             <div id="side">
+
               <!-- くらしのガイド -->
               {{ part "guide/catelist" }}
               <!-- オンラインサービス -->
@@ -81,9 +93,12 @@
 
             </div><!-- #side -->
 
-          </div><!--.content-->
-        </div><!--.inner-->
-      </div><!--#wrap-->
+          </div>
+          <!--.content-->
+        </div>
+        <!--.inner-->
+      </div>
+      <!--#wrap-->
 
       <!-- チャットボット -->
       <section id="chat" class="chat">
