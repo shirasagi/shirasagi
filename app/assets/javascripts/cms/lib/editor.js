@@ -124,18 +124,20 @@ this.Cms_Editor_CKEditor = (function () {
     });
 
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
-    CKEDITOR.on('instanceReady', function (ev) {
-      ev.editor.on("change", function () {
-        SS.formChanged = new Date().getTime();
+    CKEDITOR.on('instanceReady', function (outerEv) {
+      var elemet = outerEv.editor.element.$;
+      outerEv.editor.on("change", function () {
+        var event = new CustomEvent("ss:editorChange", { bubbles: true, cancelable: true, composed: true });
+        elemet.dispatchEvent(event);
       });
-      ev.editor.on("beforeCommandExec", function(event) {
+      outerEv.editor.on("beforeCommandExec", function(innerEv) {
         // Show the paste dialog for the paste buttons and right-click paste
-        if (event.data.name === "paste") {
-          event.editor._.forcePasteDialog = true;
+        if (innerEv.data.name === "paste") {
+          innerEv.editor._.forcePasteDialog = true;
         }
         // Don't show the paste dialog for Ctrl+Shift+V
-        if (event.data.name === "pastetext" && event.data.commandData.from === "keystrokeHandler") {
-          event.cancel();
+        if (innerEv.data.name === "pastetext" && innerEv.data.commandData.from === "keystrokeHandler") {
+          innerEv.cancel();
         }
       });
     });
