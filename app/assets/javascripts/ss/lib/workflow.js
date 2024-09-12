@@ -424,7 +424,7 @@ SS_Workflow.prototype = {
     $html.find(".action .action-attach").remove();
     $html.find(".action .action-paste").remove();
     $html.find(".action .action-thumb").remove();
-    $("#selected-files").append($html);
+    $("#selected-files").append($html).trigger("change");
   },
   deleteUploadedFile: function($a) {
     $a.closest("div[data-file-id]").remove();

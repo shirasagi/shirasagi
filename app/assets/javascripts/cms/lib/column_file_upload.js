@@ -52,7 +52,7 @@ Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
         $fileView.html(error);
       },
       complete: function() {
-        $fileView.removeClass("hide");
+        $fileView.removeClass("hide").trigger("change");
       }
     });
   };
@@ -108,7 +108,7 @@ Cms_Column_FileUpload.prototype.selectFile = function($item) {
       $fileView.html(error);
     },
     complete: function() {
-      $fileView.removeClass("hide");
+      $fileView.removeClass("hide").trigger("change");
     }
   });
 };

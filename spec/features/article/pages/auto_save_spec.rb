@@ -110,6 +110,44 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "case: new -> back -> new and cancel restoring auto save -> back -> new" do
+      # このケースでは確認ダイアログが表示されないのが望ましい。
+      it do
+        # new
+        visit article_new_path
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          fill_in "item[name]", with: name
+          fill_in "item[index_name]", with: index_name
+        end
+
+        # back
+        click_on I18n.t("ss.links.back_to_index")
+
+        # new and cancel restoring
+        page.dismiss_confirm(I18n.t("ss.confirm.resume_editing")) do
+          click_on I18n.t("ss.links.new")
+        end
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          expect(find(:fillable_field, "item[name]").value).to be_blank
+          expect(find(:fillable_field, "item[index_name]").value).to be_blank
+        end
+
+        # back
+        click_on I18n.t("ss.links.back_to_index")
+
+        # new
+        click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          # ダイアログが表示されていないので入力できるはず。
+          fill_in "item[name]", with: name
+          fill_in "item[index_name]", with: index_name
+        end
+      end
+    end
   end
 
   context "auto save with form" do
