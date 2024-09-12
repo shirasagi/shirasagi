@@ -567,6 +567,10 @@ $(asdf which bundle) exec rake db:seed name=lp site=lp_
 $(asdf which bundle) exec rake db:seed name=gws
 $(asdf which bundle) exec rake db:seed name=webmail
 
+# CMS ノードとページの生成
+$(asdf which bundle) exec rake cms:generate_nodes
+$(asdf which bundle) exec rake cms:generate_pages
+
 # MongoDB での OpenLayers API 設定
 if command -v mongosh &>/dev/null; then
   echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongosh ss >/dev/null
@@ -574,10 +578,6 @@ else
   echo "Error: MongoDB is not installed or not available in the PATH"
   exit 1
 fi
-
-# CMS ノードとページの生成
-$(asdf which bundle) exec rake cms:generate_nodes
-$(asdf which bundle) exec rake cms:generate_pages
 
 cat <<EOF | crontab
 */15 * * * * /bin/bash -l -c 'cd ${SS_DIR}; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_release_nodes_lock bundle exec rake cms:release_nodes; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_release_pages_lock bundle exec rake cms:release_pages; /usr/bin/flock -x -w 10 ${SS_DIR}/tmp/cms_generate_nodes_lock bundle exec rake cms:generate_nodes' >/dev/null
