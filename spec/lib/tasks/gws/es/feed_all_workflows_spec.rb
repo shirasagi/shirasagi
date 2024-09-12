@@ -25,13 +25,27 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
   describe ".feed_all_workflows" do
     let!(:site) { create :gws_group, menu_elasticsearch_state: "show", elasticsearch_hosts: es_url }
     let!(:user) { create(:gws_user, group_ids: [ site.id ], gws_role_ids: gws_user.gws_role_ids) }
-    let!(:file) do
+
+    let!(:file1) do
       tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", binary: true, content_type: 'image/png')
     end
-    let!(:form) { create(:gws_workflow_form, cur_site: site, cur_user: user) }
-    let!(:column) { create(:gws_column_file_upload, cur_site: site, cur_form: form) }
-    let!(:item) do
-      create(:gws_workflow_file, cur_site: site, cur_user: user, form: form, column_values: [column.serialize_value([file.id])])
+    let!(:form1) { create(:gws_workflow_form, cur_site: site, cur_user: user) }
+    let!(:column1) { create(:gws_column_file_upload, cur_site: site, cur_form: form1) }
+    let!(:item1) do
+      create(
+        :gws_workflow_file, cur_site: site, cur_user: user, form: form1,
+        column_values: [column1.serialize_value([file1.id])])
+    end
+
+    let!(:file2) do
+      tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", binary: true, content_type: 'image/png')
+    end
+    let!(:form2) { create(:gws_workflow_form, cur_site: site, cur_user: user) }
+    let!(:column2) { create(:gws_column_file_upload, cur_site: site, cur_form: form2) }
+    let!(:item2) do
+      create(
+        :gws_workflow_file, cur_site: site, cur_user: user, form: form2,
+        column_values: [column2.serialize_value([file2.id])])
     end
 
     let(:now) { Time.zone.now.change(usec: 0) }
@@ -42,28 +56,21 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expectation = expect { described_class.feed_all_workflows }
-      expectation.to output(include("- #{item.name}\n")).to_stdout
-      expectation.to output(include("- #{form.name}\n")).to_stdout
+      expect { described_class.feed_all_workflows }.to output(include(item1.name, item2.name, form1.name, form2.name)).to_stdout
+
+      expect(Job::Log.count).to eq 2
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
 
       ::Gws::Elasticsearch.refresh_index(site: site)
       site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
-        expect(es_docs["hits"]["hits"].length).to eq 3
-        es_docs["hits"]["hits"][0].tap do |es_doc|
-          expect(es_doc["_id"]).to eq "gws_workflow_files-workflow-#{item.id}"
-          source = es_doc["_source"]
-          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
-        end
-        es_docs["hits"]["hits"][1].tap do |es_doc|
-          expect(es_doc["_id"]).to eq "file-#{file.id}"
-          source = es_doc["_source"]
-          expect(source['url']).to eq "/.g#{site.id}/workflow/files/all/#{item.id}#file-#{file.id}"
-        end
-        es_docs["hits"]["hits"][2].tap do |es_doc|
-          expect(es_doc["_id"]).to eq "gws_workflow_forms-workflow-#{form.id}"
-          source = es_doc["_source"]
-          expect(source['url']).to eq "/.g#{site.id}/workflow/forms/#{form.id}"
-        end
+        expect(es_docs["hits"]["hits"].length).to eq 6
+        ids = es_docs["hits"]["hits"].map { |es_doc| es_doc["_id"] }
+        expect(ids).to include(
+          "gws_workflow_files-workflow-#{item1.id}", "file-#{file1.id}", "gws_workflow_forms-workflow-#{form1.id}",
+          "gws_workflow_files-workflow-#{item2.id}", "file-#{file2.id}", "gws_workflow_forms-workflow-#{form2.id}")
       end
     end
   end

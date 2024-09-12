@@ -41,8 +41,17 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << convert_to_doc
-      item_files.each { |file| y << convert_file_to_doc(file) }
+      each_item do |item|
+        @id = item.id.to_s
+        @item = item
+
+        puts item.name
+        y << convert_to_doc
+        item_files.each { |file| y << convert_file_to_doc(file) }
+      ensure
+        @id = nil
+        @item = nil
+      end
     end
   end
 
