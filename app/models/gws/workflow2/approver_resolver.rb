@@ -131,6 +131,7 @@ class Gws::Workflow2::ApproverResolver
     criteria = Gws::User.all
     criteria = criteria.site(cur_site)
     criteria = criteria.active
+    criteria = criteria.readable_users(cur_user, site: cur_site)
     criteria = criteria.only(*USER_FIELDS)
     criteria = criteria.where(id: user_id)
     @id_user_map[user_id] = criteria.first
@@ -144,6 +145,7 @@ class Gws::Workflow2::ApproverResolver
       criteria = Gws::User.all
       criteria = criteria.site(cur_site)
       criteria = criteria.active
+      criteria = criteria.readable_users(cur_user, site: cur_site)
       criteria = criteria.only(*USER_FIELDS)
       criteria = criteria.in(id: rejected_user_ids)
       criteria.to_a.each do |user|
@@ -151,7 +153,7 @@ class Gws::Workflow2::ApproverResolver
       end
     end
 
-    user_ids.map { |user_id| @id_user_map[user_id] }
+    user_ids.map { |user_id| @id_user_map[user_id] }.compact
   end
 
   def cur_group_users
@@ -159,6 +161,7 @@ class Gws::Workflow2::ApproverResolver
       criteria = Gws::User.all
       criteria = criteria.site(cur_site)
       criteria = criteria.active
+      criteria = criteria.readable_users(cur_user, site: cur_site)
       criteria = criteria.only(*USER_FIELDS)
       criteria = criteria.where(group_ids: cur_group.id)
       criteria.to_a
@@ -322,12 +325,10 @@ class Gws::Workflow2::ApproverResolver
         return []
       end
     end
-    if users.length > 1
-      Rails.logger.info { "multiple superior users found" }
-    end
-    user = Gws::User.order_users_by_title(users, cur_site: cur_site).first
 
-    [ Result.new(level: level, user_type: "superior", user: user, editable: editable) ]
+    users.map do |user|
+      Result.new(level: level, user_type: "superior", user: user, editable: editable)
+    end
   end
 
   def find_superiors_at(type, level)
