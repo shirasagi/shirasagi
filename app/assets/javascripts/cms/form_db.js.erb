@@ -2,7 +2,7 @@
 $('.js-list-select').each(function() {
   var $el = $(this);
   var $table = $el.closest('table');
-  $el.on('click', function(ev) {
+  $el.on('click', function(_ev) {
     $table.find('tbody th input').each(function() {
       $(this).prop('checked', $el.prop('checked'));
     });

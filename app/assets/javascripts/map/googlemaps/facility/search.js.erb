@@ -26,7 +26,7 @@ this.Facility_Search = (function () {
     overrided = Googlemaps_Map.attachMessage;
     Googlemaps_Map.attachMessage = function (id) {
       overrided(id);
-      google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
+      google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (_event) {
         var column, dataID;
         $("#map-sidebar .column").removeClass("current");
         dataID = Googlemaps_Map.markers[id]["id"];
@@ -36,7 +36,7 @@ this.Facility_Search = (function () {
           slideSidebar(column);
         }
       });
-      google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+      google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (_event) {
         $("#map-sidebar .column").removeClass("current");
       });
     };
@@ -86,7 +86,7 @@ this.Facility_Search = (function () {
       $(".filters a.clicked").each(function () {
         return dataIDs.push(parseInt($(this).attr("data-id")));
       });
-      $.each(Googlemaps_Map.markers, function (id, value) {
+      $.each(Googlemaps_Map.markers, function (id, _value) {
         var column, dataID, visible;
         visible = false;
         $.each(dataIDs, function () {
