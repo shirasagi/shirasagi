@@ -18,6 +18,7 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
       each_item do |item|
         @id = item.id.to_s
         @item = item
+        puts item.name
 
         doc = {}
         doc[:collection_name] = index_type

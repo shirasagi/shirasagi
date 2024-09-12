@@ -134,9 +134,8 @@ module Tasks
           end
 
           puts 'gws/memo/message'
-          all_ids = ::Gws::Memo::Message.site(site).pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::MemoMessageJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -153,9 +152,8 @@ module Tasks
           end
 
           puts 'gws/board/topic and gws/board/post'
-          all_ids = ::Gws::Board::Topic.site(site).topic.without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::BoardTopicJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s), recursive: true)
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -172,9 +170,8 @@ module Tasks
           end
 
           puts 'gws/faq/topic and gws/faq/post'
-          all_ids = ::Gws::Faq::Topic.site(site).topic.without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::FaqTopicJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s), recursive: true)
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -191,9 +188,8 @@ module Tasks
           end
 
           puts 'gws/qna/topic and gws/qna/post'
-          all_ids = ::Gws::Qna::Topic.site(site).topic.without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::QnaTopicJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s), recursive: true)
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -210,9 +206,8 @@ module Tasks
           end
 
           puts 'gws/survey/form'
-          all_ids = ::Gws::Survey::Form.site(site).pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::SurveyFormJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -229,9 +224,8 @@ module Tasks
           end
 
           puts 'gws/circular/post and gws/circular/comment'
-          all_ids = ::Gws::Circular::Post.site(site).topic.without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::CircularPostJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s), recursive: true)
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -248,9 +242,8 @@ module Tasks
           end
 
           puts 'gws/monitor/topic and gws/monitor/post'
-          all_ids = ::Gws::Monitor::Topic.site(site).topic.without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::MonitorTopicJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s), recursive: true)
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -267,9 +260,8 @@ module Tasks
           end
 
           puts 'gws/report/file'
-          all_ids = ::Gws::Report::File.site(site).without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::ReportFileJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -286,14 +278,12 @@ module Tasks
           end
 
           puts 'gws/workflow/file'
-          all_ids = ::Gws::Workflow::File.site(site).without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::WorkflowFileJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
 
           puts 'gws/workflow/form'
-          all_ids = ::Gws::Workflow::Form.site(site).pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::WorkflowFormJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -310,9 +300,8 @@ module Tasks
           end
 
           puts 'gws/workflow2/file'
-          all_ids = ::Gws::Workflow2::File.site(site).without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::Workflow2FileJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -329,9 +318,8 @@ module Tasks
           end
 
           puts 'gws/share/file'
-          all_ids = ::Gws::Share::File.site(site).without_deleted.pluck(:id)
           job = ::Gws::Elasticsearch::Indexer::ShareFileJob.bind(site_id: site)
-          job.perform_now(action: 'index', id: all_ids.map(&:to_s))
+          job.perform_now(action: 'index', id: :all)
         end
       end
 
@@ -348,11 +336,8 @@ module Tasks
       #    end
       #
       #    puts 'gws/workload/work'
-      #    ::Tasks::Gws::Base.each_item(::Gws::Workload::Work.site(site).without_deleted) do |work|
-      #      puts "- #{work.name}"
-      #      job = ::Gws::Elasticsearch::Indexer::WorkloadWorkJob.bind(site_id: site)
-      #      job.perform_now(action: 'index', id: work.id.to_s)
-      #    end
+      #    job = ::Gws::Elasticsearch::Indexer::WorkloadWorkJob.bind(site_id: site)
+      #    job.perform_now(action: 'index', id: :all)
       #  end
       #end
 

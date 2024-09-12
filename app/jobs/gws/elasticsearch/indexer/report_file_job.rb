@@ -45,6 +45,7 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
         @id = item.id.to_s
         @item = item
 
+        puts item.name
         y << convert_to_doc
         item_files.each { |file| y << convert_file_to_doc(file) }
       ensure

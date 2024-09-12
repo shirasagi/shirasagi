@@ -58,7 +58,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_workflows2 }.to output(include("gws/workflow2/file\n")).to_stdout
+      expect { described_class.feed_all_workflows2 }.to output(include(item1.name, item2.name)).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|

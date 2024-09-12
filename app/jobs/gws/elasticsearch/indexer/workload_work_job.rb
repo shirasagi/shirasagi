@@ -19,6 +19,7 @@ class Gws::Elasticsearch::Indexer::WorkloadWorkJob < Gws::ApplicationJob
       each_item do |item|
         @id = item.id.to_s
         @item = item
+        puts item.name
 
         y << convert_to_doc
         item.files.each do |file|

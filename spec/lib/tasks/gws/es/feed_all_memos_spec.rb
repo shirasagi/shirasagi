@@ -50,7 +50,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_memos }.to output(include("gws/memo/message\n")).to_stdout
+      expect { described_class.feed_all_memos }.to output(include(message1.subject, message2.subject)).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|

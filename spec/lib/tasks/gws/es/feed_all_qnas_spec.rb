@@ -55,7 +55,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_qnas }.to output(include("gws/qna/topic and gws/qna/post\n")).to_stdout
+      expect { described_class.feed_all_qnas }.to output(include(post1.name, post2.name)).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|

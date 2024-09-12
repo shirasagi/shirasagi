@@ -29,6 +29,7 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
         @id = item.id.to_s
         @item = item
 
+        puts item.subject
         y << convert_to_doc
         item.files.each { |file| y << convert_file_to_doc(file) }
       ensure

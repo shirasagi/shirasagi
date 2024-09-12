@@ -33,7 +33,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_surveys }.to output(include("gws/survey/form\n")).to_stdout
+      expect { described_class.feed_all_surveys }.to output(include(form1.name, form2.name)).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|

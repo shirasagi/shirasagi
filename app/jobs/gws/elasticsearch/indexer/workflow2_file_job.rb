@@ -50,6 +50,7 @@ class Gws::Elasticsearch::Indexer::Workflow2FileJob < Gws::ApplicationJob
       each_item do |item|
         @id = item.id.to_s
         @item = item
+        puts item.name
 
         y << convert_to_doc
         item_files.each { |file| y << convert_file_to_doc(file) }

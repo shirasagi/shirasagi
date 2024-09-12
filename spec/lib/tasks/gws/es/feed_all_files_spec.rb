@@ -42,7 +42,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_files }.to output(include("gws/share/file\n")).to_stdout
+      expect { described_class.feed_all_files }.to output(include(file1.name, file2.name)).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|

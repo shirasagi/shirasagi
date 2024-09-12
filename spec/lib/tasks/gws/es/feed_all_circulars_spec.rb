@@ -64,7 +64,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     it do
-      expect { described_class.feed_all_circulars }.to output(include("gws/circular/post and gws/circular/comment\n")).to_stdout
+      expect { described_class.feed_all_circulars }.to output(include(comment1.name, comment2.name)).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
