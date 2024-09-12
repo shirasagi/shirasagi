@@ -73,7 +73,9 @@ module Gws::Elasticsearch::Indexer::Base
     options = options.dup
     action = options.delete(:action)
 
-    self.send(action, options)
+    Rails.logger.tagged(site.name) do
+      self.send(action, options)
+    end
   end
 
   private
@@ -82,18 +84,28 @@ module Gws::Elasticsearch::Indexer::Base
     self.class.url_helpers
   end
 
-  def each_item(criteria: nil, ids: nil, &block)
+  def each_item(criteria: nil, &_block)
     criteria ||= self.class.model.site(site).without_deleted
 
     case @original_id
     when :all
-      ids ||= criteria.pluck(:id)
-      ids.each_slice(20) do |sub_ids|
-        criteria.in(id: sub_ids).to_a.each(&block)
+      all_ids = criteria.pluck(:id)
+      all_ids.each_slice(100) do |ids|
+        items = criteria.in(id: ids).to_a
+        items.each do |item|
+          Rails.logger.tagged("#{item.class.name}(#{item.id})") do
+            yield item
+          end
+        end
       end
     else
       criteria ||= self.class.model.site(site).without_deleted
-      yield criteria.where(id: @original_id).first
+      item = criteria.where(id: @original_id).first
+      if item
+        Rails.logger.tagged("#{item.class.name}(#{item.id})") do
+          yield item
+        end
+      end
     end
   end
 
