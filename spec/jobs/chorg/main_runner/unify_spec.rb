@@ -189,7 +189,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check group
         expect { Cms::Group.find(source_group2.id) }.to raise_error Mongoid::Errors::DocumentNotFound
-        expect { Cms::Group.find(source_group2.name) }.to raise_error Mongoid::Errors::DocumentNotFound
+        expect { Cms::Group.find_by(name: source_group2.name) }.to raise_error Mongoid::Errors::DocumentNotFound
         group_after_unify = Cms::Group.find(source_group1.id).tap do |group_after_unify|
           destination0 = changeset.destinations[0]
           expect(group_after_unify.name).to eq destination0["name"]
@@ -405,9 +405,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check group
         expect { Cms::Group.find(source_group1.id) }.to raise_error Mongoid::Errors::DocumentNotFound
-        expect { Cms::Group.find(source_group1.name) }.to raise_error Mongoid::Errors::DocumentNotFound
+        expect { Cms::Group.find_by(name: source_group1.name) }.to raise_error Mongoid::Errors::DocumentNotFound
         expect { Cms::Group.find(source_group2.id) }.to raise_error Mongoid::Errors::DocumentNotFound
-        expect { Cms::Group.find(source_group2.name) }.to raise_error Mongoid::Errors::DocumentNotFound
+        expect { Cms::Group.find_by(name: source_group2.name) }.to raise_error Mongoid::Errors::DocumentNotFound
         group_after_unify = Cms::Group.find(destination_group.id).tap do |group_after_unify|
           expect(group_after_unify.id).to eq destination_group.id
           destination0 = changeset.destinations.first
