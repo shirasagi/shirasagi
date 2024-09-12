@@ -60,29 +60,6 @@ article_map_search_categories = [
 ]
 article_map_search.st_category_ids = article_map_search_categories.map(&:id)
 article_map_search.update
-save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
-  view_route: "cms/node", page_layout_id: @layouts["general"].id, st_form_ids: [@form8.id],
-  conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
-  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0,
-  st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
-@node_form_db1 = save_node route: "article/page", filename: "hinanjo-docs/dosya", name: "土砂災害",
-  layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
-@node_form_db2 = save_node route: "article/page", filename: "hinanjo-docs/jishin", name: "地震",
-  layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
-@node_form_db3 = save_node route: "article/page", filename: "hinanjo-docs/thunami", name: "津波",
-  layout_id: @layouts["more"].id, st_form_ids: [@form8.id], st_form_default_id: @form8.id
-save_node route: "article/page", filename: "population", name: "人口・世帯数",
-  layout_id: @layouts["pages"].id, st_form_ids: [@form7.id], st_form_default_id: @form7.id,
-  new_days: 0
-
-@form_db1.node = @node_form_db1
-@form_db1.update
-
-@form_db2.node = @node_form_db2
-@form_db2.update
-
-@form_db3.node = @node_form_db3
-@form_db3.update
 
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
@@ -496,6 +473,34 @@ save_node route: "ckan/page", filename: "ckan", name: "CKAN", layout_id: @layout
 ## import node
 save_node route: "cms/import_node", filename: "testf", name: "取込ページ", layout_id: @layouts["general"].id,
   new_days: 0
+
+## form db
+save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
+  view_route: "cms/node", page_layout_id: @layouts["general"].id, st_form_ids: [@form8.id],
+  conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
+  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0,
+  st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
+@node_form_db1 = save_node route: "article/page", filename: "hinanjo-docs/dosya", name: "土砂災害",
+  layout_id: @layouts["more"].id, st_category_ids: [@categories["hinanjo/dosya"].id],
+  st_form_ids: [@form8.id], st_form_default_id: @form8.id
+@node_form_db2 = save_node route: "article/page", filename: "hinanjo-docs/jishin", name: "地震",
+  layout_id: @layouts["more"].id, st_category_ids: [@categories["hinanjo/jishin"].id],
+  st_form_ids: [@form8.id], st_form_default_id: @form8.id
+@node_form_db3 = save_node route: "article/page", filename: "hinanjo-docs/thunami", name: "津波",
+  layout_id: @layouts["more"].id, st_category_ids: [@categories["hinanjo/thunami"].id],
+  st_form_ids: [@form8.id], st_form_default_id: @form8.id
+save_node route: "article/page", filename: "population", name: "人口・世帯数",
+  layout_id: @layouts["pages"].id, st_form_ids: [@form7.id], st_form_default_id: @form7.id,
+  new_days: 0
+
+@form_db1.node = @node_form_db1
+@form_db1.update
+
+@form_db2.node = @node_form_db2
+@form_db2.update
+
+@form_db3.node = @node_form_db3
+@form_db3.update
 
 ## lsorg
 @lsorg_node = save_node route: "lsorg/node", filename: "organization", name: "組織案内",

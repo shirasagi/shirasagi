@@ -1,5 +1,3 @@
-# rubocop:disable Naming/VariableNumber
-
 puts "# articles"
 
 def save_page(data)
@@ -813,4 +811,152 @@ save_page route: "article/page", filename: "population/page53.html", name: "2022
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
-# rubocop:enable Naming/VariableNumber
+save_page route: "article/page", filename: "hinanjo-docs/dosya/page359.html", name: "シラサギ地域活動センター",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "東部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000005"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0004"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "シラサギ地域活動センター"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "シラサギチイキカツドウセンター"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市小鷺町石井"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "525")
+  ],
+  category_ids: [@categories["hinanjo/dosya"].id],
+  map_points: [{ name: "", loc: [134.575514, 34.065344], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/dosya/page361.html", name: "白鷺城展望台",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "東部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000006"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0005"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "白鷺城展望台"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "シラサギジョウテンボウダイ"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市小鷺町石井"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "1625")
+  ],
+  category_ids: [@categories["hinanjo/dosya"].id],
+  map_points: [{ name: "", loc: [134.577798, 34.063566], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/dosya/page362.html", name: "小しらさぎ南公民館",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "南部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000009"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0008"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "小しらさぎ南公民館"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "コシラサギミナミコウミンカイ"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市南鷺町字中野"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "625")
+  ],
+  category_ids: [@categories["hinanjo/dosya"].id],
+  map_points: [{ name: "", loc: [134.560032, 33.974649], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/jishin/page365.html", name: "小鷲西地域活動センター",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "北部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000002"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0001"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "小鷲西地域活動センター"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "コシラサギニシチイキカツドウセンター"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市白鷺町字山瀬"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "1375")
+  ],
+  category_ids: [@categories["hinanjo/jishin"].id],
+  map_points: [{ name: "", loc: [134.569323, 34.071022], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/jishin/page366.html", name: "小鷲北交流館",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "東部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000004"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0003"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "小鷲北交流館"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "コシラサギキタコウリュウカン"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市小鷺町石井"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "825")
+  ],
+  category_ids: [@categories["hinanjo/jishin"].id],
+  map_points: [{ name: "", loc: [134.574289, 34.064161], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/jishin/page367.html", name: "シラサギ防災交流センター",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "南部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000007"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0006"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "シラサギ防災交流センター"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "シラサギボウサイコウリュウセンター"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市南鷺町字中野"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "125")
+  ],
+  category_ids: [@categories["hinanjo/jishin"].id],
+  map_points: [{ name: "", loc: [134.577481, 34.064719], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/jishin/page368.html", name: "小鷲地域活動センター",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "南部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000008"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0007"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "小鷲地域活動センター"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "シラサギチイキカツドウセンター"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市南鷺町字中野"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "600")
+  ],
+  category_ids: [@categories["hinanjo/jishin"].id],
+  map_points: [{ name: "", loc: [134.577055, 34.065466], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/thunami/page360.html", name: "小鷲町市民サービスセンター",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "北部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000001"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0000"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "小鷲町市民サービスセンター"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "コシラサギチョウシミンサービスセンター"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市白鷺町字山瀬"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "575")
+  ],
+  category_ids: [@categories["hinanjo/thunami"].id],
+  map_points: [{ name: "", loc: [134.571645, 34.072568], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/thunami/page363.html", name: "小鷲東地域活動センター",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "北部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000003"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0002"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "小鷲東地域活動センター"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "コシラサギヒガシチイキカツドウセンター"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市白鷺町字山瀬"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "850")
+  ],
+  category_ids: [@categories["hinanjo/thunami"].id],
+  map_points: [{ name: "", loc: [134.569984, 34.066887], text: "" }]
+
+save_page route: "article/page", filename: "hinanjo-docs/thunami/page364.html", name: "シラサギ市立中学校",
+  layout_id: @layouts["general"].id, form_id: @form8.id,
+  column_values: [
+    @form_columns8[0].value_type.new(column: @form_columns8[0], value: "南部"),
+    @form_columns8[1].value_type.new(column: @form_columns8[1], value: "2024ES000010"),
+    @form_columns8[2].value_type.new(column: @form_columns8[2], value: "000-0009"),
+    @form_columns8[3].value_type.new(column: @form_columns8[3], value: "シラサギ市立中学校"),
+    @form_columns8[4].value_type.new(column: @form_columns8[4], value: "シラサギシリツチュウガッコウ"),
+    @form_columns8[5].value_type.new(column: @form_columns8[5], value: "大鷲県シラサギ市南鷺町字中野"),
+    @form_columns8[6].value_type.new(column: @form_columns8[6], value: "0000-00-0000"),
+    @form_columns8[7].value_type.new(column: @form_columns8[7], value: "5500")
+  ],
+  category_ids: [@categories["hinanjo/thunami"].id],
+  map_points: [{ name: "", loc: [134.580335, 34.066298], text: "" }]
