@@ -12,7 +12,7 @@ module Job::SS::Loggable
     prev_job_log = Job::TaskLogger.attach(job_log)
     ret = nil
     begin
-      Rails.logger.info("Started Job #{job_id}")
+      Rails.logger.info("Started Job #{job_id} on #{Rails.application.hostname}(#{Rails.application.ip_address})")
       job_log.state = Job::Log::STATE_RUNNING
       job_log.started = Time.zone.now
       job_log.save

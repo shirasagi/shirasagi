@@ -21,7 +21,16 @@ class Gws::Elasticsearch::Indexer::WorkflowFormJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << convert_to_doc
+      each_item do |item|
+        @id = item.id.to_s
+        @item = item
+        puts item.name
+
+        y << convert_to_doc
+      ensure
+        @id = nil
+        @item = nil
+      end
     end
   end
 

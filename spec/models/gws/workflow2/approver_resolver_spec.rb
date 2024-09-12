@@ -2,16 +2,22 @@ require 'spec_helper'
 
 describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
   let!(:site) { gws_site }
-  let!(:user) { gws_user }
-  let!(:group) { gws_user.groups.first }
+  let!(:minimum_role) { create(:gws_role, cur_site: site, permissions: %w(use_gws_workflow2)) }
+  let!(:user) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: [ minimum_role.id ]) }
+  let!(:group) { user.groups.first }
   let(:item) { Gws::Workflow2::File.new }
 
   context "with :my_group" do
     context "with superior" do
-      let!(:superior_user) { create(:gws_user, group_ids: user.group_ids, gws_role_ids: user.gws_role_ids) }
+      let!(:superior_user1) { create(:gws_user, group_ids: user.group_ids, gws_role_ids: user.gws_role_ids) }
+      let!(:superior_user2) { create(:gws_user, group_ids: user.group_ids, gws_role_ids: user.gws_role_ids) }
+      let!(:superior_user3) do
+        # superior_user1だけが見える
+        create(:gws_user, group_ids: user.group_ids, gws_role_ids: user.gws_role_ids, readable_member_ids: [ superior_user1.id ])
+      end
 
       before do
-        group.update(superior_user_ids: [ superior_user.id ])
+        group.update(superior_user_ids: [ superior_user1.id, superior_user2.id, superior_user3.id ])
       end
 
       it do
@@ -19,14 +25,12 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
           cur_site: site, cur_user: user, cur_group: group, route: :my_group, item: item)
         resolver.resolve
 
-        expect(resolver.workflow_approvers).to have(1).items
-        resolver.workflow_approvers[0].tap do |approver|
-          expect(approver.level).to eq 1
-          expect(approver.user_type).to eq 'superior'
-          expect(approver.user.id).to eq superior_user.id
-          expect(approver.editable).to be_falsey
-          expect(approver.error).to be_blank
-        end
+        expect(resolver.workflow_approvers).to have(2).items
+        expect(resolver.workflow_approvers.map(&:level).uniq).to eq [1]
+        expect(resolver.workflow_approvers.map(&:user_type).uniq).to eq %w(superior)
+        expect(resolver.workflow_approvers.map(&:user).map(&:id)).to include(superior_user1.id, superior_user2.id)
+        expect(resolver.workflow_approvers.map(&:editable).uniq).to eq [ nil ]
+        expect(resolver.workflow_approvers.map(&:error).uniq).to eq [ nil ]
         expect(resolver.workflow_circulations).to be_blank
       end
     end
@@ -227,14 +231,41 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
             ]
           )
         end
-        let!(:user1) do
+        let!(:user1_1) do
           create(:gws_user, occupation_ids: [ occupation1.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
         end
-        let!(:user2) do
+        let!(:user1_2) do
+          create(:gws_user, occupation_ids: [ occupation1.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user1_3) do
+          # user1_1だけが見える
+          create(
+            :gws_user, occupation_ids: [ occupation1.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids,
+            readable_member_ids: [ user1_1.id ])
+        end
+        let!(:user2_1) do
           create(:gws_user, occupation_ids: [ occupation2.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
         end
-        let!(:user3) do
+        let!(:user2_2) do
+          create(:gws_user, occupation_ids: [ occupation2.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user2_3) do
+          # user2_1だけが見える
+          create(
+            :gws_user, occupation_ids: [ occupation2.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids,
+            readable_member_ids: [ user2_1.id ])
+        end
+        let!(:user3_1) do
           create(:gws_user, occupation_ids: [ occupation3.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user3_2) do
+          create(:gws_user, occupation_ids: [ occupation3.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user3_3) do
+          # user3_1だけが見える
+          create(
+            :gws_user, occupation_ids: [ occupation3.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids,
+            readable_member_ids: [ user3_1.id ])
         end
 
         it do
@@ -242,46 +273,85 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
             cur_site: site, cur_user: user, cur_group: group, route: route, item: item)
           resolver.resolve
 
-          expect(resolver.workflow_approvers).to have(3).items
+          expect(resolver.workflow_approvers).to have(6).items
           resolver.workflow_approvers[0].tap do |approver|
             expect(approver.level).to eq 1
             expect(approver.user_type).to eq Gws::UserOccupation.name
-            expect(approver.user.id).to eq user1.id
+            expect(approver.user.id).to eq user1_1.id
             expect(approver.editable).to be_falsey
             expect(approver.error).to be_blank
           end
           resolver.workflow_approvers[1].tap do |approver|
-            expect(approver.level).to eq 2
+            expect(approver.level).to eq 1
             expect(approver.user_type).to eq Gws::UserOccupation.name
-            expect(approver.user.id).to eq user2.id
-            expect(approver.editable).to be_truthy
+            expect(approver.user.id).to eq user1_2.id
+            expect(approver.editable).to be_falsey
             expect(approver.error).to be_blank
           end
           resolver.workflow_approvers[2].tap do |approver|
+            expect(approver.level).to eq 2
+            expect(approver.user_type).to eq Gws::UserOccupation.name
+            expect(approver.user.id).to eq user2_1.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[3].tap do |approver|
+            expect(approver.level).to eq 2
+            expect(approver.user_type).to eq Gws::UserOccupation.name
+            expect(approver.user.id).to eq user2_2.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[4].tap do |approver|
             expect(approver.level).to eq 3
             expect(approver.user_type).to eq Gws::UserOccupation.name
-            expect(approver.user.id).to eq user3.id
+            expect(approver.user.id).to eq user3_1.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[5].tap do |approver|
+            expect(approver.level).to eq 3
+            expect(approver.user_type).to eq Gws::UserOccupation.name
+            expect(approver.user.id).to eq user3_2.id
             expect(approver.editable).to be_truthy
             expect(approver.error).to be_blank
           end
 
-          expect(resolver.workflow_circulations).to have(3).items
+          expect(resolver.workflow_circulations).to have(6).items
           resolver.workflow_circulations[0].tap do |circulation|
             expect(circulation.level).to eq 1
             expect(circulation.user_type).to eq Gws::UserOccupation.name
-            expect(circulation.user.id).to eq user3.id
+            expect(circulation.user.id).to eq user3_1.id
             expect(circulation.error).to be_blank
           end
           resolver.workflow_circulations[1].tap do |circulation|
-            expect(circulation.level).to eq 2
+            expect(circulation.level).to eq 1
             expect(circulation.user_type).to eq Gws::UserOccupation.name
-            expect(circulation.user.id).to eq user1.id
+            expect(circulation.user.id).to eq user3_2.id
             expect(circulation.error).to be_blank
           end
           resolver.workflow_circulations[2].tap do |circulation|
+            expect(circulation.level).to eq 2
+            expect(circulation.user_type).to eq Gws::UserOccupation.name
+            expect(circulation.user.id).to eq user1_1.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[3].tap do |circulation|
+            expect(circulation.level).to eq 2
+            expect(circulation.user_type).to eq Gws::UserOccupation.name
+            expect(circulation.user.id).to eq user1_2.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[4].tap do |circulation|
             expect(circulation.level).to eq 3
             expect(circulation.user_type).to eq Gws::UserOccupation.name
-            expect(circulation.user.id).to eq user2.id
+            expect(circulation.user.id).to eq user2_1.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[5].tap do |circulation|
+            expect(circulation.level).to eq 3
+            expect(circulation.user_type).to eq Gws::UserOccupation.name
+            expect(circulation.user.id).to eq user2_2.id
             expect(circulation.error).to be_blank
           end
         end
@@ -386,14 +456,41 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
             ]
           )
         end
-        let!(:user1) do
+        let!(:user1_1) do
           create(:gws_user, title_ids: [ title1.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
         end
-        let!(:user2) do
+        let!(:user1_2) do
+          create(:gws_user, title_ids: [ title1.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user1_3) do
+          # user1_1だけが見える
+          create(
+            :gws_user, title_ids: [ title1.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids,
+            readable_member_ids: [ user1_1.id ])
+        end
+        let!(:user2_1) do
           create(:gws_user, title_ids: [ title2.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
         end
-        let!(:user3) do
+        let!(:user2_2) do
+          create(:gws_user, title_ids: [ title2.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user2_3) do
+          # user2_1だけが見える
+          create(
+            :gws_user, title_ids: [ title2.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids,
+            readable_member_ids: [ user2_1.id ])
+        end
+        let!(:user3_1) do
           create(:gws_user, title_ids: [ title3.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user3_2) do
+          create(:gws_user, title_ids: [ title3.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids)
+        end
+        let!(:user3_3) do
+          # user3_1だけが見える
+          create(
+            :gws_user, title_ids: [ title3.id ], group_ids: [ group.id ], gws_role_ids: user.gws_role_ids,
+            readable_member_ids: [ user3_1.id ])
         end
 
         it do
@@ -401,46 +498,85 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
             cur_site: site, cur_user: user, cur_group: group, route: route, item: item)
           resolver.resolve
 
-          expect(resolver.workflow_approvers).to have(3).items
+          expect(resolver.workflow_approvers).to have(6).items
           resolver.workflow_approvers[0].tap do |approver|
             expect(approver.level).to eq 1
             expect(approver.user_type).to eq Gws::UserTitle.name
-            expect(approver.user.id).to eq user1.id
+            expect(approver.user.id).to eq user1_1.id
             expect(approver.editable).to be_falsey
             expect(approver.error).to be_blank
           end
           resolver.workflow_approvers[1].tap do |approver|
-            expect(approver.level).to eq 2
+            expect(approver.level).to eq 1
             expect(approver.user_type).to eq Gws::UserTitle.name
-            expect(approver.user.id).to eq user2.id
-            expect(approver.editable).to be_truthy
+            expect(approver.user.id).to eq user1_2.id
+            expect(approver.editable).to be_falsey
             expect(approver.error).to be_blank
           end
           resolver.workflow_approvers[2].tap do |approver|
+            expect(approver.level).to eq 2
+            expect(approver.user_type).to eq Gws::UserTitle.name
+            expect(approver.user.id).to eq user2_1.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[3].tap do |approver|
+            expect(approver.level).to eq 2
+            expect(approver.user_type).to eq Gws::UserTitle.name
+            expect(approver.user.id).to eq user2_2.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[4].tap do |approver|
             expect(approver.level).to eq 3
             expect(approver.user_type).to eq Gws::UserTitle.name
-            expect(approver.user.id).to eq user3.id
+            expect(approver.user.id).to eq user3_1.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[5].tap do |approver|
+            expect(approver.level).to eq 3
+            expect(approver.user_type).to eq Gws::UserTitle.name
+            expect(approver.user.id).to eq user3_2.id
             expect(approver.editable).to be_truthy
             expect(approver.error).to be_blank
           end
 
-          expect(resolver.workflow_circulations).to have(3).items
+          expect(resolver.workflow_circulations).to have(6).items
           resolver.workflow_circulations[0].tap do |circulation|
             expect(circulation.level).to eq 1
             expect(circulation.user_type).to eq Gws::UserTitle.name
-            expect(circulation.user.id).to eq user3.id
+            expect(circulation.user.id).to eq user3_1.id
             expect(circulation.error).to be_blank
           end
           resolver.workflow_circulations[1].tap do |circulation|
-            expect(circulation.level).to eq 2
+            expect(circulation.level).to eq 1
             expect(circulation.user_type).to eq Gws::UserTitle.name
-            expect(circulation.user.id).to eq user1.id
+            expect(circulation.user.id).to eq user3_2.id
             expect(circulation.error).to be_blank
           end
           resolver.workflow_circulations[2].tap do |circulation|
+            expect(circulation.level).to eq 2
+            expect(circulation.user_type).to eq Gws::UserTitle.name
+            expect(circulation.user.id).to eq user1_1.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[3].tap do |circulation|
+            expect(circulation.level).to eq 2
+            expect(circulation.user_type).to eq Gws::UserTitle.name
+            expect(circulation.user.id).to eq user1_2.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[4].tap do |circulation|
             expect(circulation.level).to eq 3
             expect(circulation.user_type).to eq Gws::UserTitle.name
-            expect(circulation.user.id).to eq user2.id
+            expect(circulation.user.id).to eq user2_1.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[5].tap do |circulation|
+            expect(circulation.level).to eq 3
+            expect(circulation.user_type).to eq Gws::UserTitle.name
+            expect(circulation.user.id).to eq user2_2.id
             expect(circulation.error).to be_blank
           end
         end
@@ -526,24 +662,42 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
     context "with gws/user" do
       context "without errors" do
         let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
-        let!(:user1) { create(:gws_user, group_ids: [ group1.id ], gws_role_ids: user.gws_role_ids) }
+        let!(:user1_1) { create(:gws_user, group_ids: [ group1.id ], gws_role_ids: user.gws_role_ids) }
+        let!(:user1_2) do
+          # user1_1だけが見える
+          create(:gws_user, group_ids: [ group1.id ], gws_role_ids: user.gws_role_ids, readable_member_ids: [ user1_1.id ])
+        end
         let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}" }
-        let!(:user2) { create(:gws_user, group_ids: [ group2.id ], gws_role_ids: user.gws_role_ids) }
+        let!(:user2_1) { create(:gws_user, group_ids: [ group2.id ], gws_role_ids: user.gws_role_ids) }
+        let!(:user2_2) do
+          # user2_1だけが見える
+          create(:gws_user, group_ids: [ group2.id ], gws_role_ids: user.gws_role_ids, readable_member_ids: [ user2_1.id ])
+        end
         let!(:group3) { create :gws_group, name: "#{site.name}/#{unique_id}" }
-        let!(:user3) { create(:gws_user, group_ids: [ group3.id ], gws_role_ids: user.gws_role_ids) }
+        let!(:user3_1) { create(:gws_user, group_ids: [ group3.id ], gws_role_ids: user.gws_role_ids) }
+        let!(:user3_2) do
+          # user3_1だけが見える
+          create(:gws_user, group_ids: [ group3.id ], gws_role_ids: user.gws_role_ids, readable_member_ids: [ user3_1.id ])
+        end
         let!(:route) do
           create(
             :gws_workflow2_route, cur_site: site,
             approvers: [
-              { "level" => 1, "user_type" => Gws::User.name, "user_id" => user1.id, "editable" => "" },
-              { "level" => 2, "user_type" => Gws::User.name, "user_id" => user2.id, "editable" => 1 },
-              { "level" => 3, "user_type" => Gws::User.name, "user_id" => user3.id, "editable" => 1 },
+              { "level" => 1, "user_type" => Gws::User.name, "user_id" => user1_1.id, "editable" => "" },
+              { "level" => 1, "user_type" => Gws::User.name, "user_id" => user1_2.id, "editable" => "" },
+              { "level" => 2, "user_type" => Gws::User.name, "user_id" => user2_1.id, "editable" => 1 },
+              { "level" => 2, "user_type" => Gws::User.name, "user_id" => user2_2.id, "editable" => 1 },
+              { "level" => 3, "user_type" => Gws::User.name, "user_id" => user3_1.id, "editable" => 1 },
+              { "level" => 3, "user_type" => Gws::User.name, "user_id" => user3_2.id, "editable" => 1 },
             ],
-            required_counts: [ false, false, false, false, false ],
+            required_counts: [ 1, 1, 1, false, false ],
             circulations: [
-              { "level" => 1, "user_type" => Gws::User.name, "user_id" => user3.id },
-              { "level" => 2, "user_type" => Gws::User.name, "user_id" => user1.id },
-              { "level" => 3, "user_type" => Gws::User.name, "user_id" => user2.id },
+              { "level" => 1, "user_type" => Gws::User.name, "user_id" => user3_1.id },
+              { "level" => 1, "user_type" => Gws::User.name, "user_id" => user3_2.id },
+              { "level" => 2, "user_type" => Gws::User.name, "user_id" => user1_1.id },
+              { "level" => 2, "user_type" => Gws::User.name, "user_id" => user1_2.id },
+              { "level" => 3, "user_type" => Gws::User.name, "user_id" => user2_1.id },
+              { "level" => 3, "user_type" => Gws::User.name, "user_id" => user2_2.id },
             ]
           )
         end
@@ -553,47 +707,86 @@ describe Gws::Workflow2::ApproverResolver, type: :model, dbscope: :example do
             cur_site: site, cur_user: user, cur_group: group, route: route, item: item)
           resolver.resolve
 
-          expect(resolver.workflow_approvers).to have(3).items
+          expect(resolver.workflow_approvers).to have(6).items
           resolver.workflow_approvers[0].tap do |approver|
             expect(approver.level).to eq 1
             expect(approver.user_type).to eq Gws::User.name
-            expect(approver.user.id).to eq user1.id
+            expect(approver.user.id).to eq user1_1.id
             expect(approver.editable).to be_falsey
             expect(approver.error).to be_blank
           end
           resolver.workflow_approvers[1].tap do |approver|
-            expect(approver.level).to eq 2
+            expect(approver.level).to eq 1
             expect(approver.user_type).to eq Gws::User.name
-            expect(approver.user.id).to eq user2.id
-            expect(approver.editable).to be_truthy
-            expect(approver.error).to be_blank
+            expect(approver.user).to be_blank
+            expect(approver.editable).to be_blank
+            expect(approver.error).to eq I18n.t("gws/workflow2.errors.messages.user_is_not_found")
           end
           resolver.workflow_approvers[2].tap do |approver|
-            expect(approver.level).to eq 3
+            expect(approver.level).to eq 2
             expect(approver.user_type).to eq Gws::User.name
-            expect(approver.user.id).to eq user3.id
+            expect(approver.user.id).to eq user2_1.id
             expect(approver.editable).to be_truthy
             expect(approver.error).to be_blank
           end
+          resolver.workflow_approvers[3].tap do |approver|
+            expect(approver.level).to eq 2
+            expect(approver.user_type).to eq Gws::User.name
+            expect(approver.user).to be_blank
+            expect(approver.editable).to be_blank
+            expect(approver.error).to eq I18n.t("gws/workflow2.errors.messages.user_is_not_found")
+          end
+          resolver.workflow_approvers[4].tap do |approver|
+            expect(approver.level).to eq 3
+            expect(approver.user_type).to eq Gws::User.name
+            expect(approver.user.id).to eq user3_1.id
+            expect(approver.editable).to be_truthy
+            expect(approver.error).to be_blank
+          end
+          resolver.workflow_approvers[5].tap do |approver|
+            expect(approver.level).to eq 3
+            expect(approver.user_type).to eq Gws::User.name
+            expect(approver.user).to be_blank
+            expect(approver.editable).to be_blank
+            expect(approver.error).to eq I18n.t("gws/workflow2.errors.messages.user_is_not_found")
+          end
 
-          expect(resolver.workflow_circulations).to have(3).items
+          expect(resolver.workflow_circulations).to have(6).items
           resolver.workflow_circulations[0].tap do |circulation|
             expect(circulation.level).to eq 1
             expect(circulation.user_type).to eq Gws::User.name
-            expect(circulation.user.id).to eq user3.id
+            expect(circulation.user.id).to eq user3_1.id
             expect(circulation.error).to be_blank
           end
           resolver.workflow_circulations[1].tap do |circulation|
-            expect(circulation.level).to eq 2
+            expect(circulation.level).to eq 1
             expect(circulation.user_type).to eq Gws::User.name
-            expect(circulation.user.id).to eq user1.id
-            expect(circulation.error).to be_blank
+            expect(circulation.user).to be_blank
+            expect(circulation.error).to eq I18n.t("gws/workflow2.errors.messages.user_is_not_found")
           end
           resolver.workflow_circulations[2].tap do |circulation|
+            expect(circulation.level).to eq 2
+            expect(circulation.user_type).to eq Gws::User.name
+            expect(circulation.user.id).to eq user1_1.id
+            expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[3].tap do |circulation|
+            expect(circulation.level).to eq 2
+            expect(circulation.user_type).to eq Gws::User.name
+            expect(circulation.user).to be_blank
+            expect(circulation.error).to eq I18n.t("gws/workflow2.errors.messages.user_is_not_found")
+          end
+          resolver.workflow_circulations[4].tap do |circulation|
             expect(circulation.level).to eq 3
             expect(circulation.user_type).to eq Gws::User.name
-            expect(circulation.user.id).to eq user2.id
+            expect(circulation.user.id).to eq user2_1.id
             expect(circulation.error).to be_blank
+          end
+          resolver.workflow_circulations[5].tap do |circulation|
+            expect(circulation.level).to eq 3
+            expect(circulation.user_type).to eq Gws::User.name
+            expect(circulation.user).to be_blank
+            expect(circulation.error).to eq I18n.t("gws/workflow2.errors.messages.user_is_not_found")
           end
         end
       end

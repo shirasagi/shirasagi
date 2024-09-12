@@ -74,7 +74,7 @@ this.SS_AjaxFile = (function () {
       });
 
       for (var i = 0; i < fileViews.length; i++) {
-        $("#selected-files").prepend(fileViews[i].html);
+        $("#selected-files").prepend(fileViews[i].html).trigger("change");
       }
 
       $.colorbox.close();

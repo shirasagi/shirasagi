@@ -15,36 +15,45 @@ class Gws::Elasticsearch::Indexer::ShareFileJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      doc = {}
-      doc[:collection_name] = index_type
-      doc[:url] = item_path
-      doc[:name] = item.name
-      doc[:categories] = item.categories.pluck(:name)
-      doc[:data] = Base64.strict_encode64(::File.binread(item.path))
-      doc[:file] = {}
-      doc[:file][:extname] = item.extname.upcase
-      doc[:file][:size] = item.size
+      each_item do |item|
+        @id = item.id.to_s
+        @item = item
+        puts item.name
 
-      # doc[:release_date] = topic.release_date.try(:iso8601)
-      # doc[:close_date] = topic.close_date.try(:iso8601)
-      # doc[:released] = topic.released.try(:iso8601)
-      # doc[:state] = post.state
-      doc[:state] = 'public'
+        doc = {}
+        doc[:collection_name] = index_type
+        doc[:url] = item_path
+        doc[:name] = item.name
+        doc[:categories] = item.categories.pluck(:name)
+        doc[:data] = Base64.strict_encode64(::File.binread(item.path))
+        doc[:file] = {}
+        doc[:file][:extname] = item.extname.upcase
+        doc[:file][:size] = item.size
 
-      doc[:user_name] = item.user.long_name if item.user.present?
-      doc[:group_ids] = item.groups.pluck(:id)
-      doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-      doc[:user_ids] = item.users.pluck(:id)
-      doc[:permission_level] = item.permission_level
+        # doc[:release_date] = topic.release_date.try(:iso8601)
+        # doc[:close_date] = topic.close_date.try(:iso8601)
+        # doc[:released] = topic.released.try(:iso8601)
+        # doc[:state] = post.state
+        doc[:state] = 'public'
 
-      doc[:readable_group_ids] = item.readable_groups.pluck(:id)
-      doc[:readable_custom_group_ids] = item.readable_custom_groups.pluck(:id)
-      doc[:readable_member_ids] = item.readable_members.pluck(:id)
+        doc[:user_name] = item.user.long_name if item.user.present?
+        doc[:group_ids] = item.groups.pluck(:id)
+        doc[:custom_group_ids] = item.custom_groups.pluck(:id)
+        doc[:user_ids] = item.users.pluck(:id)
+        doc[:permission_level] = item.permission_level
 
-      doc[:updated] = item.updated.try(:iso8601)
-      doc[:created] = item.created.try(:iso8601)
+        doc[:readable_group_ids] = item.readable_groups.pluck(:id)
+        doc[:readable_custom_group_ids] = item.readable_custom_groups.pluck(:id)
+        doc[:readable_member_ids] = item.readable_members.pluck(:id)
 
-      y << [ "file-#{item.id}", doc ]
+        doc[:updated] = item.updated.try(:iso8601)
+        doc[:created] = item.created.try(:iso8601)
+
+        y << [ "file-#{item.id}", doc ]
+      ensure
+        @id = nil
+        @item = nil
+      end
     end
   end
 
