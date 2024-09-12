@@ -138,6 +138,7 @@ end
 save_node filename: "css", name: "CSS", route: "uploader/file"
 save_node filename: "js", name: "Javascript", route: "uploader/file"
 save_node filename: "img", name: "画像", route: "uploader/file"
+save_node filename: "materials", name: "資料", route: "uploader/file"
 save_node filename: "ads", name: "広告", route: "ads/banner"
 
 save_node filename: "docs", name: "お知らせ", route: "article/page", shortcut: "show",
@@ -310,6 +311,9 @@ save_node filename: "chiiki/shirasagi", name: "シラサギ市", route: "opendat
 ].each_with_index do |data, idx|
   save_node filename: "chiiki/shirasagi/#{data[1]}", name: data[0], route: "opendata/area", order: idx + 1
 end
+
+array   = Cms::Node.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*$/, '\1'), m] }
+nodes = Hash[*array.flatten]
 
 # inquiry
 
@@ -519,7 +523,7 @@ license_file6 = save_ss_files "fixtures/cc-by-nc-nd.png", filename: "cc-by-nc-nd
 license_file7 = save_ss_files "fixtures/cc-zero.png", filename: "cc-zero.png", model: "opendata/license"
 
 license_cc_by = save_license name: "表示（CC BY）", file_id: license_file1.id, order: 1,
-  default_state: 'default', uid: "cc-by"
+  default_state: 'default', uid: "cc-by", metadata_uid: 'CC BY 4.0'
 save_license name: "表示-継承（CC BY-SA）", file_id: license_file2.id, order: 2, uid: "cc-by-sa"
 save_license name: "表示-改変禁止（CC BY-ND）", file_id: license_file3.id, order: 3, uid: "cc-by-nd"
 save_license name: "表示-非営利（CC BY-NC）", file_id: license_file4.id, order: 4, uid: "cc-by-nc"
@@ -662,6 +666,37 @@ end
     dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
     app_ids: Opendata::App.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
+end
+
+## -------------------------------------
+puts "# opendata metadata"
+
+def save_metadata_importer(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+
+  item = Opendata::Metadata::Importer.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+metadata_importer = save_metadata_importer cur_node: nodes['dataset'], cur_user: @user, name: 'シラサギ市',
+  source_url: ::Addressable::URI.join(@site.full_url, 'materials/shirasagi_test_date.csv'),
+  default_area_ids: [nodes['chiiki/shirasagi'].id], notice_user_ids: [@user.id]
+
+def save_estat_category_setting(data)
+  puts data[:category].name
+  cond = { site_id: @site._id, importer_id: data[:importer].id, category_id: data[:category].id }
+
+  item = Opendata::Metadata::Importer::EstatCategorySetting.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+Opendata::Node::EstatCategory.site(@site).each do |node|
+  save_estat_category_setting cur_user: @user, importer: metadata_importer,
+    category: node, order: 0,
+    conditions: [{ type: 'string', value: node.name, operator: 'match' }.with_indifferent_access]
 end
 
 ## -------------------------------------
