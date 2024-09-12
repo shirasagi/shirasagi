@@ -131,10 +131,10 @@ module Chorg::MongoidSupport
   end
 
   def find_or_create_group(attributes, alternative_names: nil)
-    group = self.class.group_class.where(name: attributes["name"]).first
+    group = self.class.group_class.where(name: attributes["name"].strip).first
     if group.blank? && alternative_names.present?
       alternative_names.each do |alternative_name|
-        group = self.class.group_class.where(name: alternative_name).first
+        group = self.class.group_class.where(name: alternative_name.strip).first
         break if group
       end
     end
@@ -251,10 +251,10 @@ module Chorg::MongoidSupport
       if group.present?
         if delete_entity(group)
           # put_log("deleted group: #{group.name}")
-          task.log("  #{group.name}")
+          task.log("  \"#{group.name}\"")
         else
           # put_log("failed to delete group: #{group.name}")
-          task.log("  #{group.name}: 削除失敗")
+          task.log("  \"#{group.name}\": 削除失敗")
         end
         remove_group_from_site(group)
       end
@@ -271,9 +271,9 @@ module Chorg::MongoidSupport
     copy << group.id
     cur_site.group_ids = copy.uniq.sort
     if save_or_collect_errors(cur_site)
-      put_log("added group #{group.name} to site #{cur_site.host}")
+      put_log("added group \"#{group.name}\" to site \"#{cur_site.host}\"")
     else
-      put_log("failed to add group #{group.name} to site #{cur_site.host}")
+      put_log("failed to add group \"#{group.name}\" to site \"#{cur_site.host}\"")
     end
   end
 
@@ -285,9 +285,9 @@ module Chorg::MongoidSupport
     copy.delete(group.id)
     cur_site.group_ids = copy.uniq.sort
     if save_or_collect_errors(cur_site)
-      put_log("removed group #{group.name} from site #{cur_site.host}")
+      put_log("removed group \"#{group.name}\" from site \"#{cur_site.host}\"")
     else
-      put_log("failed to remove group #{group.name} from site #{cur_site.host}")
+      put_log("failed to remove group \"#{group.name}\" from site \"#{cur_site.host}\"")
     end
   end
 

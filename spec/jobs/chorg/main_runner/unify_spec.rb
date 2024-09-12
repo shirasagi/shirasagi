@@ -386,7 +386,7 @@ describe Chorg::MainRunner, dbscope: :example do
         # pre-check
         expect(changeset.destinations).to have(1).items
         changeset.destinations[0].tap do |destination|
-          expect(destination[:name]).to eq destination_group.name
+          expect(destination[:name].strip).to eq destination_group.name
           expect(destination[:contact_groups].length).to eq 2
           expect(destination[:contact_groups][0][:_id]).to eq source_group1.contact_groups.first.id.to_s
           expect(destination[:contact_groups][1][:_id]).to eq source_group2.contact_groups.first.id.to_s
@@ -411,7 +411,7 @@ describe Chorg::MainRunner, dbscope: :example do
         group_after_unify = Cms::Group.find(destination_group.id).tap do |group_after_unify|
           expect(group_after_unify.id).to eq destination_group.id
           destination0 = changeset.destinations.first
-          expect(group_after_unify.name).to eq destination0["name"]
+          expect(group_after_unify.name).to eq destination0["name"].strip
 
           expect(group_after_unify.contact_groups.count).to eq 2
           group_after_unify.contact_groups[0].tap do |contact_after_unify|
@@ -607,7 +607,7 @@ describe Chorg::MainRunner, dbscope: :example do
         # pre-check
         expect(changeset.destinations).to have(1).items
         changeset.destinations[0].tap do |destination|
-          expect(destination[:name]).to eq source_group2.name
+          expect(destination[:name]).to eq source_group2.name + " "
           expect(destination[:contact_groups].length).to eq 2
           expect(destination[:contact_groups][0][:_id]).to eq source_group1.contact_groups.first.id.to_s
           expect(destination[:contact_groups][1][:_id]).to eq source_group2.contact_groups.first.id.to_s
@@ -634,7 +634,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(group_after_unify.id).to eq source_group2.id
           expect(group_after_unify.name).to eq source_group2.name
           destination0 = changeset.destinations.first
-          expect(group_after_unify.name).to eq destination0["name"]
+          expect(group_after_unify.name).to eq destination0["name"].strip
 
           expect(group_after_unify.contact_groups.count).to eq 2
           group_after_unify.contact_groups[0].tap do |contact_after_unify|
