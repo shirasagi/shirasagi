@@ -40,7 +40,8 @@ save_node route: "article/page", filename: "docs", name: "記事",
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
-  view_route: "category/node", conditions: %w(hinanjo-docs), sort: 'order', new_days: 0,
+  view_route: "category/node", sort: 'order', new_days: 0,
+  conditions: %w(hinanjo-docs hinanjo-docs/dosya hinanjo-docs/jishin hinanjo-docs/thunami),
   map_search_options: [{ name: '地域', values: "東部\n北部\n南部" }]
 )
 article_map_search_categories = [
@@ -73,6 +74,15 @@ save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情�
 save_node route: "article/page", filename: "population", name: "人口・世帯数",
   layout_id: @layouts["pages"].id, st_form_ids: [@form7.id], st_form_default_id: @form7.id,
   new_days: 0
+
+@form_db1.node = @node_form_db1
+@form_db1.update
+
+@form_db2.node = @node_form_db2
+@form_db2.update
+
+@form_db3.node = @node_form_db3
+@form_db3.update
 
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
