@@ -50,7 +50,7 @@ this.SS_Addon_TempFile = (function () {
         return 0;
       });
       for (var i = 0; i < sorted_name_and_datas.length; i++) {
-        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+        $("#selected-files").prepend(sorted_name_and_datas[i].data).trigger("change");
       }
     });
   }
