@@ -359,6 +359,7 @@ save_page route: "event/page", filename: "calendar/page28.html", name: "住民�
   layout_id: @layouts["event"].id, category_ids: [@categories["calendar/kohen"].id], event_recurrences: [ recurrence ],
   schedule: "〇〇年○月〇日", venue: "○○○○○○○○○○", cost: "○○○○○○○○○○",
   content: "○○○○○○○○○○○○○○○○○○○○", related_url: @link_url,
+  map_points: [{ name: 'シラサギ公民館', loc: [134.551637, 34.060768], text: '駐車場20台あり' }],
   group_ids: [@g_seisaku.id]
 
 file_7 = save_ss_files "ss_files/key-visual/small/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg",
