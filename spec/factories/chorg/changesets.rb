@@ -145,7 +145,7 @@ FactoryBot.define do
         { id: group.id, name: group.name }.with_indifferent_access
       end
       if evaluator.destination.present? && entity.destinations.present? && entity.destinations[0].present?
-        entity.destinations[0][:name] = evaluator.destination.name
+        entity.destinations[0][:name] = evaluator.destination.name + " "
         entity.destinations[0][:order] = evaluator.destination.order
         entity.destinations[0][:ldap_dn] = evaluator.destination.ldap_dn
       end

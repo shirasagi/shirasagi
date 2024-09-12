@@ -29,6 +29,7 @@ module Chorg::Runner::Base
     if @cur_user
       logger_tags << @cur_user.uid.presence || @cur_user.email.presence || @cur_user.name
     end
+    logger_tags << @item.name
     Rails.logger.tagged(*logger_tags) do
       self.class.revision_class.ensure_release_lock(@item) do
         SS::Model.without_record_timestamps do
