@@ -125,17 +125,17 @@ SS.ready(function () {
   // headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
   SS.render();
   // head
-  if ($(window).width() >= 800 && 0) {
-    var menu = $("#head .pulldown-menu");
-    var link = menu.find("a");
-    menu.each(function () {
-      link.not(".current").hide();
-      return link.filter(".current").prependTo(menu).on("click", function () {
-        link.not(".current").slideToggle("fast");
-        return false;
-      });
-    });
-  }
+  // if ($(window).width() >= 800 && 0) {
+  //   var menu = $("#head .pulldown-menu");
+  //   var link = menu.find("a");
+  //   menu.each(function () {
+  //     link.not(".current").hide();
+  //     return link.filter(".current").prependTo(menu).on("click", function () {
+  //       link.not(".current").slideToggle("fast");
+  //       return false;
+  //     });
+  //   });
+  // }
   // toggle navi
   var toggleNavi = function() {
     return $("#toggle-navi").hasClass("opened") ? closeNavi() : openNavi();
@@ -199,7 +199,7 @@ SS.ready(function () {
   addCurrent("#main .main-navi a");
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current');
   // navi
-  $('.sp-menu-button a').on("click", function (e) {
+  $('.sp-menu-button a').on("click", function (_ev) {
     $('#navi').slideToggle();
     $(this).toggleClass("active");
     return false;

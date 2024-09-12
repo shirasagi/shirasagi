@@ -44,7 +44,7 @@ this.SS_Login = (function () {
       return;
     }
 
-    $(document).on('ajaxComplete', function (e, xhr, status) {
+    $(document).on('ajaxComplete', function (e, xhr, _status) {
       if (xhr.getResponseHeader('ajaxRedirect')) {
         if (xhr.readyState === 4 && xhr.status === 200) {
           location.reload();
@@ -61,7 +61,7 @@ this.SS_Login = (function () {
 
     $.ajax({
       url: '/.mypage/status',
-      complete: function (xhr, status) {
+      complete: function (xhr, _status) {
         if (SS_Login.disabled) {
           return;
         }

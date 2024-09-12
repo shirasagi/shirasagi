@@ -33,11 +33,11 @@ Gws_Attendance_Portlet.prototype.punch = function($button, fieldName) {
     method: 'POST',
     data: { ref: this.options.ref },
     dataType: 'json',
-    success: function(data) {
+    success: function(_data) {
       alert(_this.options.successMessage);
       location.reload();
     },
-    error: function(xhr, status, error) {
+    error: function(xhr, _status, _error) {
       alert(xhr.responseJSON.join("\n"));
     },
     complete: function() {

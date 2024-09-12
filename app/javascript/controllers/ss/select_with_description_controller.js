@@ -7,7 +7,7 @@ export default class extends Controller {
   connect() {
     const selectElement = this.element.querySelector("select")
     if (selectElement) {
-      selectElement.addEventListener("change", (ev) => this.updateDescription(selectElement))
+      selectElement.addEventListener("change", (_ev) => this.updateDescription(selectElement))
       this.updateDescription(selectElement)
     }
   }

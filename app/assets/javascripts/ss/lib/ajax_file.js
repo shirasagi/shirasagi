@@ -56,7 +56,7 @@ this.SS_AjaxFile = (function () {
         success: function(html) {
           fileViews.push({ name: filename, html: html });
         },
-        error: function(xhr, status, data) {
+        error: function(xhr, _status, _data) {
           if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
             alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
           } else {
@@ -94,13 +94,13 @@ this.SS_AjaxFile = (function () {
       var params = {
         url: $form.attr("action") + ".json",
         dataType: "json",
-        success: function(data, textStatus, xhr) {
+        success: function(data, _textStatus, _xhr) {
           self.submitSuccess(submitted, data);
         },
-        error: function (xhr, status, error) {
+        error: function (xhr, _status, _error) {
           self.submitError(xhr);
         },
-        complete: function (xhr, status) {
+        complete: function (_xhr, _status) {
           SS.enableFormElementsOnTimeoutSubmit();
         }
       };
@@ -259,7 +259,7 @@ this.SS_AjaxFile = (function () {
           }
         });
       },
-      error: function (data, status) {
+      error: function (data, _status) {
         alert(["== Error(AjaxFile) =="].concat(data.responseJSON).join("\n"));
       }
     });
