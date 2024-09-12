@@ -14,7 +14,8 @@ class Gws::Elasticsearch::Indexer::CircularPostJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      each_item do |item|
+      post_criteria = Gws::Circular::Post.site(site).topic.without_deleted
+      each_item(criteria: post_criteria) do |item|
         puts item.name
         y << self.class.convert_to_doc(self.site, item, item)
         item.files.each do |file|
@@ -23,10 +24,10 @@ class Gws::Elasticsearch::Indexer::CircularPostJob < Gws::ApplicationJob
       end
 
       if @original_id == :all
-        all_post_ids = self.class.model.site(site).without_deleted.pluck(:id)
-        criteria = Gws::Circular::Comment.site(site).without_deleted
-        all_comment_ids = criteria.in(post_id: all_post_ids).pluck(:id)
-        each_item(criteria: criteria, ids: all_comment_ids) do |comment|
+        all_post_ids = post_criteria.pluck(:id)
+        comment_criteria = Gws::Circular::Comment.site(site).without_deleted
+        comment_criteria = comment_criteria.in(post_id: all_post_ids)
+        each_item(criteria: comment_criteria) do |comment|
           puts comment.name
           y << self.class.convert_to_doc(self.site, comment.post, comment)
         end
