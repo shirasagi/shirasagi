@@ -219,7 +219,7 @@ this.SS = (function () {
         SS.href = data.href;
         return SS.renderTools();
       },
-      error: function (req, status, error) {
+      error: function (_req, _status, _error) {
         return body.html(SS.page);
       },
       complete: function () {
@@ -248,7 +248,7 @@ this.SS = (function () {
       success: function (data) {
         return $(elem).replaceWith(data);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
         return $(elem).remove();
       },
       complete: function () {
@@ -274,7 +274,7 @@ this.SS = (function () {
       dataType: "json",
       success: function () {
       },
-      error: function (data, status) {
+      error: function (data, _status) {
         alert([ "== Error(AjaxForm) ==" ].concat(data.responseJSON).join("\n"));
       }
     };
@@ -310,7 +310,7 @@ this.SS = (function () {
         },
         success: function () {
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error(Ajax) ==");
         }
       };
@@ -348,7 +348,7 @@ this.SS = (function () {
             $(self.data("remove")).remove();
           }
         },
-        error: function (data, status) {
+        error: function (data, _status) {
           alert([ "== Error(AjaxDelete) ==" ].concat(data.responseJSON).join("\n"));
         }
       };
@@ -467,7 +467,7 @@ this.SS = (function () {
             $uploaderAlertMessage.show();
           }
         },
-        error: function (xhr, status) {
+        error: function (xhr, _status) {
           var errors;
           try {
             errors = $.parseJSON(xhr.responseText);
@@ -653,17 +653,17 @@ this.SS = (function () {
 
         var dropEventTriggered = false;
         var dropNoticeHtml = $container.find(".upload-drop-notice").html();
-        $container.on("dragenter", function (ev) {
+        $container.on("dragenter", function (_ev) {
           if (!dropEventTriggered) {
             $container.addClass('file-dragenter');
           }
           return false;
         });
-        $container.on("dragleave", function (ev) {
+        $container.on("dragleave", function (_ev) {
           $container.removeClass('file-dragenter');
           return false;
         });
-        $container.on("dragover", function (ev) {
+        $container.on("dragover", function (_ev) {
           if (!dropEventTriggered) {
             $container.addClass('file-dragenter');
           }
@@ -715,7 +715,7 @@ this.SS = (function () {
             $container.find(".sanitizer-status").addClass("hide");
             $container.find(".btn-file-delete").removeClass("hide");
             $container.find(".upload-drop-notice").addClass("hide");
-          }, function (xhr, textStatus, errorThrown) {
+          }, function (xhr, _textStatus, _errorThrown) {
             // error
             if (xhr.status === 413) {
               alert([ "== Error(FileUpload) ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
