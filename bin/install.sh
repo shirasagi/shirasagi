@@ -328,25 +328,6 @@ else
   exit 1
 fi
 # change secret
-
-#sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
-
-# enable recommendation
-#sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
-
-sudo systemctl enable firewalld.service --now
-
-sudo firewall-cmd --add-port=http/tcp --permanent
-#sudo firewall-cmd --add-port=https/tcp --permanent
-#sudo firewall-cmd --add-port=3000/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
-sudo firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
-sudo firewall-cmd --reload
-
-#### Furigana
-
 # 資格情報の編集
 echo "Editing Rails credentials using cat <<EOF"
 
@@ -373,6 +354,24 @@ if [ -f "config/secrets.yml" ]; then
 else
   echo "config/secrets.yml does not exist, skipping removal."
 fi
+
+#sed -i "s/dbcae379.*$/$(bundle exec rake secret)/" config/secrets.yml
+
+# enable recommendation
+#sed -e "s/disable: true$/disable: false/" config/defaults/recommend.yml >config/recommend.yml
+
+sudo systemctl enable firewalld.service --now
+
+sudo firewall-cmd --add-port=http/tcp --permanent
+#sudo firewall-cmd --add-port=https/tcp --permanent
+#sudo firewall-cmd --add-port=3000/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_COMPA}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_CHILD}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_OPEND}/tcp --permanent
+sudo firewall-cmd --add-port=${PORT_LPSPL}/tcp --permanent
+sudo firewall-cmd --reload
+
+#### Furigana
 
 #### Nginx
 
@@ -569,7 +568,7 @@ $(asdf which bundle) exec rake db:seed name=gws
 $(asdf which bundle) exec rake db:seed name=webmail
 
 # MongoDB での OpenLayers API 設定
-if command -v mongo &>/dev/null; then
+if command -v mongosh &>/dev/null; then
   echo 'db.ss_sites.update({}, { $set: { map_api: "openlayers" } }, { multi: true });' | mongosh ss >/dev/null
 else
   echo "Error: MongoDB is not installed or not available in the PATH"
@@ -587,7 +586,7 @@ EOF
 
 # modify ImageMagick policy to work with simple captcha
 # see: https://github.com/diaspora/diaspora/issues/6828
-cd /etc/ImageMagick && cat <<EOF | sudo patch
+cd /etc/ImageMagick-6 && cat <<EOF | sudo patch
 --- policy.xml.orig     2016-12-08 13:50:47.344009000 +0900
 +++ policy.xml  2016-12-08 13:15:22.529009000 +0900
 @@ -67,6 +67,8 @@
