@@ -265,17 +265,17 @@ def save_form_db(data)
   item.save!
   item
 end
-save_form_db name: "避難所情報（土砂災害）", form: @form8, node: @node_form_db1,
+@form_db1 = save_form_db name: "避難所情報（土砂災害）", form: @form8,
   import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
   import_primary_key: "ID", import_page_name: "名称",
   import_column_options: [{name: "災害種別_崖崩れ、土石流及び地滑り", kind: "any_of", values: ["1"]}],
   import_map: 1, generate_on_import: 1, import_skip_same_file: 1
-save_form_db name: "避難所情報（地震）", form: @form8, node: @node_form_db2,
+@form_db2 = save_form_db name: "避難所情報（地震）", form: @form8,
   import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
   import_primary_key: "ID", import_page_name: "名称",
   import_column_options: [{name: "災害種別_地震", kind: "any_of", values: ["1"]}],
   import_map: 1, generate_on_import: 1, import_skip_same_file: 1
-save_form_db name: "避難所情報（津波）", form: @form8, node: @node_form_db3,
+@form_db3 = save_form_db name: "避難所情報（津波）", form: @form8,
   import_url: ::File.join(@site.full_url, "dataset/shirasagi_City_designation_Shelter.csv"),
   import_primary_key: "ID", import_page_name: "名称",
   import_column_options: [{name: "災害種別_津波", kind: "any_of", values: ["1"]}],

@@ -74,6 +74,15 @@ save_node route: "article/page", filename: "population", name: "人口・世帯�
   layout_id: @layouts["pages"].id, st_form_ids: [@form7.id], st_form_default_id: @form7.id,
   new_days: 0
 
+@form_db1.node = @node_form_db1
+@form_db1.update
+
+@form_db2.node = @node_form_db2
+@form_db2.update
+
+@form_db3.node = @node_form_db3
+@form_db3.update
+
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
 save_node route: "category/node", filename: "kanko", name: "観光・文化・スポーツ", order: 40
