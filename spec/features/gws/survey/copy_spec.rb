@@ -103,18 +103,24 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         expect(copy_form.contributor_id).to eq form.contributor_id
         expect(copy_form.contributor_name).to eq form.contributor_name
         expect(copy_form.columns.count).to eq 2
-        copy_form.columns.first.tap do |copy_column|
-          expect(copy_column.id).not_to eq column1.id
-          expect(copy_column.name).to eq column1.name
-          expect(copy_column.order).to eq column1.order
-          expect(copy_column.required).to eq column1.required
-          expect(copy_column.tooltips).to eq column1.tooltips
-          expect(copy_column.prefix_label).to eq column1.prefix_label
-          expect(copy_column.postfix_label).to eq column1.postfix_label
-          expect(copy_column.prefix_explanation).to eq column1.prefix_explanation
-          expect(copy_column.postfix_explanation).to eq column1.postfix_explanation
-          expect(copy_column.select_options).to eq column1.select_options
-          expect(copy_column.branch_section_ids).to include copy_form.columns[1].id.to_s
+        copy_form.columns.to_a.tap do |copy_columns|
+          copy_columns[0].tap do |copy_column|
+            expect(copy_column.id).not_to eq column1.id
+            expect(copy_column.name).to eq column1.name
+            expect(copy_column.order).to eq column1.order
+            expect(copy_column.required).to eq column1.required
+            expect(copy_column.tooltips).to eq column1.tooltips
+            expect(copy_column.prefix_label).to eq column1.prefix_label
+            expect(copy_column.postfix_label).to eq column1.postfix_label
+            expect(copy_column.prefix_explanation).to eq column1.prefix_explanation
+            expect(copy_column.postfix_explanation).to eq column1.postfix_explanation
+            expect(copy_column.select_options).to eq column1.select_options
+            expect(copy_column.branch_section_ids).to include copy_form.columns[1].id.to_s
+          end
+          copy_columns[1].tap do |copy_column|
+            expect(copy_column.id).not_to eq column2.id
+            expect(copy_column.name).to eq column2.name
+          end
         end
         expect(copy_form.category_ids).to eq form.category_ids
         expect(copy_form.files.count).to eq 0
@@ -166,8 +172,10 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
         answer = answers.first
         expect(answer.user_name).to eq user2.name
-        expect(answer.column_values.count).to eq 1
-        expect(answer.column_values.first.value).to eq column_options[1]
+        answer.column_values.to_a.tap do |answer_column_values|
+          expect(answer_column_values.count).to eq 2
+          expect(answer.column_values[0].value).to eq column_options[1]
+        end
       end
     end
   end
