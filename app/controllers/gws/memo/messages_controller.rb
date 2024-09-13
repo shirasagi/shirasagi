@@ -133,8 +133,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @items.each do |item|
       id_list << item.id.to_s
     end
-    gws_memo_id_list_session = session[:gws_memo_id_list]
-    gws_memo_id_list_session ||= {}
+    gws_memo_id_list_session = {}
     gws_memo_id_list_session['id_list'] = id_list
     if params[:s]
       gws_memo_id_list_session['search'] = params[:s].to_unsafe_h
