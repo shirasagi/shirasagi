@@ -8,14 +8,8 @@
     contact = contact_group.contact_groups.where(main_state: "main").first
   elsif @item.contact_group_related?
     contact_group = @item.contact_group
-    if contact_group
-      if @item.contact_group_contact_id.present?
-        contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
-      end
-      # #5417: contact_group_contact_id が正しく設定されず連絡先が消失する問題があった。
-      # この不具合のある間に作成されたページは contact_group_contact_id がセットされていない。
-      # 「主」の連絡先を検索しセットすることで、この問題の修正を図る。
-      contact ||= contact_group.contact_groups.where(main_state: "main").first
+    if contact_group && @item.contact_group_contact_id.present?
+      contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
     end
   end
 
