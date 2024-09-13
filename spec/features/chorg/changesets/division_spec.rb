@@ -165,7 +165,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       #
       visit chorg_revision_path(site: site, id: revision)
       within "dd.chorg-revisions-division" do
-        click_on [ new_name1, new_name2 ].join(",")
+        click_on [ "\"#{new_name1}\"", "\"#{new_name2}\"" ].join(",")
       end
       wait_for_turbo_frame "#item-frame"
       expect(page).to have_css("#chorg-after-basic1", text: new_name1)
@@ -240,7 +240,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       #
       visit chorg_revision_path(site: site, id: revision)
       within "dd.chorg-revisions-division" do
-        click_on [ new_name11, new_name2 ].join(",")
+        click_on [ "\"#{new_name11}\"", "\"#{new_name2}\"" ].join(",")
       end
       wait_for_turbo_frame "#item-frame"
       expect(page).to have_css("#chorg-after-basic1", text: new_name11)
