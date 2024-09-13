@@ -39,6 +39,8 @@ class Gws::Column::CopyService
 
       break if errors.present?
 
+      column_ids = {}
+      radio_button_columns = []
       restore_service.each_column do |column|
         next if column.form_id.to_s != orig_form_id
 
@@ -47,11 +49,18 @@ class Gws::Column::CopyService
         column.instance_variable_set(:@destroyed, false)
 
         column.id = BSON::ObjectId.new
+        column_ids[column.id_was.to_s] = column.id.to_s
         column.form_id = @new_item.id
+        radio_button_columns << column if column._type == "Gws::Column::RadioButton"
         result = column.save
         unless result
           SS::Model.copy_errors(form, @item)
         end
+      end
+
+      radio_button_columns.each do |column|
+        column.branch_section_ids = column.branch_section_ids.map { |id| column_ids[id] }
+        column.save
       end
     ensure
       if restore_service
