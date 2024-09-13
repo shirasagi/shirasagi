@@ -196,12 +196,12 @@ br {
   }
 }
 
-#ajax-file-box{
+#ajax-file-box {
   padding: 30px;
-  .user-file{}
-  .user-files{
 
-  }
+  .user-file {}
+
+  .user-files {}
 }
 
 /* ===================================================================================================
@@ -331,7 +331,7 @@ common
             top: 46px;
             z-index: 60;
 
-            .ss-jp-close{
+            .ss-jp-close {
               color: #686868 !important;
             }
           }
@@ -1746,7 +1746,7 @@ body#body--index {
         background-color: $white;
         @include border-radius(15px);
 
-        tbody{
+        tbody {
           display: flex;
           flex-wrap: wrap;
           gap: 0 20px;
@@ -1756,7 +1756,7 @@ body#body--index {
           display: flex;
           width: calc((100% - 20px) / 2);
 
-          @include mb{
+          @include mb {
             width: 100%;
           }
         }
@@ -1978,9 +1978,10 @@ body#body--index {
         }
       }
 
-      .ss-preview-part>section#safety{
+      .ss-preview-part>section#safety {
         width: 90%;
-        @include tb{
+
+        @include tb {
           width: 100%;
         }
       }
@@ -4335,7 +4336,7 @@ body.general {
             justify-items: end;
             align-items: baseline;
 
-            @include tb{
+            @include tb {
               flex-wrap: wrap;
             }
 
@@ -4345,10 +4346,10 @@ body.general {
               display: flex;
               flex-wrap: wrap;
 
-              .file-view{
+              .file-view {
                 width: calc((100% - 74px)/2);
 
-                @include mb{
+                @include mb {
                   width: 100%;
                 }
               }
@@ -4558,7 +4559,7 @@ body.general {
         text-align: center;
         // line-height: 90px;
 
-        img{
+        img {
           width: 100%;
           height: 100%;
         }
@@ -4613,8 +4614,9 @@ body.general {
 
   /* 会員登録 */
   &.body--registration {
-    form{
-      .columns{
+    form {
+      .columns {
+
         dl,
         fieldset {
           @include clear;
@@ -4766,7 +4768,7 @@ body.general {
             padding: 5px 10px;
           }
 
-          .field_with_errors{
+          .field_with_errors {
             display: inline;
             float: none;
             width: auto;
@@ -4795,7 +4797,7 @@ body.general {
           }
         }
 
-        fieldset.birthday{
+        fieldset.birthday {
           input[name="item[in_birth][year]"] {
             padding: 13px 0 12px;
           }
@@ -4829,6 +4831,7 @@ body.general {
           }
         }
       }
+
       .send {
         padding-left: 236px;
 
@@ -4846,6 +4849,7 @@ body.general {
           @include btn-gry;
         }
       }
+
       #errorExplanation {
         margin-bottom: 24px;
         padding: 12px 12px 0;
@@ -10120,6 +10124,65 @@ body.body--garbage-category {
   }
 }
 
+body[class*="body--garbage-list-"] {
+  #main {
+    font-size: $px16;
+    border-radius: 16px;
+    -webkit-border-radius: 16px;
+    background-color: $white;
+
+    table.columns {
+      display: block;
+      padding: 10px 35px 30px;
+
+      @include tb {
+        font-size: $px14;
+      }
+
+      caption {
+        display: none;
+      }
+
+      thead {
+        width: 100%;
+        text-align: left;
+        background-color: $ygreen;
+
+        tr {
+          th {
+            padding: 5px 10px;
+            white-space: nowrap;
+            border: 1px solid #787878;
+
+            @include tb {
+              white-space: normal;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            padding: 5px 10px;
+            white-space: nowrap;
+            border: 1px solid #787878;
+
+            @include tb {
+              white-space: normal;
+            }
+
+            &:last-child {
+              white-space: normal;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
 /* pages - body.body--calendar イベントカレンダー
 ---------------------------------------------------------- */
 body.body--calendar {
@@ -10709,17 +10772,19 @@ body.body--calendar {
         }
       }
 
-      #event-map{
-        .map-page{
+      #event-map {
+        .map-page {
           margin-bottom: 70px;
           background-color: #fff;
           padding: 0 35px 20px;
           border-radius: 0 0 16px 16px;
-          header{
-          display: none;
+
+          header {
+            display: none;
           }
-          #map-canvas{
-            .ol-unselectable{
+
+          #map-canvas {
+            .ol-unselectable {
               border-radius: 0 0 16px 16px;
             }
           }
@@ -10946,6 +11011,7 @@ body.body--calendar {
             @include border-radius(10px);
           }
         }
+
         #map-canvas {
           margin-left: 0px;
           margin-bottom: 15px;

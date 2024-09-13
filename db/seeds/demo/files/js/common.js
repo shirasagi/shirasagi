@@ -663,20 +663,23 @@ var addAnchorLinks = function () {
 ---------------------------------------------------------- */
 var smoothScrollFunc = function () {
   $('#main a[href^="#"]').click(function () {
-    // 移動先
-    var adjust = 0;
-    // スクロール速度
-    var speed = 400;
-    // アンカーの値取得
-    var href = $(this).attr("href");
-    // 移動先取得
-    var target = $(href == "#" || href == "" ? 'html' : href);
-    // 移動先調整
-    var position = target.offset().top + adjust;
-    // スムーススクロール
-    $('body,html').animate({
-      scrollTop: position
-    }, speed, 'swing');
+    if($(this).parents(".map-search-index").length == 0){
+      // 移動先
+      var adjust = 0;
+      // スクロール速度
+      var speed = 400;
+      // アンカーの値取得
+      var href = $(this).attr("href");
+      // 移動先取得
+      var target = $(href == "#" || href == "" ? 'html' : href);
+      // 移動先調整
+      var position = target.offset().top + adjust;
+      // スムーススクロール
+      $('body,html').animate({
+        scrollTop: position
+      }, speed, 'swing');
+      return false;
+    }
     return false;
   });
 }
