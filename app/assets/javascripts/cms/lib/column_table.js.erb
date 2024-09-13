@@ -156,11 +156,11 @@ Cms_Column_Table.prototype.editCell = function (ev, editable) {
     var self = this;
 
     // セルをクリックしたら取得したセルの値をtextareaに追加してセル内にtextareaを挿入
-    editable.html('<textarea style="width:100px;">' + editable.html() + '</textarea>').find('textarea')
+    editable.html('<textarea style="width:100px;">' + $('<span />').html(editable.html()).text() + '</textarea>').find('textarea')
     .focus()
     .on('blur', function () {
       // フォーカスが外れた時、セルに値を追加して不要なtextareaを削除
-      editable.append($(this).val());
+      editable.append($('<span />').text($(this).val()).html());
       editable.find('textarea').remove();
       editable.removeClass("edited");
       self.updateHidden();
