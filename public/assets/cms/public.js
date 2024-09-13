@@ -24902,7 +24902,7 @@ this.SS = (function () {
         SS.href = data.href;
         return SS.renderTools();
       },
-      error: function (req, status, error) {
+      error: function (_req, _status, _error) {
         return body.html(SS.page);
       },
       complete: function () {
@@ -24931,7 +24931,7 @@ this.SS = (function () {
       success: function (data) {
         return $(elem).replaceWith(data);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
         return $(elem).remove();
       },
       complete: function () {
@@ -24957,7 +24957,7 @@ this.SS = (function () {
       dataType: "json",
       success: function () {
       },
-      error: function (data, status) {
+      error: function (data, _status) {
         alert([ "== Error(AjaxForm) ==" ].concat(data.responseJSON).join("\n"));
       }
     };
@@ -24993,7 +24993,7 @@ this.SS = (function () {
         },
         success: function () {
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error(Ajax) ==");
         }
       };
@@ -25031,7 +25031,7 @@ this.SS = (function () {
             $(self.data("remove")).remove();
           }
         },
-        error: function (data, status) {
+        error: function (data, _status) {
           alert([ "== Error(AjaxDelete) ==" ].concat(data.responseJSON).join("\n"));
         }
       };
@@ -25150,7 +25150,7 @@ this.SS = (function () {
             $uploaderAlertMessage.show();
           }
         },
-        error: function (xhr, status) {
+        error: function (xhr, _status) {
           var errors;
           try {
             errors = $.parseJSON(xhr.responseText);
@@ -25291,137 +25291,135 @@ this.SS = (function () {
     return moment(date).format(format);
   };
 
-  SS.renderFileUploadInitialized = false;
-
   SS.renderFileUpload = function () {
     $(".ss-file-field .btn-file-upload").each(function () {
       var $uploadBtn = $(this);
-      if ($uploadBtn.data("on-select")) {
-        return;
-      }
-
-      var $container = $uploadBtn.closest(".ss-file-field")
-      var onSelect = function ($item) {
-        $.colorbox.close();
-
-        var $data = $item.closest("[data-id]");
-        var fileId = $data.data('id');
-        var fileName = $data.data("humanizedName") || $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
-        if (!fileId || !fileName) {
+      SS.justOnce(this, "ss-file-field", function() {
+        if ($uploadBtn.data("on-select")) {
           return;
         }
 
-        $container.find(".humanized-name").text(fileName);
-        $container.find(".file-id").val(fileId);
-        $container.find(".sanitizer-status").replaceWith($data.find('.sanitizer-status'));
-        $container.find(".btn-file-delete").removeClass("hide");
-        $container.find(".upload-drop-notice").addClass("hide");
-      };
+        var $container = $uploadBtn.closest(".ss-file-field")
+        var onSelect = function ($item) {
+          $.colorbox.close();
 
-      $uploadBtn.data("on-select", onSelect);
-
-      $container.find(".dropdown-item").on("click", function (ev) {
-        ev.preventDefault();
-
-        var $el = $(this);
-        var href = $el.attr("href");
-
-        $uploadBtn.attr("href", href).text($el.text()).trigger("click");
-
-        var $dropdown = $el.closest(".dropdown")
-        $dropdown.removeClass('active');
-        $dropdown.find(".dropdown-menu").removeClass('active');
-
-        return false;
-      });
-
-      var dropEventTriggered = false;
-      var dropNoticeHtml = $container.find(".upload-drop-notice").html();
-      $container.on("dragenter", function (ev) {
-        if (!dropEventTriggered) {
-          $container.addClass('file-dragenter');
-        }
-        return false;
-      });
-      $container.on("dragleave", function (ev) {
-        $container.removeClass('file-dragenter');
-        return false;
-      });
-      $container.on("dragover", function (ev) {
-        if (!dropEventTriggered) {
-          $container.addClass('file-dragenter');
-        }
-        return false;
-      });
-      $container.on("drop", function (ev) {
-        $container.removeClass('file-dragenter');
-
-        var files = ev.originalEvent.dataTransfer.files;
-        if (files.length === 0) {
-          return false;
-        }
-
-        if (dropEventTriggered) {
-          return false;
-        }
-        dropEventTriggered = true;
-        $container.find(".upload-drop-notice").html(SS.loading).removeClass("hide");
-        $container.css("cursor", "progress");
-
-        var token = $('meta[name="csrf-token"]').attr('content');
-        var formData = new FormData();
-        formData.append('authenticity_token', token);
-        var defaultFileResizing = SS_AjaxFile.defaultFileResizing();
-        if (defaultFileResizing) {
-          formData.append('item[resizing]', defaultFileResizing);
-        }
-        for (var j = 0, len = files.length; j < len; j++) {
-          formData.append('item[in_files][]', files[j]);
-        }
-
-        var uploadUrl = $uploadBtn.attr("href");
-        $.ajax({
-          url: uploadUrl,
-          type: "POST",
-          dataType: "JSON",
-          data: formData,
-          processData: false,
-          contentType: false
-        }).then(function (data) {
-          // success
-          var fileData = data[0];
-          if (!fileData) {
+          var $data = $item.closest("[data-id]");
+          var fileId = $data.data('id');
+          var fileName = $data.data("humanizedName") || $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+          if (!fileId || !fileName) {
             return;
           }
 
-          $container.find(".humanized-name").text(fileData["humanized_name"]);
-          $container.find(".file-id").val(fileData["id"] || fileData["_id"]);
-          $container.find(".sanitizer-status").addClass("hide");
+          $container.find(".humanized-name").text(fileName);
+          $container.find(".file-id").val(fileId);
+          $container.find(".sanitizer-status").replaceWith($data.find('.sanitizer-status'));
           $container.find(".btn-file-delete").removeClass("hide");
           $container.find(".upload-drop-notice").addClass("hide");
-        }, function (xhr, textStatus, errorThrown) {
-          // error
-          if (xhr.status === 413) {
-            alert([ "== Error(FileUpload) ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
-          } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert([ "== Error(FileUpload) ==" ].concat(xhr.responseJSON).join("\n"));
-          } else {
-            alert([ "== Error(FileUpload) ==" ].concat(xhr.statusText).join("\n"));
-          }
-        }).then(function () {
-          // complete
-          dropEventTriggered = false;
-          $container.find(".upload-drop-notice").html(dropNoticeHtml);
-          $container.css("cursor", "auto");
+        };
+
+        $uploadBtn.data("on-select", onSelect);
+
+        $container.find(".dropdown-item").on("click", function (ev) {
+          ev.preventDefault();
+
+          var $el = $(this);
+          var href = $el.attr("href");
+
+          $uploadBtn.attr("href", href).text($el.text()).trigger("click");
+
+          var $dropdown = $el.closest(".dropdown")
+          $dropdown.removeClass('active');
+          $dropdown.find(".dropdown-menu").removeClass('active');
+
+          return false;
         });
 
-        return false;
+        var dropEventTriggered = false;
+        var dropNoticeHtml = $container.find(".upload-drop-notice").html();
+        $container.on("dragenter", function (_ev) {
+          if (!dropEventTriggered) {
+            $container.addClass('file-dragenter');
+          }
+          return false;
+        });
+        $container.on("dragleave", function (_ev) {
+          $container.removeClass('file-dragenter');
+          return false;
+        });
+        $container.on("dragover", function (_ev) {
+          if (!dropEventTriggered) {
+            $container.addClass('file-dragenter');
+          }
+          return false;
+        });
+        $container.on("drop", function (ev) {
+          $container.removeClass('file-dragenter');
+
+          var files = ev.originalEvent.dataTransfer.files;
+          if (files.length === 0) {
+            return false;
+          }
+
+          if (dropEventTriggered) {
+            return false;
+          }
+          dropEventTriggered = true;
+          $container.find(".upload-drop-notice").html(SS.loading).removeClass("hide");
+          $container.css("cursor", "progress");
+
+          var token = $('meta[name="csrf-token"]').attr('content');
+          var formData = new FormData();
+          formData.append('authenticity_token', token);
+          var defaultFileResizing = SS_AjaxFile.defaultFileResizing();
+          if (defaultFileResizing) {
+            formData.append('item[resizing]', defaultFileResizing);
+          }
+          for (var j = 0, len = files.length; j < len; j++) {
+            formData.append('item[in_files][]', files[j]);
+          }
+
+          var uploadUrl = $uploadBtn.attr("href");
+          $.ajax({
+            url: uploadUrl,
+            type: "POST",
+            dataType: "JSON",
+            data: formData,
+            processData: false,
+            contentType: false
+          }).then(function (data) {
+            // success
+            var fileData = data[0];
+            if (!fileData) {
+              return;
+            }
+
+            $container.find(".humanized-name").text(fileData["humanized_name"]);
+            $container.find(".file-id").val(fileData["id"] || fileData["_id"]);
+            $container.find(".sanitizer-status").addClass("hide");
+            $container.find(".btn-file-delete").removeClass("hide");
+            $container.find(".upload-drop-notice").addClass("hide");
+          }, function (xhr, _textStatus, _errorThrown) {
+            // error
+            if (xhr.status === 413) {
+              alert([ "== Error(FileUpload) ==" ].concat(i18next.t('errors.messages.request_entity_too_large')).join("\n"));
+            } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
+              alert([ "== Error(FileUpload) ==" ].concat(xhr.responseJSON).join("\n"));
+            } else {
+              alert([ "== Error(FileUpload) ==" ].concat(xhr.statusText).join("\n"));
+            }
+          }).then(function () {
+            // complete
+            dropEventTriggered = false;
+            $container.find(".upload-drop-notice").html(dropNoticeHtml);
+            $container.css("cursor", "auto");
+          });
+
+          return false;
+        });
       });
     });
 
-    if (!SS.renderFileUploadInitialized) {
-      SS.renderFileUploadInitialized = true;
-
+    SS.justOnce(document, "ss-file-field", function() {
       $(document).on("click", ".ss-file-field .btn-file-delete", function () {
         var $this = $(this);
         var $container = $this.closest(".ss-file-field")
@@ -25433,7 +25431,7 @@ this.SS = (function () {
 
         return false;
       });
-    }
+    });
   };
 
   SS.timeoutAfterSubmit = function() {
@@ -28392,7 +28390,7 @@ this.SS_AjaxFile = (function () {
       });
 
       for (var i = 0; i < fileViews.length; i++) {
-        $("#selected-files").prepend(fileViews[i].html);
+        $("#selected-files").prepend(fileViews[i].html).trigger("change");
       }
 
       $.colorbox.close();
@@ -28880,7 +28878,13 @@ this.Cms_Editor_CKEditor = (function () {
       opts = {};
     }
 
-    $(selector).ckeditor(opts);
+    // $(selector).ckeditor(opts);
+    $(selector).each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-editor", function() {
+        $this.ckeditor(opts);
+      });
+    });
 
     CKEDITOR.on('dialogDefinition', function (ev) {
       var def, info, name, text;
@@ -28910,18 +28914,20 @@ this.Cms_Editor_CKEditor = (function () {
     });
 
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
-    CKEDITOR.on('instanceReady', function (ev) {
-      ev.editor.on("change", function () {
-        SS.formChanged = new Date().getTime();
+    CKEDITOR.on('instanceReady', function (outerEv) {
+      var elemet = outerEv.editor.element.$;
+      outerEv.editor.on("change", function () {
+        var event = new CustomEvent("ss:editorChange", { bubbles: true, cancelable: true, composed: true });
+        elemet.dispatchEvent(event);
       });
-      ev.editor.on("beforeCommandExec", function(event) {
+      outerEv.editor.on("beforeCommandExec", function(innerEv) {
         // Show the paste dialog for the paste buttons and right-click paste
-        if (event.data.name === "paste") {
-          event.editor._.forcePasteDialog = true;
+        if (innerEv.data.name === "paste") {
+          innerEv.editor._.forcePasteDialog = true;
         }
         // Don't show the paste dialog for Ctrl+Shift+V
-        if (event.data.name === "pastetext" && event.data.commandData.from === "keystrokeHandler") {
-          event.cancel();
+        if (innerEv.data.name === "pastetext" && innerEv.data.commandData.from === "keystrokeHandler") {
+          innerEv.cancel();
         }
       });
     });

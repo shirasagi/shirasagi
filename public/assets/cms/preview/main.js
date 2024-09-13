@@ -472,6 +472,8 @@ this.Form_Preview = (function () {
       form[0].requestSubmit();
       return false;
     });
+
+    $("button.preview").hide().eq(0).prependTo("footer.send").addClass("icon-material").show();
     $("button.preview").addClass("form-preview-rendered");
   };
 
@@ -2639,7 +2641,7 @@ SS_Workflow.prototype = {
     $html.find(".action .action-attach").remove();
     $html.find(".action .action-paste").remove();
     $html.find(".action .action-thumb").remove();
-    $("#selected-files").append($html);
+    $("#selected-files").append($html).trigger("change");
   },
   deleteUploadedFile: function($a) {
     $a.closest("div[data-file-id]").remove();
@@ -2785,6 +2787,8 @@ SS_WorkflowApprover.prototype.render = function () {
   if (self.options.draft_save) {
     $(".save")
       .val(self.options.draft_save)
+      .attr("name", "draft_save")
+      .attr("class", "btn-primary save draft_save")
       .attr("data-disable-with", null)
       .attr("data-disable", "")
       .on("click", function (_ev) {
@@ -2887,7 +2891,7 @@ this.SS_Addon_TempFile = (function () {
         return 0;
       });
       for (var i = 0; i < sorted_name_and_datas.length; i++) {
-        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+        $("#selected-files").prepend(sorted_name_and_datas[i].data).trigger("change");
       }
     });
   }
