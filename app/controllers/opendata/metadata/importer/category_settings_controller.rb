@@ -19,6 +19,7 @@ class Opendata::Metadata::Importer::CategorySettingsController < ApplicationCont
   public
 
   def fix_params
+    set_importer
     { cur_user: @cur_user, cur_site: @cur_site, importer: @importer }
   end
 

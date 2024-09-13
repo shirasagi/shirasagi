@@ -18,7 +18,7 @@
     </span>
 
     <table class="index" style="margin-top: 10px;">
-      <% Opendata::Node::EstatCategory.order_by(filename: 1).each do |cate| %>
+      <% Opendata::Node::EstatCategory.site(@cur_site).order_by(filename: 1).each do |cate| %>
         <tr>
           <td><%= link_to cate.name, opendata_metadata_importer_estat_category_settings_path(importer_id: @item.id, category_id: cate.id) %></td>
           <td><%= cate.filename %></td>
