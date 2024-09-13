@@ -91,8 +91,7 @@ class Webmail::MailsController < ApplicationController
       uid_list << item.uid
     end
 
-    webmail_uid_list_session = session[:webmail_uid_list]
-    webmail_uid_list_session ||= {}
+    webmail_uid_list_session = {}
     webmail_uid_list_session['uid_list'] = uid_list
     if params[:s]
       webmail_uid_list_session['search'] = params[:s].to_unsafe_h
