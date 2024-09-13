@@ -13,7 +13,15 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   end
   let(:column_options) { Array.new(3) { "option-#{unique_id}" } }
   let!(:column1) do
-    create(:gws_column_radio_button, cur_site: site, form: form, select_options: column_options)
+    create(:gws_column_radio_button, cur_site: site, form: form, select_options: column_options, order: 10)
+  end
+  let!(:column2) do
+    create(:gws_column_section, cur_site: site, form: form, order: 20)
+  end
+
+  before do
+    column1.branch_section_ids = [column2.id.to_s]
+    column1.save
   end
 
   context "copy" do
@@ -94,7 +102,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         expect(copy_form.contributor_model).to eq form.contributor_model
         expect(copy_form.contributor_id).to eq form.contributor_id
         expect(copy_form.contributor_name).to eq form.contributor_name
-        expect(copy_form.columns.count).to eq 1
+        expect(copy_form.columns.count).to eq 2
         copy_form.columns.first.tap do |copy_column|
           expect(copy_column.id).not_to eq column1.id
           expect(copy_column.name).to eq column1.name
@@ -106,6 +114,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           expect(copy_column.prefix_explanation).to eq column1.prefix_explanation
           expect(copy_column.postfix_explanation).to eq column1.postfix_explanation
           expect(copy_column.select_options).to eq column1.select_options
+          expect(copy_column.branch_section_ids).to include copy_form.columns[1].id.to_s
         end
         expect(copy_form.category_ids).to eq form.category_ids
         expect(copy_form.files.count).to eq 0
