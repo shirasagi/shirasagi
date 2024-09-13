@@ -696,7 +696,7 @@ end
 Opendata::Node::EstatCategory.site(@site).each do |node|
   save_estat_category_setting cur_user: @user, importer: metadata_importer,
     category: node, order: 0,
-    conditions: [{ type: 'string', value: node.name, operator: 'match' }.with_indifferent_access]
+    conditions: [{ type: 'metadata_estat_category', value: node.name, operator: 'match' }.with_indifferent_access]
 end
 
 ## -------------------------------------
