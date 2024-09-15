@@ -14,6 +14,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
   include Sys::SiteCopy::KanaDictionaries
   include Sys::SiteCopy::OpendataDatasetGroups
   include Sys::SiteCopy::OpendataLicenses
+  include Sys::SiteCopy::PageSearches
+  include Sys::SiteCopy::SourceCleanerTemplates
 
   self.task_class = Sys::SiteCopyTask
   self.task_name = "sys::site_copy"
@@ -40,7 +42,7 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     copy_cms_roles
     copy_cms_forms
     copy_cms_columns
-    copy_cms_loop_settings
+    copy_cms_loop_settings if @copy_contents.include?("loop_settings")
     copy_cms_layouts
     copy_cms_nodes
     copy_cms_parts
@@ -48,6 +50,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     copy_cms_files if @copy_contents.include?("files")
     copy_cms_editor_templates if @copy_contents.include?("editor_templates")
     copy_kana_dictionaries if @copy_contents.include?("dictionaries")
+    copy_cms_page_searches if @copy_contents.include?("page_searches")
+    copy_source_cleaner_templates if @copy_contents.include?("source_cleaner_templates")
 
     @task.log("サイト #{@src_site.host} を #{@dest_site.host} へコピーしました。")
   end

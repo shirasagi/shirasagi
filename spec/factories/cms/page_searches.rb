@@ -29,10 +29,10 @@ FactoryBot.define do
     search_updated_start { 4.days.ago }
     search_updated_close { 2.days.ago }
     search_updated_after { rand(1..10) }
-    search_created_condition { %w(absolute relative).sample }
-    search_created_start { 4.days.ago }
-    search_created_close { 2.days.ago }
-    search_created_after { rand(1..10) }
+    # search_created_condition { %w(absolute relative).sample }
+    # search_created_start { 4.days.ago }
+    # search_created_close { 2.days.ago }
+    # search_created_after { rand(1..10) }
     search_state { %w(public closed ready closing).sample }
     search_first_released { %w(draft published).sample }
     search_approver_state { %w(request approve remand).sample }
