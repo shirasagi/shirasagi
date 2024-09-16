@@ -46,9 +46,11 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(::Translate::Lang.site(dest_site).count).to eq 1
         dest_translate_lang = ::Translate::Lang.site(dest_site).first
         expect(dest_translate_lang.name).to eq translate_lang.name
-        expect(dest_translate_lang.description).to eq translate_lang.description
-        expect(dest_translate_lang.order).to eq translate_lang.order
-        expect(dest_translate_lang.html).to eq translate_lang.html
+        expect(dest_translate_lang.code).to eq translate_lang.code
+        expect(dest_translate_lang.mock_code).to eq translate_lang.mock_code
+        expect(dest_translate_lang.google_translation_code).to eq translate_lang.google_translation_code
+        expect(dest_translate_lang.microsoft_translator_text_code).to eq translate_lang.microsoft_translator_text_code
+        expect(dest_translate_lang.accept_languages).to eq translate_lang.accept_languages
       end
     end
   end

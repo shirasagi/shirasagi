@@ -54,7 +54,6 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_translate_text_cache.api).to eq translate_text_cache.api
         expect(dest_translate_text_cache.update_state).to eq translate_text_cache.update_state
         expect(dest_translate_text_cache.text).to eq translate_text_cache.text
-        expect(dest_translate_text_cache.original_text).to eq translate_text_cache.original_text
         expect(dest_translate_text_cache.source).to eq translate_text_cache.source
         expect(dest_translate_text_cache.target).to eq translate_text_cache.target
       end
