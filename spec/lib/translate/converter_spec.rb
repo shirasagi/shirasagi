@@ -49,6 +49,20 @@ describe Translate::Converter, dbscope: :example, translate: true do
         next if node.blank?
         node.content
       end.compact
+      expect(texts).to be_present
+
+      texts.each do |text|
+        expect(text).to match(/^\[#{target.code}:.+?\]/)
+      end
+
+      texts = []
+      Translate::Converter::TEXT_ATTRS.each do |text_attr|
+        doc.search("//*[@#{text_attr}]").each do |node|
+          next if node.attributes[text_attr].blank?
+          texts << node.attributes[text_attr]
+        end
+      end
+      expect(texts).to be_present
 
       texts.each do |text|
         expect(text).to match(/^\[#{target.code}:.+?\]/)
@@ -89,6 +103,20 @@ describe Translate::Converter, dbscope: :example, translate: true do
         next if node.blank?
         node.content
       end.compact
+      expect(texts).to be_present
+
+      texts.each do |text|
+        expect(text).to match(/^\[#{target.code}:.+?\]/)
+      end
+
+      texts = []
+      Translate::Converter::TEXT_ATTRS.each do |text_attr|
+        doc.search("//*[@#{text_attr}]").each do |node|
+          next if node.attributes[text_attr].blank?
+          texts << node.attributes[text_attr]
+        end
+      end
+      expect(texts).to be_present
 
       texts.each do |text|
         expect(text).to match(/^\[#{target.code}:.+?\]/)
