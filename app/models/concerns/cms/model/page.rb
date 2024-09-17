@@ -50,22 +50,33 @@ module Cms::Model::Page
   module ClassMethods
     def and_linking_pages(page)
       cond = []
+      file_urls = []
 
       if page.respond_to?(:url) && page.respond_to?(:full_url)
         cond << { contains_urls: { '$in' => [ page.url, page.full_url ] } }
         cond << { form_contains_urls: { '$in' => [ page.url, page.full_url ] } }
       end
-
+      
       if page.respond_to?(:files) && page.files.present?
         cond << { contains_urls: { '$in' => page.files.map(&:url) } }
+        cond << { form_contains_urls: { '$in' => page.files.map(&:url) } }
       end
 
       if page.respond_to?(:related_page_ids)
         cond << { related_page_ids: page.id }
       end
 
-      return all.none if cond.blank?
+      
+      if page.respond_to?(:column_values)
+        page.column_values.each do |column_value|
+          file_urls += column_value.files.map{|file| file.url} if (column_value.respond_to?(:files) && column_value.files.present?)
+        end
+        cond << { form_contains_urls: { '$in' => file_urls } } if file_urls.present?
+        cond << { contains_urls: { '$in' => file_urls } } if file_urls.present?
+      end
 
+      return all.none if cond.blank?
+      
       all.where(:id.ne => page.id).where("$and" => [{ "$or" => cond }])
     end
 
