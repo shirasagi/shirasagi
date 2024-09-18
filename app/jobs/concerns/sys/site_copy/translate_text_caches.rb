@@ -34,7 +34,7 @@ module Sys::SiteCopy::TranslateTextCaches
       api: src_item.api,
       update_state: src_item.update_state,
       text: src_item.text,
-      original_text: "what to do here?", # in here what should be filled because original_text can not be copied its a validation
+      original_text: src_item.original_text,
       source: src_item.source,
       target: src_item.target
     }
