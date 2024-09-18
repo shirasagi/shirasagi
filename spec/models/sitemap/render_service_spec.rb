@@ -48,14 +48,16 @@ describe Sitemap::RenderService do
       let!(:article_page2) { create :article_page, cur_node: article_node }
       let!(:node) { create :sitemap_node_page }
       let!(:item) do
-        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ article_node.url ]
+        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ "/#{article_node.filename}/" ]
       end
       subject! { Sitemap::RenderService.new(cur_site: cms_site, cur_node: node, page: item) }
 
       it do
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_node.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page1.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2.url)
+        subject.load_whole_contents.tap do |load_whole_contents|
+          expect(load_whole_contents.map(&:url)).not_to include(article_node.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page1.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page2.url)
+        end
       end
     end
 
@@ -67,15 +69,17 @@ describe Sitemap::RenderService do
       let!(:article_page2) { create :article_page, cur_node: article_node }
       let!(:node) { create :sitemap_node_page }
       let!(:item) do
-        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ archive_node.url ]
+        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ "/#{archive_node.filename}/" ]
       end
       subject! { Sitemap::RenderService.new(cur_site: cms_site, cur_node: node, page: item) }
 
       it do
-        expect(subject.load_whole_contents.map(&:url)).not_to include(cms_page1.url)
-        expect(subject.load_whole_contents.map(&:url)).to include(article_page1.url)
-        expect(subject.load_whole_contents.map(&:url)).to include(article_page2.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(archive_node.url)
+        subject.load_whole_contents.tap do |load_whole_contents|
+          expect(load_whole_contents.map(&:url)).not_to include(cms_page1.url)
+          expect(load_whole_contents.map(&:url)).to include(article_page1.url)
+          expect(load_whole_contents.map(&:url)).to include(article_page2.url)
+          expect(load_whole_contents.map(&:url)).not_to include(archive_node.url)
+        end
       end
     end
 
@@ -85,13 +89,15 @@ describe Sitemap::RenderService do
       let!(:article_page2) { create :article_page, cur_node: article_node }
       let!(:node) { create :sitemap_node_page }
       let!(:item) do
-        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ article_page2.url ]
+        create :sitemap_page, cur_node: node, sitemap_page_state: 'show', sitemap_deny_urls: [ "#{article_page2.filename}" ]
       end
       subject! { Sitemap::RenderService.new(cur_site: cms_site, cur_node: node, page: item) }
 
       it do
-        expect(subject.load_whole_contents.map(&:url)).to include(article_page1.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2.url)
+        subject.load_whole_contents.tap do |load_whole_contents|
+          expect(load_whole_contents.map(&:url)).to include(article_page1.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page2.url)
+        end
       end
     end
 
@@ -110,12 +116,57 @@ describe Sitemap::RenderService do
       subject! { Sitemap::RenderService.new(cur_site: cms_site, cur_node: node, page: item) }
 
       it do
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_node2022.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2022_1.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2022_2.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_node2023.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2023_1.url)
-        expect(subject.load_whole_contents.map(&:url)).not_to include(article_page2023_2.url)
+        subject.load_whole_contents.tap do |load_whole_contents|
+          expect(load_whole_contents.map(&:url)).not_to include(article_node2022.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page2022_1.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page2022_2.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_node2023.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page2023_1.url)
+          expect(load_whole_contents.map(&:url)).not_to include(article_page2023_2.url)
+        end
+      end
+    end
+
+    context 'on the subdir site' do
+      let!(:parent_site) { cms_site }
+      let!(:site) { create :cms_site_subdir, parent: parent_site }
+      let!(:article_node) { create :article_node_page, cur_site: site }
+      let!(:article_page1) { create :article_page, cur_site: site, cur_node: article_node }
+      let!(:article_page2) { create :article_page, cur_site: site, cur_node: article_node }
+      let!(:node) { create :sitemap_node_page, cur_site: site }
+
+      context "sitemap_deny_urls requires site's subdir to exclude the specific nodes / pages" do
+        let!(:item) do
+          create(
+            :sitemap_page, cur_site: site, cur_node: node, sitemap_page_state: 'show',
+            sitemap_deny_urls: [ "/#{site.subdir}/#{article_node.filename}/" ])
+        end
+        subject! { Sitemap::RenderService.new(cur_site: site, cur_node: node, page: item) }
+
+        it do
+          subject.load_whole_contents.tap do |load_whole_contents|
+            expect(load_whole_contents.map(&:url)).not_to include(article_node.url)
+            expect(load_whole_contents.map(&:url)).not_to include(article_page1.url)
+            expect(load_whole_contents.map(&:url)).not_to include(article_page2.url)
+          end
+        end
+      end
+
+      context "unable to exclude the specific nodes / pages if subdir is omitted" do
+        let!(:item) do
+          create(
+            :sitemap_page, cur_site: site, cur_node: node, sitemap_page_state: 'show',
+            sitemap_deny_urls: [ "/#{article_node.filename}/" ])
+        end
+        subject! { Sitemap::RenderService.new(cur_site: site, cur_node: node, page: item) }
+
+        it do
+          subject.load_whole_contents.tap do |load_whole_contents|
+            expect(load_whole_contents.map(&:url)).to include(article_node.url)
+            expect(load_whole_contents.map(&:url)).to include(article_page1.url)
+            expect(load_whole_contents.map(&:url)).to include(article_page2.url)
+          end
+        end
       end
     end
   end
