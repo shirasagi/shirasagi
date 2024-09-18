@@ -762,4 +762,117 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.circulation_attachment_uses[2]).to eq circulation_attachment_use_level3
     end
   end
+
+  context "with specify at the time of application" do
+    it do
+      #
+      # Create
+      #
+      visit gws_workflow2_routes_path(site: site)
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
+
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        select pull_up_label, from: "item[pull_up]"
+        select on_remand_label, from: "item[on_remand]"
+        fill_in "item[remark]", with: remark.join("\n")
+
+        # approver level 1
+        within ".gws-workflow-route-approver-item[data-level='1']" do
+          select required_count_level1_label, from: "item[required_counts][]"
+          select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
+          within "tr[data-type='new']" do
+            select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-approver"
+          end
+        end
+        wait_for_js_ready
+
+        # approver level 2
+        within ".gws-workflow-route-approver-item[data-level='2']" do
+          select required_count_level2_label, from: "item[required_counts][]"
+          select approver_attachment_use_level2_label, from: "item[approver_attachment_uses][]"
+          within "tr[data-type='new']" do
+            select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-approver"
+          end
+        end
+        wait_for_js_ready
+
+        # approver level 3
+        within ".gws-workflow-route-approver-item[data-level='3']" do
+          select required_count_level3_label, from: "item[required_counts][]"
+          select approver_attachment_use_level3_label, from: "item[approver_attachment_uses][]"
+          within "tr[data-type='new']" do
+            select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-approver"
+          end
+        end
+        wait_for_js_ready
+
+        # circulation level 1
+        within ".gws-workflow-route-circulation-item[data-level='1']" do
+          select circulation_attachment_use_level1_label, from: "item[circulation_attachment_uses][]"
+          within "tr[data-type='new']" do
+            select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-circulator"
+          end
+        end
+        wait_for_js_ready
+
+        # circulation level 2
+        within ".gws-workflow-route-circulation-item[data-level='2']" do
+          select circulation_attachment_use_level2_label, from: "item[circulation_attachment_uses][]"
+          within "tr[data-type='new']" do
+            select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-circulator"
+          end
+        end
+        wait_for_js_ready
+
+        # circulation level 3
+        within ".gws-workflow-route-circulation-item[data-level='3']" do
+          select circulation_attachment_use_level3_label, from: "item[circulation_attachment_uses][]"
+          within "tr[data-type='new']" do
+            select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-circulator"
+          end
+        end
+        wait_for_js_ready
+
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      expect(Gws::Workflow2::Route.all.count).to eq 1
+      route = Gws::Workflow2::Route.all.first
+      expect(route.site_id).to eq site.id
+      expect(route.name).to eq name
+      expect(route.pull_up).to eq pull_up
+      expect(route.on_remand).to eq on_remand
+      expect(route.remark).to eq remark.join("\r\n")
+      expect(route.approvers).to have(3).items
+      expect(route.approvers_at(1)).to \
+        include(level: 1, user_type: 'special', user_id: 'specify_at_time_of_application', editable: "")
+      expect(route.approvers_at(2)).to \
+        include(level: 2, user_type: 'special', user_id: 'specify_at_time_of_application', editable: "")
+      expect(route.approvers_at(3)).to \
+        include(level: 3, user_type: 'special', user_id: 'specify_at_time_of_application', editable: "")
+      expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
+      expect(route.required_counts[0]).to eq required_count_level1 == "false" ? false : required_count_level1.to_i
+      expect(route.required_counts[1]).to eq required_count_level2 == "false" ? false : required_count_level2.to_i
+      expect(route.required_counts[2]).to eq required_count_level3 == "false" ? false : required_count_level3.to_i
+      expect(route.approver_attachment_uses).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
+      expect(route.approver_attachment_uses[0]).to eq approver_attachment_use_level1
+      expect(route.approver_attachment_uses[1]).to eq approver_attachment_use_level2
+      expect(route.approver_attachment_uses[2]).to eq approver_attachment_use_level3
+      expect(route.circulations).to have(3).items
+      expect(route.circulations_at(1)).to \
+        include(level: 1, user_type: 'special', user_id: 'specify_at_time_of_application')
+      expect(route.circulations_at(2)).to \
+        include(level: 2, user_type: 'special', user_id: 'specify_at_time_of_application')
+      expect(route.circulations_at(3)).to \
+        include(level: 3, user_type: 'special', user_id: 'specify_at_time_of_application')
+      expect(route.circulation_attachment_uses).to have(Gws::Workflow2::Route::MAX_CIRCULATIONS).items
+      expect(route.circulation_attachment_uses[0]).to eq circulation_attachment_use_level1
+      expect(route.circulation_attachment_uses[1]).to eq circulation_attachment_use_level2
+      expect(route.circulation_attachment_uses[2]).to eq circulation_attachment_use_level3
+    end
+  end
 end

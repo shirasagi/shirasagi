@@ -119,6 +119,7 @@ ja:
       - 申請内容に間違いないか確認の上、申請してください。
     select_other_approvers: '他の承認者を選択する...'
     select_other_circulations: '他の回覧者を選択する...'
+    specify_at_time_of_application: '申請時に指定する'
     errors:
       messages:
         approver_is_deleted: 承認者は削除されています。別の承認者を選択してください。
