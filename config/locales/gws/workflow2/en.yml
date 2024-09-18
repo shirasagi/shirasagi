@@ -120,6 +120,8 @@ en:
     select_other_approvers: 'Select other approvers...'
     select_other_circulations: 'Select other circulators...'
     specify_at_time_of_application: 'Select at the time of application'
+    editable: Edit
+    alternatable: Proxy
     errors:
       messages:
         approver_is_deleted: The approver is deleted. Select another approver.

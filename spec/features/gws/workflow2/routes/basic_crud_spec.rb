@@ -37,10 +37,16 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
   end
   let(:approver_attachment_use_level1) { %w(enabled disabled).sample }
   let(:approver_attachment_use_level1_label) { I18n.t("ss.options.state.#{approver_attachment_use_level1}") }
+  let(:approver_editable_level1) { [ true, false ].sample }
+  let(:approver_alternatable_level1) { [ true, false ].sample }
   let(:approver_attachment_use_level2) { %w(enabled disabled).sample }
   let(:approver_attachment_use_level2_label) { I18n.t("ss.options.state.#{approver_attachment_use_level2}") }
+  let(:approver_editable_level2) { [ true, false ].sample }
+  let(:approver_alternatable_level2) { [ true, false ].sample }
   let(:approver_attachment_use_level3) { %w(enabled disabled).sample }
   let(:approver_attachment_use_level3_label) { I18n.t("ss.options.state.#{approver_attachment_use_level3}") }
+  let(:approver_editable_level3) { [ true, false ].sample }
+  let(:approver_alternatable_level3) { [ true, false ].sample }
   let(:circulation_attachment_use_level1) { %w(enabled disabled).sample }
   let(:circulation_attachment_use_level1_label) { I18n.t("ss.options.state.#{circulation_attachment_use_level1}") }
   let(:circulation_attachment_use_level2) { %w(enabled disabled).sample }
@@ -72,7 +78,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='1']" do
           select required_count_level1_label, from: "item[required_counts][]"
           select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level1
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level1
+              check "dummy-alternatable-check"
+            end
             select superior_label, from: "dummy-approver"
           end
         end
@@ -80,7 +92,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 1
         within ".gws-workflow-route-circulation-item[data-level='1']" do
           select circulation_attachment_use_level1_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select superior_label, from: "dummy-circulator"
           end
         end
@@ -98,10 +110,20 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(1).items
       route.approvers[0].tap do |approver|
+        expect(approver[:_id]).to be_present
         expect(approver[:level]).to eq 1
         expect(approver[:user_type]).to eq "superior"
         expect(approver[:user_id]).to eq "superior"
-        expect(approver[:editable]).to be_blank
+        if approver_editable_level1
+          expect(approver[:editable]).to eq 1
+        else
+          expect(approver[:editable]).to be_blank
+        end
+        if approver_alternatable_level1
+          expect(approver[:alternatable]).to eq 1
+        else
+          expect(approver[:alternatable]).to be_blank
+        end
       end
       expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
       if required_count_level1 == "false"
@@ -113,12 +135,15 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.approver_attachment_uses[0]).to eq approver_attachment_use_level1
       expect(route.circulations).to have(1).items
       route.circulations[0].tap do |circulation|
+        expect(circulation[:_id]).to be_present
         expect(circulation[:level]).to eq 1
         expect(circulation[:user_type]).to eq "superior"
         expect(circulation[:user_id]).to eq "superior"
       end
       expect(route.circulation_attachment_uses).to have(Gws::Workflow2::Route::MAX_CIRCULATIONS).items
       expect(route.circulation_attachment_uses[0]).to eq circulation_attachment_use_level1
+      approver0_id = route.approvers[0][:_id]
+      circulation0_id = route.circulations[0][:_id]
 
       #
       # Update
@@ -142,10 +167,20 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(1).items
       route.approvers[0].tap do |approver|
+        expect(approver[:_id]).to eq approver0_id
         expect(approver[:level]).to eq 1
         expect(approver[:user_type]).to eq "superior"
         expect(approver[:user_id]).to eq "superior"
-        expect(approver[:editable]).to be_blank
+        if approver_editable_level1
+          expect(approver[:editable]).to eq 1
+        else
+          expect(approver[:editable]).to be_blank
+        end
+        if approver_alternatable_level1
+          expect(approver[:alternatable]).to eq 1
+        else
+          expect(approver[:alternatable]).to be_blank
+        end
       end
       expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
       if required_count_level1 == "false"
@@ -157,6 +192,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.approver_attachment_uses[0]).to eq approver_attachment_use_level1
       expect(route.circulations).to have(1).items
       route.circulations[0].tap do |circulation|
+        expect(circulation[:_id]).to eq circulation0_id
         expect(circulation[:level]).to eq 1
         expect(circulation[:user_type]).to eq "superior"
         expect(circulation[:user_id]).to eq "superior"
@@ -217,7 +253,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='1']" do
           select required_count_level1_label, from: "item[required_counts][]"
           select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level1
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level1
+              check "dummy-alternatable-check"
+            end
             select approver_level1_title1.name, from: "dummy-approver"
           end
         end
@@ -226,7 +268,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='2']" do
           select required_count_level2_label, from: "item[required_counts][]"
           select approver_attachment_use_level2_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level2
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level2
+              check "dummy-alternatable-check"
+            end
             select approver_level2_title1.name, from: "dummy-approver"
           end
         end
@@ -235,7 +283,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='3']" do
           select required_count_level3_label, from: "item[required_counts][]"
           select approver_attachment_use_level3_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level3
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level3
+              check "dummy-alternatable-check"
+            end
             select approver_level3_title1.name, from: "dummy-approver"
           end
         end
@@ -243,7 +297,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 1
         within ".gws-workflow-route-circulation-item[data-level='1']" do
           select circulation_attachment_use_level1_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select circulation_level1_title1.name, from: "dummy-circulator"
           end
         end
@@ -251,7 +305,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 2
         within ".gws-workflow-route-circulation-item[data-level='2']" do
           select circulation_attachment_use_level2_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select circulation_level2_title1.name, from: "dummy-circulator"
           end
         end
@@ -259,7 +313,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 3
         within ".gws-workflow-route-circulation-item[data-level='3']" do
           select circulation_attachment_use_level3_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select circulation_level3_title1.name, from: "dummy-circulator"
           end
         end
@@ -277,11 +331,14 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(3).items
       expect(route.approvers_at(1)).to \
-        include(level: 1, user_type: Gws::UserTitle.name, user_id: approver_level1_title1.id, editable: "")
+        include(_id: be_present, level: 1, user_type: Gws::UserTitle.name, user_id: approver_level1_title1.id,
+          editable: approver_editable_level1 ? 1 : "", alternatable: approver_alternatable_level1 ? 1 : "")
       expect(route.approvers_at(2)).to \
-        include(level: 2, user_type: Gws::UserTitle.name, user_id: approver_level2_title1.id, editable: "")
+        include(_id: be_present, level: 2, user_type: Gws::UserTitle.name, user_id: approver_level2_title1.id,
+          editable: approver_editable_level2 ? 1 : "", alternatable: approver_alternatable_level2 ? 1 : "")
       expect(route.approvers_at(3)).to \
-        include(level: 3, user_type: Gws::UserTitle.name, user_id: approver_level3_title1.id, editable: "")
+        include(_id: be_present, level: 3, user_type: Gws::UserTitle.name, user_id: approver_level3_title1.id,
+          editable: approver_editable_level3 ? 1 : "", alternatable: approver_alternatable_level3 ? 1 : "")
       expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
       expect(route.required_counts[0]).to eq required_count_level1 == "false" ? false : required_count_level1.to_i
       expect(route.required_counts[1]).to eq required_count_level2 == "false" ? false : required_count_level2.to_i
@@ -292,15 +349,21 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.approver_attachment_uses[2]).to eq approver_attachment_use_level3
       expect(route.circulations).to have(3).items
       expect(route.circulations_at(1)).to \
-        include(level: 1, user_type: Gws::UserTitle.name, user_id: circulation_level1_title1.id)
+        include(_id: be_present, level: 1, user_type: Gws::UserTitle.name, user_id: circulation_level1_title1.id)
       expect(route.circulations_at(2)).to \
-        include(level: 2, user_type: Gws::UserTitle.name, user_id: circulation_level2_title1.id)
+        include(_id: be_present, level: 2, user_type: Gws::UserTitle.name, user_id: circulation_level2_title1.id)
       expect(route.circulations_at(3)).to \
-        include(level: 3, user_type: Gws::UserTitle.name, user_id: circulation_level3_title1.id)
+        include(_id: be_present, level: 3, user_type: Gws::UserTitle.name, user_id: circulation_level3_title1.id)
       expect(route.circulation_attachment_uses).to have(Gws::Workflow2::Route::MAX_CIRCULATIONS).items
       expect(route.circulation_attachment_uses[0]).to eq circulation_attachment_use_level1
       expect(route.circulation_attachment_uses[1]).to eq circulation_attachment_use_level2
       expect(route.circulation_attachment_uses[2]).to eq circulation_attachment_use_level3
+      approver0_id = route.approvers_at(1)[0][:_id]
+      approver1_id = route.approvers_at(2)[0][:_id]
+      # approver2_id = route.approvers_at(3)[0][:_id]
+      circulation0_id = route.circulations_at(1)[0][:_id]
+      circulation1_id = route.circulations_at(2)[0][:_id]
+      circulation2_id = route.circulations_at(3)[0][:_id]
 
       #
       # Update
@@ -314,21 +377,21 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         # approver level 1: change
         within ".gws-workflow-route-approver-item[data-level='1']" do
-          within "tr[data-type='#{approver_level1_title1.class.name}'][data-id='#{approver_level1_title1.id}']" do
+          within "tr[data-user-type='#{approver_level1_title1.class.name}'][data-user-id='#{approver_level1_title1.id}']" do
             select approver_level1_title2.name, from: "dummy-approver"
           end
         end
 
         # approver level 2: add
         within ".gws-workflow-route-approver-item[data-level='2']" do
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select approver_level2_title2.name, from: "dummy-approver"
           end
         end
 
         # approver level 3: delete
         within ".gws-workflow-route-approver-item[data-level='3']" do
-          within "tr[data-type='#{approver_level3_title1.class.name}'][data-id='#{approver_level3_title1.id}']" do
+          within "tr[data-user-type='#{approver_level3_title1.class.name}'][data-user-id='#{approver_level3_title1.id}']" do
             click_on I18n.t("ss.buttons.delete")
           end
         end
@@ -345,12 +408,22 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(3).items
       expect(route.approvers_at(1)).to \
-        include(level: 1, user_type: Gws::UserTitle.name, user_id: approver_level1_title2.id, editable: "")
+        include(_id: approver0_id, level: 1, user_type: Gws::UserTitle.name, user_id: approver_level1_title2.id,
+          editable: approver_editable_level1 ? 1 : "", alternatable: approver_alternatable_level1 ? 1 : "")
       expect(route.approvers_at(2)).to \
         include(
-          { level: 2, user_type: Gws::UserTitle.name, user_id: approver_level2_title1.id, editable: "" },
-          { level: 2, user_type: Gws::UserTitle.name, user_id: approver_level2_title2.id, editable: "" })
+          { _id: approver1_id, level: 2, user_type: Gws::UserTitle.name, user_id: approver_level2_title1.id,
+            editable: approver_editable_level2 ? 1 : "", alternatable: approver_alternatable_level2 ? 1 : "" },
+          { _id: be_present, level: 2, user_type: Gws::UserTitle.name, user_id: approver_level2_title2.id,
+            editable: "", alternatable: "" })
       expect(route.approvers_at(3)).to be_blank
+      expect(route.circulations).to have(3).items
+      expect(route.circulations_at(1)).to \
+        include(_id: circulation0_id, level: 1, user_type: Gws::UserTitle.name, user_id: circulation_level1_title1.id)
+      expect(route.circulations_at(2)).to \
+        include(_id: circulation1_id, level: 2, user_type: Gws::UserTitle.name, user_id: circulation_level2_title1.id)
+      expect(route.circulations_at(3)).to \
+        include(_id: circulation2_id, level: 3, user_type: Gws::UserTitle.name, user_id: circulation_level3_title1.id)
 
       #
       # Delete
@@ -405,7 +478,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='1']" do
           select required_count_level1_label, from: "item[required_counts][]"
           select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level1
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level1
+              check "dummy-alternatable-check"
+            end
             select approver_level1_occupation1.name, from: "dummy-approver"
           end
         end
@@ -414,7 +493,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='2']" do
           select required_count_level2_label, from: "item[required_counts][]"
           select approver_attachment_use_level2_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level2
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level2
+              check "dummy-alternatable-check"
+            end
             select approver_level2_occupation1.name, from: "dummy-approver"
           end
         end
@@ -423,7 +508,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='3']" do
           select required_count_level3_label, from: "item[required_counts][]"
           select approver_attachment_use_level3_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level3
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level3
+              check "dummy-alternatable-check"
+            end
             select approver_level3_occupation1.name, from: "dummy-approver"
           end
         end
@@ -431,7 +522,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 1
         within ".gws-workflow-route-circulation-item[data-level='1']" do
           select circulation_attachment_use_level1_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select circulation_level1_occupation1.name, from: "dummy-circulator"
           end
         end
@@ -439,7 +530,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 2
         within ".gws-workflow-route-circulation-item[data-level='2']" do
           select circulation_attachment_use_level2_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select circulation_level2_occupation1.name, from: "dummy-circulator"
           end
         end
@@ -447,7 +538,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 3
         within ".gws-workflow-route-circulation-item[data-level='3']" do
           select circulation_attachment_use_level3_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select circulation_level3_occupation1.name, from: "dummy-circulator"
           end
         end
@@ -465,11 +556,14 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(3).items
       expect(route.approvers_at(1)).to \
-        include(level: 1, user_type: Gws::UserOccupation.name, user_id: approver_level1_occupation1.id, editable: "")
+        include(_id: be_present, level: 1, user_type: Gws::UserOccupation.name, user_id: approver_level1_occupation1.id,
+          editable: approver_editable_level1 ? 1 : "", alternatable: approver_alternatable_level1 ? 1 : "")
       expect(route.approvers_at(2)).to \
-        include(level: 2, user_type: Gws::UserOccupation.name, user_id: approver_level2_occupation1.id, editable: "")
+        include(_id: be_present, level: 2, user_type: Gws::UserOccupation.name, user_id: approver_level2_occupation1.id,
+          editable: approver_editable_level2 ? 1 : "", alternatable: approver_alternatable_level2 ? 1 : "")
       expect(route.approvers_at(3)).to \
-        include(level: 3, user_type: Gws::UserOccupation.name, user_id: approver_level3_occupation1.id, editable: "")
+        include(_id: be_present, level: 3, user_type: Gws::UserOccupation.name, user_id: approver_level3_occupation1.id,
+          editable: approver_editable_level3 ? 1 : "", alternatable: approver_alternatable_level3 ? 1 : "")
       expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
       expect(route.required_counts[0]).to eq required_count_level1 == "false" ? false : required_count_level1.to_i
       expect(route.required_counts[1]).to eq required_count_level2 == "false" ? false : required_count_level2.to_i
@@ -480,11 +574,11 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.approver_attachment_uses[2]).to eq approver_attachment_use_level3
       expect(route.circulations).to have(3).items
       expect(route.circulations_at(1)).to \
-        include(level: 1, user_type: Gws::UserOccupation.name, user_id: circulation_level1_occupation1.id)
+        include(_id: be_present, level: 1, user_type: Gws::UserOccupation.name, user_id: circulation_level1_occupation1.id)
       expect(route.circulations_at(2)).to \
-        include(level: 2, user_type: Gws::UserOccupation.name, user_id: circulation_level2_occupation1.id)
+        include(_id: be_present, level: 2, user_type: Gws::UserOccupation.name, user_id: circulation_level2_occupation1.id)
       expect(route.circulations_at(3)).to \
-        include(level: 3, user_type: Gws::UserOccupation.name, user_id: circulation_level3_occupation1.id)
+        include(_id: be_present, level: 3, user_type: Gws::UserOccupation.name, user_id: circulation_level3_occupation1.id)
       expect(route.circulation_attachment_uses).to have(Gws::Workflow2::Route::MAX_CIRCULATIONS).items
       expect(route.circulation_attachment_uses[0]).to eq circulation_attachment_use_level1
       expect(route.circulation_attachment_uses[1]).to eq circulation_attachment_use_level2
@@ -502,21 +596,21 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         # approver level 1: change
         within ".gws-workflow-route-approver-item[data-level='1']" do
-          within "tr[data-type='#{approver_level1_occupation1.class.name}'][data-id='#{approver_level1_occupation1.id}']" do
+          within "tr[data-user-type='#{approver_level1_occupation1.class.name}'][data-user-id='#{approver_level1_occupation1.id}']" do
             select approver_level1_occupation2.name, from: "dummy-approver"
           end
         end
 
         # approver level 2: add
         within ".gws-workflow-route-approver-item[data-level='2']" do
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select approver_level2_occupation2.name, from: "dummy-approver"
           end
         end
 
         # approver level 3: delete
         within ".gws-workflow-route-approver-item[data-level='3']" do
-          within "tr[data-type='#{approver_level3_occupation1.class.name}'][data-id='#{approver_level3_occupation1.id}']" do
+          within "tr[data-user-type='#{approver_level3_occupation1.class.name}'][data-user-id='#{approver_level3_occupation1.id}']" do
             click_on I18n.t("ss.buttons.delete")
           end
         end
@@ -533,11 +627,14 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(3).items
       expect(route.approvers_at(1)).to \
-        include(level: 1, user_type: Gws::UserOccupation.name, user_id: approver_level1_occupation2.id, editable: "")
+        include(_id: be_present, level: 1, user_type: Gws::UserOccupation.name, user_id: approver_level1_occupation2.id,
+          editable: approver_editable_level1 ? 1 : "", alternatable: approver_alternatable_level1 ? 1 : "")
       expect(route.approvers_at(2)).to \
         include(
-          { level: 2, user_type: Gws::UserOccupation.name, user_id: approver_level2_occupation1.id, editable: "" },
-          { level: 2, user_type: Gws::UserOccupation.name, user_id: approver_level2_occupation2.id, editable: "" })
+          { _id: be_present, level: 2, user_type: Gws::UserOccupation.name, user_id: approver_level2_occupation1.id,
+            editable: approver_editable_level2 ? 1 : "", alternatable: approver_alternatable_level2 ? 1 : "" },
+          { _id: be_present, level: 2, user_type: Gws::UserOccupation.name, user_id: approver_level2_occupation2.id,
+            editable: "", alternatable: "" })
       expect(route.approvers_at(3)).to be_blank
 
       #
@@ -601,7 +698,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(
             "select[name='dummy-approver'] option[value='#{non_readable_user.id}']", text: non_readable_user.long_name)
           wait_for_cbox_opened do
-            within "tr[data-type='new']" do
+            within "tr[data-user-type='new']" do
+              if approver_editable_level1
+                check "dummy-editable-check"
+              end
+              if approver_alternatable_level1
+                check "dummy-alternatable-check"
+              end
               select I18n.t("gws/workflow2.select_other_approvers"), from: "dummy-approver"
             end
           end
@@ -622,7 +725,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
           select required_count_level2_label, from: "item[required_counts][]"
           select approver_attachment_use_level2_label, from: "item[approver_attachment_uses][]"
           wait_for_cbox_opened do
-            within "tr[data-type='new']" do
+            within "tr[data-user-type='new']" do
+              if approver_editable_level2
+                check "dummy-editable-check"
+              end
+              if approver_alternatable_level2
+                check "dummy-alternatable-check"
+              end
               select I18n.t("gws/workflow2.select_other_approvers"), from: "dummy-approver"
             end
           end
@@ -643,7 +752,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
           select required_count_level3_label, from: "item[required_counts][]"
           select approver_attachment_use_level3_label, from: "item[approver_attachment_uses][]"
           wait_for_cbox_opened do
-            within "tr[data-type='new']" do
+            within "tr[data-user-type='new']" do
+              if approver_editable_level3
+                check "dummy-editable-check"
+              end
+              if approver_alternatable_level3
+                check "dummy-alternatable-check"
+              end
               select I18n.t("gws/workflow2.select_other_approvers"), from: "dummy-approver"
             end
           end
@@ -667,7 +782,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(
             "select[name='dummy-circulator'] option[value='#{non_readable_user.id}']", text: non_readable_user.long_name)
           wait_for_cbox_opened do
-            within "tr[data-type='new']" do
+            within "tr[data-user-type='new']" do
               select I18n.t("gws/workflow2.select_other_circulations"), from: "dummy-circulator"
             end
           end
@@ -687,7 +802,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-circulation-item[data-level='2']" do
           select circulation_attachment_use_level2_label, from: "item[circulation_attachment_uses][]"
           wait_for_cbox_opened do
-            within "tr[data-type='new']" do
+            within "tr[data-user-type='new']" do
               select I18n.t("gws/workflow2.select_other_circulations"), from: "dummy-circulator"
             end
           end
@@ -707,7 +822,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-circulation-item[data-level='3']" do
           select circulation_attachment_use_level3_label, from: "item[circulation_attachment_uses][]"
           wait_for_cbox_opened do
-            within "tr[data-type='new']" do
+            within "tr[data-user-type='new']" do
               select I18n.t("gws/workflow2.select_other_circulations"), from: "dummy-circulator"
             end
           end
@@ -736,11 +851,14 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(3).items
       expect(route.approvers_at(1)).to \
-        include(level: 1, user_type: Gws::User.name, user_id: approver_level1_user1.id, editable: "")
+        include(_id: be_present, level: 1, user_type: Gws::User.name, user_id: approver_level1_user1.id,
+          editable: approver_editable_level1 ? 1 : "", alternatable: approver_alternatable_level1 ? 1 : "")
       expect(route.approvers_at(2)).to \
-        include(level: 2, user_type: Gws::User.name, user_id: approver_level2_user1.id, editable: "")
+        include(_id: be_present, level: 2, user_type: Gws::User.name, user_id: approver_level2_user1.id,
+          editable: approver_editable_level2 ? 1 : "", alternatable: approver_alternatable_level2 ? 1 : "")
       expect(route.approvers_at(3)).to \
-        include(level: 3, user_type: Gws::User.name, user_id: approver_level3_user1.id, editable: "")
+        include(_id: be_present, level: 3, user_type: Gws::User.name, user_id: approver_level3_user1.id,
+          editable: approver_editable_level3 ? 1 : "", alternatable: approver_alternatable_level3 ? 1 : "")
       expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
       expect(route.required_counts[0]).to eq required_count_level1 == "false" ? false : required_count_level1.to_i
       expect(route.required_counts[1]).to eq required_count_level2 == "false" ? false : required_count_level2.to_i
@@ -751,11 +869,11 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.approver_attachment_uses[2]).to eq approver_attachment_use_level3
       expect(route.circulations).to have(3).items
       expect(route.circulations_at(1)).to \
-        include(level: 1, user_type: Gws::User.name, user_id: circulation_level1_user1.id)
+        include(_id: be_present, level: 1, user_type: Gws::User.name, user_id: circulation_level1_user1.id)
       expect(route.circulations_at(2)).to \
-        include(level: 2, user_type: Gws::User.name, user_id: circulation_level2_user1.id)
+        include(_id: be_present, level: 2, user_type: Gws::User.name, user_id: circulation_level2_user1.id)
       expect(route.circulations_at(3)).to \
-        include(level: 3, user_type: Gws::User.name, user_id: circulation_level3_user1.id)
+        include(_id: be_present, level: 3, user_type: Gws::User.name, user_id: circulation_level3_user1.id)
       expect(route.circulation_attachment_uses).to have(Gws::Workflow2::Route::MAX_CIRCULATIONS).items
       expect(route.circulation_attachment_uses[0]).to eq circulation_attachment_use_level1
       expect(route.circulation_attachment_uses[1]).to eq circulation_attachment_use_level2
@@ -783,7 +901,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='1']" do
           select required_count_level1_label, from: "item[required_counts][]"
           select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level1
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level1
+              check "dummy-alternatable-check"
+            end
             select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-approver"
           end
         end
@@ -793,7 +917,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='2']" do
           select required_count_level2_label, from: "item[required_counts][]"
           select approver_attachment_use_level2_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level2
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level2
+              check "dummy-alternatable-check"
+            end
             select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-approver"
           end
         end
@@ -803,7 +933,13 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='3']" do
           select required_count_level3_label, from: "item[required_counts][]"
           select approver_attachment_use_level3_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
+            if approver_editable_level3
+              check "dummy-editable-check"
+            end
+            if approver_alternatable_level3
+              check "dummy-alternatable-check"
+            end
             select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-approver"
           end
         end
@@ -812,7 +948,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 1
         within ".gws-workflow-route-circulation-item[data-level='1']" do
           select circulation_attachment_use_level1_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-circulator"
           end
         end
@@ -821,7 +957,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 2
         within ".gws-workflow-route-circulation-item[data-level='2']" do
           select circulation_attachment_use_level2_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-circulator"
           end
         end
@@ -830,7 +966,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 3
         within ".gws-workflow-route-circulation-item[data-level='3']" do
           select circulation_attachment_use_level3_label, from: "item[circulation_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select I18n.t("gws/workflow2.specify_at_time_of_application"), from: "dummy-circulator"
           end
         end
@@ -849,11 +985,14 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.remark).to eq remark.join("\r\n")
       expect(route.approvers).to have(3).items
       expect(route.approvers_at(1)).to \
-        include(level: 1, user_type: 'special', user_id: 'specify_at_time_of_application', editable: "")
+        include(_id: be_present, level: 1, user_type: 'special', user_id: 'specify_at_time_of_application',
+          editable: approver_editable_level1 ? 1 : "", alternatable: approver_alternatable_level1 ? 1 : "")
       expect(route.approvers_at(2)).to \
-        include(level: 2, user_type: 'special', user_id: 'specify_at_time_of_application', editable: "")
+        include(_id: be_present, level: 2, user_type: 'special', user_id: 'specify_at_time_of_application',
+          editable: approver_editable_level2 ? 1 : "", alternatable: approver_alternatable_level2 ? 1 : "")
       expect(route.approvers_at(3)).to \
-        include(level: 3, user_type: 'special', user_id: 'specify_at_time_of_application', editable: "")
+        include(_id: be_present, level: 3, user_type: 'special', user_id: 'specify_at_time_of_application',
+          editable: approver_editable_level3 ? 1 : "", alternatable: approver_alternatable_level3 ? 1 : "")
       expect(route.required_counts).to have(Gws::Workflow2::Route::MAX_APPROVERS).items
       expect(route.required_counts[0]).to eq required_count_level1 == "false" ? false : required_count_level1.to_i
       expect(route.required_counts[1]).to eq required_count_level2 == "false" ? false : required_count_level2.to_i
@@ -864,11 +1003,11 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       expect(route.approver_attachment_uses[2]).to eq approver_attachment_use_level3
       expect(route.circulations).to have(3).items
       expect(route.circulations_at(1)).to \
-        include(level: 1, user_type: 'special', user_id: 'specify_at_time_of_application')
+        include(_id: be_present, level: 1, user_type: 'special', user_id: 'specify_at_time_of_application')
       expect(route.circulations_at(2)).to \
-        include(level: 2, user_type: 'special', user_id: 'specify_at_time_of_application')
+        include(_id: be_present, level: 2, user_type: 'special', user_id: 'specify_at_time_of_application')
       expect(route.circulations_at(3)).to \
-        include(level: 3, user_type: 'special', user_id: 'specify_at_time_of_application')
+        include(_id: be_present, level: 3, user_type: 'special', user_id: 'specify_at_time_of_application')
       expect(route.circulation_attachment_uses).to have(Gws::Workflow2::Route::MAX_CIRCULATIONS).items
       expect(route.circulation_attachment_uses[0]).to eq circulation_attachment_use_level1
       expect(route.circulation_attachment_uses[1]).to eq circulation_attachment_use_level2

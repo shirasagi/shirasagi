@@ -47,7 +47,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='1']" do
           select required_count_level1_label, from: "item[required_counts][]"
           select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
-          within "tr[data-type='new']" do
+          within "tr[data-user-type='new']" do
             select superior_label, from: "dummy-approver"
           end
         end

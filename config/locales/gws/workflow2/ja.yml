@@ -120,6 +120,8 @@ ja:
     select_other_approvers: '他の承認者を選択する...'
     select_other_circulations: '他の回覧者を選択する...'
     specify_at_time_of_application: '申請時に指定する'
+    editable: 編集可
+    alternatable: 代理承認可
     errors:
       messages:
         approver_is_deleted: 承認者は削除されています。別の承認者を選択してください。
