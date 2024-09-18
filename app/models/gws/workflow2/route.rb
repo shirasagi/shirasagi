@@ -18,6 +18,7 @@ class Gws::Workflow2::Route
   cattr_reader(:approver_user_class) { Gws::User }
 
   field :name, type: String
+  field :order, type: Integer
   field :pull_up, type: String
   field :on_remand, type: String
   field :approvers, type: Workflow::Extensions::Route::Approvers
@@ -27,7 +28,7 @@ class Gws::Workflow2::Route
   field :circulation_attachment_uses, type: Array
   field :remark, type: String
 
-  permit_params :name, :pull_up, :on_remand, :remark
+  permit_params :name, :order, :pull_up, :on_remand, :remark
   permit_params approvers: [ :level, :user_type, :user_id, :editable ], required_counts: [], approver_attachment_uses: []
   permit_params circulations: [ :level, :user_type, :user_id ], circulation_attachment_uses: []
 
@@ -80,7 +81,7 @@ class Gws::Workflow2::Route
       else
         routes = routes.readable(user)
       end
-      routes.only(:id, :name).each do |route|
+      routes.only(:id, :name).reorder(order: 1, name: 1).each do |route|
         ret << [ route.name, route.id.to_s ]
       end
 

@@ -242,6 +242,7 @@ en:
         workflow_member_id: Approver
       gws/workflow2/route:
         name: Name
+        order: Order
         pull_up: Pull-up approval
         on_remand: On remand
         approvers: Approver
@@ -296,6 +297,9 @@ en:
     gws/workflow2/route:
       name:
         - Enter a name for the approval route.
+      order:
+        - Set the order.
+        - The lower the number, the higher the position.
       pull_up:
         - Enable or disable pull-up approval.
       on_remand:
