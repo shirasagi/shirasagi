@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sys::SiteImportJob, dbscope: :example do
   let!(:source_site) { create :cms_site_unique }
-  let!(:source_dictionary) { create :cms_word_dictionary }
+  let!(:source_dictionary) { create :cms_word_dictionary, site: source_site }
   let!(:file_path) do
     save_export_root = Sys::SiteExportJob.export_root
     Sys::SiteExportJob.export_root = tmpdir
