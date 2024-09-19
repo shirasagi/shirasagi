@@ -131,7 +131,7 @@
 <%= javascript_tag do %>
   SS.env = <%== Rails.env.to_json %>;
   SS.timezone = <%== Time.zone.name.to_json %>;
-  SS.disableConfirmUnloading = <%== Rails.env.test?.to_json %>;
+  // SS.disableConfirmUnloading = <%== Rails.env.test?.to_json %>;
   <% if notice %>
     SS.ready(function() { SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); });
   <% end %>
