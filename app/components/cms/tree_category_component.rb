@@ -12,14 +12,10 @@ class Cms::TreeCategoryComponent < ApplicationComponent
     @cur_site = cur_site
     @categories = categories
 
-    @readable_categories = opts[:readable_categories] ? opts[:readable_categories] : categories
+    @readable_categories = opts[:readable_categories] || categories
     @root_and_descendants = opts[:root_and_descendants].present?
-    @item_name = opts[:item_name].present? ? opts[:item_name] : "category_ids"
-    @selected = opts[:selected] ? opts[:selected] : []
-  end
-
-  def cur_site
-    @cur_site
+    @item_name = opts[:item_name].presence || "category_ids"
+    @selected = opts[:selected] || []
   end
 
   def category_ids

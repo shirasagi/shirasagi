@@ -5,8 +5,10 @@ describe Cms::TreeCategoryComponent, type: :component, dbscope: :example do
   let!(:user1) { create :cms_user, name: unique_id, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
   let!(:user2) { create :cms_user, name: unique_id, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
 
-  let!(:cate1) { create :category_node_node, site: site, filename: "c1", name: "c1",
-    readable_setting_range: "select", readable_member_ids: [user1.id] }
+  let!(:cate1) do
+    create :category_node_node, site: site, filename: "c1", name: "c1",
+      readable_setting_range: "select", readable_member_ids: [user1.id]
+  end
   let!(:cate2) { create :category_node_node, site: site, filename: "c1/c2", name: "c2" }
   let!(:cate3) { create :category_node_node, site: site, filename: "c1/c3", name: "c3" }
 
