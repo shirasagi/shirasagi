@@ -7,7 +7,7 @@
   });
 <% end %>
 
-<%= form_tag request.path, multipart: true, method: "get", class: "map-search-settings" do %>
+<%= form_tag SS.request_path(request), multipart: true, method: "get", class: "map-search-settings" do %>
   <%= render "settings" %>
   <footer class="send">
     <%= submit_tag t('facility.submit.search'), name: nil %>

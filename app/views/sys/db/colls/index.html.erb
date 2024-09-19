@@ -1,10 +1,11 @@
 <div class="cms-tabs">
+  <% request_path = SS.request_path(request) %>
   <% path = url_for(action: :index) %>
-  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+  <%= link_to(path, class: [ params[:type], request_path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">Collections</span>
   <% end %>
   <% path = url_for(action: :info) %>
-  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+  <%= link_to(path, class: [ params[:type], request_path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">Server</span>
   <% end %>
 </div>

@@ -43,7 +43,7 @@ module Webmail::BaseFilter
     webmail_session['last_logged_in'] ||= begin
       Webmail::History.info!(
         :controller, @cur_user,
-        path: request.path, controller: self.class.name.underscore, action: action_name,
+        path: SS.request_path(request), controller: self.class.name.underscore, action: action_name,
         model: Webmail::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
       )
       Time.zone.now.to_i

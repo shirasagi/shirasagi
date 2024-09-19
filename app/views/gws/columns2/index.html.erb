@@ -37,7 +37,7 @@
 <%= ss_stimulus_tag({ "gws/column/drag_drop" => { reorder: url_for(action: :reorder) } }, class: "gws-column-item-list") do %>
   <% items.each do |item| %>
     <turbo-frame id="item-<%= item.id %>">
-      <%= render template: "gws/frames/columns/show", locals: { ref: request.path, model: item.class, item: item } %>
+      <%= render template: "gws/frames/columns/show", locals: { ref: SS.request_path(request), model: item.class, item: item } %>
     </turbo-frame>
   <% end %>
 <% end %>

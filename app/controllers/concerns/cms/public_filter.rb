@@ -71,7 +71,7 @@ module Cms::PublicFilter
 
   def redirect_slash
     return unless request.get? || request.head?
-    redirect_to "#{request.path}/"
+    redirect_to "#{SS.request_path(request)}/"
   end
 
   def deny_path

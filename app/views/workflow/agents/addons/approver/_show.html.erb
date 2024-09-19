@@ -1,6 +1,6 @@
 <%= jquery do %>
   var options = {};
-  options.request_url = "<%= request.path %>";
+  options.request_url = "<%= SS.request_path(request) %>";
   options.workflow_node = "workflow" + "<%= @cur_node? @cur_node.id : "" %>";
   options.user_id = <%= @cur_user.id %>;
   options.errors = {};

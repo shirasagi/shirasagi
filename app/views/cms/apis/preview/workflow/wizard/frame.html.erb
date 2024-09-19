@@ -2,7 +2,7 @@
   var options = {};
   options.request_url = SS_Preview.workflowPath.request;
   if (!options.request_url) {
-    options.request_url = "<%= request.path %>";
+    options.request_url = "<%= SS.request_path(request) %>";
   }
   options.workflow_node = "workflow" + "<%= @item.parent ? @item.parent.id : "" %>";
   options.user_id = <%= @cur_user.id %>;
