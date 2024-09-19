@@ -79,8 +79,12 @@
   <% end %>
   <% if column.input_confirm == "enabled" && !confirm %>
     <fieldset class="column">
-      <legend><%= f.label "#{column.id}_confirm" , "#{t("inquiry.confirm_input", name: column.name)}" %>
-      <span class="required"><%= "#{t("inquiry.required_field")}" %></span></legend>
+      <legend>
+        <%= f.label "#{column.id}_confirm" , "#{t("inquiry.confirm_input", name: column.name)}" %>
+        <% if column.required == "required" %>
+          <span class="required"><%= "#{t("inquiry.required_field")}" %></span>
+        <% end %>
+      </legend>
       <div class = "fields">
         <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
         <% opt = { value: "" } %>
