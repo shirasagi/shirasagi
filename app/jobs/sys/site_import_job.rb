@@ -43,7 +43,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_columns
     invoke :import_cms_parts
     invoke :import_cms_pages
-    invoke :import_cms_page_searches
+    # invoke :import_cms_page_searches
     invoke :import_cms_notices
     invoke :import_cms_editor_templates
     invoke :import_cms_theme_templates
@@ -62,6 +62,9 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_source_cleaner_templates
     invoke :import_theme_templates
     invoke :import_cms_word_dictionaries
+    invoke :import_cms_translate_langs
+    invoke :import_cms_translate_text_caches
+    invoke :import_cms_page_search
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
@@ -407,6 +410,56 @@ class Sys::SiteImportJob < SS::ApplicationJob
       data = convert_data(data)
       cond = { name: data['name'], site_id: @dst_site.id }
       item = Cms::WordDictionary.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end
+
+  def import_cms_translate_langs
+    @task.log("- import cms translate langs")
+
+    translate_langs = ::Translate::Lang.site(@src_site)
+
+    translate_langs.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = ::Translate::Lang.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end
+
+  def import_cms_translate_text_caches
+    @task.log("- import cms translate text caches")
+
+    translate_text_caches = ::Translate::TextCache.site(@src_site)
+
+    translate_text_caches.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { site_id: @dst_site.id }
+      item = ::Translate::TextCache.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end
+  def import_cms_page_search
+    @task.log("- import cms Page Search")
+
+    page_searches = Cms::PageSearch.site(@src_site)
+
+    page_searches.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = Cms::PageSearch.find_or_initialize_by(cond)
       data.each { |k, v| item[k] = v }
 
       save_document(item)
