@@ -7,11 +7,12 @@ describe Sys::SiteCopyJob, dbscope: :example do
     let(:target_host_name) { unique_id }
     let(:target_host_host) { unique_id }
     let(:target_host_domain) { "#{unique_id}.example.jp" }
+    let!(:layout) { create :cms_layout, cur_site: site }
     let!(:cate) { create :category_node_page, cur_site: site }
     let!(:page_search) do
       create(
         :cms_page_search_full, search_category_ids: [ cate.id ], search_node_ids: [ cate.id ],
-        search_group_ids: [ cms_group.id ], search_user_ids: [ cms_user.id ])
+        search_layout_ids: [ layout.id ], search_group_ids: [ cms_group.id ], search_user_ids: [ cms_user.id ])
     end
 
     before do
@@ -49,6 +50,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
         expect(Cms::PageSearch.site(dest_site).count).to eq 1
+        dest_layout = Cms::Layout.site(dest_site).where(filename: layout.filename).first
         dest_cate = Category::Node::Base.site(dest_site).where(filename: cate.filename).first
         dest_page_search = Cms::PageSearch.site(dest_site).first
         expect(dest_page_search.name).to eq page_search.name
@@ -58,6 +60,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_page_search.search_keyword).to eq page_search.search_keyword
         expect(dest_page_search.search_category_ids).to eq [ dest_cate.id ]
         expect(dest_page_search.search_group_ids).to eq page_search.search_group_ids
+        expect(dest_page_search.search_layout_ids).to eq [ dest_layout.id ]
         expect(dest_page_search.search_user_ids).to eq page_search.search_user_ids
         expect(dest_page_search.search_node_ids).to eq [ dest_cate.id ]
         expect(dest_page_search.search_routes).to eq page_search.search_routes

@@ -6,11 +6,14 @@ module Sys::SiteCopy::PageSearches
     model = Cms::PageSearch
     dest_item = nil
     options = copy_cms_page_search_options
+    unsafe_attrs = resolve_unsafe_references(src_item, Cms::PageSearch)
+    # なぜかlayoutがsafeなリファレンスとして定義されているので明示的に解決する
+    unsafe_attrs["search_layout_ids"] ||= resolve_reference(:layout, src_item.search_layout_ids)
 
     id = cache(:page_searches, src_item.id) do
       options[:before].call(src_item) if options[:before]
       dest_item = model.new(cur_site: @dest_site)
-      dest_item.attributes = page_search_attributes(src_item, model, @dest_site)
+      dest_item.attributes = page_search_attributes(src_item, model, @dest_site).merge(unsafe_attrs)
       dest_item.save!
       dest_item.id
     end
