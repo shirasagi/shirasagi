@@ -458,6 +458,15 @@ class Sys::SiteImportJob < SS::ApplicationJob
       data = d.attributes
       id   = data.delete('_id')
       data = convert_data(data)
+      data['search_layout_ids'] = convert_ids(@cms_layouts_map, data['search_layout_ids'])
+      data['search_category_ids'] = convert_ids(@cms_nodes_map, data['search_category_ids'])
+      data['search_node_ids'] = convert_ids(@cms_nodes_map, data['search_node_ids'])
+      if data['search_group_ids'].present?
+        data['search_group_ids'] = data['search_group_ids'].map { |group_id| @cms_groups_map.fetch(group_id, group_id) }
+      end
+      if data['search_user_ids'].present?
+        data['search_user_ids'] = data['search_user_ids'].map { |user_id| @cms_users_map.fetch(user_id, user_id) }
+      end
       cond = { name: data['name'], site_id: @dst_site.id }
       item = Cms::PageSearch.find_or_initialize_by(cond)
       data.each { |k, v| item[k] = v }
