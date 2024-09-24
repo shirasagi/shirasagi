@@ -66,15 +66,18 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_approvers.count).to eq 2
       expect(item.workflow_approvers).to include(
-        { level: 1, user_type: "superior", user_id: user1.id, state: 'request', comment: '' })
-      expect(item.workflow_approvers).to include(
-        { level: 1, user_type: "Gws::User", user_id: user2.id, state: 'request', comment: '' })
+        { level: 1, user_type: "superior", user_id: user1.id, state: 'request', comment: '' },
+        { level: 1, user_type: "Gws::User", user_id: user2.id, state: 'request', comment: '' }
+      )
+      expect(item.workflow_required_counts).to eq [ 1 ]
       expect(item.workflow_circulations.count).to eq 0
 
       expect(SS::Notification.count).to eq 1
       SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.user_id).to eq admin.id
         expect(memo.member_ids).to eq [user1.id, user2.id]
+        subject = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+        expect(memo.subject).to eq subject
       end
 
       #
@@ -103,12 +106,21 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
       expect(item.workflow_approvers).to include(
-        { level: 1, user_type: "superior", user_id: user1.id, state: 'other_approved', comment: '' })
-      expect(item.workflow_approvers).to include(
-        { level: 1, user_type: "Gws::User", user_id: user2.id, state: 'approve', comment: approve_comment1, file_ids: nil,
-          created: be_within(30.seconds).of(Time.zone.now) })
+        { level: 1, user_type: "superior", user_id: user1.id, state: 'other_approved', comment: '',
+          created: be_within(30.seconds).of(Time.zone.now) },
+        { level: 1, user_type: "Gws::User", user_id: user2.id, state: 'approve', comment: approve_comment1,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) }
+      )
+      expect(item.workflow_required_counts).to eq [ 1 ]
+      expect(item.workflow_circulations.count).to eq 0
 
       expect(SS::Notification.count).to eq 2
+      SS::Notification.order_by(id: -1).first.tap do |memo|
+        expect(memo.user_id).to eq user2.id
+        expect(memo.member_ids).to eq [admin.id]
+        subject = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
+        expect(memo.subject).to eq subject
+      end
     end
   end
 

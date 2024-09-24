@@ -178,8 +178,13 @@ module Workflow::Approver
   end
 
   def workflow_approver_alternator?(user)
-    return false unless route_my_group_alternate?
-    workflow_approvers[1][:user_id] == user.id rescue false
+    if route_my_group_alternate?
+      return workflow_approvers[1][:user_id] == user.id rescue false
+    end
+
+    level = workflow_current_level
+    approvers = workflow_approvers_at(level)
+    approvers.any? { |approver| approver[:user_id] == user.id && approver[:alternate_to].present? }
   end
 
   def set_workflow_approver_state_to_request(level = workflow_current_level)
@@ -265,14 +270,34 @@ module Workflow::Approver
     user_id = user_or_id.id if user_or_id.respond_to?(:id)
     user_id ||= user_or_id.to_i
 
-    copy = workflow_approvers.to_a
-    copy.each do |approver|
-      next if approver[:level] != level || approver[:user_id] != user_id
+    created = Time.zone.now
 
+    copy = workflow_approvers.to_a
+    approved_approvers = copy.select { |approver| approver[:level] == level && approver[:user_id] == user_id }
+    approved_approvers.each do |approver|
       approver[:state] = WORKFLOW_STATE_APPROVE
       approver[:comment] = comment
       approver[:file_ids] = file_ids
-      approver[:created] = Time.zone.now
+      approver[:created] = created
+
+      # select alternate approvers
+      if approver[:alternate_to].present?
+        _alternate_to_level, _alternate_to_user_type, alternate_to_user_id = approver[:alternate_to].split(",")
+        alternate_to_user_id = alternate_to_user_id.to_i
+        alternate_approvers = copy.select { |approver| approver[:level] == level && approver[:user_id] == alternate_to_user_id }
+      else
+        expected_alternate_to = [ level, approver[:user_type], user_id ].join(",")
+        alternate_approvers = copy.select { |approver| approver[:level] == level && approver[:alternate_to] == expected_alternate_to }
+      end
+      next if alternate_approvers.blank?
+
+      alternate_approvers.each do |approver|
+        if approver[:level] == level && approver[:state] == WORKFLOW_STATE_REQUEST
+          approver[:state] = WORKFLOW_STATE_OTHER_APPROVED
+          approver[:comment] = ''
+          approver[:created] = created
+        end
+      end
     end
 
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
@@ -282,6 +307,7 @@ module Workflow::Approver
         if approver[:level] == level && approver[:state] == WORKFLOW_STATE_REQUEST
           approver[:state] = WORKFLOW_STATE_OTHER_APPROVED
           approver[:comment] = ''
+          approver[:created] = created
         end
       end
 

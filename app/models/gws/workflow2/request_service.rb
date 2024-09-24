@@ -86,7 +86,7 @@ class Gws::Workflow2::RequestService
     item.set_workflow_approver_target
     item.set_workflow_approver_alternate
     item.workflow_approvers = item.workflow_approvers.map do |approver|
-      approver = approver.slice(:level, :user_type, :user_id, :state, :editable)
+      approver = approver.slice(:level, :user_type, :user_id, :state, :editable, :alternate_to)
       approver[:state] = "pending" if approver[:user_id].present?
       approver
     end

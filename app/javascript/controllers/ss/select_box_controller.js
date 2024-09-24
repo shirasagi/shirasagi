@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
-import {dispatchEvent, appendChildren} from "../../ss/tool"
+import {dispatchEvent, appendChildren, replaceChildren} from "../../ss/tool"
 import Dialog from "../../ss/dialog";
 import ejs from 'ejs/ejs';
 
@@ -15,7 +15,12 @@ const DEFAULT_TEMPLATE = `
 `;
 
 export default class extends Controller {
-  static values = { api: String, dialogType: { type: String, default: "ss" }, template: { type: String, default: "ejs" } }
+  static values = {
+    api: String,
+    dialogType: { type: String, default: "ss" },
+    template: { type: String, default: "ejs" },
+    selectionType: { type: String, default: "append" },
+  }
   static targets = [ "result", "template" ]
 
   connect() {
@@ -95,7 +100,11 @@ export default class extends Controller {
       }
     )
 
-    appendChildren(this.resultTarget, result);
+    if (this.selectionTypeValue === "replace") {
+      replaceChildren(this.resultTarget, result);
+    } else {
+      appendChildren(this.resultTarget, result);
+    }
   }
 
   #selectedIds() {
