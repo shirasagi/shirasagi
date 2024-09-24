@@ -13,10 +13,10 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.edit")
 
         # open addon
-        ensure_addon_opened("#addon-ss-agents-addons-logo_setting")
+        ensure_addon_opened("#addon-cms-agents-addons-logo_setting")
 
         # fill form
-        within "#addon-ss-agents-addons-logo_setting" do
+        within "#addon-cms-agents-addons-logo_setting" do
           fill_in "item[logo_application_name]", with: logo_application_name
           wait_for_cbox_opened do
             # click_on I18n.t("ss.buttons.upload")
@@ -93,10 +93,10 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       # open addon
-      ensure_addon_opened("#addon-ss-agents-addons-logo_setting")
+      ensure_addon_opened("#addon-cms-agents-addons-logo_setting")
 
       # fill form
-      within "#addon-ss-agents-addons-logo_setting" do
+      within "#addon-cms-agents-addons-logo_setting" do
         fill_in "item[logo_application_name]", with: logo_application_name
       end
       within "form#item-form" do

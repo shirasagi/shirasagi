@@ -597,6 +597,9 @@ en:
         always: Use
         untrusted: Use when the access source is untrusted
         none: Not use
+      logo_application_link:
+        mypage: Mypage
+        portal: Portal
 
     tasks:
       started: Started.
