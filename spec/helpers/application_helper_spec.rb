@@ -236,6 +236,28 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
 
         it { is_expected.to eq html }
       end
+
+      context "when site and url given" do
+        let(:logo_application_image) do
+          tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", basename: "#{unique_id}.png")
+        end
+        let(:site) do
+          site = gws_site
+          site.logo_application_image = logo_application_image
+          site.logo_application_link = "portal"
+          site
+        end
+        let(:img_part) { %(<img alt="#{SS.config.ss.application_name}" src="#{logo_application_image.url}" />) }
+        let(:span_part) { "" }
+        let(:logo_html) { %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:url) { "/" }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{url}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo(site: site, url: url) }
+
+        it { is_expected.to eq html }
+      end
     end
   end
 end

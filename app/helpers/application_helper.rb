@@ -272,18 +272,18 @@ module ApplicationHelper
 
   def render_application_logo(site: nil, url: nil)
     site ||= @cur_site
-    url ||= sns_mypage_path
+    logo_url = url || sns_mypage_path
 
     if site.blank?
-      return link_to_application_logo(url) { SS.config.ss.application_logo_html.html_safe }
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
     end
 
     name = site.logo_application_name
     image = site.logo_application_image
-    url = site.logo_application_url
+    logo_url = url || site.logo_application_url
 
     if name.blank? && image.blank?
-      return link_to_application_logo(url) { SS.config.ss.application_logo_html.html_safe }
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
     end
 
     logo_html = "".html_safe
@@ -294,7 +294,7 @@ module ApplicationHelper
       logo_html += tag.span(name, class: "ss-logo-application-name")
     end
 
-    link_to_application_logo(url) do
+    link_to_application_logo(logo_url) do
       tag.div(logo_html, class: "ss-logo-wrap")
     end
   end
