@@ -16,7 +16,7 @@ module Gws::Addon::System::NoticeSetting
     %w(
       gws/schedule/plan gws/schedule/comment gws/schedule/todo_comment
       gws/schedule/attendance gws/schedule/approval).each { |k| map[k] = 'schedule' }
-    %w(gws/discussion/topic gws/discussion/post).each { |k| map[k] = 'discussion' }
+    %w(gws/discussion/topic gws/discussion/post gws/discussion/forum).each { |k| map[k] = 'discussion' }
     %w(gws/workflow/file gws/workflow2/file).each { |k| map[k] = 'workflow' }
     %w(gws/report/file).each { |k| map[k] = 'report' }
     %w(gws/notice/post).each { |k| map[k] = 'announcement' }
