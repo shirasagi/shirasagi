@@ -40,7 +40,7 @@ this.Map_Form = (function () {
   };
 
   Map_Form.attachMessage = function (id) {
-    google.maps.event.addListener(Googlemaps_Map.markers[id], 'click', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id], 'click', function (_event) {
       if (Googlemaps_Map.openedInfo) {
         Googlemaps_Map.openedInfo.close();
       }
@@ -130,7 +130,7 @@ this.Map_Form = (function () {
           return false;
         }
       });
-      cln.find(".marker-loc-input").on('focus', function (e) {
+      cln.find(".marker-loc-input").on('focus', function (_e) {
         if (Map_Form.clickMarker !== null) {
           Map_Form.clickMarker.setMap(null);
           return $(".mod-map .clicked").val("");
@@ -195,7 +195,7 @@ this.Map_Form = (function () {
 
     markers.find(".marker .images").hide();
     images.show();
-    $("body").not(this).one("click", function (e) {
+    $("body").not(this).one("click", function (_e) {
       images.hide();
     });
   };
@@ -339,15 +339,15 @@ this.Map_Form = (function () {
         map: Googlemaps_Map.map
       });
     });
-    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (_event) {
       var zoom = Googlemaps_Map.map.getZoom();
       $('input[name="item[map_zoom_level]"]').val(zoom);
     });
-    $(".mod-map .add-marker").on('click', function (e) {
+    $(".mod-map .add-marker").on('click', function (_e) {
       Map_Form.clonePointForm();
       return false;
     });
-    $(".mod-map .clear-marker").on('click', function (e) {
+    $(".mod-map .clear-marker").on('click', function (_e) {
       Map_Form.clearPointForm($(this).closest("dd.marker"));
       return false;
     });
@@ -362,11 +362,11 @@ this.Map_Form = (function () {
       $(".zoom-input").val(Googlemaps_Map.map.getZoom());
       return false;
     });
-    $(".mod-map .set-marker").on('click', function (e) {
+    $(".mod-map .set-marker").on('click', function (_e) {
       Map_Form.clickSetMarker($(this).closest("dd.marker"));
       return false;
     });
-    $(".mod-map .location-search button").on('click', function (e) {
+    $(".mod-map .location-search button").on('click', function (_e) {
       Map_Form.geocoderSearch($(".mod-map .keyword").val());
       return false;
     });
@@ -387,7 +387,7 @@ this.Map_Form = (function () {
         return false;
       }
     });
-    $(".mod-map .marker-loc-input").on('focus', function (e) {
+    $(".mod-map .marker-loc-input").on('focus', function (_e) {
       if (Map_Form.clickMarker !== null) {
         Map_Form.clickMarker.setMap(null);
         return $(".mod-map .clicked").val("");

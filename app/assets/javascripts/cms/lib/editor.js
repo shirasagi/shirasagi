@@ -63,7 +63,7 @@ this.Cms_Editor_CodeMirror = (function () {
 
   Cms_Editor_CodeMirror.lock = function (selector, target) {
     Cms_Editor_CodeMirror.setOption(selector, target);
-    return $(document).on('change', selector, function (e) {
+    return $(document).on('change', selector, function (_ev) {
       return Cms_Editor_CodeMirror.setOption(selector, target);
     });
   };
@@ -88,7 +88,7 @@ this.Cms_Editor_CKEditor = (function () {
   function Cms_Editor_CKEditor() {
   }
 
-  Cms_Editor_CKEditor.render = function (selector, opts, js_opts) {
+  Cms_Editor_CKEditor.render = function (selector, opts, _jsOpts) {
     //Render CKEditor
     if (opts == null) {
       opts = {};

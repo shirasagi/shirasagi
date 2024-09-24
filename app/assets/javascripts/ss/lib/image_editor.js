@@ -6,11 +6,11 @@ SS_ImageEditor = function (el) {
     this.$el.find('img.target')[0],
     {
       zoomOnWheel: false,
-      ready: function(e) {
+      ready: function(_e) {
         pThis.updateInspect();
         pThis.chooseSize();
       },
-      cropmove: function(e) {
+      cropmove: function(_e) {
         pThis.updateInspect();
         pThis.chooseSize();
       }

@@ -54,14 +54,14 @@ this.SS_Debug = (function () {
         return;
       }
       url = url.replace(/^https?:\/\/.*?\//, "/");
-    } else if (url.match(/^[^\/]/)) {
-      url = ref.replace(/\/[^\/]*$/, "") + ("/" + url);
+    } else if (url.match(/^[^/]/)) {
+      url = ref.replace(/\/[^/]*$/, "") + ("/" + url);
     }
     view = $("#log");
     path = url;
     path = path.replace(/\d+/g, "123");
-    path = path.replace(/\?s(\[|\%123).*/g, "");
-    patt = path.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    path = path.replace(/\?s(\[|%123).*/g, "");
+    patt = path.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&");
     if (view.val().match(new RegExp("^" + patt + "$", "m"))) {
       return true;
     }
@@ -74,7 +74,7 @@ this.SS_Debug = (function () {
       url: url,
       dataType: "html",
       cache: false,
-      success: function (data, status, xhr) {
+      success: function (data, _status, _xhr) {
         queue.val(parseInt(queue.val()) - 1);
         return $($.parseHTML(data.replace(/<img[^>]*>/ig, ""))).find("a").each(function () {
           if (!$(this).is('[href]')) {
@@ -83,7 +83,7 @@ this.SS_Debug = (function () {
           return SS_Debug.connect_url($(this).attr("href"), url);
         });
       },
-      error: function (xhr, status, error) {
+      error: function (xhr, _status, _error) {
         queue.val(parseInt(queue.val()) - 1);
         view = $("#err");
         view.val(view.val() + " [" + xhr.status + "] " + url + " - Referer: " + ref + "\n");

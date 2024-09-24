@@ -23,7 +23,7 @@ Gws_Schedule_Csv.prototype.render = function () {
       self.$importLog.html($('<span />', { class: "import-loading" }).text(i18next.t("ss.notice.uploading")));
       SS_AddonTabs.show('#import-result');
     },
-    success: function(data, status) {
+    success: function(data, _status) {
       self.renderResult(data);
     },
     error: function(xhr, status, error) {

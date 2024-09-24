@@ -24,7 +24,6 @@ SS.ready(function() {
       var calendar = this.calendar;
       var view = clearView(firstOrCreateView());
       var table = $('<div class="fc-listMonth-view-table"></div>');
-      var eventCount = 0;
       var duplicateCheck = [];
 
       var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>');
@@ -90,18 +89,18 @@ SS.ready(function() {
         if (event.sanitizedHtml) {
           info.append($('<p class="summary"/>').html(event.sanitizedHtml));
         }
+        var startLabel, endLabel;
         if (event.allDay) {
-          var startLabel = event.startDateLabel + ' ' + event.allDayLabel;
-          var endLabel = event.endDateLabel + ' ' + event.allDayLabel;
+          startLabel = event.startDateLabel + ' ' + event.allDayLabel;
+          endLabel = event.endDateLabel + ' ' + event.allDayLabel;
         } else {
-          var startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
-          var endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
+          startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
+          endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
         }
         var startAt = $('<div class="td startAt"></div>').text(startLabel);
         var delimiter = $('<div class="td delimiter"></div>').text('-');
         var endAt = $('<div class="td endAt"></div>').text(endLabel);
         var tr = $('<div class="tr"></div>').appendTo(table).append(startAt).append(delimiter).append(endAt).append(info);
-        eventCount++;
         if (event.className.indexOf('fc-event-todo') !== -1) {
           tr.addClass('fc-event-todo');
         }

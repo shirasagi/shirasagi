@@ -3,7 +3,7 @@ this.Form_Save_Event = (function () {
   }
 
   Form_Save_Event.render = function () {
-    return document.onkeydown = function (e) {
+    return document.onkeydown = function (_e) {
       if (event.ctrlKey || event.metaKey) {
         if (event.keyCode === 83) {
           event.keyCode = 0;

@@ -225,7 +225,7 @@ this.SS_SearchUI = (function () {
     });
   };
 
-  SS_SearchUI.onColorBoxLoaded = function (ev) {
+  SS_SearchUI.onColorBoxLoaded = function (_ev) {
     if (!SS_SearchUI.anchorAjaxBox) {
       // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
       // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
@@ -234,7 +234,7 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.onColorBoxCleanedUp = function (ev) {
+  SS_SearchUI.onColorBoxCleanedUp = function (_ev) {
     SS_SearchUI.anchorAjaxBox = null;
     selectTable = null;
   };
@@ -297,11 +297,11 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $el.find("#s_group").on("change", function (ev) {
+    $el.find("#s_group").on("change", function (_ev) {
       self.selectItems($el);
       return $el.find("form.search")[0].requestSubmit();
     });
-    $el.find(".submit-on-change").on("change", function (ev) {
+    $el.find(".submit-on-change").on("change", function (_ev) {
       self.selectItems($el);
       return $el.find("form.search")[0].requestSubmit();
     });
@@ -432,7 +432,7 @@ this.SS_SearchUI = (function () {
       }
       return false;
     });
-    $el.find(".index").on("change", function (ev) {
+    $el.find(".index").on("change", function (_ev) {
       return self.toggleSelectButton($el);
     });
     return self.toggleSelectButton($el);

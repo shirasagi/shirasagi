@@ -29,7 +29,6 @@ Cms_Column_List.prototype.addList = function($target) {
 };
 
 Cms_Column_List.prototype.removeList = function($target) {
-  var $columnValue = $target.closest(".column-value");
   var $li = $target.closest("li");
   $li.remove();
 };

@@ -9,7 +9,7 @@ this.SS_Clipboard = (function () {
   SS_Clipboard.copyButtonLabel = 'コピー';
 
   SS_Clipboard.copy = function (text, opts) {
-    var copy, e, message, rett, style, $body;
+    var copy, e, message, style, $body;
 
     if (opts == null) {
       opts = {};
@@ -22,7 +22,7 @@ this.SS_Clipboard = (function () {
         $body = ($("#ajax-box").length > 0) ? $("#ajax-box") : $('body');
         $body.after(copy);
         copy.select();
-        rett = document.execCommand('copy');
+        document.execCommand('copy');
         copy.remove();
         if (opts["success_alert"]) {
           message = SS_Clipboard.successAlertMessage;

@@ -39,7 +39,7 @@ this.SS_Emoji = (function () {
         $actions.append($tab);
         $palettes.append($palette);
 
-        $(emojis).each(function (i) {
+        $(emojis).each(function (_i) {
           var item = $('<div class="emoji-item">').text(this);
           $(item).on("click", function(){
             var text = $inputer.val();

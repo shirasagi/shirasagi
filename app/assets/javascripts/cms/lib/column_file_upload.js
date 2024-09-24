@@ -33,7 +33,7 @@ Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
     return self.getFileUploadPath();
   };
 
-  ret.select = function(files, dropArea) {
+  ret.select = function(files, _dropArea) {
     if (! files[0]) {
       return;
     }

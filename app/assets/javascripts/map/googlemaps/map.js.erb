@@ -33,7 +33,7 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.mapsSearchUrl = "<%= SS.config.map.googlemaps_search_end_point %>";
 
   Googlemaps_Map.attachMessage = function (id) {
-    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (_event) {
       if (Googlemaps_Map.openedInfo) {
         Googlemaps_Map.openedInfo.close();
       }
@@ -42,7 +42,7 @@ this.Googlemaps_Map = (function () {
       }
       Googlemaps_Map.openedInfo = Googlemaps_Map.markers[id]["window"];
     });
-    return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+    return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (_event) {
       Googlemaps_Map.openedInfo = null;
     });
   };
@@ -128,7 +128,7 @@ this.Googlemaps_Map = (function () {
     if (!opts) {
       opts = {};
     }
-    var markerBounds, zoomChangeBoundsListener;
+    var markerBounds;
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
     $.each(Googlemaps_Map.markers, function (id, value) {

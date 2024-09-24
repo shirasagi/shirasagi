@@ -184,21 +184,21 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
 
   var showsToolbar = false;
   if (mode === "punch" && punchable && this.options.punchUrl) {
-    var url = this.options.punchUrl;
-    url = url.replace(':type', type);
+    var punchUrl = this.options.punchUrl;
+    punchUrl = punchUrl.replace(':type', type);
 
     this.$toolbar.find('.edit').hide();
-    this.$toolbar.find('.punch').attr('href', url).show();
+    this.$toolbar.find('.punch').attr('href', punchUrl).show();
     showsToolbar = true;
   }
 
   if (mode === "edit" && editable) {
-    var url = urlTemplate;
-    url = url.replace(':day', day);
-    url = url.replace(':type', type);
+    var editUrl = urlTemplate;
+    editUrl = editUrl.replace(':day', day);
+    editUrl = editUrl.replace(':type', type);
 
     this.$toolbar.find('.punch').hide();
-    this.$toolbar.find('.edit').attr('href', url).show();
+    this.$toolbar.find('.edit').attr('href', editUrl).show();
     showsToolbar = true;
   }
 

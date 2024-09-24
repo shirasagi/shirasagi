@@ -9,7 +9,7 @@ this.Form_Preview = (function () {
   Form_Preview.page_route;
 
   Form_Preview.render = function () {
-    $("button.preview").not(".form-preview-rendered").on("click", function (e) {
+    $("button.preview").not(".form-preview-rendered").on("click", function (_e) {
       var basename, errors, form, height, i, name, ref, token, v, width;
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
@@ -18,7 +18,7 @@ this.Form_Preview = (function () {
         errors.push(<%= I18n.t('errors.messages.set_name').to_json %>);
       }
       if (basename) {
-        if (!/^[\w\-]+(\.html)?$/.test(basename)) {
+        if (!/^[\w-]+(\.html)?$/.test(basename)) {
           errors.push(<%= I18n.t('errors.messages.invalid_filename').to_json %>);
         }
       } else {

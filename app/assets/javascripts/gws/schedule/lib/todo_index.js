@@ -54,9 +54,9 @@ this.Gws_Schedule_Todo_Index = (function () {
 
   Gws_Schedule_Todo_Index.prototype.examineToShow = function($listItem) {
     if ($listItem.hasClass("gws-schedule-todo-list-item-header")) {
-      var parentGroup = $listItem.data("parent");
-      if (parentGroup) {
-        return this.examineToShow(this.$el.find("#" + parentGroup));
+      var listItemParentGroup = $listItem.data("parent");
+      if (listItemParentGroup) {
+        return this.examineToShow(this.$el.find("#" + listItemParentGroup));
       }
 
       return true;
@@ -68,9 +68,9 @@ this.Gws_Schedule_Todo_Index = (function () {
       return false;
     }
 
-    var parentGroup = $listItemHeader.data("parent");
-    if (parentGroup) {
-      return this.examineToShow(this.$el.find("#" + parentGroup));
+    var listItemHeaderParentGroup = $listItemHeader.data("parent");
+    if (listItemHeaderParentGroup) {
+      return this.examineToShow(this.$el.find("#" + listItemHeaderParentGroup));
     }
 
     return true;

@@ -50,9 +50,9 @@ this.Chat_Bot = (function () {
       success: function (res, _status) {
         _this.renderChatResponse(res);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
       },
-      complete: function(xhr, status) {
+      complete: function(_xhr, _status) {
         _this.inProgress = false;
       }
     });
@@ -92,12 +92,12 @@ this.Chat_Bot = (function () {
         text: text,
         click_suggest: options && options.clickSuggest
       },
-      success: function (res, status) {
+      success: function (res, _status) {
         _this.renderChatResponse(res);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
       },
-      complete: function(xhr, status) {
+      complete: function(_xhr, _status) {
         _this.inProgress = false;
       }
     });
@@ -163,9 +163,9 @@ this.Chat_Bot = (function () {
       success: function (res, _status) {
         _this.renderFeedback(res);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
       },
-      complete: function(xhr, status) {
+      complete: function(_xhr, _status) {
         _this.inProgress = false;
       }
     });

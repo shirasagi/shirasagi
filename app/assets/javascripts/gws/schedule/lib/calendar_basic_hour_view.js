@@ -4,7 +4,6 @@ SS.ready(function() {
      * BasicHour View
      */
     var FC = $.fullCalendar;
-    var View = FC.View;
 
     BasicHourView = FC.views.basicHour = FC.BasicView.extend({
 

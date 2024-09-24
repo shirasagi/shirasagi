@@ -89,7 +89,7 @@ Opendata_Graph.prototype.drawBar = function() {
         y: {
           ticks: {
             beginAtZero: true,
-            callback: function (label, index, labels) {
+            callback: function (label, _index, _labels) {
               return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
           }
@@ -138,7 +138,7 @@ Opendata_Graph.prototype.drawLine = function() {
         y: {
           ticks: {
             beginAtZero: true,
-            callback: function(label, index, labels) {
+            callback: function(label, _index, _labels) {
               return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
           }

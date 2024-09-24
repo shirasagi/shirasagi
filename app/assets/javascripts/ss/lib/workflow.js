@@ -237,7 +237,7 @@ SS_Workflow.prototype = {
 
         location.reload();
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         try {
           var errors = $.parseJSON(xhr.responseText);
           alert(["== Error(Workflow) =="].concat(errors).join("\n"));
@@ -284,7 +284,7 @@ SS_Workflow.prototype = {
           location.reload();
         }
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -307,10 +307,10 @@ SS_Workflow.prototype = {
     $.ajax({
       type: "GET",
       url: uri,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -335,10 +335,10 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: data,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -381,10 +381,10 @@ SS_Workflow.prototype = {
           type: 'POST',
           url: uri,
           data: data,
-          success: function(html, status) {
+          success: function(_html, _status) {
             location.reload();
           },
-          error: function(xhr, status) {
+          error: function(xhr, _status) {
             try {
               var errors = $.parseJSON(xhr.responseText);
               alert(errors.join("\n"));
@@ -404,10 +404,10 @@ SS_Workflow.prototype = {
     var pThis = this;
     $.ajax({
       url: this.fileSelectViewUrl($item.closest("[data-id]").data("id")),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         pThis.renderFileHtml(data);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
         alert("== Error(Workflow) ==");
       }
     });
@@ -429,7 +429,7 @@ SS_Workflow.prototype = {
   deleteUploadedFile: function($a) {
     $a.closest("div[data-file-id]").remove();
   },
-  onDropFile: function(files, dropArea) {
+  onDropFile: function(files, _dropArea) {
     var pThis = this;
     for (var j = 0, len = files.length; j < len; j++) {
       var file = files[j];
@@ -437,10 +437,10 @@ SS_Workflow.prototype = {
       var url = pThis.fileSelectViewUrl(id);
       $.ajax({
         url: url,
-        success: function(data, status, xhr) {
+        success: function(data, _status, _xhr) {
           pThis.renderFileHtml(data);
         },
-        error: function (xhr, status, error) {
+        error: function (_xhr, _status, _error) {
           alert("== Error(Workflow) ==");
         }
       });
@@ -460,7 +460,7 @@ SS_WorkflowRerouteBox = function (el, options) {
       success: function (data) {
         pThis.$el.closest("#cboxLoadedContent").html(data);
       },
-      error: function (data, status) {
+      error: function (_data, _status) {
         alert("== Error(Workflow) ==");
       }
     });
@@ -470,7 +470,7 @@ SS_WorkflowRerouteBox = function (el, options) {
 
   this.$el.find('.pagination a').on("click", function(e) {
     var url = $(this).attr("href");
-    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, xhr) {
+    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, _xhr) {
       if (status === 'error') {
         alert("== Error(Workflow) ==");
       }

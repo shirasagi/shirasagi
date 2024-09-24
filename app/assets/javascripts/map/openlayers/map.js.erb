@@ -130,7 +130,7 @@ this.Openlayers_Map = (function () {
       };
     })(this));
     this.popup.find('.closer').on('click', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.popupOverlay.setPosition(void 0);
         $(_this).blur();
         return false;
@@ -154,7 +154,7 @@ this.Openlayers_Map = (function () {
     this.map.on('click', (function (_this) {
       return function (e) {
         var feature;
-        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, _layer) {
           return feature;
         });
         if (feature) {
@@ -340,7 +340,7 @@ this.Openlayers_Map = (function () {
     var vectorSource = new ol.source.Vector({
       format: new _olFormat(),
       loader: function(extent, resolution, projection) {
-        var proj = projection.getCode();
+        // var proj = projection.getCode();
         var xhr = new XMLHttpRequest();
         var onError = function() {
           console.warn("loadLayer error:" + url);

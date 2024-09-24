@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
-import {csrfToken, dispatchEvent} from "../../ss/tool"
+import {csrfToken} from "../../ss/tool"
 
 export default class extends Controller {
   static values = { url: String }
