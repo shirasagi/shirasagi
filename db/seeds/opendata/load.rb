@@ -680,7 +680,7 @@ def save_metadata_importer(data)
   item
 end
 
-metadata_importer = save_metadata_importer cur_node: nodes['dataset'], cur_user: @user, name: 'シラサギ市',
+@metadata_importer = save_metadata_importer cur_node: nodes['dataset'], cur_user: @user, name: 'シラサギ市',
   source_url: ::Addressable::URI.join(@site.full_url, 'materials/shirasagi_test_date.csv'),
   default_area_ids: [nodes['chiiki/shirasagi'].id], notice_user_ids: [@user.id]
 
@@ -694,10 +694,294 @@ def save_estat_category_setting(data)
 end
 
 Opendata::Node::EstatCategory.site(@site).each do |node|
-  save_estat_category_setting cur_user: @user, importer: metadata_importer,
+  save_estat_category_setting cur_user: @user, importer: @metadata_importer,
     category: node, order: 0,
     conditions: [{ type: 'metadata_estat_category', value: node.name, operator: 'match' }.with_indifferent_access]
 end
+
+def save_metadata_report(data)
+  puts data[:name]
+  cond = { site_id: @site._id, importer_id: data[:importer_id] }
+
+  item = Opendata::Metadata::Importer::Report.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+@metadata_report = save_metadata_report importer: @metadata_importer
+
+def save_metadata_dataset(idx, data)
+  dataset_report = @metadata_report.new_dataset
+  cond = { site_id: @site.id, filename: data[:filename] }
+
+  item = Opendata::Dataset.find_or_create_by cond
+  attributes = data[:metadata_imported_attributes]
+  data.merge!(
+    {
+      created: Time.zone.parse(attributes['データセット_公開日']),
+      updated: Time.zone.parse(attributes['データセット_最終更新日']),
+      released: Time.zone.parse(attributes['データセット_公開日']),
+      name: attributes['データセット_タイトル'],
+      text: attributes['データセット_概要'],
+      estat_category_ids: Opendata::Node::EstatCategory.site(@site).where(name: attributes['データセット_分類']).pluck(:id),
+      area_ids: @metadata_importer.default_area_ids,
+      metadata_importer_id: @metadata_importer.id,
+      metadata_imported: Time.zone.now,
+      metadata_source_url: attributes['データセット_URL'],
+      metadata_host: @metadata_importer.source_host,
+      metadata_dataset_id: attributes['データセット_ID'].to_s.gsub(/\R|\s|\u00A0|　/, ''),
+      metadata_japanese_local_goverment_code: attributes['全国地方公共団体コード'],
+      metadata_local_goverment_name: attributes['地方公共団体名'],
+      metadata_dataset_keyword: attributes['データセット_キーワード'],
+      metadata_dataset_released: Time.zone.parse(attributes['データセット_公開日']),
+      metadata_dataset_updated: Time.zone.parse(attributes['データセット_最終更新日']),
+      metadata_dataset_url: attributes['データセット_URL'],
+      metadata_dataset_update_frequency: attributes['データセット_更新頻度'],
+      metadata_dataset_follow_standards: attributes['データセット_準拠する標準'],
+      metadata_dataset_related_document: attributes['データセット_関連ドキュメント'],
+      metadata_dataset_target_period: attributes['データセット_対象期間'],
+      metadata_dataset_contact_name: attributes['データセット_連絡先名称'],
+      metadata_dataset_contact_email: attributes['データセット_連絡先メールアドレス'],
+      metadata_dataset_contact_tel: attributes['データセット_連絡先電話番号'],
+      metadata_dataset_contact_ext: attributes['データセット_連絡先内線番号'],
+      metadata_dataset_contact_form_url: attributes['データセット_連絡先FormURL'],
+      metadata_dataset_contact_remark: attributes['データセット_連絡先備考（その他、SNSなど）'],
+      metadata_dataset_remark: attributes['データセット_備考']
+    }
+  )
+  def item.set_updated; end
+  puts item.errors.full_messages unless item.update data
+  save_metadata_resource(idx, item, dataset_report, data)
+  puts item.errors.full_messages unless item.save
+  dataset_report.set_reports(
+    item, item.metadata_imported_attributes, @metadata_importer.source_url, idx
+  )
+  dataset_report.save
+end
+
+def save_metadata_resource(idx, dataset, report, data)
+  url = data[:metadata_imported_attributes]['ファイル_ダウンロードURL']
+  license = @metadata_importer.send(
+    :get_license_from_metadata_uid, data[:metadata_imported_attributes]['ファイル_ライセンス']
+  )
+  report_resource = report.new_resource
+  resource = dataset.resources.select { |r| r.source_url == url }.first
+  if resource.nil?
+    resource = Opendata::Resource.new
+    dataset.resources << resource
+  end
+  filename = data[:metadata_imported_attributes]['ファイル_タイトル'].to_s + ::File.extname(url.to_s)
+  resource_data = {
+    source_url: url,
+    name: data[:metadata_imported_attributes]['ファイル_タイトル'].presence || filename,
+    text: data[:metadata_imported_attributes]['ファイル_説明'],
+    filename: filename,
+    format: data[:metadata_imported_attributes]['ファイル形式'],
+    license: license,
+    updated: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_最終更新日']),
+    created: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_公開日']),
+    metadata_importer: @metadata_importer,
+    metadata_host: @metadata_importer.source_host,
+    metadata_imported: Time.zone.now,
+    metadata_imported_url: @metadata_importer.source_url,
+    metadata_imported_attributes: data[:metadata_imported_attributes],
+    metadata_file_access_url: data[:metadata_imported_attributes]['ファイル_アクセスURL'],
+    metadata_file_download_url: data[:metadata_imported_attributes]['ファイル_ダウンロードURL'],
+    metadata_file_released: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_公開日']),
+    metadata_file_updated: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_最終更新日']),
+    metadata_file_terms_of_service: data[:metadata_imported_attributes]['ファイル_利用規約'],
+    metadata_file_related_document: data[:metadata_imported_attributes]['ファイル_関連ドキュメント'],
+    metadata_file_follow_standards: data[:metadata_imported_attributes]['ファイル_準拠する標準']
+  }
+  def resource.set_updated; end
+  puts resource.errors.full_messages unless resource.update resource_data
+  report_resource.set_reports(resource, dataset.metadata_imported_attributes, idx)
+end
+
+save_metadata_dataset 0, filename: "dataset/metadata_dataset1.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "1111111111",
+    '全国地方公共団体コード': "111111",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "指定管理者制度導入施設一覧",
+    'データセット_サブタイトル': "指定管理者制度導入施設一覧",
+    'データセット_概要': "シラサギ市の指定管理者制度導入施設一覧",
+    'データセット_キーワード': "指定管理",
+    'データセット_分類': "行財政",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/2/1",
+    'データセット_最終更新日': "2024/7/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年2月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年2月1日/2024年7月1日",
+    'データセット_連絡先名称': "シラサギ市 企画制作部 広報課",
+    'データセット_連絡先メールアドレス': "koho@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "manager-system.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_説明': "シラサギ市の指定管理者制度導入施設一覧",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/2/1",
+    'ファイル_最終更新日': "2024/7/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "有"
+  }.with_indifferent_access
+save_metadata_dataset 1, filename: "dataset/metadata_dataset1.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "1111111111",
+    '全国地方公共団体コード': "111111",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "指定管理者制度導入施設一覧",
+    'データセット_サブタイトル': "指定管理者制度導入施設一覧",
+    'データセット_概要': "シラサギ市の指定管理者制度導入施設一覧",
+    'データセット_キーワード': "指定管理",
+    'データセット_分類': "行財政",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/2/1",
+    'データセット_最終更新日': "2024/7/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年2月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年2月1日/2024年7月1日",
+    'データセット_連絡先名称': "シラサギ市 企画制作部 広報課",
+    'データセット_連絡先メールアドレス': "koho@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "manager-system2.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/dataset/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/dataset/",
+    'ファイル_説明': "シラサギ市の指定管理者制度導入施設一覧2",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/2/1",
+    'ファイル_最終更新日': "2024/7/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "有"
+  }.with_indifferent_access
+save_metadata_dataset 2, filename: "dataset/metadata_dataset2.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "2222222222",
+    '全国地方公共団体コード': "222222",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "観光施設",
+    'データセット_サブタイトル': "観光施設",
+    'データセット_概要': "シラサギ市の観光施設一覧",
+    'データセット_キーワード': "観光",
+    'データセット_分類': "運輸・観光",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/7/1",
+    'データセット_最終更新日': "2024/8/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年7月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年7月1日/2024年8月1日",
+    'データセット_連絡先名称': "シラサギ市 企画政策部 政策課",
+    'データセット_連絡先メールアドレス': "seisaku@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "tourist-facilities.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_説明': "シラサギ市観光施設一覧",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/7/1",
+    'ファイル_最終更新日': "2024/8/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "無"
+  }.with_indifferent_access
+save_metadata_dataset 3, filename: "dataset/metadata_dataset3.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "3333333333",
+    '全国地方公共団体コード': "333333",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "地域・年齢別人口",
+    'データセット_サブタイトル': "地域・年齢別人口",
+    'データセット_概要': "シラサギ市の観光施設一覧",
+    'データセット_キーワード': "人口",
+    'データセット_分類': "人口・世帯",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/8/1",
+    'データセット_最終更新日': "2024/9/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年8月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年9月1日/2024年9月1日",
+    'データセット_連絡先名称': "シラサギ市 企画政策部 政策課",
+    'データセット_連絡先メールアドレス': "seisaku@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "population.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_説明': "シラサギ市地域・年齢別人口",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/7/1",
+    'ファイル_最終更新日': "2024/9/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "有"
+  }.with_indifferent_access
 
 ## -------------------------------------
 puts "# rdf vocabs"
