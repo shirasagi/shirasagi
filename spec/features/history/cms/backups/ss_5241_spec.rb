@@ -176,7 +176,7 @@ describe "history_cms_backups", type: :feature, dbscope: :example, js: true do
       item = Article::Page.all.first
       expect(item.name).to eq name
       expect(item.column_values.count).to eq 0
-      expect(item.state).to eq "closed"
+      expect(item.state).to eq "public"
     end
   end
 end

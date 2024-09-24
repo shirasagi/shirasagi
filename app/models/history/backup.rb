@@ -16,13 +16,8 @@ class History::Backup
 
   def restorable?
     return false if get == data
-
-    item = ref_item
-    if item.respond_to?(:state)
-      item.state != "public"
-    else
-      true
-    end
+    
+    true
   end
 
   def restore(opts = {})
@@ -43,12 +38,23 @@ class History::Backup
       item = ref_class.constantize.find(self.data["_id"])
       current = item.current_backup
       before = item.before_backup
-
       self.state = 'current'
       current.state = 'before' if current
       before.state = nil if before
 
       self.update
+
+      column_value_ids = []
+      current.data["column_values"].each do |column_value|
+        column_value_ids << column_value["_id"]
+      end
+    
+      if column_value_ids 
+        column_value_ids.each do |id|
+          item.column_values.find_by(id: id)&.destroy
+        end
+      end
+
       if current
         # don't touch "updated"
         current.without_record_timestamps { current.save }
