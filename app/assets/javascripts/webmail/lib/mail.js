@@ -202,11 +202,10 @@ this.Webmail_Mail_List = (function () {
   };
 
   Webmail_Mail_List.findListItems = function (uids) {
-    var items;
     if (uids == null) {
       uids = [];
     }
-    return items = $('.webmail-mails .list-item').map(function () {
+    return $('.webmail-mails .list-item').map(function () {
       var uid;
       uid = $(this).data('uid');
       if ($.inArray(uid + "", uids) === -1) {
@@ -310,7 +309,7 @@ this.Webmail_Mail_List = (function () {
       zIndex: 110,
       opacity: 0.5,
       cursor: "pointer",
-      start: function (e, ui) {
+      start: function (_e, _ui) {
         return $(".tap-menu").hide();
       }
     });

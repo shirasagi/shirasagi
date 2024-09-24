@@ -4,7 +4,6 @@
 SS.ready(function() {
   (function ($) {
     var FC = $.fullCalendar;
-    var View = FC.View;
     var installedWithTodoClick = false;
 
     var firstOrCreateView = function () {
@@ -38,7 +37,6 @@ SS.ready(function() {
 
         var view = clearView(firstOrCreateView());
         var table = $('<div class="fc-listMonth-view-table"></div>');
-        var eventCount = 0;
 
         var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>')
         $('<div class="tr"></div>').appendTo(table).append(noPlan);
@@ -65,7 +63,6 @@ SS.ready(function() {
           var date = $('<div class="td date"></div>').text(event.startDateLabel);
           var time = $('<div class="td time"></div>').text(event.startTimeLabel);
           if (event.allDay) time.text(event.allDayLabel);
-          eventCount++;
 
           var tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
           if (event.className.indexOf('fc-event-todo') !== -1) {
@@ -81,7 +78,7 @@ SS.ready(function() {
 
         if (!installedWithTodoClick) {
           installedWithTodoClick = true;
-          $('.fc-withTodo-button').on('click', function (e) {
+          $('.fc-withTodo-button').on('click', function (_e) {
             var viewName = $('#calendar').fullCalendar('getView').name;
             if (!viewName) {
               viewName = $('#calendar-controller').fullCalendar('getView').name;
