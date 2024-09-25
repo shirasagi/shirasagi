@@ -674,6 +674,10 @@ module SS
     def clear_notice
       page.execute_script("SS.clearNotice();")
     end
+
+    def enable_confirm_unloading
+      page.execute_script('SS.disableConfirmUnloading = false;')
+    end
   end
 end
 
