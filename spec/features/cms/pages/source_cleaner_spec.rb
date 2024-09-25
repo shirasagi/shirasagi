@@ -33,7 +33,10 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
   context "source_cleaner" do
     let!(:template) do
-      create(:cms_source_cleaner_template, site: site, target_type: 'attribute', target_value: 'style', action_type: 'remove')
+      create(
+        :cms_source_cleaner_template, site: site, state: 'public',
+        target_type: 'attribute', target_value: 'style', action_type: 'remove'
+      )
     end
 
     it do
@@ -109,8 +112,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
   context "when target_type is attribute and action_type is remove and replace_source is present" do
     let!(:template) do
       create(
-        :cms_source_cleaner_template, site: site, target_type: 'attribute', target_value: 'class',
-        action_type: 'remove', replace_source: 'unnecessaryClass'
+        :cms_source_cleaner_template, site: site, state: 'public',
+        target_type: 'attribute', target_value: 'class', action_type: 'remove', replace_source: 'unnecessaryClass'
       )
     end
 
@@ -130,7 +133,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
   context "when target_type is attribute and action_type is replace and replace_source is present" do
     let!(:template) do
       create(
-        :cms_source_cleaner_template, site: site, target_type: 'attribute', target_value: 'class',
+        :cms_source_cleaner_template, site: site, state: 'public',
+        target_type: 'attribute', target_value: 'class',
         action_type: 'replace', replace_source: 'unnecessaryClass', replaced_value: 'replacedClass'
       )
     end

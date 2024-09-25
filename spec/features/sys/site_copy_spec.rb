@@ -34,6 +34,13 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
         check 'item_copy_contents_files'
         check 'item_copy_contents_editor_templates'
         check 'item_copy_contents_dictionaries'
+        check 'item_copy_contents_loop_settings'
+        check 'item_copy_contents_page_searches'
+        check 'item_copy_contents_source_cleaner_templates'
+        check 'item_copy_contents_theme_templates'
+        check 'item_copy_contents_translate_langs'
+        check 'item_copy_contents_translate_text_caches'
+        check 'item_copy_contents_word_dictionaries'
 
         click_on I18n.t("sys.apis.sites.index")
       end
@@ -72,6 +79,13 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
         expect(task.copy_contents).to include('files')
         expect(task.copy_contents).to include('editor_templates')
         expect(task.copy_contents).to include('dictionaries')
+        expect(task.copy_contents).to include('loop_settings')
+        expect(task.copy_contents).to include('page_searches')
+        expect(task.copy_contents).to include('source_cleaner_templates')
+        expect(task.copy_contents).to include('theme_templates')
+        expect(task.copy_contents).to include('translate_langs')
+        expect(task.copy_contents).to include('translate_text_caches')
+        expect(task.copy_contents).to include('word_dictionaries')
       end
 
       expect(enqueued_jobs.size).to eq 1

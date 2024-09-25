@@ -57,7 +57,36 @@
         <%= check_box_tag "#{f.object_name}[copy_contents][]", 'dictionaries', @item.copy_contents.include?('dictionaries'), { id: "#{f.object_name}_copy_contents_dictionaries" } %>
         <%= label_tag "#{f.object_name}_copy_contents_dictionaries", t('sys.options.copy_contents.dictionaries') %>
       </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'loop_settings', @item.copy_contents.include?('loop_settings'), { id: "#{f.object_name}_copy_contents_loop_settings" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_loop_settings", t('sys.options.copy_contents.loop_settings', default: 'ループHTML') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'page_searches', @item.copy_contents.include?('page_searches'), { id: "#{f.object_name}_copy_contents_page_searches" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_page_searches", t('sys.options.copy_contents.page_searches', default: 'ページ検索') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'source_cleaner_templates', @item.copy_contents.include?('source_cleaner_templates'), { id: "#{f.object_name}_copy_contents_source_cleaner_templates" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_source_cleaner_templates", t('sys.options.copy_contents.source_cleaner_templates', default: 'ソースクリーニング') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'theme_templates', @item.copy_contents.include?('theme_templates'), { id: "#{f.object_name}_copy_contents_theme_templates" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_theme_templates", t('sys.options.copy_contents.theme_templates', default: 'Theme切り替え') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'translate_langs', @item.copy_contents.include?('translate_langs'), { id: "#{f.object_name}_copy_contents_translate_langs" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_translate_langs", t('sys.options.copy_contents.translate_langs', default: '自動翻訳/言語') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'translate_text_caches', @item.copy_contents.include?('translate_text_caches'), { id: "#{f.object_name}_copy_contents_translate_text_caches" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_translate_text_caches", t('sys.options.copy_contents.translate_text_caches', default: '自動翻訳/翻訳テキスト') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'word_dictionaries', @item.copy_contents.include?('word_dictionaries'), { id: "#{f.object_name}_copy_contents_word_dictionaries" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_word_dictionaries", t('sys.options.copy_contents.word_dictionaries', default: '単語置換辞書') %>
+      </li>
     </ul>
+
     <p class="description"><%= t('sys.site_copy/description') %></p>
   </dd>
 </dl>

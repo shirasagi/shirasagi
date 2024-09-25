@@ -49,6 +49,13 @@ ja:
         files: 共有ファイル
         editor_templates: テンプレート
         dictionaries: かな辞書
+        loop_settings: "ループHTML"
+        page_searches: "ページ検索"
+        source_cleaner_templates: "ソースクリーニング"
+        theme_templates: "Theme切り替え"
+        translate_langs: "自動翻訳/言語"
+        translate_text_caches: "自動翻訳/翻訳テキスト"
+        word_dictionaries: "単語置換辞書"
       force_authn_state:
         enabled: 要求する
         disabled: 要求しない
