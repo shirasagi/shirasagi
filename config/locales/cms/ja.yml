@@ -970,7 +970,7 @@ ja:
       cms/page_search: ページ検索
       cms/task: タスク
       cms/import_page: 取り込みページ
-      cms/word_dictionary: かな辞書
+      cms/word_dictionary: 単語置換辞書
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
@@ -1000,6 +1000,7 @@ ja:
       cms/generation_report/title: 書き出し性能レポート
       cms/generation_report/history: 書き出し性能履歴
       cms/generation_report/aggregation: 書き出し性能履歴の集計結果
+      cms/source_cleaner_template: ソースクリーニング
     errors:
       models:
         cms/content:

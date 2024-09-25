@@ -24,6 +24,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     import_cms_groups
     import_cms_users
     import_dst_site
+    import_cms_editor_templates
 
     if @dst_site.errors.present?
       @task.log("Error: Could not create the site. #{@dst_site.name}")
@@ -42,7 +43,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_columns
     invoke :import_cms_parts
     invoke :import_cms_pages
-    invoke :import_cms_page_searches
+    # invoke :import_cms_page_searches
     invoke :import_cms_notices
     invoke :import_cms_editor_templates
     invoke :import_cms_theme_templates
@@ -58,6 +59,12 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :update_opendata_dataset_resources
     invoke :update_opendata_app_appfiles
     invoke :update_ss_files_url
+    invoke :import_source_cleaner_templates
+    invoke :import_theme_templates
+    invoke :import_cms_word_dictionaries
+    invoke :import_cms_translate_langs
+    invoke :import_cms_translate_text_caches
+    invoke :import_cms_page_search
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
@@ -336,6 +343,145 @@ class Sys::SiteImportJob < SS::ApplicationJob
       new_role_ids = convert_ids(@cms_roles_map, role_ids)
       user = Cms::User.unscoped.where(id: new_user_id).first
       user.add_to_set(cms_role_ids: new_role_ids) if user
+    end
+  end
+
+  def import_cms_editor_templates
+    @task.log("- import cms_editor_templates")
+    
+    read_json("cms_editor_templates").each do |data|
+      id   = data.delete('_id')
+      data = convert_data(data)
+  
+      thumb_id = data['thumb_id']
+      file_ids = data['file_ids']
+
+      # Find or initialize the editor template for the destination site
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = Cms::EditorTemplate.find_or_initialize_by(cond)
+  
+      data.each { |k, v| item[k] = v }
+  
+      if thumb_id.present?
+        new_thumb_id = @ss_files_map[thumb_id]
+        if new_thumb_id.present?
+          thumb_file = SS::File.find(new_thumb_id)
+          thumb_file.update(owner_item: item, site_id: @dst_site.id)
+          item.thumb_id = thumb_file.id
+        end
+      end
+  
+      # Process additional files
+      if file_ids.present?
+        new_file_ids = convert_ids(@ss_files_map, file_ids)
+        item.file_ids = new_file_ids
+      end
+  
+      save_document(item)
+    end
+  end
+
+  def import_source_cleaner_templates
+    @task.log("- import source cleaner templates")
+    read_json("cms_source_cleaner_templates").each do |data|
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = Cms::SourceCleanerTemplate.find_or_initialize_by(cond)
+
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end  
+
+  def import_theme_templates
+    @task.log("- import theme templates")
+
+    read_json("cms_theme_templates").each do |data|
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = Cms::ThemeTemplate.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end  
+
+  def import_cms_word_dictionaries
+    @task.log("- import cms word dictionaries")
+
+    dictionaries = Cms::WordDictionary.site(@src_site)
+
+    dictionaries.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = Cms::WordDictionary.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end
+
+  def import_cms_translate_langs
+    @task.log("- import cms translate langs")
+
+    translate_langs = ::Translate::Lang.site(@src_site)
+
+    translate_langs.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = ::Translate::Lang.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end
+
+  def import_cms_translate_text_caches
+    @task.log("- import cms translate text caches")
+
+    translate_text_caches = ::Translate::TextCache.site(@src_site)
+
+    translate_text_caches.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      cond = { site_id: @dst_site.id }
+      item = ::Translate::TextCache.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
+    end
+  end
+  def import_cms_page_search
+    @task.log("- import cms Page Search")
+
+    page_searches = Cms::PageSearch.site(@src_site)
+
+    page_searches.each do |d|
+      data = d.attributes
+      id   = data.delete('_id')
+      data = convert_data(data)
+      data['search_layout_ids'] = convert_ids(@cms_layouts_map, data['search_layout_ids'])
+      data['search_category_ids'] = convert_ids(@cms_nodes_map, data['search_category_ids'])
+      data['search_node_ids'] = convert_ids(@cms_nodes_map, data['search_node_ids'])
+      if data['search_group_ids'].present?
+        data['search_group_ids'] = data['search_group_ids'].map { |group_id| @cms_groups_map.fetch(group_id, group_id) }
+      end
+      if data['search_user_ids'].present?
+        data['search_user_ids'] = data['search_user_ids'].map { |user_id| @cms_users_map.fetch(user_id, user_id) }
+      end
+      cond = { name: data['name'], site_id: @dst_site.id }
+      item = Cms::PageSearch.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      save_document(item)
     end
   end
 end

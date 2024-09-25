@@ -35,17 +35,55 @@
       <%= t("sys.options.copy_contents.pages") %><br />
       <%= hidden_field_tag "item[copy_contents][]", "pages", id: nil %>
     <% end %>
+    
     <% if @item.copy_contents.include?('files') %>
       <%= t("sys.options.copy_contents.files") %><br />
       <%= hidden_field_tag "item[copy_contents][]", "files", id: nil %>
     <% end %>
+    
     <% if @item.copy_contents.include?('editor_templates') %>
       <%= t("sys.options.copy_contents.editor_templates") %><br />
       <%= hidden_field_tag "item[copy_contents][]", "editor_templates", id: nil %>
     <% end %>
+    
     <% if @item.copy_contents.include?('dictionaries') %>
       <%= t("sys.options.copy_contents.dictionaries") %><br />
       <%= hidden_field_tag "item[copy_contents][]", "dictionaries", id: nil %>
+    <% end %>
+
+    <% if @item.copy_contents.include?('loop_settings') %>
+      <%= t("sys.options.copy_contents.loop_settings") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "loop_settings", id: nil %>
+    <% end %>
+    
+    <% if @item.copy_contents.include?('page_searches') %>
+      <%= t("sys.options.copy_contents.page_searches") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "page_searches", id: nil %>
+    <% end %>
+    
+    <% if @item.copy_contents.include?('source_cleaner_templates') %>
+      <%= t("sys.options.copy_contents.source_cleaner_templates") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "source_cleaner_templates", id: nil %>
+    <% end %>
+    
+    <% if @item.copy_contents.include?('theme_templates') %>
+      <%= t("sys.options.copy_contents.theme_templates") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "theme_templates", id: nil %>
+    <% end %>
+    
+    <% if @item.copy_contents.include?('translate_langs') %>
+      <%= t("sys.options.copy_contents.translate_langs") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "translate_langs", id: nil %>
+    <% end %>
+    
+    <% if @item.copy_contents.include?('translate_text_caches') %>
+      <%= t("sys.options.copy_contents.translate_text_caches") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "translate_text_caches", id: nil %>
+    <% end %>
+    
+    <% if @item.copy_contents.include?('word_dictionaries') %>
+      <%= t("sys.options.copy_contents.word_dictionaries") %><br />
+      <%= hidden_field_tag "item[copy_contents][]", "word_dictionaries", id: nil %>
     <% end %>
   </dd>
 </dl>

@@ -27,36 +27,18 @@ class Translate::TextCache
   permit_params :source
   permit_params :target
 
+  before_validation :set_hexdigest
+
   validates :api, presence: true
   validates :update_state, presence: true
   validates :text, presence: true, if: -> { update_state == "manually" }
   validates :original_text, presence: true
   validates :source, presence: true
   validates :target, presence: true
-  validates :hexdigest, presence: true, if: ->{ update_state != "manually" }
-  validate :validate_hexdigest, if: ->{ update_state == "manually" }
+  validates :hexdigest, presence: true
+  validate :validate_hexdigest
 
   default_scope -> { order_by(updated: -1) }
-
-  def validate_hexdigest
-    return if api.blank?
-    return if source.blank?
-    return if target.blank?
-    return if original_text.blank?
-
-    self.hexdigest = self.class.hexdigest(api, source, target, original_text)
-    if self.class.where(hexdigest: hexdigest).ne(id: id).first
-      errors.add :base, :duplicate_hexdigest, original_text: original_text, source: source, target: target
-    end
-  end
-
-  def api_options
-    @_api_options ||= SS.config.translate.api_options.map { |k, v| [v, k] }
-  end
-
-  def update_state_options
-    I18n.t("translate.options.update_state").map { |k, v| [v, k] }
-  end
 
   class << self
     def hexdigest(api, source, target, original_text)
@@ -77,6 +59,37 @@ class Translate::TextCache
         criteria = criteria.where(update_state: params[:update_state])
       end
       criteria
+    end
+  end
+
+  def api_options
+    @_api_options ||= SS.config.translate.api_options.map { |k, v| [v, k] }
+  end
+
+  def update_state_options
+    I18n.t("translate.options.update_state").map { |k, v| [v, k] }
+  end
+
+  private
+
+  def set_hexdigest
+    return if api.blank?
+    return if source.blank?
+    return if target.blank?
+    return if original_text.blank?
+
+    self.hexdigest = self.class.hexdigest(api, source, target, original_text)
+  end
+
+  def validate_hexdigest
+    return if hexdigest.blank?
+
+    criteria = self.class.where(site_id: site_id, hexdigest: hexdigest)
+    if persisted?
+      criteria = criteria.ne(id: id)
+    end
+    if criteria.exists?
+      errors.add :base, :duplicate_hexdigest, original_text: original_text, source: source, target: target
     end
   end
 end
