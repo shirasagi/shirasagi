@@ -23,7 +23,7 @@ module Gws::Apis::CategoryFilter
     criteria = criteria.readable(@cur_user, site: @cur_site)
     criteria = criteria.search(params[:s])
     if @category
-      criteria = criteria.where("i18n_name.#{I18n.default_locale}" => /^#{::Regexp.escape(@category.i18n_default_name)}\//)
+      criteria = criteria.where(name: /^#{::Regexp.escape(@category.name)}\//)
     end
     @items = criteria.tree_sort
     @items = Kaminari.paginate_array(@items.to_a).page(params[:page]).per(50)
