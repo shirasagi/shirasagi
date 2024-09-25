@@ -133,7 +133,7 @@ class Gws::History
 
       write!(
         severity, :controller, options[:cur_user], options[:cur_site],
-        path: request.path, controller: options[:controller], action: options[:action]
+        path: SS.request_path(request), controller: options[:controller], action: options[:action]
       )
     end
 

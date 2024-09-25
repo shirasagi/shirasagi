@@ -11,5 +11,5 @@
 %>
 
 <turbo-frame id="workflow-inspection-frame">
-  <%= render template: "gws/workflow2/frames/inspections/edit", locals: local_assigns.merge(ref: request.path) %>
+  <%= render template: "gws/workflow2/frames/inspections/edit", locals: local_assigns.merge(ref: SS.request_path(request)) %>
 </turbo-frame>

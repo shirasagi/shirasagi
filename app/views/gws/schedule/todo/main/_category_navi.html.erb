@@ -4,7 +4,7 @@
   <% render_tree_item = proc do |cate| %>
     <% url = url_for(category: cate.id) %>
     <% css_class = %w(tree-item is-open) %>
-    <% css_class << "is-current" if request.path.start_with?(url) %>
+    <% css_class << "is-current" if SS.request_path(request).start_with?(url) %>
     <%= content_tag("div", class: css_class, data: { id: cate.id, filename: cate.name }) do %>
       <%= link_to cate.trailing_name, url, class: "item-name" %>
     <% end %>

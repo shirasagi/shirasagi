@@ -9,7 +9,7 @@
     <li class="list-item">
       <div class="info">
         <%= link_to item.name,
-              sns_public_notice_path(id: item, login_path: request.path),
+              sns_public_notice_path(id: item, login_path: SS.request_path(request)),
               class: "title notice-severity-#{item.notice_severity}" %>
         <span class="datetime"><%= ss_time_tag item.released %></span>
       </div>
