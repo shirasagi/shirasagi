@@ -27,7 +27,7 @@ class Translate::AccessLog
     def create_log!(site, request)
       item = self.new
       item.cur_site = site
-      item.path = request.path
+      item.path = SS.request_path(request)
       item.user_agent = request.user_agent
       item.remote_addr = request.remote_addr
       item.referer = request.referer

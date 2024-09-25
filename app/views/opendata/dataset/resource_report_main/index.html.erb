@@ -1,18 +1,19 @@
 <div class="cms-tabs">
+  <% request_path = SS.request_path(request) %>
   <% if Opendata::ResourceDownloadReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <% css_classes = request.path.start_with?(opendata_dataset_report_downloads_path) ? %w(current) : nil %>
+    <% css_classes = request_path.start_with?(opendata_dataset_report_downloads_path) ? %w(current) : nil %>
     <%= link_to opendata_dataset_report_downloads_path, class: css_classes do %>
       <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
     <% end %>
   <% end %>
   <% if Opendata::DatasetAccessReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <% css_classes = request.path.start_with?(opendata_dataset_report_accesses_path) ? %w(current) : nil %>
+    <% css_classes = request_path.start_with?(opendata_dataset_report_accesses_path) ? %w(current) : nil %>
     <%= link_to opendata_dataset_report_accesses_path, class: css_classes do %>
       <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>
     <% end %>
   <% end %>
   <% if Opendata::ResourcePreviewReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <% css_classes = request.path.start_with?(opendata_dataset_report_previews_path) ? %w(current) : nil %>
+    <% css_classes = request_path.start_with?(opendata_dataset_report_previews_path) ? %w(current) : nil %>
     <%= link_to opendata_dataset_report_previews_path, class: css_classes do %>
       <span class="tab-name"><%= t("opendata.reports.preview_reports") %></span>
     <% end %>
@@ -60,7 +61,7 @@
   <% end %>
 </div>
 
-<% if request.path.start_with?(opendata_dataset_report_downloads_path) %>
+<% if request_path.start_with?(opendata_dataset_report_downloads_path) %>
   <div class="main-box">
     <div class="markdown-body">
       <%= SS::Addon::Markdown.text_to_html(t("opendata.notice.download_report_notice_md")) %>

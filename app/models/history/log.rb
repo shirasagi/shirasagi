@@ -67,7 +67,7 @@ class History::Log
       log              = new
       log.session_id   = request.session.id
       log.request_id   = request.uuid
-      log.url          = request.path
+      log.url          = SS.request_path(request)
       log.controller   = options[:controller]
       log.action       = options[:action]
       log.cur_user     = options[:cur_user]

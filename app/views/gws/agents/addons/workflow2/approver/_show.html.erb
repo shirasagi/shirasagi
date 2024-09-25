@@ -1,5 +1,5 @@
 <% return unless @cur_form %>
 
-<turbo-frame id="workflow-approver-frame" src="<%= gws_workflow2_frames_approver_path(id: @item, ref: request.path) %>">
+<turbo-frame id="workflow-approver-frame" src="<%= gws_workflow2_frames_approver_path(id: @item, ref: SS.request_path(request)) %>">
   <%= loading %>
 </turbo-frame>

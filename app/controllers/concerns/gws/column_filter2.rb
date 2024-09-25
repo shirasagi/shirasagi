@@ -93,7 +93,7 @@ module Gws::ColumnFilter2
     end
 
     @frame_id = "item-#{@item.id}"
-    locals = { ref: request.path, model: @model, item: @item, new_item: true }
+    locals = { ref: SS.request_path(request), model: @model, item: @item, new_item: true }
     render template: "gws/frames/columns/edit", locals: locals, layout: "ss/item_frame"
   end
 

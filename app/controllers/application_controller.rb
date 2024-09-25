@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
   end
 
   def request_path
-    request.env["REQUEST_PATH"] || request.path
+    @request_path ||= SS.request_path(request)
   end
 
   def protect_csrf?

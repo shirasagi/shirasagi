@@ -60,7 +60,7 @@ module Gws::BaseFilter
     gws_session[@cur_site.id.to_s]['last_logged_in'] ||= begin
       Gws::History.info!(
         :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name,
+        path: SS.request_path(request), controller: self.class.name.underscore, action: action_name,
         model: Gws::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
       ) rescue nil
       Time.zone.now.to_i
@@ -86,7 +86,7 @@ module Gws::BaseFilter
     if history_method
       Gws::History.send(
         history_method, :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name,
+        path: SS.request_path(request), controller: self.class.name.underscore, action: action_name,
         message: "#{exception.class} (#{exception.message})"
       ) rescue nil
     end

@@ -32,7 +32,7 @@ graph.render("line", name, labels, datasets);
 var types = <%== @item.preview_graph_types.to_json %>;
 var headers = <%== graph.headers.to_json %>;
 graph.renderController(types, headers, function(type) {
-  var url = "<%= request.path %>";
+  var url = "<%= SS.request_path(request) %>";
   url += "?type=" + type + "&graph=1";
 
   graph.destroy();

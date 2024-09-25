@@ -1,6 +1,6 @@
 <%
   def current_navi
-    case request.path
+    case SS.request_path(request)
     when /affair\/overtime\/management\/aggregate/
       "overtime-aggregate"
     when /working_time\/management\/aggregate/

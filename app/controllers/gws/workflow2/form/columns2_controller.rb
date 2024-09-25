@@ -89,7 +89,7 @@ class Gws::Workflow2::Form::Columns2Controller < ApplicationController
     end
 
     @frame_id = "item-#{@item.id}"
-    render template: "gws/frames/columns/edit", locals: { ref: request.path, model: @model, item: @item }, layout: "ss/item_frame"
+    render template: "gws/frames/columns/edit", locals: { ref: SS.request_path(request), model: @model, item: @item }, layout: "ss/item_frame"
   end
 
   def reorder

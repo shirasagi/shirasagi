@@ -1,10 +1,11 @@
 <div class="gws-tabs">
+  <% request_path = SS.request_path(request) %>
   <% path = url_for(action: :confirmation) %>
-  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+  <%= link_to(path, class: [ params[:type], request_path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">実行</span>
   <% end %>
   <% path = url_for(controller: :results, action: :show) %>
-  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+  <%= link_to(path, class: [ params[:type], request_path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">結果</span>
   <% end %>
 </div>

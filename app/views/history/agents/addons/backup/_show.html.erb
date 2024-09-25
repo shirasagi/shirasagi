@@ -1,6 +1,6 @@
 <%
   return render(plain: "") if @item.backups.size == 0
-  source = ERB::Util.url_encode(request.path)
+  source = ERB::Util.url_encode(SS.request_path(request))
   top_backups = @item.backups.limit(History.max_histories).to_a
 %>
 <dl class="see">

@@ -16,5 +16,5 @@
 %>
 
 <turbo-frame id="workflow-circulation-frame">
-  <%= render template: "gws/workflow2/frames/circulations/edit", locals: local_assigns.merge(ref: request.path, workflow_circulation: workflow_circulation) %>
+  <%= render template: "gws/workflow2/frames/circulations/edit", locals: local_assigns.merge(ref: SS.request_path(request), workflow_circulation: workflow_circulation) %>
 </turbo-frame>

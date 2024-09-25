@@ -153,7 +153,7 @@ class Cms::Form::ColumnsController < ApplicationController
     raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
 
     if params[:destroy_all]
-      render_destroy_all(destroy_items, location: request.path)
+      render_destroy_all(destroy_items, location: SS.request_path(request))
       return
     end
 

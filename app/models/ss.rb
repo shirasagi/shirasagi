@@ -91,4 +91,8 @@ module SS
   def deprecator
     @deprecator ||= ActiveSupport::Deprecation.new(SS.version, "SHIRASAGI")
   end
+
+  def request_path(request)
+    Addressable::URI.parse(request.env["REQUEST_PATH"] || request.path).normalize.request_uri
+  end
 end
