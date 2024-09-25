@@ -52,6 +52,8 @@ module Gws::Model::Category
   end
 
   def depth
+    return 0 if name.blank?
+
     @depth ||= begin
       count = 0
       full_name = ""
