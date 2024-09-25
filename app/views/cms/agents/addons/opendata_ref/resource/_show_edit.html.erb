@@ -50,7 +50,7 @@
 </div>
 
 <%
-  update_opendata_resources_path = request.path.dup
+  update_opendata_resources_path = SS.request_path(request).dup
   update_opendata_resources_path << "/" unless update_opendata_resources_path.end_with?("/")
   update_opendata_resources_path << "update_opendata_resources.json"
 %>

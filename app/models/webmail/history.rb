@@ -126,7 +126,7 @@ class Webmail::History
 
       write!(
         severity, :controller, options[:cur_user],
-        path: request.path, controller: options[:controller], action: options[:action]
+        path: SS.request_path(request), controller: options[:controller], action: options[:action]
       )
     end
 

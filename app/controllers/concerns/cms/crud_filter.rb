@@ -137,7 +137,7 @@ module Cms::CrudFilter
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_confirmed_all(destroy_items, location: request.path)
+      render_confirmed_all(destroy_items, location: SS.request_path(request))
       return
     end
 
@@ -173,7 +173,7 @@ module Cms::CrudFilter
 
     @change_state = params[:state]
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
+      render_confirmed_all(change_items_state, location: SS.request_path(request))
       return
     end
 

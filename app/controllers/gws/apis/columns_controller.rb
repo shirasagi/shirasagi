@@ -18,8 +18,8 @@ class Gws::Apis::ColumnsController < ApplicationController
 
   def ref
     ret = params[:ref]
-    return request.path if ret.blank?
-    return request.path unless trusted_url?(ret)
+    return SS.request_path(request) if ret.blank?
+    return SS.request_path(request) unless trusted_url?(ret)
     ret
   end
 
