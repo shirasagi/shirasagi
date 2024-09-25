@@ -36,6 +36,8 @@ export default class extends Controller {
       if (isSubmit(ev.target)) {
         SS.formChanged = undefined;
       }
+    }).on("submit", (_ev) => {
+      SS.formChanged = undefined;
     });
   }
 }
