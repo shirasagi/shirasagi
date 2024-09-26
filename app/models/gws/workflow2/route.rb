@@ -233,15 +233,6 @@ class Gws::Workflow2::Route
 
   def validate_required_counts
     errors.add :required_counts, :blank if required_counts.blank?
-
-    levels.each do |level|
-      required_count = required_count_at(level)
-      next if required_count == false
-
-      approvers = approvers_at(level).to_a
-      errors.add :required_counts, :required_count_greater_than_approvers, level: level, required_count: required_count \
-        if approvers.length < required_count
-    end
   end
 
   def validate_approver_attachment_uses

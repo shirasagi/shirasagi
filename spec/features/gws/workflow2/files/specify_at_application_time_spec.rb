@@ -345,13 +345,60 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
       within ".mod-workflow-request" do
         fill_in "item[workflow_comment]", with: unique_id
-        click_on I18n.t("workflow.buttons.request")
+        wait_for_event_fired("turbo:frame-load") { click_on I18n.t("workflow.buttons.request") }
       end
-      wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-request" do
         attr = Gws::Workflow2::File.t(:workflow_approvers)
         error = I18n.t("errors.messages.user_id_blank")
         wait_for_error I18n.t("errors.format", attribute: attr, message: error)
+      end
+    end
+  end
+
+  context "required 3 approvers but specified only 2" do
+    let!(:route) do
+      create(
+        :gws_workflow2_route, name: unique_id, group_ids: admin.group_ids,
+        approvers: [
+          { "level" => 1, "user_type" => "special", "user_id" => "specify_at_time_of_application" },
+        ],
+        required_counts: [ 3, false, false, false, false ]
+      )
+    end
+
+    let!(:form) { create(:gws_workflow2_form_application, default_route_id: route.id, state: "public") }
+    let!(:column1) { create(:gws_column_text_field, form: form, input_type: "text") }
+    let!(:item) do
+      create :gws_workflow2_file, cur_user: user0, form: form, column_values: [ column1.serialize_value(unique_id) ]
+    end
+
+    it do
+      # user0: 申請する
+      login_user user0
+      visit gws_workflow2_file_path(site: site, state: 'all', id: item)
+      wait_for_turbo_frame "#workflow-approver-frame"
+
+      within ".mod-workflow-request" do
+        fill_in "item[workflow_comment]", with: unique_id
+        within ".gws-workflow-file-approver-item[data-level='1']" do
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
+        end
+      end
+      within_cbox do
+        first("[data-id='#{user2.id}'] [type='checkbox']").click
+        first("[data-id='#{user3.id}'] [type='checkbox']").click
+        wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
+      end
+      within ".mod-workflow-request" do
+        within ".gws-workflow-file-approver-item[data-level='1']" do
+          expect(page).to have_css(".gws-workflow-file-approver-item-special-result-item", text: user2.long_name)
+          expect(page).to have_css(".gws-workflow-file-approver-item-special-result-item", text: user3.long_name)
+        end
+
+        wait_for_event_fired("turbo:frame-load") { click_on I18n.t("workflow.buttons.request") }
+      end
+      within ".mod-workflow-request" do
+        wait_for_error I18n.t("errors.messages.required_count_greater_than_approvers", level: 1, required_count: 3)
       end
     end
   end
