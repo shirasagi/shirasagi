@@ -15,6 +15,7 @@ class Gws::Workflow2::RouteOption::UserUnderCurGroupComponent < ApplicationCompo
       criteria = Gws::User.site(cur_site)
       criteria = criteria.where(group_ids: cur_group.id)
       criteria = criteria.active
+      criteria = criteria.readable_users(cur_user, site: cur_site)
       criteria = criteria.order_by_title(cur_site)
       criteria = criteria.only(:id, :name, :uid, :email, :updated)
       criteria
