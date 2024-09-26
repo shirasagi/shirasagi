@@ -156,9 +156,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
         include(
-          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '', editable: 1 },
-          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: '', editable: 1 },
-          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '', editable: 1 }
+          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '' },
+          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: '' },
+          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '' }
         )
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
@@ -198,10 +198,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
         include(
-          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1, editable: 1,
+          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
             file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: '', editable: 1 },
-          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '', editable: 1 }
+          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: '' },
+          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '' }
         )
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
@@ -241,11 +241,11 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
         include(
-          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1, editable: 1,
+          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
             file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment2, editable: 1,
+          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment2,
             file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'request', comment: '', editable: 1 }
+          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'request', comment: '' }
         )
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
@@ -285,11 +285,11 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
         include(
-          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1, editable: 1,
+          { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
             file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment2, editable: 1,
+          { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment2,
             file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'approve', comment: approve_comment3, editable: 1,
+          { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'approve', comment: approve_comment3,
             file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) }
         )
       expect(item.workflow_circulations.count).to eq 3

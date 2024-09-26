@@ -18,8 +18,10 @@ class Gws::Workflow2::ApproverResolver
       def from_hash(approver_hash)
         new(
           level: approver_hash['level'].to_i, user_type: approver_hash['user_type'],
-          user: approver_hash['user'], editable: approver_hash['editable'])
+          user: approver_hash['user'], editable: editable?(approver_hash['editable']))
       end
+
+      delegate :editable?, to: Gws::Workflow2::ApproverResolver
     end
 
     def to_h
@@ -59,6 +61,12 @@ class Gws::Workflow2::ApproverResolver
 
   attr_accessor :cur_site, :cur_group, :cur_user, :route, :item, :workflow_approvers, :workflow_circulations
   attr_reader :resolved_approvers, :resolved_circulations
+
+  class << self
+    def editable?(value)
+      value.numeric? && value.to_i == 1
+    end
+  end
 
   def resolve
     case route
@@ -234,9 +242,7 @@ class Gws::Workflow2::ApproverResolver
     @id_occupation_map ||= all_occupations.index_by(&:id)
   end
 
-  def editable?(value)
-    value == 1
-  end
+  delegate :editable?, to: :class
 
   def workflow_approvers_at(level)
     return [] if level.nil? || @resolved_approvers.blank?
