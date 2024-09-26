@@ -73,7 +73,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       end
       expect(current_path).not_to eq sns_login_path
 
-      expect(page).to have_link(I18n.t("history.restore"))
+      expect(page).not_to have_link(I18n.t("history.restore"))
     end
 
     it "#restore at closed page" do

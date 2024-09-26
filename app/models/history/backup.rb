@@ -17,7 +17,12 @@ class History::Backup
   def restorable?
     return false if get == data
     
-    true
+    item = ref_item
+    if item.respond_to?(:state)
+      item.state != "public"
+    else
+      true
+    end
   end
 
   def restore(opts = {})
