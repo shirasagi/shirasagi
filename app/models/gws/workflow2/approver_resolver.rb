@@ -72,11 +72,13 @@ class Gws::Workflow2::ApproverResolver
     id name superior_user_ids
   ].freeze
   PERMIT_PARAMS = [
-    workflow_approvers: %i[level editable user_type user_id alternate_to].freeze,
-    workflow_circulations: %i[level user_type user_id].freeze,
+    in_approver_alternates: %i[level editable user_type user_id alternate_to].freeze,
+    in_selected_approvers: %i[level editable user_type user_id].freeze,
+    in_selected_circulations: %i[level user_type user_id].freeze,
   ].freeze
 
-  attr_accessor :cur_site, :cur_group, :cur_user, :route, :item, :workflow_approvers, :workflow_circulations
+  attr_accessor :cur_site, :cur_group, :cur_user, :route, :item,
+    :in_approver_alternates, :in_selected_approvers, :in_selected_circulations
   attr_reader :resolved_approvers, :resolved_circulations
 
   def resolve
@@ -302,9 +304,11 @@ class Gws::Workflow2::ApproverResolver
     end
     approver_results.flatten!
 
-    if workflow_approvers.present?
-      approver_results = resolve_alternatables(level, workflow_approvers, approver_results)
-      approver_results = resolve_specials(level, workflow_approvers, approver_results)
+    if in_approver_alternates.present?
+      approver_results = resolve_alternatables(level, in_approver_alternates, approver_results)
+    end
+    if in_selected_approvers.present?
+      approver_results = resolve_specials(level, in_selected_approvers, approver_results)
     end
 
     @resolved_approvers += approver_results
@@ -341,8 +345,8 @@ class Gws::Workflow2::ApproverResolver
     end
     circulation_results.flatten!
 
-    if workflow_circulations.present?
-      circulation_results = resolve_specials(level, workflow_circulations, circulation_results)
+    if in_selected_circulations.present?
+      circulation_results = resolve_specials(level, in_selected_circulations, circulation_results)
     end
 
     @resolved_circulations += circulation_results

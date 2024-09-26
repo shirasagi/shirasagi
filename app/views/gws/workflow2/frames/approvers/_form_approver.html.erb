@@ -23,11 +23,11 @@
           <%% if (selectedItems.length > 0) { %>
             <%% selectedItems.forEach(function(selectedItem) { %>
               <div class="gws-workflow-file-alternative-approver-item" data-id="<%%= selectedItem.id %>">
-                <input type="hidden" name="item[workflow_approvers][][level]" value="<%= level %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][user_type]" value="<%= user_type %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][alternate_to]" value="<%= [ level, user_type, user_id ].join(",") %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][user_type]" value="<%= user_type %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][alternate_to]" value="<%= [ level, user_type, user_id ].join(",") %>" autocomplete="off">
                 <%= I18n.t('gws/workflow2.labels.approver_alternator') %>
                 <span class="user"><%%= selectedItem.longName %></span>
                 <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
@@ -61,10 +61,10 @@
           <%% if (selectedItems.length > 0) { %>
             <%% selectedItems.forEach(function(selectedItem) { %>
               <div class="gws-workflow-file-approver-item-special-result-item" data-id="<%%= selectedItem.id %>">
-                <input type="hidden" name="item[workflow_approvers][][level]" value="<%= level %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
                 <span class="user"><%%= selectedItem.longName %></span>
                 <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
               </div>
