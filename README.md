@@ -40,7 +40,13 @@ $ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.
 
 ## Installation (AlmaLinux)
 
-拡張機能（ふりがな、読み上げ、オープンデータ等）や詳細なインストール手順は[開発マニュアル](http://shirasagi.github.io/)をご確認ください。
+- 本手順は簡易的に動作確認を行う為の最小構成の手順となります。
+正式にサービスとしてご利用の際は、フロントにNginx等のWEBサーバを立て、
+セキュリティに配慮した設定を実施頂くことを推奨いたします。<br />
+Nginxの導入につきましては開発マニュアルの[Nginxのインストール](https://shirasagi.github.io/installation/nginx.html)
+をご確認ください。<br />
+
+- 拡張機能（ふりがな、読み上げ、オープンデータ等）や詳細なインストール手順は[開発マニュアル](http://shirasagi.github.io/)をご確認ください。
 
 ### パッケージのダウンロード
 
