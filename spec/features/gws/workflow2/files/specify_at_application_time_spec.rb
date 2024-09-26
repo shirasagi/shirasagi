@@ -320,6 +320,42 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     end
   end
 
+  context "specify no approvers at the time of application" do
+    let!(:route) do
+      create(
+        :gws_workflow2_route, name: unique_id, group_ids: admin.group_ids,
+        approvers: [
+          { "level" => 1, "user_type" => "special", "user_id" => "specify_at_time_of_application" },
+        ],
+        required_counts: [ false, false, false, false, false ]
+      )
+    end
+
+    let!(:form) { create(:gws_workflow2_form_application, default_route_id: route.id, state: "public") }
+    let!(:column1) { create(:gws_column_text_field, form: form, input_type: "text") }
+    let!(:item) do
+      create :gws_workflow2_file, cur_user: user0, form: form, column_values: [ column1.serialize_value(unique_id) ]
+    end
+
+    it do
+      # user0: 申請する
+      login_user user0
+      visit gws_workflow2_file_path(site: site, state: 'all', id: item)
+      wait_for_turbo_frame "#workflow-approver-frame"
+
+      within ".mod-workflow-request" do
+        fill_in "item[workflow_comment]", with: unique_id
+        click_on I18n.t("workflow.buttons.request")
+      end
+      wait_for_turbo_frame "#workflow-approver-frame"
+      within ".mod-workflow-request" do
+        attr = Gws::Workflow2::File.t(:workflow_approvers)
+        error = I18n.t("errors.messages.user_id_blank")
+        wait_for_error I18n.t("errors.format", attribute: attr, message: error)
+      end
+    end
+  end
+
   context "js specs" do
     let!(:route) do
       create(
