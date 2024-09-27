@@ -136,6 +136,9 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 15
 
+Naming/BlockForwarding:
+  Enabled: false
+
 Naming/MethodParameterName:
   MinNameLength: 2
   AllowedNames: [ 'f', 'e', 'n' ]
@@ -152,6 +155,9 @@ Rails:
 
 # Cop supports --auto-correct.
 Rails/Output:
+  Enabled: false
+
+Style/ArgumentsForwarding:
   Enabled: false
 
 # Cop supports --auto-correct.
