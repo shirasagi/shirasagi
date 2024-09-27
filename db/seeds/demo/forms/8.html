@@ -11,18 +11,33 @@
             <th>所在地</th>
             <td>
               <div>
-                <span class="post-code">{{ page.values["郵便番号"] }}</span>
-                {{ page.values["住所"] }}
+                <span class="post-code">〒{{ page.values["郵便番号"] }}</span>
+                {{ page.values["所在地_連結表記"] }}
               </div>
             </td>
           </tr>
-
+          <tr>
+            <th>電話番号</th>
+            <td>
+              <div>
+                {{ page.values["電話番号"] }}
+              </div>
+            </td>
+          </tr>
           <tr>
             <th>対応する災害</th>
             {% for category in page.categories %}
             <td>{{ category.name }}</td>
             </span>
             {% endfor %}
+          </tr>
+          <tr>
+            <th>想定収容人数</th>
+            <td>
+              <div>
+                {{ page.values["想定収容人数"] }}人
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>

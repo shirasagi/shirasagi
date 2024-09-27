@@ -48,6 +48,9 @@ ja:
       categories:
         index: カテゴリーを選択する
         parent_id: 親カテゴリー
+        overall_criteria: 全体の条件
+        individual_criteria: 個別の条件
+        add_individual_criteria: 個別条件の追加
       custom_groups:
         index: カスタムグループを選択する
       user_titles:
@@ -178,8 +181,8 @@ ja:
       gws/user/duty_hour: 勤務時間
       gws/link: リンク
       gws/site_usage: 使用量
-      gws/user/affair_setting: 庶務事務
-      gws/group/affair_setting: 庶務事務
+      gws/user/affair_setting: 庶務事務・ワークフロー2
+      gws/group/affair_setting: 庶務事務・ワークフロー2
       gws/user/staff_category: 職員区分
       gws/circular/browsing_authority: 閲覧権限
 
@@ -322,7 +325,7 @@ ja:
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ(ハッシュ)
         permission_level: 権限レベル
-      gws/addon/readable_setting:
+      gws/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
         readable_groups_hash: 閲覧グループ(ハッシュ)
@@ -377,6 +380,8 @@ ja:
         menu_qna_state: Ｑ＆Ａの表示
         menu_workflow_label: ワークフローの表示
         menu_workflow_state: ワークフローの表示
+        menu_workflow2_label: ワークフロー2の表示
+        menu_workflow2_state: ワークフロー2の表示
         menu_workload_label: 業務見える化の表示
         menu_workload_state: 業務見える化の表示
         menu_report_label: レポートの表示

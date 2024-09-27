@@ -1,0 +1,34 @@
+<%
+  return if @item.deleted?
+  return unless use_agent?
+%>
+<%= jquery do %>
+  var approver = new Gws_Workflow2_Approver();
+  approver.renderAgentForm(<%== {
+    'url': gws_workflow2_apis_user_superior_path(id: "$id", format: :json)
+  }.to_json %>);
+  approver.renderSubmitButton();
+<% end %>
+
+<dl class="see agent_type change_agent_type">
+  <dt><%= @model.t :workflow_user_id %><%= @model.tt :workflow_user_id %></dt>
+  <dd>
+    <label>
+      <%= radio_button_tag("#{f.object_name}[workflow_agent_type]", "myself", true) %>
+      <%= t("gws/workflow.agent_type.myself") %>
+      (<%= @cur_user.name %>)
+    </label>
+  </dd>
+  <dd class="agent-type-agent">
+    <label><%= radio_button_tag("#{f.object_name}[workflow_agent_type]", "agent", false) %> <%= t("gws/workflow.agent_type.agent") %></label>
+    <%= f.hidden_field "workflow_user_id", value: "", class: "hidden-ids", id: nil %>
+    <%= link_to t("gws/workflow2.search_delegatees.index"), gws_workflow2_apis_delegatees_path(single: 1), class: "btn ajax-box" %>
+  </dd>
+  <dd class="agent-type-agent">
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      </tbody>
+    </table>
+  </dd>
+</dl>

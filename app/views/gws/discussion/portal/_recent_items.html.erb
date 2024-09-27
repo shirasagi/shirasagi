@@ -1,0 +1,21 @@
+<%= render "ss/crud/addon", addon: { head: head, class: css_class, toggle: true } do %>
+  <ul class="list-items">
+    <% @recent_items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+          <%= link_to item.name, gws_discussion_forum_thread_comments_path(forum_id: @forum.id, topic_id: item.id) %><br />
+          <div class="meta">
+            <% item.descendants_updated.try do |updated| %>
+              <span class="datetime"><%= ss_time_tag updated %></span>
+            <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+    <% if @recent_items.blank? %>
+      <li class="list-item"><%= t("gws/discussion.notice.no_recents") %></li>
+    <% end %>
+    <li class="list-item"><%= link_to t("gws/discussion.links.topic.index"), gws_discussion_forum_topics_path %></li>
+  </ul>
+<% end %>

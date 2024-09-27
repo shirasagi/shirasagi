@@ -1,0 +1,85 @@
+<%
+## controller.navi_view_file
+## - cms/main/navi
+## - cms/node/main/navi
+## - cms/main/conf_navi
+%>
+<% if controller.navi_view_file == 'cms/main/navi' %>
+  <nav class="main-navi">
+    <%= link_to t("cms.node"), cms_nodes_path, class: "icon-ss icon-node" %>
+
+    <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t("cms.page"), cms_pages_path, class: "icon-ss icon-page" %>
+    <% end %>
+    <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t("cms.part"), cms_parts_path, class: "icon-ss icon-part" %>
+    <% end %>
+    <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t("cms.layout"), cms_layouts_path, class: "icon-ss icon-layout" %>
+    <% end %>
+
+    <div class="dropdown dropdown-toggle">
+      <%= tag.span t("cms.etc"), class: "icon-ss icon-material icon-material-more-horiz" %>
+      <ul class="dropdown-menu dropdown-menu--white">
+        <% if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+          <% if @cur_node %>
+            <li><%= link_to t("cms.import_page"), node_import_path, class: "icon-material icon-material-import-node" %></li>
+          <% else %>
+            <li><%= link_to t("cms.import_node"), cms_import_path, class: "icon-material icon-material-import-node" %></li>
+          <% end %>
+        <% end %>
+        <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+          <li><%= link_to t("cms.generate_node"), cms_generate_nodes_path, class: "icon-ss icon-write" %></li>
+        <% end %>
+        <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+          <li><%= link_to t("cms.generate_page"), cms_generate_pages_path, class: "icon-ss icon-write" %></li>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <li><hr></li>
+          <li><span class="corner-name"><%= t("cms.batch_operation") %></span></li>
+          <li><%= link_to t("cms.csv_export_node"), download_cms_nodes_path, class: "icon-ss icon-export indent" %></li>
+          <li><%= link_to t("cms.csv_import_node"), import_cms_nodes_path, class: "icon-ss icon-import indent" %></li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+
+<% elsif controller.navi_view_file != 'cms/main/conf_navi' && @cur_node.present? %>
+  <nav class="main-navi">
+    <%= link_to t("cms.node"), node_nodes_path, class: "icon-ss icon-node" %>
+
+    <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t("cms.page"), node_pages_path, class: "icon-ss icon-page" %>
+    <% end %>
+    <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t("cms.part"), node_parts_path, class: "icon-ss icon-part" %>
+    <% end %>
+    <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t("cms.layout"), node_layouts_path, class: "icon-ss icon-layout" %>
+    <% end %>
+    <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to t("cms.node_config"), node_conf_path, class: "icon-ss icon-material icon-material-settings" %>
+    <% end %>
+
+    <div class="dropdown dropdown-toggle">
+      <%= tag.span t("cms.etc"), class: "icon-ss icon-material icon-material-more-horiz" %>
+      <ul class="dropdown-menu dropdown-menu--white">
+        <% if @cur_node.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
+          <li><%= link_to t("cms.import_node"), node_import_path, class: "icon-material icon-material-import-node" %></li>
+        <% end %>
+        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <li><%= link_to t("cms.generate_node"), node_generate_nodes_path, class: "icon-ss icon-write" %></li>
+        <% end %>
+        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <li><%= link_to t("cms.generate_page"), node_generate_pages_path, class: "icon-ss icon-write" %></li>
+        <% end %>
+        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+          <li><hr></li>
+          <li><span class="corner-name"><%= t("cms.batch_operation") %></span></li>
+          <li><%= link_to t("cms.csv_export_node"), download_node_nodes_path, class: "icon-ss icon-export indent" %></li>
+          <li><%= link_to t("cms.csv_import_node"), import_node_nodes_path, class: "icon-ss icon-import indent" %></li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+<% end %>

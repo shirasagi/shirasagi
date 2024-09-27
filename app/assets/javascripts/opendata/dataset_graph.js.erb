@@ -59,14 +59,14 @@ this.Opendata_Dataset_Graph = (function () {
   };
 
   Opendata_Dataset_Graph.selectItem = function (ele) {
-    var dataset_id = $(ele).attr("data-id");
+    // var dataset_id = $(ele).attr("data-id");
     var item = $(ele).find(".selected-item").clone(false);
 
     // remove renderInBox class
     $(item).find("a").removeClass("cboxElement");
 
-    $(item).find('[name="resource_id"]').each(function (idx) {
-      var resource_id = $(this).val();
+    $(item).find('[name="resource_id"]').each(function (_idx) {
+      // var resource_id = $(this).val();
 
       // checkbox
       $(this).on("click", function () {
@@ -77,7 +77,7 @@ this.Opendata_Dataset_Graph = (function () {
     });
 
     // deselect button
-    $(item).find(".deselect").on("click", function (e) {
+    $(item).find(".deselect").on("click", function (_e) {
       $(this).closest(".selected-item").remove();
       Opendata_Dataset_Graph.graph.destroy();
       Opendata_Dataset_Graph.toggleFirstNotice();
@@ -114,13 +114,13 @@ this.Opendata_Dataset_Graph = (function () {
 
   Opendata_Dataset_Graph.modal = function () {
     // form search event
-    $(".search-ui-form form.search").on("submit", function (e) {
+    $(".search-ui-form form.search").on("submit", function (_e) {
       $(this).ajaxSubmit({
         url: $(this).attr("action"),
         success: function (data) {
           return $("#cboxLoadedContent").html(data);
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error ==");
         }
       });
@@ -128,7 +128,7 @@ this.Opendata_Dataset_Graph = (function () {
     });
 
     // select item event
-    $(".search-ui a.select-item").on("click", function (e) {
+    $(".search-ui a.select-item").on("click", function (_e) {
       var tr = $(this).closest("tr");
       var article = Opendata_Dataset_Graph.selectItem(tr);
 
@@ -139,7 +139,7 @@ this.Opendata_Dataset_Graph = (function () {
     });
 
     // select items event
-    $(".search-ui-select .select-items").on("click", function (e) {
+    $(".search-ui-select .select-items").on("click", function (_e) {
       $(".search-ui .items .set-dataset:checked").each(function () {
         var tr = $(this).closest("tr");
         Opendata_Dataset_Graph.selectItem(tr);
@@ -149,7 +149,7 @@ this.Opendata_Dataset_Graph = (function () {
     });
 
     // list-head checkbox event
-    $(".search-ui .list-head input:checkbox").on("change", function (e) {
+    $(".search-ui .list-head input:checkbox").on("change", function (_e) {
       var chk = $(this).prop('checked');
       $('.search-ui .list-item').each(function () {
         $(this).toggleClass('checked', chk);
@@ -158,7 +158,7 @@ this.Opendata_Dataset_Graph = (function () {
     });
 
     // toggle select items button event
-    $(".search-ui").on("change", function (e) {
+    $(".search-ui").on("change", function (_e) {
       Opendata_Dataset_Graph.toggleSelectButton();
     });
 

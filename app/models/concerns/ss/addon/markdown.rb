@@ -31,8 +31,15 @@ module SS::Addon
       when 'cke'
         "<div class=\"ss-cke\">#{ApplicationController.helpers.sanitize(text)}</div>".html_safe
       else
-        ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+        ("<p>" + ERB::Util.h(text).gsub(/(\r\n?)|(\n)/, "<br />") + "</p>").html_safe
       end
+    end
+
+    def summary_text(limit = 80)
+      text = self.text
+      text = ApplicationController.helpers.strip_tags(text) if text_type == 'cke'
+      text = text.squish.truncate(limit) if limit
+      text
     end
 
     class << self

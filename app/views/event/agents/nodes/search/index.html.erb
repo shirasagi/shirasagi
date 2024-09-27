@@ -23,10 +23,12 @@
     </div>
   </fieldset>
 
-  <fieldset class="event-facility">
-    <legend><%= label_tag :facility_id, t("event.facility.setting") %></legend>
-    <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true %>
-  </fieldset>
+  <% if @facilities.present? %>
+    <fieldset class="event-facility">
+      <legend><%= label_tag :facility_id, t("event.facility.setting") %></legend>
+      <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true %>
+    </fieldset>
+  <% end %>
 
   <footer class="send">
     <%= submit_tag t('event.submit.search'), name: nil %>

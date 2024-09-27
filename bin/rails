@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
-load File.expand_path("spring", __dir__)
-APP_PATH = File.expand_path('../config/application', __dir__)
+spring_path = File.expand_path("spring", __dir__)
+if ::File.exist?(spring_path)
+  load spring_path
+end
+APP_PATH = File.expand_path("../config/application", __dir__)
 require_relative "../config/boot"
 require "rails/commands"

@@ -16,6 +16,7 @@ module Contact::Addon::Page
     belongs_to :contact_group, class_name: "Cms::Group"
     belongs_to :contact_group_contact, class_name: "SS::Contact"
     field :contact_group_relation, type: String
+    embeds_ids :contact_sub_groups, class_name: "Cms::Group" # 組織一覧用サブグループ
 
     before_validation :update_contacts
 
@@ -27,6 +28,7 @@ module Contact::Addon::Page
     permit_params :contact_tel, :contact_fax, :contact_email, :contact_postal_code, :contact_address
     permit_params :contact_link_url, :contact_link_name
     permit_params :contact_group_contact_id, :contact_group_relation
+    permit_params contact_sub_group_ids: []
 
     if respond_to? :liquidize
       liquidize do

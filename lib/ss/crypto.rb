@@ -3,7 +3,7 @@ require 'openssl'
 require 'base64'
 
 module SS::Crypto
-  @@salt = Rails.application.secrets.secret_key_base || "ss-salt"
+  @@salt = Rails.application.secret_key_base || "ss-salt"
   DEFAULT_CIPHER_TYPE = "AES-256-CBC".freeze
 
   class << self

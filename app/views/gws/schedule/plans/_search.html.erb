@@ -39,6 +39,40 @@
       var path = '<%= url_for({ action: :print }) %>' + queryString;
       location.href = path;
     });
+
+    $('.gws-schedule-box header form.search').on('submit', function() {
+      var $form = $(this);
+      var viewName = $('#calendar').fullCalendar('getView').name;
+      var curDate = $('#calendar').fullCalendar('getDate');
+      if (!viewName) {
+        viewName = $('#calendar-controller').fullCalendar('getView').name;
+        curDate = $('#calendar-controller').fullCalendar('getDate');
+      }
+
+      var viewFormat = "default";
+      if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
+        viewFormat = "list";
+      }
+
+      var viewTodo = "inactive";
+      if ($('#calendar').find('.fc-withTodo-button').hasClass("fc-state-active")) {
+        viewTodo = "active";
+      }
+
+      var viewAttendance = "inactive";
+      if ($('#calendar').find('.fc-withAbsence-button').hasClass("fc-state-active")) {
+        viewAttendance = "active";
+      }
+
+      if (viewName) {
+        $form.append('<input type="hidden" name="calendar[view]" value="' + viewName + '" />');
+        $form.append('<input type="hidden" name="calendar[date]" value="' + curDate.format() + '" />');
+        $form.append('<input type="hidden" name="calendar[viewFormat]" value="' + viewFormat + '" />');
+        $form.append('<input type="hidden" name="calendar[viewTodo]" value="' + viewTodo + '" />');
+        $form.append('<input type="hidden" name="calendar[viewAttendance]" value="' + viewAttendance + '" />');
+      }
+    });
+
   })($jQuery1);
 <% end %>
 
@@ -49,10 +83,18 @@
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
 
-<% category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options %>
+<%
+  category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options
+  approval_options = %w(request approve deny).map do |v|
+    [ I18n.t("gws/schedule.views.#{v}"), v ]
+  end
+%>
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
-  <%= f.select :category_id, category_options, include_blank: @model.t(:category_id) if category_options.present? %>
+  <% if category_options.present? %>
+    <%= f.select :category_id, category_options, { include_blank: @model.t(:category_id) }, { data: { controller: "ss--submit-on-change" } } %>
+  <% end %>
+  <%= f.select :approval, approval_options, { include_blank: t("gws/schedule.views.approval_state") }, { data: { controller: "ss--submit-on-change" } } %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 <% end %>

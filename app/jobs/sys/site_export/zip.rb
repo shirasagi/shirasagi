@@ -54,7 +54,7 @@ class Sys::SiteExport::Zip
     end
 
     file_counts = enumerators.map(&:count)
-    task_log "-- found #{file_counts.map { |v| v.to_s(:delimited) }.join(" + ")} files/directories to archive"
+    task_log "-- found #{file_counts.map { |v| v.to_fs(:delimited) }.join(" + ")} files/directories to archive"
 
     all_file_count = file_counts.sum
     reported_at = Time.zone.now.to_i
@@ -65,13 +65,13 @@ class Sys::SiteExport::Zip
         completed_count += src_dest_pairs.length
 
         if Time.zone.now.to_i - reported_at > 60
-          task_log "-- #{completed_count.to_s(:delimited)} / #{all_file_count.to_s(:delimited)}"
+          task_log "-- #{completed_count.to_fs(:delimited)} / #{all_file_count.to_fs(:delimited)}"
           reported_at = Time.zone.now.to_i
         end
       end
     end
   ensure
-    task_log "-- finished #{completed_count.to_s(:delimited)} / #{all_file_count.to_s(:delimited)}"
+    task_log "-- finished #{completed_count.to_fs(:delimited)} / #{all_file_count.to_fs(:delimited)}"
   end
 
   def site_fs_path

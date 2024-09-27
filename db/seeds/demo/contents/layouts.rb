@@ -38,6 +38,7 @@ save_layout filename: "login.layout.html", name: "ログイン"
 save_layout filename: "kanko-info/blog/blog1.layout.html", name: "ブログレイアウト1"
 save_layout filename: "kanko-info/blog/blog2.layout.html", name: "ブログレイアウト2"
 save_layout filename: "mypage.layout.html", name: "マイページ"
+save_layout filename: "organization.layout.html", name: "組織案内"
 
 array = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 @layouts = Hash[*array.flatten]

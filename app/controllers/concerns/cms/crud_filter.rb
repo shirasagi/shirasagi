@@ -137,7 +137,7 @@ module Cms::CrudFilter
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_confirmed_all(destroy_items, location: request.path)
+      render_confirmed_all(destroy_items, location: SS.request_path(request))
       return
     end
 
@@ -173,12 +173,44 @@ module Cms::CrudFilter
 
     @change_state = params[:state]
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
+      render_confirmed_all(change_items_state, location: SS.request_path(request))
       return
     end
 
     respond_to do |format|
       format.html { render "cms/crud/change_state_all" }
+      format.json { head json: errors }
+    end
+  end
+
+  def publish_all
+    raise "400" if @selected_items.blank?
+
+    @change_state = params[:state]
+
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.published"))
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/pages/publish_all" }
+      format.json { head json: errors }
+    end
+  end
+
+  def close_all
+    raise "400" if @selected_items.blank?
+
+    @change_state = params[:state]
+
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/pages/close_all" }
       format.json { head json: errors }
     end
   end

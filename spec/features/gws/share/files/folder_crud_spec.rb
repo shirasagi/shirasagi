@@ -54,10 +54,10 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(folder.share_max_file_size).to eq root_folder.share_max_file_size
         expect(folder.share_max_folder_size).to eq root_folder.share_max_folder_size
         expect(folder.readable_setting_range).to eq root_folder.readable_setting_range
-        expect(folder.readable_group_ids).to include(*root_folder.readable_group_ids)
-        expect(folder.readable_member_ids).to include(*root_folder.readable_member_ids)
-        expect(folder.group_ids).to include(*root_folder.group_ids)
-        expect(folder.user_ids).to include(*root_folder.user_ids)
+        expect(folder.readable_group_ids.sort).to eq root_folder.readable_group_ids.sort
+        expect(folder.readable_member_ids.sort).to eq root_folder.readable_member_ids.sort
+        expect(folder.group_ids.sort).to eq root_folder.group_ids.sort
+        expect(folder.user_ids.sort).to eq root_folder.user_ids.sort
       end
 
       # rename sub folder

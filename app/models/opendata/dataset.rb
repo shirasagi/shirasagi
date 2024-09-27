@@ -17,12 +17,15 @@ class Opendata::Dataset
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Opendata::Addon::Harvest::Dataset
+  include Opendata::Addon::Metadata::Dataset
   include Cms::Addon::GroupPermission
+  include History::Addon::Backup
   include Workflow::MemberPermission
   include Opendata::DatasetSearchable
   include Opendata::DatasetTemplateVariables
   include Opendata::DatasetCopy
   include Opendata::Addon::Harvest::EditLock
+  include Opendata::Addon::Metadata::EditLock
   include Opendata::Addon::ZipDataset
   include Opendata::Addon::ExportPublicEntityFormat
   include Cms::Lgwan::Page

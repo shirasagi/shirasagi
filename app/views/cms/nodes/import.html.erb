@@ -1,0 +1,24 @@
+<%= form_for :item, url: { action: :import }, html: { method: :post, id: "task-form" } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("ss.import") %></h2></header>
+    <div class="main-body">
+      <dl class="see">
+        <dt><%= t("ss.file") %><%= tt('cms/csv_import_base.file') %></dt>
+        <dd><%= f.file_field :file %></dd>
+      </dl>
+
+      <div class="mt-2">
+        <%= br t("cms.import_nodes.messages").join("\n") %>
+      </div>
+    </div>
+  </section>
+
+  <%= render "ss/tasks/box", task: @task, url: url_for(action: :import, format: :json) %>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.import"), class: "save", data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

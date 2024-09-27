@@ -32,7 +32,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(post.name).to eq name
         expect(post.text_type).to eq text_type
         expect(post.text).to eq texts.join("\r\n")
-        expect(post.html).to eq texts.join("<br />")
+        expect(post.html).to eq "<p>" + texts.join("<br />") + "</p>"
       end
     end
   end
@@ -154,7 +154,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(post.name).to eq name
         expect(post.text_type).to eq "plain"
         expect(post.text).to eq script
-        expect(post.html).to eq "&lt;script&gt;alert(&#39;xss&#39;);&lt;/script&gt;"
+        expect(post.html).to eq "<p>&lt;script&gt;alert(&#39;xss&#39;);&lt;/script&gt;</p>"
       end
     end
   end

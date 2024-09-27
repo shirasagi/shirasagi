@@ -1,0 +1,10 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, url_for(action: :show, id: item), class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+  <span class="readable_setting_range" data-readable_setting_range="<%= item.readable_setting_range %>"><%= item.label :readable_setting_range %></span>
+<% end %>
+
+<%= render template: 'gws/crud/index' %>

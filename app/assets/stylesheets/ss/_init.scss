@@ -156,18 +156,37 @@ $border-white: 1px solid $white;
     @include btn-pressed;
   }
 }
-@mixin btn-gray-l {
+@mixin btn-white {
   display: inline-block;
   padding: 8px 10px;
-  border: 1px solid #bbb;
   @include border-radius(6px);
   @include grd-white;
   filter: none \9;
-  color: $black;
   font-size: $px15;
   cursor: pointer;
   &:hover {
-    background: #ebecec;
+    opacity: .9;
+    text-decoration: none;
+  }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
+  }
+  @include mb {
+    padding: 5px 12px;
+    font-size: $px14;
+  }
+}
+@mixin btn-gray-l {
+  display: inline-block;
+  padding: 8px 10px;
+  @include border-radius(6px);
+  @include grd-gray;
+  filter: none \9;
+  color: $white;
+  font-size: $px15;
+  cursor: pointer;
+  &:hover {
+    opacity: .9;
     text-decoration: none;
   }
   &:disabled, &.btn-disabled {
@@ -200,6 +219,53 @@ $border-white: 1px solid $white;
     font-size: $px14;
   }
 }
+@mixin btn-blue {
+  display: inline-block;
+  min-width: 100px;
+  padding: 8px 10px;
+  border: 1px solid #b23a3d;
+  @include border-radius(6px);
+  @include grd-blue;
+  filter: none \9;
+  color: $white;
+  font-size: $px15;
+  cursor: pointer;
+  &:hover {
+    opacity: .9;
+    text-decoration: none;
+  }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
+  }
+  @include mb {
+    min-width: 0;
+    padding: 5px 12px;
+    font-size: $px12;
+  }
+}
+@mixin btn-green {
+  display: inline-block;
+  min-width: 100px;
+  padding: 8px 10px;
+  @include border-radius(6px);
+  @include grd-green;
+  filter: none \9;
+  color: $white;
+  font-size: $px15;
+  cursor: pointer;
+  &:hover {
+    opacity: .9;
+    text-decoration: none;
+  }
+  &:disabled, &.btn-disabled {
+    @include btn-disabled;
+  }
+  @include mb {
+    min-width: 0;
+    padding: 5px 12px;
+    font-size: $px12;
+  }
+}
 @mixin btn-red {
   display: inline-block;
   min-width: 100px;
@@ -212,7 +278,7 @@ $border-white: 1px solid $white;
   font-size: $px15;
   cursor: pointer;
   &:hover {
-    background: #b23a3d;
+    opacity: .9;
     text-decoration: none;
   }
   &:disabled, &.btn-disabled {
@@ -249,6 +315,18 @@ $border-white: 1px solid $white;
   background: #fff;
   @include background(linear-gradient(top, #fff, #ebecec));
   @include filter-gradient(#fff, #ebecec, vertical);
+}
+@mixin grd-gray {
+  border: 1px solid #666;
+  background: #666;
+}
+@mixin grd-blue {
+  border: 1px solid #256ab8;
+  background: #256ab8;
+}
+@mixin grd-green {
+  border: 1px solid #2f7e42;
+  background: #2f7e42;
 }
 @mixin grd-red {
   background: #e13026;

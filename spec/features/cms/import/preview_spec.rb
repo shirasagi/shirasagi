@@ -23,7 +23,7 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
       click_on name
     end
     expect(page).to have_css(".tree-navi", text: "refresh")
-    within "#navi" do
+    within "#main .main-navi" do
       click_on I18n.t("cms.node_config")
     end
 

@@ -146,8 +146,10 @@ module SS::Document
   end
 
   def record_timestamps
-    @record_timestamps = true if @record_timestamps.nil?
-    @record_timestamps
+    # 個別設定（@record_timestamps）が定義されている場合は個別設定
+    return @record_timestamps if instance_variable_defined?(:@record_timestamps)
+    # それ以外の場合はグローバル設定
+    SS::Model.record_timestamps?
   end
 
   def record_timestamps=(val)

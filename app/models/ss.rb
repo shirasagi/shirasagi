@@ -73,4 +73,26 @@ module SS
   def session_lifetime_of_user(user)
     user.try(:session_lifetime) || SS.config.sns.session_lifetime
   end
+
+  def locales_in_order
+    Enumerator.new do |y|
+      y << I18n.default_locale
+      I18n.available_locales.each do |locale|
+        next if locale == I18n.default_locale
+        y << locale
+      end
+    end
+  end
+
+  def each_locale_in_order(&block)
+    locales_in_order.each(&block)
+  end
+
+  def deprecator
+    @deprecator ||= ActiveSupport::Deprecation.new(SS.version, "SHIRASAGI")
+  end
+
+  def request_path(request)
+    Addressable::URI.parse(request.env["REQUEST_PATH"] || request.path).normalize.request_uri
+  end
 end

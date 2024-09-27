@@ -43,6 +43,7 @@ describe "gws_elasticsearch_search_workflow_form", type: :feature, dbscope: :exa
 
   before do
     # enable elastic search
+    site.menu_workflow_state = 'show'
     site.menu_elasticsearch_state = 'show'
     site.elasticsearch_hosts = SS::EsSupport.es_url
     site.save

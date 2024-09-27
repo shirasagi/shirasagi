@@ -55,6 +55,10 @@
     <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
   <% end %>
 
+  <% if @cur_site.menu_workflow2_visible? && Gws.module_usable?(:workflow2, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_workflow2_label || t('modules.gws/workflow2'), gws_workflow2_files_main_path, class: "icon-workflow" %></h2>
+  <% end %>
+
   <% if @cur_site.menu_circular_visible? && Gws.module_usable?(:circular, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_main_path, class: 'icon-circular' %></h2>
   <% end %>

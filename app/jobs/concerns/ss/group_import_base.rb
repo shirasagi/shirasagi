@@ -30,7 +30,7 @@ module SS::GroupImportBase
     i = 0
     self.class.each_csv(@cur_file) do |row|
       i += 1
-      Rails.logger.tagged("#{(i + 1).to_s(:delimited)}行目") do
+      Rails.logger.tagged("#{(i + 1).to_fs(:delimited)}行目") do
         @item = find_or_initialize_item(row)
         next unless @item
 
@@ -45,7 +45,7 @@ module SS::GroupImportBase
       end
     end
 
-    Rails.logger.info("#{i.to_s(:delimited)}件のグループをインポートしました。")
+    Rails.logger.info("#{i.to_fs(:delimited)}件のグループをインポートしました。")
   end
 
   def importer
@@ -58,6 +58,7 @@ module SS::GroupImportBase
     define_importer_basic(importer)
     define_importer_ldap(importer)
     define_importer_contact(importer)
+    define_importer_lsorg(importer)
   end
 
   def define_importer_basic(importer)
@@ -105,6 +106,11 @@ module SS::GroupImportBase
         end
       end
     end
+  end
+
+  def define_importer_lsorg(importer)
+    importer.simple_column :basename
+    importer.simple_column :overview
   end
 
   delegate :to_array, :from_label, to: SS::Csv::CsvImporter

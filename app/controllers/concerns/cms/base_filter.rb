@@ -41,12 +41,12 @@ module Cms::BaseFilter
 
     if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
       @ss_maintenance_mode = true
-      render "cms/maintenance_mode_notice/index.html", layout: "ss/base"
+      render "cms/maintenance_mode_notice/index", layout: "ss/base"
       return
     end
 
     request.env["ss.site"] = @cur_site
-    @crumbs << [@cur_site.name, cms_contents_path]
+    @crumbs << [t("cms.top"), cms_contents_path]
   end
 
   def set_cms_logged_in

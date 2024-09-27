@@ -28,7 +28,7 @@ module Cms::Model::Page
     field :route, type: String, default: ->{ "cms/page" }
     field :size, type: Integer
 
-    embeds_ids :categories, class_name: "Cms::Node"
+    embeds_ids :categories, class_name: "Cms::Node", metadata: { on_copy: :safe }
 
     permit_params category_ids: []
 
@@ -50,22 +50,33 @@ module Cms::Model::Page
   module ClassMethods
     def and_linking_pages(page)
       cond = []
+      file_urls = []
 
       if page.respond_to?(:url) && page.respond_to?(:full_url)
         cond << { contains_urls: { '$in' => [ page.url, page.full_url ] } }
         cond << { form_contains_urls: { '$in' => [ page.url, page.full_url ] } }
       end
-
+      
       if page.respond_to?(:files) && page.files.present?
         cond << { contains_urls: { '$in' => page.files.map(&:url) } }
+        cond << { form_contains_urls: { '$in' => page.files.map(&:url) } }
       end
 
       if page.respond_to?(:related_page_ids)
         cond << { related_page_ids: page.id }
       end
 
-      return all.none if cond.blank?
+      
+      if page.respond_to?(:column_values)
+        page.column_values.each do |column_value|
+          file_urls += column_value.files.map{|file| file.url} if (column_value.respond_to?(:files) && column_value.files.present?)
+        end
+        cond << { form_contains_urls: { '$in' => file_urls } } if file_urls.present?
+        cond << { contains_urls: { '$in' => file_urls } } if file_urls.present?
+      end
 
+      return all.none if cond.blank?
+      
       all.where(:id.ne => page.id).where("$and" => [{ "$or" => cond }])
     end
 
@@ -292,13 +303,11 @@ module Cms::Model::Page
 
   def skip_required?
     return false if self.try(:branch?)
-  
     return false if (state == "closed" && self.try(:workflow_state).present? && self.try(:workflow_state) == "request")
-  
     return true if state == "closed"
-  
+
     false
-  end  
+  end
 
   private
 

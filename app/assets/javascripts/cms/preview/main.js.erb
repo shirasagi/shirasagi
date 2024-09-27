@@ -495,7 +495,7 @@ SS_Preview = (function () {
         processData: false,
         contentType: false,
         cache: false,
-        success: function(data, textStatus, xhr) {
+        success: function(data, _textStatus, _xhr) {
           SS_Preview.closeWindow($(frame));
           if (typeof data === "string") {
             // data is html
@@ -509,7 +509,7 @@ SS_Preview = (function () {
             }
           }
         },
-        error: function(xhr, status, error) {
+        error: function(xhr, _status, _error) {
           var $html = $(xhr.responseText);
           var $itemForm = $html.find("#item-form");
 
@@ -580,7 +580,7 @@ SS_Preview = (function () {
       draggable: true,
       modal: true,
       resizable: true,
-      close: function(ev, ui) {
+      close: function(_ev, _ui) {
         // explicitly destroy dialog and remove elemtns because dialog elements is still remained
         $(this).dialog('destroy').remove();
       }
@@ -597,7 +597,7 @@ SS_Preview = (function () {
     $.ajax({
       url: url,
       type: "GET",
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         var $frame = $("div#ss-preview-dialog-frame");
         if (! $frame[0]) {
           $frame = $("<div></div>", { id: "ss-preview-dialog-frame" });
@@ -614,7 +614,7 @@ SS_Preview = (function () {
           draggable: true,
           modal: true,
           resizable: true,
-          close: function(ev, ui) {
+          close: function(_ev, _ui) {
             // explicitly destroy dialog and remove elemtns because dialog elements is still remained
             $(this).dialog('destroy').remove();
           }
@@ -707,7 +707,7 @@ SS_Preview = (function () {
       partId = parseInt(partId);
     }
 
-    var founds = $.grep(this.parts, function(part, index) { return part.id === partId });
+    var founds = $.grep(this.parts, function(part, _index) { return part.id === partId });
     if (! founds || founds.length === 0) {
       return null;
     }
@@ -743,7 +743,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { _method: "DELETE", authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data && data.location) {
@@ -777,7 +777,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data.location) {
@@ -1127,7 +1127,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data && data.location) {
@@ -1178,7 +1178,7 @@ SS_Preview = (function () {
       dataType: "json",
       cache: false,
       data: {authenticity_token: token}
-    }).done(function(data, status, xhr) {
+    }).done(function(_data, _status, _xhr) {
       self.bindBeforeUnloadOnce();
     }).fail(function(xhr, status, error) {
       if (self.container.notice) {

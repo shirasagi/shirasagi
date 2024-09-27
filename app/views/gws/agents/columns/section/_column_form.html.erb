@@ -4,7 +4,7 @@
 
 <% @section_id = column.section_id %>
 
-<% if %w(gws/survey/columns gws/frames/columns gws/workflow/form/columns).include?(params[:controller]) %>
+<% if %w(gws/survey/columns gws/frames/columns gws/workflow/form/columns gws/workflow2/form/columns).include?(params[:controller]) %>
   <% @section_id = nil %>
   <dt class="wide">
     <%= column.name %>

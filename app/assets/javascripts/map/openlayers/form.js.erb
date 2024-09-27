@@ -176,7 +176,7 @@ this.Openlayers_Map_Form = (function () {
       };
     })(this));
     return this.popup.find('.closer').on('click', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.popupOverlay.setPosition(void 0);
         $(_this).blur();
         return false;
@@ -325,7 +325,7 @@ this.Openlayers_Map_Form = (function () {
     this.map.on('click', (function (_this) {
       return function (e) {
         var feature, pos;
-        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, _layer) {
           return feature;
         });
         if (feature) {
@@ -356,7 +356,7 @@ this.Openlayers_Map_Form = (function () {
       }
     });
     $(".mod-map .add-marker").on('click', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.clonePointForm();
         return false;
       };
@@ -404,7 +404,7 @@ this.Openlayers_Map_Form = (function () {
       }
     });
     $(".mod-map .marker-loc-input").on('focus', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.removeClickMarker();
       };
     })(this));
@@ -466,7 +466,7 @@ this.Openlayers_Map_Form = (function () {
         }
       });
       cln.find(".marker-loc-input").on('focus', (function (_this) {
-        return function (e) {
+        return function (_e) {
           _this.removeClickMarker();
         };
       })(this));
@@ -594,7 +594,7 @@ this.Openlayers_Map_Form = (function () {
 
     markers.find(".marker .images").hide();
     images.show();
-    $("body").not(this).one("click", function (e) {
+    $("body").not(this).one("click", function (_e) {
       images.hide();
     });
   };

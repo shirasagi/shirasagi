@@ -1,5 +1,6 @@
 class Gws::Discussion::Post
   include Gws::Discussion::Postable
+  include Gws::Discussion::Searchable
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
   include Gws::Addon::File
@@ -15,6 +16,41 @@ class Gws::Discussion::Post
 
   validates :text, presence: true
 
+  def save_clone(new_forum, new_topic)
+    item = self.class.new
+    item.attributes = self.attributes
+    item.id = nil
+    item.name = new_topic.name
+
+    item.created = item.updated = Time.zone.now
+    item.released = nil if respond_to?(:released)
+    item.state = "closed" if item.depth == 1
+
+    item.descendants_updated = nil
+    item.skip_descendants_updated = true
+
+    item.forum = new_forum
+    item.topic = new_topic
+    item.parent = new_topic
+
+    if respond_to?(:files)
+      file_ids = []
+      files.each do |f|
+        file = SS::File.new
+        file.attributes = f.attributes
+        file.id = nil
+        file.in_file = f.uploaded_file
+        file.user_id = @cur_user.id if @cur_user
+
+        file.save!
+        file_ids << file.id
+      end
+      item.file_ids = file_ids
+    end
+    item.save!
+    item
+  end
+
   def save_notify_message(site, user)
     return unless site.notify_model?(self)
 
@@ -27,8 +63,9 @@ class Gws::Discussion::Post
     notify_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
     return if notify_member_ids.blank?
 
-    url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(
-      site: @cur_site.id, mode: '-', forum_id: forum.id, topic_id: topic.id, anchor: "comment-#{id}")
+    url_helpers = Rails.application.routes.url_helpers
+    url = url_helpers.gws_discussion_forum_thread_comments_path(
+      site: site, mode: '-', forum_id: forum, topic_id: topic, anchor: "comment-#{id}")
 
     item = SS::Notification.new
     item.cur_group = site

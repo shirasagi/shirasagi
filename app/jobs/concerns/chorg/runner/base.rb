@@ -29,39 +29,42 @@ module Chorg::Runner::Base
     if @cur_user
       logger_tags << @cur_user.uid.presence || @cur_user.email.presence || @cur_user.name
     end
+    logger_tags << @item.name
     Rails.logger.tagged(*logger_tags) do
       self.class.revision_class.ensure_release_lock(@item) do
-        init_context(opts)
+        SS::Model.without_record_timestamps do
+          init_context(opts)
 
-        run_primitive_chorg
+          run_primitive_chorg
 
-        put_log("==update_all==")
-        with_inc_depth { update_all }
+          put_log("==update_all==")
+          with_inc_depth { update_all }
 
-        put_log("==validate_all==")
-        with_inc_depth { validate_all }
+          put_log("==validate_all==")
+          with_inc_depth { validate_all }
 
-        # put_log("==delete_groups==")
-        task.log("==削除==")
-        with_inc_depth { delete_groups(delete_group_ids) }
+          # put_log("==delete_groups==")
+          task.log("==削除==")
+          with_inc_depth { delete_groups(delete_group_ids) }
 
-        # put_log("==results==")
-        task.log("==結果==")
-        with_inc_depth do
-          results.keys.each do |key|
-            # put_log("#{key}: success=#{results[key]["success"]}, failed=#{results[key]["failed"]}")
-            msg = [
-              "[#{I18n.t("chorg.views.revisions/edit.#{key}")}]",
-              "成功: #{results[key]["success"]},",
-              "失敗: #{results[key]["failed"]}"
-            ].join(' ')
-            task.log("  #{msg}")
+          # put_log("==results==")
+          task.log("==結果==")
+          with_inc_depth do
+            results.keys.each do |key|
+              # put_log("#{key}: success=#{results[key]["success"]}, failed=#{results[key]["failed"]}")
+              msg = [
+                "[#{I18n.t("chorg.views.revisions/edit.#{key}")}]",
+                "成功: #{results[key]["success"]},",
+                "失敗: #{results[key]["failed"]}"
+              ].join(' ')
+              task.log("  #{msg}")
+            end
           end
+
+          finalize_context
+
+          import_user_csv
         end
-
-        finalize_context
-
-        import_user_csv
       end
     end
   end

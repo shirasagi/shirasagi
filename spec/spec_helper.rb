@@ -97,6 +97,7 @@ RSpec.configure do |config|
 
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
+  config.include RSpec::Rails::RailsExampleGroup
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include FactoryBot::Syntax::Methods
@@ -119,8 +120,6 @@ RSpec.configure do |config|
     ::Rails.application.eager_load!
     # `rake db:drop`
     ::Mongoid::Clients.default.database.drop
-    # clear logfile
-    File.write(Rails.logger.instance_variable_get(:@logdev).filename, '')
   end
 
   config.before(:context) do
@@ -142,12 +141,6 @@ RSpec.configure do |config|
   rescue => e
     # たまに page.reset! でのタイムアウトでテストが失敗するときがある。テスト失敗とならないように rescue する。
     Rails.logger.debug(e.to_s)
-  end
-
-  config.after(:suite) do
-    file = Rails.logger.instance_variable_get(:@logdev).filename
-    logs = File.read(file).split(/\R/).select { |s| s.index('FATAL --') && /FATAL -- : +\w./.match?(s) }
-    puts '', '-' * 50, '[test.log]', '', logs.join("\n"), '-' * 50 if logs.present?
   end
 
   Capybara.configure do |config|

@@ -23,31 +23,41 @@ module Gws::Model::Category
     validates :color, presence: true, if: ->{ color_required? }
     validates :color, "ss/color" => true
     validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
-
-    scope :search, ->(params) do
-      criteria = where({})
-      return criteria if params.blank?
-
-      criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
-      criteria
-    end
   end
 
   module ClassMethods
     def tree_sort(options = {})
       SS::TreeList.build self, options
     end
+
+    def search(params)
+      return all if params.blank?
+      all.search_name(params).search_keyword(params)
+    end
+
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.where(name: params[:name])
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+
+      all.keyword_in params[:keyword], :name, :color
+    end
   end
 
   def trailing_name
-    @trailing_name ||= name.split("/")[depth..-1].join("/")
+    @trailing_name ||= name.to_s.split("/")[depth..-1].join("/")
   end
 
   def depth
+    return 0 if name.blank?
+
     @depth ||= begin
       count = 0
       full_name = ""
-      name.split("/").map do |part|
+      name.to_s.split("/").map do |part|
         full_name << "/" if full_name.present?
         full_name << part
 
@@ -61,6 +71,29 @@ module Gws::Model::Category
       count
     end
   end
+
+  def parent_category
+    return nil if depth.blank? || depth <= 0 || name.blank?
+
+    parent_name = ::File.dirname(name)
+    return nil if parent_name.blank? || parent_name == "."
+
+    criteria = self.class.all
+    criteria = criteria.site(@cur_site || site)
+    criteria = criteria.where(name: parent_name)
+    criteria.first
+  end
+
+  # rubocop:disable Style::RedundantAssignment
+  def descendants_category
+    return self.class.none if name.blank?
+
+    criteria = self.class.all
+    criteria = criteria.site(@cur_site || site)
+    criteria = criteria.where(name: /^#{::Regexp.escape(name)}\//)
+    criteria
+  end
+  # rubocop:enable Style::RedundantAssignment
 
   private
 

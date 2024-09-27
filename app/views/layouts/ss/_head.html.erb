@@ -10,6 +10,14 @@
       </a>
     </div>
 
+    <div class="side-navi-toggle">
+      <% if main_navi_closed? %>
+        <%= link_to t("ss.menu"), "", { id: "toggle-navi", class: "closed", "aria-label": t("ss.navi_open") } %>
+      <% else %>
+        <%= link_to t("ss.menu"), "", { id: "toggle-navi", class: "opened", "aria-label": t("ss.navi_close") } %>
+      <% end %>
+    </div>
+
     <div class="application-menu">
       <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? && Cms.allowed?(:use, @cur_user) %>
         <div class="cms">

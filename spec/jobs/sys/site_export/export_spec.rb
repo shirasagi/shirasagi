@@ -268,17 +268,17 @@ describe Sys::SiteExportJob, dbscope: :example do
             expect(cms_page["filename"]).to eq page2.filename
             expect(cms_page["column_values"]).to be_a(Array)
             expect(cms_page["column_values"][0]["_type"]).to eq page2.column_values[0].class.name
-            expect(cms_page["column_values"][0]["column_id"]).to eq("$oid" => page2.column_values[0].column.id.to_s)
+            expect(cms_page["column_values"][0]["column_id"]).to eq(page2.column_values[0].column.id.to_s)
             expect(cms_page["column_values"][0]["name"]).to eq page2.column_values[0].name
             expect(cms_page["column_values"][0]["order"]).to eq page2.column_values[0].order
             expect(cms_page["column_values"][0]["value"]).to eq page2.column_values[0].value
             expect(cms_page["column_values"][1]["_type"]).to eq page2.column_values[1].class.name
-            expect(cms_page["column_values"][1]["column_id"]).to eq("$oid" => page2.column_values[1].column.id.to_s)
+            expect(cms_page["column_values"][1]["column_id"]).to eq(page2.column_values[1].column.id.to_s)
             expect(cms_page["column_values"][1]["name"]).to eq page2.column_values[1].name
             expect(cms_page["column_values"][1]["order"]).to eq page2.column_values[1].order
             expect(cms_page["column_values"][1]["file_id"]).to eq page2.column_values[1].file_id
             expect(cms_page["column_values"][2]["_type"]).to eq page2.column_values[2].class.name
-            expect(cms_page["column_values"][2]["column_id"]).to eq("$oid" => page2.column_values[2].column.id.to_s)
+            expect(cms_page["column_values"][2]["column_id"]).to eq(page2.column_values[2].column.id.to_s)
             expect(cms_page["column_values"][2]["name"]).to eq page2.column_values[2].name
             expect(cms_page["column_values"][2]["order"]).to eq page2.column_values[2].order
             expect(cms_page["column_values"][2]["value"]).to eq page2.column_values[2].value
@@ -292,33 +292,33 @@ describe Sys::SiteExportJob, dbscope: :example do
             expect(cms_page["filename"]).to eq page3.filename
             expect(cms_page["column_values"]).to be_a(Array)
             expect(cms_page["column_values"][0]["_type"]).to eq page3.column_values[0].class.name
-            expect(cms_page["column_values"][0]["column_id"]).to eq("$oid" => page3.column_values[0].column.id.to_s)
+            expect(cms_page["column_values"][0]["column_id"]).to eq(page3.column_values[0].column.id.to_s)
             expect(cms_page["column_values"][0]["name"]).to eq page3.column_values[0].name
             expect(cms_page["column_values"][0]["order"]).to eq page3.column_values[0].order
             expect(cms_page["column_values"][0]["value"]).to eq page3.column_values[0].value
             expect(cms_page["column_values"][1]["_type"]).to eq page3.column_values[1].class.name
-            expect(cms_page["column_values"][1]["column_id"]).to eq("$oid" => page3.column_values[1].column.id.to_s)
+            expect(cms_page["column_values"][1]["column_id"]).to eq(page3.column_values[1].column.id.to_s)
             expect(cms_page["column_values"][1]["name"]).to eq page3.column_values[1].name
             expect(cms_page["column_values"][1]["order"]).to eq page3.column_values[1].order
             expect(cms_page["column_values"][1]["value"]).to eq page3.column_values[1].value
             expect(cms_page["column_values"][2]["_type"]).to eq page3.column_values[2].class.name
-            expect(cms_page["column_values"][2]["column_id"]).to eq("$oid" => page3.column_values[2].column.id.to_s)
+            expect(cms_page["column_values"][2]["column_id"]).to eq(page3.column_values[2].column.id.to_s)
             expect(cms_page["column_values"][2]["name"]).to eq page3.column_values[2].name
             expect(cms_page["column_values"][2]["order"]).to eq page3.column_values[2].order
             expect(cms_page["column_values"][2]["file_id"]).to eq page3.column_values[2].file_id
             expect(cms_page["column_values"][3]["_type"]).to eq page3.column_values[3].class.name
-            expect(cms_page["column_values"][3]["column_id"]).to eq("$oid" => page3.column_values[3].column.id.to_s)
+            expect(cms_page["column_values"][3]["column_id"]).to eq(page3.column_values[3].column.id.to_s)
             expect(cms_page["column_values"][3]["name"]).to eq page3.column_values[3].name
             expect(cms_page["column_values"][3]["order"]).to eq page3.column_values[3].order
             expect(cms_page["column_values"][3]["file_id"]).to eq page3.column_values[3].file_id
             expect(cms_page["column_values"][4]["_type"]).to eq page3.column_values[4].class.name
-            expect(cms_page["column_values"][4]["column_id"]).to eq("$oid" => page3.column_values[4].column.id.to_s)
+            expect(cms_page["column_values"][4]["column_id"]).to eq(page3.column_values[4].column.id.to_s)
             expect(cms_page["column_values"][4]["name"]).to eq page3.column_values[4].name
             expect(cms_page["column_values"][4]["order"]).to eq page3.column_values[4].order
             expect(cms_page["column_values"][4]["value"]).to eq page3.column_values[4].value
             expect(cms_page["column_values"][4]["file_ids"]).to eq page3.column_values[4].file_ids
             expect(cms_page["column_values"][5]["_type"]).to eq page3.column_values[5].class.name
-            expect(cms_page["column_values"][5]["column_id"]).to eq("$oid" => page3.column_values[5].column.id.to_s)
+            expect(cms_page["column_values"][5]["column_id"]).to eq(page3.column_values[5].column.id.to_s)
             expect(cms_page["column_values"][5]["name"]).to eq page3.column_values[5].name
             expect(cms_page["column_values"][5]["order"]).to eq page3.column_values[5].order
             expect(cms_page["column_values"][5]["value"]).to eq page3.column_values[5].value

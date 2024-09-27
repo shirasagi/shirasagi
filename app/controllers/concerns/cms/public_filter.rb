@@ -71,7 +71,7 @@ module Cms::PublicFilter
 
   def redirect_slash
     return unless request.get? || request.head?
-    redirect_to "#{request.path}/"
+    redirect_to "#{SS.request_path(request)}/"
   end
 
   def deny_path
@@ -179,8 +179,7 @@ module Cms::PublicFilter
     resp = render_page(page)
     return false if !resp
 
-    self.response = resp
-    send_page(page)
+    send_page(page, resp)
     request.env["ss.rendered"] = { type: :page, page: page, layout: @cur_layout }
     true
   end
@@ -194,8 +193,7 @@ module Cms::PublicFilter
     resp = render_node(node)
     return false if !resp
 
-    self.response = resp
-    send_page(node)
+    send_page(node, resp)
     request.env["ss.rendered"] = { type: :node, node: node, layout: @cur_layout }
     true
   end
@@ -207,19 +205,23 @@ module Cms::PublicFilter
     end
   end
 
-  def send_page(page)
+  def send_page(page, resp)
     if page.view_layout == "cms/redirect" && !mobile_path?
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
       render html: "", layout: "cms/redirect"
-    elsif response.media_type == "text/html" && page.layout
-      render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
+    elsif resp.media_type == "text/html" && page.layout
+      layout = request.xhr? ? false : "cms/page"
+      html = render_layout(page.layout, content: resp.body)
+      html = render_to_string html: html.html_safe, layout: layout
+      resp.body = html
+      self.response = resp
     else
-      @_response_body = response.body
+      self.response = resp
     end
   end
 
   def page_not_found
-    request.env["action_dispatch.show_exceptions"] = false if @preview
+    request.env["action_dispatch.show_exceptions"] = :none if @preview
     raise "404"
   end
 
@@ -239,8 +241,6 @@ module Cms::PublicFilter
       logger.error "404 #{@cur_path}"
       raise exception
     end
-
-    self.response = ActionDispatch::Response.new
 
     status = opts[:status].presence || 500
     file = error_html_file(status)

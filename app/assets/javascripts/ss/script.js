@@ -52,6 +52,7 @@
 //= require ss/lib/search_ui
 //= require ss/lib/popup
 //= require ss/lib/dropdown
+//= require ss/lib/dropdown_toggle
 //= require ss/lib/clipboard
 //= require ss/lib/color
 //= require ss/lib/workflow
@@ -125,17 +126,48 @@ SS.ready(function () {
   // headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
   SS.render();
   // head
-  if ($(window).width() >= 800 && 0) {
-    var menu = $("#head .pulldown-menu");
-    var link = menu.find("a");
-    menu.each(function () {
-      link.not(".current").hide();
-      return link.filter(".current").prependTo(menu).on("click", function () {
-        link.not(".current").slideToggle("fast");
-        return false;
-      });
+  // if ($(window).width() >= 800 && 0) {
+  //   var menu = $("#head .pulldown-menu");
+  //   var link = menu.find("a");
+  //   menu.each(function () {
+  //     link.not(".current").hide();
+  //     return link.filter(".current").prependTo(menu).on("click", function () {
+  //       link.not(".current").slideToggle("fast");
+  //       return false;
+  //     });
+  //   });
+  // }
+  // toggle navi
+  var toggleNavi = function() {
+    return $("#toggle-navi").hasClass("opened") ? closeNavi() : openNavi();
+  };
+  var openNavi = function() {
+    $("#navi").css("margin-left", "-200px");
+    $("#navi").show();
+    $("#navi").animate({"margin-left":"0px"}, 200, function(){
+      $(window).trigger('resize');
     });
-  }
+    var toggle = $("#toggle-navi");
+    toggle.addClass("opened").removeClass("closed");
+    toggle.attr("aria-label", i18next.t("ss.navi_close"));
+
+    Cookies.set("ss-navi", "opened", { expires: 7, path: '/' });
+    return false;
+  };
+  var closeNavi = function() {
+    $("#navi").animate({"margin-left":"-200px"}, 200, function(){
+      $(this).hide();
+      $(this).css("margin-left", "0px");
+      $(window).trigger('resize');
+    });
+    var toggle = $("#toggle-navi");
+    toggle.addClass("closed").removeClass("opened");
+    toggle.attr("aria-label", i18next.t("ss.navi_open"));
+
+    Cookies.set("ss-navi", "closed", { expires: 7, path: '/' });
+    return false;
+  };
+  $("#toggle-navi").on("click", toggleNavi);
   // navi
   var path = location.pathname + "/";
   var longestMatchedElement = function (selector) {
@@ -165,42 +197,15 @@ SS.ready(function () {
     return true;
   };
   addCurrent("#navi .mod-navi a") || addCurrent("#navi .main-navi a");
+  addCurrent("#main .main-navi a");
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current');
   // navi
-  $('.sp-menu-button a').on("click", function (e) {
+  $('.sp-menu-button a').on("click", function (_ev) {
     $('#navi').slideToggle();
     $(this).toggleClass("active");
     return false;
   });
-  //dropdown
-  $(document).on("click", function (e) {
-    if ($(e.target).closest('.dropdown-menu').length === 0) {
-      $(".dropdown").removeClass('active');
-      return $(".dropdown-menu").removeClass('active');
-    }
-  });
-  $(".dropdown-toggle").on("click", function (e) {
-    var $this = $(this);
-    var $target = $(e.target);
-    var ref = $this.data('ref');
-    var $dropdown = $target.closest('.dropdown');
-    var $menu = ref ? $this.find(ref) : $dropdown.find('.dropdown-menu').first();
-
-    // close other dropdown
-    $(".dropdown").not($dropdown.get(0)).each(function () {
-      return $(this).find('.dropdown-menu').removeClass('active');
-    });
-
-    // popup_notice
-    SS_PopupNotice.closePopup();
-
-    // open dropdown
-    if ($target.parents('.dropdown-menu').length === 0) {
-      $menu.toggleClass('active');
-      e.stopPropagation();
-      $this.trigger("ss:dropdownOpened");
-    }
-  });
+  SS_DropdownToggle.render();
   $("select").on("change", function () {
     if ($(this).val() === "") {
       return $(this).addClass("blank-value has-blank-value");

@@ -1,0 +1,17 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
+
+<dl class="see">
+  <dt><%= @model.t :root_group_ids %></dt>
+  <dd><%=br @item.root_groups.order_by(name: 1).map{|c| c.name } %></dd>
+
+  <dt><%= @model.t :exclude_group_ids %></dt>
+  <dd><%=br @item.exclude_groups.order_by(name: 1).map{|c| c.name } %></dd>
+
+  <dt><%= @model.t :loop_liquid %></dt>
+  <dd>
+    <% if @item.loop_liquid.present? %>
+    <%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;"  %>
+    <% end %>
+  </dd>
+</dl>

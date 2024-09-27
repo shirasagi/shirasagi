@@ -1,0 +1,9 @@
+<% @before_form = proc do |f| %>
+  <%= render "ss/crud/addon", addon: { id: nil } do %>
+    <div class="gws-workflow-select-forms-notice">
+      <%= I18n.t("gws/workflow2.alert.create_workflow_with_cur_group", name: @cur_group.name, locale: @cur_user.lang) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render template: "ss/crud/new" %>

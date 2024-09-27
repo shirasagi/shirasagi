@@ -36,12 +36,12 @@ module Gws::Addon::Share::ResourceLimitation
   def validate_share_max_file_size
     file_size = 1024
     return if in_share_max_file_size_mb.to_i <= file_size
-    errors.add :share_max_file_size, :less_than_or_equal_to, count: [file_size.to_s(:delimited), 'MB'].join(' ')
+    errors.add :share_max_file_size, :less_than_or_equal_to, count: [file_size.to_fs(:delimited), 'MB'].join(' ')
   end
 
   def validate_share_max_folder_size
     folder_size = 1024**2
     return if in_share_max_folder_size_mb.to_i <= folder_size
-    errors.add :share_max_folder_size, :less_than_or_equal_to, count: [folder_size.to_s(:delimited), 'MB'].join(' ')
+    errors.add :share_max_folder_size, :less_than_or_equal_to, count: [folder_size.to_fs(:delimited), 'MB'].join(' ')
   end
 end

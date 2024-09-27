@@ -43,13 +43,13 @@ this.Cms_Site_Search = (function () {
 
   Cms_Site_Search.modal = function () {
     // form search event
-    $(".search-ui-form form.search").on("submit", function (e) {
+    $(".search-ui-form form.search").on("submit", function (_e) {
       $(this).ajaxSubmit({
         url: $(this).attr("action"),
         success: function (data) {
           return $("#cboxLoadedContent").html(data);
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error(SiteSearch) ==");
         }
       });
@@ -57,7 +57,7 @@ this.Cms_Site_Search = (function () {
     });
 
     // select item event
-    $(".search-ui a.select-item").on("click", function (e) {
+    $(".search-ui a.select-item").on("click", function (_e) {
       $(".selected-categories").html('');
       var tr = $(this).closest("tr");
       var article = Cms_Site_Search.selectItem(tr);
@@ -69,7 +69,7 @@ this.Cms_Site_Search = (function () {
     });
 
     // select items event
-    $(".search-ui-select .select-items").on("click", function (e) {
+    $(".search-ui-select .select-items").on("click", function (_e) {
         $(".selected-categories").html('');
         $(".search-ui .items .set-category:checked").each(function () {
             var tr = $(this).closest("tr");
@@ -80,7 +80,7 @@ this.Cms_Site_Search = (function () {
     });
 
     // list-head checkbox event
-    $(".search-ui .list-head input:checkbox").on("change", function (e) {
+    $(".search-ui .list-head input:checkbox").on("change", function (_e) {
       var chk = $(this).prop('checked');
       $('.search-ui .list-item').each(function () {
         $(this).toggleClass('checked', chk);

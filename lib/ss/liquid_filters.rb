@@ -5,7 +5,7 @@ module SS::LiquidFilters
   module Utils
     def self.stringify_number(input, format)
       return input unless input.numeric?
-      ::Liquid::Utils.to_number(input).to_s(format)
+      ::Liquid::Utils.to_number(input).to_fs(format)
     end
   end
 
@@ -101,6 +101,11 @@ module SS::LiquidFilters
 
   def human_size(input)
     Utils.stringify_number(input, :human_size)
+  end
+
+  def ss_br(input)
+    return input if input.blank?
+    ApplicationController.helpers.br(input)
   end
 
   def ss_append(input, string)

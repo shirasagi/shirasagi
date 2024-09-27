@@ -51,42 +51,40 @@ module Chorg::MongoidSupport
   # rubocop:disable Layout::EmptyLineBetweenDefs
   def with_entities(models, scope = {})
     models.each do |model|
-      Rails.logger.tagged(model.try(:name) || model.to_s) do
-        criteria = model.where(scope)
-        all_ids = criteria.pluck(:id)
-        all_ids.each_slice(20) do |ids|
-          entities = criteria.in(id: ids).to_a
-          entities.each do |entity|
-            entity = entity.try(:becomes_with_topic) || entity
-            entity.try(:cur_site=, @cur_site)
-            entity.try(:allow_other_user_files)
+      criteria = model.where(scope)
+      all_ids = criteria.pluck(:id)
+      all_ids.each_slice(20) do |ids|
+        entities = criteria.in(id: ids).to_a
+        entities.each do |entity|
+          entity = entity.try(:becomes_with_topic) || entity
+          next unless set_site(entity)
+          entity.try(:allow_other_user_files)
 
-            entity_user = (entity.try(:user) || @cur_user)
-            entity_user.try(:cur_site=, @cur_site)
-            entity.try(:cur_user=, entity_user)
+          entity_user = (entity.try(:user) || @cur_user)
+          entity_user.try(:cur_site=, @cur_site)
+          entity.try(:cur_user=, entity_user)
 
-            entity.try(:skip_twitter_post=, true)
-            entity.try(:skip_line_post=, true)
-            def entity.post_to_line(execute: :inline); end
-            def entity.post_to_twitter(execute: :inline); end
+          entity.try(:skip_twitter_post=, true)
+          entity.try(:skip_line_post=, true)
+          def entity.post_to_line(execute: :inline); end
+          def entity.post_to_twitter(execute: :inline); end
 
-            entity.try(:skip_assoc_opendata=, true)
-            def entity.invoke_opendata_job(action); end
+          entity.try(:skip_assoc_opendata=, true)
+          def entity.invoke_opendata_job(action); end
 
-            entity.instance_variable_set(:@base_model, model)
-            def entity.base_model
-              return @base_model
-            end
+          entity.instance_variable_set(:@base_model, model)
+          def entity.base_model
+            return @base_model
+          end
 
-            logger_tags = [ "#{entity.class}(#{entity.id})" ]
-            if entity.respond_to?(:site_id)
-              logger_tags << "site:#{entity.try(:site_id)}"
-            end
-            Rails.logger.tagged(*logger_tags) do
-              entity.move_changes
-              yield entity
-              Rails.logger.info { "done" }
-            end
+          logger_tags = [ "#{entity.class}(#{entity.id})" ]
+          if entity.respond_to?(:site_id)
+            logger_tags << "site:#{entity.try(:site_id)}"
+          end
+          Rails.logger.tagged(*logger_tags) do
+            entity.move_changes
+            yield entity
+            Rails.logger.info { "done" }
           end
         end
       end
@@ -94,11 +92,49 @@ module Chorg::MongoidSupport
   end
   # rubocop:enable Layout::EmptyLineBetweenDefs
 
+  def all_cms_sites
+    @all_cms_sites ||= Cms::Site.all.to_a
+  end
+
+  def cms_site_id_map
+    @cms_site_id_map ||= all_cms_sites.index_by(&:id)
+  end
+
+  def all_gws_sites
+    @all_gws_sites ||= Gws::Group.all.to_a.select { |group| group.gws_use? }
+  end
+
+  def gws_site_id_map
+    @gws_site_id_map ||= all_gws_sites.index_by(&:id)
+  end
+
+  def set_site(entity)
+    if entity.is_a?(SS::Reference::Site) || entity.is_a?(Cms::Reference::Site)
+      site = cms_site_id_map[entity.site_id]
+      return false if site.blank?
+
+      entity.try(:cur_site=, site)
+      entity.try(:site=, site)
+      return true
+    end
+
+    if entity.is_a?(Gws::Reference::Site)
+      site = gws_site_id_map[entity.site_id]
+      return false if site.blank?
+
+      entity.try(:cur_site=, site)
+      entity.try(:site=, site)
+      return true
+    end
+
+    true
+  end
+
   def find_or_create_group(attributes, alternative_names: nil)
-    group = self.class.group_class.where(name: attributes["name"]).first
+    group = self.class.group_class.where(name: attributes["name"].strip).first
     if group.blank? && alternative_names.present?
       alternative_names.each do |alternative_name|
-        group = self.class.group_class.where(name: alternative_name).first
+        group = self.class.group_class.where(name: alternative_name.strip).first
         break if group
       end
     end
@@ -215,10 +251,10 @@ module Chorg::MongoidSupport
       if group.present?
         if delete_entity(group)
           # put_log("deleted group: #{group.name}")
-          task.log("  #{group.name}")
+          task.log("  \"#{group.name}\"")
         else
           # put_log("failed to delete group: #{group.name}")
-          task.log("  #{group.name}: 削除失敗")
+          task.log("  \"#{group.name}\": 削除失敗")
         end
         remove_group_from_site(group)
       end
@@ -235,9 +271,9 @@ module Chorg::MongoidSupport
     copy << group.id
     cur_site.group_ids = copy.uniq.sort
     if save_or_collect_errors(cur_site)
-      put_log("added group #{group.name} to site #{cur_site.host}")
+      put_log("added group \"#{group.name}\" to site \"#{cur_site.host}\"")
     else
-      put_log("failed to add group #{group.name} to site #{cur_site.host}")
+      put_log("failed to add group \"#{group.name}\" to site \"#{cur_site.host}\"")
     end
   end
 
@@ -249,9 +285,9 @@ module Chorg::MongoidSupport
     copy.delete(group.id)
     cur_site.group_ids = copy.uniq.sort
     if save_or_collect_errors(cur_site)
-      put_log("removed group #{group.name} from site #{cur_site.host}")
+      put_log("removed group \"#{group.name}\" from site \"#{cur_site.host}\"")
     else
-      put_log("failed to remove group #{group.name} from site #{cur_site.host}")
+      put_log("failed to remove group \"#{group.name}\" from site \"#{cur_site.host}\"")
     end
   end
 

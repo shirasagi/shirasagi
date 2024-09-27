@@ -69,8 +69,7 @@ ja:
       event_display:
         list: リスト形式
         table: 表形式
-        list_only: リスト形式のみ
-        table_only: 表形式のみ
+        map: 地図形式
         simple_table: 表形式(簡易)
         detail_table: 表形式(詳細)
       ical_refresh_method:
@@ -172,6 +171,7 @@ ja:
         event_deadline: 申込締切
       event/addon/calendar_list:
         event_display: 表示形式
+        event_display_tabs: 表示タブ
       event/addon/ical_import:
         ical_import_url: iCal配信URL
         ical_basic_certs: ベーシック認証
@@ -236,7 +236,7 @@ ja:
     event/addon/page_list:
       sort:
         - リストの並び替え方法を指定します。
-        - ただし、イベント日が設定されている場合、現時点での非公開記事については未来日でのプレビューには対応していません。
+        - イベント日については、現時点のステータスが非公開の記事にイベント日が設定されていても、未来のプレビューでは表示されません。
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
         - |-
@@ -291,6 +291,8 @@ ja:
     event/addon/calendar_list:
       event_display:
         - イベントカレンダーの表示形式を指定します。
+      event_display_tabs:
+        - イベントカレンダーの表示タブを指定します。
       substitute_html:
         - イベントがない時に表示するテキストをHTMLで記述することが可能です。
       upper_html:

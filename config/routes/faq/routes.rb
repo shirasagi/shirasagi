@@ -61,6 +61,8 @@ Rails.application.routes.draw do
     resources :pages, concerns: %i[deletion copy move lock download import command contains_urls tag michecker change_state] do
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :searches, concerns: :deletion
   end

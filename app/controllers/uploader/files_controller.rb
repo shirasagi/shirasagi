@@ -157,7 +157,7 @@ class Uploader::FilesController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    return redirect_to("#{request.path}?do=show") unless @item.directory?
+    return redirect_to("#{SS.request_path(request)}?do=show") unless @item.directory?
     set_items(@item.path)
     Uploader::File.set_sanitizer_state(@items, { site_id: @cur_site.id })
     render :index

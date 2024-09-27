@@ -5,12 +5,16 @@ module.exports = {
     "stylelint-config-recommended-scss",
     "stylelint-config-property-sort-order-smacss"
   ],
+  "ignoreFiles": [
+    "app/assets/builds/**/*.css",
+    "app/assets/stylesheets/ss/_github-markdown.scss"
+  ],
   "rules": {
     "no-descending-specificity": null,
     "font-family-no-missing-generic-family-keyword": [
       true,
       {
-        "ignoreFontFamilies": [ "Material Icons", "FontAwesome" ]
+        "ignoreFontFamilies": [ "Material Icons", "Material Icons Outlined", "FontAwesome" ]
       }
     ],
     "selector-disallowed-list": [

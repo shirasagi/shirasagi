@@ -19,6 +19,7 @@ ja:
     convert_to_cms_page: 固定ページに変換する
     count_log_of_errors: 発生したエラー数は『%{number_of_errors}件』です。
     editor_template: テンプレート
+    etc: その他
     event_calendar: イベントカレンダー
     file: 共有ファイル
     generate_node: フォルダー書き出し
@@ -78,6 +79,7 @@ ja:
     preview: プレビュー
     preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー
+    preview_page2: 画面プレビュー
     preview_pc_page: PCプレビュー
     preview_site: サイトプレビュー
     role: 権限/ロール
@@ -92,6 +94,7 @@ ja:
     search_form: サイト検索フォーム
     search_target: サイト検索範囲を選択してください
     search_contents_sitemap: サイトマップ
+    shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
     site_config: サイト設定
@@ -99,7 +102,9 @@ ja:
     site_menu: サイトメニュー
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
+    switch_module: 表示切り替え
     syntax_check: アクセシビリティチェック
+    top: トップ
     url_scheme: URLスキーム設定
     backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
@@ -117,6 +122,40 @@ ja:
     translate: 自動翻訳
     list_menu_of_monthly_page: 月別ページ一覧メニュー
     state_expired_suffix: （期限切れ）
+    csv_export: CSVエクスポート
+    csv_import: CSVインポート
+    batch_operation: 一括操作
+    csv_export_node: 一括エクスポート
+    csv_import_node: 一括インポート
+    node_columns:
+      filename: 'ファイル名'
+      route: 'フォルダー属性'
+      name: 'タイトル'
+      index_name: '一覧用タイトル'
+      order: '並び順'
+      layout_filename: 'レイアウト'
+      page_layout_filename: 'ページレイアウト'
+      shortcut: 'ショートカット'
+      view_route: '既定のモジュール'
+      keywords: 'キーワード'
+      description: '概要'
+      summary_html: 'サマリー'
+      conditions: '検索条件(URL)'
+      sort: 'リスト並び順'
+      limit: '表示件数'
+      new_days: 'NEWマーク期間'
+      loop_format: 'ループHTML形式'
+      upper_html: '上部HTML'
+      loop_html: 'ループHTML(SHIRASAGI形式)'
+      lower_html: '下部HTML'
+      loop_liquid: 'ループHTML(Liquid形式)'
+      no_items_display_state: 'ページ未検出時表示'
+      substitute_html: '代替HTML'
+      st_category_ids: 'カテゴリー設定'
+      released_type: '公開日時種別'
+      released: '公開日時'
+      state: 'ステータス'
+      group_ids: '管理グループ'
     column_file_upload:
       image:
         file_label: 代替テキスト
@@ -363,6 +402,16 @@ ja:
       link_to_job_history: ジョブ実行履歴
       target_node_name: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
+    download_nodes:
+      messages:
+        - 現在のフォルダー直下の全てのフォルダー情報をCSVに出力いたします。
+        - 「一括インポート」メニューにてインポートすることで、修正したCSV内容を一括反映させたり、違うフォルダー配下や違うサイトに一括で同じフォルダーを設置することもできます。
+    import_nodes:
+      messages:
+        - 現在のフォルダー直下において、作成したいフォルダーを一括して作成したり、既存フォルダーの設定を一括して更新することができます。
+        -
+        - ※「ファイル名」（フォルダー名）をキーにしてインポートを行いますので、同じファイル名があれば上書きし、配下にないフォルダー名を「ファイル名」に指定した場合は新規作成します。
+        - ※フォルダーを一括して非公開にするとリンク切れが発生する可能性があります。 一括して非公開にした後はリンクチェックを実行し、想定外のリンク切れが発生していないか確認するようにしてください。
     sort_options:
       name:
         title: タイトル
@@ -665,6 +714,18 @@ ja:
       success: miChecker による検証が完了しました。
       failed: miChecker による検証が失敗しました。
 
+  cms/check_links:
+    run: 実行
+    site_setting: 設定
+    reports: レポート
+    ignore_urls: 除外URL
+    nodes: フォルダー
+    pages: ページ
+    options:
+      message_format:
+        text: メール本文
+        csv: CSVを添付
+
   cms_role:
     edit_cms_sites: サイトの管理
     edit_cms_groups: グループの管理
@@ -755,11 +816,11 @@ ja:
     delete_cms_ignore_alert: 警告を無視して削除する
     edit_cms_ignore_alert: 警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
-    read_cms_check_links_reports: リンクチェックレポートの閲覧
-    delete_cms_check_links_reports: リンクチェックレポートの削除
-    read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
-    read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
-    edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
+    use_cms_check_links: リンクチェックの利用
+    run_cms_check_links: リンクチェックの実行
+    read_other_cms_check_links_errors: エラーの閲覧（全て）
+    read_private_cms_check_links_errors: エラーの閲覧（所有）
+    edit_cms_check_links_ignore_urls: 除外URLの管理
     read_cms_image_resizes: 画像リサイズの閲覧
     edit_cms_image_resizes: 画像リサイズの編集
     delete_cms_image_resizes: 画像リサイズの削除
@@ -782,6 +843,7 @@ ja:
   modules:
     cms: 標準機能
     cms/line: LINE機能
+    cms/check_links: リンクチェック
     cms/user_profile: プロフィール
     import_node: フォルダー取り込み
     addons:
@@ -908,7 +970,7 @@ ja:
       cms/page_search: ページ検索
       cms/task: タスク
       cms/import_page: 取り込みページ
-      cms/word_dictionary: かな辞書
+      cms/word_dictionary: 単語置換辞書
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
@@ -938,6 +1000,7 @@ ja:
       cms/generation_report/title: 書き出し性能レポート
       cms/generation_report/history: 書き出し性能履歴
       cms/generation_report/aggregation: 書き出し性能履歴の集計結果
+      cms/source_cleaner_template: ソースクリーニング
     errors:
       models:
         cms/content:

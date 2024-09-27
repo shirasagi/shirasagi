@@ -6,7 +6,7 @@ module SS::CrudFilter
     before_action :prepend_current_view_path
     before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-    before_action :set_selected_items, only: [:destroy_all, :change_state_all]
+    before_action :set_selected_items, only: [:destroy_all, :change_state_all, :publish_all, :close_all]
     menu_view "ss/crud/menu"
   end
 
@@ -174,7 +174,7 @@ module SS::CrudFilter
     if result
       notice = { notice: opts[:notice].presence || t("ss.notice.#{action}d") }
     else
-      notice = { notice: t("ss.notice.unable_to_#{action}", items: @items.pluck(:name).join("、")) }
+      notice = { notice: t("ss.notice.unable_to_#{action}", items: @items.to_a.map(&:name).join("、")) }
     end
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
