@@ -77,6 +77,9 @@ Layout/SpaceInsideBlockBraces:
   EnforcedStyleForEmptyBraces: no_space
   SpaceBeforeBlockParameters: true
 
+Layout/TrailingEmptyLines:
+  Enabled: true
+
 # Cop supports --auto-correct.
 Layout/TrailingWhitespace:
   Enabled: true
