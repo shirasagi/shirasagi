@@ -94,6 +94,11 @@ Metrics/AbcSize:
 # AllowedMethods: refine
 Metrics/BlockLength:
   Max: 45
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'lib/tasks/**/*'
+    - 'spec/**/*'
 
 # Offense count: 6
 # Configuration parameters: CountBlocks, CountModifierForms.
