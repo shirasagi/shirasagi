@@ -73,9 +73,9 @@ class History::Backup
         column_value_ids << column_value["_id"]
       end
     
-      if column_value_ids 
+      if column_value_ids.present?
         column_value_ids.each do |id|
-          item.column_values.find_by(id: id)&.destroy
+          item.column_values.where(id: id).first&.destroy
         end
       end
 
