@@ -147,10 +147,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_on_remand).to eq "back_to_previous"
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
-        file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
+          file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to \
         include({level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: ''})
       expect(item.workflow_approvers).to \
@@ -200,14 +199,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_on_remand).to eq "back_to_previous"
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '',
-        created: be_within(30.seconds).of(Time.zone.now)
-      })
-      expect(item.workflow_approvers).to include({
-        level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'remand', comment: remand_comment1,
-        created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '',
+          created: be_within(30.seconds).of(Time.zone.now) })
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'remand', comment: remand_comment1,
+          created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to \
         include({level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: ''})
 
