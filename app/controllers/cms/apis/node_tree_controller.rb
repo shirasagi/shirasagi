@@ -5,7 +5,6 @@ class Cms::Apis::NodeTreeController < ApplicationController
   model Cms::Node
 
   def index
-    @limit = 100
     @type = params[:type].presence || 'cms_nodes'
     @item = @model.find(params[:id]) if params[:id] != '0'
 
@@ -26,26 +25,28 @@ class Cms::Apis::NodeTreeController < ApplicationController
     if params[:root_items]
       ids = params[:root_items].to_a.map(&:to_i) rescue []
       @model.in(id: ids).site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).limit(@limit)
+        allow(:read, @cur_user, site: @cur_site)
     else
       @model.site(@cur_site).where(depth: 1).
-        allow(:read, @cur_user, site: @cur_site).limit(@limit)
+        allow(:read, @cur_user, site: @cur_site)
     end
   end
 
   def tree_items
     @item.parents.map do |item|
       next unless item.allowed?(:read, @cur_user, site: @cur_site)
-      item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
+      item.children.allow(:read, @cur_user, site: @cur_site)
     end.flatten.compact
   end
 
   def child_items
-    @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    @item.children.allow(:read, @cur_user, site: @cur_site)
   end
 
   def items_hash(items)
     items = items.map do |item|
+      next unless item.allowed?(:read, @cur_user, site: @cur_site)
+
       {
         id: item.id,
         name: item.name,

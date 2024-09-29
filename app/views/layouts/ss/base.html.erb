@@ -101,7 +101,9 @@
             <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
             <%= render partial: 'content_navi' %>
             <% elsif @tree_navi %>
-            <div id="content-navi"><%= render template: '_tree_navi' %></div>
+            <div id="content-navi">
+              <%= render(Cms::NodesTreeComponent.new(api_url: "#{request.base_url}#{@tree_navi}", request: request)) %>
+            </div>
             <% end %>
           <% end %>
         <% end %>
