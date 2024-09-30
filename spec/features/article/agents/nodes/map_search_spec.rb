@@ -27,6 +27,25 @@ describe "article_agents_nodes_map_search", type: :feature, dbscope: :example, j
       end
       expect(page).to have_css(".map-search-result")
       expect(page).to have_css("#map-canvas")
+
+      # list
+      within "nav.tabs" do
+        expect(page).to have_link I18n.t("facility.tab.map")
+        expect(page).to have_link I18n.t("facility.tab.result")
+        click_on I18n.t("facility.tab.result")
+      end
+
+      expect(page).to have_no_css("#map-canvas")
+      expect(page).to have_css("div.columns")
+
+      within "nav.tabs" do
+        expect(page).to have_link I18n.t("facility.tab.map")
+        expect(page).to have_link I18n.t("facility.tab.result")
+        click_on I18n.t("facility.tab.map")
+      end
+
+      expect(page).to have_css("#map-canvas")
+      expect(page).to have_no_css("div.columns")
     end
   end
 end
