@@ -16,12 +16,12 @@ def ss_site
   ss_site
 end
 
-def login_user(user, pass: nil, login_path: nil)
+def login_user(user, pass: nil, login_path: nil, ref: nil)
   visit login_path.presence || sns_login_path
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
     fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
-    set_value_to_hidden_input('input#ref', '/robots.txt')
+    set_value_to_hidden_input('input#ref', ref.presence || '/robots.txt')
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
   expect(page).to have_no_css('.login-box [name="item[password]"]')
