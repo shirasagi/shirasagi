@@ -250,6 +250,11 @@ production: &production
   link:
     default_target: _self
 
+  notify_setting:
+    #notify_enabled_models:
+    #  - "Gws::Schedule::Plan"
+    #  - "Gws::Schedule::Todo"
+
   aggregation:
     first_activation_date: "2000/1/1"
 

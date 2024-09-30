@@ -3,9 +3,7 @@ module Gws::NotifySetting
   extend SS::Translation
 
   included do
-    class_variable_set(:@@_notify_state_default, 'disabled')
-
-    field :notify_state, type: String, default: ->{ notify_state_default }
+    field :notify_state, type: String, default: ->{ self.class.default_notify_state }
     permit_params :notify_state
   end
 
@@ -19,7 +17,10 @@ module Gws::NotifySetting
     notify_state == 'enabled'
   end
 
-  def notify_state_default
-    self.class.class_variable_get(:@@_notify_state_default)
+  module ClassMethods
+    def default_notify_state
+      models = SS.config.gws.notify_setting["notify_enabled_models"].to_a rescue []
+      models.include?(name) ? "enabled" : 'disabled'
+    end
   end
 end
