@@ -298,7 +298,10 @@ en:
         - Enter a title.
     gws/workflow2/route:
       name:
-        - Enter a name for the approval route.
+        - Enter a name for the approval route. Category and name can be entered separated by a slash.
+        - "Ex: Category/Name"
+        -
+        - If a category is entered, the approval route will be displayed by category when selecting an approval route on the application form.
       order:
         - Set the order.
         - The lower the number, the higher the position.
