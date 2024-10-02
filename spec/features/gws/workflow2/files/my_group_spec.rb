@@ -58,9 +58,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_agent_id).to be_blank
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_approvers.count).to eq 1
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: "superior", user_id: user1.id, state: 'request', comment: ''
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: "superior", user_id: user1.id, state: 'request', comment: '' })
       expect(item.workflow_circulations.count).to eq 0
       # expect(item.workflow_circulations).to \
       #   include({level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: ''})
@@ -108,10 +107,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'approve'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 1
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: "superior", user_id: user1.id, state: 'approve', comment: approve_comment1, file_ids: nil,
-        created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: "superior", user_id: user1.id, state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_circulations.count).to eq 0
 
       expect(SS::Notification.count).to eq 2

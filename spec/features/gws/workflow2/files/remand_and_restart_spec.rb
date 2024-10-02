@@ -81,15 +81,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq "request"
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: ''
-      })
-      expect(item.workflow_approvers).to include({
-        level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: ''
-      })
-      expect(item.workflow_approvers).to include({
-        level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: ''
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '' })
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: '' })
+      expect(item.workflow_approvers).to include(
+        { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '' })
 
       expect(SS::Notification.count).to eq 1
       SS::Notification.order_by(id: -1).first.tap do |memo|
@@ -133,10 +130,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to \
         include({level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: ''})
       expect(item.workflow_approvers).to \
@@ -204,14 +200,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'remand'
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
-      expect(item.workflow_approvers).to include({
-        level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'remand', comment: remand_comment1,
-        file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'remand', comment: remand_comment1,
+          file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to \
         include({level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: ''})
 
@@ -312,10 +306,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment2
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment2,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment2,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to \
         include({level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: ''})
       expect(item.workflow_approvers).to \
@@ -359,14 +352,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment2
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment2,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
-      expect(item.workflow_approvers).to include({
-        level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment3,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment2,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment3,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to \
         include({level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'request', comment: ''})
 
@@ -413,18 +404,15 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq 'approve'
       expect(item.workflow_comment).to eq workflow_comment2
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to include({
-        level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment2,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
-      expect(item.workflow_approvers).to include({
-        level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment3,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
-      expect(item.workflow_approvers).to include({
-        level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'approve', comment: approve_comment4,
-        file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-      })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment2,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'approve', comment: approve_comment3,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
+      expect(item.workflow_approvers).to include(
+        { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'approve', comment: approve_comment4,
+          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) })
 
       expected_notification_count += admin.notice_workflow_user_setting == "notify" ? 1 : 0
       expect(SS::Notification.count).to eq expected_notification_count

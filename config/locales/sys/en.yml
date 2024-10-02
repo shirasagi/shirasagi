@@ -49,6 +49,13 @@ en:
         files: Shared files
         editor_templates: Templates
         dictionaries: Kana dictionary
+        loop_settings: Loop HTML
+        page_searches: Page Search
+        source_cleaner_templates: Source Cleaning
+        theme_templates: Theme
+        translate_langs: "Translate/Lang"
+        translate_text_caches: "Translate/Text"
+        word_dictionaries: Word Dictionary
       force_authn_state:
         enabled: Require
         disabled: Do not require

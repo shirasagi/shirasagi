@@ -84,7 +84,6 @@ module Gws::Model::Category
     criteria.first
   end
 
-  # rubocop:disable Style::RedundantAssignment
   def descendants_category
     return self.class.none if name.blank?
 
@@ -93,7 +92,6 @@ module Gws::Model::Category
     criteria = criteria.where(name: /^#{::Regexp.escape(name)}\//)
     criteria
   end
-  # rubocop:enable Style::RedundantAssignment
 
   private
 
