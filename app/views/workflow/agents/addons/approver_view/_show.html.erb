@@ -3,8 +3,10 @@
 <dl class="see workflow-approvers">
   <dt><%= @model.t :required_counts %></dt>
   <dd><%= @item.required_count_label_at(level) %></dd>
-  <dt><%= @model.t :approver_attachment_uses %></dt>
-  <dd><%= @item.approver_attachment_enabled_at?(level) ? t("ss.options.state.enabled") : t("ss.options.state.disabled") %></dd>
+  <% if @ss_mode == :gws %>
+    <dt><%= @model.t :approver_attachment_uses %></dt>
+    <dd><%= @item.approver_attachment_enabled_at?(level) ? t("ss.options.state.enabled") : t("ss.options.state.disabled") %></dd>
+  <% end %>
   <dt><%= @model.t :approvers %></dt>
   <dd>
     <table class="index">
