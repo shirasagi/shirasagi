@@ -596,7 +596,8 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         # approver level 1: change
         within ".gws-workflow-route-approver-item[data-level='1']" do
-          within "tr[data-user-type='#{approver_level1_occupation1.class.name}'][data-user-id='#{approver_level1_occupation1.id}']" do
+          user = approver_level1_occupation1
+          within "tr[data-user-type='#{user.class.name}'][data-user-id='#{user.id}']" do
             select approver_level1_occupation2.name, from: "dummy-approver"
           end
         end
@@ -610,7 +611,8 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
 
         # approver level 3: delete
         within ".gws-workflow-route-approver-item[data-level='3']" do
-          within "tr[data-user-type='#{approver_level3_occupation1.class.name}'][data-user-id='#{approver_level3_occupation1.id}']" do
+          user = approver_level3_occupation1
+          within "tr[data-user-type='#{user.class.name}'][data-user-id='#{user.id}']" do
             click_on I18n.t("ss.buttons.delete")
           end
         end

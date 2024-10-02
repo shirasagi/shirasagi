@@ -452,7 +452,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-request" do
         expect(page).to have_css(".error", text: I18n.t("gws/workflow2.errors.messages.superior_is_not_found"))
-        expect(page).to have_no_css(".gws-workflow-file-approver-item[data-level='1']", text: I18n.t("gws/workflow2.search_alternates.index"))
+        expect(page).to have_no_css(
+          ".gws-workflow-file-approver-item[data-level='1']", text: I18n.t("gws/workflow2.search_alternates.index"))
 
         fill_in "item[workflow_comment]", with: workflow_comment1
         wait_for_event_fired("turbo:frame-load") { click_on I18n.t("workflow.buttons.request") }
