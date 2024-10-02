@@ -26,16 +26,22 @@ class Gws::Workflow2::RequestService
     end
     item.workflow_state = Gws::Workflow2::File::WORKFLOW_STATE_REQUEST
     item.workflow_comment = workflow_comment
-    save_workflow_approvers = item.workflow_approvers_was
+    save_workflow_approvers_was = item.workflow_approvers_was
+    save_workflow_approvers = item.workflow_approvers.dup
     reset_workflow_approvers(item)
-    save_workflow_circulations = item.workflow_circulations_was
+    save_workflow_circulations_was = item.workflow_circulations_was
+    save_workflow_circulations = item.workflow_circulations.dup
     reset_workflow_circulations(item)
 
     result = item.valid?
-    return result unless result
+    unless result
+      item.workflow_approvers = save_workflow_approvers
+      item.workflow_circulations = save_workflow_circulations
+      return result
+    end
 
     result = request_approval
-    item.class.destroy_workflow_files(save_workflow_approvers, save_workflow_circulations)
+    item.class.destroy_workflow_files(save_workflow_approvers_was, save_workflow_circulations_was)
 
     result
   end

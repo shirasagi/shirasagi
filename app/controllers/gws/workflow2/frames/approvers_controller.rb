@@ -112,6 +112,9 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
   def interpret_route
     resolver = Gws::Workflow2::ApproverResolver.new(
       cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, route: route || route_id.to_sym, item: @item)
+    if params.key?(:item)
+      resolver.attributes = params.require(:item).permit(*Gws::Workflow2::ApproverResolver::PERMIT_PARAMS)
+    end
     resolver.resolve
   end
 

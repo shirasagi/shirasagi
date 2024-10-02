@@ -1,6 +1,6 @@
 <% return if @item.deleted? %>
 
-<% render_approver_row = proc do |_level, editable, user_type, user_id, user_name| %>
+<% render_approver_row = proc do |_level, _editable, user_type, user_id, user_name| %>
   <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
     <td>
       <% if user_type == "superior" && use_agent? %>
@@ -21,6 +21,30 @@
       <% else %>
         <span class="user"><span class="error"><%= error %></span></span>
       <% end %>
+    </td>
+  </tr>
+<% end %>
+<% render_specify_row = proc do |level, editable| %>
+  <tr data-type="special" data-id="specify_at_time_of_application">
+    <td>
+      <div data-controller="ss--select-box" data-ss--select-box-api-value="<%= gws_apis_users_path %>" data-ss--select-box-dialog-type-value="cbox">
+        <%= button_tag t("workflow.search_approvers.index"), type: :button, class: "btn", data: { action: "ss--select-box#openDialog" } %>
+        <div class="gws-workflow-file-approver-item-special-result" data-ss--select-box-target="result"></div>
+        <script type="text/plain" data-ss--select-box-target="template">
+          <%% if (selectedItems.length > 0) { %>
+            <%% selectedItems.forEach(function(selectedItem) { %>
+              <div class="gws-workflow-file-approver-item-special-result-item" data-id="<%%= selectedItem.id %>">
+                <input type="hidden" name="item[workflow_approvers][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[workflow_approvers][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
+                <input type="hidden" name="item[workflow_approvers][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
+                <input type="hidden" name="item[workflow_approvers][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <span class="user"><%%= selectedItem.longName %></span>
+                <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
+              </div>
+            <%% }); %>
+          <%% } %>
+        </script>
+      </div>
     </td>
   </tr>
 <% end %>
@@ -71,6 +95,7 @@
           </thead>
           <tbody>
           <%
+            specify_row_rendered = {}
             workflow_approvers.each do |approver_hash|
               if approver_hash[:error].present?
                 user_type = approver_hash[:user_type]
@@ -84,6 +109,9 @@
                 user ||= find_approver(approver_hash[:user_id])
                 user_type = "superior"
                 name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")})"
+              when "special"
+                user_type = "special"
+                user = approver_hash[:user]
               when Gws::UserTitle.name
                 user = approver_hash[:user]
                 user ||= find_approver(approver_hash[:user_id])
@@ -101,9 +129,15 @@
                 name = gws_public_user_long_name(user.long_name)
               end
 
-              if user_type
-                render_approver_row.call(level, approver_hash[:editable] == 1, user_type, user.id, name)
+              next unless user_type
+
+              if user_type == "special" && user == "specify_at_time_of_application" && !specify_row_rendered[level]
+                render_specify_row.call(level, approver_hash[:editable] == 1)
+                specify_row_rendered[level] = true
+                next
               end
+
+              render_approver_row.call(level, approver_hash[:editable] == 1, user_type, user.id, name)
             end
           %>
           </tbody>

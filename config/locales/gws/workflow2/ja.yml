@@ -119,6 +119,7 @@ ja:
       - 申請内容に間違いないか確認の上、申請してください。
     select_other_approvers: '他の承認者を選択する...'
     select_other_circulations: '他の回覧者を選択する...'
+    specify_at_time_of_application: '申請時に指定する'
     errors:
       messages:
         approver_is_deleted: 承認者は削除されています。別の承認者を選択してください。
@@ -241,6 +242,7 @@ ja:
         workflow_member_id: 承認者
       gws/workflow2/route:
         name: 名前
+        order: 並び順
         pull_up: 引き上げ承認
         on_remand: 差し戻し時
         approvers: 承認者
@@ -295,6 +297,9 @@ ja:
     gws/workflow2/route:
       name:
         - 承認経路の名前を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
       pull_up:
         - 引き上げ承認の有効、無効を設定します。
       on_remand:

@@ -1,7 +1,7 @@
 // jquery.colorbox.js を wrap する
 // インターフェース仕様は HTMLDialogElement を参考にした
 
-import {dispatchEvent, LOADING} from "./tool";
+import {dispatchEvent, LOADING, replaceChildren} from "./tool";
 
 const DIALOG_TEMPLATE = `
 <div class="ss-dialog-container">
@@ -111,19 +111,7 @@ class DialogFrame {
   }
 
   renderContent(content) {
-    if (typeof content === 'string') {
-      this._dialogContent.innerHTML = content
-    } else {
-      this._dialogContent.replaceChildren(content)
-    }
-
-    // execute javascript within dialog-content
-    this._dialogContent.querySelectorAll("script").forEach((scriptElement) => {
-      const newScriptElement = document.createElement("script")
-      Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value))
-      newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML))
-      scriptElement.parentElement.replaceChild(newScriptElement, scriptElement)
-    })
+    replaceChildren(this._dialogContent, content);
   }
 
   #onCancel() {

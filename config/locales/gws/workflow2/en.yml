@@ -119,6 +119,7 @@ en:
       - Please make sure that your application is correct before applying it.
     select_other_approvers: 'Select other approvers...'
     select_other_circulations: 'Select other circulators...'
+    specify_at_time_of_application: 'Select at the time of application'
     errors:
       messages:
         approver_is_deleted: The approver is deleted. Select another approver.
@@ -241,6 +242,7 @@ en:
         workflow_member_id: Approver
       gws/workflow2/route:
         name: Name
+        order: Order
         pull_up: Pull-up approval
         on_remand: On remand
         approvers: Approver
@@ -295,6 +297,9 @@ en:
     gws/workflow2/route:
       name:
         - Enter a name for the approval route.
+      order:
+        - Set the order.
+        - The lower the number, the higher the position.
       pull_up:
         - Enable or disable pull-up approval.
       on_remand:

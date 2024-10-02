@@ -10,6 +10,7 @@
   end
   approver_options += render(Gws::Workflow2::RouteOption::UserUnderCurGroupComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
   approver_options += tag.option(t('gws/workflow2.select_other_approvers'), value: 'select_other')
+  approver_options += tag.option(t('gws/workflow2.specify_at_time_of_application'), value: 'specify_at_time_of_application', data: { type: 'special' })
 
   if @cur_site.workflow_route_approver_superior == 'show'
     approver_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
@@ -133,6 +134,8 @@
                   if user
                     render_row.call(level, approver[:editable] == 1, user.class.name, user.id, user.name)
                   end
+                when "special"
+                  render_row.call(level, approver[:editable] == 1, "special", approver[:user_id], t("gws/workflow2.specify_at_time_of_application"))
                 end
               end
             %>

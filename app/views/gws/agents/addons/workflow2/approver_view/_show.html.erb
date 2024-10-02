@@ -56,13 +56,15 @@
               <%=
                 case approver[:user_type]
                 when "superior"
-                  t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")
+                  # nothing to show
                 when Gws::User.name
                   Gws::User.model_name.human
                 when Gws::UserTitle.name
                   Gws::UserTitle.model_name.human
                 when Gws::UserOccupation.name
                   Gws::UserOccupation.model_name.human
+                when "special"
+                  # nothing to show
                 end
               %>
             </td>
@@ -75,9 +77,11 @@
                   user = id_user_map[approver[:user_id]]
                   user ? gws_public_user_long_name(user.long_name) : t("workflow.user_deleted")
                 when Gws::UserTitle.name
-                  id_title_map[approver[:user_id]].try(:name) || t("workflow.user_deleted")
+                  id_title_map[approver[:user_id]].try(:name) || t("ss.options.state.deleted")
                 when Gws::UserOccupation.name
-                  id_occupation_map[approver[:user_id]].try(:name) || t("workflow.user_deleted")
+                  id_occupation_map[approver[:user_id]].try(:name) || t("ss.options.state.deleted")
+                when "special"
+                  t("gws/workflow2.specify_at_time_of_application")
                 end
               %>
             </td>

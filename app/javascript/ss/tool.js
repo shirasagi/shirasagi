@@ -103,3 +103,43 @@ export function urlSafeBase64ToObject(base64String) {
   const stringifyObject = fromUTF8(utf8String);
   return JSON.parse(stringifyObject);
 }
+
+export function replaceChildren(element, htmlTextOrNode) {
+  if (typeof htmlTextOrNode === 'string') {
+    element.innerHTML = htmlTextOrNode;
+  } else {
+    element.replaceChildren(htmlTextOrNode);
+  }
+
+  // execute javascript within element
+  element.querySelectorAll("script").forEach((scriptElement) => {
+    const newScriptElement = document.createElement("script");
+    Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
+    newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML));
+    scriptElement.parentElement.replaceChild(newScriptElement, scriptElement);
+  });
+}
+
+export function appendChildren(element, htmlTextOrNode) {
+  const convertToElement = () => {
+    if (typeof htmlTextOrNode === 'string') {
+      const dummyElement = document.createElement("div");
+      dummyElement.innerHTML = htmlTextOrNode;
+      return dummyElement;
+    } else {
+      return htmlTextOrNode;
+    }
+  }
+
+  const dummyElement = convertToElement();
+  dummyElement.childNodes.forEach((childNode) => {
+    if (childNode.tagName === "SCRIPT") {
+      const newScriptElement = document.createElement("script");
+      Array.from(childNode.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
+      newScriptElement.appendChild(document.createTextNode(childNode.innerHTML));
+      element.appendChild(newScriptElement);
+    } else {
+      element.appendChild(childNode.cloneNode(true));
+    }
+  });
+}
