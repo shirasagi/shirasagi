@@ -2,6 +2,9 @@ require 'spec_helper'
 
 describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
+  let(:permissions) { %w(use_gws_workflow2) + %w(read edit delete).map { |prefix| "#{prefix}_private_gws_workflow2_routes" } }
+  let!(:minimum_role) { create(:gws_role, cur_site: site, permissions: permissions) }
+  let!(:user) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: [ minimum_role.id ]) }
   let(:name) { unique_id }
   let(:pull_up) { %w(enabled disabled).sample }
   let(:pull_up_label) { I18n.t("ss.options.state.#{pull_up}") }
@@ -45,7 +48,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
   let(:circulation_attachment_use_level3) { %w(enabled disabled).sample }
   let(:circulation_attachment_use_level3_label) { I18n.t("ss.options.state.#{circulation_attachment_use_level3}") }
 
-  before { login_gws_user }
+  before { login_user user }
 
   context "with superior" do
     let(:superior_label) { I18n.t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids") }
@@ -559,6 +562,14 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
     let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
     let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}" }
     let!(:group3) { create :gws_group, name: "#{site.name}/#{unique_id}" }
+    let!(:readable_user) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
+    let!(:non_readable_user) do
+      # readable_userだけが見える
+      create(
+        :gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids,
+        readable_member_ids: [ readable_user.id ]
+      )
+    end
     let!(:approver_level1_user1) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: gws_user.gws_role_ids }
     let!(:approver_level2_user1) { create :gws_user, group_ids: [ group2.id ], gws_role_ids: gws_user.gws_role_ids }
     let!(:approver_level3_user1) { create :gws_user, group_ids: [ group3.id ], gws_role_ids: gws_user.gws_role_ids }
@@ -585,6 +596,10 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         within ".gws-workflow-route-approver-item[data-level='1']" do
           select required_count_level1_label, from: "item[required_counts][]"
           select approver_attachment_use_level1_label, from: "item[approver_attachment_uses][]"
+          expect(page).to have_css(
+            "select[name='dummy-approver'] option[value='#{readable_user.id}']", text: readable_user.long_name)
+          expect(page).to have_no_css(
+            "select[name='dummy-approver'] option[value='#{non_readable_user.id}']", text: non_readable_user.long_name)
           wait_for_cbox_opened do
             within "tr[data-type='new']" do
               select I18n.t("gws/workflow2.select_other_approvers"), from: "dummy-approver"
@@ -647,6 +662,10 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
         # circulation level 1
         within ".gws-workflow-route-circulation-item[data-level='1']" do
           select circulation_attachment_use_level1_label, from: "item[circulation_attachment_uses][]"
+          expect(page).to have_css(
+            "select[name='dummy-circulator'] option[value='#{readable_user.id}']", text: readable_user.long_name)
+          expect(page).to have_no_css(
+            "select[name='dummy-circulator'] option[value='#{non_readable_user.id}']", text: non_readable_user.long_name)
           wait_for_cbox_opened do
             within "tr[data-type='new']" do
               select I18n.t("gws/workflow2.select_other_circulations"), from: "dummy-circulator"
