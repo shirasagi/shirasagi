@@ -143,10 +143,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         expect(item.workflow_state).to eq "approve"
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
-        expect(item.workflow_approvers).to include({
-          level: 1, user_type: "superior", user_id: user2.id, state: 'approve', comment: approve_comment,
-          file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
-        })
+        expect(item.workflow_approvers).to include(
+          { level: 1, user_type: "superior", user_id: user2.id, state: 'approve', comment: approve_comment,
+            file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) }
+        )
       end
     end
 

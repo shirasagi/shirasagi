@@ -64,7 +64,6 @@ class Gws::Workflow2::RoutesController < ApplicationController
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    # rubocop:disable Style::SoleNestedConditional
     if @item.readable_setting_range != "private"
       if !@cur_user.gws_role_permit_any?(@cur_site, :public_readable_range_gws_workflow2_routes)
         notice = I18n.t("mongoid.errors.models.gws/workflow2/route.readable_setting_range_error")
@@ -72,7 +71,6 @@ class Gws::Workflow2::RoutesController < ApplicationController
         return
       end
     end
-    # rubocop:enable Style::SoleNestedConditional
 
     if @item.is_a?(Cms::Addon::EditLock) && !@item.acquire_lock
       redirect_to action: :lock
