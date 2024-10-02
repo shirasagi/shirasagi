@@ -204,3 +204,11 @@
     font-weight: normal;
   }
 }
+
+.gws-workflow-file-approver-item-special-result, .gws-workflow-file-circulation-item-special-result {
+  width: 100%;
+
+  &-item {
+    padding: 6px 18px;
+  }
+}

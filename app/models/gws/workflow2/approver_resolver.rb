@@ -14,11 +14,25 @@ class Gws::Workflow2::ApproverResolver
       self.attributes = options
     end
 
+    class << self
+      def from_hash(approver_hash)
+        new(
+          level: approver_hash['level'].to_i, user_type: approver_hash['user_type'],
+          user: approver_hash['user'], editable: editable?(approver_hash['editable']))
+      end
+
+      delegate :editable?, to: Gws::Workflow2::ApproverResolver
+    end
+
     def to_h
       hash = { level: level, user_type: user_type }
       if user
-        hash[:user_id] = user.id
-        hash[:user] = user
+        if user_type == "special"
+          hash[:user] = user
+        else
+          hash[:user_id] = user.id
+          hash[:user] = user
+        end
       end
       if editable
         hash[:editable] = 1
@@ -40,9 +54,19 @@ class Gws::Workflow2::ApproverResolver
   GROUP_FIELDS = %i[
     id name superior_user_ids
   ].freeze
+  PERMIT_PARAMS = [
+    workflow_approvers: %i[level editable user_type user_id].freeze,
+    workflow_circulations: %i[level user_type user_id].freeze,
+  ].freeze
 
-  attr_accessor :cur_site, :cur_group, :cur_user, :route, :item
-  attr_reader :workflow_approvers, :workflow_circulations
+  attr_accessor :cur_site, :cur_group, :cur_user, :route, :item, :workflow_approvers, :workflow_circulations
+  attr_reader :resolved_approvers, :resolved_circulations
+
+  class << self
+    def editable?(value)
+      value.numeric? && value.to_i == 1
+    end
+  end
 
   def resolve
     case route
@@ -58,10 +82,10 @@ class Gws::Workflow2::ApproverResolver
 
     item.workflow_pull_up = @workflow_pull_up
     item.workflow_on_remand = @workflow_on_remand
-    item.workflow_approvers = @workflow_approvers.map(&:to_h)
+    item.workflow_approvers = @resolved_approvers.map(&:to_h)
     item.workflow_required_counts = @workflow_required_counts
     item.workflow_approver_attachment_uses = @workflow_approver_attachment_uses
-    item.workflow_circulations = @workflow_circulations.map(&:to_h)
+    item.workflow_circulations = @resolved_circulations.map(&:to_h)
     item.workflow_circulation_attachment_uses = @workflow_circulation_attachment_uses
   end
 
@@ -79,20 +103,20 @@ class Gws::Workflow2::ApproverResolver
 
     @workflow_pull_up = item.workflow_pull_up
     @workflow_on_remand = item.workflow_on_remand
-    @workflow_approvers = restart_approvers
+    @resolved_approvers = restart_approvers
     @workflow_required_counts = item.workflow_required_counts
     @workflow_approver_attachment_uses = item.workflow_approver_attachment_uses
-    @workflow_circulations = restart_circulations
+    @resolved_circulations = restart_circulations
     @workflow_circulation_attachment_uses = item.workflow_circulation_attachment_uses
   end
 
   def resolve_my_group
     @workflow_pull_up = "disabled"
     @workflow_on_remand = "back_to_init"
-    @workflow_approvers = superior_results(1, type: :approver, adds_error: true)
+    @resolved_approvers = superior_results(1, type: :approver, adds_error: true)
     @workflow_required_counts = [ false ]
     @workflow_approver_attachment_uses = %w(disabled)
-    @workflow_circulations = []
+    @resolved_circulations = []
     @workflow_circulation_attachment_uses = []
   end
 
@@ -104,11 +128,11 @@ class Gws::Workflow2::ApproverResolver
   def resolve_route
     @workflow_pull_up = route.pull_up
     @workflow_on_remand = route.on_remand
-    @workflow_approvers = []
+    @resolved_approvers = []
     @workflow_required_counts = route.required_counts
     @workflow_approver_attachment_uses = route.approver_attachment_uses
 
-    @workflow_circulations = []
+    @resolved_circulations = []
     @workflow_circulation_attachment_uses = route.circulation_attachment_uses
 
     route.levels.each do |level|
@@ -218,18 +242,16 @@ class Gws::Workflow2::ApproverResolver
     @id_occupation_map ||= all_occupations.index_by(&:id)
   end
 
-  def editable?(value)
-    value == 1
-  end
+  delegate :editable?, to: :class
 
   def workflow_approvers_at(level)
-    return [] if level.nil? || @workflow_approvers.blank?
-    @workflow_approvers.select { |approver_result| approver_result.level == level }
+    return [] if level.nil? || @resolved_approvers.blank?
+    @resolved_approvers.select { |approver_result| approver_result.level == level }
   end
 
   def workflow_circulations_at(level)
-    return [] if level.nil? || @workflow_circulations.blank?
-    @workflow_circulations.select { |circulation_result| circulation_result.level == level }
+    return [] if level.nil? || @resolved_circulations.blank?
+    @resolved_circulations.select { |circulation_result| circulation_result.level == level }
   end
 
   def restart_approvers
@@ -259,41 +281,80 @@ class Gws::Workflow2::ApproverResolver
   end
 
   def resolve_approvers(level, approver_hashes)
+    approver_results = []
     approver_hashes.each do |approver_hash|
-      resolve_approver level, approver_hash
+      resolved = resolve_approver(level, approver_hash)
+      approver_results += resolved if resolved
     end
+    approver_results.flatten!
+
+    if workflow_approvers.present?
+      approver_results = resolve_specials(level, workflow_approvers, approver_results)
+    end
+
+    @resolved_approvers += approver_results
   end
 
   def resolve_approver(level, approver_hash)
     case approver_hash[:user_type]
     when "superior"
-      @workflow_approvers += superior_results(level, type: :approver, editable: editable?(approver_hash[:editable]))
+      superior_results(level, type: :approver, editable: editable?(approver_hash[:editable]))
     when Gws::UserTitle.name
-      @workflow_approvers += title_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+      title_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
     when Gws::UserOccupation.name
-      @workflow_approvers += occupation_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+      occupation_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
     when Gws::User.name
-      @workflow_approvers += user_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+      user_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+    when "special"
+      special_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
     end
   end
 
   def resolve_circulations(level, circulation_hashes)
+    circulation_results = []
     circulation_hashes.each do |circulation_hash|
-      resolve_circulation level, circulation_hash
+      resolved = resolve_circulation level, circulation_hash
+      circulation_results += resolved if resolved
     end
+    circulation_results.flatten!
+
+    if workflow_circulations.present?
+      circulation_results = resolve_specials(level, workflow_circulations, circulation_results)
+    end
+
+    @resolved_circulations += circulation_results
   end
 
   def resolve_circulation(level, circulation_hash)
     case circulation_hash[:user_type]
     when "superior"
-      @workflow_circulations += superior_results(level, type: :circulation)
+      superior_results(level, type: :circulation)
     when Gws::UserTitle.name
-      @workflow_circulations += title_results(level, circulation_hash[:user_id])
+      title_results(level, circulation_hash[:user_id])
     when Gws::UserOccupation.name
-      @workflow_circulations += occupation_results(level, circulation_hash[:user_id])
+      occupation_results(level, circulation_hash[:user_id])
     when Gws::User.name
-      @workflow_circulations += user_results(level, circulation_hash[:user_id])
+      user_results(level, circulation_hash[:user_id])
+    when "special"
+      special_results(level, circulation_hash[:user_id])
     end
+  end
+
+  def resolve_specials(level, source_hashes, approver_results)
+    selected_specials = source_hashes.filter_map do |approver_hash|
+      next if approver_hash['level'].to_i != level
+
+      user = find_user(approver_hash['user_id'])
+      next unless user
+
+      approver_hash['user'] = user
+      approver_hash
+    end
+    approver_results.delete_if { |approver_result| approver_result.user_type == 'special' }
+    if selected_specials.present?
+      approver_results += selected_specials.map { |approver_hash| Result.from_hash(approver_hash) }
+    end
+    approver_results
   end
 
   def superior_results(level, type:, editable: nil, adds_error: true)
@@ -302,6 +363,10 @@ class Gws::Workflow2::ApproverResolver
     end
 
     superior_results_level_n(level, type: type, editable: editable, adds_error: adds_error)
+  end
+
+  def special_results(level, user_id, editable: nil)
+    [ Result.new(level: level, user_type: "special", user: user_id, editable: editable) ]
   end
 
   # 上位ユーザー at level 1

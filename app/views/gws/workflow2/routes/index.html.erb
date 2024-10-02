@@ -3,6 +3,7 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
+  <span class="order"><%= item.order %></span>
   <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="readable_setting_range" data-readable_setting_range="<%= item.readable_setting_range %>"><%= item.label :readable_setting_range %></span>
 <% end %>
