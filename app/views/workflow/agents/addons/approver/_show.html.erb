@@ -114,7 +114,7 @@
           <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
         <% elsif @item.workflow_user.present? %>
           <%= workflow_user_profile(@item.workflow_user) %>
-        <% else %>
+        <% elsif @item.workflow_user_id.present? %>
           <%= t("workflow.user_deleted") %>
         <% end %>
       </dd>

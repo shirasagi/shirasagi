@@ -138,10 +138,20 @@
     }
   }
 
+  tr {
+    &:hover {
+      th, td {
+        background: #f2f2f2;
+      }
+    }
+  }
+
   tr:nth-child(2n) {
     th, td {
       background: #f8f8f8;
-      &:hover {
+    }
+    &:hover {
+      th, td {
         background: #f2f2f2;
       }
     }
@@ -150,12 +160,6 @@
   th, td {
     display: flex;
     align-items: center;
-  }
-
-  td {
-    &:hover {
-      background: #f2f2f2;
-    }
   }
 
   tfoot {

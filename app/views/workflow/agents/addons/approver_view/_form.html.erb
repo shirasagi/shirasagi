@@ -14,8 +14,10 @@
 <dl class="see workflow-approvers workflow-level-<%= level %>">
   <dt><%= @model.t :required_counts %><%= @model.tt :required_counts %></dt>
   <dd><%= select_tag "item[required_counts][]", options_for_select(@item.required_count_options, @item.required_count_at(level)), id: nil %></dd>
-  <dt><%= @model.t :approver_attachment_uses %><%= @model.tt :approver_attachment_uses %></dt>
-  <dd><%= select_tag "item[approver_attachment_uses][]", options_for_select(@item.approver_attachment_use_options, @item.approver_attachment_use_at(level)), id: nil, include_blank: true %></dd>
+  <% if @ss_mode == :gws %>
+    <dt><%= @model.t :approver_attachment_uses %><%= @model.tt :approver_attachment_uses %></dt>
+    <dd><%= select_tag "item[approver_attachment_uses][]", options_for_select(@item.approver_attachment_use_options, @item.approver_attachment_use_at(level)), id: nil, include_blank: true %></dd>
+  <% end %>
   <dt><%= @model.t :approvers %><%= @model.tt :approvers %></dt>
   <dd>
     <%= f.hidden_field("approvers[]", value: "", class: "hidden-ids", id: nil) %>
