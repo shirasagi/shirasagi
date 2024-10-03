@@ -102,7 +102,7 @@
             <%= render partial: 'content_navi' %>
             <% elsif @tree_navi %>
             <div id="content-navi">
-              <%= render(Cms::NodesTreeComponent.new(api_url: "#{request.base_url}#{@tree_navi}", request: request)) %>
+              <%= render(Cms::NodesTreeComponent.new(site: @cur_site, user: @cur_user, item: @item, only_children: params[:only_children], root_items: params[:root_items], type: params[:type])) %>
             </div>
             <% end %>
           <% end %>

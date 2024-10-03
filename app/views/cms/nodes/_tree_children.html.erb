@@ -1,0 +1,18 @@
+<ul>
+  <% children.each do |child| %>
+    <li>
+      <% if child[:has_children] %>
+        <details <%= "open" if child[:is_parent] %>>
+          <summary>
+            <a href="<%= child[:url] %>"><%= child[:name] %></a>
+          </summary>
+
+          
+          <%= render 'tree_children', children: child[:children] %>
+        </details>
+      <% else %>
+        <a href="<%= child[:url] %>"><%= child[:name] %></a>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

@@ -1,46 +1,79 @@
-# app/components/cms/nodes_tree_component.rb
-require 'net/http'
-require 'json'
-
 module Cms
   class NodesTreeComponent < ViewComponent::Base
-    def initialize(api_url:, request:)
-      @api_url = api_url
-      @request = request
+    include Rails.application.routes.url_helpers
+
+    def initialize(site:, user:, item: nil, only_children: false, root_items: nil, type: nil)
+      @type = type.presence || 'cms_nodes'
+      @site = site
+      @user = user
+      @item = item
+      @only_children = only_children
+      @root_items = root_items
       @folders = fetch_folders
     end
 
     private
 
     def fetch_folders
-      full_url = full_api_url(@api_url)
-      Rails.logger.info "Fetching folders from #{full_url}"
-
-      uri = URI(full_url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = uri.scheme == "https"
-      request = Net::HTTP::Get.new(uri)
-
-      request['Cookie'] = @request.headers['Cookie']
-
-      response = http.request(request)
-      if response.is_a?(Net::HTTPSuccess)
-        JSON.parse(response.body)
-      else
-        Rails.logger.error "Error fetching folders: #{response.body}"
-        []
-      end
-    rescue StandardError => e
-      Rails.logger.error "Error fetching folders: #{e.message}"
-      []
+      items = if @only_children && @item
+                child_items
+              else
+                root_items + [@item].compact + tree_items + child_items
+              end
+      items_hash(items)
     end
 
-    def full_api_url(relative_url)
-      if relative_url.start_with?('http')
-        relative_url
+    def root_items
+      if @root_items.present?
+        Cms::Node.in(id: @root_items).site(@site).
+          allow(:read, @user, site: @site)
       else
-        "#{@request.base_url}#{relative_url}"
+        Cms::Node.site(@site).where(depth: 1).
+          allow(:read, @user, site: @site)
       end
+    end
+
+    def tree_items
+      @item.present? ? @item.parents.flat_map { |parent| parent.children.allow(:read, @user, site: @site) } : []
+    end
+
+    def child_items
+      @item.present? ? @item.children.allow(:read, @user, site: @site) : []
+    end
+
+    def items_hash(items)
+      items.map { |item| build_item_hash(item) }.compact.uniq.sort_by { |item| item[:filename].tr('/', "\0") }
+    end
+
+    # Recursively builds the hash for each item and its children
+    def build_item_hash(item)
+      return unless item.allowed?(:read, @user, site: @site)
+
+      item_hash = {
+        id: item.id,
+        name: item.name,
+        filename: item.filename,
+        depth: item.depth,
+        # url: item_url(item),
+        is_current: @item.present? && item.id == @item.id,
+        is_parent: @item.present? && @item.filename.start_with?("#{item.filename}/"),
+        has_children: item.children.present?
+      }
+
+      # Recursively add children
+      if item.children.present?
+        item_hash[:children] = item.children.allow(:read, @user, site: @site).map { |child| build_item_hash(child) }
+      end
+
+      item_hash
+    end
+
+    def item_url(item)
+      return node_pages_path(cid: item.id) if @type == 'cms/page'
+      return node_parts_path(cid: item.id) if @type == 'cms/part'
+      return node_layouts_path(cid: item.id) if @type == 'cms/layout'
+      
+      item.respond_to?(:view_route) ? contents_path(item) : cms_node_nodes_path(cid: item.id)
     end
   end
 end
