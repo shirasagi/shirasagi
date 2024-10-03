@@ -7,7 +7,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
 
   permit_values :url, :youtube_id, :width, :height, :auto_width
 
-  before_validation :set_youtube_id, unless: ->{ @new_clone }
+  before_validation :set_youtube_id
 
   liquidize do
     export :youtube_id
