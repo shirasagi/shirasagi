@@ -14,11 +14,7 @@ new Cms_Line_Area_Cropper(".line-crop-area");
     <div class="areas">
       <% 1.upto(@item.area_size).each do |i| %>
         <%
-          area = @item.areas[i - 1]
-          if @item.in_areas.present? && @item.in_areas[i - 1]
-            area = Cms::Line::Area.new(@item.in_areas[i - 1])
-          end
-          area ||= Cms::Line::Area.new
+          area = @item.areas[i - 1] || Cms::Line::Area.new
         %>
         <div class="area area<%= i %>" data-area="<%= i %>" style="display: none;">
           <div class="points">
@@ -49,7 +45,7 @@ new Cms_Line_Area_Cropper(".line-crop-area");
               </label>
             </div>
           </div>
-          <%= link_to "リセット", "", class: "btn reset-area" %>
+          <%= link_to t("ss.buttons.reset"), "", class: "btn reset-area" %>
         </div>
       <% end %>
     </div>
