@@ -4,7 +4,7 @@ class Gws::Workflow2::ApproverResolver
   class Result
     include ActiveModel::Model
 
-    attr_accessor :level, :user_type, :user, :editable, :file_ids, :error
+    attr_accessor :level, :user_type, :user, :editable, :alternatable, :alternate_to, :file_ids, :error
 
     # level と user_type は必須、user, editable, file_ids, error は省略可
     def initialize(level:, user_type:, **options)
@@ -17,11 +17,12 @@ class Gws::Workflow2::ApproverResolver
     class << self
       def from_hash(approver_hash)
         new(
-          level: approver_hash['level'].to_i, user_type: approver_hash['user_type'],
-          user: approver_hash['user'], editable: editable?(approver_hash['editable']))
+          level: approver_hash['level'].to_i, user_type: approver_hash['user_type'], user: approver_hash['user'],
+          editable: editable?(approver_hash['editable']), alternatable: alternatable?(approver_hash['alternatable']),
+          alternate_to: approver_hash['alternate_to'])
       end
 
-      delegate :editable?, to: Gws::Workflow2::ApproverResolver
+      delegate :editable?, :alternatable?, to: Gws::Workflow2::ApproverResolver
     end
 
     def to_h
@@ -37,6 +38,12 @@ class Gws::Workflow2::ApproverResolver
       if editable
         hash[:editable] = 1
       end
+      if alternatable
+        hash[:alternatable] = 1
+      end
+      if alternate_to
+        hash[:alternate_to] = alternate_to
+      end
       if file_ids
         hash[:file_ids] = file_ids
       end
@@ -44,6 +51,16 @@ class Gws::Workflow2::ApproverResolver
         hash[:error] = error
       end
       hash
+    end
+  end
+
+  class << self
+    def editable?(value)
+      value.numeric? && value.to_i == 1
+    end
+
+    def alternatable?(value)
+      value.numeric? && value.to_i == 1
     end
   end
 
@@ -55,18 +72,14 @@ class Gws::Workflow2::ApproverResolver
     id name superior_user_ids
   ].freeze
   PERMIT_PARAMS = [
-    workflow_approvers: %i[level editable user_type user_id].freeze,
-    workflow_circulations: %i[level user_type user_id].freeze,
+    in_approver_alternates: %i[level editable user_type user_id alternate_to].freeze,
+    in_selected_approvers: %i[level editable user_type user_id].freeze,
+    in_selected_circulations: %i[level user_type user_id].freeze,
   ].freeze
 
-  attr_accessor :cur_site, :cur_group, :cur_user, :route, :item, :workflow_approvers, :workflow_circulations
+  attr_accessor :cur_site, :cur_group, :cur_user, :route, :item,
+    :in_approver_alternates, :in_selected_approvers, :in_selected_circulations
   attr_reader :resolved_approvers, :resolved_circulations
-
-  class << self
-    def editable?(value)
-      value.numeric? && value.to_i == 1
-    end
-  end
 
   def resolve
     case route
@@ -242,7 +255,7 @@ class Gws::Workflow2::ApproverResolver
     @id_occupation_map ||= all_occupations.index_by(&:id)
   end
 
-  delegate :editable?, to: :class
+  delegate :editable?, :alternatable?, to: :class
 
   def workflow_approvers_at(level)
     return [] if level.nil? || @resolved_approvers.blank?
@@ -259,11 +272,14 @@ class Gws::Workflow2::ApproverResolver
       user = find_user(approver_hash[:user_id])
       if user
         Result.new(
-          level: approver_hash[:level], user_type: Gws::User.name,
-          user: user, editable: editable?(approver_hash[:editable]), file_ids: approver_hash[:file_ids])
+          level: approver_hash[:level], user_type: Gws::User.name, user: user,
+          editable: editable?(approver_hash[:editable]), alternatable: alternatable?(approver_hash[:alternatable]),
+          file_ids: approver_hash[:file_ids])
       else
         error = I18n.t("gws/workflow2.errors.messages.approver_is_deleted")
-        Result.new(level: approver_hash[:level], user_type: Gws::User.name, error: error)
+        Result.new(
+          level: approver_hash[:level], user_type: Gws::User.name, error: error,
+          alternatable: alternatable?(approver_hash[:alternatable]))
       end
     end
   end
@@ -288,8 +304,11 @@ class Gws::Workflow2::ApproverResolver
     end
     approver_results.flatten!
 
-    if workflow_approvers.present?
-      approver_results = resolve_specials(level, workflow_approvers, approver_results)
+    if in_approver_alternates.present?
+      approver_results = resolve_alternatables(level, in_approver_alternates, approver_results)
+    end
+    if in_selected_approvers.present?
+      approver_results = resolve_specials(level, in_selected_approvers, approver_results)
     end
 
     @resolved_approvers += approver_results
@@ -298,13 +317,21 @@ class Gws::Workflow2::ApproverResolver
   def resolve_approver(level, approver_hash)
     case approver_hash[:user_type]
     when "superior"
-      superior_results(level, type: :approver, editable: editable?(approver_hash[:editable]))
+      superior_results(
+        level, type: :approver, editable: editable?(approver_hash[:editable]),
+        alternatable: alternatable?(approver_hash[:alternatable]))
     when Gws::UserTitle.name
-      title_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+      title_results(
+        level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]),
+        alternatable: alternatable?(approver_hash[:alternatable]))
     when Gws::UserOccupation.name
-      occupation_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+      occupation_results(
+        level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]),
+        alternatable: alternatable?(approver_hash[:alternatable]))
     when Gws::User.name
-      user_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
+      user_results(
+        level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]),
+        alternatable: alternatable?(approver_hash[:alternatable]))
     when "special"
       special_results(level, approver_hash[:user_id], editable: editable?(approver_hash[:editable]))
     end
@@ -318,8 +345,8 @@ class Gws::Workflow2::ApproverResolver
     end
     circulation_results.flatten!
 
-    if workflow_circulations.present?
-      circulation_results = resolve_specials(level, workflow_circulations, circulation_results)
+    if in_selected_circulations.present?
+      circulation_results = resolve_specials(level, in_selected_circulations, circulation_results)
     end
 
     @resolved_circulations += circulation_results
@@ -340,6 +367,34 @@ class Gws::Workflow2::ApproverResolver
     end
   end
 
+  def resolve_alternatables(level, source_hashes, approver_results)
+    alternatable_user_ids = approver_results.filter_map do |approver_result|
+      approver_result.alternatable ? approver_result.user.id : nil
+    end
+    alternatable_user_ids.compact!
+    alternatable_user_ids.uniq!
+
+    selected_alternatives = source_hashes.filter_map do |approver_hash|
+      next if approver_hash['level'].to_i != level
+      next if approver_hash['alternate_to'].blank?
+
+      user = find_user(approver_hash['user_id'])
+      next unless user
+
+      alternate_to_level, _alternate_to_user_type, alternate_to_user_id = approver_hash['alternate_to'].split(',')
+      next if alternate_to_level.to_i != level
+      next unless alternatable_user_ids.include?(alternate_to_user_id.to_i)
+
+      approver_hash['user'] = user
+      approver_hash
+    end
+
+    if selected_alternatives.present?
+      approver_results += selected_alternatives.map { |approver_hash| Result.from_hash(approver_hash) }
+    end
+    approver_results
+  end
+
   def resolve_specials(level, source_hashes, approver_results)
     selected_specials = source_hashes.filter_map do |approver_hash|
       next if approver_hash['level'].to_i != level
@@ -357,12 +412,12 @@ class Gws::Workflow2::ApproverResolver
     approver_results
   end
 
-  def superior_results(level, type:, editable: nil, adds_error: true)
+  def superior_results(level, type:, editable: nil, alternatable: nil, adds_error: true)
     if level == 1
-      return superior_results_level1(level, editable: editable, adds_error: adds_error)
+      return superior_results_level1(level, editable: editable, alternatable: alternatable, adds_error: adds_error)
     end
 
-    superior_results_level_n(level, type: type, editable: editable, adds_error: adds_error)
+    superior_results_level_n(level, type: type, editable: editable, alternatable: alternatable, adds_error: adds_error)
   end
 
   def special_results(level, user_id, editable: nil)
@@ -371,11 +426,11 @@ class Gws::Workflow2::ApproverResolver
 
   # 上位ユーザー at level 1
   # level 1 の場合、ユーザーの上位ユーザーを選択する
-  def superior_results_level1(level, editable: nil, adds_error: true)
+  def superior_results_level1(level, editable: nil, alternatable: nil, adds_error: true)
     if cur_group.superior_user_ids.blank?
       if adds_error
         error = I18n.t("gws/workflow2.errors.messages.superior_is_not_found")
-        return [ Result.new(level: level, user_type: "superior", error: error) ]
+        return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
       else
         return []
       end
@@ -385,14 +440,14 @@ class Gws::Workflow2::ApproverResolver
     if users.blank?
       if adds_error
         error = I18n.t("gws/workflow2.errors.messages.superior_is_not_found")
-        return [ Result.new(level: level, user_type: "superior", error: error) ]
+        return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
       else
         return []
       end
     end
 
     users.map do |user|
-      Result.new(level: level, user_type: "superior", user: user, editable: editable)
+      Result.new(level: level, user_type: "superior", user: user, editable: editable, alternatable: alternatable)
     end
   end
 
@@ -432,11 +487,11 @@ class Gws::Workflow2::ApproverResolver
 
   # 上位ユーザー above level 2
   # level 2 以上の場合、下位レベルの上位ユーザーの上位ユーザーを選択する
-  def superior_results_level_n(level, type:, editable: nil, adds_error: true)
+  def superior_results_level_n(level, type:, editable: nil, alternatable: nil, adds_error: true)
     lower_level_superiors = find_superiors_at(type, level - 1)
     if lower_level_superiors.blank?
       error = I18n.t("gws/workflow2.errors.messages.lower_level_superior_is_not_set")
-      return [ Result.new(level: level, user_type: "superior", error: error) ]
+      return [ Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable) ]
     end
 
     ret = []
@@ -444,40 +499,42 @@ class Gws::Workflow2::ApproverResolver
       superior = find_superior(lower_level_superior)
       next unless superior
 
-      ret << Result.new(level: level, user_type: "superior", user: superior, editable: editable)
+      ret << Result.new(
+        level: level, user_type: "superior", user: superior, editable: editable, alternatable: alternatable)
     end
     if ret.blank?
       error = I18n.t("gws/workflow2.errors.messages.lower_level_superior_is_not_set")
-      ret << Result.new(level: level, user_type: "superior", error: error)
+      ret << Result.new(level: level, user_type: "superior", error: error, alternatable: alternatable)
     end
 
     ret
   end
 
-  def title_results(level, user_id, editable: nil)
+  def title_results(level, user_id, editable: nil, alternatable: nil)
     title = id_title_map[user_id]
     if title.blank?
       error = I18n.t("gws/workflow2.errors.messages.user_title_is_not_found")
-      return [ Result.new(level: level, user_type: Gws::UserTitle.name, error: error) ]
+      return [ Result.new(level: level, user_type: Gws::UserTitle.name, error: error, alternatable: alternatable) ]
     end
 
     users = cur_group_users.select { |user| user.title_ids.include?(title.id) }
     users.compact!
     if users.blank?
       error = I18n.t("gws/workflow2.errors.messages.user_whos_title_is_not_found", title_name: title.name)
-      return [ Result.new(level: level, user_type: Gws::UserTitle.name, error: error) ]
+      return [ Result.new(level: level, user_type: Gws::UserTitle.name, error: error, alternatable: alternatable) ]
     end
 
     users.map do |user|
-      Result.new(level: level, user_type: Gws::UserTitle.name, user: user, editable: editable)
+      Result.new(
+        level: level, user_type: Gws::UserTitle.name, user: user, editable: editable, alternatable: alternatable)
     end
   end
 
-  def occupation_results(level, user_id, editable: nil)
+  def occupation_results(level, user_id, editable: nil, alternatable: nil)
     occupation = id_occupation_map[user_id]
     if occupation.blank?
       error = I18n.t("gws/workflow2.errors.messages.user_occupation_is_not_found")
-      return [ Result.new(level: level, user_type: Gws::UserOccupation.name, error: error) ]
+      return [ Result.new(level: level, user_type: Gws::UserOccupation.name, error: error, alternatable: alternatable) ]
     end
 
     users = cur_group_users.select { |user| user.occupation_ids.include?(occupation.id) }
@@ -485,21 +542,22 @@ class Gws::Workflow2::ApproverResolver
 
     if users.blank?
       error = I18n.t("gws/workflow2.errors.messages.user_whos_occupation_is_not_found", occupation_name: occupation.name)
-      return [ Result.new(level: level, user_type: Gws::UserOccupation.name, error: error) ]
+      return [ Result.new(level: level, user_type: Gws::UserOccupation.name, error: error, alternatable: alternatable) ]
     end
 
     users.map do |user|
-      Result.new(level: level, user_type: Gws::UserOccupation.name, user: user, editable: editable)
+      Result.new(
+        level: level, user_type: Gws::UserOccupation.name, user: user, editable: editable, alternatable: alternatable)
     end
   end
 
-  def user_results(level, user_id, editable: nil)
+  def user_results(level, user_id, editable: nil, alternatable: nil)
     user = find_user(user_id)
     if user.blank?
       error = I18n.t("gws/workflow2.errors.messages.user_is_not_found")
-      return [ Result.new(level: level, user_type: Gws::User.name, error: error) ]
+      return [ Result.new(level: level, user_type: Gws::User.name, error: error, alternatable: alternatable) ]
     end
 
-    [ Result.new(level: level, user_type: Gws::User.name, user: user, editable: editable) ]
+    [ Result.new(level: level, user_type: Gws::User.name, user: user, editable: editable, alternatable: alternatable) ]
   end
 end

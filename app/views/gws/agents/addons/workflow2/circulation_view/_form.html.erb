@@ -49,7 +49,7 @@
   <%= circulator_options %>
 </template>
 
-<% render_row = proc do |level, user_type, user_id, user_name| %>
+<% render_row = proc do |level, id, user_type, user_id, user_name| %>
   <%
     options_template = level == 1 ? "##{addon[:id]}-options-template0" : "##{addon[:id]}-options-template"
     select_data = { approver_path: gws_apis_users_path(single: true), options_template_ref: options_template }
@@ -59,10 +59,11 @@
       select_data[:default_user_name] = user_name
     end
   %>
-  <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
+  <tr data-id="<%= id %>" data-user-type="<%= user_type %>" data-user-id="<%= user_id %>">
     <td><%= button_tag t("ss.buttons.delete"), type: 'button', name: 'delete-row', class: "btn btn-delete" %></td>
     <td>
       <%= hidden_field_tag("#{f.object_name}[circulations][][level]", level, id: nil) %>
+      <%= hidden_field_tag("#{f.object_name}[circulations][][_id]", id, id: nil) %>
       <%= ss_stimulus_tag "gws/workflow2/route_approver_select", data: select_data do %>
         <%= select_tag "dummy-circulator", (level == 1 ? circulator_options0 : circulator_options), id: nil, class: "circulator-select" %>
         <%= hidden_field_tag("#{f.object_name}[circulations][][user_type]", user_type != 'new' ? user_type : '', id: nil) %>
@@ -73,10 +74,10 @@
 <% end %>
 
 <template id="<%= addon[:id] %>-row-template0">
-  <% render_row.call(1, 'new', 'new', '') %>
+  <% render_row.call(1, nil, 'new', 'new', '') %>
 </template>
 <template id="<%= addon[:id] %>-row-template">
-  <% render_row.call('', 'new', 'new', '') %>
+  <% render_row.call('', nil, 'new', 'new', '') %>
 </template>
 
 <% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
@@ -106,30 +107,30 @@
               @item.circulations_at(level).each do |circulator|
                 case circulator[:user_type]
                 when "superior"
-                  render_row.call(level, "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
+                  render_row.call(level, circulator[:_id], "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
                 when Gws::User.name
                   user = id_user_map[circulator[:user_id]]
                   if user
-                    render_row.call(level, user.class.name, user.id, gws_public_user_long_name(user.long_name))
+                    render_row.call(level, circulator[:_id], user.class.name, user.id, gws_public_user_long_name(user.long_name))
                   end
                 when Gws::UserTitle.name
                   user = id_title_map[circulator[:user_id]]
                   if user
-                    render_row.call(level, user.class.name, user.id, user.name)
+                    render_row.call(level, circulator[:_id], user.class.name, user.id, user.name)
                   end
                 when Gws::UserOccupation.name
                   user = id_occupation_map[circulator[:user_id]]
                   if user
-                    render_row.call(level, user.class.name, user.id, user.name)
+                    render_row.call(level, circulator[:_id], user.class.name, user.id, user.name)
                   end
                 when "special"
-                  render_row.call(level, "special", circulator[:user_id], t("gws/workflow2.specify_at_time_of_application"))
+                  render_row.call(level, circulator[:_id], "special", circulator[:user_id], t("gws/workflow2.specify_at_time_of_application"))
                 end
               end
             %>
             <%
               # new record at last
-              render_row.call(level, 'new', 'new', '')
+              render_row.call(level, nil, 'new', 'new', '')
             %>
             </tbody>
             <tfoot>

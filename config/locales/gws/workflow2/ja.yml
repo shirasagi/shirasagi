@@ -120,6 +120,8 @@ ja:
     select_other_approvers: '他の承認者を選択する...'
     select_other_circulations: '他の回覧者を選択する...'
     specify_at_time_of_application: '申請時に指定する'
+    editable: 編集可
+    alternatable: 代理承認可
     errors:
       messages:
         approver_is_deleted: 承認者は削除されています。別の承認者を選択してください。
@@ -296,7 +298,10 @@ ja:
         - タイトルを入力します。
     gws/workflow2/route:
       name:
-        - 承認経路の名前を入力します。
+        - 承認経路の名前を入力します。分類と名前をスラッシュで区切って入力することができます。
+        - "例:分類/名前"
+        -
+        - 分類を入力すると、申請フォームで承認経路を選択する際に承認経路が分類ごとに表示されるようになります。
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。

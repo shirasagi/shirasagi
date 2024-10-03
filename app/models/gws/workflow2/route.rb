@@ -29,8 +29,9 @@ class Gws::Workflow2::Route
   field :remark, type: String
 
   permit_params :name, :order, :pull_up, :on_remand, :remark
-  permit_params approvers: [ :level, :user_type, :user_id, :editable ], required_counts: [], approver_attachment_uses: []
-  permit_params circulations: [ :level, :user_type, :user_id ], circulation_attachment_uses: []
+  permit_params approvers: [ :_id, :level, :user_type, :user_id, :editable, :alternatable ], required_counts: []
+  permit_params approver_attachment_uses: []
+  permit_params circulations: [ :_id, :level, :user_type, :user_id ], circulation_attachment_uses: []
 
   before_validation :normalize_approvers
   before_validation :normalize_circulations
@@ -72,7 +73,8 @@ class Gws::Workflow2::Route
       end
       unless SS.config.workflow.disable_my_group
         ret << [ t("my_group"), "my_group" ]
-        ret << [ t("my_group_alternate"), "my_group_alternate" ]
+        # 上長が複数存在する場合、うまく動作しないので一時的に無効化
+        # ret << [ t("my_group_alternate"), "my_group_alternate" ]
       end
 
       routes = all.site(cur_site)
@@ -198,6 +200,7 @@ class Gws::Workflow2::Route
     approvers = self.approvers
     approvers = approvers.dup
     approvers.reject! { |approver| approver.blank? || approver[:user_type].blank? || approver[:user_id].blank? }
+    approvers.each { |approver| approver[:_id] = BSON::ObjectId.new.to_s if approver[:_id].blank? }
     self.approvers = approvers
   end
 
@@ -207,6 +210,7 @@ class Gws::Workflow2::Route
     circulations = self.circulations
     circulations = circulations.dup
     circulations.reject! { |circulator| circulator.blank? || circulator[:user_type].blank? || circulator[:user_id].blank? }
+    circulations.each { |circulator| circulator[:_id] = BSON::ObjectId.new.to_s if circulator[:_id].blank? }
     self.circulations = circulations
   end
 

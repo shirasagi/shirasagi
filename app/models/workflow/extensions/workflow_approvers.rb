@@ -49,6 +49,7 @@ class Workflow::Extensions::WorkflowApprovers < Array
         hash[:level] = hash[:level].to_i if hash[:level].present?
         hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
         hash[:editable] = hash[:editable].to_i if hash[:editable].present?
+        hash[:alternatable] = hash[:alternatable].to_i if hash[:alternatable].present?
         hash[:comment] = "" if hash[:comment].blank?
         hash[:file_ids] = Array(hash[:file_ids]).flatten.select(&:numeric?).map(&:to_i) if hash[:file_ids].present?
       end
