@@ -12,6 +12,33 @@
     </td>
   </tr>
 <% end %>
+<% render_alternate_row = proc do |level, editable, user_type, user_id| %>
+  <tr data-type="<%= user_type %>" data-id="<%= user_id %>-alternative">
+    <td>
+      <div data-controller="ss--select-box" data-ss--select-box-api-value="<%= gws_apis_users_path(single: 1) %>" data-ss--select-box-dialog-type-value="cbox" data-ss--select-box-selection-type-value="replace">
+        <%= button_tag t("gws/workflow2.search_alternates.index"), type: :button, class: "btn", data: { action: "ss--select-box#openDialog" } %>
+        <span style="vertical-align: middle; color: #e00"><%= I18n.t('gws/workflow2.notice.select_correct_proxy_approver') %></span>
+        <div data-ss--select-box-target="result"></div>
+        <script type="text/plain" data-ss--select-box-target="template">
+          <%% if (selectedItems.length > 0) { %>
+            <%% selectedItems.forEach(function(selectedItem) { %>
+              <div class="gws-workflow-file-alternative-approver-item" data-id="<%%= selectedItem.id %>">
+                <input type="hidden" name="item[in_approver_alternates][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][user_type]" value="<%= user_type %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <input type="hidden" name="item[in_approver_alternates][][alternate_to]" value="<%= [ level, user_type, user_id ].join(",") %>" autocomplete="off">
+                <%= I18n.t('gws/workflow2.labels.approver_alternator') %>
+                <span class="user"><%%= selectedItem.longName %></span>
+                <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
+              </div>
+            <%% }); %>
+          <%% } %>
+        </script>
+      </div>
+    </td>
+  </tr>
+<% end %>
 <% render_approver_error_row = proc do |_level, user_type, error| %>
   <tr data-type="<%= user_type %>" data-id="error">
     <td>
@@ -34,10 +61,10 @@
           <%% if (selectedItems.length > 0) { %>
             <%% selectedItems.forEach(function(selectedItem) { %>
               <div class="gws-workflow-file-approver-item-special-result-item" data-id="<%%= selectedItem.id %>">
-                <input type="hidden" name="item[workflow_approvers][][level]" value="<%= level %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_approvers][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][editable]" value="<%= editable ? 1 : nil  %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_approvers][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
                 <span class="user"><%%= selectedItem.longName %></span>
                 <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
               </div>
@@ -138,6 +165,9 @@
               end
 
               render_approver_row.call(level, approver_hash[:editable] == 1, user_type, user.id, name)
+              if approver_hash[:alternatable] == 1
+                render_alternate_row.call(level, approver_hash[:editable] == 1, user_type, user.id)
+              end
             end
           %>
           </tbody>

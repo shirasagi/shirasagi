@@ -30,7 +30,7 @@ export default class extends Controller {
       if (isInputText(ev.target) || isTextArea(ev.target) || isSelect(ev.target) || isAjaxTable(ev.target) || isFileView(ev.target)) {
         SS.formChanged = new Date().getTime();
       }
-    }).on("ss:editorChange", (_ev) => {
+    }).on("ss:change", (_ev) => {
       SS.formChanged = new Date().getTime();
     }).on("click", (ev) => {
       if (isSubmit(ev.target)) {

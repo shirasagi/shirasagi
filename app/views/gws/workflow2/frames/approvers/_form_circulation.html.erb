@@ -24,9 +24,9 @@
           <%% if (selectedItems.length > 0) { %>
             <%% selectedItems.forEach(function(selectedItem) { %>
               <div class="gws-workflow-file-circulation-item-special-result-item" data-id="<%%= selectedItem.id %>">
-                <input type="hidden" name="item[workflow_circulations][][level]" value="<%= level %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_circulations][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
-                <input type="hidden" name="item[workflow_circulations][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_circulations][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_circulations][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_circulations][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
                 <span class="user"><%%= selectedItem.longName %></span>
                 <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
               </div>

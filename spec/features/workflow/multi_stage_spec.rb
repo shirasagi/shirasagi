@@ -740,7 +740,8 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_approvers[0, 2]).to include(
           { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
             comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: '' }
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: '',
+            created: be_within(30.seconds).of(Time.zone.now) }
         )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
@@ -781,7 +782,8 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_approvers[0, 2]).to include(
           { level: 1, user_id: user1.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
             comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now) },
-          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: '' }
+          { level: 1, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_OTHER_APPROVED, comment: '',
+            created: be_within(30.seconds).of(Time.zone.now) }
         )
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {

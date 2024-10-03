@@ -48,7 +48,7 @@
   <%= approver_options %>
 </template>
 
-<% render_row = proc do |level, editable, user_type, user_id, user_name| %>
+<% render_row = proc do |level, id, editable, alternatable, user_type, user_id, user_name| %>
   <%
     options_template = level == 1 ? "##{addon[:id]}-options-template0" : "##{addon[:id]}-options-template"
     select_data = {
@@ -60,15 +60,25 @@
       select_data[:default_user_name] = user_name
     end
   %>
-  <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
-    <td><%= button_tag t("ss.buttons.delete"), type: 'button', name: 'delete-row', class: "btn btn-delete" %></td>
-    <td class="check">
-      <%= hidden_field_tag("#{f.object_name}[approvers][][editable]", "", id: nil) %>
-      <%= check_box_tag("#{f.object_name}[approvers][][editable]", 1, editable, id: nil) %>
-    </td>
-
+  <tr data-id="<%= id %>" data-user-type="<%= user_type %>" data-user-id="<%= user_id %>">
     <td>
+      <%= button_tag t("ss.buttons.delete"), type: 'button', name: 'delete-row', class: "btn btn-delete" %>
       <%= hidden_field_tag("#{f.object_name}[approvers][][level]", level, id: nil) %>
+      <%= hidden_field_tag("#{f.object_name}[approvers][][_id]", id, id: nil) %>
+    </td>
+    <td class="check">
+      <div data-controller="ss--linked-check">
+        <%= hidden_field_tag("#{f.object_name}[approvers][][editable]", editable ? 1 : '', id: nil, data: { "ss--linked-check-target" => "target" }) %>
+        <%= check_box_tag("dummy-editable-check", 1, editable, id: nil, data: { "ss--linked-check-target" => "source" }) %>
+      </div>
+    </td>
+    <td class="check">
+      <div data-controller="ss--linked-check">
+        <%= hidden_field_tag("#{f.object_name}[approvers][][alternatable]", alternatable ? 1 : '', id: nil, data: { "ss--linked-check-target" => "target" }) %>
+        <%= check_box_tag("dummy-alternatable-check", 1, alternatable, id: nil, data: { "ss--linked-check-target" => "source" }) %>
+      </div>
+    </td>
+    <td>
       <%= ss_stimulus_tag "gws/workflow2/route_approver_select", data: select_data do %>
         <%= select_tag "dummy-approver", (level == 1 ? approver_options0 : approver_options), id: nil, class: "approver-select" %>
         <%= hidden_field_tag("#{f.object_name}[approvers][][user_type]", user_type != 'new' ? user_type : '', id: nil) %>
@@ -79,10 +89,10 @@
 <% end %>
 
 <template id="<%= addon[:id] %>-row-template0">
-  <% render_row.call(1, false, 'new', 'new', '') %>
+  <% render_row.call(1, nil, false, false, 'new', 'new', '') %>
 </template>
 <template id="<%= addon[:id] %>-row-template">
-  <% render_row.call('', false, 'new', 'new', '') %>
+  <% render_row.call('', nil, false, false, 'new', 'new', '') %>
 </template>
 
 <% 1.upto(@model::MAX_APPROVERS) do |level| %>
@@ -105,11 +115,12 @@
         <%= f.hidden_field "approvers[]", value: "", class: "hidden-ids", id: nil %>
         <% row_template = level == 1 ? "##{addon[:id]}-row-template0" : "##{addon[:id]}-row-template" %>
         <%= ss_stimulus_tag "gws/workflow2/route_approver_table", data: { level: level, row_template_ref: row_template } do %>
-          <table class="index gws-workflow-grid-table" data-col="3">
+          <table class="index gws-workflow-grid-table" data-col="4">
             <thead>
             <tr>
               <th></th>
-              <th><span><%= t('ss.buttons.edit') %></span></th>
+              <th><span><%= t('gws/workflow2.editable') %></span></th>
+              <th><span><%= t("gws/workflow2.alternatable") %></span></th>
               <th class="name"><span><%= @model.t :name %></span></th>
             </tr>
             </thead>
@@ -118,36 +129,37 @@
               @item.approvers_at(level).each do |approver|
                 case approver[:user_type]
                 when "superior"
-                  render_row.call(level, approver[:editable] == 1, "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
+                  render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
                 when Gws::User.name
                   user = id_user_map[approver[:user_id]]
                   if user
-                    render_row.call(level, approver[:editable] == 1, user.class.name, user.id, gws_public_user_long_name(user.long_name))
+                    render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, user.class.name, user.id, gws_public_user_long_name(user.long_name))
                   end
                 when Gws::UserTitle.name
                   user = id_title_map[approver[:user_id]]
                   if user
-                    render_row.call(level, approver[:editable] == 1, user.class.name, user.id, user.name)
+                    render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, user.class.name, user.id, user.name)
                   end
                 when Gws::UserOccupation.name
                   user = id_occupation_map[approver[:user_id]]
                   if user
-                    render_row.call(level, approver[:editable] == 1, user.class.name, user.id, user.name)
+                    render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, user.class.name, user.id, user.name)
                   end
                 when "special"
-                  render_row.call(level, approver[:editable] == 1, "special", approver[:user_id], t("gws/workflow2.specify_at_time_of_application"))
+                  render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, "special", approver[:user_id], t("gws/workflow2.specify_at_time_of_application"))
                 end
               end
             %>
 
             <%
               # new record at last
-              render_row.call(level, false, 'new', 'new', '')
+              render_row.call(level, nil, false, false, 'new', 'new', '')
             %>
             </tbody>
             <tfoot>
             <tr>
               <td><%= button_tag t("ss.buttons.add"), type: 'button', name: 'add-row', class: "btn btn-add" %></td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>

@@ -133,7 +133,7 @@ this.Cms_Editor_CKEditor = (function () {
     CKEDITOR.on('instanceReady', function (outerEv) {
       var elemet = outerEv.editor.element.$;
       outerEv.editor.on("change", function () {
-        var event = new CustomEvent("ss:editorChange", { bubbles: true, cancelable: true, composed: true });
+        var event = new CustomEvent("ss:change", { bubbles: true, cancelable: true, composed: true });
         elemet.dispatchEvent(event);
       });
       outerEv.editor.on("beforeCommandExec", function(innerEv) {

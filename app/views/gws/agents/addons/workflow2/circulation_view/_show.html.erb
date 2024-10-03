@@ -42,7 +42,7 @@
           </thead>
           <tbody>
           <% @item.circulations_at(level).each do |circulator| %>
-            <tr>
+            <tr data-id="<%= circulator[:_id] %>">
               <td>
                 <%=
                   case circulator[:user_type]

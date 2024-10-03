@@ -35,6 +35,7 @@ module Workflow::Extensions::Route
           hash[:level] = hash[:level].to_i if hash[:level].present?
           hash[:user_id] = normalize_user_id(hash[:user_id]) if hash[:user_id].present?
           hash[:editable] = hash[:editable].to_i if hash[:editable].present?
+          hash[:alternatable] = hash[:alternatable].to_i if hash[:alternatable].present?
         end
         ret.to_a.uniq
       end
@@ -64,7 +65,7 @@ module Workflow::Extensions::Route
       def convert_from_string(text)
         return nil if text.blank?
         begin
-          Hash[[:level, :user_id, :editable].zip(text.split(",").map(&:strip))]
+          Hash[[:level, :user_id, :editable, :alternatable].zip(text.split(",").map(&:strip))]
         rescue
           nil
         end

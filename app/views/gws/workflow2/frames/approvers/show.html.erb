@@ -1,3 +1,51 @@
+<% render_approver_row = proc do |level, approver_count, current_approver, current_approver_index, alternate_to| %>
+  <%
+    approver_id = current_approver[:user_id]
+    approver = Gws::User.site(@cur_site).where(id: approver_id).first
+    state = current_approver[:state]
+    required_count = @item.workflow_required_counts[level - 1]
+  %>
+  <tr data-id="<%= level %>,<%= current_approver[:user_type] %>,<%= approver_id %>" data-level="<%= level %>" data-user-id="<%= approver_id %>"<% if alternate_to %> data-alternate-to="<%= alternate_to %>"<% end %>>
+    <% if current_approver_index == 0 %>
+      <td rowspan="<%= approver_count %>">
+        <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+      </td>
+      <td rowspan="<%= approver_count %>">
+        <% if required_count %>
+          <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+        <% else %>
+          <%= t('workflow.required_count_label.all') %>
+        <% end %>
+      </td>
+    <% end %>
+    <td>
+      <% if approver %>
+        <% if @item.route_my_group_alternate? && current_approver_index == 1 || alternate_to %>
+          <%= I18n.t('gws/workflow2.labels.approver_alternator') %>
+        <% end %>
+        <%= workflow_user_profile(approver) %>
+      <% else %>
+        <%= t("workflow.user_deleted") %>
+      <% end %>
+      <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) && !@item.deleted? %>
+        <%= button_tag type: :button, name: :reroute, title: t("ss.buttons.change"), class: "btn-reroute", data: { level: level, approver_id: approver_id, action: url_for(action: :reroute), method: :post, dialog_src: gws_apis_users_path(single: true), controller: "gws--workflow2--reroute" } do %>
+          <i class="material-icons" style="font-size: inherit">mode_edit</i>
+        <% end %>
+      <% end %>
+    </td>
+    <td>
+      <span class="workflow_approvers_state"><%= t("workflow.state.#{state}") %></span>
+      <%= ss_time_tag current_approver[:created], class: "workflow_approvers_created" %>
+      <% if current_approver[:file_ids].present? || current_approver[:comment].present? %>
+        <%= link_to comment_gws_workflow2_file_path(state: 'all', level: level, index: current_approver_index),
+          title: t('workflow.comment'), class: "ajax-box approver_comment", style: "padding: 2px 4px;" do %>
+          <i class="material-icons" style="font-size: 15px;">chat</i>
+        <% end %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+
 <div class="mod-workflow-view gws-workflow-view">
   <% if @item.workflow_state == @model::WORKFLOW_STATE_REMAND || @item.workflow_state == @model::WORKFLOW_STATE_CANCELLED %>
     <%= render "form_restart", local_assigns %>
@@ -58,56 +106,30 @@
         <% if @item.workflow_approvers.present? %>
           <table class="index">
             <tbody>
-            <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
-              <% workflow_approvers.each_with_index do |workflow_approver, index| %>
-                <% approver_id = workflow_approver[:user_id] %>
-                <% approver = Gws::User.site(@cur_site).where(id: approver_id).first %>
-                <% state = workflow_approver[:state] %>
-                <tr>
-                  <% if index == 0 %>
-                    <td rowspan="<%= workflow_approvers.count %>">
-                      <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
-                    </td>
-                    <td rowspan="<%= workflow_approvers.count %>">
-                      <% required_count = @item.workflow_required_counts[level - 1] %>
-                      <% if required_count %>
-                        <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
-                      <% else %>
-                        <%= t('workflow.required_count_label.all') %>
-                      <% end %>
-                    </td>
-                  <% end %>
-                  <td>
-                    <% if approver %>
-                      <% if @item.route_my_group_alternate? && index == 1 %>
-                        <%= I18n.t('gws/workflow2.labels.approver_alternator') %>
-                      <% end %>
-                      <%= workflow_user_profile(approver) %>
-                    <% else %>
-                      <%= t("workflow.user_deleted") %>
-                    <% end %>
-                    <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) && !@item.deleted? %>
-                      <%= button_tag type: :button, name: :reroute, title: t("ss.buttons.change"), class: "btn-reroute", data: { level: level, approver_id: approver_id, action: url_for(action: :reroute), method: :post, dialog_src: gws_apis_users_path(single: true), controller: "gws--workflow2--reroute" } do %>
-                        <i class="material-icons" style="font-size: inherit">mode_edit</i>
-                      <% end %>
-                    <% end %>
-                  </td>
-                  <td>
-                    <span class="workflow_approvers_state">
-                      <%= t("workflow.state.#{state}") %></span>
-                    <span class="workflow_approvers_created">
-                      <%= workflow_approver[:created].in_time_zone(@cur_user.timezone).strftime("(%Y/%m/%d %H:%M)") rescue nil %>
-                    </span>
-                    <% if workflow_approver[:file_ids].present? || workflow_approver[:comment].present? %>
-                      <%= link_to comment_gws_workflow2_file_path(state: 'all', level: level, index: index),
-                        title: t('workflow.comment'), class: "ajax-box approver_comment", style: "padding: 2px 4px;" do %>
-                        <i class="material-icons" style="font-size: 15px;">chat</i>
-                      <% end %>
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            <% end %>
+            <%
+              @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers|
+                approver_count = workflow_approvers.count
+                index = 0
+                loop do
+                  break if workflow_approvers.blank?
+
+                  workflow_approver = workflow_approvers.shift
+                  render_approver_row.call(level, approver_count, workflow_approver, index, nil)
+                  index += 1
+
+                  expected_alternate_to = [ level, workflow_approver[:user_type], workflow_approver[:user_id] ].join(",")
+
+                  workflow_approvers, alternatives = workflow_approvers.partition do |approver|
+                    next false if approver[:alternate_to].blank?
+                    approver[:alternate_to] != expected_alternate_to
+                  end
+                  alternatives.each do |alternative|
+                    render_approver_row.call(level, approver_count, alternative, index, alternative[:alternate_to])
+                    index += 1
+                  end
+                end
+              end
+            %>
             </tbody>
           </table>
         <% end %>

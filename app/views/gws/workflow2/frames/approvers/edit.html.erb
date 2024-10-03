@@ -42,9 +42,9 @@
       <dd>
         <div class="buttons">
           <% if route_id == "restart" %>
-            <%= f.button t("workflow.buttons.restart"), name: "restart", class: "btn-primary", disabled: routing_error? %>
+            <%= f.button t("workflow.buttons.restart"), name: "restart", class: "btn-primary" %>
           <% else %>
-            <%= f.button t("workflow.buttons.request"), name: "request", class: "btn-primary", disabled: routing_error? %>
+            <%= f.button t("workflow.buttons.request"), name: "request", class: "btn-primary" %>
           <% end %>
         </div>
       </dd>

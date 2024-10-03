@@ -1,0 +1,11 @@
+<% group_by_options do |group, options| %>
+  <%=
+    if group.present?
+      tag.optgroup label: group do
+        options_for_select(options, selected: selected)
+      end
+    else
+      options_for_select(options, selected: selected)
+    end
+  %>
+<% end %>

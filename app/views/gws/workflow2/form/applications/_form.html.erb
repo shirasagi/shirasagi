@@ -13,7 +13,7 @@
     <label><%= f.radio_button :approval_state, "with_approval" %> <%= t("gws/workflow2.options.approval_state.with_approval") %></label>
     <%=
       route_options = Gws::Workflow2::Route.route_options(@cur_user, cur_site: @cur_site, selected: @item.default_route_id)
-      f.select :default_route_id, options_for_select(route_options, selected: @item.default_route_id), include_blank: true
+      f.select :default_route_id, render(SS::OptionsForSelectComponent.new(options: route_options, selected: @item.default_route_id)), include_blank: true
     %>
   </dd>
 

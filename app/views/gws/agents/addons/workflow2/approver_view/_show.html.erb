@@ -36,19 +36,25 @@
     <dl class="see approvers">
       <dt><%= @model.t :approvers %></dt>
       <dd>
-        <table class="index gws-workflow-grid-table" data-col="3">
+        <table class="index gws-workflow-grid-table" data-col="4">
           <thead>
           <tr>
-            <th><%= t('ss.buttons.edit') %></th>
+            <th><%= t('gws/workflow2.editable') %></th>
+            <th><%= t("gws/workflow2.alternatable") %></th>
             <th class="type"><%= t("gws/workflow2.labels.approver_type") %></th>
             <th class="name"><%= t("gws/workflow2.labels.approver_name") %></th>
           </tr>
           </thead>
           <tbody>
           <% @item.approvers_at(level).each do |approver| %>
-          <tr>
+          <tr data-id="<%= approver[:_id] %>">
             <td class="check">
               <% if approver[:editable] == 1 %>
+                <i class="material-icons-outlined md-15">check_box</i>
+              <% end %>
+            </td>
+            <td class="check">
+              <% if approver[:alternatable] == 1 %>
                 <i class="material-icons-outlined md-15">check_box</i>
               <% end %>
             </td>

@@ -42,7 +42,7 @@ export default class extends Controller {
 
   #updateRowData(target, detail) {
     const trElement = target.closest("tr")
-    trElement.dataset.type = detail.userType
-    trElement.dataset.id = detail.userId
+    trElement.dataset.userType = detail.userType
+    trElement.dataset.userId = detail.userId
   }
 }

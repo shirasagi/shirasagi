@@ -2940,10 +2940,10 @@ select {
   max-width: 100%;
   height: 2.4em;
   padding: 0 4px;
-  option {
+  option, optgroup {
     color: #333;
   }
-  &.blank-value, &.has-blank-value :first-child {
+  &.blank-value, &.has-blank-value > option:first-child {
     color: #888;
   }
 }
