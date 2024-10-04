@@ -24,7 +24,7 @@ class Cms::Line::Area
   validates :text, presence: true, length: { maximum: 300 }, if: -> { type == "message" }
   validates :uri, presence: true, length: { maximum: 1000 }, if: -> { type == "uri" }
   validates :data, presence: true, length: { maximum: 300 }, if: -> { type == "postback" }
-  validates :menu, presence: true, if: -> { type == "richmenuswitch" }
+  validates :menu_id, presence: true, if: -> { type == "richmenuswitch" }
 
   def type_options
     %w(message uri postback richmenuswitch).map { |k| [I18n.t("cms.options.line_action_type.#{k}"), k] }

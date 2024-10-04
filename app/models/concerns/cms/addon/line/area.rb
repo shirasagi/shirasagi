@@ -4,8 +4,9 @@ module Cms::Addon
     extend SS::Translation
 
     included do
-      field :in_areas, type: Array # 画像、タップ領域に変更を加えた際に、updated を更新して、APIに新規登録したい
-      embeds_many :areas, class_name: "Cms::Line::Area"
+      attr_accessor :in_areas
+
+      embeds_many :areas, class_name: "Cms::Line::Area", validate: false
       permit_params in_areas: [:x, :y, :width, :height, :type, :text, :data, :uri, :menu_id]
       validate :validate_in_areas
     end
@@ -17,8 +18,7 @@ module Cms::Addon
     private
 
     def validate_in_areas
-      self.in_areas = in_areas.to_a rescue nil
-      return if in_areas.blank?
+      return if in_areas.nil?
 
       areas = []
       in_areas.each_with_index do |item, idx|

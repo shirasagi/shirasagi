@@ -52,7 +52,7 @@ module Cms::Line::Richmenu
     def set_updated
       super
       # 画像、タップ領域に変更を加えた際に、updated を更新して、APIに新規登録したい
-      self.updated = updated ? Time.zone.now : created if in_image
+      self.updated = updated ? Time.zone.now : created if in_image || in_areas
     end
 
     def validate_target
