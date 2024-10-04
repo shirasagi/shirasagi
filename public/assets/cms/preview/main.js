@@ -1065,8 +1065,20 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
-      Syntax_Checker.reset();
+    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を含む場合、説明があるか確認してください。"];
+    var allowEdit = true;
+    $.each(Syntax_Checker.errors, function(id, error) {
+      if (warnMessages.includes(error['msg'])) {
+        return true;
+      }
+
+      allowEdit = false;
+    });
+    if (allowEdit) {
+      Syntax_Checker.errors = Syntax_Checker.errors.filter(function (error) {
+        return error['msg'] != warnMessages[0];
+      });
+      Syntax_Checker.errorCount--;
     }
 
     Syntax_Checker.resultBox.showResult(checks, Syntax_Checker.errors);
