@@ -1,5 +1,4 @@
 class Cms::NodesTreeComponent < ApplicationComponent
-
   def initialize(site:, user:, item: nil, only_children: false, root_items: nil, type: nil)
     @type = type.presence || 'cms_nodes'
     @site = site
@@ -7,6 +6,11 @@ class Cms::NodesTreeComponent < ApplicationComponent
     @item = item
     @only_children = only_children
     @root_items = root_items
+    @folders = []
+  end
+
+  # Move logic dependent on URL helpers to `before_render`
+  def before_render
     @folders = fetch_folders
   end
 
@@ -43,7 +47,6 @@ class Cms::NodesTreeComponent < ApplicationComponent
     items.map { |item| build_item_hash(item) }.compact.uniq.sort_by { |item| item[:filename].tr('/', "\0") }
   end
 
-  # Recursively builds the hash for each item and its children
   def build_item_hash(item)
     return unless item.allowed?(:read, @user, site: @site)
 
@@ -52,13 +55,13 @@ class Cms::NodesTreeComponent < ApplicationComponent
       name: item.name,
       filename: item.filename,
       depth: item.depth,
-      # url: item_url(item),
+      url: item_url(item), # This now works because view context is available
+      tree_url: cms_apis_node_tree_path(id: item.id, type: @type),
       is_current: @item.present? && item.id == @item.id,
       is_parent: @item.present? && @item.filename.start_with?("#{item.filename}/"),
       has_children: item.children.present?
     }
 
-    # Recursively add children
     if item.children.present?
       item_hash[:children] = item.children.allow(:read, @user, site: @site).map { |child| build_item_hash(child) }
     end
@@ -67,9 +70,13 @@ class Cms::NodesTreeComponent < ApplicationComponent
   end
 
   def item_url(item)
-    return node_pages_path(site: @site.id, cid: item.id) if @type == 'cms/page'
-    return node_parts_path(site: @site.id, cid: item.id) if @type == 'cms/part'
-    return node_layouts_path(site: @site.id, cid: item.id) if @type == 'cms/layout'
-    cms_node_nodes_path(site: @site.id, cid: item.id)
+    return node_pages_path(cid: item.id) if @type == 'cms/page'
+
+    return node_parts_path(cid: item.id) if @type == 'cms/part'
+
+    return node_layouts_path(cid: item.id) if @type == 'cms/layout'
+    
+    cms_nodes_path(cid: item.id)
+    #item.respond_to?(:view_route) ? contents_path(item) : cms_node_nodes_path(cid: item.id)
   end
 end

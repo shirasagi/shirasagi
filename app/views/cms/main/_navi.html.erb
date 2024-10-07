@@ -40,7 +40,7 @@
 
   <% if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
     <% if @cur_node %>
-      <h2><%= link_to t("cms.import_page"), node_import_path, class: "icon-conf" %></h2>
+      <h2><%= link_to t("cms.import_page"), node_import_path(cid: params[:cid]), class: "icon-conf" %></h2>
     <% else %>
       <h2><%= link_to t("cms.import_node"), cms_import_path, class: "icon-conf" %></h2>
     <% end %>

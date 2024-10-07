@@ -1,18 +1,20 @@
-<ul>
+<ul class="tree">
   <% @folders.each do |folder| %>
-    <li>
       <% if folder[:has_children] %>
-        <details <%= "open" if folder[:is_parent] %>>
-          <summary>
-            <a href="<%= folder[:url] %>"><%= folder[:name] %></a>
-          </summary>
+        <li>
+          <details <%= "open" if folder[:is_parent] %>>
+            <summary>
+              <a href="<%= folder[:url] %>"><%= folder[:name] %></a>
+            </summary>
 
-          <%= render 'tree_children', children: folder[:children] if folder[:has_children] %>
-        </details>
+            <%= render 'tree_children', children: folder[:children] if folder[:has_children] %>
+          </details>
+        </li>
       <% else %>
-        <a href="<%= folder[:url] %>"><%= folder[:name] %></a>
+        <li class="no-children">
+          <a href="<%= folder[:url] %>"><%= folder[:name] %></a>
+        </li>
       <% end %>
-    </li>
   <% end %>
 </ul>
 
