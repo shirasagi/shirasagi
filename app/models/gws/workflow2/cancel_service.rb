@@ -7,6 +7,7 @@ class Gws::Workflow2::CancelService
   def call
     item.approved = nil
     item.workflow_state = Gws::Workflow2::File::WORKFLOW_STATE_CANCELLED
+    item.skip_validate_column_values = true
     return false unless item.save
 
     send_notification
