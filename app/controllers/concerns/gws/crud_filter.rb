@@ -187,7 +187,7 @@ module Gws::CrudFilter
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.record_timestamps = false
         item.deleted = Time.zone.now
-        item.skip_validate_column_values = true if item.class == Gws::Workflow2::File
+        item.skip_validate_column_values = true if item.instance_of?(Gws::Workflow2::File)
         next if item.save(context: :soft_delete)
       else
         item.errors.add :base, :auth_error
