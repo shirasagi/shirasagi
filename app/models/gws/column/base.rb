@@ -3,6 +3,8 @@ class Gws::Column::Base
   include SS::Model::Column
   include Gws::Reference::Site
 
+  attr_accessor :skip_elastic
+
   store_in collection: 'gws_columns'
 
   after_destroy :update_form
