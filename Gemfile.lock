@@ -130,6 +130,12 @@ GEM
       rexml
     crass (1.0.6)
     csv (3.3.0)
+    dartsass-sprockets (3.1.0)
+      railties (>= 4.0.0)
+      sassc-embedded (~> 1.69)
+      sprockets (> 3.0)
+      sprockets-rails
+      tilt
     date (3.3.4)
     debase (0.2.5.beta2)
       debase-ruby_core_source (>= 0.10.12)
@@ -231,6 +237,9 @@ GEM
       thor (>= 0.20, < 2.a)
     google-cloud-env (2.2.0)
       faraday (>= 1.0, < 3.a)
+    google-protobuf (4.28.2)
+      bigdecimal
+      rake (>= 13)
     googleauth (1.11.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
@@ -633,21 +642,11 @@ GEM
       rexml
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
-    sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
+    sass-embedded (1.79.4)
+      google-protobuf (~> 4.27)
+      rake (>= 13)
+    sassc-embedded (1.79.0)
+      sass-embedded (~> 1.79)
     scanf (1.0.0)
     sdoc (2.6.1)
       rdoc (>= 5.0)
@@ -767,6 +766,7 @@ DEPENDENCIES
   capybara
   clam_scan
   coffee-rails
+  dartsass-sprockets
   debase
   diff-lcs
   diffy
@@ -858,8 +858,6 @@ DEPENDENCIES
   rubocop-rspec
   ruby-saml
   rubyzip (~> 2.3.0)
-  sass
-  sass-rails
   sdoc
   selenium-webdriver
   shortuuid

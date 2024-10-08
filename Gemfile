@@ -5,9 +5,9 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gem 'rails', '~> 7.1.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
-gem 'sass-rails'
 gem 'sprockets-rails' # Rails 7.1 以降では明示的な組み込みが必要
-gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
+gem 'dartsass-sprockets'
+# gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'jbuilder'
