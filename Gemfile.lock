@@ -258,9 +258,6 @@ GEM
     guard-rubocop (1.5.0)
       guard (~> 2.0)
       rubocop (< 2.0)
-    guard-scss_lint (0.1.7)
-      guard-compat (~> 1.1)
-      scss_lint (~> 0.50)
     hashdiff (1.1.1)
     hashie (5.0.0)
     holiday_japan (1.4.4)
@@ -652,8 +649,6 @@ GEM
       sprockets-rails
       tilt
     scanf (1.0.0)
-    scss_lint (0.60.0)
-      sass (~> 3.5, >= 3.5.5)
     sdoc (2.6.1)
       rdoc (>= 5.0)
     selenium-webdriver (4.24.0)
@@ -789,7 +784,6 @@ DEPENDENCIES
   guard-brakeman
   guard-rspec (~> 4.3.1)
   guard-rubocop
-  guard-scss_lint
   holiday_japan
   http_accept_language
   icalendar
@@ -866,7 +860,6 @@ DEPENDENCIES
   rubyzip (~> 2.3.0)
   sass
   sass-rails
-  scss_lint
   sdoc
   selenium-webdriver
   shortuuid
