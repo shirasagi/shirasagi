@@ -107,7 +107,6 @@ module Cms::PublicFilter
       data = Fs.read(@scss)
       begin
         load_paths = Rails.application.config.assets.paths.dup
-        load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
 
         css = Cms.compile_scss(data, filename: @scss, load_paths: load_paths)
         Fs.write(@file, css)

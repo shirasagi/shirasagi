@@ -176,7 +176,6 @@ class Uploader::File
 
     Rails.logger.tagged(::File.basename(@path)) do
       load_paths = Rails.application.config.assets.paths.dup
-      load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
 
       @css = Cms.compile_scss(@binary.force_encoding("utf-8"), filename: @path, load_paths: load_paths)
     end
