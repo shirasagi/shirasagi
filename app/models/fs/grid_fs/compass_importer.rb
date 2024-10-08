@@ -10,7 +10,7 @@ class Fs::GridFs::CompassImporter < Sass::Importers::Base
   def find(uri, options)
     filename = find_file(uri)
     if filename
-      return Sass::Engine.new(::Fs.read(filename), options.merge(filename: filename))
+      return SassC::Engine.new(::Fs.read(filename), options.merge(filename: filename))
     end
 
     nil

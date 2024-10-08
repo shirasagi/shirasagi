@@ -94,20 +94,12 @@ module ApplicationHelper
   # @deprecated
   def scss(&block)
     load_paths = Rails.application.config.assets.paths.dup
-
-    sass = Sass::Engine.new(
-      "@import 'compass-mixins/lib/compass';\n" + capture(&block),
-      cache: false,
-      debug_info: false,
-      inline_source_maps: false,
-      load_paths: load_paths,
-      style: :compressed,
-      syntax: :scss
-    )
+    source = "@import 'compass-mixins/lib/compass';\n" + capture(&block)
+    css = Cms.compile_scss(source, load_paths: load_paths, style: :compressed)
 
     h = []
     h << "<style>"
-    h << sass.render
+    h << css
     h << "</style>"
     h.join("\n").html_safe
   end

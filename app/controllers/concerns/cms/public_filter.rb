@@ -103,25 +103,18 @@ module Cms::PublicFilter
     css_mtime = Fs.exist?(@file) ? Fs.stat(@file).mtime : 0
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
-    data = Fs.read(@scss)
-    begin
-      load_paths = Rails.application.config.assets.paths.dup
-      load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
+    Rails.logger.tagged(::File.basename(@scss)) do
+      data = Fs.read(@scss)
+      begin
+        load_paths = Rails.application.config.assets.paths.dup
+        load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
 
-      sass = Sass::Engine.new(
-        data,
-        cache: false,
-        debug_info: false,
-        filename: @scss,
-        inline_source_maps: false,
-        load_paths: load_paths,
-        style: :compressed,
-        syntax: :scss
-      )
-      Fs.write(@file, sass.render)
-    rescue Sass::SyntaxError => e
-      Rails.logger.error(e)
-      Fs.write(@file, data)
+        css = Cms.compile_scss(data, filename: @scss, load_paths: load_paths)
+        Fs.write(@file, css)
+      rescue SassC::BaseError, Sass::ScriptError => e
+        Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+        Fs.write(@file, data)
+      end
     end
   end
 
