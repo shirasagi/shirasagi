@@ -113,7 +113,6 @@ module Cms::PublicFilter
         Fs.write(@file, css)
       rescue SassC::BaseError, Sass::ScriptError => e
         Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-        Fs.write(@file, data)
       end
     end
   end
