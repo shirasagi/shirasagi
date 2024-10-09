@@ -1,4 +1,4 @@
-@import "compass-mixins/lib/compass";
+@use "compass-mixins/lib/compass";
 
 .sheet {
   border: 0;
@@ -31,7 +31,7 @@
 
   .sheet {
     margin: 5mm;
-    @include box-shadow(0 .5mm 2mm rgba(0, 0, 0, .3));
+    @include compass.box-shadow(0 .5mm 2mm rgba(0, 0, 0, .3));
   }
 }
 @media print {
