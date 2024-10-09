@@ -11,10 +11,7 @@
     <table class="index ajax-selected">
       <tbody>
         <% edge.points.each do |point| %>
-          <tr data-id="<%= point.id %>">
-            <td><%= hidden_field_tag "item[in_edges][][point_ids][]", point.id, id: nil %> <%= point.name_with_type %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
+          <% @render_form.call(point.id, point.name_with_type, edge.not_applicable_point_ids.include?(point.id), edge.optional_necessary_point_ids.include?(point.id)) %>
         <% end %>
       </tbody>
     </table>

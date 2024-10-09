@@ -1,0 +1,16 @@
+<dl class="see workflow-basic">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :pull_up %></dt>
+  <dd><%= @item.label :pull_up %></dd>
+
+  <dt><%= @model.t :on_remand %></dt>
+  <dd><%= @item.label :on_remand %></dd>
+
+  <dt><%= @model.t :remark %></dt>
+  <dd><%= br @item.remark %></dd>
+</dl>

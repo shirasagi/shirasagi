@@ -1,12 +1,14 @@
 module Workflow::Approver
   extend ActiveSupport::Concern
+  extend SS::Translation
 
-  attr_accessor :workflow_reset, :workflow_cancel_request
+  attr_accessor :workflow_reset, :workflow_cancel_request, :workflow_approver_alternate
 
   WORKFLOW_STATE_PUBLIC = "public".freeze
   WORKFLOW_STATE_CLOSED = "closed".freeze
   WORKFLOW_STATE_REQUEST = "request".freeze
   WORKFLOW_STATE_APPROVE = "approve".freeze
+  WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL = "approve_without_approval".freeze
   WORKFLOW_STATE_PENDING = "pending".freeze
   WORKFLOW_STATE_REMAND = "remand".freeze
   WORKFLOW_STATE_CANCELLED = "cancelled".freeze
@@ -14,7 +16,14 @@ module Workflow::Approver
   WORKFLOW_STATE_OTHER_REMANDED = "other_remanded".freeze
   WORKFLOW_STATE_OTHER_PULLED_UP = "other_pulled_up".freeze
 
-  WORKFLOW_STATE_COMPLETES = [ WORKFLOW_STATE_APPROVE, WORKFLOW_STATE_OTHER_APPROVED, WORKFLOW_STATE_OTHER_PULLED_UP ].freeze
+  WORKFLOW_STATE_COMPLETES = [
+    WORKFLOW_STATE_APPROVE, WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL, WORKFLOW_STATE_OTHER_APPROVED,
+    WORKFLOW_STATE_OTHER_PULLED_UP
+  ].freeze
+
+  WORKFLOW_EDITABLE_STATES = [
+    WORKFLOW_STATE_REMAND, WORKFLOW_STATE_CANCELLED, WORKFLOW_STATE_CLOSED
+  ].freeze
 
   included do
     cattr_reader(:approver_user_class) { Cms::User }
@@ -40,7 +49,7 @@ module Workflow::Approver
     permit_params :workflow_user_id, :workflow_state, :workflow_kind, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
-    permit_params :workflow_reset, :workflow_cancel_request
+    permit_params :workflow_reset, :workflow_cancel_request, :workflow_approver_alternate
     permit_params workflow_circulations: []
 
     before_validation :reset_workflow, if: -> { workflow_reset.present? && workflow_reset }
@@ -48,7 +57,6 @@ module Workflow::Approver
     validates :requested, datetime: true
     validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_level_consecutiveness, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
-    validate :validate_workflow_approvers_role, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_required_counts, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
 
     before_save :cancel_request, if: -> { workflow_cancel_request }
@@ -78,6 +86,11 @@ module Workflow::Approver
     return state if workflow_state == "cancelled"
     return workflow_state if workflow_state.present?
     state
+  end
+
+  def workflow_approvers_and_circulations
+    @workflow_approvers_and_circulations.present?
+    @workflow_approvers_and_circulations ||= workflow_approvers + workflow_circulations
   end
 
   def workflow_url
@@ -162,6 +175,16 @@ module Workflow::Approver
     workflow_approver_attachment_use_at(level) == "enabled"
   end
 
+  def workflow_approver_alternator?(user)
+    if route_my_group_alternate?
+      return workflow_approvers[1][:user_id] == user.id rescue false
+    end
+
+    level = workflow_current_level
+    approvers = workflow_approvers_at(level)
+    approvers.any? { |approver| approver[:user_id] == user.id && approver[:alternate_to].present? }
+  end
+
   def set_workflow_approver_state_to_request(level = workflow_current_level)
     return false if level.nil?
 
@@ -177,6 +200,43 @@ module Workflow::Approver
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     self.requested = Time.zone.now
     true
+  end
+
+  # 代理申請/上位ユーザー
+  def set_workflow_approver_target
+    return if workflow_agent_id.blank? || workflow_agent.blank? || workflow_user.blank?
+
+    superior_users = workflow_user.gws_superior_users(site)
+    superior_user = Gws::User.order_users_by_title(superior_users, cur_site: site).first
+    return unless superior_user
+
+    copy_approvers = workflow_approvers.to_a
+    copy_approvers.each do |approver|
+      if approver[:user_type] == 'superior'
+        approver[:user_id] = superior_user.id
+      end
+    end
+    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy_approvers)
+  end
+
+  # 所属長承認（代理承認者）
+  def set_workflow_approver_alternate
+    return unless workflow_approver_alternate
+
+    copy = workflow_approvers.to_a
+    copy.delete_at(1)
+
+    user_id = workflow_approver_alternate.presence
+    if user_id && user = Gws::User.site(site).find(user_id) rescue nil
+      workflow_approver = {}
+      workflow_approver[:level] = 1
+      workflow_approver[:user_type] = 'Gws::User'
+      workflow_approver[:user_id] = user.id
+      workflow_approver[:state] = WORKFLOW_STATE_REQUEST
+      workflow_approver[:comment] = ''
+      copy << workflow_approver
+    end
+    self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
   end
 
   def update_current_workflow_approver_state(user_or_id, state, comment = nil)
@@ -208,12 +268,39 @@ module Workflow::Approver
     user_id = user_or_id.id if user_or_id.respond_to?(:id)
     user_id ||= user_or_id.to_i
 
+    created = Time.zone.now
+
     copy = workflow_approvers.to_a
-    copy.each do |approver|
-      if approver[:level] == level && approver[:user_id] == user_id
-        approver[:state] = WORKFLOW_STATE_APPROVE
-        approver[:comment] = comment
-        approver[:file_ids] = file_ids
+    approved_approvers = copy.select { |approver| approver[:level] == level && approver[:user_id] == user_id }
+    approved_approvers.each do |approver|
+      approver[:state] = WORKFLOW_STATE_APPROVE
+      approver[:comment] = comment
+      approver[:file_ids] = file_ids
+      approver[:created] = created
+
+      # select alternate approvers
+      if approver[:alternate_to].present?
+        _alternate_to_level, _alternate_to_user_type, alternate_to_user_id = approver[:alternate_to].split(",")
+        alternate_to_user_id = alternate_to_user_id.to_i
+        alternate_approvers = copy.select do |approver|
+          approver[:level] == level && approver[:user_id] == alternate_to_user_id
+        end
+      else
+        expected_alternate_to = [ level, approver[:user_type], user_id ].join(",")
+        alternate_approvers = copy.select do |approver|
+          approver[:level] == level && approver[:alternate_to] == expected_alternate_to
+        end
+      end
+      next if alternate_approvers.blank?
+
+      alternate_approvers.each do |approver|
+        # rubocop:disable Style/Next
+        if approver[:level] == level && approver[:state] == WORKFLOW_STATE_REQUEST
+          approver[:state] = WORKFLOW_STATE_OTHER_APPROVED
+          approver[:comment] = ''
+          approver[:created] = created
+        end
+        # rubocop:enable Style/Next
       end
     end
 
@@ -221,10 +308,13 @@ module Workflow::Approver
 
     if workflow_completed_at?(level)
       copy.each do |approver|
+        # rubocop:disable Style/Next
         if approver[:level] == level && approver[:state] == WORKFLOW_STATE_REQUEST
           approver[:state] = WORKFLOW_STATE_OTHER_APPROVED
           approver[:comment] = ''
+          approver[:created] = created
         end
+        # rubocop:enable Style/Next
       end
 
       self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
@@ -238,6 +328,7 @@ module Workflow::Approver
     level = workflow_approvers.select { |approver| approver[:user_id] == user_id }.map { |approver| approver[:level] }.max
     return if level.nil?
 
+    # rubocop:disable Style/Next
     copy = workflow_approvers.to_a
     copy.each do |approver|
       if approver[:level] < level
@@ -249,47 +340,61 @@ module Workflow::Approver
         approver[:state] = WORKFLOW_STATE_APPROVE
         approver[:comment] = comment
         approver[:file_ids] = file_ids
+        approver[:created] = Time.zone.now
       end
     end
+    # rubocop:enable Style/Next
 
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
   end
 
-  def remand_workflow_approver_state(user_or_id, comment = nil)
+  def remand_workflow_approver_state(user_or_id, comment: nil, file_ids: nil)
     level = workflow_current_level
     return if level.nil?
 
     user_id = user_or_id.id if user_or_id.respond_to?(:id)
     user_id ||= user_or_id.to_i
 
+    removed_file_ids = []
     copy = workflow_approvers.to_a
     copy.each do |approver|
       if approver[:level] == level
         if approver[:user_id] == user_id
           approver[:state] = WORKFLOW_STATE_REMAND
           approver[:comment] = comment
+          approver[:created] = Time.zone.now
+          if file_ids
+            approver[:file_ids] = file_ids
+          else
+            approver.delete(:file_ids).try { |file_ids| removed_file_ids += file_ids }
+          end
         elsif approver[:state] == WORKFLOW_STATE_REQUEST
           approver[:state] = WORKFLOW_STATE_OTHER_REMANDED
           approver[:comment] = ''
+          # approver.delete(:file_ids).try { |file_ids| removed_file_ids += file_ids }
         end
       end
     end
 
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
 
-    if workflow_back_to_init?
-      self.workflow_state = WORKFLOW_STATE_REMAND
-    elsif level <= 1
+    if workflow_back_to_init? || level <= 1
       self.workflow_state = WORKFLOW_STATE_REMAND
     else
+      # rubocop:disable Style/Next
       copy.each do |approver|
         if approver[:level] == level - 1
           approver[:state] = WORKFLOW_STATE_REQUEST
           approver[:comment] = ''
+          approver.delete(:file_ids).try { |file_ids| removed_file_ids += file_ids }
         end
       end
+      # rubocop:enable Style/Next
       self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     end
+
+    removed_file_ids.compact!
+    removed_file_ids
   end
 
   def finish_workflow?
@@ -326,6 +431,10 @@ module Workflow::Approver
 
   def workflow_requested?
     workflow_state == WORKFLOW_STATE_REQUEST
+  end
+
+  def workflow_editable_state?
+    workflow_state.blank? || WORKFLOW_EDITABLE_STATES.include?(workflow_state)
   end
 
   def find_workflow_request_to(user)
@@ -366,7 +475,7 @@ module Workflow::Approver
 
   def workflow_circulation_users_at(level)
     circulations = workflow_circulations_at(level)
-    user_ids = circulations.map { |h| h[:user_id] }.compact.uniq
+    user_ids = circulations.filter_map { |h| h[:user_id] }.uniq
     return approver_user_class.none if user_ids.blank?
 
     approver_user_class.site(@cur_site || self.site).in(id: user_ids)
@@ -498,22 +607,6 @@ module Workflow::Approver
     end
   end
 
-  def validate_workflow_approvers_role
-    return if new_record?
-    return if cur_site.nil?
-    return if errors.present?
-
-    # check whether approvers have read permission.
-    users = workflow_approvers.map do |approver|
-      self.class.approver_user_class.where(id: approver[:user_id]).first
-    end
-    users = users.select(&:present?)
-    users.each do |user|
-      errors.add :workflow_approvers, :not_read, name: user.name unless allowed?(:read, user, site: cur_site)
-      errors.add :workflow_approvers, :not_approve, name: user.name unless allowed?(:approve, user, site: cur_site)
-    end
-  end
-
   def validate_workflow_required_counts
     errors.add :workflow_required_counts, :not_select if workflow_required_counts.blank?
 
@@ -589,8 +682,13 @@ module Workflow::Approver
       criteria
     end
 
-    def destroy_workflow_files(workflow_approvers)
+    def destroy_workflow_files(*workflow_approvers)
+      workflow_approvers = Array(workflow_approvers).flatten
+      workflow_approvers.compact!
+      workflow_approvers.map!(&:with_indifferent_access)
       file_ids = workflow_approvers.map { |workflow_approver| workflow_approver[:file_ids] }.flatten
+      return if file_ids.blank?
+      file_ids.compact!
       return if file_ids.blank?
 
       ::SS::File.in(id: file_ids).destroy_all

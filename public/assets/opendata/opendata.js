@@ -39,7 +39,7 @@ this.Opendata = (function () {
   function Opendata() {
   }
 
-  Opendata.loading = "\u003cimg style=\"vertical-align:middle\" alt=\"loading..\" border=\"0\" widtth=\"16\" height=\"11\" class=\"ss-base-loading\" src=\"/assets/img/loading.gif\" /\u003e";
+  Opendata.loading = "\u003cimg style=\"vertical-align:middle\" alt=\"loading..\" border=\"0\" width=\"16\" height=\"11\" class=\"ss-base-loading\" src=\"/assets/img/loading.gif\" /\u003e";
 
   Opendata.render = function (box) {
     var anchorCallback;
@@ -147,17 +147,6 @@ this.Opendata = (function () {
       $.ajax($.extend(defaults, params));
       e.preventDefault();
       return false;
-    });
-  };
-
-  Opendata.confirmUnloading = function () {
-    $("input[type=text],textarea,select").on("change", function () {
-      return $(window).on("beforeunload", function () {
-        return "入力したデータは保存されません。";
-      });
-    });
-    return $("input[type=submit]").on("click", function () {
-      return $(window).off("beforeunload");
     });
   };
 

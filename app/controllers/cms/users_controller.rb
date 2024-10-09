@@ -70,7 +70,7 @@ class Cms::UsersController < ApplicationController
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_destroy_all(disable_all, location: request.path)
+      render_destroy_all(disable_all, location: SS.request_path(request))
       return
     end
 

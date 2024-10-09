@@ -1,24 +1,4 @@
-<nav class="event-date" aria-label="<%= t("event.calendar") %>">
-  <h2 class="<%= event_h1_class @month %>">
-    <span class="calendar-year"><%= @year %><%= t_date('year') %></span>
-    <span class="calendar-month"><%= @month %><%= t_date('month') %></span>
-  </h2>
-  <% unless @cur_node.event_display.to_s.end_with?('only') %>
-    <div class="event-format">
-      <span class="list">
-        <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list', style: true %>
-      </span>
-      <span class="table current">
-        <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table', style: true %>
-      </span>
-    </div>
-  <% end %>
-  <%= download_ics Date.new(@year, @month, 1), class: "event-ics-file" %>
-  <ul>
-    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
-    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display] %></li>
-  </ul>
-</nav>
+<%= render partial: "tabs", locals: { current: "table" } %>
 
 <div id="event-table" class="event-table">
   <table class="calendar">

@@ -1,9 +1,7 @@
 <%= jquery do %>
   $('input.alnum').on({
-    focus: function() { $(this).attr('type', 'email'); },
-    blur: function() { $(this).attr('type', 'text'); },
     keypress: function(ev) { if (ev.which == 13) { $('#item_password').focus(); return false; } }
-  }).attr('type', 'email');
+  });
 <% end %>
 
 <div class="login-wrap">
@@ -16,7 +14,7 @@
     </header>
 
     <% setting = Sys::Auth::Setting.instance %>
-    <% if setting.form_auth_available?(params) %>
+    <% if setting.form_auth_available?(params, request) %>
       <% form_key = setting.form_key.presence || Sys::Auth::Setting::DEFAULT_KEY %>
       <%= form_tag action: params[:action] do |f| %>
         <% if flash[:alert] %>
@@ -29,7 +27,7 @@
 
         <div class="form-group">
           <label><%== t("ss.views.login/login.id") %></label>
-          <%= text_field :item, :email, class: "alnum", autofocus: pc_browser? %>
+          <%= text_field :item, :email, class: "alnum", inputmode: "email", autofocus: pc_browser? %>
         </div>
 
         <div class="form-group">
@@ -49,7 +47,7 @@
         <% ssos.each do |sso| %>
           <% sso = sso.becomes_with_model %>
           <li class="<%= sso.filename %>">
-            <%= link_to(sso.url(ref: params[:ref].try { |ref| ref.to_s } || default_logged_in_path, login_path: request.path), class: "btn-default") do %>
+            <%= link_to(sso.url(ref: params[:ref].try { |ref| ref.to_s } || default_logged_in_path, login_path: SS.request_path(request)), class: "btn-default") do %>
               <h2 class="name"><%= sso.name %></h2>
               <p class="text"><%= br sso.text %></p>
             <% end %>

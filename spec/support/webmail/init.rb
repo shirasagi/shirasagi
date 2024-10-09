@@ -240,7 +240,8 @@ def webmail_new_disposition(conf)
 end
 
 def webmail_load_mail(name)
-  yaml = YAML.load_file("#{Rails.root}/spec/fixtures/webmail/mail/#{name}")
+  path = "#{Rails.root}/spec/fixtures/webmail/mail/#{name}"
+  yaml = YAML.safe_load_file(path, permitted_classes: [Symbol])
 
   data = Net::IMAP::FetchData.new
   data.attr = yaml.dup

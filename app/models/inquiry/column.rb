@@ -94,7 +94,7 @@ class Inquiry::Column
   def validate_upload_file(answer, data)
     # MegaBytes >> Bytes
     if self.max_upload_file_size.to_i > 0
-      file_size  = data.values[2].to_i
+      file_size  = data.values[3].to_i
       limit_size = (self.max_upload_file_size * 1024 * 1024).to_i
 
       if data.present? && data.value.present?

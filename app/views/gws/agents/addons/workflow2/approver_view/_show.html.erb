@@ -1,0 +1,101 @@
+<%
+  user_ids = []
+  user_title_ids = []
+  user_occupation_ids = []
+
+  @item.approvers.each do |approver|
+    case approver[:user_type]
+      when Gws::User.name
+        user_ids << approver[:user_id]
+      when Gws::UserTitle.name
+        user_title_ids << approver[:user_id]
+      when Gws::UserOccupation.name
+        user_occupation_ids << approver[:user_id]
+    end
+  end
+
+  id_user_map = Gws::User.all.site(@cur_site).in(id: user_ids).active.to_a.index_by(&:id)
+  id_title_map = Gws::UserTitle.all.site(@cur_site).in(id: user_title_ids).active.to_a.index_by(&:id)
+  id_occupation_map = Gws::UserOccupation.all.site(@cur_site).in(id: user_occupation_ids).active.to_a.index_by(&:id)
+%>
+
+<% @item.levels.each do |level| %>
+  <div class="gws-workflow-route-approver-item" data-level="<%= level %>">
+    <h1 class="workflow-level-header"><%= @model.t :level, level: level %></h1>
+
+    <dl class="see required_counts">
+      <dt><%= @model.t :required_counts %></dt>
+      <dd><%= @item.required_count_label_at(level) %></dd>
+    </dl>
+
+    <dl class="see approver_attachment_uses">
+      <dt><%= @model.t :approver_attachment_uses %></dt>
+      <dd><%= @item.approver_attachment_enabled_at?(level) ? t("ss.options.state.enabled") : t("ss.options.state.disabled") %></dd>
+    </dl>
+
+    <dl class="see approvers">
+      <dt><%= @model.t :approvers %></dt>
+      <dd>
+        <table class="index gws-workflow-grid-table" data-col="4">
+          <thead>
+          <tr>
+            <th><%= t('gws/workflow2.editable') %></th>
+            <th><%= t("gws/workflow2.alternatable") %></th>
+            <th class="type"><%= t("gws/workflow2.labels.approver_type") %></th>
+            <th class="name"><%= t("gws/workflow2.labels.approver_name") %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @item.approvers_at(level).each do |approver| %>
+          <tr data-id="<%= approver[:_id] %>">
+            <td class="check">
+              <% if approver[:editable] == 1 %>
+                <i class="material-icons-outlined md-15">check_box</i>
+              <% end %>
+            </td>
+            <td class="check">
+              <% if approver[:alternatable] == 1 %>
+                <i class="material-icons-outlined md-15">check_box</i>
+              <% end %>
+            </td>
+            <td>
+              <%=
+                case approver[:user_type]
+                when "superior"
+                  # nothing to show
+                when Gws::User.name
+                  Gws::User.model_name.human
+                when Gws::UserTitle.name
+                  Gws::UserTitle.model_name.human
+                when Gws::UserOccupation.name
+                  Gws::UserOccupation.model_name.human
+                when "special"
+                  # nothing to show
+                end
+              %>
+            </td>
+            <td>
+              <%=
+                case approver[:user_type]
+                when "superior"
+                  t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")
+                when Gws::User.name
+                  user = id_user_map[approver[:user_id]]
+                  user ? gws_public_user_long_name(user.long_name) : t("workflow.user_deleted")
+                when Gws::UserTitle.name
+                  id_title_map[approver[:user_id]].try(:name) || t("ss.options.state.deleted")
+                when Gws::UserOccupation.name
+                  id_occupation_map[approver[:user_id]].try(:name) || t("ss.options.state.deleted")
+                when "special"
+                  t("gws/workflow2.specify_at_time_of_application")
+                end
+              %>
+            </td>
+          </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  </div>
+<% end %>

@@ -1,0 +1,53 @@
+<div class="workflow-request-notice">
+  <ul class="workflow-request-notice-list">
+    <% request_notices = with_approval? ? t("gws/workflow2.request_notice") : t("gws/workflow2.request_notice_without_approval") %>
+    <% request_notices.each do |message, options| %>
+      <%=
+        if options.present?
+          options = options.dup
+          options[:class] = Array(options[:class]) + %w(workflow-request-notice-item)
+        else
+          options = { class: %w(workflow-request-notice-item) }
+        end
+
+        tag.li message, **options
+      %>
+    <% end %>
+  </ul>
+</div>
+
+<%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "workflow-request", autocomplete: :off, data: { turbo: true } } do |f| %>
+  <section class="mod-workflow-request gws-workflow-request">
+    <%= hidden_field_tag :ref, ref, id: nil %>
+
+    <%= error_messages_for :item %>
+
+    <% if with_approval? %>
+      <%= render "form_route", f: f %>
+      <%= render "form_pull_up", f: f %>
+      <%= render "form_on_remand", f: f %>
+    <% end %>
+    <% if use_agent? %>
+      <%= render "form_agent", f: f %>
+    <% end %>
+    <% if with_approval? || use_agent? %>
+      <%= render "form_comment", f: f %>
+    <% end %>
+    <% if with_approval? %>
+      <%= render "form_approver", f: f %>
+      <%= render "form_circulation", f: f %>
+    <% end %>
+
+    <dl class="see">
+      <dd>
+        <div class="buttons">
+          <% if route_id == "restart" %>
+            <%= f.button t("workflow.buttons.restart"), name: "restart", class: "btn-primary" %>
+          <% else %>
+            <%= f.button t("workflow.buttons.request"), name: "request", class: "btn-primary" %>
+          <% end %>
+        </div>
+      </dd>
+    </dl>
+  </section>
+<% end %>

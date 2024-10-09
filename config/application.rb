@@ -12,7 +12,6 @@ require "action_mailer/railtie"
 # require "action_text/engine"
 require "action_view/railtie"
 # require "action_cable/engine"
-require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 require_relative "../app/models/ss"
@@ -23,7 +22,7 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.18.2" }
+  mattr_reader(:version) { "1.19.1" }
 
   class Current < ActiveSupport::CurrentAttributes
     attribute :env, :request
@@ -62,7 +61,15 @@ module SS
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 7.1
+
+    # Please, add to the `ignore` list any other `lib` subdirectories that do
+    # not contain `.rb` files, or that should not be reloaded or eager loaded.
+    # Common ones are `templates`, `generators`, or `middleware`, for example.
+    config.autoload_lib(ignore: %w(assets fixtures generators guard migrations))
+
+    # see: https://til.toshimaru.net/2023-03-30
+    config.action_controller.raise_on_open_redirects = false
 
     config.middleware.delete ActionDispatch::HostAuthorization
 
@@ -79,11 +86,24 @@ module SS
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
 
+    # Don't generate system test files.
+    config.generators.system_tests = nil
+
     I18n.enforce_available_locales = true
-    I18n.available_locales = SS.config.env.available_locales.map(&:to_sym) if SS.config.env.available_locales.present?
-    config.time_zone = 'Tokyo'
     config.i18n.default_locale = :ja
-    config.i18n.fallbacks = [ :en ]
+    if SS.config.env.available_locales.present?
+      I18n.available_locales = SS.config.env.available_locales.map(&:to_sym)
+      config.i18n.fallbacks = I18n.available_locales.index_with do |lang|
+        if lang == config.i18n.default_locale
+          I18n.available_locales - [ config.i18n.default_locale ]
+        else
+          I18n.available_locales - [ lang ]
+        end
+      end
+    else
+      config.i18n.fallbacks = [ :en ]
+    end
+    config.time_zone = 'Tokyo'
 
     Dir["#{config.root}/config/locales/**/*.{rb,yml}"].each do |file|
       config.i18n.load_path << file unless config.i18n.load_path.index(file)

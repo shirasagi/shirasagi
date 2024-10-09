@@ -124,50 +124,90 @@ SS.renderClipboardCopy();
       <div class="name format-<%= rs.format.downcase %>">
         <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
       </div>
-      <% if rs.respond_to?(:downloaded_count) %>
-        <div class="download-count">
-          <span class="label"><%= rs.t :downloaded_count %></span>
-          <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
+      <% if rs.text.present? %>
+        <div class="info__text">
+          <%= auto_link paragraph(sanitize(rs.text)) %>
         </div>
       <% end %>
     </div>
 
-    <div class="icons">
-      <% license = rs.license %>
-      <% if license.present? %>
-        <span class="license">
-          <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-          <% if license.related_url.present? %>
-            <%= link_to(label, license.related_url, target: "_blank", rel: [ "noopener", @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil ]) %>
-          <% else %>
-            <%= label %>
+    <div class="info-detail">
+      <dl class="info-list">
+        <% if rs.respond_to?(:downloaded_count) %>
+          <dt class="info-list__title"><%= rs.t :downloaded_count %></dt>
+          <dd class="info-list__content"><%= rs.downloaded_count.to_fs(:delimited) %><%= I18n.t("opendata.labels.time") %></dd>
+        <% end %>
+        <% if rs.metadata_file_released.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_released %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_released.to_date, format: :long) } %></dd>
+        <% elsif rs.created.present? %>
+          <dt class="info-list__title"><%= rs.t :created %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.created.to_date, format: :long) } %></dd>
+        <% end %>
+        <% if rs.metadata_file_updated.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_updated %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.metadata_file_updated.to_date, format: :long) } %></dd>
+        <% elsif rs.updated.present? %>
+          <dt class="info-list__title"><%= rs.t :updated %></dt>
+          <dd class="info-list__content"><%= tryb { I18n.l(rs.updated.to_date, format: :long) } %></dd>
+        <% end %>
+        <% if rs.metadata_file_follow_standards.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_follow_standards %></dt>
+          <dd class="info-list__content"><%= rs.metadata_file_follow_standards %></dd>
+        <% end %>
+      </dl>
+      <div class="info-detail__access">
+        <div class="icons">
+          <% license = rs.license %>
+          <% if license.present? %>
+            <span class="license">
+              <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+              <% if license.related_url.present? %>
+                <%= link_to(label, license.related_url, target: "_blank", rel: [ "noopener", @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil ]) %>
+              <% else %>
+                <%= label %>
+              <% end %>
+            </span>
           <% end %>
-        </span>
-      <% end %>
-
-      <% if rs.source_url.blank? && rs.previewable? %>
-        <div class="content-wrap">
-          <%= link_to(I18n.t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+          <% if rs.metadata_file_access_url.present? %>
+            <div class="content-wrap">
+              <%= link_to('掲載ページはこちら', rs.metadata_file_access_url, class: "content noicon", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% elsif rs.source_url.blank? && rs.previewable? %>
+            <div class="content-wrap">
+              <%= link_to(I18n.t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% end %>
+          <% if rs.metadata_file_download_url.present? %>
+            <div class="download-wrap">
+              <%= link_to(rs.metadata_file_download_url, class: "download noicon", "data-url": rs.metadata_file_download_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) do %>
+                <small>市町村ページから</small>ダウンロード
+              <% end %>
+            </div>
+          <% else %>
+            <div class="download-wrap">
+              <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+            <div class="clipboard-wrap">
+              <%= link_to(t("opendata.links.copy_url"), rs.download_url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": rs.download_full_url) %>
+            </div>
+          <% end %>
+          <% if rs.rdf_iri.present? %>
+            <div class="sparql">
+              <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            </div>
+          <% end %>
         </div>
-      <% end %>
-      <div class="download-wrap">
-        <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-      </div>
-      <div class="clipboard-wrap">
-        <%= link_to(t("opendata.links.copy_url"), rs.download_url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": rs.download_full_url) %>
-      </div>
-      <% if rs.rdf_iri.present? %>
-        <div class="sparql">
-          <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        <div class="info-detail__link">
+          <% if rs.metadata_file_terms_of_service.present? %>
+            <p><%= rs.t :metadata_file_terms_of_service %>：<%= auto_link sanitize(rs.metadata_file_terms_of_service) %></p>
+          <% end %>
+          <% if rs.metadata_file_related_document.present? %>
+            <p><%= rs.t :metadata_file_related_document %>：<%= link_to(rs.metadata_file_related_document, rs.metadata_file_related_document) rescue rs.metadata_file_related_document %></p>
+          <% end %>
         </div>
-      <% end %>
+      </div>
     </div>
-
-    <% if rs.text.present? %>
-      <div class="text">
-        <%= auto_link paragraph(sanitize(rs.text)) %>
-      </div>
-    <% end %>
   </div>
 <% end %>
 
@@ -185,10 +225,10 @@ SS.renderClipboardCopy();
             <div class="bulk-download">
               <% if @cur_site.anti_bot_use_button_for_bulk_download? %>
                 <%= form_tag search_dataset_download_path(@cur_page), method: "post" do %>
-                  <%= submit_tag t("opendata.search_datasets.download", size: @cur_page.resources.size), name: "dataset-download" %>
+                  <%= submit_tag t("opendata.search_datasets.download", size: @cur_page.resources.and_public.size), name: "dataset-download" %>
                 <% end %>
               <% else %>
-                <%= link_to(t("opendata.search_datasets.download", size: @cur_page.resources.size), search_dataset_download_path(@cur_page), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+                <%= link_to(t("opendata.search_datasets.download", size: @cur_page.resources.and_public.size), search_dataset_download_path(@cur_page), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
               <% end %>
             </div>
           <% end %>
@@ -201,71 +241,6 @@ SS.renderClipboardCopy();
             <% render_rs.call(urs) %>
           <% end %>
         </div>
-
-        <%
-          prefs, cities = @cur_page.pref_codes
-          codes = cities.presence || prefs
-        %>
-        <dl class="cio-format author">
-          <dt><%= @cur_page.t :no %></dt>
-          <dd><%= sprintf("%010d", @cur_page.id) %></dd>
-
-          <dt><%= @cur_page.t :api_state %></dt>
-          <dd>
-            <span class="api-state"><%= @cur_page.label :api_state %></span>
-            <span class="api-uuid"><%= @cur_page.uuid %></span>
-          </dd>
-
-          <% if prefs.present? %>
-            <dt><%= SS::PrefectureCode.t :prefecture %></dt>
-            <dd><%= prefs.map { |code| code.prefecture }.join(",") %></dd>
-          <% end %>
-
-          <% if cities.present? %>
-            <dt><%= SS::PrefectureCode.t :city %></dt>
-            <dd><%= cities.map { |code| code.city }.join(",") %></dd>
-          <% end %>
-
-          <% if codes.present? %>
-            <dt><%= SS::PrefectureCode.t :code %></dt>
-            <dd><%= codes.map { |code| code.code }.join(",") %></dd>
-          <% end %>
-
-          <% if @cur_page.update_plan.present? %>
-            <dt><%= @cur_page.t :update_plan %></dt>
-            <dd><%= @cur_page.update_plan %></dd>
-          <% end %>
-
-          <% if @cur_page.creator_name.present? %>
-            <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.creator_name %><br/></dd>
-          <% elsif @cur_page.member_id.present? %>
-            <dt><%= @cur_page.t :user_id %></dt>
-            <dd>
-              <% if @cur_page.member %>
-                <%= link_to(@cur_page.member.name, "#{member_path}#{@cur_page.member.id}") %>
-              <% else %>
-                <%= t("opendata.labels.guest_user") %>
-              <% end %>
-            </dd>
-          <% elsif @cur_page.contact_charge.present? %>
-            <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.contact_charge %><br/></dd>
-          <% elsif @cur_page.contact_group %>
-            <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br/></dd>
-          <% elsif @cur_page.groups.present? %>
-            <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br/></dd>
-          <% end %>
-
-          <dt><%= @cur_page.t :created %></dt>
-          <dd><%= tryb { @cur_page.created.strftime("%Y-%m-%d") } %><br/></dd>
-
-          <dt><%= @cur_page.t :updated %></dt>
-          <dd><%= tryb { @cur_page.updated.strftime("%Y-%m-%d") } %><br/></dd>
-        </dl>
-
       </div>
     </div>
     <nav class="feed"></nav>
@@ -296,5 +271,183 @@ SS.renderClipboardCopy();
   <% end %>
 </div>
 
+<div class="dataset-tabs tabs">
+  <nav class="names">
+    <a class="name current" href="#">データセット情報</a>
+  </nav>
+  <article class="view">
+    <div class="pages">
+      <div class="info-wrap">
+        <%
+          prefs, cities = @cur_page.pref_codes
+          codes = cities.presence || prefs
+        %>
+        <dl class="cio-format author">
+          <dt><%= @cur_page.t :api_state %></dt>
+          <dd>
+            <span class="api-state"><%= @cur_page.label :api_state %></span>
+            <span class="api-uuid"><%= @cur_page.uuid %></span>
+          </dd>
+
+          <% if @cur_page.metadata_dataset_id.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_id) %></dt>
+            <dd><%= @cur_page.metadata_dataset_id %></dd>
+          <% else %>
+            <dt><%= @cur_page.t :no %></dt>
+            <dd><%= sprintf("%010d", @cur_page.id) %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_japanese_local_goverment_code.present? %>
+            <dt><%= @cur_page.t(:metadata_japanese_local_goverment_code) %></dt>
+            <dd><%= @cur_page.metadata_japanese_local_goverment_code %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_local_goverment_name.present? %>
+            <dt><%= @cur_page.t(:metadata_local_goverment_name) %></dt>
+            <dd><%= @cur_page.metadata_local_goverment_name %></dd>
+          <% end %>
+
+          <% if prefs.present? %>
+            <dt><%= SS::PrefectureCode.t :prefecture %></dt>
+            <dd><%= prefs.map { |code| code.prefecture }.join(",") %></dd>
+          <% end %>
+
+          <% if cities.present? %>
+            <dt><%= SS::PrefectureCode.t :city %></dt>
+            <dd><%= cities.map { |code| code.city }.join(",") %></dd>
+          <% end %>
+
+          <% if codes.present? %>
+            <dt><%= SS::PrefectureCode.t :code %></dt>
+            <dd><%= codes.map { |code| code.code }.join(",") %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_released.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_released) %></dt>
+            <dd><%= tryb { I18n.l(@cur_page.metadata_dataset_released.to_date, format: :long) } %></dd>
+          <% else %>
+            <dt><%= @cur_page.t(:created) %></dt>
+            <dd><%= tryb { I18n.l(@cur_page.created.to_date, format: :long) } %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_updated.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_updated) %></dt>
+            <dd><%= tryb { I18n.l(@cur_page.metadata_dataset_updated.to_date, format: :long) } %></dd>
+          <% else %>
+            <dt><%= @cur_page.t(:updated) %></dt>
+            <dd><%= tryb { I18n.l(@cur_page.updated.to_date, format: :long) } %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_url.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_url) %></dt>
+            <dd><%= link_to(@cur_page.metadata_dataset_url, @cur_page.metadata_dataset_url, target: '_blank') rescue @cur_page.metadata_dataset_url %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_update_frequency.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_update_frequency) %></dt>
+            <dd><%= @cur_page.metadata_dataset_update_frequency %></dd>
+          <% elsif @cur_page.update_plan.present? %>
+            <dt><%= @cur_page.t :update_plan %></dt>
+            <dd><%= @cur_page.update_plan %></dd>
+          <% end %>
+
+          <% if @cur_page.creator_name.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.creator_name %><br/></dd>
+          <% elsif @cur_page.member_id.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd>
+              <% if @cur_page.member %>
+                <%= link_to(@cur_page.member.name, "#{member_path}#{@cur_page.member.id}") %>
+              <% else %>
+                <%= t("opendata.labels.guest_user") %>
+              <% end %>
+            </dd>
+          <% elsif @cur_page.contact_charge.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.contact_charge %><br/></dd>
+          <% elsif @cur_page.contact_group %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br/></dd>
+          <% elsif @cur_page.groups.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br/></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_follow_standards.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_follow_standards) %></dt>
+            <dd><%= @cur_page.metadata_dataset_follow_standards %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_related_document.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_related_document) %></dt>
+            <dd><%= link_to(@cur_page.metadata_dataset_related_document, @cur_page.metadata_dataset_related_document, target: '_blank') rescue @cur_page.metadata_dataset_related_document %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_target_period.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_target_period) %></dt>
+            <dd><%= @cur_page.metadata_dataset_target_period %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_remark.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_remark) %></dt>
+            <dd><%= @cur_page.metadata_dataset_remark %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </article>
+</div>
+
 <%= render template: "cms/agents/addons/related_page/view/index" %>
-<%= render template: "contact/agents/addons/page/view/index" %>
+
+<% if @cur_page.metadata_dataset_contact_name.present? %>
+  <footer class="contact">
+    <h2><%= t("contact.view.title") %></h2>
+    <p class="group"><%= @cur_page.metadata_dataset_contact_name %></p>
+    <% if @cur_page.metadata_dataset_contact_tel.present? %>
+      <dl class="tel" style="margin-right: 0;">
+        <dt><%= t("contact.view.tel") %>:</dt>
+        <dd><%= link_to(@cur_page.metadata_dataset_contact_tel, "tel:#{@cur_page.metadata_dataset_contact_tel.delete("-")}") %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_ext.present? %>
+      <dl class="extension tel">
+        <dt>（内線:</dt>
+        <dd><%= @cur_page.metadata_dataset_contact_ext %></dd>）
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_email.present? %>
+      <dl class="email">
+        <dt><%= t("contact.view.email") %>:</dt>
+        <dd><%= mail_to_entity(@cur_page.metadata_dataset_contact_email) %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_form_url.present? %>
+      <dl class="url">
+        <dt>フォームURL:</dt>
+        <dd><%= link_to(@cur_page.metadata_dataset_contact_form_url, @cur_page.metadata_dataset_contact_form_url) %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.metadata_dataset_contact_remark.present? %>
+      <dl class="remarks">
+        <dt>備考:</dt>
+        <dd><%= @cur_page.metadata_dataset_contact_remark %></dd>
+      </dl>
+    <% end %>
+  </footer>
+<% else %>
+  <%= render template: "contact/agents/addons/page/view/index" %>
+<% end %>
+
+<% if @cur_page.metadata_dataset_keyword.present? %>
+  <div class="key-word">
+    <dl><%= @cur_page.t(:metadata_dataset_keyword) %></dl>
+    <dd>
+      <% @cur_page.metadata_dataset_keyword.each_with_index do |keyword, i| %>
+        <%= "、" if i > 0 %>
+        <%= link_to(keyword, @search_path.call("s[keyword]" => keyword)) %>
+      <% end %>
+    </dd>
+  </div>
+<% end %>

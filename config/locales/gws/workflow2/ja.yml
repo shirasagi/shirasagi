@@ -1,0 +1,405 @@
+ja:
+  gws/workflow2:
+#    columns:
+#      index: 入力設定を管理する
+#    forms:
+#      default: 標準申請書
+#      more: もっと見る
+    options:
+      file_state:
+        all: すべて
+        approve: 承認依頼されているもの
+        request: 承認依頼したもの
+        circulation: 回覧中のもの
+        destination: 提出済・対応待ち一覧
+      agent_state:
+        disabled: 本人のみ申請可
+        enabled: 代理申請可
+      search_operator:
+        and: AND検索
+        or: OR検索
+      approval_state:
+        with_approval: 承認あり
+        without_approval: 承認なし
+      destination_treat_state:
+        no_need_to_treat: 処理不要
+        untreated: 未処理
+        treated: 処理済み
+      route_optgroup:
+        my_group: 所属部署
+        user_occupation: 職種
+        user_title: 役職
+#    links:
+#      publish: 公開する
+#      depublish: 非公開にする
+#      download_comment: 承認/回覧コメントCSV
+#      download_attachment: 添付ファイルダウンロード
+    buttons:
+      save_and_apply: 保存して申請に進む
+    apis:
+      purposes:
+        index: 目的別を選択する
+    navi:
+      new_application: 新規申請
+      find_by_keyword: キーワード検索
+      find_by_purpose: 業務内容で探す
+      readable: 全申請データ一覧
+      approve: 承認依頼されているもの
+      request: 承認依頼したもの
+      circulation: 回覧中のもの
+      destination: 提出済・対応待ち一覧
+      route: 承認ルート設定
+      form:
+        main: 申請フォーム設定
+        application: 申請フォーム
+        external: 外部申請リンク
+        category: カテゴリー
+        purpose: 業務別
+    notice:
+      requested: 申請しました。
+      approved: 承認しました。
+      pulled_up: 引き上げ承認しました。
+      remanded: 差し戻しました。
+      count_approved: "%{count}件を承認しました。"
+      count_remanded: "%{count}件を差し戻しました。"
+      not_approved: "承認できませんでした。"
+      not_remanded: "差し戻しできませんでした。"
+      seen: 既読にしました。
+      rerouted: 承認者を変更しました。
+#      no_files: "添付ファイルがありません。"
+      copy_created: "複製して %{name} を作成しました。"
+      data_might_not_latest: 氏名などは申請時点のものを表示しています。最新の現況とは異なるものが表示されている可能性があります。
+      untreated: 未処理にしました。
+      treated: 処理済みにしました。
+      unable_to_edit_because_form_is_deleted: "申請フォームが削除されているため編集することはできません。"
+      unable_to_copy_because_form_is_deleted: "申請フォームが削除されているため複製することはできません。"
+      select_correct_proxy_approver: ※本来の承認者が指名した正しい代理承認者を指定すること
+      use_approver_alternator:
+        - 本来の承認者から予め代理承認者として指名を受けていること
+        - 代理承認したことを本来の承認者へ報告すること
+    labels:
+#      user: 作成者
+#      form: 帳票
+      approver_type: 種別
+      approver_name: 名前
+      approver_alternator: （代理承認者）
+    search_delegatees:
+      index: 本来の申請者を選択する
+      select: 本来の申請者を設定する
+      search: 検索
+#    agent_type:
+#      myself: 本人が申請する
+#      agent: 代理で申請する
+    search_alternates:
+      index: 代理承認者を選択する
+    alert:
+      create_workflow_with_cur_group: "「%{name} グループ」でワークフローを新規に作成しようとしています。必要であれば兼務を切り替えてください"
+#    view_files: 申請一覧へ
+    find_by_purpose: 業務内容で探す
+    table:
+      gws/workflow2/file:
+        user_id: ユーザーID
+        user_name: 氏名
+        user_group: グループ
+        user_email: メールアドレス
+        agent_id: ユーザーID（代理）
+        agent_name: 氏名（代理）
+        agent_group: グループ（代理）
+        agent_email: メールアドレス（代理）
+        file_name: 申請タイトル
+        requested: 申請日時
+        workflow_state: 承認状態
+        workflow_approvers_and_circulations: 承認者・回覧者
+        workflow_comment: 申請コメント
+        updated: 更新日時
+    request_notice:
+      - 申請内容や承認先に間違いないか確認してください。
+      - 必要な場合、[申請コメント]を設定してください。
+    request_notice_without_approval:
+      - 申請内容に間違いないか確認の上、申請してください。
+    select_other_approvers: '他の承認者を選択する...'
+    select_other_circulations: '他の回覧者を選択する...'
+    specify_at_time_of_application: '申請時に指定する'
+    editable: 編集可
+    alternatable: 代理承認可
+    errors:
+      messages:
+        approver_is_deleted: 承認者は削除されています。別の承認者を選択してください。
+        circulator_is_deleted: 回覧者は削除されています。別の回覧者を選択してください。
+        superior_is_not_found: 上長が設定されていないか、設定されている上長が無効です。
+        plz_select_delegatee: 委任者を選択してください。選択した委任者の上長が自動でセットされます。
+        lower_level_superior_is_not_set: 下位レベルの上長が設定されていません。
+        user_title_is_not_found: 経路上に設定されている役職が見つかりません。
+        user_whos_title_is_not_found: "役職 %{title_name} が設定されている有効なユーザーが見つかりません。"
+        user_occupation_is_not_found: 経路上に設定されている職種が見つかりません。
+        user_whos_occupation_is_not_found: "職種 %{occupation_name} が設定されている有効なユーザーが見つかりません。"
+        user_is_not_found: 経路上に設定されているユーザーが無効です。
+
+  gws_notification:
+    gws/workflow2/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+#      request: "[REQUEST] %{name}"
+#      approve: "[COMPLETED] %{name}"
+#      remand: "[DECLINED] %{name}"
+#      circular: "[ARRIVED] %{name}"
+#      comment: "[COMMENT] %{name}"
+      destination: "[ワークフロー]「%{name}」が提出されました。"
+      cancel: "[ワークフロー]「%{name}」が取り消されました。"
+
+  modules:
+    gws/workflow2: ワークフロー2
+    addons:
+      gws/workflow2/column_setting: 入力設定
+      gws/workflow2/custom_form: 入力内容
+      gws/workflow2/approver: 承認
+      gws/workflow2/approver_print: 承認
+      gws/workflow2/approver_view: 承認経路
+      gws/workflow2/circulation_view: 回覧経路
+      gws/workflow2/group_setting: ワークフロー
+      gws/workflow2/form_category: カテゴリー
+      gws/workflow2/form_purpose: 業務別
+      gws/workflow2/destination_setting: 提出先
+      gws/workflow2/destination_view: 提出先
+      gws/workflow2/destination_state: 処理状態
+      gws/workflow2/inspection: 承認/差し戻し
+      gws/workflow2/circulation: 回覧
+      gws/workflow2/route_readable_setting: 閲覧権限
+      gws/workflow2/route_group_permission: 管理権限
+
+  gws_role:
+    use_gws_workflow2: ワークフロー2の利用
+
+    read_other_gws_workflow2_routes: 承認ルートの閲覧（全て）
+    read_private_gws_workflow2_routes: 承認ルートの閲覧（所有）
+    edit_other_gws_workflow2_routes: 承認ルートの編集（全て）
+    edit_private_gws_workflow2_routes: 承認ルートの編集（所有）
+    delete_other_gws_workflow2_routes: 承認ルートの削除（全て）
+    delete_private_gws_workflow2_routes: 承認ルートの削除（所有）
+    public_readable_range_gws_workflow2_routes: 承認ルートの公開
+
+    read_other_gws_workflow2_files: 申請の閲覧（全て）
+#    read_private_gws_workflow2_files: 申請の閲覧（所有）
+    edit_other_gws_workflow2_files: 申請の編集（全て）
+#    edit_private_gws_workflow2_files: 申請の編集（所有）
+    delete_other_gws_workflow2_files: 申請の削除（全て）
+#    delete_private_gws_workflow2_files: 申請の削除（所有）
+    reroute_other_gws_workflow2_files: 申請の経路変更（全て）
+    reroute_private_gws_workflow2_files: 申請の経路変更（所有）
+#    trash_other_gws_workflow2_files: 申請ゴミ箱の管理（全て）
+#    trash_private_gws_workflow2_files: 申請ゴミ箱の管理（所有）
+#    agent_all_gws_workflow2_files: 申請の代理（全て）
+#    agent_private_gws_workflow2_files: 申請の代理（自所属）
+
+    read_other_gws_workflow2_forms: 申請フォームの閲覧（全て）
+    read_private_gws_workflow2_forms: 申請フォームの閲覧（所有）
+    edit_other_gws_workflow2_forms: 申請フォームの編集（全て）
+    edit_private_gws_workflow2_forms: 申請フォームの編集（所有）
+    delete_other_gws_workflow2_forms: 申請フォームの削除（全て）
+    delete_private_gws_workflow2_forms: 申請フォームの削除（所有）
+
+    read_other_gws_workflow2_form_categories: カテゴリーの閲覧（全て）
+    read_private_gws_workflow2_form_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_workflow2_form_categories: カテゴリーの編集（全て）
+    edit_private_gws_workflow2_form_categories: カテゴリーの編集（所有）
+    delete_other_gws_workflow2_form_categories: カテゴリーの削除（全て）
+    delete_private_gws_workflow2_form_categories: カテゴリーの削除（所有）
+
+    read_other_gws_workflow2_form_purposes: 目的別の閲覧（全て）
+    read_private_gws_workflow2_form_purposes: 目的別の閲覧（所有）
+    edit_other_gws_workflow2_form_purposes: 目的別の編集（全て）
+    edit_private_gws_workflow2_form_purposes: 目的別の編集（所有）
+    delete_other_gws_workflow2_form_purposes: 目的別の削除（全て）
+    delete_private_gws_workflow2_form_purposes: 目的別の削除（所有）
+
+  errors:
+    messages:
+      unable_to_request_due_to_deleted_form: 申請フォームが削除されているか非公開になっているため申請することはできません。
+      unable_to_request_due_to_closed_form: 申請フォームが削除されているか非公開になっているため申請することはできません。
+
+  mongoid:
+    models:
+      gws/workflow2/route: 承認ルート設定
+      gws/workflow2/file: 申請データ
+      gws/workflow2/column: 入力項目
+      gws/workflow2/form/base: 申請フォーム
+      gws/workflow2/form/application: 申請フォーム
+      gws/workflow2/form/external: 外部申請リンク
+      gws/workflow2/form/category: カテゴリー
+      gws/workflow2/form/purpose: 目的別
+    errors:
+      models:
+        gws/workflow2/route:
+          readable_setting_range_error: 「承認ルートの公開」権限がありません。
+        gws/workflow2/file:
+          unable_to_delete: 削除できません。
+    attributes:
+      gws/workflow2/file:
+        name: 申請タイトル
+        form: フォーム
+        form_id: フォーム
+        workflow_member_id: 承認者
+      gws/workflow2/route:
+        name: 名前
+        order: 並び順
+        pull_up: 引き上げ承認
+        on_remand: 差し戻し時
+        approvers: 承認者
+        circulations: 回覧者
+        required_counts: 必要承認数
+        group_ids: グループ
+        level: "%{level} 段目"
+        my_group: "所属長承認"
+        my_group_alternate: "所属長承認（代理承認者へ変更可）"
+        approver_at: "%{level} 段目の承認者"
+        required_count_at: "%{level} 段目の必要承認数"
+        approvers_level: 段
+        approvers_user_id: 申請者
+        approver_attachment_uses: 承認者によるファイル追加
+        circulation_attachment_uses: 回覧者によるファイル追加
+        remark: 備考
+      gws/workflow2/form/base:
+        name: 申請
+        order: 並び順
+        state: 公開状態
+        description: 説明
+        memo: 備考
+      gws/workflow2/form/application:
+        approval_state: 承認の利用
+        default_route_id: 既定の承認経路
+        agent_state: 代理申請
+      gws/workflow2/form/external:
+        url: URL
+      gws/addon/workflow2/column_setting:
+        columns: 入力設定
+      gws/workflow2/column:
+        name: 項目名
+        order: 並び順
+      gws/addon/workflow2/group_setting:
+        workflow_new_days: 新着表示期間
+        workflow_my_group: 自所属の表示
+      gws/addon/workflow2/form_category:
+        category_ids: カテゴリー
+      gws/addon/workflow2/form_purpose:
+        purpose_ids: 業務別
+      gws/workflow2/form/purpose:
+        name: 業務の目的
+      gws/workflow2/destination_setting:
+        destination_treat_state: 処理状態
+        destination_group_ids: 提出先グループ
+        destination_user_ids: 提出先ユーザー
+
+  tooltip:
+    gws/workflow2/file:
+      name:
+        - タイトルを入力します。
+    gws/workflow2/route:
+      name:
+        - 承認経路の名前を入力します。分類と名前をスラッシュで区切って入力することができます。
+        - "例:分類/名前"
+        -
+        - 分類を入力すると、申請フォームで承認経路を選択する際に承認経路が分類ごとに表示されるようになります。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      pull_up:
+        - 引き上げ承認の有効、無効を設定します。
+      on_remand:
+        - 差し戻し時の動作を選択します。
+        - 「最初に戻る」は、、差し戻し時、承認を最初からやり直します。これが既定の動作です。
+        - 「直前に戻る」は、差し戻し時、直前のレベルからやり直します。
+      approvers:
+        - 承認者を選択します。
+      required_counts:
+        - 必要承認数を入力します。
+        - 「全員」を選択すると、承認者全員の承認が必要となります。
+        - 「n 人」を選択すると、承認者のうち n 人以上の承認が必要となります。
+      circulations:
+        - 回覧者を選択します。
+      group_ids:
+        - この承認経路を利用できるグループを選択します。
+      approver_attachment_uses:
+        - 承認者によるファイル追加を許可する場合は「有効」を、それ以外は「無効」を選択してください。
+      circulation_attachment_uses:
+        - 回覧者によるファイル追加を許可する場合は「有効」を、それ以外は「無効」を選択してください。
+      remark:
+        - 備考を入力します。
+    gws/workflow2/form/base:
+      name:
+        - 申請タイトルを入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      state:
+        - 申請フォームを公開するかどうかを選択します。
+      description:
+        - この申請フォームの説明を入力します。
+        - 説明は利用者に公開され、検索対象となります。
+      memo:
+        - 備考を入力します。
+        - 備考は他の場所に表示されませんので管理目的のメモなどを入力します。
+    gws/workflow2/form/application:
+      approval_state:
+        - 承認を使用するかどうかを選択します。
+        - 「承認なし」を選択すると、申請書を申請すると承認を経ずに即座に承認済みとなり提出先へ提出されます。
+        - 「承認あり」を選択すると、申請書は承認者に回覧され、承認者の確認を経て承認済みとなり提出先へ提出されます。
+        - 「承認あり」の場合に用いる既定の承認経路も指定することができます。
+      agent_state:
+        - 代理申請を許可するかどうかを選択します。
+    gws/workflow2/form/external:
+      url:
+        - リダイレクト先のURLを入力します。
+    gws/workflow2/column:
+      name:
+        - 項目を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+    gws/addon/workflow2/group_setting:
+      workflow_new_days:
+        - 新着表示期間を入力します。
+      workflow_my_group:
+        - ページの公開申請時「自所属」を表示するか設定します。
+      workflow_route_approver_superior:
+        - 承認ルート設定の承認経路において、上長を選択肢に表示するかどうかを選択します。
+      workflow_route_approver_title:
+        - 承認ルート設定の承認経路において、役職を選択肢に表示するかどうかを選択します。
+      workflow_route_approver_occupation:
+        - 承認ルート設定の承認経路において、職種を選択肢に表示するかどうかを選択します。
+      workflow_route_circulation_superior:
+        - 承認ルート設定の回覧経路において、上長を選択肢に表示するかどうかを選択します。
+      workflow_route_circulation_title:
+        - 承認ルート設定の回覧経路において、役職を選択肢に表示するかどうかを選択します。
+      workflow_route_circulation_occupation:
+        - 承認ルート設定の回覧経路において、職種を選択肢に表示するかどうかを選択します。
+    gws/workflow2/form/purpose:
+      name:
+        - 目的を入力します。
+    gws/workflow2/destination_setting:
+      destination_group_ids:
+        - 申請の提出先グループを選択します。
+      destination_user_ids:
+        - 申請の提出先ユーザーを選択します。
+
+  input_guide:
+    gws/addon/workflow2/approver_view:
+      approvers_html: |-
+        <p>承認者として上長を選択した場合、%{lower_level}段目の上長の上長が申請時に自動設定されます。</p>
+        <p>注意点として、%{lower_level}段目の承認者として上長が選択されていない場合、無効です。</p>
+    gws/addon/workflow2/circulation_view:
+      circulations_html: |-
+        <p>回覧者として上長を選択した場合、%{lower_level}段目の上長の上長が申請時に自動設定されます。</p>
+        <p>注意点として、%{lower_level}段目の回覧者として上長が選択されていない場合、無効です。</p>
+    gws/workflow2/route:
+      template_html: |-
+        <p>テンプレートとして複製したい承認ルート設定を選択してください。</p>
+    gws/addon/workflow2/approver:
+      restart_notice_html: |-
+        <p style="color: #f00;">再申請をすると、差し戻しコメント、差し戻し時の添付ファイルが消えます。</p>
+
+  job:
+    models:
+      gws/workflow2/trash_purge_job: ワークフロー/申請ゴミ箱の掃除

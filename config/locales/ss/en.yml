@@ -17,6 +17,7 @@ en:
     export_log: Export log
     login: Login
     logout: Logout
+    menu: Menu
     module: Module
     operation: Operation
     regexp: Regular expression
@@ -177,10 +178,13 @@ en:
       edit_password: Change password
       registration: Registration
       approve: Approve
+      remand: Remand
       prev: Previous
       next: Next
       update: Update
       open_in_new_tab: Open in new tab
+      navi_open: Open side menu
+      navi_close: Close side menu
     buttons:
       answer: Answer
       save: Save
@@ -254,6 +258,14 @@ en:
       update: Update
       prev: Previous
       next: Next
+      simple: Simple
+      advanced: Advanced
+      match_all: Match all
+      match_any_of: Match one of
+      include_all_of: Include all of
+      include_any_of: Include any of
+      include_none_of: Include none of
+      decide: Decide
       reset_mfa_otp: Reset OTP
     confirm:
       change_state: Are you sure you want to change your publication status?
@@ -649,6 +661,7 @@ en:
       ss/oauth2/webmail_permission: Mail permissions
       ss/locale_setting: Locale settings
       ss/mfa/user_setting: MFA settings
+      ss/check_links_setting: Email Notification Settings
 
   activemodel:
     errors:
@@ -1053,6 +1066,9 @@ en:
         partner_site_ids: Partner sites
       ss/addon/inquiry_setting:
         inquiry_form_id: Inquiry form
+      ss/addon/check_links_setting:
+        check_links_email: Notification e-mail address
+        check_links_message_format: Format
       ss/oauth2/application/base:
         name: Name
         state: Status
@@ -1536,6 +1552,12 @@ en:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - Set a group-wide inquiry form.
+
+    ss/addon/check_links_setting:
+      check_links_email:
+        - If an e-mail address is set, error results will be notified after the link check is executed.
+      check_links_message_format:
+        - Select the format for e-mail notification of error results.
 
     ss/addon/workflow_setting:
       workflow_my_group:

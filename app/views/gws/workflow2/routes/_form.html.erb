@@ -1,0 +1,16 @@
+<dl class="see workflow-basic">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :pull_up %><%= @model.tt :pull_up %></dt>
+  <dd><%= f.select :pull_up, @item.pull_up_options, include_blank: " " %></dd>
+
+  <dt><%= @model.t :on_remand %><%= @model.tt :on_remand %></dt>
+  <dd><%= f.select :on_remand, @item.on_remand_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

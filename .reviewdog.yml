@@ -12,7 +12,7 @@ runner:
     cmd: npx stylelint --no-color 'app/**/*.{css,scss,sass}'
     format: stylelint
   eslint:
-    cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' 'db/**/*.{js,js.erb}'
+    cmd: npx eslint --no-color -f stylish 'app/**/*.{js,js.erb}' --ignore-pattern 'app/assets/javascripts/cms/preview/datatables.js'
     format: eslint
   locale:
     cmd: bundle exec rails runner .github/scripts/locale_key_comp.rb

@@ -44,7 +44,7 @@ this.SS_EditLock = (function () {
       cache: false,
       statusCode: {
         200: (function (_this) {
-          return function (data, status, xhr) {
+          return function (data, _status, _xhr) {
             if (data.lock_until_pretty) {
               return _this.updateView(data.lock_until_pretty);
             } else {

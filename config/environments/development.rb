@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require_relative "../../lib/active_job/queue_adapters/shirasagi_adapter"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -6,12 +7,14 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+  config.enable_reloading = true
 
   # Do not eager load code on boot.
   config.eager_load = false
 
   # Don't include all helpers
+  # include_all_helpers が true の場合、"Cms::ListHelper#render_page_list" ではなく
+  # "Opendata::ListHelper#render_page_list" が実行され、view のレンダリングに失敗する。
   config.action_controller.include_all_helpers = false
 
   # CSRF
@@ -25,15 +28,19 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Enable server timing
+  config.server_timing = true
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
+    # config.cache_store = :memory_store
     config.cache_store = :file_store, "#{Rails.root}/tmp/cache_store"
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      "Cache-Control" => "public, max-age=#{2.days.to_i}"
     }
   else
     config.action_controller.perform_caching = false
@@ -56,6 +63,12 @@ Rails.application.configure do
 
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
+
+  # Highlight code that enqueued background job in logs.
+  config.active_job.verbose_enqueue_logs = true
+
+  # ActiveJob Queue Adapter
+  config.active_job.queue_adapter = :shirasagi
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
@@ -81,6 +94,9 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
+  # Raise error when a before_action's only/except options reference missing actions
+  config.action_controller.raise_on_missing_callback_actions = false
+
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
@@ -92,7 +108,4 @@ Rails.application.configure do
   # config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/development.log")
   config.log_formatter = ::Logger::Formatter.new
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :debug
-
-  # ActiveJob Queue Adapter
-  config.active_job.queue_adapter = :shirasagi
 end

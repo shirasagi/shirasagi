@@ -1,23 +1,27 @@
 <% parent = params[:controller].split('/').last %>
 <% @item_menu_proc = proc do |item| %>
   <% if item.member?(@cur_user) %>
-    <%= link_to t('gws/board.links.comment'), new_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item), class: 'btn' %>
+    <%=
+      link_to new_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item), class: 'btn primary' do
+        tag.span("reply", class: "material-icons-outlined md-15") + tag.span(t('gws/board.links.comment'), class: "button-label")
+      end
+    %>
   <% end %>
   <% if item.see_type_normal? && item.member?(@cur_user) %>
     <% if item.seen?(@cur_user) %>
-      <%= link_to item.see_action_label(@cur_user), unset_seen_gws_circular_post_path(category: @category || '-'), method: :post, class: "btn gws-btn-pushed" %>
+      <%= link_to tag.span(item.see_action_label(@cur_user), class: "button-label"), unset_seen_gws_circular_post_path(category: @category || '-'), method: :post, class: "btn gws-btn-pushed" %>
     <% else %>
-      <%= link_to item.see_action_label(@cur_user), set_seen_gws_circular_post_path(category: @category || '-'), method: :post, class: "btn" %>
+      <%= link_to tag.span(item.see_action_label(@cur_user), class: "button-label"), set_seen_gws_circular_post_path(category: @category || '-'), method: :post, class: "btn" %>
     <% end %>
   <% end %>
 <% end %>
 
 <% @comment_menu_proc = proc do |item, comment| %>
   <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to t('ss.links.edit'), edit_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item, id: comment), class: 'btn' %>
+    <%= link_to tag.span("edit", class: "material-icons-outlined md-15"), edit_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item, id: comment), class: 'btn', title: t('ss.links.edit') %>
   <% end %>
   <% if comment.allowed?(:delete, @cur_user, site: @cur_site)  %>
-    <%= link_to t('ss.links.delete'), delete_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item, id: comment), class: 'btn' %>
+    <%= link_to tag.span("delete", class: "material-icons-outlined md-15"), delete_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item, id: comment), class: 'btn', title: t('ss.links.delete') %>
   <% end %>
 <% end %>
 

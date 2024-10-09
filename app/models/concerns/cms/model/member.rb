@@ -94,7 +94,7 @@ module Cms::Model::Member
   def authorized?
     enabled?
   end
-  deprecate :authorized?
+  deprecate :authorized?, deprecator: SS.deprecator
 
   def email_type_options
     %w(text html).map { |m| [ I18n.t("cms.options.email_type.#{m}"), m ] }.to_a

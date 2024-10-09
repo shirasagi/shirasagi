@@ -1,9 +1,8 @@
-<% return if @cur_node.blank? %>
 <dl class="see mod-guide-procedure_setting">
   <dt><%= @item.t :procedure_ids %><%= @item.tt :procedure_ids %></dt>
   <dd>
     <%= f.hidden_field "procedure_ids[]", value: "", id: nil, class: "hidden-ids" %>
-    <%= link_to t("ss.links.select"), guide_apis_procedures_path(nid: @cur_node.id, id: @item.id), class: "ajax-box" %>
+    <%= link_to t("ss.links.select"), guide_apis_procedures_path(nid: @item.id, id: @item.id), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

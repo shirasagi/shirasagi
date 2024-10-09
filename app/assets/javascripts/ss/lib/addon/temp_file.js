@@ -50,7 +50,7 @@ this.SS_Addon_TempFile = (function () {
         return 0;
       });
       for (var i = 0; i < sorted_name_and_datas.length; i++) {
-        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+        $("#selected-files").prepend(sorted_name_and_datas[i].data).trigger("change");
       }
     });
   }
@@ -94,15 +94,15 @@ this.SS_Addon_TempFile = (function () {
     });
   };
 
-  SS_Addon_TempFile.prototype.onDragEnter = function(ev) {
+  SS_Addon_TempFile.prototype.onDragEnter = function(_ev) {
     this.$selector.addClass('file-dragenter');
   };
 
-  SS_Addon_TempFile.prototype.onDragLeave = function(ev) {
+  SS_Addon_TempFile.prototype.onDragLeave = function(_ev) {
     this.$selector.removeClass('file-dragenter');
   };
 
-  SS_Addon_TempFile.prototype.onDragOver = function(ev) {
+  SS_Addon_TempFile.prototype.onDragOver = function(_ev) {
     if (!this.$selector.hasClass('file-dragenter')) {
       this.$selector.addClass('file-dragenter');
     }

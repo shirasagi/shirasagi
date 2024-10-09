@@ -320,7 +320,7 @@ module SS
     end
 
     def within_dialog(&block)
-      element = page.document.find("#ss-dialog")
+      element = page.document.first(".ss-dialog")
       page.within_element(element, &block)
     end
 
@@ -673,6 +673,10 @@ module SS
 
     def clear_notice
       page.execute_script("SS.clearNotice();")
+    end
+
+    def enable_confirm_unloading
+      page.execute_script('SS.disableConfirmUnloading = false;')
     end
   end
 end

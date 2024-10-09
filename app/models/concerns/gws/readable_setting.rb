@@ -1,5 +1,6 @@
 module Gws::ReadableSetting
   extend ActiveSupport::Concern
+  extend SS::Translation
 
   included do
     class_variable_set(:@@_readable_setting_include_custom_groups, nil)

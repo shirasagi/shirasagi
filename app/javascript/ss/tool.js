@@ -24,6 +24,19 @@ export function dispatchEvent(element, eventName, detail) {
   return event
 }
 
+export function findTarget(element, selector) {
+  if (element.matches(selector)) {
+    return element;
+  }
+
+  const target = element.closest(selector);
+  if (target) {
+    return target;
+  }
+
+  return undefined;
+}
+
 export function fadeOut(element, speed) {
   speed ||= ANIMATE_NORMAL
 
@@ -41,4 +54,92 @@ export function capitalize(str) {
 export function isSafari() {
   const userAgent = window.navigator.userAgent.toLowerCase();
   return userAgent.indexOf("safari") !== -1
+}
+
+function toUrlSafeBase64(base64String) {
+  return base64String.replaceAll("+", "-").replaceAll("/", "_");
+}
+
+function fromUrlSafeBase64(urlSafeBase64String) {
+  return urlSafeBase64String.replaceAll("-", "+").replaceAll("_", "/");
+}
+
+function appendBase64Padding(base64String) {
+  return base64String + Array((4 - base64String.length % 4) % 4 + 1).join('=');
+}
+
+function removeBase64Padding(base64String) {
+  return base64String.replace(/=+$/, '');
+}
+
+function toUTF8(str) {
+  const encoder = new TextEncoder();
+  const uint8Array = encoder.encode(str);
+  return String.fromCodePoint(...uint8Array);
+}
+
+function fromUTF8(str) {
+  const uint8Array =  Uint8Array.from(Array.prototype.map.call(str, (x) => {
+    return x.charCodeAt(0);
+  }));
+  const decoder = new TextDecoder();
+  return decoder.decode(uint8Array);
+}
+
+export function objecToUrlSafeBase64(object, { padding = true }) {
+  const stringifyObject = JSON.stringify(object);
+  const utf8String = toUTF8(stringifyObject);
+  const base64String = btoa(utf8String);
+  if (!padding) {
+    return toUrlSafeBase64(removeBase64Padding(base64String));
+  } else {
+    return toUrlSafeBase64(base64String);
+  }
+}
+
+export function urlSafeBase64ToObject(base64String) {
+  const base64StringWithPadding = appendBase64Padding(base64String);
+  const utf8String = atob(fromUrlSafeBase64(base64StringWithPadding));
+  const stringifyObject = fromUTF8(utf8String);
+  return JSON.parse(stringifyObject);
+}
+
+export function replaceChildren(element, htmlTextOrNode) {
+  if (typeof htmlTextOrNode === 'string') {
+    element.innerHTML = htmlTextOrNode;
+  } else {
+    element.replaceChildren(htmlTextOrNode);
+  }
+
+  // execute javascript within element
+  element.querySelectorAll("script").forEach((scriptElement) => {
+    const newScriptElement = document.createElement("script");
+    Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
+    newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML));
+    scriptElement.parentElement.replaceChild(newScriptElement, scriptElement);
+  });
+}
+
+export function appendChildren(element, htmlTextOrNode) {
+  const convertToElement = () => {
+    if (typeof htmlTextOrNode === 'string') {
+      const dummyElement = document.createElement("div");
+      dummyElement.innerHTML = htmlTextOrNode;
+      return dummyElement;
+    } else {
+      return htmlTextOrNode;
+    }
+  }
+
+  const dummyElement = convertToElement();
+  dummyElement.childNodes.forEach((childNode) => {
+    if (childNode.tagName === "SCRIPT") {
+      const newScriptElement = document.createElement("script");
+      Array.from(childNode.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
+      newScriptElement.appendChild(document.createTextNode(childNode.innerHTML));
+      element.appendChild(newScriptElement);
+    } else {
+      element.appendChild(childNode.cloneNode(true));
+    }
+  });
 }

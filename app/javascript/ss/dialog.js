@@ -1,111 +1,65 @@
 // jquery.colorbox.js を wrap する
 // インターフェース仕様は HTMLDialogElement を参考にした
 
-import {dispatchEvent} from "./tool";
-
-export class ColorBoxDialog {
-  constructor(src, options) {
-    this.src = src
-    this.options = options
-    this._open = false
-    this._returnValue = undefined
-  }
-
-  static showModal(src, options) {
-    const dialog = new Dialog(src, options)
-    return dialog.showModal()
-  }
-
-  get open() {
-    return this._open;
-  }
-
-  get returnValue() {
-    return this._returnValue;
-  }
-
-  showModal() {
-    this._open = false
-    this._returnValue = undefined
-
-    return new Promise((resolve) => {
-      $.colorbox({
-        href: this.src, width: "90%", height: "90%", fixed: true, open: true,
-        onOpen: () => this.#onOpen(), onLoad: () => this.#onLoad(), onComplete: () => this.#onComplete(),
-        onCleanup: () => this.#onCleanup(), onClosed: () => { this.#onClosed(); resolve(this) }
-      })
-    })
-  }
-
-  #onOpen() {}
-  #onLoad() {}
-
-  #onComplete() {
-    const $el = $.colorbox.element()
-    $el.data("on-select", ($itemEl) => this.#onSelect($itemEl))
-    this._open = true
-  }
-
-  #onCleanup() {}
-  #onClosed() {
-    this._open = false
-  }
-
-  #onSelect($itemEl) {
-    const $dataEl = $itemEl.closest("[data-id]")
-    var data = $dataEl.data();
-    if (!data.name) {
-      data.name = $dataEl.find(".select-item").html() || $itemEl.text() || $dataEl.text();
-    }
-
-    if (!this._returnValue) {
-      this._returnValue = []
-    }
-    this._returnValue.push(data)
-    this.ok = true
-  }
-}
-
-const SPINNER_TEMPLATE = `<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." width="16" height="11" />`
+import {dispatchEvent, LOADING, replaceChildren} from "./tool";
 
 const DIALOG_TEMPLATE = `
-<div id="ss-dialog-container" class="ss-dialog-container">
-  <dialog id="ss-dialog" class="ss-dialog">
+<div class="ss-dialog-container">
+  <dialog class="ss-dialog">
     <div class="ss-dialog-header">
-      <button type="button" name="close" class="ss-dialog-close" id="ss-dialog-close" data-action="close-dialog">
+      <button type="button" name="close" class="ss-dialog-close" data-action="close-dialog">
         <span class="material-icons-outlined">cancel</span>
       </button>
     </div>
-    <turbo-frame id="ss-dialog-content" class="ss-dialog-content">
-      ${SPINNER_TEMPLATE}
-    </turbo-frame>
+    <div class="ss-dialog-content">
+      ${LOADING}
+    </div>
   </dialog>
 </div>`
 
+function findDialogContainer(element) {
+  if (element.classList.contains("ss-dialog-container")) {
+    return element;
+  }
+  return element.querySelector(".ss-dialog-container");
+}
+
 class DialogFrame {
-  static _instance
+  static connect() {
+    const instance = new DialogFrame()
+    instance.#connect()
+    return instance
+  }
 
-  static instance() {
-    if (DialogFrame._instance) {
-      return DialogFrame._instance
-    }
-
-    DialogFrame._instance = new DialogFrame()
-    DialogFrame._instance.#connect()
-    return DialogFrame._instance
+  static attach(element) {
+    const instance = new DialogFrame()
+    instance.#attach(element)
+    return instance
   }
 
   constructor() {
-    this.dialogTemplate = document.createElement("template")
-    this.dialogTemplate.innerHTML = DIALOG_TEMPLATE
   }
 
   #connect() {
-    document.body.appendChild(this.dialogTemplate.content.cloneNode(true))
+    const dialogTemplate = document.createElement("template")
+    dialogTemplate.innerHTML = DIALOG_TEMPLATE
 
-    // this._dialogContainer = document.getElementById("ss-dialog-container")
-    this._dialog = document.getElementById("ss-dialog")
+    this._attached = false;
+    this._dialogContainer = document.body.appendChild(dialogTemplate.content.firstElementChild)
+    this._dialog = this._dialogContainer.querySelector(".ss-dialog")
     this._dialogContent = this._dialog.querySelector(".ss-dialog-content")
+    this.#bind();
+  }
+
+  #attach(element) {
+    this._attached = true;
+    this._dialogContainer = findDialogContainer(element);
+    this._dialog = this._dialogContainer.querySelector(".ss-dialog")
+    this._dialogContent = this._dialog.querySelector(".ss-dialog-content")
+    this.#bind();
+  }
+
+  #bind() {
     this._dialog.addEventListener("click", (ev) => {
       if (ev.target.dataset.action && ev.target.dataset.action === "close-dialog") {
         this.closeModal()
@@ -125,6 +79,10 @@ class DialogFrame {
     this._dialogContent.addEventListener("ss:modal-select", (ev) => this.#onSelect(ev.detail.item))
   }
 
+  disconnect() {
+    this._dialogContainer.remove()
+  }
+
   get observer() {
     return this._observer
   }
@@ -135,7 +93,9 @@ class DialogFrame {
 
   showModal() {
     SS_SearchUI.dialogType = 'ss'
-    this._dialogContent.innerHTML = SPINNER_TEMPLATE
+    if (!this._attached) {
+      this._dialogContent.innerHTML = LOADING
+    }
     this._dialog.showModal()
     return new Promise((resolve) => {
       this._dialog.addEventListener("animationend", () => resolve(), { once: true })
@@ -151,19 +111,7 @@ class DialogFrame {
   }
 
   renderContent(content) {
-    if (typeof content === 'string') {
-      this._dialogContent.innerHTML = content
-    } else {
-      this._dialogContent.replaceChildren(content)
-    }
-
-    // execute javascript within dialog-content
-    this._dialogContent.querySelectorAll("script").forEach((scriptElement) => {
-      const newScriptElement = document.createElement("script")
-      Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value))
-      newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML))
-      scriptElement.parentElement.replaceChild(newScriptElement, scriptElement)
-    })
+    replaceChildren(this._dialogContent, content);
   }
 
   #onCancel() {
@@ -176,7 +124,9 @@ class DialogFrame {
     if (this._observer && this._observer.onClose) {
       this._observer.onClose()
     }
-    this._dialogContent.innerHTML = SPINNER_TEMPLATE
+    if (!this._attached) {
+      this._dialogContent.innerHTML = LOADING
+    }
     SS_SearchUI.dialogType = 'colorbox'
   }
 
@@ -213,25 +163,40 @@ export default class Dialog {
     this._returnValue = undefined
     this._dialogFrame = undefined
 
-    this._dialogFrame = DialogFrame.instance()
-    const promise1 = new Promise((resolve) => {
-      this._dialogFrame.observer = {
-        onClose: () => this.#onClose(resolve),
-        onSelect: ($itemEl) => this.#onSelect($itemEl)
-      }
-    })
-    const promise2 = this._dialogFrame.showModal()
+    let promise1;
+    if (this.options && this.options.attach) {
+      this._dialogFrame = DialogFrame.attach(this.src)
+      promise1 = new Promise((resolve) => {
+        this._dialogFrame.observer = {
+          onClose: () => this.#onClose(resolve),
+          onSelect: ($itemEl) => this.#onSelect($itemEl)
+        }
+      })
 
-    if (this.src instanceof HTMLElement) {
-      this._dialogFrame.renderContent(this.src.content.cloneNode(true))
-    } else if (this.src instanceof DocumentFragment) {
-      this._dialogFrame.renderContent(this.src)
+      await this._dialogFrame.showModal()
     } else {
-      const response = await fetch(this.src, { headers: { 'X-SS-DIALOG': true } })
-      const html = await response.text()
-      this._dialogFrame.renderContent(html)
+      this._dialogFrame = DialogFrame.connect()
+      promise1 = new Promise((resolve) => {
+        this._dialogFrame.observer = {
+          onClose: () => this.#onClose(resolve),
+          onSelect: ($itemEl) => this.#onSelect($itemEl)
+        }
+      })
+      const promise2 = this._dialogFrame.showModal()
+
+      if (this.src instanceof HTMLTemplateElement) {
+        this._dialogFrame.renderContent(this.src.content.cloneNode(true))
+      } else if (this.src instanceof HTMLElement) {
+        this._dialogFrame.renderContent(this.src.cloneNode(true))
+      } else if (this.src instanceof DocumentFragment) {
+        this._dialogFrame.renderContent(this.src)
+      } else {
+        const response = await fetch(this.src, {headers: {'X-SS-DIALOG': true}})
+        const html = await response.text()
+        this._dialogFrame.renderContent(html)
+      }
+      await promise2
     }
-    await promise2
     this._open = true
     dispatchEvent(this._dialogFrame._dialog, "ss:dialog:opened")
 
@@ -251,6 +216,7 @@ export default class Dialog {
     this._dialogFrame.observer = undefined
     resolve(this)
     dispatchEvent(this._dialogFrame._dialog, "ss:dialog:closed")
+    setTimeout(() => this._dialogFrame.disconnect(), 11)
   }
 
   #onSelect($itemEl) {

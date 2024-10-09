@@ -157,13 +157,13 @@
       <%= button_tag t("gws/affair.links.closed_results"), disabled: "disabled" %>
     <% else %>
       <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t("gws/affair.links.edit_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: request.path), class: "ajax-box" %>
+        <%= link_to t("gws/affair.links.edit_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: SS.request_path(request)), class: "ajax-box" %>
       <% end %>
       <% if @item.result_closeable(@cur_user) %>
-        <%= link_to t("gws/affair.links.close_results"), close_gws_affair_overtime_result_path(id: @item.id, ref: request.path), method: :post, class: "btn close-results", data: { confirm: "結果を確認済みにしてもよろしいですか？" } %>
+        <%= link_to t("gws/affair.links.close_results"), close_gws_affair_overtime_result_path(id: @item.id, ref: SS.request_path(request)), method: :post, class: "btn close-results", data: { confirm: "結果を確認済みにしてもよろしいですか？" } %>
       <% end %>
     <% end %>
   <% else %>
-    <%= link_to t("gws/affair.links.set_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: request.path), class: "ajax-box" %>
+    <%= link_to t("gws/affair.links.set_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: SS.request_path(request)), class: "ajax-box" %>
   <% end %>
 </dl>

@@ -12,7 +12,7 @@ module Job::SS::Loggable
     prev_job_log = Job::TaskLogger.attach(job_log)
     ret = nil
     begin
-      Rails.logger.info("Started Job #{job_id}")
+      Rails.logger.info("Started Job #{job_id} on #{Rails.application.hostname}(#{Rails.application.ip_address})")
       job_log.state = Job::Log::STATE_RUNNING
       job_log.started = Time.zone.now
       job_log.save
@@ -30,7 +30,7 @@ module Job::SS::Loggable
       job_log.closed = Time.zone.now
       Rails.logger.info("Completed Job #{job_id} in #{time * 1000} ms")
     ensure
-      Job::TaskLogger.detach(job_log)
+      Job::TaskLogger.detach
       job_log.save
       Job::TaskLogger.attach(prev_job_log) if prev_job_log.present?
     end

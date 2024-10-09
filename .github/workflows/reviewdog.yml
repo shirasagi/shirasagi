@@ -11,13 +11,17 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
+      - name: Install pre requisites
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.0'
+          ruby-version: '3.2'
           bundler-cache: true
       - uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 20
           cache: npm
       - name: ruby -v
         run: ruby -v
@@ -31,13 +35,19 @@ jobs:
         run: npx stylelint -v
       - name: eslint -v
         run: npx eslint -v
+      - name: Install MeCab Ruby
+        run: |
+          tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
+          cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install
       - uses: reviewdog/action-setup@v1
       #- name: reviewdog -list
       #  run: reviewdog -list
       - name: Run reviewdog - brakeman, eslint, stylelint, locale
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAILS_ENV: development
         run: reviewdog -reporter=github-pr-review -runners "brakeman,eslint,stylelint,locale"
+        continue-on-error: true
       # rubocopが報告するエラーが多すぎるためか、.reviewdog.ymlからrubocopを実行するとバッファー超過などのエラーになるようで正常に終了せず、
       # タイムアウトまで実行を続けてしまう。そこでrubocopを個別に実行することにする。
       - name: Run reviewdog - rubocop

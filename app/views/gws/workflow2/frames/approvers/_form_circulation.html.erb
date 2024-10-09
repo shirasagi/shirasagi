@@ -1,0 +1,125 @@
+<% return if @item.deleted? || @item.workflow_circulations.blank? %>
+
+<% render_circulation_row = proc do |_level, user_type, user_id, user_name| %>
+  <tr data-type="<%= user_type %>" data-id="<%= user_id %>">
+    <td>
+      <%= user_name %>
+    </td>
+  </tr>
+<% end %>
+
+<% render_circulation_error_row = proc do |_level, error| %>
+  <tr data-type="error" data-id="error">
+    <td><div class="style-em"><%= error %></div></td>
+  </tr>
+<% end %>
+
+<% render_specify_row = proc do |level| %>
+  <tr data-type="special" data-id="specify_at_time_of_application">
+    <td>
+      <div data-controller="ss--select-box" data-ss--select-box-api-value="<%= gws_apis_users_path %>" data-ss--select-box-dialog-type-value="cbox">
+        <%= button_tag t("workflow.search_circulations.index"), type: :button, class: "btn", data: { action: "ss--select-box#openDialog" } %>
+        <div class="gws-workflow-file-circulation-item-special-result" data-ss--select-box-target="result"></div>
+        <script type="text/plain" data-ss--select-box-target="template">
+          <%% if (selectedItems.length > 0) { %>
+            <%% selectedItems.forEach(function(selectedItem) { %>
+              <div class="gws-workflow-file-circulation-item-special-result-item" data-id="<%%= selectedItem.id %>">
+                <input type="hidden" name="item[in_selected_circulations][][level]" value="<%= level %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_circulations][][user_type]" value="<%= Gws::User.name %>" autocomplete="off">
+                <input type="hidden" name="item[in_selected_circulations][][user_id]" value="<%%= selectedItem.id %>" autocomplete="off">
+                <span class="user"><%%= selectedItem.longName %></span>
+                <%= button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn", data: { action: "ss--select-box#deselectItem" } %>
+              </div>
+            <%% }); %>
+          <%% } %>
+        </script>
+      </div>
+    </td>
+  </tr>
+<% end %>
+
+<dl class="see workflow_circulations">
+  <dt><%= @model.t :workflow_circulations %><%= @model.tt :workflow_circulations %></dt>
+  <dd></dd>
+
+  <% 1.upto(Gws::Workflow2::Route::MAX_CIRCULATIONS) do |level| %>
+    <%
+      circulations = @item.workflow_circulations_at(level)
+      next if circulations.blank?
+    %>
+    <dt class="depth-2"><%= t("workflow.circulation_step") %> <%= Gws::Workflow2::Route.t :level, level: level %></dt>
+    <dd class="depth-2">
+      <table class="index gws-workflow-grid-table" data-col="2">
+        <tbody>
+        <tr>
+          <th scope="col"><%= @model.t :workflow_circulation_attachment_uses %></th>
+          <td>
+            <%=
+              selected_attachment_use = route.try(:circulation_attachment_use_at, level).presence || "disabled"
+              Gws::Workflow2::Route.circulation_attachment_use_options.find { |_label, value| value == selected_attachment_use }.try(:[], 0)
+            %>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </dd>
+
+    <dd class="depth-2">
+      <%= tag.div class: "gws-workflow-file-circulation-item", data: { level: level } do %>
+        <table class="index gws-workflow-grid-table" data-col="1">
+          <thead>
+          <tr>
+            <th class="name"><span><%= Gws::User.t :name %></span></th>
+          </tr>
+          </thead>
+          <tbody>
+          <%
+            specify_row_rendered = {}
+            circulations.each do |circulation_hash|
+              if circulation_hash[:error].present?
+                render_circulation_error_row.call(level, circulation_hash[:error])
+                next
+              end
+
+              case circulation_hash[:user_type]
+              when "superior"
+                user = circulation_hash[:user]
+                user ||= find_circulator(circulation_hash[:user_id])
+                user_type = "superior"
+                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")})"
+              when "special"
+                user_type = "special"
+                user = circulation_hash[:user]
+              when Gws::UserTitle.name
+                user = circulation_hash[:user]
+                user ||= find_circulator(circulation_hash[:user_id])
+                user_type = Gws::UserTitle.name
+                name = "#{gws_public_user_long_name(user.long_name)} (#{Gws::UserTitle.model_name.human})"
+              when Gws::UserOccupation.name
+                user = circulation_hash[:user]
+                user ||= find_circulator(circulation_hash[:user_id])
+                user_type = Gws::UserOccupation.name
+                name = "#{gws_public_user_long_name(user.long_name)} (#{Gws::UserOccupation.model_name.human})"
+              else # Gws::User.name
+                user = circulation_hash[:user]
+                user ||= find_circulator(circulation_hash[:user_id])
+                user_type = Gws::User.name
+                name = gws_public_user_long_name(user.long_name)
+              end
+              next unless user_type
+
+              if user_type == "special" && user == "specify_at_time_of_application" && !specify_row_rendered[level]
+                render_specify_row.call(level)
+                specify_row_rendered[level] = true
+                next
+              end
+
+              render_circulation_row.call(level, user_type, user.id, name)
+            end
+          %>
+          </tbody>
+        </table>
+      <% end %>
+    </dd>
+  <% end %>
+</dl>

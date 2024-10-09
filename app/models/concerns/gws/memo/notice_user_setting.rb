@@ -18,6 +18,7 @@ module Gws::Memo::NoticeUserSetting
     field :send_notice_mail_addresses, type: SS::Extensions::Words
     permit_params :send_notice_mail_addresses
     validates :send_notice_mail_addresses, emails: true, length: { maximum: MAX_MAIL_COUNT, message: :too_large }
+    validate :validate_allowed_mail_addresses
   end
 
   def notice_user_setting_options
@@ -50,22 +51,17 @@ module Gws::Memo::NoticeUserSetting
 
   private
 
-  def model_convert_to_i18n_key(model)
-    case model.model_name.i18n_key.to_s
-    when "gws/board/topic", "gws/board/post" then 'board'
-    when "gws/circular/post" then 'circular'
-    when "gws/faq/topic", "gws/faq/post" then 'faq'
-    when "gws/qna/topic", "gws/qna/post" then 'qna'
-    when "gws/schedule/todo", "gws/schedule/todo_comment" then 'todo'
-    when "gws/workload/work" then 'workload'
-    when "gws/schedule/plan", "gws/schedule/comment", "gws/schedule/attendance", "gws/schedule/approval" then 'schedule'
-    when "gws/discussion/topic", "gws/discussion/post" then 'discussion'
-    when "gws/workflow/file" then 'workflow'
-    when "gws/report/file" then 'report'
-    when "gws/notice/post" then 'announcement'
-    when "gws/survey/form", "gws/survey/file" then 'survey'
-    when "gws/monitor/topic", "gws/monitor/post" then 'monitor'
-    when "gws/affair/overtime_file", "gws/affair/leave_file", "compensatory_file" then 'affair'
+  def validate_allowed_mail_addresses
+    return if cur_site.nil?
+    return if send_notice_mail_addresses.blank?
+    return if errors.present?
+
+    if !send_notice_mail_addresses.all? { |v| cur_site.email_domain_allowed?(v) }
+      self.errors.add :send_notice_mail_addresses, :disallowed_domains, domains: cur_site.sendmail_domains.join(", ")
     end
+  end
+
+  def model_convert_to_i18n_key(model)
+    Gws::Addon::System::NoticeSetting::MODEL_FUNCTION_MAP[model.model_name.i18n_key.to_s]
   end
 end

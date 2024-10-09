@@ -56,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "with syntax check error" do
+  context "with order_of_h checker error" do
     let(:html) { "<h6>#{unique_id}</h6>" }
 
     it do
@@ -72,6 +72,51 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       within "#cboxLoadedContent" do
         expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
+        expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+        expect(page).to have_no_css('.save')
+      end
+    end
+  end
+
+  context "with embedded_media checker error" do
+    let(:html) { '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4">' }
+
+    it do
+      visit article_pages_path(site: site, cid: node)
+      click_on page1.name
+      click_on I18n.t("ss.buttons.edit")
+
+      within "form#item-form" do
+        fill_in_ckeditor "item[html]", with: html
+
+        click_on I18n.t("ss.buttons.withdraw")
+      end
+
+      within "#cboxLoadedContent" do
+        expect(page).to have_css("li", text: I18n.t('errors.messages.check_embedded_media'))
+        expect(page).to have_no_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+        expect(page).to have_css('.save')
+      end
+    end
+  end
+
+  context "with order_of_h checker error and embedded_media checker error" do
+    let(:html) { "<h6>#{unique_id}</h6>" + '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4">' }
+
+    it do
+      visit article_pages_path(site: site, cid: node)
+      click_on page1.name
+      click_on I18n.t("ss.buttons.edit")
+
+      within "form#item-form" do
+        fill_in_ckeditor "item[html]", with: html
+
+        click_on I18n.t("ss.buttons.withdraw")
+      end
+
+      within "#cboxLoadedContent" do
+        expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
+        expect(page).to have_css("li", text: I18n.t('errors.messages.check_embedded_media'))
         expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
         expect(page).to have_no_css('.save')
       end

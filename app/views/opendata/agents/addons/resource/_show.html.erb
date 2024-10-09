@@ -21,6 +21,16 @@
               <%= number_to_human_size rs.size %>
             <% end %>
           </td>
+          <td>
+            <%= I18n.l(rs.updated) %> <%= t('ss.buttons.update') %>
+          </td>
+          <td>
+            <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
+              <div class="replace-file">
+                <%= link_to t('ss.links.edit'), edit_opendata_apis_node_resource_path(dataset_id: @item, id: rs), class: "ajax-box" %>
+              </div>
+            <% end %>
+          </td>
         </tr>
       <% end %>
       </tbody>

@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
     before_action :set_received_by
   end
 
-  class CloseableChunkedBody < Rack::Chunked::Body
+  class CloseableChunkedBody < ActionController::Streaming::Body
     def initialize(*args)
       super
       @closed = false
@@ -46,14 +46,6 @@ class ApplicationController < ActionController::Base
     agent.controller.request = request
     agent.controller.instance_variable_set :@controller, self
     agent
-  end
-
-  def render_agent(controller_name, action)
-    new_agent(controller_name).render(action)
-  end
-
-  def invoke_agent(controller_name, action)
-    new_agent(controller_name).invoke(action)
   end
 
   def send_enum(enum, options = {})
@@ -142,7 +134,7 @@ class ApplicationController < ActionController::Base
   end
 
   def request_path
-    request.env["REQUEST_PATH"] || request.path
+    @request_path ||= SS.request_path(request)
   end
 
   def protect_csrf?

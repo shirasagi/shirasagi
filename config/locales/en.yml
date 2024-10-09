@@ -187,6 +187,7 @@ en:
       not_found_user_title: Job position code “%{code}” cannot be found.
       not_found_user_occupation: "Job title code “%{code}” cannot be found."
       upload_restricted: You cannot upload files in your environment.
+      edit_restricted: File editing operations are not available in your environment.
       sanitizer_waiting: Sanitization is being performed. Please wait for a while.
       url: Must be a valid URL.
       invalid_latlon: |-
@@ -219,6 +220,7 @@ en:
       password_include_name: contains your name.
       password_include_kana: contains your reading.
       edit_approved: Approved plans cannot be changed.
+      disallowed_domains: "Only the following domains are allowed: %{domains}"
     template:
       body: Please check the following items.
       header:

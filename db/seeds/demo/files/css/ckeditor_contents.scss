@@ -1,0 +1,262 @@
+body {
+  /* Font */
+  font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
+  font-size: 12px;
+
+  /* Text color */
+  color: #333;
+
+  /* Remove the background color to make it transparent */
+  background-color: #fff;
+
+  margin: 20px;
+}
+
+.cke_editable {
+  padding: 5px;
+  font-size: 13px;
+  line-height: 1.6;
+
+  /* Fix for missing scrollbars with RTL texts. (#10488) */
+  word-wrap: break-word;
+}
+
+blockquote {
+  font-style: italic;
+  font-family: Georgia, Times, "Times New Roman", serif;
+  padding: 2px 0;
+  border-style: solid;
+  border-color: #ccc;
+  border-width: 0;
+}
+
+.cke_contents_ltr{
+  blockquote {
+    padding-left: 20px;
+    padding-right: 8px;
+    border-left-width: 5px;
+  }
+}
+
+.cke_contents_rtl{
+  blockquote {
+    padding-left: 8px;
+    padding-right: 20px;
+    border-right-width: 5px;
+  }
+}
+
+a {
+  color: #0782C1;
+}
+
+ol,
+ul,
+dl {
+  /* IE7: reset rtl list margin. (#7334) */
+  *margin-right: 0px;
+  /* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+  padding: 0 40px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+  line-height: 1.2;
+}
+
+hr {
+  border: 0px;
+  border-top: 1px solid #ccc;
+}
+
+img{
+  .right {
+    border: 1px solid #ccc;
+    float: right;
+    margin-left: 15px;
+    padding: 5px;
+  }
+  .left {
+    border: 1px solid #ccc;
+    float: left;
+    margin-right: 15px;
+    padding: 5px;
+  }
+}
+
+pre {
+  white-space: pre-wrap;
+  /* CSS 2.1 */
+  word-wrap: break-word;
+  /* IE7 */
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+.marker {
+  background-color: Yellow;
+}
+
+span[lang] {
+  font-style: italic;
+}
+
+figure {
+  text-align: center;
+  border: solid 1px #ccc;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  margin: 10px 20px;
+  display: inline-block;
+}
+
+figure{
+  >figcaption {
+  text-align: center;
+  display: block;
+  /* For IE8 */
+  }
+}
+
+a{
+  >img {
+    padding: 1px;
+    margin: 1px;
+    border: none;
+    outline: 1px solid #0782C1;
+  }
+}
+
+p {
+  margin-bottom: 20px;
+  font-size: 14px;
+  img {
+    max-width: 100%;
+  }
+  @media only screen and (max-width: 768px) {
+    font-size: 12px;
+    line-height: 1.57;
+  }
+}
+
+h2 {
+  margin: 30px 0 12px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-weight: bold;
+  background-color: #ccf0ff;
+  @media only screen and (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
+h3 {
+  margin-bottom: 12px;
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: bold;
+  border-left: 2px solid #003bbc;
+  @media only screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+h4 {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #003bbc;
+  @media only screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+ul,
+ol {
+  margin-bottom: 20px;
+  padding-left: 1em;
+  font-size: 14px;
+  @media only screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+ul {
+  list-style-type: disc;
+}
+
+strong {
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 24px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  @media only screen and (max-width: 768px) {
+    font-size: 14px;
+  }
+  @media only screen and (max-width: 480px) {
+    font-size: 12px;
+  }
+
+  caption {
+    padding: 0 10px;
+    color: #003bbc;
+    text-align: left;
+  }
+  p {
+    margin-bottom: 0;
+  }
+  th {
+    padding: 3px 8px 0;
+    border: 1px solid #ccc;
+    background: #ecebe3;
+    text-align: left;
+  }
+
+  td {
+    padding: 3px 8px 0;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+}
+
+.column2{
+	display: flex;
+  gap: 10px;
+  margin: 10px auto;
+  .column-item{
+    width: calc((100% - 10px)/2);
+    img{
+      width: 100%;
+    }
+    .caption{
+      margin: 0;
+      font-size: 13px;
+    }
+  }
+}
+
+.column3{
+  display: flex;
+  gap: 10px;
+  margin: 10px auto;
+  .column-item{
+    width: calc((100% - 20px)/3);
+    img{
+      width: 100%;
+    }
+    .caption{
+      margin: 0;
+      font-size: 13px;
+    }
+  }
+}

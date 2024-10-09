@@ -35,7 +35,7 @@ graph.render("pie", name, labels, datasets, { headerIndex: <%== @header_index.to
 var types = <%== @item.preview_graph_types.to_json %>;
 var headers = <%== @headers.to_json %>;
 graph.renderController(types, headers, function(type, headerIndex) {
-  var url = "<%= request.path %>";
+  var url = "<%= SS.request_path(request) %>";
   url += "?type=" + type + "&graph=1&headerIndex=" + headerIndex;
 
   graph.destroy();

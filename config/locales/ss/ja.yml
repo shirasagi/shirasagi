@@ -17,6 +17,7 @@ ja:
     export_log: エクスポートログ
     login: ログイン
     logout: ログアウト
+    menu: メニュー
     module: モジュール
     operation: 操作
     regexp: 正規表現
@@ -177,10 +178,13 @@ ja:
       edit_password: パスワード変更
       registration: 登録する
       approve: 承認する
+      remand: 差し戻し
       prev: 前へ
       next: 次へ
       update: 更新する
       open_in_new_tab: 別タブで開く
+      navi_open: サイドメニューを開く
+      navi_close: サイドメニューを閉じる
     buttons:
       answer: 回答
       save: 保存
@@ -254,6 +258,14 @@ ja:
       update: 更新
       prev: 前
       next: 次
+      simple: 簡易
+      advanced: 詳細
+      match_all: すべての条件に一致
+      match_any_of: いずれかの条件に一致
+      include_all_of: すべてを含む
+      include_any_of: いずれかを含む
+      include_none_of: いずれも含まない
+      decide: 決定
       reset_mfa_otp: ワンタイムパスワードの初期化
     confirm:
       change_state: 公開状態を変更してよろしいですか？
