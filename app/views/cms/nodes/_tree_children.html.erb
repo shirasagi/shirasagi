@@ -7,7 +7,7 @@
             <a href="<%= child[:url] %>"><%= child[:name] %></a>
           </summary>
           
-          <%= render 'tree_children', children: child[:children] %>
+          <%= render 'cms/nodes/tree_children', children: child[:children] %>
         </details>
       </li>
     <% else %>

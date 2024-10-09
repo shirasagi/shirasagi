@@ -1,0 +1,6 @@
+<% @index_title = proc do |item| %>
+  <% link = item.respond_to?(:view_route) ? contents_path(item) : { action: :show, id: item } %>
+  <%= link_to item.name, link, class: "title" %>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

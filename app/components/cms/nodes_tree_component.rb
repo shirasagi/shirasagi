@@ -1,4 +1,6 @@
 class Cms::NodesTreeComponent < ApplicationComponent
+  include Cms::NodeHelper
+
   def initialize(site:, user:, item: nil, only_children: false, root_items: nil, type: nil)
     @type = type.presence || 'cms_nodes'
     @site = site
@@ -71,12 +73,8 @@ class Cms::NodesTreeComponent < ApplicationComponent
 
   def item_url(item)
     return node_pages_path(cid: item.id) if @type == 'cms/page'
-
     return node_parts_path(cid: item.id) if @type == 'cms/part'
-
-    return node_layouts_path(cid: item.id) if @type == 'cms/layout'
-    
-    cms_nodes_path(cid: item.id)
-    #item.respond_to?(:view_route) ? contents_path(item) : cms_node_nodes_path(cid: item.id)
+    return node_layouts_path(cid: item.id) if @type == 'cms/layout' 
+    item.respond_to?(:view_route) ? contents_path(item) : cms_node_nodes_path(cid: item.id)
   end
 end
