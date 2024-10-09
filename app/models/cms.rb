@@ -275,13 +275,13 @@ module Cms
     end
   end
 
-  def self.compile_scss(source, load_paths:, filename: nil, style: :expanded)
+  def self.compile_scss(source, load_paths:, filename:)
     options = {
       source_map_file: ".",
       source_map_embed: true,
       source_map_contents: true,
       load_paths: load_paths,
-      style: style,
+      style: :expanded,
       syntax: :scss,
       logger: ScssLogger.instance
     }
