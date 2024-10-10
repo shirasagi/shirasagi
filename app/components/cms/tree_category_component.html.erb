@@ -1,0 +1,11 @@
+<%
+  html = cache_component do
+    render_cate_form
+  end
+  selected.each do |id|
+    html.sub!("data-unchecked=\"#{id}\"", "checked=\"checked\"")
+  end
+  html
+%>
+<%= hidden_field_tag "item[#{item_name}][]", nil, id: nil %>
+<%== html %>

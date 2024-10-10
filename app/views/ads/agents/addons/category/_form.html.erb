@@ -1,14 +1,16 @@
 <%
-
-categories = Category::Node::Base.site(@cur_site).readable(@cur_user, site: @cur_site)
-cate_options = { root_and_descendants: true, item_name: "ads_category_ids" }
-
+  categories = Category::Node::Base.site(@cur_site)
+  readable_categories = categories.readable(@cur_user, site: @cur_site)
+  options = {
+    root_and_descendants: true,
+    item_name: "ads_category_ids",
+    readable_categories: readable_categories,
+    selected: @item.ads_category_ids
+  }
 %>
-
 <dl class="see mod-category-category category-form">
   <dt class="wide"><%= @model.t :ads_categories %><%= @model.tt :ads_categories %></dt>
   <dd class="wide">
-    <%= f.hidden_field "ads_category_ids[]", value: "", id: nil %>
-    <% render_cate_form categories.tree_sort.to_a, cate_options %>
+    <%= render Cms::TreeCategoryComponent.new(@cur_site, categories, options) %>
   </dd>
 </dl>
