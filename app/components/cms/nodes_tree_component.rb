@@ -58,7 +58,6 @@ class Cms::NodesTreeComponent < ApplicationComponent
       filename: item.filename,
       depth: item.depth,
       url: item_url(item), # This now works because view context is available
-      tree_url: cms_apis_node_tree_path(id: item.id, type: @type),
       is_current: @item.present? && item.id == @item.id,
       is_parent: @item.present? && @item.filename.start_with?("#{item.filename}/"),
       has_children: item.children.present?

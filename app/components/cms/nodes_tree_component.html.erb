@@ -7,7 +7,7 @@
               <a href="<%= folder[:url] %>"><%= folder[:name] %></a>
             </summary>
 
-            <%= render 'cms/nodes/tree_children', children: folder[:children] if folder[:has_children] %>
+            <%= render 'tree_children', children: folder[:children] if folder[:has_children] %>
           </details>
         </li>
       <% else %>

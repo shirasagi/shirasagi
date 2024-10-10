@@ -364,7 +364,6 @@ Rails.application.routes.draw do
       get "layouts" => "layouts#index"
       put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
-      get "node_tree/:id" => "node_tree#index", as: :node_tree
       get "forms" => "forms#index"
       get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
       get "forms/:id/form" => "forms#form", as: :form

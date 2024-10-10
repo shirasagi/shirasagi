@@ -1,6 +1,3 @@
-<% @index_title = proc do |item| %>
-  <% link = item.respond_to?(:view_route) ? contents_path(item) : { action: :show, id: item } %>
-  <%= link_to item.name, link, class: "title" %>
-<% end %>
-
-<%= render template: "cms/crud/index" %>
+<turbo-frame id="cms-nodes-tree-frame">
+  <%= render(Cms::NodesTreeComponent.new(site: @cur_site, user: @cur_user, item: @item, only_children: params[:only_children], root_items: params[:root_items], type: params[:type])) %>
+</turbo-frame>

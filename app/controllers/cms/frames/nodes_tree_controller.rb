@@ -34,6 +34,8 @@ class Cms::Frames::NodesTreeController < ApplicationController
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)
+      
+    render :index, layout: false
   end
 
   def routes
