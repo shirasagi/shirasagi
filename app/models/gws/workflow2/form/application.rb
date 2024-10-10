@@ -13,7 +13,8 @@ class Gws::Workflow2::Form::Application < Gws::Workflow2::Form::Base
 
   # # indexing to elasticsearch via companion object
   # update_form do |form|
-  #   ::Gws::Elasticsearch::Indexer::Workflow2FormJob.around_save(form) { true }
+  #   skip = form.columns.last.try(:skip_elastic)
+  #   ::Gws::Elasticsearch::Indexer::Workflow2FormJob.around_save(form) { true } unless skip
   # end
 
   def approval_state_options
