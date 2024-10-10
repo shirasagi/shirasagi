@@ -3,18 +3,19 @@
 addon ||= local_assigns.fetch(:addon, {})
 addon[:display_body] = "hide"
 
+options = {}
+options[:selected] = @item.category_ids
 if @cur_node && (st_categories = @cur_node.st_categories).present?
   conds = [{ :id.in => @cur_node.st_category_ids }]
   st_categories.pluck(:filename).each do |filename|
     conds << { filename: /^#{::Regexp.escape(filename)}\// }
   end
   categories = Category::Node::Base.site(@cur_site).where("$and" => [{ "$or" => conds }])
-  readable_categories = categories.readable(@cur_user, site: @cur_site).to_a
-  cate_options = { readable_categories: readable_categories }
+  options[:readable_categories] = categories.readable(@cur_user, site: @cur_site)
 else
   categories = Category::Node::Base.site(@cur_site)
-  readable_categories = categories.readable(@cur_user, site: @cur_site).to_a
-  cate_options = { root_and_descendants: true, readable_categories: readable_categories }
+  options[:readable_categories] = categories.readable(@cur_user, site: @cur_site)
+  options[:root_and_descendants] = true
 end
 
 %>
@@ -22,7 +23,6 @@ end
 <dl class="see mod-category-category category-form">
   <dt class="wide"><%= @model.t :categories %><%= @model.tt :categories %></dt>
   <dd class="wide">
-    <%= f.hidden_field "category_ids[]", value: "", id: nil %>
-    <% render_cate_form categories.tree_sort.to_a, cate_options %>
+    <%= render Cms::TreeCategoryComponent.new(@cur_site, categories, options) %>
   </dd>
 </dl>
