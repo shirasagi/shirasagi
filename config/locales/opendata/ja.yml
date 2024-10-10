@@ -346,6 +346,10 @@ ja:
       shirasagi_scraper: "Shirasagi スクレイピング"
     harvest_exporter_api_options:
       ckan: "Ckan API"
+    edit_profile_state_options:
+      allow_all: 編集可能
+      restrict_oauth: メールアドレスログインのみ編集可能
+      restrict_all: 編集不可
     assoc_job:
       dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
       resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"
@@ -498,6 +502,7 @@ ja:
       opendata/metadata/license: メタデータ設定
       opendata/metadata/dataset: メタデータ設定
       opendata/metadata/resource: メタデータ設定
+      opendata/profile_setting: プロフィール設定
 
   cms:
     nodes:
@@ -998,6 +1003,8 @@ ja:
         metadata_file_terms_of_service: 利用規約
         metadata_file_related_document: 関連ドキュメント
         metadata_file_follow_standards: 準拠する標準
+      opendata/addon/profile_setting:
+        edit_profile_state: プロフィールの編集
 
   activemodel:
     models:
@@ -1348,6 +1355,10 @@ ja:
     opendata/addon/metadata/importer_notice:
       notice_user_ids:
         - メタデータのインポート完了時に、選択したユーザーへメールで通知します。
+    opendata/addon/profile_setting:
+      edit_profile_state:
+        - プロフィールの編集を許可するか選択します。
+
   job:
     models:
       opendata/csv2rdf_converter/job: RDF変換ジョブ
