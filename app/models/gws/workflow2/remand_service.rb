@@ -6,6 +6,7 @@ class Gws::Workflow2::RemandService
 
   def call
     removed_file_ids = item.remand_workflow_approver_state(cur_user, comment: comment, file_ids: file_ids)
+    item.skip_validate_column_values = true
     return false unless item.save
 
     SS::File.in(id: removed_file_ids).destroy_all if removed_file_ids.present?

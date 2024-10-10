@@ -3,7 +3,7 @@ module Gws::Addon::Workflow2::CustomForm
   extend SS::Addon
 
   included do
-    attr_accessor :cur_form, :in_custom_form_dummy
+    attr_accessor :cur_form, :in_custom_form_dummy, :skip_validate_column_values
 
     belongs_to :form, class_name: 'Gws::Workflow2::Form::Base'
     embeds_many :column_values, class_name: 'Gws::Column::Value::Base', cascade_callbacks: true
@@ -72,6 +72,7 @@ module Gws::Addon::Workflow2::CustomForm
   end
 
   def validate_column_values
+    return if skip_validate_column_values
     return if form.blank?
     column_values.each do |column_value|
       column_value.validate_value(self, :column_values)

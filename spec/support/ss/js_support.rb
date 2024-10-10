@@ -360,8 +360,16 @@ module SS
     end
 
     def save_full_screenshot(**opts)
+      width = page.execute_script(
+        "return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, " \
+        "document.documentElement.scrollWidth, document.documentElement.offsetWidth);")
+      height = page.execute_script(
+        "return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, " \
+        "document.documentElement.scrollHeight, document.documentElement.offsetHeight);")
+      window = Capybara.current_session.driver.browser.manage.window
+      window.resize_to(width + 100, height + 100)
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
-      page.save_screenshot(filename, full: true)
+      page.save_screenshot(filename)
       puts "screenshot: #{filename}"
     rescue
     end

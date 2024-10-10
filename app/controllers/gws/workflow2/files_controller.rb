@@ -215,6 +215,7 @@ class Gws::Workflow2::FilesController < ApplicationController
 
     @item.record_timestamps = false
     @item.deleted = Time.zone.now
+    @item.skip_validate_column_values = true
     render_destroy @item.save(context: :soft_delete)
   end
 

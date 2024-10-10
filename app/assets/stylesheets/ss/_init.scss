@@ -146,7 +146,7 @@ $border-white: 1px solid $white;
   vertical-align: middle;
   cursor: pointer;
   &:hover {
-    background: #ebecec;
+    opacity: .9;
     text-decoration: none;
   }
   &:disabled, &.btn-disabled {

@@ -52,6 +52,7 @@ class Gws::Column::CopyService
         column_ids[column.id_was.to_s] = column.id.to_s
         column.form_id = @new_item.id
         radio_button_columns << column if column._type == "Gws::Column::RadioButton"
+        column.skip_elastic = true
         result = column.save
         unless result
           SS::Model.copy_errors(form, @item)
@@ -62,6 +63,8 @@ class Gws::Column::CopyService
         column.branch_section_ids = column.branch_section_ids.map { |id| column_ids[id] }
         column.save
       end
+
+      @new_item.columns.first.try(:save) # for index
     ensure
       if restore_service
         restore_service.close rescue nil

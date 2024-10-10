@@ -49,7 +49,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
   context "cancel request and restart workflow" do
     let!(:form) { create(:gws_workflow2_form_application, default_route_id: route.id, state: "public") }
-    let!(:column1) { create(:gws_column_text_field, form: form, input_type: "text") }
+    let!(:column1) { create(:gws_column_text_field, form: form, input_type: "text", required: "required") }
     let(:item) { create :gws_workflow2_file, form: form, column_values: [ column1.serialize_value(unique_id) ] }
     let(:show_path) { gws_workflow2_file_path(site, item, state: 'all') }
 
@@ -143,6 +143,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         expect(memo.member_ids).to eq [user2.id]
       end
 
+      # set errors for validate_column_values
+      item.column_values[0].value = nil
+      item.column_values[0].save(validate: false)
+
       #
       # admin: cancel request
       #
@@ -191,6 +195,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         expect(memo.user_id).to eq item.workflow_user_id
         expect(memo.member_ids).to eq [user2.id]
       end
+
+      # unset errors for validate_column_values
+      item.column_values[0].value = unique_id
+      item.column_values[0].save(validate: false)
 
       #
       # admin: restart request
