@@ -108,12 +108,8 @@
           <% if !@ss_maintenance_mode %>
             <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
             <%= render partial: 'content_navi' %>
-            <% else %>
-            <div id="content-navi">
-              <turbo-frame id="cms-nodes-tree-frame" src="<%= cms_frames_nodes_tree_index_path %>">
-                <%= loading %>
-              </turbo-frame>
-            </div>
+            <% elsif @tree_navi %>
+            <div id="content-navi"><%= render template: '_tree_navi' %></div>
             <% end %>
           <% end %>
         <% end %>

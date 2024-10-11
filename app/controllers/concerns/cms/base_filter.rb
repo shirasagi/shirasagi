@@ -89,4 +89,8 @@ module Cms::BaseFilter
 
   def set_crumbs
   end
+
+  def set_tree_navi
+    @tree_navi = true
+  end
 end
