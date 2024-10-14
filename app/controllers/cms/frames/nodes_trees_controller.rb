@@ -10,7 +10,7 @@ class Cms::Frames::NodesTreesController < ApplicationController
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)
-      
+    @item = @model.find(params[:id]) if params[:id].present? && params[:id] != '0'
     render :index, layout: false
   end
 end

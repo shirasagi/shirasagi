@@ -2,17 +2,17 @@
   <% children.each do |child| %>
     <% if child[:has_children] %>
       <li>
-        <details <%= "open" if child[:is_parent] %>>
-          <summary>
-            <a href="<%= child[:url] %>"><%= child[:name] %></a>
+        <details <%= "open" if (child[:is_current] || child[:is_parent]) %>>
+          <summary class="<%= 'highlight' if child[:is_current] %>">
+            <a href="<%= child[:url] %>" data-turbo="false"><%= child[:name] %></a>
           </summary>
           
           <%= render 'tree_children', children: child[:children] %>
         </details>
       </li>
     <% else %>
-      <li >
-        <a href="<%= child[:url] %>"><%= child[:name] %></a>
+      <li class="<%= 'highlight' if child[:is_current] %>">
+        <a href="<%= child[:url] %>" data-turbo="false"><%= child[:name] %></a>
       </li>
     <% end %>
   <% end %>
