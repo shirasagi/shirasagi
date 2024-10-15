@@ -1,22 +1,28 @@
-<nav class="menu">
-  <%= link_to t("opendata.labels.edit_profile"), "#{@cur_node.url}edit/" %>
-</nav>
+<% if allow_edit_profile? %>
+  <nav class="menu">
+    <%= link_to t("opendata.labels.edit_profile"), "#{@cur_node.url}edit/" %>
+  </nav>
+<% end %>
 
 <table class="see">
-  <tr class="parent-row icon">
-    <td class="field"><%= @model.t :icon_id %></td>
-    <td class="input"><%= member_icon @cur_member %></td>
-  </tr>
+  <% if allow_edit_profile? %>
+    <tr class="parent-row icon">
+      <td class="field"><%= @model.t :icon_id %></td>
+      <td class="input"><%= member_icon @cur_member %></td>
+    </tr>
+  <% end %>
 
   <tr class="parent-row name">
     <td class="field"><%= @model.t :name %></td>
     <td class="input"><%= @cur_member.name %></td>
   </tr>
 
-  <tr class="parent-row email">
-    <td class="field"><%= @model.t :email %></td>
-    <td class="input"><%= @cur_member.email %></td>
-  </tr>
+  <% if allow_edit_profile? %>
+    <tr class="parent-row email">
+      <td class="field"><%= @model.t :email %></td>
+      <td class="input"><%= @cur_member.email %></td>
+    </tr>
+  <% end %>
 
   <tr class="parent-row login-history">
     <td class="field"><%= t "opendata.labels.login_history" %></td>
