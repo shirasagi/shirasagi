@@ -14,7 +14,7 @@ class SS::Site
   include SS::Addon::ApproveSetting
   include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting
-  include SS::Addon::LogoSetting
+  include Cms::Addon::LogoSetting
   include SS::Addon::Elasticsearch::SiteSetting
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::PartnerSetting

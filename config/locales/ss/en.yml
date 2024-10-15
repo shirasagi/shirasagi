@@ -597,6 +597,9 @@ en:
         always: Use
         untrusted: Use when the access source is untrusted
         none: Not use
+      logo_application_link:
+        mypage: Mypage
+        portal: Portal
 
     tasks:
       started: Started.
@@ -1052,6 +1055,7 @@ en:
         usage_calculated_at: Usage calculation date and time
       ss/model/logo_setting:
         logo_application_name: Application name
+        logo_application_link: Logo link
         logo_application_image_id: Logo image
         logo_application_template: Logo HTML
       ss/addon/release:
