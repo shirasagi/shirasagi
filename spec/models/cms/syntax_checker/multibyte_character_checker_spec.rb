@@ -13,7 +13,7 @@ describe Cms::SyntaxChecker::MultibyteCharacterChecker, type: :model, dbscope: :
 
     context "with single paragraph" do
       context "with full-width numerics" do
-        let(:text) { %w(７６５４ ３２１０).join(Cms::SyntaxChecker::FULL_WIDTH_SPACE) }
+        let(:text) { "７６５４　３２１０" }
         let(:texts) { [ text ] }
 
         it do
@@ -23,7 +23,7 @@ describe Cms::SyntaxChecker::MultibyteCharacterChecker, type: :model, dbscope: :
           context.errors.first.tap do |error|
             expect(error[:id]).to eq id
             expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq %w(７６５４ ３２１０).join(",")
+            expect(error[:code]).to eq text
             expect(error[:msg]).to eq I18n.t('errors.messages.invalid_multibyte_character')
             expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character')
             expect(error[:collector]).to eq described_class.name
@@ -33,7 +33,7 @@ describe Cms::SyntaxChecker::MultibyteCharacterChecker, type: :model, dbscope: :
       end
 
       context "with full-width alphabets" do
-        let(:text) { %w(ＡＢＣＤ ＥＦＧ).join(Cms::SyntaxChecker::FULL_WIDTH_SPACE) }
+        let(:text) { "ＡＢＣＤ　ＥＦＧ" }
         let(:texts) { [ text ] }
 
         it do
@@ -43,7 +43,7 @@ describe Cms::SyntaxChecker::MultibyteCharacterChecker, type: :model, dbscope: :
           context.errors.first.tap do |error|
             expect(error[:id]).to eq id
             expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq %w(ＡＢＣＤ ＥＦＧ).join(",")
+            expect(error[:code]).to eq text
             expect(error[:msg]).to eq I18n.t('errors.messages.invalid_multibyte_character')
             expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character')
             expect(error[:collector]).to eq described_class.name
@@ -53,12 +53,22 @@ describe Cms::SyntaxChecker::MultibyteCharacterChecker, type: :model, dbscope: :
       end
 
       context "with half-width alphabets and full-width space" do
-        let(:text) { %w(abcd efg).join(Cms::SyntaxChecker::FULL_WIDTH_SPACE) }
+        let(:text) { "abcd　efg" }
         let(:texts) { [ text ] }
 
         it do
           described_class.new.check(context, id, idx, raw_html, fragment)
-          expect(context.errors).to be_blank
+
+          expect(context.errors).to have(1).items
+          context.errors.first.tap do |error|
+            expect(error[:id]).to eq id
+            expect(error[:idx]).to eq idx
+            expect(error[:code]).to eq text
+            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_multibyte_character')
+            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character')
+            expect(error[:collector]).to eq described_class.name
+            expect(error[:collector_params]).to be_blank
+          end
         end
       end
 
@@ -197,20 +207,16 @@ describe Cms::SyntaxChecker::MultibyteCharacterChecker, type: :model, dbscope: :
     end
 
     context "with space-separated alphabets" do
-      let(:text1) { "ＳＨＩＲＡＳＡＧＩ#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}ＴＡＲＯ" }
-      let(:text2) { "shirasagi#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}taro" }
-      let(:text3) { "シラサギ#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}太郎" }
-      let(:text4) { %w(Meta の Javascript Ｗｅｂ Ｆｒａｍｅｗｏｒｋ).join(Cms::SyntaxChecker::FULL_WIDTH_SPACE) }
+      let(:text1) { 'ＳＨＩＲＡＳＡＧＩ　ＴＡＲＯ' }
+      let(:text2) { 'shirasagi　taro' }
+      let(:text3) { 'シラサギ　太郎' }
+      let(:text4) { 'Meta　の　Javascript　Ｗｅｂ　Ｆｒａｍｅｗｏｒｋ' }
       let(:texts) { [ text1, text2, text3, text4 ] }
 
       it do
         described_class.new.correct(context)
-        [
-          "<p>SHIRASAGI#{Cms::SyntaxChecker::FULL_WIDTH_SPACE}TARO</p>", "<p>#{text2}</p>", "<p>#{text3}</p>",
-          "<p>#{%w(Meta の Javascript Web Framework).join(Cms::SyntaxChecker::FULL_WIDTH_SPACE)}</p>"
-        ].tap do |results|
-          expect(context.result).to include(*results)
-        end
+        expect(context.result).to \
+          include("<p>SHIRASAGI TARO</p>", "<p>shirasagi taro</p>", "<p>シラサギ　太郎</p>", "<p>Meta　の　Javascript Web Framework</p>")
       end
     end
   end
