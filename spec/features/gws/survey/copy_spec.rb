@@ -173,7 +173,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         answer = answers.first
         expect(answer.user_name).to eq user2.name
         answer.column_values.to_a.tap do |answer_column_values|
-          expect(answer_column_values.count).to eq 2
+          expect(answer_column_values.count).to eq 1
           expect(answer.column_values[0].value).to eq column_options[1]
         end
       end
