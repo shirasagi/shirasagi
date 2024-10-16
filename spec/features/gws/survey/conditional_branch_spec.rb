@@ -6,6 +6,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   let!(:user2) { create(:gws_user, uid: "u02", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:user3) { create(:gws_user, uid: "u03", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:user4) { create(:gws_user, uid: "u04", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
+  let!(:due_date) { I18n.l(Time.zone.today + 14, format: :picker) }
 
   before do
     clear_downloads
@@ -41,11 +42,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: form_name
+        fill_in "item[due_date]", with: due_date
         choose I18n.t("gws.options.readable_setting_range.public")
 
         click_on I18n.t("ss.buttons.save")
       end
-      wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_notice I18n.t("ss.notice.saved") # TODO: timeout
       clear_notice
 
       expect(Gws::Survey::Form.all.count).to eq 1
@@ -114,10 +116,10 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within "form.gws-column-form" do
         expect(page).to have_css(".gws-column-form-grid tr", count: radio_options.length + 1)
         within all(".gws-column-form-grid tr")[2] do
-          select section1_name, from: "item[branch_section_ids][]"
+          select I18n.t("gws/column.show_section", name: section1_name), from: "item[branch_section_ids][]"
         end
         within all(".gws-column-form-grid tr")[3] do
-          select section2_name, from: "item[branch_section_ids][]"
+          select I18n.t("gws/column.show_section", name: section2_name), from: "item[branch_section_ids][]"
         end
         wait_for_event_fired("turbo:frame-load") { click_on I18n.t("ss.buttons.save") }
       end

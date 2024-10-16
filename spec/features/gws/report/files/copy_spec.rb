@@ -26,8 +26,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   let!(:column7) { create(:gws_column_radio_button, cur_site: site, form: form, order: 70, required: "optional") }
   let!(:column8) { create(:gws_column_check_box, cur_site: site, form: form, order: 80, required: "optional") }
   let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90, required: "optional") }
-  let!(:column10) { create(:gws_column_section, cur_site: site, form: form, order: 100) }
-  let!(:column11) { create(:gws_column_title, cur_site: site, form: form, order: 110) }
+  let!(:column10) { create(:gws_column_title, cur_site: site, form: form, order: 100) }
 
   context "print" do
     let(:name) { unique_id }
@@ -102,7 +101,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Report::File.all.count).to eq 2
-      file = Gws::Report::File.all.site(site).find_by(name: name2)
+      file = Gws::Report::File.all.site(site).find_by(name: name2) # TODO: timeout
       expect(file.column_values.count).to eq form.columns.count
       file.column_values.where(column_id: column1_text1.id).first.tap do |cv|
         expect(cv.value).to eq column_value1_text1
@@ -150,9 +149,6 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
       file.column_values.where(column_id: column10.id).first.tap do |cv|
         expect(cv.value).to eq column10.default_value
-      end
-      file.column_values.where(column_id: column11.id).first.tap do |cv|
-        expect(cv.value).to eq column11.default_value
       end
       expect(file.state).to eq "closed"
       expect(file.deleted).to be_blank
