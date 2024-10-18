@@ -1,11 +1,11 @@
-@import "init";
+@use "init";
 
 // see: app/assets/stylesheets/ss/_pc_mb.scss
 body {
-  font-family: $font-base;
+  font-family: init.$font-base;
   line-height: 1.4;
   word-wrap: break-word;
 }
 * {
-  @include box-sizing(border-box);
+  @include init.box-sizing(border-box);
 }

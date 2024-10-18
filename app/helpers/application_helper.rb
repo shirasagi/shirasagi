@@ -90,18 +90,10 @@ module ApplicationHelper
     end
   end
 
-  # @deprecated
-  def scss(&block)
-    load_paths = Rails.application.config.assets.paths.dup
-    source = "@import 'compass-mixins/lib/compass';\n" + capture(&block)
-    css = Cms.compile_scss(source, load_paths: load_paths, style: :compressed)
-
-    h = []
-    h << "<style>"
-    h << css
-    h << "</style>"
-    h.join("\n").html_safe
-  end
+  # # @deprecated
+  # def scss(&block)
+  #   tag.style(media: :all, &block)
+  # end
 
   def tt(key, *args)
     opts = args.extract_options!
