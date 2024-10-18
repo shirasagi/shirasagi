@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     post  "otp_login" => "mfa_login#otp_login"
     post  "otp_setup" => "mfa_login#otp_setup"
     get   "redirect" => "login#redirect", as: :redirect
+    get   "login_image" => "login_image#index", as: :login_image
     resources :public_notices, only: [:index, :show] do
       get :frame_content, on: :member
     end
