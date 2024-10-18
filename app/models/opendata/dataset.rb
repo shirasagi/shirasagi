@@ -128,6 +128,16 @@ class Opendata::Dataset
     format("%010d", id.to_i)
   end
 
+  def file_previewable?(file, site:, user:, member:)
+    return false unless super
+
+    resource = resources.where(file_id: file.id).first
+    resource ||= resources.where(tsv_id: file.id).first
+    return false unless resource
+    return false if resource.state != "public"
+    true
+  end
+
   private
 
   def validate_filename
