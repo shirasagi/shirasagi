@@ -22,7 +22,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
     items = if @only_children && @item
               child_items
             else
-              root_items + [@item].compact + tree_items + child_items
+              root_items
             end
     items_hash(items)
   end
@@ -35,10 +35,6 @@ class Cms::NodesTreeComponent < ApplicationComponent
       Cms::Node.site(@site).where(depth: 1).
         allow(:read, @user, site: @site)
     end
-  end
-
-  def tree_items
-    @item.present? ? @item.parents.flat_map { |parent| parent.children.allow(:read, @user, site: @site) } : []
   end
 
   def child_items
