@@ -51,7 +51,6 @@ Rails.application.configure do
   config.assets.digest = false
   config.assets.version = '1.0'
   config.sass.debug_info = false # for cms
-  config.sass.line_comments = false
   config.sass.line_numbers = false
 
   # Specifies the header that your server uses for sending files.

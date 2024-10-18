@@ -260,4 +260,34 @@ module Cms
       Cms::Page.all.site(site).and_linking_pages(page)
     end
   end
+
+  class ScssLogger
+    def self.warn(message, _options)
+      Rails.logger.warn { message }
+    end
+
+    def self.debug(message, _options)
+      Rails.logger.warn { message }
+    end
+
+    def self.instance
+      self
+    end
+  end
+
+  def self.compile_scss(source, load_paths:, filename: nil, style: :expanded)
+    options = {
+      source_map_file: ".",
+      source_map_embed: true,
+      source_map_contents: true,
+      load_paths: load_paths,
+      style: style,
+      syntax: :scss,
+      logger: ScssLogger.instance
+    }
+    options[:filename] = filename if filename
+
+    sass = SassC::Engine.new(source, options)
+    sass.render
+  end
 end
