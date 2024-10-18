@@ -3,7 +3,7 @@
    category_options = []
    Opendata::Node::Category.each { |e| category_options << [e.name, e._id]}
  %>
-<%= scss do %>
+<style media="all">
 .search-form {
   form.index-search {
     select {
@@ -13,12 +13,12 @@
       margin-left: 3px;
       max-width: 100px;
       &:focus {
-        @include box-shadow(none);
+        box-shadow: none;
       }
     }
   }
 }
-<% end %>
+</style>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.text_field :keyword, style: "width: 250px;" %>

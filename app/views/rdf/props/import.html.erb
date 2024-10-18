@@ -7,13 +7,13 @@
   <% end %>
 </div>
 
-<%= scss do %>
+<style media="all">
 table.rdf-props {
   th.name, th.range {
     width: 20%;
   }
 }
-<% end %>
+</style>
 
 <%= form_for :item, url: { action: :import }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
   <table class="index">
