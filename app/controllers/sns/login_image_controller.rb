@@ -11,7 +11,7 @@ class Sns::LoginImageController < ApplicationController
 
     respond_to do |format|
       format.html { render }
-      format.json  do
+      format.json do
         @model = Sys::Setting
         @item = @model.first
         @url = ::File.dirname(sns_mypage_url)
