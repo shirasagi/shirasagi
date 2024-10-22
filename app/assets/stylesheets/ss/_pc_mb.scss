@@ -2016,6 +2016,9 @@ footer.send {
 .btn-icon {
   @include btn-icon;
 }
+.btn-red {
+  @include btn-red-core;
+}
 .chorg-revisions {
   margin-bottom: 10px;
   .btn {
