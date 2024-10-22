@@ -103,4 +103,19 @@ describe "opendata_agents_nodes_my_profile", type: :feature, dbscope: :example d
     end
     expect(Opendata::MemberFile.count).to eq 0
   end
+
+  it "#index" do
+    node_my_profile.edit_profile_state = "restrict_all"
+    node_my_profile.update!
+
+    visit index_url
+    expect(current_path).to eq index_url.path
+    expect(status_code).to eq 200
+
+    within "table.see" do
+      expect(page).to have_content(member.name)
+    end
+    expect(page).to have_no_css("nav.menu")
+    expect(page).to have_css("nav.account", text: "アカウントの削除")
+  end
 end
