@@ -9,10 +9,19 @@ module SS::Model::LogoSetting
 
   included do
     field :logo_application_name, type: String
+    field :logo_application_link, type: String, default: "mypage"
     belongs_to_file :logo_application_image, class_name: "SS::LogoFile", resizing: RESIZING
 
-    permit_params :logo_application_name
+    permit_params :logo_application_name, :logo_application_link
 
     validates :logo_application_name, length: { maximum: 24 }
+  end
+
+  def logo_application_link_options
+    I18n.t("ss.options.logo_application_link").map { |k, v| [v, k] }
+  end
+
+  def logo_application_url
+    Rails.application.routes.url_helpers.sns_mypage_path
   end
 end
