@@ -21,11 +21,13 @@
 
 <div id="page-login">
 
+<% unless @hide_ss_layout_header %>
 <header id="head">
   <div class="wrap">
     <h1 class="application-name"><%= render_application_logo %></h1>
   </div>
 <!-- /#head --></header>
+<% end %>
 
 <aside id="notice">
   <div class="wrap"><%= notice %></div>

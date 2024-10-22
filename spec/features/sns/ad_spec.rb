@@ -24,6 +24,17 @@ describe "login_ad", type: :feature, dbscope: :example do
       expect(page).to have_css(".login-image-box")
       expect(page).to have_css("img[src='#{ss_file.url}']")
       expect(page).to have_css("img[src='#{ss_file2.url}']")
+
+      visit sns_login_image_path
+      expect(page).to have_css(".login-image-box")
+      expect(page).to have_css("img[src='#{ss_file.url}']")
+      expect(page).to have_css("img[src='#{ss_file2.url}']")
+
+      visit sns_login_image_path(format: :json)
+      source = JSON.parse(page.source)
+      expect(source["file_ids"].size).to eq 2
+      expect(source["files"][0]["name"]).to eq ss_file2.name
+      expect(source["files"][1]["name"]).to eq ss_file.name
     end
   end
 
@@ -33,6 +44,9 @@ describe "login_ad", type: :feature, dbscope: :example do
       setting.save
       setting.reload
       visit sns_login_path
+      expect(page).to have_no_css(".login-image-box")
+
+      visit sns_login_image_path
       expect(page).to have_no_css(".login-image-box")
     end
   end
