@@ -2,8 +2,8 @@
   <% @folders.each do |folder| %>
     <% if folder[:has_children] %>
       <li>
-        <details class="tree__details" data-ss--tree-target="details" <%= "open" if (folder[:is_current] || folder[:is_parent]) %>>
-          <summary class="<%= 'highlight' if folder[:is_current] %>" data-action="click->ss--tree#toggle">
+        <details class="tree__details" data-ss--tree-target="details" data-open="<%= folder[:is_current] || folder[:is_parent] %>">
+          <summary data-highlight="<%= folder[:is_current] %>" data-action="click->ss--tree#toggle">
             <a href="<%= folder[:url] %>" data-turbo="false"><%= folder[:name] %></a>
           </summary>
 
@@ -11,10 +11,9 @@
         </details>
       </li>
     <% else %>
-      <li class="no-children <%= 'highlight' if folder[:is_current] %>">
+      <li class="no-children" data-highlight="<%= folder[:is_current] %>">
         <a href="<%= folder[:url] %>" data-turbo="false"><%= folder[:name] %></a>
       </li>
     <% end %>
   <% end %>
 </ul>
-
