@@ -4,8 +4,10 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
   include Opendata::MemberFilter
   helper Opendata::UrlHelper
 
+  before_action :deny_edit, only: [:edit, :update]
   before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  helper_method :allow_edit_profile?
 
   protected
 
@@ -34,6 +36,20 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
   end
 
   public
+
+  def deny_edit
+    raise "404" if !allow_edit_profile?
+  end
+
+  def allow_edit_profile?
+    return false if @cur_node.edit_profile_state == "restrict_all"
+
+    if @cur_node.edit_profile_state == "restrict_oauth"
+      return (@cur_member.oauth_type.blank? && @cur_member.email.present?)
+    end
+
+    true
+  end
 
   def show
     render
