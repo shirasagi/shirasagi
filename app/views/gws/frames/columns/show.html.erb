@@ -14,28 +14,32 @@
     </div>
     <hr class="gws-column-item-divider">
     <div class="gws-column-item-toolbar-list" data-controller="gws--column--item-toolbar">
-      <div class="gws-column-item-toolbar-item gws-column-item-edit">
-        <%= link_to edit_gws_frames_column_path(id: item, ref: ref), class: "btn", title: I18n.t("ss.links.edit"), data: { turbo: true } do %>
-          <span class="material-icons-outlined md-15" style="vertical-align: -3px">edit</span>
-        <% end %>
-      </div>
-      <div class="gws-column-item-toolbar-item gws-column-item-delete">
-        <%= button_tag name: "delete", type: :button, class: "btn btn-gws-column-item-delete", title: t("ss.links.delete"), data: { ref: gws_frames_column_path(id: item, ref: ref) } do %>
-          <span class="material-icons-outlined md-15" style="vertical-align: -3px">delete</span>
-        <% end %>
-      </div>
-      <div class="gws-column-item-toolbar-item gws-column-item-detail">
-        <%= button_tag name: "detail", type: :button, class: "btn btn-gws-column-item-detail", title: t("gws/column.links.edit_in_detail"), data: { ref: edit_gws_apis_column_path(form_id: item.form, id: item, ref: ref) } do %>
-          <span class="material-icons-outlined md-15" style="vertical-align: -3px">open_in_new</span>
-        <% end %>
-      </div>
-      <% if item.class == Gws::Column::RadioButton %>
+      <div class="gws-column-item-toolbar-item-group">
         <div class="gws-column-item-toolbar-item gws-column-item-edit">
-          <%= link_to edit_gws_frames_column_path(id: item, ref: ref, form: 'branch'), class: "btn", title: t("gws/column.links.edit_conditional_branch"), data: { turbo: true } do %>
-            <span class="material-icons-outlined md-16" style="vertical-align: -3px">format_list_bulleted</span>
+          <%= link_to edit_gws_frames_column_path(id: item, ref: ref), class: "btn", title: I18n.t("ss.links.edit"), data: { turbo: true } do %>
+            <span class="material-icons-outlined md-15" style="vertical-align: -3px">edit</span>
           <% end %>
         </div>
-      <% end %>
+        <div class="gws-column-item-toolbar-item gws-column-item-detail">
+          <%= button_tag name: "detail", type: :button, class: "btn btn-gws-column-item-detail", title: t("gws/column.links.edit_in_detail"), data: { ref: edit_gws_apis_column_path(form_id: item.form, id: item, ref: ref) } do %>
+            <span class="material-icons-outlined md-15" style="vertical-align: -3px">open_in_new</span>
+          <% end %>
+        </div>
+        <% if item.class == Gws::Column::RadioButton %>
+          <div class="gws-column-item-toolbar-item gws-column-item-branch">
+            <%= link_to edit_gws_frames_column_path(id: item, ref: ref, form: 'branch'), class: "btn", title: t("gws/column.links.edit_conditional_branch"), data: { turbo: true } do %>
+              <span class="material-icons-outlined md-16" style="vertical-align: -3px">format_list_bulleted</span>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <div class="gws-column-item-toolbar-item-group">
+        <div class="gws-column-item-toolbar-item gws-column-item-delete">
+          <%= button_tag name: "delete", type: :button, class: "btn btn-gws-column-item-delete", title: t("ss.links.delete"), data: { ref: gws_frames_column_path(id: item, ref: ref) } do %>
+            <span class="material-icons-outlined md-15" style="vertical-align: -3px">delete</span>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
