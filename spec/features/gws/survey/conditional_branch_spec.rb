@@ -6,7 +6,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   let!(:user2) { create(:gws_user, uid: "u02", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:user3) { create(:gws_user, uid: "u03", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let!(:user4) { create(:gws_user, uid: "u04", group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
-  let!(:due_date) { I18n.l(Time.zone.today + 14, format: :picker) }
+  let!(:due_date) { I18n.l(Time.zone.today + 14.days, format: :picker) }
 
   before do
     clear_downloads
@@ -42,7 +42,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: form_name
-        fill_in "item[due_date]", with: due_date
+        fill_in_datetime "item[due_date]", with: due_date
         choose I18n.t("gws.options.readable_setting_range.public")
 
         click_on I18n.t("ss.buttons.save")
@@ -269,22 +269,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           expect(file.form_id).to eq survey_form.id
           expect(file.user_id).to eq user1.id
           file.column_values.reorder(column_id: 1).to_a.tap do |column_values|
-            expect(column_values).to have(3).items
+            expect(column_values).to have(1).items
             column_values[0].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
               expect(column_value.value).to eq radio_option0
               expect(column_value.other_value).to be_blank
-            end
-            column_values[1].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section1_column.id
-              expect(column_value.value).to eq section1_column.name
-            end
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section2_column.id
-              expect(column_value.value).to eq section2_column.name
             end
           end
         end
@@ -293,7 +283,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           expect(file.form_id).to eq survey_form.id
           expect(file.user_id).to eq user2.id
           file.column_values.reorder(column_id: 1).to_a.tap do |column_values|
-            expect(column_values).to have(4).items
+            expect(column_values).to have(2).items
             column_values[0].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
@@ -302,18 +292,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
             end
             column_values[1].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section1_column.id
-              expect(column_value.value).to eq section1_column.name
-            end
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
               expect(column_value.column_id).to eq section1_text_column.id
               expect(column_value.value).to eq section1_text_value
-            end
-            column_values[3].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section2_column.id
-              expect(column_value.value).to eq section2_column.name
             end
           end
         end
@@ -322,7 +302,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           expect(file.form_id).to eq survey_form.id
           expect(file.user_id).to eq user3.id
           file.column_values.reorder(column_id: 1).to_a.tap do |column_values|
-            expect(column_values).to have(4).items
+            expect(column_values).to have(2).items
             column_values[0].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
@@ -330,16 +310,6 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
               expect(column_value.other_value).to be_blank
             end
             column_values[1].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section1_column.id
-              expect(column_value.value).to eq section1_column.name
-            end
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section2_column.id
-              expect(column_value.value).to eq section2_column.name
-            end
-            column_values[3].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::TextField)
               expect(column_value.column_id).to eq section2_text_column.id
               expect(column_value.value).to eq section2_text_value
@@ -351,22 +321,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
           expect(file.form_id).to eq survey_form.id
           expect(file.user_id).to eq user4.id
           file.column_values.reorder(column_id: 1).to_a.tap do |column_values|
-            expect(column_values).to have(3).items
+            expect(column_values).to have(1).items
             column_values[0].tap do |column_value|
               expect(column_value).to be_a(Gws::Column::Value::RadioButton)
               expect(column_value.column_id).to eq radio_column.id
               expect(column_value.value).to eq Gws::Column::RadioButton::OTHER_VALUE
               expect(column_value.other_value).to eq radio_other1
-            end
-            column_values[1].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section1_column.id
-              expect(column_value.value).to eq section1_column.name
-            end
-            column_values[2].tap do |column_value|
-              expect(column_value).to be_a(Gws::Column::Value::TextField)
-              expect(column_value.column_id).to eq section2_column.id
-              expect(column_value.value).to eq section2_column.name
             end
           end
         end
