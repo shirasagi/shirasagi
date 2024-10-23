@@ -266,16 +266,10 @@ $border-white: 1px solid $white;
     font-size: $px12;
   }
 }
-@mixin btn-red {
-  display: inline-block;
-  min-width: 100px;
-  padding: 8px 10px;
+@mixin btn-red-core {
   border: 1px solid #b23a3d;
-  @include border-radius(6px);
   @include grd-red;
-  filter: none \9;
   color: $white;
-  font-size: $px15;
   cursor: pointer;
   &:hover {
     opacity: .9;
@@ -284,6 +278,15 @@ $border-white: 1px solid $white;
   &:disabled, &.btn-disabled {
     @include btn-disabled;
   }
+}
+@mixin btn-red {
+  @include btn-red-core;
+  display: inline-block;
+  min-width: 100px;
+  padding: 8px 10px;
+  @include border-radius(6px);
+  filter: none \9;
+  font-size: $px15;
   @include mb {
     min-width: 0;
     padding: 5px 12px;
