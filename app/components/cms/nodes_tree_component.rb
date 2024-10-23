@@ -1,5 +1,8 @@
 class Cms::NodesTreeComponent < ApplicationComponent
   include Cms::NodeHelper
+  include SS::CacheableComponent
+
+  self.cache_key = ->{ [ @site.id, @user.id ] }
 
   def initialize(site:, user:, item: nil, only_children: false, root_items: nil, type: nil)
     @type = type.presence || 'cms_nodes'
