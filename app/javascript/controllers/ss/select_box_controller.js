@@ -5,13 +5,17 @@ import Dialog from "../../ss/dialog";
 import ejs from 'ejs/ejs';
 
 const DEFAULT_TEMPLATE = `
-  <tr data-id="<%= data.id %>">
-    <td>
-      <input type="<%= attr.type %>" name="<%= attr.name %>" value="<%= data.id %>" class="<%= attr.class %>">
-      <%= data.name %>
-    </td>
-    <td><a class="deselect btn" href="#"><%= label.delete %></a></td>
-  </tr>
+  <% if (selectedItems.length > 0) { %>
+    <% selectedItems.forEach(function(selectedItem) { %>
+      <tr data-id="<%= selectedItem.id %>">
+        <td>
+          <input type="attr.type" name="attr.name" value="<%= selectedItem.id %>" class="attr.class">
+          <%= selectedItem.name %>
+        </td>
+        <td><a class="deselect btn" href="#"><%= label.delete %></a></td>
+      </tr>
+    <% }); %>
+  <% } %>
 `;
 
 export default class extends Controller {
@@ -21,7 +25,7 @@ export default class extends Controller {
     template: { type: String, default: "ejs" },
     selectionType: { type: String, default: "append" },
   }
-  static targets = [ "result", "template" ]
+  static targets = [ "result", "template", "ajaxTable" ]
 
   connect() {
   }
@@ -77,8 +81,15 @@ export default class extends Controller {
   }
 
   #templateSource() {
-    if (this.templateTarget) {
+    if (this.hasTemplateTarget) {
       return this.templateTarget.innerHTML;
+    }
+
+    const hiddenIdsElement = this.element.querySelector(".hidden-ids");
+    if (hiddenIdsElement) {
+      return DEFAULT_TEMPLATE.replaceAll("attr.name", hiddenIdsElement.name)
+        .replaceAll("attr.type", hiddenIdsElement.type)
+        .replaceAll("attr.class", hiddenIdsElement.getAttribute("class"));
     }
 
     return DEFAULT_TEMPLATE;
@@ -104,6 +115,16 @@ export default class extends Controller {
       replaceChildren(this.resultTarget, result);
     } else {
       appendChildren(this.resultTarget, result);
+    }
+
+    if (this.hasAjaxTableTarget) {
+      const $table = $(this.ajaxTableTarget);
+      if ($table.find("tbody tr").size() === 0) {
+        $table.hide();
+      } else {
+        $table.show();
+      }
+      $table.trigger("change");
     }
   }
 
