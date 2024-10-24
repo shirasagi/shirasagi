@@ -125,7 +125,7 @@ gem 'kintone', git: "https://github.com/jue58/kintone.git"
 group :development, :test do
   gem 'brakeman', require: false
   gem 'capybara', require: false
-  gem 'debase', require: false
+  gem 'debug', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
