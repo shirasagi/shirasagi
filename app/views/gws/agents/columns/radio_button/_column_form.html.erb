@@ -1,12 +1,11 @@
 <% value ||= nil %>
 <%= render 'gws/agents/columns/main/common_label', column: column %>
-<dd class="<%= @section_id %> radio-button-<%= column.id %>">
-  <% if column.branch_section_ids.compact.reject(&:empty?).present? %>
-    <%= jquery do %>
-      Gws_Column.renderRadioButton("<%= column.id %>");
-    <% end %>
-  <% end %>
-
+<%
+  data = {}
+  data[:controller] = "gws--column--radio" if column.branch_section_ids.compact.reject(&:empty?).present?
+  data[:column_id] = column.id.to_s
+%>
+<%= tag.dd(class: [ @section_id, "radio-button-#{column.id}" ], data: data) do %>
   <%= hidden_field_tag("#{object_name}[#{column.id}]", nil, id: nil) %>
   <span class="prefix-block"><%= sanitize_easy column.prefix_explanation %></span>
   <span class="prefix"><%= column.prefix_label %></span>
@@ -42,4 +41,4 @@
       <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: "btn", onclick: "$(\"input[name='#{object_name}[#{column.id}]']\").prop('checked', false);") %>
     </div>
   <% end %>
-</dd>
+<% end %>
