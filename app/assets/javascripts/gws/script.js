@@ -31,7 +31,6 @@
 //= require gws/affair/menu
 //= require gws/affair/overtime_file
 //= require gws/affair/shift_records
-//= require gws/column/column
 //= require gws/workflow2/approver
 
 SS.ready(function () {
