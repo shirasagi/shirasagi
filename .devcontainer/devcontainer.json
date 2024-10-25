@@ -1,0 +1,8 @@
+{
+  "name": "SHIRASAGI Devcontainer",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "shirasagi",
+  "workspaceFolder": "/workspaces/shirasagi"
+}
