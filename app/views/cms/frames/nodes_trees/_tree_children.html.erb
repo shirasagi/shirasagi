@@ -2,8 +2,8 @@
   <% children.each do |child| %>
     <% if child[:has_children] %>
       <li>
-        <details class="tree__details" data-ss--tree-target="details" data-open="<%= child[:is_current] || child[:is_parent] %>">
-          <summary data-highlight="<%= child[:is_current] %>" data-action="click->ss--tree#toggle">
+        <details class="tree__details" data-ss--tree-target="details">
+          <summary data-action="click->ss--tree#toggle">
             <a href="<%= child[:url] %>" data-turbo="false"><%= child[:name] %></a>
           </summary>
 
@@ -11,7 +11,7 @@
         </details>
       </li>
     <% else %>
-      <li data-highlight="<%= child[:is_current] %>">
+      <li data-ss--tree-target="li">
         <a href="<%= child[:url] %>" data-turbo="false"><%= child[:name] %></a>
       </li>
     <% end %>
