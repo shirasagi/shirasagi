@@ -8,7 +8,7 @@
               <a href="<%= folder[:url] %>" data-turbo="false"><%= folder[:name] %></a>
             </summary>
 
-            <%= render 'tree_children', children: folder[:children] if folder[:has_children] %>
+            <%= render 'cms/frames/nodes_trees/tree_children', children: folder[:children] if folder[:has_children] %>
           </details>
         </li>
       <% else %>

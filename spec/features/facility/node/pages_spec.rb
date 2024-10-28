@@ -39,7 +39,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit facility_pages_path(site: site, cid: node)
-        expect(page).to have_css(".tree-navi", text: "refresh")
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
 
         #
         # Create Facility::Node::Page
@@ -116,7 +116,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         expect(page_node.new_days).to eq new_days
 
         visit facility_pages_path(site.id, node)
-        expect(page).to have_css(".tree-navi", text: "refresh")
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
         within ".list-items" do
           click_on name
         end
@@ -139,7 +139,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         # Delete Facility::Node::Page
         #
         visit facility_pages_path(site.id, node)
-        expect(page).to have_css(".tree-navi", text: "refresh")
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
         within ".list-items" do
           click_on name2
         end
@@ -148,7 +148,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.delete')
         end
         wait_for_notice I18n.t('ss.notice.deleted')
-        expect(page).to have_css(".tree-navi", text: "refresh")
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
 
         expect { page_node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       end

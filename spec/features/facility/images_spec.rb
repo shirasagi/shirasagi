@@ -79,7 +79,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Check Facility::Node::Page
       #
       visit facility_pages_path(site: site, cid: facility_node)
-      expect(page).to have_css(".tree-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       within ".list-items" do
         click_on node.name
       end
