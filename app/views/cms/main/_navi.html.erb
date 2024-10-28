@@ -1,18 +1,3 @@
-<nav class="main-navi">
-  <h2><%= link_to t("cms.content"), cms_contents_path, class: "icon-content" %></h2>
-  <h2><%= link_to t("cms.node"), cms_nodes_path, class: "icon-node" %></h2>
-
-  <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.page"), cms_pages_path, class: "icon-page" %></h2>
-  <% end %>
-  <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.part"), cms_parts_path, class: "icon-part" %></h2>
-  <% end %>
-  <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.layout"), cms_layouts_path, class: "icon-layout" %></h2>
-  <% end %>
-</nav>
-
 <% search_folders = Cms::PageSearch.site(@cur_site).allow(:read, @cur_user, site: @cur_site).order_by(order: 1) %>
 <% if search_folders.present? %>
   <nav class="main-navi">
@@ -40,20 +25,6 @@
     <h2><%= link_to t("mongoid.models.inquiry/answer"), inquiry_site_answers_path, class: "icon-conv" %></h2>
   <% end %>
 
-  <% if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
-    <% if @cur_node %>
-      <h2><%= link_to t("cms.import_page"), node_import_path(cid: params[:cid]), class: "icon-conf" %></h2>
-    <% else %>
-      <h2><%= link_to t("cms.import_node"), cms_import_path, class: "icon-conf" %></h2>
-    <% end %>
-  <% end %>
-
-  <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.generate_node"), cms_generate_nodes_path, class: "icon-write" %></h2>
-  <% end %>
-  <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to t("cms.generate_page"), cms_generate_pages_path, class: "icon-write" %></h2>
-  <% end %>
   <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.command"), cms_command_path, class: "icon-write" %></h2>
   <% end %>
