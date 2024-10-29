@@ -5,14 +5,14 @@ class Cms::NodesTreeComponent < ApplicationComponent
 
   attr_accessor :site, :user
 
-  self.cache_key = ->{ [ @site.id, @user.id ] }
+  self.cache_key = ->{ [ site.id, folders.map(&:id), folders.max(&:updated).to_i ] }
 
   class NodeItem
     include ActiveModel::Model
 
     attr_accessor :item, :url, :children
 
-    delegate :id, :name, :filename, :depth, to: :item
+    delegate :id, :name, :filename, :depth, :route, :view_route, :updated, to: :item
 
     def children?
       children.present?
