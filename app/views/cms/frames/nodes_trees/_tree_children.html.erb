@@ -1,18 +1,18 @@
 <ul>
   <% children.each do |child| %>
-    <% if child[:has_children] %>
+    <% if child.children? %>
       <li>
         <details class="tree__details" data-ss--tree-target="details">
           <summary data-action="click->ss--tree#toggle">
-            <a href="<%= child[:url] %>" data-turbo="false"><%= child[:name] %></a>
+            <a href="<%= child.url %>" data-turbo="false"><%= child.name %></a>
           </summary>
 
-          <%= render 'tree_children', children: child[:children] %>
+          <%= render 'tree_children', children: child.children %>
         </details>
       </li>
     <% else %>
       <li data-ss--tree-target="li">
-        <a href="<%= child[:url] %>" data-turbo="false"><%= child[:name] %></a>
+        <a href="<%= child.url %>" data-turbo="false"><%= child.name %></a>
       </li>
     <% end %>
   <% end %>
