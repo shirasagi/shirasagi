@@ -1,3 +1,6 @@
-<turbo-frame id="cms-nodes-tree-frame" src="<%= cms_frames_nodes_trees_path(id: params[:cid]) %>">
-  <%= loading %>
-</turbo-frame>
+<%=
+  data = { controller: "ss--tree", "current_node_id" => params[:cid].to_s.presence }
+  tag.turbo_frame id: "cms-nodes-tree-frame", src: cms_frames_nodes_trees_path, data: data do
+    loading
+  end
+%>

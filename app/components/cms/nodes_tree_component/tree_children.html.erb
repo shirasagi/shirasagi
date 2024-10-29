@@ -1,18 +1,22 @@
-<ul>
+<ul class="ss-tree-subtree">
   <% children.each do |child| %>
     <% if child.children? %>
-      <li>
-        <details class="tree__details" data-ss--tree-target="details">
-          <summary data-action="click->ss--tree#toggle">
-            <a href="<%= child.url %>" data-turbo="false"><%= child.name %></a>
+      <li class="ss-tree-item">
+        <details class="ss-tree-subtree-wrap">
+          <summary>
+            <a href="<%= child.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= child.id %>">
+              <span class="ss-tree-item-title"><%= child.name %></span>
+            </a>
           </summary>
 
           <%= render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: child.children) %>
         </details>
       </li>
     <% else %>
-      <li data-ss--tree-target="li">
-        <a href="<%= child.url %>" data-turbo="false"><%= child.name %></a>
+      <li class="ss-tree-item no-children">
+        <a href="<%= child.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= child.id %>">
+          <span class="ss-tree-item-title"><%= child.name %></span>
+        </a>
       </li>
     <% end %>
   <% end %>

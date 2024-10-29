@@ -1,11 +1,13 @@
 <%= cache_component do %>
-  <ul class="tree" data-controller="ss--tree">
+  <ul class="ss-tree cms-nodes-tree">
     <% root_items.each do |folder| %>
       <% if folder.children? %>
-        <li>
-          <details class="tree__details" data-ss--tree-target="details">
-            <summary data-action="click->ss--tree#toggle">
-              <a href="<%= folder.url %>" data-turbo="false"><%= folder.name %></a>
+        <li class="ss-tree-item">
+          <details class="ss-tree-subtree-wrap">
+            <summary>
+              <a href="<%= folder.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= folder.id %>">
+                <span class="ss-tree-item-title"><%= folder.name %></span>
+              </a>
             </summary>
 
             <%=
@@ -16,8 +18,10 @@
           </details>
         </li>
       <% else %>
-        <li class="no-children" data-ss--tree-target="li">
-          <a href="<%= folder.url %>" data-turbo="false"><%= folder.name %></a>
+        <li class="ss-tree-item no-children">
+          <a href="<%= folder.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= folder.id %>">
+            <span class="ss-tree-item-title"><%= folder.name %></span>
+          </a>
         </li>
       <% end %>
     <% end %>

@@ -1,85 +1,41 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["details", "li"];
-
   connect() {
-    this.highlightAndOpenFolders();
+    this.currentNodeId = this.element.dataset.currentNodeId
+    this.element.addEventListener("turbo:frame-load", () => this.highlightAndOpenFolders());
   }
 
   highlightAndOpenFolders() {
-    const currentPath = location.pathname;
-    const currentNumber = this.extractNumber(currentPath);
+    this.clearHighlights();
+    if (!this.currentNodeId) {
+      return;
+    }
 
-    this.detailsTargets.forEach(details => {
-      const anchor = details.querySelector("summary a");
-      const href = anchor.getAttribute("href");
-
-      if (this.isPathMatch(currentNumber, href)) {
-        details.open = true;
-        details.querySelector("summary").classList.add("highlight");
-        this.openAllParents(details);
-      }
-    });
-
-    this.liTargets.forEach(li => {
-      const anchor = li.querySelector("a");
-      const href = anchor.getAttribute("href");
-
-      if (this.isPathMatch(currentNumber, href)) {
-        li.classList.add("highlight");
-        this.openAllParents(li.closest("details"));
+    this.element.querySelectorAll(`[data-node-id="${this.currentNodeId}"]`).forEach((el) => {
+      const treeItemElement = el.closest(".ss-tree-item")
+      if (treeItemElement) {
+        treeItemElement.classList.add("is-current");
       }
 
-      anchor.addEventListener("click", (event) => {
-        event.preventDefault();
-        this.clearHighlights();
-        li.classList.add("highlight");
-        this.openAllParents(li.closest("details"));
-        window.location.href = href;
-      });
+      const detailsElement = el.closest(".ss-tree-subtree-wrap")
+      if (detailsElement) {
+        this.openAllParents(detailsElement);
+      }
     });
   }
 
   openAllParents(element) {
-    let parent = element.closest("details");
+    let parent = element;
     while (parent) {
       parent.open = true;
-      parent = parent.parentElement.closest("details");
+      parent = parent.parentElement.closest(".ss-tree-subtree-wrap");
     }
-  }
-
-  extractNumber(path) {
-    const match = path.match(/(\d+)(?=[^0-9]*$)/);
-    return match ? match[1] : null;
-  }
-
-  isPathMatch(currentNumber, href) {
-    const match = href.match(/(\d+)(?=[^0-9]*$)/);
-    const hrefNumber = match ? match[1] : null;
-
-    if (location.pathname === "/.s1/cms/nodes") {
-      return false;
-    }
-
-    return currentNumber === hrefNumber;
-  }
-
-  toggle(event) {
-    const details = event.currentTarget.closest("details");
-
-    if (event.target.closest('a')) {
-      return; 
-    }
-
-    details.open = !details.open;
-    event.preventDefault();
   }
 
   clearHighlights() {
-    this.detailsTargets.forEach(details => {
-      details.querySelector("summary")?.classList.remove("highlight");
+    this.element.querySelectorAll(".is-current").forEach((el) => {
+      el.classList.remove("is-current")
     });
-    this.liTargets.forEach(li => li.classList.remove("highlight"));
   }
 }
