@@ -1,7 +1,7 @@
-<ul class="ss-tree-subtree">
+<ul class="ss-tree-subtree" role="group">
   <% children.each do |child| %>
     <% if child.children? %>
-      <li class="ss-tree-item">
+      <li class="ss-tree-item" role="treeitem">
         <details class="ss-tree-subtree-wrap">
           <summary>
             <a href="<%= child.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= child.id %>">
@@ -13,7 +13,7 @@
         </details>
       </li>
     <% else %>
-      <li class="ss-tree-item no-children">
+      <li class="ss-tree-item no-children" role="treeitem">
         <a href="<%= child.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= child.id %>">
           <span class="ss-tree-item-title"><%= child.name %></span>
         </a>
