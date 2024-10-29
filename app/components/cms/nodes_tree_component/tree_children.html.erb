@@ -7,7 +7,7 @@
             <a href="<%= child.url %>" data-turbo="false"><%= child.name %></a>
           </summary>
 
-          <%= render 'tree_children', children: child.children %>
+          <%= render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: child.children) %>
         </details>
       </li>
     <% else %>

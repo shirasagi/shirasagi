@@ -8,7 +8,11 @@
               <a href="<%= folder.url %>" data-turbo="false"><%= folder.name %></a>
             </summary>
 
-            <%= render 'cms/frames/nodes_trees/tree_children', children: folder.children if folder.children? %>
+            <%=
+              if folder.children?
+                render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: folder.children)
+              end
+            %>
           </details>
         </li>
       <% else %>
