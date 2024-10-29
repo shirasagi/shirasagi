@@ -20,27 +20,27 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
       # puts html
       html.css("a[href='/.s#{site.id}/article#{node1.id}/pages']").tap do |anchors|
         expect(anchors).to have(1).items
-        expect(anchors[0].text).to eq node1.name
+        expect(anchors[0].text.strip).to eq node1.name
       end
       html.css("a[href='/.s#{site.id}/cms#{node1_1.id}/archives']").tap do |anchors|
         expect(anchors).to have(1).items
-        expect(anchors[0].text).to eq node1_1.name
+        expect(anchors[0].text.strip).to eq node1_1.name
       end
       html.css("a[href='/.s#{site.id}/cms#{node1_2.id}/photo_albums']").tap do |anchors|
         expect(anchors).to have(1).items
-        expect(anchors[0].text).to eq node1_2.name
+        expect(anchors[0].text.strip).to eq node1_2.name
       end
       html.css("a[href='/.s#{site.id}/cms#{node2.id}/pages']").tap do |anchors|
         expect(anchors).to have(1).items
-        expect(anchors[0].text).to eq node2.name
+        expect(anchors[0].text.strip).to eq node2.name
       end
       html.css("a[href='/.s#{site.id}/inquiry#{node3.id}/nodes']").tap do |anchors|
         expect(anchors).to have(1).items
-        expect(anchors[0].text).to eq node3.name
+        expect(anchors[0].text.strip).to eq node3.name
       end
       html.css("a[href='/.s#{site.id}/inquiry#{node3_1.id}/forms']").tap do |anchors|
         expect(anchors).to have(1).items
-        expect(anchors[0].text).to eq node3_1.name
+        expect(anchors[0].text.strip).to eq node3_1.name
       end
     end
   end

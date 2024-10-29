@@ -5,9 +5,7 @@
         <li class="ss-tree-item" role="treeitem">
           <details class="ss-tree-subtree-wrap">
             <summary>
-              <a href="<%= folder.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= folder.id %>">
-                <span class="ss-tree-item-title"><%= folder.name %></span>
-              </a>
+              <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
             </summary>
 
             <%=
@@ -19,9 +17,7 @@
         </li>
       <% else %>
         <li class="ss-tree-item no-children" role="treeitem">
-          <a href="<%= folder.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= folder.id %>">
-            <span class="ss-tree-item-title"><%= folder.name %></span>
-          </a>
+          <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
         </li>
       <% end %>
     <% end %>

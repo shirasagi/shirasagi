@@ -4,9 +4,7 @@
       <li class="ss-tree-item" role="treeitem">
         <details class="ss-tree-subtree-wrap">
           <summary>
-            <a href="<%= child.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= child.id %>">
-              <span class="ss-tree-item-title"><%= child.name %></span>
-            </a>
+            <%= link_to tag.span(child.name, class: "ss-tree-item-title"), child.url, class: "ss-tree-item-link", data: { turbo: false, node_id: child.id } %>
           </summary>
 
           <%= render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: child.children) %>
@@ -14,9 +12,7 @@
       </li>
     <% else %>
       <li class="ss-tree-item no-children" role="treeitem">
-        <a href="<%= child.url %>" class="ss-tree-item-link" data-turbo="false" data-node-id="<%= child.id %>">
-          <span class="ss-tree-item-title"><%= child.name %></span>
-        </a>
+        <%= link_to tag.span(child.name, class: "ss-tree-item-title"), child.url, class: "ss-tree-item-link", data: { turbo: false, node_id: child.id } %>
       </li>
     <% end %>
   <% end %>
