@@ -136,31 +136,18 @@ this.Form_Alert = (function () {
   };
 
   Form_Alert.asyncValidateLinkCheck = function (form, submit, opts) {
-    // This function is skelton code.
-    // In fact, run "Link_Checker" to perform a link check.
-    var errors = [];
-    var asyncCheck = function() {
-      var defer = $.Deferred();
+    var linkChecker = Cms_Form.linkChecker;
 
-      // do check and push some errors.
-      setTimeout(function(){
-        console.log("execute link check and push an error.");
-        errors.push({ msg: "[失敗] https://sample.example.jp" });
-        defer.resolve({ status: "ok" });
-      }, 300);
-
-      return defer.promise();
-    };
-
-    var promise = asyncCheck();
-    promise.done(function() {
-      $.each(errors, function() {
-        var error = this;
-        Form_Alert.add("リンクチェック", null, error["msg"]);
+    return linkChecker.fetchLinkMessages().then(function(messages) {
+      $.each(messages, function(index, message) {
+        Form_Alert.add("リンクチェック", null, message);
       });
+    }).catch(function(errorMessages) {
+      console.error("Error during link checking:", errorMessages);
     });
-    return promise;
   };
+
+
 
   Form_Alert.wrapDeferred = function (validate) {
     return function (form, submit) {

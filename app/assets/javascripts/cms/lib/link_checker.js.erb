@@ -277,6 +277,48 @@ this.Link_Checker = (function () {
     this.links[link] = html;
   };
 
-  return Link_Checker;
+  Link_Checker.prototype.fetchLinkMessages = function () {
+    var self = this;
+    var defer = $.Deferred();
+    var messages = [];
 
+    this.beforeCheck();
+
+    if (!this.form.form_link_check_path) {
+      var msg = "form link check path is not configured";
+      this.resultBox.showMessage("<p>" + msg + "</p>");
+      defer.reject(msg);
+      return defer.promise();
+    }
+
+    var formData = this.form.getFormData($("#" + Form_Preview.form_id));
+    formData.append("route", Form_Preview.page_route);
+
+    $.ajax({
+      type: "POST",
+      url: self.form.form_link_check_path,
+      data: formData,
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: function(data) {
+        $.each(data, function(link, result) {
+          if (result["message"]) {
+            messages.push(result["message"]);
+          }
+        });
+        defer.resolve(messages); // Resolve with messages
+      },
+      error: function(xhr, status, error) {
+        var msg = Link_Checker.message["linkCheckerError"] + ": " + self.form.form_link_check_path;
+        messages.push(msg);
+        defer.reject(messages); // Reject with messages in case of error
+      }
+    });
+
+    return defer.promise(); // Return the promise
+  };
+
+
+  return Link_Checker;
 })();

@@ -14,6 +14,7 @@ this.Cms_Form = (function () {
 
   Cms_Form.options = { check: { syntax: true, link: false } };
   Cms_Form.addonSelector = ".mod-cms-body";
+  Cms_Form.linkChecker = null
 
   Cms_Form.render = function () {
     // handle Syntax_Checker
@@ -22,7 +23,7 @@ this.Cms_Form = (function () {
     }
 
     // handle Link_Checker
-    Link_Checker.render();
+    Cms_Form.linkChecker = Link_Checker.render(Cms_Form);
 
     // handle Mobile_Size_Checker
     Mobile_Size_Checker.render();
