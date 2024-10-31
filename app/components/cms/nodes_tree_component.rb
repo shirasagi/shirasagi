@@ -5,7 +5,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
 
   attr_accessor :site, :user
 
-  self.cache_key = ->{ [ site.id, folders.map(&:id), folders.max(&:updated).to_i ] }
+  self.cache_key = ->{ [ site.id, root_items.map(&:id), folders.count, folders.max(&:updated).to_i ] }
 
   class NodeItem
     include ActiveModel::Model
@@ -20,10 +20,8 @@ class Cms::NodesTreeComponent < ApplicationComponent
   end
 
   def root_items
-    @root_items ||= begin
-      items = folders.select { |node| node.depth == 1 }
-      items.map { |node| NodeItem.new(item: node, url: item_url(node), children: child_items(node)) }
-    end
+    return @root_items if @root_items
+    build_tree
   end
 
   private
@@ -41,11 +39,29 @@ class Cms::NodesTreeComponent < ApplicationComponent
     end
   end
 
-  def child_items(item)
-    prefix_filename = "#{item.filename}/"
-    folders
-      .select { |node| node.filename.start_with?(prefix_filename) && node.depth == item.depth + 1 }
-      .map { |node| NodeItem.new(item: node, url: item_url(node), children: child_items(node)) }
+  def build_tree
+    @root_items = []
+    parent_map = {}
+
+    folders.each do |node|
+      wrap = NodeItem.new(item: node, url: item_url(node), children: [])
+      parent_map[node.filename] = wrap
+      if node.depth == 1
+        @root_items << wrap
+        next
+      end
+
+      parent_filename = ::File.dirname(node.filename)
+      parent_wrap = parent_map[parent_filename]
+      unless parent_wrap
+        Rails.logger.warn { "'#{node.filename}' hasn't parent node" }
+        next
+      end
+
+      parent_wrap.children << wrap
+    end
+
+    @root_items
   end
 
   def item_url(item)
