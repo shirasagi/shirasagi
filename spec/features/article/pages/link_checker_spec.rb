@@ -8,8 +8,9 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
     group_ids: [cms_group.id], st_form_ids: [form.id]
   end
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
+  let!(:form1) { create(:cms_form, cur_site: cms_site, state: 'public', sub_type: 'static') }
   let!(:column) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1) }
-
+  let!(:column1) { create(:cms_column_free, cur_site: site, cur_form: form1, order: 1) }
   let(:ss_file1) { create :ss_file, site: site, user: user }
   let(:ss_file2) { create :ss_file, site: site, user: user }
 
@@ -36,7 +37,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:failure) { I18n.t("errors.messages.link_check_failure") }
 
   let(:edit_path) { edit_article_page_path site.id, node, item }
-
+  let(:check_edit_path) { edit_article_page_path site.id, node, check_page }
   before do
     stub_request(:get, success_url3).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
     stub_request(:get, success_url4).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
@@ -252,6 +253,27 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{redirection_self_url}")
         end
       end
+    end
+  end
+  context "check links on save" do 
+    let!(:check_page) do
+      create(
+        :article_page, cur_node: node, form: form, name: "[TEST]page", state: "public",
+        column_values: [ column1.value_type.new(column: column1, value: '<a href="/fs/1/_/failed.txt">anchor2</a><p>くらし\r\nガイド</p>') ]
+      )
+    end
+
+    it "publish save" do 
+      site.update(form_alert_link_check: "enabled")
+      site.reload
+
+      visit check_edit_path
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.publish")
+      end
+      wait_for_ajax
+      wait_for_js_ready
+      expect(page).to have_css("#alertExplanation")
     end
   end
 end
