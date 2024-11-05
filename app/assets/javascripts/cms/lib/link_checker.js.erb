@@ -304,10 +304,28 @@ this.Link_Checker = (function () {
       success: function(data) {
         $.each(data, function(link, result) {
           if (result["message"]) {
-            messages.push(result["message"]);
+            var code = result["code"];
+            var message = result["message"];
+            var state = (code == 200);
+            var html = "";
+
+            if (state) {
+              html += '<span class="success">' + Link_Checker.message["success"] + '</span> ';
+              html += '<span class="url">' + link + '</span> ';
+            } else {
+              html += '<span class="failure">' + Link_Checker.message["failure"] + '</span> ';
+              html += '<span class="url">' + link + '</span> ';
+            }
+
+            if (message) {
+              html += '<div class="message detail">'
+              html += message;
+              html += '</div>'
+            }
+            messages.push(html);
           }
         });
-        defer.resolve(messages); // Resolve with messages
+        defer.resolve(messages);
       },
       error: function(xhr, status, error) {
         var msg = Link_Checker.message["linkCheckerError"] + ": " + self.form.form_link_check_path;
@@ -318,6 +336,7 @@ this.Link_Checker = (function () {
 
     return defer.promise(); // Return the promise
   };
+
 
 
   return Link_Checker;
