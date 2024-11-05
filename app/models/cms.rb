@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module Cms
   extend Sys::ModulePermission
 
@@ -18,7 +20,7 @@ module Cms
     Cms.cms_db_used(site_criteria, opts) + Cms.cms_files_used(site_criteria, opts)
   end
 
-  MODULES_BOUND_TO_SITE = %w(
+  MODULES_BOUND_TO_SITE = Set.new(%w(
     ::Ads::AccessLog
     ::Board::AnpiPost
     ::Board::Post
@@ -48,6 +50,7 @@ module Cms
     ::Cms::Role
     ::Cms::Role
     ::Cms::SourceCleanerTemplate
+    ::Cms::Task
     ::Cms::ThemeTemplate
     ::Cms::WordDictionary
     ::Ezine::Column
@@ -95,16 +98,16 @@ module Cms
     ::Recommend::History::Log
     ::Recommend::SimilarityScore
     ::Voice::File
-  ).freeze
+  )).freeze
 
-  MODULES_BOUND_TO_GROUP = %w(
+  MODULES_BOUND_TO_GROUP = Set.new(%w(
     ::Cms::User
     ::Workflow::Route
-  ).freeze
+  )).freeze
 
-  MODULES_COMMON = %w(
+  MODULES_COMMON = Set.new(%w(
     ::Cms::User
-  ).freeze
+  )).freeze
 
   def self.cms_db_used(site_criteria, opts = {})
     site_ids = site_criteria.pluck(:id)
@@ -130,7 +133,12 @@ module Cms
       modules = MODULES_BOUND_TO_SITE
     end
     size += modules.map(&:constantize).sum do |klass|
-      klass.all.unscoped.any_in(site_id: site_ids).total_bsonsize
+      criteria = klass.all.unscoped.any_in(site_id: site_ids)
+      if criteria.respond_to?(:used_size)
+        criteria.used_size
+      else
+        criteria.total_bsonsize
+      end
     end
 
     if opts[:except] == "common"
@@ -139,7 +147,12 @@ module Cms
       modules = MODULES_BOUND_TO_GROUP
     end
     size += modules.map(&:constantize).sum do |klass|
-      klass.all.unscoped.any_in(group_ids: group_ids).total_bsonsize
+      criteria = klass.all.unscoped.any_in(group_ids: group_ids)
+      if criteria.respond_to?(:used_size)
+        criteria.used_size
+      else
+        criteria.total_bsonsize
+      end
     end
 
     size
