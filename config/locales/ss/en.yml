@@ -20,6 +20,7 @@ en:
     menu: Menu
     module: Module
     operation: Operation
+    qr_code: QR Code
     regexp: Regular expression
     resize_image: Resize image
     role: Role

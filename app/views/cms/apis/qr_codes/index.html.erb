@@ -1,0 +1,39 @@
+<%
+
+qr_code = ::RQRCode::QRCode.new(@url)
+qr_png = ChunkyPNG::Image.from_datastream(qr_code.as_png(@qr_settings[:png240]).to_datastream).to_data_url
+qr_svg = qr_code.as_svg(@qr_settings[:svg])
+
+%>
+<div class="mb-2">
+  URL: <%= @url %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <th style="width: 260px;"><%= t('ss.qr_code') %></th>
+      <th><%= t('ss.links.download') %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <tr class="qr-png">
+      <td class="thumb">
+        <%= image_tag qr_png, style: "border: 1px solid #e8e8e8;" %><br>
+        <div style="text-align: center;">(240px)</div>
+      </td>
+      <td>
+        PNG<br>
+        160px <%= link_to t('ss.links.download'), url: @url, download: 'png160' %><br>
+        240px <%= link_to t('ss.links.download'), url: @url, download: 'png240' %><br>
+        480px <%= link_to t('ss.links.download'), url: @url, download: 'png480' %><br>
+      </td>
+    </tr>
+    <tr class="qr-svg">
+      <td class="thumb"><%== qr_svg %></td>
+      <td>
+        SVG <%= link_to t('ss.links.download'), url: @url, download: 'svg' %><br>
+      </td>
+    </tr>
+  </tbody>
+</table>
