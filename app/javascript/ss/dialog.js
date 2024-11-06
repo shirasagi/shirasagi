@@ -2,13 +2,14 @@
 // インターフェース仕様は HTMLDialogElement を参考にした
 
 import {dispatchEvent, LOADING, replaceChildren} from "./tool";
+import i18next from 'i18next'
 
 const DIALOG_TEMPLATE = `
 <div class="ss-dialog-container">
   <dialog class="ss-dialog">
     <div class="ss-dialog-header">
-      <button type="button" name="close" class="ss-dialog-close" data-action="close-dialog">
-        <span class="material-icons-outlined">cancel</span>
+      <button type="button" name="close" class="ss-dialog-close" data-action="close-dialog" aria-label="close dialog">
+        <span class="material-icons-outlined" aria-hidden="true" role="img">cancel</span>
       </button>
     </div>
     <div class="ss-dialog-content">
@@ -42,7 +43,7 @@ class DialogFrame {
 
   #connect() {
     const dialogTemplate = document.createElement("template")
-    dialogTemplate.innerHTML = DIALOG_TEMPLATE
+    dialogTemplate.innerHTML = DIALOG_TEMPLATE.replaceAll("close dialog", i18next.t("ss.buttons.close"))
 
     this._attached = false;
     this._dialogContainer = document.body.appendChild(dialogTemplate.content.firstElementChild)
