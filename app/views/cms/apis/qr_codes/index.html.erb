@@ -2,7 +2,7 @@
 
 qr_code = ::RQRCode::QRCode.new(@url)
 qr_png = ChunkyPNG::Image.from_datastream(qr_code.as_png(@qr_settings[:png240]).to_datastream).to_data_url
-qr_svg = qr_code.as_svg(@qr_settings[:svg])
+qr_svg = qr_code.as_svg(@qr_settings[:svg]).html_safe
 
 %>
 <div class="mb-2">
@@ -30,7 +30,7 @@ qr_svg = qr_code.as_svg(@qr_settings[:svg])
       </td>
     </tr>
     <tr class="qr-svg">
-      <td class="thumb"><%== qr_svg %></td>
+      <td class="thumb"><%= qr_svg %></td>
       <td>
         SVG <%= link_to t('ss.links.download'), url: @url, download: 'svg' %><br>
       </td>
