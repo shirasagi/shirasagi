@@ -12,7 +12,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
 
     it "quick edit" do
       visit index_path
-      expect(page).to have_css(".content-navi-refresh", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css("a", text: "tune")
       click_link "tune"
@@ -64,7 +64,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
       within_window window1 do
         login_user user1
         visit index_path
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
         click_link "tune"
         wait_for_ajax
 
@@ -79,7 +79,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
       within_window window2 do
         login_user user2
         visit index_path
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
         click_link "tune"
         wait_for_ajax
         within ".quick-edit-grid" do
@@ -153,7 +153,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
 
     it do
       visit index_path
-      expect(page).to have_css(".content-navi-refresh", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       click_link "tune"
 
       within ".quick-edit-grid" do

@@ -9,7 +9,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
     it do
       # new
       visit cms_nodes_path(site: site)
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
@@ -58,7 +58,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_notice I18n.t("ss.notice.deleted")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
 
       expect { node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
@@ -72,7 +72,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
 
     it do
       visit cms_nodes_path(site: site)
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       within ".list-head" do
         wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
         click_on I18n.t("ss.links.make_them_public")
@@ -81,7 +81,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.make_them_public")
       end
       wait_for_notice I18n.t("ss.notice.changed")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
 
       Cms::Node.find(node1.id).tap do |node|
         expect(node.state).to eq "public"
@@ -100,7 +100,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
 
     it do
       visit cms_nodes_path(site: site)
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       within ".list-head" do
         wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
         click_on I18n.t("ss.links.make_them_close")
@@ -109,7 +109,7 @@ describe "cms_nodes", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.make_them_close")
       end
       wait_for_notice I18n.t("ss.notice.changed")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
 
       Cms::Node.find(node1.id).tap do |node|
         expect(node.state).to eq "closed"

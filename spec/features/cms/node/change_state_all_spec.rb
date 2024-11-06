@@ -12,7 +12,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example, js: true do
 
     it do
       visit node_nodes_path(site: site, cid: node0)
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       expect(node1.state).to eq "public"
       expect(node2.state).to eq "public"
       expect(node3.state).to eq "public"
@@ -29,7 +29,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.make_them_close")
       end
       wait_for_notice I18n.t("ss.notice.changed")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       expect(current_path).to eq node_nodes_path(site: site, cid: node0)
 
       node1.reload
@@ -51,7 +51,7 @@ describe "cms_node_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.make_them_public")
       end
       wait_for_notice I18n.t("ss.notice.changed")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       expect(current_path).to eq node_nodes_path(site: site, cid: node0)
 
       node1.reload

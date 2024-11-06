@@ -131,9 +131,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(item.class.all.size).to eq 1
 
       if item.route == "cms/page"
-        within "#content-navi" do
-          expect(page).to have_css(".material-icons", text: "refresh")
-        end
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
       end
     end
   end

@@ -93,6 +93,7 @@ Rails.application.routes.draw do
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
 
     namespace :frames do
+      resources :nodes_trees, only: %i[index]
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end

@@ -18,11 +18,11 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
 
   it do
     visit cms_nodes_path(site: site)
-    expect(page).to have_css(".tree-navi", text: "refresh")
+    wait_for_turbo_frame "#cms-nodes-tree-frame"
     within ".list-items" do
       click_on name
     end
-    expect(page).to have_css(".tree-navi", text: "refresh")
+    wait_for_turbo_frame "#cms-nodes-tree-frame"
     within "#main .main-navi" do
       click_on I18n.t("cms.node_config")
     end

@@ -248,6 +248,17 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_FOR_TREE_RENDER_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        var el = $(element)[0];
+        if (el.hasAttribute("data-ss-tree") && el.dataset.ssTree === "completed") {
+          resolve(true);
+          return;
+        }
+        el.addEventListener("ss:tree-render", () => resolve(true), { once: true });
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -676,6 +687,11 @@ module SS
 
     def wait_for_turbo_frame(element)
       result = page.evaluate_async_script(WAIT_FOR_TURBO_FRAME_SCRIPT, element)
+      expect(result).to be_truthy
+    end
+
+    def wait_for_tree_render(element)
+      result = page.evaluate_async_script(WAIT_FOR_TREE_RENDER_SCRIPT, element)
       expect(result).to be_truthy
     end
 
