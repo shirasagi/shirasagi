@@ -121,25 +121,29 @@ export function replaceChildren(element, htmlTextOrNode) {
 }
 
 export function appendChildren(element, htmlTextOrNode) {
-  const convertToElement = () => {
-    if (typeof htmlTextOrNode === 'string') {
-      const dummyElement = document.createElement("div");
-      dummyElement.innerHTML = htmlTextOrNode;
-      return dummyElement;
-    } else {
-      return htmlTextOrNode;
+  const cloneNode = () => {
+    if (htmlTextOrNode instanceof HTMLTemplateElement) {
+      return htmlTextOrNode.content.cloneNode(true);
     }
+
+    const dummyElement = document.createElement("template");
+    if (htmlTextOrNode instanceof HTMLElement) {
+      dummyElement.innerHTML = htmlTextOrNode.innerHTML;
+    } else {
+      dummyElement.innerHTML = htmlTextOrNode.toString();
+    }
+    return dummyElement.content.cloneNode(true);
   }
 
-  const dummyElement = convertToElement();
-  dummyElement.childNodes.forEach((childNode) => {
-    if (childNode.tagName === "SCRIPT") {
-      const newScriptElement = document.createElement("script");
-      Array.from(childNode.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
-      newScriptElement.appendChild(document.createTextNode(childNode.innerHTML));
-      element.appendChild(newScriptElement);
-    } else {
-      element.appendChild(childNode.cloneNode(true));
-    }
+  const dummyElement = cloneNode();
+  dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
+  element.appendChild(dummyElement);
+
+  element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
+    const newScriptElement = document.createElement("script");
+    delete scriptElement.dataset.new;
+    Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
+    newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML));
+    scriptElement.parentElement.replaceChild(newScriptElement, scriptElement);
   });
 }
