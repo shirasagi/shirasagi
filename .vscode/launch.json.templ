@@ -1,17 +1,17 @@
 {
-  // IntelliSense を使用して利用可能な属性を学べます。
-  // 既存の属性の説明をホバーして表示します。
-  // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+    // 参考: https://zenn.dev/igaiga/books/rails-practice-note/viewer/ruby_rails_vscode
+    // vscode に https://marketplace.visualstudio.com/items?itemName=KoichiSasada.vscode-rdbg が必要
     {
-      "name": "Local Debug",
-      "type": "Ruby",
+      "name": "Local SHIRASAGI Debug",
+      "type": "rdbg",
       "request": "launch",
-      "program": "${workspaceRoot}/bin/rails",
+      "cwd": "${workspaceRoot}",
+      "script": "${workspaceRoot}/bin/rails",
       "args":[ "server" ],
+      "askParameters": true,
       "useBundler": true
     }
   ]
 }
-
