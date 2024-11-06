@@ -9,8 +9,8 @@ class Cms::Apis::QrCodesController < ApplicationController
   private
 
   def set_target_url
-    @url = params[:url]
     raise "404" if params[:url].blank?
+    @url = ApplicationController.helpers.strip_tags(params[:url])
   end
 
   def set_qr_settings
