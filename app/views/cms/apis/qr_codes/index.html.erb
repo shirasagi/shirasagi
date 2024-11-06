@@ -17,22 +17,22 @@ qr_svg = qr_code.as_svg(@qr_settings[:svg]).html_safe
     </tr>
   </thead>
   <tbody class="items">
-    <tr class="qr-png">
+    <tr>
       <td class="thumb">
-        <%= image_tag qr_png, style: "border: 1px solid #e8e8e8;" %><br>
+        <%= image_tag qr_png, style: "border: 1px solid #eee;" %><br>
         <div style="text-align: center;">(240px)</div>
       </td>
       <td>
-        PNG<br>
-        160px <%= link_to t('ss.links.download'), url: @url, download: 'png160' %><br>
-        240px <%= link_to t('ss.links.download'), url: @url, download: 'png240' %><br>
-        480px <%= link_to t('ss.links.download'), url: @url, download: 'png480' %><br>
-      </td>
-    </tr>
-    <tr class="qr-svg">
-      <td class="thumb"><%= qr_svg %></td>
-      <td>
-        SVG <%= link_to t('ss.links.download'), url: @url, download: 'svg' %><br>
+        <div class="qr-png mb-2">
+          PNG<br>
+          160px <%= link_to t('ss.links.download'), filename: @filename, download: 'png160' %><br>
+          240px <%= link_to t('ss.links.download'), filename: @filename, download: 'png240' %><br>
+          480px <%= link_to t('ss.links.download'), filename: @filename, download: 'png480' %><br>
+        </div>
+        <div class="qr-svg">
+          SVG<br>
+          <%= link_to t('ss.links.download'), filename: @filename, download: 'svg' %><br>
+        </div>
       </td>
     </tr>
   </tbody>

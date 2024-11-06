@@ -25,19 +25,18 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content("sample.html")
 
       within "#addon-basic" do
-        wait_for_cbox_opened { click_on I18n.t('ss.qr_code') }
+        click_on I18n.t('ss.qr_code')
       end
-      within_cbox do
-        expect(page).to have_selector("tr.qr-png .thumb img")
-        expect(page).to have_selector("tr.qr-svg .thumb svg")
+      wait_for_cbox do
+        expect(page).to have_selector("td.thumb img")
 
-        find("tr.qr-png").all("a")[0].click
+        find(".qr-png").all("a")[0].click
         wait_for_download
-        find("tr.qr-png").all("a")[1].click
+        find(".qr-png").all("a")[1].click
         wait_for_download
-        find("tr.qr-png").all("a")[2].click
+        find(".qr-png").all("a")[2].click
         wait_for_download
-        find("tr.qr-svg").all("a")[0].click
+        find(".qr-svg").all("a")[0].click
         wait_for_download
         sleep(1)
 
@@ -45,7 +44,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(::File.basename(downloads[1])).to eq "QRCode_160px.png"
         expect(::File.basename(downloads[2])).to eq "QRCode_240px.png"
         expect(::File.basename(downloads[3])).to eq "QRCode_480px.png"
-        wait_for_cbox_closed { find('#cboxClose').click }
+        wait_cbox_close { find('#cboxClose').click }
       end
     end
   end

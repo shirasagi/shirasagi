@@ -9,7 +9,7 @@
   <dd><%= @item.send :basename %></dd>
   <dd>
     <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %>
-    <%= link_to t('ss.qr_code'), cms_apis_qr_codes_path(url: @item.full_url), class: "ajax-box ml-1" %>
+    <%= link_to t('ss.qr_code'), cms_apis_qr_codes_path(filename: @item.filename), class: "ajax-box ml-1" %>
   </dd>
 
   <% if @item.redirect_link.blank? %>
