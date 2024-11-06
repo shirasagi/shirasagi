@@ -127,6 +127,7 @@ ja:
     batch_operation: 一括操作
     csv_export_node: 一括エクスポート
     csv_import_node: 一括インポート
+    form_alert: ページ保存時の警告
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -940,6 +941,7 @@ ja:
       cms/line/statistic/info: 詳細情報
       cms/line/mail_handler: 本文設定
       cms/clipboard_copy: クリップボードへコピー
+      cms/form_alert_setting: ページ保存時の警告設定
 
   mongoid:
     models:
@@ -1762,6 +1764,8 @@ ja:
         average_sub_total__db: 平均子合計DB処理時間
         average_sub_total_view: 平均子合計ビュー処理時間
         average_sub_total_elapsed: 平均子合計全処理時間
+      cms/addon/form_alert_setting:
+        form_alert_link_check: リンクチェック
 
   activemodel:
     attributes:
@@ -3318,6 +3322,10 @@ ja:
         - "例: .contact"
         - class="contact" が設定されているHTML要素のテキストをクリップボードへコピーします。
         - 通常、この設定は、お問い合わせ先をクリップボードへコピーすることができます。
+
+    cms/addon/form_alert_setting:
+      form_alert_link_check:
+        - 有効にすると、ページ保存時にリンクチェックを実行し警告を表示します。
 
   all_content:
     page_id: ページID

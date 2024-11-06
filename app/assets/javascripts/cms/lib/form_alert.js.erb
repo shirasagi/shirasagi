@@ -135,6 +135,20 @@ this.Form_Alert = (function () {
     return promise;
   };
 
+  Form_Alert.asyncValidateLinkCheck = function (form, submit, opts) {
+    var linkChecker = Cms_Form.linkChecker;
+
+    return linkChecker.fetchLinkMessages().then(function(messages) {
+      $.each(messages, function(index, message) {
+        Form_Alert.add("リンクチェック", null, message);
+      });
+    }).catch(function(errorMessages) {
+      console.error("Error during link checking:", errorMessages);
+    });
+  };
+
+
+
   Form_Alert.wrapDeferred = function (validate) {
     return function (form, submit) {
       var d = $.Deferred();

@@ -150,6 +150,10 @@ Rails.application.routes.draw do
       resource :setting, only: %i[show edit update]
       resource :url_scheme, only: %i[show edit update]
     end
+    namespace 'form_alert' do
+      get "/" => redirect { |p, req| "#{req.path}/setting" }, as: :main
+      resource :setting, only: %i[show edit update]
+    end
     resource :user_profile, only: [:show, :edit, :update] do
       get :edit_password, on: :member
       post :edit_password, on: :member, action: :update_password
@@ -498,7 +502,7 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :change_state, :import] do  
+    resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
