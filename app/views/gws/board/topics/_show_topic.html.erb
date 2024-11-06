@@ -50,7 +50,7 @@
     <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user)) %>
       <div class="menu">
         <%= link_to new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" do %>
-          <span class="material-icons-outlined md-15">reply</span>
+          <%= md_icons.outlined "reply", size: 15 %>
           <span class="button-label"><%= t('gws/board.links.comment') %></span>
         <% end %>
       </div>

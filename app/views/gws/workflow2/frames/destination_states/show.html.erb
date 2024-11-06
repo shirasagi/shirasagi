@@ -3,7 +3,7 @@
     <%= select_tag "item[destination_treat_state]", destination_treat_state_options, id: nil, data: { controller: "ss--submit-on-change" } %>
     <% if params[:action] == "update" && @notice && item.errors.blank? %>
       <div class="animate__animated animate__fadeIn animate__faster gws-workflow-destination-states-notice">
-        <span class="material-icons-outlined">task_alt</span>
+        <%= md_icons.outlined "task_alt" %>
         <span><%= @notice %></span>
       </div>
     <% end %>
