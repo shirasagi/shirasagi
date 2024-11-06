@@ -14,7 +14,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       expect(page1.state).to eq "public"
       expect(page2.state).to eq "public"
       expect(page3.state).to eq "public"
@@ -27,7 +27,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
       click_button I18n.t("ss.buttons.make_them_close")
       wait_for_notice I18n.t("ss.notice.depublished")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
 
       page1.reload
       page2.reload
@@ -53,7 +53,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
       click_button I18n.t("ss.buttons.make_them_public")
       wait_for_notice I18n.t("ss.notice.published")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
 
       page1.reload
       page2.reload
@@ -103,7 +103,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
       expect(page1.state).to eq "public"
       expect(page2.state).to eq "public"
       expect(page3.state).to eq "closed"
@@ -117,7 +117,7 @@ describe "cms_page_pages", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
       click_button I18n.t("ss.buttons.make_them_public")
       wait_for_notice I18n.t("ss.notice.published")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
 
       page1.reload
       page2.reload

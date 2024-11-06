@@ -15,9 +15,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{cms_parts_path(site: site)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 
@@ -34,9 +32,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node1)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 
@@ -53,9 +49,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node2)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 
@@ -72,9 +66,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node3)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 
@@ -91,9 +83,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node4)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 
@@ -110,9 +100,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node5)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 
@@ -129,9 +117,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".current[href='#{node_parts_path(site: site, cid: node6)}']")
       end
       # フォルダーツリーの描画完了まで待機
-      within ".tree-navi" do
-        expect(page).to have_css(".content-navi-refresh", text: "refresh")
-      end
+      wait_for_turbo_frame "#cms-nodes-tree-frame"
     end
   end
 end

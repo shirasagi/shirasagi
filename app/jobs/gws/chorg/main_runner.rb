@@ -4,6 +4,13 @@ class Gws::Chorg::MainRunner < Gws::Chorg::Runner
 
   self.task_class = Gws::Chorg::Task
 
+  after_perform do
+    # CMSでは組織変更の実行後にキャッシュをクリアーしている。
+    # そこで、グループウェアでも念のためキャッシュをクリアしておく。
+    # キャッシュ寿命が有効であっても消去したいので Rails.cache.clear を実行。
+    Rails.cache.clear rescue nil
+  end
+
   private
 
   def init_context(opts = {})

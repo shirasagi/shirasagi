@@ -1,0 +1,25 @@
+<%= cache_component do %>
+  <ul class="ss-tree cms-nodes-tree" role="tree">
+    <% root_items.each do |folder| %>
+      <% if folder.children? %>
+        <li class="ss-tree-item" role="treeitem">
+          <details class="ss-tree-subtree-wrap">
+            <summary>
+              <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
+            </summary>
+
+            <%=
+              if folder.children?
+                render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: folder.children)
+              end
+            %>
+          </details>
+        </li>
+      <% else %>
+        <li class="ss-tree-item no-children" role="treeitem">
+          <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>

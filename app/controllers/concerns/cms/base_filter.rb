@@ -91,6 +91,6 @@ module Cms::BaseFilter
   end
 
   def set_tree_navi
-    @tree_navi = cms_apis_node_tree_path(id: (@cur_node || 0), type: @model.to_s.underscore)
+    @tree_navi = true
   end
 end
