@@ -27,7 +27,7 @@
         </span>
         <% @item.files.each do |file| %>
           <span id="file-<%= file.id %>" class='<%= @cur_site.board_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>'>
-            <i class="material-icons">&#xE226;</i>
+            <%= md_icons.filled "attach_file", tag: :i %>
             <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
             <%= sanitizer_status(file) %>
           </span>

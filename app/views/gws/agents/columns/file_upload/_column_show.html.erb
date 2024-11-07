@@ -11,7 +11,7 @@
         <% if file.image? %>
         <%= image_tag(file.thumb_url, alt: file.name, style: 'max-width: 40px; max-height: 40px') %>
         <% else %>
-        <i class="material-icons">&#xE24D;</i><br>
+        <%= md_icons.filled "insert_drive_file", tag: :i %><br>
         <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
         <% end %>
       </span>

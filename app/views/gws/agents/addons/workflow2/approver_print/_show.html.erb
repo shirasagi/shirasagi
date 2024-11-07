@@ -6,7 +6,7 @@
       <%= image_tag(file.thumb_url, class: "thumb") %>
     <% else %>
       <span class="thumb ext icon-<%= file.extname %>">
-        <i class="material-icons">&#xE24D;</i><br>
+        <%= md_icons.filled "insert_drive_file", tag: :i %><br>
         <span class="ext-name"><%= file.extname %></span>
       </span>
     <% end %>

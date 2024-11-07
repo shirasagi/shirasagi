@@ -33,7 +33,7 @@
         </div>
 
         <div class="icon icon-attachment">
-          <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
+          <%= md_icons.filled item.attachments? ? "attach_file" : '&nbsp;'.html_safe, tag: :i, size: 15 %>
         </div>
 
         <div class="info">

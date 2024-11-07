@@ -68,7 +68,7 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
                   <% if item %>
                     <%= link_to gws_affair_attendance_management_time_card_path(id: item), class: "name-warp" do %>
                       <span class="name"><%= user.name %></span>
-                      <i class="material-icons md-13">&#xE8B8;</i>
+                      <%= md_icons.filled "settings", tag: :i, size: 13 %>
                     <% end %>
                   <% else %>
                     <% message = t("gws/affair.notice.not_created_time_card", year: @cur_day.year, month: @cur_day.month, user: user.name) %>
@@ -159,7 +159,7 @@ $('.gws-attendance .leave-file-tooltip').on('click', function(ev) {
                   <div class="leave-file">
                     <%= leave_file.label :leave_type %>
                     <div class="leave-file-tooltip" data-href="<%= gws_affair_leave_apis_file_path(id: leave_file.id) %>">
-                      <i class="material-icons md-13">&#xE0C9;</i>
+                      <%= md_icons.filled "message", tag: :i, size: 13 %>
                     </div>
                   </div>
                 <% end %>
