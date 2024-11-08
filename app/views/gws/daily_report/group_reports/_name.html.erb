@@ -7,7 +7,7 @@
         <% link = new_gws_daily_report_form_group_report_path(form_id: @forms.first.try(:id)) %>
       <% end %>
       <%= link_to(link, { class: 'add-plan' }) do %>
-        <i class="material-icons editicon" style="font-size: inherit"></i>
+        <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
       <% end %>
     <% end %>
   </div>

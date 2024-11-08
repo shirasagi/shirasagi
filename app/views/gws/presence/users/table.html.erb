@@ -31,11 +31,11 @@
         </td>
         <td class="no-overflow">
           <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-          <i class="material-icons editicon presence-plan" style="font-size: inherit">&#xE254;</i>
+          <%= md_icons.filled "mode_edit", tag: :i, class: "editicon presence-plan", style: "font-size: inherit" %>
         </td>
         <td class="no-overflow">
           <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-          <i class="material-icons editicon presence-memo" style="font-size: inherit">&#xE254;</i>
+          <%= md_icons.filled "mode_edit", tag: :i, class: "editicon presence-memo", style: "font-size: inherit" %>
         </td>
         <% if send_message %>
           <td class="no-overflow">

@@ -186,7 +186,7 @@
               <% end %>
               <% if (state == 'request' || state == 'pending') && @item.allowed?(:reroute, @cur_user, site: @cur_site) %>
                 <%= link_to('#', class: 'workflow-reroute', data: { level: level, user_id: user_id }) do %>
-                  <i class="material-icons" style="font-size: inherit">&#xE254;</i>
+                  <%= md_icons.filled "mode_edit", tag: :i, style: "font-size: inherit" %>
                 <% end %>
               <% end %>
               </td>
@@ -201,7 +201,7 @@
                           <%= image_tag(file.thumb_url, class: "thumb") %>
                         <% else %>
                           <span class="thumb ext icon-<%= file.extname %>">
-                            <i class="material-icons">&#xE24D;</i><br>
+                            <%= md_icons.filled "insert_drive_file", tag: :i %><br>
                             <span class="ext-name"><%= file.extname %></span>
                           </span>
                         <% end %>
@@ -258,7 +258,7 @@
                               <%= image_tag(file.thumb_url, class: "thumb") %>
                             <% else %>
                               <span class="thumb ext icon-<%= file.extname %>">
-                                <i class="material-icons">&#xE24D;</i><br>
+                                <%= md_icons.filled "insert_drive_file", tag: :i %><br>
                                 <span class="ext-name"><%= file.extname %></span>
                               </span>
                             <% end %>

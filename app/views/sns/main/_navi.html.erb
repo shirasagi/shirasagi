@@ -5,20 +5,20 @@
 
   <h2>
     <%= link_to sns_cur_user_account_path do %>
-      <i class="material-icons">&#xE853;</i><%= t("sns.account") %>
+      <%= md_icons.filled "account_circle", tag: :i %><%= t("sns.account") %>
     <% end %>
   </h2>
 
   <h2>
     <%= link_to job_sns_logs_path do %>
-      <i class="material-icons">&#xE853;</i><%= t("job.task_manager") %>
+      <%= md_icons.filled "account_circle", tag: :i %><%= t("job.task_manager") %>
     <% end %>
   </h2>
 
   <% if @cur_setting.menu_file_visible? %>
     <h2>
       <%= link_to sns_cur_user_files_path do %>
-        <i class="material-icons">&#xE2C8;</i><%= t("sns.file") %>
+        <%= md_icons.filled "folder_open", tag: :i %><%= t("sns.file") %>
       <% end %>
     </h2>
   <% end %>
@@ -26,7 +26,7 @@
   <% if @cur_setting.menu_connection_visible? %>
     <h2>
       <%= link_to sns_connection_path do %>
-        <i class="material-icons">&#xE88F;</i><%= t("sns.connection") %>
+        <%= md_icons.filled "info_outline", tag: :i %><%= t("sns.connection") %>
       <% end %>
     </h2>
   <% end %>
@@ -34,7 +34,7 @@
   <% if respond_to?(:sys_conf_path) && sys_conf_path.present? %>
     <h2 class="sys-conf">
       <%= link_to sys_conf_path do %>
-        <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>
+        <%= md_icons.filled "settings", tag: :i %><%= t("sys.conf") %>
       <% end %>
     </h2>
   <% end %>

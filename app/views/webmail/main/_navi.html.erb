@@ -47,7 +47,7 @@ end
         <% end %>
       >
         <%== "<span class='pad'></span>" * padd %>
-        <i class="material-icons md-18"><%== box.icon %></i>
+        <%= md_icons.filled box.icon, tag: :i, size: 18 %>
         <span class="mailbox-name"><%= ss_truncate(name, length: 12) %></span>
         <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
       </a>
