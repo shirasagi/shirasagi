@@ -42,6 +42,7 @@ this.Gws_Presence_User = (function () {
       return false;
     });
     // ajax-text-field
+    /*
     $(".ajax-text-field").on("click", function(){
       Gws_Presence_User.toggleForm(this);
       return false;
@@ -50,6 +51,7 @@ this.Gws_Presence_User = (function () {
       $(this).prev(".ajax-text-field").trigger('click');
       return false;
     })
+    */
   };
 
   Gws_Presence_User.changedState = function (id, data) {
@@ -68,6 +70,7 @@ this.Gws_Presence_User = (function () {
     selector.find('[data-value!="' + presence_state + '"] .selected-icon').css('visibility', 'hidden');
   }
 
+  /*
   Gws_Presence_User.toggleForm = function (ele) {
     var state = $(ele).attr("data-tag-state");
     var original = $(ele).attr("data-original-tag");
@@ -149,6 +152,7 @@ this.Gws_Presence_User = (function () {
       $(".ajax-text-field[data-id='" + original.attr("data-id") + "'][data-name='" + original.attr("data-name") + "']").text(value);
     }
   };
+  */
 
   return Gws_Presence_User;
 })();
