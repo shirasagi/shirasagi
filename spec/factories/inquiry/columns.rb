@@ -95,6 +95,14 @@ FactoryBot.define do
     order { 80 }
   end
 
+  factory :inquiry_column_form_select, class: Inquiry::Column do
+    name { "回答の有無" }
+    input_type { "form_select" }
+    required { "required" }
+    select_options { %w(不要 必要) }
+    order { 10 }
+  end
+
   factory :inquiry_column_same_as_name, class: Inquiry::Column do
     name { "お名前" }
     input_type { "text_field" }
