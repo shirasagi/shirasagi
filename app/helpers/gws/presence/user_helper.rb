@@ -48,10 +48,9 @@ module Gws::Presence::UserHelper
     user_presence = item.user_presence(@cur_site)
     src = gws_presence_frames_plan_path(id: item, frame_id: frame_id)
 
-    tag.turbo_frame(id: frame_id, class: "presence-plan", "data-id": item.id, "data-src": src) do
+    tag.turbo_frame(id: frame_id, class: "presence-plan", 'data-id': item.id, 'data-src': src) do
       link_to edit_gws_presence_frames_plan_path(frame_id: frame_id, id: item) do
-        tag.span { user_presence.plan } +
-        '<i class="material-icons" style="font-size: inherit">mode_edit</i>'.html_safe
+        tag.span { user_presence.plan } + '<i class="material-icons" style="font-size: inherit">mode_edit</i>'.html_safe
       end
     end
   end
@@ -61,10 +60,9 @@ module Gws::Presence::UserHelper
     user_presence = item.user_presence(@cur_site)
     src = gws_presence_frames_memo_path(id: item, frame_id: frame_id)
 
-    tag.turbo_frame(id: frame_id, class: "presence-memo", "data-id": item.id, "data-src": src) do
+    tag.turbo_frame(id: frame_id, class: "presence-memo", 'data-id': item.id, 'data-src': src) do
       link_to edit_gws_presence_frames_memo_path(frame_id: frame_id, id: item) do
-        tag.span { user_presence.memo } +
-        '<i class="material-icons" style="font-size: inherit">mode_edit</i>'.html_safe
+        tag.span { user_presence.memo } + '<i class="material-icons" style="font-size: inherit">mode_edit</i>'.html_safe
       end
     end
   end
