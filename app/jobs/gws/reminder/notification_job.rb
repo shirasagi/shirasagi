@@ -9,13 +9,11 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     send_count = 0
     each_reminder do |item|
       mail = Gws::Reminder::Mailer.notify_mail(site, item)
-      next if mail.blank?
-      next if mail.message.is_a?(ActionMailer::Base::NullMail)
 
       item.notifications.each do |notification|
         next if notification.notify_at < @from || notification.notify_at > @to
 
-        if notification.state == "mail"
+        if notification.state == "mail" && mail.to.present?
           Rails.logger.info("#{mail.to.first}: リマインダー通知（メール送信）")
           mail.deliver_now
         else
