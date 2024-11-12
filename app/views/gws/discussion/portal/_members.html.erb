@@ -1,5 +1,8 @@
 <%= render "ss/crud/addon", addon: { head: head, css_class: css_class, toggle: true } do %>
-  <% @forum.overall_members.each do |member| %>
-    <p><%= gws_public_user_long_name(member.long_name) %></p>
+  <% @forum.overall_members.order_by_title(@cur_site).each do |member| %>
+    <p>
+      <%= gws_public_user_long_name(member.long_name) %>
+      <%= member.title(@cur_site).try(:name) %>
+    </p>
   <% end %>
 <% end %>

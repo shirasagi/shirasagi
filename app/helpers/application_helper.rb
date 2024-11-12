@@ -253,13 +253,21 @@ module ApplicationHelper
     @cur_site.try(:logo_application_name).presence || SS.config.ss.application_name
   end
 
-  def render_application_logo(site = nil)
+  def render_application_logo(site: nil, url: nil)
     site ||= @cur_site
-    return SS.config.ss.application_logo_html.html_safe if site.blank?
+    logo_url = url || sns_mypage_path
+
+    if site.blank?
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
+    end
 
     name = site.logo_application_name
     image = site.logo_application_image
-    return SS.config.ss.application_logo_html.html_safe if name.blank? && image.blank?
+    logo_url = url || site.logo_application_url
+
+    if name.blank? && image.blank?
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
+    end
 
     logo_html = "".html_safe
     if image.present?
@@ -269,7 +277,13 @@ module ApplicationHelper
       logo_html += tag.span(name, class: "ss-logo-application-name")
     end
 
-    tag.div(logo_html, class: "ss-logo-wrap")
+    link_to_application_logo(logo_url) do
+      tag.div(logo_html, class: "ss-logo-wrap")
+    end
+  end
+
+  def link_to_application_logo(url, &block)
+    ("<h1 class=\"application-name\"><a href=\"#{url}\">" + yield + "</a></h1>").html_safe
   end
 
   def required_label
