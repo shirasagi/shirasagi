@@ -1,0 +1,7 @@
+<%= jquery do %>
+$("turbo-frame.presence-plan[data-id=\"<%= @user.id %>\"]").not("#<%= @frame_id %>").each(function(){
+  $(this).attr("src", $(this).attr("data-src"));
+  this.reload();
+});
+<% end %>
+<%= render template: "gws/presence/frames/plans/show" %>
