@@ -940,6 +940,7 @@ ja:
       cms/line/statistic/info: 詳細情報
       cms/line/mail_handler: 本文設定
       cms/clipboard_copy: クリップボードへコピー
+      cms/logo_setting: ロゴ設定
 
   mongoid:
     models:

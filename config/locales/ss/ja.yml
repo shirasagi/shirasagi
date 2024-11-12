@@ -597,6 +597,9 @@ ja:
         always: 使用する
         untrusted: アクセス元が信頼できない場合に使用する
         none: 使用しない
+      logo_application_link:
+        mypage: "マイページ"
+        portal: "ポータル"
 
     tasks:
       started: 開始しました。
@@ -1052,6 +1055,7 @@ ja:
         usage_calculated_at: 使用量計算日時
       ss/model/logo_setting:
         logo_application_name: アプリケーション名
+        logo_application_link: ロゴのリンク
         logo_application_image_id: ロゴ画像
         logo_application_template: ロゴHTML
       ss/addon/release:
