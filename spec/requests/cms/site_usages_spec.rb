@@ -8,7 +8,7 @@ describe "cms_apis_reload_site_usages", type: :request, dbscope: :example do
     # get and save  auth token
     get sns_auth_token_path(format: :json)
     expect(response.status).to eq 200
-    @auth_token = JSON.parse(response.body)["auth_token"]
+    @auth_token = response.parsed_body["auth_token"]
 
     # login
     params = {
@@ -24,7 +24,7 @@ describe "cms_apis_reload_site_usages", type: :request, dbscope: :example do
     put cms_apis_reload_site_usages_path(site: site, format: :json)
     expect(response.status).to eq 200
 
-    json = JSON.parse(response.body)
+    json = response.parsed_body
     expect(json["usage_file_count"]).to be >= 0
     expect(json["usage_db_size"]).to be >= 0
     expect(json["usage_group_count"]).to be >= 0
