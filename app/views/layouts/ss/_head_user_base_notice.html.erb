@@ -42,7 +42,7 @@
 <% end %>
 <div class="gws-memo-notice popup-notice-container">
   <%= link_to sns_notifications_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
-    <i class="material-icons">&#xE7F4;</i>
+    <%= md_icons.filled "notifications", tag: :i %>
     <% count = SS::Notification.unseens(@cur_user).size %>
     <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
   <% end %>

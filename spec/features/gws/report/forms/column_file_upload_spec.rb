@@ -111,7 +111,9 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       within first(".gws-column-item") do
         wait_for_event_fired("gws:column:removed") do
           page.accept_confirm(I18n.t("ss.confirm.delete")) do
-            click_on "delete"
+            within first(".gws-column-item-toolbar-list") do
+              click_on "delete"
+            end
           end
         end
       end

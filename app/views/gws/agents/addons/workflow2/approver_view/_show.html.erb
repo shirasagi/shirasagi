@@ -50,12 +50,12 @@
           <tr data-id="<%= approver[:_id] %>">
             <td class="check">
               <% if approver[:editable] == 1 %>
-                <i class="material-icons-outlined md-15">check_box</i>
+                <%= md_icons.outlined "check_box", size: 15 %>
               <% end %>
             </td>
             <td class="check">
               <% if approver[:alternatable] == 1 %>
-                <i class="material-icons-outlined md-15">check_box</i>
+                <%= md_icons.outlined "check_box", size: 15 %>
               <% end %>
             </td>
             <td>

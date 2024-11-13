@@ -49,7 +49,7 @@
     <% if !@item.resolved? && @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
       <%= link_to(new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary") do %>
-        <span class="material-icons-outlined md-15">reply</span>
+        <%= md_icons.outlined "reply", size: 15 %>
         <span class="button-label"><%= t('gws/qna.links.comment') %></span>
       <% end %>
     </div>

@@ -1,8 +1,8 @@
 <% @index_title = proc do |item| %>
   <div class="title marked">
     <% if item.severity.present? %>
-      <i title="<%= item.label(:severity) %>" class="material-icons-outlined md-16 severity-<%= item.severity %>">error_outline</i>
-    <% end %>
+      <%= md_icons.outlined "error_outline", tag: :i, size: 16, title: item.label(:severity), class: "severity-#{item.severity}", aria: { hidden: nil } %>
+  <% end %>
     <%= link_to item.name, { action: :show, id: item }, { class: "name" } %>
   </div>
 <% end %>

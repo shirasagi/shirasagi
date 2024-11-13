@@ -15,18 +15,18 @@
           <% if node %>
             <% if node.allowed?(:read, @cur_user, site: @cur_site) %>
               <%= link_to node.private_show_path, style: "display: inline-flex; align-items: center; gap: 5px;" do %>
-                <span class="material-icons-outlined">folder</span>
+                <%= md_icons.outlined "folder" %>
                 <%= node.name %>
               <% end %>
             <% else %>
               <div style="display: inline-flex; align-items: center; gap: 5px;">
-                <span class="material-icons-outlined">folder</span>
+                <%= md_icons.outlined "folder" %>
                 <%= node.name %>
               </div>
             <% end %>
           <% else %>
             <div style="display: inline-flex; align-items: center; gap: 5px;">
-              <span class="material-icons-outlined">folder</span>
+              <%= md_icons.outlined "folder" %>
               <%= node_filename %>
             </div>
           <% end %>
@@ -41,7 +41,7 @@
         </nav>
 
         <label class="check">
-          <span class="material-icons-outlined">article</span>
+          <%= md_icons.outlined "article" %>
         </label>
         <div class="info">
           <%=

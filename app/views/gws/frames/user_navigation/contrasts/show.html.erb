@@ -4,7 +4,7 @@
     <ul class="user-navigation-dropdown-menu-item-list">
       <li class="user-navigation-dropdown-menu-item user-contrast-menu-header">
         <%= link_to gws_frames_user_navigation_menu_path(ss_mode: :gws, site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
-          <span class="material-icons-outlined">keyboard_arrow_left</span>
+          <%= md_icons.outlined "keyboard_arrow_left" %>
           <%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
         <% end %>
       </li>

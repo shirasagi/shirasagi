@@ -3,12 +3,12 @@
     <div class="toolbar">
       <span class="btn-group toolbar-zoom">
         <%= button_tag(type: "button", name: "btn-zoom-out", class: "btn btn-zoom-out") do %>
-          <i class="material-icons md-18">&#xe900;</i>
+          <%= md_icons.filled "zoom_out", tag: :i, size: 18 %>
           <%= t("ss.buttons.zoom_out") %>
         <% end %>
         <input id="zoom-slider" name="zoom-slider" type="range">
         <%= button_tag(type: "button", name: "btn-zoom-in", class: "btn btn-zoom-in") do %>
-          <i class="material-icons md-18">&#xe8ff;</i>
+          <%= md_icons.filled "zoom_in", tag: :i, size: 18 %>
           <%= t("ss.buttons.zoom_in") %>
         <% end %>
       </span>
@@ -17,7 +17,7 @@
         <label><%= t("ss.color") %></label>
         <%= ss_color_picker_tag "foreground-color", "#000000", clear: false, swatches: false, random: false %>
         <%= button_tag(type: "button", name: "btn-foreground-color-picker", class: "btn btn-color-picker") do %>
-          <i class="material-icons md-18">&#xe3b8;</i>
+          <%= md_icons.filled "colorize", tag: :i, size: 18 %>
         <% end %>
       </span>
 
@@ -25,7 +25,7 @@
         <label><%= t("ss.bg_color") %></label>
         <%= ss_color_picker_tag "background-color", "#ffffff", clear: false, swatches: false, random: false %>
         <%= button_tag(type: "button", name: "btn-background-color-picker", class: "btn btn-color-picker") do %>
-          <i class="material-icons md-18">&#xe3b8;</i>
+          <%= md_icons.filled "colorize", tag: :i, size: 18 %>
         <% end %>
       </span>
 

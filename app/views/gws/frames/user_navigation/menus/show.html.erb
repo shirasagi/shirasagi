@@ -21,7 +21,7 @@
     <li class="user-navigation-dropdown-menu-item">
       <%= link_to gws_frames_user_navigation_contrast_path(site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
         <%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
-        <span class="caret material-icons-outlined">keyboard_arrow_right</span>
+        <%= md_icons.outlined "keyboard_arrow_right", class: "caret" %>
       <% end %>
     </li>
   <% end %>

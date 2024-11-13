@@ -21,11 +21,11 @@
       <% if @user.try(:id) == @cur_user.try(:id) %>
         <% if item = @items.where(user_id: @cur_user.id, form_id: @forms.first.try(:id), daily_report_date: Time.zone.today).first %>
           <%= link_to({ action: :edit, id: item.id }, { class: 'add-plan' }) do %>
-            <i class="material-icons editicon" style="font-size: inherit"></i>
+            <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
           <% end %>
         <% elsif @forms.first.present? %>
           <%= link_to(new_gws_daily_report_form_user_report_path(form_id: @forms.first.try(:id)), { class: 'add-plan' }) do %>
-            <i class="material-icons editicon" style="font-size: inherit"></i>
+            <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
           <% end %>
         <% end %>
       <% end %>

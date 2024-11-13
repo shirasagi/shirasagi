@@ -91,7 +91,7 @@
         <% end %>
       </div>
       <div class="icon icon-attachment">
-        <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
+        <%= md_icons.filled item.attachments? ? "attach_file" : '&nbsp;'.html_safe, tag: :i, size: 15 %>
       </div>
       <div class="info">
         <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
@@ -108,7 +108,7 @@
           <% end %>
         <% end %>
         <%= link_to({ action: :show, id: item.uid }, class: "field title", title: item.display_subject) do %>
-          <% title_flag = item.answered? ? %(<i class="material-icons md-18 icon-reply">&#xE15E;</i>) : nil %>
+          <% title_flag = item.answered? ? md_icons.filled("reply", tag: :i, size: 18, class: "icon-reply") : nil %>
           <%== title_flag %><%= item.display_subject %>
         <% end %>
         <span class="field datetime"><%= ss_time_tag item.internal_date %></span>

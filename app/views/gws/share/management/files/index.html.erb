@@ -21,7 +21,7 @@
       <div class="info">
         <%= sanitizer_status(item) %>
         <%= link_to opts.merge(action: :show), class: "title" do %>
-          <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
+          <%= md_icons.filled "folder_open", tag: :i, size: 18, class: "md-dark title-icon" %>
           <%= item.name %>
         <% end %>
 

@@ -141,7 +141,7 @@ module Webmail::MailHelper
 
     tag.div(class: css_classes) do
       link_to(prev_path, title: t('ss.links.prev')) do
-        tag.span("arrow_circle_left", class: "material-icons-outlined")
+        md_icons.outlined("arrow_circle_left")
       end
     end
   end
@@ -155,7 +155,7 @@ module Webmail::MailHelper
 
     tag.div(class: css_classes) do
       link_to(next_path, title: t('gws/memo/message.links.next')) do
-        tag.span("arrow_circle_right", class: "material-icons-outlined")
+        md_icons.outlined("arrow_circle_right")
       end
     end
   end

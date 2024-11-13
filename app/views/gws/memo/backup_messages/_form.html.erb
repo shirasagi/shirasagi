@@ -30,7 +30,7 @@
               <thead>
               <tr>
                 <th class="from">
-                  <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                  <%= md_icons.filled "attach_file", tag: :i, size: 15, style: "visibility: hidden;" %>
                   <%= @model.t :from %>
                 </th>
                 <th class="name"><%= @model.t :subject %></th>
@@ -46,9 +46,9 @@
               <tr data-id="<%%= data.id %>">
                 <td>
                   <%% if (data.attachments) { %>
-                    <i class="material-icons md-15">&#xE226;</i>
+                    <%= md_icons.filled "attach_file", tag: :i, size: 15 %>
                   <%% } else { %>
-                    <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                    <%= md_icons.filled "attach_file", tag: :i, size: 15, style: "visibility: hidden;" %>
                   <%% } %>
                   <%%= data.from %>
                 </td>

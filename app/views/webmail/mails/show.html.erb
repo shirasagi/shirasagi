@@ -127,7 +127,7 @@
       <% @item.attachments.each do |part| %>
         <div class="file">
           <%= link_to({ action: :parts, section: part.section }, target: part.link_target) do %>
-            <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+            <%= md_icons.filled((part.image? ? "image" : "insert_drive_file"), tag: :i, size: 18) %>
             <%= part.filename %>
           <% end %>
           <%= "( #{number_to_human_size(part.size)} )" %>

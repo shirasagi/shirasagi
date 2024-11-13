@@ -100,7 +100,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
     view_context.tag.div(class: css_classes) do
       view_context.link_to(prev_path, title: t('gws/memo/message.links.prev')) do
-        view_context.tag.span("arrow_circle_left", class: "material-icons-outlined")
+        view_context.md_icons.outlined("arrow_circle_left")
       end
     end
   end
@@ -114,7 +114,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
     view_context.tag.div(class: css_classes) do
       view_context.link_to(next_path, title: t('gws/memo/message.links.next')) do
-        view_context.tag.span("arrow_circle_right", class: "material-icons-outlined")
+        view_context.md_icons.outlined("arrow_circle_right")
       end
     end
   end

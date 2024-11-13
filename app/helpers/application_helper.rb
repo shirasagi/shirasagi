@@ -7,6 +7,7 @@ module ApplicationHelper
   include SS::StimulusHelper
   include SS::InputGuide
   include Workflow::ViewHelper
+  include SS::MaterialIconsHelper
 
   def tryb(&block)
     begin

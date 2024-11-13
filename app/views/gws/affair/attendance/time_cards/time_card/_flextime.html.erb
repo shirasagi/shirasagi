@@ -16,7 +16,7 @@
 <% render_reason = proc do |history| %>
   <% if history.present? && history.reason.present? %>
     <div class="reason-tooltip">
-      <i class="material-icons md-13">&#xE0C9;</i>
+      <%= md_icons.filled "message", tag: :i, size: 13 %>
       <div class="reason">
         <div><%= history.reason %></div>
         <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
@@ -24,7 +24,7 @@
     </div>
   <% else %>
     <div class="reason-tooltip" style="visibility: hidden;">
-      <i class="material-icons md-13">&#xE0C9;</i>
+      <%= md_icons.filled "message", tag: :i, size: 13 %>
     </div>
   <% end %>
 <% end %>
@@ -128,7 +128,7 @@
                   <%= leave_file.label :leave_type %>
                 <% end %>
                 <div class="leave-file-tooltip" data-href="<%= gws_affair_leave_apis_file_path(id: leave_file.id) %>">
-                  <i class="material-icons md-13">&#xE0C9;</i>
+                  <%= md_icons.filled "message", tag: :i, size: 13 %>
                 </div>
               </div>
             <% end %>

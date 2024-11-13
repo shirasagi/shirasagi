@@ -3,15 +3,15 @@
 menu = []
 if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
   link = new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
-  menu << link_to(link, class: "btn primary") { tag.span("reply", class: "material-icons-outlined md-15") + tag.span(t('gws/qna.links.comment'), class: "button-label") }
+  menu << link_to(link, class: "btn primary") { md_icons.outlined("reply", size: 15) + tag.span(t('gws/qna.links.comment'), class: "button-label") }
 end
 if comment.allowed?(:edit, @cur_user, site: @cur_site)
   link = edit_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(tag.span("edit", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.edit'))
+  menu << link_to(md_icons.outlined("edit", size: 15), link, class: "btn", title: t('ss.links.edit'))
 end
 if comment.allowed?(:delete, @cur_user, site: @cur_site)
   link = delete_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(tag.span("delete", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.delete'))
+  menu << link_to(md_icons.outlined("delete", size: 15), link, class: "btn", title: t('ss.links.delete'))
 end
 if @item.resolved?
   menu = []

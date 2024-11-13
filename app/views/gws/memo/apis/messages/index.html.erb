@@ -32,7 +32,7 @@
       <th class="checkbox"><input type="checkbox" /></th>
       <% end %>
       <th class="from">
-        <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+        <%= md_icons.filled "attach_file", tag: :i, size: 15, style: "visibility: hidden;" %>
         <%= @model.t :from %>
       </th>
       <th class="name"><%= @model.t :subject %></th>
@@ -55,7 +55,7 @@
         <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
         <% end %>
         <td>
-          <i class="material-icons md-15" <%== item.attachments? ? '' : 'style="visibility: hidden;"' %>>&#xE226;</i>
+          <%= md_icons.filled("attach_file", tag: :i, size: 15, style: (item.attachments? ? nil : "visibility: hidden;")) %>
           <%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %>
         </td>
         <td><%= link_to item.subject, "#", class: @multi ? "select-item" : "select-single-item" %></td>

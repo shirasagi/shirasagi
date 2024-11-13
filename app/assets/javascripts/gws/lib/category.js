@@ -50,8 +50,9 @@ Gws_Category_Navi.prototype.render = function(items, opts) {
 
   var toggle = this.el.find('.dropdown-toggle');
   if (!hideClose && isCate) {
-    var icon = '<i class="material-icons md-18 md-dark">&#xE14C;</i>';
-    toggle.after('<a class="ml-1" href="' + toggle.attr('href') + '">' + icon + '</a>');
+    var icon = $("<i/>", { class: "material-icons md-18 md-dark", "aria-hidden": true, role: 'img' }).text("clear");
+    var anchor = $('<a/>', { class: "ml-1", href: toggle.attr('href') }).append(icon);
+    toggle.after(anchor);
   }
   toggle.on("click", function() {
     return false;

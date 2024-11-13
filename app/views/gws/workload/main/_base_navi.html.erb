@@ -3,6 +3,6 @@
     <%= render partial: "gws/workload/main/dropdown/#{dropdown}" %>
   <% end %>
   <%= link_to({ action: :index, year: '-', group: '-', user: '-', category: '-', client: '-' }) do %>
-    <i class="material-icons md-18 md-dark">&#xE14C;</i>
+    <%= md_icons.filled "clear", tag: :i, size: 18, class: "md-dark" %>
   <% end %>
 </div>

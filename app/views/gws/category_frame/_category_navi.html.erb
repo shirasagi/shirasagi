@@ -8,7 +8,7 @@
       <% category_filter.selected_categories.reorder(order: 1, name: 1).each do |cate| %>
         <%= link_to base_url.sub('ID', category_filter.change(delete: cate.id).base64_filter || "-"), class: "gws-category-label", style: category_label_css(cate) do %>
           <span><%= cate.trailing_name %></span>
-          <span class="material-icons-outlined md-13">close</span>
+          <%= md_icons.outlined "close", size: 13 %>
         <% end %>
       <% end %>
     <% else %>
@@ -16,7 +16,7 @@
     <% end %>
     <% if category_filter.present? %>
       <%= link_to base_url.sub('ID', "-"), class: "gws-category-label", title: t("ss.buttons.clear") do %>
-        <span class="material-icons-outlined md-13">close</span>
+        <%= md_icons.outlined "close", size: 13 %>
       <% end %>
     <% end %>
   </div>
