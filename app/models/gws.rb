@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module Gws
   extend Sys::ModulePermission
 
@@ -5,6 +7,8 @@ module Gws
 
   mattr_accessor(:module_usable_handlers) { {} }
 
+  # 200 = 80 for japanese name + 120 for english name
+  # 日本語タイトルと英語タイトルとをスラッシュで連結して、一つのページとして運用することを想定
   mattr_reader(:max_name_length, default: 200)
 
   def module_usable(name, proc = nil, &block)
@@ -23,14 +27,14 @@ module Gws
     Gws.gws_db_used(organizations_criteria, opts) + Gws.gws_files_used(organizations_criteria, opts)
   end
 
-  MODULES_BOUND_TO_SITE = %w(
+  MODULES_BOUND_TO_SITE = Set.new(%w(
     Gws::Attendance::History
     Gws::Attendance::Record
     Gws::Attendance::TimeCard
     Gws::Board::Category
     Gws::Board::Post
-    Gws::Bookmark::Folder
     Gws::Bookmark::Item
+    Gws::Bookmark::Folder
     Gws::Chorg::Changeset
     Gws::Chorg::Revision
     Gws::Circular::Post
@@ -81,9 +85,9 @@ module Gws
     Gws::Survey::Form
     Gws::UserForm
     Gws::UserFormData
-    Gws::UserOccupation
     Gws::UserPresence
     Gws::UserTitle
+    Gws::UserOccupation
     Gws::Workflow::File
     Gws::Workflow::Form
     Gws::Workflow2::File
@@ -92,22 +96,21 @@ module Gws
     Gws::Workflow2::Form::External
     Gws::Workflow2::Form::Purpose
     Gws::Workflow2::Route
-  ).freeze
+  )).freeze
 
-  MODULES_BOUND_TO_GROUP = %w(
+  MODULES_BOUND_TO_GROUP = Set.new(%w(
     Gws::Job::Log
-    Gws::Chorg::Task
     Gws::Task
-  ).freeze
+  )).freeze
 
-  MODULES_BOUND_TO_GROUPS = %w(
+  MODULES_BOUND_TO_GROUPS = Set.new(%w(
     Gws::User
     Gws::Workflow::Route
-  ).freeze
+  )).freeze
 
-  MODULES_COMMON = %w(
+  MODULES_COMMON = Set.new(%w(
     Gws::User
-  ).freeze
+  )).freeze
 
   def gws_db_used(organizations_criteria, opts = {})
     org_ids, org_names = organizations_criteria.pluck(:id, :name).transpose
@@ -123,7 +126,12 @@ module Gws
 
     size = opts[:except] == "common" ? 0 : groups.total_bsonsize
     size += filter.call(MODULES_BOUND_TO_SITE).map(&:constantize).sum do |klass|
-      klass.all.unscoped.any_in(site_id: org_ids).total_bsonsize
+      criteria = klass.all.unscoped.any_in(site_id: org_ids)
+      if criteria.respond_to?(:used_size)
+        criteria.used_size
+      else
+        criteria.total_bsonsize
+      end
     end
     size += filter.call(MODULES_BOUND_TO_GROUP).map(&:constantize).sum do |klass|
       klass.all.unscoped.any_in(group_id: org_ids).total_bsonsize

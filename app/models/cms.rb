@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module Cms
   extend Sys::ModulePermission
 
@@ -18,47 +20,80 @@ module Cms
     Cms.cms_db_used(site_criteria, opts) + Cms.cms_files_used(site_criteria, opts)
   end
 
-  MODULES_BOUND_TO_SITE = %w(
+  MODULES_BOUND_TO_SITE = Set.new(%w(
     ::Ads::AccessLog
     ::Board::AnpiPost
     ::Board::Post
     ::Chat::Category
     ::Chat::History
     ::Chat::Intent
+    ::Chat::LineBot::ExistsPhrase
+    ::Chat::LineBot::RecordPhrase
+    ::Chat::LineBot::Session
+    ::Chat::LineBot::UsedTime
     ::Chorg::Changeset
     ::Chorg::Revision
+    ::Cms::ApiToken
     ::Cms::BodyLayout
+    ::Cms::CheckLinks::Error::Base
+    ::Cms::CheckLinks::IgnoreUrl
+    ::Cms::CheckLinks::Report
     ::Cms::Column::Base
     ::Cms::Command
     ::Cms::EditorTemplate
+    ::Cms::File
     ::Cms::Form
+    ::Cms::FormDb
+    ::Cms::FormDb::ImportLog
+    ::Cms::GenerationReport::Title
+    ::Cms::ImageResize
     ::Cms::ImportJobFile
     ::Cms::InitColumn
     ::Cms::Layout
     ::Cms::Ldap::Import
+    ::Cms::Line::DeliverCategory::Base
+    ::Cms::Line::DeliverCondition
+    ::Cms::Line::DeliverPlan
+    ::Cms::Line::EventSession
+    ::Cms::Line::FacilitySearch::Category
+    ::Cms::Line::MailHandler
+    ::Cms::Line::Message
+    ::Cms::Line::Richmenu::Group
+    ::Cms::Line::Richmenu::Menu
+    ::Cms::Line::Richmenu::Registration
+    ::Cms::Line::Service::Group
+    ::Cms::Line::Service::Hook::Base
+    ::Cms::Line::Statistic
+    ::Cms::Line::Template::Base
+    ::Cms::Line::TestMember
     ::Cms::LoopSetting
     ::Cms::MaxFileSize
     ::Cms::Member
+    ::Cms::Michecker::Result
     ::Cms::Node
     ::Cms::Notice
     ::Cms::Page
+    ::Cms::PageIndexQueue
     ::Cms::PageRelease
     ::Cms::PageSearch
     ::Cms::Part
     ::Cms::Role
-    ::Cms::Role
+    ::Cms::SiteSearch::History::Log
+    ::Cms::SnsPostLog::Base
     ::Cms::SourceCleanerTemplate
+    ::Cms::Task
     ::Cms::ThemeTemplate
     ::Cms::WordDictionary
     ::Ezine::Column
     ::Ezine::Entry
     ::Ezine::Member
     ::Ezine::TestMember
+    ::Guide::Diagram::Point
     ::History::Log
+    ::History::Trash
     ::Inquiry::Answer
     ::Inquiry::Column
     ::Jmaxml::Action::Base
-    ::Jmaxml::Filter
     ::Jmaxml::ForecastRegion
     ::Jmaxml::QuakeRegion
     ::Jmaxml::Trigger::Base
@@ -66,45 +101,55 @@ module Cms
     ::Jmaxml::WaterLevelStation
     ::Job::Log
     ::Kana::Dictionary
+    ::Map::Geolocation
     ::Member::ActivityLog
+    ::Member::Bookmark
     ::Member::Group
     ::Opendata::AppPoint
     ::Opendata::Csv2rdfSetting
+    ::Opendata::DatasetAccessReport
+    ::Opendata::DatasetFavorite
     ::Opendata::DatasetGroup
     ::Opendata::DatasetPoint
     ::Opendata::Harvest::Exporter
-    ::Opendata::Harvest::Exporter::DatasetRelation
     ::Opendata::Harvest::Exporter::GroupSetting
     ::Opendata::Harvest::Exporter::OwnerOrgSetting
     ::Opendata::Harvest::Importer
     ::Opendata::Harvest::Importer::CategorySetting
     ::Opendata::Harvest::Importer::EstatCategorySetting
     ::Opendata::Harvest::Importer::Report
-    ::Opendata::Harvest::Importer::ReportDataset
     ::Opendata::IdeaComment
     ::Opendata::IdeaPoint
     ::Opendata::License
     ::Opendata::MemberNotice
+    ::Opendata::Metadata::Importer
+    ::Opendata::Metadata::Importer::CategorySetting
+    ::Opendata::Metadata::Importer::EstatCategorySetting
+    ::Opendata::Metadata::Importer::Report
     ::Opendata::ResourceBulkDownloadHistory
     ::Opendata::ResourceDatasetDownloadHistory
     ::Opendata::ResourceDownloadHistory
+    ::Opendata::ResourceDownloadReport
     ::Opendata::ResourcePreviewHistory
-    ::Rdf::Class
-    ::Rdf::Prop
+    ::Opendata::ResourcePreviewReport
     ::Rdf::Vocab
     ::Recommend::History::Log
     ::Recommend::SimilarityScore
+    ::Translate::AccessLog
+    ::Translate::Lang
+    ::Translate::TextCache
+    ::Uploader::JobFile
     ::Voice::File
-  ).freeze
+  )).freeze
 
-  MODULES_BOUND_TO_GROUP = %w(
+  MODULES_BOUND_TO_GROUP = Set.new(%w(
     ::Cms::User
     ::Workflow::Route
-  ).freeze
+  )).freeze
 
-  MODULES_COMMON = %w(
+  MODULES_COMMON = Set.new(%w(
     ::Cms::User
-  ).freeze
+  )).freeze
 
   def self.cms_db_used(site_criteria, opts = {})
     site_ids = site_criteria.pluck(:id)
@@ -130,7 +175,12 @@ module Cms
       modules = MODULES_BOUND_TO_SITE
     end
     size += modules.map(&:constantize).sum do |klass|
-      klass.all.unscoped.any_in(site_id: site_ids).total_bsonsize
+      criteria = klass.all.unscoped.any_in(site_id: site_ids)
+      if criteria.respond_to?(:used_size)
+        criteria.used_size
+      else
+        criteria.total_bsonsize
+      end
     end
 
     if opts[:except] == "common"
@@ -139,7 +189,12 @@ module Cms
       modules = MODULES_BOUND_TO_GROUP
     end
     size += modules.map(&:constantize).sum do |klass|
-      klass.all.unscoped.any_in(group_ids: group_ids).total_bsonsize
+      criteria = klass.all.unscoped.any_in(group_ids: group_ids)
+      if criteria.respond_to?(:used_size)
+        criteria.used_size
+      else
+        criteria.total_bsonsize
+      end
     end
 
     size

@@ -3397,3 +3397,4 @@ ja:
       cms/remove_improper_htmls_job: 不要HTML削除
       cms/line/update_statistics_job: LINE統計情報更新
       cms/generation_report_create_job: 書き出し性能レポートの作成
+      cms/reload_site_usage_job: 各種使用率の更新
