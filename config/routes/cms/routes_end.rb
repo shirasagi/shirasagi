@@ -378,6 +378,7 @@ Rails.application.routes.draw do
       put "finalize" => "large_file_upload#finalize"
       post "run" => "large_file_upload#run"
       delete "delete_init_files" => "large_file_upload#delete_init_files"
+      get "content_quota_navi" => "content_quota_navi#index"
 
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
@@ -498,7 +499,7 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :change_state, :import] do  
+    resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
