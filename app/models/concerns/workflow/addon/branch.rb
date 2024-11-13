@@ -16,7 +16,7 @@ module Workflow::Addon
       validate :validate_master_lock, if: ->{ branch? }
 
       before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
-      after_save :merge_to_master
+      before_save :merge_to_master
 
       define_method(:master?) { master.blank? }
       define_method(:branch?) { master.present? }
@@ -162,7 +162,9 @@ module Workflow::Addon
       master.cur_site = @cur_site
       master.in_branch = self
       if !master.merge_branch
+        SS::Model.copy_errors(master, self)
         Rails.logger.error("merge_branch : master save failed #{master.errors.full_messages.join(",")}")
+        throw :abort
       end
 
       master.generate_file

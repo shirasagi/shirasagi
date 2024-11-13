@@ -74,7 +74,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(branch.close_date).to eq close_date
       expect(::File.exist?(branch.path)).to be_falsey
 
-      Timecop.travel(close_date + 1.minute) do
+      travel_to = close_date + 1.minute
+      Timecop.travel(travel_to) do
         # 3. 公開終了日を経過し公開中のページ（1）が非公開になる
         expect do
           Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
@@ -96,19 +97,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             click_on I18n.t("ss.buttons.publish_save")
           end
-          wait_for_notice I18n.t("ss.notice.saved")
+          # wait_for_notice I18n.t("ss.notice.saved")
+          wait_for_error I18n.t("errors.messages.greater_than", count: I18n.l(travel_to, format: :picker))
         end.to output(/#{::Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
-        expect(page).to have_css(".list-item[data-id]", count: 1)
 
-        expect { branch.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-
-        master.reload
-        expect(master.site_id).to eq site.id
-        expect(master.state).to eq "closed"
-        expect(master.name).to eq name2
-        expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
-        expect(master.close_date).to be_blank
-        expect(::File.exist?(master.path)).to be_falsey
+        wait_for_all_ckeditors_ready
       end
     end
   end
