@@ -102,6 +102,19 @@ module SS::Model::Task
 
       all.where(state: params[:state])
     end
+
+    def used_size
+      size = all.total_bsonsize
+      ids = all.pluck(:id)
+      ids.each do |id|
+        Dir["#{SS::File.root}/ss_tasks/#{id.to_s.chars.join("/")}/_/*"].each do |path|
+          if ::File.file?(path)
+            size += ::File.size(path) rescue 0
+          end
+        end
+      end
+      size
+    end
   end
 
   def count(other = 1)

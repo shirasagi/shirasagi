@@ -13,7 +13,8 @@ class Gws::Apis::SiteUsagesController < ApplicationController
   public
 
   def reload
-    @cur_site.reload_usage!
+    Gws::ReloadSiteUsageJob.bind(site_id: @cur_site).perform_now
+    @cur_site.reload
     render
   end
 end
