@@ -3,8 +3,8 @@
     <h2 class="subject">
       <%= @item.display_subject %>
       <span class="icon-attachment">
-          <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
-        </span>
+        <%= md_icons.filled @item.attachments? ? "attach_file" : '', tag: :i %>
+      </span>
     </h2>
     <div class="from"><%= gws_public_user_long_name(@item.from_member_name) || t('gws/memo.no_senders') %></div>
     <div class="date"><%= @item.display_send_date %>
@@ -60,7 +60,7 @@
       <% @item.attachments.each do |part| %>
         <div class="file">
           <%= link_to({action: :parts, section: part.section}, target: part.link_target) do %>
-            <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+            <%= md_icons.filled(part.image? ? "image" : "insert_drive_file", tag: :i, size: 18) %>
             <%= part.filename %>
           <% end %>
         </div>

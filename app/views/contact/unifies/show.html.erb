@@ -34,7 +34,7 @@
               <%= f.hidden_field :main_id, value: contact_group.id, id: nil %>
               <%= page_count_service.render(group_id: group_item.id, contact_id: contact_group.id) %>
             </td>
-            <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+            <td class="contact-main-state"><%= contact_group.main_state == "main" ? md_icons.filled("radio_button_checked", size: 14, title: t("contact.options.main_state.main"), aria: { hidden: nil, label: t("contact.options.main_state.main") }) : nil %></td>
             <td class="name"><%= contact_group.name %></td>
             <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
             <td class="contact-charge"><%= contact_group.contact_charge %></td>
@@ -53,7 +53,7 @@
   </div>
 
   <div style="display: flex; justify-content: center; margin-bottom: 10px; font-size: 400%;">
-    <span class="material-icons-outlined" style="display: block; font-size: 100%;">arrow_circle_up</span>
+    <%= md_icons.outlined "arrow_circle_up", style: "display: block; font-size: 100%;" %>
   </div>
 
   <div class="addon-views">
@@ -88,7 +88,7 @@
             <td class="pages-used">
               <%= page_count_service.render(group_id: group_item.id, contact_id: contact_group.id) %>
             </td>
-            <td class="contact-main-state"><%= contact_group.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+            <td class="contact-main-state"><%= contact_group.main_state == "main" ? md_icons.filled("radio_button_checked", size: 14, title: t("contact.options.main_state.main"), aria: { hidden: nil, label: t("contact.options.main_state.main") }) : nil %></td>
             <td class="name"><%= contact_group.name %></td>
             <td class="contact-group-name"><%= contact_group.contact_group_name %></td>
             <td class="contact-charge"><%= contact_group.contact_charge %></td>

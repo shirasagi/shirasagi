@@ -3,7 +3,7 @@
   <% if item.member?(@cur_user) %>
     <%=
       link_to new_gws_circular_comment_path(parent: parent, post_id: item), class: 'btn primary' do
-        tag.span("reply", class: "material-icons-outlined md-15") + tag.span(t('gws/board.links.comment'), class: "button-label")
+        md_icons.outlined("reply", size: 15) + tag.span(t('gws/board.links.comment'), class: "button-label")
       end
     %>
   <% end %>
@@ -11,10 +11,10 @@
 
 <% @comment_menu_proc = proc do |item, comment| %>
   <% if item.allowed?(:edit, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id %>
-    <%= link_to tag.span("edit", class: "material-icons-outlined md-15"), edit_gws_circular_comment_path(parent: parent, post_id: item, id: comment), class: 'btn', title: t('ss.links.edit') %>
+    <%= link_to md_icons.outlined("edit", size: 15), edit_gws_circular_comment_path(parent: parent, post_id: item, id: comment), class: 'btn', title: t('ss.links.edit') %>
   <% end %>
   <% if item.allowed?(:delete, @cur_user, site: @cur_site) || comment.user_id == @cur_user.id  %>
-    <%= link_to tag.span("delete", class: "material-icons-outlined md-15"), delete_gws_circular_comment_path(parent: parent, post_id: item, id: comment), class: 'btn', title: t('ss.links.delete') %>
+    <%= link_to md_icons.outlined("delete", size: 15), delete_gws_circular_comment_path(parent: parent, post_id: item, id: comment), class: 'btn', title: t('ss.links.delete') %>
   <% end %>
 <% end %>
 

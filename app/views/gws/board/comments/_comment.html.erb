@@ -4,16 +4,16 @@ menu = []
 if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
   link = new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   menu << link_to(link, class: "btn primary") do
-    tag.span("reply", class: "material-icons-outlined md-15") + tag.span(t('gws/board.links.comment'), class: "button-label")
+    md_icons.outlined("reply", size: 15) + tag.span(t('gws/board.links.comment'), class: "button-label")
   end
 end
 if @item.allowed?(:edit, @cur_user, site: @cur_site) || (@item.member?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(tag.span("edit", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.edit'))
+  menu << link_to(md_icons.outlined("edit", size: 15), link, class: "btn", title: t('ss.links.edit'))
 end
 if @item.allowed?(:delete, @cur_user, site: @cur_site) || (@item.member?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
-  menu << link_to(tag.span("delete", class: "material-icons-outlined md-15"), link, class: "btn", title: t('ss.links.delete'))
+  menu << link_to(md_icons.outlined("delete", size: 15), link, class: "btn", title: t('ss.links.delete'))
 end
 
 %>
@@ -36,7 +36,7 @@ end
       </span>
       <% comment.files.each do |file| %>
         <span id="file-<%= file.id %>" class='<%= @cur_site.board_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>'>
-          <i class="material-icons">&#xE226;</i>
+          <%= md_icons.filled "attach_file", tag: :i %>
           <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
           <%= sanitizer_status(file) %>
         </span>

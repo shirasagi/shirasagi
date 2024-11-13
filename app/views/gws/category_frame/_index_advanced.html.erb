@@ -35,7 +35,7 @@
             %>
             <span><%= cate.name %></span>
             <button name="btn-delete-category" type="button">
-              <span class="material-icons-outlined md-15">close</span>
+              <%= md_icons.outlined "close", size: 15 %>
             </button>
           </div>
         <% end %>
@@ -91,7 +91,7 @@
           <%= tag.span "", data: { show_in: lang } %>
         <% end %>
         <button name="btn-delete-category" type="button">
-          <span class="material-icons-outlined md-15">close</span>
+          <%= md_icons.outlined "close", size: 15 %>
         </button>
       </div>
     </template>

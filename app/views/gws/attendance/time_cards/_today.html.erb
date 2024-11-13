@@ -15,7 +15,7 @@
 <% render_reason = proc do |history| %>
   <% if history.present? && history.reason.present? %>
     <div class="reason-tooltip">
-      <i class="material-icons md-13">&#xE0C9;</i>
+      <%= md_icons.filled "message", tag: :i, size: 13 %>
       <div class="reason">
         <div><%= history.reason %></div>
         <%= ss_time_tag history.created %>

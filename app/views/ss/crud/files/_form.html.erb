@@ -24,16 +24,16 @@
   <div class="ss-image-edit-canvas">
     <div class="toolbar">
       <div class="btn-group">
-        <button type="button" class="btn btn-zoom-in" data-func="zoomIn"><i class="material-icons">&#xE8FF;</i></button>
-        <button type="button" class="btn btn-zoom-out" data-func="zoomOut"><i class="material-icons">&#xE900;</i></button>
+        <button type="button" class="btn btn-zoom-in" data-func="zoomIn" aria-label="<%= t("ss.buttons.zoom_in") %>"><%= md_icons.filled "zoom_in", tag: :i %></button>
+        <button type="button" class="btn btn-zoom-out" data-func="zoomOut" aria-label="<%= t("ss.buttons.zoom_out") %>"><%= md_icons.filled "zoom_out", tag: :i %></button>
       </div>
       <div class="btn-group">
-        <button type="button" class="btn btn-rotate-left" data-func="rotateRight"><i class="material-icons">&#xE419;</i></button>
-        <button type="button" class="btn btn-rotate-right" data-func="rotateLeft"><i class="material-icons">&#xE41A;</i></button>
+        <button type="button" class="btn btn-rotate-left" data-func="rotateRight"><%= md_icons.filled "rotate_left", tag: :i %></button>
+        <button type="button" class="btn btn-rotate-right" data-func="rotateLeft"><%= md_icons.filled "rotate_right", tag: :i %></button>
       </div>
       <div class="btn-group">
-        <button type="button" class="btn btn-submit-crop" data-func="submit"><i class="material-icons">&#xE876;</i></button>
-        <button type="button" class="btn btn-cancel-crop" data-func="cancel"><i class="material-icons">&#xE5CD;</i></button>
+        <button type="button" class="btn btn-submit-crop" data-func="submit" aria-label="<%= t("ss.buttons.send") %>"><%= md_icons.filled "done", tag: :i %></button>
+        <button type="button" class="btn btn-cancel-crop" data-func="cancel" aria-label="<%= t("ss.buttons.cancel") %>"><%= md_icons.filled "close", tag: :i %></button>
       </div>
 
       <div class="btn-group">

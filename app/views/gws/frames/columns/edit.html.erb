@@ -6,9 +6,9 @@
     <div class="main-box">
       <div class="gws-column-item-drag-handle">
         <h2 class="header"><%= item.class.model_name.human %></h2>
-        <span class="material-icons-outlined gws-column-item-drag-handle-icon">drag_handle</span>
+        <%= md_icons.outlined "drag_handle", class: "gws-column-item-drag-handle-icon" %>
         <%= link_to gws_frames_column_path(id: item, ref: ref), title: t("ss.buttons.close"), class: "btn-close", data: { turbo: true } do %>
-          <span class="material-icons-outlined">cancel</span>
+          <%= md_icons.outlined "cancel" %>
         <% end %>
       </div>
 

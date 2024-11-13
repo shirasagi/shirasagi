@@ -15,7 +15,7 @@
   <%= sanitizer_status(item) %>
   <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
   <%= link_to opts.merge(action: :show), class: "title" do %>
-    <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
+    <%= md_icons.filled "folder_open", tag: :i, size: 18, class: "md-dark title-icon" %>
     <%= item.name %>
   <% end %>
   <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>

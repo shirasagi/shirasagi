@@ -25,7 +25,7 @@
           <td><%= user.email %></td>
           <td>
             <% if @item.approver_user_editable?(level, user) %>
-            <i class="material-icons" style="font-size: 100%;">&#xE5CA;</i>
+            <%= md_icons.filled "check", tag: :i, style: "font-size: 100%;" %>
             <% end %>
           </td>
           <% else %>
