@@ -39,7 +39,8 @@ describe Article::Page, dbscope: :example do
     expect(branch_page.close_date).to eq close_date
     expect(::File.exist?(branch_page.path)).to be_falsey
 
-    Timecop.travel(close_date + 1.minute) do
+    travel_to = close_date + 1.minute
+    Timecop.travel(travel_to) do
       # 3. 公開終了日を経過し公開中のページ（1）が非公開になる
       expect do
         Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
@@ -55,19 +56,30 @@ describe Article::Page, dbscope: :example do
 
       # 4. 差し替えページ（2）を公開保存
       task = SS::Task.find_or_create_for_model(master_page, site: site)
-      task.run_with do
+      result = task.run_with do
         branch_page.state = "public"
-        branch_page.save!
-        expect(branch_page.destroy).to be_truthy
+        branch_page.save
       end
+
+      expect(result).to be_falsey
+      message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to, format: :picker))
+      expect(branch_page.errors.full_messages).to include(/#{::Regexp.escape(message)}/)
 
       master_page.reload
       expect(master_page.site_id).to eq site.id
       expect(master_page.state).to eq "closed"
-      expect(master_page.name).to eq name2
+      expect(master_page.name).to eq name
       expect(master_page.filename).to eq "#{node.filename}/#{basename}"
       expect(master_page.close_date).to be_blank
       expect(::File.exist?(master_page.path)).to be_falsey
+
+      branch_page.reload
+      expect(branch_page.site_id).to eq site.id
+      expect(branch_page.state).to eq "closed"
+      expect(branch_page.name).to eq name2
+      expect(branch_page.filename).to eq "#{node.filename}/#{branch_page.id}.html"
+      expect(branch_page.close_date).to eq close_date
+      expect(::File.exist?(branch_page.path)).to be_falsey
     end
   end
 end
