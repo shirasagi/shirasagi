@@ -23,9 +23,11 @@ module Cms::Addon
       if close_date.present? && release_date.present? && release_date >= close_date
         errors.add :close_date, :greater_than, count: t(:release_date)
       end
-      if release_date.present? && release_date <= Time.zone.now
-        errors.add :release_date, :greater_than, count: I18n.l(Time.zone.now)
-      end
+      # release_dat が now 以前でもシステム的には問題ないので、エラーにするには厳しすぎる。
+      # しいて言うなら警告だけど、警告を実現する方法がないので、チェックしないようにする。
+      # if release_date.present? && release_date <= Time.zone.now
+      #   errors.add :release_date, :greater_than, count: I18n.l(Time.zone.now)
+      # end
       if close_date.present? && close_date <= Time.zone.now
         errors.add :close_date, :greater_than, count: I18n.l(Time.zone.now)
       end
