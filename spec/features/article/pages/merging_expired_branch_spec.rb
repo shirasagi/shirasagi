@@ -214,16 +214,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_content(cms_user.long_name)
             wait_for_cbox_closed { click_on cms_user.long_name }
           end
-          within ".mod-workflow-request" do
-            expect(page).to have_css("[data-id='1,#{cms_user.id}']", text: cms_user.long_name)
-            click_on I18n.t("workflow.buttons.request")
-          end
-          expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
-          wait_for_turbo_frame "#workflow-branch-frame"
           message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to, format: :picker))
           page.accept_alert(/#{::Regexp.escape(message)}/) do
-            within ".mod-workflow-approve" do
-              click_on I18n.t("workflow.buttons.approve")
+            within ".mod-workflow-request" do
+              expect(page).to have_css("[data-id='1,#{cms_user.id}']", text: cms_user.long_name)
+              click_on I18n.t("workflow.buttons.request")
             end
           end
 
