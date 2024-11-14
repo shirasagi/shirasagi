@@ -17,6 +17,29 @@ FileUtils.chdir APP_ROOT do
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
 
+  puts "== mecab-ruby =="
+  system! "tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 bundle exec ruby extconf.rb && make && make install && cd .. && rm -rf mecab-ruby-0.996"
+
+  puts "== Setup config/mongoid.yml =="
+  system! "cp config/samples/mongoid.yml config/mongoid.yml"
+
+  puts "== Install all seeds =="
+  system! "bundle exec rake db:create_indexes"
+  system! "bundle exec rake ss:create_site data=\"{ name: '自治体サンプル', host: 'www', domains: 'www.example.jp:3000', mypage_domain: 'localhost:3000', map_api: 'openlayers' }\""
+  system! "bundle exec rake ss:create_site data=\"{ name: '企業サンプル', host: 'company', domains: 'company.example.jp:3000', mypage_domain: 'localhost:3000', map_api: 'openlayers' }\""
+  system! "bundle exec rake ss:create_site data=\"{ name: '子育て支援サンプル', host: 'childcare', domains: 'childcare.example.jp:3000', mypage_domain: 'localhost:3000', map_api: 'openlayers' }\""
+  system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'www.example.jp:3000', mypage_domain: 'localhost:3000', map_api: 'openlayers', subdir: 'opendata', parent_id: 1 }\""
+  system! "bundle exec rake ss:create_site data=\"{ name: 'LPサンプル', host: 'lp_', domains: 'lp.example.jp:3000', mypage_domain: 'localhost:3000', map_api: 'openlayers' }\""
+  system! "bundle exec rake db:seed site=www name=demo"
+  system! "bundle exec rake db:seed site=company name=company"
+  system! "bundle exec rake db:seed site=childcare name=childcare"
+  system! "bundle exec rake db:seed site=opendata name=opendata"
+  system! "bundle exec rake db:seed site=lp_ name=lp"
+  system! "bundle exec rake db:seed name=gws"
+  system! "bundle exec rake db:seed name=webmail"
+  system! "bundle exec rake cms:set_subdir_url site=opendata"
+  system! "find public/sites/ -name '*.html' -delete"
+
   puts "\n== Removing old logs and tempfiles =="
   system! "bin/rails log:clear tmp:clear"
 
