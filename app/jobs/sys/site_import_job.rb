@@ -86,7 +86,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
         next if entry.directory?
 
         name = entry.name
-        if entry.gp_flags & Zip::Entry::EFS
+        if (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
           name.force_encoding("UTF-8")
         else
           name = NKF.nkf('-w', name)
