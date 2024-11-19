@@ -5,6 +5,7 @@ module Gws::ReadableSetting
   included do
     class_variable_set(:@@_readable_setting_include_custom_groups, nil)
     class_variable_set(:@@_requires_read_permission_to_read, SS.config.gws.readable_setting.fetch("requires_read_permission", true))
+    class_variable_set(:@@_module_to_readable, nil)
 
     field :readable_setting_range, type: String, default: 'select'
     field :readable_groups_hash, type: Hash
@@ -25,6 +26,9 @@ module Gws::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
+      if !module_readable?(opts[:site], user)
+        return none
+      end
       if requires_read_permission_to_read?
         return none unless self.allowed?(:read, user, opts)
       end
@@ -44,6 +48,9 @@ module Gws::ReadableSetting
   def readable?(user, opts = {})
     opts[:site] ||= self.site
 
+    if !self.class.module_readable?(opts[:site], user)
+      return false
+    end
     if self.class.requires_read_permission_to_read?
       return false unless self.class.allowed?(:read, user, opts)
     end
@@ -162,6 +169,16 @@ module Gws::ReadableSetting
       class_variable_get(:@@_requires_read_permission_to_read)
     end
 
+    def module_to_readable
+      class_variable_get(:@@_module_to_readable)
+    end
+
+    def module_readable?(site, user)
+      return true if module_to_readable.blank?
+      return false if site.nil?
+      Gws.module_usable?(module_to_readable, site, user)
+    end
+
     private
 
     def readable_setting_include_custom_groups
@@ -170,6 +187,10 @@ module Gws::ReadableSetting
 
     def no_needs_read_permission_to_read
       class_variable_set(:@@_requires_read_permission_to_read, false)
+    end
+
+    def set_module_to_readable(mod)
+      class_variable_set(:@@_module_to_readable, mod)
     end
   end
 end
