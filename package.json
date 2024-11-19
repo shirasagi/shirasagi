@@ -30,6 +30,7 @@
     "material-icons": "^1.13.2",
     "mdn-polyfills": "^5.20.0",
     "moment": "^2.29.4",
+    "npm-watch": "^0.13.0",
     "popper.js": "^1.16.1",
     "promise-polyfill": "^8.3.0",
     "smooth-dnd": "^0.12.1",
@@ -38,7 +39,13 @@
     "tippy.js": "5.2.1"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "build": {
+      "patterns": ["app/javascript"]
+    }
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
