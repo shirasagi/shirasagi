@@ -83,6 +83,32 @@ describe Article::Part::Page, type: :model, dbscope: :example do
         expect(item.render_loop_html(page, html: '#{summary}')).to eq('')
       end
     end
+
+    context '#5484: with &nbsp; in html' do
+      let(:html) do
+        <<-HTML
+          <div id="upper_part">
+            <p>&nbsp;</p>
+            <div class="details">
+              <table class="info">
+                <caption>&nbsp;</caption>
+                <tbody>
+                  <tr>
+                    <th scope="row">header</th>
+                    <td>description</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        HTML
+      end
+      let(:page) { create(:article_page, html: html) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{summary}')).to eq('header description')
+      end
+    end
   end
 
   describe '#render_loop_html - class' do
