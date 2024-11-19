@@ -9,37 +9,39 @@
   end
 %>
 
-<%= jquery do %>
-Gws_Presence_User.render();
-
-var table_url = '<%== portlet_url %>';
-var presence_id = '<%== @portlet.id %>';
-
-$(".presence-id-" + presence_id + " .reload").on("click", function(){
-  $.ajax({
-    url: table_url,
-    beforeSend: function () {
-      $(".presence-id-" + presence_id + " .portlet-content").html(SS.loading);
-    },
-    success: function(data) {
-      $(".presence-id-" + presence_id + " .portlet-content").html(data);
-      var time = $(".presence-id-" + presence_id + " .portlet-content").find("time");
-      $(".presence-id-" + presence_id + " .portlet-title time").replaceWith(time);
-      time.show();
-    },
-    error: function (xhr, status, error) {
-      $(".presence-id-" + presence_id + " .portlet-content").html("");
-    }
-  });
-});
-$(".presence-id-" + presence_id + ".presence-users .reload").trigger('click');
-<% end %>
-
 <div class="main-box presence-users portlet-users presence-id-<%= @portlet.id %>">
   <div class="portlet-title">
     <span class="group"><%= group.try(:trailing_name) || group.try(:name) %></span>
     （<time datetime="<%= time %>>"><%=l time, format: :long %></time>）
     <i class="material-icons md-18 editicon reload">refresh</i>
   </div>
-  <div class="portlet-content"></div>
+
+  <% if Gws.module_usable?(:presence, @cur_site, @cur_user) %>
+    <%= jquery do %>
+      Gws_Presence_User.render();
+
+      var table_url = '<%== portlet_url %>';
+      var presence_id = '<%== @portlet.id %>';
+
+      $(".presence-id-" + presence_id + " .reload").on("click", function(){
+        $.ajax({
+          url: table_url,
+          beforeSend: function () {
+            $(".presence-id-" + presence_id + " .portlet-content").html(SS.loading);
+          },
+          success: function(data) {
+            $(".presence-id-" + presence_id + " .portlet-content").html(data);
+            var time = $(".presence-id-" + presence_id + " .portlet-content").find("time");
+            $(".presence-id-" + presence_id + " .portlet-title time").replaceWith(time);
+            time.show();
+          },
+          error: function (xhr, status, error) {
+            $(".presence-id-" + presence_id + " .portlet-content").html("");
+          }
+        });
+      });
+      $(".presence-id-" + presence_id + ".presence-users .reload").trigger('click');
+    <% end %>
+    <div class="portlet-content"></div>
+  <% end %>
 </div>
