@@ -31,9 +31,10 @@ module Cms::Addon
       html = self.try(:render_html).presence || self.html
       return nil if html.blank?
 
-      html = ApplicationController.helpers.sanitize(html.presence || '', tags: [])
+      html = ApplicationController.helpers.sanitize(html, tags: [])
       return nil if html.blank?
 
+      html = Cms.unescape_html_entities(html)
       html = html.squish
       html = html.truncate(120)
       html.html_safe

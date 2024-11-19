@@ -89,12 +89,15 @@ describe Article::Part::Page, type: :model, dbscope: :example do
         <<-HTML
           <p>&nbsp;</p>
           <p>&amp;</p>
+          <p>&#60;</p>
+          <p>&copy;</p>
+          <p>&nbsp;</p>
         HTML
       end
       let(:page) { create(:article_page, html: html) }
 
       it do
-        expect(item.render_loop_html(page, html: '#{summary}')).to eq('&nbsp; &amp;')
+        expect(item.render_loop_html(page, html: '#{summary}')).to eq('& < ©')
       end
     end
   end
