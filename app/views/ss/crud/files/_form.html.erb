@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-    <img src="<%= @item.url %>" class="target" data-format="<%= @item.content_type %>">
+    <img src="<%= @item.no_cache_url %>" class="target" data-format="<%= @item.content_type %>">
     <%= f.hidden_field :in_data_url, value: nil %>
   </div>
 
