@@ -345,4 +345,8 @@ module Cms
     sass = SassC::Engine.new(source, options)
     sass.render
   end
+
+  def self.unescape_html_entities(text)
+    Nokogiri::HTML5.fragment(text).text
+  end
 end
