@@ -11,7 +11,11 @@ module History::Addon
     end
 
     def backups
-      History::Backup.where(ref_coll: collection_name, "data._id" => id).sort(created: -1)
+      # History::Backup.where(ref_coll: collection_name, "data._id" => id).sort(created: -1)
+      # 作成日時の降順に並び替えたい。
+      # 主キーがBSON::ObjectIDの場合、主キーの降順に並び替えるのとほぼ同義（厳密には異なるが）で、
+      # そして、主キーの降順に並び替える方が効率が良い。
+      History::Backup.where(ref_coll: collection_name, "data._id" => id).reorder(id: -1)
     end
 
     def current_backup

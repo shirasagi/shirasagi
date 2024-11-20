@@ -78,10 +78,11 @@
     </tbody>
   </table>
   <%=
-    if @item.backups.count > History.max_histories
-      t("history.n_out_of_m", n: History.max_histories, m: @item.backups.count)
+    backup_count = @item.backups.count
+    if backup_count > History.max_histories
+      t("history.n_out_of_m", n: History.max_histories, m: backup_count)
     else
-      t("history.n_out_of_m", n: @item.backups.count, m: @item.backups.count)
+      t("history.n_out_of_m", n: backup_count, m: backup_count)
     end
   %>
 </dl>

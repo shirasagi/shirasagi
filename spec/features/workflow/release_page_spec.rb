@@ -109,6 +109,22 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item.name)
         end
+
+        expect do
+          Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
+        end.to output.to_stdout
+
+        item.reload
+        expect(item.workflow_state).to eq "approve"
+        expect(item.state).to eq "ready"
+        expect(item.release_date).to eq release_date
+        expect(item.workflow_approvers.count).to eq 1
+        expect(item.workflow_approvers).to include(
+          { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now) }
+        )
+        # backup is created
+        expect(item.backups.count).to eq 2
       end
     end
 
@@ -196,6 +212,22 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             expect(mail.body.multipart?).to be_falsey
             expect(mail.body.raw_source).to include(item.name)
           end
+
+          expect do
+            Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
+          end.to output(/#{::Regexp.escape(item.full_url)}/).to_stdout
+
+          item.reload
+          expect(item.workflow_state).to eq "approve"
+          expect(item.state).to eq "public"
+          expect(item.release_date).to be_blank
+          expect(item.workflow_approvers.count).to eq 1
+          expect(item.workflow_approvers).to include(
+            { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+              created: be_within(30.seconds).of(Time.zone.now) }
+          )
+          # backup is created
+          expect(item.backups.count).to eq 3
         end
       end
     end
