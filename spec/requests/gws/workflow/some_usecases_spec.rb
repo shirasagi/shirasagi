@@ -103,7 +103,7 @@ describe "gws/workflow/files", type: :request, dbscope: :example do
   end
 
   context "with jwt bearer grant type with service application" do
-    let!(:permissions) { %w(read_private_gws_workflow_files) }
+    let!(:permissions) { %w(use_gws_workflow read_private_gws_workflow_files) }
 
     before do
       key = OpenSSL::PKey::RSA.generate(2048)

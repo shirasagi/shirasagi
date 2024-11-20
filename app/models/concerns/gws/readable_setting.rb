@@ -175,7 +175,7 @@ module Gws::ReadableSetting
 
     def module_readable?(site, user)
       return true if module_to_readable.blank?
-      return false if site.nil?
+      return false if site.nil? || user.nil?
       Gws.module_usable?(module_to_readable, site, user)
     end
 
