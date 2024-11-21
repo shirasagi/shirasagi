@@ -305,6 +305,8 @@ en:
       unable_to_delete_due_to_branch_page: It cannot be deleted because a replacement page has been created.
       not_allowed_to_publish: You are not allowed to Publish this Page
       not_allowed_to_close: You are not allowed to Close this Page
+      submit_image_canvas: To confirm the image resize, click the ✓ on the toolbar.
+
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
