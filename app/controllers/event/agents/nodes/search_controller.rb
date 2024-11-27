@@ -20,7 +20,8 @@ class Event::Agents::Nodes::SearchController < ApplicationController
       in(id: facility_ids).
       order_by(order: 1, kana: 1, name: 1).
       to_a
-    if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present? || @facility_ids.present?
+    if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present? ||
+       @facility_ids.present? || @sort.present?
       list_events
     end
   end
@@ -28,7 +29,9 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   private
 
   def set_params
-    safe_params = params.permit(:search_keyword, :facility_id, category_ids: [], event: [ :start_date, :close_date])
+    safe_params = params.permit(
+      :search_keyword, :facility_id, :sort, category_ids: [], event: [ :start_date, :close_date]
+    )
     @keyword = safe_params[:search_keyword].presence
     @category_ids = safe_params[:category_ids].presence || []
     @category_ids = @category_ids.map(&:to_i)
@@ -44,6 +47,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
         where(id: @facility_id).
         pluck(:id)
     end
+    @sort = safe_params[:sort].presence
   end
 
   def list_events
@@ -62,6 +66,8 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     else
       criteria = criteria.exists(event_dates: 1)
     end
+
+    @cur_node.sort = @sort if @sort.present?
 
     @items = criteria.order_by(@cur_node.sort_hash).
       page(params[:page]).

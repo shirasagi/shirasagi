@@ -20,6 +20,20 @@ module Event::Addon
       end
     end
 
+    def public_sort_options
+      %w(
+        updated_desc unfinished_event_dates
+      ).map do |k|
+        description = I18n.t("event.sort_options.#{k}.description", default: [ "cms.sort_options.#{k}.description".to_sym, nil ])
+
+        [
+          I18n.t("event.sort_options.#{k}.title".to_sym, default: "cms.sort_options.#{k}.title".to_sym),
+          k.sub("_desc", " -1"),
+          "data-description" => description
+        ]
+      end
+    end
+
     def condition_hash(options = {})
       h = super
       today = Time.zone.today
