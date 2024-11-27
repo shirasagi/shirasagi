@@ -16,12 +16,23 @@ FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
+  system! "yarn install"
+  system! "yarn build"
 
   puts "== mecab-ruby =="
-  system! "tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 bundle exec ruby extconf.rb && make && make install && cd .. && rm -rf mecab-ruby-0.996"
+  system! "tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install && cd .. && rm -rf mecab-ruby-0.996"
 
   puts "== Setup config/mongoid.yml =="
-  system! "cp config/samples/mongoid.yml config/mongoid.yml"
+  system! "cp -np config/samples/mongoid-container.yml config/mongoid.yml"
+
+  puts "== Setup config/secrets.yml =="
+  system! "cp -np config/samples/secrets.yml config/secrets.yml"
+
+  unless File.exist?("config/environment.yml")
+    File.open("config/environment.yml", "wt") do |f|
+      f.puts "RAILS_ENV: development"
+    end
+  end
 
   puts "== Install all seeds =="
   system! "bundle exec rake db:create_indexes"
@@ -41,8 +52,8 @@ FileUtils.chdir APP_ROOT do
   system! "find public/sites/ -name '*.html' -delete"
 
   puts "\n== Removing old logs and tempfiles =="
-  system! "bin/rails log:clear tmp:clear"
+  system! "bundle exec rails log:clear tmp:clear"
 
   puts "\n== Restarting application server =="
-  system! "bin/rails restart"
+  system! "bundle exec rails restart"
 end
