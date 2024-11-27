@@ -2,8 +2,8 @@ name: "shirasagi-devcontainer"
 
 services:
   shirasagi:
-    env_file:
-      - ../.env
+    #env_file:
+    #  - ../.env
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
@@ -18,8 +18,8 @@ services:
       - db:database
   db:
     image: mongo:7.0
-    env_file:
-      - ../.env
+    #env_file:
+    #  - ../.env
     volumes:
       - db_data:/data/db
     ports:
