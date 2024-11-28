@@ -51,6 +51,8 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   end
 
   def list_events
+    @cur_node.sort = @sort if @sort.present?
+
     criteria = Cms::Page.site(@cur_site).and_public(@cur_date)
     criteria = criteria.search(keyword: @keyword) if @keyword.present?
     criteria = criteria.where(@cur_node.condition_hash)
@@ -66,8 +68,6 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     else
       criteria = criteria.exists(event_dates: 1)
     end
-
-    @cur_node.sort = @sort if @sort.present?
 
     @items = criteria.order_by(@cur_node.sort_hash).
       page(params[:page]).
