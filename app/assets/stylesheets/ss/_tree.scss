@@ -67,16 +67,16 @@
   }
 
   summary::before {
-    z-index: 1;
     content: "＋";
-    background: #f25a38 0 0;
+    display: flex;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
     width: calc(1.5 * var(--radius));
     height: calc(1.5 * var(--radius));
     border-radius: 2px;
-    display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
+    background: #f25a38 0 0;
+    color: #fff;
   }
 
   details[open] > summary::before {
@@ -87,14 +87,14 @@
 
   .ss-tree-item-link{
     display: block;
-    width: 100%;
     flex-grow: 10;
+    width: 100%;
     padding: 2px;
     overflow: hidden;
+    color: #333;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: #333;
 
     &:hover{
       background: #fbeee8;
@@ -106,8 +106,7 @@
   .ss-tree-subtree{
     li{
       margin-left: -1px;
-      padding-left: calc(1.5* var(--spacing) - var(--radius) + 0.5em);
-
+      padding-left: calc(1.5 * var(--spacing) - var(--radius) + 0.5em);
       &::after{
         left: calc(var(--spacing) - var(--radius) - 2px);
       }
