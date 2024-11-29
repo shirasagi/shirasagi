@@ -83,12 +83,134 @@
   <%= jquery do %>
     var hostUrl = "<%= @cur_site.url %>";
     $('#addon-cms-agents-addons-body a.ajax-box.related-pages').data('on-select', function ($item) {
-      var data = $item.closest("[data-id]");
-      var href = hostUrl + data.find(".filename").text();
-      var label = data.find(".select-item").text();
-      var text = ejs.render("<a href=\"<%%= href %>\"><%%= label %></a>", { href: href, label: label });
-      SS_FileView.insertContent(text);
+        var data = $item.closest("[data-id]");
+        var href = hostUrl + data.find(".filename").text();
+        var label = data.find(".select-item").text();
+        var text = ejs.render("<a href=\"<%%= href %>\"><%%= label %></a>", { href: href, label: label });
+        SS_FileView.insertContent(text);
     });
+
+    $('input:submit').on('click', function (e) {
+        var form = $(this).closest('form');
+        var selectElement = form.find('[name="in_form_id"]');
+
+        if (selectElement.length > 0) {
+            var selectedValue = selectElement.val();
+
+            if (selectedValue === '') {
+                var textArea = form.find('textarea[name="item[html]"]');
+                var hrefs = [];
+
+                if (textArea.length > 0) {
+                    var htmlContent = textArea.val();
+
+                    var hrefRegex = /href="(.*?)"/g;
+                    var match;
+                    while ((match = hrefRegex.exec(htmlContent)) !== null) {
+                        hrefs.push(match[1]);
+                    }
+                }
+
+                if (hrefs.length > 0) {
+                    e.preventDefault();
+                    showLoader(); // Show loader while waiting for the AJAX call
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/.cms/link_check/check.json",
+                        cache: false,
+                        data: JSON.stringify({
+                            "url": hrefs,
+                            "root_url": "https://example.com"
+                        }),
+                        contentType: 'application/json',
+                        dataType: "json",
+                        crossDomain: true,
+                        success: function (res) {
+                            hideLoader(); // Hide the loader on success
+                            var results = [];
+                            var hasFailures = false;
+
+                            $.each(res, function (link, result) {
+                                var code = result["code"];
+                                var message = result["message"];
+                                var state = (code == 200);
+                                var resultMessage = "";
+
+                                if (state) {
+                                    resultMessage += "Success: " + link + "<br>";
+                                } else {
+                                    resultMessage += "Failure: " + link + "<br>";
+                                    hasFailures = true;
+                                }
+
+                                if (message) {
+                                    resultMessage += "Details: " + message + "<br>";
+                                }
+
+                                results.push(resultMessage);
+                            });
+
+                            if (hasFailures) {
+                                showAlert(results.join("<br>"), form);
+                            } else {
+                                form.submit();
+                            }
+                        },
+                        error: function (xhr) {
+                            hideLoader(); // Hide the loader on error
+                            showAlert("Error checking links. Please try again.");
+                        }
+                    });
+                }
+            }
+        }
+    });
+
+    // Function to show a loader
+    function showLoader() {
+        var loaderHtml = `
+            <div id="loaderOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        `;
+        $('body').append(loaderHtml);
+    }
+
+    // Function to hide the loader
+    function hideLoader() {
+        $('#loaderOverlay').remove();
+    }
+
+    // Function to show an alert with Close and Ignore Warnings buttons
+    function showAlert(message, form) {
+        var $div = $('<div/>', { id: "alertExplanation", class: "errorExplanation" });
+        $div.append("<h2>Link Check Results</h2>");
+        $div.append($('<div/>').html(message));
+
+        var $footer = $(document.createElement("footer")).addClass('send');
+        $footer.append('<button type="button" class="btn btn-secondary cancel">Close</button>');
+        $footer.append('<button type="button" class="btn btn-primary ignore-warnings">無視して進む</button>'); // Ignore Warnings in Japanese
+
+        $.colorbox({
+            html: $div.get(0).outerHTML + $footer.get(0).outerHTML,
+            maxHeight: "80%",
+            fixed: true
+        });
+
+        $("#cboxLoadedContent").find(".cancel").on("click", function () {
+            $.colorbox.close();
+            return false;
+        });
+
+        $("#cboxLoadedContent").find(".ignore-warnings").on("click", function () {
+            $.colorbox.close();
+            form.submit(); // Proceed with form submission
+        });
+    }
   <% end %>
+
 
 <% end %>
