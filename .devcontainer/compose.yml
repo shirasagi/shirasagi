@@ -2,8 +2,9 @@ name: "shirasagi-devcontainer"
 
 services:
   shirasagi:
-    #env_file:
-    #  - ../.env
+    env_file:
+      - path: ../.env
+        required: false
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
@@ -11,15 +12,16 @@ services:
       - ..:/workspaces/shirasagi:cached
     command: sleep infinity # 開発コンテナが勝手にダウンしない為に設定する
     ports:
-      - 3000:3000
+      - ${PORT:-3000}:${PORT:-3000}
     depends_on:
       - db
     links:
       - db:database
   db:
     image: mongo:7.0
-    #env_file:
-    #  - ../.env
+    env_file:
+      - path: ../.env
+        required: false
     volumes:
       - db_data:/data/db
     #ports:

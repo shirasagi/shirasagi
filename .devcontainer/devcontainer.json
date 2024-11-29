@@ -1,6 +1,6 @@
 {
   "name": "shirasagi-devcontainer",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "compose.yml",
   "service": "shirasagi",
   "workspaceFolder": "/workspaces/shirasagi",
 
