@@ -1,0 +1,121 @@
+.ss-tree{
+  padding: 0;
+  --spacing: 1.5rem;
+  --radius: 10px;
+
+  li {
+    display: block;
+    position: relative;
+    margin: 2px;
+    padding-left: calc(1.5 * var(--spacing) - var(--radius) - 2px);
+  }
+
+  ul {
+    margin-left: calc(var(--radius) - var(--spacing));
+    padding-left: 0;
+  }
+
+  ul li {
+    border-left: 2px solid #ddd;
+  }
+
+  ul li:last-child {
+    border-color: transparent;
+  }
+
+  ul li::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -2);
+    left: -2px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid #ddd;
+    border-width: 0 0 2px 2px;
+  }
+
+  summary {
+    display: block;
+    cursor: pointer;
+  }
+
+  summary::marker,
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:focus {
+    outline: none;
+  }
+
+  summary:focus-visible {
+    outline: 1px dotted #000;
+  }
+
+  li::after,
+  summary::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / 1.5 - var(--radius));
+    left: calc(var(--spacing) - var(--radius) - 10px);
+    width: calc(1.5 * var(--radius));
+    height: calc(1.5 * var(--radius));
+    border-radius: 2px;
+    background: #ddd;
+  }
+
+  summary::before {
+    z-index: 1;
+    content: "＋";
+    background: #f25a38 0 0;
+    width: calc(1.5 * var(--radius));
+    height: calc(1.5 * var(--radius));
+    border-radius: 2px;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  }
+
+  details[open] > summary::before {
+    content: "−";
+    align-items: end;
+    background-position: calc(-1.5 * var(--radius)) 0;
+  }
+
+  .ss-tree-item-link{
+    display: block;
+    width: 100%;
+    flex-grow: 10;
+    padding: 2px;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #333;
+
+    &:hover{
+      background: #fbeee8;
+      text-decoration: none;
+      // color: #f25a38;
+    }
+  }
+
+  .ss-tree-subtree{
+    li{
+      margin-left: -1px;
+      padding-left: calc(1.5* var(--spacing) - var(--radius) + 0.5em);
+
+      &::after{
+        left: calc(var(--spacing) - var(--radius) - 2px);
+      }
+    }
+
+    summary::before{
+      left: calc(var(--spacing) - var(--radius) - 2px);
+    }
+  }
+}
+
