@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
-require 'dotenv'
 require "fileutils"
-
-Dotenv.load
 
 # path to your application root.
 APP_ROOT = File.expand_path("..", __dir__)
+DEFAULT_PORT = "3000"
+PORT = ENV.fetch("PORT", DEFAULT_PORT)
 
 def system!(*args)
   system(*args, exception: true)
@@ -37,21 +36,42 @@ FileUtils.chdir APP_ROOT do
     end
   end
 
-  puts "== Install all seeds =="
+  puts "== Remove all existing data =="
+  system! "bundle exec rake db:drop"
+  system! "rm -rf private public"
+  system! "git checkout -- private public"
+
+  puts "== Create database =="
   system! "bundle exec rake db:create_indexes"
-  system! "bundle exec rake ss:create_site data=\"{ name: '自治体サンプル', host: 'www', domains: 'www.example.jp:#{ENV.fetch("PORT", 3000)}', mypage_domain: 'localhost:#{ENV.fetch("PORT", 3000)}', map_api: 'openlayers' }\""
-  system! "bundle exec rake ss:create_site data=\"{ name: '企業サンプル', host: 'company', domains: 'company.example.jp:#{ENV.fetch("PORT", 3000)}', mypage_domain: 'localhost:#{ENV.fetch("PORT", 3000)}', map_api: 'openlayers' }\""
-  system! "bundle exec rake ss:create_site data=\"{ name: '子育て支援サンプル', host: 'childcare', domains: 'childcare.example.jp:#{ENV.fetch("PORT", 3000)}', mypage_domain: 'localhost:#{ENV.fetch("PORT", 3000)}', map_api: 'openlayers' }\""
-  system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'www.example.jp:#{ENV.fetch("PORT", 3000)}', mypage_domain: 'localhost:#{ENV.fetch("PORT", 3000)}', map_api: 'openlayers', subdir: 'opendata', parent_id: 1 }\""
-  system! "bundle exec rake ss:create_site data=\"{ name: 'LPサンプル', host: 'lp_', domains: 'lp.example.jp:#{ENV.fetch("PORT", 3000)}', mypage_domain: 'localhost:#{ENV.fetch("PORT", 3000)}', map_api: 'openlayers' }\""
+
+  puts "== Install seed: '自治体サンプル' =="
+  system! "bundle exec rake ss:create_site data=\"{ name: '自治体サンプル', host: 'www', domains: 'www.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
   system! "bundle exec rake db:seed site=www name=demo"
+
+  puts "== Install seed: '企業サンプル' =="
+  system! "bundle exec rake ss:create_site data=\"{ name: '企業サンプル', host: 'company', domains: 'company.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
   system! "bundle exec rake db:seed site=company name=company"
+
+  puts "== Install seed: '子育て支援サンプル' =="
+  system! "bundle exec rake ss:create_site data=\"{ name: '子育て支援サンプル', host: 'childcare', domains: 'childcare.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
   system! "bundle exec rake db:seed site=childcare name=childcare"
+
+  puts "== Install seed: 'オープンデータ' =="
+  system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'www.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers', subdir: 'opendata', parent_id: 1 }\""
   system! "bundle exec rake db:seed site=opendata name=opendata"
-  system! "bundle exec rake db:seed site=lp_ name=lp"
-  system! "bundle exec rake db:seed name=gws"
-  system! "bundle exec rake db:seed name=webmail"
   system! "bundle exec rake cms:set_subdir_url site=opendata"
+
+  puts "== Install seed: 'LPサンプル' =="
+  system! "bundle exec rake ss:create_site data=\"{ name: 'LPサンプル', host: 'lp_', domains: 'lp.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
+  system! "bundle exec rake db:seed site=lp_ name=lp"
+
+  puts "== Install seed: 'グループウェア' =="
+  system! "bundle exec rake db:seed name=gws"
+
+  puts "== Install seed: 'Webメール' =="
+  system! "bundle exec rake db:seed name=webmail"
+
+  puts "\n== Removing auto generated html files =="
   system! "find public/sites/ -name '*.html' -delete"
 
   puts "\n== Removing old logs and tempfiles =="
