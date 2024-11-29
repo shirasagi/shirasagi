@@ -20,6 +20,7 @@ ja:
     menu: メニュー
     module: モジュール
     operation: 操作
+    qr_code: QRコード
     regexp: 正規表現
     resize_image: 画像リサイズ
     role: ロール
