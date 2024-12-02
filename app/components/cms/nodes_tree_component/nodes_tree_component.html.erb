@@ -1,4 +1,5 @@
 <%= cache_component do %>
+  <h2 class="content-navi-title"><%= t("cms.node") %></h2>
   <ul class="ss-tree cms-nodes-tree" role="tree">
     <% root_items.each do |folder| %>
       <% if folder.children? %>
