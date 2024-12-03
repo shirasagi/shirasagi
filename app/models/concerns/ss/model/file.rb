@@ -427,6 +427,7 @@ module SS::Model::File
       self.geo_location = converter.geo_location
     end
     self.size = Fs.size(path)
+    self.updated = Time.zone.now
 
     if SS::SvgSanitizer.sanitize(self.path, content_type: self.content_type)
       self.size = ::Fs.size(self.path)

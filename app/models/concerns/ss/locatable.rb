@@ -66,4 +66,9 @@ module SS::Locatable
 
     name_without_ext + ext
   end
+
+  def no_cache_url
+    i = respond_to?(:updated) ? updated.to_i : Time.zone.now.to_i
+    "#{url}?_=#{i}"
+  end
 end
