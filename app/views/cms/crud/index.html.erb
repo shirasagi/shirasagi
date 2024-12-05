@@ -65,7 +65,6 @@
               <% if item.try(:route) %>
                 <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
               <% end %>
-              <%= colored_state_label(item) %>
               <% if item.try(:tags) %>
                 <span class="tags"><%= item.tags.join(",") %></span>
               <% end %>

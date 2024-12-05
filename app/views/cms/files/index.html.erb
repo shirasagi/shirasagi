@@ -1,9 +1,11 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= ss_time_tag item.updated %></span>
-  <span class="content-type"><%= item.content_type %></span>
-  <span class="size"><%= number_to_human_size(item.size) %></span>
-  <%= sanitizer_status(item) %>
+  <% if params.dig(:s, :target) == 'descendant' %>
+    <span class="filename"><%= item.filename %></span>
+  <% else %>
+    <span class="filename"><%= File.basename item.filename %></span>
+  <% end %>
 <% end %>
 
 <%= render template: 'cms/crud/index' %>
