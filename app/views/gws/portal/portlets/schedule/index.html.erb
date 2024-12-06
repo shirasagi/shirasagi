@@ -1,4 +1,8 @@
 <%
+  if !Gws.module_usable?(:schedule, @cur_site, @cur_user)
+    return "<div class=\"main-box\"><div class=\"portlet-title\">#{@portlet.name}</div></div>".html_safe
+  end
+
   calendar_options = {
     firstDay: @cur_site.schedule_first_day,
     views: {

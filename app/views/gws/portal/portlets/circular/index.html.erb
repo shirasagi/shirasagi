@@ -4,32 +4,34 @@
 <div class="main-box gws-boards">
   <div class="portlet-title"><%= @portlet.name %></div>
 
-  <ul class="list-items">
-    <% items.each do |item| %>
-      <li class="list-item <%= item.seen?(@cur_user) ? 'read' : 'unread' %>">
-        <div class="info">
-          <%= link_to item.name, gws_circular_post_path(category: '-', id: item), class: 'title' %>
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+  <% if Gws.module_usable?(:circular, @cur_site, @cur_user) %>
+    <ul class="list-items">
+      <% items.each do |item| %>
+        <li class="list-item <%= item.seen?(@cur_user) ? 'read' : 'unread' %>">
+          <div class="info">
+            <%= link_to item.name, gws_circular_post_path(category: '-', id: item), class: 'title' %>
+            <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
-          <div class="meta">
-            <span class="datetime"><%= Gws::Circular::Post.t(:due_date) %>: <%= tryb { I18n.l(item.due_date.to_date) } %></span>
-            <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') %>
-              <% if item.member?(@cur_user) %>
-              <% end %>
-            </span>
-            <span>
-              <% item.categories.compact.each do |category| %>
-                <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),
-                            class: "gws-category-label", style: category_label_css(category) %>
-              <% end %>
-            </span>
+            <div class="meta">
+              <span class="datetime"><%= Gws::Circular::Post.t(:due_date) %>: <%= tryb { I18n.l(item.due_date.to_date) } %></span>
+              <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') %>
+                <% if item.member?(@cur_user) %>
+                <% end %>
+              </span>
+              <span>
+                <% item.categories.compact.each do |category| %>
+                  <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),
+                              class: "gws-category-label", style: category_label_css(category) %>
+                <% end %>
+              </span>
+            </div>
           </div>
-        </div>
-      </li>
-    <% end %>
-  </ul>
+        </li>
+      <% end %>
+    </ul>
 
-  <% if items.next_page %>
-  <div class="list-more"><%= link_to I18n.t("ss.links.more"), @portlet.see_more_circular_path(@portal, @cur_user) %></div>
+    <% if items.next_page %>
+      <div class="list-more"><%= link_to I18n.t("ss.links.more"), @portlet.see_more_circular_path(@portal, @cur_user) %></div>
+    <% end %>
   <% end %>
 </div>
