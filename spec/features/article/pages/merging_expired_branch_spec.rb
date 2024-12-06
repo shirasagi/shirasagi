@@ -98,7 +98,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            wait_for_error I18n.t("errors.messages.greater_than", count: I18n.l(travel_to, format: :picker))
+            wait_for_error I18n.t("errors.messages.greater_than", count: I18n.l(travel_to))
           end.to output(/#{::Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
 
           wait_for_all_ckeditors_ready
@@ -214,7 +214,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_content(cms_user.long_name)
             wait_for_cbox_closed { click_on cms_user.long_name }
           end
-          message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to, format: :picker))
+          message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to))
           page.accept_alert(/#{::Regexp.escape(message)}/) do
             within ".mod-workflow-request" do
               expect(page).to have_css("[data-id='1,#{cms_user.id}']", text: cms_user.long_name)
