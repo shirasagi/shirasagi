@@ -1,7 +1,10 @@
 <dl class="see">
-  <dt><%= @model.t :clipboard_copy_target %></dt>
-  <dd><%= @item.label(:clipboard_copy_target) || I18n.t("cms.options.clipboard_copy_target.url") %></dd>
+    <dt><%= @model.t :clipboard_copy_target %></dt>
+    <dd><%= @item.label(:clipboard_copy_target) || I18n.t("cms.options.clipboard_copy_target.url") %></dd>
 
-  <dt><%= @model.t :clipboard_copy_selector %></dt>
-  <dd><%= @item.clipboard_copy_selector %></dd>
+    <dt><%= @model.t :clipboard_copy_selector %></dt>
+    <dd><%= @item.clipboard_copy_selector %></dd>
+
+    <dt><%= @model.t :clipboard_display_name %></dt>
+    <dd><%= @item.clipboard_display_name %></dd>
 </dl>
