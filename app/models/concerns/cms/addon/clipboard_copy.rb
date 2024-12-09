@@ -8,6 +8,7 @@ module Cms::Addon::ClipboardCopy
     field :clipboard_display_name, type: String
     permit_params :clipboard_copy_target, :clipboard_copy_selector, :clipboard_display_name
     validates :clipboard_copy_target, inclusion: { in: %w(url css_selector), allow_blank: true }
+    validates :clipboard_display_name, presence: false
   end
 
   def clipboard_copy_target_options
