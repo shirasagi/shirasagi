@@ -3,6 +3,8 @@ require 'docker'
 module SS::LdapSupport
   module_function
 
+  BOOTSTRAP_LDIFS = %w(10-ss-schema 11-member-of).freeze
+
   def ldap_test_enabled?
     ENV["LDAP_TEST"] == "enable" || ci?
   end
@@ -71,6 +73,9 @@ module SS::LdapSupport
 
   def before_example
     SS::LdapSupport.start_ldap_service
+
+    path = Rails.root.join("spec/fixtures/ldap/shirasagi.ldif")
+    SS::LdapSupport.ldap_add path
   end
 
   def after_suite
@@ -89,7 +94,11 @@ module SS::LdapSupport
       'Image' => image_id,
       'ExposedPorts' => { '389/tcp' => {}, '636/tcp' => {} },
       'Env' => %w(LDAP_ORGANISATION=shirasagi LDAP_DOMAIN=example.jp),
+      'Cmd' => [ "--copy-service" ],
       'HostConfig' => {
+        'Binds' => BOOTSTRAP_LDIFS.map do |ldif|
+          "#{Rails.root}/spec/fixtures/ldap/#{ldif}.ldif:/container/service/slapd/assets/config/bootstrap/ldif/#{ldif}.ldif"
+        end,
         'PortBindings' => {
           '389/tcp' => [{ 'HostPort' => ldap_port.to_s }],
           '636/tcp' => [{ 'HostPort' => ldaps_port.to_s }]
@@ -103,15 +112,6 @@ module SS::LdapSupport
 
         sleep 0.1
       end
-    end
-
-    container.store_file("/shirasagi.ldif", ::File.read(Rails.root.join("spec/fixtures/ldap/shirasagi.ldif")))
-    _stdout, _stderr, exit_code = container.exec(%w(ldapadd -D cn=admin,dc=example,dc=jp -w admin -f /shirasagi.ldif))
-    if exit_code != 0
-      puts "[Error] failed to execute 'ldapadd'"
-      container.stop
-      container.delete(force: true)
-      return
     end
 
     SS::LdapSupport.docker_container = container
@@ -134,6 +134,35 @@ module SS::LdapSupport
     container.stop
     container.delete(force: true)
     puts "container '#{container.id[0, 12]}' is deleted"
+  end
+
+  def ldap_command(command, path_or_data)
+    container = SS::LdapSupport.docker_container
+    return unless container
+
+    case path_or_data
+    when Pathname
+      container.store_file("/data.ldif", ::File.read(path_or_data))
+    when File
+      container.store_file("/data.ldif", path_or_data.read)
+    when String
+      container.store_file("/data.ldif", path_or_data)
+    else
+      raise "invalid data"
+    end
+    _stdout, stderr, exit_code = container.exec(%W(#{command} -Y EXTERNAL -H ldapi:/// -f /data.ldif))
+    if exit_code != 0
+      puts "[Error] failed to execute '#{command}'"
+      puts stderr.join("\n") if stderr
+    end
+  end
+
+  def ldap_add(path_or_data)
+    ldap_command("/usr/bin/ldapadd", path_or_data)
+  end
+
+  def ldap_modify(path_or_data)
+    ldap_command("/usr/bin/ldapmodify", path_or_data)
   end
 
   module EventHandler

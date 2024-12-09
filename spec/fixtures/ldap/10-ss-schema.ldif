@@ -1,0 +1,34 @@
+# ActiveDirectory LDAP の User / Group に近づけるための定義
+# see: https://learn.microsoft.com/ja-jp/windows/win32/adschema/c-user
+dn: cn=ss-schema,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: ss-schema
+olcAttributeTypes: ( 1.2.840.113556.1.2.48
+  NAME 'isDeleted'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE )
+olcAttributeTypes: ( 1.2.840.113556.1.4.159
+  NAME 'accountExpires'
+  EQUALITY integerMatch ORDERING integerOrderingMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
+olcAttributeTypes: ( 1.2.840.113556.1.4.221
+  NAME 'sAMAccountName'
+  EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{256} SINGLE-VALUE )
+olcAttributeTypes: ( 1.2.840.113556.1.4.656
+  NAME 'userPrincipalName'
+  EQUALITY caseIgnoreIA5Match SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} SINGLE-VALUE )
+olcAttributeTypes: ( 1.2.840.113556.1.4.782
+  NAME 'objectCategory'
+  SUP distinguishedName )
+olcObjectClasses: ( 1.2.840.113556.1.5.6
+  NAME 'ssUser'
+  SUP top
+  STRUCTURAL
+  MAY ( cn $ mail $ sn $ givenName $ displayName $ userPassword $ isDeleted $ name $ accountExpires $ sAMAccountName $ userPrincipalName $ objectCategory ) )
+olcObjectClasses: ( 1.2.840.113556.1.5.8
+  NAME 'ssGroup'
+  SUP top
+  STRUCTURAL
+  MAY ( cn $ displayName $ member $ isDeleted $ name $ objectCategory $ sAMAccountName ) )

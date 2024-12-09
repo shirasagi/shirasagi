@@ -1,0 +1,111 @@
+<% content_for(:title, t("ldap.buttons.sync")) %>
+
+<%= error_messages_for :item %>
+
+<dl class="see gws-ldap-sync-task-admin">
+  <dt><%= @model.t :admin_dn %></dt>
+  <dd><%= @item.admin_dn %></dd>
+
+  <dt><%= @model.t :admin_password %></dt>
+  <dd><%= @item.admin_password.present? ? "*" * 8 : nil %></dd>
+  <dd>
+    <%= button_tag t("ldap.buttons.test_connection"), name: "test-connection", type: :button, class: "btn btn-test", data: { href: url_for(action: :test_connection) } %>
+    <div class="test-connection-result"></div>
+  </dd>
+</dl>
+
+<dl class="see gws-ldap-sync-task-group">
+  <dt><%= t("ldap.views.import/sync.group") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.base_dn") %></dt>
+  <dd class="depth-2"><%= @item.group_base_dn %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.scope") %></dt>
+  <dd class="depth-2"><%= @item.label(:group_scope) || t("ldap.options.search_scope.whole_subtree") %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.filter") %></dt>
+  <dd class="depth-2">
+    <%=
+      if @item.group_filter.present?
+        filter = Net::LDAP::Filter.construct(@item.group_filter) rescue nil
+        filter.try(:to_s)
+      end
+    %>
+  </dd>
+  <dd class="depth-2">
+    <%= button_tag t("ldap.buttons.test_search"), name: "group-test-search", type: :button, class: "btn btn-test", data: { href: url_for(action: :group_test_search) } %>
+    <div class="group-test-search-result"></div>
+  </dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.root_dn") %></dt>
+  <dd class="depth-2"><%= @item.group_root_dn %></dd>
+</dl>
+
+<dl class="see gws-ldap-sync-task-user">
+  <dt><%= t("ldap.views.import/sync.user") %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.base_dn") %></dt>
+  <dd class="depth-2"><%= @item.user_base_dn %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.scope") %></dt>
+  <dd class="depth-2"><%= @item.label(:user_scope) || t("ldap.options.search_scope.whole_subtree") %></dd>
+
+  <dt class="depth-2"><%= t("ldap.views.import/sync.filter") %></dt>
+  <dd class="depth-2"><%=
+    if @item.user_filter.present?
+      filter = Net::LDAP::Filter.construct(@item.user_filter) rescue nil
+      filter.try(:to_s)
+    end
+  %></dd>
+  <dd class="depth-2">
+    <%= button_tag t("ldap.buttons.test_search"), name: "user-test-search", type: :button, class: "btn btn-test", data: { href: url_for(action: :user_test_search) } %>
+    <div class="user-test-search-result"></div>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :user_role_ids %></dt>
+  <dd class="depth-2">
+    <% @item.user_roles.site(@cur_site).order_by(name: 1).each do |role| %>
+      <div>
+        <%=
+          html = role.name
+          if role.allowed?(:read, @cur_user, site: @cur_site)
+            html = link_to html, gws_role_path(id: role)
+          end
+          html
+        %>
+      </div>
+    <% end %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  $(".btn-test").on("click", function() {
+    var $this = $(this);
+    var url = $this.data("href");
+    if (!url) {
+      return;
+    }
+
+    var name = $this.prop("name");
+    var $result = $("." + name + "-result");
+    $result.text("");
+
+    $this.prop("disabled", true);
+    $.ajax({
+      type: "POST",
+      url: url,
+      cache: false,
+      success: function (html) {
+        $result.html(html);
+      },
+      error: function (xhr, status, error) {
+        $result.text("error");
+      },
+      complete: function(xhr, status) {
+        $this.prop("disabled", false);
+      }
+    });
+  });
+<% end %>
