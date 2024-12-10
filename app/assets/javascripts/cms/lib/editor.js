@@ -88,19 +88,14 @@ this.Cms_Editor_CKEditor = (function () {
   function Cms_Editor_CKEditor() {
   }
 
-  Cms_Editor_CKEditor.render = function (selector, opts, _jsOpts) {
-    //Render CKEditor
-    if (opts == null) {
-      opts = {};
+  var onceInitialized = false;
+
+  Cms_Editor_CKEditor.initializeOnce = function () {
+    if (onceInitialized) {
+      return;
     }
 
-    // $(selector).ckeditor(opts);
-    $(selector).each(function() {
-      var $this = $(this);
-      SS.justOnce(this, "ss-editor", function() {
-        $this.ckeditor(opts);
-      });
-    });
+    onceInitialized = true;
 
     CKEDITOR.on('dialogDefinition', function (ev) {
       var def, info, name, text;
@@ -146,6 +141,35 @@ this.Cms_Editor_CKEditor = (function () {
           innerEv.cancel();
         }
       });
+    });
+  }
+
+  Cms_Editor_CKEditor.render = function (selector, opts, _jsOpts) {
+    //Render CKEditor
+    if (opts == null) {
+      opts = {};
+    }
+
+    // $(selector).ckeditor(opts);
+    $(selector).each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-editor", function() {
+        $this.ckeditor(opts);
+      });
+    });
+
+    Cms_Editor_CKEditor.initializeOnce();
+  };
+
+  Cms_Editor_CKEditor.destroy = function (selector) {
+    $(selector).each(function() {
+      var $this = $(this);
+      var editor = $this.data("ckeditorInstance");
+      if (editor) {
+        editor.destroy();
+      }
+
+      SS.deleteJustOnce(this, "ss-editor");
     });
   };
 
