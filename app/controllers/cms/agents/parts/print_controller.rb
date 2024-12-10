@@ -2,6 +2,7 @@ class Cms::Agents::Parts::PrintController < ApplicationController
   include Cms::PartFilter::View
   helper Event::EventHelper
   helper Cms::ArchiveHelper
+  helper Cms::ListHelper
 
   def index
     # display_name が空の場合はパーツ名を使用
