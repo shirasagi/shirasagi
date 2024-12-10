@@ -52,16 +52,16 @@ ja:
     line_event_session: セッション
     form_check: 制約チェック
     list_view: リスト表示
-    row_error: "error %{row_num}行目"
-    row_update: "updating %{row_num}行目"
-    new_record: "created page %{row_num}行目 施設「%{name}」が作成されました。"
-    update_record: "updated page %{row_num}行目 施設「%{name}」が更新されました。"
-    updated_field: "updating %{row_num}行目 %{field}："
-    failed_to_save: "failed %{row_num}行目 施設「%{name}」の作成・更新がされませんでした。%{err_msgs}"
-    failed_category_log: "error %{row_num}行目 施設の種類『%{category}』が存在しないので登録できませんでした。新規に『%{category}』を作成した上で、インポートを実行してください。"
-    failed_location_log: "error %{row_num}行目 施設の地域『%{location}』が存在しないのでを登録できませんでした。新規に『%{location}』を作成した上で、インポートを実行してください。"
-    failed_service_log: "error %{row_num}行目 施設の用途『%{service}』が存在しないので登録できませんでした。新規に『%{service}』を作成した上で、インポートを実行してください。"
-    failed_group_log: "error %{row_num}行目 管理グループ『%{group}』が存在しないので登録できませんでした。新規に『%{group}』を作成した上で、インポートを実行してください。"
+    row_error: 'error %{row_num}行目'
+    row_update: 'updating %{row_num}行目'
+    new_record: 'created page %{row_num}行目 施設「%{name}」が作成されました。'
+    update_record: 'updated page %{row_num}行目 施設「%{name}」が更新されました。'
+    updated_field: 'updating %{row_num}行目 %{field}：'
+    failed_to_save: 'failed %{row_num}行目 施設「%{name}」の作成・更新がされませんでした。%{err_msgs}'
+    failed_category_log: 'error %{row_num}行目 施設の種類『%{category}』が存在しないので登録できませんでした。新規に『%{category}』を作成した上で、インポートを実行してください。'
+    failed_location_log: 'error %{row_num}行目 施設の地域『%{location}』が存在しないのでを登録できませんでした。新規に『%{location}』を作成した上で、インポートを実行してください。'
+    failed_service_log: 'error %{row_num}行目 施設の用途『%{service}』が存在しないので登録できませんでした。新規に『%{service}』を作成した上で、インポートを実行してください。'
+    failed_group_log: 'error %{row_num}行目 管理グループ『%{group}』が存在しないので登録できませんでした。新規に『%{group}』を作成した上で、インポートを実行してください。'
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
@@ -128,34 +128,34 @@ ja:
     csv_export_node: 一括エクスポート
     csv_import_node: 一括インポート
     node_columns:
-      filename: "ファイル名"
-      route: "フォルダー属性"
-      name: "タイトル"
-      index_name: "一覧用タイトル"
-      order: "並び順"
-      layout_filename: "レイアウト"
-      page_layout_filename: "ページレイアウト"
-      shortcut: "ショートカット"
-      view_route: "既定のモジュール"
-      keywords: "キーワード"
-      description: "概要"
-      summary_html: "サマリー"
-      conditions: "検索条件(URL)"
-      sort: "リスト並び順"
-      limit: "表示件数"
-      new_days: "NEWマーク期間"
-      loop_format: "ループHTML形式"
-      upper_html: "上部HTML"
-      loop_html: "ループHTML(SHIRASAGI形式)"
-      lower_html: "下部HTML"
-      loop_liquid: "ループHTML(Liquid形式)"
-      no_items_display_state: "ページ未検出時表示"
-      substitute_html: "代替HTML"
-      st_category_ids: "カテゴリー設定"
-      released_type: "公開日時種別"
-      released: "公開日時"
-      state: "ステータス"
-      group_ids: "管理グループ"
+      filename: 'ファイル名'
+      route: 'フォルダー属性'
+      name: 'タイトル'
+      index_name: '一覧用タイトル'
+      order: '並び順'
+      layout_filename: 'レイアウト'
+      page_layout_filename: 'ページレイアウト'
+      shortcut: 'ショートカット'
+      view_route: '既定のモジュール'
+      keywords: 'キーワード'
+      description: '概要'
+      summary_html: 'サマリー'
+      conditions: '検索条件(URL)'
+      sort: 'リスト並び順'
+      limit: '表示件数'
+      new_days: 'NEWマーク期間'
+      loop_format: 'ループHTML形式'
+      upper_html: '上部HTML'
+      loop_html: 'ループHTML(SHIRASAGI形式)'
+      lower_html: '下部HTML'
+      loop_liquid: 'ループHTML(Liquid形式)'
+      no_items_display_state: 'ページ未検出時表示'
+      substitute_html: '代替HTML'
+      st_category_ids: 'カテゴリー設定'
+      released_type: '公開日時種別'
+      released: '公開日時'
+      state: 'ステータス'
+      group_ids: '管理グループ'
     column_file_upload:
       image:
         file_label: 代替テキスト
@@ -295,7 +295,7 @@ ja:
           - メンバー登録者全員に配信します。
           - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
         multicast_with_registered_condition:
-          - あらかじめ作成した配信条件を設定して、条件に該当するメンバー登録者に配信します。
+          -  あらかじめ作成した配信条件を設定して、条件に該当するメンバー登録者に配信します。
           - 「LINEメッセージを受信する」になっているメンバーのみに配信されます。
         multicast_with_input_condition:
           - 配信条件を入力し、条件に該当するメンバー登録者に配信します。
@@ -304,9 +304,9 @@ ja:
           - LINEの友達登録者全員に配信されます。
           - 「LINEメッセージを受信する/しない」に関わらず送信されます。
       line_statistics:
-        - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
-        - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
-        - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
+         - 統計情報は日毎に自動更新され、メッセージの送信時刻（統計情報の作成日時）から14日間のみ更新されます。
+         - 統計情報の数値は、APIの仕様上、多少の誤差を含むことがあります。
+         - 統計情報の人数はおよそ20人未満の場合、プライバシー保護の為、非表示（情報なし）となります。
       line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
@@ -507,8 +507,8 @@ ja:
         top-left: 上部と左側
         none: なし
       max_name_length:
-        "80": 80文字
-        "0": 無制限
+        '80': 80文字
+        '0': 無制限
       form_sub_type:
         static: 定型フォーム
         entry: ブロック型入力
@@ -629,7 +629,7 @@ ja:
       default_upper_text:
         - "次のページの公開期限が切れています。"
         - "確認の上、対応をお願いいたします。"
-    #cms:
+  #cms:
     nodes:
       cms/node: フォルダーリスト
       cms/page: ページリスト
@@ -1897,16 +1897,16 @@ ja:
           - "参照: 『安全なウェブサイトの作り方 5-(ii)』"
         internal_link_shouldnt_contain_domains:
           - 内部リンクにはドメインを含めないようにしてください。
-          - '誤: &lt;a href="https://ss-proj.org/docs/page1.html">ページタイトル&lt;/a>'
-          - '正: &lt;a href="/docs/page1.html">ページタイトル&lt;/a>'
+          - "誤: &lt;a href=\"https://ss-proj.org/docs/page1.html\">ページタイトル&lt;/a>"
+          - "正: &lt;a href=\"/docs/page1.html\">ページタイトル&lt;/a>"
         internal_link_should_be_absolute_path:
           - 内部リンクは "/" で始めてください。
-          - '誤: &lt;a href="docs/page1.html">ページタイトル&lt;/a>'
-          - '正: &lt;a href="/docs/page1.html">ページタイトル&lt;/a>'
+          - "誤: &lt;a href=\"docs/page1.html\">ページタイトル&lt;/a>"
+          - "正: &lt;a href=\"/docs/page1.html\">ページタイトル&lt;/a>"
         internal_link_shouldnt_be_preview_path:
           - プレビューパスを指定しないでください。
-          - '誤: &lt;a href="/.s1/preview/docs/page1.html">ページタイトル&lt;/a>'
-          - '正: &lt;a href="/docs/page1.html">ページタイトル&lt;/a>'
+          - "誤: &lt;a href=\"/.s1/preview/docs/page1.html\">ページタイトル&lt;/a>"
+          - "正: &lt;a href=\"/docs/page1.html\">ページタイトル&lt;/a>"
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
@@ -1980,7 +1980,7 @@ ja:
           - 検索を行った後、置換を行うページ、パーツ、レイアウトにチェックを入れ全置換ボタンをクリックします。
         option:
           - "検索時に検索文字の形式を設定します。\n未設定時は通常のテキスト検索となります。"
-          - 'URL選択時は ''="検索文字'' でテキスト検索を行います'
+          - "URL選択時は '=\"検索文字' でテキスト検索を行います"
       files:
         keyword:
           - 検索を行う文字列を入力します。
@@ -2292,7 +2292,7 @@ ja:
     cms/addon/site/node_setting:
       rss_recent_state:
         - 有効にすると、一覧フォルダーにて動的にrssを応答するURLが利用可能となります。
-        - "URL: 一覧フォルダー名/rss-recent.xml"
+        - 'URL: 一覧フォルダー名/rss-recent.xml'
     cms/model/part:
       route:
         - |-
@@ -3013,9 +3013,9 @@ ja:
         - 種類を選択します。
 
     cms/column/select_page:
-      node_ids:
-        - 記事フォルダーを設定します。
-        - 設定した記事フォルダー配下のページを選択可能です。
+       node_ids:
+         - 記事フォルダーを設定します。
+         - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/form_db/import:
       import_url: |-
@@ -3136,7 +3136,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。  
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
@@ -3220,9 +3220,9 @@ ja:
 
     cms/line/message:
       name:
-        - タイトルを入力します。
+       - タイトルを入力します。
       title:
-        - タイトルを入力します。
+       - タイトルを入力します。
       statistic_state:
         - 有効にするとメッセージ送信時に統計情報を保存します。
 
