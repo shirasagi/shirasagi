@@ -941,6 +941,7 @@ ja:
       cms/line/mail_handler: 本文設定
       cms/clipboard_copy: クリップボードへコピー
       cms/logo_setting: ロゴ設定
+      cms/print: 印刷ボタンの設定
 
   mongoid:
     models:
@@ -1707,6 +1708,8 @@ ja:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
         clipboard_display_name: ボタンに表示するテキスト
+      cms/addon/print:
+        print_display_name: ボタンに表示するテキスト
       cms/generation_report/title:
         name: タイトル
         memo: メモ
@@ -3324,6 +3327,12 @@ ja:
         - ボタンに表示するテキストを入力してください。
         -
         - 例:「この内容をコピーする」「コピーする」「リンクをコピー」など、自由に設定できます。
+        - 省略した場合は「パーツ名」が表示されます。
+    cms/addon/print:
+      print_display_name:
+        - ボタンに表示するテキストを入力してください。
+        -
+        - 例:「この内容を印刷する」「印刷する」「帳票出力」など、自由に設定できます。
         - 省略した場合は「パーツ名」が表示されます。
 
   all_content:
