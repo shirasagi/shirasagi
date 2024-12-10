@@ -1,4 +1,4 @@
-module Cms::Addon::ClipboardCopy
+module Cms::Addon::Print
   extend ActiveSupport::Concern
   extend SS::Addon
 
