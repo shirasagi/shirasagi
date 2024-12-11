@@ -57,7 +57,7 @@ module Article::Addon
 
     def pages_to_json(pages)
       columns = export_columns.presence || form.columns.order(order: 1).map(&:name)
-      data = [[resolve_page_name] + columns]
+      data = [[resolve_page_name, "URL"] + columns]
 
       pages.each do |page|
         column_values_hash = page.column_values.map { |cv| [cv.name, cv.export_csv_cell] }.to_h
