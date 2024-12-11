@@ -62,7 +62,7 @@ module Article::Addon
       pages.each do |page|
         column_values_hash = page.column_values.map { |cv| [cv.name, cv.export_csv_cell] }.to_h
         values = columns.map { |col| column_values_hash[col].to_s }
-        data << [page.name] + values
+        data << [page.name, page.full_url] + values
       end
 
       data
