@@ -28,16 +28,16 @@
       <% end %>
     </div>
     <% if @cur_node.supplement_enabled? %>
-    <div class="supplement-guide">
-      <ul class="supplement-guide-list">
-        <% @cur_node.area_state_options.each do |name, value| %>
-          <li class="guide-item <%= value %>">
-            <div class="guide-marker"></div>
-            <div class="guide-statename"><%= name %></div>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+      <div class="supplement-guide">
+        <ul class="supplement-guide-list">
+          <% @cur_node.area_state_options.each do |name, value| %>
+            <li class="guide-item <%= value %>">
+              <div class="guide-marker"></div>
+              <div class="guide-statename"><%= name %></div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
   <% end %>
 
