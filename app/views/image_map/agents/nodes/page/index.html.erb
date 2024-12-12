@@ -9,36 +9,36 @@
   <%= image_tag @image.url, alt: @cur_node.name, usemap: "\##{@usemap}" %>
 
   <% if @items.present? %>
-  <map name="<%= @usemap %>">
-    <% @items.each do |item| %>
-    <area 
-      shape="<%= item.shape %>" 
-      coords="<%= item.coords.join(",") %>" 
-      href="<%= item.link_url.present? ? item.link_url : "\##{item.area_anchor}" %>" 
-      data-state="<%= item.area_state %>" 
-      data-name="<%= item.label :area_state %>" 
-      alt="<%= item.name %>">
-    <% end %>
-  </map>
-  <div class="area-contents">
-    <% @items.each do |item| %>
-    <div class="area-content" id="<%= item.area_anchor %>">
-      <%== item.render_html%>
+    <map name="<%= @usemap %>">
+      <% @items.each do |item| %>
+        <area 
+          shape="<%= item.shape %>" 
+          coords="<%= item.coords.join(",") %>" 
+          href="<%= item.link_url.present? ? item.link_url : "\##{item.area_anchor}" %>" 
+          data-state="<%= item.area_state %>" 
+          data-name="<%= item.label :area_state %>" 
+          alt="<%= item.name %>">
+      <% end %>
+    </map>
+    <div class="area-contents">
+      <% @items.each do |item| %>
+        <div class="area-content" id="<%= item.area_anchor %>">
+          <%== item.render_html%>
+        </div>
+      <% end %>
+    </div>
+    <% if @cur_node.supplement_enabled? %>
+    <div class="supplement-guide">
+      <ul class="supplement-guide-list">
+        <% @cur_node.area_state_options.each do |name, value| %>
+          <li class="guide-item <%= value %>">
+            <div class="guide-marker"></div>
+            <div class="guide-statename"><%= name %></div>
+          </li>
+        <% end %>
+      </ul>
     </div>
     <% end %>
-  </div>
-  <% if @cur_node.supplement_enabled? %>
-  <div class="supplement-guide">
-    <ul class="supplement-guide-list">
-      <% @cur_node.area_state_options.each do |name, value| %>
-      <li class="guide-item <%= value %>">
-        <div class="guide-marker"></div>
-        <div class="guide-statename"><%= name %></div>
-      </li>
-      <% end %>
-    </ul>
-  </div>
-  <% end %>
   <% end %>
 
   <%== @cur_node.lower_html.html_safe if @cur_node.lower_html.present? %>
