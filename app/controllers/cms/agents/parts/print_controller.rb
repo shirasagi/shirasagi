@@ -1,7 +1,5 @@
 class Cms::Agents::Parts::PrintController < ApplicationController
   include Cms::PartFilter::View
-  helper Event::EventHelper
-  helper Cms::ArchiveHelper
   helper Cms::ListHelper
 
   def index
