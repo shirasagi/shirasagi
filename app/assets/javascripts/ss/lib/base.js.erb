@@ -122,6 +122,14 @@ this.SS = (function () {
     return ret;
   };
 
+  SS.deleteJustOnce = function(element, key) {
+    if (!element.ss) {
+      return;
+    }
+
+    delete element.ss[key];
+  }
+
   SS.render = function (box) {
     if (box == null) {
       box = null;

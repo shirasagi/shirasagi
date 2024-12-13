@@ -28,7 +28,7 @@
       "column:beforeMove": function() {
         var editor = $(<%== "##{editor_id}".to_json %>).data("ckeditorInstance");
         if (editor) {
-          editor.destroy();
+          Cms_Editor_CKEditor.destroy(<%== "##{editor_id}".to_json %>)
         }
       },
       "column:afterMove": function() {
