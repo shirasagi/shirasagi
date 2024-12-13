@@ -43,7 +43,7 @@ module Cms::PublicFilter::Layout
 
   def render_part(part, opts = {})
     part_perf_log(part) do
-      return part.html if part.route == "cms/free"
+      return [ {}, part.html ] if part.route == "cms/free"
 
       path = "/.s#{@cur_site.id}/parts/#{part.route}"
       spec = recognize_agent path, method: "GET"
@@ -77,7 +77,7 @@ module Cms::PublicFilter::Layout
         end
 
         @cur_part = nil
-        body
+        [ resp.headers, body ]
       end
     end
   end
@@ -234,7 +234,8 @@ module Cms::PublicFilter::Layout
     if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
       html << part.ajax_html
     else
-      html << render_part(part)
+      _header, body = render_part(part)
+      html << body
     end
     if previewable
       html << "</div>"
