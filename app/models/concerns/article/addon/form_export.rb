@@ -57,12 +57,21 @@ module Article::Addon
 
     def pages_to_json(pages)
       columns = export_columns.presence || form.columns.order(order: 1).map(&:name)
-      data = [[resolve_page_name, "URL"] + columns]
+      # 記事URLを含むかどうかを判定
+      include_article_url = columns.include?("article_url")
+      article_url_label = I18n.t("cms.export.article_url")
+      if include_article_url
+        data = [ [resolve_page_name ] + columns + [article_url_label] ]
+      else
+        data = [ [resolve_page_name ] + columns ]
+      end
 
       pages.each do |page|
         column_values_hash = page.column_values.map { |cv| [cv.name, cv.export_csv_cell] }.to_h
         values = columns.map { |col| column_values_hash[col].to_s }
-        data << [page.name, page.full_url] + values
+        row = [page.name] + values
+        row << page.full_url if include_article_url
+        data << row
       end
 
       data
