@@ -6,7 +6,6 @@ module Cms::Addon
     included do
       field :print_display_name, type: String
       permit_params :print_display_name
-      validates :print_display_name, presence: false
     end
   end
 end
