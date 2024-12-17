@@ -157,24 +157,17 @@ this.Googlemaps_Map = (function () {
       } else if (name || text) {
         markerHtml = '<div class="marker-info">';
         if (name) {
-          markerHtml += '<p class="marker__name">' + name + '</p>';
+          markerHtml += '<p>' + name + '</p>';
         }
         if (text) {
-          markerHtml += '<div class="marker__explanation">';
-          text.split(/[\r\n]+/).forEach(function (line) {
-            if (line.match(/^https?:\/\//)) {
-              markerHtml += '<p><a href="' + line + '">' + line + '</a></p>';
+          $.each(text.split(/[\r\n]+/), function () {
+            if (this.match(/^https?:\/\//)) {
+              return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
             } else {
-              markerHtml += '<p>' + line + '</p>';
+              return markerHtml += '<p>' + this + '</p>';
             }
           });
-          markerHtml += '</div>';
         }
-        // Googleマップリンク
-        markerHtml += '<p class="marker__link">';
-        markerHtml += '<a href="https://www.google.co.jp/maps/search/' + pos[1] + ',' + pos[0] + '">Googleマップで見る</a>';
-        markerHtml += '</p>';
-
         markerHtml += '</div>';
       }
 
