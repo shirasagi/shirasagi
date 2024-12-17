@@ -58,7 +58,7 @@ module Article::Addon
     def pages_to_json(pages)
       columns = export_columns.presence || form.columns.order(order: 1).map(&:name)
 
-      article_url_label = I18n.t("cms.export.article_url")
+      article_url_label = I18n.t("mongoid.attributes.cms/model/page.full_url")
       data = [ [resolve_page_name ] + columns + [article_url_label] ]
 
       pages.each do |page|
