@@ -168,7 +168,13 @@ this.Googlemaps_Map = (function () {
               markerHtml += '<p>' + line + '</p>';
             }
           });
+          markerHtml += '</div>';
         }
+        // Googleマップリンク
+        markerHtml += '<p class="marker__link">';
+        markerHtml += '<a href="https://www.google.co.jp/maps/search/' + pos[1] + ',' + pos[0] + '">Googleマップで見る</a>';
+        markerHtml += '</p>';
+
         markerHtml += '</div>';
       }
 
