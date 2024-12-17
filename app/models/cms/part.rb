@@ -136,7 +136,7 @@ class Cms::Part
 
   class Print
     include Cms::Model::Part
-    include ::Cms::Addon::Print
+    include Cms::Addon::Print
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
