@@ -157,16 +157,18 @@ this.Googlemaps_Map = (function () {
       } else if (name || text) {
         markerHtml = '<div class="marker-info">';
         if (name) {
-          markerHtml += '<p>' + name + '</p>';
+          markerHtml += '<p class=marker__name>' + name + '</p>';
         }
         if (text) {
+          markerHtml = '<div class="marker__explanation">';
           $.each(text.split(/[\r\n]+/), function () {
             if (this.match(/^https?:\/\//)) {
-              return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+              return markerHtml += '<p class="marker__link"><a href="' + this + '">' + this + '</a></p>';
             } else {
               return markerHtml += '<p>' + this + '</p>';
             }
           });
+          markerHtml += '</div>';
         }
         markerHtml += '</div>';
       }
