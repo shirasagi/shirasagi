@@ -131,6 +131,7 @@ this.Googlemaps_Map = (function () {
     var markerBounds;
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
+
     $.each(Googlemaps_Map.markers, function (id, value) {
       var name, text, html, markerHtml, pos, opts;
 
@@ -163,8 +164,6 @@ this.Googlemaps_Map = (function () {
           markerHtml += '<div class="marker__explanation">';
           $.each(text.split(/[\r\n]+/), function () {
             if (this.match(/^https?:\/\//)) {
-              markerHtml += '<p class="marker__link"><a href="' + this + '">' + this + '</a></p>';
-            } else {
               markerHtml += '<p>' + this + '</p>';
             }
           });
@@ -180,9 +179,6 @@ this.Googlemaps_Map = (function () {
         markerHtml += '</div>';
       }
 
-      if (Googlemaps_Map.showGoogleMapsSearch) {
-        markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);
-      }
       if (markerHtml) {
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
           content: markerHtml,
