@@ -167,7 +167,6 @@ this.Googlemaps_Map = (function () {
               return markerHtml += '<p>' + this + '</p>';
             }
           });
-          markerHtml += '</div>';
         }
         markerHtml += '</div>';
       }
