@@ -158,13 +158,13 @@ this.Googlemaps_Map = (function () {
       } else if (name || text) {
         markerHtml = '<div class="marker-info">';
         if (name) {
-          markerHtml += '<p class="marker__name">' + name + '</p>';
+          markerHtml += '<p class="marker-name">' + name + '</p>';
         }
         if (text) {
-          markerHtml += '<div class="marker__explanation">';
+          markerHtml += '<div class="marker-explanation">';
           $.each(text.split(/[\r\n]+/), function () {
             if (this.match(/^https?:\/\//)) {
-              markerHtml += '<p class="marker__link"><a href="' + this + '">' + this + '</a></p>';
+              markerHtml += '<p class="marker-link"><a href="' + this + '">' + this + '</a></p>';
             } else {
               markerHtml += '<p>' + this + '</p>';
             }
@@ -333,7 +333,7 @@ this.Googlemaps_Map = (function () {
 
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
     var url = Googlemaps_Map.mapsSearchUrl + lat + "," + lng;
-    return '<p><a href="' + url + '">' + <%= I18n.t("map.links.google_maps_search").to_json %> + '</a></p>';
+    return '<p class="marker-link"><a href="' + url + '">' + <%= I18n.t("map.links.google_maps_search").to_json %> + '</a></p>';
   };
 
   return Googlemaps_Map;
