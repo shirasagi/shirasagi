@@ -267,17 +267,20 @@ this.Openlayers_Map = (function () {
       if (html) {
         markerHtml = html;
       } else if (name || text) {
+        markerHtml = '<div class="marker-info">';
         if (name) {
-          markerHtml += '<p>' + name + '</p>';
+          markerHtml += '<p class="marker__name">' + name + '</p>';
         }
         if (text) {
+          markerHtml += '<div class="marker__explanation">';
           $.each(text.split(/[\r\n]+/), function () {
             if (this.match(/^https?:\/\//)) {
-              markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+              markerHtml += '<p class="marker__link"><a href="' + this + '">' + this + '</a></p>';
             } else {
               markerHtml += '<p>' + this + '</p>';
             }
           });
+          markerHtml += '</div>';
         }
       }
       if (this.showGoogleMapsSearch) {
@@ -300,6 +303,7 @@ this.Openlayers_Map = (function () {
       }
       this.markerLayer.getSource().addFeature(feature)
     }
+    markerHtml += '</div>';
   };
 
   Openlayers_Map.prototype.resize = function () {
