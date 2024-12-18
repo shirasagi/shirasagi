@@ -170,6 +170,13 @@ this.Googlemaps_Map = (function () {
           });
           markerHtml += '</div>';
         }
+      // Google マップのリンクをここで追加
+        if (Googlemaps_Map.showGoogleMapsSearch) {
+          markerHtml += '<p class="marker__link">' +
+                        '<a href="' + Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]) + '">' +
+                        'Googleマップで見る</a></p>';
+        }
+
         markerHtml += '</div>';
       }
 
