@@ -144,7 +144,7 @@ this.Googlemaps_Map = (function () {
       if (value['html']) {
         markerHtml = value['html'];
       } else if (value['name'] || value['text']) {
-        markerHtml = '<div class="marker-info">';
+        markerHtml = '<div class=" marker marker-info">';
         if (value['name']) {
           markerHtml += `<p class="marker-name">${value['name']}</p>`;
         }
