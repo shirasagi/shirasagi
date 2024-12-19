@@ -105,7 +105,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.initPopup = function () {
-    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content"></div></div>');
+    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content marker"></div></div>');
     this.popup = $('#marker-popup');
     this.popup.hide();
     this.popupOverlay = new ol.Overlay({
@@ -265,7 +265,6 @@ this.Openlayers_Map = (function () {
         markerHtml = html;
       } else if (name || text) {
         markerHtml = `
-          <div class="content marker">
             ${name ? `<p class="marker-name">${name}</p>` : ''}
             ${text ? renderMarkerExplanation(text) : ''}
         `;
