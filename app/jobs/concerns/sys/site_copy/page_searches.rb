@@ -57,7 +57,7 @@ module Sys::SiteCopy::PageSearches
       search_updated_close: src_item.search_updated_close,
       search_updated_after: src_item.search_updated_after,
       search_state: src_item.search_state,
-      search_first_released: src_item.search_first_released,
+      search_first_released: nil,
       search_approver_state: src_item.search_approver_state,
       search_sort: src_item.search_sort
     }
@@ -71,12 +71,12 @@ module Sys::SiteCopy::PageSearches
       after: method(:after_copy_cms_page_search)
     }
   end
-  
+
   def before_copy_cms_page_search(src_item)
     Rails.logger.debug("#{src_item.name}(#{src_item.id}): ページ検索のコピーを開始します。")
   end
-  
+
   def after_copy_cms_page_search(src_item)
     @task.log("#{src_item.name}(#{src_item.id}): ページ検索をコピーしました。")
-  end 
+  end
 end
