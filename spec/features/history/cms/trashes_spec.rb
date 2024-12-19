@@ -49,7 +49,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(trashes[0].ref_coll).to eq "ss_files"
       expect(trashes[0].ref_class).to eq "SS::File"
 
-      Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_YEARS.years + 1.second) do
+      Timecop.freeze(Time.zone.now + SS.default_trash_threshold_in_days + 1.second) do
         History::Trash::TrashPurgeJob.bind(site_id: site.id).perform_now
         expect(History::Trash.all.count).to eq 0
       end
