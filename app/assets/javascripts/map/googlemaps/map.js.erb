@@ -315,8 +315,8 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
-    var url = Googlemaps_Map.mapsSearchUrl + lat + "," + lng;
-    return '<p class="marker-link"><a href="' + url + '">' + <%= I18n.t("map.links.google_maps_search").to_json %> + '</a></p>';
+    const url = `${Googlemaps_Map.mapsSearchUrl}${lat},${lng}`;
+    return `<p class="marker-link"><a href="${url}"><%= I18n.t("map.links.google_maps_search") %></a></p>`;
   };
 
   return Googlemaps_Map;
