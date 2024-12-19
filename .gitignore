@@ -58,8 +58,3 @@ ehthumbs.db
 
 # デバッグ用
 .rdbgrc.breakpoints
-
-# Mecab用
-mecab-0.996.tar.gz
-mecab-ruby-0.996.tar.gz
-/mecab-ruby-0.996
