@@ -18,7 +18,7 @@
         <% if controller %>
           <i class="material-icons">swap_vert</i>
         <% end %>
-        <%= column.name %>
+        <span class="column-name"><%= column.name %></span>
       </label>
       <% if !show && column.tooltips.present? %>
         <div class="tooltip">?
