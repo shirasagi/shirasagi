@@ -5,7 +5,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
 
   attr_accessor :site, :user
 
-  self.cache_key = ->{ [ site.id, root_items.map(&:id), folders.count, folders.max(&:updated).to_i ] }
+  self.cache_key = ->{ [ site.id, root_items.map(&:id), folders.count, folders.pluck(:updated).max.to_i ] }
 
   class NodeItem
     include ActiveModel::Model
