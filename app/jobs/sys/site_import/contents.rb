@@ -42,10 +42,7 @@ module Sys::SiteImport::Contents
               @ss_files_map[file_id]
             end
             if column_value.value.present?
-              @ss_files_url.each do |src, dst|
-                src_path = /#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
-                column_value.value = column_value.value.gsub(src_path, dst)
-              end
+              column_value.value = replace_html_with_url(column_value.value)
             end
           end
           column_value
