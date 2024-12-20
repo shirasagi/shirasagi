@@ -49,15 +49,15 @@ module Sys::SiteCopy::PageSearches
       search_node_ids: [ dest_cate.id ],
       search_routes: src_item.search_routes,
       search_released_condition: src_item.search_released_condition,
-      search_released_start: search_released_start,
-      search_released_close: search_released_close,
-      search_released_after: search_released_after,
+      search_released_start: nil,
+      search_released_close: src_item.search_released_close,
+      search_released_after: src_item.search_released_after,
       search_updated_condition: src_item.search_updated_condition,
-      search_updated_start: src_item.search_updated_start,
+      search_updated_start: nil,
       search_updated_close: src_item.search_updated_close,
       search_updated_after: src_item.search_updated_after,
       search_state: src_item.search_state,
-      search_first_released: src_item.search_first_released,
+      search_first_released: nil,
       search_approver_state: src_item.search_approver_state,
       search_sort: src_item.search_sort
     }
@@ -80,3 +80,5 @@ module Sys::SiteCopy::PageSearches
     @task.log("#{src_item.name}(#{src_item.id}): ページ検索をコピーしました。")
   end
 end
+
+puts @dest_item
