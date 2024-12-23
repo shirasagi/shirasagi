@@ -73,7 +73,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_page_search.search_updated_close.to_s).to eq page_search.search_updated_close.to_s
         expect(dest_page_search.search_updated_after.to_s).to eq page_search.search_updated_after.to_s
         expect(dest_page_search.search_state).to eq page_search.search_state
-        expect(dest_page_search.search_first_released).to be_nil
+        expect(dest_page_search.search_first_released).to eq page_search.search_first_released
         expect(dest_page_search.search_approver_state).to eq page_search.search_approver_state
         expect(dest_page_search.search_sort).to eq page_search.search_sort
       end

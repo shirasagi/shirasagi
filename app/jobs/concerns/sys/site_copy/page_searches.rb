@@ -57,7 +57,7 @@ module Sys::SiteCopy::PageSearches
       search_updated_close: src_item.search_updated_close,
       search_updated_after: src_item.search_updated_after,
       search_state: src_item.search_state,
-      search_first_released: nil,
+      search_first_released: src_item.search_first_released,
       search_approver_state: src_item.search_approver_state,
       search_sort: src_item.search_sort
     }
@@ -80,5 +80,3 @@ module Sys::SiteCopy::PageSearches
     @task.log("#{src_item.name}(#{src_item.id}): ページ検索をコピーしました。")
   end
 end
-
-puts @dest_item
