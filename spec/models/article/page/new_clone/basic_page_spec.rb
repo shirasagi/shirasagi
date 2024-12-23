@@ -107,7 +107,9 @@ describe Article::Page, dbscope: :example do
           expect(subject.created).to eq item.created
           expect(subject.updated).to be > item.updated
           expect(subject.released).to eq item.released
-          expect(subject.first_released).to eq item.first_released
+          # https://github.com/shirasagi/shirasagi/issues/5452:
+          # 複製直後は一度も公開されていないので first_release は blank であるべき
+          expect(subject.first_released).to be_blank
 
           # 複製の場合、添付ファイルは元のコピーなのでIDが異なるファイル（中身は同じ）し HTML も異なる
           expect(subject.files.count).to eq 2
