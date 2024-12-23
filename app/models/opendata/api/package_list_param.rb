@@ -10,8 +10,8 @@ class Opendata::Api::PackageListParam < Opendata::Api::ParamBase
   private
 
   def res_valid
-    datasets = Opendata::Dataset.site(site).and_public
-    datasets = datasets.skip(offset) if limit && offset
+    datasets = Opendata::Dataset.site(site).and_public.reorder(id: 1)
+    datasets = datasets.skip(offset) if offset
     datasets = datasets.limit(limit) if limit && limit > 0
     result = datasets.pluck(:uuid)
 

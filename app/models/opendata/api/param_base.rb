@@ -2,6 +2,7 @@ class Opendata::Api::ParamBase
   extend SS::Translation
   include ActiveModel::Model
   include SS::PermitParams
+  include Opendata::Api::Converter
 
   attr_accessor :cur_site
   alias site cur_site
@@ -22,9 +23,8 @@ class Opendata::Api::ParamBase
   end
 
   def res_invalid
-    error = {__type: "Validation Error"}
-    self.errors.each { |k, v| error[k] = v }
-
+    error = { type: "Validation Error" }
+    self.errors.each { |e| error[e.attribute] = e.message }
     { help: help, success: false, error: error }
   end
 
