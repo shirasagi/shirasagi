@@ -1,6 +1,7 @@
 class Opendata::Api::PackageShowParam < Opendata::Api::ParamBase
 
   attr_accessor :id
+
   permit_params :id
 
   def help

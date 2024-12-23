@@ -1,6 +1,7 @@
 class Opendata::Api::PackageListParam < Opendata::Api::ParamBase
 
   attr_accessor :limit, :offset
+
   permit_params :limit, :offset
 
   def help

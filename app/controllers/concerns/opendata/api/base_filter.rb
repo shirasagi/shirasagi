@@ -19,21 +19,22 @@ module Opendata::Api::BaseFilter
   end
 
   def check_num(num, messages)
-    if num
-      if integer?(num)
-        if num.to_i < 0
-          messages << "Must be a natural number"
-        end
-      else
-        messages << "Invalid integer"
-      end
+    return if num.nil?
+
+    if !integer?(num)
+      messages << "Invalid integer"
+      return
+    end
+
+    if num.to_i < 0
+      messages << "Must be a natural number"
     end
   end
 
-  def integer?(s)
-    i = Integer(s)
-    check = true
+  def integer?(num)
+    Integer(num)
+    true
   rescue
-    check = false
+    false
   end
 end

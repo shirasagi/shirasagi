@@ -34,11 +34,18 @@ class Opendata::Api::ParamBase
       self.send("#{key}=", nil)
       return
     end
-    if num.numeric? && num.to_i >= 0
+    if integer?(num) && num.to_i >= 0
       self.send("#{key}=", num.to_i)
       return
     end
     self.errors.add key, "Must be a natural number"
+  end
+
+  def integer?(num)
+    Integer(num)
+    true
+  rescue
+    false
   end
 
   def validate_param
