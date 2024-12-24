@@ -326,6 +326,10 @@ module Cms::PageFilter
 
       @item.attributes = get_params
       @copy = @item.new_clone
+
+      # first_released フィールドをコピー対象から除外
+      @copy.first_released = nil if @copy.respond_to?(:first_released)
+
       render_update @copy.save, location: { action: :index }, render: { template: "copy" }
     end
   end
