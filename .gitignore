@@ -1,12 +1,9 @@
 # Ignore
-/vendor/bundle
-
 /.bundle
 /.project
 /.ruby-version
 /.tool-versions
 /.vscode
-
 /app/assets/builds
 /config/*.yml
 /config/*.yml.enc
@@ -14,25 +11,28 @@
 /config/commands
 /config/environments
 /config/master.key
-/config/unicorn.rb
-/config/puma.rb
 /config/nginx.conf
+/config/puma.rb
+/config/unicorn.rb
 /coverage
 /file
 /log
-/tmp
 /private
+/public/.well-known
 /public/assets-dev
-/public/sites
 /public/gws
+/public/sites
 /sanitizer_input
 /sanitizer_output
+/tmp
+/vendor/bundle
 
 # YARD
 /doc
 !/doc/install.txt
 /.yardoc
 
+# Mac
 .DS_Store
 Thumbs.db
 ehthumbs.db
@@ -54,6 +54,7 @@ ehthumbs.db
 # test-queue
 .test_queue_stats
 
+# NPM / Yarn
 /node_modules
 
 # デバッグ用
