@@ -28,7 +28,7 @@ module Cms::Content
     field :depth, type: Integer
     field :order, type: Integer, default: 0
     field :released, type: DateTime, metadata: { branch: false }
-    field :released_type, type: String, default: ->{ self.class.default_released_type }, metadata: { branch: false }
+    field :released_type, type: String, default: ->{ self.class.default_released_type }
     field :first_released, type: DateTime, metadata: { branch: false }
     field :imported, type: DateTime
     field :md5, type: String
