@@ -15,7 +15,7 @@
   <%= sanitizer_status(file) %>
   <%= link_to url, class: :thumb, target: "_blank", rel: "noopener" do %>
     <% if file.image? %>
-      <%= image_tag thumb_url, alt: file.name %>
+      <%= image_tag file.thumb_no_cache_url, alt: file.name %>
     <% else %>
       <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
     <% end %>
