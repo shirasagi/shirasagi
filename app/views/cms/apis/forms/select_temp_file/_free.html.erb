@@ -3,8 +3,8 @@
     file_path = proc { |item| view_sns_apis_temp_file_path(user: @cur_user.id, id: item) }
     thumb_path = proc { |item| thumb_sns_apis_temp_file_path(user: @cur_user.id, id: item, _: item.updated.to_i) }
   else
-    file_path = proc { |item| item.url }
-    thumb_path = proc { |item| item.thumb_url }
+    file_path = proc { |item| item.no_cache_url }
+    thumb_path = proc { |item| item.thumb_no_cache_url }
   end
 %>
 <%= jquery do %>
