@@ -1817,11 +1817,6 @@ Style/RedundantCondition:
     - 'app/controllers/opendata/agents/nodes/mypage/mypage_controller.rb'
     - 'lib/ss/command.rb'
 
-# Offense count: 1706
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantConstantBase:
-  Enabled: false
-
 # Offense count: 3
 # This cop supports safe autocorrection (--autocorrect).
 Style/RedundantCurrentDirectoryInPath:

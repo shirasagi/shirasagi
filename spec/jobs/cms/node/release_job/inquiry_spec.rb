@@ -12,11 +12,11 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
   end
   let(:inquiry5) { create :inquiry_node_form, layout_id: layout.id, state: "closed" }
 
-  let(:inquiry1_path) { ::File.join(inquiry1.path, "index.html") }
-  let(:inquiry2_path) { ::File.join(inquiry2.path, "index.html") }
-  let(:inquiry3_path) { ::File.join(inquiry3.path, "index.html") }
-  let(:inquiry4_path) { ::File.join(inquiry4.path, "index.html") }
-  let(:inquiry5_path) { ::File.join(inquiry5.path, "index.html") }
+  let(:inquiry1_path) { File.join(inquiry1.path, "index.html") }
+  let(:inquiry2_path) { File.join(inquiry2.path, "index.html") }
+  let(:inquiry3_path) { File.join(inquiry3.path, "index.html") }
+  let(:inquiry4_path) { File.join(inquiry4.path, "index.html") }
+  let(:inquiry5_path) { File.join(inquiry5.path, "index.html") }
 
   let!(:release_date) { 1.day.from_now }
   let!(:close_date) { 7.days.from_now }
@@ -38,11 +38,11 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
         expect(inquiry3.state).to eq "public"
         expect(inquiry4.state).to eq "ready"
         expect(inquiry5.state).to eq "closed"
-        expect(::File.exist?(inquiry1_path)).to be false
-        expect(::File.exist?(inquiry2_path)).to be false
-        expect(::File.exist?(inquiry3_path)).to be false
-        expect(::File.exist?(inquiry4_path)).to be false
-        expect(::File.exist?(inquiry5_path)).to be false
+        expect(File.exist?(inquiry1_path)).to be false
+        expect(File.exist?(inquiry2_path)).to be false
+        expect(File.exist?(inquiry3_path)).to be false
+        expect(File.exist?(inquiry4_path)).to be false
+        expect(File.exist?(inquiry5_path)).to be false
 
         generate_all
         expect(inquiry1.state).to eq "public"
@@ -50,11 +50,11 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
         expect(inquiry3.state).to eq "public"
         expect(inquiry4.state).to eq "ready"
         expect(inquiry5.state).to eq "closed"
-        expect(::File.exist?(inquiry1_path)).to be true
-        expect(::File.exist?(inquiry2_path)).to be false
-        expect(::File.exist?(inquiry3_path)).to be true
-        expect(::File.exist?(inquiry4_path)).to be false
-        expect(::File.exist?(inquiry5_path)).to be false
+        expect(File.exist?(inquiry1_path)).to be true
+        expect(File.exist?(inquiry2_path)).to be false
+        expect(File.exist?(inquiry3_path)).to be true
+        expect(File.exist?(inquiry4_path)).to be false
+        expect(File.exist?(inquiry5_path)).to be false
 
         Timecop.travel(release_date.advance(days: 1)) do
           generate_all
@@ -63,11 +63,11 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
           expect(inquiry3.state).to eq "public"
           expect(inquiry4.state).to eq "public"
           expect(inquiry5.state).to eq "closed"
-          expect(::File.exist?(inquiry1_path)).to be true
-          expect(::File.exist?(inquiry2_path)).to be true
-          expect(::File.exist?(inquiry3_path)).to be true
-          expect(::File.exist?(inquiry4_path)).to be true
-          expect(::File.exist?(inquiry5_path)).to be false
+          expect(File.exist?(inquiry1_path)).to be true
+          expect(File.exist?(inquiry2_path)).to be true
+          expect(File.exist?(inquiry3_path)).to be true
+          expect(File.exist?(inquiry4_path)).to be true
+          expect(File.exist?(inquiry5_path)).to be false
         end
 
         Timecop.travel(close_date.advance(days: 1)) do
@@ -77,11 +77,11 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
           expect(inquiry3.state).to eq "closed"
           expect(inquiry4.state).to eq "closed"
           expect(inquiry5.state).to eq "closed"
-          expect(::File.exist?(inquiry1_path)).to be true
-          expect(::File.exist?(inquiry2_path)).to be true
-          expect(::File.exist?(inquiry3_path)).to be false
-          expect(::File.exist?(inquiry4_path)).to be false
-          expect(::File.exist?(inquiry5_path)).to be false
+          expect(File.exist?(inquiry1_path)).to be true
+          expect(File.exist?(inquiry2_path)).to be true
+          expect(File.exist?(inquiry3_path)).to be false
+          expect(File.exist?(inquiry4_path)).to be false
+          expect(File.exist?(inquiry5_path)).to be false
         end
 
         Timecop.travel(close_date.advance(days: 3)) do
@@ -91,11 +91,11 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
           expect(inquiry3.state).to eq "closed"
           expect(inquiry4.state).to eq "closed"
           expect(inquiry5.state).to eq "closed"
-          expect(::File.exist?(inquiry1_path)).to be true
-          expect(::File.exist?(inquiry2_path)).to be true
-          expect(::File.exist?(inquiry3_path)).to be false
-          expect(::File.exist?(inquiry4_path)).to be false
-          expect(::File.exist?(inquiry5_path)).to be false
+          expect(File.exist?(inquiry1_path)).to be true
+          expect(File.exist?(inquiry2_path)).to be true
+          expect(File.exist?(inquiry3_path)).to be false
+          expect(File.exist?(inquiry4_path)).to be false
+          expect(File.exist?(inquiry5_path)).to be false
         end
       end
     end

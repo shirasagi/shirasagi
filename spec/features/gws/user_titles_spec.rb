@@ -27,7 +27,7 @@ describe "gws_user_titles", type: :feature, dbscope: :example do
       end
 
       I18n.with_locale(I18n.default_locale) do
-        csv_source = ::SS::ChunkReader.new(page.html).to_a.join
+        csv_source = SS::ChunkReader.new(page.html).to_a.join
         SS::Csv.open(StringIO.new(csv_source)) do |csv|
           csv_table = csv.read
           expect(csv_table.length).to eq 1

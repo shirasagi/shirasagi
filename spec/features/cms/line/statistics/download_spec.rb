@@ -19,7 +19,7 @@ describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.download")
 
         wait_for_download
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'UTF-8')
+        csv = CSV.read(downloads.first, headers: true, encoding: 'UTF-8')
         expect(csv.length).to eq 2
 
         expect(csv[0][0]).to eq item2.name

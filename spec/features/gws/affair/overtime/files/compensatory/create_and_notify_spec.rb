@@ -233,7 +233,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           click_on I18n.t("workflow.buttons.approve")
         end
         wait_for_js_ready
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment)}/)
       end
       item.reload
       item
@@ -393,7 +393,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       # 週外振替、代休振替の有効期限は申請の 前4週 後8週 通知は期限日の７日前
       # 週内振替の通知はなし
       Timecop.freeze("2021/3/6 8:00") do
-        ::Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
+        Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
 
         names = SS::Notification.all.map(&:name)
         expect(names.count("[時間外申請] 時間外申請「#{item1.name}」振替の有効期限が迫っています。")).to be 0
@@ -404,7 +404,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(names.count("[時間外申請] 時間外申請「#{item6.name}」振替の有効期限が迫っています。")).to be 0
       end
       Timecop.freeze("2021/3/8 8:00") do
-        ::Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
+        Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
 
         names = SS::Notification.all.map(&:name)
         expect(names.count("[時間外申請] 時間外申請「#{item1.name}」振替の有効期限が迫っています。")).to be 0
@@ -415,7 +415,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(names.count("[時間外申請] 時間外申請「#{item6.name}」振替の有効期限が迫っています。")).to be 0
       end
       Timecop.freeze("2021/3/31 8:00") do
-        ::Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
+        Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
 
         names = SS::Notification.all.map(&:name)
         expect(names.count("[時間外申請] 時間外申請「#{item1.name}」振替の有効期限が迫っています。")).to be 0
@@ -426,7 +426,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         expect(names.count("[時間外申請] 時間外申請「#{item6.name}」振替の有効期限が迫っています。")).to be 1
       end
       Timecop.freeze("2021/4/1 8:00") do
-        ::Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
+        Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
 
         names = SS::Notification.all.map(&:name)
         expect(names.count("[時間外申請] 時間外申請「#{item1.name}」振替の有効期限が迫っています。")).to be 0

@@ -35,8 +35,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
     # to reproduce issues, we need the public view html of "inquiry_form"
     # So run node generation job before the test.
     # Comment out the following 2 lines to see the test success.
-    ::Cms::Node::GenerateJob.bind(site_id: site, node_id: inquiry_form).perform_now
-    expect(::File.size("#{inquiry_form.path}/index.html")).to be > 0
+    Cms::Node::GenerateJob.bind(site_id: site, node_id: inquiry_form).perform_now
+    expect(File.size("#{inquiry_form.path}/index.html")).to be > 0
   end
 
   context "ss-4755" do
@@ -59,8 +59,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       wait_for_notice I18n.t("ss.notice.saved")
 
       # after set Cms::Site#inquiry_form_id, we need to re-generate public view html of "article_page" to reflect the setting
-      ::Cms::Page::GenerateJob.bind(site_id: site, node_id: article_node).perform_now
-      ::Cms::Node::GenerateJob.bind(site_id: site, node_id: inquiry_form).perform_now
+      Cms::Page::GenerateJob.bind(site_id: site, node_id: article_node).perform_now
+      Cms::Node::GenerateJob.bind(site_id: site, node_id: inquiry_form).perform_now
 
       visit article_page.full_url
       within ".inquiry-form" do

@@ -129,7 +129,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       visit edit_path
       ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
-        page.accept_alert(/#{::Regexp.escape(I18n.t("ss.confirm.in_use"))}/) do
+        page.accept_alert(/#{Regexp.escape(I18n.t("ss.confirm.in_use"))}/) do
           click_on I18n.t("ss.buttons.delete")
         end
       end

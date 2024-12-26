@@ -40,7 +40,7 @@ describe Gws::CompressJob, dbscope: :example do
       expect(notification.text).to include("ダウンロードの準備が完了しました。")
     end
 
-    entry_names = ::Zip::File.open(physical_filepath) do |entries|
+    entry_names = Zip::File.open(physical_filepath) do |entries|
       entries.map { |entry| entry.name }
     end
     expect(entry_names).to include(file1.filename)

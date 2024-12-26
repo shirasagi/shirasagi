@@ -65,7 +65,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       Zip::File.open(downloads.first) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
-          mail = ::Mail.read_from_string(entry.get_input_stream.read)
+          mail = Mail.read_from_string(entry.get_input_stream.read)
 
           exported[name] = mail
         end
@@ -313,7 +313,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
 
         I18n.t("gws/memo/message.export_failed.subject", locale: I18n.default_locale).tap do |title|
-          expect(page).to have_css('.popup-notice-items .list-item.unseen', text: /#{::Regexp.escape(title)}/)
+          expect(page).to have_css('.popup-notice-items .list-item.unseen', text: /#{Regexp.escape(title)}/)
           click_on title
         end
         wait_for_js_ready
@@ -406,7 +406,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       Zip::File.open(downloads.first) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
-          mail = ::Mail.read_from_string(entry.get_input_stream.read)
+          mail = Mail.read_from_string(entry.get_input_stream.read)
 
           exported[name] = mail
         end
@@ -486,7 +486,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       Zip::File.open(downloads.first) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
-          mail = ::Mail.read_from_string(entry.get_input_stream.read)
+          mail = Mail.read_from_string(entry.get_input_stream.read)
 
           exported[name] = mail
         end

@@ -74,7 +74,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
         SVG
       end
     end
-    let(:name) { ::File.basename(file) }
+    let(:name) { File.basename(file) }
 
     it do
       visit sns_cur_user_files_path
@@ -126,7 +126,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
         SVG
       end
     end
-    let(:name) { ::File.basename(file) }
+    let(:name) { File.basename(file) }
 
     it do
       visit sns_cur_user_files_path
@@ -142,7 +142,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq name
       expect(item.user_id).to eq ss_user.id
 
-      content = ::File.read(item.path)
+      content = File.read(item.path)
       expect(content).not_to include "script"
     end
   end
@@ -158,7 +158,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
         SVG
       end
     end
-    let(:name) { ::File.basename(file) }
+    let(:name) { File.basename(file) }
 
     it do
       visit sns_cur_user_files_path
@@ -174,7 +174,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq name
       expect(item.user_id).to eq ss_user.id
 
-      content = ::File.read(item.path)
+      content = File.read(item.path)
       expect(content).not_to include "onclick"
     end
   end
@@ -189,7 +189,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
         SVG
       end
     end
-    let(:name) { ::File.basename(file) }
+    let(:name) { File.basename(file) }
 
     it do
       visit sns_cur_user_files_path
@@ -205,7 +205,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq name
       expect(item.user_id).to eq ss_user.id
 
-      content = ::File.read(item.path)
+      content = File.read(item.path)
       expect(content).not_to include "href"
     end
   end
@@ -220,7 +220,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
         SVG
       end
     end
-    let(:name) { ::File.basename(file) }
+    let(:name) { File.basename(file) }
 
     it do
       visit sns_cur_user_files_path
@@ -236,7 +236,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq name
       expect(item.user_id).to eq ss_user.id
 
-      content = ::File.read(item.path)
+      content = File.read(item.path)
       expect(content).not_to include "href"
     end
   end
@@ -251,7 +251,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
         SVG
       end
     end
-    let(:name) { ::File.basename(file) }
+    let(:name) { File.basename(file) }
 
     it do
       visit sns_cur_user_files_path
@@ -267,7 +267,7 @@ describe "sns_user_files", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq name
       expect(item.user_id).to eq ss_user.id
 
-      content = ::File.read(item.path)
+      content = File.read(item.path)
       expect(content).to include "href"
       expect(content).to include "/path/to/page.html"
     end

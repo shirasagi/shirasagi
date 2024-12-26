@@ -14,7 +14,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
     before { login_cms_user }
 
     it "#edit" do
-      expect(::File.exist?(item.path)).to be true
+      expect(File.exist?(item.path)).to be true
 
       visit edit_path
       within "form#item-form" do
@@ -23,7 +23,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(::File.exist?(item.path)).to be true
+      expect(File.exist?(item.path)).to be true
     end
   end
 
@@ -31,7 +31,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
     before { login_cms_user }
 
     it "#edit" do
-      expect(::File.exist?(item.path)).to be true
+      expect(File.exist?(item.path)).to be true
 
       visit edit_path
 
@@ -43,7 +43,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(::File.exist?(item.path)).to be false
+      expect(File.exist?(item.path)).to be false
     end
   end
 
@@ -51,7 +51,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
     before { login_cms_user }
 
     it "#edit" do
-      expect(::File.exist?(item.path)).to be true
+      expect(File.exist?(item.path)).to be true
 
       visit edit_path
 
@@ -70,7 +70,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(::File.exist?(item.path)).to be false
+      expect(File.exist?(item.path)).to be false
     end
   end
 
@@ -78,7 +78,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
     before { login_cms_user }
 
     it "#edit" do
-      expect(::File.exist?(item.path)).to be true
+      expect(File.exist?(item.path)).to be true
 
       visit edit_path
 
@@ -90,7 +90,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
-      expect(::File.exist?(item.path)).to be false
+      expect(File.exist?(item.path)).to be false
     end
   end
 end

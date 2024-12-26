@@ -12,11 +12,11 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
     site.save!
 
     # gws:es:ingest:init
-    ::Gws::Elasticsearch.init_ingest(site: site)
+    Gws::Elasticsearch.init_ingest(site: site)
     # gws:es:drop
-    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    Gws::Elasticsearch.drop_index(site: site) rescue nil
     # gws:es:create_indexes
-    ::Gws::Elasticsearch.create_index(site: site)
+    Gws::Elasticsearch.create_index(site: site)
   end
 
   describe '.callback' do
@@ -31,7 +31,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -65,7 +65,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -98,7 +98,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -127,7 +127,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|

@@ -37,7 +37,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          csv = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
           expect(csv.length).to eq 1
           expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item1.name
           expect(csv[0][Gws::Workflow::File.t(:html)]).to eq item1.html
@@ -61,7 +61,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          csv = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
           expect(csv.length).to eq 1
           expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
           expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
@@ -85,7 +85,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+          csv = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
           expect(csv.length).to eq 2
           expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
           expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
@@ -110,7 +110,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         wait_for_download
 
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file1.download_filename)
@@ -132,7 +132,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         wait_for_download
 
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file2.download_filename)
@@ -153,7 +153,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         wait_for_download
 
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file1.download_filename, file2.download_filename)

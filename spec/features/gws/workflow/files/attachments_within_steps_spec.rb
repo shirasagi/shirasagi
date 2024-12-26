@@ -109,7 +109,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
 
       expect(SS::File.all.where(model: "workflow/approver_file").count).to eq 1
       file1 = SS::File.all.where(model: "workflow/approver_file").order_by(id: -1).first
@@ -171,7 +171,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.links.set_seen")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(circulation_comment2)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(circulation_comment2)}/)
 
       expect(SS::File.all.where(model: "workflow/approver_file").count).to eq 2
       file2 = SS::File.all.where(model: "workflow/approver_file").order_by(id: -1).first

@@ -86,7 +86,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(::File.size(task.log_file_path)).to be > 0
+        expect(File.size(task.log_file_path)).to be > 0
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
       end
@@ -213,7 +213,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.logs).not_to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(::File.size(task.log_file_path)).to be > 0
+        expect(File.size(task.log_file_path)).to be > 0
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
       end

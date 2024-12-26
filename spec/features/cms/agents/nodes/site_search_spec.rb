@@ -18,13 +18,13 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
   before do
     site_search_node.set(layout_id: layout.id)
-    stub_request(:any, /#{::Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
+    stub_request(:any, /#{Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
       if request.uri.path == "/"
         # always respond success for ping request
         {
           status: 200,
           headers: { 'Content-Type' => 'application/json; charset=UTF-8', 'X-elastic-product' => "Elasticsearch" },
-          body: ::File.read("#{Rails.root}/spec/fixtures/gws/elasticsearch/ping.json")
+          body: File.read("#{Rails.root}/spec/fixtures/gws/elasticsearch/ping.json")
         }
       else
         requests << request.as_json.dup

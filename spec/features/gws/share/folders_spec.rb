@@ -243,7 +243,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
 
         wait_for_download
 
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file.name)

@@ -95,7 +95,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
       layout.html = layout.html.sub("{{ yield }}", part_html + "{{ yield }}")
       layout.save!
 
-      Cms::Page.all.each { |page| ::FileUtils.rm_f(page.path) }
+      Cms::Page.all.each { |page| FileUtils.rm_f(page.path) }
     end
 
     # 固定型モードの仕様（配備された階層依存）
@@ -722,7 +722,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
       layout.html = layout.html.sub("{{ yield }}", part_html + "{{ yield }}")
       layout.save!
 
-      Cms::Page.all.each { |page| ::FileUtils.rm_f(page.path) }
+      Cms::Page.all.each { |page| FileUtils.rm_f(page.path) }
     end
 
     context "without node_routes" do
@@ -785,7 +785,7 @@ describe "cms_agents_parts_node2", type: :feature, dbscope: :example do
       layout.html = layout.html.sub("{{ yield }}", part_html + "{{ yield }}")
       layout.save!
 
-      Cms::Page.all.each { |page| ::FileUtils.rm_f(page.path) }
+      Cms::Page.all.each { |page| FileUtils.rm_f(page.path) }
     end
 
     context "with node" do

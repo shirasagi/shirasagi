@@ -8,11 +8,11 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
     end
 
     # gws:es:ingest:init
-    ::Gws::Elasticsearch.init_ingest(site: site)
+    Gws::Elasticsearch.init_ingest(site: site)
     # gws:es:drop
-    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    Gws::Elasticsearch.drop_index(site: site) rescue nil
     # gws:es:create_indexes
-    ::Gws::Elasticsearch.create_index(site: site)
+    Gws::Elasticsearch.create_index(site: site)
   end
 
   after do
@@ -64,7 +64,7 @@ describe Tasks::Gws::Es, dbscope: :example, es: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      ::Gws::Elasticsearch.refresh_index(site: site)
+      Gws::Elasticsearch.refresh_index(site: site)
       site.elasticsearch_client.search(index: "g#{site.id}", size: 100, q: "*:*").tap do |es_docs|
         expect(es_docs["hits"]["hits"].length).to eq 6
         ids = es_docs["hits"]["hits"].map { |es_doc| es_doc["_id"] }

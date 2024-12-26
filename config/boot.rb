@@ -2,8 +2,8 @@
 require 'yaml'
 
 ENV['RAILS_ENV'] ||= begin
-  file = ::File.expand_path('../config/environment.yml', __dir__)
-  if ::File::exist?(file)
+  file = File.expand_path('../config/environment.yml', __dir__)
+  if File::exist?(file)
     environment = YAML.safe_load_file(file, aliases: true, permitted_classes: [Symbol])
     renv = environment['RAILS_ENV']
   end

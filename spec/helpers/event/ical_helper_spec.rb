@@ -19,7 +19,7 @@ describe Event::IcalHelper, type: :helper, dbscope: :example do
 
       it do
         data = helper.event_to_ical([ page ], site: site, node: node)
-        ical = ::Icalendar::Calendar.parse(StringIO.new(data))
+        ical = Icalendar::Calendar.parse(StringIO.new(data))
         expect(ical).to be_present
         expect(ical).to have(1).items
         ical.first.tap do |calendar|
@@ -57,7 +57,7 @@ describe Event::IcalHelper, type: :helper, dbscope: :example do
 
       it do
         data = helper.event_to_ical([ page ], site: site, node: node)
-        ical = ::Icalendar::Calendar.parse(StringIO.new(data))
+        ical = Icalendar::Calendar.parse(StringIO.new(data))
         expect(ical).to be_present
         expect(ical).to have(1).items
         ical.first.tap do |calendar|
@@ -112,7 +112,7 @@ describe Event::IcalHelper, type: :helper, dbscope: :example do
 
       it do
         data = helper.event_to_ical([ page ], site: site, node: node)
-        ical = ::Icalendar::Calendar.parse(StringIO.new(data))
+        ical = Icalendar::Calendar.parse(StringIO.new(data))
         expect(ical).to be_present
         expect(ical).to have(1).items
         ical.first.tap do |calendar|
@@ -167,7 +167,7 @@ describe Event::IcalHelper, type: :helper, dbscope: :example do
 
       it do
         data = helper.event_to_ical([ page ], site: site, node: node)
-        ical = ::Icalendar::Calendar.parse(StringIO.new(data))
+        ical = Icalendar::Calendar.parse(StringIO.new(data))
         expect(ical).to be_present
         expect(ical).to have(1).items
         ical.first.tap do |calendar|
@@ -224,7 +224,7 @@ describe Event::IcalHelper, type: :helper, dbscope: :example do
 
       it do
         data = helper.event_to_ical([ page ], site: site, node: node)
-        ical = ::Icalendar::Calendar.parse(StringIO.new(data))
+        ical = Icalendar::Calendar.parse(StringIO.new(data))
         expect(ical).to be_present
         expect(ical).to have(1).items
         ical.first.tap do |calendar|
@@ -293,7 +293,7 @@ describe Event::IcalHelper, type: :helper, dbscope: :example do
 
       it do
         data = helper.event_to_ical([ page ], site: site, node: node)
-        ical = ::Icalendar::Calendar.parse(StringIO.new(data))
+        ical = Icalendar::Calendar.parse(StringIO.new(data))
         expect(ical).to be_present
         expect(ical).to have(1).items
         ical.first.tap do |calendar|

@@ -37,25 +37,25 @@ describe 'cms_agents_nodes_form_search', type: :feature, dbscope: :example, js: 
   it do
     # empty condition
     visit form_search_node.full_url
-    expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
-    expect(page).to have_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
+    expect(page).to have_css(".pages .item-#{File.basename(item1.basename, ".*")}", text: item1.name)
+    expect(page).to have_css(".pages .item-#{File.basename(item2.basename, ".*")}", text: item2.name)
 
     visit form_search_node.full_url + "?" + { s: { col: { column1.name => select_options1[0] } } }.to_query
-    expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
-    expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
+    expect(page).to have_css(".pages .item-#{File.basename(item1.basename, ".*")}", text: item1.name)
+    expect(page).to have_no_css(".pages .item-#{File.basename(item2.basename, ".*")}", text: item2.name)
 
     visit form_search_node.full_url + "?" + { s: { col: { column1.name => select_options1[1] } } }.to_query
-    expect(page).to have_no_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
-    expect(page).to have_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
+    expect(page).to have_no_css(".pages .item-#{File.basename(item1.basename, ".*")}", text: item1.name)
+    expect(page).to have_css(".pages .item-#{File.basename(item2.basename, ".*")}", text: item2.name)
 
     visit form_search_node.full_url + "?" + { s: { col: { column1.name => select_options1[2] } } }.to_query
-    expect(page).to have_no_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
-    expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
+    expect(page).to have_no_css(".pages .item-#{File.basename(item1.basename, ".*")}", text: item1.name)
+    expect(page).to have_no_css(".pages .item-#{File.basename(item2.basename, ".*")}", text: item2.name)
 
     # multiple search params
     query = { s: { col: { column1.name => select_options1[0], column2.name => select_options2[0] } } }
     visit form_search_node.full_url + "?" + query.to_query
-    expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
-    expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
+    expect(page).to have_css(".pages .item-#{File.basename(item1.basename, ".*")}", text: item1.name)
+    expect(page).to have_no_css(".pages .item-#{File.basename(item2.basename, ".*")}", text: item2.name)
   end
 end

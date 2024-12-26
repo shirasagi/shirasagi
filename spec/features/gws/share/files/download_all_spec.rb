@@ -27,7 +27,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(folder.name)
         wait_for_download
 
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
+        entry_names = Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(item.name)

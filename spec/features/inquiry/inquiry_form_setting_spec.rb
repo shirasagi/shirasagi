@@ -134,7 +134,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         node.state = "closed"
         node.save!
 
-        ::FileUtils.rm_f(article.path)
+        FileUtils.rm_f(article.path)
       end
 
       it do
@@ -160,7 +160,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
         expect(group.contact_email).to be_blank
 
-        ::FileUtils.rm_f(article.path)
+        FileUtils.rm_f(article.path)
       end
 
       it do

@@ -87,6 +87,6 @@ describe "gws_discussion_forum_thread", type: :feature, dbscope: :example, js: t
     new_file = new_post4.files.first
     expect(new_file.id).not_to eq file.id
     expect(new_file.name).to eq file.name
-    expect(::File.read(new_file.path)).to eq ::File.read(file.path)
+    expect(File.read(new_file.path)).to eq File.read(file.path)
   end
 end

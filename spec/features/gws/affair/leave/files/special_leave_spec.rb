@@ -104,7 +104,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         end
         wait_for_js_ready
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment)}/)
       end
       item.reload
       item

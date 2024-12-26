@@ -32,7 +32,7 @@ describe "chorg_download_revision", type: :feature, dbscope: :example do
       first(".chorg-revisions a", text: I18n.t('ss.links.download')).click
       expect(page.response_headers['Content-Type']).to eq("text/csv; charset=utf-8")
 
-      csv_source = ::SS::ChunkReader.new(page.html).to_a.join
+      csv_source = SS::ChunkReader.new(page.html).to_a.join
       csv_source.force_encoding("UTF-8")
       csv_source = csv_source[1..-1]
 

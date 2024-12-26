@@ -19,7 +19,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       kintone_app_api_token: unique_id,
       kintone_app_key: 1)
   end
-  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
+  let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
   let(:kintone_domain) { "#{unique_id}.example.jp" }
   let(:kintone_url) { "https://#{kintone_domain}/k/v1/record.json" }
 

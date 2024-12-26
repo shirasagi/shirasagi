@@ -65,7 +65,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.parts[1].content_transfer_encoding).to eq "base64"
           expect(mail.parts[1].content_disposition).to include("attachment")
           expect(mail.parts[1].content_disposition).to include(file.filename)
-          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(::File.binread(content)).gsub("\n", "\r\n")
+          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(File.binread(content)).gsub("\n", "\r\n")
         end
       end
     end

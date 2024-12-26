@@ -44,7 +44,7 @@ describe Gws::StaffRecord::Seating, type: :model, dbscope: :example do
 
       csv = item.export_csv(year1.yearly_seatings.site(site1))
       csv = csv.encode("UTF-8", "SJIS")
-      csv = ::CSV.parse(csv, headers: true)
+      csv = CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
       if SS.config.ss.disable_permission_level
@@ -100,7 +100,7 @@ describe Gws::StaffRecord::Seating, type: :model, dbscope: :example do
 
       csv = item.export_csv(year1.yearly_seatings.site(site1))
       csv = csv.sub(SS::Csv::UTF8_BOM, '')
-      csv = ::CSV.parse(csv, headers: true)
+      csv = CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
       if SS.config.ss.disable_permission_level

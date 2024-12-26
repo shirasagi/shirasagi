@@ -54,7 +54,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
     end
 
     describe "image operations" do
-      let!(:file) { "#{::Rails.root}/spec/fixtures/ss/logo.png" }
+      let!(:file) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
       let!(:name1) { "logo.png" }
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
@@ -111,7 +111,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
     end
 
     describe "text operations" do
-      let!(:file) { "#{::Rails.root}/spec/fixtures/uploader/style.scss" }
+      let!(:file) { "#{Rails.root}/spec/fixtures/uploader/style.scss" }
       let!(:name1) { "style.scss" }
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
@@ -163,11 +163,11 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
     end
 
     describe "error operations" do
-      let!(:file) { "#{::Rails.root}/spec/fixtures/ss/logo.png" }
+      let!(:file) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
       let!(:name1) { "logo.png" }
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
-      let!(:error_file) { "#{::Rails.root}/spec/fixtures/ss/file/ss_file_1_1635597955_1000_pdfEncryptReport.txt" }
+      let!(:error_file) { "#{Rails.root}/spec/fixtures/ss/file/ss_file_1_1635597955_1000_pdfEncryptReport.txt" }
       let!(:output_path) { "#{SS.config.ss.sanitizer_output}/ss_uploader_1_1635597955_1000_pdfEncryptReport.txt" }
       let!(:error_filename) { "logo.png_sanitize_error.txt" }
 
