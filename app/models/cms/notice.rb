@@ -58,7 +58,6 @@ class Cms::Notice
     # item.cur_node = @cur_node
     item.instance_variable_set(:@new_clone, true)
     item
-    puts item
   end
 
   def new_clone?
