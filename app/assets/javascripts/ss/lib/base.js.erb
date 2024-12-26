@@ -260,8 +260,8 @@ this.SS = (function () {
         return $(elem).remove();
       },
       complete: function () {
-        SS.part = SS.part - 1;
-        if (SS.part === 0) {
+        SS.partCountToLoad = SS.partCountToLoad - 1;
+        if (SS.partCountToLoad === 0) {
           return SS_Recommend.render();
         }
       }
