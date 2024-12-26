@@ -29,6 +29,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 1
+        page1 = Article::Page.all.first
+        expect(page1.first_released).to be_present
 
         visit article_pages_path(site: site, cid: node)
         click_on name
@@ -39,6 +41,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t('ss.notice.saved')
         expect(Article::Page.all.count).to eq 2
+
+        page2 = Article::Page.all.ne(id: page1.id).first
+        expect(page2.name).to eq "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}"
+        expect(page2.first_released).to be_blank
 
         visit article_pages_path(site: site, cid: node)
         click_on "[#{I18n.t('workflow.cloned_name_prefix')}] #{name}"
