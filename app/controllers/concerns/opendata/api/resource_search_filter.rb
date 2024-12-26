@@ -1,6 +1,5 @@
 module Opendata::Api::ResourceSearchFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   included do
     before_action :init_resource_search, only: [:resource_search]
