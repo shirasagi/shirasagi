@@ -29,7 +29,7 @@ module Cms::Content
     field :order, type: Integer, default: 0
     field :released, type: DateTime
     field :released_type, type: String, default: ->{ self.class.default_released_type }
-    field :first_released, type: DateTime
+    field :first_released, type: DateTime, metadata: { branch: false}
     field :imported, type: DateTime
     field :md5, type: String
 
