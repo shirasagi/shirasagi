@@ -1,6 +1,9 @@
 module Recommend
   module_function
 
+  mattr_accessor(:expire_logs_in, instance_accessor: false)
+  self.expire_logs_in = 2.weeks
+
   def content(site, path)
     return if site.blank? || path.blank?
 

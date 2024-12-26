@@ -259,6 +259,25 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        SS.ready(function() {
+          if (SS.partCountToLoad === 0) {
+            console.log("there are no ajax parts to load");
+            resolve(true);
+            return;
+          }
+
+          $(document).on("ss:ajaxPartComplete", function() {
+            console.log("a ajax part is loaded");
+            if (SS.partCountToLoad === 0) {
+              resolve(true);
+            }
+          });
+        });
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -701,6 +720,11 @@ module SS
 
     def enable_confirm_unloading
       page.execute_script('SS.disableConfirmUnloading = false;')
+    end
+
+    def wait_for_all_ajax_parts
+      result = page.evaluate_async_script(WAIT_FOR_ALL_AJAX_PARTS_SCRIPT)
+      expect(result).to be_truthy
     end
   end
 end

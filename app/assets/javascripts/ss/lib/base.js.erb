@@ -231,38 +231,41 @@ this.SS = (function () {
         return body.html(SS.page);
       },
       complete: function () {
-        return $(".ss-part").each(function () {
-          return SS.renderPart($(this));
+        $(".ss-part").each(function () {
+          SS.renderPart($(this));
         });
       }
     });
   };
 
-  SS.renderPart = function (elem) {
-    var url, ref;
-    url = elem.data("href") || elem.attr("href");
+  SS.renderPart = function ($elem) {
+    var url = $elem.data("href") || $elem.attr("href");
     url = SS_Kana.url(url.replace(/\.html/, ".json"));
     url = SS_Translate.url(url.replace(/\.html/, ".json"), $("body").data("translate"));
 
-    ref = SS_Kana.url(location.pathname, false);
-    ref = SS_Translate.url(location.pathname, false);
+    var ref = SS_Translate.url(location.pathname, false);
 
-    elem.append(" " + SS.loading);
-    return $.ajax({
+    $elem.append(" " + SS.loading);
+    var $elemParent = $elem.parent();
+    $.ajax({
       type: "GET",
       url: url,
       dataType: "json",
       data: "ref=" + ref,
       success: function (data) {
-        return $(elem).replaceWith(data);
+        $elem.replaceWith(data);
       },
       error: function (_xhr, _status, _error) {
-        return $(elem).remove();
+        $elem.remove();
       },
       complete: function () {
-        SS.part = SS.part - 1;
-        if (SS.part === 0) {
-          return SS_Recommend.render();
+        SS.partCountToLoad = SS.partCountToLoad - 1;
+        // $elem は、ロードに成功した場合は replaceWith により、ロードに失敗した場合は remove() により DOM ツリーから削除されている。
+        // DOM ツリーから削除されているので、$elem でイベントを発生させても無駄。誰もイベントを補足できない。
+        // そこで $elem の親ノードでイベントを発生させる。
+        $elemParent.trigger("ss:ajaxPartComplete");
+        if (SS.partCountToLoad === 0) {
+          SS_Recommend.render();
         }
       }
     });
