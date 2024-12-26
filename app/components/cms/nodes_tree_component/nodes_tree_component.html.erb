@@ -1,5 +1,6 @@
 <%= cache_component do %>
   <h2 class="content-navi-title"><%= t("cms.node") %></h2>
+  <%= link_to md_icons.outlined("refresh"), cms_frames_nodes_trees_path, class: "content-navi-refresh", title: I18n.t("ss.buttons.reload"), data: { turbo: true } %>
   <ul class="ss-tree cms-nodes-tree" role="tree">
     <% root_items.each do |folder| %>
       <% if folder.children? %>

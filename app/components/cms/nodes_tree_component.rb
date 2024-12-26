@@ -1,6 +1,7 @@
 class Cms::NodesTreeComponent < ApplicationComponent
   include ActiveModel::Model
   include Cms::NodeHelper
+  include SS::MaterialIconsHelper
   include SS::CacheableComponent
 
   attr_accessor :site, :user
