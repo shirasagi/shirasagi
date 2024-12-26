@@ -54,8 +54,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.released_type).to eq item.released_type
           expect(subject.created).to eq item.created
           expect(subject.updated).to eq item.updated
-          expect(subject.released).to be_blank
-          expect(subject.first_released).to be_nil # 複製対象から除外
+          expect(subject.released).to be_blank # 複製対象から除外
+          expect(subject.first_released).to be_blank # 複製対象から除外
 
           # 保存前は添付ファイルは元と同じ、HTML も元と同じ
           expect(subject.files.count).to eq 2
@@ -182,8 +182,8 @@ describe Article::Page, dbscope: :example do
             expect(subject.released_type).to eq item.released_type
             expect(subject.created).to eq item.created
             expect(subject.updated).to be > item.updated
-            expect(subject.released).to be_nil
-            expect(subject.first_released).to be_nil
+            expect(subject.released).to be_blank
+            expect(subject.first_released).to be_blank
 
             # 差し替えページの場合、添付ファイルは元と同じ
             expect(subject.files.count).to eq 2
