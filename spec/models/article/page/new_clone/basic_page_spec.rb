@@ -54,7 +54,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.released_type).to eq item.released_type
           expect(subject.created).to eq item.created
           expect(subject.updated).to eq item.updated
-          expect(subject.released).to eq item.released
+          expect(subject.released).to be_blank
           expect(subject.first_released).to be_nil # 複製対象から除外
 
           # 保存前は添付ファイルは元と同じ、HTML も元と同じ
@@ -106,7 +106,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.released_type).to eq item.released_type
           expect(subject.created).to eq item.created
           expect(subject.updated).to be > item.updated
-          expect(subject.released).to eq item.released
+          expect(subject.released).to be_blank
           # https://github.com/shirasagi/shirasagi/issues/5452:
           # 複製直後は一度も公開されていないので first_release は blank であるべき
           expect(subject.first_released).to be_blank
@@ -182,7 +182,7 @@ describe Article::Page, dbscope: :example do
             expect(subject.released_type).to eq item.released_type
             expect(subject.created).to eq item.created
             expect(subject.updated).to be > item.updated
-            expect(subject.released).to eq item.released
+            expect(subject.released).to be_nil
             expect(subject.first_released).to be_nil
 
             # 差し替えページの場合、添付ファイルは元と同じ
