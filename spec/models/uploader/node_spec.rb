@@ -18,18 +18,18 @@ describe Uploader::Node::File, type: :model, dbscope: :example do
     let(:uploader_subdir_file) { "#{sub_dirname}/keyvisual.gif" }
 
     before do
-      ::FileUtils.mkdir_p(item.path) if !Dir.exist?(item.path)
-      ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", uploader_file)
-      ::FileUtils.mkdir(sub_dirname)
-      ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", uploader_subdir_file)
+      FileUtils.mkdir_p(item.path) if !Dir.exist?(item.path)
+      FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", uploader_file)
+      FileUtils.mkdir(sub_dirname)
+      FileUtils.cp("#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", uploader_subdir_file)
     end
 
     it do
       item.state = 'closed'
       expect { item.save! }.to raise_error Mongoid::Errors::Validations
 
-      expect(::File.exist?(uploader_file)).to be_truthy
-      expect(::File.exist?(uploader_subdir_file)).to be_truthy
+      expect(File.exist?(uploader_file)).to be_truthy
+      expect(File.exist?(uploader_subdir_file)).to be_truthy
     end
   end
 
@@ -41,18 +41,18 @@ describe Uploader::Node::File, type: :model, dbscope: :example do
     let(:uploader_subdir_file) { "#{sub_dirname}/keyvisual.gif" }
 
     before do
-      ::FileUtils.mkdir_p(item.path) if !Dir.exist?(item.path)
-      ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", uploader_file)
-      ::FileUtils.mkdir(sub_dirname)
-      ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", uploader_subdir_file)
+      FileUtils.mkdir_p(item.path) if !Dir.exist?(item.path)
+      FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", uploader_file)
+      FileUtils.mkdir(sub_dirname)
+      FileUtils.cp("#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", uploader_subdir_file)
     end
 
     it do
       parent.state = 'closed'
       parent.save!
 
-      expect(::File.exist?(uploader_file)).to be_truthy
-      expect(::File.exist?(uploader_subdir_file)).to be_truthy
+      expect(File.exist?(uploader_file)).to be_truthy
+      expect(File.exist?(uploader_subdir_file)).to be_truthy
     end
   end
 

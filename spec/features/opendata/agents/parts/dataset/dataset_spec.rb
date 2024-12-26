@@ -8,7 +8,7 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let!(:node_dataset) { create(:opendata_node_dataset) }
   let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset) }
   let(:part) { create :opendata_part_dataset, sort: 'attention' }
-  let(:index_url) { ::URI.parse "http://#{site.domain}#{part.url}" }
+  let(:index_url) { URI.parse "http://#{site.domain}#{part.url}" }
 
   describe "#index" do
     it do

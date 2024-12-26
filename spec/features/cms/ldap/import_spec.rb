@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
   around do |example|
-    save = ::Ldap.sync_password
-    ::Ldap.sync_password = "enable"
+    save = Ldap.sync_password
+    Ldap.sync_password = "enable"
     example.run
   ensure
-    ::Ldap.sync_password = save
+    Ldap.sync_password = save
   end
 
   context "with ldap site" do

@@ -27,8 +27,8 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
   before do
     logs.each do |log|
-      ::FileUtils.mkdir_p(::File.dirname(log.file_path)) rescue nil
-      ::File.open(log.file_path, 'wt') do |f|
+      FileUtils.mkdir_p(File.dirname(log.file_path)) rescue nil
+      File.open(log.file_path, 'wt') do |f|
         f.puts unique_id
       end
     end

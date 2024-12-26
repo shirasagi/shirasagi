@@ -11,9 +11,9 @@ describe Cms::AllContentsImporter, type: :model, dbscope: :example do
     context "when given file as upload file" do
       let(:path) { "#{Rails.root}/spec/fixtures/cms/all_contents_1.csv" }
       subject do
-        ::File.open(path, "rb") do |tempfile|
+        File.open(path, "rb") do |tempfile|
           f = ActionDispatch::Http::UploadedFile.new(
-            filename: ::File.basename(path), type: "text/csv", name: "item[in_file]", tempfile: tempfile
+            filename: File.basename(path), type: "text/csv", name: "item[in_file]", tempfile: tempfile
           )
           described_class.valid_csv?(f)
         end

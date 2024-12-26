@@ -31,7 +31,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_1.csv" }
       let(:ss_file) do
         SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
-          ::FileUtils.cp(path, file.path)
+          FileUtils.cp(path, file.path)
         end
       end
       let(:node) do
@@ -72,7 +72,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
         filename = "#{unique_id}.csv"
         csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
-          ::File.open(file.path, "wb") do |f|
+          File.open(file.path, "wb") do |f|
             exporter = Cms::PageExporter.new(mode: "article", site: site, criteria: Article::Page.site(site).node(source_node))
             exporter.enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
@@ -407,7 +407,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_4.csv" }
       let(:ss_file) do
         SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
-          ::FileUtils.cp(path, file.path)
+          FileUtils.cp(path, file.path)
         end
       end
       let(:node) do
@@ -442,7 +442,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_5.csv" }
       let(:ss_file) do
         SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
-          ::FileUtils.cp(path, file.path)
+          FileUtils.cp(path, file.path)
         end
       end
       let(:node) do
@@ -503,7 +503,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_3.csv" }
       let(:ss_file) do
         SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
-          ::FileUtils.cp(path, file.path)
+          FileUtils.cp(path, file.path)
         end
       end
 

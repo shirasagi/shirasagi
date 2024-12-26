@@ -3,7 +3,7 @@ require_relative "../../lib/ss/mailer/rescuable"
 ActiveSupport::Notifications.subscribe('deliver.action_mailer') do |*args|
   begin
     event = ActiveSupport::Notifications::Event.new(*args)
-    ::Sys::MailLog.add_from_event(event)
+    Sys::MailLog.add_from_event(event)
   rescue
     # suppress any errors
   end

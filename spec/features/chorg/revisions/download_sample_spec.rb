@@ -13,7 +13,7 @@ describe "chorg_import_revision", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.download_sample_csv")
 
       expect(page.response_headers['Content-Type']).to eq("text/csv; charset=utf-8")
-      csv_source = ::SS::ChunkReader.new(page.html).to_a.join
+      csv_source = SS::ChunkReader.new(page.html).to_a.join
       csv_source.force_encoding("UTF-8")
       header = CSV.parse(csv_source[1..-1]).first
 

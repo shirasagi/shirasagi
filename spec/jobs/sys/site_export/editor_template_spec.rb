@@ -18,14 +18,14 @@ describe Sys::SiteExportJob, dbscope: :example do
     end
 
     it do
-      job = ::Sys::SiteExportJob.new
-      job.task = ::Tasks::Cms.mock_task(
+      job = Sys::SiteExportJob.new
+      job.task = Tasks::Cms.mock_task(
         source_site_id: site.id
       )
       job.perform
       output_zip = job.instance_variable_get(:@output_zip)
 
-      expect(::File.size(output_zip)).to be > 0
+      expect(File.size(output_zip)).to be > 0
       Zip::File.open(output_zip) do |zip|
         expect(zip.read(zip.get_entry("version.json"))).not_to be_nil
 

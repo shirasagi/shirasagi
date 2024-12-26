@@ -4,7 +4,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
   context "when corrupted to is given" do
     let(:user) { webmail_imap }
     # To の 2 つ目のメールアドレスが RFC 形式ではないうえに、UTF-8 として不正な文字（Ruby で例外を発生しうる文字）を含む
-    let(:msg) { ::File.binread(Rails.root.join("spec/fixtures/webmail/corrupted_to.eml")) }
+    let(:msg) { File.binread(Rails.root.join("spec/fixtures/webmail/corrupted_to.eml")) }
 
     before do
       webmail_import_mail(user, msg)

@@ -24,7 +24,7 @@ describe "cms_node_import", type: :feature, dbscope: :example, js: true do
       let!(:max) { create :ss_max_file_size, in_size_mb: 0 }
       let(:error_message) do
         filename = "site.zip"
-        size = ActiveSupport::NumberHelper.number_to_human_size(::File.size(file))
+        size = ActiveSupport::NumberHelper.number_to_human_size(File.size(file))
         limit = ActiveSupport::NumberHelper.number_to_human_size(0)
         I18n.t("errors.messages.too_large_file", filename: filename, size: size, limit: limit)
       end

@@ -18,8 +18,8 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
     let!(:task) { Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_pages', state: 'ready') }
 
     before do
-      ::FileUtils.mkdir_p(::File.dirname(task.perf_log_file_path))
-      ::File.open(task.perf_log_file_path, "wt") do |f|
+      FileUtils.mkdir_p(File.dirname(task.perf_log_file_path))
+      File.open(task.perf_log_file_path, "wt") do |f|
         f.puts({}.to_json)
       end
     end
@@ -111,7 +111,7 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
             click_on I18n.t("ss.buttons.download")
           end
 
-          csv = ::SS::ChunkReader.new(page.html).to_a.join
+          csv = SS::ChunkReader.new(page.html).to_a.join
           csv.force_encoding("UTF-8")
           csv = csv[1..-1]
           SS::Csv.open(StringIO.new(csv)) do |csv|

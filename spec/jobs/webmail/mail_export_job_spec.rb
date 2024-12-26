@@ -50,7 +50,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example, imap: true do
       expect(notice.reply_item_id).to be_blank
 
       download = SS::DownloadJobFile.find(user, "webmail-mails.zip")
-      expect(::File.size(download.path)).to be > 0
+      expect(File.size(download.path)).to be > 0
 
       entries = []
       Zip::File.open(download.path) do |zip_file|

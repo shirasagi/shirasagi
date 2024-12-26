@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Translate::Converter, dbscope: :example, translate: true do
-  let(:ss_proj1) { ::File.read("#{Rails.root}/spec/fixtures/translate/ss_proj1.html") }
+  let(:ss_proj1) { File.read("#{Rails.root}/spec/fixtures/translate/ss_proj1.html") }
   let(:site) { cms_site }
 
   let!(:lang_ja) { create :translate_lang_ja }

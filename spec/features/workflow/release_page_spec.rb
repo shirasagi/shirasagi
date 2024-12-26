@@ -86,7 +86,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -189,7 +189,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("workflow.buttons.approve")
           end
 
-          expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+          expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
 
           item.reload
           expect(item.workflow_state).to eq "approve"
@@ -215,7 +215,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
 
           expect do
             Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
-          end.to output(/#{::Regexp.escape(item.full_url)}/).to_stdout
+          end.to output(/#{Regexp.escape(item.full_url)}/).to_stdout
 
           item.reload
           expect(item.workflow_state).to eq "approve"

@@ -20,10 +20,10 @@ RSpec.describe SS::Migration20150619114301, dbscope: :example do
   end
 
   before do
-    @before_html = ::File.open(before_html_path).read
-    @before_layout_html = ::File.open(before_layout_html_path).read
-    @after_html = ::File.open(after_html_path).read
-    @after_layout_html = ::File.open(after_layout_html_path).read
+    @before_html = File.open(before_html_path).read
+    @before_layout_html = File.open(before_layout_html_path).read
+    @after_html = File.open(after_html_path).read
+    @after_layout_html = File.open(after_layout_html_path).read
 
     create_once :cms_page, name: "cms_page", html: @before_html
     create_once :article_page, name: "article_page", html: @before_html

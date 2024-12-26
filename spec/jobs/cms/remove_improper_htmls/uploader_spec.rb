@@ -12,10 +12,10 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   after { Fs.rm_rf site.path }
 
   def generate_htmls
-    ::FileUtils.mkdir_p(site.path)
-    ::FileUtils.mkdir_p(upload_dir)
-    ::FileUtils.touch(upload_html1)
-    ::FileUtils.touch(upload_html2)
+    FileUtils.mkdir_p(site.path)
+    FileUtils.mkdir_p(upload_dir)
+    FileUtils.touch(upload_html1)
+    FileUtils.touch(upload_html2)
 
     Cms::Node::GenerateJob.bind(site_id: site).perform_now
     Cms::Page::GenerateJob.bind(site_id: site).perform_now

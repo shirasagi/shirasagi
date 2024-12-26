@@ -40,10 +40,10 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_download
         sleep(1)
 
-        expect(::File.basename(downloads[0])).to eq "QRCode.svg"
-        expect(::File.basename(downloads[1])).to eq "QRCode_160px.png"
-        expect(::File.basename(downloads[2])).to eq "QRCode_240px.png"
-        expect(::File.basename(downloads[3])).to eq "QRCode_480px.png"
+        expect(File.basename(downloads[0])).to eq "QRCode.svg"
+        expect(File.basename(downloads[1])).to eq "QRCode_160px.png"
+        expect(File.basename(downloads[2])).to eq "QRCode_240px.png"
+        expect(File.basename(downloads[3])).to eq "QRCode_480px.png"
         wait_cbox_close { find('#cboxClose').click }
       end
     end

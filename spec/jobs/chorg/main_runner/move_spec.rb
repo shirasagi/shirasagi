@@ -81,7 +81,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
           contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
           contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
-        ::FileUtils.rm_f(page.path)
+        FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
@@ -97,7 +97,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
           contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
           contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
-        ::FileUtils.rm_f(page.path)
+        FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
@@ -116,7 +116,7 @@ describe Chorg::MainRunner, dbscope: :example do
         page = create(
           :article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ],
           released_type: "same_as_updated")
-        ::FileUtils.rm_f(page.path)
+        FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
@@ -136,7 +136,7 @@ describe Chorg::MainRunner, dbscope: :example do
         page = create(
           :article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids,
           released_type: "same_as_updated")
-        ::FileUtils.rm_f(page.path)
+        FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
@@ -527,7 +527,7 @@ describe Chorg::MainRunner, dbscope: :example do
                  workflow_required_counts: [false])
           page.cur_site = site
           page.save!
-          ::FileUtils.rm_f(page.path)
+          FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -653,7 +653,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
             contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
-          ::FileUtils.rm_f(page.path)
+          FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -850,7 +850,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
             contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
             contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
-          ::FileUtils.rm_f(page.path)
+          FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -1021,7 +1021,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
           contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
           contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
-        ::FileUtils.rm_f(page.path)
+        FileUtils.rm_f(page.path)
         Cms::Page.find(page.id)
       end
     end
@@ -1036,7 +1036,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
           contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
           contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
-        ::FileUtils.rm_f(page.path)
+        FileUtils.rm_f(page.path)
         Cms::Page.find(page.id)
       end
     end

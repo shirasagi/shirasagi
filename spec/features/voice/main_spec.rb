@@ -29,7 +29,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
 
       before do
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread(html_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+          to_return(status: 200, body: File.binread(html_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
       end
 
       around do |example|
@@ -136,7 +136,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
 
       before do
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread(html_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+          to_return(status: 200, body: File.binread(html_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
 
         allow(Voice::SynthesisJob).to receive(:new).and_return(job)
         allow(job).to receive(:bind).and_return(job)
@@ -158,7 +158,7 @@ describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
 
       before do
         stub_request(:get, url0).
-          to_return(status: 200, body: ::File.binread(html_path), headers: {})
+          to_return(status: 200, body: File.binread(html_path), headers: {})
       end
 
       around do |example|

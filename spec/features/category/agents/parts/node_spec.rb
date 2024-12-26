@@ -84,7 +84,7 @@ describe "category_agents_parts_node", type: :feature, dbscope: :example do
   let!(:page1) { create(:cms_page, cur_node: cate_d1, layout: layout) }
   let!(:page2) { create(:cms_page, cur_node: cate_d13, layout: layout) }
 
-  before { Cms::Page.all.each { |page| ::FileUtils.rm_f(page.path) } }
+  before { Cms::Page.all.each { |page| FileUtils.rm_f(page.path) } }
 
   # category/node パーツは、唯一相対ディレクトリのパーツだが予測できない動作をする。
   # 正確にいうと第二階層までは兄弟を、第三階層以降では親の兄弟を表示する。

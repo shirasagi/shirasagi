@@ -70,7 +70,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       post "#{node.full_url}yahoojp_v2"
       expect(response.status).to eq 302
       expect(response.location).to be_present
-      location = ::Addressable::URI.parse(response.location)
+      location = Addressable::URI.parse(response.location)
       expect(location.origin).to eq "https://auth.login.yahoo.co.jp"
       expect(location.query).to be_present
       query_values = location.query_values
@@ -82,7 +82,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
       get "#{node.full_url}yahoojp_v2/callback?#{{state: query_values["state"], code: code}.to_query}"
       expect(response.status).to eq 302
-      location = ::Addressable::URI.parse(response.location)
+      location = Addressable::URI.parse(response.location)
       expect(location.origin).to eq site.full_url[0..-2]
       expect(location.path).to eq node.redirect_url
 

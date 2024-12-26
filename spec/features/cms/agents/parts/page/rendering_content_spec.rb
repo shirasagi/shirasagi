@@ -25,7 +25,7 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
     let!(:doc1) { create :cms_page, cur_site: site, cur_node: node, layout: layout }
 
     before do
-      Cms::Page.all.each { |page| ::FileUtils.rm_f(page.path) }
+      Cms::Page.all.each { |page| FileUtils.rm_f(page.path) }
     end
 
     context "with node" do

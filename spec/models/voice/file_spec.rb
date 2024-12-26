@@ -117,7 +117,7 @@ describe Voice::File, dbscope: :example do
 
         headers = { "ETag" => rand(0x100000000).to_s(36), "Last-Modified" => Time.zone.now.httpdate }
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
+          to_return(status: 200, body: File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
       after { WebMock.reset! }
 
@@ -139,7 +139,7 @@ describe Voice::File, dbscope: :example do
 
         headers = { "Last-Modified" => Time.zone.now.httpdate }
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
+          to_return(status: 200, body: File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
       after { WebMock.reset! }
 
@@ -161,7 +161,7 @@ describe Voice::File, dbscope: :example do
 
         headers = { "ETag" => rand(0x100000000).to_s(36) }
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
+          to_return(status: 200, body: File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
       after { WebMock.reset! }
 
@@ -183,7 +183,7 @@ describe Voice::File, dbscope: :example do
 
         headers = {}
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
+          to_return(status: 200, body: File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
       after { WebMock.reset! }
 
@@ -205,7 +205,7 @@ describe Voice::File, dbscope: :example do
     subject { described_class.find_or_create_by_url("http://#{voice_site.domain}/#{path}") }
 
     it do
-      expect(subject.lock_until).to eq ::SS::EPOCH_TIME
+      expect(subject.lock_until).to eq SS::EPOCH_TIME
 
       Timecop.freeze(now) do
         expect(described_class.acquire_lock(subject)).to be_truthy

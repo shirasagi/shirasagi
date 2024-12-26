@@ -50,7 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+          expect(page).to have_css('.file-view', text: File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -77,8 +77,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -95,8 +95,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -118,7 +118,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_page.attached_files.size).to eq 1
 
         replaced_file = replaced_page.attached_files.first
-        expect(replaced_file.filename).to eq ::File.basename(before_csv)
+        expect(replaced_file.filename).to eq File.basename(before_csv)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
         expect(Fs.cmp(replaced_file.path, after_csv)).to be true
@@ -127,8 +127,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 1
         history_file = replaced_file.history_files.first
 
-        expect(history_file.filename).to eq ::File.basename(before_csv)
-        expect(history_file.name).to eq ::File.basename(before_csv)
+        expect(history_file.filename).to eq File.basename(before_csv)
+        expect(history_file.name).to eq File.basename(before_csv)
         expect(history_file.state).to eq "closed"
         expect(Fs.cmp(history_file.path, before_csv)).to be true
       end
@@ -168,7 +168,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within ".column-value-cms-column-free" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+          expect(page).to have_css('.file-view', text: File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -195,8 +195,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -213,8 +213,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -239,7 +239,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq "before_csv.csv"
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
-        expect(::FileUtils.cmp(replaced_file.path, after_csv)).to be true
+        expect(FileUtils.cmp(replaced_file.path, after_csv)).to be true
 
         # history files
         expect(replaced_file.history_files.size).to eq 1
@@ -287,7 +287,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within ".column-value-cms-column-fileupload" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+          expect(page).to have_css('.file-view', text: File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -314,8 +314,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -333,8 +333,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_csv
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_csv, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_csv, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -356,7 +356,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_page.attached_files.size).to eq 1
 
         replaced_file = replaced_page.attached_files.first
-        expect(replaced_file.filename).to eq ::File.basename(before_csv)
+        expect(replaced_file.filename).to eq File.basename(before_csv)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
         expect(Fs.cmp(replaced_file.path, after_csv)).to be true
@@ -365,8 +365,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 1
         history_file = replaced_file.history_files.first
 
-        expect(history_file.filename).to eq ::File.basename(before_csv)
-        expect(history_file.name).to eq ::File.basename(before_csv)
+        expect(history_file.filename).to eq File.basename(before_csv)
+        expect(history_file.name).to eq File.basename(before_csv)
         expect(history_file.state).to eq "closed"
         expect(Fs.cmp(history_file.path, before_csv)).to be true
       end
@@ -407,13 +407,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within ".column-value-cms-column-fileupload" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_image))
+          expect(page).to have_css('.file-view', text: File.basename(before_image))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
 
         file = item.class.find(item.id).attached_files.first
-        expect(file.filename).to eq ::File.basename(before_image)
+        expect(file.filename).to eq File.basename(before_image)
         expect(file.name).to eq file.filename
         expect(file.state).to eq "public"
         expect(file.thumb.image_dimension).to eq [ 120, 35 ]
@@ -438,8 +438,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_image
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_image, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_image, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_image, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_image, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -456,8 +456,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file "item[in_file]", after_image
           click_button I18n.t('inquiry.confirm')
 
-          expect(page).to have_css('.file-view.before', text: ::File.basename(before_image, ".*"))
-          expect(page).to have_css('.file-view.after', text: ::File.basename(after_image, ".*"))
+          expect(page).to have_css('.file-view.before', text: File.basename(before_image, ".*"))
+          expect(page).to have_css('.file-view.after', text: File.basename(after_image, ".*"))
 
           temp_file = SS::ReplaceTempFile.first
           expect(SS::ReplaceTempFile.count).to eq 1
@@ -480,7 +480,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         replaced_file = replaced_page.attached_files.first
         expect(replaced_file.id).to eq file.id
-        expect(replaced_file.filename).to eq ::File.basename(after_image)
+        expect(replaced_file.filename).to eq File.basename(after_image)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
         expect(replaced_file.thumb.image_dimension).to eq [ 90, 90 ]
@@ -490,7 +490,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 1
         history_file = replaced_file.history_files.first
 
-        expect(history_file.filename).to eq ::File.basename(before_image)
+        expect(history_file.filename).to eq File.basename(before_image)
         expect(history_file.name).to eq history_file.filename
         expect(history_file.state).to eq "closed"
         #expect(Fs.cmp(history_file.path, before_csv)).to be true

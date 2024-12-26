@@ -62,10 +62,10 @@ RSpec.describe Gws::Share::History, type: :model, dbscope: :example do
         history1 = histories[1]
 
         history1.destroy
-        expect(::Fs.exist?(history0.path)).to be_truthy
+        expect(Fs.exist?(history0.path)).to be_truthy
 
         history0.destroy
-        expect(::Fs.exist?(history0.path)).to be_falsey
+        expect(Fs.exist?(history0.path)).to be_falsey
       end
     end
   end

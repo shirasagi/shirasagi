@@ -115,7 +115,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
 
       Gws::Workflow::File.all.first.tap do |item|
         expect(item.workflow_user_id).to eq user1.id
@@ -161,7 +161,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       end
 
       expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(circulation_comment2)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(circulation_comment2)}/)
 
       Gws::Workflow::File.all.first.tap do |item|
         expect(item.workflow_user_id).to eq user1.id

@@ -4,7 +4,7 @@ describe SS, type: :model, dbscope: :example do
   describe ".log_error" do
     let(:log_file) { tmpfile }
     let!(:logger) do
-      logger = ::Logger.new(log_file, formatter: Logger::Formatter.new)
+      logger = Logger.new(log_file, formatter: Logger::Formatter.new)
       ActiveSupport::TaggedLogging.new(logger)
     end
 
@@ -18,7 +18,7 @@ describe SS, type: :model, dbscope: :example do
 
         SS.log_error(error, logger: logger)
 
-        logs = ::File.readlines(log_file)
+        logs = File.readlines(log_file)
         expect(logs).to have_at_least(1).items
         expect(logs).to include(/ERROR -- : RuntimeError \(error\)/)
       end
@@ -38,7 +38,7 @@ describe SS, type: :model, dbscope: :example do
 
         SS.log_error(error, logger: logger, recursive: false)
 
-        logs = ::File.readlines(log_file)
+        logs = File.readlines(log_file)
         expect(logs).to have_at_least(1).items
         expect(logs).to include(/ERROR -- : RuntimeError \(outer error\)/)
         expect(logs).not_to include(/inner error/)
@@ -59,7 +59,7 @@ describe SS, type: :model, dbscope: :example do
 
         SS.log_error(error, logger: logger, recursive: true)
 
-        logs = ::File.readlines(log_file)
+        logs = File.readlines(log_file)
         expect(logs).to have_at_least(1).items
         expect(logs).to include(/ERROR -- : RuntimeError \(outer error\)/)
         expect(logs).to include(/ERROR -- : \[outer error\] RuntimeError \(inner error\)/)

@@ -49,7 +49,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       SS.config.replace_value_at(:lgwan, :disable, true)
     end
 
-    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
+    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
 
     it do
       visit index_url

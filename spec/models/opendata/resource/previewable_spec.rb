@@ -9,8 +9,8 @@ describe Opendata::Resource, dbscope: :example do
   let!(:resource) do
     path = "#{Rails.root}/spec/fixtures/opendata/map_resources/sample1.xlsx"
     preview_path = "#{Rails.root}/spec/fixtures/opendata/map_resources/sample1.csv"
-    Fs::UploadedFile.create_from_file(path, basename: ::File.basename(path)) do |file|
-      Fs::UploadedFile.create_from_file(preview_path, basename: ::File.basename(preview_path)) do |preview_file|
+    Fs::UploadedFile.create_from_file(path, basename: File.basename(path)) do |file|
+      Fs::UploadedFile.create_from_file(preview_path, basename: File.basename(preview_path)) do |preview_file|
         resource = dataset.resources.new(attributes_for(:opendata_resource))
         resource.in_file = file
         resource.in_tsv = preview_file
@@ -24,7 +24,7 @@ describe Opendata::Resource, dbscope: :example do
 
   context "when accessing public-side resource without member login" do
     before do
-      ::FileUtils.rm_rf(dataset.path)
+      FileUtils.rm_rf(dataset.path)
 
       SS::File.find(resource.file_id).tap do |file|
         file = file.becomes_with_model

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   let!(:site) { cms_site }
-  let!(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+  let!(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
 
   let!(:name) { "site" }
   let!(:import_file1) { "#{site.path}/#{name}/index.html" }
@@ -30,7 +30,7 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   end
 
   def set_improper_htmls
-    ::FileUtils.touch(improper_html)
+    FileUtils.touch(improper_html)
     expect(File.exist?(improper_html)).to be true
   end
 

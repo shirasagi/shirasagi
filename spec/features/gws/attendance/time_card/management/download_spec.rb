@@ -88,7 +88,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = CSV.read(downloads.first, headers: true)
           expect(csv.length).to eq this_month.end_of_month.day
           expect(csv[0][0]).to eq user1.uid
           expect(csv[0][1]).to eq user1.name
@@ -129,7 +129,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = CSV.read(downloads.first, headers: true)
           expect(csv.length).to eq prev_month.end_of_month.day
           expect(csv[0][0]).to eq user1.uid
           expect(csv[0][1]).to eq user1.name
@@ -166,7 +166,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         wait_for_download
 
         I18n.with_locale(I18n.default_locale) do
-          csv = ::CSV.read(downloads.first, headers: true)
+          csv = CSV.read(downloads.first, headers: true)
           expect(csv.length).to eq this_month.end_of_month.day
           expect(csv[0][0]).to eq user2.uid
           expect(csv[0][1]).to eq user2.name

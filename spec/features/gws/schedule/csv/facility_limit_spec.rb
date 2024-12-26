@@ -34,7 +34,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
       site.schedule_max_month = 3
       site.save!
 
-      ::File.open(csv_file, "wb") do |f|
+      File.open(csv_file, "wb") do |f|
         enum = Gws::Schedule::PlanCsv::Exporter.enum_csv([ plan_to_csv ], site: site, user: user, model: Gws::Schedule::Plan)
         enum.each do |csv|
           f.write csv

@@ -9,7 +9,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
   shared_examples "perform import from zip" do
     let(:expected_files) do
-      %w(index.html article/page.html css/style.css img/logo.jpg).map { |file| ::File.join(root, file) }
+      %w(index.html article/page.html css/style.css img/logo.jpg).map { |file| File.join(root, file) }
     end
 
     it do
@@ -32,15 +32,15 @@ describe Cms::ImportFilesJob, dbscope: :example do
         expect(page.html.present?).to eq true
         page.html.scan(/(href|src)="\/(.+?)"/) do
           path = $2
-          expect(path =~ /#{::Regexp.escape(root)}\//).to eq 0
+          expect(path =~ /#{Regexp.escape(root)}\//).to eq 0
         end
       end
 
       css_node = nodes.find_by(filename: "#{root}/css")
-      expect(::File.exist?("#{css_node.path}/style.css")).to be_truthy
+      expect(File.exist?("#{css_node.path}/style.css")).to be_truthy
 
       img_node = nodes.find_by(filename: "#{root}/img")
-      expect(::File.exist?("#{img_node.path}/logo.jpg")).to be_truthy
+      expect(File.exist?("#{img_node.path}/logo.jpg")).to be_truthy
 
       expect(Cms::ImportJobFile.count).to eq 0
     end
@@ -52,7 +52,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
     context "zip file contain root directory" do
       context "same root dir" do
-        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
         let(:dir) { "site" }
         let(:root) { "site" }
 
@@ -60,7 +60,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
       end
 
       context "another dir" do
-        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
         let(:dir) { "another" }
         let(:root) { "another/site" }
 
@@ -69,7 +69,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
     end
 
     context "zip file not contain root directory" do
-      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
+      let(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
       let(:dir) { "site2" }
       let(:root) { "site2" }
 
@@ -83,7 +83,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
     context "zip file contain root directory" do
       context "same root dir" do
-        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
         let(:dir) { "site" }
         let(:root) { "#{node.filename}/#{dir}" }
 
@@ -91,7 +91,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
       end
 
       context "another dir" do
-        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
         let(:dir) { "another" }
         let(:root) { "#{node.filename}/another/site" }
 
@@ -100,7 +100,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
     end
 
     context "zip file not contain root directory" do
-      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
+      let(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site2.zip", nil, true) }
       let(:dir) { "site2" }
       let(:root) { "#{node.filename}/#{dir}" }
 

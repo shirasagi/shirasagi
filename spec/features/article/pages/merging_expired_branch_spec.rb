@@ -34,7 +34,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(master.name).to eq name
         expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
         expect(master.close_date).to eq close_date
-        expect(::File.size(master.path)).to be > 0
+        expect(File.size(master.path)).to be > 0
 
         # 2-1. 差し替えページを作成する
         expect do
@@ -45,7 +45,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_css('table.branches')
           end
-        end.to output(/#{::Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
+        end.to output(/#{Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
 
         expect(Article::Page.all.count).to eq 2
         branch = Article::Page.all.where(master_id: master.id).first
@@ -54,7 +54,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(branch.name).to eq name
         expect(branch.filename).to eq "#{node.filename}/#{branch.id}.html"
         expect(branch.close_date).to eq close_date
-        expect(::File.exist?(branch.path)).to be_falsey
+        expect(File.exist?(branch.path)).to be_falsey
 
         # 2-2. 差し替えページを編集・保存（下書き保存）する
         visit edit_article_page_path(site: site, cid: node, id: branch)
@@ -73,14 +73,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(branch.name).to eq name2
         expect(branch.filename).to eq "#{node.filename}/#{branch.id}.html"
         expect(branch.close_date).to eq close_date
-        expect(::File.exist?(branch.path)).to be_falsey
+        expect(File.exist?(branch.path)).to be_falsey
 
         travel_to = close_date + 1.minute
         Timecop.travel(travel_to) do
           # 3. 公開終了日を経過し公開中のページ（1）が非公開になる
           expect do
             Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
-          end.to output(/#{::Regexp.escape(master.full_url)}/).to_stdout
+          end.to output(/#{Regexp.escape(master.full_url)}/).to_stdout
 
           master.reload
           expect(master.site_id).to eq site.id
@@ -88,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(master.name).to eq name
           expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
           expect(master.close_date).to be_blank
-          expect(::File.exist?(master.path)).to be_falsey
+          expect(File.exist?(master.path)).to be_falsey
 
           # 4. 差し替えページ（2）を公開保存
           login_cms_user # 時計を進めたのでセッションの期限が切れているはずなので、再ログイン
@@ -99,7 +99,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.buttons.publish_save")
             end
             wait_for_error I18n.t("errors.messages.greater_than", count: I18n.l(travel_to))
-          end.to output(/#{::Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
+          end.to output(/#{Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
 
           wait_for_all_ckeditors_ready
 
@@ -109,7 +109,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(master.name).to eq name
           expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
           expect(master.close_date).to be_blank
-          expect(::File.exist?(master.path)).to be_falsey
+          expect(File.exist?(master.path)).to be_falsey
 
           branch.reload
           expect(branch.site_id).to eq site.id
@@ -117,7 +117,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(branch.name).to eq name2
           expect(branch.filename).to eq "#{node.filename}/#{branch.id}.html"
           expect(branch.close_date).to eq close_date
-          expect(::File.exist?(branch.path)).to be_falsey
+          expect(File.exist?(branch.path)).to be_falsey
         end
       end
     end
@@ -144,7 +144,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(master.name).to eq name
         expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
         expect(master.close_date).to eq close_date
-        expect(::File.size(master.path)).to be > 0
+        expect(File.size(master.path)).to be > 0
 
         # 2-1. 差し替えページを作成する
         expect do
@@ -155,7 +155,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_css('table.branches')
           end
-        end.to output(/#{::Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
+        end.to output(/#{Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
 
         expect(Article::Page.all.count).to eq 2
         branch = Article::Page.all.where(master_id: master.id).first
@@ -164,7 +164,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(branch.name).to eq name
         expect(branch.filename).to eq "#{node.filename}/#{branch.id}.html"
         expect(branch.close_date).to eq close_date
-        expect(::File.exist?(branch.path)).to be_falsey
+        expect(File.exist?(branch.path)).to be_falsey
 
         # 2-2. 差し替えページを編集・保存（下書き保存）する
         visit edit_article_page_path(site: site, cid: node, id: branch)
@@ -183,14 +183,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(branch.name).to eq name2
         expect(branch.filename).to eq "#{node.filename}/#{branch.id}.html"
         expect(branch.close_date).to eq close_date
-        expect(::File.exist?(branch.path)).to be_falsey
+        expect(File.exist?(branch.path)).to be_falsey
 
         travel_to = close_date + 1.minute
         Timecop.travel(travel_to) do
           # 3. 公開終了日を経過し公開中のページ（1）が非公開になる
           expect do
             Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
-          end.to output(/#{::Regexp.escape(master.full_url)}/).to_stdout
+          end.to output(/#{Regexp.escape(master.full_url)}/).to_stdout
 
           master.reload
           expect(master.site_id).to eq site.id
@@ -198,7 +198,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(master.name).to eq name
           expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
           expect(master.close_date).to be_blank
-          expect(::File.exist?(master.path)).to be_falsey
+          expect(File.exist?(master.path)).to be_falsey
 
           # 4. 差し替えページ（2）を承認
           login_cms_user # 時計を進めたのでセッションの期限が切れているはずなので、再ログイン
@@ -215,7 +215,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             wait_for_cbox_closed { click_on cms_user.long_name }
           end
           message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to))
-          page.accept_alert(/#{::Regexp.escape(message)}/) do
+          page.accept_alert(/#{Regexp.escape(message)}/) do
             within ".mod-workflow-request" do
               expect(page).to have_css("[data-id='1,#{cms_user.id}']", text: cms_user.long_name)
               click_on I18n.t("workflow.buttons.request")
@@ -228,7 +228,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(master.name).to eq name
           expect(master.filename).to eq "#{node.filename}/#{master.id}.html"
           expect(master.close_date).to be_blank
-          expect(::File.exist?(master.path)).to be_falsey
+          expect(File.exist?(master.path)).to be_falsey
 
           branch.reload
           expect(branch.site_id).to eq site.id
@@ -236,7 +236,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(branch.name).to eq name2
           expect(branch.filename).to eq "#{node.filename}/#{branch.id}.html"
           expect(branch.close_date).to eq close_date
-          expect(::File.exist?(branch.path)).to be_falsey
+          expect(File.exist?(branch.path)).to be_falsey
         end
       end
     end

@@ -10,32 +10,32 @@ describe Cms, type: :model, dbscope: :example do
 
   let(:png_file) do
     filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
-    basename = ::File.basename(filename)
+    basename = File.basename(filename)
     SS::File.create_empty!(
       site_id: site.id, cur_user: cms_user, name: basename, filename: basename, content_type: "image/png", model: 'ss/file'
     ) do |file|
-      ::FileUtils.cp(filename, file.path)
+      FileUtils.cp(filename, file.path)
     end
   end
 
   def upload_file(upload_site)
     # uploader
     uploader = create(:uploader_node_file, cur_site: upload_site, filename: "img")
-    ::FileUtils.mkdir_p(uploader.path)
-    ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", "#{uploader.path}/logo.png")
+    FileUtils.mkdir_p(uploader.path)
+    FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", "#{uploader.path}/logo.png")
 
     # cms page
     filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
-    basename = ::File.basename(filename)
+    basename = File.basename(filename)
     file = SS::File.create_empty!(
       site_id: upload_site.id, cur_user: cms_user, name: basename, filename: basename, content_type: "image/png", model: 'ss/file'
-    ) { |file| ::FileUtils.cp(filename, file.path) }
+    ) { |file| FileUtils.cp(filename, file.path) }
     create(:cms_page, filename: "index.html", cur_site: upload_site, file_ids: [ file.id ], group_ids: [ group1.id ])
   end
 
   after do
-    ::FileUtils.rm_rf(site.path) if ::File.exist?(site.path)
-    ::FileUtils.rm_rf(other_site.path) if ::File.exist?(other_site.path)
+    FileUtils.rm_rf(site.path) if File.exist?(site.path)
+    FileUtils.rm_rf(other_site.path) if File.exist?(other_site.path)
   end
 
   it { expect(Cms.find_cms_quota_used(Cms::Site.where(id: site.id))).to be >= 700 }

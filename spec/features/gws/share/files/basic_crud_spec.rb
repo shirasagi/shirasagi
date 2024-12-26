@@ -57,8 +57,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(file.user_id).to eq gws_user.id
       expect(file.model).to eq "share/file"
       expect(file.state).to eq "closed"
-      expect(file.name).to eq ::File.basename(filepath)
-      expect(file.filename).to eq ::File.basename(filepath)
+      expect(file.name).to eq File.basename(filepath)
+      expect(file.filename).to eq File.basename(filepath)
       expect(file.size).to be_present
       expect(file.content_type).to eq "image/png"
       expect(file.category_ids).to eq [ category.id ]
@@ -76,7 +76,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq file.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
         expect(history.item_id).to eq file.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
       end
 
       folder.reload
@@ -118,7 +118,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq file.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
         expect(history.item_id).to eq file.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
         expect(history.path).to eq file.histories.last.path
       end
 
@@ -153,7 +153,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq file.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
         expect(history.item_id).to eq file.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
         expect(history.path).to eq file.histories.last.path
       end
 
@@ -165,7 +165,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       # Hard Delete
       #
       history_paths = file.histories.map(&:path)
-      expect(history_paths.all? { |path| ::Fs.file?(path) }).to be_truthy
+      expect(history_paths.all? { |path| Fs.file?(path) }).to be_truthy
       visit gws_share_files_path(site)
       click_on I18n.t("ss.links.trash")
       click_on folder.name
@@ -183,7 +183,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       expect { Gws::Share::File.find(file.id) }.to raise_error Mongoid::Errors::DocumentNotFound
       expect(file.histories.count).to eq 0
-      expect(history_paths.any? { |path| ::Fs.file?(path) }).to be_falsey
+      expect(history_paths.any? { |path| Fs.file?(path) }).to be_falsey
 
       folder.reload
       expect(folder.descendants_files_count).to eq 0

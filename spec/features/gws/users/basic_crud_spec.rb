@@ -79,7 +79,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       wait_for_download
 
       expect(downloads.first).to be_present
-      expect(::File.file?(downloads.first)).to be_truthy
+      expect(File.file?(downloads.first)).to be_truthy
 
       #import
       sys_role1

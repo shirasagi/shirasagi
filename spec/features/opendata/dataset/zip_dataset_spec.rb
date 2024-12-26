@@ -89,7 +89,7 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
         within "form" do
           click_button I18n.t('ss.buttons.delete')
         end
-        expect(::File.exist?(zip_path)).to be_falsey
+        expect(File.exist?(zip_path)).to be_falsey
       end
     end
   end

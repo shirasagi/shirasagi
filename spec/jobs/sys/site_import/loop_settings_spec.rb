@@ -8,8 +8,8 @@ describe Sys::SiteImportJob, dbscope: :example do
     Sys::SiteExportJob.export_root = tmpdir
 
     begin
-      job = ::Sys::SiteExportJob.new
-      job.task = ::Tasks::Cms.mock_task(source_site_id: source_site.id)
+      job = Sys::SiteExportJob.new
+      job.task = Tasks::Cms.mock_task(source_site_id: source_site.id)
       job.perform
       output_zip = job.instance_variable_get(:@output_zip)
 
@@ -23,8 +23,8 @@ describe Sys::SiteImportJob, dbscope: :example do
     let!(:destination_site) { create :cms_site_unique }
 
     it do
-      job = ::Sys::SiteImportJob.new
-      job.task = ::Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
+      job = Sys::SiteImportJob.new
+      job.task = Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
       job.perform
       
       expect(Cms::LoopSetting.site(destination_site).count).to eq 1

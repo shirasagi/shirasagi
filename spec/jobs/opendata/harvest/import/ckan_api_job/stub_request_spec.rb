@@ -34,7 +34,7 @@ describe Opendata::Harvest::ImportJob, dbscope: :example do
 
     describe ".perform_later" do
       before do
-        download_url = ::File.join(
+        download_url = File.join(
           "https://source.example.jp/dataset",
           "b98c93d4-6461-4927-86c0-162984136d09",
           "resource",

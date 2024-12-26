@@ -83,7 +83,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
     new_file1 = new_post1_2.files.first
     expect(new_file1.id).not_to eq file1.id
     expect(new_file1.name).to eq file1.name
-    expect(::File.read(new_file1.path)).to eq ::File.read(file1.path)
+    expect(File.read(new_file1.path)).to eq File.read(file1.path)
 
     new_posts = new_topic2.children.order(id: 1).to_a
     expect(new_posts.size).to eq 2
@@ -111,6 +111,6 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
     new_file2 = new_post2_2.files.first
     expect(new_file2.id).not_to eq file1.id
     expect(new_file2.name).to eq file1.name
-    expect(::File.read(new_file2.path)).to eq ::File.read(file2.path)
+    expect(File.read(new_file2.path)).to eq File.read(file2.path)
   end
 end

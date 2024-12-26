@@ -46,7 +46,7 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
 
       site.save!
 
-      ::FileUtils.rm_f(item.path)
+      FileUtils.rm_f(item.path)
     end
 
     after do
@@ -132,7 +132,7 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
 
       site.save!
 
-      ::FileUtils.rm_f(item.path)
+      FileUtils.rm_f(item.path)
     end
 
     after do

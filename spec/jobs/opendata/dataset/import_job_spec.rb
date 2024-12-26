@@ -40,7 +40,7 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
           expect(resource.license.id).to eq license.id
           expect(resource.file.name).to eq "sample.txt"
           expect(resource.file.filename).to eq "sample.txt"
-          expect(::File.size(resource.file.path)).to be > 0
+          expect(File.size(resource.file.path)).to be > 0
           expect(resource.file.owner_item_id).to eq dataset.id
           expect(resource.file.owner_item_type).to eq dataset.class.name
         end
@@ -65,7 +65,7 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
       ss_file = tmp_ss_file(contents: zip_file)
       expect do
         described_class.bind(site_id: site, node_id: node).perform_now(ss_file.id)
-      end.to output(/#{::File.basename(zip_file)}/).to_stdout
+      end.to output(/#{File.basename(zip_file)}/).to_stdout
     end
 
     it do
@@ -73,8 +73,8 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-      expect(::File.exist?("#{Rails.root}/shift_jis.csv")).to be_falsey
-      expect(::File.exist?("#{Rails.root}/tmp/shift_jis.csv")).to be_falsey
+      expect(File.exist?("#{Rails.root}/shift_jis.csv")).to be_falsey
+      expect(File.exist?("#{Rails.root}/tmp/shift_jis.csv")).to be_falsey
 
       expect(Opendata::Dataset.all.count).to eq 0
     end

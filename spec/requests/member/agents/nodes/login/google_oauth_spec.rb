@@ -56,7 +56,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         }
         { status: 200, headers: { 'Content-Type' => 'application/json' }, body: body.to_json }
       end
-      stub_request(:post, /#{::Regexp.escape("https://www.googleapis.com/oauth2/v3/tokeninfo")}/).to_return do |request|
+      stub_request(:post, /#{Regexp.escape("https://www.googleapis.com/oauth2/v3/tokeninfo")}/).to_return do |request|
         expect(request.headers["Authorization"]).to be_blank
         expect(request.body).to eq "access_token=#{access_token}"
         expect(request.uri.query_values).to be_blank
@@ -99,7 +99,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       post "#{node.full_url}google_oauth2"
       expect(response.status).to eq 302
       expect(response.location).to be_present
-      location = ::Addressable::URI.parse(response.location)
+      location = Addressable::URI.parse(response.location)
       expect(location.origin).to eq "https://accounts.google.com"
       expect(location.query).to be_present
       query_values = location.query_values
@@ -111,7 +111,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
       get "#{node.full_url}google_oauth2/callback?#{{state: query_values["state"], code: code}.to_query}"
       expect(response.status).to eq 302
-      location = ::Addressable::URI.parse(response.location)
+      location = Addressable::URI.parse(response.location)
       expect(location.origin).to eq site.full_url[0..-2]
       expect(location.path).to eq node.redirect_url
 

@@ -70,9 +70,9 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true)
+      csv = CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
-      expect(csv.to_s).to eq ::File.read(file)
+      expect(csv.to_s).to eq File.read(file)
     end
   end
 
@@ -115,9 +115,9 @@ describe Cms::Form::DocsController, type: :feature, dbscope: :example, js: true 
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = ::CSV.read(downloads.first, headers: true)
+      csv = CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
-      expect(csv.to_s).to eq ::File.read(file)
+      expect(csv.to_s).to eq File.read(file)
     end
   end
 

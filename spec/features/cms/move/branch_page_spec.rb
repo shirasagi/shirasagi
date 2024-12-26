@@ -8,7 +8,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example, js: true do
   let!(:node1) { create :cms_node_page }
   let!(:node2) { create :cms_node_page }
 
-  let(:destination) { ::File.join(node2.filename, "#{unique_id}.html") }
+  let(:destination) { File.join(node2.filename, "#{unique_id}.html") }
 
   context "with auth" do
     before { login_cms_user }

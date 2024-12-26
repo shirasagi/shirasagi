@@ -19,7 +19,7 @@ describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: 
 
   let!(:license) { create(:opendata_license, cur_site: site) }
 
-  let(:index_url) { ::URI.parse "http://#{site.domain}#{node_my_dataset.url}" }
+  let(:index_url) { URI.parse "http://#{site.domain}#{node_my_dataset.url}" }
 
   let(:item_name) { "リソース０１" }
   let(:item_name2) { "リソース０２" }

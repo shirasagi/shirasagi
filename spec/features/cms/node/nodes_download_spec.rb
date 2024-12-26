@@ -21,9 +21,9 @@ describe "cms_node_nodes", type: :feature, dbscope: :example do
       visit download_path
 
       click_on I18n.t("ss.buttons.download")
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv = SS::ChunkReader.new(page.html).to_a.join
       csv = csv.force_encoding("UTF-8").delete_prefix(SS::Csv::UTF8_BOM)
-      csv = ::CSV.parse(csv, headers: true)
+      csv = CSV.parse(csv, headers: true)
 
       expect(csv.size).to eq 2
 

@@ -8,8 +8,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let(:index_path) { gws_share_folder_files_path site, folder }
   let(:file_path1) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
   let(:file_path2) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
-  let(:name1) { ::File.basename(file_path1) }
-  let(:name2) { ::File.basename(file_path2) }
+  let(:name1) { File.basename(file_path1) }
+  let(:name2) { File.basename(file_path2) }
 
   before { login_gws_user }
 
@@ -49,7 +49,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(item.filename).to eq name1
 
       expect(item.histories).to have(1).items
-      expect(::Fs.file?(item.histories.first.path)).to be_truthy
+      expect(Fs.file?(item.histories.first.path)).to be_truthy
 
       # edit
       visit gws_share_files_path(site)
@@ -65,7 +65,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       expect(item.histories.count).to eq 2
-      expect(::Fs.file?(item.histories.first.path)).to be_truthy
+      expect(Fs.file?(item.histories.first.path)).to be_truthy
 
       # download
       item.histories.first.tap do |history|
@@ -82,7 +82,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_download
-        expect(::File.size(downloads.first)).to eq history.uploadfile_size
+        expect(File.size(downloads.first)).to eq history.uploadfile_size
       end
 
       clear_downloads
@@ -98,7 +98,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_download
-        expect(::File.size(downloads.first)).to eq history.uploadfile_size
+        expect(File.size(downloads.first)).to eq history.uploadfile_size
       end
     end
   end

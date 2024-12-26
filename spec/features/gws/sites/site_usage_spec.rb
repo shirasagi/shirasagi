@@ -7,11 +7,11 @@ describe "gws_sites", type: :feature, dbscope: :example, js: true do
 
   let(:png_file) do
     filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
-    basename = ::File.basename(filename)
+    basename = File.basename(filename)
     SS::File.create_empty!(
       cur_user: gws_user, name: basename, filename: basename, content_type: "image/png", model: 'ss/file'
     ) do |file|
-      ::FileUtils.cp(filename, file.path)
+      FileUtils.cp(filename, file.path)
     end
   end
   let!(:item) { create :gws_schedule_plan, member_ids: [gws_user.id], file_ids: [png_file.id] }

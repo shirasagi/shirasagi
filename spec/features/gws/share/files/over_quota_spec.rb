@@ -6,7 +6,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_folder_files_path site, folder }
   let(:filepath) { tmpfile { |file| file.write('0123456789') } }
-  let(:filesize) { ::File.size(filepath) }
+  let(:filesize) { File.size(filepath) }
 
   before { login_gws_user }
 
@@ -40,7 +40,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        expect(page).to have_css("#addon-basic .file-view", text: ::File.basename(filepath))
+        expect(page).to have_css("#addon-basic .file-view", text: File.basename(filepath))
         fill_in "item[memo]", with: unique_id
         within "footer.send" do
           click_on I18n.t("ss.links.upload")
@@ -76,7 +76,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
 
         within "form#item-form" do
-          expect(page).to have_css("#addon-basic .file-view", text: ::File.basename(filepath))
+          expect(page).to have_css("#addon-basic .file-view", text: File.basename(filepath))
           fill_in "item[memo]", with: unique_id
           within "footer.send" do
             click_on I18n.t("ss.links.upload")
@@ -154,7 +154,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
   context "when file is over quotas on updating" do
     let(:filepath2) { tmpfile { |file| file.write('0123456789' + '0') } }
-    let(:filesize2) { ::File.size(filepath2) }
+    let(:filesize2) { File.size(filepath2) }
     let(:msg) do
       I18n.t(
         "mongoid.errors.models.gws/share/file.file_size_exceeds_capacity",
@@ -181,7 +181,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       within ".tree-navi" do
         expect(page).to have_css(".item-name", text: folder.name)
       end
-      click_on ::File.basename(filepath)
+      click_on File.basename(filepath)
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do

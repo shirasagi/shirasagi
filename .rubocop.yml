@@ -207,6 +207,10 @@ Style/SignalException:
 Style/StringLiteralsInInterpolation:
   Enabled: false
 
+Style/RedundantConstantBase:
+  Exclude:
+    - 'lib/tasks/**/*'
+
 # Cop supports --auto-correct.
 Style/RedundantPercentQ:
   Enabled: true

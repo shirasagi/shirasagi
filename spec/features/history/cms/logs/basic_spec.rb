@@ -26,7 +26,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.download")
       click_on I18n.t("ss.buttons.download")
 
-      csv_source = ::SS::ChunkReader.new(page.html).to_a.join
+      csv_source = SS::ChunkReader.new(page.html).to_a.join
       SS::Csv.open(StringIO.new(csv_source)) do |csv|
         table = csv.read
         expect(table.length).to eq 7
