@@ -35,7 +35,7 @@ module Workflow::Addon
 
     def new_clone(attributes = {})
       attributes = self.attributes.merge(attributes).select { |k| self.fields.key?(k) }
-      self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
+      self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false || n == "first_released") }.each do |n, v|
         attributes.delete(n)
       end
       # new を呼び出す前に _id を削除しておかないと `#branches` などの参照が変になる
