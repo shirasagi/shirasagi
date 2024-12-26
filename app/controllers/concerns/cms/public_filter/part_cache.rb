@@ -4,16 +4,16 @@ module Cms::PublicFilter::PartCache
   def fetch_part_cache(part)
     if part.ajax_view_cache_enabled?
       body = read_part_cache(part)
-      return body if body
+      return [ { "X-SS-Received-By" => "cms/public#part_cache" }, body ] if body
     end
 
-    body = yield
+    header, body = yield
 
     if part.ajax_view_cache_enabled?
       write_part_cache(part, body)
     end
 
-    body
+    [ header, body ]
   end
 
   def read_part_cache(part)
