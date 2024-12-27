@@ -116,10 +116,10 @@ ja:
 
   job:
     models:
-      garbage/page_import_job: ゴミ品目インポート
-      garbage/area_import_job: ゴミ地区インポート
-      garbage/category_import_job: ゴミ分別区分インポート
-      garbage/center_import_job: ゴミ回収センターインポート
+      garbage/page_import_job: ゴミDB/ゴミ品目インポート
+      garbage/area_import_job: ゴミDB/ゴミ地区インポート
+      garbage/category_import_job: ゴミDB/ゴミ分別区分インポート
+      garbage/center_import_job: ゴミDB/ゴミ回収センターインポート
 
   tooltip:
     garbage/node/node:

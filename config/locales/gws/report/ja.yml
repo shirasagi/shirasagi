@@ -119,5 +119,5 @@ ja:
 
   job:
     models:
-      gws/report/notification_job: レポート通知
-      gws/report/trash_purge_job: レポートゴミ箱の掃除
+      gws/report/notification_job: レポート/通知
+      gws/report/trash_purge_job: レポート/ゴミ箱の掃除

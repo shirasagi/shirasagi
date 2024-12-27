@@ -128,5 +128,5 @@ en:
 
   job:
     models:
-      cms/ldap/import_job: LDAP import
-      cms/ldap/sync_job: LDAP synchronization
+      cms/ldap/import_job: CMS LDAP/import
+      cms/ldap/sync_job: CMS LDAP/synchronization

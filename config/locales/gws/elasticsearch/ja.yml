@@ -60,19 +60,20 @@ ja:
 
   job:
     models:
-      gws/elasticsearch/indexer/share_file_job: 共有ファイルインデクサー
-      gws/elasticsearch/indexer/board_topic_job: 掲示板インデクサー
-      gws/elasticsearch/indexer/board_post_job: 掲示板投稿インデクサー
-      gws/elasticsearch/indexer/faq_topic_job: FAQインデクサー
-      gws/elasticsearch/indexer/faq_post_job: FAQインデクサー
-      gws/elasticsearch/indexer/qna_topic_job: Ｑ＆Ａインデクサー
-      gws/elasticsearch/indexer/qna_post_job: Ｑ＆Ａインデクサー
-      gws/elasticsearch/indexer/survey_form_job: アンケートインデクサー
-      gws/elasticsearch/indexer/circular_post_job: 回覧板インデクサー
-      gws/elasticsearch/indexer/circular_comment_job: 回覧板インデクサー
-      gws/elasticsearch/indexer/monitor_topic_job: 照会・回答インデクサー
-      gws/elasticsearch/indexer/monitor_post_job: 照会・回答インデクサー
-      gws/elasticsearch/indexer/memo_message_job: 連絡メモインデクサー
-      gws/elasticsearch/indexer/report_file_job: レポートインデクサー
-      gws/elasticsearch/indexer/workflow_file_job: ワークフローインデクサー
-      gws/elasticsearch/indexer/workflow_form_job: ワークフローインデクサー
+      gws/elasticsearch/indexer/share_file_job: 全文検索/共有ファイルインデクサー
+      gws/elasticsearch/indexer/board_topic_job: 全文検索/掲示板インデクサー
+      gws/elasticsearch/indexer/board_post_job: 全文検索/掲示板投稿インデクサー
+      gws/elasticsearch/indexer/faq_topic_job: 全文検索/FAQインデクサー
+      gws/elasticsearch/indexer/faq_post_job: 全文検索/FAQインデクサー
+      gws/elasticsearch/indexer/qna_topic_job: 全文検索/Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/qna_post_job: 全文検索/Ｑ＆Ａインデクサー
+      gws/elasticsearch/indexer/survey_form_job: 全文検索/アンケートインデクサー
+      gws/elasticsearch/indexer/circular_post_job: 全文検索/回覧板インデクサー
+      gws/elasticsearch/indexer/circular_comment_job: 全文検索/回覧板インデクサー
+      gws/elasticsearch/indexer/monitor_topic_job: 全文検索/照会・回答インデクサー
+      gws/elasticsearch/indexer/monitor_post_job: 全文検索/照会・回答インデクサー
+      gws/elasticsearch/indexer/memo_message_job: 全文検索/連絡メモインデクサー
+      gws/elasticsearch/indexer/report_file_job: 全文検索/レポートインデクサー
+      gws/elasticsearch/indexer/workflow_file_job: 全文検索/ワークフローインデクサー
+      gws/elasticsearch/indexer/workflow_form_job: 全文検索/ワークフローインデクサー
+      gws/elasticsearch/indexer/workflow2_file_job: 全文検索/ワークフロー2インデクサー

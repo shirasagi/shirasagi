@@ -391,5 +391,5 @@ ja:
 
   job:
     models:
-      webmail/history_archive_job: 操作履歴アーカイブ作成
-      webmail/role_import_job: ロール/権限インポート
+      webmail/history_archive_job: ウェブメール/操作履歴アーカイブ作成
+      webmail/role_import_job: ウェブメール/ロール・権限インポート

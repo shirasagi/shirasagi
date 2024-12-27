@@ -257,4 +257,4 @@ ja:
 
   job:
     models:
-      workflow/reminder_job: 承認督促
+      workflow/reminder_job: ワークフロー/承認督促

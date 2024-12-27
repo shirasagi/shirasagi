@@ -64,4 +64,4 @@ ja:
 
   job:
     models:
-      gws/presence/reset_job: 在席管理初期化ジョブ
+      gws/presence/reset_job: 在席管理/初期化ジョブ

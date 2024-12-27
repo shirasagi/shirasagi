@@ -128,4 +128,4 @@ ja:
 
   job:
     models:
-      translate/access_log/purge_job: 自動翻訳アクセス履歴削除
+      translate/access_log/purge_job: 自動翻訳/アクセス履歴削除

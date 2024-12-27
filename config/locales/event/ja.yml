@@ -203,8 +203,8 @@ ja:
 
   job:
     models:
-      event/page/import_job: イベントページインポート
-      event/ical/import_job: iCalインポート
+      event/page/import_job: イベント/イベントページインポート
+      event/ical/import_job: イベント/iCalインポート
 
   tooltip:
     event/addon/date:

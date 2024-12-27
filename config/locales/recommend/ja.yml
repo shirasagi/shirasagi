@@ -46,6 +46,6 @@ ja:
 
   job:
     models:
-      recommend/create_similarity_scores_job: レコメンドスコア計算
-      recommend/destroy_similarity_scores_job: レコメンドスコア削除
-      recommend/destroy_history_logs_job: レコメンドログ削除
+      recommend/create_similarity_scores_job: レコメンド/スコア計算
+      recommend/destroy_similarity_scores_job: レコメンド/スコア削除
+      recommend/destroy_history_logs_job: レコメンド/ログ削除

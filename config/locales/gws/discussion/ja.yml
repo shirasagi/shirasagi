@@ -207,4 +207,4 @@ ja:
 
   job:
     models:
-      gws/discussion/trash_purge_job: 電子会議室ゴミ箱の掃除
+      gws/discussion/trash_purge_job: 電子会議室/ゴミ箱の掃除

@@ -54,4 +54,4 @@ ja:
 
   job:
     models:
-      mail_page/import_job: メール取込
+      mail_page/import_job: メール取込/メール取込

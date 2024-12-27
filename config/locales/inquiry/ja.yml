@@ -359,4 +359,4 @@ ja:
 
   job:
     models:
-      inquiry/delete_inquiry_temp_files_job: 一時ファイル削除（CMSお問い合わせ）
+      inquiry/delete_inquiry_temp_files_job: メールフォーム/一時ファイル削除

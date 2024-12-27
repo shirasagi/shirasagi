@@ -63,4 +63,4 @@ ja:
 
   job:
     models:
-      faq/page/import_job: FAQインポート
+      faq/page/import_job: FAQ/FAQ記事インポート

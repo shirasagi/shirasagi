@@ -207,4 +207,4 @@ en:
 
   job:
     models:
-      gws/discussion/trash_purge_job: Empty electronic conference room trash
+      gws/discussion/trash_purge_job: Electronic conference rooms/Empty electronic conference room trash

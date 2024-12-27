@@ -55,10 +55,10 @@ ja:
 
   job:
     models:
-      jmaxml/quake_region_import_job: 地震情報区域取込
-      jmaxml/tsunami_region_import_job: 津波予報区取込
-      jmaxml/forecast_region_import_job: 気象情報区域取込
-      jmaxml/water_level_station_import_job: 水観測所取込
+      jmaxml/quake_region_import_job: 気象庁防災情報XML/地震情報区域取込
+      jmaxml/tsunami_region_import_job: 気象庁防災情報XML/津波予報区取込
+      jmaxml/forecast_region_import_job: 気象庁防災情報XML/気象情報区域取込
+      jmaxml/water_level_station_import_job: 気象庁防災情報XML/水観測所取込
 
   mongoid:
     models:

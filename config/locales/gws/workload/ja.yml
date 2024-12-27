@@ -258,4 +258,4 @@ ja:
 
   job:
     models:
-      gws/aggregation/group_job: 集計グループ更新
+      gws/aggregation/group_job: 業務見える化/集計グループ更新

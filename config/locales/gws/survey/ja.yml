@@ -170,5 +170,5 @@ ja:
 
   job:
     models:
-      gws/survey/notification_job: アンケート通知
-      gws/survey/trash_purge_job: アンケートゴミ箱の掃除
+      gws/survey/notification_job: アンケート/通知
+      gws/survey/trash_purge_job: アンケート/ゴミ箱の掃除

@@ -128,5 +128,5 @@ ja:
 
   job:
     models:
-      cms/ldap/import_job: LDAPインポート
-      cms/ldap/sync_job: LDAP同期
+      cms/ldap/import_job: CMS LDAP/インポート
+      cms/ldap/sync_job: CMS LDAP/同期

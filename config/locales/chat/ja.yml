@@ -195,4 +195,4 @@ ja:
 
   job:
     models:
-      chat/intent/import_job: チャットシナリオインポート
+      chat/intent/import_job: チャット/シナリオインポート

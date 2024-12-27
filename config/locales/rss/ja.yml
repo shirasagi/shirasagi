@@ -41,11 +41,11 @@ ja:
 
   job:
     models:
-      rss/import_job: RSS取込
-      rss/import_from_file_job: RSSファイル取込
-      rss/import_weather_xml_job: 気象庁防災情報XML取込
-      rss/import_weather_xml_all_job: 気象庁防災情報XML取込（全サイト）
-      rss/execute_weather_xml_filters_job: 気象庁防災情報XMLフィルター処理
+      rss/import_job: RSS取込/RSS取込
+      rss/import_from_file_job: RSS取込/ファイル取込
+      rss/import_weather_xml_job: 気象庁防災情報XML/取込
+      rss/import_weather_xml_all_job: 気象庁防災情報XML/取込（全サイト）
+      rss/execute_weather_xml_filters_job: 気象庁防災情報XML/フィルター処理
 
   mongoid:
     models:

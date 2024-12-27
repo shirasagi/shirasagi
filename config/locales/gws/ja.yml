@@ -669,10 +669,10 @@ ja:
 
   job:
     models:
-      gws/history_archive_job: 操作履歴アーカイブ作成
-      gws/compress_job: ファイル/圧縮ダウンロード
-      gws/user_title_import_job: 役職インポート
-      gws/user_occupation_import_job: 職種インポート
-      gws/cache_rebuild_job: キャッシュ更新
-      gws/aggregation/group_update_job: 集計グループ更新
-      gws/reload_site_usage_job: 各種使用率の更新
+      gws/history_archive_job: GWS/操作履歴アーカイブ作成
+      gws/compress_job: GWS/ファイル圧縮・ダウンロード
+      gws/user_title_import_job: GWS/役職インポート
+      gws/user_occupation_import_job: GWS/職種インポート
+      gws/cache_rebuild_job: GWS/キャッシュ更新
+      gws/aggregation/group_update_job: GWS/集計グループ更新
+      gws/reload_site_usage_job: GWS/各種使用率の更新

@@ -139,4 +139,4 @@ ja:
 
   job:
     models:
-      gws/daily_report/copy_year_job: 業務日報年度コピージョブ
+      gws/daily_report/copy_year_job: 業務日報/年度コピージョブ

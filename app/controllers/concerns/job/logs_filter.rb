@@ -42,7 +42,13 @@ module Job::LogsFilter
 
   def min_updated
     keep_logs = SS.config.job.keep_logs
-    Time.zone.now - keep_logs
+    min1 = Time.zone.now - keep_logs
+    min2 = log_criteria.min(:created)
+    if min2
+      min1 < min2 ? min1 : min2
+    else
+      min1
+    end
   end
 
   def class_name_options

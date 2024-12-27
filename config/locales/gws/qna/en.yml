@@ -180,4 +180,4 @@ en:
 
   job:
     models:
-      gws/qna/trash_purge_job: Empty Q&A/post trash
+      gws/qna/trash_purge_job: Q&A/Empty post trash
