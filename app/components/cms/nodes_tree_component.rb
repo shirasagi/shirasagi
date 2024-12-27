@@ -8,7 +8,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
 
   attr_accessor :site, :user
 
-  self.cache_key = ->do
+  self.cache_key = -> do
     results = folders.aggregates(:updated)
     [ site.id, results["count"], results["max"].to_i ]
   end
