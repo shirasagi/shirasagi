@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   gws "job" do
     get "/" => redirect { |p, req| "#{req.path}/logs" }, as: :main
 
+    resources :logs, only: [:index, :show], path: 'logs/ymd:ymd', as: :daily_logs
+
     resources :logs, only: [:index, :show] do
       get :batch_destroy, on: :collection
       post :batch_destroy, on: :collection
@@ -16,12 +18,12 @@ Rails.application.routes.draw do
       get :download, on: :member
     end
 
-    resources :logs, only: [:index, :show], path: ':ymd/logs', as: :daily_logs
-
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
 
     scope "user" do
       get '/' => redirect { |p, req| "#{req.path}/logs" }, as: :user_main
+
+      resources :user_logs, only: [:index, :show], path: 'logs/ymd:ymd', as: :daily_user_logs
 
       resources :user_logs, path: "/logs", only: [:index, :show] do
         get :batch_destroy, on: :collection
