@@ -86,4 +86,4 @@ ja:
 
   job:
     models:
-      gws/reminder/notification_job: リマインダー通知
+      gws/reminder/notification_job: リマインダー/通知

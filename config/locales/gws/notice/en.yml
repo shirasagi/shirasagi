@@ -183,5 +183,5 @@ en:
 
   job:
     models:
-      gws/notice/notification_job: Announcement notifications
-      gws/notice/trash_purge_job: Empty announcements trash
+      gws/notice/notification_job: Announcements/Notifications
+      gws/notice/trash_purge_job: Announcements/Empty trash

@@ -86,4 +86,4 @@ en:
 
   job:
     models:
-      gws/reminder/notification_job: Reminder notifications
+      gws/reminder/notification_job: Reminder/Notifications

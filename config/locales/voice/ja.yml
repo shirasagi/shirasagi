@@ -42,4 +42,4 @@ ja:
 
   job:
     models:
-      voice/synthesis_job: 音声読み上げ
+      voice/synthesis_job: 読み上げ/音声作成

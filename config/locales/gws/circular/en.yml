@@ -178,4 +178,4 @@ en:
 
   job:
     models:
-      gws/circular/trash_purge_job: Empty circular notice trash
+      gws/circular/trash_purge_job: Circular boards/Empty circular notice trash

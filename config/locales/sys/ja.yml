@@ -342,7 +342,7 @@ ja:
 
   job:
     models:
-      sys/site_copy_job: サイト複製
-      sys/postal_code/import_job: 郵便番号インポート
-      sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
-      sys/prefecture_code/import_job: 市町村コードインポート
+      sys/site_copy_job: システム/サイト複製
+      sys/postal_code/import_job: システム/郵便番号インポート
+      sys/postal_code/official_csv_import_job: システム/日本郵便CSVインポート
+      sys/prefecture_code/import_job: システム/市町村コードインポート

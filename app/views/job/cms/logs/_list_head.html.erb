@@ -21,7 +21,10 @@
     </div>
     <% if class_name_options.present? %>
       <div class="list-head-action" style="margin-left: 18px">
-        <%= select_tag "s[class_name]", options_for_select(class_name_options, @s.class_name), id: nil, include_blank: true %>
+        <%=
+          option_tags = render SS::OptionsForSelectComponent.new(options: class_name_options, selected: @s.class_name)
+          select_tag "s[class_name]", option_tags, id: nil, include_blank: true
+        %>
       </div>
     <% end %>
   <% end %>
