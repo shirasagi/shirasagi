@@ -367,6 +367,7 @@ Rails.application.routes.draw do
       put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
+      get "qr_codes" => "qr_codes#index"
       get "forms" => "forms#index"
       get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
       get "forms/:id/form" => "forms#form", as: :form
@@ -500,7 +501,7 @@ Rails.application.routes.draw do
     end
     resources :max_file_sizes, concerns: :deletion
     resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :change_state, :import] do  
+    resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do

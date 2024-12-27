@@ -62,7 +62,7 @@ describe Article::Page, dbscope: :example do
       end
 
       expect(result).to be_falsey
-      message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to, format: :picker))
+      message = I18n.t("errors.messages.greater_than", count: I18n.l(travel_to))
       expect(branch_page.errors.full_messages).to include(/#{::Regexp.escape(message)}/)
 
       master_page.reload
