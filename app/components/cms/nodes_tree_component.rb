@@ -1,11 +1,17 @@
 class Cms::NodesTreeComponent < ApplicationComponent
   include ActiveModel::Model
   include Cms::NodeHelper
+  include SS::MaterialIconsHelper
+  include SS::StimulusHelper
+  include SS::ButtonToHelper
   include SS::CacheableComponent
 
   attr_accessor :site, :user
 
-  self.cache_key = ->{ [ site.id, root_items.map(&:id), folders.count, folders.pluck(:updated).max.to_i ] }
+  self.cache_key = -> do
+    results = folders.aggregates(:updated)
+    [ site.id, results["count"], results["max"].to_i ]
+  end
 
   class NodeItem
     include ActiveModel::Model
@@ -33,9 +39,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
       criteria = criteria.allow(:read, user, site: site)
       criteria = criteria.order_by(filename: 1)
       criteria = criteria.only(:id, :site_id, :name, :filename, :depth, :route, :view_route, :updated)
-      nodes = criteria.to_a
-      nodes.each { |node| node.site = node.cur_site = site }
-      nodes
+      criteria
     end
   end
 
@@ -43,7 +47,8 @@ class Cms::NodesTreeComponent < ApplicationComponent
     @root_items = []
     parent_map = {}
 
-    folders.each do |node|
+    folders.to_a.each do |node|
+      node.site = node.cur_site = site
       wrap = NodeItem.new(item: node, url: item_url(node), children: [])
       parent_map[node.filename] = wrap
       if node.depth == 1

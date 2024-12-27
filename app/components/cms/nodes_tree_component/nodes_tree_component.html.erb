@@ -1,25 +1,34 @@
-<%= cache_component do %>
-  <ul class="ss-tree cms-nodes-tree" role="tree">
-    <% root_items.each do |folder| %>
-      <% if folder.children? %>
-        <li class="ss-tree-item" role="treeitem">
-          <details class="ss-tree-subtree-wrap">
-            <summary>
-              <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
-            </summary>
-
-            <%=
-              if folder.children?
-                render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: folder.children)
-              end
-            %>
-          </details>
-        </li>
-      <% else %>
-        <li class="ss-tree-item no-children" role="treeitem">
-          <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
-        </li>
+<turbo-frame id="cms-nodes-tree-frame">
+  <%= cache_component do %>
+    <div class="cms-nodes-tree-frame-header">
+      <h2 class="cms-nodes-tree-frame-header-title"><%= t("cms.node") %></h2>
+      <%= ss_stimulus_tag "ss/modifier_key", class: "cms-nodes-tree-frame-header-links" do %>
+        <%= link_to md_icons.outlined("refresh"), cms_frames_nodes_trees_path, class: "cms-nodes-tree-frame-header-link", title: I18n.t("ss.buttons.reload"), data: { turbo: true } %>
+        <%= ss_button_to md_icons.outlined("refresh"), cms_frames_nodes_trees_path, name: "super_reload", class: "cms-nodes-tree-frame-header-link", method: :post, title: I18n.t("ss.buttons.reload"), data: { turbo: true, on_modifier: "shift" } %>
       <% end %>
-    <% end %>
-  </ul>
-<% end %>
+    </div>
+    <ul class="ss-tree cms-nodes-tree" role="tree">
+      <% root_items.each do |folder| %>
+        <% if folder.children? %>
+          <li class="ss-tree-item" role="treeitem">
+            <details class="ss-tree-subtree-wrap">
+              <summary>
+                <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
+              </summary>
+
+              <%=
+                if folder.children?
+                  render Cms::NodesTreeComponent::TreeChildren.new(site: site, children: folder.children)
+                end
+              %>
+            </details>
+          </li>
+        <% else %>
+          <li class="ss-tree-item no-children" role="treeitem">
+            <%= link_to tag.span(folder.name, class: "ss-tree-item-title"), folder.url, class: "ss-tree-item-link", data: { turbo: false, node_id: folder.id } %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  <% end %>
+</turbo-frame>
