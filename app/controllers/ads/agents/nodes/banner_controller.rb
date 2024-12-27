@@ -11,7 +11,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
     @item = Ads::Banner.site(@cur_site).and_public.
       filename(filename).first
 
-    raise "404" unless @item
+    raise SS::NotFoundError unless @item
 
     if !preview_path?
       log = Ads::AccessLog.find_or_create_by(

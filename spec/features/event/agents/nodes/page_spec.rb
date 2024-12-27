@@ -41,7 +41,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
     end
 
     it "table" do
-      expect { visit "#{list_only_node.full_url}table.html" }.to raise_error "404"
+      visit "#{list_only_node.full_url}table.html"
+      expect(status_code).to eq 404
     end
 
     it "monthly" do
@@ -68,7 +69,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       url = sprintf("#{node.full_url}%04d%02d/table.html", year, month)
-      expect { visit url }.to raise_error "404"
+      visit url
+      expect(status_code).to eq 404
     end
 
     it "daily" do
@@ -213,7 +215,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
     end
 
     it "table" do
-      expect { visit "#{list_only_node.full_url}table.html" }.to raise_error "404"
+      visit "#{list_only_node.full_url}table.html"
+      expect(status_code).to eq 404
     end
 
     it "monthly index type1" do
@@ -250,7 +253,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       url = sprintf("#{list_only_node.full_url}%04d%02d/table.html", year, month)
-      expect { visit url }.to raise_error "404"
+      visit url
+      expect(status_code).to eq 404
     end
   end
 
@@ -262,7 +266,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
     end
 
     it "list" do
-      expect { visit "#{table_only_node.full_url}list.html" }.to raise_error "404"
+      visit "#{table_only_node.full_url}list.html"
+      expect(status_code).to eq 404
     end
 
     it "table" do
@@ -296,7 +301,8 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       year = time.year
       month = time.month
       url = sprintf("#{table_only_node.full_url}%04d%02d/list.html", year, month)
-      expect { visit url }.to raise_error "404"
+      visit url
+      expect(status_code).to eq 404
     end
 
     it "monthly_table" do
@@ -345,21 +351,39 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
   context "with invalid date" do
     context "with invalid year and date" do
       it do
-        expect { visit "#{node.full_url}698079.html" }.to raise_error "404"
-        expect { visit "#{node.full_url}698079" }.to raise_error "404"
-        expect { visit "#{node.full_url}698079/" }.to raise_error "404"
-        expect { visit "#{node.full_url}698079/list" }.to raise_error "404"
-        expect { visit "#{node.full_url}698079/list.html" }.to raise_error "404"
+        visit "#{node.full_url}698079.html"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}698079"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}698079/"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}698079/list"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}698079/list.html"
+        expect(status_code).to eq 404
       end
     end
 
     context "with invalid year, date and day" do
       it do
-        expect { visit "#{node.full_url}69807945.html" }.to raise_error "404"
-        expect { visit "#{node.full_url}69807945" }.to raise_error "404"
-        expect { visit "#{node.full_url}69807945/" }.to raise_error "404"
-        expect { visit "#{node.full_url}69807945/index" }.to raise_error "404"
-        expect { visit "#{node.full_url}69807945/index.html" }.to raise_error "404"
+        visit "#{node.full_url}69807945.html"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}69807945"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}69807945/"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}69807945/index"
+        expect(status_code).to eq 404
+
+        visit "#{node.full_url}69807945/index.html"
+        expect(status_code).to eq 404
       end
     end
   end

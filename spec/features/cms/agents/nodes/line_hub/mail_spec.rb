@@ -14,7 +14,8 @@ describe "cms_agents_nodes_line_hub", type: :feature, dbscope: :example do
       let!(:url) { "#{node.url}mail" }
 
       it "#index" do
-        expect { visit url }.to raise_error "404"
+        visit url
+        expect(status_code).to eq 404
       end
     end
 

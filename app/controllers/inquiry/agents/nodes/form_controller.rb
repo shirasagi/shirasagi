@@ -17,15 +17,15 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def check_release_state
-    raise "404" unless @cur_node.public?
+    raise SS::NotFoundError unless @cur_node.public?
   end
 
   def check_reception_state
-    raise "404" unless @cur_node.reception_enabled?
+    raise SS::NotFoundError unless @cur_node.reception_enabled?
   end
 
   def check_aggregation_state
-    raise "404" unless @cur_node.aggregation_enabled?
+    raise SS::NotFoundError unless @cur_node.aggregation_enabled?
   end
 
   def set_columns
@@ -83,25 +83,25 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     return if params[:group].blank?
 
     @group = Cms::Group.site(@cur_site).active.where(id: params[:group]).first
-    raise "404" if @group.blank?
-    raise "404" if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
+    raise SS::NotFoundError if @group.blank?
+    raise SS::NotFoundError if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
   end
 
   def set_page
     return if params[:page].blank?
 
     @page = Cms::Page.site(@cur_site).and_public(@cur_date).where(id: params[:page]).first
-    raise "404" if @page.blank?
+    raise SS::NotFoundError if @page.blank?
   end
 
   public
 
   def new
     if @group || @page
-      raise "404" if @cur_site.inquiry_form != @cur_node
+      raise SS::NotFoundError if @cur_site.inquiry_form != @cur_node
     end
     if @group && @page
-      raise "404" if @page.contact_group_id != @group.id
+      raise SS::NotFoundError if @page.contact_group_id != @group.id
     end
   end
 

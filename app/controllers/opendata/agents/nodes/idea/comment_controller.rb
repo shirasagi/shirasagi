@@ -25,8 +25,8 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
 
     @comment_mode = logged_in?(redirect: false)
 
-    raise "404" unless @idea
-    raise '404' if !@preview && !@idea.public?
+    raise SS::NotFoundError unless @idea
+    raise SS::NotFoundError if !@preview && !@idea.public?
   end
 
   def set_workflow
@@ -42,7 +42,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
 
   def add
     @cur_node.layout = nil
-    raise "403" unless logged_in?(redirect: false)
+    raise SS::ForbiddenError unless logged_in?(redirect: false)
 
     idea_id = @idea.id
     idea = Opendata::Idea.site(@cur_site).find(idea_id)

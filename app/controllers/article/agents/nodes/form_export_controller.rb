@@ -6,8 +6,8 @@ class Article::Agents::Nodes::FormExportController < ApplicationController
   private
 
   def validate_filename
-    raise '404' unless @cur_node.resolve_filename == params[:filename]
-    raise '404' unless %w(csv json).include?(params[:format])
+    raise SS::NotFoundError unless @cur_node.resolve_filename == params[:filename]
+    raise SS::NotFoundError unless %w(csv json).include?(params[:format])
   end
 
   def pages

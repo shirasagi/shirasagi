@@ -38,7 +38,8 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
         let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
 
         it "#mail" do
-          expect { post(url, params: { data: file }) }.to raise_error "404"
+          post(url, params: { data: file })
+          expect(response.status).to eq 404
           expect(MailPage::Page.count).to eq 0
         end
       end
@@ -47,7 +48,8 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
         let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
 
         it "#mail" do
-          expect { post(url, params: { data: file }) }.to raise_error "404"
+          post(url, params: { data: file })
+          expect(response.status).to eq 404
           expect(MailPage::Page.count).to eq 0
         end
       end

@@ -36,10 +36,10 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
       to = from + 1.day - 1.second
       @range = from..to
     else
-      raise "404"
+      raise SS::NotFoundError
     end
   rescue
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def becomes_with_route_node

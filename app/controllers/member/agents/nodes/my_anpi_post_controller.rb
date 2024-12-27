@@ -57,7 +57,7 @@ class Member::Agents::Nodes::MyAnpiPostController < ApplicationController
   end
 
   def check_owner
-    raise "403" unless @item.owned?(@cur_member)
+    raise SS::ForbiddenError unless @item.owned?(@cur_member)
   end
 
   def set_items

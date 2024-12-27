@@ -16,7 +16,7 @@ module Cms::PageFilter
     super
     return unless @cur_node
     return if (@item.filename =~ /^#{::Regexp.escape(@cur_node.filename)}\//) && (@item.depth == @cur_node.depth + 1)
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def default_form(node)

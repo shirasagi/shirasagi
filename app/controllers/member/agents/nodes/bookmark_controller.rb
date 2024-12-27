@@ -16,11 +16,11 @@ class Member::Agents::Nodes::BookmarkController < ApplicationController
 
   def set_path
     @path = params[:path]
-    raise "404" if @path.blank?
+    raise SS::NotFoundError if @path.blank?
   end
 
   def set_member
-    raise "404" unless member_login_path
+    raise SS::NotFoundError unless member_login_path
     @cur_member = get_member_by_session rescue nil
     redirect_to "#{member_login_path}?ref=#{CGI.escape(@path)}" if @cur_member.nil?
   end

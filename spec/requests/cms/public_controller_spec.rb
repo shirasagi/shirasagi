@@ -9,6 +9,7 @@ describe Cms::PublicController, type: :request, dbscope: :example do
     components << Rails.root.to_s
     components << "README.md"
     path = File.join(*components)
-    expect { get "#{site.full_url}#{path}" }.to raise_error RuntimeError
+    get "#{site.full_url}#{path}"
+    expect(response.status).to eq 404
   end
 end
