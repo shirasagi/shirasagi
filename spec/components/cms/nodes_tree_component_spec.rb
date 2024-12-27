@@ -5,7 +5,6 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let(:cache_mode) { nil }
-  let!(:component) { described_class.new(site: site, user: user, cache_mode: cache_mode) }
   let(:perform_caching) { false }
 
   around do |example|
@@ -29,6 +28,8 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
     let!(:node3_1) { create :inquiry_node_form, cur_site: site, cur_node: node3 }
 
     context "cache disabled" do
+      let!(:component) { described_class.new(site: site, user: user, cache_mode: cache_mode) }
+
       it do
         html = render_inline component
         # puts html
@@ -65,11 +66,23 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
       let(:perform_caching) { true }
 
       it do
-        expect(component.cache_exist?).to be_falsey
+        described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
+          expect(component.cache_exist?).to be_falsey
 
-        render_inline component
+          render_inline component
 
-        expect(component.cache_exist?).to be_truthy
+          expect(component.cache_exist?).to be_truthy
+        end
+
+        described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
+          before_mongodb_count = MongoAccessCounter.succeeded_count
+
+          render_inline component
+
+          # 最小限のDBアクセスでキャッシュを利用可能なことを確認
+          after_mongodb_count = MongoAccessCounter.succeeded_count
+          expect(after_mongodb_count).to eq before_mongodb_count + 1
+        end
       end
     end
 
@@ -78,28 +91,32 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
       let(:cache_mode) { "refresh" }
 
       it do
-        expect(component.cache_exist?).to be_falsey
-
         before_cache_entry = nil
         Timecop.freeze(now - 5.minutes) do
-          render_inline component
+          described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
+            expect(component.cache_exist?).to be_falsey
 
-          expect(component.cache_exist?).to be_truthy
+            render_inline component
 
-          cache_key = component.send(:component_cache_key)
-          cache_key = Rails.cache.send(:normalize_key, cache_key, nil)
-          before_cache_entry = Rails.cache.send(:read_entry, cache_key)
-          expect(before_cache_entry).to be_present
+            expect(component.cache_exist?).to be_truthy
+
+            cache_key = component.send(:component_cache_key)
+            cache_key = Rails.cache.send(:normalize_key, cache_key, nil)
+            before_cache_entry = Rails.cache.send(:read_entry, cache_key)
+            expect(before_cache_entry).to be_present
+          end
         end
 
         Timecop.freeze(now) do
-          render_inline component
-          expect(component.cache_exist?).to be_truthy
+          described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
+            render_inline component
+            expect(component.cache_exist?).to be_truthy
 
-          cache_key = component.send(:component_cache_key)
-          cache_key = Rails.cache.send(:normalize_key, cache_key, nil)
-          cache_entry = Rails.cache.send(:read_entry, cache_key)
-          expect(cache_entry.expires_at).to be > before_cache_entry.expires_at
+            cache_key = component.send(:component_cache_key)
+            cache_key = Rails.cache.send(:normalize_key, cache_key, nil)
+            cache_entry = Rails.cache.send(:read_entry, cache_key)
+            expect(cache_entry.expires_at).to be > before_cache_entry.expires_at
+          end
         end
       end
     end
