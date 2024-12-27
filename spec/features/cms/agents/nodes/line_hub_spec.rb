@@ -25,7 +25,8 @@ describe "cms_agents_nodes_line_hub", type: :feature, dbscope: :example do
       visit "#{node.url}mail/#{mail_handler1.filename}"
       expect(status_code).to eq 200
 
-      expect { visit "#{node.url}mail/#{mail_handler2.filename}" }.to raise_error "404"
+      visit "#{node.url}mail/#{mail_handler2.filename}"
+      expect(status_code).to eq 404
     end
   end
 end

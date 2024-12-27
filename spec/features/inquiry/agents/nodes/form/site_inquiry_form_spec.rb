@@ -152,7 +152,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -167,7 +167,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -182,7 +182,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -197,7 +197,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 end
