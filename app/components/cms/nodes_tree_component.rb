@@ -3,6 +3,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
   include Cms::NodeHelper
   include SS::MaterialIconsHelper
   include SS::StimulusHelper
+  include SS::ButtonToHelper
   include SS::CacheableComponent
 
   attr_accessor :site, :user
