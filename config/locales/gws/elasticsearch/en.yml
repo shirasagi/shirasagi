@@ -76,3 +76,4 @@ en:
       gws/elasticsearch/indexer/report_file_job: Full-text search/Report indexer
       gws/elasticsearch/indexer/workflow_file_job: Full-text search/Workflow indexer
       gws/elasticsearch/indexer/workflow_form_job: Full-text search/Workflow indexer
+      gws/elasticsearch/indexer/workflow2_file_job: Full-text search/Workflow2 indexer

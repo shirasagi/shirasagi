@@ -1378,3 +1378,8 @@ ja:
       opendata/harvest/purge_job: オープンデータ・ハーベスト/データセット削除ジョブ
       opendata/metadata/import_datasets_job: オープンデータ・メタデータ/インポートジョブ
       opendata/metadata/destroy_datasets_job: オープンデータ・メタデータ/関連データセット削除ジョブ
+      opendata/dataset_access_report_job: オープンデータ/データセットアクセス履歴レポート
+      opendata/resource_download_history_archive_job: オープンデータ/リソースダウンロード履歴アーカイブ化
+      opendata/resource_download_report_job: オープンデータ/リソースダウンロード履歴レポート
+      opendata/resource_preview_history_archive_job: オープンデータ/リソースプレビュー履歴アーカイブ化
+      opendata/resource_preview_report_job: オープンデータ/リソースプレビュー履歴レポート
