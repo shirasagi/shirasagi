@@ -5,7 +5,24 @@ module SS
 
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
+  HTTP_STATUS_CODE_FORBIDDEN = "403"
+  HTTP_STATUS_CODE_NOT_FOUND = "404"
+
   mattr_accessor(:max_items_per_page) { 50 }
+
+  # 403
+  class ForbiddenError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_FORBIDDEN)
+    end
+  end
+
+  # 404
+  class NotFoundError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_NOT_FOUND)
+    end
+  end
 
   def change_locale_and_timezone(user)
     if user.nil?
