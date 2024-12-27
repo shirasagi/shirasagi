@@ -1714,6 +1714,8 @@ ja:
         name: タイトル
         memo: メモ
         task: タスク
+        task_started: 処理開始日時
+        task_closed: 処理終了日時
         started: 開始日時
         closed: 終了日時
       cms/generation_report/history:
