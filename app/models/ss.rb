@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module SS
   module_function
 
@@ -111,5 +113,11 @@ module SS
 
   def request_path(request)
     Addressable::URI.parse(request.env["REQUEST_PATH"] || request.path).normalize.request_uri
+  end
+
+  def not_found_error?(err)
+    return true if ActionDispatch::ExceptionWrapper.status_code_for_exception(err.class.name) == 404
+    return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
+    false
   end
 end
