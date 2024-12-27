@@ -28,7 +28,7 @@ describe SS, dbscope: :example do
     context "with Mongoid::Errors::DocumentNotFound" do
       it do
         begin
-          SS::Site.find(9876543210)
+          SS::Site.find(9_876_543_210)
         rescue => e
           expect(e).to be_a(Mongoid::Errors::DocumentNotFound)
           expect(SS.not_found_error?(e)).to be_truthy
