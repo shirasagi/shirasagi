@@ -44,7 +44,7 @@ def save_ss_files(path, data)
   if data[:name].present?
     name = data[:name]
     if !name.include?(".") && data[:filename].include?(".")
-      name = "#{name}#{::File.extname(data[:filename])}"
+      name = "#{name}#{File.extname(data[:filename])}"
     end
     item.name = name
   end
@@ -355,7 +355,7 @@ def save_word_dictionary(data)
   cond = { site_id: @site.id, name: data[:name] }
 
   body_file = data.delete(:body_file)
-  data[:body] = ::File.read(body_file)
+  data[:body] = File.read(body_file)
 
   item = Cms::WordDictionary.find_or_initialize_by cond
   puts item.errors.full_messages unless item.update data

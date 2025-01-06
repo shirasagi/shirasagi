@@ -24,7 +24,7 @@ describe "opendata_agents_nodes_my_favorite_dataset", type: :feature, dbscope: :
 
   let!(:node_login) { create :member_node_login, cur_site: site, layout_id: layout.id, redirect_url: node_my_favorite_dataset.url }
 
-  let(:index_url) { ::URI.parse "http://#{site.domain}#{node_my_favorite_dataset.url}" }
+  let(:index_url) { URI.parse "http://#{site.domain}#{node_my_favorite_dataset.url}" }
 
   before do
     login_opendata_member(site, node_login, member)

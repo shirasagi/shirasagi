@@ -21,14 +21,14 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       end
 
       zip_creator = job.instance_variable_get(:@output_zip)
-      expect(::File.size(zip_creator.path)).to be > 0
+      expect(File.size(zip_creator.path)).to be > 0
 
       @exported = {}
       Zip::File.open(zip_creator.path) do |zip_file|
         zip_file.each do |entry|
           name = NKF.nkf("-w", entry.name)
           content = entry.get_input_stream.read
-          mail = ::Mail.read_from_string(content)
+          mail = Mail.read_from_string(content)
 
           @exported[name] = mail
         end
@@ -53,7 +53,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         export_message.call
         expect(@exported.size).to eq 1
 
-        basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+        basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
         expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
         @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -109,7 +109,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         export_message.call
         expect(@exported.size).to eq 1
 
-        basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+        basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
         expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
         @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -129,7 +129,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         export_message.call
         expect(@exported.size).to eq 1
 
-        basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+        basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
         expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
         @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -163,7 +163,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -177,21 +177,21 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq user1.name
 
-          local_part = ::Addressable::IDNA.to_ascii(user1.name)
+          local_part = Addressable::IDNA.to_ascii(user1.name)
           expect(address.address).to eq "#{local_part}@users.#{canonical_domain}"
         end
         mail[:to].to_s.tap do |rfc2822_address|
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq user2.name
 
-          local_part = ::Addressable::IDNA.to_ascii(user2.name)
+          local_part = Addressable::IDNA.to_ascii(user2.name)
           expect(address.address).to eq "#{local_part}@users.#{canonical_domain}"
         end
         mail[:cc].to_s.tap do |rfc2822_address|
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq user3.name
 
-          local_part = ::Addressable::IDNA.to_ascii(user3.name)
+          local_part = Addressable::IDNA.to_ascii(user3.name)
           expect(address.address).to eq "#{local_part}@users.#{canonical_domain}"
         end
         expect(mail[:bcc]).to be_nil
@@ -237,7 +237,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox_sent")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox_sent")}/#{basename}.eml"].tap do |mail|
@@ -256,7 +256,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq shared_address_group1.name
 
-          local_part = ::Addressable::IDNA.to_ascii(shared_address_group1.name)
+          local_part = Addressable::IDNA.to_ascii(shared_address_group1.name)
           expect(address.address).to eq "#{local_part}@shared-groups.#{canonical_domain}"
         end
         expect(mail[:cc]).to be_nil
@@ -301,7 +301,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -373,7 +373,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -392,7 +392,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq address_group1.name
 
-          local_part = ::Addressable::IDNA.to_ascii(address_group1.name)
+          local_part = Addressable::IDNA.to_ascii(address_group1.name)
           expect(address.address).to eq "#{local_part}@personal-groups.#{canonical_domain}"
         end
         expect(mail[:cc]).to be_nil
@@ -430,7 +430,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -451,7 +451,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           address = Mail::Address.new(rfc2822_address)
           expect(address.display_name).to eq list.name
 
-          local_part = ::Addressable::IDNA.to_ascii(list.name)
+          local_part = Addressable::IDNA.to_ascii(list.name)
           expect(address.address).to eq "#{local_part}@lists.#{canonical_domain}"
         end
         expect(mail[:cc]).to be_nil

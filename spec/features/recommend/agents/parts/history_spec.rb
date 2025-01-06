@@ -10,9 +10,9 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
 
   before do
     # delete all statically generated html files to dynamically respond contents
-    ::FileUtils.rm_f("#{node.path}/index.html")
-    ::FileUtils.rm_f(article_page.path)
-    ::FileUtils.rm_f(cms_page.path)
+    FileUtils.rm_f("#{node.path}/index.html")
+    FileUtils.rm_f(article_page.path)
+    FileUtils.rm_f(cms_page.path)
   end
 
   after do

@@ -63,7 +63,7 @@ describe Article::Page, dbscope: :example do
   end
 
   after do
-    ::ActiveSupport::Notifications.unsubscribe(@subscriber)
+    ActiveSupport::Notifications.unsubscribe(@subscriber)
     Mongoid::Clients.clients.each { |_key, client| client.unsubscribe(Mongo::Monitoring::COMMAND, @subscriber) }
   end
 

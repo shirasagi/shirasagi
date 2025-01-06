@@ -11,7 +11,7 @@ describe "opendata_agents_nodes_dataset_group", type: :feature, dbscope: :exampl
     create :opendata_node_search_dataset_group
   end
 
-  let(:index_url) { ::URI.parse "http://#{site.domain}#{part.url}" }
+  let(:index_url) { URI.parse "http://#{site.domain}#{part.url}" }
 
   describe "#index" do
     it do

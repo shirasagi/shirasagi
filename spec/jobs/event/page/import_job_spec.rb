@@ -49,7 +49,7 @@ describe Event::Page::ImportJob, dbscope: :example do
         exporter = Cms::PageExporter.new(mode: "event", site: @cur_site, criteria: criteria)
         enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
-        ::File.open(ss_file.path, "wb") do |f|
+        File.open(ss_file.path, "wb") do |f|
           enumerable.each { |csv| f.write(csv) }
         end
 

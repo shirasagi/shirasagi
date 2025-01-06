@@ -10,7 +10,7 @@ describe Opendata::Dataset::ResourceDownloadHistoryArchivesController, type: :fe
     Opendata::ResourceDownloadHistory::ArchiveFile.create_empty!(
       cur_site: site, name: archive1_name, filename: archive1_filename, content_type: 'application/zip'
     ) do |file|
-      ::FileUtils.cp(zip_path, file.path)
+      FileUtils.cp(zip_path, file.path)
     end
   end
 
@@ -23,7 +23,7 @@ describe Opendata::Dataset::ResourceDownloadHistoryArchivesController, type: :fe
       click_on I18n.t("ss.buttons.download")
 
       wait_for_download
-      expect(::File.binread(downloads.first)).to eq ::File.binread(zip_path)
+      expect(File.binread(downloads.first)).to eq File.binread(zip_path)
 
       click_on I18n.t("ss.links.delete")
       within "form" do

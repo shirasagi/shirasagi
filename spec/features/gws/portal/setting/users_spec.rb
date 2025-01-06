@@ -80,7 +80,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
       click_on I18n.t('gws/portal.links.manage_portlets')
       click_on I18n.t('ss.links.initialize')
       within "form" do
-        page.accept_alert(/#{::Regexp.escape(I18n.t("ss.confirm.initialize"))}/) do
+        page.accept_alert(/#{Regexp.escape(I18n.t("ss.confirm.initialize"))}/) do
           click_on I18n.t('ss.buttons.initialize')
         end
       end

@@ -4,7 +4,7 @@ require 'uri'
 
 describe Voice::Scraper do
   context "when typical html is given" do
-    source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-001.html")
+    source_file = File.new("#{Rails.root}/spec/fixtures/voice/test-001.html")
     html = source_file.read
     scraper = Voice::Scraper.new
     texts = scraper.extract_text html
@@ -48,7 +48,7 @@ describe Voice::Scraper do
   end
 
   context "when no read-voice marked and id='main' marked html is given" do
-    source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-001.html")
+    source_file = File.new("#{Rails.root}/spec/fixtures/voice/test-001.html")
     html = source_file.read
     # remove "read-voice"
     html.gsub!(/(end-)?read-voice/, "")
@@ -101,7 +101,7 @@ describe Voice::Scraper do
   end
 
   context "when <script type=\"text/javascript\"> is given" do
-    source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-002.html")
+    source_file = File.new("#{Rails.root}/spec/fixtures/voice/test-002.html")
     html = source_file.read
     texts = Voice::Scraper.new.extract_text html
 
@@ -162,7 +162,7 @@ describe Voice::Scraper do
   end
 
   context "when multiple skip-voice is given" do
-    source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-003.html")
+    source_file = File.new("#{Rails.root}/spec/fixtures/voice/test-003.html")
     html = source_file.read
     texts = Voice::Scraper.new.extract_text html
 
@@ -187,7 +187,7 @@ describe Voice::Scraper do
   end
 
   context "when if it IE7 comment is given" do
-    source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-003.html")
+    source_file = File.new("#{Rails.root}/spec/fixtures/voice/test-003.html")
     html = source_file.read
     texts = Voice::Scraper.new.extract_text html
 

@@ -35,7 +35,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+          expect(page).to have_css('.file-view', text: File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -47,7 +47,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
             if index == 0
-              expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+              expect(page).to have_css('.file-view', text: File.basename(before_csv))
             else
               expect(page).to have_css('.file-view', text: "replaced")
             end
@@ -63,7 +63,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_button I18n.t('inquiry.confirm')
 
             expect(page).to have_css('.file-view.before')
-            expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+            expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
             # replace file
             fill_in "item[name]", with: "replaced"
@@ -79,8 +79,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.history_files.size).to eq 5
         history_file = replaced_file.history_files.last
 
-        expect(history_file.filename).to eq ::File.basename(before_csv)
-        expect(history_file.name).to eq ::File.basename(before_csv)
+        expect(history_file.filename).to eq File.basename(before_csv)
+        expect(history_file.name).to eq File.basename(before_csv)
         expect(history_file.state).to eq "closed"
         expect(Fs.cmp(history_file.path, before_csv)).to be true
 
@@ -144,7 +144,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+          expect(page).to have_css('.file-view', text: File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
@@ -156,7 +156,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
             if index == 0
-              expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
+              expect(page).to have_css('.file-view', text: File.basename(before_csv))
             else
               expect(page).to have_css('.file-view', text: "replaced")
             end
@@ -172,7 +172,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_button I18n.t('inquiry.confirm')
 
             expect(page).to have_css('.file-view.before')
-            expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
+            expect(page).to have_css('.file-view.after', text: File.basename(after_csv, ".*"))
 
             # replace file
             fill_in "item[name]", with: "replaced"

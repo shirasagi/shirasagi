@@ -28,7 +28,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
       expect(Rdf::Prop.count).to eq vocab.props.count
 
       expect(Rdf::Class.count).to be > 0
-      ::File.open(class_list) do |file|
+      File.open(class_list) do |file|
         file.each do |line|
           line.chomp!
           name = line.gsub(vocab.uri, '')
@@ -36,7 +36,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
           expect(rdf_object).not_to be_nil
         end
       end
-      ::File.open(property_list) do |file|
+      File.open(property_list) do |file|
         file.each do |line|
           name, type, comment = line.chomp!.split("\t")
           break if name.blank?

@@ -86,7 +86,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment)}/)
       end
       item.reload
       item

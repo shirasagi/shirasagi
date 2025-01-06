@@ -79,7 +79,7 @@ describe SS::Group, type: :model, dbscope: :example do
     subject { group.to_liquid }
 
     before do
-      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
+      subject.context = Liquid::Context.new(assigns, {}, registers, true)
     end
 
     context "with root group" do

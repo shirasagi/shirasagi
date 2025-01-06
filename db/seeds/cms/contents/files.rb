@@ -19,7 +19,7 @@ def save_ss_files(path, data)
   if data[:name].present?
     name = data[:name]
     if !name.include?(".") && data[:filename].include?(".")
-      name = "#{name}#{::File.extname(data[:filename])}"
+      name = "#{name}#{File.extname(data[:filename])}"
     end
     item.name = name
   end

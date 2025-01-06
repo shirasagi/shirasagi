@@ -266,12 +266,12 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
     let!(:item) { create(:gws_notice_folder) }
     let(:file) do
       filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
-      basename = ::File.basename(filename)
+      basename = File.basename(filename)
       SS::File.create_empty!(
         cur_user: gws_user, name: basename, filename: basename,
         content_type: "image/png", model: 'ss/temp_file'
       ) do |file|
-        ::FileUtils.cp(filename, file.path)
+        FileUtils.cp(filename, file.path)
       end
     end
 

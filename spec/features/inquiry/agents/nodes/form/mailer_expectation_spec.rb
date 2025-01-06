@@ -32,7 +32,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   end
 
   context "mailer raised expectation" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
+    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
 
     it do
       # override deliver method

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sys::PostalCodesController, type: :request, dbscope: :example do
   let!(:user) { sys_user }
-  let!(:file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/sys/postal_code.zip", nil, true) }
+  let!(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/sys/postal_code.zip", nil, true) }
   let!(:login_path) { sns_login_path(format: :json) }
   let!(:correct_login_params) do
     {
@@ -33,7 +33,7 @@ describe Sys::PostalCodesController, type: :request, dbscope: :example do
 
     context 'When #index' do
       before do
-        Sys::PostalCode::OfficialCsvImportJob.import_from_zip("#{::Rails.root}/spec/fixtures/sys/postal_code.zip")
+        Sys::PostalCode::OfficialCsvImportJob.import_from_zip("#{Rails.root}/spec/fixtures/sys/postal_code.zip")
         get sys_postal_codes_path
       end
 

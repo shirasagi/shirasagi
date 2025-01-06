@@ -13,7 +13,7 @@ describe "cms_agents_parts_site_search_keyword", type: :feature, dbscope: :examp
   let!(:index_page) { create :cms_page, layout: layout }
 
   before do
-    ::FileUtils.rm_f(index_page.path)
+    FileUtils.rm_f(index_page.path)
   end
 
   context "with public site search node" do

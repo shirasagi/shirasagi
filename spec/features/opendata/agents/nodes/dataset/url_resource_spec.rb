@@ -11,7 +11,7 @@ describe "opendata_agents_nodes_url_resource", type: :feature, dbscope: :example
 
     headers = { "ETag" => rand(0x100000000).to_s(36), "Last-Modified" => Time.zone.now.httpdate }
     stub_request(:get, original_url).
-      to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/opendata/shift_jis.csv"), headers: headers)
+      to_return(status: 200, body: File.binread("#{Rails.root}/spec/fixtures/opendata/shift_jis.csv"), headers: headers)
   end
 
   after do

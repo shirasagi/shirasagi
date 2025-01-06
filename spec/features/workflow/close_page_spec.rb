@@ -88,7 +88,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
 
       item.reload
       expect(item.workflow_state).to eq "approve"

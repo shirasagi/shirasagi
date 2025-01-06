@@ -55,9 +55,9 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         click_on I18n.t("ss.buttons.download")
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv.length).to eq 1
-        expect(csv[0][Article::Page.t(:filename)]).to eq ::File.basename(site1_article_page.filename)
+        expect(csv[0][Article::Page.t(:filename)]).to eq File.basename(site1_article_page.filename)
         expect(csv[0][Article::Page.t(:category_ids)]).to eq "#{site1_category1.name} (#{site1_category1.filename})"
       end
     end
@@ -85,9 +85,9 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         click_on I18n.t("ss.buttons.download")
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv.length).to eq 1
-        expect(csv[0][Article::Page.t(:filename)]).to eq ::File.basename(site2_article_page.filename)
+        expect(csv[0][Article::Page.t(:filename)]).to eq File.basename(site2_article_page.filename)
         expect(csv[0][Article::Page.t(:category_ids)]).to eq "#{site2_category1.name} (#{site2_category1.filename})"
       end
     end

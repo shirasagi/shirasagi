@@ -62,7 +62,7 @@ def save_ss_files(path, data)
   if data[:name].present?
     name = data[:name]
     if !name.include?(".") && data[:filename].include?(".")
-      name = "#{name}#{::File.extname(data[:filename])}"
+      name = "#{name}#{File.extname(data[:filename])}"
     end
     item.name = name
   end
@@ -681,7 +681,7 @@ def save_metadata_importer(data)
 end
 
 @metadata_importer = save_metadata_importer cur_node: nodes['dataset'], cur_user: @user, name: 'シラサギ市',
-  source_url: ::Addressable::URI.join(@site.full_url, 'materials/shirasagi_test_date.csv'),
+  source_url: Addressable::URI.join(@site.full_url, 'materials/shirasagi_test_date.csv'),
   default_area_ids: [nodes['chiiki/shirasagi'].id], notice_user_ids: [@user.id]
 
 def save_estat_category_setting(data)
@@ -770,7 +770,7 @@ def save_metadata_resource(idx, dataset, report, data)
     resource = Opendata::Resource.new
     dataset.resources << resource
   end
-  filename = data[:metadata_imported_attributes]['ファイル_タイトル'].to_s + ::File.extname(url.to_s)
+  filename = data[:metadata_imported_attributes]['ファイル_タイトル'].to_s + File.extname(url.to_s)
   resource_data = {
     source_url: url,
     name: data[:metadata_imported_attributes]['ファイル_タイトル'].presence || filename,
@@ -1028,7 +1028,7 @@ def save_word_dictionary(data)
   cond = { site_id: @site.id, name: data[:name] }
 
   body_file = data.delete(:body_file)
-  data[:body] = ::File.read(body_file)
+  data[:body] = File.read(body_file)
 
   item = Cms::WordDictionary.find_or_initialize_by cond
   puts item.errors.full_messages unless item.update data

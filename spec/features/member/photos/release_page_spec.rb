@@ -42,8 +42,8 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("workflow.buttons.request")
       end
       expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(workflow_comment)}/)
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user.uid)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(workflow_comment)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user.uid)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq cms_user.id
@@ -73,7 +73,7 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment)}/)
 
       item.reload
       expect(item.workflow_state).to eq "approve"

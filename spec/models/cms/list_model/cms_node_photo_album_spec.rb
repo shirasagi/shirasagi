@@ -17,7 +17,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 1
           # wildcard is assumed. key `:depth` isn't contained
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//)
           # and there are no category references
         end
       end
@@ -30,7 +30,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 1
           # wildcard is assumed. key `:depth` isn't contained
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//)
           # and there are no category references
         end
       end

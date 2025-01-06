@@ -41,7 +41,7 @@ describe Uploader::FilesJob, dbscope: :example do
   end
 
   describe "perform scss file" do
-    let!(:source) { "#{::Rails.root}/spec/fixtures/uploader/style.scss" }
+    let!(:source) { "#{Rails.root}/spec/fixtures/uploader/style.scss" }
     let!(:file_path) { "#{site.path}/style.scss" }
     let!(:rel_path) { file_path.delete_prefix("#{Rails.root}/") }
     let!(:css_path) { "#{site.path}/style.css" }
@@ -49,7 +49,7 @@ describe Uploader::FilesJob, dbscope: :example do
 
     it do
       # upload
-      FileUtils.mkdir_p ::File.dirname(file_path)
+      FileUtils.mkdir_p File.dirname(file_path)
       FileUtils.cp(source, file_path)
       Uploader::JobFile.new_job(bindings).upload(file_path)
       FileUtils.rm(file_path)
@@ -78,7 +78,7 @@ describe Uploader::FilesJob, dbscope: :example do
   end
 
   describe "perform coffee file" do
-    let!(:source) { "#{::Rails.root}/spec/fixtures/uploader/example.coffee" }
+    let!(:source) { "#{Rails.root}/spec/fixtures/uploader/example.coffee" }
     let!(:file_path) { "#{site.path}/example.coffee" }
     let!(:rel_path) { file_path.delete_prefix("#{Rails.root}/") }
     let!(:js_path) { "#{site.path}/example.js" }
@@ -86,7 +86,7 @@ describe Uploader::FilesJob, dbscope: :example do
 
     it do
       # upload
-      FileUtils.mkdir_p ::File.dirname(file_path)
+      FileUtils.mkdir_p File.dirname(file_path)
       FileUtils.cp(source, file_path)
       Uploader::JobFile.new_job(bindings).upload(file_path)
       FileUtils.rm(file_path)
@@ -115,13 +115,13 @@ describe Uploader::FilesJob, dbscope: :example do
   end
 
   describe "perform image file" do
-    let!(:source) { "#{::Rails.root}/spec/fixtures/ss/logo.png" }
+    let!(:source) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
     let!(:file_path) { "#{site.path}/example.png" }
     let!(:rel_path) { file_path.delete_prefix("#{Rails.root}/") }
 
     it do
       # upload
-      FileUtils.mkdir_p ::File.dirname(file_path)
+      FileUtils.mkdir_p File.dirname(file_path)
       FileUtils.cp(source, file_path)
       Uploader::JobFile.new_job(bindings).upload(file_path)
       FileUtils.rm(file_path)

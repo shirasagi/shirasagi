@@ -17,7 +17,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+        to_return(status: 200, body: File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
 
       subject.license_id = license.id
       subject.original_url = url
@@ -66,7 +66,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+        to_return(status: 200, body: File.binread(csv_path), headers: {})
 
       subject.license_id = license.id
       subject.original_url = url
@@ -92,7 +92,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
       before do
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+          to_return(status: 200, body: File.binread(csv_path), headers: {})
 
         subject.license_id = license.id
         subject.original_url = url
@@ -117,7 +117,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
       before do
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+          to_return(status: 200, body: File.binread(csv_path), headers: {})
 
         subject.license_id = license.id
         subject.original_url = url
@@ -142,7 +142,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
       before do
         stub_request(:get, url).
-          to_return(status: 200, body: ::File.binread(csv_path), headers: {})
+          to_return(status: 200, body: File.binread(csv_path), headers: {})
 
         subject.license_id = license.id
         subject.original_url = url
@@ -170,8 +170,8 @@ describe Opendata::UrlResource, dbscope: :example do
 
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: ::File.binread(csv_path1), headers: { "Last-Modified" => (now - 1.hour).httpdate }).
-        to_return(status: 200, body: ::File.binread(csv_path2), headers: { "Last-Modified" => now.httpdate })
+        to_return(status: 200, body: File.binread(csv_path1), headers: { "Last-Modified" => (now - 1.hour).httpdate }).
+        to_return(status: 200, body: File.binread(csv_path2), headers: { "Last-Modified" => now.httpdate })
 
       subject.license_id = license.id
       subject.original_url = url
@@ -270,7 +270,7 @@ describe Opendata::UrlResource, dbscope: :example do
 
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: ::File.binread(ttl_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+        to_return(status: 200, body: File.binread(ttl_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
 
       create(:opendata_node_sparql)
     end

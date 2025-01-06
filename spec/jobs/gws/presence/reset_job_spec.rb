@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ::Gws::Presence::ResetJob, dbscope: :example do
+describe Gws::Presence::ResetJob, dbscope: :example do
   let!(:site) { gws_site }
   let!(:user) { gws_user }
 

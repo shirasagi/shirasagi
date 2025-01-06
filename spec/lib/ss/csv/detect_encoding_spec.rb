@@ -13,7 +13,7 @@ describe SS::Csv do
     let(:path) { "#{Rails.root}/spec/fixtures/ckan/package_search.json" }
 
     it do
-      ::File.open(path, "rb") do |f|
+      File.open(path, "rb") do |f|
         expect(described_class.detect_encoding(f)).to eq Encoding::UTF_8
       end
     end

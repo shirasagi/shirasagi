@@ -22,7 +22,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
     before do
       WebMock.reset!
 
-      body = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", path))
+      body = File.read(Rails.root.join("spec", "fixtures", "event", "ical", path))
       stub_request(:get, node.ical_import_url).
         to_return(status: 200, body: body, headers: {})
     end
@@ -295,8 +295,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       before do
         WebMock.reset!
 
-        body1 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
-        body2 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "updated_event.ics"))
+        body1 = File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
+        body2 = File.read(Rails.root.join("spec", "fixtures", "event", "ical", "updated_event.ics"))
         stub_request(:get, node.ical_import_url).
           to_return(status: 200, body: body1, headers: {}).then.
           to_return(status: 200, body: body2, headers: {})
@@ -326,8 +326,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       before do
         WebMock.reset!
 
-        body1 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
-        body2 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-empty.ics"))
+        body1 = File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
+        body2 = File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-empty.ics"))
         stub_request(:get, node.ical_import_url).
           to_return(status: 200, body: body1, headers: {}).then.
           to_return(status: 200, body: body2, headers: {})
@@ -351,7 +351,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
       before do
         WebMock.reset!
 
-        body1 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
+        body1 = File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
         stub_request(:get, node.ical_import_url).
           to_return(status: 200, body: body1, headers: {}).then.
           to_timeout
@@ -374,7 +374,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
       before do
         WebMock.reset!
 
-        body1 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
+        body1 = File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
         stub_request(:get, node.ical_import_url).
           to_return(status: 200, body: body1, headers: {}).then.
           to_return(status: [ 404, "Not Found" ])

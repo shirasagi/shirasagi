@@ -9,14 +9,14 @@ describe Article::Page, dbscope: :example do
       SS::File.create_empty!(
         cur_user: cms_user, site_id: cms_site.id, model: "article/page", filename: "logo.png", content_type: 'image/png'
       ) do |file|
-        ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
+        FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
       end
     end
     let!(:file2) do
       SS::File.create_empty!(
         cur_user: cms_user, site_id: cms_site.id, model: "article/page", filename: "logo.png", content_type: 'image/png'
       ) do |file|
-        ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
+        FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
       end
     end
     let!(:column1) { create(:cms_column_free, cur_form: form, order: 1) }

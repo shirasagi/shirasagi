@@ -3,17 +3,17 @@ require 'spec_helper'
 describe Fs do
   let(:filesystem) do
     Class.new do
-      include ::Fs::File
+      include Fs::File
     end
   end
 
   let(:grid_fs) do
     Class.new do
-      include ::Fs::GridFs
+      include Fs::GridFs
     end
   end
 
-  let(:data) { ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png") }
+  let(:data) { File.binread("#{Rails.root}/spec/fixtures/ss/logo.png") }
 
   before do
     grid_fs.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", data)
@@ -97,7 +97,7 @@ describe Fs do
       expect(grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
       # not exist
       expect { filesystem.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
-      expect { grid_fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
+      expect { grid_fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Fs::GridFs::FileNotFoundError
     end
 
     it do
@@ -106,7 +106,7 @@ describe Fs do
       expect(grid_fs.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
       # not exist
       expect { filesystem.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
-      expect { grid_fs.binread("spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
+      expect { grid_fs.binread("spec/fixtures/#{unique_id}") }.to raise_error Fs::GridFs::FileNotFoundError
     end
   end
 
@@ -114,7 +114,7 @@ describe Fs do
     let(:tmp_dir) { "#{tmpdir}/spec/fs" }
 
     before do
-      ::FileUtils.mkdir_p(tmp_dir)
+      FileUtils.mkdir_p(tmp_dir)
     end
 
     it do
@@ -137,7 +137,7 @@ describe Fs do
       expect(grid_fs.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
       # not exist
       expect { filesystem.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
-      expect { grid_fs.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error ::Fs::GridFs::FileNotFoundError
+      expect { grid_fs.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error Fs::GridFs::FileNotFoundError
     end
 
     it do
@@ -146,7 +146,7 @@ describe Fs do
       expect(grid_fs.size("spec/fixtures/ss/logo.png")).to eq data.length
       # not exist
       expect { filesystem.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
-      expect { grid_fs.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error ::Fs::GridFs::FileNotFoundError
+      expect { grid_fs.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error Fs::GridFs::FileNotFoundError
     end
   end
 
@@ -182,8 +182,8 @@ describe Fs do
     let(:tmp_file) { "#{tmpdir}/spec/fs/logo.png" }
 
     before do
-      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
-      ::File.binwrite(tmp_file, data)
+      FileUtils.mkdir_p(File.dirname(tmp_file))
+      File.binwrite(tmp_file, data)
 
       grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
     end
@@ -195,7 +195,7 @@ describe Fs do
       expect { filesystem.mv("#{tmpdir}/spec/fs/logo2.png", "#{tmpdir}/spec/fs/logo3.png") }.to \
         raise_error Errno::ENOENT
       expect { grid_fs.mv("#{tmpdir}/spec/fs/logo2.png", "#{tmpdir}/spec/fs/logo3.png") }.to \
-        raise_error ::Fs::GridFs::FileNotFoundError
+        raise_error Fs::GridFs::FileNotFoundError
       # move directory
       expect(filesystem.mv("#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs2")).to eq 0
       expect(grid_fs.mv("#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs2")).to eq 0
@@ -206,8 +206,8 @@ describe Fs do
     let(:tmp_file) { "#{tmpdir}/spec/fs/logo.png" }
 
     before do
-      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
-      ::File.binwrite(tmp_file, data)
+      FileUtils.mkdir_p(File.dirname(tmp_file))
+      File.binwrite(tmp_file, data)
 
       grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
     end
@@ -234,8 +234,8 @@ describe Fs do
     let(:tmp_file) { "#{tmpdir}/spec/fs/logo.png" }
 
     before do
-      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
-      ::File.binwrite(tmp_file, data)
+      FileUtils.mkdir_p(File.dirname(tmp_file))
+      File.binwrite(tmp_file, data)
 
       grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
     end

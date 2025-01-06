@@ -40,7 +40,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         }
         { status: 200, headers: { 'Content-Type' => 'application/json' }, body: body.to_json }
       end
-      stub_request(:get, /#{::Regexp.escape("https://api.twitter.com/2/users/me")}/).to_return do |request|
+      stub_request(:get, /#{Regexp.escape("https://api.twitter.com/2/users/me")}/).to_return do |request|
         expect(request.headers["Authorization"]).to eq "Bearer #{access_token}"
         expect(request.body).to be_blank
 
@@ -63,7 +63,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       post "#{node.full_url}twitter2"
       expect(response.status).to eq 302
       expect(response.location).to be_present
-      location = ::Addressable::URI.parse(response.location)
+      location = Addressable::URI.parse(response.location)
       expect(location.origin).to eq "https://twitter.com"
       expect(location.query).to be_present
       query_values = location.query_values
@@ -75,7 +75,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
       get "#{node.full_url}twitter2/callback?#{{state: query_values["state"], code: code}.to_query}"
       expect(response.status).to eq 302
-      location = ::Addressable::URI.parse(response.location)
+      location = Addressable::URI.parse(response.location)
       expect(location.origin).to eq site.full_url[0..-2]
       expect(location.path).to eq node.redirect_url
 
