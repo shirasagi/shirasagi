@@ -80,8 +80,8 @@ describe "faq_pages", type: :feature, js: true do
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css("a", text: "[複製] modify")
-      expect(page).to have_css(".state", text: "編集中")
+      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] modify")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
     end
 
     it "#delete" do
