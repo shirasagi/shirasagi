@@ -85,7 +85,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(page).to have_css("a", text: "[複製] modify")
-      expect(page).to have_css(".state", text: "非公開")
+      expect(page).to have_css(".state", text: "編集中")
 
       expect(Cms::Page.count).to eq 4
 
