@@ -87,8 +87,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      expect(page).to have_css("a", text: "[複製] #{item.name}")
-      expect(page).to have_css(".state", text: "編集中")
+      expect(page).to have_css("a", text: "[#{I18n.t("workflow.cloned_name_prefix")}] #{item.name}")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
     end
 
     context "with release_date and close_date" do
