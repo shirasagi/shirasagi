@@ -81,7 +81,7 @@ describe "faq_pages", type: :feature, js: true do
       end
       expect(current_path).to eq index_path
       expect(page).to have_css("a", text: "[複製] modify")
-      expect(page).to have_css(".state", text: "非公開")
+      expect(page).to have_css(".state", text: "編集中")
     end
 
     it "#delete" do
