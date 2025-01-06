@@ -84,8 +84,8 @@ describe "cms/pages", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css("a", text: "[複製] modify")
-      expect(page).to have_css(".state", text: "編集中")
+      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] modify")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
 
       expect(Cms::Page.count).to eq 4
 
