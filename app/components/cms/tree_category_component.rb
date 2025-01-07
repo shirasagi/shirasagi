@@ -2,7 +2,7 @@ class Cms::TreeCategoryComponent < ApplicationComponent
   include SS::CacheableComponent
 
   self.cache_key = ->{
-    [ cur_site.id, max_updated, category_key, readable_category_key, root_and_descendants ]
+    [ cur_site.id, item_name, max_updated, category_key, readable_category_key, root_and_descendants ]
   }
 
   attr_reader :cur_site, :root_and_descendants, :item_name, :selected
