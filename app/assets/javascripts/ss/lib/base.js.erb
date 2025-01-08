@@ -573,6 +573,10 @@ this.SS = (function () {
       from = new RegExp(from, "g");
       format = format.replace(from, to);
     });
+
+    // "(" のような文字をエスケープする（moment のエスケープはエスケープしたい文字列を "[" と "]" で囲む）
+    format = format.replaceAll(/[^A-Za-z ,/:]+/g, function(match) { return "[" + match + "]"; });
+
     return format;
   };
 
