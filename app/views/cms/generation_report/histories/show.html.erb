@@ -1,0 +1,15 @@
+<% addons = @addons || @item.try(:addons) || [] %>
+
+<div class="addon-views">
+  <%
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+    addon_options[:head] = @title.name
+  %>
+  <% buf = render template: "_show", locals: { addon: addon_options } %>
+  <%= render "ss/crud/addon", addon: addon_options do %>
+    <%= buf %>
+  <% end %>
+
+  <%= render template: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+</div>
