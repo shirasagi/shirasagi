@@ -63,6 +63,8 @@ describe Cms::GenerationReportCreateJob, dbscope: :example do
         expect(title.site_id).to eq site.id
         expect(title.name).to include("generate node performance")
         expect(title.task_id).to eq task.id
+        expect(title.task_started).to eq task.started
+        expect(title.task_closed).to eq task.closed
         expect(title.sha256_hash).to be_present
         expect(title.generation_type).to eq "nodes"
 
