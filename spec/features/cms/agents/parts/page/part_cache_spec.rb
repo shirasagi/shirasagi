@@ -18,20 +18,23 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example, js: true do
     it "#index" do
       expect(part.ajax_view_cache_enabled?).to be false
 
-      Timecop.freeze(now_time)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
+      Timecop.freeze(now_time) do
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
 
-      item1
-      visit node.url
-      expect(page).to have_css(".pages article")
-      expect(page).to have_link(item1.name)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
+        item1
+        visit node.full_url
+        wait_for_all_ajax_parts
+        expect(page).to have_css(".pages article")
+        expect(page).to have_link(item1.name)
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
 
-      item2
-      visit node.url
-      expect(page).to have_css(".pages article")
-      expect(page).to have_link(item1.name)
-      expect(page).to have_link(item2.name)
+        item2
+        visit node.full_url
+        wait_for_all_ajax_parts
+        expect(page).to have_css(".pages article")
+        expect(page).to have_link(item1.name)
+        expect(page).to have_link(item2.name)
+      end
 
       Timecop.return
     end
@@ -50,39 +53,46 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example, js: true do
     it "#index" do
       expect(part.ajax_view_cache_enabled?).to be true
 
-      Timecop.freeze(now_time)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
+      Timecop.freeze(now_time) do
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
 
-      item1
-      visit node.url
-      expect(page).to have_css(".pages article")
-      expect(page).to have_link(item1.name)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+        item1
+        visit node.full_url
+        wait_for_all_ajax_parts
+        expect(page).to have_css(".pages article")
+        expect(page).to have_link(item1.name)
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
 
-      item2
-      visit node.url
-      expect(page).to have_css(".pages article")
-      expect(page).to have_link(item1.name)
-      expect(page).to have_no_link(item2.name)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+        item2
+        visit node.full_url
+        wait_for_all_ajax_parts
+        expect(page).to have_css(".pages article")
+        expect(page).to have_link(item1.name)
+        expect(page).to have_no_link(item2.name)
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+      end
 
-      Timecop.freeze(now_time + 5.seconds)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+      Timecop.freeze(now_time + 5.seconds) do
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
 
-      visit node.url
-      expect(page).to have_css(".pages article")
-      expect(page).to have_link(item1.name)
-      expect(page).to have_no_link(item2.name)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+        visit node.full_url
+        wait_for_all_ajax_parts
+        expect(page).to have_css(".pages article")
+        expect(page).to have_link(item1.name)
+        expect(page).to have_no_link(item2.name)
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+      end
 
-      Timecop.freeze(now_time + 10.seconds)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
+      Timecop.freeze(now_time + 10.seconds) do
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be false
 
-      visit node.url
-      expect(page).to have_css(".pages article")
-      expect(page).to have_link(item1.name)
-      expect(page).to have_link(item2.name)
-      expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+        visit node.full_url
+        wait_for_all_ajax_parts
+        expect(page).to have_css(".pages article")
+        expect(page).to have_link(item1.name)
+        expect(page).to have_link(item2.name)
+        expect(Rails.cache.exist?(part.ajax_view_cache_key)).to be true
+      end
 
       Timecop.return
     end
