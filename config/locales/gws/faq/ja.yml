@@ -171,4 +171,4 @@ ja:
 
   job:
     models:
-      gws/faq/trash_purge_job: よくある質問/投稿ゴミ箱の掃除
+      gws/faq/trash_purge_job: GWSよくある質問/投稿ゴミ箱の掃除

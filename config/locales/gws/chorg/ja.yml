@@ -40,5 +40,5 @@ ja:
 
   job:
     models:
-      gws/chorg/test_runner: 組織変更/テスト実行
-      gws/chorg/main_runner: 組織変更/本番実行
+      gws/chorg/test_runner: GWS組織変更/テスト実行
+      gws/chorg/main_runner: GWS組織変更/本番実行

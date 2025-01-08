@@ -214,5 +214,5 @@ ja:
 
   job:
     models:
-      contact/page_count_job: 連絡先使用数計数ジョブ
-      contact/unify_job: 連絡先統合ジョブ
+      contact/page_count_job: 連絡先/使用数計数ジョブ
+      contact/unify_job: 連絡先/統合ジョブ
