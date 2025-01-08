@@ -36,20 +36,20 @@ class Cms::Agents::Nodes::LineHubController < ApplicationController
 
   def image_map
     item = Cms::Line::Service::Hook::ImageMap.site(@cur_site).find(params[:id]) rescue nil
-    raise "404" unless item
+    raise SS::NotFoundError unless item
 
     size = params[:size]
-    raise "404" unless %w(1040 700 460 300 240).include?(size)
+    raise SS::NotFoundError unless %w(1040 700 460 300 240).include?(size)
 
     image = item.try("image#{size}")
-    raise "404" unless image
+    raise SS::NotFoundError unless image
 
     send_file image.path, type: image.content_type, filename: size, x_sendfile: true
   end
 
   def mail
     item = Cms::Line::MailHandler.site(@cur_site).and_enabled.find_by(filename: params[:filename]) rescue nil
-    raise "404" unless item
+    raise SS::NotFoundError unless item
 
     if request.get? || request.head?
       head :ok
@@ -64,11 +64,11 @@ class Cms::Agents::Nodes::LineHubController < ApplicationController
       end
     rescue => e
       Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      raise "404"
+      raise SS::NotFoundError
     end
 
     data = params["data"].read rescue nil
-    raise "404" if data.blank?
+    raise SS::NotFoundError if data.blank?
 
     item.handle_message(data)
     head :ok

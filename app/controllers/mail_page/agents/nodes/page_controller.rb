@@ -26,11 +26,11 @@ class MailPage::Agents::Nodes::PageController < ApplicationController
       end
     rescue => e
       Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      raise "404"
+      raise SS::NotFoundError
     end
 
     data = params["data"].read rescue nil
-    raise "404" if data.blank?
+    raise SS::NotFoundError if data.blank?
 
     file = SS::MailHandler.write_eml(data, "mail_page")
     MailPage::ImportJob.bind(site_id: @cur_site.id).perform_now(file)
