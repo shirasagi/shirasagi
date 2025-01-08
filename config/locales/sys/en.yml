@@ -342,7 +342,11 @@ en:
 
   job:
     models:
-      sys/site_copy_job: Duplicate site
-      sys/postal_code/import_job: Import postal code
-      sys/postal_code/official_csv_import_job: Import Japan Post CSV
-      sys/prefecture_code/import_job: Import city code
+      sys/group_import_job: System/Group Import
+      sys/history_archive_job: System/History Archive
+      sys/site_copy_job: System/Duplicate site
+      sys/site_export_job: System/Site Export
+      sys/site_import_job: System/Site Import
+      sys/postal_code/import_job: System/Import postal code
+      sys/postal_code/official_csv_import_job: System/Import Japan Post CSV
+      sys/prefecture_code/import_job: System/Import city code

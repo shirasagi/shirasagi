@@ -669,10 +669,10 @@ en:
 
   job:
     models:
-      gws/history_archive_job: Create an operation history archive
-      gws/compress_job: File/Compressed download
-      gws/user_title_import_job: Import job title
-      gws/user_occupation_import_job: Occupation import
-      gws/cache_rebuild_job: Rebuild cache
-      gws/aggregation/group_update_job: Update aggregation group
-      gws/reload_site_usage_job: Update various usages
+      gws/history_archive_job: GWS/Create an operation history archive
+      gws/compress_job: GWS/File Compress and download
+      gws/user_title_import_job: GWS/Import job title
+      gws/user_occupation_import_job: GWS/Occupation import
+      gws/cache_rebuild_job: GWS/Rebuild cache
+      gws/aggregation/group_update_job: GWS/Update aggregation group
+      gws/reload_site_usage_job: GWS/Update various usages

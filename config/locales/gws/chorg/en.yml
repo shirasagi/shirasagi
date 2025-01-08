@@ -40,5 +40,5 @@ en:
 
   job:
     models:
-      gws/chorg/test_runner: Organizational changes/Test run
-      gws/chorg/main_runner: Organizational changes/Execute changes
+      gws/chorg/test_runner: GWS Organizational changes/Test run
+      gws/chorg/main_runner: GWS Organizational changes/Execute changes

@@ -170,5 +170,5 @@ en:
 
   job:
     models:
-      gws/survey/notification_job: Questionnaire notifications
-      gws/survey/trash_purge_job: Empty questionnaire trash
+      gws/survey/notification_job: Questionnaire/Notifications
+      gws/survey/trash_purge_job: Questionnaires/Empty questionnaire trash

@@ -94,8 +94,8 @@ ja:
 
   job:
     models:
-      history/trash/trash_purge_job: ゴミ箱掃除
-      history/history_log/purge_job: 操作履歴削除
-      history/backup/sweep_job: 更新履歴掃除
-      history/backup/restore_job: 更新履歴復元
-      history/trash/restore_job: ゴミ箱復元
+      history/trash/trash_purge_job: GWS履歴/ゴミ箱掃除
+      history/history_log/purge_job: GWS履歴/操作履歴削除
+      history/backup/sweep_job: GWS履歴/更新履歴掃除
+      history/backup/restore_job: GWS履歴/更新履歴復元
+      history/trash/restore_job: GWS履歴/ゴミ箱復元

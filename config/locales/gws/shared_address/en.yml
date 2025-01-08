@@ -44,4 +44,4 @@ en:
 
   job:
     models:
-      gws/shared_address/trash_purge_job: Empty shared addresses/trash
+      gws/shared_address/trash_purge_job: Shared address book/Empty shared addresses trash

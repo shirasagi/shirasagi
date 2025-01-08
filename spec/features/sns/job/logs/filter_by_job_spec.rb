@@ -40,7 +40,9 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
         visit job_sns_logs_path(site: site)
 
         within ".list-head" do
-          select I18n.t(log1.class_name.underscore, scope: "job.models"), from: "s[class_name]"
+          job_name = I18n.t(log1.class_name.underscore, scope: "job.models")
+          basename = ::File.basename(job_name)
+          select basename, from: "s[class_name]"
         end
         wait_for_js_ready
 
@@ -49,7 +51,9 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".list-item", text: I18n.t(log3.class_name.underscore, scope: "job.models"))
 
         within ".list-head" do
-          select I18n.t(log3.class_name.underscore, scope: "job.models"), from: "s[class_name]"
+          job_name = I18n.t(log3.class_name.underscore, scope: "job.models")
+          basename = ::File.basename(job_name)
+          select basename, from: "s[class_name]"
         end
         wait_for_js_ready
 
@@ -77,7 +81,9 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css("option[value='#{log2.class_name}']")
           expect(page).to have_css("option[value='#{log3.class_name}']")
 
-          select I18n.t(log3.class_name.underscore, scope: "job.models"), from: "s[class_name]"
+          job_name = I18n.t(log3.class_name.underscore, scope: "job.models")
+          basename = ::File.basename(job_name)
+          select basename, from: "s[class_name]"
         end
         wait_for_js_ready
 

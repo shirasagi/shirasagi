@@ -171,4 +171,4 @@ en:
 
   job:
     models:
-      gws/faq/trash_purge_job: Empty FAQ/post trash
+      gws/faq/trash_purge_job: GWS FAQ/Empty post trash

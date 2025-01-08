@@ -142,4 +142,4 @@ en:
 
   job:
     models:
-      gws/workflow/trash_purge_job: Empty workflow/application trash
+      gws/workflow/trash_purge_job: Workflows/Empty application trash

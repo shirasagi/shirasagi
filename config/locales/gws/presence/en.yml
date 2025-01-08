@@ -64,4 +64,4 @@ en:
 
   job:
     models:
-      gws/presence/reset_job: Presence Reset Job
+      gws/presence/reset_job: Presence management/Reset Job

@@ -126,7 +126,7 @@ ja:
 
   job:
     models:
-      facility/import_job: 施設情報インポート
+      facility/import_job: 施設/インポート
 
   tooltip:
     facility/addon/body:

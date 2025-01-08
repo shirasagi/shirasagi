@@ -592,5 +592,5 @@ ja:
 
   job:
     models:
-      gws/schedule/trash_purge_job: 予定ゴミ箱の掃除
-      gws/schedule/todo_trash_purge_job: ToDoゴミ箱の掃除
+      gws/schedule/trash_purge_job: スケジュール/予定ゴミ箱の掃除
+      gws/schedule/todo_trash_purge_job: ToDo/ToDoゴミ箱の掃除

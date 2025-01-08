@@ -81,7 +81,7 @@ ja:
 
   job:
     models:
-      article/page/import_job: 記事ページインポート
+      article/page/import_job: 記事/記事ページインポート
 
   tooltip:
     article/addon/form_export:

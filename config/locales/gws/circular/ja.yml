@@ -179,4 +179,4 @@ ja:
 
   job:
     models:
-      gws/circular/trash_purge_job: 回覧板ゴミ箱の掃除
+      gws/circular/trash_purge_job: 回覧板/ゴミ箱の掃除
