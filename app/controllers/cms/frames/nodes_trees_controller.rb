@@ -4,6 +4,10 @@ class Cms::Frames::NodesTreesController < ApplicationController
   model Cms::Node
 
   def index
-    render :index, layout: false
+    render Cms::NodesTreeComponent.new(site: @cur_site, user: @cur_user), layout: false
+  end
+
+  def super_reload
+    render Cms::NodesTreeComponent.new(site: @cur_site, user: @cur_user, cache_mode: "refresh"), layout: false
   end
 end

@@ -5,12 +5,21 @@ module SS::CacheableComponent
     cattr_accessor :expires_in, :perform_caching, :cache_key, instance_accessor: false
     self.expires_in = 1.day
     self.perform_caching = Rails.application.config.action_controller.perform_caching
+
+    attr_accessor :cache_mode
   end
 
   def cache_component(&block)
     if cache_configured?
-      Rails.cache.fetch(component_cache_key || {}, expires_in: self.class.expires_in) do
-        capture(&block)
+      case cache_mode
+      when "refresh"
+        result = capture(&block)
+        Rails.cache.write(component_cache_key || {}, result, expires_in: self.class.expires_in)
+        result
+      else
+        Rails.cache.fetch(component_cache_key || {}, expires_in: self.class.expires_in) do
+          capture(&block)
+        end
       end
     else
       capture(&block)
