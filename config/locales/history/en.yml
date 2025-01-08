@@ -94,8 +94,8 @@ en:
 
   job:
     models:
-      history/trash/trash_purge_job: Empty trash
-      history/history_log/purge_job: Delete operation history
-      history/backup/sweep_job: Clear update history
-      history/backup/restore_job: Restore update history
-      history/trash/restore_job: Restore trash
+      history/trash/trash_purge_job: GWS History/Empty trash
+      history/history_log/purge_job: GWS History/Delete operation history
+      history/backup/sweep_job: GWS History/Clear update history
+      history/backup/restore_job: GWS History/Restore update history
+      history/trash/restore_job: GWS History/Restore trash

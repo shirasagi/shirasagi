@@ -134,4 +134,4 @@ en:
 
   job:
     models:
-      gws/share/trash_purge_job: Empty shared files/trash
+      gws/share/trash_purge_job: Shared files/Empty shared files trash
