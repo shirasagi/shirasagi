@@ -118,3 +118,7 @@ ja:
 
   cms_role:
     import_lsorg_node_pages: ページリストのインポート
+
+  job:
+    models:
+      lsorg/import_groups_job: 組織一覧/フォルダーの登録・更新

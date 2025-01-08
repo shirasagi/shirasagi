@@ -402,4 +402,4 @@ en:
 
   job:
     models:
-      gws/workflow2/trash_purge_job: Empty workflow/application trash
+      gws/workflow2/trash_purge_job: Application2/Empty application trash

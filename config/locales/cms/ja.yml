@@ -1714,6 +1714,8 @@ ja:
         name: タイトル
         memo: メモ
         task: タスク
+        task_started: 処理開始日時
+        task_closed: 処理終了日時
         started: 開始日時
         closed: 終了日時
       cms/generation_report/history:
@@ -3386,28 +3388,33 @@ ja:
 
   job:
     models:
-      cms/node/generate_job: フォルダー書き出し
-      cms/page/generate_job: ページ書き出し
-      cms/page/release_job: ページ公開
-      cms/page/remove_job: ページ削除
-      cms/page/update_job: ページ更新
-      cms/page/move_job: ページ移動
-      cms/page/expiration_notice_job: 公開期限お知らせ
-      cms/check_links_job: リンクチェック
-      cms/node/copy_nodes_job: フォルダー複製
-      cms/import_files_job: ページ/フォルダー取り込み
-      cms/role/import_job: 権限インポート
-      cms/form_db/import_url_job: 定型DBインポート
-      cms/all_contents_import_job: 全コンテンツ一括設定
-      cms/michecker_job: miChecker
-      cms/sns_post/twitter_job: Twitterページ投稿
-      cms/sns_post/line_job: LINEページ投稿
-      cms/line/deliver_job: LINE配信
-      cms/line/test_deliver_job: LINEテスト配信
-      cms/line/deliver_reserved_job: LINE予約配信
-      cms/line/apply_richmenu_job: LINEリッチメニュー登録
-      cms/group_import_job: グループインポート
-      cms/remove_improper_htmls_job: 不要HTML削除
-      cms/line/update_statistics_job: LINE統計情報更新
-      cms/generation_report_create_job: 書き出し性能レポートの作成
-      cms/reload_site_usage_job: 各種使用率の更新
+      cms/node/generate_job: CMS/フォルダー書き出し
+      cms/page/generate_job: CMS/ページ書き出し
+      cms/page/release_job: CMS/ページ公開
+      cms/page/remove_job: CMS/ページ削除
+      cms/page/update_job: CMS/ページ更新
+      cms/page/move_job: CMS/ページ移動
+      cms/page/expiration_notice_job: CMS/公開期限お知らせ
+      cms/check_links_job: CMS/リンクチェック
+      cms/node/copy_nodes_job: CMS/フォルダー複製
+      cms/import_files_job: CMS/ページ・フォルダー取り込み
+      cms/role/import_job: CMS/権限インポート
+      cms/form_db/import_url_job: CMS/定型DBインポート
+      cms/all_contents_import_job: CMS/全コンテンツ一括設定
+      cms/michecker_job: CMS/miChecker
+      cms/sns_post/twitter_job: CMS/Twitterページ投稿
+      cms/sns_post/line_job: LINE/ページ投稿
+      cms/line/deliver_job: LINE/配信
+      cms/line/test_deliver_job: LINE/テスト配信
+      cms/line/deliver_reserved_job: LINE/予約配信
+      cms/line/apply_richmenu_job: LINE/リッチメニュー登録
+      cms/group_import_job: CMS/グループインポート
+      cms/remove_improper_htmls_job: CMS/不要HTML削除
+      cms/line/update_statistics_job: LINE/統計情報更新
+      cms/generation_report_create_job: CMS/書き出し性能レポートの作成
+      cms/reload_site_usage_job: CMS/各種使用率の更新
+      cms/elasticsearch/indexer/feed_releases_job: CMS全文検索/リリースフィード
+      cms/elasticsearch/indexer/node_close_job: CMS全文検索/フォルダーの非公開（配下のページの削除）
+      cms/elasticsearch/indexer/node_release_job: CMS全文検索/フォルダーの公開（配下のページの追加）
+      cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
+      cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）
