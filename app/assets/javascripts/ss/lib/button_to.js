@@ -15,12 +15,13 @@ SS_ButtonTo.render = function() {
 };
 
 SS_ButtonTo.invokeAction = function(ev) {
-  var $button = $(ev.target);
+  var $button = $(ev.currentTarget);
   var action = $button.data('ss-button-to-action');
   var method = $button.data('ss-button-to-method') || 'post';
   method = method.toString().toLowerCase();
+  var turbo = $button.data('turbo');
 
-  var $form = $("<form/>", { action: action, method: method === "get" ? "get" : "post" });
+  var $form = $("<form/>", { action: action, method: method === "get" ? "get" : "post", turbo: !!turbo });
   if (method !== "get") {
     $form.append($("<input/>", {
       name: "authenticity_token", value: $('meta[name="csrf-token"]').attr('content'), type: "hidden"
