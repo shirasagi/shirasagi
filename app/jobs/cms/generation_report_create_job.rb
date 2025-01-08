@@ -112,7 +112,9 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     end
 
     title = Cms::GenerationReport::Title.new(
-      cur_site: site, name: title_name, task: generation_task, sha256_hash: digest, generation_type: generation_type)
+      cur_site: site, name: title_name,
+      task: generation_task, task_started: generation_task.started, task_closed: generation_task.closed,
+      sha256_hash: digest, generation_type: generation_type)
     title.save!
     title
   end
