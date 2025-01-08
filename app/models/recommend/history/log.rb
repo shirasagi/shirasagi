@@ -4,9 +4,10 @@ class Recommend::History::Log
   include Cms::SitePermission
 
   store_in_repl_master
+  index({ created: 1 }, { expire_after_seconds: Recommend.expire_logs_in })
   index({ created: -1 })
   index({ site_id: 1, token: 1, created: -1 })
-  index({ site_id: 1, path: 1, created: -1 })
+  # index({ site_id: 1, path: 1, created: -1 })
 
   field :token, type: String
   field :path, type: String

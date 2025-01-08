@@ -53,8 +53,8 @@ SS.ready(function () {
   });
   SS_Theme.render();
   SS.renderAjaxBox();
-  SS.part = $(".ss-part").length;
-  if (SS.part === 0) {
+  SS.partCountToLoad = $(".ss-part").length;
+  if (SS.partCountToLoad === 0) {
     SS_Recommend.render();
   }
   $(".ss-part").each(function () {
