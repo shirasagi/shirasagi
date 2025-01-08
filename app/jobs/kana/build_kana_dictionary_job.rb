@@ -1,4 +1,4 @@
-class Kana::BuildKanaDictinaryJob < Cms::ApplicationJob
+class Kana::BuildKanaDictionaryJob < Cms::ApplicationJob
   def perform(ids = [])
     error_message = Kana::Dictionary.build_dic(site.id, ids)
     if error_message.present?
