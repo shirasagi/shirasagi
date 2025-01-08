@@ -37,7 +37,8 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
 
           it "#mail" do
             capture_line_bot_client do |capture|
-              expect { post(url, params: { data: file }, headers: headers) }.to raise_error "404"
+              post(url, params: { data: file }, headers: headers)
+              expect(response.status).to eq 404
               expect(Cms::Line::Message.count).to eq 0
             end
           end
@@ -153,7 +154,8 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
           let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
 
           it "#mail" do
-            expect { post(url, params: { data: file }, headers: headers) }.to raise_error "404"
+            post(url, params: { data: file }, headers: headers)
+            expect(response.status).to eq 404
           end
         end
 
@@ -161,7 +163,8 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
           let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
 
           it "#mail" do
-            expect { post(url, params: { data: file }, headers: headers) }.to raise_error "404"
+            post(url, params: { data: file }, headers: headers)
+            expect(response.status).to eq 404
           end
         end
       end
@@ -171,7 +174,8 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
 
         it "#mail" do
-          expect { post(url, params: { data: file }, headers: headers) }.to raise_error "404"
+          post(url, params: { data: file }, headers: headers)
+          expect(response.status).to eq 404
         end
       end
 

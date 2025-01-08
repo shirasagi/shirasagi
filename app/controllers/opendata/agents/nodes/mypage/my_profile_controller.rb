@@ -38,7 +38,7 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
   public
 
   def deny_edit
-    raise "404" if !allow_edit_profile?
+    raise SS::NotFoundError if !allow_edit_profile?
   end
 
   def allow_edit_profile?

@@ -86,8 +86,7 @@ module Cms::PublicFilter::Node
       response.content_type ||= "text/html"
     rescue StandardError => e
       @exists = false
-      return if e.to_s == "404"
-      return if e.is_a? Mongoid::Errors::DocumentNotFound
+      return if SS.not_found_error?(e)
       raise e
     end
 

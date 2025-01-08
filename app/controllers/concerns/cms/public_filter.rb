@@ -48,7 +48,7 @@ module Cms::PublicFilter
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def set_request_path
@@ -77,7 +77,7 @@ module Cms::PublicFilter
   end
 
   def deny_path
-    raise "404" if @cur_path.match?(/^\/sites\/.\//)
+    raise SS::NotFoundError if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
@@ -231,7 +231,7 @@ module Cms::PublicFilter
 
   def page_not_found
     request.env["action_dispatch.show_exceptions"] = :none if @preview
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def rescue_action(exception = nil)

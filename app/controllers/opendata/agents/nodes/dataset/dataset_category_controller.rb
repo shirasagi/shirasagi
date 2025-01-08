@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
   def pages
     @cur_node.cur_subcategory = params[:name]
     @item = @cur_node.related_category
-    raise "404" unless @item
+    raise SS::NotFoundError unless @item
 
     @cur_node.name = @item.name
 

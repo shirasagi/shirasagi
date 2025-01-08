@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module SS
   module_function
 
@@ -8,7 +10,24 @@ module SS
   DEFAULT_TRASH_THRESHOLD = 1
   DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
 
+  HTTP_STATUS_CODE_FORBIDDEN = "403"
+  HTTP_STATUS_CODE_NOT_FOUND = "404"
+
   mattr_accessor(:max_items_per_page) { 50 }
+
+  # 403
+  class ForbiddenError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_FORBIDDEN)
+    end
+  end
+
+  # 404
+  class NotFoundError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_NOT_FOUND)
+    end
+  end
 
   def change_locale_and_timezone(user)
     if user.nil?
@@ -115,5 +134,11 @@ module SS
     else
       raise ArgumentError, "invalid value for threshold: \"#{threshold}\""
     end
+  end
+
+  def not_found_error?(err)
+    return true if ActionDispatch::ExceptionWrapper.status_code_for_exception(err.class.name) == 404
+    return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
+    false
   end
 end

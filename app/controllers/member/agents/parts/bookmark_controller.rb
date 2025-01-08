@@ -26,7 +26,7 @@ class Member::Agents::Parts::BookmarkController < ApplicationController
     else
       @bookmark_node = Member::Node::Bookmark.site(@cur_site).first
     end
-    raise "404" unless @bookmark_node
+    raise SS::NotFoundError unless @bookmark_node
   end
 
   #def set_cur_content
@@ -35,7 +35,7 @@ class Member::Agents::Parts::BookmarkController < ApplicationController
   #end
 
   def set_member
-    raise "404" unless member_login_path
+    raise SS::NotFoundError unless member_login_path
     @cur_member = get_member_by_session rescue nil
     @redirect_path = "#{member_login_path}?ref=#{CGI.escape(@cur_path)}"
   end

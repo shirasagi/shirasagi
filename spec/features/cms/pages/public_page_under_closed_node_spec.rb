@@ -7,8 +7,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
   let!(:item) { create :cms_page, cur_site: site, cur_node: node, layout: layout.id, basename: "index.html" }
 
   it do
-    expect do
-      visit item.full_url
-    end.to raise_error(RuntimeError, "404")
+    visit item.full_url
+    expect(status_code).to eq 404
   end
 end

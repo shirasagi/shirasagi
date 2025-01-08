@@ -18,7 +18,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
   end
 
   def set_app
-    raise "404" if app.member_id != @cur_member.id
+    raise SS::NotFoundError if app.member_id != @cur_member.id
     @app_url     = "#{@cur_node.url}#{@app.id}/"
     @appfile_url = "#{@app_url}appfiles/"
   end

@@ -26,8 +26,7 @@ module Event::GeneratorFilter::Ical
       response.content_type ||= "text/calendar"
     rescue StandardError => e
       @exists = false
-      return if e.to_s == "404"
-      return if e.is_a? Mongoid::Errors::DocumentNotFound
+      return if SS.not_found_error?(e)
       raise e
     end
 
