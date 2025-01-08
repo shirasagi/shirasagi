@@ -5,6 +5,9 @@ module SS
 
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
+  DEFAULT_TRASH_THRESHOLD = 1
+  DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
+
   mattr_accessor(:max_items_per_page) { 50 }
 
   def change_locale_and_timezone(user)
@@ -94,5 +97,23 @@ module SS
 
   def request_path(request)
     Addressable::URI.parse(request.env["REQUEST_PATH"] || request.path).normalize.request_uri
+  end
+
+  def default_trash_threshold_in_days
+    SS::Duration.parse("#{DEFAULT_TRASH_THRESHOLD}.#{DEFAULT_TRASH_THRESHOLD_UNIT}")
+  end
+
+  def parse_threshold!(now, threshold, site:)
+    return now - site.trash_threshold_in_days if threshold.nil?
+    case threshold
+    when Integer
+      unit = site.trash_threshold_unit.presence || DEFAULT_TRASH_THRESHOLD_UNIT
+      return now - threshold.send(unit)
+    when String
+      duration = threshold.present? ? SS::Duration.parse(threshold) : site.trash_threshold_in_days
+      return now - duration
+    else
+      raise ArgumentError, "invalid value for threshold: \"#{threshold}\""
+    end
   end
 end
