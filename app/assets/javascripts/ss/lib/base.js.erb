@@ -595,10 +595,10 @@ this.SS = (function () {
         format = "default"
       }
       format = i18next.t("time.formats." + format, format);
-      format = SS.convertDateTimeFormat(format);
     } else {
       format = SS.DEFAULT_TIME_FORMAT;
     }
+    format = SS.convertDateTimeFormat(format);
 
     return moment(time).format(format);
   };
@@ -612,10 +612,10 @@ this.SS = (function () {
         format = "default"
       }
       format = i18next.t("date.formats." + format, format);
-      format = SS.convertDateTimeFormat(format);
     } else {
       format = SS.DEFAULT_DATE_FORMAT;
     }
+    format = SS.convertDateTimeFormat(format);
 
     return moment(date).format(format);
   };
