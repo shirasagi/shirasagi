@@ -1,6 +1,5 @@
 module Opendata::Api::TagShowFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   def tag_show
     help = t("opendata.api.tag_show_help")

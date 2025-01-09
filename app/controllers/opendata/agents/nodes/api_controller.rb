@@ -1,5 +1,6 @@
 class Opendata::Agents::Nodes::ApiController < ApplicationController
   include Cms::NodeFilter::View
+  include Opendata::Api::BaseFilter
 
   include Opendata::Api::PackageListFilter
   include Opendata::Api::PackageShowFilter
