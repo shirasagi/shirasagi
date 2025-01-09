@@ -2,15 +2,32 @@ require 'spec_helper'
 
 describe Sys::SiteCopyJob, dbscope: :example do
   describe "copy page" do
-    let(:site) { cms_site }
-    let(:layout) { create :cms_layout, cur_site: site }
+    let!(:site) { cms_site }
+    let!(:user) { cms_user }
+    let!(:group) do
+      group = Cms::Group.find(user.groups.first.id)
+      group.contact_groups.create(
+        name: "name-#{unique_id}", contact_group_name: "group_name-#{unique_id}",
+        contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+        contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+        main_state: "main")
+
+      Cms::Group.find(user.groups.first.id)
+    end
+    let!(:layout) { create :cms_layout, cur_site: site }
     let(:task) { Sys::SiteCopyTask.new }
     let(:target_host_name) { unique_id }
     let(:target_host_host) { unique_id }
     let(:target_host_domain) { "#{unique_id}.example.jp" }
 
-    let(:article_node) { create :article_node_page, cur_site: site, layout: layout }
-    let!(:summary_page) { create :article_page, cur_site: site, cur_node: article_node, layout: layout }
+    let(:article_node) { create :article_node_page, cur_site: site, cur_user: user, layout: layout }
+    let!(:summary_page) do
+      create(
+        :article_page, cur_site: site, cur_user: user, cur_node: article_node, layout: layout,
+        contact_state: 'show', contact_group_id: group.id, contact_group_relation: 'related',
+        contact_group_contact_id: group.contact_groups.first.id
+      )
+    end
     let!(:category_node) { create :category_node_page, cur_site: site, layout: layout, summary_page: summary_page }
 
     context "without any options" do
