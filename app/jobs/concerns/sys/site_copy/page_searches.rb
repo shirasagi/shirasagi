@@ -71,12 +71,12 @@ module Sys::SiteCopy::PageSearches
       after: method(:after_copy_cms_page_search)
     }
   end
-  
+
   def before_copy_cms_page_search(src_item)
     Rails.logger.debug("#{src_item.name}(#{src_item.id}): ページ検索のコピーを開始します。")
   end
-  
+
   def after_copy_cms_page_search(src_item)
     @task.log("#{src_item.name}(#{src_item.id}): ページ検索をコピーしました。")
-  end 
+  end
 end

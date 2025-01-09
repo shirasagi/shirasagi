@@ -46,8 +46,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.released_type).to eq item.released_type
           expect(subject.created).to eq item.created
           expect(subject.updated).to eq item.updated
-          expect(subject.released).to eq item.released
-          expect(subject.first_released).to eq item.first_released
+          expect(subject.released).to be_nil
+          expect(subject.first_released).to be_nil
 
           # 保存前はサムネイルは元と同じ
           expect(subject.thumb_id).to eq file.id
@@ -96,8 +96,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.released_type).to eq item.released_type
           expect(subject.created).to eq item.created
           expect(subject.updated).to be > item.updated
-          expect(subject.released).to eq item.released
-          expect(subject.first_released).to eq item.first_released
+          expect(subject.released).to be_nil
+          expect(subject.first_released).to be_nil
 
           # 複製の場合、サムネイルは元のコピーなのでIDが異なるファイル（中身は同じ）
           expect(subject.thumb_id).not_to eq file.id
