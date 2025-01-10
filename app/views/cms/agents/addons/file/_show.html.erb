@@ -8,6 +8,9 @@
   <dd class="wide">
     <div id="selected-files">
       <% @item.files.each do |file| %>
+        <% if file.contains_urls != file.value_contains_urls %>
+          <div id="file-<%= file.id %>" class="file-view unused" data-file-id="<%= file.id %>">
+        <% end %>
         <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
