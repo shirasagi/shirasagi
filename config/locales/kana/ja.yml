@@ -2,6 +2,7 @@ ja:
   kana:
     dictionary: かな辞書
     diagnostic: 診断
+    build_start: 辞書の作成を開始しました。
     build_success: 辞書の作成に成功しました。
     dictionary_build_at: 辞書作成日時
     build_fail:
@@ -61,3 +62,7 @@ ja:
       newer_source:
         - 辞書ソースが更新されています。
         - 「辞書反映」をクリックし、更新内容をサイトに適用してください。
+
+  job:
+    models:
+      kana/build_kana_dictionary_job: 辞書反映
