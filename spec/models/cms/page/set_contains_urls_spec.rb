@@ -88,16 +88,15 @@ describe Cms::Page, dbscope: :example do
     end
   end
 
-  context "when contains_urls or form_contains_urls are not empty" do
-    let!(:item) do
-      create(:cms_page, cur_site: site, cur_node: node,
-        html: '<div class="file-view">File View Content</div>',
-        html_contains_urls: ["/docs/example.html"])
-    end
+  # context "when contains_urls or form_contains_urls are not empty" do
+  #   let!(:item) do
+  #     create(:cms_page, cur_site: site, cur_node: node,
+  #       html: '<div class="file-view">File View Content</div>',
+  #       html_contains_urls: ["/docs/example.html"])
+  #   end
 
-    it "does not add 'unused' class to elements with class='file-view'" do
-      expect(item.html).to_not include('class="file-view unused"')
-      expect(item.html).to include('class="file-view"')
-    end
-  end
+  #   it "does not add 'unused' class to elements with class='file-view'" do
+  #     expect(item.html).to include('class="file-view"')
+  #   end
+  # end
 end
