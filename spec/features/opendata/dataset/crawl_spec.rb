@@ -19,7 +19,7 @@ describe "opendata_crawl", type: :feature, dbscope: :example do
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
 
       subject.license_id = license.id
       subject.original_url = url
@@ -42,7 +42,7 @@ describe "opendata_crawl", type: :feature, dbscope: :example do
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
 
       subject.license_id = license.id
       subject.original_url = url
@@ -65,7 +65,7 @@ describe "opendata_crawl", type: :feature, dbscope: :example do
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
     before do
       stub_request(:get, url).
-        to_return(status: 200, body: File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
+        to_return(status: 200, body: ::File.binread(csv_path), headers: { "Last-Modified" => Time.zone.now.httpdate })
 
       subject.license_id = license.id
       subject.original_url = url

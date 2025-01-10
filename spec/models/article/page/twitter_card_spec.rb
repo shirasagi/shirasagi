@@ -23,7 +23,7 @@ describe Article::Page, dbscope: :example do
 
     context "with <img>" do
       let(:file) do
-        tmp_ss_file(binary: File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"), site: site, user: user)
+        tmp_ss_file(binary: ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"), site: site, user: user)
       end
       let(:item) do
         h = html + "<img src=\"#{file.url}\">"
@@ -102,10 +102,10 @@ describe Article::Page, dbscope: :example do
 
     context "with total test" do
       let(:file0) do
-        tmp_ss_file(binary: File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"), site: site, user: user)
+        tmp_ss_file(binary: ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"), site: site, user: user)
       end
       let(:file1) do
-        tmp_ss_file(binary: File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"), site: site, user: user)
+        tmp_ss_file(binary: ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"), site: site, user: user)
       end
       let(:item) do
         h = html + "<img src=\"#{file1.url}\"><img src=\"#{file0.url}\">"

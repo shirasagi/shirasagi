@@ -5,7 +5,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
   let!(:user1) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let(:name) { unique_id }
   let!(:file_path) { tmpfile(extname: ".txt") { |f| f.puts Array.new(rand(3..10)) { unique_id }.join("\n") } }
-  let!(:file_size) { File.size(file_path) }
+  let!(:file_size) { ::File.size(file_path) }
 
   before do
     site.circular_filesize_limit = limit
@@ -62,8 +62,8 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         expect(topic.name).to eq name
         expect(topic.files.count).to eq 1
         topic.files.first.tap do |topic_file|
-          expect(topic_file.name).to eq File.basename(file_path)
-          expect(topic_file.filename).to eq File.basename(file_path)
+          expect(topic_file.name).to eq ::File.basename(file_path)
+          expect(topic_file.filename).to eq ::File.basename(file_path)
           expect(topic_file.site_id).to be_blank
           expect(topic_file.model).to eq "gws/circular/post"
           expect(topic_file.owner_item_id).to eq topic.id

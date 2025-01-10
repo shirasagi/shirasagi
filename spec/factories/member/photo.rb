@@ -3,7 +3,7 @@ FactoryBot.define do
     route { "member/photo" }
     listable_state { "public" }
     slideable_state { "public" }
-    in_image { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/ss/logo.png") }
+    in_image { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/ss/logo.png") }
     map_points { [] }
     map_zoom_level { 13 }
     caption { "caption" }

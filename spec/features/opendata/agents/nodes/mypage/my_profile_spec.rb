@@ -7,8 +7,8 @@ describe "opendata_agents_nodes_my_profile", type: :feature, dbscope: :example d
   let!(:node_login) { create :member_node_login, redirect_url: node_my_profile.url }
   let(:member) { opendata_member(site: site) }
 
-  let(:index_url) { URI.parse "http://#{site.domain}#{node_my_profile.url}" }
-  let(:login_url) { URI.parse "http://#{site.domain}#{node_login.url}login.html" }
+  let(:index_url) { ::URI.parse "http://#{site.domain}#{node_my_profile.url}" }
+  let(:login_url) { ::URI.parse "http://#{site.domain}#{node_login.url}login.html" }
 
   let(:item_name) { "name-#{unique_id}" }
   let(:item_email) { "#{unique_id}@example.jp" }

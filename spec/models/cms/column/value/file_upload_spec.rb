@@ -9,7 +9,7 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
         site_id: cms_site.id, cur_user: cms_user, model: "article/page",
         name: "#{unique_id}.png", filename: "#{unique_id}.png", content_type: "image/png"
       ) do |file|
-        FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
+        ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
       end
     end
     let(:page) do
@@ -31,7 +31,7 @@ describe Cms::Column::Value::FileUpload, type: :model, dbscope: :example do
     subject { value.to_liquid }
 
     before do
-      subject.context = Liquid::Context.new(assigns, {}, registers, true)
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
     end
 
     context "with file_type 'image'" do

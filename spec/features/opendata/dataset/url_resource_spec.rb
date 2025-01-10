@@ -21,7 +21,7 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
 
       headers = { "Content-Type" => "text/csv", "Content-Disposition" => "attachment; filename=\"#{filename}\"" }
       stub_request(:get, original_url).
-        to_return(status: 200, body: File.binread(csv_path), headers: headers)
+        to_return(status: 200, body: ::File.binread(csv_path), headers: headers)
 
       login_cms_user
     end
@@ -96,10 +96,10 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("opendata.manage_url_resources")
       end
       click_on item.name
-      click_on File.basename(item.filename)
+      click_on ::File.basename(item.filename)
 
       wait_for_download
-      expect(File.binread(downloads.first)).to eq File.binread(csv_path)
+      expect(::File.binread(downloads.first)).to eq ::File.binread(csv_path)
 
       #
       # Update

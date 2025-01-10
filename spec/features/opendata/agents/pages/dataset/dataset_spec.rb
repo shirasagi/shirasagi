@@ -90,7 +90,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             #
             # そこで data-url には "/fs/" で始まる URL が設定されている必要がある。
             label = I18n.t("opendata.labels.downloaded")
-            href = "#{node_dataset.url}#{File.basename(page_dataset.filename, ".*")}/resource/#{@rs1.id}/#{@rs1.filename}"
+            href = "#{node_dataset.url}#{::File.basename(page_dataset.filename, ".*")}/resource/#{@rs1.id}/#{@rs1.filename}"
             data_url = @rs1.file.full_url
             expect(page).to have_css(".icons .download-wrap a.download[href='#{href}']", text: label)
             expect(page).to have_css(".icons .download-wrap a.download[data-url='#{data_url}']", text: label)
@@ -108,7 +108,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             # シラサギ・ハーベストが自リソースなのか外部リソースなのかを正しく判断できるように
             # data-url には外部 URL が設定されている必要がある。
             label = I18n.t("opendata.labels.downloaded")
-            href = "#{node_dataset.url}#{File.basename(page_dataset.filename, ".*")}/resource/#{@rs2.id}/source-url"
+            href = "#{node_dataset.url}#{::File.basename(page_dataset.filename, ".*")}/resource/#{@rs2.id}/source-url"
             data_url = @rs2.source_url
             expect(page).to have_css(".icons .download-wrap a.download[href='#{href}']", text: label)
             expect(page).to have_css(".icons .download-wrap a.download[data-url='#{data_url}']", text: label)
@@ -126,7 +126,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             # シラサギ・ハーベストが自リソースなのか外部リソースなのかを正しく判断できるように
             # data-url には外部 URL が設定されている必要がある。
             label = I18n.t("opendata.labels.downloaded")
-            href = "#{node_dataset.url}#{File.basename(page_dataset.filename, ".*")}/url_resource/#{@urs1.id}/#{@urs1.filename}"
+            href = "#{node_dataset.url}#{::File.basename(page_dataset.filename, ".*")}/url_resource/#{@urs1.id}/#{@urs1.filename}"
             data_url = @urs1.original_url
             expect(page).to have_css(".icons .download-wrap a.download[href='#{href}']", text: label)
             expect(page).to have_css(".icons .download-wrap a.download[data-url='#{data_url}']", text: label)
@@ -149,7 +149,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       end
 
       wait_for_download
-      expect(File.binread(downloads.first)).to eq File.binread(csv_path)
+      expect(::File.binread(downloads.first)).to eq ::File.binread(csv_path)
 
       expect(Opendata::ResourceDownloadHistory.count).to eq 1
       Opendata::ResourceDownloadHistory.first.tap do |history|

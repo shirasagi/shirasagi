@@ -89,16 +89,16 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.url_restricted?).to be_truthy
 
       # relative: path only
-      expect(described_class.valid_url?(Addressable::URI.parse("/a/b/c"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("a/b/c"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_truthy
 
       # relative: domain + path
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{request_domain}"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
     end
   end
 
@@ -117,16 +117,16 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.url_restricted?).to be_falsey
 
       # relative: path only
-      expect(described_class.valid_url?(Addressable::URI.parse("/a/b/c"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("a/b/c"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_truthy
 
       # relative: domain + path
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{request_domain}"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
-      expect(described_class.valid_url?(Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
     end
   end
 end

@@ -72,7 +72,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
         click_on I18n.t("ss.links.download")
         wait_for_download
 
-        csv = CSV.read(downloads.first, headers: true)
+        csv = ::CSV.read(downloads.first, headers: true)
         expect(csv.length).to eq 1
         expect(csv[0][0]).not_to be_nil
       end
@@ -85,7 +85,7 @@ describe "gws_workload_categories", type: :feature, dbscope: :example, js: true 
         click_on I18n.t("ss.links.download")
         wait_for_download
 
-        csv = CSV.read(downloads.first, headers: true)
+        csv = ::CSV.read(downloads.first, headers: true)
         expect(csv.length).to eq 0
       end
     end

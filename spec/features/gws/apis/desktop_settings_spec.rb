@@ -10,7 +10,7 @@ describe "gws_apis_desktop_settings", type: :feature, dbscope: :example do
     it "index" do
       visit path
       expect(status_code).to eq 200
-      expect(JSON.parse(page.html)).to eq site.desktop_settings.stringify_keys
+      expect(::JSON.parse(page.html)).to eq site.desktop_settings.stringify_keys
     end
   end
 end

@@ -188,7 +188,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       end
       wait_for_download
 
-      csv = CSV.read(downloads.first, headers: true)
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
       expect(csv[0][0].present?).to be_truthy
       expect(csv[0][1]).to eq user1.name

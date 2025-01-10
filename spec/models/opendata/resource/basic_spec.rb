@@ -142,7 +142,7 @@ describe Opendata::Resource, dbscope: :example do
       subject.save!
     end
     after do
-      FileUtils.rm_rf tmpdir
+      ::FileUtils.rm_rf tmpdir
     end
 
     its(:url) { is_expected.to end_with("/#{Addressable::URI.encode_component(subject.file.filename)}") }

@@ -25,7 +25,7 @@ describe Sys::SiteExportJob, dbscope: :example do
       job.perform
       output_zip = job.instance_variable_get(:@output_zip)
 
-      expect(File.size(output_zip)).to be > 0
+      expect(::File.size(output_zip)).to be > 0
       Zip::File.open(output_zip) do |zip|
         expect(zip.read(zip.get_entry("version.json"))).not_to be_nil
 

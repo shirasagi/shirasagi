@@ -30,7 +30,7 @@ describe Cms::ListHelper, type: :helper, dbscope: :example do
   end
 
   let!(:article_page) { create :article_page, cur_site: site, cur_node: node2 }
-  let!(:loop_html) { File.read("spec/fixtures/cms/template/shirasagi/loop.html") }
+  let!(:loop_html) { ::File.read("spec/fixtures/cms/template/shirasagi/loop.html") }
 
   let(:node2_date) { I18n.l(node2.date.to_date) }
   let(:node2_date_default) { I18n.l(node2.date.to_date, format: :default) }

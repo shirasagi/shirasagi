@@ -36,7 +36,7 @@ describe Voice::OpenJtalk do
     end
 
     it 'create wav using "test-001.html"' do
-      source_file = File.new("#{Rails.root}/spec/fixtures/voice/test-001.html")
+      source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-001.html")
       html = source_file.read
       texts = Voice::Scraper.new.extract_text html
 

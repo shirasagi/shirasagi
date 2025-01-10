@@ -106,7 +106,7 @@ describe Gws::Elasticsearch::Indexer::QnaTopicJob, dbscope: :example, es: true d
         end
 
         # wait for indexing
-        Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -135,7 +135,7 @@ describe Gws::Elasticsearch::Indexer::QnaTopicJob, dbscope: :example, es: true d
         end
 
         # wait for indexing
-        Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearchefresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|

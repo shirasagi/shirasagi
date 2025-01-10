@@ -4,8 +4,8 @@ require "ss/migration/base"
 
 RSpec.describe SS::Migration, type: :model, dbscope: :example do
   def migration_file(filepath, depend_on: nil)
-    dirpath = File.dirname(filepath)
-    FileUtils.mkdir_p(dirpath) if !Dir.exist?(dirpath)
+    dirpath = ::File.dirname(filepath)
+    ::FileUtils.mkdir_p(dirpath) if !Dir.exist?(dirpath)
 
     version, _name = described_class.parse_migration_filename(filepath)
     File.open(filepath, 'w') do |f|

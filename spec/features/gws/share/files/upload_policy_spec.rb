@@ -169,7 +169,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       end
       within_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        page.accept_alert(/#{Regexp.escape(I18n.t("errors.messages.upload_restricted"))}/) do
+        page.accept_alert(/#{::Regexp.escape(I18n.t("errors.messages.upload_restricted"))}/) do
           click_on I18n.t("ss.buttons.save")
         end
       end

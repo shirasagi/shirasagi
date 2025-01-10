@@ -98,7 +98,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -125,7 +125,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -225,7 +225,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
@@ -305,7 +305,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -332,7 +332,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
@@ -416,7 +416,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         end
 
         expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
 
         item.reload
         expect(item.workflow_state).to eq "cancelled"

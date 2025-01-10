@@ -38,7 +38,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   end
 
   context "when pc site is accessed" do
-    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
     it do
       visit index_url
@@ -174,7 +174,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   end
 
   context "when mobile site is accessed" do
-    let(:index_url) { URI.parse "http://#{site.domain}#{site.mobile_location}/#{node.filename}/" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}#{site.mobile_location}/#{node.filename}/" }
 
     it do
       visit index_url
@@ -248,7 +248,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   end
 
   context "captcha" do
-    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
     it "fail to pass capctcha with blank" do
       visit index_url

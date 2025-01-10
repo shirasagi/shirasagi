@@ -22,7 +22,7 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:irrelevant_page1) do
       Timecop.freeze(now - 2.weeks) do
         page = create(:article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ])
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end
@@ -40,7 +40,7 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:other_site_page1) do
       Timecop.freeze(now - 2.weeks) do
         page = create(:article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids)
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         expect(page.backups.count).to eq 1
         Cms::Page.find(page.id)
       end

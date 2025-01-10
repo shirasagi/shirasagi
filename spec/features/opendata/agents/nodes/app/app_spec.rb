@@ -6,7 +6,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
     appfile.in_file = file
     appfile.save!
 
-    FileUtils.rm_f(app.path)
+    ::FileUtils.rm_f(app.path)
 
     appfile
   end
@@ -122,7 +122,7 @@ describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: tru
     end
 
     wait_for_download
-    File.read(downloads.first).tap do |xml|
+    ::File.read(downloads.first).tap do |xml|
       xmldoc = REXML::Document.new(xml)
       items = REXML::XPath.match(xmldoc, "/rss/channel/item")
       expect(items).to have(1).items

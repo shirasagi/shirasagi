@@ -6,16 +6,16 @@ RSpec.describe SS::Migration20220705000000, dbscope: :example do
   let(:file_path1) { "#{root_path}/1/4/9/_/149" }
 
   before do
-    FileUtils.mkdir_p File.dirname(file_path1)
-    File.open(file_path1, "wb") do |f|
+    ::FileUtils.mkdir_p ::File.dirname(file_path1)
+    ::File.open(file_path1, "wb") do |f|
       f.write unique_id
     end
-    expect(File.size(file_path1)).to be > 0
+    expect(::File.size(file_path1)).to be > 0
 
     described_class.new.change
   end
 
   it do
-    expect(File.exist?(file_path1)).to be_falsey
+    expect(::File.exist?(file_path1)).to be_falsey
   end
 end

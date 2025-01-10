@@ -24,7 +24,7 @@ describe "article_pages", type: :feature, dbscope: :example do
 
       tmpfile do |log_file|
         @log_file = log_file
-        Rails.logger = Logger.new(log_file)
+        Rails.logger = ::Logger.new(log_file)
         example.run
       ensure
         Rails.logger = @save_logger
@@ -41,7 +41,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       # expect(page).to have_css("#addon-basic .addon-body", html: I18n.t("ss.rescues.default.body"))
 
       @log_file.flush
-      log_text = File.read(@log_file.path)
+      log_text = ::File.read(@log_file.path)
       expect(log_text).to include("FATAL -- : RuntimeError (403):\n")
     end
   end

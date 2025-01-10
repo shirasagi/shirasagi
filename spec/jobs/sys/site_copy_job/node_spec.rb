@@ -22,7 +22,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       let(:upper_html) { '<div><span>upper</span>' }
       let(:loop_html) { '<article class="#{class}"><header><h2>#{name}</h2></header><p>#{summary}</p></article>' }
       let(:lower_html) { '<span>lower</span></div>' }
-      let(:src_node) { "#{Rails.root}/spec/fixtures/ss" }
+      let(:src_node) { "#{::Rails.root}/spec/fixtures/ss" }
       let(:file_path1) { '/logo.png' }
       let(:file_path2) { '/migration' }
       let(:file_path3) { '/migration/fix_ss_files_url/before.html' }

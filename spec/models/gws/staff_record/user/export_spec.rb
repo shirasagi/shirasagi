@@ -44,7 +44,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
 
       csv = item.export_csv(year1.yearly_users.site(site1))
       csv = csv.encode("UTF-8", "SJIS")
-      csv = CSV.parse(csv, headers: true)
+      csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
       expect(csv.headers.length).to eq 22
@@ -90,7 +90,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
 
       csv = item.export_csv(year1.yearly_users.site(site1))
       csv = csv.sub(SS::Csv::UTF8_BOM, '')
-      csv = CSV.parse(csv, headers: true)
+      csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
       expect(csv.headers.length).to eq 22

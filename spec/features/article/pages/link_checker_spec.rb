@@ -14,12 +14,12 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:ss_file2) { create :ss_file, site: site, user: user }
 
   let(:success_url1) { ss_file1.url }
-  let(:success_url2) { File.join(site.full_url, ss_file2.url) }
+  let(:success_url2) { ::File.join(site.full_url, ss_file2.url) }
   let(:success_url3) { "https://success.example.jp" }
   let(:success_url4) { "https://success.example.jp/?キー=値" }
 
   let(:failed_url1) { "/fs/1/_/failed.txt" }
-  let(:failed_url2) { File.join(site.full_url, "/fs/2/_/2.pdf") }
+  let(:failed_url2) { ::File.join(site.full_url, "/fs/2/_/2.pdf") }
   let(:failed_url3) { "https://failed.example.jp" }
 
   let(:invalid_url1) { "https://invalid.example.jp /" }
@@ -89,8 +89,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_js_ready
 
-          success_full_url1 = File.join(site.full_url, success_url1)
-          failed_full_url1 = File.join(site.full_url, failed_url1)
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
@@ -123,8 +123,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_js_ready
 
-          success_full_url1 = File.join(site.full_url, success_url1)
-          failed_full_url1 = File.join(site.full_url, failed_url1)
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
@@ -177,8 +177,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_js_ready
 
-          success_full_url1 = File.join(site.full_url, success_url1)
-          failed_full_url1 = File.join(site.full_url, failed_url1)
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
@@ -218,8 +218,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_js_ready
 
-          success_full_url1 = File.join(site.full_url, success_url1)
-          failed_full_url1 = File.join(site.full_url, failed_url1)
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")

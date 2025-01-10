@@ -12,7 +12,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     image = MiniMagick::Image.open(filepath)
 
     {
-      filename: File.basename(filepath),
+      filename: ::File.basename(filepath),
       format: image.type,
       width: image.width,
       height: image.height,

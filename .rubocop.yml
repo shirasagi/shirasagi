@@ -195,6 +195,9 @@ Style/PercentLiteralDelimiters:
     '%I': '[]'
     '%r': '{}'
 
+Style/RedundantConstantBase:
+  Enabled: false
+
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/SignalException:
@@ -206,10 +209,6 @@ Style/SignalException:
 
 Style/StringLiteralsInInterpolation:
   Enabled: false
-
-Style/RedundantConstantBase:
-  Exclude:
-    - 'lib/tasks/**/*'
 
 # Cop supports --auto-correct.
 Style/RedundantPercentQ:

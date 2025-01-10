@@ -49,7 +49,7 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
         end
       end
     end
-    expect(page).to have_css(".item-#{File.basename(facility_notice.filename, ".*")}", text: facility_notice.name)
+    expect(page).to have_css(".item-#{::File.basename(facility_notice.filename, ".*")}", text: facility_notice.name)
     expect(page).to have_css("#map-canvas")
   end
 end

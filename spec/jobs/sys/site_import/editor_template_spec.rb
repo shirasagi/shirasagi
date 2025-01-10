@@ -44,7 +44,7 @@ describe Sys::SiteImportJob, dbscope: :example do
       expect(dest_template.thumb.site_id).to eq destination_site.id
       expect(dest_template.thumb.owner_item_id).to eq dest_template.id
       expect(dest_template.thumb.owner_item_type).to eq dest_template.class.name
-      expect(File.size(dest_template.thumb.path)).to be > 0
+      expect(::File.size(dest_template.thumb.path)).to be > 0
     end
   end
 end

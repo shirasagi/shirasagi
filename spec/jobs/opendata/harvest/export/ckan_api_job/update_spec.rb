@@ -25,7 +25,7 @@ describe Opendata::Harvest::ExportJob, dbscope: :example, ckan: true do
   def create_resource(dataset, file_path)
     file = Fs::UploadedFile.create_from_file(file_path)
     filename = file.original_filename
-    ext = File.extname(filename).delete(".").upcase
+    ext = ::File.extname(filename).delete(".").upcase
 
     dataset.resources.create(
       name: unique_id,
@@ -38,7 +38,7 @@ describe Opendata::Harvest::ExportJob, dbscope: :example, ckan: true do
   def update_resource(dataset, idx, file_path)
     file = Fs::UploadedFile.create_from_file(file_path)
     filename = file.original_filename
-    ext = File.extname(filename).delete(".").upcase
+    ext = ::File.extname(filename).delete(".").upcase
 
     resource = dataset.resources[idx]
     resource.in_file = file

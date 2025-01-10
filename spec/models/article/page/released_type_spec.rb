@@ -158,7 +158,7 @@ describe Article::Page, dbscope: :example do
           expect(item.released).to eq released
         end
 
-        html = File.read(item.path)
+        html = ::File.read(item.path)
         html.include?(expected_date)
       end
     end

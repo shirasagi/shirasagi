@@ -14,11 +14,11 @@ describe 'ss_nginx_config', dbscope: :example do
   end
 
   after do
-    FileUtils.rm(file) if File.exist?(file)
+    ::FileUtils.rm(file) if ::File.exist?(file)
   end
 
   it do
-    conf = File.read(file)
+    conf = ::File.read(file)
 
     expect(conf).to include("server_name #{site1.domain};")
     expect(conf).to include("root #{site1.root_path};")

@@ -26,7 +26,7 @@ describe Sys::SiteImportJob, dbscope: :example do
       job = Sys::SiteImportJob.new
       job.task = Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
       job.perform
-      
+
       expect(Cms::LoopSetting.site(destination_site).count).to eq 1
       dest_loop_setting = Cms::LoopSetting.site(destination_site).first
       expect(dest_loop_setting.name).to eq source_setting.name

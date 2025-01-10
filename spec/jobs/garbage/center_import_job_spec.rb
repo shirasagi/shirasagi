@@ -12,7 +12,7 @@ describe Garbage::CenterImportJob, dbscope: :example do
     )
   end
 
-  let!(:file_path) { "#{Rails.root}/spec/fixtures/garbage/garbage_centers.csv" }
+  let!(:file_path) { "#{::Rails.root}/spec/fixtures/garbage/garbage_centers.csv" }
   let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
   let!(:ss_file) { create(:ss_file, site: site, in_file: in_file ) }
 

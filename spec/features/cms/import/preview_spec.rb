@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "cms_import", type: :feature, dbscope: :example, js: true do
   subject(:site) { cms_site }
-  let!(:in_file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+  let!(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
   let!(:name) { "site" }
 
   before do

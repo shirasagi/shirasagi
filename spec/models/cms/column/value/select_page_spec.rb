@@ -27,7 +27,7 @@ describe Cms::Column::Value::SelectPage, type: :model, dbscope: :example do
     subject { value.to_liquid }
 
     before do
-      subject.context = Liquid::Context.new(assigns, {}, registers, true)
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
     end
 
     it do

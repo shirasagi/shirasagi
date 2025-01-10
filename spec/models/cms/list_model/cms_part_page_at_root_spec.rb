@@ -29,7 +29,7 @@ describe Cms::Addon::List::Model do
           expect(subject.length).to eq 3
           expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
           expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[2]).to eq(site_id: site.id, category_ids: article_node.id)
         end
       end
@@ -53,7 +53,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//)
+          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
         end
       end
 
@@ -92,7 +92,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: article_node.id)
         end
       end
@@ -111,7 +111,7 @@ describe Cms::Addon::List::Model do
       end
 
       context "when \#{request_dir} with sub directory is given with actual cur_main_path" do
-        let(:condition) { "\#{request_dir}/#{File.basename(article_node.filename)}" }
+        let(:condition) { "\#{request_dir}/#{::File.basename(article_node.filename)}" }
         let!(:part) { create :cms_part_page, cur_site: site, conditions: [ condition ] }
         subject do
           part.condition_hash(request_dir: "/#{root_node.filename}/index.html")["$or"]
@@ -121,7 +121,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: article_node.id)
         end
       end
@@ -144,7 +144,7 @@ describe Cms::Addon::List::Model do
           expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
           expect(subject[1]).to eq(
             site_id: site1.id,
-            filename: /^#{Regexp.escape(site1_article_node.filename)}\//, depth: site1_article_node.depth + 1)
+            filename: /^#{::Regexp.escape(site1_article_node.filename)}\//, depth: site1_article_node.depth + 1)
           expect(subject[2]).to eq(site_id: site1.id, category_ids: site1_article_node.id)
         end
       end

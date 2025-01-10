@@ -108,8 +108,8 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
         api_type: "shirasagi_scraper")
     end
 
-    let(:search1_url) { File.join(node_search.full_url, "index.p1.html") }
-    let(:search2_url) { File.join(node_search.full_url, "index.p2.html") }
+    let(:search1_url) { ::File.join(node_search.full_url, "index.p1.html") }
+    let(:search2_url) { ::File.join(node_search.full_url, "index.p2.html") }
 
     let(:sample_csv) { "spec/fixtures/opendata/harvest/shirasagi_scraper/sample.csv" }
     let(:sample2_xlsx) { "spec/fixtures/opendata/harvest/shirasagi_scraper/sample2.xlsx" }
@@ -180,15 +180,15 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
         stub_request(:get, @dataset5.full_url).to_return(body: @dataset5_html, status: 200,
           headers: { 'Content-Type' => 'text/html' })
 
-        file1_url = File.join(site.full_url, @dataset1.resources[0].file.url)
-        file2_url = File.join(site.full_url, @dataset5.resources[0].file.url)
-        file3_url = File.join(site.full_url, @dataset5.resources[1].file.url)
+        file1_url = ::File.join(site.full_url, @dataset1.resources[0].file.url)
+        file2_url = ::File.join(site.full_url, @dataset5.resources[0].file.url)
+        file3_url = ::File.join(site.full_url, @dataset5.resources[1].file.url)
 
-        stub_request(:get, file1_url).to_return(body: File.read(sample_txt), status: 200,
+        stub_request(:get, file1_url).to_return(body: ::File.read(sample_txt), status: 200,
           headers: { 'Content-Type' => 'text/csv' })
-        stub_request(:get, file2_url).to_return(body: File.read(sample_csv), status: 200,
+        stub_request(:get, file2_url).to_return(body: ::File.read(sample_csv), status: 200,
           headers: { 'Content-Type' => 'text/csv' })
-        stub_request(:get, file3_url).to_return(body: File.read(sample2_xlsx), status: 200,
+        stub_request(:get, file3_url).to_return(body: ::File.read(sample2_xlsx), status: 200,
           headers: { 'Content-Type' => 'application/octet-stream' })
 
         Opendata::Dataset.destroy_all

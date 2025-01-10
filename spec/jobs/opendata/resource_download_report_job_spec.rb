@@ -16,7 +16,7 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
   before do
     resource = Fs::UploadedFile.create_from_file(resource_file_path, basename: "spec") do |f|
       dataset1.resources.create(
-        name: unique_id, in_file: f, license_id: license.id, filename: File.basename(resource_file_path), format: "CSV"
+        name: unique_id, in_file: f, license_id: license.id, filename: ::File.basename(resource_file_path), format: "CSV"
       )
     end
 
@@ -27,7 +27,7 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
 
     Fs::UploadedFile.create_from_file(resource_file_path, basename: "spec") do |f|
       dataset3.resources.create(
-        name: unique_id, in_file: f, license_id: license.id, filename: File.basename(resource_file_path), format: "CSV"
+        name: unique_id, in_file: f, license_id: license.id, filename: ::File.basename(resource_file_path), format: "CSV"
       )
     end
   end

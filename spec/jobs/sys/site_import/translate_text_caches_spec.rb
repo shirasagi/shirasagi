@@ -32,7 +32,7 @@ describe Sys::SiteImportJob, dbscope: :example do
       job = Sys::SiteImportJob.new
       job.task = Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
       job.perform
-      
+
       expect(Translate::TextCache.site(destination_site).count).to eq 1
       dest_translate_text_cache = Translate::TextCache.site(destination_site).first
       expect(dest_translate_text_cache.api).to eq translate_text_cache.api

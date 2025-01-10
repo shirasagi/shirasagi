@@ -74,7 +74,7 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = false
 
   # Logger
-  config.log_formatter = Logger::Formatter.new
+  config.log_formatter = ::Logger::Formatter.new
   config.log_level = ENV['TEST_LOG_LEVEL'] || :debug
 
   # Use a real queuing backend for Active Job (and separate queues per environment).

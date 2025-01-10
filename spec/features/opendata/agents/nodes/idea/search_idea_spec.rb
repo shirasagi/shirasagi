@@ -239,7 +239,7 @@ describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_download
-      File.read(downloads.first).tap do |xml|
+      ::File.read(downloads.first).tap do |xml|
         xmldoc = REXML::Document.new(xml)
         items = REXML::XPath.match(xmldoc, "/rss/channel/item")
         expect(items).to have(10).items

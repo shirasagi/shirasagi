@@ -36,7 +36,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
     # So run node generation job before the test.
     # Comment out the following 2 lines to see the test success.
     Cms::Node::GenerateJob.bind(site_id: site, node_id: inquiry_form).perform_now
-    expect(File.size("#{inquiry_form.path}/index.html")).to be > 0
+    expect(::File.size("#{inquiry_form.path}/index.html")).to be > 0
   end
 
   context "ss-4755" do

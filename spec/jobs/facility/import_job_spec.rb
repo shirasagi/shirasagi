@@ -39,11 +39,11 @@ describe Facility::ImportJob, dbscope: :example do
       st_service_ids: [node_service1.id, node_service2.id, node_service3.id])
   end
 
-  let!(:file_path) { "#{Rails.root}/spec/fixtures/facility/import_job/facility_node_pages.csv" }
+  let!(:file_path) { "#{::Rails.root}/spec/fixtures/facility/import_job/facility_node_pages.csv" }
   let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
   let!(:ss_file) { create(:ss_file, site: site, in_file: in_file ) }
   let!(:expected_table) do
-    table = CSV.read( "#{Rails.root}/spec/fixtures/facility/import_job/facility_node_pages.csv", encoding: 'SJIS:UTF-8')
+    table = CSV.read( "#{::Rails.root}/spec/fixtures/facility/import_job/facility_node_pages.csv", encoding: 'SJIS:UTF-8')
     table.map { |row| row.map{ |v| v ? v.split("\n") : v }.flatten.compact }
   end
 

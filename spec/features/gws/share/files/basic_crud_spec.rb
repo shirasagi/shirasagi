@@ -57,8 +57,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(file.user_id).to eq gws_user.id
       expect(file.model).to eq "share/file"
       expect(file.state).to eq "closed"
-      expect(file.name).to eq File.basename(filepath)
-      expect(file.filename).to eq File.basename(filepath)
+      expect(file.name).to eq ::File.basename(filepath)
+      expect(file.filename).to eq ::File.basename(filepath)
       expect(file.size).to be_present
       expect(file.content_type).to eq "image/png"
       expect(file.category_ids).to eq [ category.id ]

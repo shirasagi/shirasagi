@@ -80,7 +80,7 @@ describe "gws_shared_address_management_addresses", type: :feature, dbscope: :ex
     let(:memo) { unique_id }
     let(:csv) do
       I18n.with_locale(I18n.default_locale) do
-        CSV.generate do |data|
+        ::CSV.generate do |data|
           data << Gws::SharedAddress::Address.new.send(:export_field_names)
           data << [
             nil,

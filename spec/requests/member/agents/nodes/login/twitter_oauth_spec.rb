@@ -57,7 +57,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
         { status: 200, headers: { 'Content-Type' => 'application/x-www-form-urlencoded' }, body: body.to_query }
       end
       url = "https://api.twitter.com/1.1/account/verify_credentials.json"
-      stub_request(:get, /#{Regexp.escape(url)}/).to_return do |request|
+      stub_request(:get, /#{::Regexp.escape(url)}/).to_return do |request|
         # puts request.headers["Authorization"]
         expect(request.headers["Authorization"]).to start_with("OAuth ")
         expect(request.headers["Authorization"]).to include "oauth_consumer_key=\"#{client_id}\""
@@ -85,7 +85,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       post "#{node.full_url}twitter"
       expect(response.status).to eq 302
       expect(response.location).to be_present
-      location = Addressable::URI.parse(response.location)
+      location = ::Addressable::URI.parse(response.location)
       expect(location.origin).to eq "https://api.twitter.com"
       expect(location.query).to be_present
       query_values = location.query_values
@@ -93,7 +93,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
 
       get "#{node.full_url}twitter/callback?#{{state: query_values["state"], code: code}.to_query}"
       expect(response.status).to eq 302
-      location = Addressable::URI.parse(response.location)
+      location = ::Addressable::URI.parse(response.location)
       expect(location.origin).to eq site.full_url[0..-2]
       expect(location.path).to eq node.redirect_url
 

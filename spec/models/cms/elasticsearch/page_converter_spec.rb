@@ -37,7 +37,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[1][0]).to eq "file-#{file.id}"
       expect(item.enum_es_docs.to_a[1][1][:url]).to eq cms_page.url
       expect(item.enum_es_docs.to_a[1][1][:name]).to eq file.name
-      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(File.binread(file.path))
+      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[1][1][:file][:extname]).to eq 'PNG'
       expect(item.enum_es_docs.to_a[1][1][:file][:size]).to eq file.size
       expect(item.enum_es_docs.to_a[1][1][:path]).to eq cms_page.path
@@ -141,7 +141,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[1][0]).to eq "file-#{file.id}"
       expect(item.enum_es_docs.to_a[1][1][:url]).to eq cms_page.url
       expect(item.enum_es_docs.to_a[1][1][:name]).to eq file.name
-      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(File.binread(file.path))
+      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[1][1][:file][:extname]).to eq 'PNG'
       expect(item.enum_es_docs.to_a[1][1][:file][:size]).to eq file.size
       expect(item.enum_es_docs.to_a[1][1][:path]).to eq cms_page.path
@@ -153,7 +153,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[2][0]).to eq "file-#{file.id}"
       expect(item.enum_es_docs.to_a[2][1][:url]).to eq cms_page.url
       expect(item.enum_es_docs.to_a[2][1][:name]).to eq file.name
-      expect(item.enum_es_docs.to_a[2][1][:data]).to eq Base64.strict_encode64(File.binread(file.path))
+      expect(item.enum_es_docs.to_a[2][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[2][1][:file][:extname]).to eq 'PNG'
       expect(item.enum_es_docs.to_a[2][1][:file][:size]).to eq file.size
       expect(item.enum_es_docs.to_a[2][1][:path]).to eq cms_page.path
@@ -203,7 +203,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[1][0]).to eq "file-#{app.appfiles.first.file_id}"
       expect(item.enum_es_docs.to_a[1][1][:url]).to eq app.url
       expect(item.enum_es_docs.to_a[1][1][:name]).to eq 'utf-8.csv'
-      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(File.binread(file.path))
+      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[1][1][:file][:extname]).to eq 'CSV'
       expect(item.enum_es_docs.to_a[1][1][:file][:size]).to eq app.appfiles.first.size
       expect(item.enum_es_docs.to_a[1][1][:path]).to eq app.path
@@ -254,7 +254,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[1][0]).to eq "file-#{dataset.resources.first.file_id}"
       expect(item.enum_es_docs.to_a[1][1][:url]).to eq dataset.url
       expect(item.enum_es_docs.to_a[1][1][:name]).to eq 'utf-8.csv'
-      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(File.binread(file.path))
+      expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[1][1][:file][:extname]).to eq 'CSV'
       expect(item.enum_es_docs.to_a[1][1][:file][:size]).to eq dataset.resources.first.size
       expect(item.enum_es_docs.to_a[1][1][:path]).to eq dataset.path

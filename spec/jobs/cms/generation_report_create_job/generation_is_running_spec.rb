@@ -27,11 +27,11 @@ describe Cms::GenerationReportCreateJob, dbscope: :example do
         expect(task.logs).to include(include("#{node.url}index.html"))
         expect(task.node_id).to be_nil
         # logs are saved in a file
-        expect(File.exist?(task.log_file_path)).to be_truthy
+        expect(::File.exist?(task.log_file_path)).to be_truthy
         # and there are no `logs` field
         expect(task[:logs]).to be_nil
         # performance logs are saved
-        expect(File.exist?(task.perf_log_file_path)).to be_truthy
+        expect(::File.exist?(task.perf_log_file_path)).to be_truthy
       end
       Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
         expect(task.state).to eq 'ready'

@@ -33,7 +33,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#selected-files" do
-          expect(page).to have_css(".file-view", text: File.basename(file_path1))
+          expect(page).to have_css(".file-view", text: ::File.basename(file_path1))
         end
         within "footer.send" do
           click_on I18n.t('ss.buttons.upload')
@@ -61,7 +61,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#selected-files" do
-          expect(page).to have_css(".file-view", text: File.basename(file_path2))
+          expect(page).to have_css(".file-view", text: ::File.basename(file_path2))
         end
         within "footer.send" do
           click_on I18n.t('ss.buttons.upload')
@@ -88,7 +88,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#selected-files" do
-          expect(page).to have_css(".file-view", text: File.basename(file_path3))
+          expect(page).to have_css(".file-view", text: ::File.basename(file_path3))
         end
         within "footer.send" do
           click_on I18n.t('ss.buttons.upload')
@@ -98,21 +98,21 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       expect(Gws::Share::File.all.count).to eq 3
       file1 = Gws::Share::File.all.find_by(folder_id: folder1.id)
-      expect(file1.name).to eq File.basename(file_path1)
-      expect(file1.filename).to eq File.basename(file_path1)
-      expect(file1.size).to eq File.size(file_path1)
+      expect(file1.name).to eq ::File.basename(file_path1)
+      expect(file1.filename).to eq ::File.basename(file_path1)
+      expect(file1.size).to eq ::File.size(file_path1)
       expect(file1.content_type).to eq "text/plain"
 
       file2 = Gws::Share::File.all.find_by(folder_id: folder2.id)
-      expect(file2.name).to eq File.basename(file_path2)
-      expect(file2.filename).to eq File.basename(file_path2)
-      expect(file2.size).to eq File.size(file_path2)
+      expect(file2.name).to eq ::File.basename(file_path2)
+      expect(file2.filename).to eq ::File.basename(file_path2)
+      expect(file2.size).to eq ::File.size(file_path2)
       expect(file2.content_type).to eq "text/plain"
 
       file3 = Gws::Share::File.all.find_by(folder_id: root_folder.id)
-      expect(file3.name).to eq File.basename(file_path3)
-      expect(file3.filename).to eq File.basename(file_path3)
-      expect(file3.size).to eq File.size(file_path3)
+      expect(file3.name).to eq ::File.basename(file_path3)
+      expect(file3.filename).to eq ::File.basename(file_path3)
+      expect(file3.size).to eq ::File.size(file_path3)
       expect(file3.content_type).to eq "text/plain"
 
       folder1.reload

@@ -356,8 +356,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   context "attach file which size exceeds the limit" do
     let(:file_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
-    let(:basename) { File.basename(file_path) }
-    let(:file_size_human) { File.size(file_path).to_fs(:human_size) }
+    let(:basename) { ::File.basename(file_path) }
+    let(:file_size_human) { ::File.size(file_path).to_fs(:human_size) }
     let!(:max) { create :ss_max_file_size, in_size_mb: 0 }
     let(:limit_human) { max.size.to_fs(:human_size) }
 
@@ -379,7 +379,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_cbox do
           attach_file "item[in_files][]", file_path
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
-          page.accept_alert(/#{Regexp.escape(alert)}/) do
+          page.accept_alert(/#{::Regexp.escape(alert)}/) do
             click_on I18n.t("ss.buttons.save")
           end
 
@@ -402,7 +402,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_cbox do
           attach_file "item[in_files][]", file_path
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
-          page.accept_alert(/#{Regexp.escape(alert)}/) do
+          page.accept_alert(/#{::Regexp.escape(alert)}/) do
             click_on I18n.t("ss.buttons.attach")
           end
 

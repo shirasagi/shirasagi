@@ -4,7 +4,7 @@ FactoryBot.define do
     basename { "tool.part.html" }
     filename { "tool.part.html" }
     html do
-      File.read("#{Rails.root}/db/seeds/demo/parts/tool.part.html")
+      ::File.read("#{Rails.root}/db/seeds/demo/parts/tool.part.html")
     end
   end
 

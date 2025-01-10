@@ -17,7 +17,7 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -30,9 +30,9 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[2]).to eq(site_id: site.id, category_ids: { "$in" => [ node.id, article_node.id ] })
         end
       end
@@ -45,9 +45,9 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[2]).to eq(site_id: site.id, category_ids: { "$in" => [ node.id, article_node.id ] })
         end
       end
@@ -60,7 +60,7 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -73,8 +73,8 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
           expect(subject[2]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -87,8 +87,8 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
           expect(subject[2]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -102,7 +102,7 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -117,7 +117,7 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -133,7 +133,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: article_node.id)
         end
       end
@@ -153,7 +153,7 @@ describe Cms::Addon::List::Model do
       end
 
       context "when \#{request_dir} with sub directory is given with actual cur_main_path" do
-        let(:condition) { "\#{request_dir}/#{File.basename(article_node.filename)}" }
+        let(:condition) { "\#{request_dir}/#{::File.basename(article_node.filename)}" }
         let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
         let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ condition ] }
         subject do
@@ -164,7 +164,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: article_node.id)
         end
       end
@@ -186,9 +186,9 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 4
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(
-            site_id: site1.id, filename: /^#{Regexp.escape(site1_article_node.filename)}\//,
+            site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//,
             depth: site1_article_node.depth + 1)
           expect(subject[2]).to eq(site_id: site.id, category_ids: node.id)
           expect(subject[3]).to eq(site_id: site1.id, category_ids: site1_article_node.id)
@@ -212,8 +212,8 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site1.id, filename: /^#{Regexp.escape(site1_article_node.filename)}\//)
+            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//)
           expect(subject[2]).to eq(site_id: site.id, category_ids: node.id)
         end
       end
@@ -234,7 +234,7 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(site_id: site.id, category_ids: node.id)
         end
       end

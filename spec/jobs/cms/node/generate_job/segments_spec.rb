@@ -43,13 +43,13 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   let(:web03_expected_nodes) { Cms::Node.all.select { |item| (item.id % segments.size) == 2 } }
 
   let(:web01_expected_path) do
-    web01_expected_pages.map(&:path) + web01_expected_nodes.map { |item| File.join(item.path, "index.html") }
+    web01_expected_pages.map(&:path) + web01_expected_nodes.map { |item| ::File.join(item.path, "index.html") }
   end
   let(:web02_expected_path) do
-    web02_expected_pages.map(&:path) + web02_expected_nodes.map { |item| File.join(item.path, "index.html") }
+    web02_expected_pages.map(&:path) + web02_expected_nodes.map { |item| ::File.join(item.path, "index.html") }
   end
   let(:web03_expected_path) do
-    web03_expected_pages.map(&:path) + web03_expected_nodes.map { |item| File.join(item.path, "index.html") }
+    web03_expected_pages.map(&:path) + web03_expected_nodes.map { |item| ::File.join(item.path, "index.html") }
   end
 
   before do
@@ -69,9 +69,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(File.exist?(path)).to be_truthy }
-      web02_expected_path.each { |path| expect(File.exist?(path)).to be_truthy }
-      web03_expected_path.each { |path| expect(File.exist?(path)).to be_truthy }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
     end
   end
 
@@ -83,9 +83,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(File.exist?(path)).to be_truthy }
-      web02_expected_path.each { |path| expect(File.exist?(path)).to be_falsey }
-      web03_expected_path.each { |path| expect(File.exist?(path)).to be_falsey }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
     end
   end
 
@@ -97,9 +97,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(File.exist?(path)).to be_falsey }
-      web02_expected_path.each { |path| expect(File.exist?(path)).to be_truthy }
-      web03_expected_path.each { |path| expect(File.exist?(path)).to be_falsey }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
     end
   end
 
@@ -111,9 +111,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
     it do
       expect(Job::Log.count).to eq 1
-      web01_expected_path.each { |path| expect(File.exist?(path)).to be_falsey }
-      web02_expected_path.each { |path| expect(File.exist?(path)).to be_falsey }
-      web03_expected_path.each { |path| expect(File.exist?(path)).to be_truthy }
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
     end
   end
 end

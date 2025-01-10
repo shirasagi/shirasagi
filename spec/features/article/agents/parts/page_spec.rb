@@ -170,10 +170,10 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
       expect(item2.state).to eq "public"
       expect(item3.state).to eq "ready"
 
-      FileUtils.rm_rf(item0.path)
-      FileUtils.rm_rf(item1.path)
-      FileUtils.rm_rf(item2.path)
-      FileUtils.rm_rf(item3.path)
+      ::FileUtils.rm_rf(item0.path)
+      ::FileUtils.rm_rf(item1.path)
+      ::FileUtils.rm_rf(item2.path)
+      ::FileUtils.rm_rf(item3.path)
 
       part.upper_html = '<div class="parts">'
       part.lower_html = '</div>'
@@ -184,7 +184,7 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
       visit "#{node.full_url}/index.html"
       within ".parts" do
         expect(page).to have_css("article", count: 1)
-        within ".item-#{File.basename(item0.basename, ".*")}" do
+        within ".item-#{::File.basename(item0.basename, ".*")}" do
           expect(page).to have_link(item0.name, href: item0.url)
         end
       end

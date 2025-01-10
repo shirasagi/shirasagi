@@ -101,7 +101,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with only address" do
       let(:address) { "aaa@example.jp" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq %w(aaa@example.jp) }
@@ -109,7 +109,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "when address with display name is given" do
       let(:address) { "display name <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["display name <aaa@example.jp>"] }
@@ -117,7 +117,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with multiple address sperated by comma" do
       let(:address) { "aaa@example.jp, <bbb> bbb@example.jp, ccc@example.jp" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["aaa@example.jp, <bbb> bbb@example.jp, ccc@example.jp"] }
@@ -125,7 +125,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with UTF-8 + Base64 encoded address" do
       let(:address) { "=?UTF-8?B?5ZCN5a2XIOWQjeWJjQ==?= <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["\"名字 名前\" <aaa@example.jp>"] }
@@ -133,7 +133,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with UTF-8 + Quoted-Printable encoded address" do
       let(:address) { "=?UTF-8?Q?=E5=90=8D=E5=AD=97 =E5=90=8D=E5=89=8D=?= <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["\"名字 名前\" <aaa@example.jp>"] }
@@ -141,7 +141,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with Basic ISO-2022-JP + Base64 encoded address" do
       let(:address) { "=?ISO-2022-JP?B?GyRCTD47ehsoQiAbJEJMPkEwGyhC?= <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["\"名字 名前\" <aaa@example.jp>"] }
@@ -149,7 +149,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with Basic ISO-2022-JP + Quoted-Printable encoded address" do
       let(:address) { "=?ISO-2022-JP?Q?=1B$BL>;z=1B(B =1B$BL>A0=1B(B=?= <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["名字 名前 <aaa@example.jp>"] }
@@ -157,7 +157,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with Extended ISO-2022-JP + Base64 encoded address" do
       let(:address) { "=?ISO-2022-JP?B?GyRCfGJ5dRsoQiAbJEItIS0iLSMbKEI=?= <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["\"髙﨑 ①②③\" <aaa@example.jp>"] }
@@ -165,7 +165,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with invalid address: encoding is broken" do
       let(:address) { "=?ISO-2022-JP?B?GyRCQzRFdiEnOzOUMxsoQg==?= <aaa@example.jp>" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["\"担当：山��\" <aaa@example.jp>"] }
@@ -173,7 +173,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
     context "with invalid address: local part contains multi-byte chars and spaces" do
       let(:address) { "=?ISO-2022-JP?B?GyRCJCIbKEIgGyRCJCQbKEIg?=@example.jp" }
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it { is_expected.to eq ["あ い @example.jp"] }
@@ -187,7 +187,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
           =?ISO-2022-JP?B?GyRCQzRFdiEnOzOUMxsoQg==?=@example.jp
         ].join(", ") + ","
       end
-      let(:field) { Mail::Field.parse("To: #{address}") }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
       subject { Webmail::Mail.new.parse_address_field(field) }
 
       it do
@@ -234,7 +234,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
           "Subject: =?UTF-8?B?44K/44Kk44OI44OrIOmhjOWQjQ==?="
         ].join("\r\n") + "\r\n"
       end
-      let(:mail) { Mail.read_from_string(header) }
+      let(:mail) { ::Mail.read_from_string(header) }
       subject { Webmail::Mail.new.parse_subject(mail) }
 
       it { is_expected.to eq "タイトル 題名" }
@@ -246,7 +246,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
           "Subject: =?UTF-8?Q?=E3=82=BF=E3=82=A4=E3=83=88=E3=83=AB =E9=A1=8C=E5=90=8D=?="
         ].join("\r\n") + "\r\n"
       end
-      let(:mail) { Mail.read_from_string(header) }
+      let(:mail) { ::Mail.read_from_string(header) }
       subject { Webmail::Mail.new.parse_subject(mail) }
 
       it { is_expected.to eq "タイトル 題名" }
@@ -258,7 +258,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
           "Subject: =?ISO-2022-JP?B?GyRCJT8lJCVIJWsbKEIgGyRCQmpMPhsoQg==?="
         ].join("\r\n") + "\r\n"
       end
-      let(:mail) { Mail.read_from_string(header) }
+      let(:mail) { ::Mail.read_from_string(header) }
       subject { Webmail::Mail.new.parse_subject(mail) }
 
       it { is_expected.to eq "タイトル 題名" }
@@ -282,7 +282,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
           "Subject: =?ISO-2022-JP?B?GyRCfGJ5dRsoQiAbJEItIS0iLSMbKEI=?="
         ].join("\r\n") + "\r\n"
       end
-      let(:mail) { Mail.read_from_string(header) }
+      let(:mail) { ::Mail.read_from_string(header) }
       subject { Webmail::Mail.new.parse_subject(mail) }
 
       it { is_expected.to eq "髙﨑 ①②③" }
@@ -294,7 +294,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
           "Subject: =?ISO-2022-JP?B?GyRCQzRFdiEnOzOUMxsoQg==?="
         ].join("\r\n") + "\r\n"
       end
-      let(:mail) { Mail.read_from_string(header) }
+      let(:mail) { ::Mail.read_from_string(header) }
       subject { Webmail::Mail.new.parse_subject(mail) }
 
       it { is_expected.to eq "担当：山��" }

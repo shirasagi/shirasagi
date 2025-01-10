@@ -9,7 +9,7 @@ describe Article::Page, dbscope: :example do
     subject { page.to_liquid }
 
     before do
-      subject.context = Liquid::Context.new(assigns, {}, registers, true)
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
     end
 
     context "without form" do
@@ -89,7 +89,7 @@ describe Article::Page, dbscope: :example do
           SS::File.create_empty!(
             cur_user: cms_user, site_id: cms_site.id, model: "article/page", filename: "logo.png", content_type: 'image/png'
           ) do |file|
-            FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
+            ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
           end
         end
         let!(:page) { create :article_page, cur_node: node, thumb: thumb }

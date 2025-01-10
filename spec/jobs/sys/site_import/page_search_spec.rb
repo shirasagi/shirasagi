@@ -32,7 +32,7 @@ describe Sys::SiteImportJob, dbscope: :example do
       job = Sys::SiteImportJob.new
       job.task = Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
       job.perform
-      
+
       expect(Cms::PageSearch.site(destination_site).count).to eq 1
       dest_layout = Cms::Layout.site(destination_site).where(filename: layout.filename).first
       dest_cate = Category::Node::Base.site(destination_site).where(filename: cate.filename).first

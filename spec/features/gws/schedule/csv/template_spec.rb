@@ -34,7 +34,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
       wait_for_download
 
       I18n.with_locale(I18n.default_locale) do
-        csv = CSV.open(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv = ::CSV.open(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         csv_table = csv.read
         expect(csv_table.headers.length).to be > 10
         expect(csv_table.headers).to include(*expected_basic_headers)

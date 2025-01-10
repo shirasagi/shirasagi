@@ -46,7 +46,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
           cur_month += 1.month
         end
 
-        expect { Icalendar::Calendar.parse(File.read("#{node.path}/index.ics")) }.not_to raise_error
+        expect { ::Icalendar::Calendar.parse(::File.read("#{node.path}/index.ics")) }.not_to raise_error
 
         expect(Cms::Task.count).to eq 2
         Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
@@ -97,7 +97,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
           cur_month += 1.month
         end
 
-        expect { Icalendar::Calendar.parse(File.read("#{node.path}/index.ics")) }.not_to raise_error
+        expect { ::Icalendar::Calendar.parse(::File.read("#{node.path}/index.ics")) }.not_to raise_error
 
         Cms::Task.where(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes').first.tap do |task|
           expect(task.state).to eq 'completed'

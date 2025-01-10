@@ -12,7 +12,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
     let(:webmail_support) { true }
     let(:file) do
       csv_file = "#{tmpdir}/#{unique_id}.csv"
-      File.open(csv_file, "wb") do |f|
+      ::File.open(csv_file, "wb") do |f|
         exporter = Gws::UserCsv::Exporter.new(
           site: site, criteria: [ source_user ], encoding: "UTF-8", webmail_support: webmail_support)
         exporter.enum_csv.each do |row|

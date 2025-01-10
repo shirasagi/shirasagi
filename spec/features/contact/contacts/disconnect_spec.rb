@@ -77,7 +77,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       expect(article_page.contact_link_url).to eq sub_contact.contact_link_url
       expect(article_page.contact_link_name).to eq sub_contact.contact_link_name
 
-      FileUtils.rm_f(article_page.path)
+      ::FileUtils.rm_f(article_page.path)
 
       visit article_page.full_url
       within "#main.page" do

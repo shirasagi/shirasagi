@@ -28,7 +28,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
       page = create(
         :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "hide",
         contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-      FileUtils.rm_f(page.path)
+      ::FileUtils.rm_f(page.path)
       page
     end
 
@@ -58,7 +58,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -89,7 +89,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -120,7 +120,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -155,7 +155,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -191,7 +191,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -222,7 +222,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -257,7 +257,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -292,7 +292,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -327,7 +327,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -362,7 +362,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -394,7 +394,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -429,7 +429,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -464,7 +464,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 
@@ -496,7 +496,7 @@ describe "contact/agents/addons/page/view/index.html.erb", type: :feature, dbsco
         page = create(
           :article_page, cur_site: site, cur_node: node, layout: layout, contact_state: "show",
           contact_group: group, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         page
       end
 

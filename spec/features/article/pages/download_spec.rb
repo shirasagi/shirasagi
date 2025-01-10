@@ -23,7 +23,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = CSV.read(downloads.first, headers: true)
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
       expect(csv[0][0]).not_to be_nil
     end
@@ -39,7 +39,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.download")
       wait_for_download
 
-      csv = CSV.read(downloads.first, headers: true)
+      csv = ::CSV.read(downloads.first, headers: true)
       expect(csv.length).to eq 2
       expect(csv[0][0]).not_to be_nil
     end

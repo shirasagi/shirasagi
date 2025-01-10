@@ -14,13 +14,13 @@ describe Gws::Elasticsearch::Searcher, type: :model, dbscope: :example, es: true
 
     context 'when BadRequest' do
       before do
-        stub_request(:any, /#{Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
+        stub_request(:any, /#{::Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
           if request.uri.path == "/"
             # always respond success for ping request
             {
               status: 200,
               headers: { 'Content-Type' => 'application/json; charset=UTF-8', 'X-elastic-product' => "Elasticsearch" },
-              body: File.read("#{Rails.root}/spec/fixtures/gws/elasticsearch/ping.json")
+              body: ::File.read("#{Rails.root}/spec/fixtures/gws/elasticsearch/ping.json")
             }
           else
             requests << request.as_json.dup

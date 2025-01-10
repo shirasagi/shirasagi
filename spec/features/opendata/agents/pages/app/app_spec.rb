@@ -6,7 +6,7 @@ describe "opendata_agents_pages_app", type: :feature, dbscope: :example, js: tru
     appfile.in_file = file
     appfile.save!
 
-    FileUtils.rm_f(app.path)
+    ::FileUtils.rm_f(app.path)
 
     appfile
   end

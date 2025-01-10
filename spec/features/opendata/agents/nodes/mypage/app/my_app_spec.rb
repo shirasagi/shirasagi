@@ -221,7 +221,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         fill_in "remand[comment]", with: remand_comment
         click_on I18n.t("workflow.buttons.approve")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment)}/)
 
       login_opendata_member(site, node_login, member)
       visit "http://#{site.domain}#{index_path}"

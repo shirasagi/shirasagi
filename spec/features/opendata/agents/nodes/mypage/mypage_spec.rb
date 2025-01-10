@@ -11,13 +11,13 @@ describe "opendata_agents_nodes_mypage", type: :feature, dbscope: :example do
   context "with email and password" do
     let!(:node_login) { create :member_node_login, redirect_url: node_mypage.url, form_auth: "enabled" }
 
-    let(:index_url) { URI.parse "http://#{site.domain}#{node_mypage.url}" }
-    let(:dataset_url) { URI.parse "http://#{site.domain}#{node_mypage.url}dataset/" }
-    let(:show_notice_url) { URI.parse "http://#{site.domain}#{node_mypage.url}notice/show.html" }
-    let(:confirm_notice_url) { URI.parse "http://#{site.domain}#{node_mypage.url}notice/confirm.html" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}#{node_mypage.url}" }
+    let(:dataset_url) { ::URI.parse "http://#{site.domain}#{node_mypage.url}dataset/" }
+    let(:show_notice_url) { ::URI.parse "http://#{site.domain}#{node_mypage.url}notice/show.html" }
+    let(:confirm_notice_url) { ::URI.parse "http://#{site.domain}#{node_mypage.url}notice/confirm.html" }
 
-    let(:login_url) { URI.parse "http://#{site.domain}#{node_login.url}login.html" }
-    let(:logout_url) { URI.parse "http://#{site.domain}#{node_login.url}logout.html" }
+    let(:login_url) { ::URI.parse "http://#{site.domain}#{node_login.url}login.html" }
+    let(:logout_url) { ::URI.parse "http://#{site.domain}#{node_login.url}logout.html" }
 
     it do
       visit index_url

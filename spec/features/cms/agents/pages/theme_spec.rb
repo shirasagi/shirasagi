@@ -33,7 +33,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
   end
 
   it do
-    FileUtils.rm_f item.path
+    ::FileUtils.rm_f item.path
 
     visit item.full_url
     expect(page).to have_css(".accessibility__tool-wrap", count: 2)

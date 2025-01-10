@@ -22,7 +22,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
   let(:user) { create(:cms_user, uid: unique_id, name: unique_id, group_ids: [ group2.id ], role: role) }
   let!(:related_page) { create(:article_page, site: site, filename: "docs/page27.html", name: "関連ページ") }
 
-  let!(:file_path) { "#{Rails.root}/spec/fixtures/faq/import_job/faq_pages.csv" }
+  let!(:file_path) { "#{::Rails.root}/spec/fixtures/faq/import_job/faq_pages.csv" }
   let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
   let!(:ss_file) { create(:ss_file, site: site, in_file: in_file ) }
 

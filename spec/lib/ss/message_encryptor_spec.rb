@@ -11,7 +11,7 @@ describe SS::MessageEncryptor do
   it 'encrypt' do
     expect(described_class.secret).to eq Rails.application.secret_key_base[0..31]
     expect(described_class.basic_auth).to eq [basic_auth_user, basic_auth_pass]
-    expect(described_class.encryptor.class).to eq ActiveSupport::MessageEncryptor
+    expect(described_class.encryptor.class).to eq ::ActiveSupport::MessageEncryptor
     expect(described_class.http_basic_authentication).to eq %w(user pass)
     expect(described_class.encrypt('user')).not_to eq 'user'
     expect(described_class.encrypt('pass')).not_to eq 'pass'

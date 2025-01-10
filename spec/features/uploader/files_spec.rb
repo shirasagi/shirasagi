@@ -322,7 +322,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
     let(:filename) { "/#{node.filename}/..%2Frobots.txt" }
 
     before do
-      FileUtils.touch("#{site.path}/robots.txt")
+      ::FileUtils.touch("#{site.path}/robots.txt")
       login_cms_user
     end
 

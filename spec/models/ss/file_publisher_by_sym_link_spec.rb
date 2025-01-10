@@ -15,22 +15,22 @@ RSpec.describe SS::FilePublisher::BySymLink, type: :model, dbscope: :example do
       end
 
       it do
-        expect(Dir.exist?(dirname)).to be_truthy
+        expect(::Dir.exist?(dirname)).to be_truthy
 
-        expect(File.exist?("#{dirname}/#{basename}.txt")).to be_truthy
-        expect(File.symlink?("#{dirname}/#{basename}.txt")).to be_truthy
-        expect(File.readlink("#{dirname}/#{basename}.txt")).to eq file.path
+        expect(::File.exist?("#{dirname}/#{basename}.txt")).to be_truthy
+        expect(::File.symlink?("#{dirname}/#{basename}.txt")).to be_truthy
+        expect(::File.readlink("#{dirname}/#{basename}.txt")).to eq file.path
 
-        expect(File.exist?("#{dirname}/#{basename_ja}.txt")).to be_truthy
-        expect(File.symlink?("#{dirname}/#{basename_ja}.txt")).to be_truthy
-        expect(File.readlink("#{dirname}/#{basename_ja}.txt")).to eq file.path
+        expect(::File.exist?("#{dirname}/#{basename_ja}.txt")).to be_truthy
+        expect(::File.symlink?("#{dirname}/#{basename_ja}.txt")).to be_truthy
+        expect(::File.readlink("#{dirname}/#{basename_ja}.txt")).to eq file.path
 
-        expect(File.exist?("#{dirname}/#{basename}_thumb.txt")).to be_falsey
-        expect(File.symlink?("#{dirname}/#{basename}_thumb.txt")).to be_falsey
+        expect(::File.exist?("#{dirname}/#{basename}_thumb.txt")).to be_falsey
+        expect(::File.symlink?("#{dirname}/#{basename}_thumb.txt")).to be_falsey
         # expect(::File.readlink("#{dirname}/#{basename}_thumb.txt")).to eq file.thumb.path
 
-        expect(File.exist?("#{dirname}/#{basename_ja}_thumb.txt")).to be_falsey
-        expect(File.symlink?("#{dirname}/#{basename_ja}_thumb.txt")).to be_falsey
+        expect(::File.exist?("#{dirname}/#{basename_ja}_thumb.txt")).to be_falsey
+        expect(::File.symlink?("#{dirname}/#{basename_ja}_thumb.txt")).to be_falsey
         # expect(::File.readlink("#{dirname}/#{basename_ja}_thumb.txt")).to eq file.thumb.path
       end
     end
@@ -41,11 +41,11 @@ RSpec.describe SS::FilePublisher::BySymLink, type: :model, dbscope: :example do
       end
 
       it do
-        expect(Dir.exist?(dirname)).to be_truthy
+        expect(::Dir.exist?(dirname)).to be_truthy
 
         subject.depublish(file, dirname)
 
-        expect(Dir.exist?(dirname)).to be_falsey
+        expect(::Dir.exist?(dirname)).to be_falsey
       end
     end
   end
@@ -65,23 +65,23 @@ RSpec.describe SS::FilePublisher::BySymLink, type: :model, dbscope: :example do
       end
 
       it do
-        expect(Dir.exist?(dirname)).to be_truthy
+        expect(::Dir.exist?(dirname)).to be_truthy
 
-        expect(File.exist?("#{dirname}/#{basename}.png")).to be_truthy
-        expect(File.symlink?("#{dirname}/#{basename}.png")).to be_truthy
-        expect(File.readlink("#{dirname}/#{basename}.png")).to eq file.path
+        expect(::File.exist?("#{dirname}/#{basename}.png")).to be_truthy
+        expect(::File.symlink?("#{dirname}/#{basename}.png")).to be_truthy
+        expect(::File.readlink("#{dirname}/#{basename}.png")).to eq file.path
 
-        expect(File.exist?("#{dirname}/#{basename_ja}.png")).to be_truthy
-        expect(File.symlink?("#{dirname}/#{basename_ja}.png")).to be_truthy
-        expect(File.readlink("#{dirname}/#{basename_ja}.png")).to eq file.path
+        expect(::File.exist?("#{dirname}/#{basename_ja}.png")).to be_truthy
+        expect(::File.symlink?("#{dirname}/#{basename_ja}.png")).to be_truthy
+        expect(::File.readlink("#{dirname}/#{basename_ja}.png")).to eq file.path
 
-        expect(File.exist?("#{dirname}/#{basename}_thumb.png")).to be_truthy
-        expect(File.symlink?("#{dirname}/#{basename}_thumb.png")).to be_truthy
-        expect(File.readlink("#{dirname}/#{basename}_thumb.png")).to eq file.thumb.path
+        expect(::File.exist?("#{dirname}/#{basename}_thumb.png")).to be_truthy
+        expect(::File.symlink?("#{dirname}/#{basename}_thumb.png")).to be_truthy
+        expect(::File.readlink("#{dirname}/#{basename}_thumb.png")).to eq file.thumb.path
 
-        expect(File.exist?("#{dirname}/#{basename_ja}_thumb.png")).to be_truthy
-        expect(File.symlink?("#{dirname}/#{basename_ja}_thumb.png")).to be_truthy
-        expect(File.readlink("#{dirname}/#{basename_ja}_thumb.png")).to eq file.thumb.path
+        expect(::File.exist?("#{dirname}/#{basename_ja}_thumb.png")).to be_truthy
+        expect(::File.symlink?("#{dirname}/#{basename_ja}_thumb.png")).to be_truthy
+        expect(::File.readlink("#{dirname}/#{basename_ja}_thumb.png")).to eq file.thumb.path
       end
     end
 
@@ -91,11 +91,11 @@ RSpec.describe SS::FilePublisher::BySymLink, type: :model, dbscope: :example do
       end
 
       it do
-        expect(Dir.exist?(dirname)).to be_truthy
+        expect(::Dir.exist?(dirname)).to be_truthy
 
         subject.depublish(file, dirname)
 
-        expect(Dir.exist?(dirname)).to be_falsey
+        expect(::Dir.exist?(dirname)).to be_falsey
       end
     end
   end

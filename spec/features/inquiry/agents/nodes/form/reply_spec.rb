@@ -18,7 +18,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       reply_lower_text: '下部テキスト',
       reply_content_state: reply_content_state)
   end
-  let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
+  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
   before do
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})

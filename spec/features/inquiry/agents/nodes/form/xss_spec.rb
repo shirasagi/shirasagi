@@ -68,7 +68,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
     node.columns.create! attributes_for(:inquiry_column_upload_file).reverse_merge({cur_site: site})
     node.reload
   end
-  let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/" }
+  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
   before do
     ActionMailer::Base.deliveries = []

@@ -42,12 +42,12 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_web do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_web do
@@ -56,7 +56,7 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
           item.update!
 
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
       end
 
@@ -64,12 +64,12 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_web do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_web do
@@ -89,12 +89,12 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_web do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_web do
@@ -116,12 +116,12 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_web do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_web do
@@ -144,19 +144,19 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_cms do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_cms do
           item.name = name
           item.update!
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
       end
 
@@ -164,12 +164,12 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_cms do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_cms do
@@ -178,8 +178,8 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
           item.filename = filename
           item.update!
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(path_was)).to be false
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(path_was)).to be false
+          expect(::File.exist?(item.path)).to be true
         end
       end
 
@@ -187,12 +187,12 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_cms do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_cms do
@@ -202,8 +202,8 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
           item.state = "closed"
           item.update!
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(path_was1)).to be false
-          expect(File.exist?(path_was2)).to be false
+          expect(::File.exist?(path_was1)).to be false
+          expect(::File.exist?(path_was2)).to be false
         end
       end
 
@@ -211,19 +211,19 @@ describe Cms::Lgwan::Node, type: :model, dbscope: :example do
         with_lgwan_cms do
           item
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(item.path)).to be false
+          expect(::File.exist?(item.path)).to be false
         end
 
         with_lgwan_cms do
           job.perform_now
-          expect(File.exist?(item.path)).to be true
+          expect(::File.exist?(item.path)).to be true
         end
 
         with_lgwan_cms do
           path_was = item.path
           item.destroy
           expect(enqueued_jobs.size).to eq 0
-          expect(File.exist?(path_was)).to be false
+          expect(::File.exist?(path_was)).to be false
         end
       end
     end

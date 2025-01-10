@@ -77,7 +77,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_template.thumb_id).not_to eq template.thumb_id
         expect(dest_template.thumb.site_id).to eq dest_site.id
         expect(dest_template.thumb.owner_item_id).to eq dest_template.id
-        expect(File.size(dest_template.thumb.path)).to be > 0
+        expect(::File.size(dest_template.thumb.path)).to be > 0
       end
     end
   end

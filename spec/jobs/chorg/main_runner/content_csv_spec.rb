@@ -19,7 +19,7 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:node) do
       Timecop.freeze(now - 2.weeks) do
         node = create(:article_node_page, cur_site: site, layout_id: layout.id, category_ids: [ cate.id ], group_ids: [ cms_group.id ])
-        FileUtils.rm_rf(node.path)
+        ::FileUtils.rm_rf(node.path)
         Cms::Node.find(node.id)
       end
     end

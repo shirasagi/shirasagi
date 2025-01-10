@@ -16,7 +16,7 @@ describe SS::File, dbscope: :example do
 
   context "create file with empty contents" do
     let(:filename) { "#{unique_id}.png" }
-    let(:basename) { File.basename(filename, ".*") }
+    let(:basename) { ::File.basename(filename, ".*") }
     subject! { described_class.create(model: described_class.name.underscore, filename: filename) }
 
     it do
@@ -59,7 +59,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.filename}" }
-    let(:thumb_basename) { "#{File.basename(subject.filename, ".*")}_thumb.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.filename, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{thumb_basename}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to be_nil }
@@ -90,7 +90,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    let(:thumb_basename) { "#{File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to be_nil }
@@ -122,7 +122,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    let(:thumb_basename) { "#{File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to eq "#{site.root_path}/fs/#{subject.id}/_" }
@@ -155,7 +155,7 @@ describe SS::File, dbscope: :example do
     its(:valid?) { is_expected.to be_truthy }
     its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(subject.name)}" }
-    let(:thumb_basename) { "#{File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
+    let(:thumb_basename) { "#{::File.basename(subject.name, ".*")}_thumb.#{subject.extname}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/#{CGI.escape(thumb_basename)}" }
     its(:public?) { is_expected.to be_falsey }
     its(:public_dir) { is_expected.to eq "#{site0.root_path}/fs/#{subject.id}/_" }
@@ -187,7 +187,7 @@ describe SS::File, dbscope: :example do
 
   describe "shirasagi-434" do
     before do
-      @tmpdir = Dir.mktmpdir
+      @tmpdir = ::Dir.mktmpdir
       @file_path = "#{@tmpdir}/#{filename}"
       File.open(@file_path, "wb") do |file|
         file.write [1]
@@ -195,7 +195,7 @@ describe SS::File, dbscope: :example do
     end
 
     after do
-      FileUtils.rm_rf(@tmpdir)
+      ::FileUtils.rm_rf(@tmpdir)
     end
 
     before do
@@ -294,7 +294,7 @@ describe SS::File, dbscope: :example do
   end
 
   describe "shirasagi-1066" do
-    let(:multi_frame_image) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif" }
+    let(:multi_frame_image) { "#{::Rails.root}/spec/fixtures/ss/file/keyvisual.gif" }
 
     context "when save multi frame image" do
       subject do
@@ -478,7 +478,7 @@ describe SS::File, dbscope: :example do
     subject { file.to_liquid }
 
     before do
-      subject.context = Liquid::Context.new(assigns, {}, registers, true)
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
     end
 
     context "with image file" do
@@ -561,7 +561,7 @@ describe SS::File, dbscope: :example do
       let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
 
       before do
-        FileUtils.rm_f(ss_file.path)
+        ::FileUtils.rm_f(ss_file.path)
       end
 
       it do
@@ -573,8 +573,8 @@ describe SS::File, dbscope: :example do
       let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
 
       before do
-        FileUtils.rm_f(ss_file.path)
-        FileUtils.mkdir_p(ss_file.path)
+        ::FileUtils.rm_f(ss_file.path)
+        ::FileUtils.mkdir_p(ss_file.path)
       end
 
       it do

@@ -13,7 +13,7 @@ describe Fs do
     end
   end
 
-  let(:data) { File.binread("#{Rails.root}/spec/fixtures/ss/logo.png") }
+  let(:data) { ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png") }
 
   before do
     grid_fs.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", data)
@@ -114,7 +114,7 @@ describe Fs do
     let(:tmp_dir) { "#{tmpdir}/spec/fs" }
 
     before do
-      FileUtils.mkdir_p(tmp_dir)
+      ::FileUtils.mkdir_p(tmp_dir)
     end
 
     it do
@@ -182,8 +182,8 @@ describe Fs do
     let(:tmp_file) { "#{tmpdir}/spec/fs/logo.png" }
 
     before do
-      FileUtils.mkdir_p(File.dirname(tmp_file))
-      File.binwrite(tmp_file, data)
+      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
+      ::File.binwrite(tmp_file, data)
 
       grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
     end
@@ -206,8 +206,8 @@ describe Fs do
     let(:tmp_file) { "#{tmpdir}/spec/fs/logo.png" }
 
     before do
-      FileUtils.mkdir_p(File.dirname(tmp_file))
-      File.binwrite(tmp_file, data)
+      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
+      ::File.binwrite(tmp_file, data)
 
       grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
     end
@@ -234,8 +234,8 @@ describe Fs do
     let(:tmp_file) { "#{tmpdir}/spec/fs/logo.png" }
 
     before do
-      FileUtils.mkdir_p(File.dirname(tmp_file))
-      File.binwrite(tmp_file, data)
+      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
+      ::File.binwrite(tmp_file, data)
 
       grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
     end

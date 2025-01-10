@@ -50,7 +50,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
     end
 
@@ -78,7 +78,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       day = time.day
       visit sprintf("#{node.full_url}%04d%02d%02d.html", year, month, day)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, day), format: :long)))
       expect(page).to have_css("div#event-list", text: '')
     end
   end
@@ -108,7 +108,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{list_node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
     end
 
@@ -118,7 +118,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{list_node.full_url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
     end
 
@@ -166,7 +166,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{table_node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
     end
 
@@ -176,7 +176,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{table_node.full_url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
     end
 
@@ -222,7 +222,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{list_only_node.full_url}%04d%02d.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
     end
 
@@ -232,7 +232,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{list_only_node.full_url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-list")
     end
 
@@ -277,7 +277,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{table_only_node.full_url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
     end
 
@@ -287,7 +287,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       month = time.month
       visit sprintf("#{table_only_node.full_url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
-      expect(page).to have_title(Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
     end
 

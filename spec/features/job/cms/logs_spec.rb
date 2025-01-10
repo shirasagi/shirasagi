@@ -12,8 +12,8 @@ describe "job_cms_logs", type: :feature, dbscope: :example do
 
   before do
     logs.each do |log|
-      FileUtils.mkdir_p(File.dirname(log.file_path)) rescue nil
-      File.open(log.file_path, 'wt') do |f|
+      ::FileUtils.mkdir_p(::File.dirname(log.file_path)) rescue nil
+      ::File.open(log.file_path, 'wt') do |f|
         f.puts unique_id
       end
     end
@@ -69,9 +69,9 @@ describe "job_cms_logs", type: :feature, dbscope: :example do
       expect(Job::Log.count).to eq 0
 
       # log files should be removed
-      expect(File.exist?(log1.file_path)).to be_falsey
-      expect(File.exist?(log2.file_path)).to be_falsey
-      expect(File.exist?(log3.file_path)).to be_falsey
+      expect(::File.exist?(log1.file_path)).to be_falsey
+      expect(::File.exist?(log2.file_path)).to be_falsey
+      expect(::File.exist?(log3.file_path)).to be_falsey
     end
 
     context 'when ymd is present' do

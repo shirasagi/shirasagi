@@ -8,8 +8,8 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let(:index_path) { gws_share_folder_files_path site, folder }
   let(:file_path1) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
   let(:file_path2) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
-  let(:name1) { File.basename(file_path1) }
-  let(:name2) { File.basename(file_path2) }
+  let(:name1) { ::File.basename(file_path1) }
+  let(:name2) { ::File.basename(file_path2) }
 
   before { login_gws_user }
 
@@ -82,7 +82,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_download
-        expect(File.size(downloads.first)).to eq history.uploadfile_size
+        expect(::File.size(downloads.first)).to eq history.uploadfile_size
       end
 
       clear_downloads
@@ -98,7 +98,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
 
         wait_for_download
-        expect(File.size(downloads.first)).to eq history.uploadfile_size
+        expect(::File.size(downloads.first)).to eq history.uploadfile_size
       end
     end
   end

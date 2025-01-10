@@ -71,7 +71,7 @@ describe SS::Csv do
   end
 
   context "io is given" do
-    let(:param) { File.open(csv_file) }
+    let(:param) { ::File.open(csv_file) }
 
     it_behaves_like "what SS::Csv#foreach_row is"
 

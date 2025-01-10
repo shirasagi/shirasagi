@@ -201,7 +201,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
   end
 
   context "when collapsed multipart message is given" do
-    let(:mail) { File.read("#{Rails.root}/spec/fixtures/webmail/collapsed-multipart.eml") }
+    let(:mail) { ::File.read("#{Rails.root}/spec/fixtures/webmail/collapsed-multipart.eml") }
 
     before do
       webmail_import_mail(webmail_imap, mail)

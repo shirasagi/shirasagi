@@ -14,8 +14,8 @@ describe Voice::SynthesisJob, dbscope: :example do
 
       before do
         path = Rails.root.join("spec", "fixtures", "voice", "test-001.html")
-        body = File.read(path)
-        last_modified = File.mtime(path).httpdate
+        body = ::File.read(path)
+        last_modified = ::File.mtime(path).httpdate
         stub_request(:get, url).to_return(status: 200, body: body, headers: { 'Last-Modified' => last_modified })
       end
 
@@ -34,7 +34,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
-          expect(log.logs).to include(/INFO -- : .* synthesize: #{Regexp.escape(url)}/)
+          expect(log.logs).to include(/INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
       end
@@ -57,7 +57,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/ INFO -- : .* Started Job/)
-          expect(log.logs).to include(/ INFO -- : .* synthesize: #{Regexp.escape(url)}/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
           expect(log.logs).to include(/ WARN -- : .* OpenURI::HTTPError \(400 Bad Request\):/)
           expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
@@ -81,7 +81,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/ INFO -- : .* Started Job/)
-          expect(log.logs).to include(/ INFO -- : .* synthesize: #{Regexp.escape(url)}/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
           expect(log.logs).to include(/ WARN -- : .* OpenURI::HTTPError \(404 Not Found\):/)
           expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
@@ -105,7 +105,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/ INFO -- : .* Started Job/)
-          expect(log.logs).to include(/ INFO -- : .* synthesize: #{Regexp.escape(url)}/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
           expect(log.logs).to include(/ WARN -- : .* OpenURI::HTTPError \(500 Internal Server Error\):/)
           expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
@@ -130,7 +130,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/ INFO -- : .* Started Job/)
-          expect(log.logs).to include(/ INFO -- : .* synthesize: #{Regexp.escape(url)}/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
           expect(log.logs).to include(/ WARN -- : .* Net::OpenTimeout \(execution expired\):/)
           expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
@@ -144,7 +144,7 @@ describe Voice::SynthesisJob, dbscope: :example do
 
       before do
         # http.options real_path: "/test-001.html", last_modified: nil
-        body = File.read(Rails.root.join("spec", "fixtures", "voice", "test-001.html"))
+        body = ::File.read(Rails.root.join("spec", "fixtures", "voice", "test-001.html"))
         stub_request(:get, url).to_return(status: 200, body: body)
       end
 
@@ -161,7 +161,7 @@ describe Voice::SynthesisJob, dbscope: :example do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
-          expect(log.logs).to include(/INFO -- : .* synthesize: #{Regexp.escape(url)}/)
+          expect(log.logs).to include(/INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
       end

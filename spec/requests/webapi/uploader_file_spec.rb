@@ -55,7 +55,7 @@ describe "webapi", dbscope: :example, type: :request do
           correct_upload_file_params = {
             :item => {
               :files => [
-                Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
+                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
               ]
             }
           }
@@ -74,12 +74,12 @@ describe "webapi", dbscope: :example, type: :request do
           correct_upload_file_params = {
             :item => {
               :files => [
-                Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
+                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
               ]
             }
           }
-          multibyte_filepath = File.join(site.path, "ロゴ.png")
-          FileUtils.cp("#{Rails.root}/spec/fixtures/webapi/logo.png", multibyte_filepath)
+          multibyte_filepath = ::File.join(site.path, "ロゴ.png")
+          ::FileUtils.cp("#{::Rails.root}/spec/fixtures/webapi/logo.png", multibyte_filepath)
           invalid_upload_file_params = {
             :item => {
               :files => [
@@ -104,7 +104,7 @@ describe "webapi", dbscope: :example, type: :request do
           correct_upload_file_params = {
             :item => {
               :files => [
-                Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", nil, true)
+                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", nil, true)
               ]
             }
           }
@@ -125,7 +125,7 @@ describe "webapi", dbscope: :example, type: :request do
           correct_upload_file_params = {
             :item => {
               :files => [
-                Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/uploader/style.scss", nil, true)
+                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/uploader/style.scss", nil, true)
               ]
             }
           }
@@ -147,7 +147,7 @@ describe "webapi", dbscope: :example, type: :request do
         correct_upload_file_params = {
           :item => {
             :files => [
-              Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
             ]
           }
         }
@@ -158,7 +158,7 @@ describe "webapi", dbscope: :example, type: :request do
           :item => {
             :filename => "img/replace.png",
             :files => [
-              Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/replace.png", "image/png", true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/replace.png", "image/png", true)
             ]
           }
         }
@@ -171,7 +171,7 @@ describe "webapi", dbscope: :example, type: :request do
           :item => {
             :filename => "replace.png",
             :files => [
-              Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/replace.png", nil, true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/replace.png", nil, true)
             ]
           }
         }
@@ -197,7 +197,7 @@ describe "webapi", dbscope: :example, type: :request do
         correct_upload_file_params = {
           :item => {
             :files => [
-              Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
             ]
           }
         }
@@ -219,7 +219,7 @@ describe "webapi", dbscope: :example, type: :request do
         correct_upload_file_params = {
           :item => {
             :files => [
-              Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
+              Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/logo.png", nil, true)
             ]
           }
         }

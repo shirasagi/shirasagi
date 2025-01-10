@@ -34,7 +34,7 @@ describe SS::MaxFileSize, type: :model, dbscope: :example do
     end
 
     it do
-      size = File.open(file_path, "r") do |file|
+      size = ::File.open(file_path, "r") do |file|
         SS::MaxFileSize.send(:load_nginx_client_max_body_size, file)
       end
 

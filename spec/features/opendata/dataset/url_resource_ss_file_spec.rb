@@ -22,12 +22,12 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
       click_button I18n.t("opendata.manage_url_resources")
     end
     click_on name
-    click_on File.basename(filename)
+    click_on ::File.basename(filename)
 
     wait_for_download
 
     path ||= csv_path
-    expect(File.binread(downloads.first)).to eq File.binread(path)
+    expect(::File.binread(downloads.first)).to eq ::File.binread(path)
   end
 
   def visit_url_resource
@@ -45,7 +45,7 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
       "Content-Disposition" => "attachment; filename=\"#{filename}\"",
       "Last-Modified" => last_modified.utc.httpdate
     }
-    stub_request(:get, original_url).to_return(status: 200, body: File.binread(path), headers: headers)
+    stub_request(:get, original_url).to_return(status: 200, body: ::File.binread(path), headers: headers)
   end
 
   context "basic crud" do
@@ -96,8 +96,8 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
         expect(file.name).to eq filename
         expect(file.filename).to eq filename
         expect(file.content_type).to eq "text/csv"
-        expect(file.size).to eq File.size(csv_path)
-        expect(file.read).to eq File.binread(csv_path)
+        expect(file.size).to eq ::File.size(csv_path)
+        expect(file.read).to eq ::File.binread(csv_path)
         expect(file.owner_item_id).to eq dataset.id
       end
 
@@ -125,8 +125,8 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
         expect(file.name).to eq filename
         expect(file.filename).to eq filename
         expect(file.content_type).to eq "text/csv"
-        expect(file.size).to eq File.size(csv_path)
-        expect(file.read).to eq File.binread(csv_path)
+        expect(file.size).to eq ::File.size(csv_path)
+        expect(file.read).to eq ::File.binread(csv_path)
         expect(file.owner_item_id).to eq dataset.id
       end
 
@@ -180,8 +180,8 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
           expect(file.name).to eq filename
           expect(file.filename).to eq filename
           expect(file.content_type).to eq "text/csv"
-          expect(file.size).to eq File.size(csv_path)
-          expect(file.read).to eq File.binread(csv_path)
+          expect(file.size).to eq ::File.size(csv_path)
+          expect(file.read).to eq ::File.binread(csv_path)
           expect(file.owner_item_id).to eq dataset.id
         end
 
@@ -198,8 +198,8 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
           expect(file.name).to eq filename
           expect(file.filename).to eq filename
           expect(file.content_type).to eq "text/csv"
-          expect(file.size).to eq File.size(csv_path)
-          expect(file.read).to eq File.binread(csv_path)
+          expect(file.size).to eq ::File.size(csv_path)
+          expect(file.read).to eq ::File.binread(csv_path)
           expect(file.owner_item_id).to eq dataset.id
         end
 
@@ -219,8 +219,8 @@ describe "opendata_url_resource", type: :feature, dbscope: :example, js: true do
           expect(file.name).to eq filename
           expect(file.filename).to eq filename
           expect(file.content_type).to eq "text/csv"
-          expect(file.size).to eq File.size(csv_path2)
-          expect(file.read).to eq File.binread(csv_path2)
+          expect(file.size).to eq ::File.size(csv_path2)
+          expect(file.read).to eq ::File.binread(csv_path2)
           expect(file.owner_item_id).to eq dataset.id
         end
 

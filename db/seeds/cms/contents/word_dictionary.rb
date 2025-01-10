@@ -5,7 +5,7 @@ def save_word_dictionary(data)
   cond = { site_id: @site.id, name: data[:name] }
 
   body_file = data.delete(:body_file)
-  data[:body] = File.read(body_file)
+  data[:body] = ::File.read(body_file)
 
   item = Cms::WordDictionary.find_or_initialize_by cond
   puts item.errors.full_messages unless item.update data

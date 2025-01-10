@@ -17,7 +17,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           # category key is "service_ids"
           expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
         end
@@ -30,9 +30,9 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           # category key is "service_ids"
           expect(subject[2]).to eq(site_id: site.id, service_ids: { "$in" => [ node.id, article_node.id ] })
         end
@@ -54,9 +54,9 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 4
           expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
           expect(subject[1]).to eq(
-            site_id: site1.id, filename: /^#{Regexp.escape(site1_article_node.filename)}\//,
+            site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//,
             depth: site1_article_node.depth + 1)
           # category key is "service_ids"
           expect(subject[2]).to eq(site_id: site.id, service_ids: node.id)

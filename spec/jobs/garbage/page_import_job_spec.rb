@@ -18,7 +18,7 @@ describe Garbage::PageImportJob, dbscope: :example do
   let!(:category2) { create(:garbage_node_category, site: site, filename: "garbage/categories/c2", name: "c2") }
   let!(:category3) { create(:garbage_node_category, site: site, filename: "garbage/categories/c3", name: "c3") }
 
-  let!(:file_path) { "#{Rails.root}/spec/fixtures/garbage/garbage_pages.csv" }
+  let!(:file_path) { "#{::Rails.root}/spec/fixtures/garbage/garbage_pages.csv" }
   let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
   let!(:ss_file) { create(:ss_file, site: site, in_file: in_file ) }
 

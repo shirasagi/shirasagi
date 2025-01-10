@@ -18,8 +18,8 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
     let!(:task) { Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_pages', state: 'ready') }
 
     before do
-      FileUtils.mkdir_p(File.dirname(task.perf_log_file_path))
-      File.open(task.perf_log_file_path, "wt") do |f|
+      ::FileUtils.mkdir_p(::File.dirname(task.perf_log_file_path))
+      ::File.open(task.perf_log_file_path, "wt") do |f|
         f.puts({}.to_json)
       end
     end

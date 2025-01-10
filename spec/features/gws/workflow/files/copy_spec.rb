@@ -96,7 +96,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
             end
           end
           within "form#item-form" do
-            expect(page).to have_content(File.basename(file_path))
+            expect(page).to have_content(::File.basename(file_path))
             expect(SS::TempFile.count).to eq 1
             fill_in "item[text]", with: test_url
             click_on I18n.t("ss.buttons.save")

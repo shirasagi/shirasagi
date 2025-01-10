@@ -86,7 +86,7 @@ describe Opendata::Dataset::ResourcePreviewHistoriesController, type: :feature, 
 
       wait_for_download
 
-      table = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      table = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
       expect(table.length).to eq 1
 
       expected_headers = Opendata::ResourcePreviewHistory::HistoryCsv.csv_headers.map do |k|

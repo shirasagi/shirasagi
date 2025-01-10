@@ -126,7 +126,7 @@ def create_line_template_json(message, json_path)
   item = Cms::Line::Template::JsonBody.new
   item.cur_site = @site
   item.message = message
-  item.json_body = File.read(File.join("line_template_json", json_path))
+  item.json_body = ::File.read(::File.join("line_template_json", json_path))
   item.save!
   item
 end
@@ -171,7 +171,7 @@ image = Fs::UploadedFile.create_from_file("ss_files/line/richmenu.png")
 richmenu_in_areas = [
   { x: "16", y: "15", width: "252", height: "219", type: "uri", uri: @site.full_url },
   { x: "276", y: "14", width: "248", height: "222", type: "postback", data: "チャットボット"},
-  { x: "533", y: "14", width: "251", height: "221", type: "uri", uri: File.join(@site.full_url, "calendar") }
+  { x: "533", y: "14", width: "251", height: "221", type: "uri", uri: ::File.join(@site.full_url, "calendar") }
 ]
 richmenu = create_richmenu_menu richmenu_group,
   name: "シラサギリッチメニュー ", target: "default",

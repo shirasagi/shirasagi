@@ -117,9 +117,9 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     # load all models
-    Rails.application.eager_load!
+    ::Rails.application.eager_load!
     # `rake db:drop`
-    Mongoid::Clients.default.database.drop
+    ::Mongoid::Clients.default.database.drop
   end
 
   config.before(:context) do

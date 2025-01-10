@@ -239,7 +239,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(dataset.resources.and_public.count).to eq 1
         dataset.resources.and_public.first.tap do |resource|
           file = article_page.files.first
-          expect(resource.name).to eq File.basename(file.name, ".*")
+          expect(resource.name).to eq ::File.basename(file.name, ".*")
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
           expect(resource.license_id).not_to be_nil

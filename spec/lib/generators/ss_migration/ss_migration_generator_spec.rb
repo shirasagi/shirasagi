@@ -34,8 +34,8 @@ describe SsMigrationGenerator, dbscope: :example do
       let(:outs) { [ "lib/migrations/#{basename}" ] }
 
       it do
-        expect(File.exist?("#{tmpdir}/lib/migrations/#{basename}.rb")).to be_truthy
-        expect(File.exist?("#{tmpdir}/spec/lib/migrations/#{basename}_spec.rb")).to be_truthy
+        expect(::File.exist?("#{tmpdir}/lib/migrations/#{basename}.rb")).to be_truthy
+        expect(::File.exist?("#{tmpdir}/spec/lib/migrations/#{basename}_spec.rb")).to be_truthy
       end
     end
 
@@ -44,8 +44,8 @@ describe SsMigrationGenerator, dbscope: :example do
       let(:outs) { [ "lib/migrations/#{module_name}/#{basename}" ] }
 
       it do
-        expect(File.exist?("#{tmpdir}/lib/migrations/#{module_name}/#{basename}.rb")).to be_truthy
-        expect(File.exist?("#{tmpdir}/spec/lib/migrations/#{module_name}/#{basename}_spec.rb")).to be_truthy
+        expect(::File.exist?("#{tmpdir}/lib/migrations/#{module_name}/#{basename}.rb")).to be_truthy
+        expect(::File.exist?("#{tmpdir}/spec/lib/migrations/#{module_name}/#{basename}_spec.rb")).to be_truthy
       end
     end
   end

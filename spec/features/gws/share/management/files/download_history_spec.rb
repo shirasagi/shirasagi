@@ -28,7 +28,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_download
-      expect(File.size(downloads.first)).to eq item.size
+      expect(::File.size(downloads.first)).to eq item.size
       expect(Fs.compare_file_head(downloads.first, item.path)).to be_truthy
     end
   end

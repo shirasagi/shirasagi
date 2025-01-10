@@ -55,7 +55,7 @@ describe "michecker", type: :feature, dbscope: :example, js: true, michecker: tr
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
-      expect(log.logs).to include(/#{Regexp.escape(I18n.t('cms.cms/michecker/task.success'))}/)
+      expect(log.logs).to include(/#{::Regexp.escape(I18n.t('cms.cms/michecker/task.success'))}/)
 
       select I18n.t("cms.cms/michecker.accessibility"), from: "report-type"
       within ".michecker-report__accessibility" do
@@ -76,10 +76,10 @@ describe "michecker", type: :feature, dbscope: :example, js: true, michecker: tr
         expect(result.michecker_last_job_id).to be_present
         expect(result.michecker_last_result).to eq 0
         expect(result.michecker_last_executed_at).to be_present
-        expect(File.exist?(result.html_checker_report_filepath)).to be_truthy
-        expect(File.exist?(result.low_vision_report_filepath)).to be_truthy
-        expect(File.exist?(result.low_vision_source_filepath)).to be_truthy
-        expect(File.exist?(result.low_vision_result_filepath)).to be_truthy
+        expect(::File.exist?(result.html_checker_report_filepath)).to be_truthy
+        expect(::File.exist?(result.low_vision_report_filepath)).to be_truthy
+        expect(::File.exist?(result.low_vision_source_filepath)).to be_truthy
+        expect(::File.exist?(result.low_vision_result_filepath)).to be_truthy
       end
     end
   end

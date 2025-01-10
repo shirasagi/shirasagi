@@ -26,7 +26,7 @@ describe SS::TempFile do
         expect(file.filename).to eq filename
         expect(file.content_type).to eq content_type
         expect(file.size).to eq 0
-        expect(File.exist?(file.path)).to be_truthy
+        expect(::File.exist?(file.path)).to be_truthy
         expect(file.errors).to be_empty
       end
     end
@@ -34,7 +34,7 @@ describe SS::TempFile do
     context "with block" do
       it do
         file = described_class.create_empty!(name: name, filename: filename, content_type: content_type) do |file|
-          FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
+          ::FileUtils.cp("#{Rails.root}/spec/fixtures/ss/logo.png", file.path)
         end
 
         expect(file.model).to eq 'ss/temp_file'
@@ -42,8 +42,8 @@ describe SS::TempFile do
         expect(file.name).to eq name
         expect(file.filename).to eq filename
         expect(file.content_type).to eq content_type
-        expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
-        expect(File.exist?(file.path)).to be_truthy
+        expect(file.size).to eq ::File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
+        expect(::File.exist?(file.path)).to be_truthy
         expect(file.errors).to be_empty
       end
     end

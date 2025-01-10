@@ -7,7 +7,7 @@ describe Cms::Node::ImportJob, dbscope: :example do
   let(:path) { "#{Rails.root}/spec/fixtures/cms/node/import/category.csv" }
   let(:ss_file) do
     SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
-      FileUtils.cp(path, file.path)
+      ::FileUtils.cp(path, file.path)
     end
   end
 

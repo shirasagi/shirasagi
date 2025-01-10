@@ -816,7 +816,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
           expect(file.filename).to eq "no_name"
           expect(file.content_type).to eq "application/octet-stream"
           expect(file.size).to be > 0
-          expect(File.read(message.files.first.path)).to eq "<p>#{message.text}</p>"
+          expect(::File.read(message.files.first.path)).to eq "<p>#{message.text}</p>"
         end
       end
     end

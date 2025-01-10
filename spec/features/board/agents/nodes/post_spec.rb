@@ -42,7 +42,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
   end
 
   context "new board" do
-    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/new" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/new" }
 
     it "success to post" do
       visit index_url
@@ -87,7 +87,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
   end
 
   context "post reply" do
-    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/#{board.id}/new" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/#{board.id}/new" }
 
     it "success to reply" do
       visit index_url
@@ -132,7 +132,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
   end
 
   context "post reply" do
-    let(:index_url) { URI.parse "http://#{site.domain}/#{node.filename}/#{board.id}/delete" }
+    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/#{board.id}/delete" }
 
     it "success to delete" do
       visit index_url

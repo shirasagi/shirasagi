@@ -53,7 +53,7 @@ describe Rss::Wrappers, dbscope: :example do
 
       context "file is given" do
         subject do
-          rss = File.open(file) { |f| described_class.parse(f) }
+          rss = ::File.open(file) { |f| described_class.parse(f) }
           items = []
           rss.each do |item|
             items << { name: item.name, link: item.link, html: item.html, released: item.released }
@@ -68,7 +68,7 @@ describe Rss::Wrappers, dbscope: :example do
         let(:url) { "http://#{unique_id}.example.jp/rss.xml" }
 
         before do
-          stub_request(:get, url).to_return(status: 200, body: File.read(file), headers: {})
+          stub_request(:get, url).to_return(status: 200, body: ::File.read(file), headers: {})
         end
 
         subject do
@@ -131,7 +131,7 @@ describe Rss::Wrappers, dbscope: :example do
 
       context "file is given" do
         subject do
-          rss = File.open(file) { |f| described_class.parse(f) }
+          rss = ::File.open(file) { |f| described_class.parse(f) }
           items = []
           rss.each do |item|
             items << { name: item.name, link: item.link, html: item.html, released: item.released }
@@ -146,7 +146,7 @@ describe Rss::Wrappers, dbscope: :example do
         let(:url) { "http://#{unique_id}.example.jp/rss.xml" }
 
         before do
-          stub_request(:get, url).to_return(status: 200, body: File.read(file), headers: {})
+          stub_request(:get, url).to_return(status: 200, body: ::File.read(file), headers: {})
         end
 
         subject do

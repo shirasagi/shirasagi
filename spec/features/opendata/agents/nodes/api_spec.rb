@@ -35,7 +35,7 @@ describe "opendata_agents_nodes_api", type: :feature, dbscope: :example do
 
   before do
     WebMock.reset!
-    body = File.binread(dataset_resource_file_path)
+    body = ::File.binread(dataset_resource_file_path)
     stub_request(:get, dataset_resource_url).
       to_return(status: 200, body: body, headers: { "Last-Modified" => Time.zone.now.httpdate })
 

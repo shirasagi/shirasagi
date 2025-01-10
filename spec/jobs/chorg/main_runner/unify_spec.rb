@@ -125,7 +125,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
             contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
             contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -140,7 +140,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
             contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
             contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -155,7 +155,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
             contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
             contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -170,7 +170,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
             contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
             contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -347,7 +347,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
             contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
             contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -362,7 +362,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
             contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
             contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -377,7 +377,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
             contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
             contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -568,7 +568,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
             contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
             contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -583,7 +583,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
             contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
             contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end
@@ -598,7 +598,7 @@ describe Chorg::MainRunner, dbscope: :example do
             contact_tel: contact.contact_tel, contact_fax: contact.contact_fax, contact_email: contact.contact_email,
             contact_postal_code: contact.contact_postal_code, contact_address: contact.contact_address,
             contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name)
-          FileUtils.rm_f(page.path)
+          ::FileUtils.rm_f(page.path)
           Cms::Page.find(page.id)
         end
       end

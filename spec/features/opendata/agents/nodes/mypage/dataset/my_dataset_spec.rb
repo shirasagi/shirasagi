@@ -31,7 +31,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
 
   let!(:node_search) { create :opendata_node_search_dataset, cur_site: site, layout_id: layout.id }
 
-  let(:index_url) { URI.parse "http://#{site.domain}#{node_my_dataset.url}" }
+  let(:index_url) { ::URI.parse "http://#{site.domain}#{node_my_dataset.url}" }
 
   let(:item_name) { "データセット０１" }
   let(:item_name2) { "データセット０２" }
@@ -174,7 +174,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
         fill_in "remand[comment]", with: remand_comment
         click_on I18n.t("workflow.buttons.approve")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment)}/)
 
       login_opendata_member(site, node_login, member)
       visit index_url

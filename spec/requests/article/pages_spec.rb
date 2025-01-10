@@ -201,7 +201,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           body = SS::ChunkReader.new(response.body).to_a.join
           body = body.encode("UTF-8", "SJIS")
 
-          csv = CSV.parse(body, headers: true)
+          csv = ::CSV.parse(body, headers: true)
           expect(csv.length).to eq 1
           expect(csv.headers).to include(Cms::Page.t(:filename), Cms::Page.t(:name), Cms::Page.t(:layout_id))
           csv[0].tap do |row|

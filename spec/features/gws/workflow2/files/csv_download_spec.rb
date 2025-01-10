@@ -170,7 +170,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
         wait_for_download
 
-        entry_names = Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to have(2).items
@@ -189,7 +189,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
         wait_for_download
 
-        entry_names = Zip::File.open(downloads.first) do |entries|
+        entry_names = ::Zip::File.open(downloads.first) do |entries|
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to have(2).items

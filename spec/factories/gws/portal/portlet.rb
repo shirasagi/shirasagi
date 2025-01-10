@@ -24,7 +24,7 @@ FactoryBot.define do
     after(:build) do |portlet, evaluator|
       name = "#{unique_id}.png"
       file = SS::TempFile.create_empty!(name: name, filename: name, content_type: 'image/png') do |file|
-        FileUtils.cp(Rails.root.join("spec/fixtures/ss/logo.png"), file.path)
+        ::FileUtils.cp(Rails.root.join("spec/fixtures/ss/logo.png"), file.path)
       end
 
       portlet.ad_file_ids = [ file.id ]

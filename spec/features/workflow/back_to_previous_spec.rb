@@ -78,7 +78,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -101,7 +101,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -125,7 +125,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -148,7 +148,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment3)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -172,7 +172,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment4)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment4)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -228,7 +228,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -251,7 +251,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -275,7 +275,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment3)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -300,7 +300,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -325,7 +325,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
@@ -386,7 +386,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -409,7 +409,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -433,7 +433,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -456,7 +456,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment3)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -480,7 +480,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment4)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment4)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -536,7 +536,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -559,7 +559,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -583,7 +583,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment3)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -608,7 +608,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -633,7 +633,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"

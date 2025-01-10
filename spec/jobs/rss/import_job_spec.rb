@@ -5,9 +5,9 @@ describe Rss::ImportJob, dbscope: :example do
     WebMock.reset!
 
     chain = stub_request(:get, url)
-    chain = chain.to_return(status: 200, body: File.read(Rails.root.join("spec", "fixtures", "rss", path)), headers: {})
+    chain = chain.to_return(status: 200, body: ::File.read(Rails.root.join("spec", "fixtures", "rss", path)), headers: {})
     if respond_to?(:path2)
-      chain = chain.to_return(status: 200, body: File.read(Rails.root.join("spec", "fixtures", "rss", path2)), headers: {})
+      chain = chain.to_return(status: 200, body: ::File.read(Rails.root.join("spec", "fixtures", "rss", path2)), headers: {})
     end
     chain.to_return(status: 404)
   end

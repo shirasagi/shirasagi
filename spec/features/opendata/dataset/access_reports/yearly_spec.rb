@@ -72,7 +72,7 @@ describe Opendata::Dataset::AccessReportsController, type: :feature, dbscope: :e
       csv = SS::ChunkReader.new(page.html).to_a.join
       csv = csv.encode("UTF-8", "SJIS")
 
-      table = CSV.parse(csv, headers: true)
+      table = ::CSV.parse(csv, headers: true)
       expect(table.headers[0]).to eq Opendata::Dataset.t("no")
       expect(table.headers[1]).to be_blank
       expect(table.headers[2]).to be_blank

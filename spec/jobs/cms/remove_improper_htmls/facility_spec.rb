@@ -25,16 +25,16 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   def set_improper_htmls
     facility_page1.state = "closed"
     facility_page1.update!
-    FileUtils.mkdir_p(facility_page1.path)
-    FileUtils.touch("#{facility_page1.path}/index.html")
+    ::FileUtils.mkdir_p(facility_page1.path)
+    ::FileUtils.touch("#{facility_page1.path}/index.html")
 
     facility_page2.destroy!
-    FileUtils.mkdir_p(facility_page2.path)
-    FileUtils.touch("#{facility_page2.path}/index.html")
+    ::FileUtils.mkdir_p(facility_page2.path)
+    ::FileUtils.touch("#{facility_page2.path}/index.html")
 
     # serve_static_file? is false
-    FileUtils.mkdir_p(facility_page3.path)
-    FileUtils.touch("#{facility_page3.path}/index.html")
+    ::FileUtils.mkdir_p(facility_page3.path)
+    ::FileUtils.touch("#{facility_page3.path}/index.html")
 
     expect(File.exist?(facility_page1.path)).to be true
     expect(File.exist?(facility_page2.path)).to be true

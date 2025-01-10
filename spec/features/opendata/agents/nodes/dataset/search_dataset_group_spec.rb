@@ -13,7 +13,7 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }
   let(:license) { create(:opendata_license, cur_site: site) }
   let(:node) { create :opendata_node_search_dataset_group }
-  let(:index_url) { URI.parse "http://#{site.domain}#{node.url}" }
+  let(:index_url) { ::URI.parse "http://#{site.domain}#{node.url}" }
 
   before do
     Fs::UploadedFile.create_from_file(dataset_resource_file_path, basename: "spec") do |f|

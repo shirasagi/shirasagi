@@ -373,7 +373,7 @@ describe Article::Part::Page, type: :model, dbscope: :example do
     subject { part.to_liquid }
 
     before do
-      subject.context = Liquid::Context.new(assigns, {}, registers, true)
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
     end
 
     context "with Cms::Content" do

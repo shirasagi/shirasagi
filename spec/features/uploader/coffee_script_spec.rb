@@ -12,7 +12,7 @@ describe "uploader_files", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.upload")
 
       within "form" do
-        attach_file "item[files][]", "#{Rails.root}/spec/fixtures/uploader/example.coffee"
+        attach_file "item[files][]", "#{::Rails.root}/spec/fixtures/uploader/example.coffee"
 
         click_on I18n.t("ss.buttons.save")
       end

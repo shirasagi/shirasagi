@@ -7,11 +7,11 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
 
   let(:png_file) do
     filename = "#{Rails.root}/spec/fixtures/ss/logo.png"
-    basename = File.basename(filename)
+    basename = ::File.basename(filename)
     SS::File.create_empty!(
       site_id: site.id, cur_user: cms_user, name: basename, filename: basename, content_type: "image/png", model: 'ss/file'
     ) do |file|
-      FileUtils.cp(filename, file.path)
+      ::FileUtils.cp(filename, file.path)
     end
   end
   let!(:node) { create :article_node_page, cur_site: site }

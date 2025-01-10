@@ -14,7 +14,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
   end
 
   around do |example|
-    FileUtils.rm_rf(described_class.data_cache_dir) if described_class.data_cache_dir.present?
+    ::FileUtils.rm_rf(described_class.data_cache_dir) if described_class.data_cache_dir.present?
 
     perform_enqueued_jobs do
       example.run
@@ -602,13 +602,13 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       @save = described_class.data_cache_dir
       described_class.data_cache_dir = tmpdir
 
-      File.write(File.join(tmpdir, base_name1), unique_id)
-      File.write(File.join(tmpdir, base_name2), unique_id)
-      Zlib::GzipWriter.open(File.join(tmpdir, base_name3)) { |gz| gz.write unique_id }
+      ::File.write(::File.join(tmpdir, base_name1), unique_id)
+      ::File.write(::File.join(tmpdir, base_name2), unique_id)
+      Zlib::GzipWriter.open(::File.join(tmpdir, base_name3)) { |gz| gz.write unique_id }
 
       mtime = threshold - 1.second
-      File.utime(mtime.to_i, mtime.to_i, File.join(tmpdir, base_name1))
-      File.utime(mtime.to_i, mtime.to_i, File.join(tmpdir, base_name3))
+      ::File.utime(mtime.to_i, mtime.to_i, ::File.join(tmpdir, base_name1))
+      ::File.utime(mtime.to_i, mtime.to_i, ::File.join(tmpdir, base_name3))
     end
 
     after do
@@ -616,15 +616,15 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     end
 
     it do
-      expect(File.exist?(File.join(tmpdir, base_name1))).to be_truthy
-      expect(File.exist?(File.join(tmpdir, base_name2))).to be_truthy
-      expect(File.exist?(File.join(tmpdir, base_name3))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name1))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name3))).to be_truthy
 
       described_class.new.remove_old_cache(threshold)
 
-      expect(File.exist?(File.join(tmpdir, base_name1))).to be_falsey
-      expect(File.exist?(File.join(tmpdir, base_name2))).to be_truthy
-      expect(File.exist?(File.join(tmpdir, base_name3))).to be_falsey
+      expect(::File.exist?(::File.join(tmpdir, base_name1))).to be_falsey
+      expect(::File.exist?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exist?(::File.join(tmpdir, base_name3))).to be_falsey
     end
   end
 end

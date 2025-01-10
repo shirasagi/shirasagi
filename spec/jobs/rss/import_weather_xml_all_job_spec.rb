@@ -23,7 +23,7 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
   end
 
   around do |example|
-    FileUtils.rm_rf(described_class.data_cache_dir) if described_class.data_cache_dir.present?
+    ::FileUtils.rm_rf(described_class.data_cache_dir) if described_class.data_cache_dir.present?
 
     perform_enqueued_jobs do
       example.run
@@ -109,7 +109,7 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
         end
       end
 
-      File.binread(file)
+      ::File.binread(file)
     end
 
     it do

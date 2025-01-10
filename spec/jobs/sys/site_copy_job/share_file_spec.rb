@@ -38,7 +38,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.copy_contents = "files"
         task.save!
 
-        puts "file.size=#{file.size}, #{File.size(file.path)}"
+        puts "file.size=#{file.size}, #{::File.size(file.path)}"
 
         perform_enqueued_jobs do
           ss_perform_now Sys::SiteCopyJob
@@ -56,7 +56,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_file.size).to eq file.size
         expect(dest_file.content_type).to eq file.content_type
         expect(dest_file.path).not_to eq file.path
-        expect(IO.binread(dest_file.path)).to eq IO.binread(file.path)
+        expect(::IO.binread(dest_file.path)).to eq ::IO.binread(file.path)
       end
     end
   end

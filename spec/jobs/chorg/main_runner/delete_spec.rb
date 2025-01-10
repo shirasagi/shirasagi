@@ -13,7 +13,7 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:source_page) do
       Timecop.freeze(now - 2.weeks) do
         page = create(:revision_page, cur_site: site, group: source_group)
-        FileUtils.rm_f(page.path)
+        ::FileUtils.rm_f(page.path)
         Cms::Page.find(page.id)
       end
     end

@@ -1,4 +1,4 @@
-class Job::TaskLogger < Logger
+class Job::TaskLogger < ::Logger
   class << self
     def attach(job_log)
       new_logger = new(job_log)

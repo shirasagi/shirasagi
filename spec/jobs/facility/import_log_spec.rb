@@ -35,15 +35,15 @@ describe Facility::ImportJob, dbscope: :example do
       group_ids: [group1.id, group2.id, group3.id])
   end
 
-  let!(:file_path1) { "#{Rails.root}/spec/fixtures/facility/import_job/facility_node_pages_add_test.csv" }
+  let!(:file_path1) { "#{::Rails.root}/spec/fixtures/facility/import_job/facility_node_pages_add_test.csv" }
   let!(:in_file1) { Fs::UploadedFile.create_from_file(file_path1) }
   let!(:ss_file1) { create(:ss_file, site: site, in_file: in_file1 ) }
 
-  let!(:file_path2) { "#{Rails.root}/spec/fixtures/facility/import_job/facility_node_pages_update_test.csv" }
+  let!(:file_path2) { "#{::Rails.root}/spec/fixtures/facility/import_job/facility_node_pages_update_test.csv" }
   let!(:in_file2) { Fs::UploadedFile.create_from_file(file_path2) }
   let!(:ss_file2) { create(:ss_file, site: site, in_file: in_file2) }
 
-  let!(:file_path3) { "#{Rails.root}/spec/fixtures/facility/import_job/facility_node_pages_error_test.csv" }
+  let!(:file_path3) { "#{::Rails.root}/spec/fixtures/facility/import_job/facility_node_pages_error_test.csv" }
   let!(:in_file3) { Fs::UploadedFile.create_from_file(file_path3) }
   let!(:ss_file3) { create(:ss_file, site: site, in_file: in_file3) }
 

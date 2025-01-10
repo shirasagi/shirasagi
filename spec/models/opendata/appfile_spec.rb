@@ -110,7 +110,7 @@ describe Opendata::Appfile, dbscope: :example do
     subject { create_appfile(app, file) }
 
     after do
-      FileUtils.rm_rf tmpdir
+      ::FileUtils.rm_rf tmpdir
     end
 
     its(:url) { is_expected.to end_with("/#{Addressable::URI.encode("index - コピー.json")}") }

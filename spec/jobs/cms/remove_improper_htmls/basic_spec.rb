@@ -70,7 +70,7 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     expect(File.exist?(cms_page4.path)).to be false
 
     [article_page1, event_page1, cms_page1, cms_page2, faq_page1].each do |item|
-      FileUtils.touch(item.path)
+      ::FileUtils.touch(item.path)
     end
     expect(File.exist?(article_node.path)).to be true
     expect(File.exist?(article_page1.path)).to be true
