@@ -8,7 +8,7 @@
   <dd class="wide">
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <% 
+        <%
           # contains_urls 内に file.url が含まれているか確認
           css_class = @item.contains_urls.include?(file.url) ? "file-view" : "file-view unused"
         %>
