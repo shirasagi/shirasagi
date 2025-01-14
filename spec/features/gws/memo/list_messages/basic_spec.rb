@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
+  let(:user) { gws_user }
   let(:list) { create(:gws_memo_list, cur_site: site, sender_name: "sender-#{unique_id}") }
   let(:subject1) { "subject-#{unique_id}" }
   let(:subject2) { "subject-#{unique_id}" }
@@ -90,6 +91,10 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         user_settings = list.overall_members.pluck(:id).map { |id| { "user_id" => id, "path" => "INBOX" } }
         expect(message.user_settings).to include(*user_settings)
       end
+
+      expect(Gws::Memo::Message.all.count).to eq 1
+      message = Gws::Memo::Message.first
+      expect(message.user_id).to eq user.id
 
       # delete
       visit gws_memo_list_messages_path(site: site, list_id: list)
