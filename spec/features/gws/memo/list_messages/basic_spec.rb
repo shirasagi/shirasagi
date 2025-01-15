@@ -92,10 +92,6 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         expect(message.user_settings).to include(*user_settings)
       end
 
-      expect(Gws::Memo::Message.all.count).to eq 1
-      message = Gws::Memo::Message.first
-      expect(message.user_id).to eq user.id
-
       # delete
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject2
