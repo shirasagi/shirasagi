@@ -9,10 +9,9 @@
     <div id="selected-files">
       <% @item.files.each do |file| %>
         <%
-          # contains_urls 内に file.url が含まれているか確認
-          css_class = @item.contains_urls.include?(file.url) ? "file-view" : "file-view unused"
+          contains_urls_css_class = @item.contains_urls.include?(file.url) ? "file-view" : "file-view unused"
         %>
-        <div id="file-<%= file.id %>" class="<%= css_class %>" data-file-id="<%= file.id %>">
+        <div id="file-<%= file.id %>" class="<%= contains_urls_css_class %>" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if file.image? %>
