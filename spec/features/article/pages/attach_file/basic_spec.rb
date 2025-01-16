@@ -113,6 +113,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         within '#selected-files' do
           expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+          expect(page).to have_css(".file-view", text: 'keyvisual.jpg')
+          expect(page).to have_css(".file-view unused", text: 'keyvisual.gif')
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
         click_on I18n.t("ss.buttons.publish_save")
