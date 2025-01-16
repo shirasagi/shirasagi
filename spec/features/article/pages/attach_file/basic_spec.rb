@@ -289,9 +289,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
           end
-          expect(page).to have_css('.file-view unused', text: 'keyvisual.jpg')
-          expect(page).to have_css('.file-view ', text: 'keyvisual.gif')
         end
+
+        expect(page).to have_css('.file-view.unused', text: 'keyvisual.jpg')
+        expect(page).to have_css('.file-view ', text: 'keyvisual.gif')
+
         within "form#item-form" do
           within ".column-value-cms-column-fileupload" do
             expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
