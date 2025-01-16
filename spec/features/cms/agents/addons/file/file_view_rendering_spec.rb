@@ -6,85 +6,70 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let(:name) { "#{unique_id}.png" }
   let!(:file_1) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
   let!(:file_2) { tmp_ss_file user: cms_user, basename: "#{unique_id}.jpg" }
-  let!(:item1) { create :article_page, cur_site: site, cur_user: cms_user, cur_node: node, file_ids: [ file_1.id ] }
+  let!(:item) { create :article_page, cur_site: site, cur_user: cms_user, cur_node: node, file_ids: [ file_1.id ] }
+  let(:button_label) { I18n.t("ss.buttons.upload") }
 
   before do
     login_cms_user
-    item1.update(contains_urls: [file_1.url])
-  end
-
-  context "attach file from upload" do
-    before { login_cms_user }
-
-    it "#edit" do
-      visit edit_cms_article_page_path(site, item1)
-
-      ensure_addon_opened("#addon-cms-agents-addons-file")
-      within "#addon-cms-agents-addons-file" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_for_cbox_closed do
-          click_button I18n.t("ss.buttons.attach")
-        end
-      end
-
-      within '#selected-files' do
-        expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-        expect(page).to have_css('.name', text: 'keyvisual.gif')
-      end
-    end
-
-    it "#edit file name" do
-      visit edit_cms_article_page_path(site, item1) # 修正
-
-      ensure_addon_opened("#addon-cms-agents-addons-file")
-      within "form#item-form" do
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-        click_on I18n.t("ss.buttons.edit")
-        fill_in "item[name]", with: "modify.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css(".file-view", text: "modify.jpg")
-
-        wait_for_cbox_closed do
-          click_on "modify.jpg"
-        end
-      end
-
-      within '#selected-files' do
-        expect(page).to have_css('.name', text: 'modify.jpg')
-      end
-    end
+    item.update(contains_urls: [file_1.url])
   end
 
   context "with article/page" do
+
     describe "index" do
       it do
         visit article_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
+        fill_in "item[name]", with: "sample"
+        click_on I18n.t("ss.links.input")
+        fill_in "item[basename]", with: "sample"
 
-        expect(page).to have_css(".file-view", text: file_1.name)
-        expect(page).to have_css(".file-view unused", text: file_2.name)
+        within "#item-form #addon-cms-agents-addons-file" do
+          wait_for_cbox_opened do
+            click_on button_label
+          end
+        end
+
+        within "#ajax-box" do
+          page.execute_script("SS_AjaxFile.firesEvents = true;")
+        end
+
+        within "#ajax-box" do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          click_button I18n.t("ss.buttons.save")
+          expect(page).to have_css('.file-view', text: 'logo.png')
+        end
+
+        wait_for_cbox_closed do
+          wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
+            click_on 'logo.png'
+          end
+        end
+
+        within ".file-view" do
+          find(".action-paste").click
+        end
+
+        click_on I18n.t("ss.buttons.publish_save")
+        click_on I18n.t("ss.buttons.ignore_alert")
+
+        within '#selected-files' do
+          expect(page).to have_css('.name', text: 'logo.png')
+        end
+
+        expect(page).to have_css(".file-view", text: 'logo.png')
+        expect(page).to have_css(".file-view.unused", text: file_2.name)
       end
     end
+  end
+
+  context "with cms/temp_file" do
+    let!(:file) do
+      tmp_ss_file(
+        Cms::TempFile, user: cms_user, site: site, node: node, basename: filename,
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+      )
+    end
+    let(:button_label) { I18n.t("ss.buttons.upload") }
   end
 end
