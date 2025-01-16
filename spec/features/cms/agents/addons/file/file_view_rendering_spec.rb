@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
   let(:site){ cms_site }
   let!(:node) { create :article_node_page, cur_site: site, cur_user: cms_user }
