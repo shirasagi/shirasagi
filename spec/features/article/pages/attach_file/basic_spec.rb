@@ -113,8 +113,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         within '#selected-files' do
           expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-          expect(page).to have_css(".file-view", text: 'keyvisual.jpg')
-          expect(page).to have_css(".file-view unused", text: 'keyvisual.gif')
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
         click_on I18n.t("ss.buttons.publish_save")
@@ -291,6 +289,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
           end
+          expect(page).to have_css('.file-view unused', text: 'keyvisual.jpg')
+          expect(page).to have_css('.file-view ', text: 'keyvisual.gif')
         end
         within "form#item-form" do
           within ".column-value-cms-column-fileupload" do
