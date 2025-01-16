@@ -16,7 +16,22 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with article/page" do
     describe "index" do
       it do
-        visit edit_path(site: site)
+        visit article_pages_path(site: site, cid: node)
+        click_on I18n.t("ss.links.new")
+
+        within "#addon-cms-agents-addons-form-page" do
+          within ".column-value-palette" do
+            wait_for_event_fired("ss:columnAdded") do
+              click_on column1.name
+            end
+          end
+          within ".column-value-cms-column-fileupload" do
+            wait_for_cbox_opened do
+              click_on button_label
+            end
+          end
+        end
+
         expect(page).to have_css(".file-view", text: file_1.name)
         expect(page).to have_css(".file-view unused", text: file_2.name)
       end
