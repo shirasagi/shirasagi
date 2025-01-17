@@ -1,18 +1,38 @@
 require 'spec_helper'
 
 describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true do
-  let(:site){ cms_site }
+  let(:site) { cms_site }
   let!(:node) { create :article_node_page, cur_site: site, cur_user: cms_user }
   let(:filename) { "#{unique_id}.png" }
   let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
   let(:button_label) { I18n.t("ss.buttons.upload") }
+  let(:logo_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:keyvisual_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
 
   before do
     login_cms_user
   end
 
-  context "with article/page" do
+  def upload_file_and_select(file_path)
+    within "#item-form #addon-cms-agents-addons-file" do
+      wait_for_cbox_opened { click_on button_label }
+    end
 
+    within "#ajax-box" do
+      page.execute_script("SS_AjaxFile.firesEvents = true;")
+      attach_file "item[in_files][]", file_path
+      click_button I18n.t("ss.buttons.save")
+      expect(page).to have_css('.file-view', text: File.basename(file_path))
+
+      wait_for_cbox_closed do
+        wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
+          click_on File.basename(file_path)
+        end
+      end
+    end
+  end
+
+  context "with article/page" do
     describe "index" do
       it do
         visit article_pages_path(site: site, cid: node)
@@ -21,42 +41,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         click_on I18n.t("ss.links.input")
         fill_in "item[basename]", with: "sample"
 
-        within "#item-form #addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on button_label
-          end
-        end
-
-        within "#ajax-box" do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_button I18n.t("ss.buttons.save")
-          expect(page).to have_css('.file-view', text: 'logo.png')
-        end
-
-        wait_for_cbox_closed do
-          page.execute_script("SS_AjaxFile.firesEvents = true;")
-          wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
-            click_on 'logo.png'
-          end
-        end
-
-        within "#item-form #addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on button_label
-          end
-        end
-
-        within "#ajax-box" do
-          page.execute_script("SS_AjaxFile.firesEvents = true;")
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          click_button I18n.t("ss.buttons.save")
-          expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-          wait_for_cbox_closed do
-            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
-              click_on 'keyvisual.jpg'
-            end
-          end
-        end
+        upload_file_and_select(logo_path)
+        upload_file_and_select(keyvisual_path)
 
         within ".file-view", text: 'keyvisual.jpg' do
           find(".action-paste").click
@@ -77,7 +63,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     let!(:file) do
       tmp_ss_file(
         Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
-        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+        contents: logo_path
       )
     end
     let(:button_label) { I18n.t("cms.file") }
