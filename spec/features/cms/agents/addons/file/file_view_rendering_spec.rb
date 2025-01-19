@@ -148,8 +148,13 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
           expect(page).to have_css('.file-view', text: 'logo.png')
 
+          require 'pry-byebug'
+          binding.pry
+
           within ".file-view", text: 'logo.png' do
-            find(".action-paste").click
+            within ".action" do
+              find(".btn-file-image-paste").click
+            end
           end
         end
 
@@ -162,8 +167,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       wait_for_js_ready
 
       click_on I18n.t("ss.buttons.publish_save")
-      click_on I18n.t("ss.buttons.ignore_alert")
     end
+
+    click_on I18n.t("ss.buttons.ignore_alert")
     wait_for_notice I18n.t('ss.notice.saved')
 
     context "with article/page" do
