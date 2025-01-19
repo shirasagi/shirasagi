@@ -313,6 +313,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
+
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
           wait_for_cbox_closed do
             click_on I18n.t('ss.buttons.attach')
