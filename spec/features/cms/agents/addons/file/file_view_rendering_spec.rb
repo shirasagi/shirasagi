@@ -53,7 +53,11 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
         within '#selected-files' do
           expect(page).to have_css(".file-view", text: 'keyvisual.jpg')
+          element = find('.file-view', text: 'keyvisual.jpg', match: :first)
+          expect(element['class']).not_to include('unused')
           expect(page).to have_css(".file-view.unused", text: 'logo.png')
+          element = find('.file-view', text: 'logo.png', match: :first)
+          expect(element['class']).to include('unused')
         end
       end
     end
@@ -84,18 +88,100 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", file_type: "video", order: 1)
   end
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
-  let(:filename) { "#{unique_id}.jpg" }
   let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
   let(:button_label) { I18n.t("ss.buttons.upload") }
   let(:logo_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
-  let(:keyvisual_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
 
   before do
     login_cms_user
     visit edit_path
   end
 
+  it "allows file uploads in form" do
+    within 'form#item-form' do
+      wait_for_event_fired("ss:formActivated") do
+        page.accept_confirm(I18n.t("cms.confirm.change_form")) do
+          select form.name, from: 'in_form_id'
+        end
+      end
+    end
+
+    within ".column-value-palette" do
+      wait_for_event_fired("ss:columnAdded") do
+        click_on column2.name
+      end
+    end
+    within ".column-value-cms-column-free" do
+      wait_for_cbox_opened do
+        click_on button_label
+      end
+    end
+
+    within_cbox do
+      attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+      click_button I18n.t("ss.buttons.save")
+      expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
+      click_on 'shirasagi.pdf'
+
+      wait_for_cbox_closed do
+        click_on I18n.t('ss.buttons.save')
+      end
+    end
+
+    within ".column-value-cms-column-free" do
+      wait_for_cbox_opened do
+        click_on button_label
+      end
+    end
+
+    within_cbox do
+      attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+      click_button I18n.t("ss.buttons.save")
+      expect(page).to have_css('.file-view', text: 'logo.png')
+      click_on 'logo.png'
+
+      wait_for_cbox_closed do
+        click_on I18n.t('ss.buttons.save')
+      end
+    end
+
+    within "form#item-form" do
+      within ".column-value-cms-column-free" do
+        within '.column-value-files' do
+          expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
+          expect(page).to have_css('.file-view', text: 'logo.png')
+
+          within ".file-view", text: 'logo.png' do
+            within ".action" do
+              find(".btn-file-image-paste").click
+            end
+          end
+        end
+      end
+
+      wait_for_js_ready
+      click_on I18n.t("ss.buttons.publish_save")
+    end
+
+    click_on I18n.t("ss.buttons.ignore_alert")
+    wait_for_notice I18n.t('ss.notice.saved')
+
+    within '#addon-cms-agents-addons-form-page' do
+      within ".column-value-cms-column-free" do
+        within '#selected-files' do
+          expect(page).to have_css(".file-view", text: 'logo.png')
+          element = find('.file-view', text: 'logo.png', match: :first)
+          expect(element['class']).not_to include('unused')
+          expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
+          element = find('.file-view', text: 'shirasagi.pdf', match: :first)
+          expect(element['class']).to include('unused')
+        end
+      end
+    end
+  end
+
   context "with cms/file" do
+    let(:filename) { "#{unique_id}.jpg" }
     let!(:file) do
       tmp_ss_file(
         Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
@@ -103,87 +189,5 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       )
     end
     let(:button_label) { I18n.t("ss.buttons.upload") }
-
-    it "allows file uploads in form" do
-      within 'form#item-form' do
-        wait_for_event_fired("ss:formActivated") do
-          page.accept_confirm(I18n.t("cms.confirm.change_form")) do
-            select form.name, from: 'in_form_id'
-          end
-        end
-      end
-
-      within ".column-value-palette" do
-        wait_for_event_fired("ss:columnAdded") do
-          click_on column2.name
-        end
-      end
-      within ".column-value-cms-column-free" do
-        wait_for_cbox_opened do
-          click_on button_label
-        end
-      end
-
-      within_cbox do
-        attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
-        click_on 'shirasagi.pdf'
-
-        wait_for_cbox_closed do
-          click_on I18n.t('ss.buttons.save')
-        end
-      end
-
-      within ".column-value-cms-column-free" do
-        wait_for_cbox_opened do
-          click_on button_label
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'logo.png')
-        click_on 'logo.png'
-
-        wait_for_cbox_closed do
-          click_on I18n.t('ss.buttons.save')
-        end
-      end
-
-      within "form#item-form" do
-        within ".column-value-cms-column-free" do
-          within '.column-value-files' do
-            expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
-            expect(page).to have_css('.file-view', text: 'logo.png')
-
-            within ".file-view", text: 'logo.png' do
-              within ".action" do
-                find(".btn-file-image-paste").click
-              end
-            end
-          end
-        end
-
-        wait_for_js_ready
-        click_on I18n.t("ss.buttons.publish_save")
-      end
-
-      click_on I18n.t("ss.buttons.ignore_alert")
-      wait_for_notice I18n.t('ss.notice.saved')
-
-      require 'pry-byebug'
-      binding.pry
-
-      within '#addon-cms-agents-addons-form-page' do
-        within ".column-value-cms-column-free" do
-          within '#selected-files' do
-            expect(page).to have_css(".file-view", text: 'logo.png')
-            expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
-          end
-        end
-      end
-    end
   end
 end
