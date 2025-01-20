@@ -1,0 +1,8 @@
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/concerns/sys/site_copy/cms_nodes.rb:1
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/concerns/sys/site_copy/cms_nodes.rb:6
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/concerns/sys/site_copy/cms_nodes.rb:30
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/concerns/ss/copy/cms_nodes.rb:1
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/concerns/ss/copy/cms_nodes.rb:18
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/concerns/ss/copy/cms_nodes.rb:25
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/sys/site_copy_job.rb:1
+break /Users/tsukudasayoko/Desktop/dev/shirasagi/app/jobs/sys/site_copy_job.rb:29
