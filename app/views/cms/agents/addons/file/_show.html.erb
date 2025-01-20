@@ -7,9 +7,13 @@
 <dl class="see">
   <dd class="wide">
     <div id="selected-files">
-      <% @item.files.each do |file| %>
+      <% @item.files.try(:each) do |file| %>
         <%
-          css_class = @item.contains_urls.include?(file.url) ? "file-view" : "file-view unused"
+          css_class = if @item.respond_to?(:contains_urls)
+                          @item.contains_urls&.include?(file.url) ? "file-view" : "file-view unused"
+                      else
+                        "file-view"
+                      end
         %>
         <div id="file-<%= file.id %>" class="<%= css_class %>" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
