@@ -65,4 +65,4 @@ ja:
 
   job:
     models:
-      kana/build_kana_dictionary_job: 辞書反映
+      kana/build_kana_dictionary_job: かな/辞書反映
