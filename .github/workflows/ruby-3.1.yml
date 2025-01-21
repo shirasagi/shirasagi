@@ -16,7 +16,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 50
     strategy:
       fail-fast: false
@@ -158,7 +158,7 @@ jobs:
 
   finish:
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Coveralls Finished
         uses: coverallsapp/github-action@master
