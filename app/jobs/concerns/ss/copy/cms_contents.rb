@@ -59,8 +59,6 @@ module SS::Copy::CmsContents
       :opendata_license
     elsif ancestors.include?(Jmaxml::QuakeRegion)
       :jmaxml_quake_region
-    elsif ancestors.include?(SS::Contact)
-      :contact
     else
       raise "unknown reference type: #{klass}"
     end

@@ -10,11 +10,21 @@ module SS::Copy::CmsPages
   end
 
   def resolve_page_reference(id)
-    id
-  end
+    return nil if id.blank?
 
+    cache(:pages, id) do
+      src_page = Cms::Page.site(@src_site).find(id) rescue nil
+      if src_page.blank?
+        Rails.logger.warn("#{id}: 参照されているページが存在しません。")
+        return nil
+      end
+
+      dest_page = Cms::Page.site(@dest_site).where(filename: src_page.filename).first
+      Rails.logger.info("resolve_page_reference: #{id} => #{dest_page.try(:id)}")
+      dest_page.try(:id)
+      end
+    end
   private
-
   def copy_cms_page_options
     {
       before: method(:before_copy_cms_page),
@@ -49,9 +59,6 @@ module SS::Copy::CmsPages
         dest_column_value
       end
     end
-
-    dest_page.summary_page_id = src_page.id # 元のページIDを新しいページのsummary_page_idに設定
-    dest_page.save!
 
     @task.log("#{src_page.filename}(#{src_page.id}): ページをコピーしました。")
   end
