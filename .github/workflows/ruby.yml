@@ -80,8 +80,8 @@ jobs:
           echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
       - name: Install pre requisites
         run: |
-          sudo apt-get update
-          sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+          sudo apt update
+          sudo apt -y install imagemagick libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
