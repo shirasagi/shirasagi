@@ -5,7 +5,14 @@
   <% if value.files.present? %>
     <div id="selected-files">
       <% value.files.each do |file| %>
-        <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
+        <%
+          css_class = if value.respond_to?(:contains_urls)
+                          value.contains_urls&.include?(file.url) ? "file-view" : "file-view unused"
+                      else
+                        "file-view"
+                      end
+        %>
+        <div id="file-<%= file.id %>" class="<%= css_class %>" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if file.image? %>
