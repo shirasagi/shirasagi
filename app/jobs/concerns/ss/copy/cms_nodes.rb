@@ -10,19 +10,7 @@ module SS::Copy::CmsNodes
   end
 
   def resolve_node_reference(id)
-    return nil if id.blank?
-
-    cache(:nodes, id) do
-      src_node = Cms::Node.site(@src_site).find(id) rescue nil
-      if src_node.blank?
-        Rails.logger.warn("#{id}: 参照されているフォルダーが存在しません。")
-        return nil
-      end
-
-      dest_node = Cms::Node.site(@dest_site).where(filename: src_node.filename).first
-      Rails.logger.info("resolve_node_reference: #{id} => #{dest_node.try(:id)}")
-      dest_node.try(:id)
-    end
+    id
   end
 
   private
@@ -50,15 +38,6 @@ module SS::Copy::CmsNodes
       @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")
       return
     end
-
-    # summary_page_id の変換処理を追加 #issue5479 https://github.com/shirasagi/shirasagi/pull/5526
-    if src_node.summary_page_id.present?
-      new_summary_page_id = resolve_node_reference(src_node.summary_page_id)
-      dest_node.update!(summary_page_id: new_summary_page_id) if new_summary_page_id
-    else
-      dest_node.update!(summary_page_id: nil)
-    end
-
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーしました。")
   end
 end
