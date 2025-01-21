@@ -39,14 +39,6 @@ module SS::Copy::CmsNodes
       return
     end
 
-    # summary_page_id の変換を追加
-    if src_node.summary_page_id.present?
-      new_summary_page_id = resolve_page_reference(src_node.summary_page_id)
-      dest_node.update!(summary_page_id: new_summary_page_id) if new_summary_page_id
-    else
-      dest_node.update!(summary_page_id: nil)
-    end
-
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーしました。")
   end
 end
