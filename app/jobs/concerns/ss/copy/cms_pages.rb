@@ -50,6 +50,9 @@ module SS::Copy::CmsPages
       end
     end
 
+    dest_page.summary_page_id = src_page.id # 元のページIDを新しいページのsummary_page_idに設定
+    dest_page.save!
+
     @task.log("#{src_page.filename}(#{src_page.id}): ページをコピーしました。")
   end
 
