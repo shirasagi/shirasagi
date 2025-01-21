@@ -12,7 +12,9 @@ module SS::Copy::CmsPages
   def resolve_page_reference(id)
     id
   end
+
   private
+
   def copy_cms_page_options
     {
       before: method(:before_copy_cms_page),
