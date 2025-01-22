@@ -26,6 +26,12 @@ module SS::Copy::CmsContents
   end
 
   def reference_type(klass)
+    Rails.logger.debug { "♦︎ Checking reference type: #{klass.name} (class: #{klass.class.name})" }
+    unless klass.is_a?(Class)
+      Rails.logger.error("♦︎ Invalid reference type: #{klass.inspect} (not a Class)")
+      raise "unknown reference type: #{klass}"
+    end
+
     ancestors = klass.ancestors
     if ancestors.include?(SS::Model::Group)
       :group
@@ -59,7 +65,11 @@ module SS::Copy::CmsContents
       :opendata_license
     elsif ancestors.include?(Jmaxml::QuakeRegion)
       :jmaxml_quake_region
+    elsif klass == SS::Contact
+      :contact
     else
+      Rails.logger.error("♦︎ unknown reference type: #{klass.name} (class: #{klass.class.name})")
+      Rails.logger.debug { "♦︎ Contact Group Object: #{group.contact_groups.first.class.name}" }
       raise "unknown reference type: #{klass}"
     end
   end

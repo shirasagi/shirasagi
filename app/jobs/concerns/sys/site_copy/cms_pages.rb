@@ -14,11 +14,10 @@ module Sys::SiteCopy::CmsPages
     copy_cms_content(:pages, src_page, copy_cms_page_options)
 
     # サマリーページのコピー後に category_node の summary_page_id を更新
+    dest_page = Cms::Page.site(@dest_site).find_by(filename: src_page.filename)
     if src_page.route == "cms/summary_page"
       update_summary_page_reference(src_page, dest_page)
     end
-
-    # dest_page
 
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")
