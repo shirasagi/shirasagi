@@ -70,8 +70,9 @@ module Sys::SiteCopy::CmsPages
 
       Rails.logger.info("♦︎ 参照ページコピー開始: #{src_page.filename} (#{src_page.id})")
       dest_page = copy_cms_page(src_page)
-      Rails.logger.debug("♦︎ コピー後の dest_page: #{dest_page&.id}") # 📌 コピー結果確認
       dest_page.try(:id)
+      Rails.logger.debug("♦︎ コピー後の dest_page: #{dest_page&.id}") # 📌 コピー結果確認
+      Rails.logger.debug("♦︎ copy_cms_page 終了時の dest_page: #{dest_page.inspect}")
     end
   end
 end

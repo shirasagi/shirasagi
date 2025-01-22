@@ -3,6 +3,8 @@ module Sys::SiteCopy::CmsContents
   include SS::Copy::CmsContents
 
   def copy_cms_content(cache_id, src_content, options = {})
+    # Rails.logger.debug("♦︎ [copy_cms_content] コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
+    #                    "summary_page_id=#{src_content.try(:summary_page_id)})")
     klass = src_content.class
     dest_content = nil
     id = cache(cache_id, src_content.id) do
@@ -22,6 +24,8 @@ module Sys::SiteCopy::CmsContents
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
       update_html_links(src_content, dest_content)
       dest_content.save!
+      # Rails.logger.debug("♦︎ [copy_cms_content] コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
+      #                    "summary_page_id=#{dest_content.try(:summary_page_id)})")
 
       options[:after].call(src_content, dest_content) if options[:after]
     end
