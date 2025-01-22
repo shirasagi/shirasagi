@@ -3,9 +3,11 @@ module SS::Copy::CmsNodes
   include SS::Copy::Cache
 
   def copy_cms_node(src_node)
-    Rails.logger.debug("♦︎ [copy_cms_node] #{src_node.filename}: コピー処理開始 (summary_page_id=#{src_node.try(:summary_page_id)})")
+    Rails.logger.debug("♦︎ [copy_cms_node] #{src_node.filename}: " \
+                       "コピー処理開始 (summary_page_id=#{src_node.try(:summary_page_id)})")
     copy_cms_content(:nodes, src_node, copy_cms_node_options)
-    Rails.logger.debug("♦︎ [copy_cms_node] #{src_node.filename} → #{dest_node.try(:filename)}: コピー処理完了 (summary_page_id=#{dest_node.try(:summary_page_id)})")
+    Rails.logger.debug("♦︎ [copy_cms_node] #{src_node.filename} → #{dest_node.try(:filename)}:" \
+                       "コピー処理完了 (summary_page_id=#{dest_node.try(:summary_page_id)})")
   rescue => e
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーに失敗しました。")
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
