@@ -8,8 +8,8 @@ module Sys::SiteCopy::CmsPages
 
     return nil if (src_page.route != "cms/page") && !@copy_contents.include?('pages')
 
-    Rails.logger.debug("♦︎ copy_cms_page: #{@copy_contents.inspect}") # 📌 copy_contents の状態を確認
-    Rails.logger.debug("♦︎ copy_cms_page: src_page.contact_group_contact_id=#{src_page.contact_group_contact_id}") # 📌 Contact ID 確認
+    Rails.logger.debug("♦︎ copy_cms_page: #{@copy_contents.inspect}")
+    Rails.logger.debug("♦︎ copy_cms_page: src_page.contact_group_contact_id=#{src_page.contact_group_contact_id}")
 
     copy_cms_content(:pages, src_page, copy_cms_page_options)
 
@@ -18,7 +18,6 @@ module Sys::SiteCopy::CmsPages
     if src_page.route == "cms/summary_page"
       update_summary_page_reference(src_page, dest_page)
     end
-
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -26,7 +25,7 @@ module Sys::SiteCopy::CmsPages
 
   def copy_cms_pages
     page_ids = Cms::Page.site(@src_site).pluck(:id)
-    Rails.logger.info("♦︎ コピー対象ページ数: #{page_ids.size}") # 📌 ページ数確認
+    Rails.logger.info("♦︎ コピー対象ページ数: #{page_ids.size}")
     page_ids.each do |page_id|
       page = Cms::Page.site(@src_site).find(page_id) rescue nil
       if page.blank?
