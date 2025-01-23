@@ -71,7 +71,7 @@ module Sys::SiteCopy::CmsContents
       when :dummy
         next [field_name, field_value]
       else
-        ''
+        next nil # 何もしない
       end
 
       ref_class = reference_class(field_name, field_info, content)
