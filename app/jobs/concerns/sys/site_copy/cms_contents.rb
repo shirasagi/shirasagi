@@ -3,14 +3,14 @@ module Sys::SiteCopy::CmsContents
   include SS::Copy::CmsContents
 
   def copy_cms_content(cache_id, src_content, options = {})
-    # Rails.logger.debug("♦︎ [copy_cms_content] コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
-    #                    "summary_page_id=#{src_content.try(:summary_page_id)})")
+    Rails.logger.debug("♦︎ [copy_cms_content] コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
+                       "summary_page_id=#{src_content.try(:summary_page_id)})")
     klass = src_content.class
     dest_content = nil
     id = cache(cache_id, src_content.id) do
       options[:before].call(src_content) if options[:before]
       dest_content = klass.site(@dest_site).where(filename: src_content.filename).first
-      return dest_content.id if dest_content.present?
+      next dest_content.id if dest_content.present? # return → next に変更することでid=trueがキャッシュされるのを防止
 
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
@@ -19,13 +19,17 @@ module Sys::SiteCopy::CmsContents
       dest_content.id
     end
 
+    # 不正な id による find(true) のエラーを回避
+    id = nil unless id.is_a?(Integer) || id.is_a?(BSON::ObjectId)
+    Rails.logger.debug("♦︎ [cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})")
+
     if dest_content
       # after create item, copy references which have possibility of circular reference
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
       update_html_links(src_content, dest_content)
       dest_content.save!
-      # Rails.logger.debug("♦︎ [copy_cms_content] コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
-      #                    "summary_page_id=#{dest_content.try(:summary_page_id)})")
+      Rails.logger.debug("♦︎ [copy_cms_content] コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
+                         "summary_page_id=#{dest_content.try(:summary_page_id)})")
 
       options[:after].call(src_content, dest_content) if options[:after]
     end
@@ -66,6 +70,8 @@ module Sys::SiteCopy::CmsContents
         unsafe = false
       when :dummy
         next [field_name, field_value]
+      else
+        ''
       end
 
       ref_class = reference_class(field_name, field_info, content)
