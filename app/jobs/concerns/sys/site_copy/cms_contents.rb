@@ -30,7 +30,8 @@ module Sys::SiteCopy::CmsContents
       dest_content.save!
       Rails.logger.debug("♦︎ [copy_cms_content] コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
                          "summary_page_id=#{dest_content.try(:summary_page_id)})")
-
+      Rails.logger.debug("♦︎ [copy_cms_content] コピー後" \
+                         "dest_content.summary_page=#{dest_content.try(:summary_page).inspect}")
       options[:after].call(src_content, dest_content) if options[:after]
     end
 
