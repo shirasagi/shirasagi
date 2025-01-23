@@ -38,8 +38,11 @@ module SS::Copy::CmsNodes
     when "ezine/page"
       copy_ezine_columns(src_node, dest_node)
     when "category/page"
-      # summary_page_idをコピー先ノードに設定
-      dest_node.summary_page_id = src_node.summary_page_id
+      if @task.copy_contents.include?('pages')
+        dest_node.summary_page_id = src_node.summary_page_id
+      else
+        dest_node.summary_page_id = nil
+      end
       dest_node.save!
     when "rss/weather_xml"
       @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")
