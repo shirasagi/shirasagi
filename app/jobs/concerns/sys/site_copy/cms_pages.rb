@@ -12,12 +12,6 @@ module Sys::SiteCopy::CmsPages
     Rails.logger.debug("♦︎ copy_cms_page: src_page.contact_group_contact_id=#{src_page.contact_group_contact_id}")
 
     copy_cms_content(:pages, src_page, copy_cms_page_options)
-
-    # サマリーページのコピー後に category_node の summary_page_id を更新
-    dest_page = Cms::Page.site(@dest_site).find_by(filename: src_page.filename)
-    if src_page.route == "cms/summary_page"
-      update_summary_page_reference(src_page, dest_page)
-    end
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -37,29 +31,6 @@ module Sys::SiteCopy::CmsPages
       copy_cms_page(page)
     end
   end
-
-  private
-
-  def update_summary_page_reference(src_page, dest_page)
-    if dest_page.nil?
-      Rails.logger.error("♦︎ update_summary_page_reference: dest_page が nil のため更新できません")
-      return
-    end
-
-    category_nodes = Cms::Node.site(@src_site).where(summary_page_id: src_page.id)
-
-    category_nodes.each do |category_node|
-      dest_category_node = Cms::Node.site(@dest_site).find_by(filename: category_node.filename)
-      if dest_category_node.blank?
-        Rails.logger.warn("♦︎ カテゴリーノード未検出: #{category_node.filename}")
-        next
-      end
-
-      Rails.logger.info("♦︎ summary_page_id 更新: #{dest_category_node.filename} -> #{dest_page.id}")
-      dest_category_node.update(summary_page_id: dest_page.id)
-    end
-  end
-
   def resolve_page_reference(id)
     cache(:pages, id) do
       src_page = Cms::Page.site(@src_site).find(id) rescue nil
