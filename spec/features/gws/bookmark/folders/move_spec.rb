@@ -4,7 +4,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
 
-  let(:basename) { ::Gws::Bookmark::Folder.default_root_name }
+  let(:basename) { Gws::Bookmark::Folder.default_root_name }
   let(:basename1) { unique_id }
   let(:basename2) { unique_id }
   let(:basename3) { basename2 }

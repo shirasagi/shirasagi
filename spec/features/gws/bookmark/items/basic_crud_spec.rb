@@ -22,7 +22,7 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
       visit index_path
 
       expect(current_path).not_to eq sns_login_path
-      expect(folder.name).to eq ::Gws::Bookmark::Folder.default_root_name
+      expect(folder.name).to eq Gws::Bookmark::Folder.default_root_name
 
       within "#content-navi" do
         expect(page).to have_css(".item-name", text: folder.name)

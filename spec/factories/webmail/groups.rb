@@ -11,7 +11,7 @@ FactoryBot.define do
       ]
     end
     imap_settings do
-      conf = ::SS::WebmailSupport.test_conf
+      conf = SS::WebmailSupport.test_conf
 
       setting = Webmail::ImapSetting.default
       setting[:imap_host] = conf['host'] || 'localhost'

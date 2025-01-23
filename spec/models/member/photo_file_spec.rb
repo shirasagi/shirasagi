@@ -22,7 +22,7 @@ describe Member::PhotoFile, dbscope: :example do
         it do
           expect(subject).to be_persisted
           expect(subject).to be_valid
-          expect(::Fs.size(subject.path)).to be > 0
+          expect(Fs.size(subject.path)).to be > 0
           expect(subject.site_id).to eq cms_site.id
           expect(subject.user_id).to eq cms_user.id
           expect(subject.model).to eq "member/photo"
@@ -131,7 +131,7 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.site_id).to be_blank
           expect(subject.user_id).to be_blank
           expect(subject.model).to eq "member/photo"
-          expect(::Fs.size(subject.path)).to be > 0
+          expect(Fs.size(subject.path)).to be > 0
           expect(subject.image_dimension).to eq [ 180, 53 ]
 
           expect(subject.variants.count).to eq 2
