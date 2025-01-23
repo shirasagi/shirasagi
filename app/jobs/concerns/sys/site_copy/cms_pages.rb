@@ -22,22 +22,15 @@ module Sys::SiteCopy::CmsPages
     Rails.logger.info("♦︎ コピー対象ページ数: #{page_ids.size}")
     page_ids.each do |page_id|
       page = Cms::Page.site(@src_site).find(page_id) rescue nil
-      if page.blank?
-        Rails.logger.warn("♦︎ ページ取得失敗: page_id=#{page_id}")
-        next
-      end
-      # next if page.blank?
-      Rails.logger.info("♦︎ ページコピー開始: #{page.filename} (#{page.id})")
+      next if page.blank?
+      Rails.logger.info("♦︎ [copy_cms_pages] ページコピー開始: #{page.filename} (#{page.id})")
       copy_cms_page(page)
     end
   end
   def resolve_page_reference(id)
     cache(:pages, id) do
       src_page = Cms::Page.site(@src_site).find(id) rescue nil
-      if src_page.blank?
-        Rails.logger.warn("#{id}: 参照されているページが存在しません。")
-        return nil
-      end
+      return nil if src_page.blank?
 
       Rails.logger.info("♦︎ 参照ページコピー開始: #{src_page.filename} (#{src_page.id})")
       dest_page = copy_cms_page(src_page)
