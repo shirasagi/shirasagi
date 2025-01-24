@@ -40,7 +40,7 @@
 
   <dt><%= @model.t :copy_contents %><%= @model.tt :copy_contents %></dt>
   <dd>
-    <%= f.hidden_field "copy_contents[]", value: "", id: nil %>
+    <%= f.hidden_field "[copy_contents][]", value: "", id: nil %>
     <ul>
       <li>
         <%= check_box_tag "#{f.object_name}[copy_contents][]", 'pages', @item.copy_contents.include?('pages'), { id: "#{f.object_name}_copy_contents_pages" } %>
