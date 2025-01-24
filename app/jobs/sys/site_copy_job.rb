@@ -27,10 +27,13 @@ class Sys::SiteCopyJob < SS::ApplicationJob
   attr_accessor :src_site, :dest_site, :copy_options
 
   def perform
-    Rails.logger.info("サイト複製処理を開始します。#{Sys::SiteCopyTask.t :copy_contents}: #{@copy_contents}")
 
     @src_site = Cms::Site.find(@task.source_site_id)
     @copy_contents = @task.copy_contents
+    Rails.logger.info("♦︎ サイト複製処理を開始します。#{Sys::SiteCopyTask.t :copy_contents}: #{@copy_contents}")
+    Rails.logger.info("♦︎ Sys::SiteCopyJob [perform] @task.source_site_id:#{@task.source_site_id}" \
+                      "@task.copy_contents: #{@task.copy_contents}")
+
     dest_site_params = {
       name: @task.target_host_name,
       host: @task.target_host_host,
@@ -50,7 +53,7 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     copy_cms_layouts
     copy_cms_nodes
     copy_cms_parts
-    copy_cms_pages
+    copy_cms_pages if @copy_contents.include?("pages")
     copy_cms_files if @copy_contents.include?("files")
     copy_cms_editor_templates if @copy_contents.include?("editor_templates")
     copy_kana_dictionaries if @copy_contents.include?("dictionaries")
