@@ -53,7 +53,7 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     copy_cms_layouts
     copy_cms_nodes
     copy_cms_parts
-    copy_cms_pages if @copy_contents.include?("pages")
+    copy_cms_pages
     copy_cms_files if @copy_contents.include?("files")
     copy_cms_editor_templates if @copy_contents.include?("editor_templates")
     copy_kana_dictionaries if @copy_contents.include?("dictionaries")
