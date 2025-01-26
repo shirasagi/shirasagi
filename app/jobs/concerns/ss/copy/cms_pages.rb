@@ -3,7 +3,8 @@ module SS::Copy::CmsPages
   include SS::Copy::Cache
 
   def copy_cms_page(src_page)
-    Rails.logger.info("♦︎ SS::Copy::CmsPages[copy_cms_page] コピー開始: #{src_page.filename}(#{src_page.id}), route: #{src_page.route}")
+    Rails.logger.info("♦︎ SS::Copy::CmsPages[copy_cms_page] コピー開始: " \
+                      "#{src_page.filename}(#{src_page.id}), route: #{src_page.route}")
     copy_cms_content(:pages, src_page, copy_cms_page_options)
     Rails.logger.info("♦︎ SS::Copy::CmsPages[copy_cms_page] コピー完了: #{src_page.filename} → #{dest_node.try(:filename)}:" \
                       "(dest_page.id:#{dest_page.id}), route: #{dest_page.route}")
@@ -41,6 +42,9 @@ module SS::Copy::CmsPages
       copy_opendata_app_appfiles(src_page, dest_page)
     end
 
+    Rails.logger.debug("♦︎ DEBUG: dest_page.related_page_ids=#{dest_page.related_page_ids.inspect} " \
+                       "(class=#{dest_page.related_page_ids.class})")
+    
     if dest_page.respond_to?(:column_values)
       dest_page.column_values = src_page.column_values.map do |src_column_value|
         dest_column_value = src_column_value.dup
