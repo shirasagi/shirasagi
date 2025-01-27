@@ -4,6 +4,7 @@ class Sys::UsersController < ApplicationController
 
   model SS::User
 
+  navi_view "sys/main/conf_navi"
   menu_view "sys/users/menu"
 
   before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
