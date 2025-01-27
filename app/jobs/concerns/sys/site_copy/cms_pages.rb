@@ -38,9 +38,9 @@ module Sys::SiteCopy::CmsPages
 
       Rails.logger.info("♦︎ [resolve_page_reference] 参照ページコピー開始: #{src_page.filename} (#{src_page.id})")
       dest_page = copy_cms_page(src_page)
-      dest_page.try(:id)
-      Rails.logger.debug("♦︎ [resolve_page_reference] コピー後の dest_page: #{dest_page&.id}") # コピー結果確認
+      Rails.logger.debug("♦︎ [resolve_page_reference] コピー後の dest_page: #{dest_page&.id}")
       Rails.logger.debug("♦︎ [resolve_page_reference] 終了時の dest_page: #{dest_page.inspect}")
+      dest_page.try(:id)
     end
   end
 end
