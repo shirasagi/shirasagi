@@ -4,8 +4,7 @@ class Sys::UsersController < ApplicationController
 
   model SS::User
 
-  navi_view "sys/main/conf_navi"
-  menu_view "sys/users/menu"
+  menu_view "sys/crud/menu"
 
   before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
 
@@ -80,8 +79,8 @@ class Sys::UsersController < ApplicationController
   end
 end
 
-def download
-  csv = @model.unscoped.site(@cur_site, state: 'all').allow(:read, @cur_user, site: @cur_site, node: @cur_node).
-    order_by(_id: 1).to_csv(site: @cur_site)
-  send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_users_#{Time.zone.now.to_i}.csv"
-end
+# def download
+#   csv = @model.unscoped.site(@cur_site, state: 'all').allow(:read, @cur_user, site: @cur_site, node: @cur_node).
+#     order_by(_id: 1).to_csv(site: @cur_site)
+#   send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_users_#{Time.zone.now.to_i}.csv"
+# end
