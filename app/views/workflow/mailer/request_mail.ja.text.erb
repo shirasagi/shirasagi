@@ -1,5 +1,9 @@
 <% message.subject = @subject %>
+<% if @member.present? %>
+<%= @member.name %>(ログインメンバー)さんより<%= @page.name %>の承認依頼が届きました。
+<% else %>
 <%= @from_user.name %>さん<% if @agent_user %>（代理：<%= @agent_user.name %>さん）<% end %>より次の記事について承認依頼が届きました。
+<% end %>
 承認作業を行ってください。
 
 - タイトル
