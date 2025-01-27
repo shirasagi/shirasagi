@@ -3,7 +3,7 @@ module SS::Copy::CmsNodes
   include SS::Copy::Cache
 
   def copy_cms_node(src_node)
-    Rails.logger.debug("♦︎ [copy_cms_node] #{src_node.filename}: " \
+    Rails.logger.debug("♦︎ SS::Copy::CmsNodes [copy_cms_node] #{src_node.filename}: " \
                        "コピー処理開始 (summary_page_id=#{src_node.try(:summary_page_id)})")
     copy_cms_content(:nodes, src_node, copy_cms_node_options)
   rescue => e
@@ -40,7 +40,9 @@ module SS::Copy::CmsNodes
       copy_ezine_columns(src_node, dest_node)
     when "category/page"
       if @copy_contents.include?('pages')
-        dest_node.summary_page_id = src_node.summary_page_id
+        Rails.logger.debug("♦︎ [after_copy_cms_node] @copy_contents=#{@copy_contents.inspect} " \
+                           "(class=#{@copy_contents.class})")
+        dest_node.summary_page_id
       else
         dest_node.summary_page_id = nil
       end
