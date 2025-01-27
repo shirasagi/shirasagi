@@ -8,9 +8,6 @@ module Sys::SiteCopy::CmsPages
     Rails.logger.debug("♦︎ [copy_cms_page] @copy_contents=#{@copy_contents.inspect} (class=#{@copy_contents.class})")
     return nil if (src_page.route != "cms/page") && !@copy_contents.include?('pages')
 
-    Rails.logger.debug("♦︎ [copy_cms_page] @copy_contents=#{@copy_contents.inspect} (class=#{@copy_contents.class})")
-    Rails.logger.debug("♦︎ [copy_cms_page] src_page.contact_group_contact_id=#{src_page.contact_group_contact_id}")
-
     copy_cms_content(:pages, src_page, copy_cms_page_options)
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")
