@@ -13,7 +13,7 @@ module Sys::SiteCopy::CmsContents
     id = cache(cache_id, src_content.id) do
       options[:before].call(src_content) if options[:before]
       dest_content = klass.site(@dest_site).where(filename: src_content.filename).first
-      next dest_content.id if dest_content.present? # return → next に変更することでid=trueがキャッシュされるのを防止
+      return dest_content.id if dest_content.present?
 
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
@@ -21,9 +21,6 @@ module Sys::SiteCopy::CmsContents
       dest_content.save!
       dest_content.id
     end
-
-    # # 不正な id による find(true) のエラーを回避
-    id = nil unless id.is_a?(Integer) || id.is_a?(BSON::ObjectId)
     Rails.logger.debug("♦︎ [cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})")
 
     if dest_content
