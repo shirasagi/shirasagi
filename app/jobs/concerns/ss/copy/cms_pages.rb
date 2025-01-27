@@ -6,7 +6,7 @@ module SS::Copy::CmsPages
     Rails.logger.info("♦︎ SS::Copy::CmsPages[copy_cms_page] コピー開始: " \
                       "#{src_page.filename}(#{src_page.id}), route: #{src_page.route}")
     copy_cms_content(:pages, src_page, copy_cms_page_options)
-    Rails.logger.info("♦︎ SS::Copy::CmsPages[copy_cms_page] コピー完了: #{src_page.filename} → #{dest_node.try(:filename)}:" \
+    Rails.logger.info("♦︎ SS::Copy::CmsPages[copy_cms_page] コピー完了: #{src_page.filename} → #{dest_page.try(:filename)}:" \
                       "(dest_page.id:#{dest_page.id}), route: #{dest_page.route}")
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")
