@@ -49,7 +49,7 @@ describe Inquiry::Answer, dbscope: :example do
       expect(item.data[0].values[1]).to eq ss_file.filename
       expect(item.data[0].values[2]).to eq ss_file.name
       expect(item.data[0].values[3]).to eq ss_file.size
-      expect(item.data[0].values[3]).to eq ((1 * 1024 * 1024) + 1)
+      expect(item.data[0].values[3]).to eq (1 * 1024 * 1024) + 1
       expect(item.valid?).to be_truthy
     end
   end
@@ -74,8 +74,32 @@ describe Inquiry::Answer, dbscope: :example do
       expect(item.data[0].values[1]).to eq ss_file.filename
       expect(item.data[0].values[2]).to eq ss_file.name
       expect(item.data[0].values[3]).to eq ss_file.size
-      expect(item.data[0].values[3]).to eq ((1 * 1024 * 1024) + 1)
+      expect(item.data[0].values[3]).to eq (1 * 1024 * 1024) + 1
       expect(item.valid?).to be_falsey
+
+      expect(item.errors.full_messages.size).to eq 1
+      expect(item.errors.full_messages[0]).to eq error_message
+    end
+  end
+
+  context "with max file size" do
+    let!(:max) { create :ss_max_file_size, in_size_mb: 1 }
+
+    before do
+      upload_file_column.max_upload_file_size = 0
+      upload_file_column.update!
+    end
+
+    it do
+      item = described_class.new(cur_site: site, cur_node: node)
+      item.set_data(data)
+
+      expect(SS::File.where(site_id: site.id).count).to eq 0
+
+      expect(item.data.size).to eq 1
+      expect(item.data[0].column_id).to eq upload_file_column.id
+      expect(item.data[0].value).to be_nil
+      expect(item.data[0].values).to be_blank
 
       expect(item.errors.full_messages.size).to eq 1
       expect(item.errors.full_messages[0]).to eq error_message
