@@ -75,7 +75,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_summary_page).to be_present
 
         dest_category_node = Cms::Node.site(dest_site).find_by(filename: category_node.filename)
-        expect(dest_category_node.summary_page_id).to eq summary_page.id
+        expect(dest_category_node.summary_page_id).to eq dest_summary_page.id
       end
     end
   end
