@@ -1,0 +1,14 @@
+# content_quota
+
+production: &production
+  navi:
+    routes:
+      - "article/page"
+      - "cms/node"
+      - "cms/page"
+
+test:
+  <<: *production
+
+development:
+  <<: *production
