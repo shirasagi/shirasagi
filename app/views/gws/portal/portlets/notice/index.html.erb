@@ -4,59 +4,61 @@
 <div class="main-box gws-notices">
   <div class="portlet-title"><%= @portlet.name %></div>
 
-  <ul class="list-items">
-    <% items.each do |item| %>
-      <%
-        css_classes = %w(list-item)
-        css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
-        if item.severity.present?
-          css_classes << item.severity
-        end
-      %>
-      <li class="<%= css_classes.join(' ') %>">
-        <div class="info">
+  <% if Gws.module_usable?(:notice, @cur_site, @cur_user) %>
+    <ul class="list-items">
+      <% items.each do |item| %>
+        <%
+          css_classes = %w(list-item)
+          css_classes << (item.browsed?(@cur_user) ? 'read' : 'unread')
+          if item.severity.present?
+            css_classes << item.severity
+          end
+        %>
+        <li class="<%= css_classes.join(' ') %>">
+          <div class="info">
 
-          <div class="title marked">
-            <% if item.severity.present? %>
-              <%= md_icons.outlined "error_outline", tag: :i, size: 16, title: item.label(:severity), class: "severity-#{item.severity}", aria: { hidden: nil } %>
-            <% end %>
-            <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'name' %>
-            <% if item.term_enabled? %>
-              <%= link_to gws_notice_calendars_path(@portal.notice_calendar_params(item)), { class: "index-cleander-link" } do %>
-                <i class="material-icons calendar-month md-18">calendar_month</i>
+            <div class="title marked">
+              <% if item.severity.present? %>
+                <%= md_icons.outlined "error_outline", tag: :i, size: 16, title: item.label(:severity), class: "severity-#{item.severity}", aria: { hidden: nil } %>
               <% end %>
-            <% end %>
-            <% if item.new_flag? %>
-              <span class="gws-board-flag-new"></span>
-            <% end %>
-          </div>
+              <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'name' %>
+              <% if item.term_enabled? %>
+                <%= link_to gws_notice_calendars_path(@portal.notice_calendar_params(item)), { class: "index-cleander-link" } do %>
+                  <i class="material-icons calendar-month md-18">calendar_month</i>
+                <% end %>
+              <% end %>
+              <% if item.new_flag? %>
+                <span class="gws-board-flag-new"></span>
+              <% end %>
+            </div>
 
-          <div class="meta">
-            <span class="datetime"><%= ss_time_tag item.updated %></span>
-            <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
-            <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
-            <% if attr = item.label(:severity).presence %>
-              <span class="label"><%= attr %></span>
-            <% end %>
-            <span>
-              <% item.categories.compact.each do |category| %>
-                <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id),
-                            class: "gws-category-label", style: category_label_css(category) %>
+            <div class="meta">
+              <span class="datetime"><%= ss_time_tag item.updated %></span>
+              <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
+              <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
+              <% if attr = item.label(:severity).presence %>
+                <span class="label"><%= attr %></span>
               <% end %>
-            </span>
-            <% if item.files.present? %>
-              <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
-            <% end %>
-            <% if item.comments.count > 0 %>
-              <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
-            <% end %>
+              <span>
+                <% item.categories.compact.each do |category| %>
+                  <%= link_to category.trailing_name, gws_notice_readables_path(folder_id: '-', category_id: category.id),
+                              class: "gws-category-label", style: category_label_css(category) %>
+                <% end %>
+              </span>
+              <% if item.files.present? %>
+                <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
+              <% end %>
+              <% if item.comments.count > 0 %>
+                <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
+              <% end %>
+            </div>
           </div>
-        </div>
-      </li>
+        </li>
+      <% end %>
+    </ul>
+
+    <% if items.next_page %>
+      <div class="list-more"><%= link_to I18n.t("ss.links.more"), @portlet.see_more_path(@portal, @cur_user) %></div>
     <% end %>
-  </ul>
-
-  <% if items.next_page %>
-    <div class="list-more"><%= link_to I18n.t("ss.links.more"), @portlet.see_more_path(@portal, @cur_user) %></div>
   <% end %>
 </div>
