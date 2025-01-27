@@ -44,7 +44,6 @@ module SS::Copy::CmsPages
 
     Rails.logger.debug("♦︎ DEBUG: dest_page.related_page_ids=#{dest_page.related_page_ids.inspect} " \
                        "(class=#{dest_page.related_page_ids.class})")
-    
     if dest_page.respond_to?(:column_values)
       dest_page.column_values = src_page.column_values.map do |src_column_value|
         dest_column_value = src_column_value.dup

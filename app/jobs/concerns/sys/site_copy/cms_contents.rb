@@ -3,7 +3,8 @@ module Sys::SiteCopy::CmsContents
   include SS::Copy::CmsContents
 
   def copy_cms_content(cache_id, src_content, options = {})
-    Rails.logger.debug("♦︎ Sys::SiteCopy::CmsContents[copy_cms_content] コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
+    Rails.logger.debug("♦︎ Sys::SiteCopy::CmsContents[copy_cms_content] " \
+                       "コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
                        "summary_page_id=#{src_content.try(:summary_page_id)}," \
                        "related_page_ids=#{src_content.try(:related_page_ids)}," \
                        "cache_id=#{src_content.try(:cache_id)}")
@@ -34,7 +35,8 @@ module Sys::SiteCopy::CmsContents
                          "dest_content.related_page_ids=#{dest_content.try(:related_page_ids).inspect}")
       update_html_links(src_content, dest_content)
       dest_content.save!
-      Rails.logger.debug("♦︎ Sys::SiteCopy::CmsContents[copy_cms_content] コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
+      Rails.logger.debug("♦︎ Sys::SiteCopy::CmsContents[copy_cms_content] " \
+                         "コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
                          "related_page_ids=#{dest_content.try(:related_page_ids)}," \
                          "summary_page_id=#{dest_content.try(:summary_page_id)})")
       options[:after].call(src_content, dest_content) if options[:after]
