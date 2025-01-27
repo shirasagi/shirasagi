@@ -255,6 +255,9 @@ production: &production
     #  - "Gws::Schedule::Plan"
     #  - "Gws::Schedule::Todo"
 
+  notice_comment_setting:
+    comment_state: disabled
+
   aggregation:
     first_activation_date: "2000/1/1"
 
