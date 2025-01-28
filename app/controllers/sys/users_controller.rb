@@ -4,7 +4,7 @@ class Sys::UsersController < ApplicationController
 
   model SS::User
 
-  menu_view "sys/crud/menu"
+  menu_view "sys/users/menu"
 
   before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
 
@@ -77,4 +77,11 @@ class Sys::UsersController < ApplicationController
     @item.unset(:mfa_otp_secret, :mfa_otp_enabled_at)
     redirect_to url_for(action: :show), notice: t("ss.notice.reset_mfa_otp")
   end
+
+  def download_all
+    csv = @model.allow(:edit, @cur_user).state(params.dig(:s, :state)).search(params[:s]).
+      order_by(_id: 1).to_csv
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "sys_users_#{Time.zone.now.to_i}.csv"
+  end
 end
+
