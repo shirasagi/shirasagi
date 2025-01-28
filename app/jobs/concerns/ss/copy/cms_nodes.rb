@@ -3,8 +3,10 @@ module SS::Copy::CmsNodes
   include SS::Copy::Cache
 
   def copy_cms_node(src_node)
-    Rails.logger.debug("♦︎ SS::Copy::CmsNodes [copy_cms_node] #{src_node.filename}: " \
-                       "コピー処理開始 (summary_page_id=#{src_node.try(:summary_page_id)})")
+    Rails.logger.debug do
+      "♦SS::Copy::CmsNodes[copy_cms_node] #{src_node.filename}: " \
+        "コピー処理開始 (summary_page_id=#{src_node.try(:summary_page_id)})"
+    end
     copy_cms_content(:nodes, src_node, copy_cms_node_options)
   rescue => e
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーに失敗しました。")
@@ -29,8 +31,8 @@ module SS::Copy::CmsNodes
   end
 
   def after_copy_cms_node(src_node, dest_node)
-    Rails.logger.debug("♦︎ [after_copy_cms_node] #{src_node.filename}: 処理前 summary_page_id=#{src_node.try(:summary_page_id)}")
-    Rails.logger.debug("♦︎ [after_copy_cms_node] #{src_node.filename}: 処理前 summary_page=#{src_node.try(:summary_page).inspect}")
+    Rails.logger.debug{ "♦[after_copy_cms_node] #{src_node.filename}: 処理前 summary_page_id=#{src_node.try(:summary_page_id)}" }
+    Rails.logger.debug{ "♦[after_copy_cms_node] #{src_node.filename}: 処理前 summary_page=#{src_node.try(:summary_page).inspect}" }
     case src_node.route
     when "uploader/file"
       copy_node_files(src_node, dest_node)
@@ -40,8 +42,10 @@ module SS::Copy::CmsNodes
       copy_ezine_columns(src_node, dest_node)
     when "category/page"
       if @copy_contents.include?('pages')
-        Rails.logger.debug("♦︎ [after_copy_cms_node] @copy_contents=#{@copy_contents.inspect} " \
-                           "(class=#{@copy_contents.class})")
+        Rails.logger.debug do
+          "♦[after_copy_cms_node] @copy_contents=#{@copy_contents.inspect} " \
+            "(class=#{@copy_contents.class})"
+        end
         dest_node.summary_page_id
       else
         dest_node.summary_page_id = nil
@@ -53,9 +57,13 @@ module SS::Copy::CmsNodes
     end
 
     @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーしました。")
-    Rails.logger.debug("♦︎ [after_copy_cms_node] #{src_node.filename} → #{dest_node.try(:filename)}:" \
-                       "コピー処理完了 (summary_page_id=#{dest_node.try(:summary_page_id)})")
-    Rails.logger.debug("♦︎ [after_copy_cms_node] #{src_node.filename}: → #{dest_node.try(:filename)}:" \
-                       "コピー処理完了 (summary_page=#{dest_node.try(:summary_page).inspect}")
+    Rails.logger.debug do
+      "♦[after_copy_cms_node] #{src_node.filename} → #{dest_node.try(:filename)}:" \
+        "コピー処理完了 (summary_page_id=#{dest_node.try(:summary_page_id)})"
+    end
+    Rails.logger.debug do
+      "♦[after_copy_cms_node] #{src_node.filename}: → #{dest_node.try(:filename)}:" \
+        "コピー処理完了 (summary_page=#{dest_node.try(:summary_page).inspect}"
+    end
   end
 end

@@ -3,11 +3,13 @@ module Sys::SiteCopy::CmsContents
   include SS::Copy::CmsContents
 
   def copy_cms_content(cache_id, src_content, options = {})
-    Rails.logger.debug("♦︎ Sys::SiteCopy::CmsContents[copy_cms_content] " \
-                       "コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
-                       "summary_page_id=#{src_content.try(:summary_page_id)}," \
-                       "related_page_ids=#{src_content.try(:related_page_ids)}," \
-                       "cache_id=#{src_content.try(:cache_id)}")
+    Rails.logger.debug do
+      "♦Sys::SiteCopy::CmsContents[copy_cms_content] " \
+        "コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
+        "summary_page_id=#{src_content.try(:summary_page_id)}," \
+        "related_page_ids=#{src_content.try(:related_page_ids)}," \
+        "cache_id=#{src_content.try(:cache_id)}"
+    end
     klass = src_content.class
     dest_content = nil
     id = cache(cache_id, src_content.id) do
@@ -21,21 +23,27 @@ module Sys::SiteCopy::CmsContents
       dest_content.save!
       dest_content.id
     end
-    Rails.logger.debug("♦︎ [cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})")
+    Rails.logger.debug{ "♦[cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})" }
 
     if dest_content
-      Rails.logger.debug("♦︎ [BEFORE] resolve_unsafe_references: " \
-                         "src_content.related_page_ids=#{src_content.try(:related_page_ids).inspect}")
+      Rails.logger.debug do
+        "♦[BEFORE] resolve_unsafe_references: " \
+          "src_content.related_page_ids=#{src_content.try(:related_page_ids).inspect}"
+      end
       # after create item, copy references which have possibility of circular reference
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
-      Rails.logger.debug("♦︎ [AFTER] resolve_unsafe_references: " \
-                         "dest_content.related_page_ids=#{dest_content.try(:related_page_ids).inspect}")
+      Rails.logger.debug do
+        "♦[AFTER] resolve_unsafe_references: " \
+          "dest_content.related_page_ids=#{dest_content.try(:related_page_ids).inspect}"
+      end
       update_html_links(src_content, dest_content)
       dest_content.save!
-      Rails.logger.debug("♦︎ Sys::SiteCopy::CmsContents[copy_cms_content] " \
-                         "コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
-                         "related_page_ids=#{dest_content.try(:related_page_ids)}," \
-                         "summary_page_id=#{dest_content.try(:summary_page_id)})")
+      Rails.logger.debug do
+        "♦Sys::SiteCopy::CmsContents[copy_cms_content] " \
+          "コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
+          "related_page_ids=#{dest_content.try(:related_page_ids)}," \
+          "summary_page_id=#{dest_content.try(:summary_page_id)})"
+      end
       options[:after].call(src_content, dest_content) if options[:after]
     end
 

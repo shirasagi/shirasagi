@@ -38,8 +38,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.source_site_id = site.id
         task.copy_contents = ''
         task.save!
-        Rails.logger.debug("♦︎♦︎ without any options コピー元 summary_page ID: #{summary_page.id}")
-        Rails.logger.debug("♦︎♦︎ task.copy_contents=#{task.copy_contents.inspect}")
+        Rails.logger.debug{ "♦♦without any options コピー元 summary_page ID: #{summary_page.id}" }
+        Rails.logger.debug{ "♦♦task.copy_contents=#{task.copy_contents.inspect}" }
       end
 
       it do
@@ -61,8 +61,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.source_site_id = site.id
         task.copy_contents = 'pages'
         task.save!
-        Rails.logger.debug("♦︎♦︎ with option 'pages' コピー元 summary_page ID: #{summary_page.id}")
-        Rails.logger.debug("♦︎♦︎ task.copy_contents=#{task.copy_contents.inspect}")
+        Rails.logger.debug{ "♦♦with option 'pages' コピー元 summary_page ID: #{summary_page.id}" }
+        Rails.logger.debug{ "♦♦task.copy_contents=#{task.copy_contents.inspect}" }
       end
 
       it do

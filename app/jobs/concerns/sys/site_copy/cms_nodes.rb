@@ -8,8 +8,10 @@ module Sys::SiteCopy::CmsNodes
     node_ids.each do |node_id|
       node = Cms::Node.site(@src_site).find(node_id) rescue nil
       next if node.blank?
-      Rails.logger.debug("♦︎ [copy_cms_nodes] #{node.filename}:" \
-                         "コピー開始 (summary_page_id=#{node.try(:summary_page_id)})")
+      Rails.logger.debug do
+        "♦[copy_cms_nodes] #{node.filename}:" \
+          "コピー開始 (summary_page_id=#{node.try(:summary_page_id)})"
+      end
       copy_cms_node(node)
     end
   end
@@ -22,11 +24,15 @@ module Sys::SiteCopy::CmsNodes
         return nil
       end
 
-      Rails.logger.debug("♦︎ [resolve_node_reference] #{src_node.filename}:" \
-                         "解決開始 (summary_page_id=#{src_node.try(:summary_page_id)})")
+      Rails.logger.debug do
+        "♦[resolve_node_reference] #{src_node.filename}:" \
+          "解決開始 (summary_page_id=#{src_node.try(:summary_page_id)})"
+      end
       dest_node = copy_cms_node(src_node)
-      Rails.logger.debug("♦︎ [resolve_node_reference] #{src_node.filename} → #{dest_node.try(:filename)}:" \
-                         "解決完了 (summary_page_id=#{dest_node.try(:summary_page_id)})")
+      Rails.logger.debug do
+        "♦[resolve_node_reference] #{src_node.filename} → #{dest_node.try(:filename)}:" \
+          "解決完了 (summary_page_id=#{dest_node.try(:summary_page_id)})"
+      end
       dest_node.try(:id)
     end
   end

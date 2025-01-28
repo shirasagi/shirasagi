@@ -26,9 +26,9 @@ module SS::Copy::CmsContents
   end
 
   def reference_type(klass)
-    Rails.logger.debug { "♦︎ [reference_type] Checking reference type: #{klass.name} (class: #{klass.class.name})" }
+    Rails.logger.debug { "♦[reference_type] Checking reference type: #{klass.name} (class: #{klass.class.name})" }
     unless klass.is_a?(Class)
-      Rails.logger.error("♦︎ [reference_type] Invalid reference type: #{klass.inspect} (not a Class)")
+      Rails.logger.error { "♦[reference_type] Invalid reference type: #{klass.inspect} (not a Class)" }
       raise "unknown reference type: #{klass}"
     end
 
@@ -68,8 +68,8 @@ module SS::Copy::CmsContents
     elsif klass == SS::Contact
       :contact
     else
-      Rails.logger.error("♦︎ [reference_type] unknown reference type: #{klass.name} (class: #{klass.class.name})")
-      Rails.logger.debug { "♦︎ [reference_type] Contact Group Object: #{group.contact_groups.first.class.name}" }
+      Rails.logger.error { "♦[reference_type] unknown reference type: #{klass.name} (class: #{klass.class.name})" }
+      Rails.logger.debug { "♦[reference_type] Contact Group Object: #{group.contact_groups.first.class.name}" }
       raise "unknown reference type: #{klass}"
     end
   end
