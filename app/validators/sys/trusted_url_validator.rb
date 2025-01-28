@@ -3,7 +3,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     def myself_url?(url)
       return false if Rails.application.current_request.blank?
 
-      url = ensure_addressable_url(url)
+      url = ensure_addressable_url!(url)
       request_url = ::Addressable::URI.parse(Rails.application.current_request.url)
 
       if url.host.present?
@@ -17,7 +17,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def trusted_url?(url, known_trusted_urls = nil)
-      url = ensure_addressable_url(url)
+      url = ensure_addressable_url!(url)
       return true if url.scheme.blank? && url.host.blank? && url.port.blank?
 
       if known_trusted_urls.present?
@@ -52,7 +52,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
 
     private
 
-    def ensure_addressable_url(url)
+    def ensure_addressable_url!(url)
       return url if url.respond_to?(:scheme)
       ::Addressable::URI.parse(url.to_s)
     end
@@ -78,7 +78,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       return [] if sources.blank?
 
       sources.uniq.sort.map do |source|
-        ensure_addressable_url(source) rescue nil
+        ensure_addressable_url!(source) rescue nil
       end.compact
     end
 
