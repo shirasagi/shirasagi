@@ -3,8 +3,11 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     def myself_url?(url)
       return false if Rails.application.current_request.blank?
 
-      url = ensure_addressable_url!(url)
-      request_url = ::Addressable::URI.parse(Rails.application.current_request.url)
+      url = ensure_addressable_url!(url) rescue nil
+      return false unless url
+
+      request_url = ::Addressable::URI.parse(Rails.application.current_request.url) rescue nil
+      return false unless request_url
 
       if url.host.present?
         return false if url.host != request_url.host
@@ -17,7 +20,8 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def trusted_url?(url, known_trusted_urls = nil)
-      url = ensure_addressable_url!(url)
+      url = ensure_addressable_url!(url) rescue nil
+      return false unless url
       return true if url.scheme.blank? && url.host.blank? && url.port.blank?
 
       if known_trusted_urls.present?
@@ -106,8 +110,17 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       break
     end
 
-    url = ::Addressable::URI.parse(value)
-    return if self.class.valid_url?(url, known_trusted_urls)
+    if record.fields[attribute.to_s].localized?
+      return if value.values.all? do |url|
+        url = ::Addressable::URI.parse(url) rescue nil
+        next false unless url
+        self.class.valid_url?(url, known_trusted_urls)
+      end
+    else
+      url = ::Addressable::URI.parse(value) rescue nil
+      return unless url
+      return if self.class.valid_url?(url, known_trusted_urls)
+    end
 
     record.errors.add(attribute, options[:message] || :trusted_url)
   rescue Addressable::URI::InvalidURIError => _e
