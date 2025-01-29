@@ -65,8 +65,8 @@ ja:
       summary_page_id:
         - サマリーページを設定すると、指定したページの内容をこのカテゴリーフォルダー内で表示できます。
         -
-        - 必要な設定
+        - ※ 必要な設定 ※
         -   (1)サマリーページを設定
         -   (2)リスト表示
         -    「ループHTML形式」=「Liquid」
-        -    「ループHTML」の表示 = <タグ>{{ node.summary_page.html }}<タグ>
+        -    「ループHTML」の表示 = &lt;section class="summary"&gt;{{ node.summary_page.html }}&lt;/section&gt;
