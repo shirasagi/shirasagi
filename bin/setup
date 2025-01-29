@@ -10,6 +10,17 @@ def system!(*args)
   system(*args, exception: true)
 end
 
+def get_site_id!(host)
+  command = <<~COMMAND
+    bundle exec rails runner "puts Cms::Site.find_by(host: '#{host}').id"
+  COMMAND
+
+  reader, writer = IO.pipe
+  system(command, out: writer, exception: true)
+  writer.close
+  reader.read.strip.to_i
+end
+
 FileUtils.chdir APP_ROOT do
   # This script is a way to set up or update your development environment automatically.
   # This script is idempotent, so that you can run it at any time and get an expectable outcome.
@@ -53,8 +64,8 @@ FileUtils.chdir APP_ROOT do
   if ENV.fetch("SETUP_OPENDATA_SITE", "subdir").then { _1 == "subdir" || _1 == "1" }
     puts "== Install seed: 'オープンデータ' =="
     if ENV.fetch("SETUP_DEMO_SITE", "1") == "1" && ENV.fetch("SETUP_OPENDATA_SITE", "subdir").then { _1 == "subdir" }
-      demo_site = Cms::Site.find_by(host: "www")
-      system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'www.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers', subdir: 'opendata', parent_id: #{demo_site.id} }\""
+      site_id = get_site_id!("www")
+      system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'www.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers', subdir: 'opendata', parent_id: #{site_id} }\""
     else
       system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'opendata.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
     end
