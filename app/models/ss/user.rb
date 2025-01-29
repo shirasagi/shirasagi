@@ -39,7 +39,11 @@ class SS::User
           line << item.tel_ext
           line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
           line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
-          line << (item.initial_password_warning.present? ? I18n.t('ss.options.state.enabled') : I18n.t('ss.options.state.disabled'))
+          line << if item.initial_password_warning.present?
+                    I18n.t('ss.options.state.enabled')
+                  else
+                    I18n.t('ss.options.state.disabled')
+                  end
           line << item.organization&.name
           line << (item.groups.pluck(:name).join("\n") || '')
           line << item.last_loggedin
