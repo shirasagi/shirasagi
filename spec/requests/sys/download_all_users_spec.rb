@@ -36,9 +36,6 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
     it do
       visit index_path
 
-      # require 'pry-byebug'
-      # binding.pry
-
       within "#menu" do
         within "nav" do
           click_on I18n.t("ss.links.download")
