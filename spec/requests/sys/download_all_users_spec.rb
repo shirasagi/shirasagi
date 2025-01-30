@@ -10,7 +10,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
   let(:new_path) { new_sys_user_path(site.id) }
   let(:download_path) { download_all_sys_users_path(site.id) }
   let(:user) do
-    create(:sys_user_sample,
+    create(:sys_user_sample_2,
            name: "John Doe",
            kana: "ジョン・ドウ",
            uid: "johndoe",

@@ -14,6 +14,15 @@ FactoryBot.define do
     name { unique_id.to_s }
     email { "user#{unique_id}@example.jp" }
     in_password { "pass" }
+    type { SS::Model::User::TYPE_SNS }
+    #sys_role_ids
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
+  end
+
+  factory :sys_user_sample_2, class: SS::User do
+    name { unique_id.to_s }
+    email { "user#{unique_id}@example.jp" }
+    in_password { "pass" }
     organization_id { create(:ss_group).id }
     type { SS::Model::User::TYPE_SNS }
     #sys_role_ids
