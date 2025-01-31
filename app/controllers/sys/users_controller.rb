@@ -79,7 +79,9 @@ class Sys::UsersController < ApplicationController
   end
 
   def download_all
-    criteria = SS::User.all
+    criteria = @model.allow(:edit, @cur_user)
+                     .state(params.dig(:s, :state))
+                     .search(params[:s])
     criteria = criteria.reorder(id: 1)
     csv = @model.to_csv(criteria: criteria, site: @cur_site)
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
