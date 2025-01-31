@@ -92,11 +92,13 @@ module Gws::CrudFilter
 
   def delete
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    Rails.logger.debug { "♦Deleting item: #{@item.inspect}" }
     render
   end
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+    Rails.logger.debug { "♦Destroying item: #{@item.inspect}" }
     render_destroy @item.destroy
   end
 
@@ -111,6 +113,7 @@ module Gws::CrudFilter
 
     @item.record_timestamps = false
     @item.deleted = Time.zone.now
+    Rails.logger.debug { "♦Soft deleting item: #{@item.inspect}" }
     render_destroy @item.save(context: :soft_delete)
   end
 
@@ -131,6 +134,7 @@ module Gws::CrudFilter
     render_opts[:render] = { template: "undo_delete" }
     render_opts[:notice] = t('ss.notice.restored')
 
+    Rails.logger.debug { "♦Undo deleting item: #{@item.inspect}" }
     render_update @item.save, render_opts
   end
 
@@ -141,8 +145,12 @@ module Gws::CrudFilter
     @items = []
 
     entries.each do |item|
+      Rails.logger.debug { "♦Destroying item in destroy_all: #{item.inspect}" }
       if item.allowed?(:delete, @cur_user, site: @cur_site)
-        next if item.destroy
+        # next if item.destroy
+        result = item.destroy
+        Rails.logger.debug { "♦Destroy result for item #{item.id}: #{result}" }
+        next if result
       else
         item.errors.add :base, :auth_error
       end
@@ -158,6 +166,7 @@ module Gws::CrudFilter
     @items = []
 
     entries.each do |item|
+      Rails.logger.debug { "♦Disabling item in disable_all: #{item.inspect}" }
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.attributes = fix_params
         if item.is_a?(Gws::User) && item.deletion_unlocked? && item.disabled?
@@ -184,11 +193,15 @@ module Gws::CrudFilter
     entries.each do |item|
       item.try(:cur_site=, @cur_site)
       item.try(:cur_user=, @cur_user)
+      Rails.logger.debug { "♦Soft deleting item in soft_delete_all: #{item.inspect}" }
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.record_timestamps = false
         item.deleted = Time.zone.now
         item.skip_validate_column_values = true if item.instance_of?(Gws::Workflow2::File)
-        next if item.save(context: :soft_delete)
+        # next if item.save(context: :soft_delete)
+        result = item.save(context: :soft_delete)
+        Rails.logger.debug { "♦Soft delete result for item #{item.id}: #{result}" }
+        next if result
       else
         item.errors.add :base, :auth_error
       end
