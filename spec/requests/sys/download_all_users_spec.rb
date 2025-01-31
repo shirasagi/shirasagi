@@ -59,7 +59,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         expect(row["ユーザーID"]).to eq(user.uid)
         expect(row["職員番号"]).to eq(user.organization_uid)
         expect(row["メールアドレス"]).to eq(user.email)
-        expect(row["パスワード"]).to be_nil
+        expect(row["パスワード"]).to be_blank
         expect(row["電話番号"]).to eq(user.tel)
         expect(row["内線番号"]).to eq(user.tel_ext)
         expect(row["有効期限（開始）"]).to eq(I18n.l(user.account_start_date, format: :default))
