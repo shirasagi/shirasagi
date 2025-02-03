@@ -26,7 +26,7 @@ module SS
             begin
               csv << generate_csv_row(item)
             rescue => e
-              Rails.logger.error{"♦#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"}
+              Rails.logger.error{ "♦#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
             end
           end
         end
@@ -60,7 +60,7 @@ module SS
           end
         end
       rescue => e
-        Rails.logger.error{"♦Failed to generate CSV row for item #{item.id}: #{e.message}"}
+        Rails.logger.error{ "♦Failed to generate CSV row for item #{item.id}: #{e.message}" }
         []
       end
     end

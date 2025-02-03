@@ -381,6 +381,7 @@ en:
         blank_file: A file must be entered.
         invalid_file_type: Invalid file format.
       failed_to_resume_editing: Failed to resume editing.
+      csv_export_error: An error occurred during CSV export. Please try again.
     apis:
       groups:
         index: Select a group
