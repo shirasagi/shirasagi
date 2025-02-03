@@ -78,6 +78,7 @@ ja:
       type_datas:
         plain: テキスト形式
         markdown: Markdown形式
+        cke: 書式編集
 
       columns:
         id: "追加入力%{n}ID"
