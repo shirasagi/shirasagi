@@ -40,6 +40,7 @@
 
   <dt><%= @model.t :copy_contents %><%= @model.tt :copy_contents %></dt>
   <dd>
+    <%= f.hidden_field "copy_contents[]", value: "", id: nil %>
     <ul>
       <li>
         <%= check_box_tag "#{f.object_name}[copy_contents][]", 'pages', @item.copy_contents.include?('pages'), { id: "#{f.object_name}_copy_contents_pages" } %>
@@ -88,5 +89,6 @@
     </ul>
 
     <p class="description"><%= t('sys.site_copy/description') %></p>
+    <p class="description"><%= "※ 複製する項目「記事・その他のページ」を選択しなかった場合、カテゴリーフォルダー内のサマリーページの設定は解除されます。" %></p>
   </dd>
 </dl>
