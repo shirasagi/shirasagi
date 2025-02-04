@@ -381,7 +381,6 @@ ja:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
       failed_to_resume_editing: 編集の再開に失敗しました。
-      csv_export_error: CSVエクスポート中にエラーが発生しました。もう一度お試しください。
     apis:
       groups:
         index: グループを選択する
