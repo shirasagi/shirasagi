@@ -90,7 +90,6 @@ class Sys::UsersController < ApplicationController
                 filename: "sys_users_#{Time.zone.now.to_i}.csv"
     rescue => e
       Rails.logger.error{ "CSVエクスポート中にエラーが発生しました: #{e.message}" }
-      redirect_to url_for(action: :index), error: t("ss.errors.csv_export_error")
     end
   end
 end
