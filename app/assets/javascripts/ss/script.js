@@ -149,7 +149,7 @@ SS.ready(function () {
     });
     var toggle = $("#toggle-navi");
     toggle.addClass("opened").removeClass("closed");
-    toggle.attr("aria-label", i18next.t("ss.navi_close"));
+    toggle.attr("aria-label", i18next.t("ss.links.navi_close"));
 
     Cookies.set("ss-navi", "opened", { expires: 7, path: '/' });
     return false;
@@ -162,7 +162,7 @@ SS.ready(function () {
     });
     var toggle = $("#toggle-navi");
     toggle.addClass("closed").removeClass("opened");
-    toggle.attr("aria-label", i18next.t("ss.navi_open"));
+    toggle.attr("aria-label", i18next.t("ss.links.navi_open"));
 
     Cookies.set("ss-navi", "closed", { expires: 7, path: '/' });
     return false;
