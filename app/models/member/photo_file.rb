@@ -4,7 +4,7 @@ class Member::PhotoFile
   include Cms::MemberPermission
   include Cms::Lgwan::File
 
-  default_thumb_size [160, 120]
+  default_thumb_size [360, 360]
   add_thumb_size :detail, [800, 600]
 
   default_scope ->{ where(model: "member/photo") }
