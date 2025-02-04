@@ -317,7 +317,11 @@ module Cms
   end
 
   def self.compile_scss(source, load_paths:, filename:)
-    commands = %w(npx sass --stdin --embed-source-map)
+    commands = SS.config.cms.sass['commands'].dup
+    unless commands.include?("--stdin")
+      commands << "--stdin"
+    end
+
     if filename
       basedir = ::File.dirname(filename)
     end
@@ -337,7 +341,7 @@ module Cms
       wait_thr
     end
 
-    raise RuntimeError, "sass command exited in errors" unless wait_thr.value.success?
+    raise "sass command exited in errors" unless wait_thr.value.success?
 
     output
   end
