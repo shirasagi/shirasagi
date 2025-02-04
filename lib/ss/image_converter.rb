@@ -1,7 +1,7 @@
 # this class doesn't support grid_fs for performance reason
 class SS::ImageConverter
-  DEFAULT_THUMB_WIDTH = 120
-  DEFAULT_THUMB_HEIGHT = 90
+  DEFAULT_THUMB_WIDTH = 360
+  DEFAULT_THUMB_HEIGHT = 360
 
   private_class_method :new
 
