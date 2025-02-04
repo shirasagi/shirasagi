@@ -326,17 +326,20 @@ module Cms
     end
     load_paths.each { commands << "--load-path=#{_1}" }
 
-    ret = Open3.popen3(*commands) do |stdin, stdout, stderr, _wait_thr|
+    output = nil
+    wait_thr = Open3.popen3(*commands) do |stdin, stdout, stderr, wait_thr|
       stdin.write source
       stdin.close
 
       output = stdout.read
       Rails.logger.info { stderr.read }
 
-      output
+      wait_thr
     end
 
-    ret
+    raise RuntimeError, "sass command exited in errors" unless wait_thr.value.success?
+
+    output
   end
 
   def self.unescape_html_entities(text)
