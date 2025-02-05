@@ -197,12 +197,7 @@ module Cms::Content
 
   def date
     released_type = self.released_type.presence || self.class.default_released_type
-    case released_type
-    when "same_as_created"
-      created
-    else
-      Cms.cms_page_date(released_type, self[:released], updated, created, first_released)
-    end
+    Cms.cms_page_date(released_type, self[:released], updated, created, first_released)
   end
 
   def public?
