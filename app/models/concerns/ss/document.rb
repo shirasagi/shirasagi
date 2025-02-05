@@ -10,7 +10,7 @@ module SS::Document
   attr_accessor :in_updated
 
   included do
-    field :created, type: DateTime, default: -> { Time.zone.now }
+    field :created, type: DateTime, default: -> { Time.zone.now }, metadata: { branch: false }
     field :updated, type: DateTime, default: -> { created }
     field :deleted, type: DateTime
     field :text_index, type: String

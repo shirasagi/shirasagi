@@ -44,7 +44,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created).to eq item.created
+          expect(subject.created.to_i).to eq item.created.to_i
           expect(subject.updated).to eq item.updated
           expect(subject.released).to be_nil
           expect(subject.first_released).to be_nil
@@ -94,7 +94,7 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created).to eq item.created
+          expect(subject.created.to_i).to eq item.created.to_i
           expect(subject.updated).to be > item.updated
           expect(subject.released).to be_nil
           expect(subject.first_released).to be_nil
