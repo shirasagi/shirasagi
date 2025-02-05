@@ -26,61 +26,161 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "attach file from upload" do
     before { login_cms_user }
 
-    it "#edit" do
-      visit edit_path
+    context "#edit" do
+      it do
+        visit edit_path
 
-      ensure_addon_opened("#addon-cms-agents-addons-file")
-      within "#addon-cms-agents-addons-file" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_for_cbox_closed do
-          click_button I18n.t("ss.buttons.attach")
-        end
-      end
-
-      within '#selected-files' do
-        expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-        expect(page).to have_css('.name', text: 'keyvisual.gif')
-      end
-    end
-
-    it "#edit file name" do
-      visit edit_path
-      ensure_addon_opened("#addon-cms-agents-addons-file")
-      within "form#item-form" do
+        ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
           wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.upload")
           end
         end
-      end
 
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
+        within_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          click_button I18n.t("ss.buttons.save")
+          expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
-        click_on I18n.t("ss.buttons.edit")
-        fill_in "item[name]", with: "modify.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css(".file-view", text: "modify.jpg")
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+          wait_for_cbox_closed do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
 
-        wait_for_cbox_closed do
-          click_on "modify.jpg"
+        within '#selected-files' do
+          expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+          expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
       end
+    end
 
-      within '#selected-files' do
-        expect(page).to have_css('.name', text: 'modify.jpg')
+    context "#edit file name" do
+      it do
+        visit edit_path
+        ensure_addon_opened("#addon-cms-agents-addons-file")
+        within "form#item-form" do
+          within "#addon-cms-agents-addons-file" do
+            wait_for_cbox_opened do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+
+        within_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          click_button I18n.t("ss.buttons.save")
+          expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
+
+          click_on I18n.t("ss.buttons.edit")
+          fill_in "item[name]", with: "modify.jpg"
+          click_button I18n.t("ss.buttons.save")
+          expect(page).to have_css(".file-view", text: "modify.jpg")
+
+          wait_for_cbox_closed do
+            click_on "modify.jpg"
+          end
+        end
+
+        within '#selected-files' do
+          expect(page).to have_css('.name', text: 'modify.jpg')
+        end
+      end
+    end
+
+    context "with webp" do
+      it do
+        visit edit_path
+        wait_for_all_ckeditors_ready
+
+        within "form#item-form" do
+          ensure_addon_opened("#addon-cms-agents-addons-file")
+          within "#addon-cms-agents-addons-file" do
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
+          end
+        end
+
+        within_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.webp"
+          wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
+        end
+
+        within "form#item-form" do
+          within '#selected-files' do
+            expect(page).to have_css('.name', text: 'keyvisual.webp')
+            click_on I18n.t("sns.image_paste")
+          end
+
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
+        end
+        within_cbox do
+          click_on I18n.t("ss.buttons.ignore_alert")
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        item.reload
+        expect(item.file_ids.length).to eq 1
+
+        attached_file = item.files.first
+        expect(attached_file.name).to eq 'keyvisual.webp'
+        # owner item
+        expect(attached_file.owner_item_type).to eq item.class.name
+        expect(attached_file.owner_item_id).to eq item.id
+        # other
+        expect(attached_file.user_id).to eq cms_user.id
+
+        image_element_info(first(".file-view img[alt='#{attached_file.name}']")).tap do |info|
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq 35
+        end
+      end
+    end
+
+    context "with avif" do
+      it do
+        visit edit_path
+        wait_for_all_ckeditors_ready
+
+        within "form#item-form" do
+          ensure_addon_opened("#addon-cms-agents-addons-file")
+          within "#addon-cms-agents-addons-file" do
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
+          end
+        end
+
+        within_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.avif"
+          wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
+        end
+
+        within "form#item-form" do
+          within '#selected-files' do
+            expect(page).to have_css('.name', text: 'keyvisual.avif')
+            click_on I18n.t("sns.image_paste")
+          end
+
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
+        end
+        within_cbox do
+          click_on I18n.t("ss.buttons.ignore_alert")
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        item.reload
+        expect(item.file_ids.length).to eq 1
+
+        attached_file = item.files.first
+        expect(attached_file.name).to eq 'keyvisual.avif'
+        # owner item
+        expect(attached_file.owner_item_type).to eq item.class.name
+        expect(attached_file.owner_item_id).to eq item.id
+        # other
+        expect(attached_file.user_id).to eq cms_user.id
+
+        image_element_info(first(".file-view img[alt='#{attached_file.name}']")).tap do |info|
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq 35
+        end
       end
     end
   end
