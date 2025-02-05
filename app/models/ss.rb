@@ -5,7 +5,7 @@ module SS
 
   EPOCH_TIME = Time.at(0).utc
 
-  SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
+  SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp avif).freeze
 
   DEFAULT_TRASH_THRESHOLD = 1
   DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
