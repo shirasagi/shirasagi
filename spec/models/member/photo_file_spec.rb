@@ -52,7 +52,8 @@ describe Member::PhotoFile, dbscope: :example do
             expect(variant.filename).to be_present
             expect(variant.size).to be_present
 
-
+            require 'pry-byebug'
+            binding.pry
 
             expect(variant.image_dimension).to eq [ 360, 106 ]
           end
@@ -140,9 +141,6 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.variants.count).to eq 2
           expect(subject.variants[:thumb]).to be_present
           expect(subject.variants[:thumb].url).to be_present
-
-
-
           expect(subject.variants[:thumb].image_dimension).to eq [ 180, 53 ]
           expect(subject.variants[:detail]).to be_present
           expect(subject.variants[:detail].url).to be_present
