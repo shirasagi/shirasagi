@@ -57,17 +57,23 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         expect(row[I18n.t("mongoid.attributes.ss/model/user.name", default: "name")]).to eq(user.name)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.kana", default: "kana")]).to eq(user.kana)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.uid", default: "uid")]).to eq(user.uid)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_uid", default: "organization_uid")]).to eq(user.organization_uid)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_uid",
+default: "organization_uid")]).to eq(user.organization_uid)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.email", default: "email")]).to eq(user.email)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.password", default: "password")]).to be_blank
         expect(row[I18n.t("mongoid.attributes.ss/model/user.tel", default: "tel")]).to eq(user.tel)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.tel_ext", default: "tel_ext")]).to eq(user.tel_ext)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date", default: "account_start_date")]).to eq(I18n.l(user.account_start_date, format: :default))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date", default: "account_expiration_date")]).to eq(I18n.l(user.account_expiration_date, format: :default))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning", default: "initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id", default: "organization_id")]).to eq(organization.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date",
+default: "account_start_date")]).to eq(I18n.l(user.account_start_date, format: :default))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date",
+default: "account_expiration_date")]).to eq(I18n.l(user.account_expiration_date, format: :default))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning",
+default: "initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id",
+default: "organization_id")]).to eq(organization.name)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.groups", default: "groups")]).to eq(group.name)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.last_loggedin", default: "last_loggedin")]).to eq(user.last_loggedin.to_s)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.last_loggedin",
+default: "last_loggedin")]).to eq(user.last_loggedin.to_s)
         unless Sys::Auth::Setting.instance.mfa_otp_use_none?
           expect(row[I18n.t("mongoid.attributes.ss/model/user.mfa_otp_enabled_at", default: "mfa_otp_enabled_at")]).to be_nil
         end
