@@ -48,30 +48,30 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         csv_data = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv_data.length).to eq 3
         expected_headers = %w(
-          id 氏名 カナ ユーザーID 職員番号 メールアドレス パスワード 電話番号 内線番号
-          有効期限（開始） 有効期限（終了） 初期パスワード警告 所属組織 グループ 最終ログイン日時 SYSロール
-        )
+          id name kana uid organization_uid email password tel tel_ext
+          account_start_date account_expiration_date initial_password_warning organization_id groups last_loggedin sys_roles
+        ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header) }
         expect(csv_data.headers).to include(*expected_headers)
 
         row = csv_data[-1]
-        expect(row["氏名"]).to eq(user.name)
-        expect(row["カナ"]).to eq(user.kana)
-        expect(row["ユーザーID"]).to eq(user.uid)
-        expect(row["職員番号"]).to eq(user.organization_uid)
-        expect(row["メールアドレス"]).to eq(user.email)
-        expect(row["パスワード"]).to be_blank
-        expect(row["電話番号"]).to eq(user.tel)
-        expect(row["内線番号"]).to eq(user.tel_ext)
-        expect(row["有効期限（開始）"]).to eq(I18n.l(user.account_start_date, format: :default))
-        expect(row["有効期限（終了）"]).to eq(I18n.l(user.account_expiration_date, format: :default))
-        expect(row["初期パスワード警告"]).to eq(I18n.t('ss.options.state.enabled'))
-        expect(row["所属組織"]).to eq(organization.name)
-        expect(row["グループ"]).to eq(group.name)
-        expect(row["最終ログイン日時"]).to eq(user.last_loggedin.to_s)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.name", default: "name")]).to eq(user.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.kana", default: "kana")]).to eq(user.kana)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.uid", default: "uid")]).to eq(user.uid)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_uid", default: "organization_uid")]).to eq(user.organization_uid)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.email", default: "email")]).to eq(user.email)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.password", default: "password")]).to be_blank
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.tel", default: "tel")]).to eq(user.tel)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.tel_ext", default: "tel_ext")]).to eq(user.tel_ext)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date", default: "account_start_date")]).to eq(I18n.l(user.account_start_date, format: :default))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date", default: "account_expiration_date")]).to eq(I18n.l(user.account_expiration_date, format: :default))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning", default: "initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id", default: "organization_id")]).to eq(organization.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.groups", default: "groups")]).to eq(group.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.last_loggedin", default: "last_loggedin")]).to eq(user.last_loggedin.to_s)
         unless Sys::Auth::Setting.instance.mfa_otp_use_none?
-          expect(row["mfa_otp_enabled_at"]).to be_nil
+          expect(row[I18n.t("mongoid.attributes.ss/model/user.mfa_otp_enabled_at", default: "mfa_otp_enabled_at")]).to be_nil
         end
-        expect(row["SYSロール"]).to eq(role.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.sys_roles", default: "sys_roles")]).to eq(role.name)
       end
     end
   end
