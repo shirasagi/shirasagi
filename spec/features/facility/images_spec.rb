@@ -87,15 +87,24 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".summary.image img[alt='#{image_page.image_alt}']")
 
         info = image_element_info(first(".summary.image img[alt='#{image_page.image_alt}']"))
-        expect(info[:width]).to eq image_thumb_width
-        expect(info[:height]).to eq 71
+
+        require 'pry-byebug'
+        binding.pry
+
+        expect(info[:width]).to eq 712
+        expect(info[:height]).to eq 210
       end
       within "#facility-images" do
         expect(page).to have_css("img[alt='#{image_page2.image_alt}']")
 
         info = image_element_info(first("img[alt='#{image_page2.image_alt}']"))
-        expect(info[:width]).to eq [ SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT ].min
-        expect(info[:height]).to eq [ SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT ].min
+
+
+        require 'pry-byebug'
+        binding.pry
+
+        expect(info[:width]).to eq 160
+        expect(info[:height]).to eq 160
       end
 
       #

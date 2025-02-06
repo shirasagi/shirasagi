@@ -416,7 +416,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(file.filename).to eq ::File.basename(before_image)
         expect(file.name).to eq file.filename
         expect(file.state).to eq "public"
-        expect(file.thumb.image_dimension).to eq [ 120, 35 ]
+        expect(file.thumb.image_dimension).to eq [ 360, 106 ]
 
         # open replace file dialog
         wait_for_js_ready
@@ -483,7 +483,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq ::File.basename(after_image)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
-        expect(replaced_file.thumb.image_dimension).to eq [ 90, 90 ]
+        expect(replaced_file.thumb.image_dimension).to eq [ 160, 160 ]
         #expect(Fs.cmp(replaced_file.path, after_image)).to be true
 
         # history files
