@@ -51,10 +51,6 @@ describe Member::PhotoFile, dbscope: :example do
             expect(variant.name).to be_present
             expect(variant.filename).to be_present
             expect(variant.size).to be_present
-
-            require 'pry-byebug'
-            binding.pry
-
             expect(variant.image_dimension).to eq [ 360, 106 ]
           end
           subject.variants[:detail].tap do |variant|
