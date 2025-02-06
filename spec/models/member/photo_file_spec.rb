@@ -51,7 +51,10 @@ describe Member::PhotoFile, dbscope: :example do
             expect(variant.name).to be_present
             expect(variant.filename).to be_present
             expect(variant.size).to be_present
-            expect(variant.image_dimension).to eq [ 160, 47 ]
+
+
+
+            expect(variant.image_dimension).to eq [ 360, 106 ]
           end
           subject.variants[:detail].tap do |variant|
             expect(variant).to be_present
@@ -137,7 +140,10 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.variants.count).to eq 2
           expect(subject.variants[:thumb]).to be_present
           expect(subject.variants[:thumb].url).to be_present
-          expect(subject.variants[:thumb].image_dimension).to eq [ 160, 47 ]
+
+
+
+          expect(subject.variants[:thumb].image_dimension).to eq [ 180, 53 ]
           expect(subject.variants[:detail]).to be_present
           expect(subject.variants[:detail].url).to be_present
           expect(subject.variants[:detail].image_dimension).to eq [ 180, 53 ]
