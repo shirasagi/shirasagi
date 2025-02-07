@@ -169,3 +169,4 @@ describe Member::PhotoFile, dbscope: :example do
     end
   end
 end
+
