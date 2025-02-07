@@ -43,7 +43,7 @@ describe Sys::SiteImportJob, dbscope: :example do
   end
 
   context 'with pages' do
-    let(:file_path) { "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip" }
+    let(:file_path) { "#{Rails.root}/spec/fixtures/sys/site-exports-1.ssr" }
 
     context "when default multibyte_filename and file_url_with" do
       it do
