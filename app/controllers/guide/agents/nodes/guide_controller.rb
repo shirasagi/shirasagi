@@ -47,7 +47,7 @@ class Guide::Agents::Nodes::GuideController < ApplicationController
     @no = @answers.size
   rescue => e
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    raise "404"
+    raise SS::NotFoundError
   end
 
   public

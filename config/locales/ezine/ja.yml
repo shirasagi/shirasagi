@@ -143,5 +143,5 @@ ja:
 
   job:
     models:
-      ezine/deliver_job: 単メール配信
-      ezine/deliver_reserved_job: メール配信
+      ezine/deliver_job: メールマガジン/単メール配信
+      ezine/deliver_reserved_job: メールマガジン/メール配信

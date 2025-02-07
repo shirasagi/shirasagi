@@ -10,7 +10,7 @@ class Member::Agents::Nodes::MypageController < ApplicationController
 
     child = @cur_node.children.first
 
-    raise "404" unless child
+    raise SS::NotFoundError unless child
     redirect_to child.url
   end
 end

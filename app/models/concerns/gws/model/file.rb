@@ -154,6 +154,14 @@ module Gws::Model::File
     "/fs/" + id.to_s.chars.join("/") + "/_/thumb/#{filename}"
   end
 
+  def no_cache_url
+    "#{url}?_=#{updated.to_i}"
+  end
+
+  def thumb_no_cache_url
+    "#{thumb_url}?_=#{updated.to_i}"
+  end
+
   def public?
     state == "public"
   end

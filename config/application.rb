@@ -68,6 +68,9 @@ module SS
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets fixtures generators guard migrations))
 
+    config.action_dispatch.rescue_responses["SS::ForbiddenError"] = :forbidden # 403
+    config.action_dispatch.rescue_responses["SS::NotFoundError"] = :not_found # 404
+
     # see: https://til.toshimaru.net/2023-03-30
     config.action_controller.raise_on_open_redirects = false
 

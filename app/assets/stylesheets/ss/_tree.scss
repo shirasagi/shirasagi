@@ -1,0 +1,183 @@
+.ss-tree{
+  padding: 0;
+  --spacing: 1.5rem;
+  --radius: 10px;
+
+  li {
+    display: block;
+    position: relative;
+    margin: 2px;
+    padding-left: calc(1.5 * var(--spacing) - var(--radius) - 2px);
+
+    &.is-current{
+      a{
+        background: #fbeee8;
+      }
+    }
+  }
+
+  ul {
+    margin-left: calc(var(--radius) - var(--spacing));
+    padding-left: 0;
+  }
+
+  ul li {
+    border-left: 2px solid #ddd;
+  }
+
+  ul li:last-child {
+    border-color: transparent;
+  }
+
+  ul li::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -2);
+    left: -2px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) + 1px);
+    border: solid #ddd;
+    border-width: 0 0 2px 2px;
+  }
+
+  summary {
+    display: block;
+    cursor: pointer;
+  }
+
+  summary::marker,
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:focus {
+    outline: none;
+  }
+
+  summary:focus-visible {
+    outline: 1px dotted #000;
+  }
+
+  li::after,
+  summary::before {
+    content: "−";
+    display: flex;
+    position: absolute;
+    top: calc(var(--spacing) / 1.5 - var(--radius));
+    left: calc(var(--spacing) - var(--radius) - 10px);
+    align-items: end;
+    justify-content: center;
+    width: calc(1.5 * var(--radius));
+    height: calc(1.5 * var(--radius));
+    border-radius: 2px;
+    background: #ddd;
+    background-position: calc(-1.5 * var(--radius)) 0;
+  }
+
+  summary::before {
+    content: "＋";
+    display: flex;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    width: calc(1.5 * var(--radius));
+    height: calc(1.5 * var(--radius));
+    border-radius: 2px;
+    background: #f25a38 0 0;
+    color: #fff;
+  }
+
+  details[open] > summary::before {
+    content: "−";
+    align-items: end;
+    background-position: calc(-1.5 * var(--radius)) 0;
+  }
+
+  .ss-tree-item-link{
+    display: block;
+    flex-grow: 10;
+    width: 100%;
+    padding: 2px;
+    overflow: hidden;
+    color: #333;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover,
+    &:focus{
+      background: #fbeee8;
+      text-decoration: none;
+    }
+  }
+
+  .ss-tree-subtree{
+    li{
+      margin-left: -1px;
+      padding-left: calc(1.5 * var(--spacing) - var(--radius) + 0.5em);
+      &::after{
+        left: calc(var(--spacing) - var(--radius) - 2px);
+      }
+    }
+
+    summary::before{
+      left: calc(var(--spacing) - var(--radius) - 2px);
+    }
+  }
+}
+
+.cms-nodes-tree-frame-header {
+  display: flex;
+  align-items: center;
+  margin-top: -10px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f2f2f2;
+
+  .cms-nodes-tree-frame-header-title {
+    &:before {
+      content: " ";
+      margin-right: 6px;
+      padding-left: 3px;
+      background-color: #f25a38;
+    }
+
+    font-weight: bold;
+  }
+
+  .cms-nodes-tree-frame-header-links {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .cms-nodes-tree-frame-header-link {
+    display: inline-flex;
+    padding: unset;
+    border: unset;
+    background: unset;
+    color: #333;
+    text-decoration: none;
+
+    &:hover {
+      background-color: #f2f2f2;
+      color: #f25a38;
+      cursor: pointer;
+    }
+  }
+
+  [data-controller~="ss--modifier-key"] {
+    &[data-modifier-keys~="shift"] {
+      > :not([data-on-modifier]) {
+        // shiftキー押下時、修飾キー指定のない要素（=既定の要素）を非表示
+        display: none;
+      }
+    }
+
+    &:not([data-modifier-keys~="shift"]) {
+      > [data-on-modifier] {
+        // shiftキーが押されていない時、修飾キー指定のある要素を非表示
+        display: none;
+      }
+    }
+  }
+}

@@ -70,6 +70,9 @@ ja:
         本集計では、以下のダウンロード履歴は除外して集計していますので、ダウンロード履歴を集計して得られる数値と、本集計の数値とが異なる場合があります。
         - ダウンロード方法が「一括」は除外
         - ボットは除外
+      access_report_notice_md: |-
+        本集計はリコメンド履歴の機能を利用していますが、このサイトではリコメンド履歴が有効になっていません。
+        本集計を正しく利用するにはリコメンド履歴を有効にしてください。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
@@ -1361,17 +1364,22 @@ ja:
 
   job:
     models:
-      opendata/csv2rdf_converter/job: RDF変換ジョブ
-      opendata/facility/assoc_job: 施設CSV取り込みジョブ
-      opendata/cms_integration/assoc_job: 記事連携設定ジョブ
-      opendata/notify_dataset_plan_job: データセット更新通知ジョブ
-      opendata/dataset/export_job: データセットエクスポートジョブ
-      opendata/dataset/import_job: データセットインポートジョブ
-      opendata/resource_download_history_update_job: リソースダウンロード履歴更新ジョブ
-      opendata/resource_preview_history_update_job: リソースプレビュー履歴更新ジョブ
-      opendata/harvest/run_job: ハーベスト/実行ジョブ
-      opendata/harvest/export_job: ハーベスト/エクスポートジョブ
-      opendata/harvest/import_job: ハーベスト/インポートジョブ
-      opendata/harvest/purge_job: ハーベスト/データセット削除ジョブ
-      opendata/metadata/import_datasets_job: メタデータインポートジョブ
-      opendata/metadata/destroy_datasets_job: メタデータ関連データセット削除ジョブ
+      opendata/csv2rdf_converter/job: オープンデータ/RDF変換ジョブ
+      opendata/facility/assoc_job: オープンデータ/施設CSV取り込みジョブ
+      opendata/cms_integration/assoc_job: オープンデータ/記事連携設定ジョブ
+      opendata/notify_dataset_plan_job: オープンデータ/データセット更新通知ジョブ
+      opendata/dataset/export_job: オープンデータ/データセットエクスポートジョブ
+      opendata/dataset/import_job: オープンデータ/データセットインポートジョブ
+      opendata/resource_download_history_update_job: オープンデータ/リソースダウンロード履歴更新ジョブ
+      opendata/resource_preview_history_update_job: オープンデータ/リソースプレビュー履歴更新ジョブ
+      opendata/harvest/run_job: オープンデータ・ハーベスト/実行ジョブ
+      opendata/harvest/export_job: オープンデータ・ハーベスト/エクスポートジョブ
+      opendata/harvest/import_job: オープンデータ・ハーベスト/インポートジョブ
+      opendata/harvest/purge_job: オープンデータ・ハーベスト/データセット削除ジョブ
+      opendata/metadata/import_datasets_job: オープンデータ・メタデータ/インポートジョブ
+      opendata/metadata/destroy_datasets_job: オープンデータ・メタデータ/関連データセット削除ジョブ
+      opendata/dataset_access_report_job: オープンデータ/データセットアクセス履歴レポート
+      opendata/resource_download_history_archive_job: オープンデータ/リソースダウンロード履歴アーカイブ化
+      opendata/resource_download_report_job: オープンデータ/リソースダウンロード履歴レポート
+      opendata/resource_preview_history_archive_job: オープンデータ/リソースプレビュー履歴アーカイブ化
+      opendata/resource_preview_report_job: オープンデータ/リソースプレビュー履歴レポート

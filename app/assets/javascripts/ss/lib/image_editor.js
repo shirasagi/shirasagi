@@ -1,4 +1,5 @@
 SS_ImageEditor = function (el) {
+  var self = this;
   var pThis = this;
 
   this.$el = $(el);
@@ -13,6 +14,7 @@ SS_ImageEditor = function (el) {
       cropmove: function(_e) {
         pThis.updateInspect();
         pThis.chooseSize();
+        self.$el.find(".confirm").css('visibility', 'visible');
       }
     }
   );
@@ -21,9 +23,13 @@ SS_ImageEditor = function (el) {
     var func = $(this).data('func');
     if (func && pThis[func]) {
       pThis[func]();
-      pThis.updateInspect();
-      pThis.chooseSize();
-
+      if (func == "submit") {
+        self.$el.find(".confirm").hide();
+      } else {
+        pThis.updateInspect();
+        pThis.chooseSize();
+        self.$el.find(".confirm").css('visibility', 'visible');
+      }
       e.preventDefault();
       return false;
     }
