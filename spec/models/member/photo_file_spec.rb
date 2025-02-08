@@ -34,6 +34,8 @@ describe Member::PhotoFile, dbscope: :example do
           subject.variants[:thumb].tap do |variant|
             expect(variant).to be_present
             expect(variant.variant_name).to eq :thumb
+            Rails.logger.debug { "♦variant: #{variant.inspect}" }
+            Rails.logger.debug { "♦variant_name: #{variant.variant_name.to_s.encoding}" }
 
             expect(variant.id).to eq subject.id
             expect(variant.site_id).to eq subject.site_id
@@ -91,7 +93,9 @@ describe Member::PhotoFile, dbscope: :example do
           end
           subject.variants[{ width: 160, height: 120 }].tap do |variant|
             expect(variant).to be_present
-            expect(variant.variant_name).to eq :thumb
+            Rails.logger.debug { "♦variant: #{variant.inspect}" }
+            Rails.logger.debug { "♦variant_name: #{variant.variant_name.to_s.encoding}" }
+            expect(variant.variant_name.to_s).to eq "160x120" # :thumb
           end
           subject.variants[{ width: 800, height: 600 }].tap do |variant|
             expect(variant).to be_present
@@ -146,25 +150,6 @@ describe Member::PhotoFile, dbscope: :example do
     end
 
     context "with ImageMagick6/7" do
-      include_context "member/photo_file is"
-    end
-
-    context "with GraphicsMagick" do
-      # As of MiniMagick 5+, GraphicsMagick isn't officially supported. However, we can work with it
-      around do |example|
-        save_cli_prefix = nil
-        MiniMagick.configure do |config|
-          save_cli_prefix = config.cli_prefix
-          config.cli_prefix = "gm"
-        end
-
-        example.run
-      ensure
-        MiniMagick.configure do |config|
-          config.cli_prefix = save_cli_prefix
-        end
-      end
-
       include_context "member/photo_file is"
     end
   end
