@@ -24,7 +24,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
            group_ids: [group.id],
            sys_role_ids: [role.id],
            organization_id: organization.id,
-           last_loggedin: "2025-01-28 12:00:00")
+           ldap_dn: "uid=johndoe,ou=users,dc=example,dc=com")
   end
 
   before do
@@ -49,7 +49,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         expect(csv_data.length).to eq 3
         expected_headers = %w(
           id name kana uid organization_uid email password tel tel_ext
-          account_start_date account_expiration_date initial_password_warning organization_id groups last_loggedin sys_roles
+          account_start_date account_expiration_date initial_password_warning organization_id groups DN sys_roles
         ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header) }
         expect(csv_data.headers).to include(*expected_headers)
 
@@ -72,8 +72,7 @@ default: "initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id",
 default: "organization_id")]).to eq(organization.name)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.groups", default: "groups")]).to eq(group.name)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.last_loggedin",
-default: "last_loggedin")]).to eq(user.last_loggedin.to_s)
+        expect(row['DN']).to eq(user.ldap_dn)
         unless Sys::Auth::Setting.instance.mfa_otp_use_none?
           expect(row[I18n.t("mongoid.attributes.ss/model/user.mfa_otp_enabled_at", default: "mfa_otp_enabled_at")]).to be_nil
         end
