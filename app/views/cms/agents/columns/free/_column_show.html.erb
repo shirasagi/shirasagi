@@ -40,12 +40,6 @@
             </label><br />
           </div>
 
-          <%# if css_class.include?("unused") %>
-<!--            <div class="delete-file">-->
-              <%#= link_to t('ss.buttons.delete'), params[:cid].blank? ? cms_apis_replace_file_path(owner_item_id: @item, id: file), method: :delete, data: { confirm: t('ss.confirm.delete') }, class: "ajax-box" %>
-<!--            </div>-->
-          <%# end %>
-
           <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
             <div class="replace-file">
               <% if params[:replace_temp_file].present? %>
