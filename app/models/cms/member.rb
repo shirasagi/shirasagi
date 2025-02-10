@@ -90,6 +90,7 @@ class Cms::Member
     end
 
     def import_csv(file, cur_site:, cur_user:)
+      Rails.logger.info{"♦[Cms::Member/import_csv]Starting CSV import"}
       CSV.foreach(file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
         attributes = row.to_hash.slice(
           'id', 'state', 'name', 'email', 'kana', 'organization_name', 'job', 'tel',
@@ -99,10 +100,18 @@ class Cms::Member
         member.attributes = attributes
         member.cur_site = cur_site
         member.cur_user = cur_user
-        return { success: false, error: member.errors.full_messages.join(', ') } unless member.save
+        if member.save
+          Rails.logger.info("♦[Cms::Member/import_csv]Saved member: #{member.id}")
+        else
+          error_message = member.errors.full_messages.join(', ')
+          Rails.logger.error("♦[Cms::Member/import_csv]Failed to save member: #{error_message}")
+          return { success: false, error: error_message }
+        end
       end
+      Rails.logger.info("♦[Cms::Member/import_csv]CSV import completed successfully")
       { success: true }
     rescue => e
+      Rails.logger.error("♦[Cms::Member/import_csv]CSV import failed: #{e.message}")
       { success: false, error: e.message }
     end
   end

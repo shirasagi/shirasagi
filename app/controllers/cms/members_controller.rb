@@ -49,12 +49,15 @@ class Cms::MembersController < ApplicationController
       render :import
     elsif request.post?
       file = params[:item][:in_file]
+      Rails.logger.info{ "♦POST request for import action with file: #{file.inspect}" }
       result = Cms::Member.import_csv(file, cur_site: @cur_site, cur_user: @cur_user)
       if result[:success]
         flash[:notice] = t("ss.notice.saved")
+        Rails.logger.info{ "♦Import successful: #{file.inspect}" }
         redirect_to action: :index
       else
         flash.now[:alert] = result[:error]
+        Rails.logger.error{ "♦Import failed: #{result[:error]}" }
         render :import
       end
     end
