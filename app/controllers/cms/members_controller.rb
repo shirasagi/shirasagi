@@ -41,16 +41,24 @@ class Cms::MembersController < ApplicationController
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "members_#{Time.zone.now.to_i}.csv"
   end
 
-  # def import
-  #   raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
-  #   return if request.get? || request.head?
-  #
-  #   @item = @model.new get_params
-  #   @item.cur_site = @cur_site
-  #   result = @item.import
-  #   flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
-  #   render_create result, location: { action: :index }, render: { template: "import" }
-  # end
+  def import
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+    if request.get?
+      @item = @model.new
+      render :import
+    elsif request.post?
+      file = params[:item][:in_file]
+      result = Cms::Member.import_csv(file, cur_site: @cur_site, cur_user: @cur_user)
+      if result[:success]
+        flash[:notice] = t("ss.notice.saved")
+        redirect_to action: :index
+      else
+        flash.now[:alert] = result[:error]
+        render :import
+      end
+    end
+  end
 
   def verify
     raise '404' unless @node = Member::Node::Registration.site(@cur_site).and_public.first

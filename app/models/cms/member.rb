@@ -88,5 +88,22 @@ class Cms::Member
         end
       end
     end
+
+    def import_csv(file, cur_site:, cur_user:)
+      CSV.foreach(file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+        attributes = row.to_hash.slice(
+          'id', 'state', 'name', 'email', 'kana', 'organization_name', 'job', 'tel',
+          'postal_code', 'addr', 'sex', 'birthday', 'last_loggedin', 'updated', 'created'
+        )
+        member = cur_site.members.find_or_initialize_by(id: attributes['id'])
+        member.attributes = attributes
+        member.cur_site = cur_site
+        member.cur_user = cur_user
+        return { success: false, error: member.errors.full_messages.join(', ') } unless member.save
+      end
+      { success: true }
+    rescue => e
+      { success: false, error: e.message }
+    end
   end
 end
