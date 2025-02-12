@@ -57,7 +57,7 @@ class Cms::MembersController < ApplicationController
         Rails.logger.info{ "♦Import successful: #{file.inspect}" }
         redirect_to action: :index
       else
-        flash.now[:alert] = t("ss.notice.not_saved_successfully")
+        flash.now[:notice] = t("ss.notice.not_saved_successfully")
         Rails.logger.error{ "♦Import failed: #{result[:error]}" }
         render :import
       end
