@@ -34,6 +34,7 @@ describe Member::PhotoFile, dbscope: :example do
           subject.variants[:thumb].tap do |variant|
             expect(variant).to be_present
             expect(variant.variant_name).to eq :thumb
+
             expect(variant.id).to eq subject.id
             expect(variant.site_id).to eq subject.site_id
             expect(variant.user_id).to eq subject.user_id
