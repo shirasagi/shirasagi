@@ -7,10 +7,9 @@ class Member::PhotoFile
   include Cms::Lgwan::File
 
   DEFAULT_THUMB_SIZE = ImgSettings::DEFAULT_THUMB_SIZE
-  THUMB_SIZE_DETAIL = ImgSettings::THUMB_SIZE_DETAIL
 
   default_thumb_size DEFAULT_THUMB_SIZE
-  add_thumb_size :detail, THUMB_SIZE_DETAIL
+  add_thumb_size :detail, [800, 600]
 
   default_scope ->{ where(model: "member/photo") }
 end

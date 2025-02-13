@@ -4,5 +4,4 @@ module ImgSettings
   DEFAULT_THUMB_HEIGHT = 360 unless defined?(DEFAULT_THUMB_HEIGHT)
 
   DEFAULT_THUMB_SIZE = [360, 360].freeze unless defined?(DEFAULT_THUMB_SIZE)
-  THUMB_SIZE_DETAIL = [800, 600].freeze unless defined?(THUMB_SIZE_DETAIL)
 end
