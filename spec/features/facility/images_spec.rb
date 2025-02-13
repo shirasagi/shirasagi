@@ -87,7 +87,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".summary.image img[alt='#{image_page.image_alt}']")
 
         info = image_element_info(first(".summary.image img[alt='#{image_page.image_alt}']"))
-        expect(info[:width]).to eq 712
+        expect(info[:width]).to eq image_thumb_width
         expect(info[:height]).to eq 210
       end
       within "#facility-images" do
