@@ -93,9 +93,7 @@ describe Member::PhotoFile, dbscope: :example do
           end
           subject.variants[{ width: 160, height: 120 }].tap do |variant|
             expect(variant).to be_present
-            Rails.logger.debug { "♦variant: #{variant.inspect}" }
-            Rails.logger.debug { "♦variant_name: #{variant.variant_name.to_s.encoding}" }
-            expect(variant.variant_name.to_s).to eq "160x120" # :thumb
+            expect(variant.variant_name.to_s).to eq :thumb
           end
           subject.variants[{ width: 800, height: 600 }].tap do |variant|
             expect(variant).to be_present
