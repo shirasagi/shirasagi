@@ -34,9 +34,6 @@ describe Member::PhotoFile, dbscope: :example do
           subject.variants[:thumb].tap do |variant|
             expect(variant).to be_present
             expect(variant.variant_name).to eq :thumb
-            Rails.logger.debug { "♦variant: #{variant.inspect}" }
-            Rails.logger.debug { "♦variant_name: #{variant.variant_name.to_s.encoding}" }
-
             expect(variant.id).to eq subject.id
             expect(variant.site_id).to eq subject.site_id
             expect(variant.user_id).to eq subject.user_id
