@@ -6,6 +6,7 @@ describe Cms::PublicController, type: :request, dbscope: :example do
   let!(:site) { cms_site }
 
   Cms::Part.plugins.map(&:path).each do |path|
+    # cms/free も ajax 機能に対応していて良さそうだが、なぜか対応していない。
     next if path == "cms/free"
     # opendata 機能は単体では動作せず、構成が大変
     next if path.start_with?("opendata/")

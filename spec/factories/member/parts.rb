@@ -9,9 +9,11 @@ FactoryBot.define do
 
   factory :member_part_bookmark, class: Member::Part::Bookmark, traits: [:cms_part] do
     route { "member/bookmark" }
+    # 本パーツには親フォルダー "member/bookmark" が必要
     cur_node { create :member_node_bookmark, cur_site: cur_site }
 
     after(:create) do |part|
+      # そして、サイト内のどこかにフォルダー "member/login" が必要
       if Member::Node::Login.site(part.cur_site).blank?
         create(:member_node_login, cur_site: part.cur_site)
       end
