@@ -94,14 +94,12 @@ class Cms::Member
     end
 
     def import_csv(file, cur_site:, cur_user:)
-      Rails.logger.info{ "♦[Cms::Member/import_csv]Starting CSV import" }
       Rails.logger.debug { "♦[Cms::Member/import_csv] Starting import: #{file.inspect} (class: #{file.class})" }
 
       dsl = build_importer
       Rails.logger.debug { "♦[Cms::Member/import_csv] DSL: #{dsl.inspect} (class: #{dsl.class})" }
 
       SS::Csv.foreach_row(file) do |row|
-        Rails.logger.debug { "♦[SS::Csv.foreach_row] Starting import: #{file.inspect} (class: #{file.class})" }
         Rails.logger.debug { "♦Processing row: #{row.inspect} (class: #{row.class})" }
         next if row.blank? || !row.respond_to?(:[])
 
@@ -166,7 +164,7 @@ class Cms::Member
                  Cms::Member.site(cur_site).where(email: row['email']).first
                end
 
-      member ||= Cms::Member.new
+      member || Cms::Member.new
     end
   end
 end

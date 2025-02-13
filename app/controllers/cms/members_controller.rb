@@ -5,6 +5,7 @@ class Cms::MembersController < ApplicationController
   model Cms::Member
 
   navi_view "cms/cms/navi"
+  menu_view "cms/crud/menu"
 
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :verify]
 
@@ -48,8 +49,19 @@ class Cms::MembersController < ApplicationController
       @item = @model.new
       render :import
     elsif request.post?
+      if params[:item].nil?
+        flash.now[:notice] = I18n.t("ss.errors.import.blank_file")
+        render :import
+        return
+      end
+
       file = params[:item][:in_file]
       Rails.logger.info{ "♦POST request for import action with file: #{file.inspect}" }
+      if File.extname(file.original_filename) != ".csv"
+        flash.now[:alert] = I18n.t("ss.errors.import.invalid_file_type")
+        render :import
+        return
+      end
       result = Cms::Member.import_csv(file, cur_site: @cur_site, cur_user: @cur_user)
       Rails.logger.info{ "♦POST request for import action with file: #{result.inspect}" }
       if result[:success]
