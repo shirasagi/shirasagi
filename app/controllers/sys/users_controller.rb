@@ -4,7 +4,7 @@ class Sys::UsersController < ApplicationController
 
   model SS::User
 
-  menu_view "sys/crud/menu"
+  menu_view "sys/users/menu"
 
   before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
 
@@ -76,5 +76,20 @@ class Sys::UsersController < ApplicationController
 
     @item.unset(:mfa_otp_secret, :mfa_otp_enabled_at)
     redirect_to url_for(action: :show), notice: t("ss.notice.reset_mfa_otp")
+  end
+
+  def download_all
+    begin
+      Rails.logger.info{ "♦sys/users CSVエクスポート開始: ユーザーID=#{@cur_user.id},ユーザー名=#{@cur_user.name}, 時刻=#{Time.zone.now}" }
+      criteria = @model.allow(:edit, @cur_user)
+                       .state(params.dig(:s, :state))
+                       .search(params[:s])
+      criteria = criteria.reorder(id: 1)
+      csv = @model.to_csv(criteria: criteria, site: @cur_site)
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+                filename: "sys_users_#{Time.zone.now.to_i}.csv"
+    rescue => e
+      Rails.logger.error{ "CSVエクスポート中にエラーが発生しました: #{e.message}" }
+    end
   end
 end
