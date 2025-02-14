@@ -89,7 +89,7 @@ describe Member::PhotoFile, dbscope: :example do
           subject.variants[0].tap do |variant|
             expect(variant).to be_nil
           end
-          subject.variants[{ width: 160, height: 120 }].tap do |variant|
+          subject.variants[{ width: 360, height: 360 }].tap do |variant|
             expect(variant).to be_present
             expect(variant.variant_name).to eq :thumb
           end
