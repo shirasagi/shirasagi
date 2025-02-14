@@ -51,7 +51,7 @@ describe Member::PhotoFile, dbscope: :example do
             expect(variant.name).to be_present
             expect(variant.filename).to be_present
             expect(variant.size).to be_present
-            expect(variant.image_dimension).to eq [ 160, 47 ]
+            expect(variant.image_dimension).to eq [ 360, 106 ]
           end
           subject.variants[:detail].tap do |variant|
             expect(variant).to be_present
@@ -89,7 +89,7 @@ describe Member::PhotoFile, dbscope: :example do
           subject.variants[0].tap do |variant|
             expect(variant).to be_nil
           end
-          subject.variants[{ width: 160, height: 120 }].tap do |variant|
+          subject.variants[{ width: 360, height: 360 }].tap do |variant|
             expect(variant).to be_present
             expect(variant.variant_name).to eq :thumb
           end
@@ -137,7 +137,7 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.variants.count).to eq 2
           expect(subject.variants[:thumb]).to be_present
           expect(subject.variants[:thumb].url).to be_present
-          expect(subject.variants[:thumb].image_dimension).to eq [ 160, 47 ]
+          expect(subject.variants[:thumb].image_dimension).to eq [ 180, 53 ]
           expect(subject.variants[:detail]).to be_present
           expect(subject.variants[:detail].url).to be_present
           expect(subject.variants[:detail].image_dimension).to eq [ 180, 53 ]
@@ -146,25 +146,6 @@ describe Member::PhotoFile, dbscope: :example do
     end
 
     context "with ImageMagick6/7" do
-      include_context "member/photo_file is"
-    end
-
-    context "with GraphicsMagick" do
-      # As of MiniMagick 5+, GraphicsMagick isn't officially supported. However, we can work with it
-      around do |example|
-        save_cli_prefix = nil
-        MiniMagick.configure do |config|
-          save_cli_prefix = config.cli_prefix
-          config.cli_prefix = "gm"
-        end
-
-        example.run
-      ensure
-        MiniMagick.configure do |config|
-          config.cli_prefix = save_cli_prefix
-        end
-      end
-
       include_context "member/photo_file is"
     end
   end

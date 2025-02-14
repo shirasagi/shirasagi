@@ -118,8 +118,8 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
         visit node_my_blog.full_url
         click_on I18n.t("member.links.blog_setting")
         image_element_info(first(".member-blog img")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 160
+          expect(info[:height]).to eq 160
         end
       end
     end

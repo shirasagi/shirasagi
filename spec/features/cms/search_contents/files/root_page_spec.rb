@@ -15,8 +15,8 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".file-view", text: name)
         expect(page).to have_css(".file-view", text: item1.name)
         image_element_info(first(".file-view img[alt='#{file.name}']")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq 120
         end
       end
     end
@@ -32,8 +32,8 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".file-view", text: name)
         expect(page).to have_css(".file-view", text: item1.name)
         image_element_info(first(".file-view img[alt='#{file.name}']")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq 120
         end
 
         # by page's name
@@ -44,8 +44,8 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".file-view", text: name)
         expect(page).to have_css(".file-view", text: item1.name)
         image_element_info(first(".file-view img[alt='#{file.name}']")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq 120
         end
 
         within "form.search" do
