@@ -5,14 +5,13 @@ class Cms::Member
   include ::Member::Addon::LineAttributes
   include ::Member::Addon::Bookmark
   include Ezine::Addon::Subscription
+  include Cms::Addon::Import::User
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
   index({ site_email: 1 }, { unique: true, sparse: true })
 
-  attr_accessor :cur_user, :in_file
-
-  permit_params :in_file
+  attr_accessor :cur_user, :in_file, :password_confirmation
 
   class << self
     def create_auth_member(auth, site)
@@ -96,6 +95,14 @@ class Cms::Member
     def import_csv(file, cur_site:, cur_user:)
       Rails.logger.debug { "♦[Cms::Member/import_csv] Starting import: #{file.inspect} (class: #{file.class})" }
 
+      importer_instance = new(in_file: file)
+      importer_instance.send(:validate_import)
+      if importer_instance.errors.present?
+        error_message = importer_instance.errors.full_messages.join(", ")
+        Rails.logger.error { "♦[Cms::Member/import_csv] File validation failed: #{error_message}" }
+        return { success: false, error: error_message }
+      end
+
       dsl = build_importer
       Rails.logger.debug { "♦[Cms::Member/import_csv] DSL: #{dsl.inspect} (class: #{dsl.class})" }
       importer = dsl.create
@@ -109,6 +116,12 @@ class Cms::Member
 
         member.cur_site = cur_site
         member.cur_user = cur_user
+
+        if member.password.blank?
+          random_password = SecureRandom.hex(8)
+          member.password = random_password
+          member.password_confirmation = random_password
+        end
 
         unless member.save
           error_message = member.errors.full_messages.join(", ")
@@ -160,9 +173,11 @@ class Cms::Member
 
     def find_or_initialize_member(row, cur_site)
       if row['id'].present?
-        Cms::Member.site(cur_site).where(id: row['id']).first
+        member = Cms::Member.site(cur_site).where(id: row['id']).first
+        member || Cms::Member.new
       elsif row['email'].present?
-        Cms::Member.site(cur_site).where(email: row['email']).first
+        member = Cms::Member.site(cur_site).where(email: row['email']).first
+        member || Cms::Member.new
       else
         Cms::Member.new
       end
