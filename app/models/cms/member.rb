@@ -98,27 +98,28 @@ class Cms::Member
 
       dsl = build_importer
       Rails.logger.debug { "♦[Cms::Member/import_csv] DSL: #{dsl.inspect} (class: #{dsl.class})" }
+      importer = dsl.create
 
       SS::Csv.foreach_row(file) do |row|
         Rails.logger.debug { "♦Processing row: #{row.inspect} (class: #{row.class})" }
         next if row.blank? || !row.respond_to?(:[])
 
         member = find_or_initialize_member(row, cur_site)
-        dsl.create.import_row(row, member)
+        importer.import_row(row, member)
 
         member.cur_site = cur_site
         member.cur_user = cur_user
 
         unless member.save
           error_message = member.errors.full_messages.join(", ")
-          Rails.logger.error("♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}")
+          Rails.logger.error{ "♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
           return { success: false, error: error_message }
         end
 
-        Rails.logger.info("♦[SS::Csv/foreach_row] Saved member: #{member.id}")
+        Rails.logger.debug{ "♦[SS::Csv/foreach_row] Saved member: #{member.id}" }
       end
 
-      Rails.logger.info{ "♦[Cms::Member/import_csv]CSV import completed successfully" }
+      Rails.logger.debug{ "♦[Cms::Member/import_csv]CSV import completed successfully" }
       { success: true }
     rescue => e
       Rails.logger.error{ "♦[Cms::Member/import_csv]CSV import failed: #{e.message}" }
@@ -158,13 +159,13 @@ class Cms::Member
     end
 
     def find_or_initialize_member(row, cur_site)
-      member = if row['id'].present?
-                 Cms::Member.site(cur_site).where(id: row['id']).first
-               elsif row['email'].present?
-                 Cms::Member.site(cur_site).where(email: row['email']).first
-               end
-
-      member || Cms::Member.new
+      if row['id'].present?
+        Cms::Member.site(cur_site).where(id: row['id']).first
+      elsif row['email'].present?
+        Cms::Member.site(cur_site).where(email: row['email']).first
+      else
+        Cms::Member.new
+      end
     end
   end
 end

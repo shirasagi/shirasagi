@@ -43,7 +43,7 @@ class Cms::MembersController < ApplicationController
   end
 
   def import
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site)
 
     if request.get?
       @item = @model.new
