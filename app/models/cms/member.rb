@@ -5,10 +5,13 @@ class Cms::Member
   include ::Member::Addon::LineAttributes
   include ::Member::Addon::Bookmark
   include Ezine::Addon::Subscription
+  include Cms::Addon::Import::User
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
   index({ site_email: 1 }, { unique: true, sparse: true })
+
+  attr_accessor :cur_user, :in_file, :password_confirmation
 
   class << self
     def create_auth_member(auth, site)
@@ -86,6 +89,97 @@ class Cms::Member
             data << line
           end
         end
+      end
+    end
+
+    def import_csv(file, cur_site:, cur_user:)
+      Rails.logger.debug { "♦[Cms::Member/import_csv] Starting import: #{file.inspect} (class: #{file.class})" }
+
+      importer_instance = new(in_file: file)
+      importer_instance.send(:validate_import)
+      if importer_instance.errors.present?
+        error_message = importer_instance.errors.full_messages.join(", ")
+        Rails.logger.error { "♦[Cms::Member/import_csv] File validation failed: #{error_message}" }
+        return { success: false, error: error_message }
+      end
+
+      dsl = build_importer
+      Rails.logger.debug { "♦[Cms::Member/import_csv] DSL: #{dsl.inspect} (class: #{dsl.class})" }
+      importer = dsl.create
+
+      SS::Csv.foreach_row(file) do |row|
+        Rails.logger.debug { "♦Processing row: #{row.inspect} (class: #{row.class})" }
+        next if row.blank? || !row.respond_to?(:[])
+
+        member = find_or_initialize_member(row, cur_site)
+        importer.import_row(row, member)
+
+        member.cur_site = cur_site
+        member.cur_user = cur_user
+
+        if member.password.blank?
+          random_password = SecureRandom.hex(8)
+          member.password = random_password
+          member.password_confirmation = random_password
+        end
+
+        unless member.save
+          error_message = member.errors.full_messages.join(", ")
+          Rails.logger.error{ "♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
+          return { success: false, error: error_message }
+        end
+
+        Rails.logger.debug{ "♦[SS::Csv/foreach_row] Saved member: #{member.id}" }
+      end
+
+      Rails.logger.debug{ "♦[Cms::Member/import_csv]CSV import completed successfully" }
+      { success: true }
+    rescue => e
+      Rails.logger.error{ "♦[Cms::Member/import_csv]CSV import failed: #{e.message}" }
+      { success: false, error: e.message }
+    end
+
+    private
+
+    def build_importer
+      SS::Csv.draw(:import, context: self, model: self) do |importer|
+        importer.simple_column :state do |row, member, head, value|
+          mapping = {
+            I18n.t("cms.options.member_state.enabled")   => "enabled",
+            I18n.t("cms.options.member_state.disabled")  => "disabled",
+            I18n.t("cms.options.member_state.temporary") => "temporary"
+          }
+          member.state = mapping[value] || value
+        end
+        importer.simple_column :name
+        importer.simple_column :email
+        importer.simple_column :kana
+        importer.simple_column :organization_name
+        importer.simple_column :job
+        importer.simple_column :tel
+        importer.simple_column :postal_code
+        importer.simple_column :addr
+        importer.simple_column :sex do |row, member, head, value|
+          mapping = {
+            I18n.t("member.options.sex.male")   => "male",
+            I18n.t("member.options.sex.female") => "female"
+          }
+          member.sex = mapping[value] || value
+        end
+        importer.simple_column :birthday
+        importer.simple_column :last_loggedin
+      end
+    end
+
+    def find_or_initialize_member(row, cur_site)
+      if row['id'].present?
+        member = Cms::Member.site(cur_site).where(id: row['id']).first
+        member || Cms::Member.new
+      elsif row['email'].present?
+        member = Cms::Member.site(cur_site).where(email: row['email']).first
+        member || Cms::Member.new
+      else
+        Cms::Member.new
       end
     end
   end
