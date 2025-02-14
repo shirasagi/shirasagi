@@ -27,6 +27,20 @@ module SS::Copy::CmsParts
   end
 
   def after_copy_cms_part(src_part, dest_part)
+    if dest_part.respond_to?(:condition_forms) && dest_part.condition_forms.values.present?
+      condition_forms = []
+      dest_part.condition_forms.each do |dest_condition_form|
+        form_id = resolve_reference(:form, dest_condition_form.form_id)
+        filters = []
+        dest_condition_form.filters.each do |filter|
+          filters << filter.to_h.merge(column_id: resolve_reference(:column, filter.column_id))
+        end
+        condition_forms << dest_condition_form.to_h.merge(form_id: form_id, filters: filters)
+      end
+      dest_part.condition_forms = condition_forms
+      dest_part.save!
+    end
+
     @task.log("#{src_part.filename}(#{src_part.id}): パーツをコピーしました。")
   end
 end
