@@ -316,34 +316,34 @@ module Cms
     end
   end
 
-  class ScssLogger
-    def self.warn(message, _options)
-      Rails.logger.warn { message }
-    end
-
-    def self.debug(message, _options)
-      Rails.logger.warn { message }
-    end
-
-    def self.instance
-      self
-    end
-  end
-
   def self.compile_scss(source, load_paths:, filename:)
-    options = {
-      source_map_file: ".",
-      source_map_embed: true,
-      source_map_contents: true,
-      load_paths: load_paths,
-      style: :expanded,
-      syntax: :scss,
-      logger: ScssLogger.instance
-    }
-    options[:filename] = filename if filename
+    commands = SS.config.cms.sass['commands'].dup
+    unless commands.include?("--stdin")
+      commands << "--stdin"
+    end
 
-    sass = SassC::Engine.new(source, options)
-    sass.render
+    if filename
+      basedir = ::File.dirname(filename)
+    end
+    if basedir && !load_paths.include?(basedir)
+      commands << "--load-path=#{basedir}"
+    end
+    load_paths.each { commands << "--load-path=#{_1}" }
+
+    output = nil
+    wait_thr = Open3.popen3(*commands) do |stdin, stdout, stderr, wait_thr|
+      stdin.write source
+      stdin.close
+
+      output = stdout.read
+      Rails.logger.info { stderr.read }
+
+      wait_thr
+    end
+
+    raise "sass command exited in errors" unless wait_thr.value.success?
+
+    output
   end
 
   def self.unescape_html_entities(text)

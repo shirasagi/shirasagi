@@ -201,6 +201,15 @@ production: &production
   # unrestricted: not to restrict characters.
   column_name_type: "unrestricted"
 
+  sass:
+    # 公開画面の scss をトランスパイルするための sass コマンドを指定します。
+    # オプションの一覧は https://sass-lang.com/documentation/cli/dart-sass/ を参照してください。
+    # sass コマンド実行時、システム標準の load path が "--load-path" オプションで追加されます。
+    commands:
+      - npx
+      - sass
+      - "--embed-source-map"
+
 test:
   <<: *production
 
