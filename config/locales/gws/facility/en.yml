@@ -78,7 +78,7 @@ en:
       type_datas:
         plain: Text format
         markdown: Markdown format
-
+        cke: Formatted format
       columns:
         id: "Additional input %{n} ID"
         type: "Additional input %{n} Input items"
