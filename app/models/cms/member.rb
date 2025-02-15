@@ -103,43 +103,46 @@ class Cms::Member
         return { success: false, error: error_message }
       end
 
-      dsl = build_importer
-      Rails.logger.debug { "♦[Cms::Member/import_csv] DSL: #{dsl.inspect} (class: #{dsl.class})" }
-      importer = dsl.create
+      importer = build_importer.create
 
       SS::Csv.foreach_row(file) do |row|
-        Rails.logger.debug { "♦Processing row: #{row.inspect} (class: #{row.class})" }
         next if row.blank? || !row.respond_to?(:[])
-
-        member = find_or_initialize_member(row, cur_site)
-        importer.import_row(row, member)
-
-        member.cur_site = cur_site
-        member.cur_user = cur_user
-
-        if member.password.blank?
-          random_password = SecureRandom.hex(8)
-          member.password = random_password
-          member.password_confirmation = random_password
-        end
-
-        unless member.save
-          error_message = member.errors.full_messages.join(", ")
-          Rails.logger.error{ "♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
-          return { success: false, error: error_message }
-        end
-
-        Rails.logger.debug{ "♦[SS::Csv/foreach_row] Saved member: #{member.id}" }
+        result = process_csv_row(row, importer, cur_site, cur_user)
+        return result unless result[:success]
       end
 
-      Rails.logger.debug{ "♦[Cms::Member/import_csv]CSV import completed successfully" }
+      Rails.logger.debug { "♦[Cms::Member/import_csv] CSV import completed successfully" }
       { success: true }
     rescue => e
-      Rails.logger.error{ "♦[Cms::Member/import_csv]CSV import failed: #{e.message}" }
+      Rails.logger.error { "♦[Cms::Member/import_csv] CSV import failed: #{e.message}" }
       { success: false, error: e.message }
     end
 
     private
+
+    def process_csv_row(row, importer, cur_site, cur_user)
+      Rails.logger.debug { "♦Processing row: #{row.inspect} (class: #{row.class})" }
+      member = find_or_initialize_member(row, cur_site)
+      importer.import_row(row, member)
+
+      member.cur_site = cur_site
+      member.cur_user = cur_user
+
+      if member.password.blank?
+        random_password = SecureRandom.hex(8)
+        member.password = random_password
+        member.password_confirmation = random_password
+      end
+
+      unless member.save
+        error_message = member.errors.full_messages.join(", ")
+        Rails.logger.error { "♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
+        return { success: false, error: error_message }
+      end
+
+      Rails.logger.debug { "♦[SS::Csv/foreach_row] Saved member: #{member.id}" }
+      { success: true }
+    end
 
     def build_importer
       SS::Csv.draw(:import, context: self, model: self) do |importer|
@@ -173,11 +176,9 @@ class Cms::Member
 
     def find_or_initialize_member(row, cur_site)
       if row['id'].present?
-        member = Cms::Member.site(cur_site).where(id: row['id']).first
-        member || Cms::Member.new
+        Cms::Member.site(cur_site).where(id: row['id']).first || Cms::Member.new
       elsif row['email'].present?
-        member = Cms::Member.site(cur_site).where(email: row['email']).first
-        member || Cms::Member.new
+        Cms::Member.site(cur_site).where(email: row['email']).first || Cms::Member.new
       else
         Cms::Member.new
       end
