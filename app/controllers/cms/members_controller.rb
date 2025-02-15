@@ -58,7 +58,7 @@ class Cms::MembersController < ApplicationController
       file = params[:item][:in_file]
       Rails.logger.info{ "♦POST request for import action with file: #{file.inspect}" }
       if File.extname(file.original_filename) != ".csv"
-        flash.now[:alert] = I18n.t("ss.errors.import.invalid_file_type")
+        flash.now[:notice] = I18n.t("ss.errors.import.invalid_file_type")
         render :import
         return
       end
@@ -69,7 +69,7 @@ class Cms::MembersController < ApplicationController
         Rails.logger.info{ "♦Import successful: #{file.inspect}" }
         redirect_to action: :index
       else
-        flash.now[:notice] = t("ss.notice.not_saved_successfully")
+        flash.now[:notice] = "#{t("ss.notice.not_saved_successfully")} #{result[:error]}"
         Rails.logger.error{ "♦Import failed: #{result[:error]}" }
         render :import
       end
