@@ -17,29 +17,19 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
     raise "404" unless @owner_item
     raise "404" unless @owner_item.id.to_s == params[:owner_item_id].to_s
 
-    raise "403" unless SS::ReplaceFile.deletable?(@owner_item, user: @cur_user, site: @cur_site, node: @cur_node)
-  end
-
-  def render_delete(result, opts = {})
-    if result
-      flash[:notice] = opts[:notice] if opts[:notice]
-      render json: file_json, status: :ok, content_type: json_content_type
-    else
-      render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
-    end
-  end
-
-  def file_json
-    {
-      id: @item.id,
-      name: @item.name
-    }
+    raise "403" unless SS::ReplaceFile.replaceable?(@owner_item, user: @cur_user, site: @cur_site, node: @cur_node)
   end
 
   public
 
   def destroy
-    result = @item.destroy
-    render_delete result, notice: I18n.t('ss.notice.deleted')
+    if @item.destroy
+      Rails.logger.debug{ "Successfully destroyed item with ID: #{@item.id}" }
+      flash[:notice] = I18n.t('ss.notice.deleted')
+    else
+      Rails.logger.error{ "Failed to destroy item with ID: #{@item.id}. Errors: #{@item.errors.full_messages.join(', ')}" }
+      flash.now[:notice] = "#{t("ss.notice.unable_to_delete")} #{@item.errors.full_messages.join(', ')}"
+    end
+    redirect_back fallback_location: root_path
   end
 end
