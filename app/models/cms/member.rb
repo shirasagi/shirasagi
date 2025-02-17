@@ -134,6 +134,10 @@ class Cms::Member
         member.password_confirmation = random_password
       end
 
+      if member.email.blank? && member.id.blank?
+        member.state = 'disabled'
+      end
+
       unless member.save
         error_message = member.errors.full_messages.join(", ")
         Rails.logger.error { "♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
