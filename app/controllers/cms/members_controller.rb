@@ -57,7 +57,7 @@ class Cms::MembersController < ApplicationController
 
       file = params[:item][:in_file]
       Rails.logger.info{ "♦POST request for import action with file: #{file.inspect}" }
-      if File.extname(file.original_filename) != ".csv"
+      if File.extname(file.original_filename).downcase != ".csv"
         flash.now[:notice] = I18n.t("ss.errors.import.invalid_file_type")
         render :import
         return
