@@ -3,8 +3,8 @@ module SS::Copy::CmsPages
   include SS::Copy::Cache
 
   def copy_cms_page(src_page)
-    Rails.logger.info do
-      "♦SS::Copy::CmsPages[copy_cms_page] コピー開始: " \
+    Rails.logger.debug do
+      "SS::Copy::CmsPages[copy_cms_page] コピー開始: " \
         "#{src_page.filename}(#{src_page.id}), route: #{src_page.route}"
     end
     copy_cms_content(:pages, src_page, copy_cms_page_options)
@@ -32,7 +32,7 @@ module SS::Copy::CmsPages
 
   def after_copy_cms_page(src_page, dest_page)
     Rails.logger.info do
-      "♦SS::Copy::CmsPages[after_copy_cms_page] コピー開始: #{src_page.filename}(#{src_page.id}), " \
+      "SS::Copy::CmsPages[after_copy_cms_page] コピー開始: #{src_page.filename}(#{src_page.id}), " \
         "route: #{src_page.route}, related_page_ids=#{src_page.try(:related_page_ids)}"
     end
 
@@ -45,7 +45,7 @@ module SS::Copy::CmsPages
     end
 
     Rails.logger.debug do
-      "♦DEBUG: dest_page.related_page_ids=#{dest_page.related_page_ids.inspect} " \
+      "DEBUG: dest_page.related_page_ids=#{dest_page.related_page_ids.inspect} " \
         "(class=#{dest_page.related_page_ids.class})"
     end
     if dest_page.respond_to?(:column_values)
@@ -62,8 +62,8 @@ module SS::Copy::CmsPages
         dest_column_value
       end
     end
-    Rails.logger.info do
-      "♦SS::Copy::CmsPages[after_copy_cms_page] コピー完了: #{src_page.filename} → #{dest_page.try(:filename)}:" \
+    Rails.logger.debug do
+      "SS::Copy::CmsPages[after_copy_cms_page] コピー完了: #{src_page.filename} → #{dest_page.try(:filename)}:" \
         "(dest_page.id:#{dest_page.id}), route: #{dest_page.route}," \
         "related_page_ids=#{dest_page.try(:related_page_ids)}"
     end
