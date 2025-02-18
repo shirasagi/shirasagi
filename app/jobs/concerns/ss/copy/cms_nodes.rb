@@ -41,14 +41,7 @@ module SS::Copy::CmsNodes
     when "ezine/page"
       copy_ezine_columns(src_node, dest_node)
     when "category/page"
-      if @copy_contents.include?('pages')
-        Rails.logger.debug do
-          "[after_copy_cms_node] @copy_contents=#{@copy_contents.inspect} " \
-            "(class=#{@copy_contents.class})"
-        end
-      else
-        dest_node.summary_page_id = nil
-      end
+      dest_node.summary_page_id = nil unless @copy_contents.include?('pages')
       dest_node.save!
     when "rss/weather_xml"
       @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")

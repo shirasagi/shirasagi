@@ -31,7 +31,7 @@ module SS::Copy::CmsPages
   end
 
   def after_copy_cms_page(src_page, dest_page)
-    Rails.logger.info do
+    Rails.logger.debug do
       "SS::Copy::CmsPages[after_copy_cms_page] コピー開始: #{src_page.filename}(#{src_page.id}), " \
         "route: #{src_page.route}, related_page_ids=#{src_page.try(:related_page_ids)}"
     end
