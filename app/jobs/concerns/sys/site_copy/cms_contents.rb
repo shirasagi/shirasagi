@@ -23,6 +23,7 @@ module Sys::SiteCopy::CmsContents
       dest_content.save!
       dest_content.id
     end
+
     Rails.logger.debug{ "[cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})" }
 
     if dest_content
