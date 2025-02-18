@@ -29,7 +29,7 @@ module Sys::SiteCopy::CmsPages
     cache(:pages, id) do
       src_page = Cms::Page.site(@src_site).find(id) rescue nil
       if src_page.blank?
-        Rails.logger.debug{ "[resolve_page_reference] #{id}: 参照されているページが存在しません。" }
+        Rails.logger.warn{ "[resolve_page_reference] #{id}: 参照されているページが存在しません。" }
         return nil
       end
 
