@@ -41,6 +41,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
     end
 
     {
+      publish_user: @cur_user,
       state: 'public',
       from_member_name: @cur_list.sender_name.presence || @cur_list.name,
       member_ids: valid_members.map(&:id),
