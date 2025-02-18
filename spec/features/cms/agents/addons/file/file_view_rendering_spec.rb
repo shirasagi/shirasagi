@@ -60,6 +60,44 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(element['class']).to include('unused')
         end
       end
+
+      it "should display deletion button for unused file and delete it successfully" do
+        visit article_pages_path(site: site, cid: node)
+        click_on I18n.t("ss.links.new")
+        fill_in "item[name]", with: "sample"
+        click_on I18n.t("ss.links.input")
+        fill_in "item[basename]", with: "sample"
+
+        upload_file_and_select(logo_path)
+        upload_file_and_select(keyvisual_path)
+
+        within ".file-view", text: 'keyvisual.jpg' do
+          find(".action-paste").click
+        end
+
+        click_on I18n.t("ss.buttons.publish_save")
+        click_on I18n.t("ss.buttons.ignore_alert")
+
+        within '#selected-files' do
+          within ".file-view.unused", text: 'logo.png' do
+            expect(page).to have_link(I18n.t("ss.buttons.delete"))
+          end
+        end
+
+        accept_confirm do
+          within '#selected-files' do
+            within ".file-view.unused", text: 'logo.png' do
+              click_link I18n.t("ss.buttons.delete")
+            end
+          end
+        end
+
+        wait_for_notice I18n.t('ss.notice.deleted')
+
+        within '#selected-files' do
+          expect(page).not_to have_css(".file-view.unused", text: 'logo.png')
+        end
+      end
     end
   end
 
@@ -175,8 +213,26 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
           element = find('.file-view', text: 'shirasagi.pdf', match: :first)
           expect(element['class']).to include('unused')
+
+          within ".file-view.unused", text: 'shirasagi.pdf' do
+            expect(page).to have_link(I18n.t("ss.buttons.delete"))
+          end
         end
       end
+    end
+
+    accept_confirm do
+      within '#selected-files' do
+        within ".file-view.unused", text: 'shirasagi.pdf' do
+          click_link I18n.t("ss.buttons.delete")
+        end
+      end
+    end
+
+    wait_for_notice I18n.t('ss.notice.deleted')
+
+    within '#selected-files' do
+      expect(page).not_to have_css(".file-view.unused", text: 'shirasagi.pdf')
     end
   end
 
