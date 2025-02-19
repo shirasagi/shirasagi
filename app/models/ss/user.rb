@@ -78,8 +78,8 @@ class SS::User
           item.organization&.name
         when "groups"
           item.groups.pluck(:name).join("\n")
-        # when "ss/locale_setting"
-        #   item.try(header).present? ? I18.t("ss.options.user_type.#{item.try(header)}") : nil
+        when "ss/locale_setting"
+          item.try(:lang).present? ? I18n.t("ss.options.lang.#{value}") : nil
         else
           item.try(header)
         end
