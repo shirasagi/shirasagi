@@ -6,7 +6,7 @@ class Member::PhotoFile
   include Cms::MemberPermission
   include Cms::Lgwan::File
 
-  DEFAULT_THUMB_SIZE = ImgSettings::DEFAULT_THUMB_SIZE
+  DEFAULT_THUMB_SIZE = ImageSettings::DEFAULT_THUMB_SIZE
 
   default_thumb_size DEFAULT_THUMB_SIZE
   add_thumb_size :detail, [800, 600]

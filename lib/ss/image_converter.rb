@@ -2,8 +2,8 @@
 require_relative '../../config/initializers/img_settings'
 
 class SS::ImageConverter
-  DEFAULT_THUMB_WIDTH = ImgSettings::DEFAULT_THUMB_WIDTH
-  DEFAULT_THUMB_HEIGHT = ImgSettings::DEFAULT_THUMB_HEIGHT
+  DEFAULT_THUMB_WIDTH = ImageSettings::DEFAULT_THUMB_WIDTH
+  DEFAULT_THUMB_HEIGHT = ImageSettings::DEFAULT_THUMB_HEIGHT
 
   private_class_method :new
 

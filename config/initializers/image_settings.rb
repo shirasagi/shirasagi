@@ -1,5 +1,5 @@
 # Image settings configuration
-module ImgSettings
+module ImageSettings
   # lib/ss/image_converter.rb
   DEFAULT_THUMB_WIDTH = 360 unless defined?(DEFAULT_THUMB_WIDTH)
   DEFAULT_THUMB_HEIGHT = 360 unless defined?(DEFAULT_THUMB_HEIGHT)
