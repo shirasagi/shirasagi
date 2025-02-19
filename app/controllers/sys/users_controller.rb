@@ -79,17 +79,12 @@ class Sys::UsersController < ApplicationController
   end
 
   def download_all
-    begin
-      Rails.logger.info{ "♦sys/users CSVエクスポート開始: ユーザーID=#{@cur_user.id},ユーザー名=#{@cur_user.name}, 時刻=#{Time.zone.now}" }
-      criteria = @model.allow(:edit, @cur_user)
-                       .state(params.dig(:s, :state))
-                       .search(params[:s])
-      criteria = criteria.reorder(id: 1)
-      csv = @model.to_csv(criteria: criteria, site: @cur_site)
-      send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-                filename: "sys_users_#{Time.zone.now.to_i}.csv"
-    rescue => e
-      Rails.logger.error{ "CSVエクスポート中にエラーが発生しました: #{e.message}" }
-    end
+    criteria = @model.allow(:edit, @cur_user)
+                     .state(params.dig(:s, :state))
+                     .search(params[:s])
+    criteria = criteria.reorder(id: 1)
+    csv = @model.to_csv(criteria: criteria, site: @cur_site)
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+              filename: "sys_users_#{Time.zone.now.to_i}.csv"
   end
 end
