@@ -13,8 +13,8 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
     let(:order) { rand(1..10) }
     let(:image_alt) { unique_id }
     let(:image_comment) { Array.new(2) { unique_id } }
-    let(:image_thumb_width) { SS::ImageConverter::DEFAULT_THUMB_WIDTH }
-    let(:image_thumb_height) { SS::ImageConverter::DEFAULT_THUMB_HEIGHT }
+    let(:image_thumb_width) { SS::ImageConverter::DEFAULT_THUMB_WIDTH * 2 }
+    let(:image_thumb_height) { SS::ImageConverter::DEFAULT_THUMB_HEIGHT * 2 }
     let(:name2) { unique_id }
 
     it do
@@ -87,8 +87,8 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".summary.image img[alt='#{image_page.image_alt}']")
 
         info = image_element_info(first(".summary.image img[alt='#{image_page.image_alt}']"))
-        expect(info[:width]).to eq image_thumb_width
-        expect(info[:height]).to eq 106
+        expect(info[:width]).to eq 712
+        expect(info[:height]).to eq 210
       end
       within "#facility-images" do
         expect(page).to have_css("img[alt='#{image_page2.image_alt}']")
