@@ -79,7 +79,7 @@ class SS::User
         when "groups"
           item.groups.pluck(:name).join("\n")
         when "ss/locale_setting"
-          item.try(:lang).present? ? I18n.t("ss.options.lang.#{value}") : nil
+          item.try(:lang).present? ? I18n.t("ss.options.lang.#{item.try(:lang)}") : nil
         else
           item.try(header)
         end
