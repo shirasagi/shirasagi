@@ -6,6 +6,7 @@ describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page, cur_site: site }
   let(:prefix) { I18n.t("workflow.cloned_name_prefix") }
   let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:now) { Time.zone.now.change(usec: 0) }
 
   describe "#new_clone" do
     context "with page having composite columns" do
@@ -19,20 +20,26 @@ describe Article::Page, dbscope: :example do
       let!(:column2) do
         create(:cms_column_free, cur_site: site, cur_form: form, order: 2)
       end
-      let!(:item) { create :article_page, cur_site: site, cur_user: user, cur_node: node, form: form }
+      let!(:item) do
+        Timecop.freeze(now - 1.week) do
+          create :article_page, cur_site: site, cur_user: user, cur_node: node, form: form
+        end
+      end
 
       before do
-        html = [
-          "<p>#{unique_id}</p>",
-          "<p><a class=\"icon-png attachment\" href=\"#{file2.url}\">#{file2.humanized_name}</a></p>",
-          "<p><a class=\"icon-png attachment\" href=\"#{file3.url}\">#{file3.humanized_name}</a></p>",
-        ].join("\r\n\r\n")
+        Timecop.freeze(now - 5.days) do
+          html = [
+            "<p>#{unique_id}</p>",
+            "<p><a class=\"icon-png attachment\" href=\"#{file2.url}\">#{file2.humanized_name}</a></p>",
+            "<p><a class=\"icon-png attachment\" href=\"#{file3.url}\">#{file3.humanized_name}</a></p>",
+          ].join("\r\n\r\n")
 
-        item.column_values = [
-          column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
-          column2.value_type.new(column: column2, value: html, file_ids: [ file2.id, file3.id ])
-        ]
-        item.save!
+          item.column_values = [
+            column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
+            column2.value_type.new(column: column2, value: html, file_ids: [ file2.id, file3.id ])
+          ]
+          item.save!
+        end
 
         file1.reload
         expect(file1.owner_item_type).to eq item.class.name
@@ -75,8 +82,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created.to_i).to eq item.created.to_i
-          expect(subject.updated).to eq item.updated
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to eq item.updated
           expect(subject.released).to be_nil
           expect(subject.first_released).to be_nil
 
@@ -142,8 +149,8 @@ describe Article::Page, dbscope: :example do
 
           # 複製の場合、公開日と初回公開日はクリアされる
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created.to_i).to eq item.created.to_i
-          expect(subject.updated).to be > item.updated
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
           expect(subject.released).to be_nil
           expect(subject.first_released).to be_nil
 
@@ -229,8 +236,8 @@ describe Article::Page, dbscope: :example do
 
             # 差し替えページの場合、公開日と初回公開日は元と同じ
             expect(subject.released_type).to eq item.released_type
-            expect(subject.created.to_i).to eq item.created.to_i
-            expect(subject.updated).to be > item.updated
+            expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+            expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
             expect(subject.released).to be_nil
             expect(subject.first_released).to be_nil
 

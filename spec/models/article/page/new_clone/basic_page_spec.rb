@@ -6,6 +6,7 @@ describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page, cur_site: site }
   let(:prefix) { I18n.t("workflow.cloned_name_prefix") }
   let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:now) { Time.zone.now.change(usec: 0) }
 
   describe "#new_clone" do
     context "with basic page" do
@@ -19,7 +20,9 @@ describe Article::Page, dbscope: :example do
         ].join("\r\n\r\n")
       end
       let!(:item) do
-        create :article_page, cur_site: site, cur_user: user, cur_node: node, html: html, file_ids: [ file1.id, file2.id ]
+        Timecop.freeze(now - 1.week) do
+          create :article_page, cur_site: site, cur_user: user, cur_node: node, html: html, file_ids: [ file1.id, file2.id ]
+        end
       end
 
       context "before save" do
@@ -52,8 +55,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created.to_i).to eq item.created.to_i
-          expect(subject.updated).to eq item.updated
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to eq item.updated.in_time_zone
           expect(subject.released).to be_blank # 複製対象から除外
           expect(subject.first_released).to be_blank # 複製対象から除外
 
@@ -104,8 +107,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created.to_i).to eq item.created.to_i
-          expect(subject.updated).to be > item.updated
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
           expect(subject.released).to be_blank
           # https://github.com/shirasagi/shirasagi/issues/5452:
           # 複製直後は一度も公開されていないので first_release は blank であるべき
@@ -180,8 +183,8 @@ describe Article::Page, dbscope: :example do
             expect(subject.branches.count).to eq 0
 
             expect(subject.released_type).to eq item.released_type
-            expect(subject.created.to_i).to eq item.created.to_i
-            expect(subject.updated).to be > item.updated
+            expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+            expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
             expect(subject.released).to be_blank
             expect(subject.first_released).to be_blank
 
