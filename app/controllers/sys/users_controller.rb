@@ -79,12 +79,24 @@ class Sys::UsersController < ApplicationController
   end
 
   def download_all
+    if request.get? || request.head?
+      @item = SS::DownloadParam.new
+      render
+      return
+    end
+
+    @item = SS::DownloadParam.new(params.require(:item).permit(:encoding))
+    if @item.invalid?
+      render
+      return
+    end
+
     criteria = @model.allow(:edit, @cur_user)
                      .state(params.dig(:s, :state))
                      .search(params[:s])
     criteria = criteria.reorder(id: 1)
     csv = @model.to_csv(criteria: criteria, site: @cur_site)
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+    send_data csv.encode(@item.encoding, invalid: :replace, undef: :replace),
               filename: "sys_users_#{Time.zone.now.to_i}.csv"
   end
 end
