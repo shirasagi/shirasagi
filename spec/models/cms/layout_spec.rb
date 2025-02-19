@@ -8,17 +8,17 @@ describe Cms::Layout do
   it_behaves_like "mongoid#find"
 
   describe "#attributes" do
-    subject(:item) { model.last }
+    subject! { create(:cms_layout) }
 
-    it { expect(item.dirname).to eq nil }
-    it { expect(item.basename).not_to eq nil }
-    it { expect(item.path).not_to eq nil }
-    it { expect(item.json_path).not_to eq nil }
-    it { expect(item.url).not_to eq nil }
-    it { expect(item.full_url).not_to eq nil }
-    it { expect(item.json_path).not_to eq nil }
-    it { expect(item.public?).not_to eq nil }
-    it { expect(item.parent).to eq false }
+    it { expect(subject.dirname).to eq nil }
+    it { expect(subject.basename).not_to eq nil }
+    it { expect(subject.path).not_to eq nil }
+    it { expect(subject.json_path).not_to eq nil }
+    it { expect(subject.url).not_to eq nil }
+    it { expect(subject.full_url).not_to eq nil }
+    it { expect(subject.json_path).not_to eq nil }
+    it { expect(subject.public?).not_to eq nil }
+    it { expect(subject.parent).to eq false }
   end
 
   describe "validation" do
