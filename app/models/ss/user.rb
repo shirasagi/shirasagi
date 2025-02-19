@@ -10,8 +10,9 @@ class SS::User
 
   def self.csv_headers
     headers = %w(
-        id name kana uid organization_uid email password tel tel_ext account_start_date account_expiration_date
-        initial_password_warning organization_id groups ldap_dn
+        id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
+        initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups
+        ldap_dn ss/locale_setting
       )
     unless Sys::Auth::Setting.instance.mfa_otp_use_none?
       headers << "mfa_otp_enabled_at"
@@ -24,7 +25,14 @@ class SS::User
     I18n.with_locale(I18n.default_locale) do
       CSV.generate(headers: true) do |csv|
         csv << csv_headers.map do |header|
-          header == 'ldap_dn' ? 'DN' : I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header)
+          case header
+          when 'ldap_dn'
+            'DN'
+          when 'ss/locale_setting'
+            I18n.t("modules.addons.ss/locale_setting")
+          else
+            I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header)
+          end
         end
 
         opts[:criteria].each do |item|
@@ -58,10 +66,20 @@ class SS::User
           item.try(header).present? ? I18n.l(item.try(header)) : nil
         when "initial_password_warning"
           item.initial_password_warning.present? ? I18n.t('ss.options.state.enabled') : I18n.t('ss.options.state.disabled')
+        when "type"
+          item.try(header).present? ? I18n.t("ss.options.user_type.#{item.try(header)}") : nil
+        when "restriction"
+          item.try(header).present? ? I18n.t("ss.options.restriction.#{item.try(header)}") : nil
+        when "lock_state"
+          item.try(header).present? ? I18n.t("ss.options.user_lock_state.#{item.try(header)}") : nil
+        when "deletion_lock_state"
+          item.try(header).present? ? I18n.t("ss.options.user_deletion_lock_state.#{item.try(header)}") : nil
         when "organization_id"
           item.organization&.name
         when "groups"
           item.groups.pluck(:name).join("\n")
+        # when "ss/locale_setting"
+        #   item.try(header).present? ? I18.t("ss.options.user_type.#{item.try(header)}") : nil
         else
           item.try(header)
         end
