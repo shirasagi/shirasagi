@@ -48,6 +48,7 @@ class SS::User
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def self.generate_csv_row(item)
     begin
       csv_headers.map do |header|
@@ -89,4 +90,5 @@ class SS::User
       []
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 end
