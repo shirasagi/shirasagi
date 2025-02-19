@@ -1,5 +1,5 @@
 # this class doesn't support grid_fs for performance reason
-require_relative '../../config/initializers/img_settings'
+require_relative '../../config/initializers/image_settings'
 
 class SS::ImageConverter
   DEFAULT_THUMB_WIDTH = ImageSettings::DEFAULT_THUMB_WIDTH

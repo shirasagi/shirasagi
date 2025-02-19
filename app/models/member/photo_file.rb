@@ -1,4 +1,4 @@
-require_relative '../../../config/initializers/img_settings'
+require_relative '../../../config/initializers/image_settings'
 
 class Member::PhotoFile
   include SS::Model::File
