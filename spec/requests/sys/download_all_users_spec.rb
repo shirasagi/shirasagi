@@ -42,6 +42,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
   context "users download" do
     it do
       visit index_path
+      # #item-form > footer > input
 
       within "#menu" do
         within "nav" do
@@ -49,10 +50,16 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         end
       end
 
+      within "#item-form" do
+        within "footer" do
+          click_on I18n.t("ss.links.download")
+        end
+      end
+
       wait_for_download
 
       I18n.with_locale(I18n.default_locale) do
-        csv_data = CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv_data = CSV.read(downloads.first, headers: true, encoding: 'UTF-8')
         expect(csv_data.length).to eq 3
         expected_headers = %w(
           id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
