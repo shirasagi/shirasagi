@@ -115,7 +115,6 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
       end
     end
 
-
     context 'when the CSV file contains invalid data' do
       it 'renders the import template with an error message' do
         allow(Cms::Member).to receive(:import_csv).and_return({ success: false, error: 'Invalid data' })
