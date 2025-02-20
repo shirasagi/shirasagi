@@ -10,6 +10,8 @@ class Cms::Member
 
   index({ site_email: 1 }, { unique: true, sparse: true })
 
+  attr_accessor :cur_user
+
   class << self
     def create_auth_member(auth, site)
       create! do |member|
@@ -62,7 +64,7 @@ class Cms::Member
       I18n.with_locale(I18n.default_locale) do
         CSV.generate do |data|
           data << %w(
-            id state name email kana organization_name job tel
+            id state name email password kana organization_name job tel
             postal_code addr sex birthday last_loggedin updated created
           ).map { |k| t(k) }
 
@@ -72,6 +74,7 @@ class Cms::Member
             line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
             line << item.name
             line << item.email
+            line << nil
             line << item.kana
             line << item.organization_name
             line << item.job
@@ -117,20 +120,10 @@ class Cms::Member
       member.cur_site = cur_site
       member.cur_user = cur_user
 
-      if member.password.blank?
-        random_password = SecureRandom.hex(8)
-        member.password = random_password
-        member.password_confirmation = random_password
-      end
-
-      if member.email.blank? && member.id.blank?
-        member.state = 'disabled'
-      end
-
       unless member.save
         error_message = member.errors.full_messages.join(", ")
-        Rails.logger.error { "[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
-        return { success: false, error: error_message }
+        Rails.logger.error { "[SS::Csv/foreach_row] Failed to save member #{row['id']}: #{error_message}" }
+        return { success: false, error: "id: #{row['id']} : #{error_message}" }
       end
 
       Rails.logger.debug { "[SS::Csv/foreach_row] Saved member: #{member.id}" }
@@ -149,6 +142,10 @@ class Cms::Member
         end
         importer.simple_column :name
         importer.simple_column :email
+        importer.simple_column :password do |row, member, head, value|
+          password = value.to_s.strip
+          member.in_password = password if password.present?
+        end
         importer.simple_column :kana
         importer.simple_column :organization_name
         importer.simple_column :job
@@ -170,8 +167,6 @@ class Cms::Member
     def find_or_initialize_member(row, cur_site)
       if row['id'].present?
         Cms::Member.site(cur_site).where(id: row['id']).first || Cms::Member.new
-      elsif row['email'].present?
-        Cms::Member.site(cur_site).where(email: row['email']).first || Cms::Member.new
       else
         Cms::Member.new
       end

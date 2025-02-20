@@ -382,6 +382,7 @@ ja:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
+        failed_to_save: 'failed %{id}「%{name}」の作成・更新がされませんでした。%{error_message}'
       failed_to_resume_editing: 編集の再開に失敗しました。
     apis:
       groups:

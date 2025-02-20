@@ -95,6 +95,27 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
       end
     end
 
+    context 'when the CSV file contains nil id data' do
+      it 'imports CSV data with nil id successfully and creates a new member' do
+        allow(Cms::Member).to receive(:import_csv).and_return({ success: true })
+        attach_file 'item[in_file]', Rails.root.join('spec/fixtures/cms/members/nil_id_members.csv')
+        accept_confirm(I18n.t("ss.confirm.import")) do
+          within '#main' do
+            within 'div.wrap' do
+              within 'form' do
+                within 'footer.send' do
+                  click_button I18n.t('ss.buttons.import')
+                end
+              end
+            end
+          end
+        end
+        expect(page).to have_current_path(index_path)
+        expect(page).to have_content(I18n.t('ss.notice.saved'))
+      end
+    end
+
+
     context 'when the CSV file contains invalid data' do
       it 'renders the import template with an error message' do
         allow(Cms::Member).to receive(:import_csv).and_return({ success: false, error: 'Invalid data' })
