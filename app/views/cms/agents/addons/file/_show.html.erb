@@ -6,6 +6,7 @@
 
 <dl class="see">
   <dd class="wide">
+  <dt><%= @model.tt simple_format(t('description')) %></dt>
     <div id="selected-files">
       <% @item.files.try(:each) do |file| %>
         <%
@@ -17,6 +18,9 @@
         %>
         <div id="file-<%= file.id %>" class="<%= css_class %>" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
+          <% if css_class.include?("unused") %>
+            <span class="unused-message">未使用</span>
+          <% end %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if file.image? %>
               <%= image_tag file.thumb_url, alt: file.name %>
@@ -51,6 +55,7 @@
                 <%= link_to t('ss.buttons.replace_file'), params[:cid].blank? ? edit_cms_apis_replace_file_path(owner_item_id: @item, id: file) : edit_cms_apis_node_replace_file_path(owner_item_id: @item, id: file.id), class: "ajax-box" %>
               <% end %>
               <% if css_class.include?("unused") %>
+
                 <%= link_to t('ss.buttons.delete'),
                             params[:cid].blank? ? cms_apis_delete_unused_file_path(owner_item_id: @item, id: file) : cms_apis_node_delete_unused_file_path(owner_item_id: @item, id: file),
                             method: :delete,
