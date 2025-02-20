@@ -56,21 +56,21 @@ class Cms::MembersController < ApplicationController
       end
 
       file = params[:item][:in_file]
-      Rails.logger.info{ "♦POST request for import action with file: #{file.inspect}" }
+      Rails.logger.debug{ "POST request for import action with file: #{file.inspect}" }
       if File.extname(file.original_filename).downcase != ".csv"
         flash.now[:notice] = I18n.t("ss.errors.import.invalid_file_type")
         render :import
         return
       end
       result = Cms::Member.import_csv(file, cur_site: @cur_site, cur_user: @cur_user)
-      Rails.logger.info{ "♦POST request for import action with file: #{result.inspect}" }
+      Rails.logger.debug{ "POST request for import action with file: #{result.inspect}" }
       if result[:success]
         flash[:notice] = t("ss.notice.saved")
-        Rails.logger.info{ "♦Import successful: #{file.inspect}" }
+        Rails.logger.debug{ "Import successful: #{file.inspect}" }
         redirect_to action: :index
       else
         flash.now[:notice] = "#{t("ss.notice.not_saved_successfully")} #{result[:error]}"
-        Rails.logger.error{ "♦Import failed: #{result[:error]}" }
+        Rails.logger.error{ "Import failed: #{result[:error]}" }
         render :import
       end
     end

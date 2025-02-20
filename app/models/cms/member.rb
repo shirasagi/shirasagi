@@ -5,13 +5,10 @@ class Cms::Member
   include ::Member::Addon::LineAttributes
   include ::Member::Addon::Bookmark
   include Ezine::Addon::Subscription
-  include Cms::Addon::Import::User
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
   index({ site_email: 1 }, { unique: true, sparse: true })
-
-  attr_accessor :cur_user, :in_file, :password_confirmation
 
   class << self
     def create_auth_member(auth, site)
@@ -93,15 +90,7 @@ class Cms::Member
     end
 
     def import_csv(file, cur_site:, cur_user:)
-      Rails.logger.debug { "♦[Cms::Member/import_csv] Starting import: #{file.inspect} (class: #{file.class})" }
-
-      importer_instance = new(in_file: file)
-      importer_instance.send(:validate_import)
-      if importer_instance.errors.present?
-        error_message = importer_instance.errors.full_messages.join(", ")
-        Rails.logger.error { "♦[Cms::Member/import_csv] File validation failed: #{error_message}" }
-        return { success: false, error: error_message }
-      end
+      Rails.logger.debug { "[Cms::Member/import_csv] Starting import: #{file.inspect} (class: #{file.class})" }
 
       importer = build_importer.create
 
@@ -111,17 +100,17 @@ class Cms::Member
         return result unless result[:success]
       end
 
-      Rails.logger.debug { "♦[Cms::Member/import_csv] CSV import completed successfully" }
+      Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed successfully" }
       { success: true }
     rescue => e
-      Rails.logger.error { "♦[Cms::Member/import_csv] CSV import failed: #{e.message}" }
+      Rails.logger.error { "[Cms::Member/import_csv] CSV import failed: #{e.message}" }
       { success: false, error: e.message }
     end
 
     private
 
     def process_csv_row(row, importer, cur_site, cur_user)
-      Rails.logger.debug { "♦Processing row: #{row.inspect} (class: #{row.class})" }
+      Rails.logger.debug { "Processing row: #{row.inspect} (class: #{row.class})" }
       member = find_or_initialize_member(row, cur_site)
       importer.import_row(row, member)
 
@@ -140,11 +129,11 @@ class Cms::Member
 
       unless member.save
         error_message = member.errors.full_messages.join(", ")
-        Rails.logger.error { "♦[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
+        Rails.logger.error { "[SS::Csv/foreach_row] Failed to save member #{member.id}: #{error_message}" }
         return { success: false, error: error_message }
       end
 
-      Rails.logger.debug { "♦[SS::Csv/foreach_row] Saved member: #{member.id}" }
+      Rails.logger.debug { "[SS::Csv/foreach_row] Saved member: #{member.id}" }
       { success: true }
     end
 
