@@ -10,18 +10,9 @@ class Webmail::Role
 
   attr_accessor :cur_user
 
-  field :permission_level, type: Integer, default: 1
-
-  permit_params :permission_level
-
-  validates :permission_level, presence: true
-
   class << self
     def csv_headers
-      headers = %w(id name permissions)
-      unless SS.config.ss.disable_permission_level
-        headers << 'permission_level'
-      end
+      %w(id name permissions)
     end
 
     def to_csv
@@ -33,18 +24,11 @@ class Webmail::Role
             line << item.id
             line << item.name
             line << item.localized_permissions.join("\n")
-            unless SS.config.ss.disable_permission_level
-              line << item.permission_level
-            end
             data << line
           end
         end
       end
     end
-  end
-
-  def permission_level_options
-    [%w(1 1), %w(2 2), %w(3 3)]
   end
 
   def localized_permissions

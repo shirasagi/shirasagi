@@ -118,9 +118,9 @@ class Gws::StaffRecord::User
   def editable_charge?(user)
     permissions = user.gws_role_permissions
 
-    if permissions["edit_other_gws_staff_record_charges_#{site_id}"].to_i >= permission_level
+    if permissions["edit_other_gws_staff_record_charges_#{site_id}"]
       return true
-    elsif permissions["edit_private_gws_staff_record_charges_#{site_id}"].to_i >= permission_level
+    elsif permissions["edit_private_gws_staff_record_charges_#{site_id}"]
       return true if owned?(user)
     end
     false
@@ -146,17 +146,12 @@ class Gws::StaffRecord::User
   end
 
   def export_fields
-    fields = %w(
+    %w(
       id name code order kana multi_section section_name title_ids occupation_ids tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
       readable_setting_range readable_group_ids readable_member_ids
       group_ids user_ids
     )
-    unless SS.config.ss.disable_permission_level
-      fields << "permission_level"
-    end
-
-    fields
   end
 
   def export_convert_item(item, data)

@@ -316,7 +316,6 @@ en:
         gws_role_ids: Role
       gws/addon/permission:
         group_ids: Administrative group
-        permission_level: Permission level
       gws/group_permission:
         group_ids: Administrative group
         groups_hash: Administrative group (hash)
@@ -324,7 +323,6 @@ en:
         users_hash: Administrative users (hash)
         custom_group_ids: Administrative custom group
         custom_groups_hash: Administrative custom group (hash)
-        permission_level: Permission level
       gws/readable_setting:
         readable_setting_range: Publication range
         readable_group_ids: Viewing group
@@ -644,9 +642,6 @@ en:
         - Enter the order.
       in_parent:
         - Select the parent folder.
-    gws/role:
-      permission_level:
-        - Sets the permission level.
     gws/addon/user/affair_setting:
       staff_category: Select staff category
       staff_address_uid: Input staff address uid

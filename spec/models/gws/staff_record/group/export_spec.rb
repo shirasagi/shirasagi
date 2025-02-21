@@ -11,7 +11,7 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
     create(
       :gws_staff_record_group, cur_site: site1, year: year1,
       readable_setting_range: %w(public select private).sample, readable_group_ids: [ group1.id ],
-      readable_member_ids: [ user1.id ], group_ids: [ group2.id ], user_ids: [ user2.id ], permission_level: rand(1..3)
+      readable_member_ids: [ user1.id ], group_ids: [ group2.id ], user_ids: [ user2.id ]
     )
   end
 
@@ -21,15 +21,6 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
     gws_user.add_to_set(gws_role_ids: admin_role.id)
 
     year1.reload
-  end
-
-  before do
-    @save = SS.config.ss.disable_permission_level
-    SS.config.replace_value_at(:ss, :disable_permission_level, [ false, true ].sample)
-  end
-
-  after do
-    SS.config.replace_value_at(:ss, :disable_permission_level, @save)
   end
 
   context "with Shift_JIS" do
@@ -47,11 +38,7 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
-      if SS.config.ss.disable_permission_level
-        expect(csv.headers.length).to eq 9
-      else
-        expect(csv.headers.length).to eq 10
-      end
+      expect(csv.headers.length).to eq 9
       basic_headers = %i[id name seating_chart_url order].map { |f| described_class.t(f) }
       expect(csv.headers).to include(*basic_headers)
       readable_setting_headers = %i[readable_setting_range readable_group_ids readable_member_ids].map do |f|
@@ -60,17 +47,8 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
       expect(csv.headers).to include(*readable_setting_headers)
       group_permission_header = %i[group_ids user_ids].map { |f| described_class.t(f) }
       expect(csv.headers).to include(*group_permission_header)
-      if SS.config.ss.disable_permission_level
-        expect(csv.headers).not_to include(*%i[permission_level].map { |f| described_class.t(f) })
-      else
-        expect(csv.headers).to include(*%i[permission_level].map { |f| described_class.t(f) })
-      end
       csv.first.tap do |row|
-        if SS.config.ss.disable_permission_level
-          expect(row.length).to eq 9
-        else
-          expect(row.length).to eq 10
-        end
+        expect(row.length).to eq 9
         expect(row[described_class.t(:id)]).to eq staff_record_group1.id.to_s
         expect(row[described_class.t(:name)]).to eq staff_record_group1.name
         expect(row[described_class.t(:seating_chart_url)]).to eq staff_record_group1.seating_chart_url
@@ -80,9 +58,6 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
         expect(row[described_class.t(:readable_member_ids)]).to eq staff_record_group1.readable_members.pluck(:uid).join("\n")
         expect(row[described_class.t(:group_ids)]).to eq staff_record_group1.groups.pluck(:name).join("\n")
         expect(row[described_class.t(:user_ids)]).to eq staff_record_group1.users.pluck(:uid).join("\n")
-        unless SS.config.ss.disable_permission_level
-          expect(row[described_class.t(:permission_level)]).to eq staff_record_group1.permission_level.to_s
-        end
       end
     end
   end
@@ -102,11 +77,7 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
       csv = ::CSV.parse(csv, headers: true)
 
       expect(csv.length).to eq 1
-      if SS.config.ss.disable_permission_level
-        expect(csv.headers.length).to eq 9
-      else
-        expect(csv.headers.length).to eq 10
-      end
+      expect(csv.headers.length).to eq 9
       basic_headers = %i[id name seating_chart_url order].map { |f| described_class.t(f) }
       expect(csv.headers).to include(*basic_headers)
       readable_setting_headers = %i[readable_setting_range readable_group_ids readable_member_ids].map do |f|
@@ -115,17 +86,8 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
       expect(csv.headers).to include(*readable_setting_headers)
       group_permission_header = %i[group_ids user_ids].map { |f| described_class.t(f) }
       expect(csv.headers).to include(*group_permission_header)
-      if SS.config.ss.disable_permission_level
-        expect(csv.headers).not_to include(*%i[permission_level].map { |f| described_class.t(f) })
-      else
-        expect(csv.headers).to include(*%i[permission_level].map { |f| described_class.t(f) })
-      end
       csv.first.tap do |row|
-        if SS.config.ss.disable_permission_level
-          expect(row.length).to eq 9
-        else
-          expect(row.length).to eq 10
-        end
+        expect(row.length).to eq 9
         expect(row[described_class.t(:id)]).to eq staff_record_group1.id.to_s
         expect(row[described_class.t(:name)]).to eq staff_record_group1.name
         expect(row[described_class.t(:seating_chart_url)]).to eq staff_record_group1.seating_chart_url
@@ -135,9 +97,6 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
         expect(row[described_class.t(:readable_member_ids)]).to eq staff_record_group1.readable_members.pluck(:uid).join("\n")
         expect(row[described_class.t(:group_ids)]).to eq staff_record_group1.groups.pluck(:name).join("\n")
         expect(row[described_class.t(:user_ids)]).to eq staff_record_group1.users.pluck(:uid).join("\n")
-        unless SS.config.ss.disable_permission_level
-          expect(row[described_class.t(:permission_level)]).to eq staff_record_group1.permission_level.to_s
-        end
       end
     end
   end

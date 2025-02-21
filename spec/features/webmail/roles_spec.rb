@@ -18,7 +18,6 @@ describe "webmail_roles", type: :feature, dbscope: :example do
       wait_for_notice I18n.t('ss.notice.saved')
 
       Webmail::Role.all.find_by(name: name).tap do |item|
-        expect(item.permission_level).to eq 1
         expect(item.permissions).to include("use_webmail_group_imap_setting")
       end
 
@@ -33,7 +32,6 @@ describe "webmail_roles", type: :feature, dbscope: :example do
 
       expect { Webmail::Role.all.find_by(name: name) }.to raise_error(Mongoid::Errors::DocumentNotFound)
       Webmail::Role.all.find_by(name: name2).tap do |item|
-        expect(item.permission_level).to eq 1
         expect(item.permissions).to include("use_webmail_group_imap_setting")
       end
 

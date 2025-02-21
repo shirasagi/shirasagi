@@ -118,7 +118,6 @@ en:
         users_hash: Administrative users
         custom_group_ids: Administrative custom group
         custom_groups_hash: Administrative custom group
-        permission_level: Permission level
       gws/addon/discussion/release:
         released: Publishing date
       gws/addon/discussion/readable_setting:

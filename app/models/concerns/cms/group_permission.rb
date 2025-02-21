@@ -3,9 +3,8 @@ module Cms::GroupPermission
   include SS::Permission
 
   included do
-    field :permission_level, type: Integer, default: 1
     embeds_ids :groups, class_name: "SS::Group"
-    permit_params :permission_level, group_ids: []
+    permit_params group_ids: []
 
     if respond_to?(:template_variable_handler)
       template_variable_handler(:group, :template_variable_handler_group)
@@ -28,10 +27,6 @@ module Cms::GroupPermission
 
   def root_owned?(user)
     false
-  end
-
-  def permission_level_options
-    [%w(1 1), %w(2 2), %w(3 3)]
   end
 
   def allowed?(action, user, opts = {})
@@ -65,14 +60,13 @@ module Cms::GroupPermission
 
       action = permission_action || action
 
-      level = user.cms_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-      return where("$or" => [{ permission_level: { "$lte" => level }}, { permission_level: nil }]) if level
+      other_allowed = user.cms_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
+      return all if other_allowed
 
-      level = user.cms_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-      return self.in(group_ids: user.group_ids).
-        where("$or" => [{ permission_level: { "$lte" => level }}, { permission_level: nil }]) if level
+      private_allowed = user.cms_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+      return all.in(group_ids: user.group_ids) if private_allowed
 
-      where({ _id: -1 })
+      all.none
     end
   end
 

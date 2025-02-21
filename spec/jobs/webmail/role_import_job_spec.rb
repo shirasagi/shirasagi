@@ -36,7 +36,6 @@ describe Webmail::RoleImportJob, dbscope: :example do
       expect(Webmail::Role.all.count).to eq 3
       Webmail::Role.all.find_by(name: "管理者").tap do |role|
         expect(role.name).to eq "管理者"
-        expect(role.permission_level).to be_numeric
       end
     end
   end

@@ -14,7 +14,6 @@
     "user_ids": { "type": "integer" },
     "group_ids": { "type": "integer" },
     "custom_group_ids": { "type": "integer" },
-    "permission_level": { "type": "integer" },
     "member_ids": { "type": "integer" },
     "member_group_ids": { "type": "integer" },
     "member_custom_group_ids": { "type": "integer" },

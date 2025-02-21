@@ -27,7 +27,6 @@ module Gws::Addon::Affair::OvertimeFile
         leave_file.end_at_hour = week_in_end_at_hour
         leave_file.end_at_minute = week_in_end_at_minute
 
-        leave_file.permission_level = permission_level
         leave_file.group_ids = group_ids
         leave_file.user_ids = user_ids
         leave_file.state = state
@@ -70,7 +69,6 @@ module Gws::Addon::Affair::OvertimeFile
         leave_file.end_at_hour = week_out_end_at_hour
         leave_file.end_at_minute = week_out_end_at_minute
 
-        leave_file.permission_level = permission_level
         leave_file.group_ids = group_ids
         leave_file.user_ids = user_ids
         leave_file.state = state
@@ -113,7 +111,6 @@ module Gws::Addon::Affair::OvertimeFile
         leave_file.end_at_hour = holiday_compensatory_end_at_hour
         leave_file.end_at_minute = holiday_compensatory_end_at_minute
 
-        leave_file.permission_level = permission_level
         leave_file.group_ids = group_ids
         leave_file.user_ids = user_ids
         leave_file.state = state

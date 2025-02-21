@@ -33,16 +33,11 @@ class Gws::StaffRecord::Group
   private
 
   def export_fields
-    fields = %w(
+    %w(
       id name seating_chart_url order
       readable_setting_range readable_group_ids readable_member_ids
       group_ids user_ids
     )
-    unless SS.config.ss.disable_permission_level
-      fields << "permission_level"
-    end
-
-    fields
   end
 
   def export_convert_item(item, data)

@@ -385,10 +385,6 @@ en:
       imap_default_index:
         - このアカウントを既定のアカウントにするか選択します。
 
-    webmail/role:
-      permission_level:
-        - 権限レベルを設定します。
-
   job:
     models:
       webmail/history_archive_job: ウェブメール/操作履歴アーカイブ作成

@@ -181,8 +181,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           released: released,
           release_date: release_date,
           close_date: close_date,
-          group_ids: [group.id],
-          permission_level: 1)
+          group_ids: [group.id])
       end
 
       describe "POST /.s{site}/article{cid}/pages/download_all" do
@@ -232,9 +231,6 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             expect(row[Cms::Page.t(:release_date)]).to eq release_date.strftime("%Y/%m/%d %H:%M")
             expect(row[Cms::Page.t(:close_date)]).to eq close_date.strftime("%Y/%m/%d %H:%M")
             expect(row[Cms::Page.t(:group_ids)]).to eq group.name
-            unless SS.config.ss.disable_permission_level
-              expect(row[Cms::Page.t(:permission_level)]).to eq 1
-            end
           end
         end
       end

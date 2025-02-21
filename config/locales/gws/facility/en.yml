@@ -63,7 +63,6 @@ en:
       readable_member_names: Viewing users
       group_names: Administrative group
       user_names: Administrative users
-      permission_level: Permission level
 
       approval_check_state_datas:
         disabled: Invalid
