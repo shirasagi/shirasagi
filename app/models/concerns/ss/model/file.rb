@@ -293,7 +293,7 @@ module SS::Model::File
     SS::FilePublisher.depublish(self, dir)
   end
 
-  COPY_SKIP_ATTRS = %w(_id id model file_id group_ids permission_level category_ids owner_item_id owner_item_type).freeze
+  COPY_SKIP_ATTRS = %w(_id id model file_id group_ids category_ids owner_item_id owner_item_type).freeze
 
   def copy(opts = {})
     model = opts[:cur_node].present? ? Cms::TempFile : SS::TempFile

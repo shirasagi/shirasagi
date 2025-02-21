@@ -26,8 +26,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       year_id: @cur_year.id, name: group.trailing_name, order: group.order,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,
       readable_custom_group_ids: @cur_year.readable_custom_group_ids, readable_member_ids: @cur_year.readable_member_ids,
-      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,
-      permission_level: @cur_year.permission_level
+      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids
     )
     sr_group.save!(context: :copy_situation)
 
@@ -47,8 +46,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       cur_site: site, cur_user: user,
       year_id: @cur_year.id, code: user_title.code, name: user_title.name, order: user_title.order,
       remark: user_title.remark,
-      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,
-      permission_level: @cur_year.permission_level
+      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids
     )
     sr_user_title.save!(context: :copy_situation)
 
@@ -68,8 +66,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       cur_site: site, cur_user: user,
       year_id: @cur_year.id, code: user_occupation.code, name: user_occupation.name, order: user_occupation.order,
       remark: user_occupation.remark,
-      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,
-      permission_level: @cur_year.permission_level
+      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids
     )
     sr_user_occupation.save!(context: :copy_situation)
 
@@ -97,8 +94,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
       divide_duties: user.divide_duties,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,
       readable_custom_group_ids: @cur_year.readable_custom_group_ids, readable_member_ids: @cur_year.readable_member_ids,
-      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,
-      permission_level: @cur_year.permission_level
+      group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids
     )
     sr_user.save!(context: :copy_situation)
 

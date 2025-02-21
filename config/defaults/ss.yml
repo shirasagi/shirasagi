@@ -29,8 +29,6 @@ production: &production
     # uncomment blow setting if you have been running SHIRASAGI with full https
     # secure: true
 
-  disable_permission_level: true
-
   # how to paste file by
   #   filename: physical name. this means paste file with only alpha-nums.
   #   name: logical name. this means paste file with japanese text.

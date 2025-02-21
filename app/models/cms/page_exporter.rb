@@ -374,10 +374,6 @@ class Cms::PageExporter
     drawer.column :groups do
       drawer.body { |item| item.try(:groups).try(:pluck, :name).join("\n") }
     end
-
-    unless SS.config.ss.disable_permission_level
-      drawer.column :permission_level
-    end
   end
 
   def draw_state(drawer)

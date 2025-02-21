@@ -1,6 +1,5 @@
 [
   {
-    "permission_level": 1,
     "order": 40,
     "name": "ブロック入力",
     "sub_type": "entry",
@@ -125,7 +124,6 @@
     ]
   },
   {
-    "permission_level": 1,
     "order": 50,
     "name": "ブロック入力2",
     "sub_type": "entry",
