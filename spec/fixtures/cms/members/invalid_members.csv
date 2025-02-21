@@ -1,0 +1,2 @@
+id,state,name,email,kana,organization_name,job,tel,postal_code,addr,sex,birthday,last_loggedin,updated,created
+,enabled,Invalid User,invalid email,,Example Corp,Manager,1234567890,123-4567,Tokyo,male,,2025-01-01,2025-01-01,2025-01-01
