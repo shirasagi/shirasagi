@@ -8,6 +8,8 @@ class Cms::Agents::Parts::MonthlyNavController < ApplicationController
     @cur_part.periods.times do |i|
       @months.push [ previous_month_beginning(i), contents_size(i)]
     end
+
+    render formats: :html
   end
 
   private
