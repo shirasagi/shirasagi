@@ -6,7 +6,15 @@
 
 <dl class="see">
   <dd class="wide">
-  <dt><%= @model.tt simple_format(t('description')) %></dt>
+  <dt>
+    <div class="tooltip">?
+      <ul class="tooltip-content">
+        <% Array(t("tooltip.cms/addon/file.description")).flatten.each do |tooltip| %>
+          <li><%= tooltip %><br></li>
+        <% end %>
+      </ul>
+    </div>
+  </dt>
     <div id="selected-files">
       <% @item.files.try(:each) do |file| %>
         <%
