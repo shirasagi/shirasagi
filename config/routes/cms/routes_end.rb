@@ -403,7 +403,9 @@ Rails.application.routes.draw do
         post :restore, on: :member
         post :destroy, on: :member
       end
-      resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy]
+      resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
+        get :delete, on: :member
+      end
       scope "node:cid/cms", as: "node", cid: /\w+/ do
         resources :temp_files, controller: 'node/temp_files', concerns: [:deletion, :file_api] do
           get :contrast_ratio, on: :collection
@@ -416,7 +418,9 @@ Rails.application.routes.draw do
           post :restore, on: :member
           post :destroy, on: :member
         end
-        resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy]
+        resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
+          get :delete, on: :member
+        end
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'

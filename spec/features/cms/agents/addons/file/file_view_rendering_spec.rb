@@ -221,13 +221,19 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
     end
 
-    accept_confirm do
-      within '#selected-files' do
-        within ".file-view.unused", text: 'shirasagi.pdf' do
+    require 'pry-byebug'
+    binding.pry
+
+    within '#selected-files' do
+      within ".file-view.unused", text: 'shirasagi.pdf' do
+        expect(page).to have_link(I18n.t("ss.buttons.delete"))
+        accept_confirm(I18n.t("ss.confirm.delete")) do
           click_link I18n.t("ss.buttons.delete")
         end
       end
     end
+
+    binding.pry
 
     wait_for_notice I18n.t('ss.notice.deleted')
 
