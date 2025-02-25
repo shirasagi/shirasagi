@@ -1,10 +1,14 @@
+require_relative '../../../config/initializers/image_settings'
+
 class Member::PhotoFile
   include SS::Model::File
   include Cms::Reference::Member
   include Cms::MemberPermission
   include Cms::Lgwan::File
 
-  default_thumb_size [160, 120]
+  DEFAULT_THUMB_SIZE = ImageSettings::DEFAULT_THUMB_SIZE
+
+  default_thumb_size DEFAULT_THUMB_SIZE
   add_thumb_size :detail, [800, 600]
 
   default_scope ->{ where(model: "member/photo") }

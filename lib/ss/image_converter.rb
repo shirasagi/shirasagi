@@ -1,7 +1,9 @@
 # this class doesn't support grid_fs for performance reason
+require_relative '../../config/initializers/image_settings'
+
 class SS::ImageConverter
-  DEFAULT_THUMB_WIDTH = 120
-  DEFAULT_THUMB_HEIGHT = 90
+  DEFAULT_THUMB_WIDTH = ImageSettings::DEFAULT_THUMB_WIDTH
+  DEFAULT_THUMB_HEIGHT = ImageSettings::DEFAULT_THUMB_HEIGHT
 
   private_class_method :new
 
