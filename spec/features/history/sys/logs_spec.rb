@@ -28,7 +28,7 @@ describe "history_sys_logs", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.download")
       click_on I18n.t("ss.buttons.download")
 
-      csv_source = ::SS::ChunkReader.new(page.html).to_a.join
+      csv_source = SS::ChunkReader.new(page.html).to_a.join
       I18n.with_locale(I18n.default_locale) do
         SS::Csv.open(StringIO.new(csv_source)) do |csv|
           table = csv.read

@@ -33,7 +33,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-        expect(::Translate::TextCache.site(dest_site).count).to eq 0
+        expect(Translate::TextCache.site(dest_site).count).to eq 0
       end
     end
 
@@ -49,8 +49,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
       it do
         dest_site = Cms::Site.find_by(host: target_host_host)
-        expect(::Translate::TextCache.site(dest_site).count).to eq 1
-        dest_translate_text_cache = ::Translate::TextCache.site(dest_site).first
+        expect(Translate::TextCache.site(dest_site).count).to eq 1
+        dest_translate_text_cache = Translate::TextCache.site(dest_site).first
         expect(dest_translate_text_cache.api).to eq translate_text_cache.api
         expect(dest_translate_text_cache.update_state).to eq translate_text_cache.update_state
         expect(dest_translate_text_cache.text).to eq translate_text_cache.text

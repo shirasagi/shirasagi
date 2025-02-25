@@ -4,11 +4,11 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
   let(:ldap_url) { "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/" }
 
   around do |example|
-    save = ::Ldap.sync_password
-    ::Ldap.sync_password = "enable"
+    save = Ldap.sync_password
+    Ldap.sync_password = "enable"
     example.run
   ensure
-    ::Ldap.sync_password = save
+    Ldap.sync_password = save
   end
 
   context 'パスワード変更' do

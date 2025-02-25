@@ -51,11 +51,11 @@ describe "gws_elasticsearch_search_survey", type: :feature, dbscope: :example, j
     site.save
 
     # gws:es:ingest:init
-    ::Gws::Elasticsearch.init_ingest(site: site)
+    Gws::Elasticsearch.init_ingest(site: site)
     # gws:es:drop
-    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    Gws::Elasticsearch.drop_index(site: site) rescue nil
     # gws:es:create_indexes
-    ::Gws::Elasticsearch.create_index(site: site)
+    Gws::Elasticsearch.create_index(site: site)
   end
 
   context "user1" do
@@ -74,7 +74,7 @@ describe "gws_elasticsearch_search_survey", type: :feature, dbscope: :example, j
       end
 
       # wait for indexing
-      ::Gws::Elasticsearch.refresh_index(site: site)
+      Gws::Elasticsearch.refresh_index(site: site)
 
       visit index_path
       within '.index form' do
@@ -127,7 +127,7 @@ describe "gws_elasticsearch_search_survey", type: :feature, dbscope: :example, j
       end
 
       # wait for indexing
-      ::Gws::Elasticsearch.refresh_index(site: site)
+      Gws::Elasticsearch.refresh_index(site: site)
 
       visit index_path
       within '.index form' do
