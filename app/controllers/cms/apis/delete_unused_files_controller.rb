@@ -43,9 +43,8 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
     else
       flash[:alert] = t("ss.notice.unable_to_delete")
     end
-    redirect_to article_page(site: @cur_site)
+    redirect_to :back
   end
-
 
   public
 
