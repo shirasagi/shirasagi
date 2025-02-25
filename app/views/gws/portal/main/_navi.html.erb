@@ -75,7 +75,9 @@
       <% if path.present? %>
         <%= content_tag(h, link_to(label, path, options)) %>
       <% else %>
-        <%= content_tag(h, label, options) %>
+        <%= content_tag(h, options) do %>
+          <%= content_tag(:div, label) %>
+        <% end %>
       <% end %>
     <% end %>
   </nav>

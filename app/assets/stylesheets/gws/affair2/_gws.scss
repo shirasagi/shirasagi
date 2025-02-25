@@ -1,0 +1,60 @@
+// affair2
+
+.time-card-error {
+  border: solid #ff0000 1px;
+  border-radius: 3px;
+  padding: 10px;
+  background: #ffecec;
+}
+.time-card-notice {
+  border: solid #d0d0d0 1px;
+  border-radius: 3px;
+  padding: 10px;
+  background: #f2f2f2;
+}
+
+/*
+.gws-attendance {
+  .time-card {
+    tr {
+      td.date a {
+        color: #333;
+        text-decoration: underline;
+      }
+      &.holiday {
+        td.date a {
+          color: #f25a38;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.time-card-wrap {
+  table.total {
+    white-space: nowrap;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: 12px;
+
+    th {
+      padding: 5px;
+      border: 1px solid $gray4;
+    }
+
+    td {
+      padding: 5px;
+      border: 1px solid $gray4;
+      text-align: center;
+    }
+
+    tr.header {
+      background-color: $gray1;
+    }
+  }
+}
+.table-wrap {
+  overflow-x: scroll;
+}
+*/

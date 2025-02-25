@@ -1,0 +1,48 @@
+<%= jquery do %>
+$(".overtime-results .break-time").each(function(){
+  new Gws_Affair2_Breaktime(this);
+});
+<% end %>
+
+<% if !@item.entered? %>
+  <div style="color: red; padding-bottom: 5px;">結果を入力してください。</div>
+<% elsif !@item.confirmed? %>
+  <div style="color: red; padding-bottom: 5px;">承認者は結果を確認済みにしてください。</div>
+<% else %>
+  <div style="padding-bottom: 5px;">結果は確認済みです。</div>
+<% end %>
+
+<table class="index overtime-results">
+  <thead>
+    <tr class="item-head">
+      <th class="time"><%= "開始時間" %></th>
+      <th class="time"><%= "終了時間" %></th>
+      <th class="time"><%= "休憩時間 (開始時間～終了時間)" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="item">
+      <td class="time"><%= format_time(@item.date, @item.start_at) %></td>
+      <td class="time"><%= format_time(@item.date, @item.close_at) %></td>
+      <td class="time break-time" data-date="<%= @item.date.strftime("%Y-%m-%d") %>">
+        <%= format_time(@item.date, @item.break_start_at) %>
+        <%= hidden_field_tag "item[in_break_start_hour]", @item.in_break_start_hour, id: nil, class: "start-hour" %>
+        <%= hidden_field_tag "item[in_break_start_minute]", @item.in_break_start_minute, id: nil, class: "start-minute" %>
+        <%= t("ss.wave_dash") %>
+        <%= format_time(@item.date, @item.break_close_at) %>
+        <%= hidden_field_tag "item[in_break_close_hour]", @item.in_break_close_hour, id: nil, class: "close-hour" %>
+        <%= hidden_field_tag "item[in_break_close_minute]", @item.in_break_close_minute, id: nil, class: "close-minute" %>
+        <span class="diff"></span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<% if !@item.entered? %>
+  <%= link_to "結果を入力", { action: :edit }, { class: "btn" } %>
+<% elsif !@item.confirmed? %>
+  <%= link_to "結果を編集", { action: :edit }, { class: "btn" } %>
+  <%= link_to "確認済みにする", { action: :confirmed }, { class: "btn", "data-confirm": "確認済みにしてよろしいですか" } %>
+<% else %>
+  <%= link_to "確認済み", "", { class: "btn btn-disabled", onclick: "return false;" } %>
+<% end %>

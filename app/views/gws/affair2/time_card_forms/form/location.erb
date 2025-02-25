@@ -1,0 +1,50 @@
+<%= form_for :record, url: { action: :location }, html: { method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :record %>
+
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-body">
+        <table class="index">
+          <thead>
+            <tr>
+              <th><%= Gws::Affair2::Attendance::Record.t :location %></th>
+              <th><%= Gws::Affair2::Attendance::Record.t :location_cost %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @locations.each do |item| %>
+              <tr>
+                <td>
+                  <label>
+                    <%= f.radio_button :location_id, item.id %>
+                    <%= item.name %>
+                  </label>
+                </td>
+                <td>
+                  <%= item.location_cost.to_fs(:delimited)%>
+                  <%= t("gws/affair2.views.yen") %>
+                </td>
+              </tr>
+            <% end %>
+            <tr>
+              <td>
+                <label>
+                  <%= f.radio_button :location_id, nil %>
+                  <%= t("gws/affair2.views.etc") %>
+                </label>
+              </td>
+              <td><%= t("gws/affair2.views.manual_input") %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>

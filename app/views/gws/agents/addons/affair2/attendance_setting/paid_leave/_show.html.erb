@@ -1,0 +1,38 @@
+<%
+  return if @item.duty_setting.nil?
+
+  paid_leave_settings = @item.paid_leave_settings.to_a
+  return if paid_leave_settings.blank?
+%>
+<dl class="see">
+  <dd class="wide">
+    <% paid_leave_settings.each do |item| %>
+      <table class="index">
+        <thead>
+          <tr>
+            <th rowspan="2">対象年</th>
+            <th rowspan="2"><%= @item.duty_setting.t(:day_leave_minutes) %></th>
+            <th colspan="3">有効時間</th>
+            <th rowspan="2">取得時間</th>
+            <th rowspan="2">有効時間（残り）</th>
+          </tr>
+          <tr>
+            <th>繰越分</th>
+            <th>追加分</th>
+            <th>合計</th>
+          </tr>
+        </thead>
+        <tbody>
+          <td><%= item.year %></td>
+          <td><%= @item.duty_setting.day_leave_minutes %><%= t("datetime.prompts.minute") %></td>
+          <td><%= item.carryover_minutes_label(@item.duty_setting.day_leave_minutes) %></td>
+          <td><%= item.additional_minutes_label(@item.duty_setting.day_leave_minutes) %></td>
+          <td><%= item.effective_minutes_label(@item.duty_setting.day_leave_minutes) %></td>
+          <td><%= item.used_minutes_label(@item.duty_setting.day_leave_minutes) %></td>
+          <td><%= item.remind_minutes_label(@item.duty_setting.day_leave_minutes) %></td>
+        </tbody>
+      </table>
+      <br />
+    <% end %>
+  </dd>
+</dl>

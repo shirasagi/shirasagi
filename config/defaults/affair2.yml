@@ -1,0 +1,38 @@
+# affair2
+
+production: &production
+  default_duty:
+    worktime:
+      start_hour: 8
+      start_minute: 30
+      close_hour: 17
+      close_minute: 15
+      break_minutes: 60
+    workday:
+      sunday: holiday
+      monday: workday
+      tuesday: workday
+      wednesday: workday
+      thursday: workday
+      friday: workday
+      saturday: holiday
+      national_holiday: holiday
+      special_holiday: holiday
+    day_leave_minutes: 465
+
+  # 深夜残業の開始、終了時間
+  night_time:
+    start_hour: 22
+    close_hour: 29
+
+  overtime:
+    # 月時間外 既定は30h(1800m)
+    monthly_threshold: 1800
+    # 1日465mを超えたら割増時間外として扱う
+    daily_threshold: 465
+
+test:
+  <<: *production
+
+development:
+  <<: *production

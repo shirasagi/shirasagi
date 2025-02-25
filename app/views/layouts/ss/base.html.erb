@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <article id="main">
+      <article id="main" class="<%== main_navi_closed? ? "navi-closed" : "navi-opened" %>">
       <%= render "layouts/ss/password_warn" %>
       <% if !@ss_maintenance_mode %>
         <ol class="breadcrumb" id="crumbs">
@@ -89,28 +89,36 @@
         </ol>
       <% end %>
 
-      <% if !@ss_rescue %>
-        <% if !@ss_maintenance_mode %>
-          <% if @ss_mode == :cms %>
-            <%= render partial: 'cms/main/main_menu' %>
-          <% end %>
+      <%
+        render_menu_view = true
+        render_menu_view = false if @hide_menu_view
+        render_menu_view = false if @ss_rescue
+        render_menu_view = false if @ss_maintenance_mode
+      %>
+      <% if render_menu_view %>
+        <% if @ss_mode == :cms %>
+          <%= render partial: 'cms/main/main_menu' %>
+        <% end %>
 
-          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-            <div id="menu"><%= render partial: "menu" %></div>
-          <% elsif controller.menu_view_file %>
-            <div id="menu"><%= render partial: controller.menu_view_file %></div>
-          <% end %>
+        <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+          <div id="menu"><%= render partial: "menu" %></div>
+        <% elsif controller.menu_view_file %>
+          <div id="menu"><%= render partial: controller.menu_view_file %></div>
         <% end %>
       <% end %>
 
       <div class="wrap">
-        <% if !@ss_rescue %>
-          <% if !@ss_maintenance_mode %>
-            <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
+        <%
+          render_content_navi_view = true
+          render_content_navi_view = false if @hide_content_navi_view
+          render_content_navi_view = false if @ss_rescue
+          render_content_navi_view = false if @ss_maintenance_mode
+        %>
+        <% if render_content_navi_view %>
+          <% if ::File.exist?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
             <%= render partial: 'content_navi' %>
-            <% elsif @tree_navi %>
+          <% elsif @tree_navi %>
             <div id="content-navi"><%= render template: '_tree_navi' %></div>
-            <% end %>
           <% end %>
         <% end %>
 

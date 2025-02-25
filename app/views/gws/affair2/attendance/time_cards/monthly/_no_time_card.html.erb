@@ -1,0 +1,7 @@
+<div class="time-card-wrap" style="padding-top: 5px;">
+  <% if @monthly_attendance %>
+    <%= link_to "タイムカードを作成する", { action: :create }, method: :post, class: "btn" %>
+  <% else %>
+    <p><%= t('gws/attendance.no_time_cards') %></p>
+  <% end %>
+</div>

@@ -1,0 +1,180 @@
+<style>
+.gws-attendance {
+  width: 930px;
+}
+.gws-attendance .sheet {
+  height: 550px;
+  background: white;
+  border: 1px solid #dcdcdc;
+  margin-bottom: 10px;
+}
+
+.sheet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.body {
+  width: 910px;
+}
+.body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table td {
+  text-align: center;
+}
+.f1 {
+  font-size: 10.5pt;
+  font-family: 'ＭＳ 明朝';
+  color: #000;
+}
+.f2 {
+  font-size: 9pt;
+  font-family: 'ＭＳ 明朝';
+  color: #000;
+}
+.bt1 {
+  border-top: 1px solid #000;
+}
+.br1 {
+  border-right: 1px solid #000;
+}
+.bl1 {
+  border-left: 1px solid #000;
+}
+.bb1 {
+  border-bottom: 1px solid #000;
+}
+.bt2 {
+  border-top: 1px dashed #000;
+}
+.br2 {
+  border-right: 1px dashed #000;
+}
+.bl2 {
+  border-left: 1px dashed #000;
+}
+.bb2 {
+  border-bottom: 1px dashed #000;
+}
+</style>
+
+<% @item.tables.each do |columns| %>
+  <div class="sheet">
+    <div class="body">
+      <div style="height: 21px; margin-left: 20px;" class="f1">（その2）</div>
+      <table>
+        <tr>
+          <td style="width: 410px; height: 37px;" class="f1">
+            <span style="display: inline-block; letter-spacing: 16px;">休暇承認</span>
+            <span>(願)</span>
+            <span style="margin-left: 20px;">簿</span>
+          </td>
+          <td style="width: 42px; height: 37px;" class="bt1 br1 bl1 f1">課名</td>
+          <td style="width: 106px; height: 37px;" class="bt1 br1 bl1 f2">
+            <div style="width: 106px; white-space: nowrap; overflow: hidden;">
+              <%= @item.group_name %>
+            </div>
+          </td>
+          <td style="width: 42px; height: 37px;" class="bt1 br1 bl1 f1">職名</td>
+          <td style="width: 114px; height: 37px;" class="bt1 br1 bl1 f2">
+            <div style="width: 114px; white-space: nowrap; overflow: hidden;">
+              <%= @item.user_title %>
+            </div>
+          </td>
+          <td style="width: 44px; height: 37px;" class="bt1 br1 bl1 f1">氏名</td>
+          <td style="width: 136px; height: 37px;" class="bt1 br1 bl1 f2">
+            <div style="width: 136px; white-space: nowrap; overflow: hidden;">
+              <%= @item.user_name %>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <td style="width: 63px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            <div>届出</div>
+            <div>年月日</div>
+          </td>
+          <td style="width: 97px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            <span style="letter-spacing: 5.25pt;">承認</span>印</p>
+          </td>
+          <td style="width: 88px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            休暇の種類
+          </td>
+          <td style="width: 118px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            休暇を受ける時間
+          </td>
+          <td style="width: 118px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            休暇を受ける期間
+          </td>
+          <td style="width: 83px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            休暇の理由
+          </td>
+          <td style="width: 78px; height: 85px;" rowspan="3" class="bt1 br1 bl1 f1">
+            <div>本人又は</div>
+            <div>代理届出</div>
+            <div>人職氏名</div>
+            <div>印</div>
+          </td>
+          <td style="width: 251px; height: 22px;" colspan="4" class="bt1 br1 bl1 f1">
+            <span style="letter-spacing: 5.25pt;">休暇累計</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 127px; height: 22px;" colspan="2" class="bt1 br1 bl1 f1">
+            傷病休暇
+          </td>
+          <td style="width: 62px;" rowspan="2" class="bt1 br1 bl1 f1">
+            <div>特別</div>
+            <div>休暇</div>
+          </td>
+          <td style="width: 62px;" rowspan="2" class="bt1 br1 bl1 f1">
+            <div>介護</div>
+            <div>休暇</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 64px;" class="bt1 br1 bl1 f1">
+            公傷病
+          </td>
+          <td style="width: 64px;" class="bt1 br1 bl1 f1">
+            私傷病
+          </td>
+        </tr>
+        <% columns.each_with_index do |column, i| %>
+          <% cls = (i == 6) ? "bb1" : "" %>
+          <tr>
+            <td style="width: 64px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>"><%= column.date %></td>
+            <td style="width: 97px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>"></td>
+            <td style="width: 88px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>"><%= column.leave_type %></td>
+            <td style="width: 118px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>"><%= column.time2 %></td>
+            <td style="width: 118px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>"><%= column.term1 %></td>
+            <td style="width: 83px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>">
+              <div style="width: 83px; max-height: 40px; overflow: hidden;">
+                <%= column.remark %>
+              </div>
+            </td>
+            <td style="width: 78px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>"></td>
+            <td style="width: 64px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>">
+              <%= column.used3 %>
+            </td>
+            <td style="width: 64px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>">
+              <%= column.used4 %>
+            </td>
+            <td style="width: 64px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>">
+              <%= column.used5 %>
+            </td>
+            <td style="width: 64px; height: 40px" class="bt1 br1 bl1 f2 <%= cls %>">
+              <%= column.used6 %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+      <div class="f1">
+      　(注)　南アルプス市職員の勤務時間、休暇等に関する条例(平成15年南アルプス市条例第41号)別表に定める特別休暇を請求しようとするときに使用するものとする。
+      </div>
+    </div>
+  </div>
+<% end %>

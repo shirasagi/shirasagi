@@ -1,0 +1,44 @@
+<% return if @item.workflow_circulations.blank? %>
+
+<table class="index">
+  <tbody>
+    <% @item.workflow_circulations.group_by { |workflow_circulation| workflow_circulation[:level] }.each do |level, workflow_circulations| %>
+      <% workflow_circulations.each_with_index do |workflow_circulation, index| %>
+        <%
+          user_id = workflow_circulation[:user_id]
+          user = SS::User.where(id: user_id).first
+          state = workflow_circulation[:state]
+        %>
+        <tr>
+          <% if index == 0 %>
+            <td rowspan="<%= workflow_circulations.count %>">
+              <%= t("workflow.circulation_step") %> <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+            </td>
+          <% end %>
+          <td><%= user ? workflow_user_profile(user) : t("workflow.user_deleted") %></td>
+          <td><%= t("workflow.circulation_state.#{state}", default: state) if state.present? %></td>
+          <td>
+            <div class="approver-comment"><%= workflow_circulation[:comment] %></div>
+            <% if workflow_circulation[:file_ids].present? %>
+              <div class="approver-files">
+                <% SS::File.in(id: workflow_circulation[:file_ids]).each do |file| %>
+                  <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
+                    <% if file.image? %>
+                      <%= image_tag(file.thumb_url, class: "thumb") %>
+                      <% else %>
+                      <span class="thumb ext icon-<%= file.extname %>">
+                        <i class="material-icons">&#xE24D;</i><br>
+                        <span class="ext-name"><%= file.extname %></span>
+                      </span>
+                    <% end %>
+                    <span class="name"><%= file.humanized_name %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

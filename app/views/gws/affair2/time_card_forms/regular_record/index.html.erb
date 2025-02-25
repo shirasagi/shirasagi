@@ -1,0 +1,35 @@
+<%= jquery do %>
+$("#ajax-box form").ajaxForm({
+  success: function(data) {
+    var $body = $("<div>" + data + "</div>").find("#ajax-box");
+    $("#ajax-box").replaceWith($body);
+    $.colorbox.resize();
+  }
+});
+<% end %>
+
+<%= form_for :item, url: { action: :update }, html: { method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.import") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t "ss.file" %></dt>
+          <dd>
+            <%= f.hidden_field "item[in_file]", value: "" %>
+            <%= f.file_field :in_file %>
+          </dd>
+          <dd><%= link_to t('ss.links.download'), { action: :download } %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+  </footer>
+<% end %>

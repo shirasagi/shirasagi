@@ -83,6 +83,9 @@ ja:
       workflow:
         name: ワークフロー
         text: 新着のワークフローを表示します。
+      affair2:
+        name: 庶務事務2
+        text: 本日の出退勤を表示および打刻します。(庶務事務2)
       attendance:
         name: 出退勤
         text: 本日の出退勤を表示および打刻します。

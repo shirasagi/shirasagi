@@ -1,0 +1,24 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-title"><%= @item.title %></div>
+    <div class="attendance-box-main">
+      <div class="nav-group">
+        <%= tag.nav(class: "nav-menu", data: { controller: "ss--redirect-on-change", url: url_for(action: :index, fiscal_year: ':fiscal_year:') }) do %>
+          <%= select_tag(:fiscal_year, options_for_select(fiscal_year_options, params[:fiscal_year]), { include_blank: true, data: { default: default_fiscal_year  }}) %>
+        <% end %>
+        <nav class="nav-operation">
+        <%= link_to(t("ss.buttons.print"), { action: :print }, class: "print btn") %>
+        </nav>
+      </div>
+    </div>
+
+    <% if @item.errors.present? %>
+      <ul>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li style="list-style: disc;"><%= msg %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  <%= render partial: "sheets" %>
+</div>

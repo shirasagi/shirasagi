@@ -945,8 +945,26 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       }
     }
     h2:not(:first-child) {
-      padding: 10px 15px;
-      font-weight: bold;
+      div {
+        font-weight: bold;
+        padding: 10px 15px;
+      }
+      a {
+        display: block;
+        position: relative;
+        padding: 10px 10px 10px 40px;
+        //font-weight: bold;
+        border-top: solid 1px #c9c9c9;
+        text-decoration: none;
+        background: url(/assets/img/ic-arrow16-off.png) no-repeat 15px center;
+        &.open {
+          background: url(/assets/img/ic-arrow16down-off.png) no-repeat 15px center;
+        }
+        &:hover {
+          background-color: #f2f2f2;
+          color: #f25a38;
+        }
+      }
     }
   }
   h3 a {

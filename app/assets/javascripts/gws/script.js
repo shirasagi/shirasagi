@@ -28,6 +28,9 @@
 //= require gws/attendance/portlet
 //= require gws/presence/user
 //= require gws/share/folder_toolbar
+//= require gws/affair2/attendance
+//= require gws/affair2/breaktime
+//= require gws/affair2/leave_file
 //= require gws/affair/menu
 //= require gws/affair/overtime_file
 //= require gws/affair/shift_records

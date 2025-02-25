@@ -1,0 +1,7 @@
+<%
+  @item.load_in_accessor
+%>
+<dl class="see">
+  <dt><%= @item.t :day_leave_minutes %></dt>
+  <dd><%= "#{@item.in_day_leave_hour}:#{format("%02d", @item.in_day_leave_minute)}" %></dd>
+</dl>

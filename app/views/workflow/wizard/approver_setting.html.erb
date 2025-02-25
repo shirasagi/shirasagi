@@ -5,9 +5,11 @@ level = 1
 if @ss_mode == :cms
   def groups_path; cms_apis_groups_path; end
   def approvers_path(*args); workflow_search_approvers_path(*args); end
+  def user_model; Cms::User end
 else
   def groups_path; gws_apis_groups_path; end
   def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
+  def user_model; Gws::User end
 end
 
 use_agent = @ss_mode == :gws && @item.agent_enabled? && @cur_user.gws_role_permit_any?(@cur_site, :agent_all_gws_workflow_files, :agent_private_gws_workflow_files)
@@ -60,7 +62,7 @@ end
   </dd>
   <dd class="agent-type-agent" style="display: none;">
     <table class="index ajax-selected" style="display: none;">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <thead><tr><th class="name"><%= user_model.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
       </tbody>
     </table>
@@ -86,7 +88,7 @@ end
     <table class="index ajax-selected approvers" style="display: none;">
       <thead>
         <tr>
-          <th class="name"><%= @model.t :name %></th>
+          <th class="name"><%= user_model.t :name %></th>
           <th></th>
         </tr>
       </thead>
@@ -114,7 +116,7 @@ end
     <table class="index ajax-selected circulations" style="display: none;">
       <thead>
         <tr>
-          <th class="name"><%= @model.t :name %></th>
+          <th class="name"><%= user_model.t :name %></th>
           <th></th>
         </tr>
       </thead>

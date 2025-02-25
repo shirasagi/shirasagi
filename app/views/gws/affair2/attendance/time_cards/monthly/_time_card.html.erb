@@ -1,0 +1,105 @@
+<div class="time-card-wrap">
+  <% if loader.notice_messages.present? %>
+    <ul class="time-card-error">
+      <% loader.notice_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <table class="time-card">
+    <tbody>
+    <% date = month.to_datetime %>
+    <% while date <= month.end_of_month %>
+      <% offset = date.day >= 16 ? 'top' : '' %>
+      <% if date.day == 1 %>
+        <tr class="header">
+          <th colspan="5"><%= "#{t("gws/affair.timecard.in_work.title")} (#{@cur_duty.try(:name)})" %></th>
+          <th class="time overtime" colspan="3"><%= t("gws/affair.timecard.in_over.title") %></th>
+          <th class="time leave" rowspan="2"><%= t("gws/affair.timecard.in_leave.title") %></th>
+          <th class="memo" rowspan="2"><%= Gws::Affair2::Attendance::Record.t(:memo) %></th>
+        </tr>
+        <tr class="header">
+          <th class="date"><%= Gws::Affair2::Attendance::Record.t(:date) %></th>
+          <th class="time enter"><%= Gws::Affair2::Attendance::Record.t(:enter) %></th>
+          <th class="time leave"><%= Gws::Affair2::Attendance::Record.t(:leave) %></th>
+          <th class="time break-time"><%= Gws::Affair2::Attendance::Record.t(:break_time) %></th>
+          <th class="time work-time"><%= t("gws/affair.timecard.in_work.worktime") %></th>
+          <th class="time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+          <th class="time break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+          <th class="time compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
+        <tr>
+    　<% end %>
+      <% if date.day == 16 %>
+        <tr class="header">
+          <th class="date"><%= Gws::Affair2::Attendance::Record.t(:date) %></th>
+          <th class="time enter"><%= Gws::Affair2::Attendance::Record.t(:enter) %></th>
+          <th class="time leave"><%= Gws::Affair2::Attendance::Record.t(:leave) %></th>
+          <th class="time break-time"><%= Gws::Affair2::Attendance::Record.t(:break_time) %></th>
+          <th class="time work-time"><%= t("gws/affair.timecard.in_work.worktime") %></th>
+          <th class="time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+          <th class="time break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+          <th class="time compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
+          <th class="time leave"><%= t("gws/affair.timecard.in_leave.title") %></th>
+          <th class="memo"><%= Gws::Affair2::Attendance::Record.t(:memo) %></th>
+        </tr>
+      <% end %>
+      <%
+        record = item.records.find_by(date: date)
+        tr_css_classes = [ "day-#{date.day}" ]
+        tr_css_classes << (attendance_date?(date) ? 'current' : nil)
+        tr_css_classes << "holiday" if record.regular_holiday?
+      %>
+      <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>">
+        <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+
+        <%= render_punchable(item, record, "enter") do |mode, url| %>
+          <td class="time enter <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= format_time(date, record.enter) %>
+            <%= render_reason(record, "enter") %>
+          </td>
+        <% end %>
+        <%= render_punchable(item, record, "leave") do |mode, url| %>
+          <td class="time leave <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= format_time(date, record.leave) %>
+            <%= render_reason(record, "leave") %>
+          </td>
+        <% end %>
+        <%= render_editable(item, record, "break_minutes") do |mode, url| %>
+          <td class="time break_minutes <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= format_minutes(record.break_minutes) %>
+          </td>
+        <% end %>
+
+        <td class="time work_time <%= offset %>">
+          <%= loader.render_work_time(date) %>
+        </td>
+        <td class="time over_time <%= offset %>">
+          <%= loader.render_over_time(date) %>
+        </td>
+        <td class="time over_break_time <%= offset %>">
+          <%= loader.render_over_break_time(date) %>
+        </td>
+        <td class="time over_compens <%= offset %>">
+          <%= loader.render_over_compens(date) %>
+        </td>
+        <td class="leave_files">
+          <%= loader.render_leave(date) %>
+        </td>
+
+        <%= render_editable(item, record, "memo") do |mode, url| %>
+          <td class="memo <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= record.memo %>
+          </td>
+        <% end %>
+      </tr>
+      <% date += 1.day %>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="cell-toolbar">
+  <a href="#" class="punch" data-confirm="<%= t('gws/attendance.confirm.punch') %>"><%= t('gws/attendance.links.punch') %></a>
+  <a href="#" class="edit"><%= t('ss.links.edit') %></a>
+</div>

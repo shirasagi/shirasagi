@@ -1,0 +1,19 @@
+<nav class="mod-navi current-navi">
+  <h2><%= link_to @cur_site.menu_affair2_label || t('modules.gws/affair2/attendance'), gws_affair2_attendance_main_path, class: 'icon-affair' %></h2>
+  <h2><%= link_to t('modules.gws/affair2/attendance'), gws_affair2_attendance_main_path %></h2>
+
+  <% if Gws::Affair2::Management.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/affair2/management'), gws_affair2_management_main_path %></h2>
+  <% end %>
+  <h2><%= link_to t('modules.gws/affair2/admin'),  gws_affair2_admin_main_path, class: 'open' %></h2>
+
+  <h3><%= link_to t('modules.gws/affair2/admin/attendance_setting'), gws_affair2_admin_users_path, class: 'management' %></h3>
+  <h3><%= link_to t('modules.gws/affair2/admin/paid_leave_setting'), gws_affair2_admin_years_path, class: 'management' %></h3>
+  <h3><%= link_to t('modules.gws/affair2/admin/duty_setting'), gws_affair2_admin_duty_settings_path, class: 'management' %></h3>
+  <h3><%= link_to t('modules.gws/affair2/admin/leave_setting'), gws_affair2_admin_leave_settings_path, class: 'management' %></h3>
+  <h3><%= link_to t('modules.gws/affair2/admin/special_leave'), gws_affair2_admin_special_leave_index_path, class: 'management' %></h3>
+  <h3><%= link_to t('modules.gws/affair2/admin/special_holiday'), gws_affair2_admin_special_holidays_main_path, class: 'management' %></h3>
+  <h3><%= link_to t('modules.gws/affair2/admin/duty_notice'), gws_affair2_admin_duty_notices_path, class: 'management' %></h3>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

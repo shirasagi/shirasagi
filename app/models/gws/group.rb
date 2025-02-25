@@ -9,6 +9,7 @@ class Gws::Group
   include Gws::Addon::Facility::GroupSetting
   include Gws::Addon::Attendance::GroupSetting
   include Gws::Addon::Affair::GroupSetting
+  include Gws::Addon::Affair2::GroupSetting
   include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Workload::GroupSetting
   include Gws::Addon::Report::GroupSetting

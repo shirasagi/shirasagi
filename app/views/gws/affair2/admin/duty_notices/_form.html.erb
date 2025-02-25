@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @item.t :name %><%= @item.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @item.t :notice_type %><%= @item.tt :notice_type %></dt>
+  <dd><%= f.select :notice_type, @item.notice_type_options %></dd>
+
+  <dt><%= @item.t :threshold_hour %><%= @item.tt :threshold_hour %></dt>
+  <dd>
+    <%= f.number_field :threshold_hour, min: 0 %>
+    <%= t("ss.hours") %>
+  </dd>
+
+  <dt><%= @item.t :body %><%= @item.tt :body %></dt>
+  <dd><%= f.text_field :body %></dd>
+</dl>

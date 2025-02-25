@@ -16,6 +16,7 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Report
   include Gws::Addon::Portal::Portlet::Workflow
   include Gws::Addon::Portal::Portlet::Attendance
+  include Gws::Addon::Portal::Portlet::Affair2
   include Gws::Addon::Portal::Portlet::Notice
   include Gws::Addon::Portal::Portlet::Presence
   include Gws::Addon::Portal::Portlet::Survey
@@ -38,6 +39,7 @@ module Gws::Portal::PortletModel
     report:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Report] },
     workflow:   { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Workflow] },
     attendance: { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Attendance] },
+    affair2:    { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Affair2] },
     notice:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Notice] },
     presence:   { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Presence] },
     survey:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Survey] },

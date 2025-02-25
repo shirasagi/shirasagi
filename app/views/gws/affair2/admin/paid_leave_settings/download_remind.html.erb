@@ -1,0 +1,36 @@
+<%= form_for :item, url: { action: :download_remind }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/attendance.confirm.download') %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t("gws/affair2.labels.caution") %></dt>
+          <dd><%= @year %>年の有効時間数と残時間数を出力します。</dd>
+
+          <dt><%= t('ss.encoding') %></dt>
+          <dd>
+            <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+            <label>
+              <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', {id: nil} %>
+              <%= t("ss.options.csv_encoding.#{encoding}") %>
+            </label>
+            <% end %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+    <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  SS.confirmUnloading();
+<% end %>
