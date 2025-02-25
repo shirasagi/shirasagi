@@ -1,12 +1,4 @@
 <% file = @item %>
-<div class="delete-confirmation">
-  <div class="selected-image">
-    <%= image_tag file.url, alt: '選択中の画像ファイル' %>
-  </div>
-
-  <div class="delete-file">
-  <!-- 削除確認メッセージ -->
-  <span>削除してもよろしいですか？</span>
 
   <%= link_to t('ss.buttons.delete'),
               params[:cid].blank? ? cms_apis_delete_unused_file_path(owner_item_id: @owner_item.id, id: file.id) : cms_apis_node_delete_unused_file_path(owner_item_id: @owner_item.id, id: file.id),
@@ -14,5 +6,3 @@
               remote: true,
               data: { confirm: t('ss.confirm.delete') },
               class: "ajax-box" %>
-  </div>
-</div>
