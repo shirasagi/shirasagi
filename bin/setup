@@ -3,9 +3,22 @@ require "fileutils"
 
 # path to your application root.
 APP_ROOT = File.expand_path("..", __dir__)
+DEFAULT_PORT = "3000"
+PORT = ENV.fetch("PORT", DEFAULT_PORT)
 
 def system!(*args)
   system(*args, exception: true)
+end
+
+def get_site_id!(host)
+  command = <<~COMMAND
+    bundle exec rails runner "puts Cms::Site.find_by(host: '#{host}').id"
+  COMMAND
+
+  reader, writer = IO.pipe
+  system(command, out: writer, exception: true)
+  writer.close
+  reader.read.strip.to_i
 end
 
 FileUtils.chdir APP_ROOT do
@@ -16,10 +29,86 @@ FileUtils.chdir APP_ROOT do
   puts "== Installing dependencies =="
   system! "gem install bundler --conservative"
   system("bundle check") || system!("bundle install")
+  system! "yarn install"
+  system! "yarn build"
+
+  puts "== mecab-ruby =="
+  system! "tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install && cd .. && rm -rf mecab-ruby-0.996"
+
+  puts "== Setup config/mongoid.yml =="
+  system! "cp -np config/samples/mongoid-container.yml config/mongoid.yml"
+
+  puts "== Setup config/secrets.yml =="
+  system! "cp -np config/samples/secrets.yml config/secrets.yml"
+
+  unless File.exist?("config/environment.yml")
+    File.open("config/environment.yml", "wt") do |f|
+      f.puts "RAILS_ENV: development"
+    end
+  end
+
+  puts "== Remove all existing data =="
+  system! "bundle exec rake db:drop"
+  system! "rm -rf private public"
+  system! "git checkout -- private public"
+
+  puts "== Create database =="
+  system! "bundle exec rake db:create_indexes"
+
+  if ENV.fetch("SETUP_DEMO_SITE", "1") == "1"
+    puts "== Install seed: '自治体サンプル' =="
+    system! "bundle exec rake ss:create_site data=\"{ name: '自治体サンプル', host: 'www', domains: 'www.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
+    system! "bundle exec rake db:seed site=www name=demo"
+  end
+
+  if ENV.fetch("SETUP_OPENDATA_SITE", "subdir").then { _1 == "subdir" || _1 == "1" }
+    puts "== Install seed: 'オープンデータ' =="
+    if ENV.fetch("SETUP_DEMO_SITE", "1") == "1" && ENV.fetch("SETUP_OPENDATA_SITE", "subdir").then { _1 == "subdir" }
+      site_id = get_site_id!("www")
+      system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'www.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers', subdir: 'opendata', parent_id: #{site_id} }\""
+    else
+      system! "bundle exec rake ss:create_site data=\"{ name: 'オープンデータ', host: 'opendata', domains: 'opendata.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
+    end
+    system! "bundle exec rake db:seed site=opendata name=opendata"
+    if ENV.fetch("SETUP_DEMO_SITE", "1") == "1" && ENV.fetch("SETUP_OPENDATA_SITE", "subdir").then { _1 == "subdir" }
+      system! "bundle exec rake cms:set_subdir_url site=opendata"
+    end
+  end
+
+  if ENV.fetch("SETUP_COMPANY_SITE", "0") == "1"
+    puts "== Install seed: '企業サンプル' =="
+    system! "bundle exec rake ss:create_site data=\"{ name: '企業サンプル', host: 'company', domains: 'company.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
+    system! "bundle exec rake db:seed site=company name=company"
+  end
+
+  if ENV.fetch("SETUP_CHILDCARE_SITE", "0") == "1"
+    puts "== Install seed: '子育て支援サンプル' =="
+    system! "bundle exec rake ss:create_site data=\"{ name: '子育て支援サンプル', host: 'childcare', domains: 'childcare.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
+    system! "bundle exec rake db:seed site=childcare name=childcare"
+  end
+
+  if ENV.fetch("SETUP_LP_SITE", "0") == "1"
+    puts "== Install seed: 'LPサンプル' =="
+    system! "bundle exec rake ss:create_site data=\"{ name: 'LPサンプル', host: 'lp_', domains: 'lp.example.jp:#{PORT}', mypage_domain: 'localhost:#{PORT}', map_api: 'openlayers' }\""
+    system! "bundle exec rake db:seed site=lp_ name=lp"
+  end
+
+  if ENV.fetch("SETUP_GWS", "0") == "1"
+    puts "== Install seed: 'グループウェア' =="
+    system! "bundle exec rake db:seed name=gws"
+  end
+
+  if ENV.fetch("SETUP_WEBMAIL", "0") == "1"
+    puts "== Install seed: 'Webメール' =="
+    system! "bundle exec rake db:seed name=webmail"
+  end
+
+  puts "\n== Removing auto generated html files =="
+  system! "find public/sites/ -name '*.html' -delete"
 
   puts "\n== Removing old logs and tempfiles =="
-  system! "bin/rails log:clear tmp:clear"
+  system! "bundle exec rails log:clear tmp:clear"
 
   puts "\n== Restarting application server =="
-  system! "bin/rails restart"
+  system! "bundle exec rails restart"
 end
