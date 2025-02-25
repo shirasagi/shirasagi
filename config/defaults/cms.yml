@@ -208,6 +208,7 @@ production: &production
     commands:
       - npx
       - sass
+      - "--style=compressed"
       - "--embed-source-map"
 
 test:
