@@ -63,12 +63,7 @@
                 <%= link_to t('ss.buttons.replace_file'), params[:cid].blank? ? edit_cms_apis_replace_file_path(owner_item_id: @item, id: file) : edit_cms_apis_node_replace_file_path(owner_item_id: @item, id: file.id), class: "ajax-box" %>
               <% end %>
               <% if css_class.include?("unused") %>
-                <%= link_to t('ss.buttons.delete'),
-                            params[:cid].blank? ? cms_apis_delete_unused_file_path(owner_item_id: @owner_item.id, id: @item.id) : cms_apis_node_delete_unused_file_path(owner_item_id: @owner_item.id, id: @item.id),
-                            method: :delete,
-                            remote: true,
-                            data: { confirm: t('ss.confirm.delete') },
-                            class: "ajax-box" %>
+                <%= link_to t('ss.buttons.delete'), delete_cms_apis_delete_unused_file_path(owner_item_id: @item, id: file.id), class: "ajax-box" %>
               <% end %>
             </div>
           <% end %>
