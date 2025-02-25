@@ -316,27 +316,43 @@ module Cms
     end
   end
 
-  def self.compile_scss(source, load_paths:, filename:)
+  def self.compile_scss(source_path, output_path, basedir:)
     commands = SS.config.cms.sass['commands'].dup
-    unless commands.include?("--stdin")
-      commands << "--stdin"
+    basedir ||= Rails.root.to_s
+    basedir = basedir[0..-2] if basedir.end_with?("/")
+    # make sure that source path is absolute path
+    source_path = ::File.expand_path(source_path, basedir)
+    # convert absolute path to relative path
+    if source_path.start_with?(basedir)
+      source_path = source_path.sub(basedir, "")
+      source_path = source_path[1..-1]
     end
 
-    if filename
-      basedir = ::File.dirname(filename)
+    # make sure that output path is absolute path
+    output_path = ::File.expand_path(output_path, basedir)
+    # convert absolute path to relative path
+    if output_path.start_with?(basedir)
+      output_path = output_path.sub(basedir, "")
+      output_path = output_path[1..-1]
     end
-    if basedir && !load_paths.include?(basedir)
-      commands << "--load-path=#{basedir}"
-    end
-    load_paths.each { commands << "--load-path=#{_1}" }
+
+    commands << "--load-path=#{basedir}"
+    Rails.application.config.assets.paths.each { commands << "--load-path=#{_1}" }
+    commands << source_path
+    # 注意: オプション --source-map-urls=relative を指定する場合、出力ファイルを指定しなければならない。
+    # 注意: そうしないと sass コマンドがエラー終了する。
+    commands << output_path
 
     output = nil
-    wait_thr = Open3.popen3(*commands) do |stdin, stdout, stderr, wait_thr|
-      stdin.write source
+    wait_thr = Open3.popen3(*commands, { chdir: basedir }) do |stdin, stdout, stderr, wait_thr|
+      # stdin.write source
       stdin.close
 
       output = stdout.read
-      Rails.logger.info { stderr.read }
+      error = stderr.read
+      if error
+        Rails.logger.warn { error }
+      end
 
       wait_thr
     end

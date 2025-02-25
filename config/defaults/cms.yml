@@ -209,6 +209,7 @@ production: &production
       - npx
       - sass
       - "--style=compressed"
+      - "--source-map-urls=relative"
       - "--embed-source-map"
 
 test:
