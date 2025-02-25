@@ -108,7 +108,7 @@ module Cms::PublicFilter
     Rails.logger.tagged(::File.basename(@scss)) do
       begin
         Cms.compile_scss(@scss, @file, basedir: @cur_site.path)
-      rescue SassC::BaseError, Sass::ScriptError => e
+      rescue Cms::ScssScriptError => e
         Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end

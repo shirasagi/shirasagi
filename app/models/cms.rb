@@ -3,6 +3,8 @@
 module Cms
   extend Sys::ModulePermission
 
+  class ScssScriptError < StandardError; end
+
   # factory method for Liquid::Template
   def self.parse_liquid(source, registers)
     template = Liquid::Template.parse(source)
@@ -357,7 +359,7 @@ module Cms
       wait_thr
     end
 
-    raise "sass command exited in errors" unless wait_thr.value.success?
+    raise ScssScriptError, "sass command exited in errors" unless wait_thr.value.success?
 
     output
   end
