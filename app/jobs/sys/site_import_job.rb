@@ -53,6 +53,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_kana_dictionaries
     invoke :import_opendata_dataset_groups
     invoke :import_opendata_licenses
+    invoke :update_cms_groups
     invoke :update_cms_nodes
     invoke :update_cms_pages
     invoke :update_ss_files
@@ -255,6 +256,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       data.each do |k, v|
         next if k == "contact_groups"
+        next if k == "basename" && v == "g#{id}"
         item[k] = v
       end
 
@@ -348,20 +350,20 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
   def import_cms_editor_templates
     @task.log("- import cms_editor_templates")
-    
+
     read_json("cms_editor_templates").each do |data|
       id   = data.delete('_id')
       data = convert_data(data)
-  
+
       thumb_id = data['thumb_id']
       file_ids = data['file_ids']
 
       # Find or initialize the editor template for the destination site
       cond = { name: data['name'], site_id: @dst_site.id }
       item = Cms::EditorTemplate.find_or_initialize_by(cond)
-  
+
       data.each { |k, v| item[k] = v }
-  
+
       if thumb_id.present?
         new_thumb_id = @ss_files_map[thumb_id]
         if new_thumb_id.present?
@@ -370,13 +372,13 @@ class Sys::SiteImportJob < SS::ApplicationJob
           item.thumb_id = thumb_file.id
         end
       end
-  
+
       # Process additional files
       if file_ids.present?
         new_file_ids = convert_ids(@ss_files_map, file_ids)
         item.file_ids = new_file_ids
       end
-  
+
       save_document(item)
     end
   end
@@ -393,7 +395,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       save_document(item)
     end
-  end  
+  end
 
   def import_theme_templates
     @task.log("- import theme templates")
@@ -407,7 +409,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       save_document(item)
     end
-  end  
+  end
 
   def import_cms_word_dictionaries
     @task.log("- import cms word dictionaries")
@@ -459,6 +461,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       save_document(item)
     end
   end
+
   def import_cms_page_search
     @task.log("- import cms Page Search")
 
@@ -482,6 +485,16 @@ class Sys::SiteImportJob < SS::ApplicationJob
       data.each { |k, v| item[k] = v }
 
       save_document(item)
+    end
+  end
+
+  def update_cms_groups
+    @cms_groups_map.each do |old_id, id|
+      item = Cms::Group.unscoped.find(id) rescue nil
+
+      next unless item
+
+      save_document(item) if item.valid?
     end
   end
 end
