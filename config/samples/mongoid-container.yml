@@ -1,0 +1,20 @@
+# MongoDB Configuration
+#
+# if you want to know about detail configuration,
+# see: https://docs.mongodb.org/ecosystem/tutorial/mongoid-installation/#mongoid-configuration
+production:
+  clients:
+    default:
+      database: ss
+      hosts:
+        - database:27017
+
+development:
+  <<: *production
+
+test:
+  clients:
+    default:
+      database: ss_test
+      hosts:
+        - database:27017
