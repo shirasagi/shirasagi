@@ -63,12 +63,16 @@
                 <%= link_to t('ss.buttons.replace_file'), params[:cid].blank? ? edit_cms_apis_replace_file_path(owner_item_id: @item, id: file) : edit_cms_apis_node_replace_file_path(owner_item_id: @item, id: file.id), class: "ajax-box" %>
               <% end %>
               <% if css_class.include?("unused") %>
+<<<<<<< HEAD
                 <%= link_to t('ss.buttons.delete'),
                             params[:cid].blank? ? cms_apis_delete_unused_file_path(owner_item_id: @item, id: file) : cms_apis_node_delete_unused_file_path(owner_item_id: @item, id: file),
                             method: :delete,
                             remote: true,
                             data: { confirm: t('ss.confirm.delete') },
                             class: "ajax-box" %>
+=======
+                <%= link_to t('ss.buttons.delete'), delete_cms_apis_delete_unused_file_path(owner_item_id: @item, id: file), class: "ajax-box" %>
+>>>>>>> 3379660bb (delete.html.erb修正)
               <% end %>
             </div>
           <% end %>

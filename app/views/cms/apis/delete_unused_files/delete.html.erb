@@ -1,8 +1,19 @@
-<% file = @item %>
+<%= form_for :item, url: { action: :destroy }, html: { method: :delete, id: "item-form", multipart: true } do |f| %>
+  <%= error_messages_for :item %>
 
-  <%= link_to t('ss.buttons.delete'),
-              params[:cid].blank? ? cms_apis_delete_unused_file_path(owner_item_id: @owner_item.id, id: file.id) : cms_apis_node_delete_unused_file_path(owner_item_id: @owner_item.id, id: file.id),
-              method: :delete,
-              remote: true,
-              data: { confirm: t('ss.confirm.delete') },
-              class: "ajax-box" %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.confirm.delete") %></h2></div>
+      <div class="addon-body">
+        <div class="selected-image">
+          <img src="<%= @item.thumb_url %>" alt="<%= @item.basename %>" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t('ss.buttons.delete'), class: 'btn-danger delete' %>
+    <%= link_to(t("ss.buttons.cancel"), { action: :delete }, { class: "ajax-box btn-default back-to-show" }) %>
+  </footer>
+<% end %>
