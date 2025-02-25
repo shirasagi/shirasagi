@@ -27,10 +27,16 @@ class Sys::SiteCopyJob < SS::ApplicationJob
   attr_accessor :src_site, :dest_site, :copy_options
 
   def perform
-    Rails.logger.info("サイト複製処理を開始します。#{Sys::SiteCopyTask.t :copy_contents}: #{@copy_contents}")
+    Rails.logger.info{ "サイト複製処理を開始します。#{Sys::SiteCopyTask.t :copy_contents}: #{@copy_contents}" }
 
     @src_site = Cms::Site.find(@task.source_site_id)
     @copy_contents = @task.copy_contents
+
+    Rails.logger.debug do
+      "Sys::SiteCopyJob[perform] @task.source_site_id:#{@task.source_site_id}" \
+        "@task.copy_contents: #{@task.copy_contents}"
+    end
+
     dest_site_params = {
       name: @task.target_host_name,
       host: @task.target_host_host,

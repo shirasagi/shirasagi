@@ -32,9 +32,4 @@
       </tbody>
     </table>
   </dd>
-
-  <% unless SS.config.ss.disable_permission_level %>
-    <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
-    <dd><%= f.select :permission_level, (1..@cur_user.cms_role_level(@cur_site)).map { |i| %W(#{i} #{i}) } %></dd>
-  <% end %>
 </dl>

@@ -409,7 +409,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -426,7 +425,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -473,7 +471,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -521,7 +518,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -538,7 +534,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present

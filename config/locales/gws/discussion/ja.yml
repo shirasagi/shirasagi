@@ -118,7 +118,6 @@ ja:
         users_hash: 管理ユーザー
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ
-        permission_level: 権限レベル
       gws/addon/discussion/release:
         released: 公開日時
       gws/addon/discussion/readable_setting:

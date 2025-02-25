@@ -6,12 +6,15 @@ describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page, cur_site: site }
   let(:prefix) { I18n.t("workflow.cloned_name_prefix") }
   let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:now) { Time.zone.now.change(usec: 0) }
 
   describe "#new_clone" do
     context "with page having thumbnail" do
       let(:file) { tmp_ss_file(site: site, user: user, contents: file_path) }
       let!(:item) do
-        create :article_page, cur_site: site, cur_user: user, cur_node: node, html: "<p>#{unique_id}</p>", thumb_id: file.id
+        Timecop.freeze(now - 1.week) do
+          create :article_page, cur_site: site, cur_user: user, cur_node: node, html: "<p>#{unique_id}</p>", thumb_id: file.id
+        end
       end
 
       context "before save" do
@@ -29,7 +32,6 @@ describe Article::Page, dbscope: :example do
           expect(subject.state).not_to eq item.state
           expect(subject.state).to eq 'closed'
           expect(subject.group_ids).to eq item.group_ids
-          expect(subject.permission_level).to eq item.permission_level
           expect(subject.workflow_user_id).to be_nil
           expect(subject.workflow_state).to be_nil
           expect(subject.workflow_comment).to be_nil
@@ -44,8 +46,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created).to eq item.created
-          expect(subject.updated).to eq item.updated
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to eq item.updated.in_time_zone
           expect(subject.released).to be_nil
           expect(subject.first_released).to be_nil
 
@@ -79,7 +81,6 @@ describe Article::Page, dbscope: :example do
           expect(subject.state).not_to eq item.state
           expect(subject.state).to eq 'closed'
           expect(subject.group_ids).to eq item.group_ids
-          expect(subject.permission_level).to eq item.permission_level
           expect(subject.workflow_user_id).to be_nil
           expect(subject.workflow_state).to be_nil
           expect(subject.workflow_comment).to be_nil
@@ -94,8 +95,8 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created).to eq item.created
-          expect(subject.updated).to be > item.updated
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
           expect(subject.released).to be_nil
           expect(subject.first_released).to be_nil
 
@@ -145,7 +146,6 @@ describe Article::Page, dbscope: :example do
             expect(subject.state).not_to eq item.state
             expect(subject.state).to eq 'closed'
             expect(subject.group_ids).to eq item.group_ids
-            expect(subject.permission_level).to eq item.permission_level
             expect(subject.workflow_user_id).to be_nil
             expect(subject.workflow_state).to be_nil
             expect(subject.workflow_comment).to be_nil
