@@ -2,11 +2,6 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
-  <% if !SS.config.ss.disable_permission_level && @item.respond_to?(:permission_level) %>
-  <dt><%= @model.t :permission_level %></dt>
-  <dd><%= @item.label :permission_level %></dd>
-  <% end %>
-
   <dt><%= @model.t :permissions %></dt>
   <dd class="role-permissions">
     <%= render "ss/roles/show_permissions", model: @model %>

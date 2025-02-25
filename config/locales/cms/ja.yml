@@ -1148,11 +1148,9 @@ ja:
       cms/addon/permission:
         group_ids: 管理グループ
         groups: 管理グループ
-        permission_level: 権限レベル
       cms/addon/group_permission:
         group_ids: 管理グループ
         groups: 管理グループ
-        permission_level: 権限レベル
       cms/addon/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -1968,11 +1966,6 @@ ja:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
       captcha_test:
         - 認証画像の表示を確認します。
-
-    cms/role:
-      permission_level:
-        - 権限レベルを設定します。
-        - 数字が大きいほど強い権限になります。
 
     search_contents:
       html:
@@ -3383,7 +3376,6 @@ ja:
     status: ステータス
     released: 公開日時
     group_names: 管理グループ
-    permission_level: 権限レベル
     size: 容量
 
   job:

@@ -56,7 +56,7 @@ describe Cms::User do
     subject { create(:cms_user_base, :cms_user_rand_name, :cms_user_email, group: group1, cms_role_ids: [ role1.id, role2.id ]) }
 
     its(:cms_role_permissions) { is_expected.to be_a(Hash) }
-    its(:cms_role_permissions) { is_expected.to include("edit_private_article_pages_#{cms_site.id}" => 1) }
+    its(:cms_role_permissions) { is_expected.to include("edit_private_article_pages_#{cms_site.id}") }
   end
 
   describe "#cms_role_permissions" do

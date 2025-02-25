@@ -10,7 +10,7 @@ describe Gws::StaffRecord::UserOccupation, type: :model, dbscope: :example do
   let!(:occupation1) do
     create(
       :gws_staff_record_user_occupation, cur_site: site1, year: year1,
-      group_ids: [ group1.id, group2.id ], user_ids: [ user1.id, user2.id ], permission_level: rand(1..3)
+      group_ids: [ group1.id, group2.id ], user_ids: [ user1.id, user2.id ]
     )
   end
 
@@ -63,9 +63,6 @@ describe Gws::StaffRecord::UserOccupation, type: :model, dbscope: :example do
         expect(imported_user_occupation.group_ids).to be_blank
         expect(imported_user_occupation.user_ids).to have(3).items
         expect(imported_user_occupation.user_ids).to include(gws_user.id, user1.id, user2.id)
-        unless SS.config.ss.disable_permission_level
-          expect(imported_user_occupation.permission_level).to eq occupation1.permission_level
-        end
       end
     end
   end

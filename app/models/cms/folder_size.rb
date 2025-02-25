@@ -15,9 +15,6 @@ class Cms::FolderSize
       %w(released),
       %w(group_names to_group_names)
     ]
-    unless SS.config.ss.disable_permission_level
-      fields << %w(permission_level)
-    end
     fields << %w(size to_size)
     fields
   end.freeze

@@ -11,7 +11,6 @@ class Webmail::RoleImportJob < Webmail::ApplicationJob
         count += 1 if row.key?(Webmail::Role.t("id"))
         count += 1 if row.key?(Webmail::Role.t("name"))
         count += 1 if row.key?(Webmail::Role.t("permissions"))
-        count += 1 if row.key?(Webmail::Role.t("permission_level"))
         break
       end
       count >= 3
@@ -35,7 +34,6 @@ class Webmail::RoleImportJob < Webmail::ApplicationJob
     id               = val(row, "id")
     name             = val(row, "name")
     permissions      = val(row, "permissions").split("\n")
-    permission_level = val(row, "permission_level").to_i
 
     if id.present?
       item = Webmail::Role.unscoped.where(id: id).first
@@ -54,7 +52,6 @@ class Webmail::RoleImportJob < Webmail::ApplicationJob
 
     item.name             = name
     item.permissions      = item.normalized_permissions(permissions)
-    item.permission_level = (permission_level <= 0) ? 1 : permission_level
 
     if !item.save
       Rails.logger.warn("#{index}行目: 権限/ロール #{id} をインポート中にエラーが発生しました。エラー:\n#{item.errors.full_messages.join("\n")}")

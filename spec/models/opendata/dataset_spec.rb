@@ -114,7 +114,6 @@ describe Opendata::Dataset, dbscope: :example do
         cur_node: node,
         site_id: site.id,
         user_id: user.id,
-        permission_level: 1,
         group_ids: [1],
         state: "public",
         order: 1,

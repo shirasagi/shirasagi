@@ -33,8 +33,8 @@ exclusions = %w(
 admin_permissions = Cms::Role.permission_names - exclusions
 user_permissions = Cms::Role.permission_names.select { |n| n =~ /_(private|other)_/ } - exclusions
 
-r01 = save_role name: I18n.t('cms.roles.admin'), site_id: @site.id, permissions: admin_permissions, permission_level: 3
-r02 = save_role name: I18n.t('cms.roles.user'), site_id: @site.id, permissions: user_permissions, permission_level: 1
+r01 = save_role name: I18n.t('cms.roles.admin'), site_id: @site.id, permissions: admin_permissions
+r02 = save_role name: I18n.t('cms.roles.user'), site_id: @site.id, permissions: user_permissions
 
 Cms::User.unscoped.find_by(uid: "sys").add_to_set(cms_role_ids: r01.id)
 Cms::User.unscoped.find_by(uid: "admin").add_to_set(cms_role_ids: r01.id)

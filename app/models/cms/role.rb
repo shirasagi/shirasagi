@@ -5,16 +5,6 @@ class Cms::Role
 
   set_permission_name "cms_roles", :edit
 
-  field :permission_level, type: Integer, default: 1
-
-  permit_params :permission_level
-
-  validates :permission_level, presence: true
-
-  def permission_level_options
-    [%w(1 1), %w(2 2), %w(3 3)]
-  end
-
   class << self
     def to_csv(site, encode = nil)
       I18n.with_locale(I18n.default_locale) do
@@ -29,9 +19,6 @@ class Cms::Role
 
     def header
       headers = %w(id name permissions)
-      unless SS.config.ss.disable_permission_level
-        headers << 'permission_level'
-      end
       headers.map { |e| t e }
     end
 
@@ -43,9 +30,6 @@ class Cms::Role
         item.name,
         localized_permissions(item).join("\n")
       ]
-      unless SS.config.ss.disable_permission_level
-        row << item.permission_level
-      end
       row
     end
 

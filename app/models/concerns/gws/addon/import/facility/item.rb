@@ -69,9 +69,6 @@ module Gws::Addon::Import::Facility
               line << item.readable_member_names.join("\n")
               line << item.group_names.join("\n")
               line << item.user_names.join("\n")
-              unless SS.config.ss.disable_permission_level
-                line << item.permission_level
-              end
               data << line
             end
           end
@@ -91,9 +88,6 @@ module Gws::Addon::Import::Facility
           reservable_group_names reservable_member_names readable_setting_range
           readable_group_names readable_member_names group_names user_names
         )
-        unless SS.config.ss.disable_permission_level
-          headers << "permission_level"
-        end
         headers
       end
 
@@ -279,9 +273,6 @@ module Gws::Addon::Import::Facility
       item.readable_member_ids = user_names_to_ids(readable_member_names)
       item.group_ids = group_names_to_ids(group_names)
       item.user_ids = user_names_to_ids(user_names)
-      if row.key?(header_t("permission_level"))
-        item.permission_level = row[header_t("permission_level")].to_s.strip
-      end
 
       item.approval_check_state = approval_check_state_datas_text_to_value(approval_check_state)
       item.update_approved_state = update_approved_state_datas_text_to_value(update_approved_state)

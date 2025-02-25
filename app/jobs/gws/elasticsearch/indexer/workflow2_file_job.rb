@@ -215,7 +215,6 @@ class Gws::Elasticsearch::Indexer::Workflow2FileJob < Gws::ApplicationJob
     doc[:group_ids] = item_group_ids
     # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
     doc[:user_ids] = item_user_ids
-    # doc[:permission_level] = item.permission_level
   end
 
   def build_updated(doc)

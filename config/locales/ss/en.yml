@@ -854,7 +854,6 @@ en:
         site_id: Site
       ss/model/role:
         name: Role name
-        permission_level: Permission level
         permissions: Permission settings
       ss/model/address:
         member_id: User
@@ -1241,8 +1240,6 @@ en:
       close_date:
         - Specify the date and time to end publishing.
         - Publishing will cease at the specified date and time.
-      permission_level:
-        - Specify the permission level at which edits are allowed.
       group_ids:
         - Select the groups that are allowed to edit.
       user_ids:

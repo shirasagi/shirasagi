@@ -7,7 +7,7 @@ class SS::Migration20181218000000
     return if Webmail::Role.count > 0
 
     webmail_r01 = Webmail::Role.new(
-      name: I18n.t('webmail.roles.admin'), permissions: Webmail::Role.permission_names, permission_level: 3
+      name: I18n.t('webmail.roles.admin'), permissions: Webmail::Role.permission_names
     )
     webmail_r01.without_record_timestamps { webmail_r01.save! }
 

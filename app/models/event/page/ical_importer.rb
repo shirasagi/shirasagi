@@ -200,7 +200,6 @@ class Event::Page::IcalImporter
     item.layout_id ||= node.page_layout_id
     item.state ||= node.ical_page_state if node.ical_page_state.present?
     item.category_ids = Array.new(node.ical_category_ids) if item.category_ids.blank?
-    item.permission_level = node.permission_level if item.permission_level.blank?
     item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
     item.ical_uid ||= extract_text(event.x_shirasagi_parent_uid).presence || uid
 

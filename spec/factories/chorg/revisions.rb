@@ -54,6 +54,5 @@ FactoryBot.define do
     state { "public" }
     order { 0 }
     category_ids { [ 83, 88, 128, 129, 135, 136 ] }
-    permission_level { 1 }
   end
 end

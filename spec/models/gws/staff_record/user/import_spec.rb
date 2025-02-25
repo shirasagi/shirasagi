@@ -19,8 +19,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
     create(
       :gws_staff_record_user, cur_site: site1, year: year1, title_ids: [title1.id], occupation_ids: [occupation1.id],
       readable_setting_range: readable_setting_range, readable_group_ids: [group1.id, group2.id],
-      readable_member_ids: [user1.id, user2.id], group_ids: [group3.id, group4.id], user_ids: [user3.id, user4.id],
-      permission_level: rand(1..3)
+      readable_member_ids: [user1.id, user2.id], group_ids: [group3.id, group4.id], user_ids: [user3.id, user4.id]
     )
   end
 

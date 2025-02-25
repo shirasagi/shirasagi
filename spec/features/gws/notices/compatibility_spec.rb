@@ -8,7 +8,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   context 'when v1.7.0 post is given' do
     V170_FIELDS = %w(
       _id close_date created custom_group_ids custom_groups_hash deleted email_notification group_ids
-      groups_hash message_notification name notification_noticed permission_level readable_custom_group_ids
+      groups_hash message_notification name notification_noticed readable_custom_group_ids
       readable_custom_groups_hash readable_group_ids readable_groups_hash readable_member_ids
       readable_members_hash readable_setting_range release_date released severity site_id state text
       text_index text_type updated user_group_id user_group_name user_id user_ids user_name user_uid users_hash

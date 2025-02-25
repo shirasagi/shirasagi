@@ -19,8 +19,8 @@ module Webmail::Permission
       action = permission_action || action
       permit = "#{action}_#{permission_name}"
 
-      role = user.webmail_roles.in(permissions: permit).first
-      role ? all : none
+      has_role = user.webmail_roles.in(permissions: permit).exists?
+      has_role ? all : none
     end
   end
 end

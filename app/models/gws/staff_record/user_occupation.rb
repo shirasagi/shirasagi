@@ -67,16 +67,10 @@ class Gws::StaffRecord::UserOccupation
   end
 
   def export_fields
-    fields = %w(
+    %w(
       id code name remark order
       group_ids user_ids
     )
-
-    unless SS.config.ss.disable_permission_level
-      fields << "permission_level"
-    end
-
-    fields
   end
 
   def export_convert_item(item, data)

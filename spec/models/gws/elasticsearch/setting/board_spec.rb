@@ -19,7 +19,6 @@ describe Gws::Elasticsearch::Setting::Board, type: :model, dbscope: :example do
 
       filter = item.manageable_filter[:bool][:should].to_json
       expect(filter).to include %({"term":{"user_ids":#{user.id}}})
-      expect(filter).to include %({"range":{"permission_level":{"gte":0,"lte":3}}})
 
       # manageable/private
 
@@ -32,7 +31,6 @@ describe Gws::Elasticsearch::Setting::Board, type: :model, dbscope: :example do
       filter = item.manageable_filter[:bool][:should].to_json
       expect(filter).to include %({"term":{"user_ids":#{user.id}}})
       expect(filter).to include %({"terms":{"group_ids":#{user.group_ids.to_json}}})
-      expect(filter).to include %({"range":{"permission_level":{"gte":0,"lte":3}}})
 
       # manageable/none
 

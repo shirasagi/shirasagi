@@ -73,7 +73,6 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
     doc[:group_ids] = item.groups.pluck(:id)
     doc[:custom_group_ids] = item.custom_groups.pluck(:id)
     doc[:user_ids] = item.users.pluck(:id)
-    doc[:permission_level] = item.permission_level
 
     doc[:member_ids] = item.members.pluck(:id)
     doc[:member_custom_group_ids] = item.member_custom_groups.pluck(:id)
@@ -107,7 +106,6 @@ class Gws::Elasticsearch::Indexer::ReportFileJob < Gws::ApplicationJob
     doc[:group_ids] = item.groups.pluck(:id)
     doc[:custom_group_ids] = item.custom_groups.pluck(:id)
     doc[:user_ids] = item.users.pluck(:id)
-    doc[:permission_level] = item.permission_level
 
     doc[:member_ids] = item.members.pluck(:id)
     doc[:member_custom_group_ids] = item.member_custom_groups.pluck(:id)

@@ -316,7 +316,6 @@ ja:
         gws_role_ids: ロール
       gws/addon/permission:
         group_ids: 管理グループ
-        permission_level: 権限レベル
       gws/group_permission:
         group_ids: 管理グループ
         groups_hash: 管理グループ(ハッシュ)
@@ -324,7 +323,6 @@ ja:
         users_hash: 管理ユーザー(ハッシュ)
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ(ハッシュ)
-        permission_level: 権限レベル
       gws/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -644,9 +642,6 @@ ja:
         - 並び順を入力します。
       in_parent:
         - 親フォルダーを選択してください。
-    gws/role:
-      permission_level:
-        - 権限レベルを設定します。
     gws/addon/user/affair_setting:
       staff_category: 職員区分を設定します。
       staff_address_uid: 宛名番号を入力します。

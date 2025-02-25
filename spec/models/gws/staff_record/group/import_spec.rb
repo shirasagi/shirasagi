@@ -12,7 +12,7 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
     create(
       :gws_staff_record_group, cur_site: site1, year: year1, seating_chart_url: "/#{unique_id}/#{unique_id}.html",
       readable_setting_range: readable_setting_range, readable_group_ids: [ group1.id ],
-      readable_member_ids: [ user1.id ], group_ids: [ group2.id ], user_ids: [ user2.id ], permission_level: rand(1..3)
+      readable_member_ids: [ user1.id ], group_ids: [ group2.id ], user_ids: [ user2.id ]
     )
   end
 
@@ -70,9 +70,6 @@ describe Gws::StaffRecord::Group, type: :model, dbscope: :example do
         expect(imported_staff_record_group.group_ids).to be_blank
         expect(imported_staff_record_group.user_ids).to have(2).items
         expect(imported_staff_record_group.user_ids).to include(gws_user.id, user2.id)
-        unless SS.config.ss.disable_permission_level
-          expect(imported_staff_record_group.permission_level).to eq staff_record_group1.permission_level
-        end
       end
     end
   end

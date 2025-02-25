@@ -67,7 +67,6 @@ describe Article::Page, dbscope: :example do
           expect(subject.state).not_to eq item.state
           expect(subject.state).to eq 'closed'
           expect(subject.group_ids).to eq item.group_ids
-          expect(subject.permission_level).to eq item.permission_level
           expect(subject.workflow_user_id).to be_nil
           expect(subject.workflow_state).to be_nil
           expect(subject.workflow_comment).to be_nil
@@ -133,7 +132,6 @@ describe Article::Page, dbscope: :example do
           expect(subject.state).not_to eq item.state
           expect(subject.state).to eq 'closed'
           expect(subject.group_ids).to eq item.group_ids
-          expect(subject.permission_level).to eq item.permission_level
           expect(subject.workflow_user_id).to be_nil
           expect(subject.workflow_state).to be_nil
           expect(subject.workflow_comment).to be_nil
@@ -221,7 +219,6 @@ describe Article::Page, dbscope: :example do
             expect(subject.state).not_to eq item.state
             expect(subject.state).to eq 'closed'
             expect(subject.group_ids).to eq item.group_ids
-            expect(subject.permission_level).to eq item.permission_level
             expect(subject.workflow_user_id).to be_nil
             expect(subject.workflow_state).to be_nil
             expect(subject.workflow_comment).to be_nil
