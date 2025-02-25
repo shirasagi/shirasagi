@@ -37,15 +37,6 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
     end.to_json
   end
 
-  def render_update(status, opts = nil)
-    if status == :ok
-      flash[:notice] = t("ss.notice.deleted")
-    else
-      flash[:alert] = t("ss.notice.unable_to_delete")
-    end
-    redirect_to :back
-  end
-
   public
 
   def delete
@@ -60,6 +51,5 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
       Rails.logger.error{ "Failed to destroy item with ID: #{@item.id}. Errors: #{@item.errors.full_messages.join(', ')}" }
       render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
     end
-    render_update(:status)
   end
 end
