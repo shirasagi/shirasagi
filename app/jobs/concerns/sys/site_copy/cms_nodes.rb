@@ -8,6 +8,10 @@ module Sys::SiteCopy::CmsNodes
     node_ids.each do |node_id|
       node = Cms::Node.site(@src_site).find(node_id) rescue nil
       next if node.blank?
+      Rails.logger.debug do
+        "[copy_cms_nodes] #{node.filename}:" \
+          "コピー開始 (summary_page_id=#{node.try(:summary_page_id)})"
+      end
       copy_cms_node(node)
     end
   end
