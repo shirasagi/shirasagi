@@ -14,6 +14,6 @@
 
   <footer class="send">
     <%= f.submit t('ss.buttons.delete'), class: 'btn-danger delete' %>
-    <%= link_to(t("ss.buttons.cancel"), { action: :delete }, { class: "ajax-box btn-default back-to-show" }) %>
+    <%= link_to(t("ss.buttons.cancel"), "", { class: "btn-default", onclick: '$.colorbox.close(); return false;' }) %>
   </footer>
 <% end %>
