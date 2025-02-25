@@ -150,6 +150,7 @@ en:
     edit_gws_personal_addresses: Use of personal address books
     edit_gws_user_profile: Edit user profile
     edit_password_gws_user_profile: Edit password of user profile
+    edit_gws_memo_notice_user_setting: Use notice settings of user profile
 
   modules:
     gws: Standard
