@@ -4,7 +4,6 @@ FactoryBot.define do
     cur_user { cms_user }
     name { "cms_role" }
     permissions { [] }
-    permission_level { 1 }
   end
 
   factory :cms_role, class: Cms::Role, traits: [:cms_role] do

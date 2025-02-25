@@ -75,9 +75,6 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq nil
         expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq nil
         expect(item.groups.pluck(:name)).to match_array ["シラサギ市/企画政策部/政策課"]
-        unless SS.config.ss.disable_permission_level
-          expect(item.permission_level).to be 1
-        end
         expect(item.state).to eq "closed"
       end
     end
@@ -128,9 +125,6 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to be_nil
         expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to be_nil
         #expect(item.groups.pluck(:name)).to match_array ["シラサギ市/企画政策部/政策課"]
-        unless SS.config.ss.disable_permission_level
-          expect(item.permission_level).to be 1
-        end
         expect(item.state).to eq "public"
       end
     end
