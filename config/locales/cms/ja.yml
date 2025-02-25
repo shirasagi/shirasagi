@@ -186,6 +186,7 @@ ja:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
     visit_article: 記事を見る
+    content_quota_navi: フォルダー使用量
 
     adobe_reader:
       remark:
@@ -313,6 +314,9 @@ ja:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
+      content_quota_navi:
+        - "コンテンツに表示されているフォルダーのおおよその使用量を表示しています。"
+        - "対象のフォルダー属性: %{routes} "
     apis:
       categories:
         index: カテゴリーを選択する
