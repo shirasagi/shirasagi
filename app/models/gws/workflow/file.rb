@@ -16,6 +16,7 @@ class Gws::Workflow::File
 
   cattr_reader(:approver_user_class) { Gws::User }
   self.default_release_state = "closed"
+  set_module_to_readable :workflow
 
   seqid :id
   field :name, type: String
@@ -61,10 +62,12 @@ class Gws::Workflow::File
       cur_user = params[:cur_user]
 
       allow_selector = unscoped do
-        all.allow(:read, cur_user, site: cur_site).selector
+        criteria = all.allow(:read, cur_user, site: cur_site)
+        criteria.none? ? { id: -1 } : criteria.selector
       end
       readable_selector = unscoped do
-        all.in(state: %w(approve public)).readable(cur_user, site: cur_site).selector
+        criteria = all.in(state: %w(approve public)).readable(cur_user, site: cur_site)
+        criteria.none? ? { id: -1 } : criteria.selector
       end
       base_criteria = base_criteria.where('$and' => [{ '$or' => [ allow_selector, readable_selector ] }])
 

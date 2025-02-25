@@ -5,30 +5,32 @@
 <div class="main-box gws-todo-box">
   <div class="portlet-title"><%= @portlet.name %></div>
 
-  <ul class="list-items">
-    <% items.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <%= link_to item.name, gws_schedule_todo_readable_path(category: '-', id: item), class: 'title' %>
+  <% if Gws.module_usable?(:schedule, @cur_site, @cur_user) %>
+    <ul class="list-items">
+      <% items.each do |item| %>
+        <li class="list-item">
+          <div class="info">
+            <%= link_to item.name, gws_schedule_todo_readable_path(category: '-', id: item), class: 'title' %>
 
-          <div class="meta">
-            <span class="ss-quota-bar gws-achievement-bar">
-              <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></span>
-              <span class="usage " style="width: <%= item.achievement_rate || 0 %>%"></span>
-            </span>
-            <span class="datetime">
-              <%= Gws::Schedule::Todo.t(:term) %>: <%= ss_time_tag item.end_at %>
-              <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
-                <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
-              <% end %>
-            </span>
+            <div class="meta">
+              <span class="ss-quota-bar gws-achievement-bar">
+                <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></span>
+                <span class="usage " style="width: <%= item.achievement_rate || 0 %>%"></span>
+              </span>
+              <span class="datetime">
+                <%= Gws::Schedule::Todo.t(:term) %>: <%= ss_time_tag item.end_at %>
+                <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
+                  <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
+                <% end %>
+              </span>
+            </div>
           </div>
-        </div>
-      </li>
-    <% end %>
-  </ul>
+        </li>
+      <% end %>
+    </ul>
 
-  <% if items.next_page %>
-    <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_schedule_todo_main_path %></div>
+    <% if items.next_page %>
+      <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_schedule_todo_main_path %></div>
+    <% end %>
   <% end %>
 </div>
