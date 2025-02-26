@@ -79,20 +79,18 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         click_on I18n.t("ss.buttons.ignore_alert")
 
         within '#selected-files' do
-          within ".file-view.unused", text: 'logo.png' do
-            expect(page).to have_link(I18n.t("ss.buttons.delete"))
+          within ".file-view.unused" do
+            expect(page).to have_content(I18n.t("ss.unused_file"))
+            expect(page).to have_content(I18n.t("ss.buttons.delete"))
+            click_link I18n.t("ss.buttons.delete")
           end
         end
 
-        accept_confirm do
-          within '#selected-files' do
-            within ".file-view.unused", text: 'logo.png' do
-              click_link I18n.t("ss.buttons.delete")
-            end
+        within 'form#ajax-form' do
+          within "footer.send" do
+            click_on I18n.t("ss.buttons.delete")
           end
         end
-
-        wait_for_notice I18n.t('ss.notice.deleted')
 
         within '#selected-files' do
           expect(page).not_to have_css(".file-view.unused", text: 'logo.png')
@@ -213,29 +211,27 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
           element = find('.file-view', text: 'shirasagi.pdf', match: :first)
           expect(element['class']).to include('unused')
+          expect(page).to have_content(I18n.t("ss.unused_file"))
 
-          within ".file-view.unused", text: 'shirasagi.pdf' do
+          within ".file-view.unused" do
             expect(page).to have_link(I18n.t("ss.buttons.delete"))
           end
         end
       end
     end
 
-    require 'pry-byebug'
-    binding.pry
-
     within '#selected-files' do
       within ".file-view.unused", text: 'shirasagi.pdf' do
         expect(page).to have_link(I18n.t("ss.buttons.delete"))
-        accept_confirm(I18n.t("ss.confirm.delete")) do
-          click_link I18n.t("ss.buttons.delete")
-        end
+        click_link I18n.t("ss.buttons.delete")
       end
     end
 
-    binding.pry
-
-    wait_for_notice I18n.t('ss.notice.deleted')
+    within 'form#ajax-form' do
+      within "footer.send" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+    end
 
     within '#selected-files' do
       expect(page).not_to have_css(".file-view.unused", text: 'shirasagi.pdf')
