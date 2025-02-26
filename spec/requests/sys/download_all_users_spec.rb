@@ -26,7 +26,9 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
            lock_state: "locked",
            deletion_lock_state: "unlocked",
            type: SS::Model::User::TYPE_SSO,
+           remark: "Test Remark",
            lang: "ja",
+           timezone: "Asia/Tokyo",
            in_password: nil,
            group_ids: [group.id],
            sys_role_ids: [role.id],
@@ -59,11 +61,12 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
       wait_for_download
 
       I18n.with_locale(I18n.default_locale) do
-        csv_data = CSV.read(downloads.first, headers: true, encoding: 'UTF-8')
+        csv_data = CSV.read(downloads.first, headers: true, encoding: 'BOM|UTF-8')
+
         expect(csv_data.length).to eq 3
         expected_headers = %w(
-          id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
-          initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups
+         id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
+         initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
         ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header) }
         expect(csv_data.headers).to include(*expected_headers)
 
@@ -94,11 +97,13 @@ default: "initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id",
 default: "organization_id")]).to eq(organization.name)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.groups", default: "groups")]).to eq(group.name)
-        expect(row['DN']).to eq(user.ldap_dn)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.remark", default: "remark")]).to eq(user.remark)
         unless Sys::Auth::Setting.instance.mfa_otp_use_none?
           expect(row[I18n.t("mongoid.attributes.ss/model/user.mfa_otp_enabled_at", default: "mfa_otp_enabled_at")]).to be_nil
         end
         expect(row[I18n.t("modules.addons.ss/locale_setting")]).to eq(I18n.t("ss.options.lang.ja"))
+        expect(row[I18n.t("mongoid.attributes.ss/addon/locale_setting.timezone", default: "timezone")]).to eq(user.timezone)
+        expect(row['DN']).to eq(user.ldap_dn)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.sys_roles", default: "sys_roles")]).to eq(role.name)
       end
     end
