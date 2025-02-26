@@ -27,7 +27,7 @@
         <div id="file-<%= file.id %>" class="<%= css_class %>" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
           <% if css_class.include?("unused") %>
-            <span class="unused-message">未使用</span>
+            <span class="unused-message"><%= t("ss.unused_file") %></span>
           <% end %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if file.image? %>

@@ -48,6 +48,7 @@ ja:
     replace: 差し替え
     before_replace: 差し替え前
     after_replace: 差し替え後
+    unused_file: 未使用
     broken_link: リンク切れ
     auto_reload: 自動更新
     quality: 画質
