@@ -32,7 +32,7 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
 
   def render_update(result, opts = {})
     if result
-      flash[:notice] = opts[:notice] if opts[:notice]
+      flash.now[:notice] = opts[:notice] if opts[:notice]
       render json: items_json, status: :ok, content_type: json_content_type
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
