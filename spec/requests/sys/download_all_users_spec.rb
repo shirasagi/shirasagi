@@ -68,6 +68,13 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
          id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
          initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
         ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header) }
+
+        expected_headers += [
+          I18n.t("modules.addons.ss/locale_setting"),
+          I18n.t("mongoid.attributes.ss/addon/locale_setting.timezone"),
+          "DN"
+        ]
+
         expect(csv_data.headers).to include(*expected_headers)
 
         row = csv_data[-1]
