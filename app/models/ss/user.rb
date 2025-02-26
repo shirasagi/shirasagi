@@ -12,7 +12,7 @@ class SS::User
     headers = %w(
         id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
         initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups
-        ldap_dn ss/locale_setting
+        remark ss/locale_setting timezone ldap_dn
       )
     unless Sys::Auth::Setting.instance.mfa_otp_use_none?
       headers << "mfa_otp_enabled_at"
@@ -30,6 +30,8 @@ class SS::User
             'DN'
           when 'ss/locale_setting'
             I18n.t("modules.addons.ss/locale_setting")
+          when 'timezone'
+            I18n.t("mongoid.attributes.ss/addon/locale_setting.timezone")
           else
             I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header)
           end
@@ -37,58 +39,48 @@ class SS::User
 
         opts[:criteria].each do |item|
           next if item.nil?
-
-          begin
-            csv << generate_csv_row(item)
-          rescue => e
-            Rails.logger.error{ "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-          end
+          csv << generate_csv_row(item)
         end
       end
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def self.generate_csv_row(item)
-    begin
-      csv_headers.map do |header|
-        case header
-        when "password"
-          ""
-        when "mfa_otp_enabled_at"
-          if item.mfa_otp_secret.present?
-            I18n.t("ss.mfa_otp_enabled_at", time: I18n.l(item.mfa_otp_enabled_at, format: :picker))
-          else
-            I18n.t("ss.mfa_otp_not_enabled_yet")
-          end
-        when "sys_roles"
-          item.sys_roles.pluck(:name).join("\n")
-        when "account_start_date", "account_expiration_date"
-          item.try(header).present? ? I18n.l(item.try(header)) : nil
-        when "initial_password_warning"
-          item.initial_password_warning.present? ? I18n.t('ss.options.state.enabled') : I18n.t('ss.options.state.disabled')
-        when "type"
-          item.try(header).present? ? I18n.t("ss.options.user_type.#{item.try(header)}") : nil
-        when "restriction"
-          item.try(header).present? ? I18n.t("ss.options.restriction.#{item.try(header)}") : nil
-        when "lock_state"
-          item.try(header).present? ? I18n.t("ss.options.user_lock_state.#{item.try(header)}") : nil
-        when "deletion_lock_state"
-          item.try(header).present? ? I18n.t("ss.options.user_deletion_lock_state.#{item.try(header)}") : nil
-        when "organization_id"
-          item.organization&.name
-        when "groups"
-          item.groups.pluck(:name).join("\n")
-        when "ss/locale_setting"
-          item.try(:lang).present? ? I18n.t("ss.options.lang.#{item.try(:lang)}") : nil
+    csv_headers.map do |header|
+      case header
+      when "password"
+        ""
+      when "mfa_otp_enabled_at"
+        if item.mfa_otp_secret.present?
+          I18n.t("ss.mfa_otp_enabled_at", time: I18n.l(item.mfa_otp_enabled_at, format: :picker))
         else
-          item.try(header)
+          I18n.t("ss.mfa_otp_not_enabled_yet")
         end
+      when "sys_roles"
+        item.sys_roles.pluck(:name).join("\n")
+      when "account_start_date", "account_expiration_date"
+        item.try(header).present? ? I18n.l(item.try(header)) : nil
+      when "initial_password_warning"
+        item.initial_password_warning.present? ? I18n.t('ss.options.state.enabled') : I18n.t('ss.options.state.disabled')
+      when "type"
+        item.try(header).present? ? I18n.t("ss.options.user_type.#{item.try(header)}") : nil
+      when "restriction"
+        item.try(header).present? ? I18n.t("ss.options.restriction.#{item.try(header)}") : nil
+      when "lock_state"
+        item.try(header).present? ? I18n.t("ss.options.user_lock_state.#{item.try(header)}") : nil
+      when "deletion_lock_state"
+        item.try(header).present? ? I18n.t("ss.options.user_deletion_lock_state.#{item.try(header)}") : nil
+      when "organization_id"
+        item.organization&.name
+      when "groups"
+        item.groups.pluck(:name).join("\n")
+      when "ss/locale_setting"
+        item.try(:lang).present? ? I18n.t("ss.options.lang.#{item.try(:lang)}") : nil
+      when "ss/addon/locale_setting.timezone"
+        (item.try(:timezone).presence)
+      else
+        item.try(header)
       end
-    rescue => e
-      Rails.logger.debug{ "Failed to generate CSV row for item #{item.id}: #{e.message}" }
-      []
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 end

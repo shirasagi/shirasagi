@@ -96,7 +96,11 @@ class Sys::UsersController < ApplicationController
                      .search(params[:s])
     criteria = criteria.reorder(id: 1)
     csv = @model.to_csv(criteria: criteria, site: @cur_site)
-    send_data csv.encode(@item.encoding, invalid: :replace, undef: :replace),
-              filename: "sys_users_#{Time.zone.now.to_i}.csv"
+    if @item.encoding.present? && @item.encoding.casecmp("UTF-8") == 0
+      csv = SS::Csv::UTF8_BOM + csv
+    else
+      csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
+    send_data csv, filename: "sys_users_#{Time.zone.now.to_i}.csv"
   end
 end
