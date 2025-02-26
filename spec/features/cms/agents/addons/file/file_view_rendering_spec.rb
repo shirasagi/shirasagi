@@ -86,9 +86,12 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
 
-        within 'form#ajax-form' do
-          within "footer.send" do
-            click_on I18n.t("ss.buttons.delete")
+        wait_for_cbox_opened do
+          page.execute_script("SS_AjaxFile.firesEvents = true;")
+          within 'form#ajax-form' do
+            within "footer.send" do
+              click_on I18n.t("ss.buttons.delete")
+            end
           end
         end
 
@@ -221,7 +224,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     end
 
     within '#selected-files' do
-      within ".file-view.unused", text: 'shirasagi.pdf' do
+      within ".file-view.unused" do
         expect(page).to have_link(I18n.t("ss.buttons.delete"))
         click_link I18n.t("ss.buttons.delete")
       end
