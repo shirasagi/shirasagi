@@ -26,20 +26,17 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
 
   def items_json
     [ @item, @item.thumb ].select { |item| Fs.file?(item.path) }.map do |item|
-      {
-        name: item.name,
-        filename: item.filename,
-        content_type: item.content_type,
-        size: item.size,
-        url: item.url,
-        updated_to_i: item.updated.to_i,
-      }
+      {}
     end.to_json
   end
 
-  def render_update(status, opts = nil)
-    flash.now[:notice] = t("ss.notice.deleted") if status == :ok
-    # redirect_back fallback_location: root_url
+  def render_update(result, opts = {})
+    if result
+      flash[:notice] = opts[:notice] if opts[:notice]
+      render json: items_json, status: :ok, content_type: json_content_type
+    else
+      render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
+    end
   end
 
   public
@@ -49,13 +46,8 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
   end
 
   def destroy
-    if @item.destroy
-      Rails.logger.debug{ "Successfully destroyed item with ID: #{@item.id}" }
-      render_update(:ok)
-      render json: items_json, status: :ok, content_type: json_content_type
-    else
-      Rails.logger.error{ "Failed to destroy item with ID: #{@item.id}. Errors: #{@item.errors.full_messages.join(', ')}" }
-      render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
-    end
+    @item.destroy
+    Rails.logger.debug{ "Successfully destroyed item with ID: #{@item.id}" }
+    render_update true, notice: t('ss.notice.deleted')
   end
 end

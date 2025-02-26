@@ -1,4 +1,8 @@
-<%= form_for :item, url: { action: :destroy }, html: { method: :delete, id: "item-form", multipart: true } do |f| %>
+<%= jquery do %>
+  SS_ReplaceFile.instance().renderConfirm("<%= url_for(action: :delete) %>");
+<% end %>
+
+<%= form_for :item, url: { action: :destroy }, html: { method: :delete, id: "ajax-form", multipart: true } do |f| %>
   <%= error_messages_for :item %>
 
   <div class="addon-views">
