@@ -3,13 +3,7 @@
   <%= text_area_tag "mod-cms-body", value.value, id: nil, class: "column-free-html", style: "height: 400px;" %>
 
   <% if value.files.present? %>
-    <div class="tooltip">?
-      <ul class="tooltip-content">
-        <% Array(t("tooltip.cms/addon/file.description")).flatten.each do |tooltip| %>
-          <li><%= tooltip %><br></li>
-        <% end %>
-      </ul>
-    </div>
+    <%= tt('cms/addon/file.description', 'tooltip') %>
     <div id="selected-files">
       <% value.files.each do |file| %>
         <%
