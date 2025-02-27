@@ -40,7 +40,12 @@ class SS::User
 
           opts[:criteria].each do |item|
             next if item.nil?
-            csv << generate_csv_row(item)
+
+            begin
+              csv << generate_csv_row(item)
+            rescue => e
+              Rails.logger.error{ "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+            end
           end
         end
       end
