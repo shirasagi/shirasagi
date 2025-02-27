@@ -30,6 +30,7 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
     end.to_json
   end
 
+  # rubocop:disable Rails/ActionControllerFlashBeforeRender
   def render_update(result, opts = {})
     if result
       flash[:notice] = opts[:notice] if opts[:notice]
@@ -38,6 +39,7 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
       render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
     end
   end
+  # rubocop:enable Rails/ActionControllerFlashBeforeRender
 
   public
 
