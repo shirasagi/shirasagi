@@ -33,6 +33,7 @@ class Gws::Affair2::Attendance::Record
   validates :date, presence: true
   validate :validate_regular
 
+  before_save :set_regular_work_minutes
   before_save :set_break_minutes
   before_save :set_work_minutes
   before_save :set_over_minutes
@@ -40,7 +41,7 @@ class Gws::Affair2::Attendance::Record
   # 所定時間が入力され準備完了か？
   def regular_open?
     return true if regular_holiday?
-    return (regular_start && regular_close && regular_break_minutes) if regular_workday?
+    return (regular_start && regular_close && regular_break_minutes && regular_work_minutes) if regular_workday?
     false
   end
 
@@ -98,6 +99,15 @@ class Gws::Affair2::Attendance::Record
     end
     if regular_start && regular_close && regular_start >= regular_close
       errors.add :regular_close, :greater_than, count: t(:regular_start)
+    end
+  end
+
+  def set_regular_work_minutes
+    return if regular_work_minutes
+    if regular_start && regular_close && regular_break_minutes
+      minutes = time_to_min(regular_close) - time_to_min(regular_start) - regular_break_minutes
+      minutes > 0 ? minutes : 0
+      self.regular_work_minutes = minutes
     end
   end
 
