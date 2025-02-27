@@ -32,7 +32,7 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
 
   def render_update(result, opts = {})
     if result
-      flash.now[:notice] = opts[:notice] if opts[:notice]
+      flash[:notice] = opts[:notice] if opts[:notice]
       render json: items_json, status: :ok, content_type: json_content_type
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
@@ -46,8 +46,13 @@ class Cms::Apis::DeleteUnusedFilesController < ApplicationController
   end
 
   def destroy
-    @item.destroy
-    Rails.logger.debug{ "Successfully destroyed item with ID: #{@item.id}" }
-    render_update true, notice: t('ss.notice.deleted')
+    result = @item.destroy
+    if result
+      Rails.logger.debug{ "Successfully destroyed item with ID: #{@item.id}" }
+      render_update result, notice: t('ss.notice.deleted')
+    else
+      Rails.logger.error { "Failed to destroy item with ID: #{@item.id}" }
+      render_update result
+    end
   end
 end
