@@ -94,13 +94,20 @@ class Sys::UsersController < ApplicationController
     criteria = @model.allow(:edit, @cur_user)
                      .state(params.dig(:s, :state))
                      .search(params[:s])
-    criteria = criteria.reorder(id: 1)
+                     .reorder(id: 1)
+
     csv = @model.to_csv(criteria: criteria, site: @cur_site)
-    if @item.encoding.present? && @item.encoding.casecmp("UTF-8") == 0
-      csv = SS::Csv::UTF8_BOM + csv
-    else
-      csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
-    end
+    csv = encode_csv(csv, @item.encoding)
     send_data csv, filename: "sys_users_#{Time.zone.now.to_i}.csv"
+  end
+
+  private
+
+  def encode_csv(csv, encoding)
+    if encoding.present? && encoding.casecmp("UTF-8").zero?
+      SS::Csv::UTF8_BOM + csv
+    else
+      csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
   end
 end
