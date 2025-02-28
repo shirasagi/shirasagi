@@ -559,10 +559,10 @@ ja:
     edit_private_gws_affair2_overtime_workday_files: 時間外申請の編集（所有）
     delete_other_gws_affair2_overtime_workday_files: 時間外申請の削除（全て）
     delete_private_gws_affair2_overtime_workday_files: 時間外申請の削除（所有）
-    approve_private_gws_affair2_overtime_workday_files: 時間外申請の承認（所有）
     approve_other_gws_affair2_overtime_workday_files: 時間外申請の承認（全て）
-    reroute_private_gws_affair2_overtime_workday_files: 時間外申請の経路変更（所有）
+    approve_private_gws_affair2_overtime_workday_files: 時間外申請の承認（所有）
     reroute_other_gws_affair2_overtime_workday_files: 時間外申請の経路変更（全て）
+    reroute_private_gws_affair2_overtime_workday_files: 時間外申請の経路変更（所有）
     # overtime_holiday_files
     read_other_gws_affair2_overtime_holiday_files: 休出申請の閲覧（全て）
     read_private_gws_affair2_overtime_holiday_files: 休出申請の閲覧（所有）
@@ -570,10 +570,10 @@ ja:
     edit_private_gws_affair2_overtime_holiday_files: 休出申請の編集（所有）
     delete_other_gws_affair2_overtime_holiday_files: 休出申請の削除（全て）
     delete_private_gws_affair2_overtime_holiday_files: 休出申請の削除（所有）
-    approve_private_gws_affair2_overtime_holiday_files: 休出申請の承認（所有）
     approve_other_gws_affair2_overtime_holiday_files: 休出申請の承認（全て）
-    reroute_private_gws_affair2_overtime_holiday_files: 休出申請の経路変更（所有）
+    approve_private_gws_affair2_overtime_holiday_files: 休出申請の承認（所有）
     reroute_other_gws_affair2_overtime_holiday_files: 休出申請の経路変更（全て）
+    reroute_private_gws_affair2_overtime_holiday_files: 休出申請の経路変更（所有）
     # leave_files
     read_other_gws_affair2_leave_files: 休暇申請の閲覧（全て）
     read_private_gws_affair2_leave_files: 休暇申請の閲覧（所有）
@@ -581,10 +581,10 @@ ja:
     edit_private_gws_affair2_leave_files: 休暇申請の編集（所有）
     delete_other_gws_affair2_leave_files: 休暇申請の削除（全て）
     delete_private_gws_affair2_leave_files: 休暇申請の削除（所有）
-    approve_private_gws_affair2_leave_files: 休暇申請の承認（全て）
-    approve_other_gws_affair2_leave_files: 休暇申請の承認（所有）
-    reroute_private_gws_affair2_leave_files: 休暇申請の経路変更（全て）
-    reroute_other_gws_affair2_leave_files: 休暇申請の経路変更（所有）
+    approve_other_gws_affair2_leave_files: 休暇申請の承認（全て）
+    approve_private_gws_affair2_leave_files: 休暇申請の承認（所有）
+    reroute_other_gws_affair2_leave_files: 休暇申請の経路変更（全て）
+    reroute_private_gws_affair2_leave_files: 休暇申請の経路変更（所有）
     # book
     read_gws_affair2_time_card_books: "様式 出勤簿の閲覧"
     read_gws_affair2_workday_overtime_books: "様式 時間外(平日)の閲覧"
@@ -599,6 +599,6 @@ ja:
     use_sub_gws_affair2_leave_achieves: 休暇取得累計の閲覧（所属下）
     use_all_gws_affair2_leave_achieves: 休暇取得累計の閲覧（全て）
     # aggregation
-    use_gws_affair2_aggregation: 実績出力の利用
+    use_gws_affair2_aggregations: 実績出力の利用
     # settings
     use_gws_affair2_admin_settings: 設定の管理

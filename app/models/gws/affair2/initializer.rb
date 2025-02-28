@@ -21,10 +21,10 @@ module Gws::Affair2
     Gws::Role.permission :edit_private_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
     Gws::Role.permission :delete_other_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
     Gws::Role.permission :delete_private_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
-    Gws::Role.permission :approve_private_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
     Gws::Role.permission :approve_other_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
-    Gws::Role.permission :reroute_private_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
+    Gws::Role.permission :approve_private_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
     Gws::Role.permission :reroute_other_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
+    Gws::Role.permission :reroute_private_gws_affair2_overtime_workday_files, module_name: 'gws/affair2'
 
     # overtime_holiday_files
     Gws::Role.permission :read_other_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
@@ -33,10 +33,10 @@ module Gws::Affair2
     Gws::Role.permission :edit_private_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
     Gws::Role.permission :delete_other_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
     Gws::Role.permission :delete_private_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
-    Gws::Role.permission :approve_private_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
     Gws::Role.permission :approve_other_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
-    Gws::Role.permission :reroute_private_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
+    Gws::Role.permission :approve_private_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
     Gws::Role.permission :reroute_other_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
+    Gws::Role.permission :reroute_private_gws_affair2_overtime_holiday_files, module_name: 'gws/affair2'
 
     # leave_files
     Gws::Role.permission :read_other_gws_affair2_leave_files, module_name: 'gws/affair2'
@@ -45,10 +45,10 @@ module Gws::Affair2
     Gws::Role.permission :edit_private_gws_affair2_leave_files, module_name: 'gws/affair2'
     Gws::Role.permission :delete_other_gws_affair2_leave_files, module_name: 'gws/affair2'
     Gws::Role.permission :delete_private_gws_affair2_leave_files, module_name: 'gws/affair2'
-    Gws::Role.permission :approve_private_gws_affair2_leave_files, module_name: 'gws/affair2'
     Gws::Role.permission :approve_other_gws_affair2_leave_files, module_name: 'gws/affair2'
-    Gws::Role.permission :reroute_private_gws_affair2_leave_files, module_name: 'gws/affair2'
+    Gws::Role.permission :approve_private_gws_affair2_leave_files, module_name: 'gws/affair2'
     Gws::Role.permission :reroute_other_gws_affair2_leave_files, module_name: 'gws/affair2'
+    Gws::Role.permission :reroute_private_gws_affair2_leave_files, module_name: 'gws/affair2'
 
     # book
     Gws::Role.permission :read_gws_affair2_time_card_books, module_name: 'gws/affair2'
@@ -64,6 +64,9 @@ module Gws::Affair2
     Gws::Role.permission :use_private_gws_affair2_leave_achieves, module_name: 'gws/affair2'
     Gws::Role.permission :use_sub_gws_affair2_leave_achieves, module_name: 'gws/affair2'
     Gws::Role.permission :use_all_gws_affair2_leave_achieves, module_name: 'gws/affair2'
+
+    # aggregation
+    Gws::Role.permission :use_gws_affair2_aggregations, module_name: 'gws/affair2'
 
     # settings
     Gws::Role.permission :use_gws_affair2_admin_settings, module_name: 'gws/affair2'
