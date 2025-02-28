@@ -125,7 +125,7 @@ class Cms::Member
 
       unless member.save
         error_message = member.errors.full_messages.join(", ")
-        Rails.logger.error { "[SS::Csv/foreach_row] Failed to save member #{row['id']}: #{error_message}" }
+        Rails.logger.error { "[SS::Csv/foreach_row] Failed to save member id #{row['id']}: #{error_message}" }
         return { success: false, error: "id: #{row['id']} : #{error_message}" }
       end
 
