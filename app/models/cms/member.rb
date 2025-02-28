@@ -92,22 +92,25 @@ class Cms::Member
       end
     end
 
-    def import_csv(file, cur_site:, cur_user:)
-      Rails.logger.debug { "[Cms::Member/import_csv] Starting import: #{file.inspect} (class: #{file.class})" }
+    def import_csv(import_param)
+      Rails.logger.debug { "[Cms::Member/import_csv] Starting import: #{import_param.inspect} (class: #{import_param.class})" }
 
       importer = build_importer.create
 
-      SS::Csv.foreach_row(file) do |row|
+      SS::Csv.foreach_row(import_param.in_file.path, headers: true) do |row|
         next if row.blank? || !row.respond_to?(:[])
-        result = process_csv_row(row, importer, cur_site, cur_user)
-        return result unless result[:success]
+        result = process_csv_row(row, importer, import_param.cur_site, import_param.cur_user)
+        unless result[:success]
+          import_param.errors.add(:base, result[:error])
+          return false
+        end
       end
-
       Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed successfully" }
       { success: true }
     rescue => e
       Rails.logger.error { "[Cms::Member/import_csv] CSV import failed: #{e.message}" }
-      { success: false, error: e.message }
+      import_param.errors.add(:base, :malformed_csv)
+      false
     end
 
     private
@@ -144,7 +147,7 @@ class Cms::Member
         importer.simple_column :email
         importer.simple_column :password do |row, member, head, value|
           password = value.to_s.strip
-          member.in_password = password if password.present?
+          member.in_password = password
         end
         importer.simple_column :kana
         importer.simple_column :organization_name

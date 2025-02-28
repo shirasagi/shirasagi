@@ -44,35 +44,32 @@ class Cms::MembersController < ApplicationController
 
   def import
     raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site)
+    return if request.get? || request.head?
 
-    if request.get?
-      @item = @model.new
+    @item = SS::ImportParam.new(cur_user: @cur_user, cur_site: @cur_site)
+
+    if params[:item].blank?
+      @item.errors.add :base, I18n.t("ss.errors.import.blank_file")
+      render :import and return
+    end
+
+    @item.attributes = params.require(:item).permit(:in_file)
+
+    if File.extname(@item.in_file.original_filename).downcase != ".csv"
+      @item.errors.add :base, :invalid_csv
+      render :import and return
+    end
+
+    result = Cms::Member.import_csv(@item)
+    Rails.logger.debug{ "POST request for import action with file: #{result.inspect}" }
+
+    if result
+      Rails.logger.debug{ "Import successful: #{@item.inspect}" }
+      flash[:notice] = t("ss.notice.imported")
+      redirect_to action: :index
+    else
+      Rails.logger.error{ "Import failed: #{@item.errors}" }
       render :import
-    elsif request.post?
-      if params[:item].nil?
-        flash.now[:notice] = I18n.t("ss.errors.import.blank_file")
-        render :import
-        return
-      end
-
-      file = params[:item][:in_file]
-      Rails.logger.debug{ "POST request for import action with file: #{file.inspect}" }
-      if File.extname(file.original_filename).downcase != ".csv"
-        flash.now[:notice] = I18n.t("ss.errors.import.invalid_file_type")
-        render :import
-        return
-      end
-      result = Cms::Member.import_csv(file, cur_site: @cur_site, cur_user: @cur_user)
-      Rails.logger.debug{ "POST request for import action with file: #{result.inspect}" }
-      if result[:success]
-        flash[:notice] = t("ss.notice.saved")
-        Rails.logger.debug{ "Import successful: #{file.inspect}" }
-        redirect_to action: :index
-      else
-        flash.now[:notice] = "#{t("ss.notice.not_saved_successfully")} #{result[:error]}"
-        Rails.logger.error{ "Import failed: #{result[:error]}" }
-        render :import
-      end
     end
   end
 
