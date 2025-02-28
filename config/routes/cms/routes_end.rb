@@ -420,7 +420,6 @@ Rails.application.routes.draw do
         end
         resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
           get :delete, on: :member
-
         end
       end
       namespace "opendata_ref" do
