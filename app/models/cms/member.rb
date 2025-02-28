@@ -102,7 +102,7 @@ class Cms::Member
         result = process_csv_row(row, importer, import_param.cur_site, import_param.cur_user)
         unless result[:success]
           import_param.errors.add(:base, result[:error])
-          return false
+          return { success: false }
         end
       end
       Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed successfully" }
@@ -110,7 +110,7 @@ class Cms::Member
     rescue => e
       Rails.logger.error { "[Cms::Member/import_csv] CSV import failed: #{e.message}" }
       import_param.errors.add(:base, :malformed_csv)
-      false
+      { success: false }
     end
 
     private
@@ -147,7 +147,7 @@ class Cms::Member
         importer.simple_column :email
         importer.simple_column :password do |row, member, head, value|
           password = value.to_s.strip
-          member.in_password = password
+          member.in_password = password if password.present?
         end
         importer.simple_column :kana
         importer.simple_column :organization_name

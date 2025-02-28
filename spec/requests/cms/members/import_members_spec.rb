@@ -71,7 +71,7 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
             end
           end
         end
-        expect(page).to have_content(I18n.t('ss.errors.import.invalid_file_type'))
+        expect(page).to have_content(I18n.t('errors.messages.invalid_csv'))
       end
     end
 
@@ -91,7 +91,7 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
           end
         end
         expect(page).to have_current_path(index_path)
-        expect(page).to have_content(I18n.t('ss.notice.saved'))
+        expect(page).to have_content(I18n.t('ss.notice.imported'))
       end
     end
 
@@ -111,7 +111,7 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
           end
         end
         expect(page).to have_current_path(index_path)
-        expect(page).to have_content(I18n.t('ss.notice.saved'))
+        expect(page).to have_content(I18n.t('ss.notice.imported'))
       end
     end
 
@@ -130,7 +130,7 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
             end
           end
         end
-        expect(page).to have_content("#{I18n.t('ss.notice.not_saved_successfully')} Invalid data")
+        expect(page).to have_content("Invalid data")
       end
     end
 
@@ -149,7 +149,7 @@ RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: tr
             end
           end
         end
-        expect(page).to have_content("#{I18n.t('ss.notice.not_saved_successfully')} Duplicate data")
+        expect(page).to have_content("Duplicate data")
       end
     end
   end

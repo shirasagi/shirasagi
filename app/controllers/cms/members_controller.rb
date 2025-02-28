@@ -49,7 +49,7 @@ class Cms::MembersController < ApplicationController
     @item = SS::ImportParam.new(cur_user: @cur_user, cur_site: @cur_site)
 
     if params[:item].blank?
-      @item.errors.add :base, I18n.t("ss.errors.import.blank_file")
+      @item.errors.add :base, t("ss.errors.import.blank_file")
       render :import and return
     end
 
@@ -63,11 +63,12 @@ class Cms::MembersController < ApplicationController
     result = Cms::Member.import_csv(@item)
     Rails.logger.debug{ "POST request for import action with file: #{result.inspect}" }
 
-    if result
+    if result[:success]
       Rails.logger.debug{ "Import successful: #{@item.inspect}" }
       flash[:notice] = t("ss.notice.imported")
       redirect_to action: :index
     else
+      @item.errors.add(:base, result[:error]) if @item.errors.blank?
       Rails.logger.error{ "Import failed: #{@item.errors}" }
       render :import
     end
