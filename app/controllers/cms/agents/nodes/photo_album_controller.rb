@@ -55,19 +55,25 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
     @cur_parent = @cur_node.parent
   end
 
-  def all_pages
-    @all_pages ||= begin
+  def condition_hash
+    @condition_hash ||= begin
       if @cur_node.conditions.present?
-        condition_hash = @cur_node.condition_hash
+        @cur_node.condition_hash
       else
         condition_hash = @cur_parent.try(:condition_hash)
-        condition_hash ||= @cur_node.condition_hash
+        condition_hash || @cur_node.condition_hash
       end
+    end
+  end
 
+  def all_pages
+    @all_pages ||= begin
       service = PhotoAlbumSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
       service.cur_date = @cur_date
       service.condition_hash = condition_hash
       service.sort = @cur_node.sort
+      service.page = nil
+      service.limit = nil
       service.call
     end
   end
@@ -75,13 +81,6 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   public
 
   def index
-    if @cur_node.conditions.present?
-      condition_hash = @cur_node.condition_hash
-    else
-      condition_hash = @cur_parent.try(:condition_hash)
-      condition_hash ||= @cur_node.condition_hash
-    end
-
     service = PhotoAlbumSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
     service.cur_date = @cur_date
     service.condition_hash = condition_hash
