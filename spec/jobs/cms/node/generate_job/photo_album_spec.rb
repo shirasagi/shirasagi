@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Cms::Node::GenerateJob, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout }
@@ -12,12 +13,16 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   end
   let(:attachment_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
   let!(:page1) do
-    file = tmp_ss_file(site: site, user: user, contents: attachment_path, basename: 'logo.png')
-    create(:article_page, cur_site: site, cur_node: article_node, layout: layout, file_ids: [ file.id ], state: 'public')
+    Timecop.freeze(now - 1.hour) do
+      file = tmp_ss_file(site: site, user: user, contents: attachment_path, basename: 'logo.png')
+      create(:article_page, cur_site: site, cur_node: article_node, layout: layout, file_ids: [ file.id ], state: 'public')
+    end
   end
   let!(:page2) do
-    file = tmp_ss_file(site: site, user: user, contents: attachment_path, basename: 'logo.png')
-    create(:article_page, cur_site: site, cur_node: article_node, layout: layout, file_ids: [ file.id ], state: 'public')
+    Timecop.freeze(now - 2.hours) do
+      file = tmp_ss_file(site: site, user: user, contents: attachment_path, basename: 'logo.png')
+      create(:article_page, cur_site: site, cur_node: article_node, layout: layout, file_ids: [ file.id ], state: 'public')
+    end
   end
 
   before do
@@ -53,6 +58,14 @@ describe Cms::Node::GenerateJob, dbscope: :example do
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      html = File.read("#{photo_album_node.path}/index.html")
+      html = Nokogiri::HTML5::Document.parse(html)
+      html.css(".photos .photo").tap do |photos|
+        expect(photos).to have(2).items
+        expect(photos[0].css(".title").text.strip).to eq page1.name
+        expect(photos[1].css(".title").text.strip).to eq page2.name
       end
     end
   end
