@@ -30,6 +30,13 @@ module Cms::NodeFilter::ListView
     end
   end
 
+  def cleanup_rss_file
+    basename = "rss.xml"
+    file = "#{@cur_node.path}/#{basename}"
+    return unless Fs.exist?(file)
+    Fs.rm_rf file
+  end
+
   def _render_with_pagination(items)
     save_items = @items
     @items = items
@@ -64,10 +71,12 @@ module Cms::NodeFilter::ListView
       @task.log "#{@cur_node.url}#{basename}" if @task
     end
 
-    basename = "rss.xml"
-    rss = _render_rss(@cur_node, [])
-    if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
-      @task.log "#{@cur_node.url}#{basename}" if @task
+    if self.class.generates_rss
+      basename = "rss.xml"
+      rss = _render_rss(@cur_node, [])
+      if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
+        @task.log "#{@cur_node.url}#{basename}" if @task
+      end
     end
   end
 
@@ -111,12 +120,14 @@ module Cms::NodeFilter::ListView
   def generate
     if index_page_exist? || !@cur_node.serve_static_file?
       cleanup_index_files(1)
+      cleanup_rss_file
       return true
     end
 
     if all_pages.blank?
       generate_empty_files
       cleanup_index_files(1)
+      cleanup_rss_file unless self.class.generates_rss
       return true
     end
 
@@ -150,6 +161,7 @@ module Cms::NodeFilter::ListView
     end
 
     cleanup_index_files(next_page_index)
+    cleanup_rss_file unless self.class.generates_rss
     true
   ensure
     head :no_content
