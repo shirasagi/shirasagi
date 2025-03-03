@@ -109,7 +109,6 @@ class Cms::Member
 
       Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed #{all_success ? 'successfully' : 'with errors'}" }
       { success: all_success }
-
     rescue => e
       Rails.logger.error { "[Cms::Member/import_csv] CSV import failed: #{e.message}" }
       import_param.errors.add(:base, :malformed_csv)
