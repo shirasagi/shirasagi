@@ -4,7 +4,8 @@ module Cms::NodeFilter::ListView
   include Cms::PublicFilter::Node
 
   included do
-
+    cattr_accessor :generates_rss, instance_accessor: false
+    self.generates_rss = true
     before_action :prepend_current_view_path, only: [:generate]
     helper Cms::ListHelper
   end
@@ -70,6 +71,10 @@ module Cms::NodeFilter::ListView
     end
   end
 
+  def all_pages
+    @all_pages ||= SS::SortEmulator.new(pages, @cur_node.sort_hash)
+  end
+
   public
 
   def index
@@ -109,7 +114,6 @@ module Cms::NodeFilter::ListView
       return true
     end
 
-    all_pages = SS::SortEmulator.new(pages, @cur_node.sort_hash)
     if all_pages.blank?
       generate_empty_files
       cleanup_index_files(1)
@@ -134,7 +138,7 @@ module Cms::NodeFilter::ListView
         @task.log "#{@cur_node.url}#{basename}" if @task
       end
 
-      if page_index == 0
+      if page_index == 0 && self.class.generates_rss
         basename = "rss.xml"
         rss = _render_rss(@cur_node, pages)
         if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
