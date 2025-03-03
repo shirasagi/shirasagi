@@ -96,17 +96,20 @@ class Cms::Member
       Rails.logger.debug { "[Cms::Member/import_csv] Starting import: #{import_param.inspect} (class: #{import_param.class})" }
 
       importer = build_importer.create
+      all_success = true
 
       SS::Csv.foreach_row(import_param.in_file.path, headers: true) do |row|
         next if row.blank? || !row.respond_to?(:[])
         result = process_csv_row(row, importer, import_param.cur_site, import_param.cur_user)
         unless result[:success]
+          all_success = false
           import_param.errors.add(:base, result[:error])
-          return { success: false }
         end
       end
-      Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed successfully" }
-      { success: true }
+
+      Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed #{all_success ? 'successfully' : 'with errors'}" }
+      { success: all_success }
+
     rescue => e
       Rails.logger.error { "[Cms::Member/import_csv] CSV import failed: #{e.message}" }
       import_param.errors.add(:base, :malformed_csv)
