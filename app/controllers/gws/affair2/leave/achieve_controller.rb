@@ -82,7 +82,7 @@ class Gws::Affair2::Leave::AchieveController < ApplicationController
     @user = @users.find(params[:id]) rescue nil
     raise "403" if @user.nil?
 
-    @item = @model.new(@cur_site, @cur_user, @group, @cur_month)
+    @item = @model.new(@cur_site, @user, @group, @cur_month)
     @item.load
   end
 end

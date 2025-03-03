@@ -65,6 +65,22 @@ describe "gws_affair2_overtime_achieve", type: :feature, dbscope: :example, js: 
           end
         end
       end
+
+      it "#show" do
+        visit gws_affair2_overtime_achieve_path(site, affair2.groups.g1_1, year_month, user.id)
+        wait_for_js_ready
+
+        within ".addon-views" do
+          expect(page).to have_text(user.name)
+        end
+
+        visit gws_affair2_overtime_achieve_path(site, affair2.groups.g1_1, year_month, affair2.users.u12.id)
+        wait_for_js_ready
+
+        within ".addon-views" do
+          expect(page).to have_text(affair2.users.u12.name)
+        end
+      end
     end
 
     context "manager user" do
@@ -105,6 +121,22 @@ describe "gws_affair2_overtime_achieve", type: :feature, dbscope: :example, js: 
           end
         end
       end
+
+      it "#show" do
+        visit gws_affair2_overtime_achieve_path(site, affair2.groups.g1_1, year_month, user.id)
+        wait_for_js_ready
+
+        within ".addon-views" do
+          expect(page).to have_text(user.name)
+        end
+
+        visit gws_affair2_overtime_achieve_path(site, affair2.groups.g1_1, year_month, affair2.users.u12.id)
+        wait_for_js_ready
+
+        within ".addon-views" do
+          expect(page).to have_text(affair2.users.u12.name)
+        end
+      end
     end
 
     context "regular user" do
@@ -124,6 +156,22 @@ describe "gws_affair2_overtime_achieve", type: :feature, dbscope: :example, js: 
             expect(page).to have_link affair2.users.u3.long_name
             expect(page).to have_link affair2.users.u4.long_name
           end
+        end
+      end
+
+      it "#show" do
+        visit gws_affair2_overtime_achieve_path(site, affair2.groups.g1_1_1, year_month, user.id)
+        wait_for_js_ready
+
+        within ".addon-views" do
+          expect(page).to have_text(user.name)
+        end
+
+        visit gws_affair2_overtime_achieve_path(site, affair2.groups.g1_1_1, year_month, affair2.users.u4.id)
+        wait_for_js_ready
+
+        within ".addon-views" do
+          expect(page).to have_text(affair2.users.u4.name)
         end
       end
     end
