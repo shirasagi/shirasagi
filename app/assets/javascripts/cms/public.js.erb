@@ -109,17 +109,44 @@ this.SS_Kana = (function () {
         }
 
         var html = $kana.html();
-        var anchorId = 'kana_a_' + index;
-        var $anchor = $("<a />", { id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
-        $kana.html($anchor);
 
-        $anchor.on("click", function (ev) {
-          ev.preventDefault();
-          var $clickedAnchor = $(this);
-          var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
-          location.href = clickedUrl;
-          return false;
-        });
+        // aタグの場合の処理（旧仕様に対応）
+//        if ($kana.is("a")) {
+          var anchorId = 'kana_a_' + index;
+          var $anchor = $("<a />", { id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
+          $kana.html($anchor);
+
+          $anchor.on("click", function (ev) {
+              ev.preventDefault();
+              var $clickedAnchor = $(this);
+              var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
+              location.href = clickedUrl;
+              return false;
+          });
+//        }
+
+//        var buttonId = 'kana_btn_' + index;
+//        var isOn = (cssClass === "on");
+//        var ariaPressed = isOn ? "true" : "false";
+
+//        var $button = $("<button />", {
+//            id: buttonId,
+//            type: "button",
+//            name: "kana",
+//            class: cssClass,
+//            "aria-pressed": ariaPressed,
+//            "data-url": url
+//        }).html(html);
+
+//          $kana.empty().append($button);
+
+//          $button.on("click", function (ev) {
+//              ev.preventDefault();
+//              var $clickedButton = $(this);
+//              var clickedUrl = $clickedButton.data("url");
+//              location.href = clickedUrl;
+//              return false;
+//          });
       });
     });
   };
