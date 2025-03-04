@@ -12,7 +12,7 @@ const DEFAULT_TEMPLATE = `
           <input type="attr.type" name="attr.name" value="<%= selectedItem.id %>" class="attr.class">
           <%= selectedItem.name %>
         </td>
-        <td><a class="deselect btn" href="#"><%= label.delete %></a></td>
+        <td><button name="deselect" type="button" class="deselect btn"><%= label.delete %></button></td>
       </tr>
     <% }); %>
   <% } %>
@@ -53,11 +53,11 @@ export default class extends Controller {
 
   #openDialogByCBox() {
     const selected = [];
-    const params = new URLSearchParams();
-    this.#selectedIds().forEach((id) => params.append("selected[]", id));
+    const apiUrl = new URL(this.apiValue, location.origin);
+    this.#selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
 
     $.colorbox({
-      fixed: true, open: true, href: this.apiValue + "?" + params.toString(), width: "90%", height: "90%",
+      fixed: true, open: true, href: apiUrl.toString(), width: "90%", height: "90%",
       onComplete: () => {
         const $ajaxBox = SS_SearchUI.anchorAjaxBox || $.colorbox.element();
         $ajaxBox.data('on-select', ($selectedItem) => {
@@ -69,30 +69,42 @@ export default class extends Controller {
           selected.push(data);
         });
       },
-      onCleanup: () => { this.#renderResult(selected); }
+      onCleanup: () => { this.#renderResult(selected); $.colorbox.close(); }
     })
   }
 
   #openDialogBySS() {
     // not implemented yet.
-    Dialog.showModal(this.apiValue).then((result) => {
+    const apiUrl = new URL(this.apiValue, location.origin);
+    this.#selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+
+    Dialog.showModal(apiUrl.toString()).then((result) => {
       console.log(result);
     })
   }
 
+  #_templateSource = undefined;
+
   #templateSource() {
+    if (this.#_templateSource) {
+      return this.#_templateSource;
+    }
+
     if (this.hasTemplateTarget) {
-      return this.templateTarget.innerHTML;
+      this.#_templateSource = this.templateTarget.innerHTML;
+      return this.#_templateSource;
     }
 
     const hiddenIdsElement = this.element.querySelector(".hidden-ids");
     if (hiddenIdsElement) {
-      return DEFAULT_TEMPLATE.replaceAll("attr.name", hiddenIdsElement.name)
+      this.#_templateSource = DEFAULT_TEMPLATE.replaceAll("attr.name", hiddenIdsElement.name)
         .replaceAll("attr.type", hiddenIdsElement.type)
         .replaceAll("attr.class", hiddenIdsElement.getAttribute("class"));
+      return this.#_templateSource;
     }
 
-    return DEFAULT_TEMPLATE;
+    this.#_templateSource = DEFAULT_TEMPLATE;
+    return this.#_templateSource;
   }
 
   #renderResult(selectedItems) {
@@ -100,20 +112,28 @@ export default class extends Controller {
       return;
     }
 
-    const existedIds = this.#selectedIds();
-    const nonExistedItems = selectedItems.filter((selectedItem) => !existedIds.has(selectedItem.id))
-
-    const result = ejs.render(
-      this.#templateSource(),
-      {
-        selectedItems: nonExistedItems,
-        label: { delete: i18next.t("ss.buttons.delete") }
-      }
-    )
-
     if (this.selectionTypeValue === "replace") {
+      const result = ejs.render(
+        this.#templateSource(),
+        {
+          selectedItems: selectedItems,
+          label: { delete: i18next.t("ss.buttons.delete") }
+        }
+      )
+
       replaceChildren(this.resultTarget, result);
     } else {
+      // append only missing items
+      const existedIds = this.#selectedIds();
+      const nonExistedItems = selectedItems.filter((selectedItem) => !existedIds.has(selectedItem.id))
+      const result = ejs.render(
+        this.#templateSource(),
+        {
+          selectedItems: nonExistedItems,
+          label: { delete: i18next.t("ss.buttons.delete") }
+        }
+      )
+
       appendChildren(this.resultTarget, result);
     }
 
