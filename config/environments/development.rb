@@ -68,8 +68,7 @@ Rails.application.configure do
   config.active_job.verbose_enqueue_logs = true
 
   # ActiveJob Queue Adapter
-  # config.active_job.queue_adapter = :shirasagi
-  config.active_job.queue_adapter = :inline
+  config.active_job.queue_adapter = :shirasagi
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
