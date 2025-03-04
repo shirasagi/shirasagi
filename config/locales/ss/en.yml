@@ -629,6 +629,7 @@ en:
       prev_slide_message: "Previous slide"
       next_slide_message: "Next slide"
       pagination_bullet_message: "Go to slide {{index}}"
+    unused_file: "Unused"
 
   modules:
     addons:
