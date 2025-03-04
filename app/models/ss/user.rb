@@ -44,7 +44,7 @@ class SS::User
             begin
               csv << generate_csv_row(item)
             rescue => e
-              Rails.logger.error{ "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+              Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
             end
           end
         end
