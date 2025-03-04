@@ -15,6 +15,8 @@ module SS
 
   mattr_accessor(:max_items_per_page) { 50 }
 
+  mattr_accessor(:file_upload_dialog) { :v2 }
+
   # 403
   class ForbiddenError < RuntimeError
     def initialize(msg = nil)
