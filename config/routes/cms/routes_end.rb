@@ -99,7 +99,10 @@ Rails.application.routes.draw do
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end
-      resources :temp_files, only: %i[index]
+      namespace :temp_files do
+        resources :uploads, only: %i[index new create]
+        resources :files, only: %i[index edit update destroy]
+      end
     end
   end
 
