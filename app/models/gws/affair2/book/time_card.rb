@@ -30,7 +30,7 @@ class Gws::Affair2::Book::TimeCard
       { "state" => { "$ne" => "request" } },
       { "$and" => [
         { "date" => { "$gte" => @month0.in_time_zone } },
-        { "date" => { "$lte" => @month5.in_time_zone } }
+        { "date" => { "$lte" => @month5.in_time_zone.end_of_month } }
       ]})
     items.each do |item|
       date = item.date.in_time_zone.to_datetime
