@@ -100,7 +100,9 @@ Rails.application.routes.draw do
         resource :menu, only: %i[show]
       end
       namespace :temp_files do
-        resources :uploads, only: %i[index new create]
+        resources :uploads, only: %i[index new create] do
+          post :preview, on: :collection
+        end
         resources :files, only: %i[index edit update destroy]
       end
     end

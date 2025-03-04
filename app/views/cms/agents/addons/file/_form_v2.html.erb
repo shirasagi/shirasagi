@@ -11,9 +11,9 @@
     else
       od_path_params = {}
     end
-    api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node, **od_path_params)
+    api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node, **od_path_params)
   else
-    api_path = cms_frames_temp_files_files_path(site: @cur_site)
+    api_path = cms_frames_temp_files_uploads_path(site: @cur_site)
   end
 %>
 
