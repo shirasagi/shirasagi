@@ -17,25 +17,37 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   end
 
   describe "#perform" do
-    before do
-      expect do
-        described_class.bind(site_id: site.id).perform_now
-      end.to output(include("/#{photo_album_node.filename}/index.html")).to_stdout
-    end
-
     context "with pages and files" do
       let(:attachment_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
       let!(:page1) do
         Timecop.freeze(now - 1.hour) do
           file = tmp_ss_file(site: site, user: user, contents: attachment_path, basename: 'logo.png')
-          create(:article_page, cur_site: site, cur_node: article_node, layout: layout, file_ids: [ file.id ], state: 'public')
+          page = create(
+            :article_page, cur_site: site, cur_user: user, cur_node: article_node, layout: layout,
+            file_ids: [ file.id ], state: 'public')
+
+          file.reload
+          expect(file.owner_item_id).to eq page.id
+          page
         end
       end
       let!(:page2) do
         Timecop.freeze(now - 2.hours) do
           file = tmp_ss_file(site: site, user: user, contents: attachment_path, basename: 'logo.png')
-          create(:article_page, cur_site: site, cur_node: article_node, layout: layout, file_ids: [ file.id ], state: 'public')
+          page = create(
+            :article_page, cur_site: site, cur_user: user, cur_node: article_node, layout: layout,
+            file_ids: [ file.id ], state: 'public')
+
+          file.reload
+          expect(file.owner_item_id).to eq page.id
+          page
         end
+      end
+
+      before do
+        expect do
+          described_class.bind(site_id: site.id).perform_now
+        end.to output(include("/#{photo_album_node.filename}/index.html")).to_stdout
       end
 
       it do
@@ -77,6 +89,12 @@ describe Cms::Node::GenerateJob, dbscope: :example do
     end
 
     context "without pages and files" do
+      before do
+        expect do
+          described_class.bind(site_id: site.id).perform_now
+        end.to output(include("/#{photo_album_node.filename}/index.html")).to_stdout
+      end
+
       it do
         expect(File.exist?("#{photo_album_node.path}/index.html")).to be_truthy
         # cms/photo には RSS を応答する公開アクションはないので rss.xml が作成されていないことを確認する
