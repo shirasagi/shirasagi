@@ -21,7 +21,7 @@ class Cms::FileSearchService
 
   def call
     @stages = []
-    @stage_face_contains = false
+    @stage_facet_contains = false
     STAGE_BUILDERS.each do |builder|
       send(builder)
     end
@@ -30,7 +30,7 @@ class Cms::FileSearchService
     results = SS::File.collection.aggregate(@stages)
     return [] if results.blank?
 
-    if @stage_face_contains
+    if @stage_facet_contains
       result = results.first
       return [] if result.blank?
 
@@ -92,16 +92,16 @@ class Cms::FileSearchService
   end
 
   def stage_pagination
-    # pagination: see https://stackoverflow.com/questions/20348093/mongodb-aggregation-how-to-get-total-records-count
     return if !offset.numeric? || !limit.numeric?
 
+    # pagination: see https://stackoverflow.com/questions/20348093/mongodb-aggregation-how-to-get-total-records-count
+    @stage_facet_contains = true
     @stages << {
       "$facet" => {
         "paginatedResults" => [{ "$skip" => offset }, { "$limit" => limit }],
         "totalCount" => [{ "$count" => "count" }]
       }
     }
-    @stage_face_contains = true
   end
 
   def parse_results(data)
