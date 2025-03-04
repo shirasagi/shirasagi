@@ -67,7 +67,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         expected_headers = %w(
          id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
          initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
-        ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}", default: header) }
+        ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}") }
 
         expected_headers += [
           I18n.t("modules.addons.ss/locale_setting"),
@@ -78,40 +78,32 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         expect(csv_data.headers).to include(*expected_headers)
 
         row = csv_data[-1]
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.name", default: "name")]).to eq(user.name)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.kana", default: "kana")]).to eq(user.kana)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.uid", default: "uid")]).to eq(user.uid)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_uid",
-default: "organization_uid")]).to eq(user.organization_uid)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.email", default: "email")]).to eq(user.email)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.password", default: "password")]).to be_blank
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.tel", default: "tel")]).to eq(user.tel)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.tel_ext", default: "tel_ext")]).to eq(user.tel_ext)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.type", default: "type")]).to eq(I18n.t("ss.options.user_type.sso"))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.session_lifetime", default: "session_lifetime")]).to eq("3600")
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.restriction",
-default: "restriction")]).to eq(I18n.t("ss.options.restriction.api_only"))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.lock_state",
-default: "lock_state")]).to eq(I18n.t("ss.options.user_lock_state.locked"))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.deletion_lock_state",
-default: "deletion_lock_state")]).to eq(I18n.t("ss.options.user_deletion_lock_state.unlocked"))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date",
-default: "account_start_date")]).to eq(I18n.l(user.account_start_date, format: :default))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date",
-default: "account_expiration_date")]).to eq(I18n.l(user.account_expiration_date, format: :default))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning",
-default: "initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id",
-default: "organization_id")]).to eq(organization.name)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.groups", default: "groups")]).to eq(group.name)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.remark", default: "remark")]).to eq(user.remark)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.name")]).to eq(user.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.kana")]).to eq(user.kana)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.uid")]).to eq(user.uid)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_uid")]).to eq(user.organization_uid)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.email")]).to eq(user.email)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.password")]).to be_blank
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.tel")]).to eq(user.tel)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.tel_ext")]).to eq(user.tel_ext)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.type")]).to eq(I18n.t("ss.options.user_type.sso"))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.session_lifetime")]).to eq("3600")
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.restriction")]).to eq(I18n.t("ss.options.restriction.api_only"))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.lock_state")]).to eq(I18n.t("ss.options.user_lock_state.locked"))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.deletion_lock_state")]).to eq(I18n.t("ss.options.user_deletion_lock_state.unlocked"))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date")]).to eq(I18n.l(user.account_start_date))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date")]).to eq(I18n.l(user.account_expiration_date))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id")]).to eq(organization.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.groups")]).to eq(group.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.remark")]).to eq(user.remark)
         unless Sys::Auth::Setting.instance.mfa_otp_use_none?
-          expect(row[I18n.t("mongoid.attributes.ss/model/user.mfa_otp_enabled_at", default: "mfa_otp_enabled_at")]).to be_nil
+          expect(row[I18n.t("mongoid.attributes.ss/model/user.mfa_otp_enabled_at")]).to be_nil
         end
         expect(row[I18n.t("modules.addons.ss/locale_setting")]).to eq(I18n.t("ss.options.lang.ja"))
-        expect(row[I18n.t("mongoid.attributes.ss/addon/locale_setting.timezone", default: "timezone")]).to eq(user.timezone)
+        expect(row[I18n.t("mongoid.attributes.ss/addon/locale_setting.timezone")]).to eq(user.timezone)
         expect(row['DN']).to eq(user.ldap_dn)
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.sys_roles", default: "sys_roles")]).to eq(role.name)
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.sys_roles")]).to eq(role.name)
       end
     end
   end
