@@ -1,0 +1,3 @@
+id,state,name,email,kana,organization_name,job,tel,postal_code,addr,sex,birthday,last_loggedin,updated,created
+1,enabled,John Doe,john@example.com,ジョン ドウ,Example Corp,Manager,1234567890,123-4567,Tokyo,male,1980-01-01,2025-01-01,2025-01-01,2025-01-01
+1,enabled,John Smith,john@example.com,ジョン スミス,Example Corp,Developer,0987654321,765-4321,Osaka,male,1990-02-02,2025-02-02,2025-02-02,2025-02-02
