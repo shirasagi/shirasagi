@@ -99,6 +99,7 @@ Rails.application.routes.draw do
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end
+      resources :temp_files, only: %i[index]
     end
   end
 
