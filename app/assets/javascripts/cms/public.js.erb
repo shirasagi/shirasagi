@@ -110,14 +110,14 @@ this.SS_Kana = (function () {
 
         const html = $kana.html();
 
-        const anchorId = 'kana_a_' + index;
-        const $anchor = $("<button />", {id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow", title: ""}).html(html);
+        const $anchor = $("<button />", {type: "button", name: "kana", "aria-pressed": "false"}).html(html);
         $kana.html($anchor);
 
         $anchor.on("click", function (ev) {
           ev.preventDefault();
-          const $clickedAnchor = $(this);
-          const clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
+          const $clickedButton = $(this);
+          $clickedButton.attr("aria-pressed", "on")
+          const clickedUrl = url
           location.href = clickedUrl;
           return false;
         });
