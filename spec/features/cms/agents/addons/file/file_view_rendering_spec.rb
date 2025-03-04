@@ -60,6 +60,45 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(element['class']).to include('unused')
         end
       end
+
+      it "should display deletion button for unused file and delete it successfully" do
+        visit article_pages_path(site: site, cid: node)
+        click_on I18n.t("ss.links.new")
+        fill_in "item[name]", with: "sample"
+        click_on I18n.t("ss.links.input")
+        fill_in "item[basename]", with: "sample"
+
+        upload_file_and_select(logo_path)
+        upload_file_and_select(keyvisual_path)
+
+        within ".file-view", text: 'keyvisual.jpg' do
+          find(".action-paste").click
+        end
+
+        click_on I18n.t("ss.buttons.publish_save")
+        click_on I18n.t("ss.buttons.ignore_alert")
+
+        within '#selected-files' do
+          within ".file-view.unused" do
+            expect(page).to have_content(I18n.t("ss.unused_file"))
+            expect(page).to have_content(I18n.t("ss.buttons.delete"))
+            click_link I18n.t("ss.buttons.delete")
+          end
+        end
+
+        wait_for_cbox_opened do
+          page.execute_script("SS_AjaxFile.firesEvents = true;")
+          within 'form#ajax-form' do
+            within "footer.send" do
+              click_on I18n.t("ss.buttons.delete")
+            end
+          end
+        end
+
+        within '#selected-files' do
+          expect(page).not_to have_css(".file-view.unused", text: 'logo.png')
+        end
+      end
     end
   end
 
@@ -175,8 +214,30 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
           element = find('.file-view', text: 'shirasagi.pdf', match: :first)
           expect(element['class']).to include('unused')
+          expect(page).to have_content(I18n.t("ss.unused_file"))
+
+          within ".file-view.unused" do
+            expect(page).to have_link(I18n.t("ss.buttons.delete"))
+          end
         end
       end
+    end
+
+    within '#selected-files' do
+      within ".file-view.unused" do
+        expect(page).to have_link(I18n.t("ss.buttons.delete"))
+        click_link I18n.t("ss.buttons.delete")
+      end
+    end
+
+    within 'form#ajax-form' do
+      within "footer.send" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+    end
+
+    within '#selected-files' do
+      expect(page).not_to have_css(".file-view.unused", text: 'shirasagi.pdf')
     end
   end
 
