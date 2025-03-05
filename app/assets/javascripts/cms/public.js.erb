@@ -112,11 +112,9 @@ this.SS_Kana = (function () {
 
         $anchor.on("click", function (ev) {
           ev.preventDefault();
-          const $clickedButton = $(this);
-          $clickedButton.attr("aria-pressed", "on")
-          const clickedUrl = url
-          location.href = clickedUrl;
-          return false;
+            $(this).attr("aria-pressed", "on");
+            location.href = url;
+            return false;
         });
       });
     });
