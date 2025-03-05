@@ -40,6 +40,12 @@ export default class extends Controller {
     }
   }
 
+  select(ev) {
+    ev.preventDefault();
+    dispatchEvent(ev.target, "ss:modal-select", { item: $(ev.target) });
+    dispatchEvent(ev.target, "ss:modal-close");
+  }
+
   async #selectFiles() {
     if (this.hasDummyButtonTarget) {
       this.dummyButtonTarget.disabled = true;

@@ -1,14 +1,15 @@
 <%
   url = local_assigns.fetch(:file_url, nil).try { |p| p.call(file) } || file.url
-  thumb_url = local_assigns.fetch(:file_thumb_url, nil).try { |p| p.call(file) } || file.thumb_url
 %>
-<%= jquery do %>
-  $(".od-resource-file-meta").hide();
-  $("input[name='item[opendata_dataset_state]']").each(function() {
-    if ($(this).prop("checked")) {
-      $(this).trigger('change');
-    }
-  });
+<% if SS.file_upload_dialog == :v1 %>
+  <%= jquery do %>
+    $(".od-resource-file-meta").hide();
+    $("input[name='item[opendata_dataset_state]']").each(function() {
+      if ($(this).prop("checked")) {
+        $(this).trigger('change');
+      }
+    });
+  <% end %>
 <% end %>
 
 <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>" data-name="<%= file.name %>" data-humanized-name="<%= file.humanized_name %>" data-url="<%= file.url %>" data-thumb-url="<%= file.thumb_url %>" data-extname="<%= file.extname %>">
@@ -46,17 +47,47 @@
   </div>
   <div class="action">
     <% if local_assigns.fetch(:show_attach, true) %>
-      <%= link_to t("sns.file_attach"), "#file-#{file.id}", class: "action-attach" %>
+      <%=
+        if SS.file_upload_dialog == :v1
+          link_to t("sns.file_attach"), "#file-#{file.id}", class: "action-attach"
+        else
+          button_tag t("sns.file_attach"), type: :button, name: 'file_attach', class: 'btn', data: { action: "ss--file-select-box#attachFile" }
+        end
+      %>
       <% if file.image? %>
-        <%= link_to t("sns.image_paste"), "#file-#{file.id}", class: "action-paste" %>
-        <%= link_to t("sns.thumb_paste"), "#file-#{file.id}", class: "action-thumb" %>
+        <%=
+          if SS.file_upload_dialog == :v1
+            link_to t("sns.image_paste"), "#file-#{file.id}", class: "action-paste"
+          else
+            button_tag t("sns.image_paste"), type: :button, name: 'image_paste', class: 'btn', data: { action: "ss--file-select-box#pasteImage" }
+          end
+        %>
+        <%=
+          if SS.file_upload_dialog == :v1
+            link_to t("sns.thumb_paste"), "#file-#{file.id}", class: "action-thumb"
+          else
+            button_tag t("sns.thumb_paste"), type: :button, name: 'thumb_paste', class: 'btn', data: { action: "ss--file-select-box#pasteThumbnail" }
+          end
+        %>
       <% end %>
     <% end %>
     <% if local_assigns.fetch(:show_delete, true) %>
-      <%= link_to t("ss.buttons.delete"), "#file-#{file.id}", class: "action-delete" %>
+      <%=
+        if SS.file_upload_dialog == :v1
+          link_to t("ss.buttons.delete"), "#file-#{file.id}", class: "action-delete"
+        else
+          button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: 'btn', data: { action: "ss--file-select-box#deleteFile" }
+        end
+      %>
     <% end %>
     <% if local_assigns.fetch(:show_copy_url, false) %>
-      <%= link_to t("ss.buttons.copy_url"), "#file-#{file.id}", class: "action-copy-url" %>
+      <%=
+        if SS.file_upload_dialog == :v1
+          link_to t("ss.buttons.copy_url"), "#file-#{file.id}", class: "action-copy-url"
+        else
+          button_tag t("ss.buttons.copy_url"), type: :button, name: 'copy_url', class: 'btn', data: { action: "ss--file-select-box#copyUrl" }
+        end
+      %>
     <% end %>
   </div>
 

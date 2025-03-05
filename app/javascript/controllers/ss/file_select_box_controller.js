@@ -1,0 +1,95 @@
+import SelectBoxController from "./select_box_controller";
+import {prependChildren, replaceChildren} from "../../ss/tool";
+import i18next from 'i18next'
+
+// ファイル選択の選択結果はとてもじゃないけど ejs でレンダリングするのは無理。
+// 選択したファイルをサーバーへポストバックしてレンダリングしてもらう。
+export default class extends SelectBoxController {
+  static values = {
+    selectApi: String,
+    viewApi: String
+  }
+
+  connect() {
+    super.connect();
+  }
+
+  attachFile(ev) {
+    SS_FileView.pasteFile(ev, this.#fileViewOptions());
+  }
+
+  pasteImage(ev) {
+    SS_FileView.pasteImage(ev, this.#fileViewOptions());
+  }
+
+  pasteThumbnail(ev) {
+    SS_FileView.pasteThumbnail(ev, this.#fileViewOptions());
+  }
+
+  deleteFile(ev) {
+    SS_FileView.deleteFile(ev, this.#fileViewOptions());
+  }
+
+  #fileViewOptions() {
+    const options = {
+      viewPath: this.viewApiValue,
+      confirmationOnDelete: i18next.t('ss.confirm.delete'),
+      inUseConfirmation: i18next.t('ss.confirm.in_use')
+    };
+    return options;
+  }
+
+  async _renderResult(selectedItems) {
+    if (!this.hasResultTarget) {
+      return;
+    }
+    if (!selectedItems || selectedItems.length === 0) {
+      return;
+    }
+
+    if (this.selectionTypeValue === "replace") {
+      const overallHtml = [];
+      for(const selectedItem of selectedItems) {
+        const api = this.selectApiValue.replaceAll(':id', selectedItem.id);
+        const response = await fetch(api);
+        if (response.ok) {
+          const html = await response.text();
+          overallHtml.push(html);
+        }
+      }
+      replaceChildren(this.resultTarget, overallHtml.join());
+    } else {
+      // append only missing items
+      const existedIds = this._selectedIds();
+      const nonExistedItems = selectedItems.filter((selectedItem) => !existedIds.has(String(selectedItem.id)))
+      for(const selectedItem of nonExistedItems) {
+        const api = this.selectApiValue.replaceAll(':id', selectedItem.id);
+        const response = await fetch(api);
+        if (response.ok) {
+          const html = await response.text();
+          prependChildren(this.resultTarget, html);
+        }
+      }
+    }
+
+    if (this.hasAjaxTableTarget) {
+      const $table = $(this.ajaxTableTarget);
+      if ($table.find("tbody tr").size() === 0) {
+        $table.hide();
+      } else {
+        $table.show();
+      }
+      $table.trigger("change");
+    }
+  }
+
+  _selectedIds() {
+    if (!this.resultTarget) {
+      return;
+    }
+
+    const idElements = this.resultTarget.querySelectorAll("[data-file-id]");
+    const ids = Array.from(idElements).map((element) => String(element.dataset.fileId));
+    return new Set(ids);
+  }
+}

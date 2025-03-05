@@ -3,7 +3,7 @@
   <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(site: @s.cur_site, cid: @s.cur_node), class: "current", data: { turbo: true } %>
 </div>
 
-<div class="cms-temp-files">
+<div class="cms-temp-files" data-controller="ss--temp-file">
   <div class="search-ui-form">
     <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
       <div>
@@ -37,16 +37,17 @@
           data_hash[:sanitizer_state] = item.sanitizer_state
           data_hash[:sanitizer_state_label] = item.label(:sanitizer_state)
         end
+
         case item
-        when SS::TempFile, Cms::TempFile
-          data_hash[:type] = 'temp_file'
         when Cms::File
           data_hash[:type] = 'cms_file'
         when SS::UserFile
           data_hash[:type] = 'user_file'
+        else # SS::TempFile, Cms::TempFile
+          data_hash[:type] = 'temp_file'
         end
       %>
-      <%= content_tag(:article, class: "file-view", id: "user-file#{item.id}", data: data_hash) do %>
+      <%= content_tag(:article, class: "file-view", id: "file-#{item.id}", data: data_hash) do %>
         <%= sanitizer_status(item) %>
         <%
           opts = { action: :select, id: item }
@@ -54,7 +55,7 @@
           opts[:owner_item_id] = params[:owner_item_id] if params[:owner_item_id].present?
           opts[:owner_item_type] = params[:owner_item_type] if params[:owner_item_type].present?
         %>
-        <a class="select" href="#" title="<%= item.humanized_name %>" data-humanized-name="<%= item.humanized_name %>">
+        <%= link_to "#", class: "select", title: item.humanized_name, data: { humanized_name: item.humanized_name, action: "ss--temp-file#select" } do %>
           <div class="thumb">
             <% if item.image? %>
               <img src="<%= "#{item.thumb_url}?_=#{item.updated.to_i}" %>" alt="<%= item.humanized_name %>"/>
@@ -69,7 +70,7 @@
               <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
             <% end %>
           </div>
-        </a>
+        <% end %>
         <nav class="menu">
           <% if item.is_a?(SS::TempFile) %>
             <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, file_size: params[:file_size]), class: "btn", data: { turbo: true } %>

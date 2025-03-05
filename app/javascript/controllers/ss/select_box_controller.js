@@ -54,7 +54,7 @@ export default class extends Controller {
   #openDialogByCBox() {
     const selected = [];
     const apiUrl = new URL(this.apiValue, location.origin);
-    this.#selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+    this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
 
     $.colorbox({
       fixed: true, open: true, href: apiUrl.toString(), width: "90%", height: "90%",
@@ -69,17 +69,17 @@ export default class extends Controller {
           selected.push(data);
         });
       },
-      onCleanup: () => { this.#renderResult(selected); $.colorbox.close(); }
+      onCleanup: () => { this._renderResult(selected); $.colorbox.close(); }
     })
   }
 
   #openDialogBySS() {
     // not implemented yet.
     const apiUrl = new URL(this.apiValue, location.origin);
-    this.#selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+    this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
 
     Dialog.showModal(apiUrl.toString()).then((result) => {
-      console.log(result);
+      this._renderResult(result.returnValue)
     })
   }
 
@@ -107,8 +107,8 @@ export default class extends Controller {
     return this.#_templateSource;
   }
 
-  #renderResult(selectedItems) {
-    if (!this.resultTarget) {
+  _renderResult(selectedItems) {
+    if (!this.hasResultTarget) {
       return;
     }
 
@@ -124,7 +124,7 @@ export default class extends Controller {
       replaceChildren(this.resultTarget, result);
     } else {
       // append only missing items
-      const existedIds = this.#selectedIds();
+      const existedIds = this._selectedIds();
       const nonExistedItems = selectedItems.filter((selectedItem) => !existedIds.has(selectedItem.id))
       const result = ejs.render(
         this.#templateSource(),
@@ -148,7 +148,7 @@ export default class extends Controller {
     }
   }
 
-  #selectedIds() {
+  _selectedIds() {
     if (!this.resultTarget) {
       return;
     }
