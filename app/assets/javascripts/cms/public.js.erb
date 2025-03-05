@@ -87,8 +87,8 @@ this.SS_Kana = (function () {
     $kanaElements.each(function (index) {
       const $kana = $(this);
       if (!$kana[0]) {
-      return;
-    }
+        return;
+      }
 
       SS.justOnce($kana[0], "ss-kana", function() {
         const pathname = location.pathname;
@@ -127,9 +127,7 @@ this.SS_Kana = (function () {
               location.href = clickedUrl;
               return false;
             });
-          }
-          // 新方式の場合： data-tool="ss-kana" なら button タグを生成
-          else {
+          } else {
             const $anchor = $("<button />", {
               type: "button",
               name: "kana",
