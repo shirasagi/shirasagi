@@ -90,8 +90,10 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         expect(row[I18n.t("mongoid.attributes.ss/model/user.session_lifetime")]).to eq("3600")
         expect(row[I18n.t("mongoid.attributes.ss/model/user.restriction")]).to eq(I18n.t("ss.options.restriction.api_only"))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.lock_state")]).to eq(I18n.t("ss.options.user_lock_state.locked"))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.deletion_lock_state")]).to eq(I18n.t("ss.options.user_deletion_lock_state.unlocked"))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date")]).to eq(I18n.l(user.account_start_date))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.deletion_lock_state")]).to \
+          eq(I18n.t("ss.options.user_deletion_lock_state.unlocked"))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date")]).to \
+          eq(I18n.l(user.account_start_date))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date")]).to eq(I18n.l(user.account_expiration_date))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id")]).to eq(organization.name)
