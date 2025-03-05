@@ -385,18 +385,17 @@ function SS_Voice() {
 }
 
 SS_Voice.prototype.render = function ($voiceTag, index_1)  {
-  var self = this;
-  var $voiceTag = $voiceTag;
-  var index = index_1
+  const self = this;
+  const index = index_1;
   self.url = self.requestUrl();
-  
-  var anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
+
+  const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
   $voiceTag.html('');
   anchor.appendTo($voiceTag);
   self.$voiceTag = anchor;
 
-  var controllerId = 'ss-voice-controller-' + index;
-  var voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
+  const controllerId = 'ss-voice-controller-' + index;
+  const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
   $voiceTag.after(voice_controller);
   self.voiceController = new SS_VoiceController(voice_controller[0]);
   self.state = null;
@@ -437,7 +436,7 @@ SS_Voice.prototype.load = function (ev) {
         return self.playAudio();
       },
       202: function (data, status, xhr) {
-        var retry_after;
+        let retry_after;
         self.renderLoading();
         retry_after = xhr.getResponseHeader('Retry-After');
         if (!retry_after) {
@@ -458,7 +457,7 @@ SS_Voice.prototype.load = function (ev) {
 };
 
 SS_Voice.prototype.renderLoading = function () {
-  var url;
+  let url;
   if (this.state === 'loading') {
     return false;
   }
@@ -470,7 +469,7 @@ SS_Voice.prototype.renderLoading = function () {
 };
 
 SS_Voice.prototype.renderError = function (status) {
-  var url;
+  let url;
   if (this.state === 'error') {
     return false;
   }
@@ -511,7 +510,7 @@ SS_Voice.prototype.playAudio = function () {
 };
 
 SS_Voice.prototype.requestUrl = function () {
-  var path, url;
+  let path, url;
   path = this.trimKanaDir(location.pathname);
   if (path === "/") {
     path = "/index.html";
@@ -598,7 +597,7 @@ this.SS_VoiceController = (function () {
   };
 
   SS_VoiceController.prototype.template = function () {
-    var template = "<div id=\"jquery_jplayer_:TIMESTAMP:\" class=\"jp-jplayer\"></div>\n" +
+    let template = "<div id=\"jquery_jplayer_:TIMESTAMP:\" class=\"jp-jplayer\"></div>\n" +
       "<div id=\"jp_container_:TIMESTAMP:\" class=\"jp-audio\" role=\"application\" aria-label=\"media player\">\n" +
       "  <div class=\"jp-type-single\">\n" +
       "    <div class=\"jp-gui jp-interface\">\n" +
@@ -630,7 +629,7 @@ this.SS_VoiceController = (function () {
       "    </div>\n" +
       "  </div>\n" +
       "</div>";
-    var timestamp = (new Date).getTime();
+    const timestamp = (new Date).getTime();
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
     return template;
