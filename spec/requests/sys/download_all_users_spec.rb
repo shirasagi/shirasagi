@@ -94,7 +94,8 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
           eq(I18n.t("ss.options.user_deletion_lock_state.unlocked"))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.account_start_date")]).to \
           eq(I18n.l(user.account_start_date))
-        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date")]).to eq(I18n.l(user.account_expiration_date))
+        expect(row[I18n.t("mongoid.attributes.ss/model/user.account_expiration_date")]).to \
+          eq(I18n.l(user.account_expiration_date))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.initial_password_warning")]).to eq(I18n.t('ss.options.state.enabled'))
         expect(row[I18n.t("mongoid.attributes.ss/model/user.organization_id")]).to eq(organization.name)
         expect(row[I18n.t("mongoid.attributes.ss/model/user.groups")]).to eq(group.name)
