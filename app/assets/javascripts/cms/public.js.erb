@@ -128,10 +128,10 @@ this.SS_Kana = (function () {
               return false;
             });
           } else {
-            const $anchor = $("<button />", {
+              const $anchor = $("<button />", {
               type: "button",
               name: "kana",
-              "aria-pressed": "false",
+              "aria-pressed": cssClass === "off" ? "true" : "false",
             }).html(html);
             $kana.html($anchor);
 
