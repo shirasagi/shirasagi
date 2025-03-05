@@ -106,13 +106,9 @@ module Cms::PublicFilter
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
     Rails.logger.tagged(::File.basename(@scss)) do
-      data = Fs.read(@scss)
       begin
-        load_paths = Rails.application.config.assets.paths.dup
-
-        css = Cms.compile_scss(data, filename: @scss, load_paths: load_paths)
-        Fs.write(@file, css)
-      rescue SassC::BaseError, Sass::ScriptError => e
+        Cms.compile_scss(@scss, @file, basedir: @cur_site.path)
+      rescue Cms::ScssScriptError => e
         Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end
