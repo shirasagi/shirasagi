@@ -92,15 +92,13 @@ this.SS_Kana = (function () {
 
       SS.justOnce($kana[0], "ss-kana", function() {
         const pathname = location.pathname;
-        let url, cssClass;
+        let url;
         if ($("body").data("kana")) {
-        url = SS_Kana.url(pathname, false);
-        url = SS_Translate.url(url);
-        cssClass = "off";
+          url = SS_Kana.url(pathname, false);
+          url = SS_Translate.url(url);
         } else {
           url = SS_Translate.url(pathname, false)
           url = SS_Kana.url(url, true);
-          cssClass = "on";
         }
         if (url[0] !== '/') {
           // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
@@ -108,8 +106,7 @@ this.SS_Kana = (function () {
           return;
         }
 
-        const html = $kana.html();
-
+        const html = $kana.html()
         const $anchor = $("<button />", {type: "button", name: "kana", "aria-pressed": "false"}).html(html);
         $kana.html($anchor);
 
