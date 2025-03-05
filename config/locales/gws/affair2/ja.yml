@@ -416,6 +416,7 @@ ja:
         threshold_hour: 上限時間
         body: 警告文
       gws/affair2/special_holiday:
+        name: 日付
         date: 日付
 
   activemodel:
