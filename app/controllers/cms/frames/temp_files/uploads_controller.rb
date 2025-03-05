@@ -7,6 +7,24 @@ class Cms::Frames::TempFiles::UploadsController < ApplicationController
 
   layout 'ss/item_frame'
 
+  helper_method :cur_node
+
+  private
+
+  def cur_node
+    return @cur_node if instance_variable_defined?(:@cur_node)
+
+    cid = params[:cid].to_s
+    if cid.blank?
+      @cur_node = nil
+      return @cur_node
+    end
+
+    @cur_node = Cms::Node.site(@cur_site).find(cid)
+  end
+
+  public
+
   def index
     render
   end
