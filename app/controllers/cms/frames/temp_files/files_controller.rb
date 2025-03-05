@@ -17,7 +17,7 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
     @s ||= begin
       s = Cms::TempFileSearchParam.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
       if params.key?(:s)
-        s.attributes = params[:s].permit(:node, :keyword, types: [])
+        s.attributes = params[:s].permit(:node, :keyword, :node_bound, types: [])
       else
         s.types = %w(temp_file)
         s.node_bound = "current"
@@ -39,17 +39,22 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
     @cur_node = Cms::Node.site(@cur_site).find(cid)
   end
 
-  # no bound
   def base_items
     set_search_params
-
-    @base_items ||= begin
-      criteria = Cms::TempFile.site(@cur_site)
-      criteria = criteria.exists(node_id: false)
-      criteria = criteria.allow(:read, @cur_user)
-      criteria
-    end
+    @base_items ||= @s.query(SS::File, SS::File.unscoped)
   end
+
+  # # no bound
+  # def base_items
+  #   set_search_params
+  #
+  #   @base_items ||= begin
+  #     criteria = Cms::TempFile.site(@cur_site)
+  #     criteria = criteria.exists(node_id: false)
+  #     criteria = criteria.allow(:read, @cur_user)
+  #     criteria
+  #   end
+  # end
 
   # # bounded to node
   # def items

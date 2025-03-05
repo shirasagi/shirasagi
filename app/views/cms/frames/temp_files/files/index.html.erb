@@ -1,78 +1,83 @@
-<%= jquery do %>
-  SS_SearchUI.modal();
-<% end %>
+<div class="cms-tabs ajax-file-tabs">
+  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path, data: { turbo: true } %>
+  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path, class: "current", data: { turbo: true } %>
+</div>
 
-<turbo-frame id="ajax-file-box">
-  <div class="cms-tabs ajax-file-tabs">
-    <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path, data: { turbo: true } %>
-    <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path, class: "current", data: { turbo: true } %>
-  </div>
+<div class="search-ui-form">
+  <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
+    <div>
+      <label><%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil %> <%= "一時ファイル" %></label>
+      (
+        <label><%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil %> <%= cur_node ? "このフォルダー" : "ルート階層" %></label>
+        <label><%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil %> <%= "全体" %></label>
+      )
+      <label><%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil %> <%= t("sns.user_file") %></label>
+      <label><%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil %> <%= t("cms.file") %></label>
+    </div>
+    <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
+    <%= f.text_field :keyword %>
+    <%= f.submit  t("ss.buttons.search"), class: :btn %>
+  <% end %>
+</div>
 
-  <div class="search-ui-form">
-    <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
-      <div>
-        <label><%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil %> <%= "一時ファイル" %></label>
-        (
-          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil %> <%= cur_node ? "このフォルダー" : "ルート階層" %></label>
-          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil %> <%= "全体" %></label>
-        )
-        <label><%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil %> <%= t("sns.user_file") %></label>
-        <label><%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil %> <%= t("cms.file") %></label>
-      </div>
-      <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
-      <%= f.text_field :keyword %>
-      <%= f.submit  t("ss.buttons.search"), class: :btn %>
-    <% end %>
-  </div>
+<div class="user-files">
+  <% items.each do |item| %>
+    <%
+      item = item.becomes_with_model
+      item = Cms::TempFile.find(item.id) if item.is_a?(SS::TempFile)
 
-  <div class="index user-files">
-    <% items.each do |item| %>
+      data_hash = Hash[%i[id name humanized_name extname url image? thumb_url image_dimension].map { |m| [m, (item.send(m) rescue nil)] }]
+      data_hash[:file_id] = item.id
+      data_hash[:size] = number_to_human_size(item.size) rescue nil
+      data_hash[:updated] = item.updated.to_i rescue nil
+      data_hash[:user_name] = item.user.name if item.user.present?
+      if item.sanitizer_state
+        data_hash[:sanitizer_state] = item.sanitizer_state
+        data_hash[:sanitizer_state_label] = item.label(:sanitizer_state)
+      end
+      case item
+      when SS::TempFile, Cms::TempFile
+        data_hash[:type] = 'temp_file'
+      when Cms::File
+        data_hash[:type] = 'cms_file'
+      when SS::UserFile
+        data_hash[:type] = 'user_file'
+      end
+    %>
+    <%= content_tag(:article, class: "file-view", id: "user-file#{item.id}", data: data_hash) do %>
+      <%= sanitizer_status(item) %>
       <%
-        data_hash = Hash[%i[id name humanized_name extname url image? thumb_url image_dimension].map { |m| [m, (item.send(m) rescue nil)] }]
-        data_hash[:file_id] = item.id
-        data_hash[:size] = number_to_human_size(item.size) rescue nil
-        data_hash[:updated] = item.updated.to_i rescue nil
-        data_hash[:user_name] = item.user.name if item.user.present?
-        if item.sanitizer_state
-          data_hash[:sanitizer_state] = item.sanitizer_state
-          data_hash[:sanitizer_state_label] = item.label(:sanitizer_state)
-        end
+        opts = { action: :select, id: item }
+        opts[:file_size] = true if params[:file_size].present?
+        opts[:owner_item_id] = params[:owner_item_id] if params[:owner_item_id].present?
+        opts[:owner_item_type] = params[:owner_item_type] if params[:owner_item_type].present?
       %>
-      <%= content_tag(:article, class: "file-view", id: "user-file#{item.id}", data: data_hash) do %>
-        <%= sanitizer_status(item) %>
-        <%
-          opts = { action: :select, id: item }
-          opts[:file_size] = true if params[:file_size].present?
-          opts[:owner_item_id] = params[:owner_item_id] if params[:owner_item_id].present?
-          opts[:owner_item_type] = params[:owner_item_type] if params[:owner_item_type].present?
-        %>
-        <a class="select" href="#" title="<%= item.humanized_name %>" data-humanized-name="<%= item.humanized_name %>">
-          <div class="thumb">
-            <% if item.image? %>
-              <img src="<%= "#{item.thumb_url}?_=#{item.updated.to_i}" %>" alt="<%= item.humanized_name %>"/>
-            <% else %>
-              <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
-            <% end %>
-          </div>
-          <div class="name">
-            <%= item.name %>
-            <% if params[:file_size] %>
-              <br/>
-              <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
-            <% end %>
-          </div>
-        </a>
-        <nav class="menu">
-          <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, file_size: params[:file_size]), class: "btn", data: { turbo: true } %>
+      <a class="select" href="#" title="<%= item.humanized_name %>" data-humanized-name="<%= item.humanized_name %>">
+        <div class="thumb">
+          <% if item.image? %>
+            <img src="<%= "#{item.thumb_url}?_=#{item.updated.to_i}" %>" alt="<%= item.humanized_name %>"/>
+          <% else %>
+            <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
           <% end %>
-          <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item) } %>
+        </div>
+        <div class="name">
+          <%= item.name %>
+          <% if params[:file_size] %>
+            <br/>
+            <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
           <% end %>
-        </nav>
-      <% end %>
+        </div>
+      </a>
+      <nav class="menu">
+        <% if item.is_a?(SS::TempFile) %>
+          <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, file_size: params[:file_size]), class: "btn", data: { turbo: true } %>
+        <% end %>
+        <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+          <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item) } %>
+        <% end %>
+      </nav>
     <% end %>
-  </div>
+  <% end %>
+</div>
 
-  <%= paginate items if items.try(:current_page) %>
-</turbo-frame>
+<%= paginate items if items.try(:current_page) %>
