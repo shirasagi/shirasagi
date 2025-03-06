@@ -285,15 +285,21 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
     it_behaves_like "kana"
   end
 
-  context "with old accessibility html" do
-    let!(:part) { create :accessibility_tool_compat, cur_site: site }
+  context "with old accessibility html 1" do
+    let!(:part) { create :accessibility_tool_compat1, cur_site: site }
+
+    it_behaves_like "kana"
+  end
+
+  context "with old accessibility html 2" do
+    let!(:part) { create :accessibility_tool_compat2, cur_site: site }
 
     it_behaves_like "kana"
   end
 
   context "with multiple accessibility parts" do
     let!(:part1) { create :accessibility_tool, cur_site: site }
-    let!(:part2) { create :accessibility_tool_compat, cur_site: site }
+    let!(:part2) { create :accessibility_tool_compat1, cur_site: site }
     let!(:layout) { create_cms_layout part1, part2 }
     let!(:node) { create :article_node_page, cur_site: site, layout: layout }
     let(:page_html) do
