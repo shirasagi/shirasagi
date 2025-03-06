@@ -11,10 +11,12 @@
     else
       od_path_params = {}
     end
-    api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node, **od_path_params)
+    upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node, **od_path_params)
+    file_api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node, **od_path_params)
     select_api_path = select_cms_apis_node_temp_file_path(site: @cur_site, cid: @cur_node, id: ':id', **od_path_params)
   else
-    api_path = cms_frames_temp_files_uploads_path(site: @cur_site)
+    upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site)
+    file_api_path = cms_frames_temp_files_files_path(site: @cur_site)
     select_api_path = select_cms_apis_temp_file_path(site: @cur_site, id: ':id', **od_path_params)
   end
   view_api_path = view_cms_apis_content_file_path(id: ":id")
@@ -22,20 +24,25 @@
 
 <dl class="see">
   <dd class="wide">
-    <div class="cms-file-upload" data-controller="ss--file-select-box" data-ss--file-select-box-api-value="<%= api_path %>" data-ss--file-select-box-select-api-value="<%= select_api_path %>" data-ss--file-select-box-view-api-value="<%= view_api_path %>" data-ss--file-select-box-dialog-type-value="ss" data-ss--file-select-box-selection-type-value="append">
+    <div class="cms-file-upload" data-controller="ss--file-select-box" data-ss--file-select-box-upload-api-value="<%= upload_api_path %>" data-ss--file-select-box-file-api-value="<%= file_api_path %>" data-ss--file-select-box-select-api-value="<%= select_api_path %>" data-ss--file-select-box-view-api-value="<%= view_api_path %>" data-ss--file-select-box-dialog-type-value="ss" data-ss--file-select-box-selection-type-value="append">
       <%= f.hidden_field "file_ids[]", value: "", id: nil %>
 
-      <span class="cms-file-upload-menu-new">
-        <%= button_tag t('ss.links.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-      </span>
+      <div class="cms-file-upload-menu-new">
+        <div class="ss-btn-group" role="group" aria-label="ファイル選択">
+          <%= button_tag t('ss.links.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
+          <%= button_tag "一覧から選択", type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
+        </div>
+      </div>
 
       <div class="upload-drop-area cms-file-upload-drop-area">
         <span class="upload-drop-notice cms-file-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
       </div>
 
       <div class="cms-file-upload-file-order">
-        <%= button_tag t('ss.buttons.file_name_order'), { type: :button, class: "btn file-order-btn", value: "name" } %>
-        <%= button_tag t('ss.buttons.file_upload_order'), { type: :button, class: "btn file-order-btn", value: "upload" } %>
+        <div class="ss-btn-group" role="group" aria-label="並び順">
+          <%= button_tag t('ss.buttons.file_name_order'), { type: :button, class: "btn file-order-btn", value: "name" } %>
+          <%= button_tag t('ss.buttons.file_upload_order'), { type: :button, class: "btn file-order-btn", value: "upload" } %>
+        </div>
         <%= @model.tt :file_order %>
       </div>
 
