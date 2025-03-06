@@ -26,7 +26,9 @@
     <% items.each do |item| %>
       <%
         item = item.becomes_with_model
-        item = Cms::TempFile.find(item.id) if item.is_a?(SS::TempFile)
+        if item.is_a?(SS::TempFile)
+          item = item.becomes(Cms::TempFile)
+        end
 
         data_hash = Hash[%i[id name humanized_name extname url image? thumb_url image_dimension].map { |m| [m, (item.send(m) rescue nil)] }]
         data_hash[:file_id] = item.id
@@ -55,7 +57,7 @@
           opts[:owner_item_id] = params[:owner_item_id] if params[:owner_item_id].present?
           opts[:owner_item_type] = params[:owner_item_type] if params[:owner_item_type].present?
         %>
-        <%= link_to "#", class: "select", title: item.humanized_name, data: { humanized_name: item.humanized_name, action: "ss--temp-file#select" } do %>
+        <%= link_to "#", class: "select", title: item.humanized_name, data: { humanized_name: item.humanized_name, action: "ss--temp-file#selectFile" } do %>
           <div class="thumb">
             <% if item.image? %>
               <img src="<%= "#{item.thumb_url}?_=#{item.updated.to_i}" %>" alt="<%= item.humanized_name %>"/>
@@ -72,11 +74,11 @@
           </div>
         <% end %>
         <nav class="menu">
-          <% if item.is_a?(SS::TempFile) %>
+          <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
             <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, file_size: params[:file_size]), class: "btn", data: { turbo: true } %>
           <% end %>
           <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item) } %>
+            <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item, format: :json), action: "ss--temp-file#deleteFile" } %>
           <% end %>
         </nav>
       <% end %>
