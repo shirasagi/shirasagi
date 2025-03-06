@@ -64,7 +64,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
         csv_data = CSV.read(downloads.first, headers: true, encoding: 'BOM|UTF-8')
 
         expect(csv_data.length).to eq 3
-        expected_headers = %w(
+        expected_headers = %w[id] + %w(
          id name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
          initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
         ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}") }
