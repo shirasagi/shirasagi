@@ -16,6 +16,8 @@ module Cms::PublicFilter
     before_action :x_sendfile, unless: ->{ filter_include_any?(:mobile, :kana, :translate) || @preview }
   end
 
+  PART_FORWARDABLE_HEADERS = Set.new(%w(x-ss-received-by)).freeze
+
   def index
     if @cur_path.match?(/\.p[1-9]\d*\.html$/)
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
@@ -46,7 +48,7 @@ module Cms::PublicFilter
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def set_request_path
@@ -75,7 +77,7 @@ module Cms::PublicFilter
   end
 
   def deny_path
-    raise "404" if @cur_path.match?(/^\/sites\/.\//)
+    raise SS::NotFoundError if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
@@ -104,13 +106,9 @@ module Cms::PublicFilter
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
     Rails.logger.tagged(::File.basename(@scss)) do
-      data = Fs.read(@scss)
       begin
-        load_paths = Rails.application.config.assets.paths.dup
-
-        css = Cms.compile_scss(data, filename: @scss, load_paths: load_paths)
-        Fs.write(@file, css)
-      rescue SassC::BaseError, Sass::ScriptError => e
+        Cms.compile_scss(@scss, @file, basedir: @cur_site.path)
+      rescue Cms::ScssScriptError => e
         Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end
@@ -158,10 +156,10 @@ module Cms::PublicFilter
   def render_and_send_part(part)
     @cur_path = params[:ref] || "/"
     set_main_path
-    resp = render_part(part)
-    return false if !resp
+    header, body = render_part(part)
+    return false if !body
 
-    send_part(resp)
+    send_part(header, body)
     request.env["ss.rendered"] = { type: :part, part: part }
     true
   end
@@ -189,10 +187,26 @@ module Cms::PublicFilter
     true
   end
 
-  def send_part(body)
+  def send_part(header, body)
     respond_to do |format|
-      format.html { render html: body.html_safe, layout: false }
-      format.json { render json: body.to_json }
+      format.html do
+        forward_part_header(header)
+        render html: body.html_safe, layout: false
+      end
+      format.json do
+        forward_part_header(header)
+        render json: body.to_json
+      end
+    end
+  end
+
+  def forward_part_header(header, resp = nil)
+    return unless header
+
+    resp ||= response
+    header.each do |key, value|
+      next unless PART_FORWARDABLE_HEADERS.include?(key)
+      resp.headers[key] = value
     end
   end
 
@@ -213,7 +227,7 @@ module Cms::PublicFilter
 
   def page_not_found
     request.env["action_dispatch.show_exceptions"] = :none if @preview
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def rescue_action(exception = nil)

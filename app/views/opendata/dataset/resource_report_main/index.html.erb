@@ -1,5 +1,13 @@
+<% request_path = SS.request_path(request) %>
+<% if request_path.start_with?(opendata_dataset_report_accesses_path) && !Recommend::History::Log.enable_access_logging?(@cur_site) %>
+  <div id="errorExplanation" class="errorExplanation">
+    <div class="markdown-body">
+      <%= SS::Addon::Markdown.text_to_html(t("opendata.notice.access_report_notice_md")) %>
+    </div>
+  </div>
+<% end %>
+
 <div class="cms-tabs">
-  <% request_path = SS.request_path(request) %>
   <% if Opendata::ResourceDownloadReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <% css_classes = request_path.start_with?(opendata_dataset_report_downloads_path) ? %w(current) : nil %>
     <%= link_to opendata_dataset_report_downloads_path, class: css_classes do %>

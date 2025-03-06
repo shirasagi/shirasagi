@@ -119,5 +119,5 @@ en:
 
   job:
     models:
-      gws/report/notification_job: Report notifications
-      gws/report/trash_purge_job: Empty report trash
+      gws/report/notification_job: Reports/notifications
+      gws/report/trash_purge_job: Reports/Empty trash

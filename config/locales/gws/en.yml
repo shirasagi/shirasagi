@@ -316,7 +316,6 @@ en:
         gws_role_ids: Role
       gws/addon/permission:
         group_ids: Administrative group
-        permission_level: Permission level
       gws/group_permission:
         group_ids: Administrative group
         groups_hash: Administrative group (hash)
@@ -324,7 +323,6 @@ en:
         users_hash: Administrative users (hash)
         custom_group_ids: Administrative custom group
         custom_groups_hash: Administrative custom group (hash)
-        permission_level: Permission level
       gws/readable_setting:
         readable_setting_range: Publication range
         readable_group_ids: Viewing group
@@ -644,9 +642,6 @@ en:
         - Enter the order.
       in_parent:
         - Select the parent folder.
-    gws/role:
-      permission_level:
-        - Sets the permission level.
     gws/addon/user/affair_setting:
       staff_category: Select staff category
       staff_address_uid: Input staff address uid
@@ -669,10 +664,10 @@ en:
 
   job:
     models:
-      gws/history_archive_job: Create an operation history archive
-      gws/compress_job: File/Compressed download
-      gws/user_title_import_job: Import job title
-      gws/user_occupation_import_job: Occupation import
-      gws/cache_rebuild_job: Rebuild cache
-      gws/aggregation/group_update_job: Update aggregation group
-      gws/reload_site_usage_job: Update various usages
+      gws/history_archive_job: GWS/Create an operation history archive
+      gws/compress_job: GWS/File Compress and download
+      gws/user_title_import_job: GWS/Import job title
+      gws/user_occupation_import_job: GWS/Occupation import
+      gws/cache_rebuild_job: GWS/Rebuild cache
+      gws/aggregation/group_update_job: GWS/Update aggregation group
+      gws/reload_site_usage_job: GWS/Update various usages

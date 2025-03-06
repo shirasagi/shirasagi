@@ -58,8 +58,12 @@ module SS::AutoLink
 
         escapes = options[:sanitize] ? true : false
         attributes = link_attributes.merge('href' => href)
-        link = options[:link_to].call(link_text, attributes, escapes) if options[:link_to]
-        link ||= content_tag(:a, link_text, attributes, escapes)
+        if options[:link_to]
+          link = options[:link_to].call(link_text, attributes, escapes) rescue nil
+        else
+          link = content_tag(:a, link_text, attributes, escapes)
+        end
+        link ||= link_text
         link + punctuation.reverse.join
       end
     end

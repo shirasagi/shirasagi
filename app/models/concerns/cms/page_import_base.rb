@@ -337,7 +337,6 @@ module Cms::PageImportBase
         item.group_ids = group_names.map { |name| group_name_group_map[name] }.compact.map(&:id)
       end
     end
-    importer.simple_column :permission_level
   end
 
   def define_importer_state(importer)

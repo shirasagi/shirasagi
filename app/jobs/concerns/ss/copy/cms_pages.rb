@@ -3,6 +3,10 @@ module SS::Copy::CmsPages
   include SS::Copy::Cache
 
   def copy_cms_page(src_page)
+    Rails.logger.debug do
+      "SS::Copy::CmsPages[copy_cms_page] コピー開始: " \
+        "#{src_page.filename}(#{src_page.id}), route: #{src_page.route}"
+    end
     copy_cms_content(:pages, src_page, copy_cms_page_options)
   rescue => e
     @task.log("#{src_page.filename}(#{src_page.id}): ページのコピーに失敗しました。")
@@ -27,6 +31,11 @@ module SS::Copy::CmsPages
   end
 
   def after_copy_cms_page(src_page, dest_page)
+    Rails.logger.debug do
+      "SS::Copy::CmsPages[after_copy_cms_page] コピー開始: #{src_page.filename}(#{src_page.id}), " \
+        "route: #{src_page.route}, related_page_ids=#{src_page.try(:related_page_ids)}"
+    end
+
     case src_page.route
     when "opendata/dataset"
       copy_opendata_dataset_groups(src_page, dest_page)
@@ -35,6 +44,10 @@ module SS::Copy::CmsPages
       copy_opendata_app_appfiles(src_page, dest_page)
     end
 
+    Rails.logger.debug do
+      "DEBUG: dest_page.related_page_ids=#{dest_page.related_page_ids.inspect} " \
+        "(class=#{dest_page.related_page_ids.class})"
+    end
     if dest_page.respond_to?(:column_values)
       dest_page.column_values = src_page.column_values.map do |src_column_value|
         dest_column_value = src_column_value.dup
@@ -49,7 +62,11 @@ module SS::Copy::CmsPages
         dest_column_value
       end
     end
-
+    Rails.logger.debug do
+      "SS::Copy::CmsPages[after_copy_cms_page] コピー完了: #{src_page.filename} → #{dest_page.try(:filename)}:" \
+        "(dest_page.id:#{dest_page.id}), route: #{dest_page.route}," \
+        "related_page_ids=#{dest_page.try(:related_page_ids)}"
+    end
     @task.log("#{src_page.filename}(#{src_page.id}): ページをコピーしました。")
   end
 

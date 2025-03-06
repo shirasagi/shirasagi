@@ -1,8 +1,5 @@
-module Opendata::Api
-  def check_num(num, messages)
-    num = Integer(num) rescue -1
-    messages << "Must be a natural number" if num < 0
-  end
+module Opendata::Api::Converter
+  extend ActiveSupport::Concern
 
   def convert_packages(datasets)
     datasets.map { |dataset| convert_package(dataset) }

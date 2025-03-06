@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module SS
   module_function
 
@@ -5,7 +7,27 @@ module SS
 
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
+  DEFAULT_TRASH_THRESHOLD = 1
+  DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
+
+  HTTP_STATUS_CODE_FORBIDDEN = "403"
+  HTTP_STATUS_CODE_NOT_FOUND = "404"
+
   mattr_accessor(:max_items_per_page) { 50 }
+
+  # 403
+  class ForbiddenError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_FORBIDDEN)
+    end
+  end
+
+  # 404
+  class NotFoundError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_NOT_FOUND)
+    end
+  end
 
   def change_locale_and_timezone(user)
     if user.nil?
@@ -94,5 +116,29 @@ module SS
 
   def request_path(request)
     Addressable::URI.parse(request.env["REQUEST_PATH"] || request.path).normalize.request_uri
+  end
+
+  def default_trash_threshold_in_days
+    SS::Duration.parse("#{DEFAULT_TRASH_THRESHOLD}.#{DEFAULT_TRASH_THRESHOLD_UNIT}")
+  end
+
+  def parse_threshold!(now, threshold, site:)
+    return now - site.trash_threshold_in_days if threshold.nil?
+    case threshold
+    when Integer
+      unit = site.trash_threshold_unit.presence || DEFAULT_TRASH_THRESHOLD_UNIT
+      return now - threshold.send(unit)
+    when String
+      duration = threshold.present? ? SS::Duration.parse(threshold) : site.trash_threshold_in_days
+      return now - duration
+    else
+      raise ArgumentError, "invalid value for threshold: \"#{threshold}\""
+    end
+  end
+
+  def not_found_error?(err)
+    return true if ActionDispatch::ExceptionWrapper.status_code_for_exception(err.class.name) == 404
+    return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
+    false
   end
 end

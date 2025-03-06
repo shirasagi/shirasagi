@@ -1,3 +1,16 @@
+<div class="main-box">
+  <dl class="see">
+    <dt><%= Cms::GenerationReport::Title.t :name %></dt>
+    <dd><%= @title.name %></dd>
+
+    <dt><%= Cms::GenerationReport::Title.t :task_started %></dt>
+    <dd><%= ss_time_tag @title.task_started %></dd>
+
+    <dt><%= Cms::GenerationReport::Title.t :task_closed %></dt>
+    <dd><%= ss_time_tag @title.task_closed %></dd>
+  </dl>
+</div>
+
 <div class="cms-tabs">
   <%= link_to(cms_generation_report_histories_path) do %>
     <span class="tab-name"><%= t("mongoid.models.cms/generation_report/history") %></span>

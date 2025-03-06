@@ -941,6 +941,7 @@ ja:
       cms/line/mail_handler: 本文設定
       cms/clipboard_copy: クリップボードへコピー
       cms/logo_setting: ロゴ設定
+      cms/print: 印刷ボタンの設定
 
   mongoid:
     models:
@@ -1147,11 +1148,9 @@ ja:
       cms/addon/permission:
         group_ids: 管理グループ
         groups: 管理グループ
-        permission_level: 権限レベル
       cms/addon/group_permission:
         group_ids: 管理グループ
         groups: 管理グループ
-        permission_level: 権限レベル
       cms/addon/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -1706,10 +1705,15 @@ ja:
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
+        clipboard_display_name: ボタンに表示するテキスト
+      cms/addon/print:
+        print_display_name: ボタンに表示するテキスト
       cms/generation_report/title:
         name: タイトル
         memo: メモ
         task: タスク
+        task_started: 処理開始日時
+        task_closed: 処理終了日時
         started: 開始日時
         closed: 終了日時
       cms/generation_report/history:
@@ -1962,11 +1966,6 @@ ja:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
       captcha_test:
         - 認証画像の表示を確認します。
-
-    cms/role:
-      permission_level:
-        - 権限レベルを設定します。
-        - 数字が大きいほど強い権限になります。
 
     search_contents:
       html:
@@ -2836,7 +2835,11 @@ ja:
     cms/addon/for_member_node:
       for_member_state:
         - 会員がログインしている時のみ閲覧できるように設定します。
-
+    cms/addon/file:
+      description:
+        - 本ページにアップロードされたファイルの一覧です。
+        - 本ページで使用していないファイルには「未使用」タグが表示されます。
+        - ※アップロードされたファイルは、URLを直接入力するとアクセスできるため、不要なファイルの管理にご注意ください。
     cms/command:
       name:
         - タイトルを入力します。
@@ -3135,7 +3138,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。　
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。 
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
@@ -3319,6 +3322,15 @@ ja:
         - "例: .contact"
         - class="contact" が設定されているHTML要素のテキストをクリップボードへコピーします。
         - 通常、この設定は、お問い合わせ先をクリップボードへコピーすることができます。
+      clipboard_display_name:
+        - ボタンに表示するテキストを入力してください。
+        - 「コピーする」「リンクをコピー」など、自由に設定できます。
+        - 省略した場合は「パーツ名」が表示されます。
+    cms/addon/print:
+      print_display_name:
+        - ボタンに表示するテキストを入力してください。
+        - 「印刷する」「帳票出力」など、自由に設定できます。
+        - 省略した場合は「パーツ名」が表示されます。
 
   all_content:
     page_id: ページID
@@ -3368,33 +3380,37 @@ ja:
     status: ステータス
     released: 公開日時
     group_names: 管理グループ
-    permission_level: 権限レベル
     size: 容量
 
   job:
     models:
-      cms/node/generate_job: フォルダー書き出し
-      cms/page/generate_job: ページ書き出し
-      cms/page/release_job: ページ公開
-      cms/page/remove_job: ページ削除
-      cms/page/update_job: ページ更新
-      cms/page/move_job: ページ移動
-      cms/page/expiration_notice_job: 公開期限お知らせ
-      cms/check_links_job: リンクチェック
-      cms/node/copy_nodes_job: フォルダー複製
-      cms/import_files_job: ページ/フォルダー取り込み
-      cms/role/import_job: 権限インポート
-      cms/form_db/import_url_job: 定型DBインポート
-      cms/all_contents_import_job: 全コンテンツ一括設定
-      cms/michecker_job: miChecker
-      cms/sns_post/twitter_job: Twitterページ投稿
-      cms/sns_post/line_job: LINEページ投稿
-      cms/line/deliver_job: LINE配信
-      cms/line/test_deliver_job: LINEテスト配信
-      cms/line/deliver_reserved_job: LINE予約配信
-      cms/line/apply_richmenu_job: LINEリッチメニュー登録
-      cms/group_import_job: グループインポート
-      cms/remove_improper_htmls_job: 不要HTML削除
-      cms/line/update_statistics_job: LINE統計情報更新
-      cms/generation_report_create_job: 書き出し性能レポートの作成
-      cms/reload_site_usage_job: 各種使用率の更新
+      cms/node/generate_job: CMS/フォルダー書き出し
+      cms/page/generate_job: CMS/ページ書き出し
+      cms/page/release_job: CMS/ページ公開
+      cms/page/remove_job: CMS/ページ削除
+      cms/page/update_job: CMS/ページ更新
+      cms/page/move_job: CMS/ページ移動
+      cms/page/expiration_notice_job: CMS/公開期限お知らせ
+      cms/check_links_job: CMS/リンクチェック
+      cms/node/copy_nodes_job: CMS/フォルダー複製
+      cms/import_files_job: CMS/ページ・フォルダー取り込み
+      cms/role/import_job: CMS/権限インポート
+      cms/form_db/import_url_job: CMS/定型DBインポート
+      cms/all_contents_import_job: CMS/全コンテンツ一括設定
+      cms/michecker_job: CMS/miChecker
+      cms/sns_post/twitter_job: CMS/Twitterページ投稿
+      cms/sns_post/line_job: LINE/ページ投稿
+      cms/line/deliver_job: LINE/配信
+      cms/line/test_deliver_job: LINE/テスト配信
+      cms/line/deliver_reserved_job: LINE/予約配信
+      cms/line/apply_richmenu_job: LINE/リッチメニュー登録
+      cms/group_import_job: CMS/グループインポート
+      cms/remove_improper_htmls_job: CMS/不要HTML削除
+      cms/line/update_statistics_job: LINE/統計情報更新
+      cms/generation_report_create_job: CMS/書き出し性能レポートの作成
+      cms/reload_site_usage_job: CMS/各種使用率の更新
+      cms/elasticsearch/indexer/feed_releases_job: CMS全文検索/リリースフィード
+      cms/elasticsearch/indexer/node_close_job: CMS全文検索/フォルダーの非公開（配下のページの削除）
+      cms/elasticsearch/indexer/node_release_job: CMS全文検索/フォルダーの公開（配下のページの追加）
+      cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
+      cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）

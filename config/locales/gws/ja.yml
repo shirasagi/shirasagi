@@ -316,7 +316,6 @@ ja:
         gws_role_ids: ロール
       gws/addon/permission:
         group_ids: 管理グループ
-        permission_level: 権限レベル
       gws/group_permission:
         group_ids: 管理グループ
         groups_hash: 管理グループ(ハッシュ)
@@ -324,7 +323,6 @@ ja:
         users_hash: 管理ユーザー(ハッシュ)
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ(ハッシュ)
-        permission_level: 権限レベル
       gws/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -644,9 +642,6 @@ ja:
         - 並び順を入力します。
       in_parent:
         - 親フォルダーを選択してください。
-    gws/role:
-      permission_level:
-        - 権限レベルを設定します。
     gws/addon/user/affair_setting:
       staff_category: 職員区分を設定します。
       staff_address_uid: 宛名番号を入力します。
@@ -669,10 +664,10 @@ ja:
 
   job:
     models:
-      gws/history_archive_job: 操作履歴アーカイブ作成
-      gws/compress_job: ファイル/圧縮ダウンロード
-      gws/user_title_import_job: 役職インポート
-      gws/user_occupation_import_job: 職種インポート
-      gws/cache_rebuild_job: キャッシュ更新
-      gws/aggregation/group_update_job: 集計グループ更新
-      gws/reload_site_usage_job: 各種使用率の更新
+      gws/history_archive_job: GWS/操作履歴アーカイブ作成
+      gws/compress_job: GWS/ファイル圧縮・ダウンロード
+      gws/user_title_import_job: GWS/役職インポート
+      gws/user_occupation_import_job: GWS/職種インポート
+      gws/cache_rebuild_job: GWS/キャッシュ更新
+      gws/aggregation/group_update_job: GWS/集計グループ更新
+      gws/reload_site_usage_job: GWS/各種使用率の更新

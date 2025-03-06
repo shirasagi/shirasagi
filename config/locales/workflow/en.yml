@@ -256,4 +256,4 @@ en:
 
   job:
     models:
-      workflow/reminder_job: Approval Reminder
+      workflow/reminder_job: Workflow/Approval Reminder

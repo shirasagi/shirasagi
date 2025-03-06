@@ -293,7 +293,7 @@ module SS::Model::File
     SS::FilePublisher.depublish(self, dir)
   end
 
-  COPY_SKIP_ATTRS = %w(_id id model file_id group_ids permission_level category_ids owner_item_id owner_item_type).freeze
+  COPY_SKIP_ATTRS = %w(_id id model file_id group_ids category_ids owner_item_id owner_item_type).freeze
 
   def copy(opts = {})
     model = opts[:cur_node].present? ? Cms::TempFile : SS::TempFile
@@ -427,6 +427,7 @@ module SS::Model::File
       self.geo_location = converter.geo_location
     end
     self.size = Fs.size(path)
+    self.updated = Time.zone.now
 
     if SS::SvgSanitizer.sanitize(self.path, content_type: self.content_type)
       self.size = ::Fs.size(self.path)

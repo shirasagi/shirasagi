@@ -402,4 +402,4 @@ ja:
 
   job:
     models:
-      gws/workflow2/trash_purge_job: ワークフロー/申請ゴミ箱の掃除
+      gws/workflow2/trash_purge_job: ワークフロー2/申請ゴミ箱の掃除
