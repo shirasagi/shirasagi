@@ -108,40 +108,40 @@ this.SS_Kana = (function () {
           return;
         }
 
-        const html = $kana.html()
-          // legacy の場合： id="ss-kana" なら a タグを生成
-          if ($kana.is("#ss-kana")) {
-            const anchorId = 'kana_a_' + index;
-            const $anchor = $("<a />", {
-              id: anchorId,
-              class: cssClass,
-              href: "#" + url,
-              rel: "nofollow"
-            }).html(html);
-            $kana.html($anchor);
+        const html = $kana.html();
+        // legacy の場合： id="ss-kana" なら a タグを生成
+        if ($kana.is("#ss-kana")) {
+          const anchorId = 'kana_a_' + index;
+          const $anchor = $("<a />", {
+            id: anchorId,
+            class: cssClass,
+            href: "#" + url,
+            rel: "nofollow"
+          }).html(html);
+          $kana.html($anchor);
 
-            $anchor.on("click", function (ev) {
-              ev.preventDefault();
-              const $clickedAnchor = $(this);
-              const clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
-              location.href = clickedUrl;
-              return false;
-            });
-          } else {
-              const $anchor = $("<button />", {
-              type: "button",
-              name: "kana",
-              "aria-pressed": cssClass === "off" ? "true" : "false",
-            }).html(html);
-            $kana.html($anchor);
+          $anchor.on("click", function (ev) {
+            ev.preventDefault();
+            const $clickedAnchor = $(this);
+            const clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
+            location.href = clickedUrl;
+            return false;
+          });
+        } else {
+            const $anchor = $("<button />", {
+            type: "button",
+            name: "kana",
+            "aria-pressed": cssClass === "off" ? "true" : "false",
+          }).html(html);
+          $kana.html($anchor);
 
-            $anchor.on("click", function (ev) {
-              ev.preventDefault();
-              $(this).attr("aria-pressed", "on");
-              location.href = url;
-              return false;
-            });
-          }
+          $anchor.on("click", function (ev) {
+            ev.preventDefault();
+            $(this).attr("aria-pressed", "on");
+            location.href = url;
+            return false;
+          });
+        }
       });
     });
   };
