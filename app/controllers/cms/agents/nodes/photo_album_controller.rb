@@ -5,7 +5,12 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
 
   self.generates_rss = false
 
+  if Rails.env.development?
+    before_action { ::Rails.application.eager_load! }
+  end
+
   before_action :becomes_with_route_node
+
   ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
 
   class PhotoAlbumSearchService < Cms::FileSearchService
