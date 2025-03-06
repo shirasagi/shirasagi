@@ -6,12 +6,24 @@ import i18next from 'i18next'
 // 選択したファイルをサーバーへポストバックしてレンダリングしてもらう。
 export default class extends SelectBoxController {
   static values = {
+    uploadApi: String,
+    fileApi: String,
     selectApi: String,
     viewApi: String
   }
 
   connect() {
     super.connect();
+  }
+
+  openDialog(ev) {
+    if (ev.target.name === "upload") {
+      this.apiValue = this.uploadApiValue;
+    } else {
+      this.apiValue = this.fileApiValue;
+    }
+
+    super.openDialog();
   }
 
   attachFile(ev) {
