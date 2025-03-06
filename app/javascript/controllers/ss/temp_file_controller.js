@@ -1,42 +1,99 @@
 import { Controller } from "@hotwired/stimulus"
 import ejs from "ejs/ejs";
-import {appendChildren, csrfToken, dispatchEvent} from "../../ss/tool";
+import {prependChildren, csrfToken, dispatchEvent} from "../../ss/tool";
+
+const NUM_RETRY = 5;
+
+function createError(errors, { id = undefined, cssClass = undefined, header = undefined, body = undefined }) {
+  // <div id="errorExplanation" class="errorExplanation">
+  //   <h2>登録内容を確認してください。</h2>
+  //   <p>次の項目を確認してください。</p>
+  //   <ul>
+  //     <li>ファイル名を入力してください。</li>
+  //     <li>タイトルを入力してください。</li>
+  //   </ul>
+  // </div>
+  const errorExplanationElement = document.createElement("div");
+  errorExplanationElement.id = id || "errorExplanation";
+  errorExplanationElement.classList.add(cssClass || "errorExplanation");
+
+  const headerElement = document.createElement("h2");
+  headerElement.textContent = header || i18next.t("errors.template.header.one");
+  errorExplanationElement.appendChild(headerElement);
+
+  const bodyElement = document.createElement("p");
+  bodyElement.textContent = body || i18next.t("errors.template.body");
+  errorExplanationElement.appendChild(bodyElement);
+
+  const errorListElement = document.createElement("ul");
+  errorExplanationElement.appendChild(errorListElement);
+  errors.forEach((error) => {
+    const errorItemElement = document.createElement("li");
+    errorItemElement.textContent = error;
+    errorListElement.appendChild(errorItemElement);
+  });
+
+  return errorExplanationElement;
+}
 
 export default class extends Controller {
   static values = {
     previewApi: String,
+    createUrl: String,
   }
-  static targets = [ "realButton", "dummyButton", "template", "result", "resultItem" ];
+  static targets = [
+    "option",
+    "fileUploadShadow", "fileUploadReal", "fileUploadDropArea",
+    "fileUploadWaitingForm", "fileUploadWaitingList", "fileUploadWaitingItem", "fileUploadWaitingItemTemplate" ];
 
   connect() {
-    if (this.hasRealButtonTarget) {
-      this.realButtonTarget.addEventListener('change', () => this.#selectFiles())
+    if (this.hasFileUploadShadowTarget) {
+      this.fileUploadShadowTarget.addEventListener('change', () => this.#selectFiles())
+    }
+    if (this.hasFileUploadWaitingFormTarget) {
+      this.fileUploadWaitingFormTarget.addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        this.#uploadAllWaitingItems();
+      })
+    }
+  }
+
+  optionTargetConnected(element) {
+    const option = JSON.parse(element.innerHTML);
+    for (const key in option) {
+      this[`${key}Value`] = option[key];
     }
   }
 
   openDialog() {
-    if (!this.hasRealButtonTarget) {
+    if (!this.hasFileUploadShadowTarget) {
       return;
     }
 
-    this.realButtonTarget.click();
+    this.fileUploadShadowTarget.click();
   }
 
   deselect(ev) {
-    if (!this.hasResultItemTarget) {
+    if (!this.hasFileUploadWaitingItemTarget) {
       return;
     }
 
     let removed = false;
-    this.resultItemTargets.forEach((resultItem) => {
-      if (resultItem.contains(ev.target)) {
-        removed = this.resultTarget.contains(resultItem);
-        resultItem.remove();
+    this.fileUploadWaitingItemTargets.forEach((item) => {
+      if (item.contains(ev.target)) {
+        removed = this.fileUploadWaitingListTarget.contains(item);
+        item.remove();
       }
     })
 
     if (removed) {
-      dispatchEvent(this.resultTarget, "change");
+      if (this.fileUploadWaitingItemTargets.length > 0) {
+        this.fileUploadWaitingFormTarget.classList.remove("hide")
+      } else {
+        this.fileUploadWaitingFormTarget.classList.add("hide")
+      }
+
+      dispatchEvent(this.fileUploadWaitingListTarget, "change");
     }
   }
 
@@ -47,11 +104,11 @@ export default class extends Controller {
   }
 
   async #selectFiles() {
-    if (this.hasDummyButtonTarget) {
-      this.dummyButtonTarget.disabled = true;
+    if (this.hasFileUploadRealTarget) {
+      this.fileUploadRealTarget.disabled = true;
     }
 
-    const templateSource = this.templateTarget.innerHTML;
+    const templateSource = this.fileUploadWaitingItemTemplateTarget.innerHTML;
 
     const renderOne = async (file) => {
       const formData = new FormData();
@@ -66,19 +123,165 @@ export default class extends Controller {
       });
       const json = await response.json();
 
-      const result = ejs.render(templateSource, { selectedItems: json })
-      appendChildren(this.resultTarget, result);
+      const html = ejs.render(templateSource, { selectedItems: json })
+      prependChildren(this.fileUploadWaitingListTarget, html);
     };
 
-    for (const file of this.realButtonTarget.files) {
+    for (const file of Array.from(this.fileUploadShadowTarget.files).reverse()) {
       await renderOne(file);
+
+      const newFileElement = this.fileUploadWaitingListTarget.querySelector(`[name="item[files][][in_file]"]`);
+      if (newFileElement) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        newFileElement.files = dataTransfer.files;
+      }
     }
 
-    this.realButtonTarget.files = undefined;
-    if (this.hasDummyButtonTarget) {
-      this.dummyButtonTarget.disabled = false;
+    this.fileUploadShadowTarget.files = undefined;
+    this.fileUploadShadowTarget.value = '';
+    if (this.hasFileUploadRealTarget) {
+      this.fileUploadRealTarget.disabled = false;
+    }
+    if (this.hasFileUploadWaitingItemTemplateTarget) {
+      if (this.fileUploadWaitingItemTargets.length > 0) {
+        this.fileUploadWaitingFormTarget.classList.remove("hide")
+      } else {
+        this.fileUploadWaitingFormTarget.classList.add("hide")
+      }
     }
 
-    dispatchEvent(this.resultTarget, "change");
+    dispatchEvent(this.fileUploadWaitingListTarget, "change");
+  }
+
+  async #uploadAllWaitingItems() {
+    for(const item of this.fileUploadWaitingItemTargets) {
+      const operationsElement = item.querySelector(".operations");
+      if (operationsElement) {
+        operationsElement.textContent = 'アップロードの待機中';
+      }
+    }
+
+    let allSucceeded = true;
+    const uploadedItems = [];
+    for(const item of this.fileUploadWaitingItemTargets) {
+      const fileElement = item.querySelector(`[name="item[files][][in_file]"]`)
+      if (! fileElement.files || fileElement.files.length === 0) {
+        continue;
+      }
+      const file = fileElement.files[0];
+      if (!file) {
+        continue;
+      }
+
+      const nameElement = item.querySelector(`[name="item[files][][name]"]`);
+      const filenameElement = item.querySelector(`[name="item[files][][filename]"]`);
+      if (!nameElement && !filenameElement) {
+        continue;
+      }
+
+      const name = nameElement.value;
+      const filename = filenameElement.value;
+
+      const resizing = item.querySelector(`[name="item[files][][resizing]"]`)?.value;
+      const quality = item.querySelector(`[name="item[files][][quality]"]`)?.value;
+      const imageResizesDisabled = item.querySelector(`[name="item[files][][image_resizes_disabled]"]`)?.value;
+
+      const operationsElement = item.querySelector(".operations");
+      if (operationsElement) {
+        operationsElement.textContent = 'アップロードしています';
+      }
+
+      const result = await this.#uploadOneFile({ item, name, filename, file, resizing, quality, imageResizesDisabled });
+      if (result) {
+        uploadedItems.push(item);
+      } else {
+        allSucceeded = false;
+      }
+    }
+
+    if (allSucceeded) {
+      uploadedItems.forEach((item) => {
+        dispatchEvent(this.element, "ss:modal-select", { item: $(item) });
+      });
+      dispatchEvent(this.element, "ss:modal-close");
+    }
+  }
+
+  async #uploadOneFile({ item, name, filename, resizing, quality, imageResizesDisabled, file }) {
+    const createParams = new FormData();
+    if (name) {
+      createParams.append("item[name]", name);
+    }
+    if (filename) {
+      createParams.append("item[filename]", filename);
+    }
+    if (resizing) {
+      createParams.append("item[resizing]", resizing);
+    }
+    if (quality) {
+      createParams.append("item[quality]", quality);
+    }
+    if (imageResizesDisabled) {
+      createParams.append("item[image_resizes_disabled]", imageResizesDisabled);
+    }
+    createParams.append("item[in_files][]", file);
+
+    let lastResponse = undefined;
+    for (let i = 0; i < NUM_RETRY; i++) {
+      const createResponse = await fetch(this.createUrlValue, {
+        method: "POST",
+        headers: { "X-CSRF-Token": csrfToken() },
+        body: createParams,
+      });
+      lastResponse = createResponse;
+      if (createResponse.ok) {
+        break;
+      }
+    }
+    if (!lastResponse.ok) {
+      this.#showError(item, [ "failed to upload" ]);
+      return false;
+    }
+
+    const createResults = await lastResponse.json();
+    const createResult = createResults[0];
+
+    item.dataset.id = createResult['_id'];
+    item.dataset.name = createResult['name'];
+    item.dataset.humanizedName = createResult['humanized_name'];
+    item.dataset.extname = createResult['extname'];
+    // item.setAttribute("data-id", createResult['_id']);
+    const nameElement = item.querySelector(".name");
+    if (nameElement) {
+      nameElement.textContent = createResult['name'];
+    }
+    const filenameElement = item.querySelector(".filename");
+    if (filenameElement) {
+      filenameElement.textContent = createResult['filename'];
+    }
+    const optionsElement = item.querySelector(".options");
+    if (optionsElement) {
+      optionsElement.innerHTML = '';
+    }
+    const operationsElement = item.querySelector(".operations");
+    if (operationsElement) {
+      operationsElement.textContent = 'アップロードしました。';
+    }
+    const errorsElement = item.querySelector(".errors");
+    if (errorsElement) {
+      errorsElement.innerHTML = '';
+    }
+
+    return true;
+  }
+
+  #showError(item, errorMessages) {
+    const errorsElement = item.querySelector(".errors");
+    if (!errorsElement) {
+      return;
+    }
+
+    errorsElement.replaceChildren(createError(errorMessages));
   }
 }
