@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:part1) { create :accessibility_tool, cur_site: site }
-  let!(:part2) { create :accessibility_tool_compat, cur_site: site }
+  let!(:part2) { create :accessibility_tool_compat1, cur_site: site }
   let!(:layout) { create_cms_layout part1, part2 }
   let!(:item) do
     page_html = <<~HTML
