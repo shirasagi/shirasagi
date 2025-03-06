@@ -49,6 +49,7 @@ ja:
           no_paid_leave_setting: 有給日数の設定がありません。
     time_card_errors:
       regular_open: 勤務日及び所定時間が入力されていない日があります。打刻前に設定してください。
+      no_attendance_setting: タイムカードに出退勤が設定されていません。タイムカードを作成した後に出退勤を変更した可能性があります。
 
     options:
       state:

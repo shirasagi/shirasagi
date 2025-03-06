@@ -112,8 +112,11 @@ class Gws::Affair2::Loader::Monthly::Base < Gws::Affair2::Loader::Common::Base
     @notice_messages = []
     if !time_card.regular_open?
       @notice_messages << I18n.t("gws/affair2.time_card_errors.regular_open")
-      return
     end
+    if time_card.attendance_setting.nil?
+      @notice_messages << I18n.t("gws/affair2.time_card_errors.no_attendance_setting")
+    end
+    return if @notice_messages.present?
 
     duty_notices = time_card.attendance_setting.duty_setting.duty_notices.to_a rescue []
     return if duty_notices.blank?
