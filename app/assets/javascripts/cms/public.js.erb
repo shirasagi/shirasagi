@@ -389,10 +389,22 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const index = index_1;
   self.url = self.requestUrl();
 
-  const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
-  $voiceTag.html('');
-  anchor.appendTo($voiceTag);
-  self.$voiceTag = anchor;
+  if ($voiceTag.is("#ss-voice")) {
+    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
+    $voiceTag.html('');
+    anchor.appendTo($voiceTag);
+    self.$voiceTag = anchor;
+  } else {
+    const anchor = $("<button />", {
+      type: "button",
+      name: "voice",
+      "aria-expanded": "false",
+      "aria-haspopup": "dialog"
+    }).html($voiceTag.html());
+    $voiceTag.html('');
+    anchor.appendTo($voiceTag);
+    self.$voiceTag = anchor;
+  }
 
   const controllerId = 'ss-voice-controller-' + index;
   const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
@@ -495,7 +507,9 @@ SS_Voice.prototype.cancel = function (ev) {
   }
   this.timerId = null;
   this.init();
-
+  if (this.$voiceTag && this.$voiceTag.is("button")) {
+    this.$voiceTag.attr("aria-expanded", "false");
+  }
   if (ev) {
     ev.preventDefault();
   }
@@ -506,6 +520,9 @@ SS_Voice.prototype.playAudio = function () {
   this.state = 'playing';
   this.voiceController.play(this.url);
   this.setAction(this.cancel.bind(this));
+  if (this.$voiceTag.is("button")) {
+    this.$voiceTag.attr("aria-expanded", "true");
+  }
   return false;
 };
 
