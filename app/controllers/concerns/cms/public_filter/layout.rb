@@ -276,7 +276,7 @@ module Cms::PublicFilter::Layout
       outer_start = $1
       inner_html = $2
       outer_end = $3
-      "#{outer_start}#{ inner_html =~ /<button\b/ ? inner_html : label }#{outer_end}"
+      "#{outer_start}#{inner_html =~ /<button\b/ ? inner_html : label}#{outer_end}"
     end
   end
 
