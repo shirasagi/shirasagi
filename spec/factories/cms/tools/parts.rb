@@ -8,7 +8,7 @@ FactoryBot.define do
     end
   end
 
-  factory :accessibility_tool_compat, class: 'Cms::Part::Free' do
+  factory :accessibility_tool_compat1, class: 'Cms::Part::Free' do
     name { unique_id.to_s }
     basename { "tool-#{unique_id}.part.html" }
     filename { "tool-#{unique_id}.part.html" }
@@ -32,6 +32,38 @@ FactoryBot.define do
                 <span id="ss-small">小さく</span>
                 <span id="ss-medium">標準</span>
                 <span id="ss-large">大きく</span>
+              </div>
+            </div><!-- .accessibility__tool-list -->
+          </nav><!-- .accessibility__tool -->
+        </div><!--#tool .accessibility__tool-wrap -->
+      HTML
+    end
+  end
+
+  factory :accessibility_tool_compat2, class: 'Cms::Part::Free' do
+    name { unique_id.to_s }
+    basename { "tool-#{unique_id}.part.html" }
+    filename { "tool-#{unique_id}.part.html" }
+    html do
+      # "data-tool=" で機能を指定する形式；ただし「ふりがなをつける」しかコーディングされていない。
+      <<~HTML
+        <!-- アクセシビリティツール -->
+        <div class="accessibility__tool-wrap">
+          <nav class="accessibility__tool">
+            <div class="accessibility__tool-list">
+              <div data-tool="ss-kana" class="accessibility__kana">ふりがなをつける</div>
+              <div data-tool="ss-voice" class="accessibility__voice">読み上げる</div>
+              <div class="accessibility__theme">背景色
+                <span data-tool="ss-theme">
+                  <a href="#" class="white">白</a>
+                  <a href="#" class="blue">青</a>
+                  <a href="#" class="black">黒</a>
+                </span>
+              </div>
+              <div class="accessibility__fontsize">文字サイズ
+                <span data-tool="ss-small">小さく</span>
+                <span data-tool="ss-medium">標準</span>
+                <span data-tool="ss-large">大きく</span>
               </div>
             </div><!-- .accessibility__tool-list -->
           </nav><!-- .accessibility__tool -->
