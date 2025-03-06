@@ -28,8 +28,8 @@ $("#ajax-box form").ajaxForm({
     </div>
   </div>
 
-  <footer class="send ss-sticky ss-sticky-bottom">
-    <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
-    <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+  <footer class="send">
+    <%= f.submit t("ss.buttons.import"), class: 'btn-primary save', data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
   </footer>
 <% end %>
