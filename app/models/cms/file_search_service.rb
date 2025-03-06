@@ -47,7 +47,11 @@ class Cms::FileSearchService
     end
     return [] if items.blank?
 
-    Kaminari.paginate_array(items, limit: limit, offset: offset, total_count: total_count)
+    if @stage_facet_contains
+      items = Kaminari.paginate_array(items, limit: limit, offset: offset, total_count: total_count)
+    end
+
+    items
   end
 
   private
