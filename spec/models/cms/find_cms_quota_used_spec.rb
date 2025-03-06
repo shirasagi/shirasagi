@@ -244,7 +244,7 @@ describe Cms, type: :model, dbscope: :example do
   context "when workflow/route is created" do
     it do
       expect { create(:workflow_route, group_ids: [ group2.id ]) }.to \
-        change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by_at_least(200)
+        change { Cms.find_cms_quota_used(Cms::Site.where(id: site.id)) }.by_at_least(150)
     end
   end
 

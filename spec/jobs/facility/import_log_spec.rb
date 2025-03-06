@@ -50,7 +50,6 @@ describe Facility::ImportJob, dbscope: :example do
   let!(:facility_for_updates1) do
     model.create(
       site_id: 1,
-      permission_level: 1,
       group_ids: [3],
       name: "シラサギランド",
       filename: "facilities/item_update1",
@@ -67,7 +66,6 @@ describe Facility::ImportJob, dbscope: :example do
   let!(:facility_for_updates2) do
     model.create(
       site_id: 1,
-      permission_level: 1,
       group_ids: [3],
       name: "シラサギスタジオ",
       filename: "facilities/item_update2",

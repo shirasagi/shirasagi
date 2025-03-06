@@ -5,6 +5,7 @@ class Cms::MembersController < ApplicationController
   model Cms::Member
 
   navi_view "cms/cms/navi"
+  menu_view "cms/crud/menu"
 
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :verify]
 
@@ -39,6 +40,38 @@ class Cms::MembersController < ApplicationController
       order_by(id: 1).
       to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "members_#{Time.zone.now.to_i}.csv"
+  end
+
+  def import
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site)
+    return if request.get? || request.head?
+
+    @item = SS::ImportParam.new(cur_user: @cur_user, cur_site: @cur_site)
+
+    if params[:item].blank?
+      @item.errors.add :base, t("ss.errors.import.blank_file")
+      render :import and return
+    end
+
+    @item.attributes = params.require(:item).permit(:in_file)
+
+    if File.extname(@item.in_file.original_filename).downcase != ".csv"
+      @item.errors.add :base, :invalid_csv
+      render :import and return
+    end
+
+    result = Cms::Member.import_csv(@item)
+    Rails.logger.debug{ "POST request for import action with file: #{result.inspect}" }
+
+    if result[:success]
+      Rails.logger.debug{ "Import successful: #{@item.inspect}" }
+      flash[:notice] = t("ss.notice.imported")
+      redirect_to action: :index
+    else
+      @item.errors.add(:base, result[:error]) if @item.errors.blank?
+      Rails.logger.error{ "Import failed: #{@item.errors}" }
+      render :import
+    end
   end
 
   def verify

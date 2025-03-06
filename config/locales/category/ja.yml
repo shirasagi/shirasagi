@@ -63,5 +63,10 @@ ja:
         - 統合後は削除されます。
     category/addon/summary_page:
       summary_page_id:
-        - サマリーとなるページを設定できます。
-        - 設定したページは、Liquid形式のループHTMLより参照できます。
+        - サマリーページを設定すると、指定したページの内容をこのカテゴリーフォルダー内で表示できます。
+        -
+        - ※ 必要な設定 ※
+        -   (1)サマリーページを設定
+        -   (2)リスト表示
+        -    「ループHTML形式」=「Liquid」
+        -    「ループHTML」の表示 = &lt;section class="summary"&gt;{{ node.summary_page.html }}&lt;/section&gt;

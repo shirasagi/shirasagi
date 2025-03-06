@@ -918,7 +918,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
     context 'create page with not allowed user' do
       let!(:permissions) { Cms::Role.permission_names.select { |item| item =~ /_private_/ } }
-      let!(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3, cur_site: site }
+      let!(:role) { create :cms_role, name: "role", permissions: permissions, cur_site: site }
       let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
       let(:form2) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id] }
 

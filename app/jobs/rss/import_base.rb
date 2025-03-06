@@ -68,7 +68,6 @@ class Rss::ImportBase < Cms::ApplicationJob
     page.html = rss_item.html
     page.released_type = 'fixed'
     page.released = rss_item.released
-    page.permission_level = node.permission_level if page.permission_level.blank?
     page.group_ids = Array.new(node.group_ids) if page.group_ids.blank?
     if rss_item.authors.present?
       rss_item.authors.each do |author|

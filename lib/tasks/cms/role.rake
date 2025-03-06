@@ -7,7 +7,7 @@ namespace :cms do
       puts "User not found: #{ENV['user']}" or exit unless user
 
       role = Cms::Role.find_or_create_by name: I18n.t('cms.roles.admin'), site_id: site.id
-      role.update permissions: Cms::Role.permission_names, permission_level: 3
+      role.update permissions: Cms::Role.permission_names
       user.add_to_set cms_role_ids: role.id
 
       puts "#{user.name}: #{role.name}"

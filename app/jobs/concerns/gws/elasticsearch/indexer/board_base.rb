@@ -22,7 +22,6 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
       doc[:user_ids] = post.users.pluck(:id)
-      doc[:permission_level] = post.permission_level
 
       doc[:member_ids] = topic.members.pluck(:id) if topic.respond_to?(:members)
       doc[:member_group_ids] = topic.member_groups.pluck(:id) if topic.respond_to?(:member_groups)
@@ -57,7 +56,6 @@ module Gws::Elasticsearch::Indexer::BoardBase
       doc[:group_ids] = post.groups.pluck(:id)
       doc[:custom_group_ids] = post.custom_groups.pluck(:id)
       doc[:user_ids] = post.users.pluck(:id)
-      doc[:permission_level] = post.permission_level
 
       doc[:member_ids] = topic.members.pluck(:id) if topic.respond_to?(:members)
       doc[:member_custom_group_ids] = topic.member_custom_groups.pluck(:id) if topic.respond_to?(:member_custom_groups)

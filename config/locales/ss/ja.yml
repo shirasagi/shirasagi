@@ -48,6 +48,7 @@ ja:
     replace: 差し替え
     before_replace: 差し替え前
     after_replace: 差し替え後
+    unused_file: 未使用
     broken_link: リンク切れ
     auto_reload: 自動更新
     quality: 画質
@@ -854,7 +855,6 @@ ja:
         site_id: サイト
       ss/model/role:
         name: ロール名
-        permission_level: 権限レベル
         permissions: 権限設定
       ss/model/address:
         member_id: ユーザー
@@ -1241,8 +1241,6 @@ ja:
       close_date:
         - 公開を終了する日時を指定します。
         - 指定した日時が来ると非公開になります。
-      permission_level:
-        - 編集を許可する権限レベルを指定します。
       group_ids:
         - 編集を許可するグループを選択します。
       user_ids:

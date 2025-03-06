@@ -38,7 +38,6 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       expect(folder.group_ids).to eq folder.readable_group_ids
       expect(folder.user_ids).to eq folder.readable_member_ids
       expect(folder.custom_group_ids).to be_blank
-      expect(folder.permission_level).to eq 1
 
       #
       # Update

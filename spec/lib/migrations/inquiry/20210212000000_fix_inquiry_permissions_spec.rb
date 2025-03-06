@@ -10,7 +10,6 @@ RSpec.describe SS::Migration20210212000000, dbscope: :example do
     create(:cms_role,
       name: "role1",
       permissions: all_permissions,
-      permission_level: 3,
       cur_site: site
     )
   end
@@ -18,7 +17,6 @@ RSpec.describe SS::Migration20210212000000, dbscope: :example do
     create(:cms_role,
       name: "role2",
       permissions: (all_permissions - inquiry_permissions),
-      permission_level: 1,
       cur_site: site
     )
   end

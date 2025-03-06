@@ -35,8 +35,8 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       "[alt=\"#{facility_image1.image_alt}\"]".tap do |selector|
         expect(page).to have_css(selector)
         image_element_info(first(selector)).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 160
+          expect(info[:height]).to eq 160
         end
       end
     end
@@ -44,8 +44,8 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
       "[alt=\"#{facility_image2.image_alt}\"]".tap do |selector|
         expect(page).to have_css(selector)
         image_element_info(first(selector)).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 160
+          expect(info[:height]).to eq 160
         end
       end
     end

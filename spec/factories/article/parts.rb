@@ -10,4 +10,8 @@ FactoryBot.define do
   factory :article_part_search, class: Article::Part::Search, traits: [:cms_part] do
     route { "article/search" }
   end
+
+  factory :article_part_page_navi, class: Article::Part::PageNavi, traits: [:cms_part] do
+    route { "article/page_navi" }
+  end
 end

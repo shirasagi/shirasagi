@@ -3,6 +3,8 @@
 module Cms
   extend Sys::ModulePermission
 
+  class ScssScriptError < StandardError; end
+
   # factory method for Liquid::Template
   def self.parse_liquid(source, registers)
     template = Liquid::Template.parse(source)
@@ -316,34 +318,50 @@ module Cms
     end
   end
 
-  class ScssLogger
-    def self.warn(message, _options)
-      Rails.logger.warn { message }
+  def self.compile_scss(source_path, output_path, basedir:)
+    commands = SS.config.cms.sass['commands'].dup
+    basedir ||= Rails.root.to_s
+    basedir = basedir[0..-2] if basedir.end_with?("/")
+    # make sure that source path is absolute path
+    source_path = ::File.expand_path(source_path, basedir)
+    # convert absolute path to relative path
+    if source_path.start_with?(basedir)
+      source_path = source_path.sub(basedir, "")
+      source_path = source_path[1..-1]
     end
 
-    def self.debug(message, _options)
-      Rails.logger.warn { message }
+    # make sure that output path is absolute path
+    output_path = ::File.expand_path(output_path, basedir)
+    # convert absolute path to relative path
+    if output_path.start_with?(basedir)
+      output_path = output_path.sub(basedir, "")
+      output_path = output_path[1..-1]
     end
 
-    def self.instance
-      self
+    commands << "--load-path=#{basedir}"
+    Rails.application.config.assets.paths.each { commands << "--load-path=#{_1}" }
+    commands << source_path
+    # 注意: オプション --source-map-urls=relative を指定する場合、出力ファイルを指定しなければならない。
+    # 注意: そうしないと sass コマンドがエラー終了する。
+    commands << output_path
+
+    output = nil
+    wait_thr = Open3.popen3(*commands, { chdir: basedir }) do |stdin, stdout, stderr, wait_thr|
+      # stdin.write source
+      stdin.close
+
+      output = stdout.read
+      error = stderr.read
+      if error
+        Rails.logger.warn { error }
+      end
+
+      wait_thr
     end
-  end
 
-  def self.compile_scss(source, load_paths:, filename:)
-    options = {
-      source_map_file: ".",
-      source_map_embed: true,
-      source_map_contents: true,
-      load_paths: load_paths,
-      style: :expanded,
-      syntax: :scss,
-      logger: ScssLogger.instance
-    }
-    options[:filename] = filename if filename
+    raise ScssScriptError, "sass command exited in errors" unless wait_thr.value.success?
 
-    sass = SassC::Engine.new(source, options)
-    sass.render
+    output
   end
 
   def self.unescape_html_entities(text)
