@@ -67,6 +67,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
 
         expected_headers = %w[id] + %w(
          name kana uid organization_uid email password tel tel_ext type account_start_date account_expiration_date
+
          initial_password_warning session_lifetime restriction lock_state deletion_lock_state organization_id groups remark
         ).map { |header| I18n.t("mongoid.attributes.ss/model/user.#{header}") }
 
