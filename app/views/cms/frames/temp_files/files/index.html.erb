@@ -7,13 +7,13 @@
   <div class="search-ui-form">
     <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
       <div>
-        <label><%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil %> <%= "一時ファイル" %></label>
+        <label><%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil, data: { controller: "ss--submit-on-change" } %> <%= "一時ファイル" %></label>
         (
-          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil %> <%= cur_node ? "このフォルダー" : "ルート階層" %></label>
-          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil %> <%= "全体" %></label>
+          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil, data: { controller: "ss--submit-on-change" } %> <%= cur_node ? "このフォルダー" : "ルート階層" %></label>
+          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil, data: { controller: "ss--submit-on-change" } %> <%= "全体" %></label>
         )
-        <label><%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil %> <%= t("sns.user_file") %></label>
-        <label><%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil %> <%= t("cms.file") %></label>
+        <label><%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil, data: { controller: "ss--submit-on-change" } %> <%= t("sns.user_file") %></label>
+        <label><%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil, data: { controller: "ss--submit-on-change" } %> <%= t("cms.file") %></label>
       </div>
       <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
       <%= hidden_field_tag :cid, params[:cid] if params[:cid].present? %>
