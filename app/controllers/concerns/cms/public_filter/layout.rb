@@ -274,9 +274,14 @@ module Cms::PublicFilter::Layout
     end
     html.gsub(/(<.+? data-tool="ss-kana".*?>)(.*?)(<\/.+?>)/m) do
       outer_start = $1
-      inner_html = $2
-      outer_end = $3
-      "#{outer_start}#{inner_html =~ /<button\b/ ? inner_html : label}#{outer_end}"
+      inner_html  = $2
+      outer_end   = $3
+      if inner_html =~ /<button\b/
+        # 新様式なら変更せずそのまま返す
+        outer_start + inner_html + outer_end
+      else
+        outer_start + label + outer_end
+      end
     end
   end
 
