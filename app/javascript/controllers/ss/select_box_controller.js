@@ -61,7 +61,7 @@ export default class extends Controller {
       onComplete: () => {
         const $ajaxBox = SS_SearchUI.anchorAjaxBox || $.colorbox.element();
         $ajaxBox.data('on-select', ($selectedItem) => {
-          const $dataItem = $selectedItem.closest("[data-id]");
+          const $dataItem = $selectedItem.is("[data-id]") ? $selectedItem : $selectedItem.closest("[data-id]");
           const data = $dataItem[0].dataset;
           if (!data.name) {
             data.name = $dataItem.find(".select-item").text() || $selectedItem.text() || $dataItem.text();
