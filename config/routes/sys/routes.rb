@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resource :ad, only: [:show, :edit, :update]
 
     resources :users, concerns: [:deletion, :lock_and_unlock] do
+      match :download_all, on: :collection, via: %i[get post]
       post :reset_mfa_otp, on: :member
     end
     resources :notice, concerns: :deletion
