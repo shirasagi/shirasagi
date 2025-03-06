@@ -92,4 +92,15 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
   def index
     render
   end
+
+  def destroy
+    @item = SS::File.find(params[:id])
+    @item = @item.becomes_with_model
+    if @item.is_a?(SS::TempFile)
+      @item = @item.becomes(Cms::TempFile)
+    end
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: cur_node)
+    @item.cur_user = @cur_user if @item.respond_to?(:cur_user)
+    render_destroy @item.destroy
+  end
 end

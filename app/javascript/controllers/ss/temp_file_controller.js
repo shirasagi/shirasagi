@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import ejs from "ejs/ejs";
-import {prependChildren, csrfToken, dispatchEvent} from "../../ss/tool";
+import {prependChildren, csrfToken, dispatchEvent, LOADING} from "../../ss/tool";
 
 const NUM_RETRY = 5;
 
@@ -97,10 +97,50 @@ export default class extends Controller {
     }
   }
 
-  select(ev) {
+  selectFile(ev) {
     ev.preventDefault();
     dispatchEvent(ev.target, "ss:modal-select", { item: $(ev.target) });
     dispatchEvent(ev.target, "ss:modal-close");
+  }
+
+  async deleteFile(ev) {
+    const href = ev.target.dataset.href;
+    if (!href) {
+      return;
+    }
+
+    if (!confirm(i18next.t('ss.confirm.delete'))) {
+      return false;
+    }
+
+    const params = new FormData();
+    params.append("_method", "delete")
+
+    const saveHtml = ev.target.innerHTML;
+    ev.target.innerHTML = LOADING;
+
+    const response = await fetch(href, {
+      method: "POST",
+      headers: { "X-CSRF-Token": csrfToken() },
+      body: params
+    });
+    ev.target.innerHTML = saveHtml;
+    if (!response.ok) {
+      alert(["== Error(AjaxFile) =="]);
+      return;
+    }
+
+    let targetElement;
+    if (ev.target.dataset.remove) {
+      targetElement = document.querySelector(ev.target.dataset.remove);
+    }
+    targetElement ||= ev.target.closest(".file-view");
+
+    targetElement.classList.add("animate__animated", "animate__zoomOut", "animate__faster")
+    targetElement.addEventListener('animationend', () => {
+      targetElement.remove();
+      dispatchEvent(this.element, "ss:ajaxRemoved");
+    }, { once: true });
   }
 
   async #selectFiles() {
