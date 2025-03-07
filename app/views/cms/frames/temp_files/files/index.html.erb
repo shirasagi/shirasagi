@@ -1,6 +1,6 @@
 <div class="cms-tabs">
-  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path(site: @s.cur_site, cid: @s.cur_node), data: { turbo: true } %>
-  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(site: @s.cur_site, cid: @s.cur_node), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path(cid: cur_node), data: { turbo: true } %>
+  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(cid: cur_node), class: "current", data: { turbo: true } %>
 </div>
 
 <div class="cms-temp-files" data-controller="ss--temp-file">
@@ -27,7 +27,7 @@
       <%
         item = item.becomes_with_model
         if item.is_a?(SS::TempFile)
-          item = item.becomes(Cms::TempFile)
+          item = item.becomes_with(Cms::TempFile)
         end
 
         data_hash = Hash[%i[id name humanized_name extname url image? thumb_url image_dimension].map { |m| [m, (item.send(m) rescue nil)] }]
@@ -75,10 +75,10 @@
         <% end %>
         <nav class="menu">
           <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, file_size: params[:file_size]), class: "btn", data: { turbo: true } %>
+            <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, cid: cur_node), class: "btn", data: { turbo: true } %>
           <% end %>
           <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item, format: :json), action: "ss--temp-file#deleteFile" } %>
+            <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item, cid: cur_node, format: :json), action: "ss--temp-file#deleteFile" } %>
           <% end %>
         </nav>
       <% end %>
