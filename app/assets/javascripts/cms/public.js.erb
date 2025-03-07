@@ -434,12 +434,12 @@ SS_Voice.prototype.setAction = function (action) {
 };
 
 SS_Voice.prototype.load = function (ev) {
-  var self = this;
+  const self = this;
   if (this.cancelLoading) {
-    if (ev) {
-      ev.preventDefault();
-    }
-    return false;
+  if (ev) {
+    ev.preventDefault();
+  }
+  return false;
   }
 
   $.ajax({
@@ -510,7 +510,6 @@ SS_Voice.prototype.cancel = function (ev) {
   }
   this.timerId = null;
   this.init();
-  this.updateAriaExpanded();
   if (ev) {
     ev.preventDefault();
   }
@@ -521,7 +520,6 @@ SS_Voice.prototype.playAudio = function () {
   this.state = 'playing';
   this.voiceController.play(this.url);
   this.setAction(this.cancel.bind(this));
-  this.updateAriaExpanded();
   return false;
 };
 
