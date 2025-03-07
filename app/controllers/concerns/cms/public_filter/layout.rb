@@ -269,8 +269,14 @@ module Cms::PublicFilter::Layout
 
   def render_kana_tool(html)
     label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
-    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+    html = html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{label}#{$3}"
+    end
+    html.gsub(/(<.+? data-tool="ss-kana".*?>)(.*?)(<\/.+?>)/m) do
+      outer_start = $1
+      inner_html = $2
+      outer_end = $3
+      "#{outer_start}#{inner_html =~ /<button\b/ ? inner_html : label}#{outer_end}"
     end
   end
 
