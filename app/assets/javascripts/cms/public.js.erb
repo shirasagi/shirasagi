@@ -387,20 +387,22 @@ function SS_Voice() {
 SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const self = this;
   const index = index_1;
+  self.expand = false;
   self.url = self.requestUrl();
 
-  if ($voiceTag.is("#ss-voice")) {
-    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
-    $voiceTag.html('');
-    anchor.appendTo($voiceTag);
-    self.$voiceTag = anchor;
-  } else {
-    const anchor = $("<button />", {
+  if ($voiceTag.is('[data-tool="ss-voice"]')) {
+    const voiceButton = $("<button />", {
       type: "button",
       name: "voice",
-      "aria-expanded": "false",
+      "aria-controls": null,
+      "aria-expanded": false,
       "aria-haspopup": "dialog"
     }).html($voiceTag.html());
+    $voiceTag.html('');
+    $voiceTag.empty().append(voiceButton);
+    self.$voiceTag = voiceButton;
+  } else {
+    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
     $voiceTag.html('');
     anchor.appendTo($voiceTag);
     self.$voiceTag = anchor;
@@ -408,7 +410,8 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
 
   const controllerId = 'ss-voice-controller-' + index;
   const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
-  $voiceTag.after(voice_controller);
+  self.$voiceTag.attr("aria-controls", controllerId);
+  $voiceTag.append(voice_controller);
   self.voiceController = new SS_VoiceController(voice_controller[0]);
   self.state = null;
   self.cancelLoading = false;
@@ -507,9 +510,7 @@ SS_Voice.prototype.cancel = function (ev) {
   }
   this.timerId = null;
   this.init();
-  if (this.$voiceTag && this.$voiceTag.is("button")) {
-    this.$voiceTag.attr("aria-expanded", "false");
-  }
+  this.updateAriaExpanded();
   if (ev) {
     ev.preventDefault();
   }
@@ -520,9 +521,7 @@ SS_Voice.prototype.playAudio = function () {
   this.state = 'playing';
   this.voiceController.play(this.url);
   this.setAction(this.cancel.bind(this));
-  if (this.$voiceTag.is("button")) {
-    this.$voiceTag.attr("aria-expanded", "true");
-  }
+  this.updateAriaExpanded();
   return false;
 };
 
