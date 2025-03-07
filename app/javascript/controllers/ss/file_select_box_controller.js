@@ -1,5 +1,5 @@
 import SelectBoxController from "./select_box_controller";
-import {prependChildren, replaceChildren} from "../../ss/tool";
+import {dispatchEvent, prependChildren, replaceChildren} from "../../ss/tool";
 import i18next from 'i18next'
 
 // ファイル選択の選択結果はとてもじゃないけど ejs でレンダリングするのは無理。
@@ -11,9 +11,36 @@ export default class extends SelectBoxController {
     selectApi: String,
     viewApi: String
   }
+  static targets = [
+    "fileUploadDropArea"
+  ];
 
   connect() {
     super.connect();
+
+    if (this.hasFileUploadDropAreaTarget) {
+      this.fileUploadDropAreaTarget.addEventListener("dragenter", (ev) => {
+        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
+        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
+        ev.preventDefault();
+
+        this.#onDragEnter(ev);
+      });
+      this.fileUploadDropAreaTarget.addEventListener("dragleave", (ev) => {
+        this.#onDragLeave(ev);
+      });
+      this.fileUploadDropAreaTarget.addEventListener("dragover", (ev) => {
+        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
+        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
+        ev.preventDefault();
+
+        this.#onDragOver(ev);
+      });
+      this.fileUploadDropAreaTarget.addEventListener("drop", (ev) => {
+        ev.preventDefault();
+        this.#onDrop(ev);
+      });
+    }
   }
 
   openDialog(ev) {
@@ -103,5 +130,35 @@ export default class extends SelectBoxController {
     const idElements = this.resultTarget.querySelectorAll("[data-file-id]");
     const ids = Array.from(idElements).map((element) => String(element.dataset.fileId));
     return new Set(ids);
+  }
+
+  #onDragEnter(ev) {
+    this.fileUploadDropAreaTarget.classList.add('file-dragenter');
+  }
+
+  #onDragLeave(ev) {
+    this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
+  }
+
+  #onDragOver(ev) {
+    if (!this.fileUploadDropAreaTarget.classList.contains('file-dragenter')) {
+      this.fileUploadDropAreaTarget.classList.add('file-dragenter');
+    }
+  }
+
+  #onDrop(ev) {
+    const files = ev.dataTransfer.files;
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    document.addEventListener("ss:dialog:opened", (ev) => {
+      const tempFilesElement = ev.target.querySelector(".cms-temp-files");
+      dispatchEvent(tempFilesElement, "ss:tempFile:upload", { files: files });
+      this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
+    }, { once: true })
+
+    this.apiValue = this.uploadApiValue;
+    super.openDialog();
   }
 }

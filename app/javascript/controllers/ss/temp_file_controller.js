@@ -79,6 +79,9 @@ export default class extends Controller {
         this.#onDrop(ev);
       });
     }
+    this.element.addEventListener("ss:tempFile:upload", (ev) => {
+      this.#appendFilesToWaitingList(ev.detail.files)
+    });
   }
 
   optionTargetConnected(element) {
