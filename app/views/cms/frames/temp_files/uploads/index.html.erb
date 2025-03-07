@@ -20,10 +20,10 @@
       }.to_json
     %>
   </script>
-  <div class="search-ui-form">
+  <div class="search-ui-form" data-ss--temp-file-target="fileUploadDropArea">
     <%= file_field_tag :in_files, multiple: true, class: "hide", id: nil, data: { "ss--temp-file-target" => "fileUploadShadow" } %>
     <%= button_tag "ファイル選択", type: :button, name: 'select_file', class: "btn", data: { action: "ss--temp-file#openDialog", "ss--temp-file-target" => "fileUploadReal" } %>
-    <span class="upload-drop-notice" data-ss--temp-file-target="fileUploadDropArea">ここにファイルをドロップすることでアップロードできます。</span>
+    <span class="upload-drop-notice">ここにファイルをドロップすることでアップロードできます。</span>
   </div>
 
   <%= form_with scope: :item, url: url_for(action: :create), class: "hide", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>

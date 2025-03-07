@@ -56,6 +56,29 @@ export default class extends Controller {
         this.#uploadAllWaitingItems();
       })
     }
+    if (this.hasFileUploadDropAreaTarget) {
+      this.fileUploadDropAreaTarget.addEventListener("dragenter", (ev) => {
+        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
+        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
+        ev.preventDefault();
+
+        this.#onDragEnter(ev);
+      });
+      this.fileUploadDropAreaTarget.addEventListener("dragleave", (ev) => {
+        this.#onDragLeave(ev);
+      });
+      this.fileUploadDropAreaTarget.addEventListener("dragover", (ev) => {
+        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
+        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
+        ev.preventDefault();
+
+        this.#onDragOver(ev);
+      });
+      this.fileUploadDropAreaTarget.addEventListener("drop", (ev) => {
+        ev.preventDefault();
+        this.#onDrop(ev);
+      });
+    }
   }
 
   optionTargetConnected(element) {
@@ -144,10 +167,25 @@ export default class extends Controller {
   }
 
   async #selectFiles() {
+    const files = this.fileUploadShadowTarget.files;
+    if (!files || files.length === 0) {
+      return;
+    }
+
     if (this.hasFileUploadRealTarget) {
       this.fileUploadRealTarget.disabled = true;
     }
 
+    await this.#appendFilesToWaitingList(files);
+
+    this.fileUploadShadowTarget.files = undefined;
+    this.fileUploadShadowTarget.value = '';
+    if (this.hasFileUploadRealTarget) {
+      this.fileUploadRealTarget.disabled = false;
+    }
+  }
+
+  async #appendFilesToWaitingList(files) {
     const templateSource = this.fileUploadWaitingItemTemplateTarget.innerHTML;
 
     const renderOne = async (file) => {
@@ -167,7 +205,7 @@ export default class extends Controller {
       prependChildren(this.fileUploadWaitingListTarget, html);
     };
 
-    for (const file of Array.from(this.fileUploadShadowTarget.files).reverse()) {
+    for (const file of Array.from(files).reverse()) {
       await renderOne(file);
 
       const newFileElement = this.fileUploadWaitingListTarget.querySelector(`[name="item[files][][in_file]"]`);
@@ -178,11 +216,6 @@ export default class extends Controller {
       }
     }
 
-    this.fileUploadShadowTarget.files = undefined;
-    this.fileUploadShadowTarget.value = '';
-    if (this.hasFileUploadRealTarget) {
-      this.fileUploadRealTarget.disabled = false;
-    }
     if (this.hasFileUploadWaitingItemTemplateTarget) {
       if (this.fileUploadWaitingItemTargets.length > 0) {
         this.fileUploadWaitingFormTarget.classList.remove("hide")
@@ -323,5 +356,31 @@ export default class extends Controller {
     }
 
     errorsElement.replaceChildren(createError(errorMessages));
+  }
+
+  #onDragEnter(ev) {
+    this.fileUploadDropAreaTarget.classList.add('file-dragenter');
+  }
+
+  #onDragLeave(ev) {
+    this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
+  }
+
+  #onDragOver(ev) {
+    if (!this.fileUploadDropAreaTarget.classList.contains('file-dragenter')) {
+      this.fileUploadDropAreaTarget.classList.add('file-dragenter');
+    }
+  }
+
+  #onDrop(ev) {
+    const files = ev.dataTransfer.files;
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    this.fileUploadDropAreaTarget.classList.add('busy');
+    this.#appendFilesToWaitingList(files).then(() => {
+      this.fileUploadDropAreaTarget.classList.remove('file-dragenter', 'busy');
+    });
   }
 }
