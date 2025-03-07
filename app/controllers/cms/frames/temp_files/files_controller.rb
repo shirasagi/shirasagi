@@ -2,6 +2,7 @@
 
 class Cms::Frames::TempFiles::FilesController < ApplicationController
   include Cms::BaseFilter
+  include Cms::CrudFilter
 
   model SS::File
 
@@ -44,63 +45,29 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
     @base_items ||= @s.query(SS::File, SS::File.unscoped)
   end
 
-  # # no bound
-  # def base_items
-  #   set_search_params
-  #
-  #   @base_items ||= begin
-  #     criteria = Cms::TempFile.site(@cur_site)
-  #     criteria = criteria.exists(node_id: false)
-  #     criteria = criteria.allow(:read, @cur_user)
-  #     criteria
-  #   end
-  # end
-
-  # # bounded to node
-  # def items
-  #   @items ||= begin
-  #     criteria = Cms::TempFile.site(@cur_site)
-  #     criteria = criteria.node(@cur_node)
-  #     criteria = criteria.allow(:read, @cur_user)
-  #     criteria
-  #   end
-  # end
-
-  # # cms file
-  # def items
-  #   @items ||= begin
-  #     criteria = Cms::File.site(@cur_site)
-  #     criteria = criteria.allow(:read, @cur_user)
-  #     criteria
-  #   end
-  # end
-
-  # # user file
-  # def items
-  #   @items ||= begin
-  #     criteria = SS::UserFile.user(@cur_user)
-  #     criteria
-  #   end
-  # end
-
   def items
     @items ||= base_items.reorder(filename: 1).page(params[:page]).per(20)
+  end
+
+  def crud_redirect_url
+    url_for(action: :index, cid: cur_node)
+  end
+
+  def set_item
+    @item ||= begin
+      item = SS::File.find(params[:id])
+      item = item.becomes_with_model
+      if item.is_a?(SS::TempFile)
+        item = item.becomes_with(Cms::TempFile)
+      end
+      @model = item.class
+      item
+    end
   end
 
   public
 
   def index
     render
-  end
-
-  def destroy
-    @item = SS::File.find(params[:id])
-    @item = @item.becomes_with_model
-    if @item.is_a?(SS::TempFile)
-      @item = @item.becomes(Cms::TempFile)
-    end
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: cur_node)
-    @item.cur_user = @cur_user if @item.respond_to?(:cur_user)
-    render_destroy @item.destroy
   end
 end
