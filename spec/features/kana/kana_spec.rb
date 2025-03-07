@@ -300,7 +300,8 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
   context "with multiple accessibility parts" do
     let!(:part1) { create :accessibility_tool, cur_site: site }
     let!(:part2) { create :accessibility_tool_compat1, cur_site: site }
-    let!(:layout) { create_cms_layout part1, part2 }
+    let!(:part3) { create :accessibility_tool_compat2, cur_site: site }
+    let!(:layout) { create_cms_layout part1, part2, part3 }
     let!(:node) { create :article_node_page, cur_site: site, layout: layout }
     let(:page_html) do
       html = []
@@ -324,7 +325,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       visit item.full_url
       expect(page).to have_no_css('ruby')
 
-      expect(page).to have_css(".accessibility__tool-wrap", count: 2)
+      expect(page).to have_css(".accessibility__tool-wrap", count: 3)
 
       within ".accessibility__tool-wrap:first-child" do
         click_on I18n.t("cms.links.ruby_on")
@@ -335,6 +336,9 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         expect(page).to have_content(I18n.t("cms.links.ruby_off"))
       end
       within all(".accessibility__tool-wrap")[1] do
+        expect(page).to have_content(I18n.t("cms.links.ruby_off"))
+      end
+      within all(".accessibility__tool-wrap")[2] do
         expect(page).to have_content(I18n.t("cms.links.ruby_off"))
       end
 
@@ -349,6 +353,56 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       within all(".accessibility__tool-wrap")[1] do
         expect(page).to have_content(I18n.t("cms.links.ruby_on"))
       end
+      within all(".accessibility__tool-wrap")[2] do
+        expect(page).to have_content(I18n.t("cms.links.ruby_on"))
+      end
+    end
+  end
+
+  context "with old accessibility custom html" do
+    let!(:part) { create :accessibility_tool_custom, cur_site: site }
+    let!(:layout) { create_cms_layout part }
+    let!(:node) { create :article_node_page, cur_site: site, layout: layout }
+    let(:page_html) do
+      html = []
+      html << '<div id="content">'
+      html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
+      html << '<nav class="ss-adobe-reader">'
+      html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
+      html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
+      html << '  <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>'
+      html << '</nav>'
+      html << '</div>'
+      html << '<footer>'
+      html << '  〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号'
+      html << '  <small>Copyright © City of Shirasagi All rights Reserved.</small>'
+      html << '</footer>'
+      html.join("\n")
+    end
+    let!(:item) { create :article_page, cur_site: site, cur_node: node, layout: layout, html: page_html }
+
+    it do
+      visit item.full_url
+      expect(page).to have_no_css('ruby')
+      within ".accessibility__tool-wrap:first-child" do
+        first(".accessibility__kana").text.split(/\s+/).tap do |text_segments|
+          expect(text_segments).to include(I18n.t("cms.links.ruby_on"), I18n.t("cms.links.ruby_off"), "toggle_off", "toggle_on")
+          expect(text_segments.count(I18n.t("cms.links.ruby_on"))).to eq 1
+          expect(text_segments.count(I18n.t("cms.links.ruby_off"))).to eq 1
+          expect(text_segments.count("toggle_off")).to eq 1
+          expect(text_segments.count("toggle_on")).to eq 1
+        end
+      end
+
+      within ".accessibility__tool-wrap:first-child" do
+        click_on I18n.t("cms.links.ruby_on")
+      end
+      expect(page).to have_css('ruby')
+
+      within ".accessibility__tool-wrap:first-child" do
+        click_on I18n.t("cms.links.ruby_off")
+      end
+      expect(page).to have_no_css('ruby')
     end
   end
 end
