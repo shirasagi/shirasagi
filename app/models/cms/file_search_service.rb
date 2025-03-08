@@ -21,6 +21,7 @@ class Cms::FileSearchService
 
   def call
     @stages = []
+    @stage_facet_contains = false
     STAGE_BUILDERS.each do |builder|
       send(builder)
     end
@@ -29,19 +30,34 @@ class Cms::FileSearchService
     results = SS::File.collection.aggregate(@stages)
     return [] if results.blank?
 
-    result = results.first
-    return [] if result.blank?
+    if @stage_facet_contains
+      result = results.first
+      return [] if result.blank?
 
-    items = parse_results(result)
+      items = parse_results(result)
+      total_count = parse_total_count(result)
+    else
+      items = results.map do |data|
+        [
+          Mongoid::Factory.from_db(SS::File, data.except("page")),
+          Mongoid::Factory.from_db(Cms::Page, data["page"].first)
+        ]
+      end
+      total_count = results.count
+    end
     return [] if items.blank?
 
-    total_count = parse_total_count(result)
-    Kaminari.paginate_array(items, limit: limit, offset: offset, total_count: total_count)
+    if @stage_facet_contains
+      items = Kaminari.paginate_array(items, limit: limit, offset: offset, total_count: total_count)
+    end
+
+    items
   end
 
   private
 
   def offset
+    return if !page.numeric? || !limit.numeric?
     page * limit
   end
 
@@ -80,7 +96,10 @@ class Cms::FileSearchService
   end
 
   def stage_pagination
+    return if !offset.numeric? || !limit.numeric?
+
     # pagination: see https://stackoverflow.com/questions/20348093/mongodb-aggregation-how-to-get-total-records-count
+    @stage_facet_contains = true
     @stages << {
       "$facet" => {
         "paginatedResults" => [{ "$skip" => offset }, { "$limit" => limit }],
