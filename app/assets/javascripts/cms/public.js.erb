@@ -83,17 +83,14 @@ this.SS_Kana = (function () {
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
 
-    const $kanaElements = $('#ss-kana,[data-tool="ss-kana"]');
-    $kanaElements.each(function (index) {
-      const $kana = $(this);
-      if (!$kana[0]) {
-        return;
-      }
+    const kanaElements = document.querySelectorAll('#ss-kana, [data-tool="ss-kana"]');
+    kanaElements.forEach((kanaElement, index) => {
+      if (!kanaElement) return;
 
-      SS.justOnce($kana[0], "ss-kana", function() {
+      SS.justOnce(kanaElement, "ss-kana", function() {
         const pathname = location.pathname;
         let url, cssClass;
-        if ($("body").data("kana")) {
+        if (document.body.dataset.kana) {
           url = SS_Kana.url(pathname, false);
           url = SS_Translate.url(url);
           cssClass = "off";
@@ -108,38 +105,35 @@ this.SS_Kana = (function () {
           return;
         }
 
-        const html = $kana.html();
-        // legacy：htmlにspanが含まれていない　→ a タグを生成
-        if (!$kana.is("#ss-kana") && html.includes("<span")) {
-          const $anchor = $("<button />", {
-            type: "button",
-            name: "kana",
-            "aria-pressed": cssClass === "off" ? "true" : "false",
-          }).html(html);
-          $kana.html($anchor);
+        // legacy：htmlにbuttonが含まれていない　→ a タグを生成
+        if (!kanaElement.querySelector("button")) {
+          const anchorId = 'kana_a_' + index;
+          const content = kanaElement.innerHTML;
+          const anchor = document.createElement('a');
+          anchor.id = anchorId;
+          anchor.className = cssClass;
+          anchor.href = '#' + url;
+          anchor.rel = 'nofollow';
+          anchor.innerHTML = content;
+          kanaElement.innerHTML = '';
+          kanaElement.appendChild(anchor);
 
-          $anchor.on("click", function (ev) {
+          anchor.addEventListener("click", function (ev) {
             ev.preventDefault();
-            $(this).attr("aria-pressed", "on");
-            location.href = url;
+            const clickedUrl = this.getAttribute('href').substring(1); // Remove '#'
+            location.href = clickedUrl;
             return false;
           });
         } else {
-          const anchorId = 'kana_a_' + index;
-          const $anchor = $("<a />", {
-              id: anchorId,
-              class: cssClass,
-              href: "#" + url,
-              rel: "nofollow"
-          }).html(html);
-          $kana.html($anchor);
+          const kanaButton = kanaElement.querySelector('button');
+          const currentValue = (cssClass === 'on') ? 'false' : 'true';
+          kanaButton.setAttribute('aria-pressed', currentValue);
 
-          $anchor.on("click", function (ev) {
+          kanaButton.addEventListener('click', function(ev){
             ev.preventDefault();
-            const $clickedAnchor = $(this);
-            const clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
-            location.href = clickedUrl;
-            return false;
+            const expressed = (this.getAttribute('aria-pressed') === 'true') ? 'false' : 'true';
+            this.setAttribute('aria-pressed', expressed);
+            location.href = url;
           });
         }
       });
@@ -151,7 +145,7 @@ this.SS_Kana = (function () {
       bool = null;
     }
     if (bool === null) {
-      bool = $("body").data("kana");
+      bool = document.body.dataset.kana;
     }
     if (bool) {
       url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + this.kanaUrl);
@@ -162,17 +156,17 @@ this.SS_Kana = (function () {
   };
 
   SS_Kana.loadPage = function (elem) {
-    $.ajax({
-      type: "GET",
-      url: elem.attr("href"),
-      dataType: "html",
-      success: function (data) {
-        let body;
-        body = $("body");
-        body.data("kana", elem.hasClass("on"));
-        return body.html(data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1"));
-      }
-    });
+    const href = elem.getAttribute("href");
+    fetch(href)
+      .then(response => response.text())
+      .then(data => {
+        document.body.dataset.kana = elem.classList.contains("on") ? "true" : "";
+        const replaced = data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1");
+        document.body.innerHTML = replaced;
+      })
+      .catch(error => {
+        console.error('Error loading page:', error);
+      });
     return false;
   };
 

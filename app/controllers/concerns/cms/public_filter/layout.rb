@@ -268,6 +268,7 @@ module Cms::PublicFilter::Layout
   end
 
   def render_kana_tool(html)
+    return html if html =~ /material-icons-outlined/
     label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
     html = html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{label}#{$3}"
