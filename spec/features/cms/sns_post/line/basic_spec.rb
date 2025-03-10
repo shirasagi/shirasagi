@@ -325,17 +325,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit new_path
           ensure_addon_opened("#addon-cms-agents-addons-file")
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", attach_file_path
-            wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
-            end
-          end
+          ss_upload_file attach_file_path
           within '#selected-files' do
             click_on I18n.t("sns.image_paste")
           end
@@ -392,17 +382,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit edit_path
           ensure_addon_opened("#addon-cms-agents-addons-file")
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", attach_file_path
-            wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
-            end
-          end
+          ss_upload_file attach_file_path
           within '#selected-files' do
             click_on I18n.t("sns.image_paste")
           end

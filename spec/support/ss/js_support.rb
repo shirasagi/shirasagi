@@ -239,12 +239,52 @@ module SS
 
     WAIT_FOR_TURBO_FRAME_SCRIPT = <<~SCRIPT.freeze
       (function(element, resolve) {
-        var el = $(element)[0];
-        if (el.hasAttribute("complete")) {
+        const isCompleted = function(el) {
+          return el.hasAttribute("complete");
+        }
+
+        const el = $(element)[0];
+        if (isCompleted(el)) {
           resolve(true);
           return;
         }
         el.addEventListener("turbo:frame-load", () => resolve(true), { once: true });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const isLazy = function(el) {
+          const loadingAttr = el.getAttribute("loading");
+          return loadingAttr && loadingAttr === "lazy";
+        }
+        const hasSrc = function(el) {
+          return el.hasAttribute("src");
+        }
+        const isCompleted = function(el) {
+          return el.hasAttribute("complete");
+        }
+
+        const promises = [];
+        document.querySelectorAll("turbo-frame").forEach((el) => {
+          if (isLazy(el) || !hasSrc(el) || isCompleted(el)) {
+            return;
+          }
+
+          const promise = new Promise((resolutionFunc, rejectionFunc) => {
+            el.addEventListener("turbo:frame-load", () => resolutionFunc(true), { once: true });
+          });
+          promises.push(promise);
+        });
+
+        if (promises.length === 0) {
+          console.log(`found no frames to wait for load`)
+          resolve(true);
+          return;
+        }
+
+        console.log(`found ${promises.length} frames to wait for load`)
+        Promise.all(promises).then(() => resolve(true));
       })(...arguments)
     SCRIPT
 
@@ -709,6 +749,12 @@ module SS
       expect(result).to be_truthy
     end
 
+    def wait_for_all_turbo_frames
+      wait_for_js_ready
+      result = page.evaluate_async_script(WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT)
+      expect(result).to be_truthy
+    end
+
     def wait_for_tree_render(element)
       result = page.evaluate_async_script(WAIT_FOR_TREE_RENDER_SCRIPT, element)
       expect(result).to be_truthy
@@ -725,6 +771,82 @@ module SS
     def wait_for_all_ajax_parts
       result = page.evaluate_async_script(WAIT_FOR_ALL_AJAX_PARTS_SCRIPT)
       expect(result).to be_truthy
+    end
+
+    def ss_upload_file(file_path, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_upload_file_v1(file_path, addon: addon)
+      else
+        ss_upload_file_v2(file_path, addon: addon)
+      end
+    end
+
+    def ss_upload_file_v1(file_path, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", file_path
+        wait_for_cbox_closed do
+          click_on I18n.t("ss.buttons.attach")
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_path))
+      end
+    end
+
+    def ss_upload_file_v2(file_path, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        attach_file "in_files", file_path
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_path))
+      end
+    end
+
+    def ss_drop_file(locator, file_path)
+      file_input = unique_id
+      page.execute_script <<~SCRIPT
+        (function() {
+          const fileInputElement = document.createElement("input");
+          fileInputElement.name = `#{file_input}`;
+          fileInputElement.type = "file";
+          document.body.appendChild(fileInputElement);
+        })(...arguments)
+      SCRIPT
+
+      element = page.document.first("body")
+      page.within_element(element) do
+        attach_file file_input, file_path
+      end
+
+      script = <<~SCRIPT
+        (function(dropTargetElement) {
+          const fileInputElement = document.querySelector(`[name="#{file_input}"]`);
+
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(fileInputElement.files[0]);
+
+          const dropEvent = new DragEvent("drop", { dataTransfer });
+          dropTargetElement.dispatchEvent(dropEvent);
+        })(...arguments)
+      SCRIPT
+      page.execute_script script, first(locator)
     end
   end
 end

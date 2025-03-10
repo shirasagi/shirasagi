@@ -120,24 +120,38 @@ export function replaceChildren(element, htmlTextOrNode) {
   });
 }
 
-export function appendChildren(element, htmlTextOrNode) {
-  const cloneNode = () => {
-    if (htmlTextOrNode instanceof HTMLTemplateElement) {
-      return htmlTextOrNode.content.cloneNode(true);
-    }
-
-    const dummyElement = document.createElement("template");
-    if (htmlTextOrNode instanceof HTMLElement) {
-      dummyElement.innerHTML = htmlTextOrNode.innerHTML;
-    } else {
-      dummyElement.innerHTML = htmlTextOrNode.toString();
-    }
-    return dummyElement.content.cloneNode(true);
+function _cloneNode(htmlTextOrNode) {
+  if (htmlTextOrNode instanceof HTMLTemplateElement) {
+    return htmlTextOrNode.content.cloneNode(true);
   }
 
-  const dummyElement = cloneNode();
+  const dummyElement = document.createElement("template");
+  if (htmlTextOrNode instanceof HTMLElement) {
+    dummyElement.innerHTML = htmlTextOrNode.innerHTML;
+  } else {
+    dummyElement.innerHTML = htmlTextOrNode.toString();
+  }
+  return dummyElement.content.cloneNode(true);
+}
+
+export function appendChildren(element, htmlTextOrNode) {
+  const dummyElement = _cloneNode(htmlTextOrNode);
   dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
   element.appendChild(dummyElement);
+
+  element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
+    const newScriptElement = document.createElement("script");
+    delete scriptElement.dataset.new;
+    Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
+    newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML));
+    scriptElement.parentElement.replaceChild(newScriptElement, scriptElement);
+  });
+}
+
+export function prependChildren(element, htmlTextOrNode) {
+  const dummyElement = _cloneNode(htmlTextOrNode);
+  dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
+  element.prepend(dummyElement);
 
   element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
     const newScriptElement = document.createElement("script");
