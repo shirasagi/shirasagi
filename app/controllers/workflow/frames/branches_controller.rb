@@ -19,6 +19,8 @@ class Workflow::Frames::BranchesController < ApplicationController
   def item
     @item ||= begin
       item = Cms::Page.site(@cur_site).find(params[:id])
+      item.cur_site = @cur_site
+      item.cur_user = @cur_user
       item.cur_node = item.parent
       item
     end
@@ -40,7 +42,7 @@ class Workflow::Frames::BranchesController < ApplicationController
       return
     end
 
-    service = Workflow::BranchCreationService.new(cur_site: @cur_site, item: item)
+    service = Workflow::BranchCreationService.new(cur_site: @cur_site, cur_user: @cur_user, item: item)
     result = service.call
     unless result
       render action: :show, status: :unprocessable_entity and return
