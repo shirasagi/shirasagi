@@ -51,11 +51,14 @@ module Translate::PublicFilter
   def render_translate
     return unless translatable_content_type?
 
-    body = response.body
-
-    if params[:format] == "json"
-      body = ActiveSupport::JSON.decode(body)
+    respond_to do |format|
+      format.html { render_translate_html }
+      format.json { render_translate_json }
     end
+  end
+
+  def render_translate_html
+    body = response.body
 
     converter = Translate::Converter.new(@cur_site, @translate_source, @translate_target)
     body = converter.convert(body)
@@ -77,11 +80,9 @@ module Translate::PublicFilter
       HTML
       body.sub!('</html>', h + '</html>')
     end
-
-    if params[:format] == "json"
-      body = ActiveSupport::JSON.encode(body)
-    end
-
     response.body = body
+  end
+
+  def render_translate_json
   end
 end
