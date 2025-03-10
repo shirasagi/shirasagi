@@ -71,10 +71,12 @@ describe Article::Page, dbscope: :example do
 
       context "copy page" do
         subject do
-          copy = item.new_clone
-          copy.name = "[#{prefix}] #{copy.name}"
-          copy.save!
-          copy
+          Timecop.freeze(now) do
+            copy = item.new_clone
+            copy.name = "[#{prefix}] #{copy.name}"
+            copy.save!
+            copy
+          end
         end
 
         it do
@@ -145,10 +147,12 @@ describe Article::Page, dbscope: :example do
 
       context "branch page" do
         subject do
-          copy = item.new_clone
-          copy.master = item
-          copy.save!
-          copy
+          Timecop.freeze(now) do
+            copy = item.new_clone
+            copy.master = item
+            copy.save!
+            copy
+          end
         end
 
         context "when branch was finally destroyed" do
@@ -246,6 +250,9 @@ describe Article::Page, dbscope: :example do
           end
 
           it do
+            expect(item.backups.count).to eq 1
+            expect(subject.backups.count).to eq 1
+
             subject.class.find(subject.id).tap do |branch|
               expect(branch.new_clone?).to be_falsey
               expect(branch.master_id).to eq item.id
@@ -258,10 +265,14 @@ describe Article::Page, dbscope: :example do
               branch.state = "public"
               branch.save
 
+              expect(subject.backups.count).to eq 2
+
               branch.file_ids = nil
               branch.skip_history_trash = true
               branch.destroy
             end
+
+            expect(subject.backups.count).to eq 0
 
             item.reload
             expect(item.master?).to be_truthy
@@ -293,6 +304,26 @@ describe Article::Page, dbscope: :example do
               expect(trash.data["_id"]).to eq file2.id
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
+            end
+
+            expect(item.backups.count).to eq 4
+            item.backups.to_a.tap do |backups|
+              backups[0].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq subject.id
+              end
+              backups[1].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq item.id
+              end
+              backups[2].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq subject.id
+              end
+              backups[3].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq item.id
+              end
             end
           end
         end

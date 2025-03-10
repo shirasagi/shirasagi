@@ -7,7 +7,7 @@ module History::Addon
       attr_accessor :skip_history_backup, :history_backup_action
 
       after_save :save_backup, if: -> { changes.present? || previous_changes.present? }
-      before_destroy :destroy_backups
+      after_destroy :transfer_backups_or_destroy
     end
 
     def backups
@@ -71,8 +71,13 @@ module History::Addon
       Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     end
 
-    def destroy_backups
-      backups.destroy
+    def transfer_backups_or_destroy
+      master = self.try(:master)
+      if master
+        backups.set(ref_id: master.id, ref_class: master.class.name)
+      else
+        backups.destroy_all
+      end
     end
   end
 end
