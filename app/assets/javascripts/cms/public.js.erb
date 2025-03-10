@@ -163,9 +163,6 @@ this.SS_Kana = (function () {
         document.body.dataset.kana = elem.classList.contains("on") ? "true" : "";
         const replaced = data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1");
         document.body.innerHTML = replaced;
-      })
-      .catch(error => {
-        console.error('Error loading page:', error);
       });
     return false;
   };
