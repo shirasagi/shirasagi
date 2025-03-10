@@ -72,8 +72,7 @@ module History::Addon
     end
 
     def transfer_backups_or_destroy
-      master = self.try(:master)
-      if master
+      if @transfer_history_backup && (master = self.try(:master))
         backups.set(ref_id: master.id, ref_class: master.class.name)
       else
         backups.destroy_all

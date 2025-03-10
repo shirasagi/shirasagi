@@ -169,6 +169,9 @@ module Workflow::Addon
 
       master.generate_file
 
+      # 差し替えページを公開したので、更新履歴の転送を指示
+      @transfer_history_backup = true
+
       # この後、差し替えページは削除されるので履歴を作成しても無意味なので履歴作成を抑制する。
       # また、更新履歴が二重に作成されるのを防ぐ意味もある。
       @skip_history_backup = true
