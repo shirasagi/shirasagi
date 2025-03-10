@@ -7,8 +7,8 @@
 %>
 
 <div class="cms-tabs">
-  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path(site: @cur_site, cid: cur_node), class: "current", data: { turbo: true } %>
-  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(site: @cur_site, cid: cur_node), data: { turbo: true } %>
+  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
 </div>
 
 <div class="cms-temp-files" data-controller="ss--temp-file">
