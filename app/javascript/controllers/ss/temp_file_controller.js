@@ -361,15 +361,15 @@ export default class extends Controller {
     errorsElement.replaceChildren(createError(errorMessages));
   }
 
-  #onDragEnter(ev) {
+  #onDragEnter(_ev) {
     this.fileUploadDropAreaTarget.classList.add('file-dragenter');
   }
 
-  #onDragLeave(ev) {
+  #onDragLeave(_ev) {
     this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
   }
 
-  #onDragOver(ev) {
+  #onDragOver(_ev) {
     if (!this.fileUploadDropAreaTarget.classList.contains('file-dragenter')) {
       this.fileUploadDropAreaTarget.classList.add('file-dragenter');
     }
