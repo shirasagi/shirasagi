@@ -130,7 +130,7 @@ jobs:
         run: npx webpack-cli build
       - name: Run tests
         run: |
-          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }}) --include features/cms
+          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }} --include features/cms)
           if [ $? -ne 0 ]; then
             exit 1
           fi
