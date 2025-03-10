@@ -55,7 +55,7 @@ class SS::TempFilePreview
   end
 
   def multibyte_filename_disabled?
-    return if cur_site.blank? || !cur_site.respond_to?(:multibyte_filename_disabled?)
+    return false if cur_site.blank? || !cur_site.respond_to?(:multibyte_filename_disabled?)
     cur_site.multibyte_filename_disabled?
   end
 
