@@ -265,7 +265,8 @@ describe Article::Page, dbscope: :example do
               branch.state = "public"
               branch.save
 
-              expect(subject.backups.count).to eq 2
+              # 差し替えページを公開した際の履歴は作成されない
+              expect(subject.backups.count).to eq 1
 
               branch.file_ids = nil
               branch.skip_history_trash = true
@@ -306,21 +307,17 @@ describe Article::Page, dbscope: :example do
               expect(trash.action).to eq "save"
             end
 
-            expect(item.backups.count).to eq 4
+            expect(item.backups.count).to eq 3
             item.backups.to_a.tap do |backups|
               backups[0].tap do |backup|
                 expect(backup.ref_id).to eq item.id
-                expect(backup.data["_id"]).to eq subject.id
+                expect(backup.data["_id"]).to eq item.id
               end
               backups[1].tap do |backup|
                 expect(backup.ref_id).to eq item.id
-                expect(backup.data["_id"]).to eq item.id
-              end
-              backups[2].tap do |backup|
-                expect(backup.ref_id).to eq item.id
                 expect(backup.data["_id"]).to eq subject.id
               end
-              backups[3].tap do |backup|
+              backups[2].tap do |backup|
                 expect(backup.ref_id).to eq item.id
                 expect(backup.data["_id"]).to eq item.id
               end
