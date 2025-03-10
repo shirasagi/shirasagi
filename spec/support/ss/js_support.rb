@@ -818,6 +818,36 @@ module SS
         expect(page).to have_css(".file-view", text: ::File.basename(file_path))
       end
     end
+
+    def ss_drop_file(locator, file_path)
+      file_input = unique_id
+      page.execute_script <<~SCRIPT
+        (function() {
+          const fileInputElement = document.createElement("input");
+          fileInputElement.name = `#{file_input}`;
+          fileInputElement.type = "file";
+          document.body.appendChild(fileInputElement);
+        })(...arguments)
+      SCRIPT
+
+      element = page.document.first("body")
+      page.within_element(element) do
+        attach_file file_input, file_path
+      end
+
+      script = <<~SCRIPT
+        (function(dropTargetElement) {
+          const fileInputElement = document.querySelector(`[name="#{file_input}"]`);
+
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(fileInputElement.files[0]);
+
+          const dropEvent = new DragEvent("drop", { dataTransfer });
+          dropTargetElement.dispatchEvent(dropEvent);
+        })(...arguments)
+      SCRIPT
+      page.execute_script script, first(locator)
+    end
   end
 end
 
