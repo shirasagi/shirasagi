@@ -71,10 +71,12 @@ describe Article::Page, dbscope: :example do
 
       context "copy page" do
         subject do
-          copy = item.new_clone
-          copy.name = "[#{prefix}] #{copy.name}"
-          copy.save!
-          copy
+          Timecop.freeze(now) do
+            copy = item.new_clone
+            copy.name = "[#{prefix}] #{copy.name}"
+            copy.save!
+            copy
+          end
         end
 
         it do
@@ -145,14 +147,19 @@ describe Article::Page, dbscope: :example do
 
       context "branch page" do
         subject do
-          copy = item.new_clone
-          copy.master = item
-          copy.save!
-          copy
+          Timecop.freeze(now) do
+            copy = item.new_clone
+            copy.master = item
+            copy.save!
+            copy
+          end
         end
 
         context "when branch was finally destroyed" do
           it do
+            expect(item.backups.count).to eq 1
+            expect(subject.backups.count).to eq 1
+
             expect(subject.persisted?).to be_truthy
             expect(subject.id).not_to eq item.id
             expect(subject.site_id).to eq item.site_id
@@ -231,6 +238,11 @@ describe Article::Page, dbscope: :example do
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
             end
+
+            expect(subject.backups.count).to eq 0
+
+            # 差し替えページを単に削除した際、マスターページの更新歴は変わらない
+            expect(item.backups.count).to eq 1
           end
         end
 
@@ -246,6 +258,9 @@ describe Article::Page, dbscope: :example do
           end
 
           it do
+            expect(item.backups.count).to eq 1
+            expect(subject.backups.count).to eq 1
+
             subject.class.find(subject.id).tap do |branch|
               expect(branch.new_clone?).to be_falsey
               expect(branch.master_id).to eq item.id
@@ -258,10 +273,15 @@ describe Article::Page, dbscope: :example do
               branch.state = "public"
               branch.save
 
+              # 差し替えページを公開した際の履歴は作成されない
+              expect(subject.backups.count).to eq 1
+
               branch.file_ids = nil
               branch.skip_history_trash = true
               branch.destroy
             end
+
+            expect(subject.backups.count).to eq 0
 
             item.reload
             expect(item.master?).to be_truthy
@@ -293,6 +313,23 @@ describe Article::Page, dbscope: :example do
               expect(trash.data["_id"]).to eq file2.id
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
+            end
+
+            # 差し替えページを公開した際、差し替えページの更新履歴をマスターページで確認することができる
+            expect(item.backups.count).to eq 3
+            item.backups.to_a.tap do |backups|
+              backups[0].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq item.id
+              end
+              backups[1].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq subject.id
+              end
+              backups[2].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq item.id
+              end
             end
           end
         end

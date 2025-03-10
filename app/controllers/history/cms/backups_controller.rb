@@ -78,10 +78,19 @@ class History::Cms::BackupsController < ApplicationController
   end
 
   def restore
+    if @item.ref_id != @item.data["_id"]
+      @item.errors.add :base, :unable_to_restore_branch_page_history
+    end
     render
   end
 
   def update
+    if @item.ref_id != @item.data["_id"]
+      @item.errors.add :base, :unable_to_restore_branch_page_history
+      render action: :restore
+      return
+    end
+
     set_task
     if !@task.ready
       @item.errors.add :base, :other_task_is_running
