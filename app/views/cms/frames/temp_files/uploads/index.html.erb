@@ -59,14 +59,26 @@
               </td>
               <td class="options">
                 <%% if (selectedItem.is_image) { %>
-                  <% if @model.resizing_options(user: @cur_user, node: cur_node).present? %>
-                    <%= f.select :resizing, @model.resizing_options(user: @cur_user, node: cur_node), { include_blank: t("ss.resize_image_auto") }, { class: "image-size", id: nil } %>
-                  <% end %>
-                  <% if @model.quality_options(user: @cur_user, node: cur_node).present? %>
-                    <%= f.select :quality, @model.quality_options(user: @cur_user, node: cur_node), { include_blank: t("ss.quality") }, { id: nil } %>
-                  <% end %>
+                  <%=
+                    file_resizing_options = @model.resizing_options(user: @cur_user, node: cur_node)
+                    if file_resizing_options.present?
+                      file_resizing_options = options_for_select(file_resizing_options)
+                      if (site_file_resizing = @cur_site.file_resizing).present?
+                        file_resizing_options += tag.option(@cur_site.t(:file_resizing_label, size: site_file_resizing.join("x")), value: site_file_resizing.join(","), selected: true)
+                      end
+                    end
+                    if file_resizing_options.present?
+                      select_tag "item[files][][resizing]", file_resizing_options, include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
+                    end
+                  %>
+                  <%=
+                    file_quality_options = @model.quality_options(user: @cur_user, node: cur_node)
+                    if file_quality_options.present?
+                      select_tag "item[files][][quality]", options_for_select(file_quality_options), include_blank: t("ss.quality"), id: nil
+                    end
+                  %>
                   <% if disable_image_resizes %>
-                    <%= f.select :image_resizes_disabled, @model.image_resizes_disabled_options, {}, { id: nil } %>
+                    <%= select_tag "item[files][][image_resizes_disabled]", options_for_select(@model.image_resizes_disabled_options), id: nil %>
                   <% end %>
                   <% if min_size %>
                     <div class="tooltip">?
