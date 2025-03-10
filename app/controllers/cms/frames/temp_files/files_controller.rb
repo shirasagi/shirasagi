@@ -50,7 +50,7 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
   end
 
   def crud_redirect_url
-    url_for(action: :index, cid: cur_node)
+    url_for(action: :index, cid: cur_node, s: params[:s].try(:to_unsafe_h))
   end
 
   def set_item
@@ -69,5 +69,10 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
 
   def index
     render
+  end
+
+  def select
+    set_item
+    render template: "ss/crud/ajax_files/select", layout: false
   end
 end

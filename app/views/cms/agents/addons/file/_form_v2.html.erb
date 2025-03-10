@@ -13,11 +13,11 @@
     end
     upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node, **od_path_params)
     file_api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node, **od_path_params)
-    select_api_path = select_cms_apis_node_temp_file_path(site: @cur_site, cid: @cur_node, id: ':id', **od_path_params)
+    select_api_path = select_cms_frames_temp_files_file_path(site: @cur_site, cid: @cur_node, id: ':id', **od_path_params)
   else
     upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site)
     file_api_path = cms_frames_temp_files_files_path(site: @cur_site)
-    select_api_path = select_cms_apis_temp_file_path(site: @cur_site, id: ':id', **od_path_params)
+    select_api_path = select_cms_frames_temp_files_file_path(site: @cur_site, id: ':id')
   end
   view_api_path = view_cms_apis_content_file_path(id: ":id")
 %>

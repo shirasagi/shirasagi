@@ -103,7 +103,9 @@ Rails.application.routes.draw do
         resources :uploads, only: %i[index new create] do
           post :preview, on: :collection
         end
-        resources :files, only: %i[index edit update destroy]
+        resources :files, only: %i[index edit update destroy] do
+          get :select, on: :member
+        end
       end
     end
   end
