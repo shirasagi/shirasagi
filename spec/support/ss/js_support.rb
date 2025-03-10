@@ -726,6 +726,52 @@ module SS
       result = page.evaluate_async_script(WAIT_FOR_ALL_AJAX_PARTS_SCRIPT)
       expect(result).to be_truthy
     end
+
+    def ss_upload_file(file_path, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_upload_file_v1(file_path, addon: addon)
+      else
+        ss_upload_file_v2(file_path, addon: addon)
+      end
+    end
+
+    def ss_upload_file_v1(file_path, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", file_path
+        wait_for_cbox_closed do
+          click_on I18n.t("ss.buttons.attach")
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_path))
+      end
+    end
+
+    def ss_upload_file_v2(file_path, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        attach_file "in_files", file_path
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_path))
+      end
+    end
   end
 end
 
