@@ -17,6 +17,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         context "with already bound file" do
           it do
             visit article_page_path(site: site, cid: node, id: item)
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
 
             ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
@@ -42,6 +44,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         it do
           visit article_page_path(site: site, cid: node, id: item)
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-cms-agents-addons-thumb" do
             expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
@@ -84,6 +88,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         it do
           visit article_page_path(site: site, cid: node, id: item)
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-cms-agents-addons-form-page" do
             expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
@@ -101,6 +107,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           visit article_page_path(site: site, cid: node, id: item)
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-form-page" do
             expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
             wait_for_cbox_opened do
@@ -126,6 +134,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         context "with already bound file" do
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
 
             ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
@@ -148,20 +158,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         context "with newly added file" do
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
 
             ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
-              wait_for_cbox_opened do
-                click_on I18n.t("ss.buttons.upload")
-              end
             end
-            within_cbox do
-              expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
-              wait_for_cbox_closed do
-                click_on file2.name
-              end
-            end
+            ss_select_file file2
 
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
@@ -206,6 +210,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         context "with already bound file" do
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
 
             within "#addon-cms-agents-addons-form-page" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
@@ -223,6 +229,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
 
             visit article_page_path(site: site, cid: node, id: item)
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
             within "#addon-cms-agents-addons-form-page" do
               expect(page).to have_css(".file-view[data-file-id='#{file2.id}']", text: file2.name)
               wait_for_cbox_opened do
@@ -246,6 +254,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
             within "#addon-cms-agents-addons-form-page" do
               within ".column-value-cms-column-fileupload" do
                 wait_for_cbox_opened do

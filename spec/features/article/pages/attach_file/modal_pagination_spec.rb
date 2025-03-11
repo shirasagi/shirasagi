@@ -23,53 +23,41 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "#edit" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", files
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
-
-        within '#selected-files' do
-          expect(page).to have_selector('.file-view', count: 3)
-          expect(page).to have_css('.name', text: 'logo.png')
-        end
+        ss_upload_file(*files)
 
         within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
+          within '#selected-files' do
+            expect(page).to have_selector('.file-view', count: 3)
+            expect(page).to have_css('.name', text: 'logo.png')
           end
         end
 
-        within_cbox do
-          attach_file "item[in_files][]", add_file
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file(add_file)
 
-        within '#selected-files' do
-          expect(page).to have_selector('.file-view', count: 4)
-          expect(page).to have_css('.name', text: 'ロゴ.png')
+        within "#addon-cms-agents-addons-file" do
+          within '#selected-files' do
+            expect(page).to have_selector('.file-view', count: 4)
+            expect(page).to have_css('.name', text: File.basename(add_file))
+          end
         end
 
         within "form#item-form" do
           click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        within "#selected-files" do
-          expect(page).to have_selector('.file-view', count: 4)
-          expect(page).to have_css('.name', text: 'logo.png')
-          expect(page).to have_css('.name', text: 'ロゴ.png')
+        within "#addon-cms-agents-addons-file" do
+          within "#selected-files" do
+            expect(page).to have_selector('.file-view', count: 4)
+            expect(page).to have_css('.name', text: 'logo.png')
+            expect(page).to have_css('.name', text: File.basename(add_file))
+          end
         end
       end
     end
@@ -80,60 +68,56 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "#edit" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", files
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
-
-        within '#selected-files' do
-          expect(page).to have_selector('.file-view', count: 25)
-          expect(page).to have_css('.name', text: 'logo.png')
-        end
+        ss_upload_file(*files)
 
         within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
+          within '#selected-files' do
+            expect(page).to have_selector('.file-view', count: 25)
+            expect(page).to have_css('.name', text: 'logo.png')
           end
         end
 
-        within_cbox do
-          attach_file "item[in_files][]", add_file
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file(add_file)
 
-        within '#selected-files' do
-          expect(page).to have_selector('.file-view', count: 26)
-          expect(page).to have_css('.name', text: 'ロゴ.png')
+        within "#addon-cms-agents-addons-file" do
+          within '#selected-files' do
+            expect(page).to have_selector('.file-view', count: 26)
+            expect(page).to have_css('.name', text: 'ロゴ.png')
+          end
         end
 
         within "form#item-form" do
           click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        within "#selected-files" do
-          expect(page).to have_selector('.file-view', count: 26)
-          expect(page).to have_css('.name', text: 'logo.png')
-          expect(page).to have_css('.name', text: 'ロゴ.png')
+        within "#addon-cms-agents-addons-file" do
+          within "#selected-files" do
+            expect(page).to have_selector('.file-view', count: 26)
+            expect(page).to have_css('.name', text: 'logo.png')
+            expect(page).to have_css('.name', text: 'ロゴ.png')
+          end
         end
       end
     end
   end
 
   context "attach file from user file" do
-    before { login_cms_user }
+    before do
+      @save_file_upload_dialog = SS.file_upload_dialog
+      SS.file_upload_dialog = :v1
+      login_cms_user
+    end
+
+    after do
+      SS.file_upload_dialog = @save_file_upload_dialog
+    end
 
     context "attach 4 files" do
       let(:files) { Array.new(3) { "#{Rails.root}/spec/fixtures/ss/logo.png" } }
@@ -141,6 +125,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "#edit" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
@@ -183,6 +169,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "#selected-files" do
           expect(page).to have_selector('.file-view', count: 4)
@@ -198,6 +186,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "#edit" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened("#addon-cms-agents-addons-file")
         within "#addon-cms-agents-addons-file" do
@@ -240,6 +230,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t('ss.buttons.ignore_alert')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "#selected-files" do
           expect(page).to have_selector('.file-view', count: 26)
@@ -259,6 +251,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "#edit" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           wait_for_event_fired("ss:formActivated") do
@@ -316,6 +310,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.ignore_alert')
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_selector('.file-view', count: 1)
@@ -331,6 +327,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "#edit" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           wait_for_event_fired("ss:formActivated") do
@@ -388,6 +386,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('ss.buttons.ignore_alert')
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_selector('.file-view', count: 1)

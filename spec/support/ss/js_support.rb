@@ -106,6 +106,11 @@ module SS
 
     WAIT_ALL_CKEDITORS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
+        if (! ("CKEDITOR" in window)) {
+          resolve(true);
+          return;
+        }
+
         var promises = [];
         Object.values(CKEDITOR.instances).forEach(function(ckeditor) {
           if (ckeditor.status === "ready") {

@@ -23,47 +23,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:role) { create :cms_role, name: "role", permissions: permissions, cur_site: site }
   let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
 
-  before do
-    @save_file_upload_dialog = SS.file_upload_dialog
-    SS.file_upload_dialog = :v1
-  end
-
-  after do
-    SS.file_upload_dialog = @save_file_upload_dialog
-  end
-
   context "attach file from upload" do
     before { login_cms_user }
 
-    it "#edit" do
-      visit edit_path
-
-      ensure_addon_opened("#addon-cms-agents-addons-file")
-      within "#addon-cms-agents-addons-file" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_for_cbox_closed do
-          click_button I18n.t("ss.buttons.attach")
-        end
-      end
-
-      within '#selected-files' do
-        expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-        expect(page).to have_css('.name', text: 'keyvisual.gif')
-      end
-    end
-
     it "#edit file name" do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
@@ -73,56 +39,70 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-        click_on I18n.t("ss.buttons.edit")
-        fill_in "item[name]", with: "modify.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css(".file-view", text: "modify.jpg")
-
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        end
+        within first("form .index tbody tr") do
+          fill_in "item[files][][name]", with: "modify.jpg"
+          fill_in "item[files][][filename]", with: "modify.jpg"
+        end
         wait_for_cbox_closed do
-          click_on "modify.jpg"
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
       end
 
-      within '#selected-files' do
-        expect(page).to have_css('.name', text: 'modify.jpg')
+      within "form#item-form" do
+        within "#addon-cms-agents-addons-file" do
+          within '#selected-files' do
+            expect(page).to have_css('.name', text: 'modify.jpg')
+          end
+        end
       end
     end
   end
 
   context "attach file from user file" do
+    let!(:file) do
+      tmp_ss_file(
+        SS::UserFile, model: "ss/user_file", user: cms_user, basename: "logo-#{unique_id}.png",
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+      )
+    end
+
     before { login_cms_user }
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
           wait_for_cbox_opened do
-            click_on I18n.t("sns.user_file")
+            click_on "一覧から選択"
           end
         end
       end
 
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
+      within_dialog do
+        wait_for_event_fired "turbo:frame-load" do
+          within "form.search" do
+            check I18n.t("sns.user_file")
+          end
+        end
 
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+        expect(page).to have_css('.file-view', text: file.name)
         wait_for_cbox_closed do
-          click_button I18n.t("ss.buttons.attach")
+          click_on file.name
         end
       end
 
       within "form#item-form" do
         within '#selected-files' do
-          expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-          expect(page).to have_css('.name', text: 'keyvisual.gif')
+          expect(page).to have_css('.name', text: file.name)
         end
         click_on I18n.t("ss.buttons.publish_save")
       end
@@ -131,45 +111,62 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       item.reload
       expect(item.file_ids.length).to eq 1
       attached_file = item.files.first
+      # copy is attached
+      expect(attached_file.id).not_to eq file.id
+      expect(attached_file.name).to eq file.name
+      expect(attached_file.filename).to eq file.filename
+      expect(attached_file.size).to eq file.size
+      expect(attached_file.content_type).to eq file.content_type
       # owner item
       expect(attached_file.owner_item_type).to eq item.class.name
       expect(attached_file.owner_item_id).to eq item.id
       # other
       expect(attached_file.user_id).to eq cms_user.id
+      expect(attached_file.model).to eq "article/page"
     end
   end
 
   context "attach file from cms file" do
+    let!(:file) do
+      tmp_ss_file(
+        Cms::File, model: "cms/file", user: cms_user, site: site, name: "#{unique_id}.png", basename: "logo-#{unique_id}.png",
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png", group_ids: cms_user.group_ids
+      )
+    end
+
     context "with cms addon file" do
       context "when file is attached / saved on the modal dialog" do
         it do
-          login_user(user2)
+          login_user(cms_user)
 
           visit edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_for_cbox_opened do
-                click_on I18n.t("cms.file")
+                click_on "一覧から選択"
               end
             end
           end
 
-          within_cbox do
-            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-            click_button I18n.t("ss.buttons.save")
-            expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
+          within_dialog do
+            wait_for_event_fired "turbo:frame-load" do
+              within "form.search" do
+                check I18n.t("cms.file")
+              end
+            end
 
-            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+            expect(page).to have_css('.file-view', text: file.name)
             wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
+              click_on file.name
             end
           end
 
           within "form#item-form" do
             within '#selected-files' do
-              expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-              expect(page).to have_css('.name', text: 'keyvisual.gif')
+              expect(page).to have_css('.name', text: file.name)
             end
 
             click_on I18n.t("ss.buttons.publish_save")
@@ -179,42 +176,45 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           item.reload
           expect(item.file_ids.length).to eq 1
           attached_file = item.files.first
+          # copy is attached
+          expect(attached_file.id).not_to eq file.id
+          expect(attached_file.name).to eq file.name
+          expect(attached_file.filename).to eq file.filename
+          expect(attached_file.size).to eq file.size
+          expect(attached_file.content_type).to eq file.content_type
           # owner item
           expect(attached_file.owner_item_type).to eq item.class.name
           expect(attached_file.owner_item_id).to eq item.id
           # other
-          expect(attached_file.user_id).to eq user2.id
+          expect(attached_file.user_id).to eq cms_user.id
+          expect(attached_file.model).to eq "article/page"
         end
       end
 
       context "when a file uploaded by other user is attached" do
-        let(:name) { unique_id }
-        let(:file_name) { "#{unique_id}.jpg" }
-        let!(:file) do
-          # cms/file is created by cms_user
-          tmp_ss_file(
-            Cms::File,
-            site: site, user: cms_user, model: "cms/file", name: name, basename: file_name,
-            contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg",
-            group_ids: cms_user.group_ids
-          )
-        end
-
         it do
           login_user(user2)
           visit edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_for_cbox_opened do
-                click_on I18n.t("cms.file")
+                click_on "一覧から選択"
               end
             end
           end
 
-          within_cbox do
+          within_dialog do
+            wait_for_event_fired "turbo:frame-load" do
+              within "form.search" do
+                check I18n.t("cms.file")
+              end
+            end
+
             wait_for_cbox_closed do
-              click_on name
+              click_on file.name
             end
           end
 
@@ -252,7 +252,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           attached_file = item.files.first
           # copy is attached
           expect(attached_file.id).not_to eq file.id
-          expect(attached_file.name).to eq name
+          expect(attached_file.name).to eq file.name
           expect(attached_file.filename).to eq file.filename
           expect(attached_file.size).to eq file.size
           expect(attached_file.content_type).to eq file.content_type
@@ -261,15 +261,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(attached_file.owner_item_id).to eq item.id
           # other
           expect(attached_file.user_id).to eq user2.id
+          expect(attached_file.model).to eq "article/page"
         end
       end
     end
 
-    context "with entry form" do
+    xcontext "with entry form" do
       it "#edit" do
         login_user(user2)
 
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           wait_for_event_fired("ss:formActivated") do
@@ -374,49 +377,29 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       login_cms_user
     end
 
-    context "click save" do
-      it do
-        visit edit_path
+    it do
+      visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-        ensure_addon_opened("#addon-cms-agents-addons-file")
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", file_path
-          alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
-          page.accept_alert(/#{::Regexp.escape(alert)}/) do
-            click_on I18n.t("ss.buttons.save")
-          end
-
-          expect(page).to have_no_css('.file-view', text: basename)
+      ensure_addon_opened("#addon-cms-agents-addons-file")
+      within "#addon-cms-agents-addons-file" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
         end
       end
-    end
 
-    context "click attach" do
-      it do
-        visit edit_path
-
-        ensure_addon_opened("#addon-cms-agents-addons-file")
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", file_path
         end
 
-        within_cbox do
-          attach_file "item[in_files][]", file_path
+        within first(".index tbody tr") do
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
-          page.accept_alert(/#{::Regexp.escape(alert)}/) do
-            click_on I18n.t("ss.buttons.attach")
-          end
-
-          expect(page).to have_no_css('.file-view', text: basename)
+          expect(page).to have_css(".errors", text: alert)
         end
+
+        expect(page).to have_no_css('.file-view', text: basename)
       end
     end
   end

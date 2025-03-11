@@ -20,25 +20,17 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-      ensure_addon_opened "#addon-cms-agents-addons-file"
-      within "#addon-cms-agents-addons-file" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
+      within "form#item-form" do
+        ensure_addon_opened "#addon-cms-agents-addons-file"
+        ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        click_on I18n.t("ss.buttons.publish_save")
       end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_for_cbox_closed do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
-      within "#addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
-      end
-      click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.files.count).to eq 1
@@ -113,15 +105,21 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.list-item', count: 3)
 
       visit edit_path
-      ensure_addon_opened "#addon-cms-agents-addons-file"
-      wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
-        within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css(".file-view", text: "keyvisual.jpg")
-          click_on I18n.t("sns.thumb_paste")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      within "form#item-form" do
+        ensure_addon_opened "#addon-cms-agents-addons-file"
+        wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+          within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+            click_on I18n.t("sns.thumb_paste")
+          end
         end
+        click_on I18n.t("ss.buttons.publish_save")
       end
-      click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[4].tap do |history|
@@ -175,9 +173,15 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.list-item', count: 6)
 
       visit edit_path
-      fill_in_ckeditor "item[html]", with: ""
-      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      within "form#item-form" do
+        fill_in_ckeditor "item[html]", with: ""
+        click_on I18n.t("ss.buttons.publish_save")
+      end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[7].tap do |history|

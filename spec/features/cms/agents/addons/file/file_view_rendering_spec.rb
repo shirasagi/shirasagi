@@ -16,25 +16,38 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     describe "index" do
       it do
         visit article_pages_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("ss.links.new")
-        fill_in "item[name]", with: "sample"
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        ss_upload_file logo_path
-        ss_upload_file keyvisual_path
+        logo_file = nil
+        keyvisual_file = nil
+        within "form#item-form" do
+          fill_in "item[name]", with: "sample"
 
-        logo_file = SS::File.find_by(name: File.basename(logo_path))
-        keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
+          ss_upload_file logo_path
+          ss_upload_file keyvisual_path
 
-        within "#selected-files" do
-          expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
-          expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
+          logo_file = SS::File.find_by(name: File.basename(logo_path))
+          keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
 
-          within ".file-view[data-file-id='#{keyvisual_file.id}']" do
-            click_on I18n.t("sns.file_attach")
+          within "#selected-files" do
+            expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
+            expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
+
+            within ".file-view[data-file-id='#{keyvisual_file.id}']" do
+              click_on I18n.t("sns.file_attach")
+            end
           end
-        end
 
-        click_on I18n.t("ss.buttons.draft_save")
+          click_on I18n.t("ss.buttons.draft_save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within '#selected-files' do
           element = find(".file-view[data-file-id='#{keyvisual_file.id}']")
@@ -48,31 +61,48 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       it "should display deletion button for unused file and delete it successfully" do
         visit article_pages_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("ss.links.new")
-        fill_in "item[name]", with: "sample"
-        click_on I18n.t("ss.links.input")
-        fill_in "item[basename]", with: "sample"
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        upload_file_and_select(logo_path)
-        upload_file_and_select(keyvisual_path)
+        within "form#item-form" do
+          fill_in "item[name]", with: "sample"
+          click_on I18n.t("ss.links.input")
+          fill_in "item[basename]", with: "sample"
 
-        within ".file-view", text: 'keyvisual.jpg' do
-          find(".action-paste").click
+          ss_upload_file logo_path
+          ss_upload_file keyvisual_path
+
+          logo_file = SS::File.find_by(name: File.basename(logo_path))
+          keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
+
+          within '#selected-files' do
+            expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
+            expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
+
+            within ".file-view[data-file-id='#{keyvisual_file.id}']" do
+              click_on I18n.t("sns.file_attach")
+            end
+          end
+
+          click_on I18n.t("ss.buttons.draft_save")
         end
-
-        click_on I18n.t("ss.buttons.publish_save")
-        click_on I18n.t("ss.buttons.ignore_alert")
+        wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within '#selected-files' do
           within ".file-view.unused" do
             expect(page).to have_content(I18n.t("ss.unused_file"))
             expect(page).to have_content(I18n.t("ss.buttons.delete"))
-            click_link I18n.t("ss.buttons.delete")
+            wait_for_cbox_opened { click_link I18n.t("ss.buttons.delete") }
           end
         end
 
-        wait_for_cbox_opened do
-          page.execute_script("SS_AjaxFile.firesEvents = true;")
+        within_cbox do
           within 'form#ajax-form' do
             within "footer.send" do
               click_on I18n.t("ss.buttons.delete")
@@ -81,7 +111,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
 
         within '#selected-files' do
-          expect(page).not_to have_css(".file-view.unused", text: 'logo.png')
+          expect(page).to have_no_css(".file-view.unused")
         end
       end
     end
@@ -109,6 +139,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   before do
     login_cms_user
     visit edit_path
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
   end
 
   it "allows file uploads in form" do
@@ -120,14 +152,16 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
     end
 
-    within ".column-value-palette" do
-      wait_for_event_fired("ss:columnAdded") do
-        click_on column2.name
+    within 'form#item-form' do
+      within ".column-value-palette" do
+        wait_for_event_fired("ss:columnAdded") do
+          click_on column2.name
+        end
       end
-    end
-    within ".column-value-cms-column-free" do
-      wait_for_cbox_opened do
-        click_on button_label
+      within ".column-value-cms-column-free" do
+        wait_for_cbox_opened do
+          click_on button_label
+        end
       end
     end
 
@@ -142,9 +176,11 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
     end
 
-    within ".column-value-cms-column-free" do
-      wait_for_cbox_opened do
-        click_on button_label
+    within 'form#item-form' do
+      within ".column-value-cms-column-free" do
+        wait_for_cbox_opened do
+          click_on button_label
+        end
       end
     end
 
@@ -179,6 +215,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
     click_on I18n.t("ss.buttons.ignore_alert")
     wait_for_notice I18n.t('ss.notice.saved')
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
 
     within '#addon-cms-agents-addons-form-page' do
       within ".column-value-cms-column-free" do
