@@ -19,7 +19,8 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
       s = Cms::TempFileSearchParam.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
       if params.key?(:s)
         s.attributes = params[:s].permit(:node, :keyword, :node_bound, types: [])
-      else
+      end
+      if s.types.blank? && s.node_bound.blank?
         s.types = %w(temp_file)
         s.node_bound = "current"
       end
